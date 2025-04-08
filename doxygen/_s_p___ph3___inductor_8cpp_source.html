@@ -120,31 +120,31 @@ $(function() {
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  **mIntfCurrent = mSusceptance * **mIntfVoltage;</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  SPDLOG_LOGGER_INFO(mSLog, <span class="stringliteral">&quot;--- Initialize according to power flow ---&quot;</span>);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  <span class="comment">/*</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">    mLog.info() &lt;&lt; &quot;--- Initialize according to power flow ---&quot; &lt;&lt; std::endl</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">        &lt;&lt; &quot;in phase A: &quot; &lt;&lt; std::endl</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">        &lt;&lt; &quot;Voltage across: &quot; &lt;&lt; std::abs((**mIntfVoltage)(0, 0))</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">        &lt;&lt; &quot;&lt;&quot; &lt;&lt; Math::phaseDeg((**mIntfVoltage)(0, 0)) &lt;&lt; std::endl</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">        &lt;&lt; &quot;Current: &quot; &lt;&lt; std::abs((**mIntfCurrent)(0, 0))</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">        &lt;&lt; &quot;&lt;&quot; &lt;&lt; Math::phaseDeg((**mIntfCurrent)(0, 0)) &lt;&lt; std::endl</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">        &lt;&lt; &quot;Terminal 0 voltage: &quot; &lt;&lt; std::abs(initialSingleVoltage(0))</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">        &lt;&lt; &quot;&lt;&quot; &lt;&lt; Math::phaseDeg(initialSingleVoltage(0)) &lt;&lt; std::endl</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">        &lt;&lt; &quot;Terminal 1 voltage: &quot; &lt;&lt; std::abs(initialSingleVoltage(1))</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">        &lt;&lt; &quot;&lt;&quot; &lt;&lt; Math::phaseDeg(initialSingleVoltage(1)) &lt;&lt; std::endl</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">        &lt;&lt; &quot;--- Power flow initialization finished ---&quot; &lt;&lt; std::endl;</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment">*/</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#if 0</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  mLog.info() &lt;&lt; <span class="stringliteral">&quot;--- Initialize according to power flow ---&quot;</span> &lt;&lt; std::endl</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;in phase A: &quot;</span> &lt;&lt; std::endl</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;Voltage across: &quot;</span> &lt;&lt; std::abs((**mIntfVoltage)(0, 0))</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;&lt;&quot;</span> &lt;&lt; Math::phaseDeg((**mIntfVoltage)(0, 0)) &lt;&lt; std::endl</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;Current: &quot;</span> &lt;&lt; std::abs((**mIntfCurrent)(0, 0))</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;&lt;&quot;</span> &lt;&lt; Math::phaseDeg((**mIntfCurrent)(0, 0)) &lt;&lt; std::endl</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;Terminal 0 voltage: &quot;</span> &lt;&lt; std::abs(initialSingleVoltage(0))</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;&lt;&quot;</span> &lt;&lt; Math::phaseDeg(initialSingleVoltage(0)) &lt;&lt; std::endl</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;Terminal 1 voltage: &quot;</span> &lt;&lt; std::abs(initialSingleVoltage(1))</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;&lt;&quot;</span> &lt;&lt; Math::phaseDeg(initialSingleVoltage(1)) &lt;&lt; std::endl</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;--- Power flow initialization finished ---&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
 <div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#a930275c4acf1168f6ea0eb8175413fa4">   67</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#a930275c4acf1168f6ea0eb8175413fa4">SP::Ph3::Inductor::mnaCompInitialize</a>(Real omega, Real timeStep,</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                                          <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Matrix&gt;::Ptr</a> leftVector) {</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  updateMatrixNodeIndices();</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <span class="comment">// TODO</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  <span class="comment">/*</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">    mLog.info() &lt;&lt; &quot;Initial voltage &quot; &lt;&lt; Math::abs((**mIntfVoltage)(0, 0))</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">        &lt;&lt; &quot;&lt;&quot; &lt;&lt; Math::phaseDeg((**mIntfVoltage)(0, 0)) &lt;&lt; std::endl</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment">        &lt;&lt; &quot;Initial current &quot; &lt;&lt; Math::abs((**mIntfCurrent)(0, 0))</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">        &lt;&lt; &quot;&lt;&quot; &lt;&lt; Math::phaseDeg((**mIntfCurrent)(0, 0)) &lt;&lt; std::endl;</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment">*/</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor">#if 0</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  mLog.info() &lt;&lt; <span class="stringliteral">&quot;Initial voltage &quot;</span> &lt;&lt; Math::abs((**mIntfVoltage)(0, 0))</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;&lt;&quot;</span> &lt;&lt; Math::phaseDeg((**mIntfVoltage)(0, 0)) &lt;&lt; std::endl</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;Initial current &quot;</span> &lt;&lt; Math::abs((**mIntfCurrent)(0, 0))</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;&lt;&quot;</span> &lt;&lt; Math::phaseDeg((**mIntfCurrent)(0, 0)) &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;}</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
 <div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#af9284b554384f0afa1ce82a2662442ad">   79</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#af9284b554384f0afa1ce82a2662442ad">SP::Ph3::Inductor::mnaCompApplySystemMatrixStamp</a>(</div>

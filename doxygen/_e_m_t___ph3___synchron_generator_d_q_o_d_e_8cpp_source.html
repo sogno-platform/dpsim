@@ -81,8 +81,8 @@ $(function() {
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">using namespace </span>CPS;</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">// !!! TODO:    Adaptions to use in EMT_Ph3 models phase-to-ground peak variables</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">// !!!          with initialization from phase-to-phase RMS variables</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">// !!! TODO: Adaptions to use in EMT_Ph3 models phase-to-ground peak variables</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">// !!!       with initialization from phase-to-phase RMS variables</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;EMT::Ph3::SynchronGeneratorDQODE::SynchronGeneratorDQODE(String uid,</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;                                                         String name,</div>
@@ -189,8 +189,8 @@ $(function() {
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  ydot[mDim - 2] = y[mDim - 1] * mBase_OmMech;</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;  <span class="comment">/* Auxiliary variables to compute</span></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="comment">     * T_e= lambda_d * i_q - lambda_q * i_d</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="comment">     * needed for omega:  */</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="comment">   * T_e= lambda_d * i_q - lambda_q * i_d</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="comment">   * needed for omega:  */</span></div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;  realtype i_d = 0, i_q = 0;</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;  <span class="comment">// Compute new currents (depending on updated fluxes)</span></div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; mDim - 2; i++) {</div>

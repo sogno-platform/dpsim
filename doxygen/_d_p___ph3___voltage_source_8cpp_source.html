@@ -107,197 +107,201 @@ $(function() {
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  <span class="keywordflow">if</span> (**mVoltageRef == Complex(0, 0))</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    **mVoltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  <span class="comment">// mLog.info() &lt;&lt; &quot;--- Initialize according to power flow ---&quot; &lt;&lt; std::endl;</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;  <span class="comment">// mLog.info() &lt;&lt; &quot;Terminal 0 voltage: &quot; &lt;&lt; std::abs(initialSingleVoltage(0))</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  <span class="comment">//    &lt;&lt; &quot;&lt;&quot; &lt;&lt; std::arg(initialSingleVoltage(0)) &lt;&lt; std::endl;</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;  <span class="comment">// mLog.info() &lt;&lt; &quot;Terminal 1 voltage: &quot; &lt;&lt; std::abs(initialSingleVoltage(1))</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  <span class="comment">//    &lt;&lt; &quot;&lt;&quot; &lt;&lt; std::arg(initialSingleVoltage(1)) &lt;&lt; std::endl;</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  <span class="comment">// mLog.info() &lt;&lt; &quot;Voltage across: &quot; &lt;&lt; std::abs(mVoltageRef-&gt;get()) &lt;&lt; &quot;&lt;&quot; &lt;&lt; std::arg(mVoltageRef-&gt;get()) &lt;&lt; std::endl;</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;}</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keywordtype">void</span> DP::Ph3::VoltageSource::mnaCompInitialize(</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    Real omega, Real timeStep, <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Matrix&gt;::Ptr</a> leftVector) {</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  updateMatrixNodeIndices();</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  (**mIntfVoltage)(0, 0) = **mVoltageRef;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  (**mIntfVoltage)(1, 0) =</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;      Complex(Math::abs(**mVoltageRef) *</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                  cos(Math::phase(**mVoltageRef) - 2. / 3. * M_PI),</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;              Math::abs(**mVoltageRef) *</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                  sin(Math::phase(**mVoltageRef) - 2. / 3. * M_PI));</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  (**mIntfVoltage)(2, 0) =</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;      Complex(Math::abs(**mVoltageRef) *</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                  cos(Math::phase(**mVoltageRef) + 2. / 3. * M_PI),</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;              Math::abs(**mVoltageRef) *</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;                  sin(Math::phase(**mVoltageRef) + 2. / 3. * M_PI));</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;}</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a0ea8c8dc602a206a8c94790d3b5d5e85">   63</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a0ea8c8dc602a206a8c94790d3b5d5e85">DP::Ph3::VoltageSource::mnaCompApplySystemMatrixStamp</a>(</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    SparseMatrixRow &amp;systemMatrix) {</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="keywordflow">if</span> (terminalNotGrounded(0)) {</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                             mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::A),</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                             Complex(-1, 0));</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    Math::addToMatrixElement(systemMatrix,</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                             mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::A),</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                             matrixNodeIndex(0, 0), Complex(-1, 0));</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                             mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::B),</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                             Complex(-1, 0));</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    Math::addToMatrixElement(systemMatrix,</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;                             mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::B),</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;                             matrixNodeIndex(0, 1), Complex(-1, 0));</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                             mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::C),</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;                             Complex(-1, 0));</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    Math::addToMatrixElement(systemMatrix,</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;                             mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::C),</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;                             matrixNodeIndex(0, 2), Complex(-1, 0));</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  }</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  <span class="keywordflow">if</span> (terminalNotGrounded(1)) {</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0),</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;                             mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::A),</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;                             Complex(1, 0));</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    Math::addToMatrixElement(systemMatrix,</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;                             mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::A),</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;                             matrixNodeIndex(1, 0), Complex(1, 0));</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1),</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;                             mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::B),</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;                             Complex(1, 0));</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    Math::addToMatrixElement(systemMatrix,</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;                             mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::B),</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;                             matrixNodeIndex(1, 1), Complex(1, 0));</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2),</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                             mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::C),</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                             Complex(1, 0));</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    Math::addToMatrixElement(systemMatrix,</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                             mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::C),</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                             matrixNodeIndex(1, 2), Complex(1, 0));</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;  }</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  <span class="comment">// mLog.info() &lt;&lt; &quot;--- System matrix stamp ---&quot; &lt;&lt; std::endl;</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  <span class="comment">// if (terminalNotGrounded(0)) {</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  <span class="comment">//    mLog.info() &lt;&lt; &quot;Add &quot; &lt;&lt; Complex(-1, 0) &lt;&lt; &quot; to &quot; &lt;&lt; matrixNodeIndex(0) &lt;&lt; &quot;,&quot; &lt;&lt; mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::A) &lt;&lt; std::endl;</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  <span class="comment">//    mLog.info() &lt;&lt; &quot;Add &quot; &lt;&lt; Complex(-1, 0) &lt;&lt; &quot; to &quot; &lt;&lt; mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::A) &lt;&lt; &quot;,&quot; &lt;&lt; matrixNodeIndex(0) &lt;&lt; std::endl;</span></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  <span class="comment">// }</span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;  <span class="comment">// if (terminalNotGrounded(1)) {</span></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;  <span class="comment">//    mLog.info() &lt;&lt; &quot;Add &quot; &lt;&lt; Complex(1, 0) &lt;&lt; &quot; to &quot; &lt;&lt; mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::A) &lt;&lt; &quot;,&quot; &lt;&lt; matrixNodeIndex(1) &lt;&lt; std::endl;</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  <span class="comment">//    mLog.info() &lt;&lt; &quot;Add &quot; &lt;&lt; Complex(1, 0) &lt;&lt; &quot; to &quot; &lt;&lt; matrixNodeIndex(1) &lt;&lt; &quot;,&quot; &lt;&lt; mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::A) &lt;&lt; std::endl;</span></div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  <span class="comment">// }</span></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;}</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
-<div class="line"><a name="l00121"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#aeca303abea946c8b73cec2af33cb4219">  121</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#aeca303abea946c8b73cec2af33cb4219">DP::Ph3::VoltageSource::mnaCompApplyRightSideVectorStamp</a>(</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    Matrix &amp;rightVector) {</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;  Math::setVectorElement(rightVector,</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;                         mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::A),</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;                         (**mIntfVoltage)(0, 0));</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;  Math::setVectorElement(rightVector,</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;                         mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::B),</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;                         (**mIntfVoltage)(1, 0));</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;  Math::setVectorElement(rightVector,</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;                         mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::C),</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;                         (**mIntfVoltage)(2, 0));</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;  <span class="comment">//mLog.debug() &lt;&lt; &quot;Add &quot; &lt;&lt; (**mIntfVoltage)(0,0) &lt;&lt; &quot; to source vector &quot; &lt;&lt; mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::A) &lt;&lt; std::endl;</span></div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;}</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160; </div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="keywordtype">void</span> DP::Ph3::VoltageSource::updateVoltage(Real time) {</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;  <span class="comment">// can&#39;t we just do nothing??</span></div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;  (**mIntfVoltage)(0, 0) = **mVoltageRef;</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;  (**mIntfVoltage)(1, 0) =</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;      Complex(Math::abs(**mVoltageRef) *</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;                  cos(Math::phase(**mVoltageRef) - 2. / 3. * M_PI),</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;              Math::abs(**mVoltageRef) *</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;                  sin(Math::phase(**mVoltageRef) - 2. / 3. * M_PI));</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;  (**mIntfVoltage)(2, 0) =</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;      Complex(Math::abs(**mVoltageRef) *</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;                  cos(Math::phase(**mVoltageRef) + 2. / 3. * M_PI),</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;              Math::abs(**mVoltageRef) *</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;                  sin(Math::phase(**mVoltageRef) + 2. / 3. * M_PI));</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;}</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160; </div>
-<div class="line"><a name="l00151"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a7de34257b6e957af0126a059bce01abf">  151</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a7de34257b6e957af0126a059bce01abf">DP::Ph3::VoltageSource::mnaCompAddPreStepDependencies</a>(</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    AttributeBase::List &amp;prevStepDependencies,</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    AttributeBase::List &amp;attributeDependencies,</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    AttributeBase::List &amp;modifiedAttributes) {</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;  attributeDependencies.push_back(mVoltageRef);</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;  modifiedAttributes.push_back(mRightVector);</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;  modifiedAttributes.push_back(mIntfVoltage);</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;}</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160; </div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;<span class="keywordtype">void</span> DP::Ph3::VoltageSource::mnaCompPreStep(Real time, Int timeStepCount) {</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;  updateVoltage(time);</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;  mnaCompApplyRightSideVectorStamp(**mRightVector);</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;}</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
-<div class="line"><a name="l00165"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#ad96511c88990f92782154354ba9e6eb0">  165</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#ad96511c88990f92782154354ba9e6eb0">DP::Ph3::VoltageSource::mnaCompAddPostStepDependencies</a>(</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    AttributeBase::List &amp;prevStepDependencies,</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    AttributeBase::List &amp;attributeDependencies,</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    AttributeBase::List &amp;modifiedAttributes,</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Matrix&gt;::Ptr</a> &amp;leftVector) {</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;  attributeDependencies.push_back(leftVector);</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;  modifiedAttributes.push_back(mIntfCurrent);</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;}</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160; </div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;<span class="keywordtype">void</span> DP::Ph3::VoltageSource::mnaCompPostStep(</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    Real time, Int timeStepCount, <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Matrix&gt;::Ptr</a> &amp;leftVector) {</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;  mnaCompUpdateCurrent(**leftVector);</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;}</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160; </div>
-<div class="line"><a name="l00179"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#aa528fd1c80b864bff687fa0a8827d2b1">  179</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#aa528fd1c80b864bff687fa0a8827d2b1">DP::Ph3::VoltageSource::mnaCompUpdateCurrent</a>(<span class="keyword">const</span> Matrix &amp;leftVector) {</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;  (**mIntfCurrent)(0, 0) = Math::complexFromVectorElement(</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;      leftVector, mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::A));</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;  (**mIntfCurrent)(1, 0) = Math::complexFromVectorElement(</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;      leftVector, mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::B));</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;  (**mIntfCurrent)(2, 0) = Math::complexFromVectorElement(</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;      leftVector, mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::C));</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;}</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160; </div>
-<div class="line"><a name="l00188"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a53f614e9f6d76ebe7d700061672663b0">  188</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a53f614e9f6d76ebe7d700061672663b0">DP::Ph3::VoltageSource::daeResidual</a>(<span class="keywordtype">double</span> ttime, <span class="keyword">const</span> <span class="keywordtype">double</span> state[],</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;                                         <span class="keyword">const</span> <span class="keywordtype">double</span> dstate_dt[],</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;                                         <span class="keywordtype">double</span> resid[],</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;                                         std::vector&lt;int&gt; &amp;off) {</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;  <span class="comment">/* new state vector definintion:</span></div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;<span class="comment">        state[0]=node0_voltage</span></div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;<span class="comment">        state[1]=node1_voltage</span></div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;<span class="comment">        ....</span></div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;<span class="comment">        state[n]=noden_voltage</span></div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;<span class="comment">        state[n+1]=component0_voltage</span></div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;<span class="comment">        state[n+2]=component0_inductance (not yet implemented)</span></div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;<span class="comment">        ...</span></div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;<span class="comment">        state[m-1]=componentm_voltage</span></div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;<span class="comment">        state[m]=componentm_inductance</span></div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;<span class="comment">    */</span></div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160; </div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;  <span class="comment">//int Pos1 = matrixNodeIndex(0);</span></div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;  <span class="comment">//int Pos2 = matrixNodeIndex(1);</span></div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;  <span class="comment">//int c_offset = off[0] + off[1]; //current offset for component</span></div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;  <span class="comment">//int n_offset_1 = c_offset + Pos1 + 1;// current offset for first nodal equation</span></div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;  <span class="comment">//int n_offset_2 = c_offset + Pos2 + 1;// current offset for second nodal equation</span></div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;  <span class="comment">//resid[c_offset] = (state[Pos2] - state[Pos1]) - state[c_offset]; // Voltage equation for Resistor</span></div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;<span class="comment"></span>  <span class="comment">//resid[n_offset_1] += std::real(current());</span></div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;  <span class="comment">//resid[n_offset_2] += std::real(current());</span></div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;  <span class="comment">//off[1] += 1;</span></div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;}</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160; </div>
-<div class="line"><a name="l00216"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a3f811fbb378a4c85e87c59c7192a43c8">  216</a></span>&#160;Complex <a class="code" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a3f811fbb378a4c85e87c59c7192a43c8">DP::Ph3::VoltageSource::daeInitialize</a>() {</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;  (**mIntfVoltage)(0, 0) = **mVoltageRef;</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;  <span class="keywordflow">return</span> **mVoltageRef;</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;}</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#if 0</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;  mLog.info() &lt;&lt; <span class="stringliteral">&quot;--- Initialize according to power flow ---&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  mLog.info() &lt;&lt; <span class="stringliteral">&quot;Terminal 0 voltage: &quot;</span> &lt;&lt; std::abs(initialSingleVoltage(0))</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;&lt;&quot;</span> &lt;&lt; std::arg(initialSingleVoltage(0)) &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  mLog.info() &lt;&lt; <span class="stringliteral">&quot;Terminal 1 voltage: &quot;</span> &lt;&lt; std::abs(initialSingleVoltage(1))</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;&lt;&quot;</span> &lt;&lt; std::arg(initialSingleVoltage(1)) &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  mLog.info() &lt;&lt; <span class="stringliteral">&quot;Voltage across: &quot;</span> &lt;&lt; std::abs(mVoltageRef-&gt;get()) &lt;&lt; <span class="stringliteral">&quot;&lt;&quot;</span> &lt;&lt; std::arg(mVoltageRef-&gt;get()) &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;}</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keywordtype">void</span> DP::Ph3::VoltageSource::mnaCompInitialize(</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    Real omega, Real timeStep, <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Matrix&gt;::Ptr</a> leftVector) {</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  updateMatrixNodeIndices();</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  (**mIntfVoltage)(0, 0) = **mVoltageRef;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  (**mIntfVoltage)(1, 0) =</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;      Complex(Math::abs(**mVoltageRef) *</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                  cos(Math::phase(**mVoltageRef) - 2. / 3. * M_PI),</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;              Math::abs(**mVoltageRef) *</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;                  sin(Math::phase(**mVoltageRef) - 2. / 3. * M_PI));</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  (**mIntfVoltage)(2, 0) =</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;      Complex(Math::abs(**mVoltageRef) *</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;                  cos(Math::phase(**mVoltageRef) + 2. / 3. * M_PI),</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;              Math::abs(**mVoltageRef) *</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                  sin(Math::phase(**mVoltageRef) + 2. / 3. * M_PI));</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;}</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a0ea8c8dc602a206a8c94790d3b5d5e85">   65</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a0ea8c8dc602a206a8c94790d3b5d5e85">DP::Ph3::VoltageSource::mnaCompApplySystemMatrixStamp</a>(</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    SparseMatrixRow &amp;systemMatrix) {</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <span class="keywordflow">if</span> (terminalNotGrounded(0)) {</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                             mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::A),</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                             Complex(-1, 0));</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    Math::addToMatrixElement(systemMatrix,</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                             mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::A),</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                             matrixNodeIndex(0, 0), Complex(-1, 0));</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                             mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::B),</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;                             Complex(-1, 0));</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    Math::addToMatrixElement(systemMatrix,</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                             mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::B),</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                             matrixNodeIndex(0, 1), Complex(-1, 0));</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;                             mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::C),</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;                             Complex(-1, 0));</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    Math::addToMatrixElement(systemMatrix,</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;                             mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::C),</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;                             matrixNodeIndex(0, 2), Complex(-1, 0));</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  }</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  <span class="keywordflow">if</span> (terminalNotGrounded(1)) {</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0),</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;                             mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::A),</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;                             Complex(1, 0));</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    Math::addToMatrixElement(systemMatrix,</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;                             mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::A),</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;                             matrixNodeIndex(1, 0), Complex(1, 0));</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1),</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;                             mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::B),</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;                             Complex(1, 0));</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    Math::addToMatrixElement(systemMatrix,</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;                             mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::B),</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;                             matrixNodeIndex(1, 1), Complex(1, 0));</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2),</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                             mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::C),</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                             Complex(1, 0));</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    Math::addToMatrixElement(systemMatrix,</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;                             mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::C),</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;                             matrixNodeIndex(1, 2), Complex(1, 0));</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  }</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">#if 0</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  mLog.info() &lt;&lt; <span class="stringliteral">&quot;--- System matrix stamp ---&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  <span class="keywordflow">if</span> (terminalNotGrounded(0)) {</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    mLog.info() &lt;&lt; <span class="stringliteral">&quot;Add &quot;</span> &lt;&lt; Complex(-1, 0) &lt;&lt; <span class="stringliteral">&quot; to &quot;</span> &lt;&lt; matrixNodeIndex(0) &lt;&lt; <span class="stringliteral">&quot;,&quot;</span> &lt;&lt; mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::A) &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    mLog.info() &lt;&lt; <span class="stringliteral">&quot;Add &quot;</span> &lt;&lt; Complex(-1, 0) &lt;&lt; <span class="stringliteral">&quot; to &quot;</span> &lt;&lt; mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::A) &lt;&lt; <span class="stringliteral">&quot;,&quot;</span> &lt;&lt; matrixNodeIndex(0) &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  }</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  <span class="keywordflow">if</span> (terminalNotGrounded(1)) {</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    mLog.info() &lt;&lt; <span class="stringliteral">&quot;Add &quot;</span> &lt;&lt; Complex(1, 0) &lt;&lt; <span class="stringliteral">&quot; to &quot;</span> &lt;&lt; mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::A) &lt;&lt; <span class="stringliteral">&quot;,&quot;</span> &lt;&lt; matrixNodeIndex(1) &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    mLog.info() &lt;&lt; <span class="stringliteral">&quot;Add &quot;</span> &lt;&lt; Complex(1, 0) &lt;&lt; <span class="stringliteral">&quot; to &quot;</span> &lt;&lt; matrixNodeIndex(1) &lt;&lt; <span class="stringliteral">&quot;,&quot;</span> &lt;&lt; mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::A) &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;  }</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;}</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
+<div class="line"><a name="l00125"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#aeca303abea946c8b73cec2af33cb4219">  125</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#aeca303abea946c8b73cec2af33cb4219">DP::Ph3::VoltageSource::mnaCompApplyRightSideVectorStamp</a>(</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    Matrix &amp;rightVector) {</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;  Math::setVectorElement(rightVector,</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;                         mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::A),</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;                         (**mIntfVoltage)(0, 0));</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;  Math::setVectorElement(rightVector,</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;                         mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::B),</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;                         (**mIntfVoltage)(1, 0));</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;  Math::setVectorElement(rightVector,</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;                         mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::C),</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;                         (**mIntfVoltage)(2, 0));</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160; </div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;  <span class="comment">//mLog.debug() &lt;&lt; &quot;Add &quot; &lt;&lt; (**mIntfVoltage)(0,0) &lt;&lt; &quot; to source vector &quot; &lt;&lt; mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::A) &lt;&lt; std::endl;</span></div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;}</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160; </div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;<span class="keywordtype">void</span> DP::Ph3::VoltageSource::updateVoltage(Real time) {</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;  <span class="comment">// can&#39;t we just do nothing??</span></div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;  (**mIntfVoltage)(0, 0) = **mVoltageRef;</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;  (**mIntfVoltage)(1, 0) =</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;      Complex(Math::abs(**mVoltageRef) *</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;                  cos(Math::phase(**mVoltageRef) - 2. / 3. * M_PI),</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;              Math::abs(**mVoltageRef) *</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;                  sin(Math::phase(**mVoltageRef) - 2. / 3. * M_PI));</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;  (**mIntfVoltage)(2, 0) =</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;      Complex(Math::abs(**mVoltageRef) *</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;                  cos(Math::phase(**mVoltageRef) + 2. / 3. * M_PI),</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;              Math::abs(**mVoltageRef) *</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;                  sin(Math::phase(**mVoltageRef) + 2. / 3. * M_PI));</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;}</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160; </div>
+<div class="line"><a name="l00155"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a7de34257b6e957af0126a059bce01abf">  155</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a7de34257b6e957af0126a059bce01abf">DP::Ph3::VoltageSource::mnaCompAddPreStepDependencies</a>(</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    AttributeBase::List &amp;prevStepDependencies,</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    AttributeBase::List &amp;attributeDependencies,</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    AttributeBase::List &amp;modifiedAttributes) {</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;  attributeDependencies.push_back(mVoltageRef);</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;  modifiedAttributes.push_back(mRightVector);</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;  modifiedAttributes.push_back(mIntfVoltage);</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;}</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160; </div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;<span class="keywordtype">void</span> DP::Ph3::VoltageSource::mnaCompPreStep(Real time, Int timeStepCount) {</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;  updateVoltage(time);</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;  mnaCompApplyRightSideVectorStamp(**mRightVector);</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;}</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160; </div>
+<div class="line"><a name="l00169"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#ad96511c88990f92782154354ba9e6eb0">  169</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#ad96511c88990f92782154354ba9e6eb0">DP::Ph3::VoltageSource::mnaCompAddPostStepDependencies</a>(</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    AttributeBase::List &amp;prevStepDependencies,</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    AttributeBase::List &amp;attributeDependencies,</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    AttributeBase::List &amp;modifiedAttributes,</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Matrix&gt;::Ptr</a> &amp;leftVector) {</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;  attributeDependencies.push_back(leftVector);</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;  modifiedAttributes.push_back(mIntfCurrent);</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;}</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160; </div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;<span class="keywordtype">void</span> DP::Ph3::VoltageSource::mnaCompPostStep(</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    Real time, Int timeStepCount, <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Matrix&gt;::Ptr</a> &amp;leftVector) {</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;  mnaCompUpdateCurrent(**leftVector);</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;}</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160; </div>
+<div class="line"><a name="l00183"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#aa528fd1c80b864bff687fa0a8827d2b1">  183</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#aa528fd1c80b864bff687fa0a8827d2b1">DP::Ph3::VoltageSource::mnaCompUpdateCurrent</a>(<span class="keyword">const</span> Matrix &amp;leftVector) {</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;  (**mIntfCurrent)(0, 0) = Math::complexFromVectorElement(</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;      leftVector, mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::A));</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;  (**mIntfCurrent)(1, 0) = Math::complexFromVectorElement(</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;      leftVector, mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::B));</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;  (**mIntfCurrent)(2, 0) = Math::complexFromVectorElement(</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;      leftVector, mVirtualNodes[0]-&gt;matrixNodeIndex(PhaseType::C));</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;}</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160; </div>
+<div class="line"><a name="l00192"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a53f614e9f6d76ebe7d700061672663b0">  192</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a53f614e9f6d76ebe7d700061672663b0">DP::Ph3::VoltageSource::daeResidual</a>(<span class="keywordtype">double</span> ttime, <span class="keyword">const</span> <span class="keywordtype">double</span> state[],</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;                                         <span class="keyword">const</span> <span class="keywordtype">double</span> dstate_dt[],</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;                                         <span class="keywordtype">double</span> resid[],</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;                                         std::vector&lt;int&gt; &amp;off) {</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;  <span class="comment">/* New state vector definintion:</span></div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;<span class="comment">   *  state[0]=node0_voltage</span></div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;<span class="comment">   *  state[1]=node1_voltage</span></div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;<span class="comment">   *  ....</span></div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;<span class="comment">   *  state[n]=noden_voltage</span></div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;<span class="comment">   *  state[n+1]=component0_voltage</span></div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;<span class="comment">   *  state[n+2]=component0_inductance (not yet implemented)</span></div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;<span class="comment">   *  ...</span></div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;<span class="comment">   *  state[m-1]=componentm_voltage</span></div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;<span class="comment">   *  state[m]=componentm_inductance</span></div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;<span class="comment">   */</span></div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160; </div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;  <span class="comment">//int Pos1 = matrixNodeIndex(0);</span></div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;  <span class="comment">//int Pos2 = matrixNodeIndex(1);</span></div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;  <span class="comment">//int c_offset = off[0] + off[1]; //current offset for component</span></div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;  <span class="comment">//int n_offset_1 = c_offset + Pos1 + 1;// current offset for first nodal equation</span></div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;  <span class="comment">//int n_offset_2 = c_offset + Pos2 + 1;// current offset for second nodal equation</span></div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;  <span class="comment">//resid[c_offset] = (state[Pos2] - state[Pos1]) - state[c_offset]; // Voltage equation for Resistor</span></div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;<span class="comment"></span>  <span class="comment">//resid[n_offset_1] += std::real(current());</span></div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;  <span class="comment">//resid[n_offset_2] += std::real(current());</span></div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;  <span class="comment">//off[1] += 1;</span></div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;}</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160; </div>
+<div class="line"><a name="l00220"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a3f811fbb378a4c85e87c59c7192a43c8">  220</a></span>&#160;Complex <a class="code" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a3f811fbb378a4c85e87c59c7192a43c8">DP::Ph3::VoltageSource::daeInitialize</a>() {</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;  (**mIntfVoltage)(0, 0) = **mVoltageRef;</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;  <span class="keywordflow">return</span> **mVoltageRef;</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;}</div>
 <div class="ttc" id="aclass_c_p_s_1_1_attribute_html"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a></div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00266">Attribute.h:267</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source_html_a0ea8c8dc602a206a8c94790d3b5d5e85"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a0ea8c8dc602a206a8c94790d3b5d5e85">CPS::DP::Ph3::VoltageSource::mnaCompApplySystemMatrixStamp</a></div><div class="ttdeci">void mnaCompApplySystemMatrixStamp(SparseMatrixRow &amp;systemMatrix) override</div><div class="ttdoc">Stamps system matrix.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph3___voltage_source_8cpp_source.html#l00063">DP_Ph3_VoltageSource.cpp:63</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source_html_a3f811fbb378a4c85e87c59c7192a43c8"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a3f811fbb378a4c85e87c59c7192a43c8">CPS::DP::Ph3::VoltageSource::daeInitialize</a></div><div class="ttdeci">Complex daeInitialize() override</div><div class="ttdoc">Voltage Getter.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph3___voltage_source_8cpp_source.html#l00216">DP_Ph3_VoltageSource.cpp:216</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source_html_a0ea8c8dc602a206a8c94790d3b5d5e85"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a0ea8c8dc602a206a8c94790d3b5d5e85">CPS::DP::Ph3::VoltageSource::mnaCompApplySystemMatrixStamp</a></div><div class="ttdeci">void mnaCompApplySystemMatrixStamp(SparseMatrixRow &amp;systemMatrix) override</div><div class="ttdoc">Stamps system matrix.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph3___voltage_source_8cpp_source.html#l00065">DP_Ph3_VoltageSource.cpp:65</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source_html_a3f811fbb378a4c85e87c59c7192a43c8"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a3f811fbb378a4c85e87c59c7192a43c8">CPS::DP::Ph3::VoltageSource::daeInitialize</a></div><div class="ttdeci">Complex daeInitialize() override</div><div class="ttdoc">Voltage Getter.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph3___voltage_source_8cpp_source.html#l00220">DP_Ph3_VoltageSource.cpp:220</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source_html_a52452cc289f106c45adc94c00215aaf8"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a52452cc289f106c45adc94c00215aaf8">CPS::DP::Ph3::VoltageSource::initializeFromNodesAndTerminals</a></div><div class="ttdeci">void initializeFromNodesAndTerminals(Real frequency) override</div><div class="ttdoc">Initializes component from power flow data.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph3___voltage_source_8cpp_source.html#l00035">DP_Ph3_VoltageSource.cpp:35</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source_html_a53f614e9f6d76ebe7d700061672663b0"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a53f614e9f6d76ebe7d700061672663b0">CPS::DP::Ph3::VoltageSource::daeResidual</a></div><div class="ttdeci">void daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector&lt; int &gt; &amp;off) override</div><div class="ttdoc">Residual function for DAE Solver.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph3___voltage_source_8cpp_source.html#l00188">DP_Ph3_VoltageSource.cpp:188</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source_html_a53f614e9f6d76ebe7d700061672663b0"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a53f614e9f6d76ebe7d700061672663b0">CPS::DP::Ph3::VoltageSource::daeResidual</a></div><div class="ttdeci">void daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector&lt; int &gt; &amp;off) override</div><div class="ttdoc">Residual function for DAE Solver.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph3___voltage_source_8cpp_source.html#l00192">DP_Ph3_VoltageSource.cpp:192</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source_html_a5d4621129f4fb2036a31f5c1b7d71534"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a5d4621129f4fb2036a31f5c1b7d71534">CPS::DP::Ph3::VoltageSource::clone</a></div><div class="ttdeci">SimPowerComp&lt; Complex &gt;::Ptr clone(String name) override</div><div class="ttdoc">Returns a modified copy of the component with the given suffix added to the name and without.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph3___voltage_source_8cpp_source.html#l00024">DP_Ph3_VoltageSource.cpp:24</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source_html_a784bc72dba9b20d793abcfc54c2fc19c"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a784bc72dba9b20d793abcfc54c2fc19c">CPS::DP::Ph3::VoltageSource::VoltageSource</a></div><div class="ttdeci">VoltageSource(String uid, String name, Logger::Level loglevel=Logger::Level::off)</div><div class="ttdoc">Defines UID, name, component parameters and logging level.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph3___voltage_source_8cpp_source.html#l00013">DP_Ph3_VoltageSource.cpp:13</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source_html_a7de34257b6e957af0126a059bce01abf"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a7de34257b6e957af0126a059bce01abf">CPS::DP::Ph3::VoltageSource::mnaCompAddPreStepDependencies</a></div><div class="ttdeci">void mnaCompAddPreStepDependencies(AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes) override</div><div class="ttdoc">Add MNA pre step dependencies.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph3___voltage_source_8cpp_source.html#l00151">DP_Ph3_VoltageSource.cpp:151</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source_html_aa528fd1c80b864bff687fa0a8827d2b1"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#aa528fd1c80b864bff687fa0a8827d2b1">CPS::DP::Ph3::VoltageSource::mnaCompUpdateCurrent</a></div><div class="ttdeci">void mnaCompUpdateCurrent(const Matrix &amp;leftVector) override</div><div class="ttdoc">Returns current through the component.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph3___voltage_source_8cpp_source.html#l00179">DP_Ph3_VoltageSource.cpp:179</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source_html_ad96511c88990f92782154354ba9e6eb0"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#ad96511c88990f92782154354ba9e6eb0">CPS::DP::Ph3::VoltageSource::mnaCompAddPostStepDependencies</a></div><div class="ttdeci">void mnaCompAddPostStepDependencies(AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes, Attribute&lt; Matrix &gt;::Ptr &amp;leftVector) override</div><div class="ttdoc">Add MNA post step dependencies.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph3___voltage_source_8cpp_source.html#l00165">DP_Ph3_VoltageSource.cpp:165</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source_html_aeca303abea946c8b73cec2af33cb4219"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#aeca303abea946c8b73cec2af33cb4219">CPS::DP::Ph3::VoltageSource::mnaCompApplyRightSideVectorStamp</a></div><div class="ttdeci">void mnaCompApplyRightSideVectorStamp(Matrix &amp;rightVector) override</div><div class="ttdoc">Stamps right side (source) vector.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph3___voltage_source_8cpp_source.html#l00121">DP_Ph3_VoltageSource.cpp:121</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source_html_a7de34257b6e957af0126a059bce01abf"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a7de34257b6e957af0126a059bce01abf">CPS::DP::Ph3::VoltageSource::mnaCompAddPreStepDependencies</a></div><div class="ttdeci">void mnaCompAddPreStepDependencies(AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes) override</div><div class="ttdoc">Add MNA pre step dependencies.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph3___voltage_source_8cpp_source.html#l00155">DP_Ph3_VoltageSource.cpp:155</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source_html_aa528fd1c80b864bff687fa0a8827d2b1"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#aa528fd1c80b864bff687fa0a8827d2b1">CPS::DP::Ph3::VoltageSource::mnaCompUpdateCurrent</a></div><div class="ttdeci">void mnaCompUpdateCurrent(const Matrix &amp;leftVector) override</div><div class="ttdoc">Returns current through the component.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph3___voltage_source_8cpp_source.html#l00183">DP_Ph3_VoltageSource.cpp:183</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source_html_ad96511c88990f92782154354ba9e6eb0"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#ad96511c88990f92782154354ba9e6eb0">CPS::DP::Ph3::VoltageSource::mnaCompAddPostStepDependencies</a></div><div class="ttdeci">void mnaCompAddPostStepDependencies(AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes, Attribute&lt; Matrix &gt;::Ptr &amp;leftVector) override</div><div class="ttdoc">Add MNA post step dependencies.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph3___voltage_source_8cpp_source.html#l00169">DP_Ph3_VoltageSource.cpp:169</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source_html_aeca303abea946c8b73cec2af33cb4219"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#aeca303abea946c8b73cec2af33cb4219">CPS::DP::Ph3::VoltageSource::mnaCompApplyRightSideVectorStamp</a></div><div class="ttdeci">void mnaCompApplyRightSideVectorStamp(Matrix &amp;rightVector) override</div><div class="ttdoc">Stamps right side (source) vector.</div><div class="ttdef"><b>Definition:</b> <a href="_d_p___ph3___voltage_source_8cpp_source.html#l00125">DP_Ph3_VoltageSource.cpp:125</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_m_n_a_sim_power_comp_html"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp</a></div><div class="ttdoc">Base class for all MNA components that are transmitting power.</div><div class="ttdef"><b>Definition:</b> <a href="_m_n_a_sim_power_comp_8h_source.html#l00013">MNASimPowerComp.h:13</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp</a></div><div class="ttdoc">Base class for all components that are transmitting power.</div><div class="ttdef"><b>Definition:</b> <a href="_sim_power_comp_8h_source.html#l00017">SimPowerComp.h:17</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html_ac080c0dad3920e5415dbc80374f4ea34"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html#ac080c0dad3920e5415dbc80374f4ea34">CPS::SimPowerComp&lt; Complex &gt;::mIntfCurrent</a></div><div class="ttdeci">const Attribute&lt; MatrixVar&lt; Complex &gt; &gt;::Ptr mIntfCurrent</div><div class="ttdoc">Current through component.</div><div class="ttdef"><b>Definition:</b> <a href="_sim_power_comp_8h_source.html#l00047">SimPowerComp.h:47</a></div></div>

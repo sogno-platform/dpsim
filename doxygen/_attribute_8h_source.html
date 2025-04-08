@@ -147,29 +147,29 @@ $(function() {
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  <span class="keywordtype">bool</span> isNull()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> mPtr == <span class="keyword">nullptr</span>; }</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  <span class="comment">/*</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment">            These (implicit) comparison operators are disabled to avoid accidentally comparing pointers instead of attribute values.</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment">            When a pointer comparison is necessary, this can be done via the `getPtr` method or by using the `AttributeCmp` and `AttributeEq` structs.</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="comment">            template&lt;class U&gt;</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment">            bool operator&lt;(const AttributePointer&lt;U&gt;&amp; rhs) const noexcept {</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment">                return this-&gt;mPtr &lt; rhs.getPtr();</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="comment">            }</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="comment">            template&lt;class U&gt;</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">            bool operator&gt;(const AttributePointer&lt;U&gt;&amp; rhs) const noexcept {</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment">                return this-&gt;mPtr &gt; rhs.getPtr();</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="comment">            }</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="comment">            template&lt;class U&gt;</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment">            bool operator==(const AttributePointer&lt;U&gt;&amp; rhs) const noexcept {</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="comment">                return this-&gt;mPtr == rhs.getPtr();</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment">            }</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment">            template&lt;class U&gt;</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="comment">            bool operator!=(const AttributePointer&lt;U&gt;&amp; rhs) const noexcept {</span></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="comment">                return this-&gt;mPtr != rhs.getPtr();</span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="comment">            }*/</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  <span class="comment">// These (implicit) comparison operators are disabled to avoid accidentally comparing pointers instead of attribute values.</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  <span class="comment">// When a pointer comparison is necessary, this can be done via the `getPtr` method or by using the `AttributeCmp` and `AttributeEq` structs.</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="preprocessor">#if 0</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> U&gt;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  <span class="keywordtype">bool</span> operator&lt;(<span class="keyword">const</span> <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer&lt;U&gt;</a>&amp; rhs) <span class="keyword">const</span> noexcept {</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordflow">return</span> this-&gt;mPtr &lt; rhs.getPtr();</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;  }</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> U&gt;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  <span class="keywordtype">bool</span> operator&gt;(<span class="keyword">const</span> <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer&lt;U&gt;</a>&amp; rhs) <span class="keyword">const</span> noexcept {</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordflow">return</span> this-&gt;mPtr &gt; rhs.getPtr();</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  }</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> U&gt;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer&lt;U&gt;</a>&amp; rhs) <span class="keyword">const</span> noexcept {</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordflow">return</span> this-&gt;mPtr == rhs.getPtr();</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;  }</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> U&gt;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  <span class="keywordtype">bool</span> operator!=(<span class="keyword">const</span> <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer&lt;U&gt;</a>&amp; rhs) <span class="keyword">const</span> noexcept {</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordflow">return</span> this-&gt;mPtr != rhs.getPtr();</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  }</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  std::shared_ptr&lt;T&gt; mPtr;</div>
@@ -291,330 +291,331 @@ $(function() {
 <div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160; </div>
 <div class="line"><a name="l00304"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a3c42660c3f5d42250e48df96fae93da2">  304</a></span>&#160;  <span class="keyword">virtual</span> std::shared_ptr&lt;T&gt; <a class="code" href="class_c_p_s_1_1_attribute.html#a3c42660c3f5d42250e48df96fae93da2">asRawPointer</a>() = 0;</div>
 <div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160; </div>
-<div class="line"><a name="l00307"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a839fdbf14db973e9388bef208d39c833">  307</a></span>&#160;  String <a class="code" href="class_c_p_s_1_1_attribute.html#a839fdbf14db973e9388bef208d39c833">toString</a>()<span class="keyword"> override </span>{</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;    std::stringstream ss;</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;    ss &lt;&lt; this-&gt;<a class="code" href="class_c_p_s_1_1_attribute.html#a9b287cc553000b9221b9c5076e495e55">get</a>();</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    <span class="keywordflow">return</span> ss.str();</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;  }</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160; </div>
-<div class="line"><a name="l00322"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a54f5609f916a9dc53321193ed3c723f9">  322</a></span>&#160;  <span class="keyword">operator</span> <span class="keyword">const</span> T &amp;() { <span class="keywordflow">return</span> this-&gt;<a class="code" href="class_c_p_s_1_1_attribute.html#a9b287cc553000b9221b9c5076e495e55">get</a>(); }</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160; </div>
-<div class="line"><a name="l00327"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a62e86ddb590d2e9168c448c9eaf23467">  327</a></span>&#160;  T &amp;<a class="code" href="class_c_p_s_1_1_attribute.html#a62e86ddb590d2e9168c448c9eaf23467">operator*</a>() { <span class="keywordflow">return</span> this-&gt;<a class="code" href="class_c_p_s_1_1_attribute.html#a9b287cc553000b9221b9c5076e495e55">get</a>(); }</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160; </div>
-<div class="line"><a name="l00333"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#abd47af2d0f12236a7f5686e7ac5ad561">  333</a></span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="class_c_p_s_1_1_attribute.html#abd47af2d0f12236a7f5686e7ac5ad561">copyValue</a>(<a class="code" href="class_c_p_s_1_1_attribute_pointer.html">AttributeBase::Ptr</a> copyFrom)<span class="keyword"> override </span>{</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;    <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">Attribute&lt;T&gt;::Ptr</a> copyFromTyped =</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;        std::dynamic_pointer_cast&lt;Attribute&lt;T&gt;&gt;(copyFrom.getPtr());</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;    <span class="keywordflow">if</span> (copyFromTyped.getPtr() == <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;    }</div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    this-&gt;<a class="code" href="class_c_p_s_1_1_attribute.html#a838e3d8f79bc73a91e6dd44c6d83c97e">set</a>(**copyFromTyped);</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;  }</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160; </div>
-<div class="line"><a name="l00347"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a76414b13889a71671efa5ba2afbd2d61">  347</a></span>&#160;  <span class="keyword">const</span> std::type_info &amp;<a class="code" href="class_c_p_s_1_1_attribute.html#a76414b13889a71671efa5ba2afbd2d61">getType</a>()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> <span class="keyword">typeid</span>(T); }</div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160; </div>
-<div class="line"><a name="l00353"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a9700bdb5f0798aa0e2dd3a3e374b5251">  353</a></span>&#160;  <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">AttributeBase::Ptr</a> <a class="code" href="class_c_p_s_1_1_attribute.html#a9700bdb5f0798aa0e2dd3a3e374b5251">cloneValueOntoNewAttribute</a>()<span class="keyword"> override </span>{</div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer&lt;AttributeBase&gt;</a>(</div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;        <a class="code" href="class_c_p_s_1_1_attribute_static.html">AttributeStatic&lt;T&gt;::make</a>(this-&gt;<a class="code" href="class_c_p_s_1_1_attribute.html#a9b287cc553000b9221b9c5076e495e55">get</a>()));</div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;    <span class="comment">// TODO: This is in the real time path. We should not use heap here.</span></div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;  };</div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160; </div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> U&gt;</div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;  <span class="keyword">typename</span> <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">Attribute&lt;U&gt;::Ptr</a></div>
-<div class="line"><a name="l00369"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a666db94b91248ca3c0ff7e421761ba0c">  369</a></span>&#160;  <a class="code" href="class_c_p_s_1_1_attribute.html#a666db94b91248ca3c0ff7e421761ba0c">derive</a>(<span class="keyword">typename</span> AttributeUpdateTask&lt;U, T&gt;::Actor getter =</div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;             <span class="keyword">typename</span> AttributeUpdateTask&lt;U, T&gt;::Actor(),</div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;         <span class="keyword">typename</span> AttributeUpdateTask&lt;U, T&gt;::Actor setter =</div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;             <span class="keyword">typename</span> AttributeUpdateTask&lt;U, T&gt;::Actor()) {</div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;    <span class="keyword">auto</span> derivedAttribute = std::make_shared&lt;AttributeDynamic&lt;U&gt;&gt;();</div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;    <span class="keywordflow">if</span> (setter) {</div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;      derivedAttribute-&gt;addTask(</div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;          UpdateTaskKind::UPDATE_ON_SET,</div>
-<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;          <a class="code" href="class_c_p_s_1_1_attribute_update_task.html">AttributeUpdateTask&lt;U, T&gt;::make</a>(</div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;              UpdateTaskKind::UPDATE_ON_SET, setter,</div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;              <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">Attribute&lt;T&gt;::Ptr</a>(this-&gt;shared_from_this())));</div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;    }</div>
-<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;    <span class="keywordflow">if</span> (getter) {</div>
-<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;      derivedAttribute-&gt;addTask(</div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;          UpdateTaskKind::UPDATE_ON_GET,</div>
-<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;          <a class="code" href="class_c_p_s_1_1_attribute_update_task.html">AttributeUpdateTask&lt;U, T&gt;::make</a>(</div>
-<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;              UpdateTaskKind::UPDATE_ON_GET, getter,</div>
-<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;              <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">Attribute&lt;T&gt;::Ptr</a>(this-&gt;shared_from_this())));</div>
-<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;    }</div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;    <span class="keywordflow">return</span> derivedAttribute;</div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;  }</div>
-<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160; </div>
-<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> U = T,</div>
-<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;            std::enable_if_t&lt;std::is_same_v&lt;Complex, U&gt;, <span class="keywordtype">bool</span>&gt; = <span class="keyword">true</span>&gt;</div>
-<div class="line"><a name="l00397"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a6d8b91651d42f0ff81ae3617118e4f51">  397</a></span>&#160;  <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer&lt;Attribute&lt;Real&gt;</a>&gt; <a class="code" href="class_c_p_s_1_1_attribute.html#a6d8b91651d42f0ff81ae3617118e4f51">deriveReal</a>()</div>
-<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;  <span class="comment">// requires std::same_as&lt;T, CPS::Complex&gt; //CPP20</span></div>
-<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;  {</div>
-<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;    AttributeUpdateTask&lt;CPS::Real, CPS::Complex&gt;::Actor getter =</div>
-<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;        [](std::shared_ptr&lt;Real&gt; &amp;dependent,</div>
-<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;           <span class="keyword">typename</span> <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Complex&gt;::Ptr</a> dependency) {</div>
-<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;          *dependent = (**dependency).real();</div>
-<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;        };</div>
-<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;    AttributeUpdateTask&lt;CPS::Real, CPS::Complex&gt;::Actor setter =</div>
+<div class="line"><a name="l00309"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a839fdbf14db973e9388bef208d39c833">  309</a></span>&#160;  String <a class="code" href="class_c_p_s_1_1_attribute.html#a839fdbf14db973e9388bef208d39c833">toString</a>()<span class="keyword"> override </span>{</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    std::stringstream ss;</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    ss &lt;&lt; this-&gt;<a class="code" href="class_c_p_s_1_1_attribute.html#a9b287cc553000b9221b9c5076e495e55">get</a>();</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;    <span class="keywordflow">return</span> ss.str();</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;  }</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160; </div>
+<div class="line"><a name="l00325"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a54f5609f916a9dc53321193ed3c723f9">  325</a></span>&#160;  <span class="keyword">operator</span> <span class="keyword">const</span> T &amp;() { <span class="keywordflow">return</span> this-&gt;<a class="code" href="class_c_p_s_1_1_attribute.html#a9b287cc553000b9221b9c5076e495e55">get</a>(); }</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160; </div>
+<div class="line"><a name="l00332"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a62e86ddb590d2e9168c448c9eaf23467">  332</a></span>&#160;  T &amp;<a class="code" href="class_c_p_s_1_1_attribute.html#a62e86ddb590d2e9168c448c9eaf23467">operator*</a>() { <span class="keywordflow">return</span> this-&gt;<a class="code" href="class_c_p_s_1_1_attribute.html#a9b287cc553000b9221b9c5076e495e55">get</a>(); }</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160; </div>
+<div class="line"><a name="l00338"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#abd47af2d0f12236a7f5686e7ac5ad561">  338</a></span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="class_c_p_s_1_1_attribute.html#abd47af2d0f12236a7f5686e7ac5ad561">copyValue</a>(<a class="code" href="class_c_p_s_1_1_attribute_pointer.html">AttributeBase::Ptr</a> copyFrom)<span class="keyword"> override </span>{</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">Attribute&lt;T&gt;::Ptr</a> copyFromTyped =</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;        std::dynamic_pointer_cast&lt;Attribute&lt;T&gt;&gt;(copyFrom.getPtr());</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    <span class="keywordflow">if</span> (copyFromTyped.getPtr() == <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    }</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;    this-&gt;<a class="code" href="class_c_p_s_1_1_attribute.html#a838e3d8f79bc73a91e6dd44c6d83c97e">set</a>(**copyFromTyped);</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;  }</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160; </div>
+<div class="line"><a name="l00352"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a76414b13889a71671efa5ba2afbd2d61">  352</a></span>&#160;  <span class="keyword">const</span> std::type_info &amp;<a class="code" href="class_c_p_s_1_1_attribute.html#a76414b13889a71671efa5ba2afbd2d61">getType</a>()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> <span class="keyword">typeid</span>(T); }</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160; </div>
+<div class="line"><a name="l00358"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a9700bdb5f0798aa0e2dd3a3e374b5251">  358</a></span>&#160;  <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">AttributeBase::Ptr</a> <a class="code" href="class_c_p_s_1_1_attribute.html#a9700bdb5f0798aa0e2dd3a3e374b5251">cloneValueOntoNewAttribute</a>()<span class="keyword"> override </span>{</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer&lt;AttributeBase&gt;</a>(</div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;        <a class="code" href="class_c_p_s_1_1_attribute_static.html">AttributeStatic&lt;T&gt;::make</a>(this-&gt;<a class="code" href="class_c_p_s_1_1_attribute.html#a9b287cc553000b9221b9c5076e495e55">get</a>()));</div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;    <span class="comment">// TODO: This is in the real time path. We should not use heap here.</span></div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;  };</div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160; </div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> U&gt;</div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;  <span class="keyword">typename</span> <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">Attribute&lt;U&gt;::Ptr</a></div>
+<div class="line"><a name="l00374"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a666db94b91248ca3c0ff7e421761ba0c">  374</a></span>&#160;  <a class="code" href="class_c_p_s_1_1_attribute.html#a666db94b91248ca3c0ff7e421761ba0c">derive</a>(<span class="keyword">typename</span> AttributeUpdateTask&lt;U, T&gt;::Actor getter =</div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;             <span class="keyword">typename</span> AttributeUpdateTask&lt;U, T&gt;::Actor(),</div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;         <span class="keyword">typename</span> AttributeUpdateTask&lt;U, T&gt;::Actor setter =</div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;             <span class="keyword">typename</span> AttributeUpdateTask&lt;U, T&gt;::Actor()) {</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;    <span class="keyword">auto</span> derivedAttribute = std::make_shared&lt;AttributeDynamic&lt;U&gt;&gt;();</div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;    <span class="keywordflow">if</span> (setter) {</div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;      derivedAttribute-&gt;addTask(</div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;          UpdateTaskKind::UPDATE_ON_SET,</div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;          <a class="code" href="class_c_p_s_1_1_attribute_update_task.html">AttributeUpdateTask&lt;U, T&gt;::make</a>(</div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;              UpdateTaskKind::UPDATE_ON_SET, setter,</div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;              <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">Attribute&lt;T&gt;::Ptr</a>(this-&gt;shared_from_this())));</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;    }</div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;    <span class="keywordflow">if</span> (getter) {</div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;      derivedAttribute-&gt;addTask(</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;          UpdateTaskKind::UPDATE_ON_GET,</div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;          <a class="code" href="class_c_p_s_1_1_attribute_update_task.html">AttributeUpdateTask&lt;U, T&gt;::make</a>(</div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;              UpdateTaskKind::UPDATE_ON_GET, getter,</div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;              <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">Attribute&lt;T&gt;::Ptr</a>(this-&gt;shared_from_this())));</div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;    }</div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;    <span class="keywordflow">return</span> derivedAttribute;</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;  }</div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160; </div>
+<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> U = T,</div>
+<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;            std::enable_if_t&lt;std::is_same_v&lt;Complex, U&gt;, <span class="keywordtype">bool</span>&gt; = <span class="keyword">true</span>&gt;</div>
+<div class="line"><a name="l00402"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a6d8b91651d42f0ff81ae3617118e4f51">  402</a></span>&#160;  <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer&lt;Attribute&lt;Real&gt;</a>&gt; <a class="code" href="class_c_p_s_1_1_attribute.html#a6d8b91651d42f0ff81ae3617118e4f51">deriveReal</a>()</div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;  <span class="comment">// requires std::same_as&lt;T, CPS::Complex&gt; //CPP20</span></div>
+<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;  {</div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;    AttributeUpdateTask&lt;CPS::Real, CPS::Complex&gt;::Actor getter =</div>
 <div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;        [](std::shared_ptr&lt;Real&gt; &amp;dependent,</div>
 <div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;           <span class="keyword">typename</span> <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Complex&gt;::Ptr</a> dependency) {</div>
-<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;          CPS::Complex currentValue = dependency-&gt;get();</div>
-<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;          currentValue.real(*dependent);</div>
-<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;          dependency-&gt;set(currentValue);</div>
-<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;        };</div>
-<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;    <span class="keywordflow">return</span> derive&lt;CPS::Real&gt;(getter, setter);</div>
-<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;  }</div>
-<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160; </div>
-<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> U = T,</div>
-<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;            std::enable_if_t&lt;std::is_same_v&lt;Complex, U&gt;, <span class="keywordtype">bool</span>&gt; = <span class="keyword">true</span>&gt;</div>
-<div class="line"><a name="l00421"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#af2e861ade90dd8a86fb41d0cfd18ca1f">  421</a></span>&#160;  <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer&lt;Attribute&lt;Real&gt;</a>&gt; <a class="code" href="class_c_p_s_1_1_attribute.html#af2e861ade90dd8a86fb41d0cfd18ca1f">deriveImag</a>()</div>
-<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;  <span class="comment">// requires std::same_as&lt;T, CPS::Complex&gt; //CPP20</span></div>
-<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;  {</div>
-<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;    AttributeUpdateTask&lt;CPS::Real, CPS::Complex&gt;::Actor getter =</div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;        [](std::shared_ptr&lt;Real&gt; &amp;dependent,</div>
-<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;           <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Complex&gt;::Ptr</a> dependency) {</div>
-<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;          *dependent = (**dependency).imag();</div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;        };</div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;    AttributeUpdateTask&lt;CPS::Real, CPS::Complex&gt;::Actor setter =</div>
+<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;          *dependent = (**dependency).real();</div>
+<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;        };</div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;    AttributeUpdateTask&lt;CPS::Real, CPS::Complex&gt;::Actor setter =</div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;        [](std::shared_ptr&lt;Real&gt; &amp;dependent,</div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;           <span class="keyword">typename</span> <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Complex&gt;::Ptr</a> dependency) {</div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;          CPS::Complex currentValue = dependency-&gt;get();</div>
+<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;          currentValue.real(*dependent);</div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;          dependency-&gt;set(currentValue);</div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;        };</div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;    <span class="keywordflow">return</span> derive&lt;CPS::Real&gt;(getter, setter);</div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;  }</div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160; </div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> U = T,</div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;            std::enable_if_t&lt;std::is_same_v&lt;Complex, U&gt;, <span class="keywordtype">bool</span>&gt; = <span class="keyword">true</span>&gt;</div>
+<div class="line"><a name="l00426"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#af2e861ade90dd8a86fb41d0cfd18ca1f">  426</a></span>&#160;  <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer&lt;Attribute&lt;Real&gt;</a>&gt; <a class="code" href="class_c_p_s_1_1_attribute.html#af2e861ade90dd8a86fb41d0cfd18ca1f">deriveImag</a>()</div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;  <span class="comment">// requires std::same_as&lt;T, CPS::Complex&gt; //CPP20</span></div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;  {</div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;    AttributeUpdateTask&lt;CPS::Real, CPS::Complex&gt;::Actor getter =</div>
 <div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;        [](std::shared_ptr&lt;Real&gt; &amp;dependent,</div>
 <div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;           <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Complex&gt;::Ptr</a> dependency) {</div>
-<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;          CPS::Complex currentValue = dependency-&gt;get();</div>
-<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;          currentValue.imag(*dependent);</div>
-<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;          dependency-&gt;set(currentValue);</div>
-<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;        };</div>
-<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;    <span class="keywordflow">return</span> derive&lt;CPS::Real&gt;(getter, setter);</div>
-<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;  }</div>
-<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160; </div>
-<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> U = T,</div>
-<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;            std::enable_if_t&lt;std::is_same_v&lt;Complex, U&gt;, <span class="keywordtype">bool</span>&gt; = <span class="keyword">true</span>&gt;</div>
-<div class="line"><a name="l00445"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a295c0aeb84da58dbd52f79423d1b7de4">  445</a></span>&#160;  <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer&lt;Attribute&lt;Real&gt;</a>&gt; <a class="code" href="class_c_p_s_1_1_attribute.html#a295c0aeb84da58dbd52f79423d1b7de4">deriveMag</a>()</div>
-<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;  <span class="comment">// requires std::same_as&lt;T, CPS::Complex&gt; //CPP20</span></div>
-<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;  {</div>
-<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;    AttributeUpdateTask&lt;CPS::Real, CPS::Complex&gt;::Actor getter =</div>
-<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;        [](std::shared_ptr&lt;Real&gt; &amp;dependent,</div>
-<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;           <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Complex&gt;::Ptr</a> dependency) {</div>
-<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;          *dependent = Math::abs(**dependency);</div>
-<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;        };</div>
-<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;    AttributeUpdateTask&lt;CPS::Real, CPS::Complex&gt;::Actor setter =</div>
+<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;          *dependent = (**dependency).imag();</div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;        };</div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;    AttributeUpdateTask&lt;CPS::Real, CPS::Complex&gt;::Actor setter =</div>
+<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;        [](std::shared_ptr&lt;Real&gt; &amp;dependent,</div>
+<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;           <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Complex&gt;::Ptr</a> dependency) {</div>
+<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;          CPS::Complex currentValue = dependency-&gt;get();</div>
+<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;          currentValue.imag(*dependent);</div>
+<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;          dependency-&gt;set(currentValue);</div>
+<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;        };</div>
+<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;    <span class="keywordflow">return</span> derive&lt;CPS::Real&gt;(getter, setter);</div>
+<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;  }</div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160; </div>
+<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> U = T,</div>
+<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;            std::enable_if_t&lt;std::is_same_v&lt;Complex, U&gt;, <span class="keywordtype">bool</span>&gt; = <span class="keyword">true</span>&gt;</div>
+<div class="line"><a name="l00450"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a295c0aeb84da58dbd52f79423d1b7de4">  450</a></span>&#160;  <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer&lt;Attribute&lt;Real&gt;</a>&gt; <a class="code" href="class_c_p_s_1_1_attribute.html#a295c0aeb84da58dbd52f79423d1b7de4">deriveMag</a>()</div>
+<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;  <span class="comment">// requires std::same_as&lt;T, CPS::Complex&gt; //CPP20</span></div>
+<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;  {</div>
+<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;    AttributeUpdateTask&lt;CPS::Real, CPS::Complex&gt;::Actor getter =</div>
 <div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;        [](std::shared_ptr&lt;Real&gt; &amp;dependent,</div>
 <div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;           <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Complex&gt;::Ptr</a> dependency) {</div>
-<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;          CPS::Complex currentValue = dependency-&gt;get();</div>
-<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;          dependency-&gt;set(Math::polar(*dependent, Math::phase(currentValue)));</div>
-<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;        };</div>
-<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;    <span class="keywordflow">return</span> derive&lt;CPS::Real&gt;(getter, setter);</div>
-<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;  }</div>
-<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160; </div>
-<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> U = T,</div>
-<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;            std::enable_if_t&lt;std::is_same_v&lt;Complex, U&gt;, <span class="keywordtype">bool</span>&gt; = <span class="keyword">true</span>&gt;</div>
-<div class="line"><a name="l00468"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a433fb9826628621f042c47ae74223840">  468</a></span>&#160;  <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer&lt;Attribute&lt;Real&gt;</a>&gt; <a class="code" href="class_c_p_s_1_1_attribute.html#a433fb9826628621f042c47ae74223840">derivePhase</a>()</div>
-<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;  <span class="comment">// requires std::same_as&lt;T, CPS::Complex&gt; //CPP20</span></div>
-<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;  {</div>
-<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;    AttributeUpdateTask&lt;CPS::Real, CPS::Complex&gt;::Actor getter =</div>
-<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;        [](std::shared_ptr&lt;Real&gt; &amp;dependent,</div>
-<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;           <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Complex&gt;::Ptr</a> dependency) {</div>
-<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;          *dependent = Math::phase(**dependency);</div>
-<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;        };</div>
-<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;    AttributeUpdateTask&lt;CPS::Real, CPS::Complex&gt;::Actor setter =</div>
+<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;          *dependent = Math::abs(**dependency);</div>
+<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;        };</div>
+<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;    AttributeUpdateTask&lt;CPS::Real, CPS::Complex&gt;::Actor setter =</div>
+<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;        [](std::shared_ptr&lt;Real&gt; &amp;dependent,</div>
+<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;           <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Complex&gt;::Ptr</a> dependency) {</div>
+<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;          CPS::Complex currentValue = dependency-&gt;get();</div>
+<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;          dependency-&gt;set(Math::polar(*dependent, Math::phase(currentValue)));</div>
+<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;        };</div>
+<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;    <span class="keywordflow">return</span> derive&lt;CPS::Real&gt;(getter, setter);</div>
+<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;  }</div>
+<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160; </div>
+<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> U = T,</div>
+<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;            std::enable_if_t&lt;std::is_same_v&lt;Complex, U&gt;, <span class="keywordtype">bool</span>&gt; = <span class="keyword">true</span>&gt;</div>
+<div class="line"><a name="l00473"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a433fb9826628621f042c47ae74223840">  473</a></span>&#160;  <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer&lt;Attribute&lt;Real&gt;</a>&gt; <a class="code" href="class_c_p_s_1_1_attribute.html#a433fb9826628621f042c47ae74223840">derivePhase</a>()</div>
+<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;  <span class="comment">// requires std::same_as&lt;T, CPS::Complex&gt; //CPP20</span></div>
+<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;  {</div>
+<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;    AttributeUpdateTask&lt;CPS::Real, CPS::Complex&gt;::Actor getter =</div>
 <div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;        [](std::shared_ptr&lt;Real&gt; &amp;dependent,</div>
 <div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;           <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Complex&gt;::Ptr</a> dependency) {</div>
-<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;          CPS::Complex currentValue = dependency-&gt;get();</div>
-<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;          dependency-&gt;set(Math::polar(Math::abs(currentValue), *dependent));</div>
-<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;        };</div>
-<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;    <span class="keywordflow">return</span> derive&lt;CPS::Real&gt;(getter, setter);</div>
-<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;  }</div>
-<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160; </div>
-<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> U = T, std::enable_if_t&lt;std::is_same_v&lt;Real, U&gt; ||</div>
-<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;                                                 std::is_same_v&lt;Complex, U&gt;,</div>
-<div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;                                             <span class="keywordtype">bool</span>&gt; = true&gt;</div>
-<div class="line"><a name="l00493"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a2458fb0f3949cdb55bc430bff7ae2bc0">  493</a></span>&#160;  <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer&lt;Attribute&lt;T&gt;</a>&gt; <a class="code" href="class_c_p_s_1_1_attribute.html#a2458fb0f3949cdb55bc430bff7ae2bc0">deriveScaled</a>(T scale)</div>
-<div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;  <span class="comment">// requires std::same_as&lt;T, CPS::Complex&gt; || std::same_as&lt;T, CPS::Real&gt; //CPP20</span></div>
-<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;  {</div>
-<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;    <span class="keyword">typename</span> AttributeUpdateTask&lt;T, T&gt;::Actor getter =</div>
-<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;        [scale](std::shared_ptr&lt;T&gt; &amp;dependent, <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">Attribute&lt;T&gt;::Ptr</a> dependency) {</div>
-<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;          *dependent = scale * (**dependency);</div>
-<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;        };</div>
-<div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160;    <span class="keyword">typename</span> AttributeUpdateTask&lt;T, T&gt;::Actor setter =</div>
-<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;        [scale](std::shared_ptr&lt;T&gt; &amp;dependent, <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">Attribute&lt;T&gt;::Ptr</a> dependency) {</div>
-<div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160;          dependency-&gt;set((*dependent) / scale);</div>
-<div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;        };</div>
-<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;    <span class="keywordflow">return</span> derive&lt;T&gt;(getter, setter);</div>
-<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;  }</div>
-<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160; </div>
-<div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class </span>U, <span class="keyword">class </span>V = T,</div>
-<div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;            std::enable_if_t&lt;std::is_same_v&lt;CPS::MatrixVar&lt;U&gt;, V&gt;, <span class="keywordtype">bool</span>&gt; = <span class="keyword">true</span>&gt;</div>
-<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;  <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer&lt;Attribute&lt;U&gt;</a>&gt;</div>
-<div class="line"><a name="l00517"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a2f159b5093b304495eecd575d933c59b">  517</a></span>&#160;  <a class="code" href="class_c_p_s_1_1_attribute.html#a2f159b5093b304495eecd575d933c59b">deriveCoeff</a>(<span class="keyword">typename</span> CPS::MatrixVar&lt;U&gt;::Index row,</div>
-<div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;              <span class="keyword">typename</span> CPS::MatrixVar&lt;U&gt;::Index column)</div>
-<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;  <span class="comment">// requires std::same_as&lt;T, CPS::MatrixVar&lt;U&gt;&gt; //CPP20</span></div>
-<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;  {</div>
-<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;    <span class="keyword">typename</span> AttributeUpdateTask&lt;U, T&gt;::Actor getter =</div>
-<div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;        [row, column](std::shared_ptr&lt;U&gt; &amp;dependent,</div>
-<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;                      <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">Attribute&lt;T&gt;::Ptr</a> dependency) {</div>
-<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160;          *dependent = (**dependency)(row, column);</div>
-<div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160;        };</div>
-<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160;    <span class="keyword">typename</span> AttributeUpdateTask&lt;U, T&gt;::Actor setter =</div>
+<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;          *dependent = Math::phase(**dependency);</div>
+<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;        };</div>
+<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;    AttributeUpdateTask&lt;CPS::Real, CPS::Complex&gt;::Actor setter =</div>
+<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;        [](std::shared_ptr&lt;Real&gt; &amp;dependent,</div>
+<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;           <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Complex&gt;::Ptr</a> dependency) {</div>
+<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;          CPS::Complex currentValue = dependency-&gt;get();</div>
+<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;          dependency-&gt;set(Math::polar(Math::abs(currentValue), *dependent));</div>
+<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;        };</div>
+<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;    <span class="keywordflow">return</span> derive&lt;CPS::Real&gt;(getter, setter);</div>
+<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;  }</div>
+<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160; </div>
+<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> U = T, std::enable_if_t&lt;std::is_same_v&lt;Real, U&gt; ||</div>
+<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;                                                 std::is_same_v&lt;Complex, U&gt;,</div>
+<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;                                             <span class="keywordtype">bool</span>&gt; = true&gt;</div>
+<div class="line"><a name="l00498"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a2458fb0f3949cdb55bc430bff7ae2bc0">  498</a></span>&#160;  <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer&lt;Attribute&lt;T&gt;</a>&gt; <a class="code" href="class_c_p_s_1_1_attribute.html#a2458fb0f3949cdb55bc430bff7ae2bc0">deriveScaled</a>(T scale)</div>
+<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;  <span class="comment">// requires std::same_as&lt;T, CPS::Complex&gt; || std::same_as&lt;T, CPS::Real&gt; //CPP20</span></div>
+<div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160;  {</div>
+<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;    <span class="keyword">typename</span> AttributeUpdateTask&lt;T, T&gt;::Actor getter =</div>
+<div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160;        [scale](std::shared_ptr&lt;T&gt; &amp;dependent, <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">Attribute&lt;T&gt;::Ptr</a> dependency) {</div>
+<div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;          *dependent = scale * (**dependency);</div>
+<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;        };</div>
+<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;    <span class="keyword">typename</span> AttributeUpdateTask&lt;T, T&gt;::Actor setter =</div>
+<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;        [scale](std::shared_ptr&lt;T&gt; &amp;dependent, <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">Attribute&lt;T&gt;::Ptr</a> dependency) {</div>
+<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;          dependency-&gt;set((*dependent) / scale);</div>
+<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;        };</div>
+<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;    <span class="keywordflow">return</span> derive&lt;T&gt;(getter, setter);</div>
+<div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;  }</div>
+<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160; </div>
+<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class </span>U, <span class="keyword">class </span>V = T,</div>
+<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;            std::enable_if_t&lt;std::is_same_v&lt;CPS::MatrixVar&lt;U&gt;, V&gt;, <span class="keywordtype">bool</span>&gt; = <span class="keyword">true</span>&gt;</div>
+<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;  <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer&lt;Attribute&lt;U&gt;</a>&gt;</div>
+<div class="line"><a name="l00522"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a2f159b5093b304495eecd575d933c59b">  522</a></span>&#160;  <a class="code" href="class_c_p_s_1_1_attribute.html#a2f159b5093b304495eecd575d933c59b">deriveCoeff</a>(<span class="keyword">typename</span> CPS::MatrixVar&lt;U&gt;::Index row,</div>
+<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;              <span class="keyword">typename</span> CPS::MatrixVar&lt;U&gt;::Index column)</div>
+<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160;  <span class="comment">// requires std::same_as&lt;T, CPS::MatrixVar&lt;U&gt;&gt; //CPP20</span></div>
+<div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160;  {</div>
+<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160;    <span class="keyword">typename</span> AttributeUpdateTask&lt;U, T&gt;::Actor getter =</div>
 <div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160;        [row, column](std::shared_ptr&lt;U&gt; &amp;dependent,</div>
 <div class="line"><a name="l00528"></a><span class="lineno">  528</span>&#160;                      <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">Attribute&lt;T&gt;::Ptr</a> dependency) {</div>
-<div class="line"><a name="l00529"></a><span class="lineno">  529</span>&#160;          CPS::MatrixVar&lt;U&gt; currentValue = dependency-&gt;get();</div>
-<div class="line"><a name="l00530"></a><span class="lineno">  530</span>&#160;          currentValue(row, column) = *dependent;</div>
-<div class="line"><a name="l00531"></a><span class="lineno">  531</span>&#160;          dependency-&gt;set(currentValue);</div>
-<div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160;        };</div>
-<div class="line"><a name="l00533"></a><span class="lineno">  533</span>&#160;    <span class="keywordflow">return</span> derive&lt;U&gt;(getter, setter);</div>
-<div class="line"><a name="l00534"></a><span class="lineno">  534</span>&#160;  }</div>
-<div class="line"><a name="l00535"></a><span class="lineno">  535</span>&#160;};</div>
-<div class="line"><a name="l00536"></a><span class="lineno">  536</span>&#160; </div>
-<div class="line"><a name="l00541"></a><span class="lineno">  541</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00542"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_static.html">  542</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_c_p_s_1_1_attribute_static.html">AttributeStatic</a> : <span class="keyword">public</span> <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;T&gt;,</div>
-<div class="line"><a name="l00543"></a><span class="lineno">  543</span>&#160;                        <span class="keyword">public</span> <a class="code" href="class_shared_factory.html">SharedFactory</a>&lt;AttributeStatic&lt;T&gt;&gt; {</div>
-<div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160;  <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="class_shared_factory.html">SharedFactory</a>&lt;<a class="code" href="class_c_p_s_1_1_attribute_static.html">AttributeStatic</a>&lt;T&gt;&gt;;</div>
-<div class="line"><a name="l00545"></a><span class="lineno">  545</span>&#160; </div>
-<div class="line"><a name="l00546"></a><span class="lineno">  546</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00547"></a><span class="lineno">  547</span>&#160;  <a class="code" href="class_c_p_s_1_1_attribute_static.html">AttributeStatic</a>(T initialValue = T()) : <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;T&gt;</a>(initialValue) {}</div>
-<div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160; </div>
-<div class="line"><a name="l00549"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_static.html#a3169cd650243408920b16eb28c1f4f00">  549</a></span>&#160;  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_attribute_static.html#a3169cd650243408920b16eb28c1f4f00">set</a>(T value)<span class="keyword"> override </span>{ *this-&gt;mData = value; };</div>
+<div class="line"><a name="l00529"></a><span class="lineno">  529</span>&#160;          *dependent = (**dependency)(row, column);</div>
+<div class="line"><a name="l00530"></a><span class="lineno">  530</span>&#160;        };</div>
+<div class="line"><a name="l00531"></a><span class="lineno">  531</span>&#160;    <span class="keyword">typename</span> AttributeUpdateTask&lt;U, T&gt;::Actor setter =</div>
+<div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160;        [row, column](std::shared_ptr&lt;U&gt; &amp;dependent,</div>
+<div class="line"><a name="l00533"></a><span class="lineno">  533</span>&#160;                      <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">Attribute&lt;T&gt;::Ptr</a> dependency) {</div>
+<div class="line"><a name="l00534"></a><span class="lineno">  534</span>&#160;          CPS::MatrixVar&lt;U&gt; currentValue = dependency-&gt;get();</div>
+<div class="line"><a name="l00535"></a><span class="lineno">  535</span>&#160;          currentValue(row, column) = *dependent;</div>
+<div class="line"><a name="l00536"></a><span class="lineno">  536</span>&#160;          dependency-&gt;set(currentValue);</div>
+<div class="line"><a name="l00537"></a><span class="lineno">  537</span>&#160;        };</div>
+<div class="line"><a name="l00538"></a><span class="lineno">  538</span>&#160;    <span class="keywordflow">return</span> derive&lt;U&gt;(getter, setter);</div>
+<div class="line"><a name="l00539"></a><span class="lineno">  539</span>&#160;  }</div>
+<div class="line"><a name="l00540"></a><span class="lineno">  540</span>&#160;};</div>
+<div class="line"><a name="l00541"></a><span class="lineno">  541</span>&#160; </div>
+<div class="line"><a name="l00546"></a><span class="lineno">  546</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00547"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_static.html">  547</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_c_p_s_1_1_attribute_static.html">AttributeStatic</a> : <span class="keyword">public</span> <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;T&gt;,</div>
+<div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160;                        <span class="keyword">public</span> <a class="code" href="class_shared_factory.html">SharedFactory</a>&lt;AttributeStatic&lt;T&gt;&gt; {</div>
+<div class="line"><a name="l00549"></a><span class="lineno">  549</span>&#160;  <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="class_shared_factory.html">SharedFactory</a>&lt;<a class="code" href="class_c_p_s_1_1_attribute_static.html">AttributeStatic</a>&lt;T&gt;&gt;;</div>
 <div class="line"><a name="l00550"></a><span class="lineno">  550</span>&#160; </div>
-<div class="line"><a name="l00551"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_static.html#ab8e0a9256d59d807198051ab53c263b1">  551</a></span>&#160;  <span class="keyword">virtual</span> T &amp;<a class="code" href="class_c_p_s_1_1_attribute_static.html#ab8e0a9256d59d807198051ab53c263b1">get</a>()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> *this-&gt;mData; };</div>
-<div class="line"><a name="l00552"></a><span class="lineno">  552</span>&#160; </div>
-<div class="line"><a name="l00553"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_static.html#ab7423b869b379a6f084889f83266896e">  553</a></span>&#160;  <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="class_c_p_s_1_1_attribute_static.html#ab7423b869b379a6f084889f83266896e">isStatic</a>()<span class="keyword"> const override </span>{ <span class="keywordflow">return</span> <span class="keyword">true</span>; }</div>
-<div class="line"><a name="l00554"></a><span class="lineno">  554</span>&#160; </div>
-<div class="line"><a name="l00555"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_static.html#ab02e7247c9d1e8ee476a7a1e051a9100">  555</a></span>&#160;  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_attribute_static.html#ab02e7247c9d1e8ee476a7a1e051a9100">setReference</a>(<span class="keyword">typename</span> <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">Attribute&lt;T&gt;::Ptr</a> reference)<span class="keyword"> override </span>{</div>
-<div class="line"><a name="l00556"></a><span class="lineno">  556</span>&#160;    <span class="keywordflow">throw</span> <a class="code" href="class_c_p_s_1_1_type_exception.html">TypeException</a>();</div>
-<div class="line"><a name="l00557"></a><span class="lineno">  557</span>&#160;  }</div>
-<div class="line"><a name="l00558"></a><span class="lineno">  558</span>&#160; </div>
-<div class="line"><a name="l00559"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_static.html#ad908919c5694bf8cabf9094fc0cdf9dc">  559</a></span>&#160;  <span class="keyword">virtual</span> std::shared_ptr&lt;T&gt; <a class="code" href="class_c_p_s_1_1_attribute_static.html#ad908919c5694bf8cabf9094fc0cdf9dc">asRawPointer</a>()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> this-&gt;mData; }</div>
-<div class="line"><a name="l00560"></a><span class="lineno">  560</span>&#160; </div>
-<div class="line"><a name="l00561"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_static.html#a636c3781af596ecaf9bbf1f4f17df27c">  561</a></span>&#160;  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_attribute_static.html#a636c3781af596ecaf9bbf1f4f17df27c">appendDependencies</a>(AttributeBase::Set *deps)<span class="keyword"> override </span>{</div>
-<div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160;    deps-&gt;insert(this-&gt;shared_from_this());</div>
-<div class="line"><a name="l00563"></a><span class="lineno">  563</span>&#160;  }</div>
-<div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160;};</div>
+<div class="line"><a name="l00551"></a><span class="lineno">  551</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00552"></a><span class="lineno">  552</span>&#160;  <a class="code" href="class_c_p_s_1_1_attribute_static.html">AttributeStatic</a>(T initialValue = T()) : <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;T&gt;</a>(initialValue) {}</div>
+<div class="line"><a name="l00553"></a><span class="lineno">  553</span>&#160; </div>
+<div class="line"><a name="l00554"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_static.html#a3169cd650243408920b16eb28c1f4f00">  554</a></span>&#160;  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_attribute_static.html#a3169cd650243408920b16eb28c1f4f00">set</a>(T value)<span class="keyword"> override </span>{ *this-&gt;mData = value; };</div>
+<div class="line"><a name="l00555"></a><span class="lineno">  555</span>&#160; </div>
+<div class="line"><a name="l00556"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_static.html#ab8e0a9256d59d807198051ab53c263b1">  556</a></span>&#160;  <span class="keyword">virtual</span> T &amp;<a class="code" href="class_c_p_s_1_1_attribute_static.html#ab8e0a9256d59d807198051ab53c263b1">get</a>()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> *this-&gt;mData; };</div>
+<div class="line"><a name="l00557"></a><span class="lineno">  557</span>&#160; </div>
+<div class="line"><a name="l00558"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_static.html#ab7423b869b379a6f084889f83266896e">  558</a></span>&#160;  <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="class_c_p_s_1_1_attribute_static.html#ab7423b869b379a6f084889f83266896e">isStatic</a>()<span class="keyword"> const override </span>{ <span class="keywordflow">return</span> <span class="keyword">true</span>; }</div>
+<div class="line"><a name="l00559"></a><span class="lineno">  559</span>&#160; </div>
+<div class="line"><a name="l00560"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_static.html#ab02e7247c9d1e8ee476a7a1e051a9100">  560</a></span>&#160;  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_attribute_static.html#ab02e7247c9d1e8ee476a7a1e051a9100">setReference</a>(<span class="keyword">typename</span> <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">Attribute&lt;T&gt;::Ptr</a> reference)<span class="keyword"> override </span>{</div>
+<div class="line"><a name="l00561"></a><span class="lineno">  561</span>&#160;    <span class="keywordflow">throw</span> <a class="code" href="class_c_p_s_1_1_type_exception.html">TypeException</a>();</div>
+<div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160;  }</div>
+<div class="line"><a name="l00563"></a><span class="lineno">  563</span>&#160; </div>
+<div class="line"><a name="l00564"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_static.html#ad908919c5694bf8cabf9094fc0cdf9dc">  564</a></span>&#160;  <span class="keyword">virtual</span> std::shared_ptr&lt;T&gt; <a class="code" href="class_c_p_s_1_1_attribute_static.html#ad908919c5694bf8cabf9094fc0cdf9dc">asRawPointer</a>()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> this-&gt;mData; }</div>
 <div class="line"><a name="l00565"></a><span class="lineno">  565</span>&#160; </div>
-<div class="line"><a name="l00569"></a><span class="lineno">  569</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00570"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_dynamic.html">  570</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_c_p_s_1_1_attribute_dynamic.html">AttributeDynamic</a> : <span class="keyword">public</span> <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;T&gt;,</div>
-<div class="line"><a name="l00571"></a><span class="lineno">  571</span>&#160;                         <span class="keyword">public</span> <a class="code" href="class_shared_factory.html">SharedFactory</a>&lt;AttributeDynamic&lt;T&gt;&gt; {</div>
-<div class="line"><a name="l00572"></a><span class="lineno">  572</span>&#160;  <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="class_shared_factory.html">SharedFactory</a>&lt;<a class="code" href="class_c_p_s_1_1_attribute_dynamic.html">AttributeDynamic</a>&lt;T&gt;&gt;;</div>
-<div class="line"><a name="l00573"></a><span class="lineno">  573</span>&#160; </div>
-<div class="line"><a name="l00574"></a><span class="lineno">  574</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00575"></a><span class="lineno">  575</span>&#160;  std::vector&lt;typename AttributeUpdateTaskBase&lt;T&gt;::Ptr&gt; updateTasksOnce;</div>
-<div class="line"><a name="l00576"></a><span class="lineno">  576</span>&#160;  std::vector&lt;typename AttributeUpdateTaskBase&lt;T&gt;::Ptr&gt; updateTasksOnGet;</div>
-<div class="line"><a name="l00577"></a><span class="lineno">  577</span>&#160;  std::vector&lt;typename AttributeUpdateTaskBase&lt;T&gt;::Ptr&gt; updateTasksOnSet;</div>
+<div class="line"><a name="l00566"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_static.html#a636c3781af596ecaf9bbf1f4f17df27c">  566</a></span>&#160;  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_attribute_static.html#a636c3781af596ecaf9bbf1f4f17df27c">appendDependencies</a>(AttributeBase::Set *deps)<span class="keyword"> override </span>{</div>
+<div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160;    deps-&gt;insert(this-&gt;shared_from_this());</div>
+<div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160;  }</div>
+<div class="line"><a name="l00569"></a><span class="lineno">  569</span>&#160;};</div>
+<div class="line"><a name="l00570"></a><span class="lineno">  570</span>&#160; </div>
+<div class="line"><a name="l00574"></a><span class="lineno">  574</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00575"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_dynamic.html">  575</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_c_p_s_1_1_attribute_dynamic.html">AttributeDynamic</a> : <span class="keyword">public</span> <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;T&gt;,</div>
+<div class="line"><a name="l00576"></a><span class="lineno">  576</span>&#160;                         <span class="keyword">public</span> <a class="code" href="class_shared_factory.html">SharedFactory</a>&lt;AttributeDynamic&lt;T&gt;&gt; {</div>
+<div class="line"><a name="l00577"></a><span class="lineno">  577</span>&#160;  <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="class_shared_factory.html">SharedFactory</a>&lt;<a class="code" href="class_c_p_s_1_1_attribute_dynamic.html">AttributeDynamic</a>&lt;T&gt;&gt;;</div>
 <div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160; </div>
-<div class="line"><a name="l00579"></a><span class="lineno">  579</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00580"></a><span class="lineno">  580</span>&#160;  <a class="code" href="class_c_p_s_1_1_attribute_dynamic.html">AttributeDynamic</a>(T initialValue = T()) : <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;T&gt;</a>(initialValue) {}</div>
-<div class="line"><a name="l00581"></a><span class="lineno">  581</span>&#160; </div>
-<div class="line"><a name="l00587"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_dynamic.html#a1c947ae5b79f4387cc909ddb6c69af06">  587</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_attribute_dynamic.html#a1c947ae5b79f4387cc909ddb6c69af06">addTask</a>(UpdateTaskKind kind,</div>
-<div class="line"><a name="l00588"></a><span class="lineno">  588</span>&#160;               <span class="keyword">typename</span> AttributeUpdateTaskBase&lt;T&gt;::Ptr task) {</div>
-<div class="line"><a name="l00589"></a><span class="lineno">  589</span>&#160;    <span class="keywordflow">switch</span> (kind) {</div>
-<div class="line"><a name="l00590"></a><span class="lineno">  590</span>&#160;    <span class="keywordflow">case</span> UpdateTaskKind::UPDATE_ONCE:</div>
-<div class="line"><a name="l00591"></a><span class="lineno">  591</span>&#160;      updateTasksOnce.push_back(task);</div>
-<div class="line"><a name="l00593"></a><span class="lineno">  593</span>&#160;      task-&gt;executeUpdate(this-&gt;mData);</div>
-<div class="line"><a name="l00594"></a><span class="lineno">  594</span>&#160;      <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00595"></a><span class="lineno">  595</span>&#160;    <span class="keywordflow">case</span> UpdateTaskKind::UPDATE_ON_GET:</div>
-<div class="line"><a name="l00596"></a><span class="lineno">  596</span>&#160;      updateTasksOnGet.push_back(task);</div>
-<div class="line"><a name="l00597"></a><span class="lineno">  597</span>&#160;      <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00598"></a><span class="lineno">  598</span>&#160;    <span class="keywordflow">case</span> UpdateTaskKind::UPDATE_ON_SET:</div>
-<div class="line"><a name="l00599"></a><span class="lineno">  599</span>&#160;      updateTasksOnSet.push_back(task);</div>
-<div class="line"><a name="l00600"></a><span class="lineno">  600</span>&#160;      <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00601"></a><span class="lineno">  601</span>&#160;    <span class="keywordflow">case</span> UpdateTaskKind::UPDATE_ON_SIMULATION_STEP:</div>
-<div class="line"><a name="l00602"></a><span class="lineno">  602</span>&#160;      <span class="keywordflow">throw</span> <a class="code" href="class_c_p_s_1_1_invalid_argument_exception.html">InvalidArgumentException</a>();</div>
-<div class="line"><a name="l00603"></a><span class="lineno">  603</span>&#160;    };</div>
-<div class="line"><a name="l00604"></a><span class="lineno">  604</span>&#160;  }</div>
-<div class="line"><a name="l00605"></a><span class="lineno">  605</span>&#160; </div>
-<div class="line"><a name="l00610"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_dynamic.html#a9537f6d374d622424bb1c012f4786543">  610</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_attribute_dynamic.html#a9537f6d374d622424bb1c012f4786543">clearTasks</a>(UpdateTaskKind kind) {</div>
-<div class="line"><a name="l00611"></a><span class="lineno">  611</span>&#160;    <span class="keywordflow">switch</span> (kind) {</div>
-<div class="line"><a name="l00612"></a><span class="lineno">  612</span>&#160;    <span class="keywordflow">case</span> UpdateTaskKind::UPDATE_ONCE:</div>
-<div class="line"><a name="l00613"></a><span class="lineno">  613</span>&#160;      updateTasksOnce.clear();</div>
-<div class="line"><a name="l00614"></a><span class="lineno">  614</span>&#160;      <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00615"></a><span class="lineno">  615</span>&#160;    <span class="keywordflow">case</span> UpdateTaskKind::UPDATE_ON_GET:</div>
-<div class="line"><a name="l00616"></a><span class="lineno">  616</span>&#160;      updateTasksOnGet.clear();</div>
-<div class="line"><a name="l00617"></a><span class="lineno">  617</span>&#160;      <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00618"></a><span class="lineno">  618</span>&#160;    <span class="keywordflow">case</span> UpdateTaskKind::UPDATE_ON_SET:</div>
-<div class="line"><a name="l00619"></a><span class="lineno">  619</span>&#160;      updateTasksOnSet.clear();</div>
-<div class="line"><a name="l00620"></a><span class="lineno">  620</span>&#160;      <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00621"></a><span class="lineno">  621</span>&#160;    <span class="keywordflow">case</span> UpdateTaskKind::UPDATE_ON_SIMULATION_STEP:</div>
-<div class="line"><a name="l00622"></a><span class="lineno">  622</span>&#160;      <span class="keywordflow">throw</span> <a class="code" href="class_c_p_s_1_1_invalid_argument_exception.html">InvalidArgumentException</a>();</div>
-<div class="line"><a name="l00623"></a><span class="lineno">  623</span>&#160;    };</div>
-<div class="line"><a name="l00624"></a><span class="lineno">  624</span>&#160;  }</div>
-<div class="line"><a name="l00625"></a><span class="lineno">  625</span>&#160; </div>
-<div class="line"><a name="l00629"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_dynamic.html#a5205aa615398dcd5468fa3e692878e3e">  629</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_attribute_dynamic.html#a5205aa615398dcd5468fa3e692878e3e">clearAllTasks</a>() {</div>
-<div class="line"><a name="l00630"></a><span class="lineno">  630</span>&#160;    updateTasksOnce.clear();</div>
-<div class="line"><a name="l00631"></a><span class="lineno">  631</span>&#160;    updateTasksOnGet.clear();</div>
-<div class="line"><a name="l00632"></a><span class="lineno">  632</span>&#160;    updateTasksOnSet.clear();</div>
-<div class="line"><a name="l00633"></a><span class="lineno">  633</span>&#160;  }</div>
-<div class="line"><a name="l00634"></a><span class="lineno">  634</span>&#160; </div>
-<div class="line"><a name="l00635"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_dynamic.html#a629b5054cf3a255ba8c866fef677c103">  635</a></span>&#160;  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_attribute_dynamic.html#a629b5054cf3a255ba8c866fef677c103">setReference</a>(<span class="keyword">typename</span> <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">Attribute&lt;T&gt;::Ptr</a> reference)<span class="keyword"> override </span>{</div>
-<div class="line"><a name="l00636"></a><span class="lineno">  636</span>&#160;    <span class="keyword">typename</span> AttributeUpdateTask&lt;T, T&gt;::Actor getter =</div>
-<div class="line"><a name="l00637"></a><span class="lineno">  637</span>&#160;        [](std::shared_ptr&lt;T&gt; &amp;dependent,</div>
-<div class="line"><a name="l00638"></a><span class="lineno">  638</span>&#160;           <span class="keyword">typename</span> <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">Attribute&lt;T&gt;::Ptr</a> dependency) {</div>
-<div class="line"><a name="l00639"></a><span class="lineno">  639</span>&#160;          dependent = dependency-&gt;asRawPointer();</div>
-<div class="line"><a name="l00640"></a><span class="lineno">  640</span>&#160;        };</div>
-<div class="line"><a name="l00641"></a><span class="lineno">  641</span>&#160;    this-&gt;<a class="code" href="class_c_p_s_1_1_attribute_dynamic.html#a5205aa615398dcd5468fa3e692878e3e">clearAllTasks</a>();</div>
-<div class="line"><a name="l00642"></a><span class="lineno">  642</span>&#160;    <span class="keywordflow">if</span> (reference-&gt;isStatic()) {</div>
-<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;      this-&gt;<a class="code" href="class_c_p_s_1_1_attribute_dynamic.html#a1c947ae5b79f4387cc909ddb6c69af06">addTask</a>(UpdateTaskKind::UPDATE_ONCE,</div>
-<div class="line"><a name="l00644"></a><span class="lineno">  644</span>&#160;                    <a class="code" href="class_c_p_s_1_1_attribute_update_task.html">AttributeUpdateTask&lt;T, T&gt;::make</a>(UpdateTaskKind::UPDATE_ONCE,</div>
-<div class="line"><a name="l00645"></a><span class="lineno">  645</span>&#160;                                                    getter, reference));</div>
-<div class="line"><a name="l00646"></a><span class="lineno">  646</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00647"></a><span class="lineno">  647</span>&#160;      this-&gt;<a class="code" href="class_c_p_s_1_1_attribute_dynamic.html#a1c947ae5b79f4387cc909ddb6c69af06">addTask</a>(UpdateTaskKind::UPDATE_ON_GET,</div>
-<div class="line"><a name="l00648"></a><span class="lineno">  648</span>&#160;                    <a class="code" href="class_c_p_s_1_1_attribute_update_task.html">AttributeUpdateTask&lt;T, T&gt;::make</a>(</div>
-<div class="line"><a name="l00649"></a><span class="lineno">  649</span>&#160;                        UpdateTaskKind::UPDATE_ON_GET, getter, reference));</div>
-<div class="line"><a name="l00650"></a><span class="lineno">  650</span>&#160;    }</div>
-<div class="line"><a name="l00651"></a><span class="lineno">  651</span>&#160;  }</div>
-<div class="line"><a name="l00652"></a><span class="lineno">  652</span>&#160; </div>
-<div class="line"><a name="l00653"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_dynamic.html#a37c4f4b7ae8bbb6fd0cdd81d3d55fa75">  653</a></span>&#160;  <span class="keyword">virtual</span> std::shared_ptr&lt;T&gt; <a class="code" href="class_c_p_s_1_1_attribute_dynamic.html#a37c4f4b7ae8bbb6fd0cdd81d3d55fa75">asRawPointer</a>()<span class="keyword"> override </span>{</div>
-<div class="line"><a name="l00654"></a><span class="lineno">  654</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">typename</span> AttributeUpdateTaskBase&lt;T&gt;::Ptr task : updateTasksOnGet) {</div>
-<div class="line"><a name="l00655"></a><span class="lineno">  655</span>&#160;      task-&gt;executeUpdate(this-&gt;mData);</div>
-<div class="line"><a name="l00656"></a><span class="lineno">  656</span>&#160;    }</div>
-<div class="line"><a name="l00657"></a><span class="lineno">  657</span>&#160;    <span class="keywordflow">return</span> this-&gt;mData;</div>
-<div class="line"><a name="l00658"></a><span class="lineno">  658</span>&#160;  }</div>
-<div class="line"><a name="l00659"></a><span class="lineno">  659</span>&#160; </div>
-<div class="line"><a name="l00660"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_dynamic.html#a9b25a033a7578cfaf45573861c47d8dc">  660</a></span>&#160;  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_attribute_dynamic.html#a9b25a033a7578cfaf45573861c47d8dc">set</a>(T value)<span class="keyword"> override </span>{</div>
-<div class="line"><a name="l00661"></a><span class="lineno">  661</span>&#160;    *this-&gt;mData = value;</div>
-<div class="line"><a name="l00662"></a><span class="lineno">  662</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">typename</span> AttributeUpdateTaskBase&lt;T&gt;::Ptr task : updateTasksOnSet) {</div>
-<div class="line"><a name="l00663"></a><span class="lineno">  663</span>&#160;      task-&gt;executeUpdate(this-&gt;mData);</div>
-<div class="line"><a name="l00664"></a><span class="lineno">  664</span>&#160;    }</div>
-<div class="line"><a name="l00665"></a><span class="lineno">  665</span>&#160;  };</div>
-<div class="line"><a name="l00666"></a><span class="lineno">  666</span>&#160; </div>
-<div class="line"><a name="l00667"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_dynamic.html#a512fc4f25526b41f988834498419e30a">  667</a></span>&#160;  <span class="keyword">virtual</span> T &amp;<a class="code" href="class_c_p_s_1_1_attribute_dynamic.html#a512fc4f25526b41f988834498419e30a">get</a>()<span class="keyword"> override </span>{</div>
-<div class="line"><a name="l00668"></a><span class="lineno">  668</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">typename</span> AttributeUpdateTaskBase&lt;T&gt;::Ptr task : updateTasksOnGet) {</div>
-<div class="line"><a name="l00669"></a><span class="lineno">  669</span>&#160;      task-&gt;executeUpdate(this-&gt;mData);</div>
-<div class="line"><a name="l00670"></a><span class="lineno">  670</span>&#160;    }</div>
-<div class="line"><a name="l00671"></a><span class="lineno">  671</span>&#160;    <span class="keywordflow">return</span> *this-&gt;mData;</div>
-<div class="line"><a name="l00672"></a><span class="lineno">  672</span>&#160;  };</div>
-<div class="line"><a name="l00673"></a><span class="lineno">  673</span>&#160; </div>
-<div class="line"><a name="l00674"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_dynamic.html#ad48bbe0d95a615ce21ac1fca9cfb0df1">  674</a></span>&#160;  <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="class_c_p_s_1_1_attribute_dynamic.html#ad48bbe0d95a615ce21ac1fca9cfb0df1">isStatic</a>()<span class="keyword"> const override </span>{ <span class="keywordflow">return</span> <span class="keyword">false</span>; }</div>
-<div class="line"><a name="l00675"></a><span class="lineno">  675</span>&#160; </div>
-<div class="line"><a name="l00681"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_dynamic.html#a6ae57409a29917f653ff5772fe1fa5de">  681</a></span>&#160;  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_attribute_dynamic.html#a6ae57409a29917f653ff5772fe1fa5de">appendDependencies</a>(AttributeBase::Set *deps)<span class="keyword"> override </span>{</div>
-<div class="line"><a name="l00682"></a><span class="lineno">  682</span>&#160;    deps-&gt;insert(this-&gt;shared_from_this());</div>
-<div class="line"><a name="l00683"></a><span class="lineno">  683</span>&#160; </div>
-<div class="line"><a name="l00684"></a><span class="lineno">  684</span>&#160;    AttributeBase::Set newDeps = AttributeBase::Set();</div>
-<div class="line"><a name="l00685"></a><span class="lineno">  685</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">typename</span> AttributeUpdateTaskBase&lt;T&gt;::Ptr task : updateTasksOnce) {</div>
-<div class="line"><a name="l00686"></a><span class="lineno">  686</span>&#160;      AttributeBase::List taskDeps = task-&gt;getDependencies();</div>
-<div class="line"><a name="l00687"></a><span class="lineno">  687</span>&#160;      newDeps.insert(taskDeps.begin(), taskDeps.end());</div>
-<div class="line"><a name="l00688"></a><span class="lineno">  688</span>&#160;    }</div>
-<div class="line"><a name="l00689"></a><span class="lineno">  689</span>&#160; </div>
-<div class="line"><a name="l00690"></a><span class="lineno">  690</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">typename</span> AttributeUpdateTaskBase&lt;T&gt;::Ptr task : updateTasksOnGet) {</div>
+<div class="line"><a name="l00579"></a><span class="lineno">  579</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00580"></a><span class="lineno">  580</span>&#160;  std::vector&lt;typename AttributeUpdateTaskBase&lt;T&gt;::Ptr&gt; updateTasksOnce;</div>
+<div class="line"><a name="l00581"></a><span class="lineno">  581</span>&#160;  std::vector&lt;typename AttributeUpdateTaskBase&lt;T&gt;::Ptr&gt; updateTasksOnGet;</div>
+<div class="line"><a name="l00582"></a><span class="lineno">  582</span>&#160;  std::vector&lt;typename AttributeUpdateTaskBase&lt;T&gt;::Ptr&gt; updateTasksOnSet;</div>
+<div class="line"><a name="l00583"></a><span class="lineno">  583</span>&#160; </div>
+<div class="line"><a name="l00584"></a><span class="lineno">  584</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00585"></a><span class="lineno">  585</span>&#160;  <a class="code" href="class_c_p_s_1_1_attribute_dynamic.html">AttributeDynamic</a>(T initialValue = T()) : <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;T&gt;</a>(initialValue) {}</div>
+<div class="line"><a name="l00586"></a><span class="lineno">  586</span>&#160; </div>
+<div class="line"><a name="l00592"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_dynamic.html#a1c947ae5b79f4387cc909ddb6c69af06">  592</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_attribute_dynamic.html#a1c947ae5b79f4387cc909ddb6c69af06">addTask</a>(UpdateTaskKind kind,</div>
+<div class="line"><a name="l00593"></a><span class="lineno">  593</span>&#160;               <span class="keyword">typename</span> AttributeUpdateTaskBase&lt;T&gt;::Ptr task) {</div>
+<div class="line"><a name="l00594"></a><span class="lineno">  594</span>&#160;    <span class="keywordflow">switch</span> (kind) {</div>
+<div class="line"><a name="l00595"></a><span class="lineno">  595</span>&#160;    <span class="keywordflow">case</span> UpdateTaskKind::UPDATE_ONCE:</div>
+<div class="line"><a name="l00596"></a><span class="lineno">  596</span>&#160;      updateTasksOnce.push_back(task);</div>
+<div class="line"><a name="l00597"></a><span class="lineno">  597</span>&#160;      <span class="comment">// THISISBAD: This is probably not the right time to run this kind of task</span></div>
+<div class="line"><a name="l00598"></a><span class="lineno">  598</span>&#160;      task-&gt;executeUpdate(this-&gt;mData);</div>
+<div class="line"><a name="l00599"></a><span class="lineno">  599</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00600"></a><span class="lineno">  600</span>&#160;    <span class="keywordflow">case</span> UpdateTaskKind::UPDATE_ON_GET:</div>
+<div class="line"><a name="l00601"></a><span class="lineno">  601</span>&#160;      updateTasksOnGet.push_back(task);</div>
+<div class="line"><a name="l00602"></a><span class="lineno">  602</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00603"></a><span class="lineno">  603</span>&#160;    <span class="keywordflow">case</span> UpdateTaskKind::UPDATE_ON_SET:</div>
+<div class="line"><a name="l00604"></a><span class="lineno">  604</span>&#160;      updateTasksOnSet.push_back(task);</div>
+<div class="line"><a name="l00605"></a><span class="lineno">  605</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160;    <span class="keywordflow">case</span> UpdateTaskKind::UPDATE_ON_SIMULATION_STEP:</div>
+<div class="line"><a name="l00607"></a><span class="lineno">  607</span>&#160;      <span class="keywordflow">throw</span> <a class="code" href="class_c_p_s_1_1_invalid_argument_exception.html">InvalidArgumentException</a>();</div>
+<div class="line"><a name="l00608"></a><span class="lineno">  608</span>&#160;    };</div>
+<div class="line"><a name="l00609"></a><span class="lineno">  609</span>&#160;  }</div>
+<div class="line"><a name="l00610"></a><span class="lineno">  610</span>&#160; </div>
+<div class="line"><a name="l00615"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_dynamic.html#a9537f6d374d622424bb1c012f4786543">  615</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_attribute_dynamic.html#a9537f6d374d622424bb1c012f4786543">clearTasks</a>(UpdateTaskKind kind) {</div>
+<div class="line"><a name="l00616"></a><span class="lineno">  616</span>&#160;    <span class="keywordflow">switch</span> (kind) {</div>
+<div class="line"><a name="l00617"></a><span class="lineno">  617</span>&#160;    <span class="keywordflow">case</span> UpdateTaskKind::UPDATE_ONCE:</div>
+<div class="line"><a name="l00618"></a><span class="lineno">  618</span>&#160;      updateTasksOnce.clear();</div>
+<div class="line"><a name="l00619"></a><span class="lineno">  619</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00620"></a><span class="lineno">  620</span>&#160;    <span class="keywordflow">case</span> UpdateTaskKind::UPDATE_ON_GET:</div>
+<div class="line"><a name="l00621"></a><span class="lineno">  621</span>&#160;      updateTasksOnGet.clear();</div>
+<div class="line"><a name="l00622"></a><span class="lineno">  622</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00623"></a><span class="lineno">  623</span>&#160;    <span class="keywordflow">case</span> UpdateTaskKind::UPDATE_ON_SET:</div>
+<div class="line"><a name="l00624"></a><span class="lineno">  624</span>&#160;      updateTasksOnSet.clear();</div>
+<div class="line"><a name="l00625"></a><span class="lineno">  625</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00626"></a><span class="lineno">  626</span>&#160;    <span class="keywordflow">case</span> UpdateTaskKind::UPDATE_ON_SIMULATION_STEP:</div>
+<div class="line"><a name="l00627"></a><span class="lineno">  627</span>&#160;      <span class="keywordflow">throw</span> <a class="code" href="class_c_p_s_1_1_invalid_argument_exception.html">InvalidArgumentException</a>();</div>
+<div class="line"><a name="l00628"></a><span class="lineno">  628</span>&#160;    };</div>
+<div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160;  }</div>
+<div class="line"><a name="l00630"></a><span class="lineno">  630</span>&#160; </div>
+<div class="line"><a name="l00634"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_dynamic.html#a5205aa615398dcd5468fa3e692878e3e">  634</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_attribute_dynamic.html#a5205aa615398dcd5468fa3e692878e3e">clearAllTasks</a>() {</div>
+<div class="line"><a name="l00635"></a><span class="lineno">  635</span>&#160;    updateTasksOnce.clear();</div>
+<div class="line"><a name="l00636"></a><span class="lineno">  636</span>&#160;    updateTasksOnGet.clear();</div>
+<div class="line"><a name="l00637"></a><span class="lineno">  637</span>&#160;    updateTasksOnSet.clear();</div>
+<div class="line"><a name="l00638"></a><span class="lineno">  638</span>&#160;  }</div>
+<div class="line"><a name="l00639"></a><span class="lineno">  639</span>&#160; </div>
+<div class="line"><a name="l00640"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_dynamic.html#a629b5054cf3a255ba8c866fef677c103">  640</a></span>&#160;  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_attribute_dynamic.html#a629b5054cf3a255ba8c866fef677c103">setReference</a>(<span class="keyword">typename</span> <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">Attribute&lt;T&gt;::Ptr</a> reference)<span class="keyword"> override </span>{</div>
+<div class="line"><a name="l00641"></a><span class="lineno">  641</span>&#160;    <span class="keyword">typename</span> AttributeUpdateTask&lt;T, T&gt;::Actor getter =</div>
+<div class="line"><a name="l00642"></a><span class="lineno">  642</span>&#160;        [](std::shared_ptr&lt;T&gt; &amp;dependent,</div>
+<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;           <span class="keyword">typename</span> <a class="code" href="class_c_p_s_1_1_attribute_pointer.html">Attribute&lt;T&gt;::Ptr</a> dependency) {</div>
+<div class="line"><a name="l00644"></a><span class="lineno">  644</span>&#160;          dependent = dependency-&gt;asRawPointer();</div>
+<div class="line"><a name="l00645"></a><span class="lineno">  645</span>&#160;        };</div>
+<div class="line"><a name="l00646"></a><span class="lineno">  646</span>&#160;    this-&gt;<a class="code" href="class_c_p_s_1_1_attribute_dynamic.html#a5205aa615398dcd5468fa3e692878e3e">clearAllTasks</a>();</div>
+<div class="line"><a name="l00647"></a><span class="lineno">  647</span>&#160;    <span class="keywordflow">if</span> (reference-&gt;isStatic()) {</div>
+<div class="line"><a name="l00648"></a><span class="lineno">  648</span>&#160;      this-&gt;<a class="code" href="class_c_p_s_1_1_attribute_dynamic.html#a1c947ae5b79f4387cc909ddb6c69af06">addTask</a>(UpdateTaskKind::UPDATE_ONCE,</div>
+<div class="line"><a name="l00649"></a><span class="lineno">  649</span>&#160;                    <a class="code" href="class_c_p_s_1_1_attribute_update_task.html">AttributeUpdateTask&lt;T, T&gt;::make</a>(UpdateTaskKind::UPDATE_ONCE,</div>
+<div class="line"><a name="l00650"></a><span class="lineno">  650</span>&#160;                                                    getter, reference));</div>
+<div class="line"><a name="l00651"></a><span class="lineno">  651</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00652"></a><span class="lineno">  652</span>&#160;      this-&gt;<a class="code" href="class_c_p_s_1_1_attribute_dynamic.html#a1c947ae5b79f4387cc909ddb6c69af06">addTask</a>(UpdateTaskKind::UPDATE_ON_GET,</div>
+<div class="line"><a name="l00653"></a><span class="lineno">  653</span>&#160;                    <a class="code" href="class_c_p_s_1_1_attribute_update_task.html">AttributeUpdateTask&lt;T, T&gt;::make</a>(</div>
+<div class="line"><a name="l00654"></a><span class="lineno">  654</span>&#160;                        UpdateTaskKind::UPDATE_ON_GET, getter, reference));</div>
+<div class="line"><a name="l00655"></a><span class="lineno">  655</span>&#160;    }</div>
+<div class="line"><a name="l00656"></a><span class="lineno">  656</span>&#160;  }</div>
+<div class="line"><a name="l00657"></a><span class="lineno">  657</span>&#160; </div>
+<div class="line"><a name="l00658"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_dynamic.html#a37c4f4b7ae8bbb6fd0cdd81d3d55fa75">  658</a></span>&#160;  <span class="keyword">virtual</span> std::shared_ptr&lt;T&gt; <a class="code" href="class_c_p_s_1_1_attribute_dynamic.html#a37c4f4b7ae8bbb6fd0cdd81d3d55fa75">asRawPointer</a>()<span class="keyword"> override </span>{</div>
+<div class="line"><a name="l00659"></a><span class="lineno">  659</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">typename</span> AttributeUpdateTaskBase&lt;T&gt;::Ptr task : updateTasksOnGet) {</div>
+<div class="line"><a name="l00660"></a><span class="lineno">  660</span>&#160;      task-&gt;executeUpdate(this-&gt;mData);</div>
+<div class="line"><a name="l00661"></a><span class="lineno">  661</span>&#160;    }</div>
+<div class="line"><a name="l00662"></a><span class="lineno">  662</span>&#160;    <span class="keywordflow">return</span> this-&gt;mData;</div>
+<div class="line"><a name="l00663"></a><span class="lineno">  663</span>&#160;  }</div>
+<div class="line"><a name="l00664"></a><span class="lineno">  664</span>&#160; </div>
+<div class="line"><a name="l00665"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_dynamic.html#a9b25a033a7578cfaf45573861c47d8dc">  665</a></span>&#160;  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_attribute_dynamic.html#a9b25a033a7578cfaf45573861c47d8dc">set</a>(T value)<span class="keyword"> override </span>{</div>
+<div class="line"><a name="l00666"></a><span class="lineno">  666</span>&#160;    *this-&gt;mData = value;</div>
+<div class="line"><a name="l00667"></a><span class="lineno">  667</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">typename</span> AttributeUpdateTaskBase&lt;T&gt;::Ptr task : updateTasksOnSet) {</div>
+<div class="line"><a name="l00668"></a><span class="lineno">  668</span>&#160;      task-&gt;executeUpdate(this-&gt;mData);</div>
+<div class="line"><a name="l00669"></a><span class="lineno">  669</span>&#160;    }</div>
+<div class="line"><a name="l00670"></a><span class="lineno">  670</span>&#160;  };</div>
+<div class="line"><a name="l00671"></a><span class="lineno">  671</span>&#160; </div>
+<div class="line"><a name="l00672"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_dynamic.html#a512fc4f25526b41f988834498419e30a">  672</a></span>&#160;  <span class="keyword">virtual</span> T &amp;<a class="code" href="class_c_p_s_1_1_attribute_dynamic.html#a512fc4f25526b41f988834498419e30a">get</a>()<span class="keyword"> override </span>{</div>
+<div class="line"><a name="l00673"></a><span class="lineno">  673</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">typename</span> AttributeUpdateTaskBase&lt;T&gt;::Ptr task : updateTasksOnGet) {</div>
+<div class="line"><a name="l00674"></a><span class="lineno">  674</span>&#160;      task-&gt;executeUpdate(this-&gt;mData);</div>
+<div class="line"><a name="l00675"></a><span class="lineno">  675</span>&#160;    }</div>
+<div class="line"><a name="l00676"></a><span class="lineno">  676</span>&#160;    <span class="keywordflow">return</span> *this-&gt;mData;</div>
+<div class="line"><a name="l00677"></a><span class="lineno">  677</span>&#160;  };</div>
+<div class="line"><a name="l00678"></a><span class="lineno">  678</span>&#160; </div>
+<div class="line"><a name="l00679"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_dynamic.html#ad48bbe0d95a615ce21ac1fca9cfb0df1">  679</a></span>&#160;  <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="class_c_p_s_1_1_attribute_dynamic.html#ad48bbe0d95a615ce21ac1fca9cfb0df1">isStatic</a>()<span class="keyword"> const override </span>{ <span class="keywordflow">return</span> <span class="keyword">false</span>; }</div>
+<div class="line"><a name="l00680"></a><span class="lineno">  680</span>&#160; </div>
+<div class="line"><a name="l00686"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute_dynamic.html#a6ae57409a29917f653ff5772fe1fa5de">  686</a></span>&#160;  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_attribute_dynamic.html#a6ae57409a29917f653ff5772fe1fa5de">appendDependencies</a>(AttributeBase::Set *deps)<span class="keyword"> override </span>{</div>
+<div class="line"><a name="l00687"></a><span class="lineno">  687</span>&#160;    deps-&gt;insert(this-&gt;shared_from_this());</div>
+<div class="line"><a name="l00688"></a><span class="lineno">  688</span>&#160; </div>
+<div class="line"><a name="l00689"></a><span class="lineno">  689</span>&#160;    AttributeBase::Set newDeps = AttributeBase::Set();</div>
+<div class="line"><a name="l00690"></a><span class="lineno">  690</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">typename</span> AttributeUpdateTaskBase&lt;T&gt;::Ptr task : updateTasksOnce) {</div>
 <div class="line"><a name="l00691"></a><span class="lineno">  691</span>&#160;      AttributeBase::List taskDeps = task-&gt;getDependencies();</div>
 <div class="line"><a name="l00692"></a><span class="lineno">  692</span>&#160;      newDeps.insert(taskDeps.begin(), taskDeps.end());</div>
 <div class="line"><a name="l00693"></a><span class="lineno">  693</span>&#160;    }</div>
 <div class="line"><a name="l00694"></a><span class="lineno">  694</span>&#160; </div>
-<div class="line"><a name="l00695"></a><span class="lineno">  695</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> dependency : newDeps) {</div>
-<div class="line"><a name="l00696"></a><span class="lineno">  696</span>&#160;      dependency-&gt;appendDependencies(deps);</div>
-<div class="line"><a name="l00697"></a><span class="lineno">  697</span>&#160;    }</div>
-<div class="line"><a name="l00698"></a><span class="lineno">  698</span>&#160;  }</div>
-<div class="line"><a name="l00699"></a><span class="lineno">  699</span>&#160;};</div>
-<div class="line"><a name="l00700"></a><span class="lineno">  700</span>&#160; </div>
-<div class="line"><a name="l00701"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a6c1d45fe21dc8cabee918586149820bd">  701</a></span>&#160;<span class="keyword">template</span> &lt;&gt; String <a class="code" href="class_c_p_s_1_1_attribute.html#a839fdbf14db973e9388bef208d39c833">Attribute&lt;Real&gt;::toString</a>();</div>
-<div class="line"><a name="l00702"></a><span class="lineno">  702</span>&#160; </div>
-<div class="line"><a name="l00703"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a771a34f4aa3995ac0e3f2ffbb29850a8">  703</a></span>&#160;<span class="keyword">template</span> &lt;&gt; String <a class="code" href="class_c_p_s_1_1_attribute.html#a839fdbf14db973e9388bef208d39c833">Attribute&lt;Complex&gt;::toString</a>();</div>
-<div class="line"><a name="l00704"></a><span class="lineno">  704</span>&#160; </div>
-<div class="line"><a name="l00705"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#aec20e1601092fb2480ae5c8b805f72d6">  705</a></span>&#160;<span class="keyword">template</span> &lt;&gt; String <a class="code" href="class_c_p_s_1_1_attribute.html#a839fdbf14db973e9388bef208d39c833">Attribute&lt;String&gt;::toString</a>();</div>
-<div class="line"><a name="l00706"></a><span class="lineno">  706</span>&#160; </div>
-<div class="line"><a name="l00707"></a><span class="lineno">  707</span>&#160;} <span class="comment">// namespace CPS</span></div>
-<div class="line"><a name="l00708"></a><span class="lineno">  708</span>&#160; </div>
-<div class="line"><a name="l00709"></a><span class="lineno">  709</span>&#160;<span class="keyword">namespace </span>std {</div>
-<div class="line"><a name="l00713"></a><span class="lineno"><a class="line" href="structstd_1_1hash_3_01_c_p_s_1_1_attribute_pointer_3_01_t_01_4_01_4.html">  713</a></span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; <span class="keyword">struct </span>hash&lt;CPS::AttributePointer&lt;T&gt;&gt; {</div>
-<div class="line"><a name="l00714"></a><span class="lineno">  714</span>&#160;  <span class="keywordtype">size_t</span> operator()(<a class="code" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributePointer&lt;T&gt;</a> <span class="keyword">const</span> &amp;x)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00715"></a><span class="lineno">  715</span>&#160;    <span class="keywordflow">return</span> std::hash&lt;std::shared_ptr&lt;T&gt;&gt;()(x.getPtr());</div>
-<div class="line"><a name="l00716"></a><span class="lineno">  716</span>&#160;  }</div>
-<div class="line"><a name="l00717"></a><span class="lineno">  717</span>&#160;};</div>
-<div class="line"><a name="l00718"></a><span class="lineno">  718</span>&#160;} <span class="comment">// namespace std</span></div>
+<div class="line"><a name="l00695"></a><span class="lineno">  695</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">typename</span> AttributeUpdateTaskBase&lt;T&gt;::Ptr task : updateTasksOnGet) {</div>
+<div class="line"><a name="l00696"></a><span class="lineno">  696</span>&#160;      AttributeBase::List taskDeps = task-&gt;getDependencies();</div>
+<div class="line"><a name="l00697"></a><span class="lineno">  697</span>&#160;      newDeps.insert(taskDeps.begin(), taskDeps.end());</div>
+<div class="line"><a name="l00698"></a><span class="lineno">  698</span>&#160;    }</div>
+<div class="line"><a name="l00699"></a><span class="lineno">  699</span>&#160; </div>
+<div class="line"><a name="l00700"></a><span class="lineno">  700</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> dependency : newDeps) {</div>
+<div class="line"><a name="l00701"></a><span class="lineno">  701</span>&#160;      dependency-&gt;appendDependencies(deps);</div>
+<div class="line"><a name="l00702"></a><span class="lineno">  702</span>&#160;    }</div>
+<div class="line"><a name="l00703"></a><span class="lineno">  703</span>&#160;  }</div>
+<div class="line"><a name="l00704"></a><span class="lineno">  704</span>&#160;};</div>
+<div class="line"><a name="l00705"></a><span class="lineno">  705</span>&#160; </div>
+<div class="line"><a name="l00706"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a6c1d45fe21dc8cabee918586149820bd">  706</a></span>&#160;<span class="keyword">template</span> &lt;&gt; String <a class="code" href="class_c_p_s_1_1_attribute.html#a839fdbf14db973e9388bef208d39c833">Attribute&lt;Real&gt;::toString</a>();</div>
+<div class="line"><a name="l00707"></a><span class="lineno">  707</span>&#160; </div>
+<div class="line"><a name="l00708"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#a771a34f4aa3995ac0e3f2ffbb29850a8">  708</a></span>&#160;<span class="keyword">template</span> &lt;&gt; String <a class="code" href="class_c_p_s_1_1_attribute.html#a839fdbf14db973e9388bef208d39c833">Attribute&lt;Complex&gt;::toString</a>();</div>
+<div class="line"><a name="l00709"></a><span class="lineno">  709</span>&#160; </div>
+<div class="line"><a name="l00710"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_attribute.html#aec20e1601092fb2480ae5c8b805f72d6">  710</a></span>&#160;<span class="keyword">template</span> &lt;&gt; String <a class="code" href="class_c_p_s_1_1_attribute.html#a839fdbf14db973e9388bef208d39c833">Attribute&lt;String&gt;::toString</a>();</div>
+<div class="line"><a name="l00711"></a><span class="lineno">  711</span>&#160; </div>
+<div class="line"><a name="l00712"></a><span class="lineno">  712</span>&#160;} <span class="comment">// namespace CPS</span></div>
+<div class="line"><a name="l00713"></a><span class="lineno">  713</span>&#160; </div>
+<div class="line"><a name="l00714"></a><span class="lineno">  714</span>&#160;<span class="keyword">namespace </span>std {</div>
+<div class="line"><a name="l00718"></a><span class="lineno"><a class="line" href="structstd_1_1hash_3_01_c_p_s_1_1_attribute_pointer_3_01_t_01_4_01_4.html">  718</a></span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; <span class="keyword">struct </span>hash&lt;CPS::AttributePointer&lt;T&gt;&gt; {</div>
+<div class="line"><a name="l00719"></a><span class="lineno">  719</span>&#160;  <span class="keywordtype">size_t</span> operator()(<a class="code" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributePointer&lt;T&gt;</a> <span class="keyword">const</span> &amp;x)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00720"></a><span class="lineno">  720</span>&#160;    <span class="keywordflow">return</span> std::hash&lt;std::shared_ptr&lt;T&gt;&gt;()(x.getPtr());</div>
+<div class="line"><a name="l00721"></a><span class="lineno">  721</span>&#160;  }</div>
+<div class="line"><a name="l00722"></a><span class="lineno">  722</span>&#160;};</div>
+<div class="line"><a name="l00723"></a><span class="lineno">  723</span>&#160;} <span class="comment">// namespace std</span></div>
 <div class="ttc" id="aclass_c_p_s_1_1_attribute_base_html"><div class="ttname"><a href="class_c_p_s_1_1_attribute_base.html">CPS::AttributeBase</a></div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00144">Attribute.h:144</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_attribute_base_html_a3f9c6108086afcc87b26520c6fffa5c4"><div class="ttname"><a href="class_c_p_s_1_1_attribute_base.html#a3f9c6108086afcc87b26520c6fffa5c4">CPS::AttributeBase::isStatic</a></div><div class="ttdeci">virtual bool isStatic() const =0</div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_attribute_base_html_a6d364e036ee067918a4a440d1da7dced"><div class="ttname"><a href="class_c_p_s_1_1_attribute_base.html#a6d364e036ee067918a4a440d1da7dced">CPS::AttributeBase::getType</a></div><div class="ttdeci">virtual const std::type_info &amp; getType()=0</div><div class="ttdoc">Get the type of this attribute.</div></div>
@@ -623,41 +624,41 @@ $(function() {
 <div class="ttc" id="aclass_c_p_s_1_1_attribute_base_html_abda122ccbefeb889b8d28b11354859e4"><div class="ttname"><a href="class_c_p_s_1_1_attribute_base.html#abda122ccbefeb889b8d28b11354859e4">CPS::AttributeBase::getDependencies</a></div><div class="ttdeci">virtual AttributeBase::Set getDependencies() final</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00193">Attribute.h:193</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_attribute_base_html_ad239e5eb700b2f6a13f0cf0a417e3d23"><div class="ttname"><a href="class_c_p_s_1_1_attribute_base.html#ad239e5eb700b2f6a13f0cf0a417e3d23">CPS::AttributeBase::appendDependencies</a></div><div class="ttdeci">virtual void appendDependencies(AttributeBase::Set *deps)=0</div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_attribute_base_html_ad81dc7b53af27946a0f44ae196b9039e"><div class="ttname"><a href="class_c_p_s_1_1_attribute_base.html#ad81dc7b53af27946a0f44ae196b9039e">CPS::AttributeBase::cloneValueOntoNewAttribute</a></div><div class="ttdeci">virtual AttributeBase::Ptr cloneValueOntoNewAttribute()=0</div><div class="ttdoc">Generates a new attribute of the same type and copies the current value in the heap....</div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_dynamic_html"><div class="ttname"><a href="class_c_p_s_1_1_attribute_dynamic.html">CPS::AttributeDynamic</a></div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00570">Attribute.h:571</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_dynamic_html_a1c947ae5b79f4387cc909ddb6c69af06"><div class="ttname"><a href="class_c_p_s_1_1_attribute_dynamic.html#a1c947ae5b79f4387cc909ddb6c69af06">CPS::AttributeDynamic::addTask</a></div><div class="ttdeci">void addTask(UpdateTaskKind kind, typename AttributeUpdateTaskBase&lt; T &gt;::Ptr task)</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00587">Attribute.h:587</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_dynamic_html_a37c4f4b7ae8bbb6fd0cdd81d3d55fa75"><div class="ttname"><a href="class_c_p_s_1_1_attribute_dynamic.html#a37c4f4b7ae8bbb6fd0cdd81d3d55fa75">CPS::AttributeDynamic::asRawPointer</a></div><div class="ttdeci">virtual std::shared_ptr&lt; T &gt; asRawPointer() override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00653">Attribute.h:653</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_dynamic_html_a512fc4f25526b41f988834498419e30a"><div class="ttname"><a href="class_c_p_s_1_1_attribute_dynamic.html#a512fc4f25526b41f988834498419e30a">CPS::AttributeDynamic::get</a></div><div class="ttdeci">virtual T &amp; get() override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00667">Attribute.h:667</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_dynamic_html_a5205aa615398dcd5468fa3e692878e3e"><div class="ttname"><a href="class_c_p_s_1_1_attribute_dynamic.html#a5205aa615398dcd5468fa3e692878e3e">CPS::AttributeDynamic::clearAllTasks</a></div><div class="ttdeci">void clearAllTasks()</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00629">Attribute.h:629</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_dynamic_html_a629b5054cf3a255ba8c866fef677c103"><div class="ttname"><a href="class_c_p_s_1_1_attribute_dynamic.html#a629b5054cf3a255ba8c866fef677c103">CPS::AttributeDynamic::setReference</a></div><div class="ttdeci">virtual void setReference(typename Attribute&lt; T &gt;::Ptr reference) override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00635">Attribute.h:635</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_dynamic_html_a6ae57409a29917f653ff5772fe1fa5de"><div class="ttname"><a href="class_c_p_s_1_1_attribute_dynamic.html#a6ae57409a29917f653ff5772fe1fa5de">CPS::AttributeDynamic::appendDependencies</a></div><div class="ttdeci">virtual void appendDependencies(AttributeBase::Set *deps) override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00681">Attribute.h:681</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_dynamic_html_a9537f6d374d622424bb1c012f4786543"><div class="ttname"><a href="class_c_p_s_1_1_attribute_dynamic.html#a9537f6d374d622424bb1c012f4786543">CPS::AttributeDynamic::clearTasks</a></div><div class="ttdeci">void clearTasks(UpdateTaskKind kind)</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00610">Attribute.h:610</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_dynamic_html_a9b25a033a7578cfaf45573861c47d8dc"><div class="ttname"><a href="class_c_p_s_1_1_attribute_dynamic.html#a9b25a033a7578cfaf45573861c47d8dc">CPS::AttributeDynamic::set</a></div><div class="ttdeci">virtual void set(T value) override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00660">Attribute.h:660</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_dynamic_html_ad48bbe0d95a615ce21ac1fca9cfb0df1"><div class="ttname"><a href="class_c_p_s_1_1_attribute_dynamic.html#ad48bbe0d95a615ce21ac1fca9cfb0df1">CPS::AttributeDynamic::isStatic</a></div><div class="ttdeci">virtual bool isStatic() const override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00674">Attribute.h:674</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_dynamic_html"><div class="ttname"><a href="class_c_p_s_1_1_attribute_dynamic.html">CPS::AttributeDynamic</a></div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00575">Attribute.h:576</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_dynamic_html_a1c947ae5b79f4387cc909ddb6c69af06"><div class="ttname"><a href="class_c_p_s_1_1_attribute_dynamic.html#a1c947ae5b79f4387cc909ddb6c69af06">CPS::AttributeDynamic::addTask</a></div><div class="ttdeci">void addTask(UpdateTaskKind kind, typename AttributeUpdateTaskBase&lt; T &gt;::Ptr task)</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00592">Attribute.h:592</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_dynamic_html_a37c4f4b7ae8bbb6fd0cdd81d3d55fa75"><div class="ttname"><a href="class_c_p_s_1_1_attribute_dynamic.html#a37c4f4b7ae8bbb6fd0cdd81d3d55fa75">CPS::AttributeDynamic::asRawPointer</a></div><div class="ttdeci">virtual std::shared_ptr&lt; T &gt; asRawPointer() override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00658">Attribute.h:658</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_dynamic_html_a512fc4f25526b41f988834498419e30a"><div class="ttname"><a href="class_c_p_s_1_1_attribute_dynamic.html#a512fc4f25526b41f988834498419e30a">CPS::AttributeDynamic::get</a></div><div class="ttdeci">virtual T &amp; get() override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00672">Attribute.h:672</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_dynamic_html_a5205aa615398dcd5468fa3e692878e3e"><div class="ttname"><a href="class_c_p_s_1_1_attribute_dynamic.html#a5205aa615398dcd5468fa3e692878e3e">CPS::AttributeDynamic::clearAllTasks</a></div><div class="ttdeci">void clearAllTasks()</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00634">Attribute.h:634</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_dynamic_html_a629b5054cf3a255ba8c866fef677c103"><div class="ttname"><a href="class_c_p_s_1_1_attribute_dynamic.html#a629b5054cf3a255ba8c866fef677c103">CPS::AttributeDynamic::setReference</a></div><div class="ttdeci">virtual void setReference(typename Attribute&lt; T &gt;::Ptr reference) override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00640">Attribute.h:640</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_dynamic_html_a6ae57409a29917f653ff5772fe1fa5de"><div class="ttname"><a href="class_c_p_s_1_1_attribute_dynamic.html#a6ae57409a29917f653ff5772fe1fa5de">CPS::AttributeDynamic::appendDependencies</a></div><div class="ttdeci">virtual void appendDependencies(AttributeBase::Set *deps) override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00686">Attribute.h:686</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_dynamic_html_a9537f6d374d622424bb1c012f4786543"><div class="ttname"><a href="class_c_p_s_1_1_attribute_dynamic.html#a9537f6d374d622424bb1c012f4786543">CPS::AttributeDynamic::clearTasks</a></div><div class="ttdeci">void clearTasks(UpdateTaskKind kind)</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00615">Attribute.h:615</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_dynamic_html_a9b25a033a7578cfaf45573861c47d8dc"><div class="ttname"><a href="class_c_p_s_1_1_attribute_dynamic.html#a9b25a033a7578cfaf45573861c47d8dc">CPS::AttributeDynamic::set</a></div><div class="ttdeci">virtual void set(T value) override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00665">Attribute.h:665</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_dynamic_html_ad48bbe0d95a615ce21ac1fca9cfb0df1"><div class="ttname"><a href="class_c_p_s_1_1_attribute_dynamic.html#ad48bbe0d95a615ce21ac1fca9cfb0df1">CPS::AttributeDynamic::isStatic</a></div><div class="ttdeci">virtual bool isStatic() const override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00679">Attribute.h:679</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_attribute_html"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a></div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00266">Attribute.h:267</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a2458fb0f3949cdb55bc430bff7ae2bc0"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a2458fb0f3949cdb55bc430bff7ae2bc0">CPS::Attribute::deriveScaled</a></div><div class="ttdeci">AttributePointer&lt; Attribute&lt; T &gt; &gt; deriveScaled(T scale)</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00493">Attribute.h:493</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a295c0aeb84da58dbd52f79423d1b7de4"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a295c0aeb84da58dbd52f79423d1b7de4">CPS::Attribute::deriveMag</a></div><div class="ttdeci">AttributePointer&lt; Attribute&lt; Real &gt; &gt; deriveMag()</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00445">Attribute.h:445</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a2f159b5093b304495eecd575d933c59b"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a2f159b5093b304495eecd575d933c59b">CPS::Attribute::deriveCoeff</a></div><div class="ttdeci">AttributePointer&lt; Attribute&lt; U &gt; &gt; deriveCoeff(typename CPS::MatrixVar&lt; U &gt;::Index row, typename CPS::MatrixVar&lt; U &gt;::Index column)</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00517">Attribute.h:517</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a2458fb0f3949cdb55bc430bff7ae2bc0"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a2458fb0f3949cdb55bc430bff7ae2bc0">CPS::Attribute::deriveScaled</a></div><div class="ttdeci">AttributePointer&lt; Attribute&lt; T &gt; &gt; deriveScaled(T scale)</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00498">Attribute.h:498</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a295c0aeb84da58dbd52f79423d1b7de4"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a295c0aeb84da58dbd52f79423d1b7de4">CPS::Attribute::deriveMag</a></div><div class="ttdeci">AttributePointer&lt; Attribute&lt; Real &gt; &gt; deriveMag()</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00450">Attribute.h:450</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a2f159b5093b304495eecd575d933c59b"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a2f159b5093b304495eecd575d933c59b">CPS::Attribute::deriveCoeff</a></div><div class="ttdeci">AttributePointer&lt; Attribute&lt; U &gt; &gt; deriveCoeff(typename CPS::MatrixVar&lt; U &gt;::Index row, typename CPS::MatrixVar&lt; U &gt;::Index column)</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00522">Attribute.h:522</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a3c42660c3f5d42250e48df96fae93da2"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a3c42660c3f5d42250e48df96fae93da2">CPS::Attribute::asRawPointer</a></div><div class="ttdeci">virtual std::shared_ptr&lt; T &gt; asRawPointer()=0</div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a433fb9826628621f042c47ae74223840"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a433fb9826628621f042c47ae74223840">CPS::Attribute::derivePhase</a></div><div class="ttdeci">AttributePointer&lt; Attribute&lt; Real &gt; &gt; derivePhase()</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00468">Attribute.h:468</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a62e86ddb590d2e9168c448c9eaf23467"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a62e86ddb590d2e9168c448c9eaf23467">CPS::Attribute::operator*</a></div><div class="ttdeci">T &amp; operator*()</div><div class="ttdoc">User-defined dereference operator.</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00327">Attribute.h:327</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a666db94b91248ca3c0ff7e421761ba0c"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a666db94b91248ca3c0ff7e421761ba0c">CPS::Attribute::derive</a></div><div class="ttdeci">Attribute&lt; U &gt;::Ptr derive(typename AttributeUpdateTask&lt; U, T &gt;::Actor getter=typename AttributeUpdateTask&lt; U, T &gt;::Actor(), typename AttributeUpdateTask&lt; U, T &gt;::Actor setter=typename AttributeUpdateTask&lt; U, T &gt;::Actor())</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00369">Attribute.h:369</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a6d8b91651d42f0ff81ae3617118e4f51"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a6d8b91651d42f0ff81ae3617118e4f51">CPS::Attribute::deriveReal</a></div><div class="ttdeci">AttributePointer&lt; Attribute&lt; Real &gt; &gt; deriveReal()</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00397">Attribute.h:397</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a433fb9826628621f042c47ae74223840"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a433fb9826628621f042c47ae74223840">CPS::Attribute::derivePhase</a></div><div class="ttdeci">AttributePointer&lt; Attribute&lt; Real &gt; &gt; derivePhase()</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00473">Attribute.h:473</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a62e86ddb590d2e9168c448c9eaf23467"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a62e86ddb590d2e9168c448c9eaf23467">CPS::Attribute::operator*</a></div><div class="ttdeci">T &amp; operator*()</div><div class="ttdoc">User-defined dereference operator.</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00332">Attribute.h:332</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a666db94b91248ca3c0ff7e421761ba0c"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a666db94b91248ca3c0ff7e421761ba0c">CPS::Attribute::derive</a></div><div class="ttdeci">Attribute&lt; U &gt;::Ptr derive(typename AttributeUpdateTask&lt; U, T &gt;::Actor getter=typename AttributeUpdateTask&lt; U, T &gt;::Actor(), typename AttributeUpdateTask&lt; U, T &gt;::Actor setter=typename AttributeUpdateTask&lt; U, T &gt;::Actor())</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00374">Attribute.h:374</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a6d8b91651d42f0ff81ae3617118e4f51"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a6d8b91651d42f0ff81ae3617118e4f51">CPS::Attribute::deriveReal</a></div><div class="ttdeci">AttributePointer&lt; Attribute&lt; Real &gt; &gt; deriveReal()</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00402">Attribute.h:402</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a710a833d4a1ad10f73da67105850efb0"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a710a833d4a1ad10f73da67105850efb0">CPS::Attribute::setReference</a></div><div class="ttdeci">virtual void setReference(Attribute&lt; T &gt;::Ptr reference)=0</div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a76414b13889a71671efa5ba2afbd2d61"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a76414b13889a71671efa5ba2afbd2d61">CPS::Attribute::getType</a></div><div class="ttdeci">const std::type_info &amp; getType() override</div><div class="ttdoc">Get the type of this attribute.</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00347">Attribute.h:347</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a76414b13889a71671efa5ba2afbd2d61"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a76414b13889a71671efa5ba2afbd2d61">CPS::Attribute::getType</a></div><div class="ttdeci">const std::type_info &amp; getType() override</div><div class="ttdoc">Get the type of this attribute.</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00352">Attribute.h:352</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a838e3d8f79bc73a91e6dd44c6d83c97e"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a838e3d8f79bc73a91e6dd44c6d83c97e">CPS::Attribute::set</a></div><div class="ttdeci">virtual void set(T value)=0</div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a839fdbf14db973e9388bef208d39c833"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a839fdbf14db973e9388bef208d39c833">CPS::Attribute::toString</a></div><div class="ttdeci">String toString() override</div><div class="ttdoc">Fallback method for all attribute types not covered by the specifications in Attribute....</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00307">Attribute.h:307</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a9700bdb5f0798aa0e2dd3a3e374b5251"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a9700bdb5f0798aa0e2dd3a3e374b5251">CPS::Attribute::cloneValueOntoNewAttribute</a></div><div class="ttdeci">AttributeBase::Ptr cloneValueOntoNewAttribute() override</div><div class="ttdoc">Generates a new attribute of the same type and copies the current value in the heap....</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00353">Attribute.h:353</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a839fdbf14db973e9388bef208d39c833"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a839fdbf14db973e9388bef208d39c833">CPS::Attribute::toString</a></div><div class="ttdeci">String toString() override</div><div class="ttdoc">Fallback method for all attribute types not covered by the specifications in Attribute....</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00309">Attribute.h:309</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a9700bdb5f0798aa0e2dd3a3e374b5251"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a9700bdb5f0798aa0e2dd3a3e374b5251">CPS::Attribute::cloneValueOntoNewAttribute</a></div><div class="ttdeci">AttributeBase::Ptr cloneValueOntoNewAttribute() override</div><div class="ttdoc">Generates a new attribute of the same type and copies the current value in the heap....</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00358">Attribute.h:358</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_attribute_html_a9b287cc553000b9221b9c5076e495e55"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#a9b287cc553000b9221b9c5076e495e55">CPS::Attribute::get</a></div><div class="ttdeci">virtual T &amp; get()=0</div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_abd47af2d0f12236a7f5686e7ac5ad561"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#abd47af2d0f12236a7f5686e7ac5ad561">CPS::Attribute::copyValue</a></div><div class="ttdeci">bool copyValue(AttributeBase::Ptr copyFrom) override</div><div class="ttdoc">Copy the attribute value of copyFrom onto this attribute.</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00333">Attribute.h:333</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_af2e861ade90dd8a86fb41d0cfd18ca1f"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#af2e861ade90dd8a86fb41d0cfd18ca1f">CPS::Attribute::deriveImag</a></div><div class="ttdeci">AttributePointer&lt; Attribute&lt; Real &gt; &gt; deriveImag()</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00421">Attribute.h:421</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_abd47af2d0f12236a7f5686e7ac5ad561"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#abd47af2d0f12236a7f5686e7ac5ad561">CPS::Attribute::copyValue</a></div><div class="ttdeci">bool copyValue(AttributeBase::Ptr copyFrom) override</div><div class="ttdoc">Copy the attribute value of copyFrom onto this attribute.</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00338">Attribute.h:338</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_af2e861ade90dd8a86fb41d0cfd18ca1f"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#af2e861ade90dd8a86fb41d0cfd18ca1f">CPS::Attribute::deriveImag</a></div><div class="ttdeci">AttributePointer&lt; Attribute&lt; Real &gt; &gt; deriveImag()</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00426">Attribute.h:426</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_attribute_pointer_html"><div class="ttname"><a href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributePointer</a></div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00046">Attribute.h:46</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_static_html"><div class="ttname"><a href="class_c_p_s_1_1_attribute_static.html">CPS::AttributeStatic</a></div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00542">Attribute.h:543</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_static_html_a3169cd650243408920b16eb28c1f4f00"><div class="ttname"><a href="class_c_p_s_1_1_attribute_static.html#a3169cd650243408920b16eb28c1f4f00">CPS::AttributeStatic::set</a></div><div class="ttdeci">virtual void set(T value) override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00549">Attribute.h:549</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_static_html_a636c3781af596ecaf9bbf1f4f17df27c"><div class="ttname"><a href="class_c_p_s_1_1_attribute_static.html#a636c3781af596ecaf9bbf1f4f17df27c">CPS::AttributeStatic::appendDependencies</a></div><div class="ttdeci">virtual void appendDependencies(AttributeBase::Set *deps) override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00561">Attribute.h:561</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_static_html_ab02e7247c9d1e8ee476a7a1e051a9100"><div class="ttname"><a href="class_c_p_s_1_1_attribute_static.html#ab02e7247c9d1e8ee476a7a1e051a9100">CPS::AttributeStatic::setReference</a></div><div class="ttdeci">virtual void setReference(typename Attribute&lt; T &gt;::Ptr reference) override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00555">Attribute.h:555</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_static_html_ab7423b869b379a6f084889f83266896e"><div class="ttname"><a href="class_c_p_s_1_1_attribute_static.html#ab7423b869b379a6f084889f83266896e">CPS::AttributeStatic::isStatic</a></div><div class="ttdeci">virtual bool isStatic() const override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00553">Attribute.h:553</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_static_html_ab8e0a9256d59d807198051ab53c263b1"><div class="ttname"><a href="class_c_p_s_1_1_attribute_static.html#ab8e0a9256d59d807198051ab53c263b1">CPS::AttributeStatic::get</a></div><div class="ttdeci">virtual T &amp; get() override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00551">Attribute.h:551</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_static_html_ad908919c5694bf8cabf9094fc0cdf9dc"><div class="ttname"><a href="class_c_p_s_1_1_attribute_static.html#ad908919c5694bf8cabf9094fc0cdf9dc">CPS::AttributeStatic::asRawPointer</a></div><div class="ttdeci">virtual std::shared_ptr&lt; T &gt; asRawPointer() override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00559">Attribute.h:559</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_static_html"><div class="ttname"><a href="class_c_p_s_1_1_attribute_static.html">CPS::AttributeStatic</a></div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00547">Attribute.h:548</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_static_html_a3169cd650243408920b16eb28c1f4f00"><div class="ttname"><a href="class_c_p_s_1_1_attribute_static.html#a3169cd650243408920b16eb28c1f4f00">CPS::AttributeStatic::set</a></div><div class="ttdeci">virtual void set(T value) override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00554">Attribute.h:554</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_static_html_a636c3781af596ecaf9bbf1f4f17df27c"><div class="ttname"><a href="class_c_p_s_1_1_attribute_static.html#a636c3781af596ecaf9bbf1f4f17df27c">CPS::AttributeStatic::appendDependencies</a></div><div class="ttdeci">virtual void appendDependencies(AttributeBase::Set *deps) override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00566">Attribute.h:566</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_static_html_ab02e7247c9d1e8ee476a7a1e051a9100"><div class="ttname"><a href="class_c_p_s_1_1_attribute_static.html#ab02e7247c9d1e8ee476a7a1e051a9100">CPS::AttributeStatic::setReference</a></div><div class="ttdeci">virtual void setReference(typename Attribute&lt; T &gt;::Ptr reference) override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00560">Attribute.h:560</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_static_html_ab7423b869b379a6f084889f83266896e"><div class="ttname"><a href="class_c_p_s_1_1_attribute_static.html#ab7423b869b379a6f084889f83266896e">CPS::AttributeStatic::isStatic</a></div><div class="ttdeci">virtual bool isStatic() const override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00558">Attribute.h:558</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_static_html_ab8e0a9256d59d807198051ab53c263b1"><div class="ttname"><a href="class_c_p_s_1_1_attribute_static.html#ab8e0a9256d59d807198051ab53c263b1">CPS::AttributeStatic::get</a></div><div class="ttdeci">virtual T &amp; get() override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00556">Attribute.h:556</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_static_html_ad908919c5694bf8cabf9094fc0cdf9dc"><div class="ttname"><a href="class_c_p_s_1_1_attribute_static.html#ad908919c5694bf8cabf9094fc0cdf9dc">CPS::AttributeStatic::asRawPointer</a></div><div class="ttdeci">virtual std::shared_ptr&lt; T &gt; asRawPointer() override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00564">Attribute.h:564</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_attribute_update_task_base_html"><div class="ttname"><a href="class_c_p_s_1_1_attribute_update_task_base.html">CPS::AttributeUpdateTaskBase</a></div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00203">Attribute.h:203</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_attribute_update_task_html"><div class="ttname"><a href="class_c_p_s_1_1_attribute_update_task.html">CPS::AttributeUpdateTask</a></div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00219">Attribute.h:222</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_attribute_update_task_html_aa0ac8456162526792a7bfa9f6076d9c4"><div class="ttname"><a href="class_c_p_s_1_1_attribute_update_task.html#aa0ac8456162526792a7bfa9f6076d9c4">CPS::AttributeUpdateTask::getDependencies</a></div><div class="ttdeci">virtual AttributeBase::List getDependencies() override</div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00251">Attribute.h:251</a></div></div>

@@ -110,8 +110,8 @@ $(function() {
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                       Logger::Level logLevel = Logger::Level::off)</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;      : <a class="code" href="class_c_p_s_1_1_identified_object.html">IdentifiedObject</a>(<a class="code" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, name),</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="comment">/* We also want to set the CLI loglevel according to the logLevel</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">             * std::max(Logger::Level::info, logLevel). But because of excessive</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">             * logging to Level::info that is currently infeasible. */</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">         * std::max(Logger::Level::info, logLevel). But because of excessive</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">         * logging to Level::info that is currently infeasible. */</span></div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <a class="code" href="class_c_p_s_1_1_topological_power_comp.html#a7c61e480e446111d56ac35399643d5b0">mSLog</a>(<a class="code" href="class_c_p_s_1_1_logger.html">Logger</a>::get(name, logLevel, <a class="code" href="class_c_p_s_1_1_logger.html">Logger</a>::Level::warn)),</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <a class="code" href="class_c_p_s_1_1_topological_power_comp.html#a113e3e3f5ce50c5162079cad7d206a40">mLogLevel</a>(logLevel) {}</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>

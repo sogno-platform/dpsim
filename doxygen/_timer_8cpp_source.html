@@ -86,7 +86,7 @@ $(function() {
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#ifdef HAVE_TIMERFD</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &lt;sys/timerfd.h&gt;</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &lt;unistd.h&gt;</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* HAVE_TIMERFD */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// HAVE_TIMERFD</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">using namespace </span><a class="code" href="namespace_d_psim.html">DPsim</a>;</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">using</span> <a class="code" href="class_c_p_s_1_1_system_error.html">CPS::SystemError</a>;</div>
@@ -152,14 +152,14 @@ $(function() {
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  mTicks = 0;</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  mOverruns = 0;</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  <span class="comment">/* Determine offset between clocks */</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  <span class="comment">// Determine offset between clocks.</span></div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  <span class="keyword">auto</span> rt = StartClock::now();</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  <span class="keyword">auto</span> steady = IntervalClock::now();</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  <span class="comment">/* This handles the offset between</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">    * - IntervalClock (CLOCK_MONOTONIC aka std::chrono::steady_clock) and</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">    * - StartClock (CLOCK_REALTIME aka std::chrono::system_clock)</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment">    */</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">   * - IntervalClock (CLOCK_MONOTONIC aka std::chrono::steady_clock) and</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">   * - StartClock (CLOCK_REALTIME aka std::chrono::system_clock)</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment">   */</span></div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  <span class="keyword">auto</span> <a class="code" href="class_d_psim_1_1_timer.html#a3a8b5272198d029779dc9302a54305a8">start</a> = mStartAt &gt; StartTimePoint()</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;                   ? mStartAt.time_since_epoch() - rt.time_since_epoch() +</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;                         steady.time_since_epoch()</div>
