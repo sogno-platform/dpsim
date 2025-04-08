@@ -198,6 +198,34 @@ To build the Python package run
 python3 setup.py bdist_wheel
 ```
 
+## Nix
+
+DPsim can be fully build using [Nix](https://nixos.org/), a declarative package manager for building software reproducible.
+
+The following steps require a working single-user or multi-user installation of Nix, but not necessarily NixOS.
+
+DPsim uses Nix's experimental Flake feature which needs to be activated:
+
+```shell
+echo "experimental-features=nix-command flakes" > ~/.config/nix/nix.conf
+```
+
+Building DPsim, including all its dependencies can be done by running:
+
+```shell
+nix build github:sogno-platform/dpsim
+```
+
+The build result will be available within the `result` folder of your current directory.
+
+For development purposes, a local development environment can be setup by you running:
+
+```shell
+nix develop github:sogno-platform/dpsim
+```
+
+Please note, that the Flake reference above (`github:sogno-platform/dpsim`) can be substituted by a local path (`.`), in case you have locally checked out the DPsim repo.
+
 # Documentation
 
 ## Python
