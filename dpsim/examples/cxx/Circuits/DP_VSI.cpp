@@ -110,12 +110,14 @@ void DP_Ph1_VSI2_4bus_SampleGrid() {
   }
   // Logging
   auto logger = DataLogger::make(simName);
-  // currents
-  /*logger->logAttribute("i_vs", vs->attribute("i_intf"));
-	logger->logAttribute("i_vsi", vsi->attribute("i_intf"));
-	logger->logAttribute("i_vsi2", vsi2->attribute("i_intf"));
-	logger->logAttribute("iload", rload->attribute("i_intf"));
-	logger->logAttribute("iqload", Lload->attribute("i_intf"));*/
+#if 0
+  // Currents
+  logger->logAttribute("i_vs", vs->attribute("i_intf"));
+  logger->logAttribute("i_vsi", vsi->attribute("i_intf"));
+  logger->logAttribute("i_vsi2", vsi2->attribute("i_intf"));
+  logger->logAttribute("iload", rload->attribute("i_intf"));
+  logger->logAttribute("iqload", Lload->attribute("i_intf"));
+#endif
   // nodal voltages
   logger->logAttribute("vBus1", n1->attribute("v"));
   logger->logAttribute("v_slack", n5->attribute("v"));

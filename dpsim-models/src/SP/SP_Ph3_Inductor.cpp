@@ -49,31 +49,31 @@ void SP::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
   **mIntfCurrent = mSusceptance * **mIntfVoltage;
 
   SPDLOG_LOGGER_INFO(mSLog, "--- Initialize according to power flow ---");
-  /*
-	mLog.info() << "--- Initialize according to power flow ---" << std::endl
-		<< "in phase A: " << std::endl
-		<< "Voltage across: " << std::abs((**mIntfVoltage)(0, 0))
-		<< "<" << Math::phaseDeg((**mIntfVoltage)(0, 0)) << std::endl
-		<< "Current: " << std::abs((**mIntfCurrent)(0, 0))
-		<< "<" << Math::phaseDeg((**mIntfCurrent)(0, 0)) << std::endl
-		<< "Terminal 0 voltage: " << std::abs(initialSingleVoltage(0))
-		<< "<" << Math::phaseDeg(initialSingleVoltage(0)) << std::endl
-		<< "Terminal 1 voltage: " << std::abs(initialSingleVoltage(1))
-		<< "<" << Math::phaseDeg(initialSingleVoltage(1)) << std::endl
-		<< "--- Power flow initialization finished ---" << std::endl;
-*/
+#if 0
+  mLog.info() << "--- Initialize according to power flow ---" << std::endl
+    << "in phase A: " << std::endl
+    << "Voltage across: " << std::abs((**mIntfVoltage)(0, 0))
+    << "<" << Math::phaseDeg((**mIntfVoltage)(0, 0)) << std::endl
+    << "Current: " << std::abs((**mIntfCurrent)(0, 0))
+    << "<" << Math::phaseDeg((**mIntfCurrent)(0, 0)) << std::endl
+    << "Terminal 0 voltage: " << std::abs(initialSingleVoltage(0))
+    << "<" << Math::phaseDeg(initialSingleVoltage(0)) << std::endl
+    << "Terminal 1 voltage: " << std::abs(initialSingleVoltage(1))
+    << "<" << Math::phaseDeg(initialSingleVoltage(1)) << std::endl
+    << "--- Power flow initialization finished ---" << std::endl;
+#endif
 }
 
 void SP::Ph3::Inductor::mnaCompInitialize(Real omega, Real timeStep,
                                           Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
   // TODO
-  /*
-	mLog.info() << "Initial voltage " << Math::abs((**mIntfVoltage)(0, 0))
-		<< "<" << Math::phaseDeg((**mIntfVoltage)(0, 0)) << std::endl
-		<< "Initial current " << Math::abs((**mIntfCurrent)(0, 0))
-		<< "<" << Math::phaseDeg((**mIntfCurrent)(0, 0)) << std::endl;
-*/
+#if 0
+  mLog.info() << "Initial voltage " << Math::abs((**mIntfVoltage)(0, 0))
+    << "<" << Math::phaseDeg((**mIntfVoltage)(0, 0)) << std::endl
+    << "Initial current " << Math::abs((**mIntfCurrent)(0, 0))
+    << "<" << Math::phaseDeg((**mIntfCurrent)(0, 0)) << std::endl;
+#endif
 }
 
 void SP::Ph3::Inductor::mnaCompApplySystemMatrixStamp(

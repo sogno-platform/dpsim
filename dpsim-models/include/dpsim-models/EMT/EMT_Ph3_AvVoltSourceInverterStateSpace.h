@@ -72,13 +72,15 @@ public:
 
 protected:
   Matrix mIfabc = Matrix::Zero(3, 1);
-  /*Real mIfa;
-		Real mIfb;
-		Real mIfc;*/
+#if 0
+  Real mIfa;
+  Real mIfb;
+  Real mIfc;
 
-  /*Real mVca;
-		Real mVcb;
-		Real mVcc;*/
+  Real mVca;
+  Real mVcb;
+  Real mVcc;
+#endif
 
   // Norton equivalant voltage source
   Matrix mEquivCurrent = Matrix::Zero(3, 1);
@@ -111,12 +113,14 @@ public:
   void initializeStates(Real omega, Real timeStep,
                         Attribute<Matrix>::Ptr leftVector);
 
-  // initialize with parameters.
-  //void initialize(Real theta, Real phi_pll, Real p, Real q, Real phi_d, Real phi_q,
-  //	Real gamma_d, Real gamma_q, Real i_fd, Real i_fq, Real v_cd, Real v_cq);
+#if 0
+  // Initialize with parameters.
+  void initialize(Real theta, Real phi_pll, Real p, Real q, Real phi_d, Real phi_q,
+    Real gamma_d, Real gamma_q, Real i_fd, Real i_fq, Real v_cd, Real v_cq);
 
-  //void initStates(Real initOmegaPLL, Real initPhiPLL, Real initP, Real initQ,
-  //	Real initPhid, Real initPhiQ, Real initGamma_d, Real initGamma_q, Real initVcabc, Real initIfabc);
+  void initStates(Real initOmegaPLL, Real initPhiPLL, Real initP, Real initQ,
+    Real initPhid, Real initPhiQ, Real initGamma_d, Real initGamma_q, Real initVcabc, Real initIfabc);
+#endif
 
   void updateStates();
 

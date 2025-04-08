@@ -21,13 +21,13 @@ int main(int argc, char *argv[]) {
   Real H = 3.7;
 
 #if 0
-	Real Ka = 20;
-	Real Ta = 0.2;
-	Real Ke = 1;
-	Real Te = 0.314;
-	Real Kf = 0.063;
-	Real Tf = 0.35;
-	Real Tr = 0.02;
+  Real Ka = 20;
+  Real Ta = 0.2;
+  Real Ke = 1;
+  Real Te = 0.314;
+  Real Kf = 0.063;
+  Real Tf = 0.35;
+  Real Tr = 0.02;
 #endif
 
   Real Rs = 0.003;
@@ -107,9 +107,9 @@ int main(int argc, char *argv[]) {
 
   // Calculate initial values for circuit at generator connection point
 #if 0
-	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
-	Real initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
-	Real initPowerFactor = acos(initActivePower / initApparentPower);
+  Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
+  Real initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
+  Real initPowerFactor = acos(initActivePower / initApparentPower);
 #endif
 
   sim.setSwitchTime(0.1, 1);

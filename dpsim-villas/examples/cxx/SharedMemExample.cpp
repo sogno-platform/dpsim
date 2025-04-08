@@ -50,15 +50,15 @@ int main(int argc, char *argv[]) {
   sim.setFinalTime(2.0);
 
   std::string shmemConfig = R"STRING(
-		{
-        "type": "shmem",
-        "in": {
-            "name": "shmem-dpsim"
-        },
-        "out": {
-            "name": "dpsim-shmem"
-        },
-		"queuelen": 1024
+    {
+      "type": "shmem",
+      "in": {
+          "name": "shmem-dpsim"
+      },
+      "out": {
+          "name": "dpsim-shmem"
+      },
+      "queuelen": 1024
     })STRING";
 
   auto intf = std::make_shared<InterfaceVillas>(shmemConfig);

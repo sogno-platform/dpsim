@@ -43,12 +43,12 @@ public:
   /// MANUAL for providing an assign pattern manually. see power flow example: CIM/CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
   enum class Mode { AUTO, MANUAL };
 
-  /*
-		 Time Stamp Format.
-         HHMMSS:  Hours : Minutes : Seconds, it be casted to the corresponding SECONDS.
-         SECONDS: profiles recorded with total seconds.
-         PVGEN: format comply with https://www.fein-aachen.org/projects/PVgenerator/
-		*/
+  /* Time Stamp Format.
+   *
+   *  HHMMSS:  Hours : Minutes : Seconds, it be casted to the corresponding SECONDS.
+   *  SECONDS: profiles recorded with total seconds.
+   *  PVGEN: format comply with https://www.fein-aachen.org/projects/PVgenerator/
+   */
   enum class DataFormat { HHMMSS, SECONDS, HOURS, MINUTES };
 
   ///
@@ -62,8 +62,8 @@ public:
   CSVReader(String name, String path, std::map<String, String> &assignList,
             Logger::Level logLevel);
 
-  ///	convert HH:MM:SS format timestamp into total seconds.
-  ///	e.g.: 00 : 01 : 00 -- > 60.
+  /// Convert HH:MM:SS format timestamp into total seconds.
+  ///  e.g.: 00 : 01 : 00 -- > 60.
   Real time_format_convert(const String &time);
   /// Skip first row if it has no digits at beginning
   void doSkipFirstRow(Bool value = true) { mSkipFirstRow = value; }
@@ -75,15 +75,17 @@ public:
       Real end_time = -1, Real scale_factor = 1,
       CSVReader::DataFormat format = CSVReader::DataFormat::SECONDS);
 
-  // void assignLoadProfilePF(std::vector<std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ>>& loads,
-  // 	Real start_time = -1, Real time_step = 1, Real end_time = -1, Real scale_factor= 1,
-  // 	CSVReader::Mode mode = CSVReader::Mode::AUTO,
-  // 	CSVReader::DataFormat format = CSVReader::DataFormat::SECONDS);
+#if 0
+  void assignLoadProfilePF(std::vector<std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ>>& loads,
+    Real start_time = -1, Real time_step = 1, Real end_time = -1, Real scale_factor= 1,
+    CSVReader::Mode mode = CSVReader::Mode::AUTO,
+    CSVReader::DataFormat format = CSVReader::DataFormat::SECONDS);
 
-  // void assignLoadProfileSP(std::vector<std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ>>& loads,
-  // 	Real start_time = -1, Real time_step = 1, Real end_time = -1, Real scale_factor= 1,
-  // 	CSVReader::Mode mode = CSVReader::Mode::AUTO,
-  // 	CSVReader::DataFormat format = CSVReader::DataFormat::SECONDS);
+  void assignLoadProfileSP(std::vector<std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ>>& loads,
+    Real start_time = -1, Real time_step = 1, Real end_time = -1, Real scale_factor= 1,
+    CSVReader::Mode mode = CSVReader::Mode::AUTO,
+    CSVReader::DataFormat format = CSVReader::DataFormat::SECONDS);
+#endif
 
   void assignLoadProfileDP(
       std::vector<std::shared_ptr<CPS::DP::Ph1::AvVoltageSourceInverterDQ>>

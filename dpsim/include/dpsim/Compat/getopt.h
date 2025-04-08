@@ -1,3 +1,4 @@
+// editorconfig-checker-disable-file
 #ifndef __GETOPT_H__
 /**
  * DISCLAIMER
@@ -85,12 +86,14 @@ int optreset; /* reset getopt */
 char *optarg; /* argument associated with option */
 #endif
 
-//extern int optind;		/* index of first non-option in argv      */
-//extern int optopt;		/* single option character, as parsed     */
-//extern int opterr;		/* flag to enable built-in diagnostics... */
-//				/* (user may set to zero, to suppress)    */
-//
-//extern char *optarg;		/* pointer to argument of current option  */
+#if 0
+extern int optind;		/* index of first non-option in argv      */
+extern int optopt;		/* single option character, as parsed     */
+extern int opterr;		/* flag to enable built-in diagnostics... */
+				/* (user may set to zero, to suppress)    */
+
+extern char *optarg;		/* pointer to argument of current option  */
+#endif
 
 #define PRINT_ERROR ((opterr) && (*options != ':'))
 

@@ -76,11 +76,13 @@ public:
                                    AttributeBase::List &modifiedAttributes,
                                    Attribute<Matrix>::Ptr &leftVector) override;
 
-  //MNAInterface::List mnaTearGroundComponents();
-  /*void mnaTearInitialize(Real omega, Real timeStep);
-		void mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix);
-		void mnaTearApplyVoltageStamp(Matrix& voltageVector);
-		void mnaTearPostStep(Matrix voltage, Matrix current);*/
+#if 0
+  MNAInterface::List mnaTearGroundComponents();
+  void mnaTearInitialize(Real omega, Real timeStep);
+    void mnaTearApplyMatrixStamp(SparseMatrixRow& tearMatrix);
+    void mnaTearApplyVoltageStamp(Matrix& voltageVector);
+    void mnaTearPostStep(Matrix voltage, Matrix current);
+#endif
 };
 } // namespace Ph3
 } // namespace EMT

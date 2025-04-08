@@ -207,28 +207,30 @@ void SP::Ph1::VoltageSource::daeResidual(double ttime, const double state[],
                                          const double dstate_dt[],
                                          double resid[],
                                          std::vector<int> &off) {
-  /* new state vector definintion:
-		state[0]=node0_voltage
-		state[1]=node1_voltage
-		....
-		state[n]=noden_voltage
-		state[n+1]=component0_voltage
-		state[n+2]=component0_inductance (not yet implemented)
-		...
-		state[m-1]=componentm_voltage
-		state[m]=componentm_inductance
-	*/
+  /* New state vector definintion:
+   *  state[0]=node0_voltage
+   *  state[1]=node1_voltage
+   *  ....
+   *  state[n]=noden_voltage
+   *  state[n+1]=component0_voltage
+   *  state[n+2]=component0_inductance (not yet implemented)
+   *  ...
+   *  state[m-1]=componentm_voltage
+   *  state[m]=componentm_inductance
+   */
 
-  //int Pos1 = matrixNodeIndex(0);
-  //int Pos2 = matrixNodeIndex(1);
-  //int c_offset = off[0] + off[1]; //current offset for component
-  //int n_offset_1 = c_offset + Pos1 + 1;// current offset for first nodal equation
-  //int n_offset_2 = c_offset + Pos2 + 1;// current offset for second nodal equation
-  //resid[c_offset] = (state[Pos2] - state[Pos1]) - state[c_offset]; // Voltage equation for Resistor
-  ////resid[++c_offset] = ; //TODO : add inductance equation
-  //resid[n_offset_1] += std::real(current());
-  //resid[n_offset_2] += std::real(current());
-  //off[1] += 1;
+#if 0
+  int Pos1 = matrixNodeIndex(0);
+  int Pos2 = matrixNodeIndex(1);
+  int c_offset = off[0] + off[1]; //current offset for component
+  int n_offset_1 = c_offset + Pos1 + 1;// current offset for first nodal equation
+  int n_offset_2 = c_offset + Pos2 + 1;// current offset for second nodal equation
+  resid[c_offset] = (state[Pos2] - state[Pos1]) - state[c_offset]; // Voltage equation for Resistor
+  //resid[++c_offset] = ; //TODO : add inductance equation
+  resid[n_offset_1] += std::real(current());
+  resid[n_offset_2] += std::real(current());
+  off[1] += 1;
+#endif
 }
 
 Complex SP::Ph1::VoltageSource::daeInitialize() {

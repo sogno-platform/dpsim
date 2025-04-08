@@ -200,17 +200,17 @@ void SP::Ph1::NetworkInjection::daeResidual(double ttime, const double state[],
                                             const double dstate_dt[],
                                             double resid[],
                                             std::vector<int> &off) {
-  /* new state vector definintion:
-		state[0]=node0_voltage
-		state[1]=node1_voltage
-		....
-		state[n]=noden_voltage
-		state[n+1]=component0_voltage
-		state[n+2]=component0_inductance (not yet implemented)
-		...
-		state[m-1]=componentm_voltage
-		state[m]=componentm_inductance
-	*/
+  /* New state vector definintion:
+   *  state[0]=node0_voltage
+   *  state[1]=node1_voltage
+   *  ....
+   *  state[n]=noden_voltage
+   *  state[n+1]=component0_voltage
+   *  state[n+2]=component0_inductance (not yet implemented)
+   *  ...
+   *  state[m-1]=componentm_voltage
+   *  state[m]=componentm_inductance
+   */
 
   int Pos1 = matrixNodeIndex(0);
   int Pos2 = matrixNodeIndex(1);

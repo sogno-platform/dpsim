@@ -4,7 +4,7 @@ endif()
 
 # Allow overriding the commit hash externally
 if(NOT DEFINED CIMPP_COMMIT)
-    set(CIMPP_COMMIT "1b11d5c17bedf0ae042628b42ecb4e49df70b2f6") # Default commit
+	set(CIMPP_COMMIT "1b11d5c17bedf0ae042628b42ecb4e49df70b2f6") # Default commit
 endif()
 
 message(STATUS "CIM Version: ${CIM_VERSION}")

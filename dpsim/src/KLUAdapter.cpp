@@ -61,13 +61,14 @@ void KLUAdapter::preprocessing(
     mVaryingColumns.push_back(changedEntry.second);
   }
 
-  // this call also works if mVaryingColumns, mVaryingRows are empty
+  // This call also works if mVaryingColumns, mVaryingRows are empty
   mSymbolic =
       klu_analyze_partial(n, Ap, Ai, &mVaryingColumns[0], &mVaryingRows[0],
                           varying_entries, mPreordering, &mCommon);
 
-  /* store non-zero value of current preprocessed matrix. only used until
-     * to-do in refactorize-function is resolved. Can be removed then. */
+  /* Store non-zero value of current preprocessed matrix. only used until
+   * to-do in refactorize-function is resolved. Can be removed then.
+   */
   nnz = Eigen::internal::convert_index<Int>(systemMatrix.nonZeros());
 }
 
@@ -85,8 +86,9 @@ void KLUAdapter::factorize(SparseMatrix &systemMatrix) {
   Int varying_entries =
       Eigen::internal::convert_index<Int>(mChangedEntries.size());
 
-  /* make sure that factorization path is not computed if there are no varying entries.
-     * Doing so should not be a problem, but it is safer to do it this way */
+  /* Make sure that factorization path is not computed if there are no varying entries.
+   * Doing so should not be a problem, but it is safer to do it this way.
+   */
   if (!(mVaryingColumns.empty()) && !(mVaryingRows.empty())) {
     if (mPartialRefactorizationMethod ==
         DPsim::PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH) {
@@ -102,7 +104,7 @@ void KLUAdapter::factorize(SparseMatrix &systemMatrix) {
 }
 
 void KLUAdapter::refactorize(SparseMatrix &systemMatrix) {
-  /* TODO: remove if-else when zero<->non-zero issue during matrix stamping has been fixed. Also remove in partialRefactorize then. */
+  // TODO: Remove if-else when zero<->non-zero issue during matrix stamping has been fixed. Also remove in partialRefactorize then.
   if (systemMatrix.nonZeros() != nnz) {
     preprocessing(systemMatrix, mChangedEntries);
     factorize(systemMatrix);
@@ -153,16 +155,18 @@ Matrix KLUAdapter::solve(Matrix &rightSideVector) {
   // We should preallocate this buffer.
   Matrix x = rightSideVector;
 
-  /* number of right hands sides
-     * usually one, KLU can handle multiple right hand sides */
+  /* Number of right hands sides
+   * usually one, KLU can handle multiple right hand sides.
+   */
   Int rhsCols = Eigen::internal::convert_index<Int>(rightSideVector.cols());
 
-  /* leading dimension, also called "n" */
+  // Leading dimension, also called "n".
   Int rhsRows = Eigen::internal::convert_index<Int>(rightSideVector.rows());
 
   /* tsolve refers to transpose solve. Input matrix is stored in compressed row format,
-	 * KLU operates on compressed column format. This way, the transpose of the matrix is factored.
-	 * This has to be taken into account only here during right-hand solving. */
+   * KLU operates on compressed column format. This way, the transpose of the matrix is factored.
+   * This has to be taken into account only here during right-hand solving.
+   */
   klu_tsolve(mSymbolic, mNumeric, rhsRows, rhsCols,
              x.const_cast_derived().data(), &mCommon);
 
@@ -180,8 +184,9 @@ void KLUAdapter::printMatrixMarket(SparseMatrix &matrix, int counter) const {
 
   std::ofstream ofs;
   ofs.open(outputName);
-  /* TODO: add logger to DirectLinearSolver to use libfmt's more powerful logging tools.
-	 * Then also move matrix printing (of LU matrices) here in order to avoid C-level printing. */
+  /* TODO: Add logger to DirectLinearSolver to use libfmt's more powerful logging tools.
+   * Then also move matrix printing (of LU matrices) here in order to avoid C-level printing.
+   */
   ofs.precision(14);
   ofs << "%%MatrixMarket matrix coordinate real general" << std::endl;
   ofs << n << " " << n << " " << nz << std::endl;
@@ -211,7 +216,7 @@ void KLUAdapter::applyConfiguration() {
   SPDLOG_LOGGER_INFO(mSLog, "Matrix is scaled using " +
                                 mConfiguration.getScalingMethodString());
 
-  // TODO: implement support for COLAMD (modifiy SuiteSparse)
+  // TODO: Implement support for COLAMD (modifiy SuiteSparse)
   switch (mConfiguration.getFillInReductionMethod()) {
   case FILL_IN_REDUCTION_METHOD::AMD:
     mPreordering = AMD_ORDERING;

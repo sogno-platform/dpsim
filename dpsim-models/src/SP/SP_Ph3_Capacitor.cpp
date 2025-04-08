@@ -48,30 +48,33 @@ void SP::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 
   **mIntfCurrent = mSusceptance * **mIntfVoltage;
   // TODO: add updated logger
-  /*
-	mLog.info() << "\n--- Initialize from power flow ---" << std::endl
-		<< "Impedance: " << impedance << std::endl
-		<< "Voltage across: " << std::abs((**mIntfVoltage)(0, 0))
-		<< "<" << Math::phaseDeg((**mIntfVoltage)(0, 0)) << std::endl
-		<< "Current: " << std::abs((**mIntfCurrent)(0, 0))
-		<< "<" << Math::phaseDeg((**mIntfCurrent)(0, 0)) << std::endl
-		<< "Terminal 0 voltage: " << std::abs(initialSingleVoltage(0))
-		<< "<" << Math::phaseDeg(initialSingleVoltage(0)) << std::endl
-		<< "Terminal 1 voltage: " << std::abs(initialSingleVoltage(1))
-		<< "<" << Math::phaseDeg(initialSingleVoltage(1)) << std::endl
-		<< "--- Power flow initialization finished ---" << std::endl;*/
+#if 0
+  mLog.info() << "\n--- Initialize from power flow ---" << std::endl
+    << "Impedance: " << impedance << std::endl
+    << "Voltage across: " << std::abs((**mIntfVoltage)(0, 0))
+    << "<" << Math::phaseDeg((**mIntfVoltage)(0, 0)) << std::endl
+    << "Current: " << std::abs((**mIntfCurrent)(0, 0))
+    << "<" << Math::phaseDeg((**mIntfCurrent)(0, 0)) << std::endl
+    << "Terminal 0 voltage: " << std::abs(initialSingleVoltage(0))
+    << "<" << Math::phaseDeg(initialSingleVoltage(0)) << std::endl
+    << "Terminal 1 voltage: " << std::abs(initialSingleVoltage(1))
+    << "<" << Math::phaseDeg(initialSingleVoltage(1)) << std::endl
+    << "--- Power flow initialization finished ---" << std::endl;
+#endif
 }
 
 void SP::Ph3::Capacitor::mnaCompInitialize(Real omega, Real timeStep,
                                            Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
   // TODO add updated logger
-  /*mLog.info() << "\n--- MNA Initialization ---" << std::endl
-		<< "Initial voltage " << Math::abs((**mIntfVoltage)(0, 0))
-		<< "<" << Math::phaseDeg((**mIntfVoltage)(0, 0)) << std::endl
-		<< "Initial current " << Math::abs((**mIntfCurrent)(0, 0))
-		<< "<" << Math::phaseDeg((**mIntfCurrent)(0, 0)) << std::endl
-		<< "--- MNA initialization finished ---" << std::endl;*/
+#if 0
+mLog.info() << "\n--- MNA Initialization ---" << std::endl
+    << "Initial voltage " << Math::abs((**mIntfVoltage)(0, 0))
+    << "<" << Math::phaseDeg((**mIntfVoltage)(0, 0)) << std::endl
+    << "Initial current " << Math::abs((**mIntfCurrent)(0, 0))
+    << "<" << Math::phaseDeg((**mIntfCurrent)(0, 0)) << std::endl
+    << "--- MNA initialization finished ---" << std::endl;
+#endif
 }
 
 void SP::Ph3::Capacitor::mnaCompApplySystemMatrixStamp(

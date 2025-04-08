@@ -12,7 +12,7 @@ using namespace DPsim;
 using namespace CPS::EMT::Ph3;
 
 int main(int argc, char *argv[]) {
-  // Define machine parameters in per unit
+  // Define machine parameters in per unit.
   Real nomPower = 555e6;
   Real nomPhPhVoltRMS = 24e3;
   Real nomFreq = 60;
@@ -34,13 +34,14 @@ int main(int argc, char *argv[]) {
   Real Llkq1 = 0.7252;
   Real Rkq2 = 0.0237;
   Real Llkq2 = 0.125;
-  //Real Rkq2 = 0;
-  //Real Llkq2 = 0;
-
+#if 0
+  Real Rkq2 = 0;
+  Real Llkq2 = 0;
+#endif
   Real Ld_s = 0.23;
   Real Lq_s = 0.25;
 
-  // Set up simulation
+  // Set up simulation.
   Real tf, dt;
   Real om = 2.0 * M_PI * 60.0;
   tf = 0.3;
@@ -49,7 +50,7 @@ int main(int argc, char *argv[]) {
 
   Real Ra = (Ld_s + Lq_s) / dt;
 
-  // Declare circuit components
+  // Declare circuit components.
   Component::Ptr gen = SynchronGeneratorDQ::make(
       "gen", 0, 1, 2, nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
       Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2,
@@ -62,7 +63,7 @@ int main(int argc, char *argv[]) {
   SystemTopology system(60);
   system.mComponents = {gen, r1, r2, r3};
 
-  // Declare circuit components for resistance change
+  // Declare circuit components for resistance change.
   Real breakerRes = 0.001;
   Component::Ptr rBreaker1 =
       Resistor::make("rbreak1", 0, DEPRECATEDGND, breakerRes);
@@ -84,7 +85,7 @@ int main(int argc, char *argv[]) {
   sim.setLogDownsamplingRate(downSampling);
   sim.addSystemTopology(systemBreakerOn);
 
-  // Initialize generator
+  // Initialize generator.
   Real initActivePower = 300e6;
   Real initReactivePower = 0;
   Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
@@ -94,11 +95,11 @@ int main(int argc, char *argv[]) {
   genPtr->initialize(om, dt, initActivePower, initReactivePower,
                      initTerminalVolt, initVoltAngle, mechPower);
 
-  // Calculate initial values for circuit at generator connection point
+  // Calculate initial values for circuit at generator connection point.
 #if 0
-	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
-	Real initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
-	Real initPowerFactor = acos(initActivePower / initApparentPower);
+  Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
+  Real initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
+  Real initPowerFactor = acos(initActivePower / initApparentPower);
 #endif
 
   sim.setSwitchTime(0.1, 1);

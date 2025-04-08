@@ -31,8 +31,8 @@ public:
                         Logger::Level logLevel = Logger::Level::off)
       : IdentifiedObject(uid, name),
         /* We also want to set the CLI loglevel according to the logLevel
-			 * std::max(Logger::Level::info, logLevel). But because of excessive
-			 * logging to Level::info that is currently infeasible. */
+         * std::max(Logger::Level::info, logLevel). But because of excessive
+         * logging to Level::info that is currently infeasible. */
         mSLog(Logger::get(name, logLevel, Logger::Level::warn)),
         mLogLevel(logLevel) {}
 

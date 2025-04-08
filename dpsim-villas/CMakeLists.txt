@@ -24,10 +24,10 @@ endif()
 file(GLOB_RECURSE HEADER_FILES include/*.h)
 
 target_sources(dpsim-villas PUBLIC
-  FILE_SET public_headers
-  TYPE HEADERS
-  BASE_DIRS include
-  FILES "${HEADER_FILES}"
+	FILE_SET public_headers
+	TYPE HEADERS
+	BASE_DIRS include
+	FILES "${HEADER_FILES}"
 )
 
 install(TARGETS dpsim-villas
