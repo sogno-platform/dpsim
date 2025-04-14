@@ -10,7 +10,7 @@ A few years later, dynamic phasors were also employed for power system simulatio
 In [Strunz2006](https://ieeexplore.ieee.org/document/4026700) the authors combine the dynamic phasor approach with the Electromagnetic Transients Program (EMTP) simulator concept which includes Modified Nodal Analysis (MNA).
 Further research topics include fault and stability analysis under unbalanced conditions as presented in [Stankovic2000](https://ieeexplore.ieee.org/document/871734) and also rotating machine models have been developed in dynamic phasors [Zhang 2007](https://ieeexplore.ieee.org/document/4282063).
 
-## Bandpass Signals and Baseband Representation
+# Bandpass Signals and Baseband Representation
 
 Although here, dynamic phasors are presented as a power system modelling tool, it should be noted that the concept is also known in other domains, for example, microwave and communications engineering [Maas2003](https://ieeexplore.ieee.org/document/9100822), [Suarez2009](https://ieeexplore.ieee.org/book/5236646), [Haykin2009](https://isbnsearch.org/isbn/9780471697909), [Proakis2001](https://isbnsearch.org/isbn/0131589326).
 In these domains, the approach is often denoted as base band representation or complex envelope.

@@ -32,7 +32,8 @@ The project is released under the terms of the [MPL 2.0](https://mozilla.org/MPL
 
 [LF Energy Slack](https://slack.lfenergy.org/) - Chat with other users and developers and get help in the **#sogno** or **#sogno-dpsim** channel.
 
-You can also send a direct message to
+You can also send a direct message to:
+
 - Markus Mirz
 - Jan Dinkelbach
 - Steffen Vogel

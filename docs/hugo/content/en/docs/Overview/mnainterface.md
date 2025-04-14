@@ -26,9 +26,10 @@ virtual void mnaCompApplySystemMatrixStampHarm(SparseMatrixRow& systemMatrix, In
 virtual void mnaCompApplyRightSideVectorStampHarm(Matrix& sourceVector);
 virtual void mnaCompApplyRightSideVectorStampHarm(Matrix& sourceVector, Int freqIdx);
 ```
+
 `MNASimPowerComp` provides empty default implementations for all of these methods, so component classes are not forced to implement any of them.
 
-## Controlling Common Base Class Behavior
+# Controlling Common Base Class Behavior
 
 Child component classes can control the behavior of the base class through the constructor arguments of `MNASimPowerComp`.
 The two boolean variables `hasPreStep` and `hasPostStep` can be used to control whether the `MNAPreStep` and `MNAPostStep` tasks will be created and registered.
@@ -40,10 +41,10 @@ If this behavior is not desired, e.g. for resistors which have no influence on t
 
 ```cpp
 void DP::Ph1::Resistor::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	updateMatrixNodeIndices();
+  updateMatrixNodeIndices();
 
-	**mRightVector = Matrix::Zero(0, 0);
-    //...
+  **mRightVector = Matrix::Zero(0, 0);
+  //...
 }
 ```
 

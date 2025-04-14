@@ -12,12 +12,12 @@ This is due to operating system noise and other processes interfering with the s
 With proper tuning, we have achieved real-time time steps as low as 5 us synchronized to a FPGA using VILLASnode.
 Synchronizing the time step to an external source is only necessary, when very high time step accuracy, with maximum deviations in the nanoseconds, is required.
 
-
-## Operating System and Kernel
+# Operating System and Kernel
 
 Using a Linux kernel with the `PREEMPT_RT` feature improves latency when issuing system calls and enables the FIFO scheduler that lets us avoid preemption during the real-time simulation.
 
 Most distributions offer a binary package for a `PREEMPT_RT` enabled kernel. For example on Rocky Linux:
+
 ```bash
 sudo dnf --enablerepo=rt install kernel-rt kernel-rt-devel
 ```
@@ -25,22 +25,26 @@ sudo dnf --enablerepo=rt install kernel-rt kernel-rt-devel
 More aggressive tuning can involve isolating a set of cores for exclusive use by the real-time simulation.
 This way, the kernel will not schedule any processes on these cores.
 Add the kernel parameters `isolcpus` and `nohz_full` using, for example, `grubby`:
+
 ```bash
 sudo grubby --update-kernel=ALL --args="isolcpus=9,11,13,15 nohz_full=9,11,13,15"
 ```
 
 Something similar, but less invasive and non-permanent can be achieved using `tuna`:
+
 ```bash
 sudo tuna isolate -c 9,11,13,15
 ```
 
 To avoid real-time throttling to cause overruns disable this feature:
+
 ```bash
 sudo bash -c "echo -1 > /proc/sys/kernel/sched_rt_runtime_us"
 ```
+
 Note that this is not persistent when rebooting.
 
-## Simulation Model Tuning
+# Simulation Model Tuning
 
 Real time capable models cannot issue any system calls during simulation as the context switch to the kernel introduces unacceptable latencies.
 This means models cannot allocate memory, use mutexes or other interrupt-driven synchronization primitives, read or write data from files.
@@ -50,7 +54,8 @@ Note however, that this logger pre-allocated the memory required for all of the 
 Your machine may run out of memory, when the simulation is long or you log too many signals.
 
 You can increase the performance of your simulation by adding the `-flto` and  `-march=native` compiler flags:
-```
+
+```diff
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 8801cbe8d..4a2843269 100644
 --- a/CMakeLists.txt
@@ -66,9 +71,10 @@ index 8801cbe8d..4a2843269 100644
  # Get version info and buildid from Git
 ```
 
-## Running a Real-Time Simulation
+# Running a Real-Time Simulation
 
 Before running a simulation, you can run the following commands as root:
+
 ```bash
 echo "evacuating cores"
 tuna isolate -c 9,11,13,15
@@ -86,6 +92,7 @@ systemctl stop chronyd
 As a reference, real-time simulation examples are provided in the `dpsim/examples/cxx` and `dpsim-villas/examples/cxx` folder of the DPsim repository.
 
 To benefit from the `PREEMPT_RT` feature and the isolated cores, the simulation has to be started using the `chrt` command to set the scheduling policy and priority, and the `taskset` command to pin the process to the isolated cores.
+
 - [chrt man-page](http://man7.org/linux/man-pages/man1/chrt.1.html)
 - [taskset man-page](http://man7.org/linux/man-pages/man1/taskset.1.html)
 

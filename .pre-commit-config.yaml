@@ -42,3 +42,9 @@ repos:
     hooks:
       - id: black
       - id: black-jupyter
+
+  - repo: https://github.com/markdownlint/markdownlint
+    rev: "v0.13.0"
+    hooks:
+      - id: markdownlint
+        args: [-r, "~MD013,~MD033,~MD024"]
