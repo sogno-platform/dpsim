@@ -1,5 +1,5 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DPsim – Documentation</title><link>https://sogno-platform.github.io/dpsim/docs/</link><description>Recent content in Documentation on DPsim</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://sogno-platform.github.io/dpsim/docs/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Architecture</title><link>https://sogno-platform.github.io/dpsim/docs/overview/architecture/</link><pubDate>Wed, 25 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/overview/architecture/</guid><description>
-&lt;h2 id="modules-and-dependencies">Modules and Dependencies&lt;/h2>
+&lt;h1 id="modules-and-dependencies">Modules and Dependencies&lt;/h1>
 &lt;p>The figure below shows the main components of the DPsim library and their dependencies on other software projects.
 All functionality is implemented in the C++ core, which can be used standalone or together with the Python interface.
 The Python interface is a thin wrapper of the C++ core.
@@ -22,7 +22,7 @@ A DAE solver is currently under development.
 Its main purpose will be offline simulation, for example, to provide reference results where simulation runtime and real-time execution are not relevant.&lt;/p>
 &lt;p>The component models depend mostly on the Eigen library.
 Even if components are used in combination with Sundials ODE / DAE solvers, we try to keep the specific functions required by these solvers independent of the Sundials package.&lt;/p>
-&lt;h2 id="class-hierarchy">Class Hierarchy&lt;/h2>
+&lt;h1 id="class-hierarchy">Class Hierarchy&lt;/h1>
 &lt;p>The &lt;code>Simulation&lt;/code> class holds references to instances of &lt;code>Interface&lt;/code>, &lt;code>Solver&lt;/code>, &lt;code>Logger&lt;/code> and &lt;code>SystemTopology&lt;/code>.
 For a simulation scenario, the minimum description would include a &lt;code>SystemTopology&lt;/code> and a solver type.
 The &lt;code>Solver&lt;/code> instance is then created by the &lt;code>Simulation&lt;/code>.&lt;/p>
@@ -50,7 +50,7 @@ In general, attributes are instances of the &lt;code>Attribute&amp;lt;T&amp;gt;&
 &lt;p>Any simulation component or class which inherits from &lt;code>IdentifiedObject&lt;/code> contains an instance of an &lt;code>AttributeList&lt;/code>.
 This list can be used to store all the attributes present in this component and later access them via a &lt;code>String&lt;/code> instead of having to use the member variable directly.
 For reasons of code clarity and runtime safety, the member variables should still be used whenever possible.&lt;/p>
-&lt;h2 id="creating-and-storing-attributes">Creating and Storing Attributes&lt;/h2>
+&lt;h1 id="creating-and-storing-attributes">Creating and Storing Attributes&lt;/h1>
 &lt;p>Normally, a new attribute is created by using the &lt;code>create&lt;/code> or &lt;code>createDynamic&lt;/code> method of an &lt;code>AttributeList&lt;/code> object.
 These two methods will create a new attribute of the given type and insert it into the &lt;code>AttributeList&lt;/code> under the given name. After the name, &lt;code>create&lt;/code> can take an additional parameter of type &lt;code>T&lt;/code> which will be used as the initial value for this attribute.
 Afterwards, a pointer to the attribute is returned which can then be stored in a component&amp;rsquo;s member variable. Usually this is done in the
@@ -83,7 +83,7 @@ component&amp;rsquo;s constructor in an initialization list:&lt;/p>
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic">// ...
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="working-with-static-attributes">Working with Static Attributes&lt;/h2>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="working-with-static-attributes">Working with Static Attributes&lt;/h1>
 &lt;p>As stated above, the value of a static attribute can only be changed through the attribute&amp;rsquo;s &lt;code>set&lt;/code>-method or by writing its value through a mutable reference obtained by calling &lt;code>get&lt;/code>. This means that the value will not change between consecutive reads. Because of the performance benefits static
 attributes provide over dynamic attributes, attributes should be static whenever possible.&lt;/p>
 &lt;p>The value of a static attribute can be read by using the attribute&amp;rsquo;s &lt;code>get&lt;/code>-function (i.e. &lt;code>attr-&amp;gt;get&lt;/code>) or by applying the &lt;code>*&lt;/code> operator on the already dereferenced pointer (i.e. &lt;code>**attr&lt;/code>), which is overloaded to also call the &lt;code>get&lt;/code> function. Both methods return a &lt;strong>mutable reference&lt;/strong> to the attribute&amp;rsquo;s value of type &lt;code>T&amp;amp;&lt;/code>:&lt;/p>
@@ -98,7 +98,7 @@ attributes provide over dynamic attributes, attributes should be static whenever
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">Real&lt;/span> &lt;span style="color:#000">read2&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">**&lt;/span>&lt;span style="color:#000">attr&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#8f5902;font-style:italic">//read2 = 0.002
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#000">attr&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">-&amp;gt;&lt;/span>&lt;span style="color:#000">set&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">0.003&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">Real&lt;/span> &lt;span style="color:#000">read3&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">**&lt;/span>&lt;span style="color:#000">attr&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#8f5902;font-style:italic">//read3 = 0.003
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="working-with-dynamic-attributes">Working with Dynamic Attributes&lt;/h2>
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="working-with-dynamic-attributes">Working with Dynamic Attributes&lt;/h1>
 &lt;p>In general, dynamic attributes can be accessed via the same &lt;code>get&lt;/code> and &lt;code>set&lt;/code>-methods described above for static attributes. However,
 dynamic attributes can additionally have &lt;strong>dependencies&lt;/strong> on other attributes which affect the behavior of these methods.
 Usually, this is used to dynamically compute the attribute&amp;rsquo;s value from the value of another attribute. In the simplest case, a dynamic
@@ -138,12 +138,12 @@ of the various &lt;code>derive...&lt;/code> methods on the original attribute:&l
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Ptr&lt;/span> &lt;span style="color:#000">attr1&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">AttributeStatic&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">Complex&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;gt;::&lt;/span>&lt;span style="color:#000">make&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Complex&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">3&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">4&lt;/span>&lt;span style="color:#000;font-weight:bold">));&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Ptr&lt;/span> &lt;span style="color:#000">attr2&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">attr1&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">-&amp;gt;&lt;/span>&lt;span style="color:#000">deriveMag&lt;/span>&lt;span style="color:#000;font-weight:bold">();&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">Real&lt;/span> &lt;span style="color:#000">read1&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">**&lt;/span>&lt;span style="color:#000">attr2&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#8f5902;font-style:italic">//read1 = 5
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">Real&lt;/span> &lt;span style="color:#000">read1&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">**&lt;/span>&lt;span style="color:#000">attr2&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// read1 = 5
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">**&lt;/span>&lt;span style="color:#000">attr1&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">Complex&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">Real&lt;/span> &lt;span style="color:#000">read2&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">**&lt;/span>&lt;span style="color:#000">attr2&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#8f5902;font-style:italic">//read2 = 1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">Real&lt;/span> &lt;span style="color:#000">read2&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">**&lt;/span>&lt;span style="color:#000">attr2&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// read2 = 1
 &lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>There is also a general &lt;code>derive&lt;/code>-method which can take a custom &lt;code>getter&lt;/code> and &lt;code>setter&lt;/code> lambda function for computing the derived attribute from its dependency.
 For more complex cases involving dependencies on multiple attributes, the &lt;code>AttributeDynamic&lt;/code> class has a method called &lt;code>addTask&lt;/code> which can be used to add arbitrary computation tasks which are executed when the attribute is read or written to. For more information, check the method comments in &lt;code>Attribute.h&lt;/code>.&lt;/p>
-&lt;h2 id="using-attributes-for-logging-and-interfacing">Using Attributes for Logging and Interfacing&lt;/h2>
+&lt;h1 id="using-attributes-for-logging-and-interfacing">Using Attributes for Logging and Interfacing&lt;/h1>
 &lt;p>When setting up a simulation, there are some methods which require an instance of &lt;code>AttributeBase::Ptr&lt;/code> as a parameter. Examples for this
 are the logger methods (e.g. &lt;code>DataLogger::logAttribute&lt;/code>) and &lt;a href="https://sogno-platform.github.io/dpsim/docs/overview/interfaces/">interface&lt;/a> methods (e.g. &lt;code>InterfaceVillas::exportAttribute&lt;/code>). To obtain the
 required attribute pointer, one can either directly access the public member variables of the component the attribute belongs to, or use the component&amp;rsquo;s &lt;code>attribute(String name)&lt;/code> method which will look up the attribute in the component&amp;rsquo;s &lt;code>AttributeList&lt;/code>:&lt;/p>
@@ -165,7 +165,7 @@ required attribute pointer, one can either directly access the public member var
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">intf&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">dpsimpyvillas&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">InterfaceVillas&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">name&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;dpsim-mqtt&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">config&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">mqtt_config&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">intf&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">import_attribute&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">evs&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">attr&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;V_ref&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">),&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">True&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">intf&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">export_attribute&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">r12&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">attr&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;i_intf&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">derive_coeff&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>&lt;span style="color:#000;font-weight:bold">),&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="using-attributes-to-schedule-tasks">Using Attributes to Schedule Tasks&lt;/h2>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="using-attributes-to-schedule-tasks">Using Attributes to Schedule Tasks&lt;/h1>
 &lt;p>Attributes are also used to determine dependencies of tasks on data, which is information required by the scheduler.
 For the usual &lt;code>MNAPreStep&lt;/code> and &lt;code>MNAPostStep&lt;/code> tasks, these dependencies are configured in the &lt;code>mnaAddPreStepDependencies&lt;/code> and &lt;code>mnaAddPostStepDependencies&lt;/code> methods:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">DP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Ph1&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Inductor&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">mnaAddPostStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>
@@ -184,16 +184,16 @@ In the simplest case, all tasks of a level have to be finished before tasks of t
 &lt;p>&lt;img src="task_graph_levels.svg" alt="image">&lt;/p>
 &lt;p>The dependencies of tasks on data are determined by referencing the attributes that are read or modified by the task.
 The scheduler computes the schedule prior to the simulation from the task dependency graph resulting from the tasks&amp;rsquo; data dependencies.&lt;/p></description></item><item><title>Docs: Add New Model</title><link>https://sogno-platform.github.io/dpsim/docs/tasks/add-model/</link><pubDate>Tue, 17 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/tasks/add-model/</guid><description>
-&lt;h2 id="add-a-component-model">Add a Component Model&lt;/h2>
+&lt;h1 id="add-a-component-model">Add a Component Model&lt;/h1>
 &lt;p>In this section we will show the implementation of a new component model by means a three-phase dynamic phasor inductor model.&lt;/p>
-&lt;h3 id="c-oop">C++ OOP&lt;/h3>
+&lt;h2 id="c-oop">C++ OOP&lt;/h2>
 &lt;p>DPsim implements component models in a sub project called CPowerSystems (CPS) that is located in the &lt;em>models&lt;/em> folder.
 This folder is added to the DPsim CMake project.
 Every component in DPsim is represented by a C++ class.&lt;/p>
 &lt;p>DPsim supports different types of solvers (MNA, DAE, NRP).
 Each solver requires certain member functions in the component class to be implemented.
 These functions are specified by the solver interface classes: &lt;code>MNAInterface.h&lt;/code>, &lt;code>DAEInterface.h&lt;/code>, etc.&lt;/p>
-&lt;h3 id="directory--namespace-structure">Directory / Namespace Structure&lt;/h3>
+&lt;h2 id="directory--namespace-structure">Directory / Namespace Structure&lt;/h2>
 &lt;p>For the implementation of the new component, we add two new files&lt;/p>
 &lt;ul>
 &lt;li>&lt;code>models/Source/DP/DP_Ph3_Inductor.cpp&lt;/code>&lt;/li>
@@ -202,31 +202,29 @@ These functions are specified by the solver interface classes: &lt;code>MNAInter
 &lt;p>In these files, we will implement a new C++ class with the name &lt;code>CPS::DP::Ph3::Inductor&lt;/code>.
 The general structure looks as follows.&lt;/p>
 &lt;p>Directories:&lt;/p>
-&lt;pre>&lt;code>DPsim
-|
-|- Source
-|- Include
-\ models
-|- Source
-|- DP
-|- EMT
-|- Static
-\ Signal
-|- Include
-|- DP
-|- EMT
-|- Static
-\ Signal
-&lt;/code>&lt;/pre>
-&lt;p>Namespaces:&lt;/p>
-&lt;pre>&lt;code>CPS::{DP,EMT,Static,Signal}::{Ph1,Ph3}::{Name}
-&lt;/code>&lt;/pre>
-&lt;h3 id="attributes">Attributes&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>DPsim
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |- Source
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |- Include
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> \ models
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |- Source
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |- DP
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |- EMT
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |- Static
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> \ Signal
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |- Include
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |- DP
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |- EMT
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |- Static
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> \ Signal
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Namespaces:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">CPS&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#000">DP&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>&lt;span style="color:#000">EMT&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>&lt;span style="color:#000">Static&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>&lt;span style="color:#000">Signal&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#000">Ph1&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>&lt;span style="color:#000">Ph3&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#000">Name&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="attributes">Attributes&lt;/h2>
 &lt;p>Each components has a list of attributes, which has to be specified when creating the components class.&lt;/p>
 &lt;p>TODO: explain attribute system&lt;/p>
-&lt;h3 id="tasks-for-prepost-step-functions">Tasks for Pre/Post-step Functions&lt;/h3>
+&lt;h2 id="tasks-for-prepost-step-functions">Tasks for Pre/Post-step Functions&lt;/h2>
 &lt;p>TODO: add example task dependency graph&lt;/p>
-&lt;h3 id="adding-the-new-component-to-dpsim">Adding the new Component to DPsim&lt;/h3>
+&lt;h2 id="adding-the-new-component-to-dpsim">Adding the new Component to DPsim&lt;/h2>
 &lt;p>After finishing the implementation of the new component, it needs to be added to the following files:&lt;/p>
 &lt;ul>
 &lt;li>&lt;code>models/Include/cps/Components.h&lt;/code>&lt;/li>
@@ -235,7 +233,7 @@ The general structure looks as follows.&lt;/p>
 &lt;/ul></description></item><item><title>Docs: Roadmap</title><link>https://sogno-platform.github.io/dpsim/docs/roadmap/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/roadmap/</guid><description>
 &lt;p>Short-term planning for new features is done on the GitHub &lt;a href="https://github.com/orgs/sogno-platform/projects/1">Project board&lt;/a>.&lt;/p>
 &lt;p>You can also check the &lt;a href="https://github.com/sogno-platform/dpsim/issues">Issues List&lt;/a> or the &lt;a href="https://github.com/sogno-platform/dpsim/pulls">Pull Requests&lt;/a> on GitHub.&lt;/p>
-&lt;h3 id="under-development">Under Development&lt;/h3>
+&lt;h1 id="under-development">Under Development&lt;/h1>
 &lt;ul>
 &lt;li>Solver
 &lt;ul>
@@ -266,7 +264,7 @@ The general structure looks as follows.&lt;/p>
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
-&lt;h3 id="ideas">Ideas&lt;/h3>
+&lt;h1 id="ideas">Ideas&lt;/h1>
 &lt;ul>
 &lt;li>Solver
 &lt;ul>
@@ -289,7 +287,7 @@ Simulation signals in the form of &lt;a href="https://sogno-platform.github.io/d
 Interfaces are subclasses of &lt;code>Interface&lt;/code> and implement the methods &lt;code>addExport&lt;/code> and &lt;code>addImport&lt;/code>, which add dependencies to the passed attribute that forward the attribute value from or to the interface.
 This way, attributes that are imported are read from the interface before they are used in any DPsim component.
 Attributes that are exported are written to the interface after they are set by a DPsim component.&lt;/p>
-&lt;h2 id="interfacing-with-villasnode">Interfacing with VILLASnode&lt;/h2>
+&lt;h1 id="interfacing-with-villasnode">Interfacing with VILLASnode&lt;/h1>
 &lt;blockquote>
 &lt;p>This feature requires the compilation of DPsim with the &lt;code>WITH_VILLAS&lt;/code> feature flag. For use of the VILLASnode interface in python, the &lt;code>dpsimpyvillas&lt;/code> target has to built in addition to the normal &lt;code>dpsimpy&lt;/code> package.&lt;/p>
 &lt;/blockquote>
@@ -354,7 +352,7 @@ As an example, for exporting and importing attributes via the MQTT protocol, the
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Configuring the InterfaceVillas to import and export attributes&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">intf&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">import_attribute&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">evs&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">attr&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;V_ref&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">),&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87;font-weight:bold">True&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">intf&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">export_attribute&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">r12&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">attr&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;i_intf&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">derive_coeff&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>&lt;span style="color:#000;font-weight:bold">),&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="adding-an-interface-to-the-simulation">Adding an Interface to the Simulation&lt;/h2>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="adding-an-interface-to-the-simulation">Adding an Interface to the Simulation&lt;/h1>
 &lt;p>After a new interface has been created and configured, it can be added to a simulation using the &lt;code>Simulation::addInterface&lt;/code> method:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">// Create and configure simulation
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#000">RealTimeSimulation&lt;/span> &lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">simName&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
@@ -372,7 +370,7 @@ The interface&amp;rsquo;s &lt;code>PostStep&lt;/code> task is set to depend on a
 Note that the execution of these tasks might not necessarily coincide with the point in time at which the values are actually written out to or read from the environment.
 This is because the interface internally spawns two new threads for exchanging data with the environment and then uses a &lt;strong>lock-free queue&lt;/strong> for communication between these reader and writer threads, and the simulation. Because of this, time-intensive import or export operations will not block
 the main simulation thread unless this is explicitly configured in the interface&amp;rsquo;s &lt;code>importAttribute&lt;/code> and &lt;code>exportAttribute&lt;/code> methods.&lt;/p>
-&lt;h2 id="synchronizing-the-simulation-with-the-environment">Synchronizing the Simulation with the Environment&lt;/h2>
+&lt;h1 id="synchronizing-the-simulation-with-the-environment">Synchronizing the Simulation with the Environment&lt;/h1>
 &lt;p>To allow for synchronizing the DPsim simulation with external services, the &lt;code>Interface&lt;/code> class provides some additional configuration options in the &lt;code>importAttribute&lt;/code> and &lt;code>exportAttribute&lt;/code> methods. For imports, setting the &lt;code>blockOnRead&lt;/code> parameter will completely halt the simulation at the start of
 every time step until a new value for this attribute was read from the environment. Additionally, the &lt;code>syncOnSimulationStart&lt;/code> parameter can be set for every
 import to indicate that this attribute is used to synchronize the start of the simulation. When a simulation contains any interfaces importing attributes
@@ -389,7 +387,7 @@ However, without modifying system parameters the minimum time step reliably achi
 This is due to operating system noise and other processes interfering with the simulation.
 With proper tuning, we have achieved real-time time steps as low as 5 us synchronized to a FPGA using VILLASnode.
 Synchronizing the time step to an external source is only necessary, when very high time step accuracy, with maximum deviations in the nanoseconds, is required.&lt;/p>
-&lt;h2 id="operating-system-and-kernel">Operating System and Kernel&lt;/h2>
+&lt;h1 id="operating-system-and-kernel">Operating System and Kernel&lt;/h1>
 &lt;p>Using a Linux kernel with the &lt;code>PREEMPT_RT&lt;/code> feature improves latency when issuing system calls and enables the FIFO scheduler that lets us avoid preemption during the real-time simulation.&lt;/p>
 &lt;p>Most distributions offer a binary package for a &lt;code>PREEMPT_RT&lt;/code> enabled kernel. For example on Rocky Linux:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo dnf --enablerepo&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>rt install kernel-rt kernel-rt-devel
@@ -402,7 +400,7 @@ Add the kernel parameters &lt;code>isolcpus&lt;/code> and &lt;code>nohz_full&lt;
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To avoid real-time throttling to cause overruns disable this feature:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo bash -c &lt;span style="color:#4e9a06">&amp;#34;echo -1 &amp;gt; /proc/sys/kernel/sched_rt_runtime_us&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Note that this is not persistent when rebooting.&lt;/p>
-&lt;h2 id="simulation-model-tuning">Simulation Model Tuning&lt;/h2>
+&lt;h1 id="simulation-model-tuning">Simulation Model Tuning&lt;/h1>
 &lt;p>Real time capable models cannot issue any system calls during simulation as the context switch to the kernel introduces unacceptable latencies.
 This means models cannot allocate memory, use mutexes or other interrupt-driven synchronization primitives, read or write data from files.
 You should turn off logging, when time steps in the low milliseconds are desired.
@@ -410,19 +408,20 @@ There is a &lt;code>RealTimeDataLogger&lt;/code> that can be used to output simu
 Note however, that this logger pre-allocated the memory required for all of the logging required during simulations.
 Your machine may run out of memory, when the simulation is long or you log too many signals.&lt;/p>
 &lt;p>You can increase the performance of your simulation by adding the &lt;code>-flto&lt;/code> and &lt;code>-march=native&lt;/code> compiler flags:&lt;/p>
-&lt;pre tabindex="0">&lt;code>diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8801cbe8d..4a2843269 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -79,7 +79,7 @@ include(CheckSymbolExists)
-check_symbol_exists(timerfd_create sys/timerfd.h HAVE_TIMERFD)
-check_symbol_exists(getopt_long getopt.h HAVE_GETOPT)
-if(CMAKE_BUILD_TYPE STREQUAL &amp;#34;Release&amp;#34; OR CMAKE_BUILD_TYPE STREQUAL &amp;#34;RelWithDebInfo&amp;#34;)
-- add_compile_options(-Ofast)
-+ add_compile_options(-Ofast -flto -march=native)
-endif()
-# Get version info and buildid from Git
-&lt;/code>&lt;/pre>&lt;h2 id="running-a-real-time-simulation">Running a Real-Time Simulation&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-diff" data-lang="diff">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000080;font-weight:bold">diff --git a/CMakeLists.txt b/CMakeLists.txt
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000080;font-weight:bold">index 8801cbe8d..4a2843269 100644
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000080;font-weight:bold">&lt;/span>&lt;span style="color:#a40000">--- a/CMakeLists.txt
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+++ b/CMakeLists.txt
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a000">&lt;/span>&lt;span style="color:#800080;font-weight:bold">@@ -79,7 +79,7 @@ include(CheckSymbolExists)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> check_symbol_exists(timerfd_create sys/timerfd.h HAVE_TIMERFD)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> check_symbol_exists(getopt_long getopt.h HAVE_GETOPT)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> if(CMAKE_BUILD_TYPE STREQUAL &amp;#34;Release&amp;#34; OR CMAKE_BUILD_TYPE STREQUAL &amp;#34;RelWithDebInfo&amp;#34;)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">- add_compile_options(-Ofast)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ add_compile_options(-Ofast -flto -march=native)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a000">&lt;/span> endif()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> # Get version info and buildid from Git
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="running-a-real-time-simulation">Running a Real-Time Simulation&lt;/h1>
 &lt;p>Before running a simulation, you can run the following commands as root:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;evacuating cores&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>tuna isolate -c 9,11,13,15
@@ -449,81 +448,66 @@ endif()
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Here we need sudo, to interact with the FPGA. We disable logging (log=false) and set the time step to 50 us (-t 0.00005).&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo taskset -c 9,11,13,15 chrt -f &lt;span style="color:#0000cf;font-weight:bold">99&lt;/span> build/dpsim-villas/examples/cxx/FpgaCosim3PhInfiniteBus -o &lt;span style="color:#000">log&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">false&lt;/span> -t 0.00005 -d &lt;span style="color:#0000cf;font-weight:bold">10&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: Build</title><link>https://sogno-platform.github.io/dpsim/docs/getting-started/build/</link><pubDate>Wed, 03 May 2023 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/getting-started/build/</guid><description>
-&lt;h2 id="docker-based">Docker based&lt;/h2>
+&lt;h1 id="docker-based">Docker based&lt;/h1>
 &lt;p>Clone the repository&lt;/p>
-&lt;pre>&lt;code>$ git clone git@github.com:sogno-platform/dpsim.git
-&lt;/code>&lt;/pre>
-&lt;p>or using https if you do not have an account&lt;/p>
-&lt;pre>&lt;code>$ git clone https://github.com/sogno-platform/dpsim.git
-&lt;/code>&lt;/pre>
-&lt;p>In the repository, there is a Docker file with all required dependencies&lt;/p>
-&lt;pre>&lt;code>$ cd dpsim
-$ docker build -t sogno/dpsim:dev -f Packaging/Docker/Dockerfile.dev .
-&lt;/code>&lt;/pre>
-&lt;p>Alternatively, the image can be pulled from DockerHub like so&lt;/p>
-&lt;pre>&lt;code>$ docker pull sogno/dpsim:dev
-&lt;/code>&lt;/pre>
-&lt;p>For OS specific instructions on how to install requirements, see the sections below.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>git clone git@github.com:sogno-platform/dpsim.git
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>or using https if you do not have an account&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>git clone https://github.com/sogno-platform/dpsim.git
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In the repository, there is a Docker file with all required dependencies&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> dpsim
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker build -t sogno/dpsim:dev -f Packaging/Docker/Dockerfile.dev .
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Alternatively, the image can be pulled from DockerHub like so&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>docker pull sogno/dpsim:dev
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>For OS specific instructions on how to install requirements, see the sections below.&lt;/p>
 &lt;p>Next, run a Docker container&lt;/p>
-&lt;pre>&lt;code>$ cd dpsim
-$ docker run -it -p 8888:8888 -v $(pwd):/dpsim --privileged sogno/dpsim:dev bash
-&lt;/code>&lt;/pre>
-&lt;p>The option &lt;code>-p&lt;/code> maps the port 8888 of the container to the docker host. This is required to access the jupyter lab instance inside the container. The option &lt;code>--privileged&lt;/code> is required for debug builds.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> dpsim
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker run -it -p 8888:8888 -v &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>&lt;span style="color:#204a87">pwd&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>:/dpsim --privileged sogno/dpsim:dev bash
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The option &lt;code>-p&lt;/code> maps the port 8888 of the container to the docker host. This is required to access the jupyter lab instance inside the container. The option &lt;code>--privileged&lt;/code> is required for debug builds.&lt;/p>
 &lt;p>For Windows, you might need to specify the current directory with curly brackets&lt;/p>
-&lt;pre>&lt;code>$ docker run -it -p 8888:8888 -v ${pwd}:/dpsim --privileged sogno/dpsim:dev bash
-&lt;/code>&lt;/pre>
-&lt;p>Now, you should be in an interactive session inside the docker container.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>docker run -it -p 8888:8888 -v &lt;span style="color:#4e9a06">${&lt;/span>&lt;span style="color:#000">pwd&lt;/span>&lt;span style="color:#4e9a06">}&lt;/span>:/dpsim --privileged sogno/dpsim:dev bash
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now, you should be in an interactive session inside the docker container.&lt;/p>
 &lt;p>The DPsim C++ and Python library without C++ examples or documentation can be built as follows&lt;/p>
-&lt;pre>&lt;code>$ cd /dpsim
-$ mkdir build &amp;amp;&amp;amp; cd build
-$ cmake ..
-$ cmake --build . --target dpsimpy
-&lt;/code>&lt;/pre>
-&lt;p>If you need other libraries that are not built by default, you need to target them specifically, for example if you need `dpsimpy´ and ´dpsimpyvillas´:&lt;/p>
-&lt;pre>&lt;code>$ cmake --build . --target dpsimpy dpsimpyvillas
-&lt;/code>&lt;/pre>
-&lt;p>To build everything run&lt;/p>
-&lt;pre>&lt;code>$ cmake --build .
-&lt;/code>&lt;/pre>
-&lt;p>To use other libraries that are installed, use the relevant option defined in the CMakeList.txt files, for example for GSL below, and then build as usual:&lt;/p>
-&lt;pre>&lt;code>$ cmake .. -DWITH_GSL=ON
-&lt;/code>&lt;/pre>
-&lt;p>If you would like to use the Python package, it has to be added to the path.
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> /dpsim
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mkdir build &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake ..
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake --build . --target dpsimpy
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If you need other libraries that are not built by default, you need to target them specifically, for example if you need `dpsimpy´ and ´dpsimpyvillas´:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cmake --build . --target dpsimpy dpsimpyvillas
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To build everything run&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cmake --build .
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To use other libraries that are installed, use the relevant option defined in the CMakeList.txt files, for example for GSL below, and then build as usual:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cmake .. -DWITH_GSL&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>ON
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If you would like to use the Python package, it has to be added to the path.
 The following command adds the dpsimpy C++/Python package as well as the dpsim pure Python package.&lt;/p>
-&lt;pre>&lt;code>$ cd /dpsim/build
-$ export PYTHONPATH=$(pwd):$(pwd)/../python/src/
-&lt;/code>&lt;/pre>
-&lt;p>If you are using &lt;code>conda&lt;/code> or other ways to develop with environments, please keep in mind that this will become specific for your setup. For this case, from within the environment already active:&lt;/p>
-&lt;pre>&lt;code>$ cd /dpsim/build
-$ conda develop $(pwd) &amp;amp;&amp;amp; conda develop $(pwd)/Source/Python &amp;amp;&amp;amp; conda develop $(pwd)/../Source/Python
-&lt;/code>&lt;/pre>
-&lt;p>To run jupyter lab&lt;/p>
-&lt;pre>&lt;code>$ cd /dpsim
-$ jupyter lab --ip=&amp;quot;0.0.0.0&amp;quot; --allow-root --no-browser
-&lt;/code>&lt;/pre>
-&lt;p>To install dpsim run&lt;/p>
-&lt;pre>&lt;code>$ cd /dpsim/build
-$ sudo make install
-&lt;/code>&lt;/pre>
-&lt;h2 id="cmake-for-linux">CMake for Linux&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> /dpsim/build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">PYTHONPATH&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>&lt;span style="color:#204a87">pwd&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>:&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>&lt;span style="color:#204a87">pwd&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>/../python/src/
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If you are using &lt;code>conda&lt;/code> or other ways to develop with environments, please keep in mind that this will become specific for your setup. For this case, from within the environment already active:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> /dpsim/build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>conda develop &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>&lt;span style="color:#204a87">pwd&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> conda develop &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>&lt;span style="color:#204a87">pwd&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>/Source/Python &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> conda develop &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>&lt;span style="color:#204a87">pwd&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>/../Source/Python
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To run JupyterLab&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> /dpsim
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>jupyter lab --ip&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;0.0.0.0&amp;#34;&lt;/span> --allow-root --no-browser
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To install DPsim run&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> /dpsim/build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo make install
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="cmake-for-linux">CMake for Linux&lt;/h1>
 &lt;p>The most recent list of requirements can be found in the Dockerfiles.&lt;/p>
 &lt;p>Make sure that the required dependencies are installed.
 The &lt;a href="https://github.com/sogno-platform/dpsim/blob/c40e283338574e0ba7cd9861c70f1e41aa3399ba/packaging/Shell/install-fedora-deps.sh">fedora installation script&lt;/a> in the DPsim repository is a good place to start from.&lt;/p>
 &lt;p>&lt;strong>Note:&lt;/strong> There are currently no Debian packages for &lt;code>villas-node&lt;/code> and &lt;code>libcimpp16v29a&lt;/code>.
 If you want to use these optional feature, you have to build them manually.&lt;/p>
 &lt;p>Install Sundials&lt;/p>
-&lt;pre>&lt;code>$ git clone --branch v3.1.1 https://github.com/LLNL/sundials.git
-$ mkdir sundials/build
-$ pushd sundials/build
-$ cmake .. \
--DBUILD_SHARED_LIBS=ON \
--DBUILD_STATIC_LIBS=OFF \
--DEXAMPLES_ENABLE_C=OFF
-$ make -j$(nproc) install
-$ popd
-&lt;/code>&lt;/pre>
-&lt;p>The following steps to clone, build and install are the same as for the Docker setup.&lt;/p>
-&lt;h2 id="cmake-for-windows">CMake for Windows&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>git clone --branch v3.1.1 https://github.com/LLNL/sundials.git
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mkdir sundials/build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">pushd&lt;/span> sundials/build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake .. &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06">&lt;/span> -DBUILD_SHARED_LIBS&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>ON &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06">&lt;/span> -DBUILD_STATIC_LIBS&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>OFF &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06">&lt;/span> -DEXAMPLES_ENABLE_C&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>OFF
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make -j&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>nproc&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> install
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">popd&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The following steps to clone, build and install are the same as for the Docker setup.&lt;/p>
+&lt;h1 id="cmake-for-windows">CMake for Windows&lt;/h1>
 &lt;p>Make sure that the required dependecies are installed:&lt;/p>
 &lt;ul>
 &lt;li>Visual Studio 2017 with C++ Desktop development package&lt;/li>
@@ -534,52 +518,44 @@ $ popd
 &lt;p>Clone the project as explained for Docker.&lt;/p>
 &lt;p>Open a windows command prompt and navigate into the new DPsim folder.
 Generate a Visual Studio project with CMake and use it to build the project&lt;/p>
-&lt;pre>&lt;code>$ mkdir build
-$ cd build
-$ cmake -G &amp;quot;Visual Studio 15 2017 Win64&amp;quot; ..
-&lt;/code>&lt;/pre>
-&lt;p>Open Visual Studio and load the Visual Studio project from the build directory within the DPsim folder.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>mkdir build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake -G &lt;span style="color:#4e9a06">&amp;#34;Visual Studio 15 2017 Win64&amp;#34;&lt;/span> ..
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Open Visual Studio and load the Visual Studio project from the build directory within the DPsim folder.&lt;/p>
 &lt;p>You can either build the project from within Visual Studio or from the command line by running the following command in the windows command prompt&lt;/p>
-&lt;pre>&lt;code>$ cmake --build .
-&lt;/code>&lt;/pre>
-&lt;p>To install the Python package use Visual Studio and the Release configuration to build the DPsim Python module and then build the INSTALL project.&lt;/p>
-&lt;h2 id="cmake-for-macos">CMake for macOS&lt;/h2>
-&lt;p>Make sure that the required dependecies are installed&lt;/p>
-&lt;pre>&lt;code>$ /usr/bin/ruby -e &amp;quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&amp;quot;
-$ brew install gcc9 git cmake graphviz python3 gsl eigen spdlog
-$ sudo pip3 install numpy
-&lt;/code>&lt;/pre>
-&lt;p>Clone the source as explained for the Docker setup.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cmake --build .
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To install the Python package use Visual Studio and the Release configuration to build the DPsim Python module and then build the INSTALL project.&lt;/p>
+&lt;h1 id="cmake-for-macos">CMake for macOS&lt;/h1>
+&lt;p>Make sure that the required dependencies are installed&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>/usr/bin/ruby -e &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>brew install gcc9 git cmake graphviz python3 gsl eigen spdlog
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo pip3 install numpy
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Clone the source as explained for the Docker setup.&lt;/p>
 &lt;p>Compile&lt;/p>
-&lt;pre>&lt;code>$ mkdir build
-$ cmake ..
-$ make -j$(sysctl -n hw.ncpu)
-&lt;/code>&lt;/pre>
-&lt;p>To install the generated Python module to your system&lt;/p>
-&lt;pre>&lt;code>$ sudo make install
-&lt;/code>&lt;/pre>
-&lt;h2 id="python-package-for-pypi">Python Package for pypi&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>mkdir build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake ..
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make -j&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>sysctl -n hw.ncpu&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To install the generated Python module to your system&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo make install
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="python-package-for-pypi">Python Package for pypi&lt;/h1>
 &lt;p>Follow the previous steps to set up the Docker container.&lt;/p>
 &lt;p>To build the Python package run&lt;/p>
-&lt;pre>&lt;code>$ python3 setup.py bdist_wheel
-&lt;/code>&lt;/pre>
-&lt;h2 id="documentation">Documentation&lt;/h2>
-&lt;h3 id="python">Python&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>python3 setup.py bdist_wheel
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="documentation">Documentation&lt;/h1>
+&lt;h2 id="python">Python&lt;/h2>
 &lt;p>Install &lt;a href="https://www.sphinx-doc.org/en/master/">Sphinx&lt;/a> or use the Docker image.&lt;/p>
 &lt;p>Generate the Python documentation by running Sphinx via CMake:&lt;/p>
-&lt;pre>&lt;code>$ mkdir -p build &amp;amp;&amp;amp; cd build
-$ cmake ..
-$ make docs
-&lt;/code>&lt;/pre>
-&lt;p>The resulting documentation will be generated in &lt;code>Documentation/html/&lt;/code>.&lt;/p>
-&lt;h3 id="c">C++&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>mkdir -p build &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake ..
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make docs
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The resulting documentation will be generated in &lt;code>Documentation/html/&lt;/code>.&lt;/p>
+&lt;h2 id="c">C++&lt;/h2>
 &lt;p>Install &lt;a href="http://www.doxygen.nl/">Doxygen&lt;/a> or use the Docker image.&lt;/p>
 &lt;p>Generate the C++ documentation by running Doxygen via CMake:&lt;/p>
-&lt;pre>&lt;code>$ mkdir -p build &amp;amp;&amp;amp; cd build
-$ cmake ..
-$ make docs_cxx
-&lt;/code>&lt;/pre>
-&lt;p>The resulting documentation will be generated in &lt;code>Documentation/html/Cxx&lt;/code>.&lt;/p></description></item><item><title>Docs: Interfacing with the MNA Solver</title><link>https://sogno-platform.github.io/dpsim/docs/overview/mnainterface/</link><pubDate>Mon, 19 Dec 2022 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/overview/mnainterface/</guid><description>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>mkdir -p build &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake ..
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make docs_cxx
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The resulting documentation will be generated in &lt;code>Documentation/html/Cxx&lt;/code>.&lt;/p></description></item><item><title>Docs: Interfacing with the MNA Solver</title><link>https://sogno-platform.github.io/dpsim/docs/overview/mnainterface/</link><pubDate>Mon, 19 Dec 2022 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/overview/mnainterface/</guid><description>
 &lt;p>The various solver classes based on &lt;code>MNASolver&lt;/code> are used to perform &lt;a href="https://sogno-platform.github.io/dpsim/docs/concepts/nodal-analysis/">Nodal Analysis&lt;/a> during a DPsim simulation. For components to be able to influence the input variables of the MNA, they have to implement certain methods defined in the &lt;code>MNAInterface&lt;/code> interface class. While it is possible to individually implement &lt;code>MNAInterface&lt;/code> for every
 component, the behavior of many components can be unified in a common base class. This base class is called &lt;code>MNASimPowerComp&amp;lt;T&amp;gt;&lt;/code>.
 Currently, it is the only class which directly implements &lt;code>MNAInterface&lt;/code> and in turn all MNA components inherit from this class.
@@ -600,7 +576,7 @@ Additionally, &lt;code>MNASimPowerComp&lt;/code> provides a set of virtual metho
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">virtual&lt;/span> &lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">mnaCompApplyRightSideVectorStampHarm&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Matrix&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span> &lt;span style="color:#000">sourceVector&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">virtual&lt;/span> &lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">mnaCompApplyRightSideVectorStampHarm&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Matrix&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span> &lt;span style="color:#000">sourceVector&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">Int&lt;/span> &lt;span style="color:#000">freqIdx&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>MNASimPowerComp&lt;/code> provides empty default implementations for all of these methods, so component classes are not forced to implement any of them.&lt;/p>
-&lt;h2 id="controlling-common-base-class-behavior">Controlling Common Base Class Behavior&lt;/h2>
+&lt;h1 id="controlling-common-base-class-behavior">Controlling Common Base Class Behavior&lt;/h1>
 &lt;p>Child component classes can control the behavior of the base class through the constructor arguments of &lt;code>MNASimPowerComp&lt;/code>.
 The two boolean variables &lt;code>hasPreStep&lt;/code> and &lt;code>hasPostStep&lt;/code> can be used to control whether the &lt;code>MNAPreStep&lt;/code> and &lt;code>MNAPostStep&lt;/code> tasks will be created and registered.
 If these tasks are created, the &lt;code>mnaCompPreStep&lt;/code> / &lt;code>mnaCompPostStep&lt;/code> and &lt;code>mnaCompAddPreStepDependencies&lt;/code> / &lt;code>mnaCompAddPostStepDependencies&lt;/code> methods will be called during the component&amp;rsquo;s lifecycle.
@@ -616,7 +592,7 @@ If this behavior is not desired, e.g. for resistors which have no influence on t
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>For all other MNA methods, the &lt;code>MNASimPowerComp&lt;/code> base class will just call the associated &lt;code>mnaComp...&lt;/code> method. For more details, take a look at the implementations in &lt;code>MNASimPowerComp.cpp&lt;/code>.&lt;/p></description></item><item><title>Docs: Subcomponent Handling</title><link>https://sogno-platform.github.io/dpsim/docs/overview/subcomponents/</link><pubDate>Wed, 14 Dec 2022 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/overview/subcomponents/</guid><description>
 &lt;p>In DPsim, there are many components which can be broken down into individual subcomponents. Examples are the &lt;code>PiLine&lt;/code>, consisting of an inductor, three resistors, and two capacitors, or the &lt;code>NetworkInjection&lt;/code> which contains a voltage source.
 On the C++ class level, these subcomponents are represented by member variables within the larger component class. In this guide, all components which have subcomponents are called &lt;strong>composite components&lt;/strong>.&lt;/p>
-&lt;h2 id="creating-composite-components">Creating Composite Components&lt;/h2>
+&lt;h1 id="creating-composite-components">Creating Composite Components&lt;/h1>
 &lt;p>While normal components are usually subclasses of &lt;code>SimPowerComp&amp;lt;T&amp;gt;&lt;/code> or &lt;code>MNASimPowerComp&amp;lt;T&amp;gt;&lt;/code>, there exists a special base class for composite
 components called &lt;code>CompositePowerComp&amp;lt;T&amp;gt;&lt;/code>. This class provides multiple methods and parameters for configuring how the subcomponents should be
 handled with respect to the &lt;code>MNAPreStep&lt;/code> and &lt;code>MNAPostStep&lt;/code> tasks.
@@ -655,7 +631,7 @@ should be stamped into the system &lt;code>rightVector&lt;/code>:&lt;/p>
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">addMNASubComponent&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mSubSeriesInductor&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">MNA_SUBCOMP_TASK_ORDER&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">TASK_BEFORE_PARENT&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">MNA_SUBCOMP_TASK_ORDER&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">TASK_BEFORE_PARENT&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87">true&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic">//...
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="orchestrating-mna-method-calls">Orchestrating MNA Method Calls&lt;/h2>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="orchestrating-mna-method-calls">Orchestrating MNA Method Calls&lt;/h1>
 &lt;p>By choosing which methods to override in the composite component class, subcomponent handling can either be offloaded to the &lt;code>CompositePowerComp&lt;/code> base class or manually implemented in the new component class. By default, &lt;code>CompositePowerComp&lt;/code> provides all
 methods demanded by &lt;code>MNAInterface&lt;/code> in such a way that the subcomponents&amp;rsquo; MNA-methods are properly called. To also allow for the composite
 component class to perform further actions in these MNA-methods, there exist multiple methods prefixed with &lt;code>mnaParent&lt;/code>, e.g. &lt;code>mnaParentPreStep&lt;/code> or &lt;code>mnaParentAddPostStepDependencies&lt;/code>.
@@ -666,23 +642,24 @@ calling the subcomponent&amp;rsquo;s methods in a different order, the composite
 &lt;code>mnaParent&lt;/code> prefix. This will prevent the &lt;code>CompositePowerComp&lt;/code> base class from doing any subcomponent handling in this specific MNA-method,
 so the subcomponent method calls have to be performed explicitly if desired. Given this, the following two implementations of the &lt;code>mnaAddPreStepDependencies&lt;/code> method are equivalent:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">DP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Ph1&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">PiLine&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">mnaParentAddPreStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">prevStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">attributeDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">modifiedAttributes&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic">// only add the dependencies of the composite component, the subcomponent&amp;#39;s dependencies are handled by the base class
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic">// Only add the dependencies of the composite component, the subcomponent&amp;#39;s dependencies are handled by the base class
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">prevStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">push_back&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mIntfCurrent&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">prevStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">push_back&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mIntfVoltage&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">modifiedAttributes&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">push_back&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mRightVector&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">DP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Ph1&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">PiLine&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">mnaCompAddPreStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">prevStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">attributeDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">modifiedAttributes&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic">// manually add pre-step dependencies of subcomponents
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic">// Manually add pre-step dependencies of subcomponents
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">auto&lt;/span> &lt;span style="color:#f57900">subComp&lt;/span> &lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000">mSubcomponentsMNA&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">subComp&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">-&amp;gt;&lt;/span>&lt;span style="color:#000">mnaAddPreStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">prevStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">attributeDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">modifiedAttributes&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic">// add pre-step dependencies of component itself
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic">// Add pre-step dependencies of component itself
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">prevStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">push_back&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mIntfCurrent&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">prevStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">push_back&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mIntfVoltage&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">modifiedAttributes&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">push_back&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mRightVector&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: Transformer</title><link>https://sogno-platform.github.io/dpsim/docs/models/transformer/</link><pubDate>Thu, 22 Jul 2021 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/models/transformer/</guid><description>
-&lt;h2 id="2-winding-transformer">2-Winding Transformer&lt;/h2>
+&lt;h1 id="2-winding-transformer">2-Winding Transformer&lt;/h1>
 &lt;p>The transformer model is composed of an RL-segment and an ideal transformer.
 The single line diagram is depicted in the figure below.&lt;/p>
 &lt;p>&lt;img src="electrical_transformer.svg" alt="Transformer">&lt;/p>
@@ -711,38 +688,38 @@ $l$ indicates the inserted row and column to accommodate the relation between th
 The transformer ratio is defined as $T = V_{j} / V_{k}$.
 A phase shift can be introduced if $T$ is considered as a complex number.&lt;/p></description></item><item><title>Docs: Create New Simulation</title><link>https://sogno-platform.github.io/dpsim/docs/tasks/create-simulation/</link><pubDate>Wed, 25 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/tasks/create-simulation/</guid><description>
 &lt;p>Here, we will show the implementation of a new simulation scenario defined in C++, which is using DPsim as a library.&lt;/p>
-&lt;h2 id="directory-structure">Directory Structure&lt;/h2>
+&lt;h1 id="directory-structure">Directory Structure&lt;/h1>
 &lt;p>In the end, your directory structure should look like as follows:&lt;/p>
-&lt;pre>&lt;code>my-project
-|- CMakeLists.txt
-|- source
-|- my-scenario.cpp
-|- dpsim (as submodule)
-&lt;/code>&lt;/pre>
-&lt;h2 id="cmake-file">CMake File&lt;/h2>
-&lt;p>Your CMakeLists could look like this:&lt;/p>
-&lt;pre>&lt;code>cmake_minimum_required(VERSION 3.5)
-project(my-project CXX)
-add_subdirectory(dpsim)
-add_executable(my-scenario source/my-scenario.cpp)
-target_link_libraries(my-scenario dpsim)
-&lt;/code>&lt;/pre>
-&lt;h2 id="build-the-project">Build the Project&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>my-project
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |- CMakeLists.txt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |- source
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |- my-scenario.cpp
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |- dpsim (as submodule)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="cmake-file">CMake File&lt;/h1>
+&lt;p>Your &lt;code>CMakeLists.txt&lt;/code> could look like this:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cmake" data-lang="cmake">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cmake_minimum_required&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">VERSION&lt;/span> &lt;span style="color:#4e9a06">3.5&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>&lt;span style="color:#a40000">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#204a87">project&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">my-project&lt;/span> &lt;span style="color:#4e9a06">CXX&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>&lt;span style="color:#a40000">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#204a87">add_subdirectory&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">dpsim&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>&lt;span style="color:#a40000">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#204a87">add_executable&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">my-scenario&lt;/span> &lt;span style="color:#4e9a06">source/my-scenario.cpp&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>&lt;span style="color:#a40000">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#204a87">target_link_libraries&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">my-scenario&lt;/span> &lt;span style="color:#4e9a06">dpsim&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>&lt;span style="color:#a40000">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="build-the-project">Build the Project&lt;/h1>
 &lt;p>The build process is similar to the one of DPsim:&lt;/p>
-&lt;pre>&lt;code>$ cd my-project
-$ mkdir build &amp;amp;&amp;amp; cd build
-$ cmake ..
-$ make my-scenario
-&lt;/code>&lt;/pre></description></item><item><title>Docs: Branches</title><link>https://sogno-platform.github.io/dpsim/docs/models/branches/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/models/branches/</guid><description>
-&lt;h2 id="rx-line">RX-Line&lt;/h2>
-&lt;h2 id="pi-line">PI-Line&lt;/h2>
-&lt;h2 id="transformer">Transformer&lt;/h2></description></item><item><title>Docs: Dynamic Phasors</title><link>https://sogno-platform.github.io/dpsim/docs/concepts/dyn-phasors/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/concepts/dyn-phasors/</guid><description>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> my-project
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mkdir build &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake ..
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make my-scenario
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: Branches</title><link>https://sogno-platform.github.io/dpsim/docs/models/branches/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/models/branches/</guid><description>
+&lt;h1 id="rx-line">RX-Line&lt;/h1>
+&lt;h1 id="pi-line">PI-Line&lt;/h1>
+&lt;h1 id="transformer">Transformer&lt;/h1></description></item><item><title>Docs: Dynamic Phasors</title><link>https://sogno-platform.github.io/dpsim/docs/concepts/dyn-phasors/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/concepts/dyn-phasors/</guid><description>
 &lt;p>In the power systems community, dynamic phasors were initially introduced for power electronics analysis &lt;a href="https://ieeexplore.ieee.org/document/76811">Sanders1991&lt;/a> as a more general approach than state-space averaging.
 They were used to construct efficient models for the dynamics of switching gate phenomena with a high level of detail as shown in &lt;a href="https://ieeexplore.ieee.org/abstract/document/744524">Mattavelli1999&lt;/a>.
 A few years later, dynamic phasors were also employed for power system simulation as described in &lt;a href="https://www.research-collection.ethz.ch/handle/20.500.11850/123490">Demiray2008&lt;/a>.
 In &lt;a href="https://ieeexplore.ieee.org/document/4026700">Strunz2006&lt;/a> the authors combine the dynamic phasor approach with the Electromagnetic Transients Program (EMTP) simulator concept which includes Modified Nodal Analysis (MNA).
 Further research topics include fault and stability analysis under unbalanced conditions as presented in &lt;a href="https://ieeexplore.ieee.org/document/871734">Stankovic2000&lt;/a> and also rotating machine models have been developed in dynamic phasors &lt;a href="https://ieeexplore.ieee.org/document/4282063">Zhang 2007&lt;/a>.&lt;/p>
-&lt;h2 id="bandpass-signals-and-baseband-representation">Bandpass Signals and Baseband Representation&lt;/h2>
+&lt;h1 id="bandpass-signals-and-baseband-representation">Bandpass Signals and Baseband Representation&lt;/h1>
 &lt;p>Although here, dynamic phasors are presented as a power system modelling tool, it should be noted that the concept is also known in other domains, for example, microwave and communications engineering &lt;a href="https://ieeexplore.ieee.org/document/9100822">Maas2003&lt;/a>, &lt;a href="https://ieeexplore.ieee.org/book/5236646">Suarez2009&lt;/a>, &lt;a href="https://isbnsearch.org/isbn/9780471697909">Haykin2009&lt;/a>, &lt;a href="https://isbnsearch.org/isbn/0131589326">Proakis2001&lt;/a>.
 In these domains, the approach is often denoted as base band representation or complex envelope.
 Another common term coming from power electrical engineering is shifted frequency analysis (SFA).
@@ -770,12 +747,12 @@ A circuit can be solved using Nodal Analysis as follows&lt;/p>
 &lt;li>Represent every branch current $i$ as a function of node voltage variables $v$ with the general expression $i = g(v)$&lt;/li>
 &lt;li>Write $n-1$ KCL based equations in terms of node voltage variable.&lt;/li>
 &lt;/ul>
-&lt;p>The resulting equations can be written in matrix form and have to be solved for $v$.
-$$\boldsymbol{Y} \boldsymbol{v} = \boldsymbol{i}$$&lt;/p></description></item><item><title>Docs: Powerflow</title><link>https://sogno-platform.github.io/dpsim/docs/concepts/powerflow/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/concepts/powerflow/</guid><description>
+&lt;p>The resulting equations can be written in matrix form and have to be solved for $v$.&lt;/p>
+&lt;div class="math">$$\boldsymbol{Y} \boldsymbol{v} = \boldsymbol{i}$$&lt;/div></description></item><item><title>Docs: Powerflow</title><link>https://sogno-platform.github.io/dpsim/docs/concepts/powerflow/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/concepts/powerflow/</guid><description>
 &lt;p>The power flow problem is about the calculation of voltage magnitudes and angles for one set of buses.
 The solution is obtained from a given set of voltage magnitudes and power levels for a specific model of the network configuration.
 The power flow solution exhibits the voltages and angles at all buses and real and reactive flows can be deduced from the same.&lt;/p>
-&lt;h2 id="power-system-model">Power System Model&lt;/h2>
+&lt;h1 id="power-system-model">Power System Model&lt;/h1>
 &lt;p>Power systems are modeled as a network of buses (nodes) and branches (lines).
 To a network bus, components such a generator, load, and transmission substation can be connected.
 Each bus in the network is fully described by the following four electrical quantities:&lt;/p>
@@ -813,24 +790,18 @@ Depending on the type of the bus, two of the four electrical quantities are spec
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
-&lt;h2 id="single-phase-power-flow-problem">Single Phase Power Flow Problem&lt;/h2>
+&lt;h1 id="single-phase-power-flow-problem">Single Phase Power Flow Problem&lt;/h1>
 &lt;p>The power flow problem can be expressed by the goal to bring a mismatch function $\vec{f}$ to zero.
-The value of the mismatch function depends on a solution vector $\vec{x}$:
-$$ \vec{f}(\vec{x}) = 0 $$&lt;/p>
-&lt;p>As $\vec{f}(\vec{x})$ will be nonlinear, the equation system will be solved with Newton-Raphson:&lt;/p>
-&lt;p>$$-\textbf{J}(\vec{x}) \Delta \vec{x} = \vec{f} (\vec{x})$$&lt;/p>
-&lt;p>where $\Delta \vec{x}$ is the correction of the solution vector and $\textbf{J}(\vec{x})$ is the Jacobian matrix.
+The value of the mismatch function depends on a solution vector $\vec{x}$:&lt;/p>
+&lt;div class="math">$$\vec{f}(\vec{x}) = 0$$&lt;/div>&lt;p>As $\vec{f}(\vec{x})$ will be nonlinear, the equation system will be solved with Newton-Raphson:&lt;/p>
+&lt;div class="math">$$-\textbf{J}(\vec{x}) \Delta \vec{x} = \vec{f} (\vec{x})$$&lt;/div>&lt;p>where $\Delta \vec{x}$ is the correction of the solution vector and $\textbf{J}(\vec{x})$ is the Jacobian matrix.
 The solution vector $\vec{x}$ represents the voltage $\vec{V}$ by polar or cartesian quantities.
 The mismatch function $\vec{f}$ will either represent the power mismatch $\Delta \vec{S}$ in terms of&lt;/p>
-&lt;p>$$\left [ \begin{array}{c} \Delta \vec{P} \ \Delta \vec{Q} \end{array} \right ]$$&lt;/p>
-&lt;p>or the current mismatch $\Delta \vec{I}$ in terms of&lt;/p>
-&lt;p>$$\left [ \begin{array}{c} \Delta \vec{I_{real}} \ \Delta \vec{I_{imag}} \end{array} \right ]$$&lt;/p>
-&lt;p>where the vectors split the complex quantities into real and imaginary parts.
+&lt;div class="math">$$\left [ \begin{array}{c} \Delta \vec{P} \\ \Delta \vec{Q} \end{array} \right ]$$&lt;/div>&lt;p>or the current mismatch $\Delta \vec{I}$ in terms of&lt;/p>
+&lt;div class="math">$$\left [ \begin{array}{c} \Delta \vec{I_{real}} \\ \Delta \vec{I_{imag}} \end{array} \right ]$$&lt;/div>&lt;p>where the vectors split the complex quantities into real and imaginary parts.
 Futhermore, the solution vector $\vec{x}$ will represent $\vec{V}$ either by polar coordinates&lt;/p>
-&lt;p>$$\left [ \begin{array}{c} \vec{\delta} \ \vert \vec{V} \vert \end{array} \right ]$$&lt;/p>
-&lt;p>or rectangular coordinates&lt;/p>
-&lt;p>$$\left [ \begin{array}{c} \vec{V_{real}} \ \vec{V_{imag}} \end{array} \right ]$$&lt;/p>
-&lt;p>This results in four different formulations of the powerflow problem:&lt;/p>
+&lt;div class="math">$$\left [ \begin{array}{c} \vec{\delta} \\ \vert \vec{V} \vert \end{array} \right ]$$&lt;/div>&lt;p>or rectangular coordinates&lt;/p>
+&lt;div class="math">$$\left [ \begin{array}{c} \vec{V_{real}} \\ \vec{V_{imag}} \end{array} \right ]$$&lt;/div>&lt;p>This results in four different formulations of the powerflow problem:&lt;/p>
 &lt;ul>
 &lt;li>with power mismatch function and polar coordinates&lt;/li>
 &lt;li>with power mismatch function and rectangular coordinates&lt;/li>
@@ -838,15 +809,11 @@ Futhermore, the solution vector $\vec{x}$ will represent $\vec{V}$ either by pol
 &lt;li>with current mismatch function and rectangular coordinates&lt;/li>
 &lt;/ul>
 &lt;p>To solve the problem using NR, we need to formulate $\textbf{J} (\vec{x})$ and $\vec{f} (\vec{x})$ for each powerflow problem formulation.&lt;/p>
-&lt;h3 id="powerflow-problem-with-power-mismatch-function-and-polar-coordinates">Powerflow Problem with Power Mismatch Function and Polar Coordinates&lt;/h3>
-&lt;h4 id="formulation-of-mismatch-function">Formulation of Mismatch Function&lt;/h4>
-&lt;p>The injected power at a node $k$ is given by:
-$$S_{k} = V_{k} I _{k}^{*}$$&lt;/p>
-&lt;p>The current injection into any bus $k$ may be expressed as:
-$$
-I_{k} = \sum_{j=1}^{N} Y_{kj} V_{j}
-$$&lt;/p>
-&lt;p>Substitution yields:&lt;/p>
+&lt;h2 id="powerflow-problem-with-power-mismatch-function-and-polar-coordinates">Powerflow Problem with Power Mismatch Function and Polar Coordinates&lt;/h2>
+&lt;h3 id="formulation-of-mismatch-function">Formulation of Mismatch Function&lt;/h3>
+&lt;p>The injected power at a node $k$ is given by:&lt;/p>
+&lt;div class="math">$$S_{k} = V_{k} I _{k}^{*}$$&lt;/div>&lt;p>The current injection into any bus $k$ may be expressed as:&lt;/p>
+&lt;div class="math">$$I_{k} = \sum_{j=1}^{N} Y_{kj} V_{j}$$&lt;/div>&lt;p>Substitution yields:&lt;/p>
 &lt;div class="math">$$\begin{align}
 S_{k} &amp;= V_{k} \left ( \sum_{j=1}^{N} Y_{kj} V_{j} \right )^{*} \nonumber \\
 &amp;= V_{k} \sum_{j=1}^{N} Y_{kj}^{*} V_{j} ^{*} \nonumber
@@ -883,7 +850,7 @@ Q_{k} = Q_{k} (\vec{x}) \Rightarrow Q_{k} (\vec{x}) - Q_{k} &amp;= 0 \quad \quad
 = \vec{0}
 \end{align}$$&lt;/div>&lt;p>That is a system of nonlinear equations.
 This nonlinearity comes from the fact that $P_{k}$ and $Q_{k}$ have terms containing products of some of the unknowns and also terms containing trigonometric functions of some the unknowns.&lt;/p>
-&lt;h4 id="formulation-of-jacobian">Formulation of Jacobian&lt;/h4>
+&lt;h3 id="formulation-of-jacobian">Formulation of Jacobian&lt;/h3>
 &lt;p>As discussed in the previous section, the power flow problem will be solved using the Newton-Raphson method. Here, the Jacobian matrix is obtained by taking all first-order partial derivates of the power mismatch functions with respect to the voltage angles $\theta_{k}$ and magnitudes $\vert V_{k} \vert$ as:&lt;/p>
 &lt;div class="math">$$\begin{align}
 J_{jk}^{P \theta} &amp;= \frac{\partial P_{j} (\vec{x} ) } {\partial \theta_{k}} = \vert V_{j} \vert \vert V_{k} \vert \left ( G_{jk} sin(\theta_{j} - \theta_{k}) - B_{jk} cos(\theta_{j} - \theta_{k} ) \right ) \\
@@ -930,152 +897,77 @@ J_{jj}^{QV} &amp;= \frac{\partial Q_{j}(\vec{x})}{\partial \vert V_{j} \vert } =
 &lt;li>Compute the update solution vector $\vec{x}^{(i+1)}$. Return to step 3.&lt;/li>
 &lt;li>Stop.&lt;/li>
 &lt;/ol></description></item><item><title>Docs: RLC-Elements</title><link>https://sogno-platform.github.io/dpsim/docs/models/rlc-elements/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/models/rlc-elements/</guid><description>
-&lt;h2 id="emt-equations-and-modified-nodal-analysis">EMT Equations and Modified Nodal Analysis&lt;/h2>
-&lt;h3 id="inductance">Inductance&lt;/h3>
-&lt;p>An inductance is described by
-$$
-v_j(t) - v_k(t) = v_L(t) = L \frac{\mathrm{d} i_L(t)}{\mathrm{d}t}
-$$
-Integration results in an equation to compute the current at time $t$ from a previous state at $t - \Delta t$.
-$$
-i_L(t) = i_L(t - \Delta t) + \frac{1}{L} \ \int_{t - \Delta t}^{t} v_L(\tau) \ \mathrm{d} \tau
-$$
-There are various methods to discretize this equation in order to solve it numerically.
-The trapezoidal rule, an implicit second-order method, is commonly applied for circuit simulation:
-$$
-\int_{t - \Delta t}^{t} f(\tau) \ \mathrm{d} \tau \approx \frac{\Delta t}{2}(f(t) + f(t - \Delta t))
-$$
-Applying the trapezoidal rule to leads to
-$$
-i_L(t) = i_L(t - \Delta t) + \frac{\Delta t}{2L}(v_L(t) + v_L(t - \Delta t))
-$$
-This can be rewritten in terms of an equivalent conductance and current source and the number of time steps $k$ with size $\Delta t$.
-$$
-i_L(k) = g_L v_L(k) + i_{L,equiv}(k-1)
-$$
-$$
-i_{L,equiv}(k-1) = i_L(k-1) + \frac{\Delta t}{2L} v_L(k-1)
-$$
-$$
-g_L = \frac{\Delta t}{2L}
-$$&lt;/p>
-&lt;p>Hence, components described by differential equations are transformed into a DC equivalent circuit as depicted in the figure below.&lt;/p>
+&lt;h1 id="emt-equations-and-modified-nodal-analysis">EMT Equations and Modified Nodal Analysis&lt;/h1>
+&lt;h2 id="inductance">Inductance&lt;/h2>
+&lt;p>An inductance is described by&lt;/p>
+&lt;div class="math">$$v_j(t) - v_k(t) = v_L(t) = L \frac{\mathrm{d} i_L(t)}{\mathrm{d}t}$$&lt;/div>&lt;p>Integration results in an equation to compute the current at time $t$ from a previous state at $t - \Delta t$.&lt;/p>
+&lt;div class="math">$$i_L(t) = i_L(t - \Delta t) + \frac{1}{L} \ \int_{t - \Delta t}^{t} v_L(\tau) \ \mathrm{d} \tau$$&lt;/div>&lt;p>There are various methods to discretize this equation in order to solve it numerically.
+The trapezoidal rule, an implicit second-order method, is commonly applied for circuit simulation:&lt;/p>
+&lt;div class="math">$$\int_{t - \Delta t}^{t} f(\tau) \ \mathrm{d} \tau \approx \frac{\Delta t}{2}(f(t) + f(t - \Delta t))$$&lt;/div>&lt;p>Applying the trapezoidal rule to leads to&lt;/p>
+&lt;div class="math">$$i_L(t) = i_L(t - \Delta t) + \frac{\Delta t}{2L}(v_L(t) + v_L(t - \Delta t))$$&lt;/div>&lt;p>This can be rewritten in terms of an equivalent conductance and current source and the number of time steps $k$ with size $\Delta t$.&lt;/p>
+&lt;div class="math">$$i_L(k) = g_L v_L(k) + i_{L,equiv}(k-1)$$&lt;/div>
+&lt;div class="math">$$i_{L,equiv}(k-1) = i_L(k-1) + \frac{\Delta t}{2L} v_L(k-1)$$&lt;/div>
+&lt;div class="math">$$g_L = \frac{\Delta t}{2L}$$&lt;/div>&lt;p>Hence, components described by differential equations are transformed into a DC equivalent circuit as depicted in the figure below.&lt;/p>
 &lt;p>&lt;img src="electrical_resistive_companion_inductance.svg" alt="inductance resistive companion">&lt;/p>
-&lt;h3 id="capacitance">Capacitance&lt;/h3>
+&lt;h2 id="capacitance">Capacitance&lt;/h2>
 &lt;p>The same procedure can be applied to a capacitance.
-Integration on both side yields
-$$
-i_C(t) = C \frac{\mathrm{d}}{\mathrm{d}t} \ v_C(t)
-$$
-$$
-v_C(t) = v_C(t - \Delta t) + \frac{1}{C} \int_{t - \Delta t}^t i_C(\tau) \mathrm{d} \tau
-$$
-Finally, the equivalent circuit is described by a current source and a conductance.
-$$
-i_{C}(k) = g_{C} v_C(k) + i_{C,equiv}(k-1)
-$$
-$$
-i_{C,equiv}(k-1) = -i_{C}(k-1) - g_C v_C(k-1)
-$$
-$$
-g_{C} = \frac{2C}{\Delta t}
-$$
-This equation set is visualized in the figure below.&lt;/p>
+Integration on both side yields&lt;/p>
+&lt;div class="math">$$i_C(t) = C \frac{\mathrm{d}}{\mathrm{d}t} \ v_C(t)$$&lt;/div>
+&lt;div class="math">$$v_C(t) = v_C(t - \Delta t) + \frac{1}{C} \int_{t - \Delta t}^t i_C(\tau) \mathrm{d} \tau$$&lt;/div>&lt;p>Finally, the equivalent circuit is described by a current source and a conductance.&lt;/p>
+&lt;div class="math">$$i_{C}(k) = g_{C} v_C(k) + i_{C,equiv}(k-1)$$&lt;/div>
+&lt;div class="math">$$i_{C,equiv}(k-1) = -i_{C}(k-1) - g_C v_C(k-1)$$&lt;/div>
+&lt;div class="math">$$g_{C} = \frac{2C}{\Delta t}$$&lt;/div>&lt;p>This equation set is visualized in the figure below.&lt;/p>
 &lt;p>&lt;img src="electrical_resistive_companion_capacitance.svg" alt="capacitance resistive companion">&lt;/p>
-&lt;p>Hence, the vector of unknowns $\bm{x}$ and the source vector $\bm{b}$ become time dependent and this leads to the system description:
-$$
-\bm{A} \bm{x}(t) = \bm{b}(t)
-$$
-To simulate the transient behavior of circuits, this linear equation has to be solved repeatedly.
+&lt;p>Hence, the vector of unknowns $\bm{x}$ and the source vector $\bm{b}$ become time dependent and this leads to the system description:&lt;/p>
+&lt;div class="math">$$\bm{A} \bm{x}(t) = \bm{b}(t)$$&lt;/div>&lt;p>To simulate the transient behavior of circuits, this linear equation has to be solved repeatedly.
 As long as the system topology and the time step is fixed, the system matrix is constant.&lt;/p>
 &lt;h2 id="extension-with-dynamic-phasors">Extension with Dynamic Phasors&lt;/h2>
 &lt;p>The dynamic phasor concept can be integrated with nodal analysis.
 The overall procedure does not change but the system equations are rewritten using complex numbers and all variables need to be expressed in terms of dynamic phasors.
 Therefore, the resistive companion representations of inductances and capacitances have to be adapted as well.&lt;/p>
-&lt;h3 id="inductance-1">Inductance&lt;/h3>
+&lt;h2 id="inductance-1">Inductance&lt;/h2>
 &lt;p>In dynamic phasors the integration of the inductance equation yields&lt;/p>
 &lt;div class="math">$$\begin{align}
 \langle v_L \rangle(t) &amp;= \Big \langle L \frac{\mathrm{d} i_L}{\mathrm{d}t} \Big \rangle(t) \nonumber \\
 &amp;= L \frac{\mathrm{d}}{dt} \langle i_L \rangle(t) + j \omega L \ \langle i_L \rangle(t)
-\end{align}$$&lt;/div>&lt;p>$$
-\langle i_L \rangle(t) = \langle i_L \rangle(t - \Delta t) + \int_{t - \Delta t}^t \frac{1}{L} \langle v_L \rangle(\tau) - j \omega \ \langle i_L \rangle(\tau) \mathrm{d} \tau
-$$&lt;/p>
-&lt;p>Applying the trapezoidal method leads to the finite difference equation:
-$$
-\begin{split}
+\end{align}$$&lt;/div>
+&lt;div class="math">$$\langle i_L \rangle(t) = \langle i_L \rangle(t - \Delta t) + \int_{t - \Delta t}^t \frac{1}{L} \langle v_L \rangle(\tau) - j \omega \ \langle i_L \rangle(\tau) \mathrm{d} \tau$$&lt;/div>&lt;p>Applying the trapezoidal method leads to the finite difference equation:&lt;/p>
+&lt;div class="math">$$\begin{split}
 \langle i_L \rangle(k) = \langle i_L \rangle(k-1) + \frac{\Delta t}{2} \bigg[ \frac{1}{L} (\langle v_L \rangle(k) + \langle v_L \rangle(k-1))
 - j \omega (\langle i_L \rangle(t) + \langle i_L \rangle(k-1) \bigg]
-\end{split}
-$$&lt;/p>
-&lt;p>Solving this for $\langle i_L \rangle(k)$ results in the \ac{DP} equivalent circuit model:
-$$
-\langle i_L \rangle(k) = \frac{a - jab}{1 + b^2} \langle v_L \rangle(k) + \langle i_{L,equiv} \rangle(k-1)
-$$
-with
-$$
-a = \frac{\Delta t}{2L}, \qquad b = \frac{\Delta t \omega}{2}
-$$
-$$
-\langle i_{L,equiv} \rangle(k-1) = \frac{1 - b^2 - j2b}{1 + b^2} \langle i_L \rangle(k-1) + \frac{a - jab}{1 + b^2} \langle v_L \rangle(k-1)
-$$&lt;/p>
-&lt;h3 id="capacitance-1">Capacitance&lt;/h3>
-&lt;p>Similarly, a capacitance is described by as follows
-$$
-\langle i_C \rangle(k) = C \ \frac{\mathrm{d} \langle v_C \rangle}{\mathrm{d} t} + j \omega C \ \langle v_C \rangle(t)
-$$
-$$
-v_C(t) = v_C(t- \Delta t) + \int_{t- \Delta t}^{t} \frac{1}{C} \ i_C(\tau) -j \omega \ v_C(\tau) \ \mathrm{d} \tau
-$$&lt;/p>
-&lt;p>Applying the trapezoidal rule for the capacitance equation leads to the finite difference equation:&lt;/p>
+\end{split}$$&lt;/div>&lt;p>Solving this for $\langle i_L \rangle(k)$ results in the \ac{DP} equivalent circuit model:&lt;/p>
+&lt;div class="math">$$\langle i_L \rangle(k) = \frac{a - jab}{1 + b^2} \langle v_L \rangle(k) + \langle i_{L,equiv} \rangle(k-1)$$&lt;/div>&lt;p>with&lt;/p>
+&lt;div class="math">$$a = \frac{\Delta t}{2L}, \qquad b = \frac{\Delta t \omega}{2}$$&lt;/div>
+&lt;div class="math">$$\langle i_{L,equiv} \rangle(k-1) = \frac{1 - b^2 - j2b}{1 + b^2} \langle i_L \rangle(k-1) + \frac{a - jab}{1 + b^2} \langle v_L \rangle(k-1)$$&lt;/div>&lt;h2 id="capacitance-1">Capacitance&lt;/h2>
+&lt;p>Similarly, a capacitance is described by as follows&lt;/p>
+&lt;div class="math">$$\langle i_C \rangle(k) = C \ \frac{\mathrm{d} \langle v_C \rangle}{\mathrm{d} t} + j \omega C \ \langle v_C \rangle(t)$$&lt;/div>
+&lt;div class="math">$$v_C(t) = v_C(t- \Delta t) + \int_{t- \Delta t}^{t} \frac{1}{C} \ i_C(\tau) -j \omega \ v_C(\tau) \ \mathrm{d} \tau$$&lt;/div>&lt;p>Applying the trapezoidal rule for the capacitance equation leads to the finite difference equation:&lt;/p>
 &lt;div class="math">$$\begin{split}
 \langle v_C \rangle(k) = \langle v_C \rangle(k-1)
 + \frac{\Delta t}{2} \bigg[ \frac{1}{C} \ \langle i_C \rangle(k) - j \omega \ \langle v_C \rangle(k) \\
 + \frac{1}{C} \ \langle i_C \rangle(k-1) - j \omega \ \langle v_C \rangle(k-1) \bigg]
-\end{split}$$&lt;/div>&lt;p>The DP model for the capacitance is defined by
-$$
-\langle i_C \rangle(k) = \frac{1+jb}{a} \ \langle v_C \rangle(k) + \langle i_{C,equiv} \rangle(k-1)
-$$
-with
-$$
-a = \frac{\Delta t}{2C}, \qquad
-b = \frac{\Delta t \omega}{2}
-$$
-$$
-\langle i_{C,equiv} \rangle(k-1) = - \frac{1-jb}{a} \ \langle v_C \rangle(k-1) - \langle i_C \rangle(k-1)
-$$&lt;/p>
-&lt;h3 id="rl-series-element">RL-series element&lt;/h3>
-&lt;p>In dynamic phasors the integration of the inductance equation yields
-$$
-\langle v \rangle(t) = L \frac{\mathrm{d}}{dt} \langle i \rangle(t) + j \omega L \ \langle i \rangle(t) + R \ \langle i \rangle(t)
-$$
-$$
-\langle i \rangle(t) = \langle i \rangle(t - \Delta t) + \int_{t - \Delta t}^t \frac{1}{L} \langle v \rangle(\tau) - j \omega \ \langle i \rangle(\tau) - \frac{R}{L} \ \langle i \rangle(\tau) \mathrm{d} \tau
-$$&lt;/p>
-&lt;p>Applying the trapezoidal method leads to the finite difference equation:
-$$
-\begin{split}
+\end{split}$$&lt;/div>&lt;p>The DP model for the capacitance is defined by&lt;/p>
+&lt;div class="math">$$\langle i_C \rangle(k) = \frac{1+jb}{a} \ \langle v_C \rangle(k) + \langle i_{C,equiv} \rangle(k-1)$$&lt;/div>&lt;p>with&lt;/p>
+&lt;div class="math">$$a = \frac{\Delta t}{2C}, \qquad
+b = \frac{\Delta t \omega}{2}$$&lt;/div>
+&lt;div class="math">$$\langle i_{C,equiv} \rangle(k-1) = - \frac{1-jb}{a} \ \langle v_C \rangle(k-1) - \langle i_C \rangle(k-1)$$&lt;/div>&lt;h2 id="rl-series-element">RL-series element&lt;/h2>
+&lt;p>In dynamic phasors the integration of the inductance equation yields&lt;/p>
+&lt;div class="math">$$\langle v \rangle(t) = L \frac{\mathrm{d}}{dt} \langle i \rangle(t) + j \omega L \ \langle i \rangle(t) + R \ \langle i \rangle(t)$$&lt;/div>
+&lt;div class="math">$$\langle i \rangle(t) = \langle i \rangle(t - \Delta t) + \int_{t - \Delta t}^t \frac{1}{L} \langle v \rangle(\tau) - j \omega \ \langle i \rangle(\tau) - \frac{R}{L} \ \langle i \rangle(\tau) \mathrm{d} \tau$$&lt;/div>&lt;p>Applying the trapezoidal method leads to the finite difference equation:&lt;/p>
+&lt;div class="math">$$\begin{split}
 \langle i \rangle(k) = \langle i \rangle(k-1) + \frac{\Delta t}{2} \bigg[ \frac{1}{L} (\langle v \rangle(k) + \langle v \rangle(k-1))
 - \left( j \omega + \frac{R}{L} \right) (\langle i \rangle(k) + \langle i \rangle(k-1)) \bigg]
-\end{split}
-$$&lt;/p>
-&lt;p>Solving this for $\langle i \rangle(k)$ results in the \ac{DP} equivalent circuit model:
-$$
-\langle i \rangle(k) = \frac{a + Ra^2 - jab}{(1+Ra)^2 + b^2} \langle v \rangle(k) + \langle i_{equiv} \rangle(k-1)
-$$
-with
-$$
-a = \frac{\Delta t}{2L}, \qquad b = \frac{\Delta t \omega}{2}
-$$
-$$
-\langle i_{equiv} \rangle(k-1) = \frac{1 - b^2 - j2b + 2Ra + (Ra)^2 - j2Rab}{(1+Ra^2) + b^2} \langle i \rangle(k-1) + \frac{a + Ra^2 - jab}{(1+Ra)^2 + b^2} \langle v \rangle(k-1)
-$$&lt;/p></description></item><item><title>Docs: Synchronous Generator</title><link>https://sogno-platform.github.io/dpsim/docs/models/synchronous-generator/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/models/synchronous-generator/</guid><description>
+\end{split}$$&lt;/div>&lt;p>Solving this for $\langle i \rangle(k)$ results in the \ac{DP} equivalent circuit model:&lt;/p>
+&lt;div class="math">$$\langle i \rangle(k) = \frac{a + Ra^2 - jab}{(1+Ra)^2 + b^2} \langle v \rangle(k) + \langle i_{equiv} \rangle(k-1)$$&lt;/div>&lt;p>with&lt;/p>
+&lt;div class="math">$$a = \frac{\Delta t}{2L}, \qquad b = \frac{\Delta t \omega}{2}$$&lt;/div>
+&lt;div class="math">$$\langle i_{equiv} \rangle(k-1) = \frac{1 - b^2 - j2b + 2Ra + (Ra)^2 - j2Rab}{(1+Ra^2) + b^2} \langle i \rangle(k-1) + \frac{a + Ra^2 - jab}{(1+Ra)^2 + b^2} \langle v \rangle(k-1)$$&lt;/div></description></item><item><title>Docs: Synchronous Generator</title><link>https://sogno-platform.github.io/dpsim/docs/models/synchronous-generator/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/models/synchronous-generator/</guid><description>
 &lt;p>Two different synchronous machine models are currently available:&lt;/p>
 &lt;ul>
 &lt;li>the full order dq0 reference frame model (EMT, DP) [Kundur, Power system stability and control, 1994]&lt;/li>
 &lt;li>and the much simpler transient stability model (DP) [Eremia, Handbook of Electrical Power System Dynamics, 2003]&lt;/li>
 &lt;/ul>
 &lt;p>The machine model is interfaced to the nodal analysis network solver through a current source, which only affects the source vector and not the system matrix &lt;a href="https://ieeexplore.ieee.org/document/5411963">Wang2010&lt;/a>.&lt;/p>
-&lt;h2 id="basic-equations">Basic Equations&lt;/h2>
+&lt;h1 id="basic-equations">Basic Equations&lt;/h1>
 &lt;p>The equations of the stator and rotor voltages are&lt;/p>
 &lt;div class="math">$$\begin{align}
 \mathbf{v}_{abcs} &amp;= \mathbf{R}_s \mathbf{i}_{abcs} + \frac{d}{dt} \boldsymbol{\lambda}_{abcs} \\
@@ -1325,73 +1217,67 @@ T_e &amp;= \langle \lambda_{qs} \rangle_0 \langle i_{ds} \rangle_0 - \langle \la
 &lt;p>DPsim is a Python module / C++ library for complex power system
 simulation. As a Python module, the easiest way to get to know DPsim is
 via &lt;a href="https://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/">Jupyter Notebooks&lt;/a>.&lt;/p>
-&lt;h2 id="docker">Docker&lt;/h2>
+&lt;h1 id="docker">Docker&lt;/h1>
 &lt;p>First, you need to install &lt;a href="https://docs.docker.com/install/">Docker&lt;/a>.
 Then, you could either build a docker image by yourself as described in the build instructions or download a prepared image from Docker Hub as described in the following.&lt;/p>
 &lt;p>To start a Jupyter session, run a DPsim Docker container&lt;/p>
-&lt;pre>&lt;code> $ docker run -p 8888:8888 sogno/dpsim
-&lt;/code>&lt;/pre>
-&lt;p>And access the session by opening the following link: http://localhost:8888/lab?token=3adaa57df44cea75e60c0169e1b2a98ae8f7de130481b5bc&lt;/p>
-&lt;h2 id="python">Python&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>docker run -p 8888:8888 sogno/dpsim
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>And access the session by opening the following link: &lt;a href="http://localhost:8888/lab?token=3adaa57df44cea75e60c0169e1b2a98ae8f7de130481b5bc">http://localhost:8888/lab?token=3adaa57df44cea75e60c0169e1b2a98ae8f7de130481b5bc&lt;/a>&lt;/p>
+&lt;h1 id="python">Python&lt;/h1>
 &lt;p>&lt;strong>Currently, the pypi packages are not maintained. Until we have updated the packages, please use the docker installation.&lt;/strong>&lt;/p>
-&lt;h3 id="prerequisites">Prerequisites&lt;/h3>
+&lt;h2 id="prerequisites">Prerequisites&lt;/h2>
 &lt;p>First, you need to make sure that Python is installed and your version is compatible.
 An easy way to install Python and all required packages is the &lt;a href="https://www.anaconda.com/">Anaconda distribution&lt;/a>.
 To get started, install the latest installer for Python 3.x from the &lt;a href="https://www.anaconda.com/download/">downloads section&lt;/a>.
 Then, run the Anaconda Prompt and create a new conda environment:&lt;/p>
-&lt;pre>&lt;code>$ conda create -n dpsim python=3.6
-&lt;/code>&lt;/pre>
-&lt;p>After creating the environment you need to make sure that it is activated.
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>conda create -n dpsim &lt;span style="color:#000">python&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>3.6
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>After creating the environment you need to make sure that it is activated.
 The current environment is displayed at the beginning of the command line in brackets.
 It should read &lt;em>&amp;quot;(dpsim)&amp;hellip;&amp;quot;&lt;/em>.
 In case it is not activated, run:&lt;/p>
-&lt;pre>&lt;code>$ activate dpsim
-&lt;/code>&lt;/pre>
-&lt;h3 id="pip-package-installation">Pip Package Installation&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>activate dpsim
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="pip-package-installation">Pip Package Installation&lt;/h2>
 &lt;p>Then, DPsim can be installed as a Python module:&lt;/p>
-&lt;pre>&lt;code>$ pip install dpsim
-&lt;/code>&lt;/pre>
-&lt;h2 id="from-source">From Source&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>pip install dpsim
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="from-source">From Source&lt;/h1>
 &lt;p>To build and install DPsim from the source files, please refer to the build section.&lt;/p></description></item><item><title>Docs: Debugging</title><link>https://sogno-platform.github.io/dpsim/docs/development/debugging/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/development/debugging/</guid><description>
-&lt;h2 id="mixed-python-c-debugging">Mixed Python C++ Debugging&lt;/h2>
-&lt;h3 id="prerequisites">Prerequisites&lt;/h3>
+&lt;h1 id="mixed-python-c-debugging">Mixed Python C++ Debugging&lt;/h1>
+&lt;h2 id="prerequisites">Prerequisites&lt;/h2>
 &lt;p>Your vscode launch.json should have two configurations, one to launch the python process and one to attach gdb:&lt;/p>
-&lt;pre>&lt;code>{
-&amp;quot;version&amp;quot;: &amp;quot;0.2.0&amp;quot;,
-&amp;quot;configurations&amp;quot;: [
-{
-&amp;quot;name&amp;quot;: &amp;quot;Python: Current File&amp;quot;,
-&amp;quot;type&amp;quot;: &amp;quot;python&amp;quot;,
-&amp;quot;request&amp;quot;: &amp;quot;launch&amp;quot;,
-&amp;quot;program&amp;quot;: &amp;quot;${file}&amp;quot;,
-&amp;quot;console&amp;quot;: &amp;quot;integratedTerminal&amp;quot;,
-&amp;quot;stopOnEntry&amp;quot;: true,
-&amp;quot;env&amp;quot;: {&amp;quot;PYTHONPATH&amp;quot;: &amp;quot;${workspaceFolder}/build${pathSeparator}${env:PYTHONPATH}&amp;quot;}
-},
-{
-&amp;quot;name&amp;quot;: &amp;quot;(gdb) Attach&amp;quot;,
-&amp;quot;type&amp;quot;: &amp;quot;cppdbg&amp;quot;,
-&amp;quot;request&amp;quot;: &amp;quot;attach&amp;quot;,
-&amp;quot;program&amp;quot;: &amp;quot;/usr/bin/python&amp;quot;,
-&amp;quot;processId&amp;quot;: &amp;quot;${command:pickProcess}&amp;quot;,
-&amp;quot;MIMode&amp;quot;: &amp;quot;gdb&amp;quot;,
-&amp;quot;setupCommands&amp;quot;: [
-{
-&amp;quot;description&amp;quot;: &amp;quot;Enable pretty-printing for gdb&amp;quot;,
-&amp;quot;text&amp;quot;: &amp;quot;-enable-pretty-printing&amp;quot;,
-&amp;quot;ignoreFailures&amp;quot;: true
-}
-]
-}
-]
-}
-&lt;/code>&lt;/pre>
-&lt;p>The python debugger will stop on entry (&amp;ldquo;stopOnEntry&amp;rdquo;: true).
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;version&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;0.2.0&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;configurations&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;name&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Python: Current File&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;type&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;python&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;request&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;launch&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;program&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;${file}&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;console&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;integratedTerminal&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;stopOnEntry&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#204a87;font-weight:bold">true&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;env&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#204a87;font-weight:bold">&amp;#34;PYTHONPATH&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;${workspaceFolder}/build${pathSeparator}${env:PYTHONPATH}&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;name&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;(gdb) Attach&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;type&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;cppdbg&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;request&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;attach&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;program&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;/usr/bin/python&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;processId&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;${command:pickProcess}&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;MIMode&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;gdb&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;setupCommands&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;description&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Enable pretty-printing for gdb&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;text&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;-enable-pretty-printing&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;ignoreFailures&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#204a87;font-weight:bold">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The python debugger will stop on entry (&amp;ldquo;stopOnEntry&amp;rdquo;: true).
 Make sure to adapt your PYTHONPATH variable if necessary.&lt;/p>
 &lt;p>The C++ code has to be build in debug mode&lt;/p>
-&lt;pre>&lt;code>cmake .. -DCMAKE_BUILD_TYPE=Debug
-&lt;/code>&lt;/pre>
-&lt;h3 id="attaching-c-debugger">Attaching C++ Debugger&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cmake .. -DCMAKE_BUILD_TYPE&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>Debug
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="attaching-c-debugger">Attaching C++ Debugger&lt;/h2>
 &lt;ul>
 &lt;li>open the python example to be debugged&lt;/li>
 &lt;li>go to the debug menu and select / run the &amp;ldquo;Python: Current File&amp;rdquo; configuration&lt;/li>
@@ -1403,46 +1289,45 @@ Make sure to adapt your PYTHONPATH variable if necessary.&lt;/p>
 &lt;li>press play to continue Python debugging… the c++ debugger will stop at the next breakpoint&lt;/li>
 &lt;/ul>
 &lt;p>You can automate this by using the vscode extension “Python C++ Debugger” and by adding this configuration to the launch.json above:&lt;/p>
-&lt;pre>&lt;code>{
-&amp;quot;name&amp;quot;: &amp;quot;Python C++ Debugger&amp;quot;,
-&amp;quot;type&amp;quot;: &amp;quot;pythoncpp&amp;quot;,
-&amp;quot;request&amp;quot;: &amp;quot;launch&amp;quot;,
-&amp;quot;pythonConfig&amp;quot;: &amp;quot;custom&amp;quot;,
-&amp;quot;pythonLaunchName&amp;quot;: &amp;quot;Python: Current File&amp;quot;,
-&amp;quot;cppConfig&amp;quot;: &amp;quot;default (gdb) Attach&amp;quot;
-}
-&lt;/code>&lt;/pre>
-&lt;p>This will automatically run both debuggers and select the current process.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;name&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Python C++ Debugger&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;type&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;pythoncpp&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;request&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;launch&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;pythonConfig&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;custom&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;pythonLaunchName&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Python: Current File&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;cppConfig&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;default (gdb) Attach&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This will automatically run both debuggers and select the current process.&lt;/p>
 &lt;p>It can take a while before the debugger hits the C++ breakpoints.&lt;/p>
-&lt;h2 id="c-debugging">C++ Debugging&lt;/h2>
+&lt;h1 id="c-debugging">C++ Debugging&lt;/h1>
 &lt;p>Use the following launch.json for vscode and set the program path:&lt;/p>
-&lt;pre>&lt;code>{
-&amp;quot;version&amp;quot;: &amp;quot;0.2.0&amp;quot;,
-&amp;quot;configurations&amp;quot;: [
-{
-&amp;quot;name&amp;quot;: &amp;quot;(gdb) Launch&amp;quot;,
-&amp;quot;type&amp;quot;: &amp;quot;cppdbg&amp;quot;,
-&amp;quot;request&amp;quot;: &amp;quot;launch&amp;quot;,
-&amp;quot;program&amp;quot;: &amp;quot;${workspaceFolder}/dpsim/build/Examples/Cxx/example&amp;quot;,
-&amp;quot;args&amp;quot;: [],
-&amp;quot;stopAtEntry&amp;quot;: true,
-&amp;quot;cwd&amp;quot;: &amp;quot;${workspaceFolder}&amp;quot;,
-&amp;quot;environment&amp;quot;: [],
-&amp;quot;externalConsole&amp;quot;: false,
-&amp;quot;MIMode&amp;quot;: &amp;quot;gdb&amp;quot;,
-&amp;quot;setupCommands&amp;quot;: [
-{
-&amp;quot;description&amp;quot;: &amp;quot;Enable pretty-printing for gdb&amp;quot;,
-&amp;quot;text&amp;quot;: &amp;quot;-enable-pretty-printing&amp;quot;,
-&amp;quot;ignoreFailures&amp;quot;: true
-}
-]
-}
-]
-}
-&lt;/code>&lt;/pre></description></item><item><title>Docs: Guidelines</title><link>https://sogno-platform.github.io/dpsim/docs/development/guidelines/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/development/guidelines/</guid><description>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;version&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;0.2.0&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;configurations&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;name&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;(gdb) Launch&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;type&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;cppdbg&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;request&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;launch&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;program&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;${workspaceFolder}/dpsim/build/Examples/Cxx/example&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;args&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">[],&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;stopAtEntry&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#204a87;font-weight:bold">true&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;cwd&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;${workspaceFolder}&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;environment&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">[],&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;externalConsole&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#204a87;font-weight:bold">false&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;MIMode&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;gdb&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;setupCommands&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;description&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Enable pretty-printing for gdb&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;text&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;-enable-pretty-printing&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;ignoreFailures&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#204a87;font-weight:bold">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: Guidelines</title><link>https://sogno-platform.github.io/dpsim/docs/development/guidelines/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/development/guidelines/</guid><description>
 &lt;p>This is a summary of general guidelines for the development of DPsim.&lt;/p>
-&lt;h2 id="scaling-of-voltages-and-currents">Scaling of Voltages and Currents&lt;/h2>
+&lt;h1 id="scaling-of-voltages-and-currents">Scaling of Voltages and Currents&lt;/h1>
 &lt;p>Voltage quantities are expressed either as phase-to-phase RMS values (denominated as &lt;code>RMS3PH&lt;/code>) or as phase-to-ground peak values (denominated as &lt;code>PEAK1PH&lt;/code>):&lt;/p>
 &lt;ul>
 &lt;li>Initialisation quantities (e.g. &lt;code>initialSingleVoltage&lt;/code> of &lt;code>SimPowerComp&lt;/code>) as &lt;code>RMS3PH&lt;/code> values&lt;/li>
@@ -1454,10 +1339,10 @@ Make sure to adapt your PYTHONPATH variable if necessary.&lt;/p>
 &lt;li>Simulation quantities in both &lt;code>SP&lt;/code> and &lt;code>DP&lt;/code> domain (e.g. &lt;code>mIntfCurrent&lt;/code> of &lt;code>DP::Ph1::PiLine&lt;/code>) as &lt;code>RMS&lt;/code> values&lt;/li>
 &lt;li>Simulation quantities in the &lt;code>EMT&lt;/code> domain (e.g. &lt;code>mIntfCurrent&lt;/code> of &lt;code>EMT::Ph3::Transformer&lt;/code>) as &lt;code>PEAK&lt;/code> values&lt;/li>
 &lt;/ul>
-&lt;h2 id="logging">Logging&lt;/h2>
+&lt;h1 id="logging">Logging&lt;/h1>
 &lt;p>Debug or trace should be the default log level for information that might be nice to have but not necessary for every simulation case.&lt;/p>
 &lt;p>Calls to the logger that might occur during simulation must use spdlog macros, like SPDLOG_LOGGER_INFO.&lt;/p>
-&lt;h2 id="creating-new-releases">Creating New Releases&lt;/h2>
+&lt;h1 id="creating-new-releases">Creating New Releases&lt;/h1>
 &lt;p>Although DPsim currently does not have any conventions on versioning, the periodic creation of
 new versions can help to mark significant changes and to analyze new portions of code using tools like SonarCloud.&lt;/p>
 &lt;p>A new version of DPsim has to be indicated as follows:&lt;/p>

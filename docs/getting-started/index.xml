@@ -5,7 +5,7 @@ However, without modifying system parameters the minimum time step reliably achi
 This is due to operating system noise and other processes interfering with the simulation.
 With proper tuning, we have achieved real-time time steps as low as 5 us synchronized to a FPGA using VILLASnode.
 Synchronizing the time step to an external source is only necessary, when very high time step accuracy, with maximum deviations in the nanoseconds, is required.&lt;/p>
-&lt;h2 id="operating-system-and-kernel">Operating System and Kernel&lt;/h2>
+&lt;h1 id="operating-system-and-kernel">Operating System and Kernel&lt;/h1>
 &lt;p>Using a Linux kernel with the &lt;code>PREEMPT_RT&lt;/code> feature improves latency when issuing system calls and enables the FIFO scheduler that lets us avoid preemption during the real-time simulation.&lt;/p>
 &lt;p>Most distributions offer a binary package for a &lt;code>PREEMPT_RT&lt;/code> enabled kernel. For example on Rocky Linux:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo dnf --enablerepo&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>rt install kernel-rt kernel-rt-devel
@@ -18,7 +18,7 @@ Add the kernel parameters &lt;code>isolcpus&lt;/code> and &lt;code>nohz_full&lt;
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To avoid real-time throttling to cause overruns disable this feature:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo bash -c &lt;span style="color:#4e9a06">&amp;#34;echo -1 &amp;gt; /proc/sys/kernel/sched_rt_runtime_us&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Note that this is not persistent when rebooting.&lt;/p>
-&lt;h2 id="simulation-model-tuning">Simulation Model Tuning&lt;/h2>
+&lt;h1 id="simulation-model-tuning">Simulation Model Tuning&lt;/h1>
 &lt;p>Real time capable models cannot issue any system calls during simulation as the context switch to the kernel introduces unacceptable latencies.
 This means models cannot allocate memory, use mutexes or other interrupt-driven synchronization primitives, read or write data from files.
 You should turn off logging, when time steps in the low milliseconds are desired.
@@ -26,19 +26,20 @@ There is a &lt;code>RealTimeDataLogger&lt;/code> that can be used to output simu
 Note however, that this logger pre-allocated the memory required for all of the logging required during simulations.
 Your machine may run out of memory, when the simulation is long or you log too many signals.&lt;/p>
 &lt;p>You can increase the performance of your simulation by adding the &lt;code>-flto&lt;/code> and &lt;code>-march=native&lt;/code> compiler flags:&lt;/p>
-&lt;pre tabindex="0">&lt;code>diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8801cbe8d..4a2843269 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -79,7 +79,7 @@ include(CheckSymbolExists)
-check_symbol_exists(timerfd_create sys/timerfd.h HAVE_TIMERFD)
-check_symbol_exists(getopt_long getopt.h HAVE_GETOPT)
-if(CMAKE_BUILD_TYPE STREQUAL &amp;#34;Release&amp;#34; OR CMAKE_BUILD_TYPE STREQUAL &amp;#34;RelWithDebInfo&amp;#34;)
-- add_compile_options(-Ofast)
-+ add_compile_options(-Ofast -flto -march=native)
-endif()
-# Get version info and buildid from Git
-&lt;/code>&lt;/pre>&lt;h2 id="running-a-real-time-simulation">Running a Real-Time Simulation&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-diff" data-lang="diff">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000080;font-weight:bold">diff --git a/CMakeLists.txt b/CMakeLists.txt
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000080;font-weight:bold">index 8801cbe8d..4a2843269 100644
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000080;font-weight:bold">&lt;/span>&lt;span style="color:#a40000">--- a/CMakeLists.txt
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+++ b/CMakeLists.txt
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a000">&lt;/span>&lt;span style="color:#800080;font-weight:bold">@@ -79,7 +79,7 @@ include(CheckSymbolExists)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> check_symbol_exists(timerfd_create sys/timerfd.h HAVE_TIMERFD)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> check_symbol_exists(getopt_long getopt.h HAVE_GETOPT)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> if(CMAKE_BUILD_TYPE STREQUAL &amp;#34;Release&amp;#34; OR CMAKE_BUILD_TYPE STREQUAL &amp;#34;RelWithDebInfo&amp;#34;)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">- add_compile_options(-Ofast)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ add_compile_options(-Ofast -flto -march=native)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a000">&lt;/span> endif()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> # Get version info and buildid from Git
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="running-a-real-time-simulation">Running a Real-Time Simulation&lt;/h1>
 &lt;p>Before running a simulation, you can run the following commands as root:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;evacuating cores&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>tuna isolate -c 9,11,13,15
@@ -65,81 +66,66 @@ endif()
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Here we need sudo, to interact with the FPGA. We disable logging (log=false) and set the time step to 50 us (-t 0.00005).&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo taskset -c 9,11,13,15 chrt -f &lt;span style="color:#0000cf;font-weight:bold">99&lt;/span> build/dpsim-villas/examples/cxx/FpgaCosim3PhInfiniteBus -o &lt;span style="color:#000">log&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">false&lt;/span> -t 0.00005 -d &lt;span style="color:#0000cf;font-weight:bold">10&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: Build</title><link>https://sogno-platform.github.io/dpsim/docs/getting-started/build/</link><pubDate>Wed, 03 May 2023 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/getting-started/build/</guid><description>
-&lt;h2 id="docker-based">Docker based&lt;/h2>
+&lt;h1 id="docker-based">Docker based&lt;/h1>
 &lt;p>Clone the repository&lt;/p>
-&lt;pre>&lt;code>$ git clone git@github.com:sogno-platform/dpsim.git
-&lt;/code>&lt;/pre>
-&lt;p>or using https if you do not have an account&lt;/p>
-&lt;pre>&lt;code>$ git clone https://github.com/sogno-platform/dpsim.git
-&lt;/code>&lt;/pre>
-&lt;p>In the repository, there is a Docker file with all required dependencies&lt;/p>
-&lt;pre>&lt;code>$ cd dpsim
-$ docker build -t sogno/dpsim:dev -f Packaging/Docker/Dockerfile.dev .
-&lt;/code>&lt;/pre>
-&lt;p>Alternatively, the image can be pulled from DockerHub like so&lt;/p>
-&lt;pre>&lt;code>$ docker pull sogno/dpsim:dev
-&lt;/code>&lt;/pre>
-&lt;p>For OS specific instructions on how to install requirements, see the sections below.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>git clone git@github.com:sogno-platform/dpsim.git
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>or using https if you do not have an account&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>git clone https://github.com/sogno-platform/dpsim.git
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In the repository, there is a Docker file with all required dependencies&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> dpsim
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker build -t sogno/dpsim:dev -f Packaging/Docker/Dockerfile.dev .
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Alternatively, the image can be pulled from DockerHub like so&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>docker pull sogno/dpsim:dev
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>For OS specific instructions on how to install requirements, see the sections below.&lt;/p>
 &lt;p>Next, run a Docker container&lt;/p>
-&lt;pre>&lt;code>$ cd dpsim
-$ docker run -it -p 8888:8888 -v $(pwd):/dpsim --privileged sogno/dpsim:dev bash
-&lt;/code>&lt;/pre>
-&lt;p>The option &lt;code>-p&lt;/code> maps the port 8888 of the container to the docker host. This is required to access the jupyter lab instance inside the container. The option &lt;code>--privileged&lt;/code> is required for debug builds.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> dpsim
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker run -it -p 8888:8888 -v &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>&lt;span style="color:#204a87">pwd&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>:/dpsim --privileged sogno/dpsim:dev bash
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The option &lt;code>-p&lt;/code> maps the port 8888 of the container to the docker host. This is required to access the jupyter lab instance inside the container. The option &lt;code>--privileged&lt;/code> is required for debug builds.&lt;/p>
 &lt;p>For Windows, you might need to specify the current directory with curly brackets&lt;/p>
-&lt;pre>&lt;code>$ docker run -it -p 8888:8888 -v ${pwd}:/dpsim --privileged sogno/dpsim:dev bash
-&lt;/code>&lt;/pre>
-&lt;p>Now, you should be in an interactive session inside the docker container.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>docker run -it -p 8888:8888 -v &lt;span style="color:#4e9a06">${&lt;/span>&lt;span style="color:#000">pwd&lt;/span>&lt;span style="color:#4e9a06">}&lt;/span>:/dpsim --privileged sogno/dpsim:dev bash
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now, you should be in an interactive session inside the docker container.&lt;/p>
 &lt;p>The DPsim C++ and Python library without C++ examples or documentation can be built as follows&lt;/p>
-&lt;pre>&lt;code>$ cd /dpsim
-$ mkdir build &amp;amp;&amp;amp; cd build
-$ cmake ..
-$ cmake --build . --target dpsimpy
-&lt;/code>&lt;/pre>
-&lt;p>If you need other libraries that are not built by default, you need to target them specifically, for example if you need `dpsimpy´ and ´dpsimpyvillas´:&lt;/p>
-&lt;pre>&lt;code>$ cmake --build . --target dpsimpy dpsimpyvillas
-&lt;/code>&lt;/pre>
-&lt;p>To build everything run&lt;/p>
-&lt;pre>&lt;code>$ cmake --build .
-&lt;/code>&lt;/pre>
-&lt;p>To use other libraries that are installed, use the relevant option defined in the CMakeList.txt files, for example for GSL below, and then build as usual:&lt;/p>
-&lt;pre>&lt;code>$ cmake .. -DWITH_GSL=ON
-&lt;/code>&lt;/pre>
-&lt;p>If you would like to use the Python package, it has to be added to the path.
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> /dpsim
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mkdir build &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake ..
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake --build . --target dpsimpy
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If you need other libraries that are not built by default, you need to target them specifically, for example if you need `dpsimpy´ and ´dpsimpyvillas´:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cmake --build . --target dpsimpy dpsimpyvillas
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To build everything run&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cmake --build .
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To use other libraries that are installed, use the relevant option defined in the CMakeList.txt files, for example for GSL below, and then build as usual:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cmake .. -DWITH_GSL&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>ON
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If you would like to use the Python package, it has to be added to the path.
 The following command adds the dpsimpy C++/Python package as well as the dpsim pure Python package.&lt;/p>
-&lt;pre>&lt;code>$ cd /dpsim/build
-$ export PYTHONPATH=$(pwd):$(pwd)/../python/src/
-&lt;/code>&lt;/pre>
-&lt;p>If you are using &lt;code>conda&lt;/code> or other ways to develop with environments, please keep in mind that this will become specific for your setup. For this case, from within the environment already active:&lt;/p>
-&lt;pre>&lt;code>$ cd /dpsim/build
-$ conda develop $(pwd) &amp;amp;&amp;amp; conda develop $(pwd)/Source/Python &amp;amp;&amp;amp; conda develop $(pwd)/../Source/Python
-&lt;/code>&lt;/pre>
-&lt;p>To run jupyter lab&lt;/p>
-&lt;pre>&lt;code>$ cd /dpsim
-$ jupyter lab --ip=&amp;quot;0.0.0.0&amp;quot; --allow-root --no-browser
-&lt;/code>&lt;/pre>
-&lt;p>To install dpsim run&lt;/p>
-&lt;pre>&lt;code>$ cd /dpsim/build
-$ sudo make install
-&lt;/code>&lt;/pre>
-&lt;h2 id="cmake-for-linux">CMake for Linux&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> /dpsim/build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">PYTHONPATH&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>&lt;span style="color:#204a87">pwd&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>:&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>&lt;span style="color:#204a87">pwd&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>/../python/src/
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If you are using &lt;code>conda&lt;/code> or other ways to develop with environments, please keep in mind that this will become specific for your setup. For this case, from within the environment already active:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> /dpsim/build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>conda develop &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>&lt;span style="color:#204a87">pwd&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> conda develop &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>&lt;span style="color:#204a87">pwd&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>/Source/Python &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> conda develop &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>&lt;span style="color:#204a87">pwd&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>/../Source/Python
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To run JupyterLab&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> /dpsim
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>jupyter lab --ip&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;0.0.0.0&amp;#34;&lt;/span> --allow-root --no-browser
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To install DPsim run&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> /dpsim/build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo make install
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="cmake-for-linux">CMake for Linux&lt;/h1>
 &lt;p>The most recent list of requirements can be found in the Dockerfiles.&lt;/p>
 &lt;p>Make sure that the required dependencies are installed.
 The &lt;a href="https://github.com/sogno-platform/dpsim/blob/c40e283338574e0ba7cd9861c70f1e41aa3399ba/packaging/Shell/install-fedora-deps.sh">fedora installation script&lt;/a> in the DPsim repository is a good place to start from.&lt;/p>
 &lt;p>&lt;strong>Note:&lt;/strong> There are currently no Debian packages for &lt;code>villas-node&lt;/code> and &lt;code>libcimpp16v29a&lt;/code>.
 If you want to use these optional feature, you have to build them manually.&lt;/p>
 &lt;p>Install Sundials&lt;/p>
-&lt;pre>&lt;code>$ git clone --branch v3.1.1 https://github.com/LLNL/sundials.git
-$ mkdir sundials/build
-$ pushd sundials/build
-$ cmake .. \
--DBUILD_SHARED_LIBS=ON \
--DBUILD_STATIC_LIBS=OFF \
--DEXAMPLES_ENABLE_C=OFF
-$ make -j$(nproc) install
-$ popd
-&lt;/code>&lt;/pre>
-&lt;p>The following steps to clone, build and install are the same as for the Docker setup.&lt;/p>
-&lt;h2 id="cmake-for-windows">CMake for Windows&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>git clone --branch v3.1.1 https://github.com/LLNL/sundials.git
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mkdir sundials/build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">pushd&lt;/span> sundials/build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake .. &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06">&lt;/span> -DBUILD_SHARED_LIBS&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>ON &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06">&lt;/span> -DBUILD_STATIC_LIBS&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>OFF &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06">&lt;/span> -DEXAMPLES_ENABLE_C&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>OFF
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make -j&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>nproc&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> install
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">popd&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The following steps to clone, build and install are the same as for the Docker setup.&lt;/p>
+&lt;h1 id="cmake-for-windows">CMake for Windows&lt;/h1>
 &lt;p>Make sure that the required dependecies are installed:&lt;/p>
 &lt;ul>
 &lt;li>Visual Studio 2017 with C++ Desktop development package&lt;/li>
@@ -150,80 +136,68 @@ $ popd
 &lt;p>Clone the project as explained for Docker.&lt;/p>
 &lt;p>Open a windows command prompt and navigate into the new DPsim folder.
 Generate a Visual Studio project with CMake and use it to build the project&lt;/p>
-&lt;pre>&lt;code>$ mkdir build
-$ cd build
-$ cmake -G &amp;quot;Visual Studio 15 2017 Win64&amp;quot; ..
-&lt;/code>&lt;/pre>
-&lt;p>Open Visual Studio and load the Visual Studio project from the build directory within the DPsim folder.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>mkdir build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake -G &lt;span style="color:#4e9a06">&amp;#34;Visual Studio 15 2017 Win64&amp;#34;&lt;/span> ..
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Open Visual Studio and load the Visual Studio project from the build directory within the DPsim folder.&lt;/p>
 &lt;p>You can either build the project from within Visual Studio or from the command line by running the following command in the windows command prompt&lt;/p>
-&lt;pre>&lt;code>$ cmake --build .
-&lt;/code>&lt;/pre>
-&lt;p>To install the Python package use Visual Studio and the Release configuration to build the DPsim Python module and then build the INSTALL project.&lt;/p>
-&lt;h2 id="cmake-for-macos">CMake for macOS&lt;/h2>
-&lt;p>Make sure that the required dependecies are installed&lt;/p>
-&lt;pre>&lt;code>$ /usr/bin/ruby -e &amp;quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&amp;quot;
-$ brew install gcc9 git cmake graphviz python3 gsl eigen spdlog
-$ sudo pip3 install numpy
-&lt;/code>&lt;/pre>
-&lt;p>Clone the source as explained for the Docker setup.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cmake --build .
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To install the Python package use Visual Studio and the Release configuration to build the DPsim Python module and then build the INSTALL project.&lt;/p>
+&lt;h1 id="cmake-for-macos">CMake for macOS&lt;/h1>
+&lt;p>Make sure that the required dependencies are installed&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>/usr/bin/ruby -e &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>brew install gcc9 git cmake graphviz python3 gsl eigen spdlog
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo pip3 install numpy
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Clone the source as explained for the Docker setup.&lt;/p>
 &lt;p>Compile&lt;/p>
-&lt;pre>&lt;code>$ mkdir build
-$ cmake ..
-$ make -j$(sysctl -n hw.ncpu)
-&lt;/code>&lt;/pre>
-&lt;p>To install the generated Python module to your system&lt;/p>
-&lt;pre>&lt;code>$ sudo make install
-&lt;/code>&lt;/pre>
-&lt;h2 id="python-package-for-pypi">Python Package for pypi&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>mkdir build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake ..
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make -j&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>sysctl -n hw.ncpu&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To install the generated Python module to your system&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo make install
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="python-package-for-pypi">Python Package for pypi&lt;/h1>
 &lt;p>Follow the previous steps to set up the Docker container.&lt;/p>
 &lt;p>To build the Python package run&lt;/p>
-&lt;pre>&lt;code>$ python3 setup.py bdist_wheel
-&lt;/code>&lt;/pre>
-&lt;h2 id="documentation">Documentation&lt;/h2>
-&lt;h3 id="python">Python&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>python3 setup.py bdist_wheel
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="documentation">Documentation&lt;/h1>
+&lt;h2 id="python">Python&lt;/h2>
 &lt;p>Install &lt;a href="https://www.sphinx-doc.org/en/master/">Sphinx&lt;/a> or use the Docker image.&lt;/p>
 &lt;p>Generate the Python documentation by running Sphinx via CMake:&lt;/p>
-&lt;pre>&lt;code>$ mkdir -p build &amp;amp;&amp;amp; cd build
-$ cmake ..
-$ make docs
-&lt;/code>&lt;/pre>
-&lt;p>The resulting documentation will be generated in &lt;code>Documentation/html/&lt;/code>.&lt;/p>
-&lt;h3 id="c">C++&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>mkdir -p build &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake ..
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make docs
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The resulting documentation will be generated in &lt;code>Documentation/html/&lt;/code>.&lt;/p>
+&lt;h2 id="c">C++&lt;/h2>
 &lt;p>Install &lt;a href="http://www.doxygen.nl/">Doxygen&lt;/a> or use the Docker image.&lt;/p>
 &lt;p>Generate the C++ documentation by running Doxygen via CMake:&lt;/p>
-&lt;pre>&lt;code>$ mkdir -p build &amp;amp;&amp;amp; cd build
-$ cmake ..
-$ make docs_cxx
-&lt;/code>&lt;/pre>
-&lt;p>The resulting documentation will be generated in &lt;code>Documentation/html/Cxx&lt;/code>.&lt;/p></description></item><item><title>Docs: Install</title><link>https://sogno-platform.github.io/dpsim/docs/getting-started/install/</link><pubDate>Thu, 05 Jan 2017 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/getting-started/install/</guid><description>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>mkdir -p build &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake ..
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make docs_cxx
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The resulting documentation will be generated in &lt;code>Documentation/html/Cxx&lt;/code>.&lt;/p></description></item><item><title>Docs: Install</title><link>https://sogno-platform.github.io/dpsim/docs/getting-started/install/</link><pubDate>Thu, 05 Jan 2017 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/getting-started/install/</guid><description>
 &lt;p>DPsim is a Python module / C++ library for complex power system
 simulation. As a Python module, the easiest way to get to know DPsim is
 via &lt;a href="https://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/">Jupyter Notebooks&lt;/a>.&lt;/p>
-&lt;h2 id="docker">Docker&lt;/h2>
+&lt;h1 id="docker">Docker&lt;/h1>
 &lt;p>First, you need to install &lt;a href="https://docs.docker.com/install/">Docker&lt;/a>.
 Then, you could either build a docker image by yourself as described in the build instructions or download a prepared image from Docker Hub as described in the following.&lt;/p>
 &lt;p>To start a Jupyter session, run a DPsim Docker container&lt;/p>
-&lt;pre>&lt;code> $ docker run -p 8888:8888 sogno/dpsim
-&lt;/code>&lt;/pre>
-&lt;p>And access the session by opening the following link: http://localhost:8888/lab?token=3adaa57df44cea75e60c0169e1b2a98ae8f7de130481b5bc&lt;/p>
-&lt;h2 id="python">Python&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>docker run -p 8888:8888 sogno/dpsim
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>And access the session by opening the following link: &lt;a href="http://localhost:8888/lab?token=3adaa57df44cea75e60c0169e1b2a98ae8f7de130481b5bc">http://localhost:8888/lab?token=3adaa57df44cea75e60c0169e1b2a98ae8f7de130481b5bc&lt;/a>&lt;/p>
+&lt;h1 id="python">Python&lt;/h1>
 &lt;p>&lt;strong>Currently, the pypi packages are not maintained. Until we have updated the packages, please use the docker installation.&lt;/strong>&lt;/p>
-&lt;h3 id="prerequisites">Prerequisites&lt;/h3>
+&lt;h2 id="prerequisites">Prerequisites&lt;/h2>
 &lt;p>First, you need to make sure that Python is installed and your version is compatible.
 An easy way to install Python and all required packages is the &lt;a href="https://www.anaconda.com/">Anaconda distribution&lt;/a>.
 To get started, install the latest installer for Python 3.x from the &lt;a href="https://www.anaconda.com/download/">downloads section&lt;/a>.
 Then, run the Anaconda Prompt and create a new conda environment:&lt;/p>
-&lt;pre>&lt;code>$ conda create -n dpsim python=3.6
-&lt;/code>&lt;/pre>
-&lt;p>After creating the environment you need to make sure that it is activated.
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>conda create -n dpsim &lt;span style="color:#000">python&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>3.6
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>After creating the environment you need to make sure that it is activated.
 The current environment is displayed at the beginning of the command line in brackets.
 It should read &lt;em>&amp;quot;(dpsim)&amp;hellip;&amp;quot;&lt;/em>.
 In case it is not activated, run:&lt;/p>
-&lt;pre>&lt;code>$ activate dpsim
-&lt;/code>&lt;/pre>
-&lt;h3 id="pip-package-installation">Pip Package Installation&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>activate dpsim
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="pip-package-installation">Pip Package Installation&lt;/h2>
 &lt;p>Then, DPsim can be installed as a Python module:&lt;/p>
-&lt;pre>&lt;code>$ pip install dpsim
-&lt;/code>&lt;/pre>
-&lt;h2 id="from-source">From Source&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>pip install dpsim
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="from-source">From Source&lt;/h1>
 &lt;p>To build and install DPsim from the source files, please refer to the build section.&lt;/p></description></item></channel></rss>

@@ -1,43 +1,41 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DPsim – Development</title><link>https://sogno-platform.github.io/dpsim/docs/development/</link><description>Recent content in Development on DPsim</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://sogno-platform.github.io/dpsim/docs/development/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Debugging</title><link>https://sogno-platform.github.io/dpsim/docs/development/debugging/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/development/debugging/</guid><description>
-&lt;h2 id="mixed-python-c-debugging">Mixed Python C++ Debugging&lt;/h2>
-&lt;h3 id="prerequisites">Prerequisites&lt;/h3>
+&lt;h1 id="mixed-python-c-debugging">Mixed Python C++ Debugging&lt;/h1>
+&lt;h2 id="prerequisites">Prerequisites&lt;/h2>
 &lt;p>Your vscode launch.json should have two configurations, one to launch the python process and one to attach gdb:&lt;/p>
-&lt;pre>&lt;code>{
-&amp;quot;version&amp;quot;: &amp;quot;0.2.0&amp;quot;,
-&amp;quot;configurations&amp;quot;: [
-{
-&amp;quot;name&amp;quot;: &amp;quot;Python: Current File&amp;quot;,
-&amp;quot;type&amp;quot;: &amp;quot;python&amp;quot;,
-&amp;quot;request&amp;quot;: &amp;quot;launch&amp;quot;,
-&amp;quot;program&amp;quot;: &amp;quot;${file}&amp;quot;,
-&amp;quot;console&amp;quot;: &amp;quot;integratedTerminal&amp;quot;,
-&amp;quot;stopOnEntry&amp;quot;: true,
-&amp;quot;env&amp;quot;: {&amp;quot;PYTHONPATH&amp;quot;: &amp;quot;${workspaceFolder}/build${pathSeparator}${env:PYTHONPATH}&amp;quot;}
-},
-{
-&amp;quot;name&amp;quot;: &amp;quot;(gdb) Attach&amp;quot;,
-&amp;quot;type&amp;quot;: &amp;quot;cppdbg&amp;quot;,
-&amp;quot;request&amp;quot;: &amp;quot;attach&amp;quot;,
-&amp;quot;program&amp;quot;: &amp;quot;/usr/bin/python&amp;quot;,
-&amp;quot;processId&amp;quot;: &amp;quot;${command:pickProcess}&amp;quot;,
-&amp;quot;MIMode&amp;quot;: &amp;quot;gdb&amp;quot;,
-&amp;quot;setupCommands&amp;quot;: [
-{
-&amp;quot;description&amp;quot;: &amp;quot;Enable pretty-printing for gdb&amp;quot;,
-&amp;quot;text&amp;quot;: &amp;quot;-enable-pretty-printing&amp;quot;,
-&amp;quot;ignoreFailures&amp;quot;: true
-}
-]
-}
-]
-}
-&lt;/code>&lt;/pre>
-&lt;p>The python debugger will stop on entry (&amp;ldquo;stopOnEntry&amp;rdquo;: true).
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;version&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;0.2.0&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;configurations&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;name&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Python: Current File&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;type&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;python&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;request&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;launch&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;program&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;${file}&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;console&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;integratedTerminal&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;stopOnEntry&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#204a87;font-weight:bold">true&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;env&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#204a87;font-weight:bold">&amp;#34;PYTHONPATH&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;${workspaceFolder}/build${pathSeparator}${env:PYTHONPATH}&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;name&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;(gdb) Attach&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;type&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;cppdbg&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;request&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;attach&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;program&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;/usr/bin/python&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;processId&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;${command:pickProcess}&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;MIMode&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;gdb&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;setupCommands&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;description&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Enable pretty-printing for gdb&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;text&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;-enable-pretty-printing&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;ignoreFailures&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#204a87;font-weight:bold">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The python debugger will stop on entry (&amp;ldquo;stopOnEntry&amp;rdquo;: true).
 Make sure to adapt your PYTHONPATH variable if necessary.&lt;/p>
 &lt;p>The C++ code has to be build in debug mode&lt;/p>
-&lt;pre>&lt;code>cmake .. -DCMAKE_BUILD_TYPE=Debug
-&lt;/code>&lt;/pre>
-&lt;h3 id="attaching-c-debugger">Attaching C++ Debugger&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cmake .. -DCMAKE_BUILD_TYPE&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>Debug
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="attaching-c-debugger">Attaching C++ Debugger&lt;/h2>
 &lt;ul>
 &lt;li>open the python example to be debugged&lt;/li>
 &lt;li>go to the debug menu and select / run the &amp;ldquo;Python: Current File&amp;rdquo; configuration&lt;/li>
@@ -49,46 +47,45 @@ Make sure to adapt your PYTHONPATH variable if necessary.&lt;/p>
 &lt;li>press play to continue Python debugging… the c++ debugger will stop at the next breakpoint&lt;/li>
 &lt;/ul>
 &lt;p>You can automate this by using the vscode extension “Python C++ Debugger” and by adding this configuration to the launch.json above:&lt;/p>
-&lt;pre>&lt;code>{
-&amp;quot;name&amp;quot;: &amp;quot;Python C++ Debugger&amp;quot;,
-&amp;quot;type&amp;quot;: &amp;quot;pythoncpp&amp;quot;,
-&amp;quot;request&amp;quot;: &amp;quot;launch&amp;quot;,
-&amp;quot;pythonConfig&amp;quot;: &amp;quot;custom&amp;quot;,
-&amp;quot;pythonLaunchName&amp;quot;: &amp;quot;Python: Current File&amp;quot;,
-&amp;quot;cppConfig&amp;quot;: &amp;quot;default (gdb) Attach&amp;quot;
-}
-&lt;/code>&lt;/pre>
-&lt;p>This will automatically run both debuggers and select the current process.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;name&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Python C++ Debugger&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;type&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;pythoncpp&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;request&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;launch&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;pythonConfig&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;custom&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;pythonLaunchName&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Python: Current File&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;cppConfig&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;default (gdb) Attach&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This will automatically run both debuggers and select the current process.&lt;/p>
 &lt;p>It can take a while before the debugger hits the C++ breakpoints.&lt;/p>
-&lt;h2 id="c-debugging">C++ Debugging&lt;/h2>
+&lt;h1 id="c-debugging">C++ Debugging&lt;/h1>
 &lt;p>Use the following launch.json for vscode and set the program path:&lt;/p>
-&lt;pre>&lt;code>{
-&amp;quot;version&amp;quot;: &amp;quot;0.2.0&amp;quot;,
-&amp;quot;configurations&amp;quot;: [
-{
-&amp;quot;name&amp;quot;: &amp;quot;(gdb) Launch&amp;quot;,
-&amp;quot;type&amp;quot;: &amp;quot;cppdbg&amp;quot;,
-&amp;quot;request&amp;quot;: &amp;quot;launch&amp;quot;,
-&amp;quot;program&amp;quot;: &amp;quot;${workspaceFolder}/dpsim/build/Examples/Cxx/example&amp;quot;,
-&amp;quot;args&amp;quot;: [],
-&amp;quot;stopAtEntry&amp;quot;: true,
-&amp;quot;cwd&amp;quot;: &amp;quot;${workspaceFolder}&amp;quot;,
-&amp;quot;environment&amp;quot;: [],
-&amp;quot;externalConsole&amp;quot;: false,
-&amp;quot;MIMode&amp;quot;: &amp;quot;gdb&amp;quot;,
-&amp;quot;setupCommands&amp;quot;: [
-{
-&amp;quot;description&amp;quot;: &amp;quot;Enable pretty-printing for gdb&amp;quot;,
-&amp;quot;text&amp;quot;: &amp;quot;-enable-pretty-printing&amp;quot;,
-&amp;quot;ignoreFailures&amp;quot;: true
-}
-]
-}
-]
-}
-&lt;/code>&lt;/pre></description></item><item><title>Docs: Guidelines</title><link>https://sogno-platform.github.io/dpsim/docs/development/guidelines/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/development/guidelines/</guid><description>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;version&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;0.2.0&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;configurations&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;name&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;(gdb) Launch&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;type&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;cppdbg&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;request&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;launch&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;program&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;${workspaceFolder}/dpsim/build/Examples/Cxx/example&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;args&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">[],&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;stopAtEntry&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#204a87;font-weight:bold">true&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;cwd&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;${workspaceFolder}&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;environment&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">[],&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;externalConsole&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#204a87;font-weight:bold">false&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;MIMode&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;gdb&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;setupCommands&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;description&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Enable pretty-printing for gdb&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;text&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;-enable-pretty-printing&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;ignoreFailures&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#204a87;font-weight:bold">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: Guidelines</title><link>https://sogno-platform.github.io/dpsim/docs/development/guidelines/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/development/guidelines/</guid><description>
 &lt;p>This is a summary of general guidelines for the development of DPsim.&lt;/p>
-&lt;h2 id="scaling-of-voltages-and-currents">Scaling of Voltages and Currents&lt;/h2>
+&lt;h1 id="scaling-of-voltages-and-currents">Scaling of Voltages and Currents&lt;/h1>
 &lt;p>Voltage quantities are expressed either as phase-to-phase RMS values (denominated as &lt;code>RMS3PH&lt;/code>) or as phase-to-ground peak values (denominated as &lt;code>PEAK1PH&lt;/code>):&lt;/p>
 &lt;ul>
 &lt;li>Initialisation quantities (e.g. &lt;code>initialSingleVoltage&lt;/code> of &lt;code>SimPowerComp&lt;/code>) as &lt;code>RMS3PH&lt;/code> values&lt;/li>
@@ -100,10 +97,10 @@ Make sure to adapt your PYTHONPATH variable if necessary.&lt;/p>
 &lt;li>Simulation quantities in both &lt;code>SP&lt;/code> and &lt;code>DP&lt;/code> domain (e.g. &lt;code>mIntfCurrent&lt;/code> of &lt;code>DP::Ph1::PiLine&lt;/code>) as &lt;code>RMS&lt;/code> values&lt;/li>
 &lt;li>Simulation quantities in the &lt;code>EMT&lt;/code> domain (e.g. &lt;code>mIntfCurrent&lt;/code> of &lt;code>EMT::Ph3::Transformer&lt;/code>) as &lt;code>PEAK&lt;/code> values&lt;/li>
 &lt;/ul>
-&lt;h2 id="logging">Logging&lt;/h2>
+&lt;h1 id="logging">Logging&lt;/h1>
 &lt;p>Debug or trace should be the default log level for information that might be nice to have but not necessary for every simulation case.&lt;/p>
 &lt;p>Calls to the logger that might occur during simulation must use spdlog macros, like SPDLOG_LOGGER_INFO.&lt;/p>
-&lt;h2 id="creating-new-releases">Creating New Releases&lt;/h2>
+&lt;h1 id="creating-new-releases">Creating New Releases&lt;/h1>
 &lt;p>Although DPsim currently does not have any conventions on versioning, the periodic creation of
 new versions can help to mark significant changes and to analyze new portions of code using tools like SonarCloud.&lt;/p>
 &lt;p>A new version of DPsim has to be indicated as follows:&lt;/p>

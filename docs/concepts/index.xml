@@ -4,7 +4,7 @@ They were used to construct efficient models for the dynamics of switching gate 
 A few years later, dynamic phasors were also employed for power system simulation as described in &lt;a href="https://www.research-collection.ethz.ch/handle/20.500.11850/123490">Demiray2008&lt;/a>.
 In &lt;a href="https://ieeexplore.ieee.org/document/4026700">Strunz2006&lt;/a> the authors combine the dynamic phasor approach with the Electromagnetic Transients Program (EMTP) simulator concept which includes Modified Nodal Analysis (MNA).
 Further research topics include fault and stability analysis under unbalanced conditions as presented in &lt;a href="https://ieeexplore.ieee.org/document/871734">Stankovic2000&lt;/a> and also rotating machine models have been developed in dynamic phasors &lt;a href="https://ieeexplore.ieee.org/document/4282063">Zhang 2007&lt;/a>.&lt;/p>
-&lt;h2 id="bandpass-signals-and-baseband-representation">Bandpass Signals and Baseband Representation&lt;/h2>
+&lt;h1 id="bandpass-signals-and-baseband-representation">Bandpass Signals and Baseband Representation&lt;/h1>
 &lt;p>Although here, dynamic phasors are presented as a power system modelling tool, it should be noted that the concept is also known in other domains, for example, microwave and communications engineering &lt;a href="https://ieeexplore.ieee.org/document/9100822">Maas2003&lt;/a>, &lt;a href="https://ieeexplore.ieee.org/book/5236646">Suarez2009&lt;/a>, &lt;a href="https://isbnsearch.org/isbn/9780471697909">Haykin2009&lt;/a>, &lt;a href="https://isbnsearch.org/isbn/0131589326">Proakis2001&lt;/a>.
 In these domains, the approach is often denoted as base band representation or complex envelope.
 Another common term coming from power electrical engineering is shifted frequency analysis (SFA).
@@ -32,12 +32,12 @@ A circuit can be solved using Nodal Analysis as follows&lt;/p>
 &lt;li>Represent every branch current $i$ as a function of node voltage variables $v$ with the general expression $i = g(v)$&lt;/li>
 &lt;li>Write $n-1$ KCL based equations in terms of node voltage variable.&lt;/li>
 &lt;/ul>
-&lt;p>The resulting equations can be written in matrix form and have to be solved for $v$.
-$$\boldsymbol{Y} \boldsymbol{v} = \boldsymbol{i}$$&lt;/p></description></item><item><title>Docs: Powerflow</title><link>https://sogno-platform.github.io/dpsim/docs/concepts/powerflow/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/concepts/powerflow/</guid><description>
+&lt;p>The resulting equations can be written in matrix form and have to be solved for $v$.&lt;/p>
+&lt;div class="math">$$\boldsymbol{Y} \boldsymbol{v} = \boldsymbol{i}$$&lt;/div></description></item><item><title>Docs: Powerflow</title><link>https://sogno-platform.github.io/dpsim/docs/concepts/powerflow/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/concepts/powerflow/</guid><description>
 &lt;p>The power flow problem is about the calculation of voltage magnitudes and angles for one set of buses.
 The solution is obtained from a given set of voltage magnitudes and power levels for a specific model of the network configuration.
 The power flow solution exhibits the voltages and angles at all buses and real and reactive flows can be deduced from the same.&lt;/p>
-&lt;h2 id="power-system-model">Power System Model&lt;/h2>
+&lt;h1 id="power-system-model">Power System Model&lt;/h1>
 &lt;p>Power systems are modeled as a network of buses (nodes) and branches (lines).
 To a network bus, components such a generator, load, and transmission substation can be connected.
 Each bus in the network is fully described by the following four electrical quantities:&lt;/p>
@@ -75,24 +75,18 @@ Depending on the type of the bus, two of the four electrical quantities are spec
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
-&lt;h2 id="single-phase-power-flow-problem">Single Phase Power Flow Problem&lt;/h2>
+&lt;h1 id="single-phase-power-flow-problem">Single Phase Power Flow Problem&lt;/h1>
 &lt;p>The power flow problem can be expressed by the goal to bring a mismatch function $\vec{f}$ to zero.
-The value of the mismatch function depends on a solution vector $\vec{x}$:
-$$ \vec{f}(\vec{x}) = 0 $$&lt;/p>
-&lt;p>As $\vec{f}(\vec{x})$ will be nonlinear, the equation system will be solved with Newton-Raphson:&lt;/p>
-&lt;p>$$-\textbf{J}(\vec{x}) \Delta \vec{x} = \vec{f} (\vec{x})$$&lt;/p>
-&lt;p>where $\Delta \vec{x}$ is the correction of the solution vector and $\textbf{J}(\vec{x})$ is the Jacobian matrix.
+The value of the mismatch function depends on a solution vector $\vec{x}$:&lt;/p>
+&lt;div class="math">$$\vec{f}(\vec{x}) = 0$$&lt;/div>&lt;p>As $\vec{f}(\vec{x})$ will be nonlinear, the equation system will be solved with Newton-Raphson:&lt;/p>
+&lt;div class="math">$$-\textbf{J}(\vec{x}) \Delta \vec{x} = \vec{f} (\vec{x})$$&lt;/div>&lt;p>where $\Delta \vec{x}$ is the correction of the solution vector and $\textbf{J}(\vec{x})$ is the Jacobian matrix.
 The solution vector $\vec{x}$ represents the voltage $\vec{V}$ by polar or cartesian quantities.
 The mismatch function $\vec{f}$ will either represent the power mismatch $\Delta \vec{S}$ in terms of&lt;/p>
-&lt;p>$$\left [ \begin{array}{c} \Delta \vec{P} \ \Delta \vec{Q} \end{array} \right ]$$&lt;/p>
-&lt;p>or the current mismatch $\Delta \vec{I}$ in terms of&lt;/p>
-&lt;p>$$\left [ \begin{array}{c} \Delta \vec{I_{real}} \ \Delta \vec{I_{imag}} \end{array} \right ]$$&lt;/p>
-&lt;p>where the vectors split the complex quantities into real and imaginary parts.
+&lt;div class="math">$$\left [ \begin{array}{c} \Delta \vec{P} \\ \Delta \vec{Q} \end{array} \right ]$$&lt;/div>&lt;p>or the current mismatch $\Delta \vec{I}$ in terms of&lt;/p>
+&lt;div class="math">$$\left [ \begin{array}{c} \Delta \vec{I_{real}} \\ \Delta \vec{I_{imag}} \end{array} \right ]$$&lt;/div>&lt;p>where the vectors split the complex quantities into real and imaginary parts.
 Futhermore, the solution vector $\vec{x}$ will represent $\vec{V}$ either by polar coordinates&lt;/p>
-&lt;p>$$\left [ \begin{array}{c} \vec{\delta} \ \vert \vec{V} \vert \end{array} \right ]$$&lt;/p>
-&lt;p>or rectangular coordinates&lt;/p>
-&lt;p>$$\left [ \begin{array}{c} \vec{V_{real}} \ \vec{V_{imag}} \end{array} \right ]$$&lt;/p>
-&lt;p>This results in four different formulations of the powerflow problem:&lt;/p>
+&lt;div class="math">$$\left [ \begin{array}{c} \vec{\delta} \\ \vert \vec{V} \vert \end{array} \right ]$$&lt;/div>&lt;p>or rectangular coordinates&lt;/p>
+&lt;div class="math">$$\left [ \begin{array}{c} \vec{V_{real}} \\ \vec{V_{imag}} \end{array} \right ]$$&lt;/div>&lt;p>This results in four different formulations of the powerflow problem:&lt;/p>
 &lt;ul>
 &lt;li>with power mismatch function and polar coordinates&lt;/li>
 &lt;li>with power mismatch function and rectangular coordinates&lt;/li>
@@ -100,15 +94,11 @@ Futhermore, the solution vector $\vec{x}$ will represent $\vec{V}$ either by pol
 &lt;li>with current mismatch function and rectangular coordinates&lt;/li>
 &lt;/ul>
 &lt;p>To solve the problem using NR, we need to formulate $\textbf{J} (\vec{x})$ and $\vec{f} (\vec{x})$ for each powerflow problem formulation.&lt;/p>
-&lt;h3 id="powerflow-problem-with-power-mismatch-function-and-polar-coordinates">Powerflow Problem with Power Mismatch Function and Polar Coordinates&lt;/h3>
-&lt;h4 id="formulation-of-mismatch-function">Formulation of Mismatch Function&lt;/h4>
-&lt;p>The injected power at a node $k$ is given by:
-$$S_{k} = V_{k} I _{k}^{*}$$&lt;/p>
-&lt;p>The current injection into any bus $k$ may be expressed as:
-$$
-I_{k} = \sum_{j=1}^{N} Y_{kj} V_{j}
-$$&lt;/p>
-&lt;p>Substitution yields:&lt;/p>
+&lt;h2 id="powerflow-problem-with-power-mismatch-function-and-polar-coordinates">Powerflow Problem with Power Mismatch Function and Polar Coordinates&lt;/h2>
+&lt;h3 id="formulation-of-mismatch-function">Formulation of Mismatch Function&lt;/h3>
+&lt;p>The injected power at a node $k$ is given by:&lt;/p>
+&lt;div class="math">$$S_{k} = V_{k} I _{k}^{*}$$&lt;/div>&lt;p>The current injection into any bus $k$ may be expressed as:&lt;/p>
+&lt;div class="math">$$I_{k} = \sum_{j=1}^{N} Y_{kj} V_{j}$$&lt;/div>&lt;p>Substitution yields:&lt;/p>
 &lt;div class="math">$$\begin{align}
 S_{k} &amp;= V_{k} \left ( \sum_{j=1}^{N} Y_{kj} V_{j} \right )^{*} \nonumber \\
 &amp;= V_{k} \sum_{j=1}^{N} Y_{kj}^{*} V_{j} ^{*} \nonumber
@@ -145,7 +135,7 @@ Q_{k} = Q_{k} (\vec{x}) \Rightarrow Q_{k} (\vec{x}) - Q_{k} &amp;= 0 \quad \quad
 = \vec{0}
 \end{align}$$&lt;/div>&lt;p>That is a system of nonlinear equations.
 This nonlinearity comes from the fact that $P_{k}$ and $Q_{k}$ have terms containing products of some of the unknowns and also terms containing trigonometric functions of some the unknowns.&lt;/p>
-&lt;h4 id="formulation-of-jacobian">Formulation of Jacobian&lt;/h4>
+&lt;h3 id="formulation-of-jacobian">Formulation of Jacobian&lt;/h3>
 &lt;p>As discussed in the previous section, the power flow problem will be solved using the Newton-Raphson method. Here, the Jacobian matrix is obtained by taking all first-order partial derivates of the power mismatch functions with respect to the voltage angles $\theta_{k}$ and magnitudes $\vert V_{k} \vert$ as:&lt;/p>
 &lt;div class="math">$$\begin{align}
 J_{jk}^{P \theta} &amp;= \frac{\partial P_{j} (\vec{x} ) } {\partial \theta_{k}} = \vert V_{j} \vert \vert V_{k} \vert \left ( G_{jk} sin(\theta_{j} - \theta_{k}) - B_{jk} cos(\theta_{j} - \theta_{k} ) \right ) \\
