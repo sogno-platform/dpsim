@@ -1,8 +1,8 @@
-FROM fedora:36 AS base
+FROM fedora:42 AS base
 
 ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
 ARG CIMPP_COMMIT=1b11d5c17bedf0ae042628b42ecb4e49df70b2f6
-ARG VILLAS_VERSION=18cdd2a6364d05fbf413ca699616cd324abfcb54
+ARG VILLAS_VERSION=825237cb11f687169a9455ecaa97b5dc6cbce26e
 
 ARG CMAKE_OPTS
 ARG MAKE_OPTS=-j4
@@ -22,7 +22,10 @@ RUN dnf -y install \
 	rpmdevtools rpm-build \
 	make cmake pkgconfig \
 	python3-pip \
-	cppcheck
+	cppcheck \
+	flex bison \
+	protobuf-compiler protobuf-c-compiler \
+	clang-tools-extra
 
 # Tools needed for developement
 RUN dnf -y install \
@@ -52,7 +55,7 @@ RUN cd /tmp && \
 	make ${MAKE_OPTS} install
 
 # CIMpp and VILLASnode are installed here
-ENV LD_LIBRARY_PATH="/usr/local/lib64:${LD_LIBRARY_PATH}"
+ENV LD_LIBRARY_PATH="/usr/local/lib64"
 
 # Install minimal VILLASnode dependencies
 RUN dnf -y install \
@@ -71,13 +74,12 @@ RUN dnf -y install \
 	protobuf-c-devel
 
 # Python dependencies
-ADD requirements.txt .
-RUN pip3 install --upgrade wheel build setuptools packaging
-RUN pip3 install -r requirements.txt
+COPY requirements.txt .
+RUN pip3 install --upgrade wheel build setuptools packaging && pip3 install -r requirements.txt
 
 # Install CIMpp from source
-RUN cd /tmp && \
-	git clone https://github.com/sogno-platform/libcimpp.git && \
+WORKDIR /tmp
+RUN git clone https://github.com/sogno-platform/libcimpp.git && \
 	mkdir -p libcimpp/build && cd libcimpp/build && \
 	git checkout ${CIMPP_COMMIT} && \
 	git submodule update --init && \
@@ -89,15 +91,16 @@ RUN cd /tmp && \
 	make ${MAKE_OPTS} install && \
 	rm -rf /tmp/libcimpp
 
-# Install VILLASnode from source
-RUN cd /tmp && \
-	git clone --recurse-submodules https://github.com/VILLASframework/node.git villas-node && \
-	mkdir -p villas-node/build && cd villas-node/build && \
+# Install VILLASnode from source (without fpga support)
+WORKDIR /tmp
+RUN git clone https://github.com/VILLASframework/node.git villas-node && \
+	cd villas-node && \
 	git checkout ${VILLAS_VERSION} && \
-	cmake ${CMAKE_OPTS} .. \
+	git submodule update --init common && \
+	cmake -S . -B ./build ${CMAKE_OPTS} \
 		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
-		-DDOWNLOAD_GO=OFF && \
-	make ${MAKE_OPTS} install && \
+		-DCMAKE_BUILD_TYPE=Release && \
+	cmake --build ./build --target install && \
 	rm -rf /tmp/villas-node
 
 # Remove this part in the future and use dedicated Jupyter Dockerfile
@@ -122,9 +125,9 @@ ARG USERNAME=dpsim
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
-RUN groupadd --gid $USER_GID $USERNAME && \
-	useradd --uid $USER_UID --gid $USER_GID -m $USERNAME && \
-	echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME && \
-	chmod 0440 /etc/sudoers.d/$USERNAME
+RUN groupadd --gid $"USER_GID" $"USERNAME" && \
+	useradd --uid $"USER_UID" --gid $"USER_GID" -m $"USERNAME" && \
+	echo $"USERNAME" ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$"USERNAME" && \
+	chmod 0440 /etc/sudoers.d/$"USERNAME"
 
 FROM base
