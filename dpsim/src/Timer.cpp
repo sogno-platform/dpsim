@@ -35,7 +35,11 @@ Timer::Timer(int flags)
 
 Timer::~Timer() {
   if (mState == State::running)
-    stop();
+    try {
+      stop();
+    } catch (SystemError &e) {
+      std::cerr << "ERROR: The timer was not stopped properly: " << std::endl;
+    }
 
 #ifdef HAVE_TIMERFD
   close(mTimerFd);
