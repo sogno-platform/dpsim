@@ -78,9 +78,9 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
 /// DEPRECATED: Delete method
 SimPowerComp<Complex>::Ptr SP::Ph1::Transformer::clone(String name) {
   auto copy = Transformer::make(name, mLogLevel);
-  copy->setParameters(mNominalVoltageEnd1, mNominalVoltageEnd2,
-                      **mRatedPower, std::abs(**mRatio), std::arg(**mRatio),
-                      **mResistance, **mInductance);
+  copy->setParameters(mNominalVoltageEnd1, mNominalVoltageEnd2, **mRatedPower,
+                      std::abs(**mRatio), std::arg(**mRatio), **mResistance,
+                      **mInductance);
   return copy;
 }
 

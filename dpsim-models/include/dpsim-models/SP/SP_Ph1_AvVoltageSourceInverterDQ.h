@@ -28,6 +28,7 @@ class AvVoltageSourceInverterDQ
 private:
   /// Nominal voltage
   Real mVnom;
+
 protected:
   // ### General Parameters ###
   /// Nominal system angle

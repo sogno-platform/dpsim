@@ -91,9 +91,7 @@ void SP::Ph1::NetworkInjection::setParameters(Complex initialPhasor,
                      Logger::realToString(baseFrequency));
 }
 
-Real SP::Ph1::NetworkInjection::getBaseVoltage() const{
-  return mBaseVoltage;
-}
+Real SP::Ph1::NetworkInjection::getBaseVoltage() const { return mBaseVoltage; }
 
 void SP::Ph1::NetworkInjection::setBaseVoltage(Real baseVoltage) {
   mBaseVoltage = baseVoltage;

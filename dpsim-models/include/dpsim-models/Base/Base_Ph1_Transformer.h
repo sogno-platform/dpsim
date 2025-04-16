@@ -35,7 +35,7 @@ public:
       : mRatedPower(attributeList->create<Real>("S")),
         mRatio(attributeList->create<Complex>("ratio")),
         mResistance(attributeList->create<Real>("R")),
-        mInductance(attributeList->create<Real>("L")) {};
+        mInductance(attributeList->create<Real>("L")){};
 
   ///
   void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs,
