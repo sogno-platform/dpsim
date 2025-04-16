@@ -14,7 +14,6 @@ SP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(
     String uid, String name, Logger::Level logLevel, Bool withTrafo)
     : CompositePowerComp<Complex>(uid, name, true, true, logLevel),
       mOmegaN(mAttributes->create<Real>("Omega_nom")),
-      mVnom(mAttributes->create<Real>("vnom")),
       mPref(mAttributes->create<Real>("P_ref")),
       mQref(mAttributes->create<Real>("Q_ref")),
       mVcd(mAttributes->create<Real>("Vc_d", 0)),
@@ -107,7 +106,7 @@ void SP::Ph1::AvVoltageSourceInverterDQ::setParameters(Real sysOmega,
   mPowerControllerVSI->setParameters(Pref, Qref);
 
   **mOmegaN = sysOmega;
-  **mVnom = sysVoltNom;
+  mVnom = sysVoltNom;
   **mPref = Pref;
   **mQref = Qref;
 }
@@ -294,6 +293,8 @@ void SP::Ph1::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(
         Logger::phasorToString(mVirtualNodes[3]->initialSingleVoltage()));
   SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialization from powerflow finished ---");
 }
+
+Real SP::Ph1::AvVoltageSourceInverterDQ::getNomVoltage() const { return mVnom; }
 
 void SP::Ph1::AvVoltageSourceInverterDQ::mnaParentInitialize(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {

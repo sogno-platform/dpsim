@@ -22,6 +22,10 @@ class RXLine : public CompositePowerComp<Complex>,
                public SharedFactory<RXLine>,
                public PFSolverInterfaceBranch,
                public Base::Ph1::PiLine {
+private:
+  ///base voltage [V]
+  Real mBaseVoltage;
+
 protected:
   /// CHECK: Which of these really need to be member variables?
   ///Capacitance of the line in [F]
@@ -59,8 +63,6 @@ protected:
   std::shared_ptr<Resistor> mInitialResistor;
 
 public:
-  ///base voltage [V]
-  const Attribute<Real>::Ptr mBaseVoltage;
   ///Inductance of the line in [H]
   /// CHECK: Why does this not use the base class' attribute mSeriesInd?
   const Attribute<Real>::Ptr mInductance;
@@ -100,9 +102,10 @@ public:
   void transformParametersToPerUnitSystem();
 
   // #### Powerflow section ####
+  /// Get base voltage
+  Real getBaseVoltage() const;
   /// Stamps admittance matrix
   void pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow &Y) override;
-
   /// updates branch current and power flow, input pu value, update with real value
   void updateBranchFlow(VectorComp &current, VectorComp &powerflow);
   /// stores nodal injection power in this line object

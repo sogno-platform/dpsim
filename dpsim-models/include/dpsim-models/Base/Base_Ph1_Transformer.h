@@ -15,11 +15,13 @@ namespace CPS {
 namespace Base {
 namespace Ph1 {
 class Transformer {
-public:
+protected:
   /// Nominal voltage of primary side
-  const Attribute<Real>::Ptr mNominalVoltageEnd1;
+  Real mNominalVoltageEnd1;
   /// Nominal voltage of secondary side
-  const Attribute<Real>::Ptr mNominalVoltageEnd2;
+  Real mNominalVoltageEnd2;
+
+public:
   /// Rated Apparent Power [VA]
   const Attribute<Real>::Ptr mRatedPower;
   /// Complex transformer ratio
@@ -30,20 +32,16 @@ public:
   const Attribute<Real>::Ptr mInductance;
 
   explicit Transformer(CPS::AttributeList::Ptr attributeList)
-      : mNominalVoltageEnd1(
-            attributeList->create<Real>("nominal_voltage_end1")),
-        mNominalVoltageEnd2(
-            attributeList->create<Real>("nominal_voltage_end2")),
-        mRatedPower(attributeList->create<Real>("S")),
+      : mRatedPower(attributeList->create<Real>("S")),
         mRatio(attributeList->create<Complex>("ratio")),
         mResistance(attributeList->create<Real>("R")),
-        mInductance(attributeList->create<Real>("L")){};
+        mInductance(attributeList->create<Real>("L")) {};
 
   ///
   void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs,
                      Real ratioPhase, Real resistance, Real inductance) {
-    **mNominalVoltageEnd1 = nomVoltageEnd1;
-    **mNominalVoltageEnd2 = nomVoltageEnd2;
+    mNominalVoltageEnd1 = nomVoltageEnd1;
+    mNominalVoltageEnd2 = nomVoltageEnd2;
     **mRatio = std::polar<Real>(ratioAbs, ratioPhase);
     **mResistance = resistance;
     **mInductance = inductance;

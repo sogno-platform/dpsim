@@ -13,7 +13,6 @@ using namespace CPS;
 SP::Ph1::SynchronGenerator::SynchronGenerator(String uid, String name,
                                               Logger::Level logLevel)
     : SimPowerComp<Complex>(uid, name, logLevel),
-      mBaseVoltage(mAttributes->create<Real>("base_Voltage")),
       mSetPointActivePower(mAttributes->create<Real>("P_set")),
       mSetPointReactivePower(mAttributes->create<Real>("Q_set")),
       mSetPointVoltage(mAttributes->create<Real>("V_set")),
@@ -45,8 +44,11 @@ void SP::Ph1::SynchronGenerator::setParameters(
 }
 
 // #### Powerflow section ####
+
+Real SP::Ph1::SynchronGenerator::getBaseVoltage() const { return mBaseVoltage; }
+
 void SP::Ph1::SynchronGenerator::setBaseVoltage(Real baseVoltage) {
-  **mBaseVoltage = baseVoltage;
+  mBaseVoltage = baseVoltage;
 }
 
 void SP::Ph1::SynchronGenerator::calculatePerUnitParameters(
@@ -60,7 +62,7 @@ void SP::Ph1::SynchronGenerator::calculatePerUnitParameters(
   **mSetPointActivePowerPerUnit = **mSetPointActivePower / mBaseApparentPower;
   **mSetPointReactivePowerPerUnit =
       **mSetPointReactivePower / mBaseApparentPower;
-  **mSetPointVoltagePerUnit = **mSetPointVoltage / **mBaseVoltage;
+  **mSetPointVoltagePerUnit = **mSetPointVoltage / mBaseVoltage;
   SPDLOG_LOGGER_INFO(mSLog,
                      "Active Power Set Point={} [pu] Voltage Set Point={} [pu]",
                      **mSetPointActivePowerPerUnit, **mSetPointVoltagePerUnit);

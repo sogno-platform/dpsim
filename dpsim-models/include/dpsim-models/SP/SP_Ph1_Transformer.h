@@ -134,7 +134,10 @@ public:
   void initializeFromNodesAndTerminals(Real frequency) override;
 
   // #### Powerflow section ####
-  /// Set base voltage
+  /// Get nominal voltage at end 1
+  Real getNominalVoltageEnd1() const;
+  /// Get nominal voltage at end 2
+  Real getNominalVoltageEnd2() const;
   void setBaseVoltage(Real baseVoltage);
   /// Initializes component from power flow data
   void calculatePerUnitParameters(Real baseApparentPower, Real baseOmega);

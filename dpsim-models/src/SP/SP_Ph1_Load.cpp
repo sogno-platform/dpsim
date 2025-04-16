@@ -20,9 +20,8 @@ SP::Ph1::Load::Load(String uid, String name, Logger::Level logLevel)
       mActivePower(mAttributes->createDynamic<Real>(
           "P")), //Made dynamic so it can be imported through InterfaceVillas
       mReactivePower(mAttributes->createDynamic<Real>(
-          "Q")), //Made dynamic so it can be imported through InterfaceVillas
-      mNomVoltage(mAttributes->create<Real>("V_nom")) {
-
+          "Q")) //Made dynamic so it can be imported through InterfaceVillas
+{
   SPDLOG_LOGGER_INFO(mSLog, "Create {} of type {}", **mName, this->type());
   mSLog->flush();
   **mIntfVoltage = MatrixComp::Zero(1, 1);
@@ -34,18 +33,20 @@ void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower,
                                   Real nominalVoltage) {
   **mActivePower = activePower;
   **mReactivePower = reactivePower;
-  **mNomVoltage = nominalVoltage;
+  mNomVoltage = nominalVoltage;
 
   SPDLOG_LOGGER_INFO(
       mSLog,
       "Active Power={} [W]  Reactive Power={} [VAr]  Nominal Voltage={} [V]",
-      **mActivePower, **mReactivePower, **mNomVoltage);
+      **mActivePower, **mReactivePower, mNomVoltage);
   mSLog->flush();
 
   mParametersSet = true;
 }
 
 // #### Powerflow section ####
+Real SP::Ph1::Load::getNomVoltage() const { return mNomVoltage; }
+
 void SP::Ph1::Load::calculatePerUnitParameters(Real baseApparentPower,
                                                Real baseOmega) {
   SPDLOG_LOGGER_INFO(mSLog, "#### Calculate Per Unit Parameters for {}",
@@ -107,7 +108,7 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 
   // instantiate subResistor for active power consumption
   if (**mActivePower != 0) {
-    mResistance = std::pow(**mNomVoltage, 2) / **mActivePower;
+    mResistance = std::pow(mNomVoltage, 2) / **mActivePower;
     mConductance = 1.0 / mResistance;
     mSubResistor = std::make_shared<SP::Ph1::Resistor>(
         **mUID + "_res", **mName + "_res", Logger::Level::off);
@@ -120,7 +121,7 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
   }
 
   if (**mReactivePower != 0)
-    mReactance = std::pow(**mNomVoltage, 2) / **mReactivePower;
+    mReactance = std::pow(mNomVoltage, 2) / **mReactivePower;
   else
     mReactance = 0;
 

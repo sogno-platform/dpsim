@@ -15,7 +15,6 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
                         Logger::Level logLevel)
     : Base::Ph1::PiLine(mAttributes),
       CompositePowerComp<Complex>(uid, name, true, true, logLevel),
-      mBaseVoltage(mAttributes->create<Real>("base_Voltage", baseVoltage)),
       mInductance(mAttributes->create<Real>("L_series")),
       mActivePowerInjection(mAttributes->create<Real>("p_inj")),
       mReactivePowerInjection(mAttributes->create<Real>("q_inj")),
@@ -41,7 +40,6 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 SP::Ph1::RXLine::RXLine(String uid, String name, Logger::Level logLevel)
     : Base::Ph1::PiLine(mAttributes),
       CompositePowerComp<Complex>(uid, name, true, true, logLevel),
-      mBaseVoltage(mAttributes->create<Real>("base_Voltage")),
       mInductance(mAttributes->create<Real>("L_series")),
       mActivePowerInjection(mAttributes->create<Real>("p_inj")),
       mReactivePowerInjection(mAttributes->create<Real>("q_inj")),
@@ -58,11 +56,11 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Logger::Level logLevel)
 void SP::Ph1::RXLine::setPerUnitSystem(Real baseApparentPower, Real baseOmega) {
   mBaseApparentPower = baseApparentPower;
   mBaseOmega = baseOmega;
-  mBaseImpedance = (**mBaseVoltage * **mBaseVoltage) / mBaseApparentPower;
+  mBaseImpedance = (mBaseVoltage * mBaseVoltage) / mBaseApparentPower;
   mBaseAdmittance = 1.0 / mBaseImpedance;
   mBaseInductance = mBaseImpedance / mBaseOmega;
   /// I_base = S_base / V_line
-  mBaseCurrent = baseApparentPower / (**mBaseVoltage * sqrt(3));
+  mBaseCurrent = baseApparentPower / (mBaseVoltage * sqrt(3));
 
 #if 0
   mLog.Log(Logger::Level::INFO) << "#### Set Per Unit System for " << **mName << std::endl;
@@ -79,6 +77,8 @@ void SP::Ph1::RXLine::setPerUnitSystem(Real baseApparentPower, Real baseOmega) {
     mLog.Log(Logger::Level::INFO)  << "r " << mSeriesResPerUnit << std::endl << "  x: " << mBaseOmega * mInductance / mBaseImpedance<<std::endl;
 #endif
 }
+
+Real SP::Ph1::RXLine::getBaseVoltage() const { return mBaseVoltage; }
 
 void SP::Ph1::RXLine::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow &Y) {
   updateMatrixNodeIndices();

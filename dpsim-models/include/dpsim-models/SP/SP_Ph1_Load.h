@@ -25,8 +25,6 @@ class Load : public CompositePowerComp<Complex>,
              public SharedFactory<Load>,
              public PFSolverInterfaceBus {
 public:
-  /// Nominal voltage [V]
-  const Attribute<Real>::Ptr mNomVoltage;
   /// Active power [Watt]
   const Attribute<Real>::Ptr mActivePower;
   /// Reactive power [VAr]
@@ -37,6 +35,8 @@ public:
   const Attribute<Real>::Ptr mReactivePowerPerUnit;
 
 private:
+  /// Nominal voltage [V]
+  Real mNomVoltage;
   /// base apparent power[VA]
   Real mBaseApparentPower;
   ///base omega [1/s]
@@ -79,6 +79,8 @@ public:
   void updatePQ(Real time);
 
   // #### Powerflow section ####
+  /// Get nominal voltage
+  Real getNomVoltage() const;
   /// Calculates component's parameters in specified per-unit system
   void calculatePerUnitParameters(Real baseApparentPower, Real baseOmega);
   /// Modify powerflow bus type

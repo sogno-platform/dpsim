@@ -39,7 +39,7 @@ private:
 
   // #### Powerflow section ####
   /// Base voltage [V]
-  const Attribute<Real>::Ptr mBaseVoltage;
+  Real mBaseVoltage;
 
 public:
   const Attribute<Complex>::Ptr mVoltageRef;
@@ -71,6 +71,8 @@ public:
   // #### Powerflow section ####
   /// Set parameters relevant for PF solver
   void setParameters(Real vSetPointPerUnit);
+  // Get base voltage
+  Real getBaseVoltage() const;
   /// Set base voltage
   void setBaseVoltage(Real baseVoltage);
   /// Calculates component's parameters in specified per-unit system
