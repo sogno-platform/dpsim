@@ -20,16 +20,18 @@
 using namespace DPsim;
 using CPS::SystemError;
 
-Timer::Timer(int flags)
-    : mState(stopped), mOverruns(0), mTicks(0), mFlags(flags) {
+Timer::Timer(int flags, CPS::Logger::Level logLevel)
+    : mState(stopped), mOverruns(0), mTicks(0), mFlags(flags),
+      mLogLevel(logLevel) {
 #ifdef HAVE_TIMERFD
   mTimerFd = timerfd_create(CLOCK_MONOTONIC, 0);
   if (mTimerFd < 0) {
+    SPDLOG_LOGGER_ERROR(mSLog, "Failed to create timerfd");
     throw SystemError("Failed to create timerfd");
   }
 #else
-  std::cerr << "WARNING: No high resolution timer available. Clock might drift!"
-            << std::endl;
+  SPDLOG_LOGGER_WARN(mSLog,
+                     "No high resolution timer available. Clock might drift!");
 #endif
 }
 
@@ -38,7 +40,9 @@ Timer::~Timer() {
     try {
       stop();
     } catch (SystemError &e) {
-      std::cerr << "ERROR: The timer was not stopped properly: " << std::endl;
+      SPDLOG_LOGGER_ERROR(mSLog,
+                          "The timer was not stopped properly. The simulation "
+                          "behaviour is not guaranteed anymore.");
     }
 
 #ifdef HAVE_TIMERFD
@@ -54,6 +58,7 @@ void Timer::sleep() {
 
   bytes = read(mTimerFd, &ticks, sizeof(ticks));
   if (bytes < 0) {
+    SPDLOG_LOGGER_ERROR(mSLog, "Read from timerfd failed");
     throw SystemError("Read from timerfd failed");
   }
 #else
@@ -73,9 +78,13 @@ void Timer::sleep() {
   mTicks += ticks;
 
   if (overruns > 0) {
-    //SPDLOG_LOGGER_WARN(mSLog, "Timer overrun of {} timesteps at {}", overruns, mTime);
-    if (mFlags & Flags::fail_on_overrun)
+    SPDLOG_LOGGER_WARN(mSLog, "Timer overrun of {} timesteps at {}", overruns,
+                       mTicks);
+    if (mFlags & Flags::fail_on_overrun) {
+      SPDLOG_LOGGER_ERROR(mSLog, "The overrun has made the simulation to fail "
+                                 "because the flag is active");
       throw OverrunException{overruns};
+    }
   }
 }
 
