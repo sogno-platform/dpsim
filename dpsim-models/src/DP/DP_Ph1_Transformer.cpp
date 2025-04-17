@@ -30,7 +30,7 @@ DP::Ph1::Transformer::Transformer(String uid, String name,
 /// DEPRECATED: Delete method
 SimPowerComp<Complex>::Ptr DP::Ph1::Transformer::clone(String name) {
   auto copy = Transformer::make(name, mLogLevel);
-  copy->setParameters(**mNominalVoltageEnd1, **mNominalVoltageEnd2,
+  copy->setParameters(mNominalVoltageEnd1, mNominalVoltageEnd2,
                       std::abs(**mRatio), std::arg(**mRatio), **mResistance,
                       **mInductance);
   return copy;
@@ -47,7 +47,7 @@ void DP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
 
   SPDLOG_LOGGER_INFO(
       mSLog, "Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]",
-      **mNominalVoltageEnd1, **mNominalVoltageEnd2);
+      mNominalVoltageEnd1, mNominalVoltageEnd2);
   SPDLOG_LOGGER_INFO(
       mSLog,
       "Resistance={} [Ohm] Inductance={} [Ohm] (referred to primary side)",
@@ -81,14 +81,14 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
     std::shared_ptr<SimTerminal<Complex>> tmp = mTerminals[0];
     mTerminals[0] = mTerminals[1];
     mTerminals[1] = tmp;
-    Real tmpVolt = **mNominalVoltageEnd1;
-    **mNominalVoltageEnd1 = **mNominalVoltageEnd2;
-    **mNominalVoltageEnd2 = tmpVolt;
+    Real tmpVolt = mNominalVoltageEnd1;
+    mNominalVoltageEnd1 = mNominalVoltageEnd2;
+    mNominalVoltageEnd2 = tmpVolt;
     SPDLOG_LOGGER_INFO(mSLog, "Switching terminals to have first terminal at "
                               "higher voltage side. Updated parameters: ");
     SPDLOG_LOGGER_INFO(
         mSLog, "Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]",
-        **mNominalVoltageEnd1, **mNominalVoltageEnd2);
+        mNominalVoltageEnd1, mNominalVoltageEnd2);
     SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio = {} [ ] Phase Shift = {} [deg]",
                        std::abs(**mRatio), std::arg(**mRatio));
   }
@@ -130,7 +130,7 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
   Real qSnub = Q_SNUB_TRANSFORMER * **mRatedPower;
 
   // A snubber conductance is added on the higher voltage side
-  mSnubberResistance1 = std::pow(std::abs(**mNominalVoltageEnd1), 2) / pSnub;
+  mSnubberResistance1 = std::pow(std::abs(mNominalVoltageEnd1), 2) / pSnub;
   mSubSnubResistor1 =
       std::make_shared<DP::Ph1::Resistor>(**mName + "_snub_res1", mLogLevel);
   mSubSnubResistor1->setParameters(mSnubberResistance1);
@@ -144,7 +144,7 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
   // A snubber conductance is added on the lower voltage side
-  mSnubberResistance2 = std::pow(std::abs(**mNominalVoltageEnd2), 2) / pSnub;
+  mSnubberResistance2 = std::pow(std::abs(mNominalVoltageEnd2), 2) / pSnub;
   mSubSnubResistor2 =
       std::make_shared<DP::Ph1::Resistor>(**mName + "_snub_res2", mLogLevel);
   mSubSnubResistor2->setParameters(mSnubberResistance2);
@@ -167,7 +167,7 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 
   // A snubber capacitance is added to lower voltage side
   mSnubberCapacitance2 =
-      qSnub / std::pow(std::abs(**mNominalVoltageEnd2), 2) / omega;
+      qSnub / std::pow(std::abs(mNominalVoltageEnd2), 2) / omega;
   mSubSnubCapacitor2 =
       std::make_shared<DP::Ph1::Capacitor>(**mName + "_snub_cap2", mLogLevel);
   mSubSnubCapacitor2->setParameters(mSnubberCapacitance2);

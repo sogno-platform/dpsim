@@ -49,7 +49,7 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
 
   SPDLOG_LOGGER_INFO(
       mSLog, "Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]",
-      **mNominalVoltageEnd1, **mNominalVoltageEnd2);
+      mNominalVoltageEnd1, mNominalVoltageEnd2);
   SPDLOG_LOGGER_INFO(
       mSLog, "Resistance={} [Ohm] Inductance={} [H] (referred to primary side)",
       **mResistance, **mInductance);
@@ -78,9 +78,9 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
 /// DEPRECATED: Delete method
 SimPowerComp<Complex>::Ptr SP::Ph1::Transformer::clone(String name) {
   auto copy = Transformer::make(name, mLogLevel);
-  copy->setParameters(**mNominalVoltageEnd1, **mNominalVoltageEnd2,
-                      **mRatedPower, std::abs(**mRatio), std::arg(**mRatio),
-                      **mResistance, **mInductance);
+  copy->setParameters(mNominalVoltageEnd1, mNominalVoltageEnd2, **mRatedPower,
+                      std::abs(**mRatio), std::arg(**mRatio), **mResistance,
+                      **mInductance);
   return copy;
 }
 
@@ -100,14 +100,14 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
     std::shared_ptr<SimTerminal<Complex>> tmp = mTerminals[0];
     mTerminals[0] = mTerminals[1];
     mTerminals[1] = tmp;
-    Real tmpVolt = **mNominalVoltageEnd1;
-    **mNominalVoltageEnd1 = **mNominalVoltageEnd2;
-    **mNominalVoltageEnd2 = tmpVolt;
+    Real tmpVolt = mNominalVoltageEnd1;
+    mNominalVoltageEnd1 = mNominalVoltageEnd2;
+    mNominalVoltageEnd2 = tmpVolt;
     SPDLOG_LOGGER_INFO(mSLog, "Switching terminals to have first terminal at "
                               "higher voltage side. Updated parameters: ");
     SPDLOG_LOGGER_INFO(
         mSLog, "Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]",
-        **mNominalVoltageEnd1, **mNominalVoltageEnd2);
+        mNominalVoltageEnd1, mNominalVoltageEnd2);
     SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio = {} [ ] Phase Shift = {} [deg]",
                        mRatioAbs, mRatioPhase);
   }
@@ -149,7 +149,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
     Real qSnub = Q_SNUB_TRANSFORMER * **mRatedPower;
 
     // A snubber conductance is added on the higher voltage side
-    mSnubberResistance1 = std::pow(std::abs(**mNominalVoltageEnd1), 2) / pSnub;
+    mSnubberResistance1 = std::pow(std::abs(mNominalVoltageEnd1), 2) / pSnub;
     mSubSnubResistor1 =
         std::make_shared<SP::Ph1::Resistor>(**mName + "_snub_res1", mLogLevel);
     mSubSnubResistor1->setParameters(mSnubberResistance1);
@@ -158,13 +158,13 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
         mSLog,
         "Snubber Resistance 1 (connected to higher voltage side {}) = {} [Ohm]",
         node(0)->name(), Logger::realToString(mSnubberResistance1));
-    mSubSnubResistor1->setBaseVoltage(**mNominalVoltageEnd1);
+    mSubSnubResistor1->setBaseVoltage(mNominalVoltageEnd1);
     addMNASubComponent(mSubSnubResistor1,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
     // A snubber conductance is added on the lower voltage side
-    mSnubberResistance2 = std::pow(std::abs(**mNominalVoltageEnd2), 2) / pSnub;
+    mSnubberResistance2 = std::pow(std::abs(mNominalVoltageEnd2), 2) / pSnub;
     mSubSnubResistor2 =
         std::make_shared<SP::Ph1::Resistor>(**mName + "_snub_res2", mLogLevel);
     mSubSnubResistor2->setParameters(mSnubberResistance2);
@@ -173,7 +173,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
         mSLog,
         "Snubber Resistance 2 (connected to lower voltage side {}) = {} [Ohm]",
         node(1)->name(), Logger::realToString(mSnubberResistance2));
-    mSubSnubResistor2->setBaseVoltage(**mNominalVoltageEnd2);
+    mSubSnubResistor2->setBaseVoltage(mNominalVoltageEnd2);
     addMNASubComponent(mSubSnubResistor2,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
@@ -189,7 +189,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 
     // A snubber capacitance is added to lower voltage side
     mSnubberCapacitance2 =
-        qSnub / std::pow(std::abs(**mNominalVoltageEnd2), 2) / mNominalOmega;
+        qSnub / std::pow(std::abs(mNominalVoltageEnd2), 2) / mNominalOmega;
     mSubSnubCapacitor2 =
         std::make_shared<SP::Ph1::Capacitor>(**mName + "_snub_cap2", mLogLevel);
     mSubSnubCapacitor2->setParameters(mSnubberCapacitance2);
@@ -198,7 +198,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
         mSLog,
         "Snubber Capacitance 2 (connected to lower voltage side {}) = {} [F]",
         node(1)->name(), Logger::realToString(mSnubberCapacitance2));
-    mSubSnubCapacitor2->setBaseVoltage(**mNominalVoltageEnd2);
+    mSubSnubCapacitor2->setBaseVoltage(mNominalVoltageEnd2);
     addMNASubComponent(mSubSnubCapacitor2,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
@@ -229,6 +229,14 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 }
 
 // #### Powerflow section ####
+
+Real SP::Ph1::Transformer::getNominalVoltageEnd1() const {
+  return mNominalVoltageEnd1;
+}
+
+Real SP::Ph1::Transformer::getNominalVoltageEnd2() const {
+  return mNominalVoltageEnd2;
+}
 
 void SP::Ph1::Transformer::setBaseVoltage(Real baseVoltage) {
   // Note: to be consistent set base voltage to higher voltage (and impedance values must be referred to high voltage side)
@@ -264,7 +272,7 @@ void SP::Ph1::Transformer::calculatePerUnitParameters(Real baseApparentPower,
   mLeakagePerUnit = Complex(mResistancePerUnit, 1. * mInductancePerUnit);
   SPDLOG_LOGGER_INFO(mSLog, "Leakage Impedance={} [pu] ", mLeakagePerUnit);
 
-  mRatioAbsPerUnit = mRatioAbs / **mNominalVoltageEnd1 * **mNominalVoltageEnd2;
+  mRatioAbsPerUnit = mRatioAbs / mNominalVoltageEnd1 * mNominalVoltageEnd2;
   SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio={} [pu]", mRatioAbsPerUnit);
 
   // Calculate per unit parameters of subcomps

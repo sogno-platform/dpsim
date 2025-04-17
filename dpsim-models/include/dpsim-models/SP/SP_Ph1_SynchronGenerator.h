@@ -20,6 +20,8 @@ class SynchronGenerator : public SimPowerComp<Complex>,
                           public SharedFactory<SynchronGenerator>,
                           public PFSolverInterfaceBus {
 private:
+  /// Base voltage [V]
+  Real mBaseVoltage;
   /// Base apparent power[VA]
   Real mBaseApparentPower;
 
@@ -30,8 +32,6 @@ public:
   const Attribute<Real>::Ptr mSetPointReactivePower;
   /// Voltage set point of the machine [V]
   const Attribute<Real>::Ptr mSetPointVoltage;
-  /// Base voltage [V]
-  const Attribute<Real>::Ptr mBaseVoltage;
   /// Active power set point of the machine [pu]
   const Attribute<Real>::Ptr mSetPointActivePowerPerUnit;
   /// Reactive power set point of the machine [pu]
@@ -51,6 +51,7 @@ public:
                      PowerflowBusType powerflowBusType,
                      Real setPointReactivepower = 0);
   // #### Powerflow section ####
+  Real getBaseVoltage() const;
   /// Set base voltage
   void setBaseVoltage(Real baseVoltage);
   /// Initializes component from power flow data

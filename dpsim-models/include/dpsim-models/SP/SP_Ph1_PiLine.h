@@ -28,10 +28,11 @@ class PiLine : public CompositePowerComp<Complex>,
                public MNATearInterface,
                public SharedFactory<PiLine>,
                public PFSolverInterfaceBranch {
-public:
-  ///base voltage [V]
-  const Attribute<Real>::Ptr mBaseVoltage;
+private:
+  /// base voltage [V]
+  Real mBaseVoltage;
 
+public:
   // #### Power flow results ####
   /// branch Current flow [A], coef(0) has data from node 0, coef(1) from node 1.
   const Attribute<MatrixComp>::Ptr mCurrent;
@@ -106,6 +107,8 @@ public:
   void initializeFromNodesAndTerminals(Real frequency) override;
 
   // #### Powerflow section ####
+  /// Get base voltage
+  Real getBaseVoltage() const;
   /// Set base voltage
   void setBaseVoltage(Real baseVoltage);
   /// Calculates component's parameters in specified per-unit system

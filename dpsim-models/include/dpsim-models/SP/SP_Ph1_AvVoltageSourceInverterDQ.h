@@ -25,6 +25,10 @@ class AvVoltageSourceInverterDQ
     : public CompositePowerComp<Complex>,
       public Base::AvVoltageSourceInverterDQ,
       public SharedFactory<AvVoltageSourceInverterDQ> {
+private:
+  /// Nominal voltage
+  Real mVnom;
+
 protected:
   // ### General Parameters ###
   /// Nominal system angle
@@ -65,8 +69,6 @@ public:
   // ### General Parameters ###
   /// Nominal frequency
   const Attribute<Real>::Ptr mOmegaN;
-  /// Nominal voltage
-  const Attribute<Real>::Ptr mVnom;
   /// Active power reference
   const Attribute<Real>::Ptr mPref;
   /// Reactive power reference
@@ -126,6 +128,10 @@ public:
                              Real phi_qInit, Real gamma_dInit,
                              Real gamma_qInit);
   void withControl(Bool controlOn) { mWithControl = controlOn; };
+
+  // #### Powerflow section ####
+  /// Get nominal voltage
+  Real getNomVoltage() const;
 
   // #### MNA section ####
   /// Initializes internal variables of the component

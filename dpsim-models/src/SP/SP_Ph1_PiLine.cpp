@@ -13,7 +13,6 @@ using namespace CPS;
 SP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
     : Base::Ph1::PiLine(mAttributes),
       CompositePowerComp<Complex>(uid, name, false, true, logLevel),
-      mBaseVoltage(mAttributes->create<Real>("base_Voltage")),
       mCurrent(mAttributes->create<MatrixComp>("current_vector")),
       mActivePowerBranch(mAttributes->create<Matrix>("p_branch_vector")),
       mReactivePowerBranch(mAttributes->create<Matrix>("q_branch_vector")),
@@ -77,8 +76,10 @@ SimPowerComp<Complex>::Ptr SP::Ph1::PiLine::clone(String name) {
 }
 
 // #### Powerflow section ####
+Real SP::Ph1::PiLine::getBaseVoltage() const { return mBaseVoltage; }
+
 void SP::Ph1::PiLine::setBaseVoltage(Real baseVoltage) {
-  **mBaseVoltage = baseVoltage;
+  mBaseVoltage = baseVoltage;
 }
 
 void SP::Ph1::PiLine::calculatePerUnitParameters(Real baseApparentPower,
@@ -90,15 +91,15 @@ void SP::Ph1::PiLine::calculatePerUnitParameters(Real baseApparentPower,
   SPDLOG_LOGGER_INFO(mSLog, "Base Power={} [VA]  Base Omega={} [1/s]",
                      baseApparentPower, baseOmega);
 
-  mBaseImpedance = (**mBaseVoltage * **mBaseVoltage) / mBaseApparentPower;
+  mBaseImpedance = (mBaseVoltage * mBaseVoltage) / mBaseApparentPower;
   mBaseAdmittance = 1.0 / mBaseImpedance;
   mBaseInductance = mBaseImpedance / mBaseOmega;
   mBaseCapacitance = 1.0 / mBaseOmega / mBaseImpedance;
   mBaseCurrent = baseApparentPower /
-                 (**mBaseVoltage *
+                 (mBaseVoltage *
                   sqrt(3)); // I_base=(S_threephase/3)/(V_line_to_line/sqrt(3))
   SPDLOG_LOGGER_INFO(mSLog, "Base Voltage={} [V]  Base Impedance={} [Ohm]",
-                     **mBaseVoltage, mBaseImpedance);
+                     mBaseVoltage, mBaseImpedance);
 
   mSeriesResPerUnit = **mSeriesRes / mBaseImpedance;
   mSeriesIndPerUnit = **mSeriesInd / mBaseInductance;
