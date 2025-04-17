@@ -91,12 +91,12 @@ RUN git clone https://github.com/sogno-platform/libcimpp.git && \
 	make ${MAKE_OPTS} install && \
 	rm -rf /tmp/libcimpp
 
-# Install VILLASnode from source (without fpga support)
+# Install VILLASnode from source (with fpga support)
 WORKDIR /tmp
 RUN git clone https://github.com/VILLASframework/node.git villas-node && \
 	cd villas-node && \
 	git checkout ${VILLAS_VERSION} && \
-	git submodule update --init common && \
+	git submodule update --init --recursive && \
 	cmake -S . -B ./build ${CMAKE_OPTS} \
 		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
 		-DCMAKE_BUILD_TYPE=Release && \
@@ -125,9 +125,7 @@ ARG USERNAME=dpsim
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
-RUN groupadd --gid $"USER_GID" $"USERNAME" && \
-	useradd --uid $"USER_UID" --gid $"USER_GID" -m $"USERNAME" && \
-	echo $"USERNAME" ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$"USERNAME" && \
-	chmod 0440 /etc/sudoers.d/$"USERNAME"
-
-FROM base
+RUN groupadd --gid $USER_GID $USERNAME && \
+	useradd --uid $USER_UID --gid $USER_GID -m $USERNAME && \
+	echo "$USERNAME ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/$USERNAME && \
+	chmod 0440 /etc/sudoers.d/$USERNAME
