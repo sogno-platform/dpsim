@@ -244,9 +244,12 @@ void SystemTopology::reset() {
 }
 
 void SystemTopology::removeComponent(const String &name) {
-  for (auto it = mComponents.begin(); it != mComponents.end(); ++it) {
+  for (auto it = mComponents.begin(); it != mComponents.end();) {
     if ((*it)->name() == name) {
-      mComponents.erase(it);
+      it = mComponents.erase(
+          it); // safe: returns next valid iterator when erasing
+    } else {
+      ++it;
     }
   }
 }
