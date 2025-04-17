@@ -46,7 +46,7 @@ if (edges && edges.length) {
         </defs>
 
 <script type="text/javascript">
-var viewWidth = 804;
+var viewWidth = 765;
 var viewHeight = 220;
 var sectionId = 'dynsection-1';
 </script>
@@ -58,8 +58,8 @@ var sectionId = 'dynsection-1';
 <g id="node1" class="node">
 <title>Node1</title>
 <g id="a_node1"><a xlink:title=" ">
-<polygon fill="#bfbfbf" stroke="black" points="645,-82.99 645,-101.99 796,-101.99 796,-82.99 645,-82.99"/>
-<text text-anchor="middle" x="720.5" y="-89.99" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Base::Ph1::Transformer</text>
+<polygon fill="#bfbfbf" stroke="black" points="606,-82.99 606,-101.99 757,-101.99 757,-82.99 606,-82.99"/>
+<text text-anchor="middle" x="681.5" y="-89.99" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Base::Ph1::Transformer</text>
 </a>
 </g>
 </g>
@@ -75,13 +75,11 @@ var sectionId = 'dynsection-1';
 <!-- Node2&#45;&gt;Node1 -->
 <g id="edge1" class="edge">
 <title>Node2&#45;&gt;Node1</title>
-<path fill="none" stroke="#9a32cd" stroke-dasharray="5,2" d="M503.24,-117.53C546.01,-112.58 601.02,-106.21 644.85,-101.13"/>
-<polygon fill="#9a32cd" stroke="#9a32cd" points="502.74,-114.06 493.21,-118.69 503.54,-121.02 502.74,-114.06"/>
-<text text-anchor="middle" x="574" y="-161.49" font-family="Helvetica,sans-Serif" font-size="10.00"> mInductance</text>
-<text text-anchor="middle" x="574" y="-150.49" font-family="Helvetica,sans-Serif" font-size="10.00">mNominalVoltageEnd1</text>
-<text text-anchor="middle" x="574" y="-139.49" font-family="Helvetica,sans-Serif" font-size="10.00">mNominalVoltageEnd2</text>
-<text text-anchor="middle" x="574" y="-128.49" font-family="Helvetica,sans-Serif" font-size="10.00">mRatedPower</text>
-<text text-anchor="middle" x="574" y="-117.49" font-family="Helvetica,sans-Serif" font-size="10.00">mResistance</text>
+<path fill="none" stroke="#9a32cd" stroke-dasharray="5,2" d="M503.18,-116.27C536.37,-111.82 576.16,-106.48 609.63,-102"/>
+<polygon fill="#9a32cd" stroke="#9a32cd" points="502.56,-112.83 493.11,-117.63 503.49,-119.76 502.56,-112.83"/>
+<text text-anchor="middle" x="554.5" y="-138.49" font-family="Helvetica,sans-Serif" font-size="10.00"> mInductance</text>
+<text text-anchor="middle" x="554.5" y="-127.49" font-family="Helvetica,sans-Serif" font-size="10.00">mRatedPower</text>
+<text text-anchor="middle" x="554.5" y="-116.49" font-family="Helvetica,sans-Serif" font-size="10.00">mResistance</text>
 </g>
 <!-- Node3 -->
 <g id="node3" class="node">
@@ -179,9 +177,9 @@ var sectionId = 'dynsection-1';
 <!-- Node7&#45;&gt;Node1 -->
 <g id="edge7" class="edge">
 <title>Node7&#45;&gt;Node1</title>
-<path fill="none" stroke="#9a32cd" stroke-dasharray="5,2" d="M513.36,-72.64C548.25,-72.91 589.73,-74.1 627,-77.49 640.61,-78.73 655.25,-80.77 668.77,-82.95"/>
-<polygon fill="#9a32cd" stroke="#9a32cd" points="513.25,-69.14 503.23,-72.59 513.21,-76.14 513.25,-69.14"/>
-<text text-anchor="middle" x="574" y="-80.49" font-family="Helvetica,sans-Serif" font-size="10.00"> mRatio</text>
+<path fill="none" stroke="#9a32cd" stroke-dasharray="5,2" d="M513.15,-73.5C537.22,-74.05 563.73,-75.21 588,-77.49 601.44,-78.75 615.89,-80.77 629.28,-82.92"/>
+<polygon fill="#9a32cd" stroke="#9a32cd" points="513.07,-70 503.01,-73.3 512.94,-77 513.07,-70"/>
+<text text-anchor="middle" x="554.5" y="-80.49" font-family="Helvetica,sans-Serif" font-size="10.00"> mRatio</text>
 </g>
 <!-- Node8 -->
 <g id="node8" class="node">

@@ -100,7 +100,7 @@ $(function() {
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
 <div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html#ab16bbf8f15d45cba88e3a145c6cac4b8">   31</a></span>&#160;<a class="code" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp&lt;Complex&gt;::Ptr</a> <a class="code" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html#ab16bbf8f15d45cba88e3a145c6cac4b8">DP::Ph1::Transformer::clone</a>(String name) {</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;  <span class="keyword">auto</span> copy = Transformer::make(name, mLogLevel);</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;  copy-&gt;setParameters(**mNominalVoltageEnd1, **mNominalVoltageEnd2,</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;  copy-&gt;setParameters(mNominalVoltageEnd1, mNominalVoltageEnd2,</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;                      std::abs(**mRatio), std::arg(**mRatio), **mResistance,</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;                      **mInductance);</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  <span class="keywordflow">return</span> copy;</div>
@@ -117,7 +117,7 @@ $(function() {
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  SPDLOG_LOGGER_INFO(</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;      mSLog, <span class="stringliteral">&quot;Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]&quot;</span>,</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;      **mNominalVoltageEnd1, **mNominalVoltageEnd2);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;      mNominalVoltageEnd1, mNominalVoltageEnd2);</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  SPDLOG_LOGGER_INFO(</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;      mSLog,</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;      <span class="stringliteral">&quot;Resistance={} [Ohm] Inductance={} [Ohm] (referred to primary side)&quot;</span>,</div>
@@ -151,14 +151,14 @@ $(function() {
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    std::shared_ptr&lt;SimTerminal&lt;Complex&gt;&gt; tmp = mTerminals[0];</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    mTerminals[0] = mTerminals[1];</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    mTerminals[1] = tmp;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    Real tmpVolt = **mNominalVoltageEnd1;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    **mNominalVoltageEnd1 = **mNominalVoltageEnd2;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    **mNominalVoltageEnd2 = tmpVolt;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    Real tmpVolt = mNominalVoltageEnd1;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    mNominalVoltageEnd1 = mNominalVoltageEnd2;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    mNominalVoltageEnd2 = tmpVolt;</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    SPDLOG_LOGGER_INFO(mSLog, <span class="stringliteral">&quot;Switching terminals to have first terminal at &quot;</span></div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;                              <span class="stringliteral">&quot;higher voltage side. Updated parameters: &quot;</span>);</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    SPDLOG_LOGGER_INFO(</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        mSLog, <span class="stringliteral">&quot;Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]&quot;</span>,</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        **mNominalVoltageEnd1, **mNominalVoltageEnd2);</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        mNominalVoltageEnd1, mNominalVoltageEnd2);</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    SPDLOG_LOGGER_INFO(mSLog, <span class="stringliteral">&quot;Tap Ratio = {} [ ] Phase Shift = {} [deg]&quot;</span>,</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;                       std::abs(**mRatio), std::arg(**mRatio));</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  }</div>
@@ -200,7 +200,7 @@ $(function() {
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;  Real qSnub = Q_SNUB_TRANSFORMER * **mRatedPower;</div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;  <span class="comment">// A snubber conductance is added on the higher voltage side</span></div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;  mSnubberResistance1 = std::pow(std::abs(**mNominalVoltageEnd1), 2) / pSnub;</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;  mSnubberResistance1 = std::pow(std::abs(mNominalVoltageEnd1), 2) / pSnub;</div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;  mSubSnubResistor1 =</div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;      std::make_shared&lt;DP::Ph1::Resistor&gt;(**mName + <span class="stringliteral">&quot;_snub_res1&quot;</span>, mLogLevel);</div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;  mSubSnubResistor1-&gt;setParameters(mSnubberResistance1);</div>
@@ -214,7 +214,7 @@ $(function() {
 <div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, <span class="keyword">true</span>);</div>
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160; </div>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;  <span class="comment">// A snubber conductance is added on the lower voltage side</span></div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;  mSnubberResistance2 = std::pow(std::abs(**mNominalVoltageEnd2), 2) / pSnub;</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;  mSnubberResistance2 = std::pow(std::abs(mNominalVoltageEnd2), 2) / pSnub;</div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;  mSubSnubResistor2 =</div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;      std::make_shared&lt;DP::Ph1::Resistor&gt;(**mName + <span class="stringliteral">&quot;_snub_res2&quot;</span>, mLogLevel);</div>
 <div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;  mSubSnubResistor2-&gt;setParameters(mSnubberResistance2);</div>
@@ -237,7 +237,7 @@ $(function() {
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160; </div>
 <div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;  <span class="comment">// A snubber capacitance is added to lower voltage side</span></div>
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;  mSnubberCapacitance2 =</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;      qSnub / std::pow(std::abs(**mNominalVoltageEnd2), 2) / omega;</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;      qSnub / std::pow(std::abs(mNominalVoltageEnd2), 2) / omega;</div>
 <div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;  mSubSnubCapacitor2 =</div>
 <div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;      std::make_shared&lt;DP::Ph1::Capacitor&gt;(**mName + <span class="stringliteral">&quot;_snub_cap2&quot;</span>, mLogLevel);</div>
 <div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;  mSubSnubCapacitor2-&gt;setParameters(mSnubberCapacitance2);</div>

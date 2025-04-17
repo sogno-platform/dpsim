@@ -446,8 +446,7 @@
 <title>Node21&#45;&gt;Node1</title>
 <path fill="none" stroke="#9a32cd" stroke-dasharray="5,2" d="M599.05,-446.9C646.33,-447.44 710.46,-448.01 767,-448.01 767,-448.01 767,-448.01 2003,-448.01 2144.84,-448.01 2166.95,-195.95 2170.04,-142.78"/>
 <polygon fill="#9a32cd" stroke="#9a32cd" points="598.96,-443.4 588.92,-446.79 598.88,-450.4 598.96,-443.4"/>
-<text text-anchor="middle" x="1373.5" y="-473.01" font-family="Helvetica,sans-Serif" font-size="10.00"> mActivePowerInjection</text>
-<text text-anchor="middle" x="1373.5" y="-462.01" font-family="Helvetica,sans-Serif" font-size="10.00">mBaseVoltage</text>
+<text text-anchor="middle" x="1373.5" y="-462.01" font-family="Helvetica,sans-Serif" font-size="10.00"> mActivePowerInjection</text>
 <text text-anchor="middle" x="1373.5" y="-451.01" font-family="Helvetica,sans-Serif" font-size="10.00">mReactivePowerInjection</text>
 </g>
 <!-- Node21&#45;&gt;Node20 -->

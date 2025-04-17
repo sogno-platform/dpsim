@@ -113,6 +113,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setParameters</b> (Re
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_pi_line.html#aed280ca01ca78abcde62c409adf17e7f">initializeFromNodesAndTerminals</a> (Real frequency) override</td></tr>
 <tr class="memdesc:aed280ca01ca78abcde62c409adf17e7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data. <br /></td></tr>
 <tr class="separator:aed280ca01ca78abcde62c409adf17e7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99742bba5e555c6ec869f75b73d21b3e"><td class="memItemLeft" align="right" valign="top"><a id="a99742bba5e555c6ec869f75b73d21b3e"></a>
+Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_pi_line.html#a99742bba5e555c6ec869f75b73d21b3e">getBaseVoltage</a> () const</td></tr>
+<tr class="memdesc:a99742bba5e555c6ec869f75b73d21b3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get base voltage. <br /></td></tr>
+<tr class="separator:a99742bba5e555c6ec869f75b73d21b3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c12c3456068354ada963c05bb05ad0e"><td class="memItemLeft" align="right" valign="top"><a id="a0c12c3456068354ada963c05bb05ad0e"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_pi_line.html#a0c12c3456068354ada963c05bb05ad0e">setBaseVoltage</a> (Real baseVoltage)</td></tr>
 <tr class="memdesc:a0c12c3456068354ada963c05bb05ad0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set base voltage. <br /></td></tr>
@@ -540,10 +544,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaTearSetIdx</b> (UI
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:afd7977745d50e705b40ba7f3ba954215"><td class="memItemLeft" align="right" valign="top"><a id="afd7977745d50e705b40ba7f3ba954215"></a>
-const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_pi_line.html#afd7977745d50e705b40ba7f3ba954215">mBaseVoltage</a></td></tr>
-<tr class="memdesc:afd7977745d50e705b40ba7f3ba954215"><td class="mdescLeft">&#160;</td><td class="mdescRight">base voltage [V] <br /></td></tr>
-<tr class="separator:afd7977745d50e705b40ba7f3ba954215"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31012ccbac01f1fce6346ea5433a3ae9"><td class="memItemLeft" align="right" valign="top"><a id="a31012ccbac01f1fce6346ea5433a3ae9"></a>
 const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; MatrixComp &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_pi_line.html#a31012ccbac01f1fce6346ea5433a3ae9">mCurrent</a></td></tr>
 <tr class="memdesc:a31012ccbac01f1fce6346ea5433a3ae9"><td class="mdescLeft">&#160;</td><td class="mdescRight">branch Current flow [A], coef(0) has data from node 0, coef(1) from node 1. <br /></td></tr>
@@ -834,7 +834,7 @@ static std::shared_ptr&lt; PiLine &gt;&#160;</td><td class="memItemRight" valign
 </div><div class="memdoc">
 <p>CHECK: Which of these really need to be member variables? base current [A] </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___pi_line_8h_source.html#l00048">48</a> of file <a class="el" href="_s_p___ph1___pi_line_8h_source.html">SP_Ph1_PiLine.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___pi_line_8h_source.html#l00049">49</a> of file <a class="el" href="_s_p___ph1___pi_line_8h_source.html">SP_Ph1_PiLine.h</a>.</p>
 
 </div>
 </div>
