@@ -541,7 +541,18 @@ Generate a Visual Studio project with CMake and use it to build the project&lt;/
 &lt;p>Follow the previous steps to set up the Docker container.&lt;/p>
 &lt;p>To build the Python package run&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>python3 setup.py bdist_wheel
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="documentation">Documentation&lt;/h1>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="nix">Nix&lt;/h2>
+&lt;p>DPsim can be fully build using &lt;a href="https://nixos.org/">Nix&lt;/a>, a declarative package manager for building software reproducible.&lt;/p>
+&lt;p>The following steps require a working single-user or multi-user installation of Nix, but not necessarily NixOS.&lt;/p>
+&lt;p>DPsim uses Nix&amp;rsquo;s experimental Flake feature which needs to be activated:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;experimental-features=nix-command flakes&amp;#34;&lt;/span> &amp;gt; ~/.config/nix/nix.conf
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Building DPsim, including all its dependencies can be done by running:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>nix build github:sogno-platform/dpsim
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The build result will be available within the &lt;code>result&lt;/code> folder of your current directory.&lt;/p>
+&lt;p>For development purposes, a local development environment can be setup by you running:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>nix develop github:sogno-platform/dpsim
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Please note, that the Flake reference above (&lt;code>github:sogno-platform/dpsim&lt;/code>) can be substituted by a local path (&lt;code>.&lt;/code>), in case you have locally checked out the DPsim repo.&lt;/p>
+&lt;h1 id="documentation">Documentation&lt;/h1>
 &lt;h2 id="python">Python&lt;/h2>
 &lt;p>Install &lt;a href="https://www.sphinx-doc.org/en/master/">Sphinx&lt;/a> or use the Docker image.&lt;/p>
 &lt;p>Generate the Python documentation by running Sphinx via CMake:&lt;/p>
