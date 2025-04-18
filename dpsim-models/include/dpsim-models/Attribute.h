@@ -90,30 +90,6 @@ public:
 
   bool isNull() const { return mPtr == nullptr; }
 
-  // These (implicit) comparison operators are disabled to avoid accidentally comparing pointers instead of attribute values.
-  // When a pointer comparison is necessary, this can be done via the `getPtr` method or by using the `AttributeCmp` and `AttributeEq` structs.
-#if 0
-  template<class U>
-  bool operator<(const AttributePointer<U>& rhs) const noexcept {
-    return this->mPtr < rhs.getPtr();
-  }
-
-  template<class U>
-  bool operator>(const AttributePointer<U>& rhs) const noexcept {
-    return this->mPtr > rhs.getPtr();
-  }
-
-  template<class U>
-  bool operator==(const AttributePointer<U>& rhs) const noexcept {
-    return this->mPtr == rhs.getPtr();
-  }
-
-  template<class U>
-  bool operator!=(const AttributePointer<U>& rhs) const noexcept {
-    return this->mPtr != rhs.getPtr();
-  }
-#endif
-
 private:
   std::shared_ptr<T> mPtr;
 };

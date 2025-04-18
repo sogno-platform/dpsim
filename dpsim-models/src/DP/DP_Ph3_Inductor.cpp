@@ -54,16 +54,6 @@ void DP::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 
   //TODO
   SPDLOG_LOGGER_INFO(mSLog, "--- Initialize according to power flow ---");
-  // << "in phase A: " << std::endl
-  // << "Voltage across: " << std::abs((**mIntfVoltage)(0,0))
-  // << "<" << Math::phaseDeg((**mIntfVoltage)(0,0)) << std::endl
-  // << "Current: " << std::abs((**mIntfCurrent)(0,0))
-  // << "<" << Math::phaseDeg((**mIntfCurrent)(0,0)) << std::endl
-  // << "Terminal 0 voltage: " << std::abs(initialSingleVoltage(0))
-  // << "<" << Math::phaseDeg(initialSingleVoltage(0)) << std::endl
-  // << "Terminal 1 voltage: " << std::abs(initialSingleVoltage(1))
-  // << "<" << Math::phaseDeg(initialSingleVoltage(1)) << std::endl
-  // << "--- Power flow initialization finished ---" << std::endl;
 }
 
 void DP::Ph3::Inductor::initVars(Real omega, Real timeStep) {
@@ -89,8 +79,6 @@ void DP::Ph3::Inductor::initVars(Real omega, Real timeStep) {
 
   // TODO: check if this is correct or if it should be only computed before the step
   mEquivCurrent = mEquivCond * **mIntfVoltage + mPrevCurrFac * **mIntfCurrent;
-  // no need to update this now
-  //**mIntfCurrent = mEquivCond.cwiseProduct(**mIntfVoltage) + mEquivCurrent;
 }
 
 void DP::Ph3::Inductor::mnaCompInitialize(Real omega, Real timeStep,
@@ -100,9 +88,6 @@ void DP::Ph3::Inductor::mnaCompInitialize(Real omega, Real timeStep,
 
   SPDLOG_LOGGER_INFO(mSLog, "Initial voltage {}",
                      Math::abs((**mIntfVoltage)(0, 0)));
-  // << "<" << Math::phaseDeg((**mIntfVoltage)(0,0)) << std::endl
-  // << "Initial current " << Math::abs((**mIntfCurrent)(0,0))
-  // << "<" << Math::phaseDeg((**mIntfCurrent)(0,0)) << std::endl;
 }
 
 void DP::Ph3::Inductor::mnaCompApplySystemMatrixStamp(
@@ -197,22 +182,8 @@ void DP::Ph3::Inductor::mnaTearInitialize(Real omega, Real timeStep) {
   initVars(omega, timeStep);
 }
 
-void DP::Ph3::Inductor::mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) {
-#if 0
-  Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, mEquivCond.cwiseInverse()(0,0));
-#endif
-}
+void DP::Ph3::Inductor::mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) {}
 
-void DP::Ph3::Inductor::mnaTearApplyVoltageStamp(Matrix &voltageVector) {
-#if 0
-  mEquivCurrent = mEquivCond * (**mIntfVoltage)(0,0) + mPrevCurrFac * (**mIntfCurrent)(0,0);
-  Math::addToVectorElement(voltageVector, mTearIdx, mEquivCurrent .cwiseProduct( mEquivCond.cwiseInverse()));
-#endif
-}
+void DP::Ph3::Inductor::mnaTearApplyVoltageStamp(Matrix &voltageVector) {}
 
-void DP::Ph3::Inductor::mnaTearPostStep(Complex voltage, Complex current) {
-#if 0
-  **mIntfVoltage = voltage;
-  **mIntfCurrent = mEquivCond * voltage + mEquivCurrent;
-#endif
-}
+void DP::Ph3::Inductor::mnaTearPostStep(Complex voltage, Complex current) {}

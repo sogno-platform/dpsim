@@ -148,14 +148,6 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::initializeStates(
   **mGamma_q = 0.006339;
   **mVcabc = initVgabc;
   mIfabc = Matrix::Zero(3, 1);
-#if 0
-  mVca = initVcabc(0, 0);
-  mVcb = initVcabc(1, 0);
-  mVcc = initVcabc(2, 0);
-  mIfa = initIfabc(0, 0);
-  mIfb = initIfabc(1, 0);
-  mIfc = initIfabc(2, 0);
-#endif
 
   mStates << **mThetaPLL, **mPhiPLL, **mP, **mQ, **mPhi_d, **mPhi_q, **mGamma_d,
       **mGamma_q, **mVcabc, mIfabc;
@@ -183,14 +175,6 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::updateStates() {
   **mGamma_d = newStates(7, 0);
   **mVcabc = newStates.block(8, 0, 3, 1);
   mIfabc = newStates.block(11, 0, 3, 1);
-#if 0
-  mIfa = newStates(8, 1);
-  mIfb = newStates(9, 1);
-  mIfc = newStates(10, 1);
-  mVca = newStates(11, 1);
-  mVcb = newStates(12, 1);
-  mVcc = newStates(13, 1);
-#endif
   mStates = newStates;
 
   mU = newU;

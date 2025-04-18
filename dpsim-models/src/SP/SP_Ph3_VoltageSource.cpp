@@ -36,15 +36,6 @@ void SP::Ph3::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 
   if (**mVoltageRef == Complex(0, 0))
     **mVoltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);
-
-#if 0
-  mLog.info() << "--- Initialize according to power flow ---" << std::endl;
-  mLog.info() << "Terminal 0 voltage: " << std::abs(initialSingleVoltage(0))
-    << "<" << std::arg(initialSingleVoltage(0)) << std::endl;
-  mLog.info() << "Terminal 1 voltage: " << std::abs(initialSingleVoltage(1))
-    << "<" << std::arg(initialSingleVoltage(1)) << std::endl;
-  mLog.info() << "Voltage across: " << std::abs(mVoltageRef->get()) << "<" << std::arg(mVoltageRef->get()) << std::endl;
-#endif
 }
 
 void SP::Ph3::VoltageSource::mnaCompInitialize(
@@ -109,18 +100,6 @@ void SP::Ph3::VoltageSource::mnaCompApplySystemMatrixStamp(
                              mVirtualNodes[0]->matrixNodeIndex(PhaseType::C),
                              matrixNodeIndex(1, 2), Complex(1, 0));
   }
-
-#if 0
-  mLog.info() << "--- System matrix stamp ---" << std::endl;
-  if (terminalNotGrounded(0)) {
-    mLog.info() << "Add " << Complex(-1, 0) << " to " << matrixNodeIndex(0) << "," << mVirtualNodes[0]->matrixNodeIndex() << std::endl;
-    mLog.info() << "Add " << Complex(-1, 0) << " to " << mVirtualNodes[0]->matrixNodeIndex() << "," << matrixNodeIndex(0) << std::endl;
-  }
-  if (terminalNotGrounded(1)) {
-    mLog.info() << "Add " << Complex(1, 0) << " to " << mVirtualNodes[0]->matrixNodeIndex() << "," << matrixNodeIndex(1) << std::endl;
-    mLog.info() << "Add " << Complex(1, 0) << " to " << matrixNodeIndex(1) << "," << mVirtualNodes[0]->matrixNodeIndex() << std::endl;
-  }
-#endif
 }
 
 void SP::Ph3::VoltageSource::mnaCompApplyRightSideVectorStamp(
@@ -134,8 +113,6 @@ void SP::Ph3::VoltageSource::mnaCompApplyRightSideVectorStamp(
   Math::setVectorElement(rightVector,
                          mVirtualNodes[0]->matrixNodeIndex(PhaseType::C),
                          (**mIntfVoltage)(2, 0));
-
-  //mLog.debug() << "Add " << (**mIntfVoltage)(0,0) << " to source vector " << mVirtualNodes[0]->matrixNodeIndex() << std::endl;
 }
 
 void SP::Ph3::VoltageSource::updateVoltage(Real time) {
@@ -194,32 +171,7 @@ void SP::Ph3::VoltageSource::mnaCompUpdateCurrent(const Matrix &leftVector) {
 void SP::Ph3::VoltageSource::daeResidual(double ttime, const double state[],
                                          const double dstate_dt[],
                                          double resid[],
-                                         std::vector<int> &off) {
-  /* New state vector definintion:
-   *  state[0]=node0_voltage
-   *  state[1]=node1_voltage
-   *  ....
-   *  state[n]=noden_voltage
-   *  state[n+1]=component0_voltage
-   *  state[n+2]=component0_inductance (not yet implemented)
-   *  ...
-   *  state[m-1]=componentm_voltage
-   *  state[m]=componentm_inductance
-   */
-
-#if 0
-  int Pos1 = matrixNodeIndex(0);
-  int Pos2 = matrixNodeIndex(1);
-  int c_offset = off[0] + off[1]; //current offset for component
-  int n_offset_1 = c_offset + Pos1 + 1;// current offset for first nodal equation
-  int n_offset_2 = c_offset + Pos2 + 1;// current offset for second nodal equation
-  resid[c_offset] = (state[Pos2] - state[Pos1]) - state[c_offset]; // Voltage equation for Resistor
-  //resid[++c_offset] = ; //TODO : add inductance equation
-  resid[n_offset_1] += std::real(current());
-  resid[n_offset_2] += std::real(current());
-  off[1] += 1;
-#endif
-}
+                                         std::vector<int> &off) {}
 
 Complex SP::Ph3::VoltageSource::daeInitialize() {
   (**mIntfVoltage)(0, 0) = **mVoltageRef;
