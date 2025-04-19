@@ -75,18 +75,6 @@ public:
       Real end_time = -1, Real scale_factor = 1,
       CSVReader::DataFormat format = CSVReader::DataFormat::SECONDS);
 
-#if 0
-  void assignLoadProfilePF(std::vector<std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ>>& loads,
-    Real start_time = -1, Real time_step = 1, Real end_time = -1, Real scale_factor= 1,
-    CSVReader::Mode mode = CSVReader::Mode::AUTO,
-    CSVReader::DataFormat format = CSVReader::DataFormat::SECONDS);
-
-  void assignLoadProfileSP(std::vector<std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ>>& loads,
-    Real start_time = -1, Real time_step = 1, Real end_time = -1, Real scale_factor= 1,
-    CSVReader::Mode mode = CSVReader::Mode::AUTO,
-    CSVReader::DataFormat format = CSVReader::DataFormat::SECONDS);
-#endif
-
   void assignLoadProfileDP(
       std::vector<std::shared_ptr<CPS::DP::Ph1::AvVoltageSourceInverterDQ>>
           &loads,

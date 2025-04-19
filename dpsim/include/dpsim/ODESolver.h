@@ -53,14 +53,6 @@ protected:
   /// Scalar absolute tolerance
   realtype abstol = RCONST(1.0e-10);
 
-  // TODO: Variables for implicit solve?
-  /// Template Jacobian Matrix (implicit solver)
-#if 0
-  SUNMatrix A = NULL;
-  /// Linear solver object (implicit solver)
-  SUNLinearSolver LS = NULL;
-#endif
-
   /// Reusable error-checking flag
   int mFlag{0};
 

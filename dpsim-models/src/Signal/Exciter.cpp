@@ -57,7 +57,6 @@ void Signal::Exciter::initialize(Real Vh_init, Real Ef_init) {
   **mEf = Ef_init;
 
   // mVse is the ceiling function in PSAT
-  // mVse = mEf * (0.33 * (exp(0.1 * abs(mEf)) - 1.));
   **mVse = **mEf * (0.33 * exp(0.1 * abs(**mEf)));
 
   // mVis = vr2 in PSAT
@@ -98,7 +97,6 @@ Real Signal::Exciter::step(Real mVd, Real mVq, Real dt) {
   **mVm = Math::StateSpaceEuler(mVm_prev, -1 / mTr, 1 / mTr, dt, **mVh);
 
   // Stabilizing feedback equation
-  // mVse = mEf * (0.33 * (exp(0.1 * abs(mEf)) - 1.));
   **mVse = mEf_prev * (0.33 * exp(0.1 * abs(mEf_prev)));
   **mVis = Math::StateSpaceEuler(mVis_prev, -1 / mTf, -mKf / mTf / mTf, dt,
                                  mEf_prev);
@@ -118,19 +116,3 @@ Real Signal::Exciter::step(Real mVd, Real mVq, Real dt) {
 
   return **mEf;
 }
-
-#if 0
-// Saturation function according to Viviane thesis
-Real Signal::Exciter::saturation_fcn1(Real mVd, Real mVq, Real Vref, Real dt) {
-  if (mEf <= 2.3)
-    mVse = (0.1 / 2.3)*mEf;
-  else
-    mVse = (0.33 / 3.1)*mEf;
-  mVse = mVse*mEf;
-}
-
-// Saturation function according to PSAT
-Real Signal::Exciter::saturation_fcn2() {
-  return mA * (exp(mB * abs(mEf)) - 1);
-}
-#endif

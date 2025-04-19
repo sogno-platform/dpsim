@@ -193,53 +193,6 @@ MatrixComp DP::Ph3::SynchronGeneratorDQ::dq0ToAbcTransform(Real theta,
   return abcCompVector;
 }
 
-void DP::Ph3::SynchronGeneratorDQ::trapezoidalFluxStates() {
-#if 0
-  // Calculation of rotational speed with euler
-  if (mHasTurbineGovernor == true)
-    mMechTorque = mTurbineGovernor.step(mOmMech, 1, 300e6 / 555e6, mTimeStep);
+void DP::Ph3::SynchronGeneratorDQ::trapezoidalFluxStates() {}
 
-  mElecTorque = (mPsid*mIq - mPsiq*mId);
-  mOmMech = mOmMech + mTimeStep * (1 / (2 * mH) * (mMechTorque - mElecTorque));
-
-  //Calculation of flux
-  Matrix A = (mResistanceMat*mReactanceMat - mOmMech*mOmegaFluxMat);
-  Matrix B = Matrix::Identity(7, 7);
-
-  if (numMethod == NumericalMethod::Trapezoidal_flux)
-    Fluxes = Math::StateSpaceTrapezoidal(Fluxes, A, B, mTimeStep*mBase_OmElec, dqVoltages);
-  else
-    Fluxes = Math::StateSpaceEuler(Fluxes, A, B, mTimeStep*mBase_OmElec, dqVoltages);
-
-  // Calculation of currents based on inverse of inductance matrix
-  mId = ((mLlfd*mLlkd + mLmd*(mLlfd + mLlkd))*mPsid - mLmd*mLlkd*mPsifd - mLlfd*mLmd*mPsikd) / detLd;
-  mIfd = (mLlkd*mLmd*mPsid - (mLl*mLlkd + mLmd*(mLl + mLlkd))*mPsifd + mLmd*mLl*mPsikd) / detLd;
-  mIkd = (mLmd*mLlfd*mPsid + mLmd*mLl*mPsifd - (mLmd*(mLlfd + mLl) + mLl*mLlfd)*mPsikd) / detLd;
-  mIq = ((mLlkq1*mLlkq2 + mLmq*(mLlkq1 + mLlkq2))*mPsiq - mLmq*mLlkq2*mPsikq1 - mLmq*mLlkq1*mPsikq2) / detLq;
-  mIkq1 = (mLmq*mLlkq2*mPsiq - (mLmq*(mLlkq2 + mLl) + mLl*mLlkq2)*mPsikq1 + mLmq*mLl*mPsikq2) / detLq;
-  mIkq2 = (mLmq*mLlkq1*mPsiq + mLmq*mLl*mPsikq1 - (mLmq*(mLlkq1 + mLl) + mLl*mLlkq1)*mPsikq2) / detLq;
-  mI0 = -mPsi0 / mLl;
-#endif
-}
-
-void DP::Ph3::SynchronGeneratorDQ::trapezoidalCurrentStates() {
-#if 0
-  Matrix A = (mReactanceMat*mResistanceMat);
-  Matrix B = mReactanceMat;
-  Matrix C = Matrix::Zero(7, 1);
-  C(0, 0) = -mOmMech*mPsid;
-  C(1, 0) = mOmMech*mPsiq;
-  C = mReactanceMat*C;
-
-  dqCurrents = Math::StateSpaceTrapezoidal(dqCurrents, A, B, C, mTimeStep*mOmMech, dqVoltages);
-
-  //Calculation of currents based on inverse of inductance matrix
-  mPsiq = -(mLl + mLmq)*mIq + mLmq*mIkq1 + mLmq*mIkq2;
-  mPsid = -(mLl + mLmd)*mId + mLmd*mIfd + mLmd*mIkd;
-  mPsi0 = -mLl*mI0;
-  mPsikq1 = -mLmq*mIq + (mLlkq1 + mLmq)*mIkq1 + mLmq*mIkq2;
-  mPsikq2 = -mLmq*mIq + mLmq*mIkq1 + (mLlkq2 + mLmq)*mIkq2;
-  mPsifd = -mLmd*mId + (mLlfd + mLmd)*mIfd + mLmd*mIkd;
-  mPsikd = -mLmd*mId + mLmd*mIfd + (mLlkd + mLmd)*mIkd;
-#endif
-}
+void DP::Ph3::SynchronGeneratorDQ::trapezoidalCurrentStates() {}

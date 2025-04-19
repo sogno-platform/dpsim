@@ -223,38 +223,6 @@ Graph::Graph Simulation::dependencyGraph() {
   std::map<CPS::Task::Ptr, Scheduler::TaskTime> avgTimes;
   std::map<CPS::Task::Ptr, String> fillColors;
 
-#if 0
-  /* The main SolveTasks of each Solver usually takes the
-   * largest amount of computing time. We exclude it from
-   * coloring for improving the spread of the color range
-   * for the remaining tasks.
-   */
-  auto isSolveTask = [](Task::Ptr task) -> Bool {
-    const std::vector<std::type_index> ignoreTasks = {
-#ifdef WITH_SUNDIALS
-      std::type_index(typeid(ODESolver::SolveTask)),
-#endif
-      std::type_index(typeid(MnaSolver<Real>::SolveTask)),
-      std::type_index(typeid(MnaSolver<Complex>::SolveTask)),
-      std::type_index(typeid(DiakopticsSolver<Real>::SubnetSolveTask)),
-      std::type_index(typeid(DiakopticsSolver<Complex>::SubnetSolveTask)),
-      std::type_index(typeid(DiakopticsSolver<Real>::SolveTask)),
-      std::type_index(typeid(DiakopticsSolver<Complex>::SolveTask)),
-      std::type_index(typeid(NRpolarSolver::SolveTask))
-    };
-
-    return std::find(ignoreTasks.begin(), ignoreTasks.end(), std::type_index(typeid(*task.get()))) != ignoreTasks.end();
-  };
-
-  auto isIgnoredTask = [&isSolveTask](Task::Ptr task) -> Bool {
-    return typeid(*task.get()) == typeid(Interface::PreStep) || sSolveTask(task);
-  };
-
-   auto isRootTask = [](Task::Ptr task) -> Bool {
-    return typeid(*task.get()) == typeid(Scheduler::Root);
-  };
-#endif
-
   auto isScheduled = [this](Task::Ptr task) -> Bool {
     return !mTaskOutEdges[task].empty();
   };
@@ -309,12 +277,6 @@ Graph::Graph Simulation::dependencyGraph() {
     n->set("style", "rounded,filled,bold");
     n->set("shape", "rectangle");
 
-    // if (isSolveTask(task)) {
-    // 	n->set("fillcolor", "orange");
-    // }
-    // if (isRootTask(task)) {
-    // 	n->set("fillcolor", "springgreen1");
-    // }
     if (isScheduled(task)) {
       if (avgTimeWorst > Scheduler::TaskTime(0)) {
         auto grad = (float)avgTimes[task].count() / avgTimeWorst.count();
