@@ -120,105 +120,85 @@ $(function() {
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  **mIntfCurrent = mSusceptance * **mIntfVoltage;</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  SPDLOG_LOGGER_INFO(mSLog, <span class="stringliteral">&quot;--- Initialize according to power flow ---&quot;</span>);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#if 0</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  mLog.info() &lt;&lt; <span class="stringliteral">&quot;--- Initialize according to power flow ---&quot;</span> &lt;&lt; std::endl</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;in phase A: &quot;</span> &lt;&lt; std::endl</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;Voltage across: &quot;</span> &lt;&lt; std::abs((**mIntfVoltage)(0, 0))</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;&lt;&quot;</span> &lt;&lt; Math::phaseDeg((**mIntfVoltage)(0, 0)) &lt;&lt; std::endl</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;Current: &quot;</span> &lt;&lt; std::abs((**mIntfCurrent)(0, 0))</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;&lt;&quot;</span> &lt;&lt; Math::phaseDeg((**mIntfCurrent)(0, 0)) &lt;&lt; std::endl</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;Terminal 0 voltage: &quot;</span> &lt;&lt; std::abs(initialSingleVoltage(0))</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;&lt;&quot;</span> &lt;&lt; Math::phaseDeg(initialSingleVoltage(0)) &lt;&lt; std::endl</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;Terminal 1 voltage: &quot;</span> &lt;&lt; std::abs(initialSingleVoltage(1))</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;&lt;&quot;</span> &lt;&lt; Math::phaseDeg(initialSingleVoltage(1)) &lt;&lt; std::endl</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;--- Power flow initialization finished ---&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#a930275c4acf1168f6ea0eb8175413fa4">   67</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#a930275c4acf1168f6ea0eb8175413fa4">SP::Ph3::Inductor::mnaCompInitialize</a>(Real omega, Real timeStep,</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                                          <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Matrix&gt;::Ptr</a> leftVector) {</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  updateMatrixNodeIndices();</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <span class="comment">// TODO</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor">#if 0</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  mLog.info() &lt;&lt; <span class="stringliteral">&quot;Initial voltage &quot;</span> &lt;&lt; Math::abs((**mIntfVoltage)(0, 0))</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;&lt;&quot;</span> &lt;&lt; Math::phaseDeg((**mIntfVoltage)(0, 0)) &lt;&lt; std::endl</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;Initial current &quot;</span> &lt;&lt; Math::abs((**mIntfCurrent)(0, 0))</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    &lt;&lt; <span class="stringliteral">&quot;&lt;&quot;</span> &lt;&lt; Math::phaseDeg((**mIntfCurrent)(0, 0)) &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;}</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#af9284b554384f0afa1ce82a2662442ad">   79</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#af9284b554384f0afa1ce82a2662442ad">SP::Ph3::Inductor::mnaCompApplySystemMatrixStamp</a>(</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    SparseMatrixRow &amp;systemMatrix) {</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  MNAStampUtils::stampAdmittanceMatrix(</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;      mSusceptance, systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;      terminalNotGrounded(0), terminalNotGrounded(1), mSLog);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;}</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#ad64e748c63aa51cd33bee3a87180a036">   86</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#ad64e748c63aa51cd33bee3a87180a036">SP::Ph3::Inductor::mnaCompAddPostStepDependencies</a>(</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    AttributeBase::List &amp;prevStepDependencies,</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    AttributeBase::List &amp;attributeDependencies,</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    AttributeBase::List &amp;modifiedAttributes,</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Matrix&gt;::Ptr</a> &amp;leftVector) {</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  attributeDependencies.push_back(leftVector);</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  modifiedAttributes.push_back(mIntfVoltage);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  modifiedAttributes.push_back(mIntfCurrent);</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;}</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="keywordtype">void</span> SP::Ph3::Inductor::mnaCompPostStep(Real time, Int timeStepCount,</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;                                        <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Matrix&gt;::Ptr</a> &amp;leftVector) {</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;  mnaCompUpdateVoltage(**leftVector);</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;  mnaCompUpdateCurrent(**leftVector);</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;}</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#ae66f5480734424ca0b896ee49941ecad">  102</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#ae66f5480734424ca0b896ee49941ecad">SP::Ph3::Inductor::mnaCompUpdateVoltage</a>(<span class="keyword">const</span> Matrix &amp;leftVector) {</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;  <span class="comment">// v1 - v0</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  **mIntfVoltage = Matrix::Zero(3, 1);</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;  <span class="keywordflow">if</span> (terminalNotGrounded(1)) {</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    (**mIntfVoltage)(0, 0) =</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 0));</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    (**mIntfVoltage)(1, 0) =</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 1));</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    (**mIntfVoltage)(2, 0) =</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 2));</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  }</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  <span class="keywordflow">if</span> (terminalNotGrounded(0)) {</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    (**mIntfVoltage)(0, 0) =</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        (**mIntfVoltage)(0, 0) -</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    (**mIntfVoltage)(1, 0) =</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        (**mIntfVoltage)(1, 0) -</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 1));</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    (**mIntfVoltage)(2, 0) =</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        (**mIntfVoltage)(2, 0) -</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 2));</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;  }</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;}</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
-<div class="line"><a name="l00126"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#aa6a016dd1ec78c407d1a4dc053a989a2">  126</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#aa6a016dd1ec78c407d1a4dc053a989a2">SP::Ph3::Inductor::mnaCompUpdateCurrent</a>(<span class="keyword">const</span> Matrix &amp;leftVector) {</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;  **mIntfCurrent = mSusceptance * **mIntfVoltage;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;}</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="comment">// #### Tear Methods ####</span></div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="keywordtype">void</span> SP::Ph3::Inductor::mnaTearApplyMatrixStamp(SparseMatrixRow &amp;tearMatrix) {</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;  <span class="comment">// TODO</span></div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;  Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx,</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;                           1. / mSusceptance(0, 0));</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;  Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx,</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;                           1. / mSusceptance(1, 0));</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;  Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx,</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;                           1. / mSusceptance(2, 0));</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;}</div>
-<div class="ttc" id="aclass_c_p_s_1_1_attribute_html"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a></div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00266">Attribute.h:267</a></div></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;}</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#a930275c4acf1168f6ea0eb8175413fa4">   54</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#a930275c4acf1168f6ea0eb8175413fa4">SP::Ph3::Inductor::mnaCompInitialize</a>(Real omega, Real timeStep,</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                                          <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Matrix&gt;::Ptr</a> leftVector) {</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  updateMatrixNodeIndices();</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;}</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#af9284b554384f0afa1ce82a2662442ad">   59</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#af9284b554384f0afa1ce82a2662442ad">SP::Ph3::Inductor::mnaCompApplySystemMatrixStamp</a>(</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    SparseMatrixRow &amp;systemMatrix) {</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  MNAStampUtils::stampAdmittanceMatrix(</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;      mSusceptance, systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;      terminalNotGrounded(0), terminalNotGrounded(1), mSLog);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;}</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#ad64e748c63aa51cd33bee3a87180a036">   66</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#ad64e748c63aa51cd33bee3a87180a036">SP::Ph3::Inductor::mnaCompAddPostStepDependencies</a>(</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    AttributeBase::List &amp;prevStepDependencies,</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    AttributeBase::List &amp;attributeDependencies,</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    AttributeBase::List &amp;modifiedAttributes,</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Matrix&gt;::Ptr</a> &amp;leftVector) {</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  attributeDependencies.push_back(leftVector);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  modifiedAttributes.push_back(mIntfVoltage);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  modifiedAttributes.push_back(mIntfCurrent);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;}</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keywordtype">void</span> SP::Ph3::Inductor::mnaCompPostStep(Real time, Int timeStepCount,</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;                                        <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Matrix&gt;::Ptr</a> &amp;leftVector) {</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  mnaCompUpdateVoltage(**leftVector);</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  mnaCompUpdateCurrent(**leftVector);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;}</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
+<div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#ae66f5480734424ca0b896ee49941ecad">   82</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#ae66f5480734424ca0b896ee49941ecad">SP::Ph3::Inductor::mnaCompUpdateVoltage</a>(<span class="keyword">const</span> Matrix &amp;leftVector) {</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  <span class="comment">// v1 - v0</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  **mIntfVoltage = Matrix::Zero(3, 1);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  <span class="keywordflow">if</span> (terminalNotGrounded(1)) {</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    (**mIntfVoltage)(0, 0) =</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 0));</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    (**mIntfVoltage)(1, 0) =</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 1));</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    (**mIntfVoltage)(2, 0) =</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 2));</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  }</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  <span class="keywordflow">if</span> (terminalNotGrounded(0)) {</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    (**mIntfVoltage)(0, 0) =</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        (**mIntfVoltage)(0, 0) -</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    (**mIntfVoltage)(1, 0) =</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        (**mIntfVoltage)(1, 0) -</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 1));</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    (**mIntfVoltage)(2, 0) =</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        (**mIntfVoltage)(2, 0) -</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 2));</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;  }</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;}</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
+<div class="line"><a name="l00106"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#aa6a016dd1ec78c407d1a4dc053a989a2">  106</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#aa6a016dd1ec78c407d1a4dc053a989a2">SP::Ph3::Inductor::mnaCompUpdateCurrent</a>(<span class="keyword">const</span> Matrix &amp;leftVector) {</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  **mIntfCurrent = mSusceptance * **mIntfVoltage;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;}</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment">// #### Tear Methods ####</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="keywordtype">void</span> SP::Ph3::Inductor::mnaTearApplyMatrixStamp(SparseMatrixRow &amp;tearMatrix) {</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  <span class="comment">// TODO</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx,</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;                           1. / mSusceptance(0, 0));</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;  Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx,</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                           1. / mSusceptance(1, 0));</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx,</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;                           1. / mSusceptance(2, 0));</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;}</div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a></div><div class="ttdef"><b>Definition:</b> <a href="_attribute_8h_source.html#l00242">Attribute.h:243</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_m_n_a_sim_power_comp_html"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp</a></div><div class="ttdoc">Base class for all MNA components that are transmitting power.</div><div class="ttdef"><b>Definition:</b> <a href="_m_n_a_sim_power_comp_8h_source.html#l00013">MNASimPowerComp.h:13</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor_html"><div class="ttname"><a href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html">CPS::SP::Ph3::Inductor</a></div><div class="ttdoc">Inductor.</div><div class="ttdef"><b>Definition:</b> <a href="_s_p___ph3___inductor_8h_source.html#l00026">SP_Ph3_Inductor.h:29</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor_html_a60a584288c044f9ebd5aed6c6bac82d3"><div class="ttname"><a href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#a60a584288c044f9ebd5aed6c6bac82d3">CPS::SP::Ph3::Inductor::initializeFromNodesAndTerminals</a></div><div class="ttdeci">void initializeFromNodesAndTerminals(Real frequency) override</div><div class="ttdoc">Initializes component from power flow data.</div><div class="ttdef"><b>Definition:</b> <a href="_s_p___ph3___inductor_8cpp_source.html#l00028">SP_Ph3_Inductor.cpp:28</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor_html_a8f17f26b2a0e6d3be9c41d294b6ef465"><div class="ttname"><a href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#a8f17f26b2a0e6d3be9c41d294b6ef465">CPS::SP::Ph3::Inductor::clone</a></div><div class="ttdeci">SimPowerComp&lt; Complex &gt;::Ptr clone(String name) override</div><div class="ttdoc">Returns a modified copy of the component with the given suffix added to the name and without.</div><div class="ttdef"><b>Definition:</b> <a href="_s_p___ph3___inductor_8cpp_source.html#l00022">SP_Ph3_Inductor.cpp:22</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor_html_a930275c4acf1168f6ea0eb8175413fa4"><div class="ttname"><a href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#a930275c4acf1168f6ea0eb8175413fa4">CPS::SP::Ph3::Inductor::mnaCompInitialize</a></div><div class="ttdeci">void mnaCompInitialize(Real omega, Real timeStep, Attribute&lt; Matrix &gt;::Ptr leftVector) override</div><div class="ttdoc">Initializes internal variables of the component.</div><div class="ttdef"><b>Definition:</b> <a href="_s_p___ph3___inductor_8cpp_source.html#l00067">SP_Ph3_Inductor.cpp:67</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor_html_aa6a016dd1ec78c407d1a4dc053a989a2"><div class="ttname"><a href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#aa6a016dd1ec78c407d1a4dc053a989a2">CPS::SP::Ph3::Inductor::mnaCompUpdateCurrent</a></div><div class="ttdeci">void mnaCompUpdateCurrent(const Matrix &amp;leftVector) override</div><div class="ttdoc">Update interface current from MNA system result.</div><div class="ttdef"><b>Definition:</b> <a href="_s_p___ph3___inductor_8cpp_source.html#l00126">SP_Ph3_Inductor.cpp:126</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor_html_ad64e748c63aa51cd33bee3a87180a036"><div class="ttname"><a href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#ad64e748c63aa51cd33bee3a87180a036">CPS::SP::Ph3::Inductor::mnaCompAddPostStepDependencies</a></div><div class="ttdeci">void mnaCompAddPostStepDependencies(AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes, Attribute&lt; Matrix &gt;::Ptr &amp;leftVector) override</div><div class="ttdoc">Add MNA post step dependencies.</div><div class="ttdef"><b>Definition:</b> <a href="_s_p___ph3___inductor_8cpp_source.html#l00086">SP_Ph3_Inductor.cpp:86</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor_html_a930275c4acf1168f6ea0eb8175413fa4"><div class="ttname"><a href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#a930275c4acf1168f6ea0eb8175413fa4">CPS::SP::Ph3::Inductor::mnaCompInitialize</a></div><div class="ttdeci">void mnaCompInitialize(Real omega, Real timeStep, Attribute&lt; Matrix &gt;::Ptr leftVector) override</div><div class="ttdoc">Initializes internal variables of the component.</div><div class="ttdef"><b>Definition:</b> <a href="_s_p___ph3___inductor_8cpp_source.html#l00054">SP_Ph3_Inductor.cpp:54</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor_html_aa6a016dd1ec78c407d1a4dc053a989a2"><div class="ttname"><a href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#aa6a016dd1ec78c407d1a4dc053a989a2">CPS::SP::Ph3::Inductor::mnaCompUpdateCurrent</a></div><div class="ttdeci">void mnaCompUpdateCurrent(const Matrix &amp;leftVector) override</div><div class="ttdoc">Update interface current from MNA system result.</div><div class="ttdef"><b>Definition:</b> <a href="_s_p___ph3___inductor_8cpp_source.html#l00106">SP_Ph3_Inductor.cpp:106</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor_html_ad64e748c63aa51cd33bee3a87180a036"><div class="ttname"><a href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#ad64e748c63aa51cd33bee3a87180a036">CPS::SP::Ph3::Inductor::mnaCompAddPostStepDependencies</a></div><div class="ttdeci">void mnaCompAddPostStepDependencies(AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes, Attribute&lt; Matrix &gt;::Ptr &amp;leftVector) override</div><div class="ttdoc">Add MNA post step dependencies.</div><div class="ttdef"><b>Definition:</b> <a href="_s_p___ph3___inductor_8cpp_source.html#l00066">SP_Ph3_Inductor.cpp:66</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor_html_adf6dd25363eb4f65b708b3919779bcbf"><div class="ttname"><a href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#adf6dd25363eb4f65b708b3919779bcbf">CPS::SP::Ph3::Inductor::Inductor</a></div><div class="ttdeci">Inductor(String uid, String name, Logger::Level logLevel=Logger::Level::off)</div><div class="ttdoc">Defines UID, name, component parameters and logging level.</div><div class="ttdef"><b>Definition:</b> <a href="_s_p___ph3___inductor_8cpp_source.html#l00013">SP_Ph3_Inductor.cpp:13</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor_html_ae66f5480734424ca0b896ee49941ecad"><div class="ttname"><a href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#ae66f5480734424ca0b896ee49941ecad">CPS::SP::Ph3::Inductor::mnaCompUpdateVoltage</a></div><div class="ttdeci">void mnaCompUpdateVoltage(const Matrix &amp;leftVector) override</div><div class="ttdoc">Update interface voltage from MNA system result.</div><div class="ttdef"><b>Definition:</b> <a href="_s_p___ph3___inductor_8cpp_source.html#l00102">SP_Ph3_Inductor.cpp:102</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor_html_af9284b554384f0afa1ce82a2662442ad"><div class="ttname"><a href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#af9284b554384f0afa1ce82a2662442ad">CPS::SP::Ph3::Inductor::mnaCompApplySystemMatrixStamp</a></div><div class="ttdeci">void mnaCompApplySystemMatrixStamp(SparseMatrixRow &amp;systemMatrix) override</div><div class="ttdoc">Stamps system matrix.</div><div class="ttdef"><b>Definition:</b> <a href="_s_p___ph3___inductor_8cpp_source.html#l00079">SP_Ph3_Inductor.cpp:79</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor_html_ae66f5480734424ca0b896ee49941ecad"><div class="ttname"><a href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#ae66f5480734424ca0b896ee49941ecad">CPS::SP::Ph3::Inductor::mnaCompUpdateVoltage</a></div><div class="ttdeci">void mnaCompUpdateVoltage(const Matrix &amp;leftVector) override</div><div class="ttdoc">Update interface voltage from MNA system result.</div><div class="ttdef"><b>Definition:</b> <a href="_s_p___ph3___inductor_8cpp_source.html#l00082">SP_Ph3_Inductor.cpp:82</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor_html_af9284b554384f0afa1ce82a2662442ad"><div class="ttname"><a href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#af9284b554384f0afa1ce82a2662442ad">CPS::SP::Ph3::Inductor::mnaCompApplySystemMatrixStamp</a></div><div class="ttdeci">void mnaCompApplySystemMatrixStamp(SparseMatrixRow &amp;systemMatrix) override</div><div class="ttdoc">Stamps system matrix.</div><div class="ttdef"><b>Definition:</b> <a href="_s_p___ph3___inductor_8cpp_source.html#l00059">SP_Ph3_Inductor.cpp:59</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp</a></div><div class="ttdoc">Base class for all components that are transmitting power.</div><div class="ttdef"><b>Definition:</b> <a href="_sim_power_comp_8h_source.html#l00017">SimPowerComp.h:17</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html_ac080c0dad3920e5415dbc80374f4ea34"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html#ac080c0dad3920e5415dbc80374f4ea34">CPS::SimPowerComp&lt; Complex &gt;::mIntfCurrent</a></div><div class="ttdeci">const Attribute&lt; MatrixVar&lt; Complex &gt; &gt;::Ptr mIntfCurrent</div><div class="ttdoc">Current through component.</div><div class="ttdef"><b>Definition:</b> <a href="_sim_power_comp_8h_source.html#l00047">SimPowerComp.h:47</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html_af5092d5b0b94b99ff6ff405ab0294c52"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html#af5092d5b0b94b99ff6ff405ab0294c52">CPS::SimPowerComp&lt; Complex &gt;::mIntfVoltage</a></div><div class="ttdeci">const Attribute&lt; MatrixVar&lt; Complex &gt; &gt;::Ptr mIntfVoltage</div><div class="ttdoc">Voltage between terminals.</div><div class="ttdef"><b>Definition:</b> <a href="_sim_power_comp_8h_source.html#l00045">SimPowerComp.h:45</a></div></div>
