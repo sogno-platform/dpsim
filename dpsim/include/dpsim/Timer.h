@@ -10,6 +10,7 @@
 
 #include <chrono>
 
+#include <dpsim-models/Logger.h>
 #include <dpsim/Config.h>
 
 namespace DPsim {
@@ -42,10 +43,15 @@ protected:
   long long mTicks;
   int mFlags;
 
+  /// Timer log level
+  CPS::Logger::Level mLogLevel;
+  /// Logger
+  CPS::Logger::Log mSLog;
+
 public:
   enum Flags : int { fail_on_overrun = 1 };
 
-  Timer(int flags = 0);
+  Timer(int flags = 0, CPS::Logger::Level logLevel = CPS::Logger::Level::debug);
 
   ~Timer();
 

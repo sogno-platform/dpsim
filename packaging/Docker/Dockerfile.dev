@@ -1,8 +1,8 @@
-FROM fedora:36 AS base
+FROM fedora:42 AS base
 
 ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
 ARG CIMPP_COMMIT=1b11d5c17bedf0ae042628b42ecb4e49df70b2f6
-ARG VILLAS_VERSION=18cdd2a6364d05fbf413ca699616cd324abfcb54
+ARG VILLAS_VERSION=825237cb11f687169a9455ecaa97b5dc6cbce26e
 
 ARG CMAKE_OPTS
 ARG MAKE_OPTS=-j4
@@ -22,7 +22,10 @@ RUN dnf -y install \
 	rpmdevtools rpm-build \
 	make cmake pkgconfig \
 	python3-pip \
-	cppcheck
+	cppcheck \
+	flex bison \
+	protobuf-compiler protobuf-c-compiler \
+	clang-tools-extra
 
 # Tools needed for developement
 RUN dnf -y install \
@@ -71,9 +74,8 @@ RUN dnf -y install \
 	protobuf-c-devel
 
 # Python dependencies
-ADD requirements.txt .
-RUN pip3 install --upgrade wheel build setuptools packaging
-RUN pip3 install -r requirements.txt
+COPY requirements.txt .
+RUN pip3 install --upgrade wheel build setuptools packaging && pip3 install -r requirements.txt
 
 # Install CIMpp from source
 RUN cd /tmp && \
@@ -89,14 +91,14 @@ RUN cd /tmp && \
 	make ${MAKE_OPTS} install && \
 	rm -rf /tmp/libcimpp
 
-# Install VILLASnode from source
+# Install VILLASnode from source (with fpga support)
 RUN cd /tmp && \
 	git clone --recurse-submodules https://github.com/VILLASframework/node.git villas-node && \
 	mkdir -p villas-node/build && cd villas-node/build && \
 	git checkout ${VILLAS_VERSION} && \
 	cmake ${CMAKE_OPTS} .. \
 		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
-		-DDOWNLOAD_GO=OFF && \
+		-DCMAKE_BUILD_TYPE=Release && \
 	make ${MAKE_OPTS} install && \
 	rm -rf /tmp/villas-node
 
