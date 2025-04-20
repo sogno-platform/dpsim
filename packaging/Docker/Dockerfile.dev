@@ -71,7 +71,8 @@ RUN dnf -y install \
 	libconfig-devel \
 	libnl3-devel \
 	protobuf-devel \
-	protobuf-c-devel
+	protobuf-c-devel \
+	libre-devel
 
 # Python dependencies
 COPY requirements.txt .
