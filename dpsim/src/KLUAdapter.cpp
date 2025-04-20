@@ -62,9 +62,22 @@ void KLUAdapter::preprocessing(
   }
 
   // This call also works if mVaryingColumns, mVaryingRows are empty
-  mSymbolic =
-      klu_analyze_partial(n, Ap, Ai, &mVaryingColumns[0], &mVaryingRows[0],
-                          varying_entries, mPreordering, &mCommon);
+  int *colPtr = mVaryingColumns.empty() ? nullptr : &mVaryingColumns[0];
+  int *rowPtr = mVaryingRows.empty() ? nullptr : &mVaryingRows[0];
+
+  mSymbolic = klu_analyze_partial(n, Ap, Ai, colPtr, rowPtr, varying_entries,
+                                  mPreordering, &mCommon);
+
+  if (mVaryingColumns.empty()) {
+    SPDLOG_LOGGER_INFO(
+        mSLog,
+        "KLUAdapter: No variable COLUMN entries passed to klu_analyze_partial");
+  }
+  if (mVaryingRows.empty()) {
+    SPDLOG_LOGGER_INFO(
+        mSLog,
+        "KLUAdapter: No variable ROW entries passed to klu_analyze_partial");
+  }
 
   /* Store non-zero value of current preprocessed matrix. only used until
    * to-do in refactorize-function is resolved. Can be removed then.
