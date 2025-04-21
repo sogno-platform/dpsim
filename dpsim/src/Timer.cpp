@@ -23,6 +23,7 @@ using CPS::SystemError;
 Timer::Timer(int flags, CPS::Logger::Level logLevel)
     : mState(stopped), mOverruns(0), mTicks(0), mFlags(flags),
       mLogLevel(logLevel) {
+  mSLog = CPS::Logger::get("Timer");
 #ifdef HAVE_TIMERFD
   mTimerFd = timerfd_create(CLOCK_MONOTONIC, 0);
   if (mTimerFd < 0) {
