@@ -1,6 +1,9 @@
 <map id="DPsim::ThreadScheduler" name="DPsim::ThreadScheduler">
-<area shape="rect" id="node1" title=" " alt="" coords="133,80,308,107"/>
-<area shape="rect" id="node3" href="$class_d_psim_1_1_thread_level_scheduler.html" title=" " alt="" coords="5,155,212,181"/>
-<area shape="rect" id="node4" href="$class_d_psim_1_1_thread_list_scheduler.html" title=" " alt="" coords="237,155,431,181"/>
-<area shape="rect" id="node2" href="$class_d_psim_1_1_scheduler.html" title=" " alt="" coords="155,5,286,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="133,83,307,113"/>
+<area shape="rect" id="Node000003" href="$class_d_psim_1_1_thread_level_scheduler.html" title=" " alt="" coords="5,161,211,190"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="188,124,130,162,127,158,185,120"/>
+<area shape="rect" id="Node000004" href="$class_d_psim_1_1_thread_list_scheduler.html" title=" " alt="" coords="235,161,429,190"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="255,120,313,158,310,162,252,124"/>
+<area shape="rect" id="Node000002" href="$class_d_psim_1_1_scheduler.html" title=" " alt="" coords="155,5,285,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="223,51,223,82,217,82,217,51"/>
 </map>

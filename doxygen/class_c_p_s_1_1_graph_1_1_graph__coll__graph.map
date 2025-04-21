@@ -1,4 +1,5 @@
 <map id="CPS::Graph::Graph" name="CPS::Graph::Graph">
-<area shape="rect" id="node1" title=" " alt="" coords="12,80,149,107"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_graph_1_1_element.html" title=" " alt="" coords="5,5,156,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="12,83,148,113"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_graph_1_1_element.html" title=" " alt="" coords="5,5,155,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,51,83,82,77,82,77,51"/>
 </map>

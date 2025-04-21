@@ -1,4 +1,5 @@
 <map id="CPS::DP::Ph1::Inverter::MnaPreStepHarm" name="CPS::DP::Ph1::Inverter::MnaPreStepHarm">
-<area shape="rect" id="node1" title=" " alt="" coords="5,80,169,121"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_task.html" title="Tasks to be defined by every component." alt="" coords="48,5,127,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,83,169,132"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_task.html" title="Tasks to be defined by every component." alt="" coords="48,5,126,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,50,90,82,84,82,84,50"/>
 </map>

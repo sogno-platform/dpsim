@@ -1,10 +1,19 @@
 <map id="DPsim::InterfaceVillas" name="DPsim::InterfaceVillas">
-<area shape="rect" id="node1" title="Interface type that can be used to import and export simulation attributes over any node type support..." alt="" coords="222,403,379,429"/>
-<area shape="rect" id="node8" href="$class_py_interface_villas.html" title=" " alt="" coords="238,479,363,505"/>
-<area shape="rect" id="node2" href="$class_d_psim_1_1_interface_queued.html" title=" " alt="" coords="145,327,323,353"/>
-<area shape="rect" id="node3" href="$class_d_psim_1_1_interface.html" title=" " alt="" coords="60,211,187,237"/>
-<area shape="rect" id="node4" href="$class_shared_factory.html" title=" " alt="" coords="5,95,196,121"/>
-<area shape="rect" id="node5" href="$class_shared_factory.html" title=" " alt="" coords="164,5,304,32"/>
-<area shape="rect" id="node6" href="$class_shared_factory.html" title=" " alt="" coords="144,145,324,187"/>
-<area shape="rect" id="node7" href="$class_shared_factory.html" title=" " alt="" coords="291,261,471,303"/>
+<area shape="rect" id="Node000001" title="Interface type that can be used to import and export simulation attributes over any node type support..." alt="" coords="220,434,376,463"/>
+<area shape="rect" id="Node000008" href="$class_py_interface_villas.html" title=" " alt="" coords="236,513,360,542"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="300,479,300,512,295,512,295,479"/>
+<area shape="rect" id="Node000002" href="$class_d_psim_1_1_interface_queued.html" title=" " alt="" coords="144,355,321,384"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="256,395,288,432,284,435,252,398"/>
+<area shape="rect" id="Node000003" href="$class_d_psim_1_1_interface.html" title=" " alt="" coords="60,228,186,258"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="147,268,222,352,218,356,143,271"/>
+<area shape="rect" id="Node000004" href="$class_shared_factory.html" title=" " alt="" coords="5,102,196,132"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="108,146,123,227,118,228,103,147"/>
+<area shape="rect" id="Node000005" href="$class_shared_factory.html" title=" " alt="" coords="163,5,302,35"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="150,42,122,61,110,81,104,102,99,101,105,79,118,57,147,38"/>
+<area shape="rect" id="Node000006" href="$class_shared_factory.html" title=" " alt="" coords="143,156,322,204"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="235,51,235,155,230,155,230,51"/>
+<area shape="rect" id="Node000007" href="$class_shared_factory.html" title=" " alt="" coords="288,282,468,331"/>
+<area shape="poly" id="edge8_Node000007_Node000005" title=" " alt="" coords="318,26,346,38,369,57,386,84,396,114,402,145,403,177,398,236,388,282,382,281,392,236,398,177,396,146,391,115,381,87,365,61,343,42,316,31"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="235,220,235,354,230,354,230,220"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="359,346,308,435,304,432,355,343"/>
 </map>

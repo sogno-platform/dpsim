@@ -1,11 +1,19 @@
 <map id="CPS::DAEInterface" name="CPS::DAEInterface">
-<area shape="rect" id="node1" title=" " alt="" coords="5,199,141,225"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_network_injection.html" title="Network injection model." alt="" coords="189,5,408,32"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_profile_voltage_source.html" title=" " alt="" coords="199,57,398,98"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_resistor.html" title="Dynamic phasor resistor model." alt="" coords="218,123,379,149"/>
-<area shape="rect" id="node5" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="199,173,399,200"/>
-<area shape="rect" id="node6" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="199,224,399,251"/>
-<area shape="rect" id="node7" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_network_injection.html" title="Network injection model." alt="" coords="191,275,407,301"/>
-<area shape="rect" id="node8" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="200,325,397,352"/>
-<area shape="rect" id="node9" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="200,376,397,403"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,211,141,240"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_network_injection.html" title="Network injection model." alt="" coords="189,5,407,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,195,98,160,121,119,150,79,187,45,208,33,210,38,190,49,154,82,125,122,103,162,87,197"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_profile_voltage_source.html" title=" " alt="" coords="199,58,396,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="95,197,135,156,187,117,210,105,212,110,190,121,139,160,99,201"/>
+<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_resistor.html" title="Dynamic phasor resistor model." alt="" coords="218,131,378,160"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="115,201,188,170,225,158,227,163,190,175,117,206"/>
+<area shape="rect" id="Node000005" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="198,184,398,214"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="156,213,198,208,198,213,156,218"/>
+<area shape="rect" id="Node000006" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="198,237,398,267"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="156,233,198,238,198,243,156,238"/>
+<area shape="rect" id="Node000007" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_network_injection.html" title="Network injection model." alt="" coords="190,291,406,320"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="117,245,190,276,227,288,225,293,188,281,115,250"/>
+<area shape="rect" id="Node000008" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="200,344,396,374"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="98,251,138,292,163,312,190,330,216,341,214,346,187,335,160,317,135,296,94,254"/>
+<area shape="rect" id="Node000009" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="200,397,396,427"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="89,253,128,320,157,354,190,383,211,394,209,399,187,388,153,358,124,323,85,256"/>
 </map>

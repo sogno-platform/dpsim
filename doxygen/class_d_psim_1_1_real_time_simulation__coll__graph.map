@@ -1,20 +1,42 @@
 <map id="DPsim::RealTimeSimulation" name="DPsim::RealTimeSimulation">
-<area shape="rect" id="node1" title="Extending Simulation class by real&#45;time functionality." alt="" coords="1281,245,1471,271"/>
-<area shape="rect" id="node2" href="$class_d_psim_1_1_simulation.html" title="The Simulation holds a SystemTopology and a Solver." alt="" coords="1048,211,1181,238"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="628,31,759,58"/>
-<area shape="rect" id="node4" href="$class_shared_factory.html" title=" " alt="" coords="312,5,491,47"/>
-<area shape="rect" id="node5" href="$class_shared_factory.html" title=" " alt="" coords="13,13,153,39"/>
-<area shape="rect" id="node6" href="$class_c_p_s_1_1_system_topology.html" title=" " alt="" coords="616,93,771,119"/>
-<area shape="rect" id="node7" href="$class_d_psim_1_1_direct_linear_solver_configuration.html" title=" " alt="" coords="601,144,785,185"/>
-<area shape="rect" id="node8" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="614,379,773,406"/>
-<area shape="rect" id="node9" href="$class_c_p_s_1_1_attribute_base.html" title=" " alt="" coords="13,219,153,246"/>
-<area shape="rect" id="node11" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="332,253,471,279"/>
-<area shape="rect" id="node13" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="613,210,773,237"/>
-<area shape="rect" id="node16" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="609,261,778,287"/>
-<area shape="rect" id="node10" title=" " alt="" coords="324,383,479,439"/>
-<area shape="rect" id="node12" title=" " alt="" coords="5,482,160,538"/>
-<area shape="rect" id="node14" title=" " alt="" coords="324,122,479,178"/>
-<area shape="rect" id="node15" href="$class_d_psim_1_1_event_queue.html" title=" " alt="" coords="620,311,767,338"/>
-<area shape="rect" id="node17" title=" " alt="" coords="324,303,479,359"/>
-<area shape="rect" id="node18" href="$class_d_psim_1_1_timer.html" title=" " alt="" coords="1062,262,1167,289"/>
+<area shape="rect" id="Node000001" title="Extending Simulation class by real&#45;time functionality." alt="" coords="1275,372,1463,402"/>
+<area shape="rect" id="Node000002" href="$class_d_psim_1_1_simulation.html" title="The Simulation holds a SystemTopology and a Solver." alt="" coords="1043,338,1176,367"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1192,361,1274,372,1274,377,1191,366"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="624,90,755,119"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="771,93,830,93,896,100,961,118,992,132,1021,150,1043,170,1061,194,1087,247,1102,298,1109,337,1104,338,1097,300,1082,249,1056,197,1039,174,1018,154,990,137,960,123,895,105,830,98,771,98"/>
+<area shape="rect" id="Node000004" href="$class_shared_factory.html" title=" " alt="" coords="310,5,488,54"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="503,52,575,70,635,86,634,91,573,75,502,57"/>
+<area shape="rect" id="Node000005" href="$class_shared_factory.html" title=" " alt="" coords="12,15,152,44"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="167,27,310,27,310,32,167,32"/>
+<area shape="rect" id="Node000006" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="606,338,774,367"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="790,350,1043,350,1043,355,790,355"/>
+<area shape="rect" id="Node000007" href="$class_c_p_s_1_1_attribute_base.html" title=" " alt="" coords="12,244,152,274"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="102,286,134,334,181,393,241,450,274,474,311,493,358,509,398,514,438,508,487,493,515,480,535,466,572,424,579,412,582,400,586,389,596,377,615,365,617,370,600,381,591,391,587,402,584,414,576,427,539,470,518,485,489,497,439,513,398,519,357,514,309,497,272,478,237,454,177,397,130,337,97,289"/>
+<area shape="rect" id="Node000009" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="330,270,468,299"/>
+<area shape="poly" id="edge9_Node000009_Node000007" title=" " alt="" coords="168,263,329,276,329,281,167,268"/>
+<area shape="rect" id="Node000011" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="611,168,768,198"/>
+<area shape="poly" id="edge12_Node000011_Node000007" title=" " alt="" coords="109,232,146,202,194,169,250,137,309,114,358,104,407,102,457,106,506,115,592,139,657,165,655,170,591,145,504,120,457,112,407,108,358,110,310,119,252,142,197,173,150,207,113,236"/>
+<area shape="rect" id="Node000013" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="610,284,769,314"/>
+<area shape="poly" id="edge16_Node000013_Node000007" title=" " alt="" coords="159,238,245,222,350,211,463,212,520,218,575,230,602,240,629,253,671,282,668,286,626,258,600,245,573,235,519,223,463,217,350,217,245,228,160,243"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="322,416,476,484"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="490,426,532,412,573,394,597,377,625,365,627,370,599,381,575,399,534,416,491,431"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="471,302,489,310,513,325,559,338,605,345,605,350,558,343,511,330,487,315,469,307"/>
+<area shape="poly" id="edge14_Node000011_Node000009" title=" " alt="" coords="457,261,644,196,646,201,459,266"/>
+<area shape="poly" id="edge18_Node000013_Node000009" title=" " alt="" coords="484,295,512,298,610,300,610,305,512,303,483,301"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="5,520,159,588"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="113,505,149,459,195,407,249,355,308,310,334,297,336,302,311,315,252,359,199,411,153,463,118,509"/>
+<area shape="poly" id="edge11_Node000002_Node000011" title=" " alt="" coords="784,189,840,199,901,213,962,233,1021,261,1045,278,1067,298,1099,335,1095,339,1063,301,1042,282,1018,265,960,238,899,218,839,204,783,195"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="322,128,476,196"/>
+<area shape="poly" id="edge13_Node000011_Node000012" title=" " alt="" coords="491,166,611,175,610,180,491,171"/>
+<area shape="poly" id="edge15_Node000002_Node000013" title=" " alt="" coords="785,302,898,312,1020,328,1049,334,1048,339,1019,334,897,317,784,307"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="322,324,476,392"/>
+<area shape="poly" id="edge17_Node000013_Node000014" title=" " alt="" coords="491,386,534,387,554,383,572,374,582,364,584,352,587,338,596,324,614,312,617,317,600,328,592,340,589,353,586,366,576,378,556,388,534,393,491,392"/>
+<area shape="rect" id="Node000015" href="$class_d_psim_1_1_event_queue.html" title=" " alt="" coords="617,391,762,420"/>
+<area shape="poly" id="edge19_Node000002_Node000015" title=" " alt="" coords="777,400,893,391,1019,374,1057,365,1058,370,1020,379,893,396,778,405"/>
+<area shape="rect" id="Node000016" href="$class_c_p_s_1_1_system_topology.html" title=" " alt="" coords="613,444,766,474"/>
+<area shape="poly" id="edge20_Node000002_Node000016" title=" " alt="" coords="782,469,839,470,901,465,962,450,991,438,1018,423,1026,413,1030,402,1033,390,1041,377,1058,365,1061,370,1045,381,1038,392,1035,404,1031,416,1021,427,993,443,964,455,902,470,839,475,782,474"/>
+<area shape="rect" id="Node000017" href="$class_d_psim_1_1_direct_linear_solver_configuration.html" title=" " alt="" coords="598,497,781,546"/>
+<area shape="poly" id="edge21_Node000002_Node000017" title=" " alt="" coords="797,541,853,545,912,540,968,525,994,512,1018,495,1028,482,1033,469,1031,440,1028,410,1032,393,1041,377,1055,366,1058,370,1045,381,1037,395,1034,410,1036,440,1038,470,1033,484,1021,499,997,516,970,530,913,546,853,550,796,546"/>
+<area shape="rect" id="Node000018" href="$class_d_psim_1_1_timer.html" title=" " alt="" coords="1057,391,1162,420"/>
+<area shape="poly" id="edge22_Node000001_Node000018" title=" " alt="" coords="1177,400,1250,395,1274,393,1275,399,1251,401,1177,405"/>
 </map>

@@ -1,6 +1,9 @@
 <map id="CPS::AttributeUpdateTask&lt; DependentType, DependencyTypes &gt;" name="CPS::AttributeUpdateTask&lt; DependentType, DependencyTypes &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="652,43,919,84"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_attribute_update_task_base.html" title=" " alt="" coords="406,5,589,47"/>
-<area shape="rect" id="node3" href="$class_shared_factory.html" title=" " alt="" coords="392,71,603,127"/>
-<area shape="rect" id="node4" href="$class_shared_factory.html" title=" " alt="" coords="5,86,145,113"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="649,47,916,95"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_attribute_update_task_base.html" title=" " alt="" coords="405,5,586,54"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="602,42,649,49,648,54,601,48"/>
+<area shape="rect" id="Node000003" href="$class_shared_factory.html" title=" " alt="" coords="391,78,600,146"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="615,92,649,88,649,93,616,98"/>
+<area shape="rect" id="Node000004" href="$class_shared_factory.html" title=" " alt="" coords="5,98,145,127"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="160,110,390,110,390,115,160,115"/>
 </map>

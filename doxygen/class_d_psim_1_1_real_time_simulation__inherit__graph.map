@@ -1,7 +1,11 @@
 <map id="DPsim::RealTimeSimulation" name="DPsim::RealTimeSimulation">
-<area shape="rect" id="node1" title="Extending Simulation class by real&#45;time functionality." alt="" coords="5,337,195,364"/>
-<area shape="rect" id="node2" href="$class_d_psim_1_1_simulation.html" title="The Simulation holds a SystemTopology and a Solver." alt="" coords="33,261,167,288"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="35,185,165,212"/>
-<area shape="rect" id="node4" href="$class_shared_factory.html" title=" " alt="" coords="11,95,189,136"/>
-<area shape="rect" id="node5" href="$class_shared_factory.html" title=" " alt="" coords="30,5,170,32"/>
+<area shape="rect" id="Node000001" title="Extending Simulation class by real&#45;time functionality." alt="" coords="5,358,194,388"/>
+<area shape="rect" id="Node000002" href="$class_d_psim_1_1_simulation.html" title="The Simulation holds a SystemTopology and a Solver." alt="" coords="33,279,166,309"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,324,102,358,97,358,97,324"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="34,200,165,230"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="102,245,102,279,97,279,97,245"/>
+<area shape="rect" id="Node000004" href="$class_shared_factory.html" title=" " alt="" coords="10,102,189,151"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="102,166,102,199,97,199,97,166"/>
+<area shape="rect" id="Node000005" href="$class_shared_factory.html" title=" " alt="" coords="30,5,169,35"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="102,51,102,101,97,101,97,51"/>
 </map>

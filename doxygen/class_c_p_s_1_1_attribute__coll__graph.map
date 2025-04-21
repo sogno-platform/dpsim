@@ -1,5 +1,7 @@
 <map id="CPS::Attribute&lt; T &gt;" name="CPS::Attribute&lt; T &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="91,109,230,136"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_attribute_base.html" title=" " alt="" coords="5,20,145,47"/>
-<area shape="rect" id="node3" title=" " alt="" coords="170,5,325,61"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="91,121,230,151"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_attribute_base.html" title=" " alt="" coords="5,24,145,54"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,64,150,119,146,122,96,67"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="169,5,322,73"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="208,86,175,122,171,119,204,83"/>
 </map>

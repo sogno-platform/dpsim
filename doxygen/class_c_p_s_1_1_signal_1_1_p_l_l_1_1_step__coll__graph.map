@@ -1,4 +1,5 @@
 <map id="CPS::Signal::PLL::Step" name="CPS::Signal::PLL::Step">
-<area shape="rect" id="node1" title=" " alt="" coords="5,80,160,107"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_task.html" title="Tasks to be defined by every component." alt="" coords="43,5,122,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,83,160,113"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_task.html" title="Tasks to be defined by every component." alt="" coords="43,5,122,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,51,85,82,80,82,80,51"/>
 </map>

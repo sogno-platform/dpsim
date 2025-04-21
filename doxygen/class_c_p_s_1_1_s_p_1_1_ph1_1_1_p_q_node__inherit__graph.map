@@ -1,9 +1,16 @@
 <map id="CPS::SP::Ph1::PQNode" name="CPS::SP::Ph1::PQNode">
-<area shape="rect" id="node1" title=" " alt="" coords="205,352,365,379"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="109,261,267,303"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="5,81,203,108"/>
-<area shape="rect" id="node5" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="126,157,285,199"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="27,5,181,32"/>
-<area shape="rect" id="node6" href="$class_shared_factory.html" title=" " alt="" coords="291,269,477,295"/>
-<area shape="rect" id="node7" href="$class_shared_factory.html" title=" " alt="" coords="314,165,454,191"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="204,377,363,407"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="107,279,265,328"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="226,336,269,374,266,378,222,340"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="5,84,202,114"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="104,130,105,169,115,211,136,247,162,277,158,280,132,250,110,213,100,170,99,130"/>
+<area shape="rect" id="Node000005" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="124,163,283,212"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="133,122,178,161,174,165,129,126"/>
+<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="27,5,180,35"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="106,50,106,84,101,84,101,50"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="200,228,192,279,187,278,195,227"/>
+<area shape="rect" id="Node000006" href="$class_shared_factory.html" title=" " alt="" coords="290,288,474,318"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="357,330,301,378,298,374,353,326"/>
+<area shape="rect" id="Node000007" href="$class_shared_factory.html" title=" " alt="" coords="312,173,452,202"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="385,218,385,288,380,288,380,218"/>
 </map>

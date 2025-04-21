@@ -1,6 +1,9 @@
 <map id="DPsim::Event" name="DPsim::Event">
-<area shape="rect" id="node1" title=" " alt="" coords="239,5,343,32"/>
-<area shape="rect" id="node2" href="$class_d_psim_1_1_attribute_event.html" title=" " alt="" coords="5,80,196,107"/>
-<area shape="rect" id="node3" href="$class_d_psim_1_1_switch_event.html" title=" " alt="" coords="220,80,363,107"/>
-<area shape="rect" id="node4" href="$class_d_psim_1_1_switch_event3_ph.html" title=" " alt="" coords="387,80,553,107"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="238,5,341,35"/>
+<area shape="rect" id="Node000002" href="$class_d_psim_1_1_attribute_event.html" title=" " alt="" coords="5,83,195,113"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="241,44,136,85,134,80,239,39"/>
+<area shape="rect" id="Node000003" href="$class_d_psim_1_1_switch_event.html" title=" " alt="" coords="218,83,360,113"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="292,51,292,82,287,82,287,51"/>
+<area shape="rect" id="Node000004" href="$class_d_psim_1_1_switch_event3_ph.html" title=" " alt="" coords="385,83,551,113"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="338,39,436,80,434,85,336,44"/>
 </map>

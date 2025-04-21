@@ -1,4 +1,5 @@
 <map id="CPS::DP::Ph1::VoltageSource::MnaPostStepHarm" name="CPS::DP::Ph1::VoltageSource::MnaPostStepHarm">
-<area shape="rect" id="node1" title=" " alt="" coords="5,80,205,121"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_task.html" title="Tasks to be defined by every component." alt="" coords="66,5,145,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,83,205,132"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_task.html" title="Tasks to be defined by every component." alt="" coords="66,5,144,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,50,108,82,102,82,102,50"/>
 </map>

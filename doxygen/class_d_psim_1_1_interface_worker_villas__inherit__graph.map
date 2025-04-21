@@ -1,6 +1,9 @@
 <map id="DPsim::InterfaceWorkerVillas" name="DPsim::InterfaceWorkerVillas">
-<area shape="rect" id="node1" title=" " alt="" coords="49,185,253,212"/>
-<area shape="rect" id="node2" href="$class_d_psim_1_1_interface_worker.html" title=" " alt="" coords="5,102,180,129"/>
-<area shape="rect" id="node3" href="$class_shared_factory.html" title=" " alt="" coords="204,95,384,136"/>
-<area shape="rect" id="node4" href="$class_shared_factory.html" title=" " alt="" coords="224,5,364,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="48,200,251,230"/>
+<area shape="rect" id="Node000002" href="$class_d_psim_1_1_interface_worker.html" title=" " alt="" coords="5,112,179,141"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,153,142,198,138,201,107,156"/>
+<area shape="rect" id="Node000003" href="$class_shared_factory.html" title=" " alt="" coords="202,102,382,151"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="242,161,174,202,171,197,239,156"/>
+<area shape="rect" id="Node000004" href="$class_shared_factory.html" title=" " alt="" coords="222,5,362,35"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="295,51,295,101,289,101,289,51"/>
 </map>

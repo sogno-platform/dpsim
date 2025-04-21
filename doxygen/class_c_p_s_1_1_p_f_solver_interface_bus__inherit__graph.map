@@ -1,7 +1,11 @@
 <map id="CPS::PFSolverInterfaceBus" name="CPS::PFSolverInterfaceBus">
-<area shape="rect" id="node1" title="Common base class of all Component templates." alt="" coords="5,81,193,108"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_load.html" title=" " alt="" coords="287,5,426,32"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_network_injection.html" title="Network injection model." alt="" coords="249,56,465,83"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator.html" title=" " alt="" coords="241,107,472,133"/>
-<area shape="rect" id="node5" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source_inverter.html" title=" " alt="" coords="258,158,455,199"/>
+<area shape="rect" id="Node000001" title="Common base class of all Component templates." alt="" coords="5,85,193,115"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_load.html" title=" " alt="" coords="287,5,424,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="150,77,240,44,286,32,287,37,241,49,152,82"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_network_injection.html" title="Network injection model." alt="" coords="248,59,463,88"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="208,86,247,82,248,87,208,91"/>
+<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator.html" title=" " alt="" coords="241,112,470,142"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="209,109,240,112,240,118,208,114"/>
+<area shape="rect" id="Node000005" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source_inverter.html" title=" " alt="" coords="257,165,454,214"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="154,119,242,151,275,162,273,167,240,156,152,124"/>
 </map>

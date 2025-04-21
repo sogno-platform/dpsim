@@ -1,6 +1,9 @@
 <map id="CPS::Base::Ph3::PiLine" name="CPS::Base::Ph3::PiLine">
-<area shape="rect" id="node1" title=" " alt="" coords="186,5,346,32"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html" title="PI&#45;line dynamic phasor model." alt="" coords="5,80,161,107"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html" title=" " alt="" coords="186,80,346,107"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_rx_line.html" title=" " alt="" coords="370,80,519,107"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="185,5,344,35"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html" title="PI&#45;line dynamic phasor model." alt="" coords="5,83,161,113"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="217,44,118,85,116,80,215,39"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html" title=" " alt="" coords="185,83,344,113"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="267,51,267,82,262,82,262,51"/>
+<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_rx_line.html" title=" " alt="" coords="368,83,516,113"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="313,39,409,80,407,85,310,44"/>
 </map>

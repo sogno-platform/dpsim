@@ -1,7 +1,15 @@
 <map id="CPS::SimTerminal&lt; VarType &gt;" name="CPS::SimTerminal&lt; VarType &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="96,185,297,212"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_topological_terminal.html" title=" " alt="" coords="5,102,180,129"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="15,5,170,32"/>
-<area shape="rect" id="node4" href="$class_shared_factory.html" title=" " alt="" coords="205,95,402,136"/>
-<area shape="rect" id="node5" href="$class_shared_factory.html" title=" " alt="" coords="233,5,373,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="113,200,313,230"/>
+<area shape="rect" id="Node000006" href="$class_c_p_s_1_1_sim_terminal.html" title=" " alt="" coords="5,297,208,326"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="188,242,124,298,121,294,185,238"/>
+<area shape="rect" id="Node000007" href="$class_c_p_s_1_1_sim_terminal.html" title=" " alt="" coords="232,297,408,326"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="242,238,306,294,302,298,238,242"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_topological_terminal.html" title=" " alt="" coords="22,112,196,141"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="139,149,198,197,194,202,136,153"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="32,5,186,35"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="112,50,112,111,106,111,106,50"/>
+<area shape="rect" id="Node000004" href="$class_shared_factory.html" title=" " alt="" coords="220,102,417,151"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="280,163,232,202,229,197,276,159"/>
+<area shape="rect" id="Node000005" href="$class_shared_factory.html" title=" " alt="" coords="249,5,388,35"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="321,51,321,101,316,101,316,51"/>
 </map>

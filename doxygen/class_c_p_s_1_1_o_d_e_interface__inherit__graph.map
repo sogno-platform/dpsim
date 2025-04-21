@@ -1,5 +1,7 @@
 <map id="CPS::ODEInterface" name="CPS::ODEInterface">
-<area shape="rect" id="node1" title=" " alt="" coords="183,5,322,32"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q_o_d_e.html" title=" " alt="" coords="5,80,239,121"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_d_q_o_d_e.html" title=" " alt="" coords="263,80,504,121"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="182,5,320,35"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q_o_d_e.html" title=" " alt="" coords="5,83,238,132"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="219,46,159,85,156,80,216,41"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_d_q_o_d_e.html" title=" " alt="" coords="261,83,502,132"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="286,41,347,80,344,85,284,46"/>
 </map>

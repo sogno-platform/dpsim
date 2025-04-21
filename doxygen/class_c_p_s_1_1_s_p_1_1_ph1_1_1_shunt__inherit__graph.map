@@ -1,10 +1,18 @@
 <map id="CPS::SP::Ph1::Shunt" name="CPS::SP::Ph1::Shunt">
-<area shape="rect" id="node1" title=" " alt="" coords="311,352,455,379"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="115,261,274,303"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="5,81,203,108"/>
-<area shape="rect" id="node5" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="126,157,285,199"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="27,5,181,32"/>
-<area shape="rect" id="node6" href="$class_shared_factory.html" title=" " alt="" coords="298,269,467,295"/>
-<area shape="rect" id="node7" href="$class_shared_factory.html" title=" " alt="" coords="313,165,453,191"/>
-<area shape="rect" id="node8" href="$class_c_p_s_1_1_p_f_solver_interface_branch.html" title="Common base class of all Component templates." alt="" coords="492,269,700,295"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="309,377,452,407"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="114,279,272,328"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="259,332,351,374,349,379,257,337"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="5,84,202,114"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="104,130,105,169,115,211,138,247,166,277,162,280,134,250,110,213,100,170,98,130"/>
+<area shape="rect" id="Node000005" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="124,163,283,212"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="133,122,178,161,174,165,129,126"/>
+<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="27,5,180,35"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="106,50,106,84,101,84,101,50"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="203,228,198,279,192,278,197,227"/>
+<area shape="rect" id="Node000006" href="$class_shared_factory.html" title=" " alt="" coords="297,288,465,318"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="384,333,384,376,378,376,378,333"/>
+<area shape="rect" id="Node000007" href="$class_shared_factory.html" title=" " alt="" coords="311,173,450,202"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="384,218,384,288,378,288,378,218"/>
+<area shape="rect" id="Node000008" href="$class_c_p_s_1_1_p_f_solver_interface_branch.html" title="Common base class of all Component templates." alt="" coords="489,288,696,318"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="546,327,417,379,415,374,544,322"/>
 </map>

@@ -1,8 +1,13 @@
 <map id="CPS::Signal::PLL" name="CPS::Signal::PLL">
-<area shape="rect" id="node1" title=" " alt="" coords="136,247,255,273"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_sim_signal_comp.html" title=" " alt="" coords="35,171,182,197"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_topological_signal_comp.html" title=" " alt="" coords="5,81,199,108"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="25,5,179,32"/>
-<area shape="rect" id="node5" href="$class_shared_factory.html" title=" " alt="" coords="214,171,369,197"/>
-<area shape="rect" id="node6" href="$class_shared_factory.html" title=" " alt="" coords="223,81,363,108"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="138,260,257,290"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_sim_signal_comp.html" title=" " alt="" coords="38,181,184,211"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,219,183,258,180,262,136,223"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_topological_signal_comp.html" title=" " alt="" coords="5,84,198,114"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="107,129,112,180,107,181,102,129"/>
+<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="25,5,178,35"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="104,50,104,84,99,84,99,50"/>
+<area shape="rect" id="Node000005" href="$class_shared_factory.html" title=" " alt="" coords="212,181,367,211"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="263,223,216,262,213,258,259,219"/>
+<area shape="rect" id="Node000006" href="$class_shared_factory.html" title=" " alt="" coords="221,84,360,114"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="293,130,292,181,287,181,288,130"/>
 </map>

@@ -1,10 +1,18 @@
 <map id="CPS::SP::Ph1::SynchronGenerator" name="CPS::SP::Ph1::SynchronGenerator">
-<area shape="rect" id="node1" title=" " alt="" coords="1115,93,1345,120"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="859,27,1017,69"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="209,5,407,32"/>
-<area shape="rect" id="node5" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="456,27,615,69"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="5,5,160,32"/>
-<area shape="rect" id="node6" href="$class_shared_factory.html" title=" " alt="" coords="811,93,1065,120"/>
-<area shape="rect" id="node7" href="$class_shared_factory.html" title=" " alt="" coords="465,93,605,120"/>
-<area shape="rect" id="node8" href="$class_c_p_s_1_1_p_f_solver_interface_bus.html" title="Common base class of all Component templates." alt="" coords="844,144,1032,171"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="1111,99,1340,128"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="855,26,1013,75"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1029,68,1154,95,1152,101,1028,74"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="208,5,404,35"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="420,13,454,12,619,11,783,24,855,34,854,40,783,29,619,16,454,17,420,18"/>
+<area shape="rect" id="Node000005" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="454,26,612,75"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="420,33,454,37,453,43,419,38"/>
+<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="5,5,159,35"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="174,18,208,18,208,23,174,23"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="628,48,854,48,854,54,628,54"/>
+<area shape="rect" id="Node000006" href="$class_shared_factory.html" title=" " alt="" coords="807,99,1061,128"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="1077,111,1110,111,1110,116,1077,116"/>
+<area shape="rect" id="Node000007" href="$class_shared_factory.html" title=" " alt="" coords="463,99,602,128"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="618,111,806,111,806,116,618,116"/>
+<area shape="rect" id="Node000008" href="$class_c_p_s_1_1_p_f_solver_interface_bus.html" title="Common base class of all Component templates." alt="" coords="840,152,1028,182"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="1034,146,1140,126,1141,132,1035,151"/>
 </map>

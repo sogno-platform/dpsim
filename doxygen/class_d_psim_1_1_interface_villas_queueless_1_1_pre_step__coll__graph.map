@@ -1,4 +1,5 @@
 <map id="DPsim::InterfaceVillasQueueless::PreStep" name="DPsim::InterfaceVillasQueueless::PreStep">
-<area shape="rect" id="node1" title=" " alt="" coords="5,80,228,121"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_task.html" title="Tasks to be defined by every component." alt="" coords="77,5,156,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,83,227,132"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_task.html" title="Tasks to be defined by every component." alt="" coords="77,5,155,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,50,119,82,113,82,113,50"/>
 </map>

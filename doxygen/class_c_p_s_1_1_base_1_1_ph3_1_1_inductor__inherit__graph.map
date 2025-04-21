@@ -1,8 +1,13 @@
 <map id="CPS::Base::Ph3::Inductor" name="CPS::Base::Ph3::Inductor">
-<area shape="rect" id="node1" title=" " alt="" coords="5,115,183,141"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html" title="Inductor." alt="" coords="235,5,400,32"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor.html" title="Inductor." alt="" coords="231,56,404,83"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html" title="Full_Serial_RLC." alt="" coords="246,107,389,149"/>
-<area shape="rect" id="node5" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_inductor.html" title="Inductor." alt="" coords="246,173,389,214"/>
-<area shape="rect" id="node6" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html" title="Inductor." alt="" coords="236,239,399,265"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,121,182,151"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html" title="Inductor." alt="" coords="234,5,398,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,109,173,76,229,44,257,33,259,38,231,49,175,81,128,114"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor.html" title="Inductor." alt="" coords="230,59,402,88"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="163,114,260,86,261,91,164,119"/>
+<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html" title="Full_Serial_RLC." alt="" coords="245,112,387,160"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="197,134,244,134,244,139,197,139"/>
+<area shape="rect" id="Node000005" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_inductor.html" title="Inductor." alt="" coords="245,185,387,234"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="156,154,245,184,243,189,154,159"/>
+<area shape="rect" id="Node000006" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html" title="Inductor." alt="" coords="235,257,396,287"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="122,160,171,202,231,243,256,254,254,259,228,248,167,207,119,164"/>
 </map>

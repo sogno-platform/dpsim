@@ -1,4 +1,5 @@
 <map id="DPsim::GpuMagmaAdapter" name="DPsim::GpuMagmaAdapter">
-<area shape="rect" id="node1" title=" " alt="" coords="5,80,197,107"/>
-<area shape="rect" id="node2" href="$class_d_psim_1_1_direct_linear_solver.html" title=" " alt="" coords="9,5,193,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,83,197,113"/>
+<area shape="rect" id="Node000002" href="$class_d_psim_1_1_direct_linear_solver.html" title=" " alt="" coords="9,5,193,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,51,104,82,98,82,98,51"/>
 </map>

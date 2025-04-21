@@ -1,13 +1,28 @@
 <map id="CPS::EMT::Ph3::SynchronGeneratorDQ" name="CPS::EMT::Ph3::SynchronGeneratorDQ">
-<area shape="rect" id="node1" title="Synchronous generator model in dq&#45;reference frame." alt="" coords="170,456,431,483"/>
-<area shape="rect" id="node10" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_d_q_o_d_e.html" title=" " alt="" coords="48,532,289,573"/>
-<area shape="rect" id="node11" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_d_q_trapez.html" title=" " alt="" coords="313,532,555,573"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="99,365,281,407"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="305,261,464,303"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="227,81,425,108"/>
-<area shape="rect" id="node6" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="188,157,347,199"/>
-<area shape="rect" id="node5" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="249,5,403,32"/>
-<area shape="rect" id="node8" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title="Base class for all MNA components that are transmitting power." alt="" coords="99,261,281,303"/>
-<area shape="rect" id="node7" href="$class_c_p_s_1_1_m_n_a_interface.html" title="Interface to be implemented by all models used by the MNA solver." alt="" coords="5,165,148,191"/>
-<area shape="rect" id="node9" href="$class_c_p_s_1_1_base_1_1_synchron_generator.html" title="Base synchronous generator model." alt="" coords="306,373,519,399"/>
+<area shape="rect" id="Node000001" title="Synchronous generator model in dq&#45;reference frame." alt="" coords="1253,112,1513,142"/>
+<area shape="rect" id="Node000011" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_d_q_o_d_e.html" title=" " alt="" coords="1563,65,1803,114"/>
+<area shape="poly" id="edge13_Node000001_Node000011" title=" " alt="" coords="1522,107,1562,102,1563,107,1523,112"/>
+<area shape="rect" id="Node000012" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_d_q_trapez.html" title=" " alt="" coords="1563,138,1803,187"/>
+<area shape="poly" id="edge14_Node000001_Node000012" title=" " alt="" coords="1527,141,1563,146,1562,151,1527,147"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="1007,56,1188,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1204,95,1289,109,1288,114,1203,100"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="722,129,881,178"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="895,128,1006,100,1007,105,897,133"/>
+<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="208,132,404,162"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="420,146,722,150,722,155,420,151"/>
+<area shape="rect" id="Node000006" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="454,184,612,232"/>
+<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="380,164,454,184,453,189,378,169"/>
+<area shape="rect" id="Node000009" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="454,61,612,110"/>
+<area shape="poly" id="edge10_Node000009_Node000004" title=" " alt="" coords="378,125,453,104,454,109,380,130"/>
+<area shape="rect" id="Node000005" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="5,132,159,162"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="174,144,208,144,208,150,174,150"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="627,193,686,182,721,174,723,179,688,187,628,198"/>
+<area shape="rect" id="Node000007" href="$class_c_p_s_1_1_m_n_a_interface.html" title="Interface to be implemented by all models used by the MNA solver." alt="" coords="462,5,604,35"/>
+<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="619,21,748,29,893,42,968,54,1007,61,1006,66,967,59,892,47,748,34,619,26"/>
+<area shape="rect" id="Node000008" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title="Base class for all MNA components that are transmitting power." alt="" coords="711,56,892,104"/>
+<area shape="poly" id="edge11_Node000008_Node000007" title=" " alt="" coords="618,36,711,57,710,63,617,42"/>
+<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="908,78,1006,78,1006,83,908,83"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="628,81,711,79,711,85,628,86"/>
+<area shape="rect" id="Node000010" href="$class_c_p_s_1_1_base_1_1_synchron_generator.html" title="Base synchronous generator model." alt="" coords="991,128,1204,158"/>
+<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="1219,133,1252,131,1253,137,1220,139"/>
 </map>

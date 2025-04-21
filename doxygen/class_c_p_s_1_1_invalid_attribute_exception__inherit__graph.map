@@ -1,5 +1,7 @@
 <map id="CPS::InvalidAttributeException" name="CPS::InvalidAttributeException">
-<area shape="rect" id="node1" title=" " alt="" coords="5,155,216,181"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_exception.html" title=" " alt="" coords="54,80,167,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="56,5,165,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,161,216,190"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_exception.html" title=" " alt="" coords="54,83,167,113"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,129,113,160,108,160,108,129"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="56,5,165,35"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="113,51,113,82,108,82,108,51"/>
 </map>

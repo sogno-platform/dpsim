@@ -1,10 +1,20 @@
 <map id="CPS::Base::Ph3::Switch" name="CPS::Base::Ph3::Switch">
-<area shape="rect" id="node1" title="Dynamic Phasor Three&#45;Phase Switch." alt="" coords="819,152,981,179"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="483,103,643,129"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_attribute_base.html" title=" " alt="" coords="13,111,153,137"/>
-<area shape="rect" id="node5" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="217,137,356,164"/>
-<area shape="rect" id="node7" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="477,203,649,229"/>
-<area shape="rect" id="node4" title=" " alt="" coords="209,5,364,61"/>
-<area shape="rect" id="node6" title=" " alt="" coords="5,161,160,217"/>
-<area shape="rect" id="node8" title=" " alt="" coords="209,192,364,248"/>
+<area shape="rect" id="Node000001" title="Dynamic Phasor Three&#45;Phase Switch." alt="" coords="815,170,976,199"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="474,122,646,151"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="661,148,815,170,814,176,661,154"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_attribute_base.html" title=" " alt="" coords="12,119,152,149"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="167,127,300,124,450,126,474,127,474,132,450,131,300,130,167,133"/>
+<area shape="rect" id="Node000005" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="216,148,354,178"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="168,143,215,151,215,156,167,149"/>
+<area shape="rect" id="Node000007" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="480,195,640,225"/>
+<area shape="poly" id="edge8_Node000007_Node000003" title=" " alt="" coords="155,155,161,160,173,176,180,193,184,226,188,256,196,270,209,282,251,302,296,308,343,305,389,294,434,277,474,258,535,223,538,228,476,263,436,282,391,299,344,310,296,314,249,307,207,287,192,273,183,258,178,227,175,194,169,179,157,164,152,159"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="208,5,361,73"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="377,64,451,89,525,119,523,124,449,94,375,69"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="369,153,450,145,474,142,474,148,451,150,370,158"/>
+<area shape="poly" id="edge10_Node000007_Node000005" title=" " alt="" coords="370,175,480,194,480,199,369,180"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="5,173,159,241"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="173,185,214,176,215,181,174,190"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="655,210,722,208,790,204,829,197,830,203,791,209,722,214,655,215"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="208,205,361,273"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="376,228,450,221,480,217,480,222,451,226,377,233"/>
 </map>

@@ -1,8 +1,14 @@
 <map id="CPS::Base::Ph1::PiLine" name="CPS::Base::Ph1::PiLine">
-<area shape="rect" id="node1" title=" " alt="" coords="760,55,920,81"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="464,55,623,81"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_attribute_base.html" title=" " alt="" coords="13,5,153,32"/>
-<area shape="rect" id="node5" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="217,55,356,81"/>
-<area shape="rect" id="node4" title=" " alt="" coords="209,105,364,161"/>
-<area shape="rect" id="node6" title=" " alt="" coords="5,56,160,112"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="754,66,913,96"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="460,66,618,96"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="633,79,753,79,753,84,633,84"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_attribute_base.html" title=" " alt="" coords="12,14,152,44"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="167,30,295,38,437,55,480,63,479,68,436,60,294,43,167,35"/>
+<area shape="rect" id="Node000005" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="216,66,354,96"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="158,46,224,63,223,68,157,51"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="208,121,361,188"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="376,126,484,94,485,99,377,131"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="369,79,460,79,460,84,369,84"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="5,69,159,136"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="173,90,215,86,215,91,174,96"/>
 </map>

@@ -1,8 +1,13 @@
 <map id="DPsim::Scheduler" name="DPsim::Scheduler">
-<area shape="rect" id="node1" title=" " alt="" coords="279,5,410,32"/>
-<area shape="rect" id="node2" href="$class_d_psim_1_1_open_m_p_level_scheduler.html" title=" " alt="" coords="5,80,223,107"/>
-<area shape="rect" id="node3" href="$class_d_psim_1_1_sequential_scheduler.html" title=" " alt="" coords="247,80,443,107"/>
-<area shape="rect" id="node4" href="$class_d_psim_1_1_thread_scheduler.html" title=" " alt="" coords="467,80,641,107"/>
-<area shape="rect" id="node5" href="$class_d_psim_1_1_thread_level_scheduler.html" title=" " alt="" coords="337,155,544,181"/>
-<area shape="rect" id="node6" href="$class_d_psim_1_1_thread_list_scheduler.html" title=" " alt="" coords="569,155,763,181"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="278,5,408,35"/>
+<area shape="rect" id="Node000002" href="$class_d_psim_1_1_open_m_p_level_scheduler.html" title=" " alt="" coords="5,83,222,113"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="286,43,157,85,156,80,285,38"/>
+<area shape="rect" id="Node000003" href="$class_d_psim_1_1_sequential_scheduler.html" title=" " alt="" coords="245,83,440,113"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="346,51,346,82,340,82,340,51"/>
+<area shape="rect" id="Node000004" href="$class_d_psim_1_1_thread_scheduler.html" title=" " alt="" coords="464,83,638,113"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="397,38,513,80,511,85,395,43"/>
+<area shape="rect" id="Node000005" href="$class_d_psim_1_1_thread_level_scheduler.html" title=" " alt="" coords="336,161,542,190"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="519,124,461,162,458,158,516,120"/>
+<area shape="rect" id="Node000006" href="$class_d_psim_1_1_thread_list_scheduler.html" title=" " alt="" coords="566,161,760,190"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="586,120,643,158,640,162,583,124"/>
 </map>

@@ -1,6 +1,9 @@
 <map id="DPsim::DataLogger" name="DPsim::DataLogger">
-<area shape="rect" id="node1" title=" " alt="" coords="100,171,243,197"/>
-<area shape="rect" id="node2" href="$class_d_psim_1_1_data_logger_interface.html" title=" " alt="" coords="5,95,207,121"/>
-<area shape="rect" id="node3" href="$class_shared_factory.html" title=" " alt="" coords="231,95,437,121"/>
-<area shape="rect" id="node4" href="$class_shared_factory.html" title=" " alt="" coords="264,5,404,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="50,181,193,211"/>
+<area shape="rect" id="Node000002" href="$class_d_psim_1_1_data_logger_interface.html" title=" " alt="" coords="5,102,206,132"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="114,147,121,180,116,181,109,148"/>
+<area shape="rect" id="Node000003" href="$class_shared_factory.html" title=" " alt="" coords="230,102,437,132"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="281,140,161,183,160,178,280,135"/>
+<area shape="rect" id="Node000004" href="$class_shared_factory.html" title=" " alt="" coords="264,5,403,35"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="336,51,336,102,331,102,331,51"/>
 </map>

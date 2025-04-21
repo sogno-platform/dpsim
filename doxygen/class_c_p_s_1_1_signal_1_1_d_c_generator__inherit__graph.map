@@ -1,9 +1,15 @@
 <map id="CPS::Signal::DCGenerator" name="CPS::Signal::DCGenerator">
-<area shape="rect" id="node1" title="Model to generate sinusoidal signals." alt="" coords="129,323,309,349"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_signal_1_1_signal_generator.html" title="Model to generate generic signals." alt="" coords="5,247,204,273"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_sim_signal_comp.html" title=" " alt="" coords="31,157,178,184"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_topological_signal_comp.html" title=" " alt="" coords="8,81,201,108"/>
-<area shape="rect" id="node5" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="27,5,182,32"/>
-<area shape="rect" id="node6" href="$class_shared_factory.html" title=" " alt="" coords="229,247,445,273"/>
-<area shape="rect" id="node7" href="$class_shared_factory.html" title=" " alt="" coords="267,157,407,184"/>
+<area shape="rect" id="Node000001" title="Model to generate sinusoidal signals." alt="" coords="129,339,308,369"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_signal_1_1_signal_generator.html" title="Model to generate generic signals." alt="" coords="5,260,203,290"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="139,296,199,336,196,341,136,301"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_sim_signal_comp.html" title=" " alt="" coords="31,163,177,193"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="107,209,107,260,101,260,101,209"/>
+<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_topological_signal_comp.html" title=" " alt="" coords="8,84,200,114"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="107,129,107,163,101,163,101,129"/>
+<area shape="rect" id="Node000005" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="27,5,181,35"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="107,50,107,84,101,84,101,50"/>
+<area shape="rect" id="Node000006" href="$class_shared_factory.html" title=" " alt="" coords="227,260,442,290"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="302,301,241,341,238,336,299,296"/>
+<area shape="rect" id="Node000007" href="$class_shared_factory.html" title=" " alt="" coords="265,163,404,193"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="337,209,337,260,332,260,332,209"/>
 </map>

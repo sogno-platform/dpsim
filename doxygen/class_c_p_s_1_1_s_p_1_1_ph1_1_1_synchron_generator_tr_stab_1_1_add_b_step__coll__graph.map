@@ -1,4 +1,5 @@
 <map id="CPS::SP::Ph1::SynchronGeneratorTrStab::AddBStep" name="CPS::SP::Ph1::SynchronGeneratorTrStab::AddBStep">
-<area shape="rect" id="node1" title=" " alt="" coords="5,80,236,121"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_task.html" title="Tasks to be defined by every component." alt="" coords="81,5,160,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,83,235,132"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_task.html" title="Tasks to be defined by every component." alt="" coords="81,5,159,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,50,123,82,117,82,117,50"/>
 </map>

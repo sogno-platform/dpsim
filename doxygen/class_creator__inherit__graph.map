@@ -1,4 +1,5 @@
 <map id="Creator&lt; BaseClass &gt;" name="Creator&lt; BaseClass &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="37,5,188,32"/>
-<area shape="rect" id="node2" href="$class_derived_creator.html" title=" " alt="" coords="5,80,220,121"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="37,5,187,35"/>
+<area shape="rect" id="Node000002" href="$class_derived_creator.html" title=" " alt="" coords="5,83,219,132"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,50,115,82,109,82,109,50"/>
 </map>

@@ -1,5 +1,7 @@
 <map id="DPsim::ThreadLevelScheduler" name="DPsim::ThreadLevelScheduler">
-<area shape="rect" id="node1" title=" " alt="" coords="5,155,212,181"/>
-<area shape="rect" id="node2" href="$class_d_psim_1_1_thread_scheduler.html" title=" " alt="" coords="21,80,196,107"/>
-<area shape="rect" id="node3" href="$class_d_psim_1_1_scheduler.html" title=" " alt="" coords="43,5,174,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,161,211,190"/>
+<area shape="rect" id="Node000002" href="$class_d_psim_1_1_thread_scheduler.html" title=" " alt="" coords="21,83,195,113"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,129,111,160,105,160,105,129"/>
+<area shape="rect" id="Node000003" href="$class_d_psim_1_1_scheduler.html" title=" " alt="" coords="43,5,173,35"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="111,51,111,82,105,82,105,51"/>
 </map>

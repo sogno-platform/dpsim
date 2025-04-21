@@ -1,4 +1,5 @@
 <map id="DPsim::KLUAdapter" name="DPsim::KLUAdapter">
-<area shape="rect" id="node1" title=" " alt="" coords="25,80,170,107"/>
-<area shape="rect" id="node2" href="$class_d_psim_1_1_direct_linear_solver.html" title=" " alt="" coords="5,5,189,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="25,83,169,113"/>
+<area shape="rect" id="Node000002" href="$class_d_psim_1_1_direct_linear_solver.html" title=" " alt="" coords="5,5,189,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,51,100,82,94,82,94,51"/>
 </map>

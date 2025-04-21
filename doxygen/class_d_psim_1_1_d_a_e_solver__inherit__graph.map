@@ -1,4 +1,5 @@
 <map id="DPsim::DAESolver" name="DPsim::DAESolver">
-<area shape="rect" id="node1" title="Solver class which uses Differential Algebraic Equation(DAE) systems." alt="" coords="5,80,139,107"/>
-<area shape="rect" id="node2" href="$class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA." alt="" coords="18,5,126,32"/>
+<area shape="rect" id="Node000001" title="Solver class which uses Differential Algebraic Equation(DAE) systems." alt="" coords="5,83,138,113"/>
+<area shape="rect" id="Node000002" href="$class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA." alt="" coords="18,5,125,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,51,74,82,69,82,69,51"/>
 </map>

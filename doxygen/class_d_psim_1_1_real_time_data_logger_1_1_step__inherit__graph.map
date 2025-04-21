@@ -1,4 +1,5 @@
 <map id="DPsim::RealTimeDataLogger::Step" name="DPsim::RealTimeDataLogger::Step">
-<area shape="rect" id="node1" title=" " alt="" coords="5,80,204,121"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_task.html" title="Tasks to be defined by every component." alt="" coords="65,5,144,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,83,204,132"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_task.html" title="Tasks to be defined by every component." alt="" coords="65,5,144,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,50,107,82,102,82,102,50"/>
 </map>

@@ -1,8 +1,13 @@
 <map id="CPS::Base::Ph1::Resistor" name="CPS::Base::Ph1::Resistor">
-<area shape="rect" id="node1" title=" " alt="" coords="5,107,179,133"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_resistor.html" title="Dynamic phasor resistor model." alt="" coords="249,5,411,32"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_resistor.html" title=" " alt="" coords="231,56,429,83"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_resistor.html" title="EMT Resistor." alt="" coords="245,107,415,133"/>
-<area shape="rect" id="node5" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_series_resistor.html" title="EMT three&#45;phase resistor." alt="" coords="227,157,433,184"/>
-<area shape="rect" id="node6" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_resistor.html" title="Static phasor resistor model." alt="" coords="251,208,409,235"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,112,178,142"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_resistor.html" title="Dynamic phasor resistor model." alt="" coords="249,5,409,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,101,171,72,225,44,257,33,258,38,227,49,174,76,128,105"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_resistor.html" title=" " alt="" coords="230,59,428,88"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="175,105,259,86,260,92,176,111"/>
+<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_resistor.html" title="EMT Resistor." alt="" coords="245,112,413,142"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="194,124,244,124,244,130,194,130"/>
+<area shape="rect" id="Node000005" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_series_resistor.html" title="EMT three&#45;phase resistor." alt="" coords="226,165,432,195"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="176,143,260,162,259,167,175,148"/>
+<area shape="rect" id="Node000006" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_resistor.html" title="Static phasor resistor model." alt="" coords="250,219,408,248"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="128,148,174,177,227,204,258,216,257,221,225,209,171,182,125,153"/>
 </map>

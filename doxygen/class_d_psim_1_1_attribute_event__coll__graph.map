@@ -1,6 +1,9 @@
 <map id="DPsim::AttributeEvent&lt; T &gt;" name="DPsim::AttributeEvent&lt; T &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="11,185,202,212"/>
-<area shape="rect" id="node2" href="$class_d_psim_1_1_event.html" title=" " alt="" coords="5,102,109,129"/>
-<area shape="rect" id="node3" href="$class_shared_factory.html" title=" " alt="" coords="133,95,312,136"/>
-<area shape="rect" id="node4" href="$class_shared_factory.html" title=" " alt="" coords="153,5,293,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,200,195,230"/>
+<area shape="rect" id="Node000002" href="$class_d_psim_1_1_event.html" title=" " alt="" coords="32,112,136,141"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,156,100,199,95,200,87,157"/>
+<area shape="rect" id="Node000003" href="$class_shared_factory.html" title=" " alt="" coords="160,102,338,151"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="197,161,126,202,123,197,194,156"/>
+<area shape="rect" id="Node000004" href="$class_shared_factory.html" title=" " alt="" coords="180,5,319,35"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="252,51,252,101,247,101,247,51"/>
 </map>

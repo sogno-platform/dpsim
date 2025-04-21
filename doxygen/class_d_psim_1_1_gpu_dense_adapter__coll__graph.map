@@ -1,6 +1,9 @@
 <map id="DPsim::GpuDenseAdapter" name="DPsim::GpuDenseAdapter">
-<area shape="rect" id="node1" title=" " alt="" coords="160,213,347,240"/>
-<area shape="rect" id="node2" href="$class_d_psim_1_1_direct_linear_solver.html" title=" " alt="" coords="5,117,189,143"/>
-<area shape="rect" id="node3" href="$class_d_psim_1_1_direct_linear_solver_configuration.html" title=" " alt="" coords="5,5,189,47"/>
-<area shape="rect" id="node4" href="$struct_d_psim_1_1_gpu_dense_adapter_1_1_gpu_data.html" title="Variables for solving one Equation&#45;system (All pointer are device&#45;pointer)" alt="" coords="213,109,400,151"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="160,237,346,266"/>
+<area shape="rect" id="Node000002" href="$class_d_psim_1_1_direct_linear_solver.html" title=" " alt="" coords="5,130,189,160"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,167,233,234,230,238,129,171"/>
+<area shape="rect" id="Node000003" href="$class_d_psim_1_1_direct_linear_solver_configuration.html" title=" " alt="" coords="5,5,189,54"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="100,69,100,130,94,130,94,69"/>
+<area shape="rect" id="Node000004" href="$struct_d_psim_1_1_gpu_dense_adapter_1_1_gpu_data.html" title="Variables for solving one Equation&#45;system (All pointer are device&#45;pointer)" alt="" coords="212,121,398,170"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="289,185,262,237,258,235,284,182"/>
 </map>

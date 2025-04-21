@@ -1,6 +1,9 @@
 <map id="CPS::Base::Ph1::Inductor" name="CPS::Base::Ph1::Inductor">
-<area shape="rect" id="node1" title=" " alt="" coords="193,5,370,32"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor.html" title="Inductor." alt="" coords="5,80,171,107"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_inductor.html" title="Inductor." alt="" coords="195,80,368,107"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_inductor.html" title="Static phasor inductor model." alt="" coords="392,80,555,107"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="191,5,368,35"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor.html" title="Inductor." alt="" coords="5,83,170,113"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="230,44,124,85,122,80,228,39"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_inductor.html" title="Inductor." alt="" coords="193,83,366,113"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="282,51,282,82,277,82,277,51"/>
+<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_inductor.html" title="Static phasor inductor model." alt="" coords="390,83,551,113"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="330,39,435,80,433,85,328,44"/>
 </map>

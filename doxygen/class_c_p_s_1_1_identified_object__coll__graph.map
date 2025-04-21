@@ -1,8 +1,14 @@
 <map id="CPS::IdentifiedObject" name="CPS::IdentifiedObject">
-<area shape="rect" id="node1" title=" " alt="" coords="745,55,900,81"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="475,55,644,81"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_attribute_base.html" title=" " alt="" coords="13,5,153,32"/>
-<area shape="rect" id="node5" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="217,55,356,81"/>
-<area shape="rect" id="node4" title=" " alt="" coords="209,105,364,161"/>
-<area shape="rect" id="node6" title=" " alt="" coords="5,56,160,112"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="740,57,893,87"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="471,57,640,87"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="655,70,739,70,739,75,655,75"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_attribute_base.html" title=" " alt="" coords="12,5,152,35"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="167,21,300,29,448,46,493,54,492,59,447,51,299,34,167,26"/>
+<area shape="rect" id="Node000005" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="216,57,354,87"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="158,37,224,54,223,59,157,42"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="208,112,361,179"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="376,118,497,85,498,90,377,123"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="369,70,471,70,471,75,369,75"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="5,60,159,127"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="173,81,215,77,215,82,174,87"/>
 </map>

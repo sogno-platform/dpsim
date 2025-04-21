@@ -1,6 +1,9 @@
 <map id="CPS::Base::AvVoltageSourceInverterDQ" name="CPS::Base::AvVoltageSourceInverterDQ">
-<area shape="rect" id="node1" title="Base model of average inverter." alt="" coords="5,71,201,112"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html" title=" " alt="" coords="249,5,465,47"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q.html" title=" " alt="" coords="266,71,449,112"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html" title=" " alt="" coords="251,136,464,177"/>
+<area shape="rect" id="Node000001" title="Base model of average inverter." alt="" coords="5,79,201,127"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html" title=" " alt="" coords="249,5,464,54"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,71,269,52,270,57,204,76"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q.html" title=" " alt="" coords="266,79,447,127"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="216,100,265,100,265,106,216,106"/>
+<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html" title=" " alt="" coords="250,152,462,201"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="204,130,270,149,269,154,203,135"/>
 </map>

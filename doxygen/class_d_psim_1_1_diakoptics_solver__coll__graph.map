@@ -1,12 +1,22 @@
 <map id="DPsim::DiakopticsSolver&lt; VarType &gt;" name="DPsim::DiakopticsSolver&lt; VarType &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="972,49,1143,90"/>
-<area shape="rect" id="node2" href="$class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA." alt="" coords="636,5,744,32"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="625,56,755,83"/>
-<area shape="rect" id="node4" href="$class_shared_factory.html" title=" " alt="" coords="312,22,491,63"/>
-<area shape="rect" id="node5" href="$class_shared_factory.html" title=" " alt="" coords="13,29,153,56"/>
-<area shape="rect" id="node6" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="604,115,776,141"/>
-<area shape="rect" id="node7" href="$class_c_p_s_1_1_attribute_base.html" title=" " alt="" coords="13,88,153,115"/>
-<area shape="rect" id="node9" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="332,139,471,165"/>
-<area shape="rect" id="node8" title=" " alt="" coords="324,189,479,245"/>
-<area shape="rect" id="node10" title=" " alt="" coords="5,140,160,196"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="967,49,1138,98"/>
+<area shape="rect" id="Node000002" href="$class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA." alt="" coords="633,5,740,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="756,26,944,52,967,56,967,61,943,57,755,31"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="622,59,752,88"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="767,71,967,71,967,76,767,76"/>
+<area shape="rect" id="Node000004" href="$class_shared_factory.html" title=" " alt="" coords="310,24,488,72"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="504,55,621,65,621,70,503,60"/>
+<area shape="rect" id="Node000005" href="$class_shared_factory.html" title=" " alt="" coords="12,33,152,63"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="167,46,310,46,310,51,167,51"/>
+<area shape="rect" id="Node000006" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="601,137,772,167"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="788,141,864,131,943,114,996,96,998,101,944,119,865,136,788,147"/>
+<area shape="rect" id="Node000007" href="$class_c_p_s_1_1_attribute_base.html" title=" " alt="" coords="12,95,152,124"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="168,107,356,111,467,118,577,128,615,134,615,139,577,133,466,123,355,117,167,112"/>
+<area shape="rect" id="Node000009" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="330,147,468,176"/>
+<area shape="poly" id="edge9_Node000009_Node000007" title=" " alt="" coords="168,123,183,126,330,149,329,154,182,131,167,128"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="322,201,476,269"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="489,206,631,165,633,170,491,211"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="483,156,601,152,601,158,483,161"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="5,149,159,217"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="174,174,329,163,330,169,174,179"/>
 </map>

@@ -1,12 +1,21 @@
 <map id="DPsim::Solver" name="DPsim::Solver">
-<area shape="rect" id="node1" title="Base class for more specific solvers such as MNA, ODE or IDA." alt="" coords="5,148,113,175"/>
-<area shape="rect" id="node2" href="$class_d_psim_1_1_d_a_e_solver.html" title="Solver class which uses Differential Algebraic Equation(DAE) systems." alt="" coords="199,5,332,32"/>
-<area shape="rect" id="node3" href="$class_d_psim_1_1_diakoptics_solver.html" title=" " alt="" coords="180,57,351,98"/>
-<area shape="rect" id="node4" href="$class_d_psim_1_1_mna_solver.html" title="Solver class using Modified Nodal Analysis (MNA)." alt="" coords="161,123,369,149"/>
-<area shape="rect" id="node7" href="$class_d_psim_1_1_o_d_e_solver.html" title="Solver class for ODE (Ordinary Differential Equation) systems." alt="" coords="198,173,333,200"/>
-<area shape="rect" id="node8" href="$class_d_psim_1_1_o_d_eint_solver.html" title="Solver class which uses ODE systems." alt="" coords="190,224,341,251"/>
-<area shape="rect" id="node9" href="$class_d_psim_1_1_p_f_solver.html" title="Solver class using the nonlinear powerflow (PF) formulation." alt="" coords="204,275,327,301"/>
-<area shape="rect" id="node5" href="$class_d_psim_1_1_mna_solver_direct.html" title="Solver class using Modified Nodal Analysis (MNA)." alt="" coords="429,115,601,157"/>
-<area shape="rect" id="node6" href="$class_d_psim_1_1_mna_solver_plugin.html" title=" " alt="" coords="660,115,833,157"/>
-<area shape="rect" id="node10" href="$class_d_psim_1_1_p_f_solver_power_polar.html" title="Powerflow solver class considering power mismatch and voltages in polar coordinates." alt="" coords="417,275,612,301"/>
+<area shape="rect" id="Node000001" title="Base class for more specific solvers such as MNA, ODE or IDA." alt="" coords="5,157,113,187"/>
+<area shape="rect" id="Node000002" href="$class_d_psim_1_1_d_a_e_solver.html" title="Solver class which uses Differential Algebraic Equation(DAE) systems." alt="" coords="198,5,330,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,142,108,92,132,66,159,45,197,28,199,33,162,49,136,70,112,95,78,145"/>
+<area shape="rect" id="Node000003" href="$class_d_psim_1_1_diakoptics_solver.html" title=" " alt="" coords="179,58,350,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="99,147,160,116,187,105,189,110,162,121,101,152"/>
+<area shape="rect" id="Node000004" href="$class_d_psim_1_1_mna_solver.html" title="Solver class using Modified Nodal Analysis (MNA)." alt="" coords="161,131,368,160"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="128,161,160,156,161,162,129,166"/>
+<area shape="rect" id="Node000007" href="$class_d_psim_1_1_o_d_e_solver.html" title="Solver class for ODE (Ordinary Differential Equation) systems." alt="" coords="197,184,332,214"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="128,178,197,187,196,193,128,184"/>
+<area shape="rect" id="Node000008" href="$class_d_psim_1_1_o_d_eint_solver.html" title="Solver class which uses ODE systems." alt="" coords="189,237,340,267"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="99,193,162,223,195,234,194,239,160,228,97,197"/>
+<area shape="rect" id="Node000009" href="$class_d_psim_1_1_p_f_solver.html" title="Solver class using the nonlinear powerflow (PF) formulation." alt="" coords="203,291,326,320"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="81,198,116,239,138,259,162,276,204,293,202,298,159,281,135,264,112,243,77,201"/>
+<area shape="rect" id="Node000005" href="$class_d_psim_1_1_mna_solver_direct.html" title="Solver class using Modified Nodal Analysis (MNA)." alt="" coords="428,121,599,170"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="384,143,427,143,427,148,384,148"/>
+<area shape="rect" id="Node000006" href="$class_d_psim_1_1_mna_solver_plugin.html" title=" " alt="" coords="658,121,831,170"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="614,143,658,143,658,148,614,148"/>
+<area shape="rect" id="Node000010" href="$class_d_psim_1_1_p_f_solver_power_polar.html" title="Powerflow solver class considering power mismatch and voltages in polar coordinates." alt="" coords="416,291,610,320"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="341,303,416,303,416,308,341,308"/>
 </map>

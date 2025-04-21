@@ -1,6 +1,9 @@
 <map id="DPsim::SwitchEvent" name="DPsim::SwitchEvent">
-<area shape="rect" id="node1" title=" " alt="" coords="5,171,148,197"/>
-<area shape="rect" id="node2" href="$class_d_psim_1_1_event.html" title=" " alt="" coords="9,95,113,121"/>
-<area shape="rect" id="node3" href="$class_shared_factory.html" title=" " alt="" coords="137,95,344,121"/>
-<area shape="rect" id="node4" href="$class_shared_factory.html" title=" " alt="" coords="171,5,311,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="38,181,180,211"/>
+<area shape="rect" id="Node000002" href="$class_d_psim_1_1_event.html" title=" " alt="" coords="5,102,109,132"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,143,102,179,97,182,73,146"/>
+<area shape="rect" id="Node000003" href="$class_shared_factory.html" title=" " alt="" coords="132,102,339,132"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="201,142,133,183,131,178,198,138"/>
+<area shape="rect" id="Node000004" href="$class_shared_factory.html" title=" " alt="" coords="166,5,305,35"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="238,51,238,102,233,102,233,51"/>
 </map>

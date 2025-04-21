@@ -1,10 +1,17 @@
 <map id="CPS::Signal::SignalGenerator" name="CPS::Signal::SignalGenerator">
-<area shape="rect" id="node1" title="Model to generate generic signals." alt="" coords="644,85,843,112"/>
-<area shape="rect" id="node5" href="$class_c_p_s_1_1_signal_1_1_cosine_f_m_generator.html" title="Model to generate signals containing a frequency ramp." alt="" coords="891,5,1113,32"/>
-<area shape="rect" id="node6" href="$class_c_p_s_1_1_signal_1_1_d_c_generator.html" title="Model to generate sinusoidal signals." alt="" coords="912,56,1092,83"/>
-<area shape="rect" id="node7" href="$class_c_p_s_1_1_signal_1_1_frequency_ramp_generator.html" title="Model to generate signals containing a frequency ramp." alt="" coords="903,107,1101,149"/>
-<area shape="rect" id="node8" href="$class_c_p_s_1_1_signal_1_1_sine_wave_generator.html" title="Model to generate sinusoidal signals." alt="" coords="891,173,1113,200"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_sim_signal_comp.html" title=" " alt="" coords="449,85,596,112"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_topological_signal_comp.html" title=" " alt="" coords="208,85,401,112"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="5,85,160,112"/>
+<area shape="rect" id="Node000001" title="Model to generate generic signals." alt="" coords="641,91,839,120"/>
+<area shape="rect" id="Node000005" href="$class_c_p_s_1_1_signal_1_1_cosine_f_m_generator.html" title="Model to generate signals containing a frequency ramp." alt="" coords="887,5,1108,35"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="788,82,886,44,925,33,927,38,888,49,790,87"/>
+<area shape="rect" id="Node000006" href="$class_c_p_s_1_1_signal_1_1_d_c_generator.html" title="Model to generate sinusoidal signals." alt="" coords="908,59,1087,88"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="854,89,907,82,908,87,854,94"/>
+<area shape="rect" id="Node000007" href="$class_c_p_s_1_1_signal_1_1_frequency_ramp_generator.html" title="Model to generate signals containing a frequency ramp." alt="" coords="899,112,1096,160"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="854,116,899,122,898,127,854,122"/>
+<area shape="rect" id="Node000008" href="$class_c_p_s_1_1_signal_1_1_sine_wave_generator.html" title="Model to generate sinusoidal signals." alt="" coords="887,184,1108,214"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="785,125,834,148,888,170,925,181,923,186,886,175,832,153,783,130"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_sim_signal_comp.html" title=" " alt="" coords="447,91,593,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="609,103,641,103,641,108,609,108"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_topological_signal_comp.html" title=" " alt="" coords="207,91,399,120"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="415,103,447,103,447,108,415,108"/>
+<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="5,91,159,120"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="174,103,206,103,206,108,174,108"/>
 </map>

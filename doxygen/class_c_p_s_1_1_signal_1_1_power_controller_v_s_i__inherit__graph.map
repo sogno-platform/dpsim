@@ -1,8 +1,13 @@
 <map id="CPS::Signal::PowerControllerVSI" name="CPS::Signal::PowerControllerVSI">
-<area shape="rect" id="node1" title=" " alt="" coords="97,261,315,288"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_sim_signal_comp.html" title=" " alt="" coords="29,178,175,205"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_topological_signal_comp.html" title=" " alt="" coords="5,81,199,108"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="25,5,179,32"/>
-<area shape="rect" id="node5" href="$class_shared_factory.html" title=" " alt="" coords="199,171,423,212"/>
-<area shape="rect" id="node6" href="$class_shared_factory.html" title=" " alt="" coords="241,81,381,108"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="96,279,315,309"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_sim_signal_comp.html" title=" " alt="" coords="28,190,175,220"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="131,228,190,276,187,281,128,232"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_topological_signal_comp.html" title=" " alt="" coords="5,84,198,114"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="104,129,104,190,99,190,99,129"/>
+<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="25,5,178,35"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="104,50,104,84,99,84,99,50"/>
+<area shape="rect" id="Node000005" href="$class_shared_factory.html" title=" " alt="" coords="199,181,422,230"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="272,242,224,281,221,276,269,238"/>
+<area shape="rect" id="Node000006" href="$class_shared_factory.html" title=" " alt="" coords="241,84,380,114"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="314,130,314,180,308,180,308,130"/>
 </map>

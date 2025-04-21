@@ -1,9 +1,15 @@
 <map id="DPsim::Interface" name="DPsim::Interface">
-<area shape="rect" id="node1" title=" " alt="" coords="143,171,269,197"/>
-<area shape="rect" id="node4" href="$class_d_psim_1_1_interface_queued.html" title=" " alt="" coords="5,247,183,273"/>
-<area shape="rect" id="node7" href="$class_d_psim_1_1_interface_villas_queueless.html" title="Interface type that can be used to import and export simulation attributes over any node type support..." alt="" coords="207,247,429,273"/>
-<area shape="rect" id="node2" href="$class_shared_factory.html" title=" " alt="" coords="111,95,301,121"/>
-<area shape="rect" id="node3" href="$class_shared_factory.html" title=" " alt="" coords="136,5,276,32"/>
-<area shape="rect" id="node5" href="$class_d_psim_1_1_interface_villas.html" title="Interface type that can be used to import and export simulation attributes over any node type support..." alt="" coords="15,323,173,349"/>
-<area shape="rect" id="node6" href="$class_py_interface_villas.html" title=" " alt="" coords="31,399,157,425"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="141,181,267,211"/>
+<area shape="rect" id="Node000004" href="$class_d_psim_1_1_interface_queued.html" title=" " alt="" coords="5,260,182,290"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="173,222,115,262,112,257,170,217"/>
+<area shape="rect" id="Node000007" href="$class_d_psim_1_1_interface_villas_queueless.html" title="Interface type that can be used to import and export simulation attributes over any node type support..." alt="" coords="206,260,427,290"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="239,217,297,257,294,262,236,222"/>
+<area shape="rect" id="Node000002" href="$class_shared_factory.html" title=" " alt="" coords="109,102,299,132"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="207,147,207,181,202,181,202,147"/>
+<area shape="rect" id="Node000003" href="$class_shared_factory.html" title=" " alt="" coords="134,5,274,35"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="207,51,207,102,202,102,202,51"/>
+<area shape="rect" id="Node000005" href="$class_d_psim_1_1_interface_villas.html" title="Interface type that can be used to import and export simulation attributes over any node type support..." alt="" coords="15,339,172,369"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="96,305,96,339,91,339,91,305"/>
+<area shape="rect" id="Node000006" href="$class_py_interface_villas.html" title=" " alt="" coords="31,418,156,448"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="96,384,96,418,91,418,91,384"/>
 </map>

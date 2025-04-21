@@ -1,4 +1,5 @@
 <map id="DPsim::DirectLinearSolver" name="DPsim::DirectLinearSolver">
-<area shape="rect" id="node1" title=" " alt="" coords="5,109,189,136"/>
-<area shape="rect" id="node2" href="$class_d_psim_1_1_direct_linear_solver_configuration.html" title=" " alt="" coords="5,5,189,47"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,121,189,151"/>
+<area shape="rect" id="Node000002" href="$class_d_psim_1_1_direct_linear_solver_configuration.html" title=" " alt="" coords="5,5,189,54"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,69,100,120,94,120,94,69"/>
 </map>

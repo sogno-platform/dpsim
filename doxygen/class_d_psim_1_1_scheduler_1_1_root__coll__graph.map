@@ -1,4 +1,5 @@
 <map id="DPsim::Scheduler::Root" name="DPsim::Scheduler::Root">
-<area shape="rect" id="node1" title=" " alt="" coords="5,80,173,107"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_task.html" title="Tasks to be defined by every component." alt="" coords="50,5,129,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,83,173,113"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_task.html" title="Tasks to be defined by every component." alt="" coords="50,5,128,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,51,92,82,86,82,86,51"/>
 </map>

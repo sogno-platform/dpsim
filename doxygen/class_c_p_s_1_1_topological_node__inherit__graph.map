@@ -1,6 +1,13 @@
 <map id="CPS::TopologicalNode" name="CPS::TopologicalNode">
-<area shape="rect" id="node1" title=" " alt="" coords="15,81,169,108"/>
-<area shape="rect" id="node3" href="$class_c_p_s_1_1_sim_node.html" title=" " alt="" coords="5,247,189,273"/>
-<area shape="rect" id="node4" href="$class_c_p_s_1_1_sim_node.html" title=" " alt="" coords="114,157,297,184"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="15,5,169,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="117,84,272,114"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_sim_node.html" title=" " alt="" coords="5,260,189,290"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="140,123,114,141,94,165,86,189,85,214,94,259,89,260,80,215,81,188,89,162,111,137,138,119"/>
+<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_sim_node.html" title=" " alt="" coords="228,260,384,290"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="249,119,276,137,299,162,310,187,314,214,312,260,306,260,309,214,305,189,295,165,273,141,246,123"/>
+<area shape="rect" id="Node000005" href="$class_c_p_s_1_1_sim_node.html" title=" " alt="" coords="104,163,285,193"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="197,129,197,163,192,163,192,129"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="118,5,271,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,50,197,84,192,84,192,50"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="157,204,138,219,120,240,107,261,102,258,116,237,134,215,154,200"/>
+<area shape="poly" id="edge6_Node000005_Node000004" title=" " alt="" coords="220,202,254,234,286,257,283,262,251,238,216,206"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="CPS::Base::Ph1::SVC" name="CPS::Base::Ph1::SVC">
-<area shape="rect" id="node1" title="Static VAR compensator (SVC)" alt="" coords="5,5,152,32"/>
-<area shape="rect" id="node2" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_s_v_c.html" title="SVC." alt="" coords="11,80,146,107"/>
+<area shape="rect" id="Node000001" title="Static VAR compensator (SVC)" alt="" coords="5,5,151,35"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_s_v_c.html" title="SVC." alt="" coords="11,83,145,113"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,51,81,82,75,82,75,51"/>
 </map>
