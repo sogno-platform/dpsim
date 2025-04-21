@@ -41,7 +41,8 @@ RUN dnf -y install \
 	wget \
 	libarchive \
 	openblas-devel \
-	gcc-gfortran
+	gcc-gfortran \
+	coreutils-single
 
 # Dependencies
 RUN dnf --refresh -y install \
@@ -62,7 +63,15 @@ RUN dnf -y install \
 	jansson-devel \
 	mosquitto-devel \
 	libjpeg-devel \
-	zlib-devel
+	zlib-devel \
+	protobuf-c-devel \
+	protobuf-devel \
+	libmodbus-devel \
+	librdkafka-devel \
+	zeromq-devel \
+	libusb-devel \
+	lua-devel \
+	nanomsg-devel
 
 # CUDARPC and dependencies
 RUN dnf install -y \
@@ -125,29 +134,25 @@ RUN cd /tmp && \
 		-DBUILD_SHARED_LIBS=on && \
 	make ${MAKE_OPTS} install && rm -rf /tmp/magma-2.6.0
 
-# Install VILLASnode from source
+# Install VILLASnode and deps from source
 RUN cd /tmp && \
 	git clone --recurse-submodules https://github.com/VILLASframework/node.git villas-node && \
-	mkdir -p villas-node/build && cd villas-node/build && \
+	cd villas-node && \
 	git checkout ${VILLAS_VERSION} && \
+	env MAKE_OPTS="" DEPS_NONINTERACTIVE=1 DEPS_SKIP="criterion,ethercat" bash packaging/deps.sh && \
+	mkdir -p build && cd build && \
 	cmake ${CMAKE_OPTS} .. \
-		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
-		-DDOWNLOAD_GO=OFF && \
+		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 && \
 	make ${MAKE_OPTS} install && \
 	rm -rf /tmp/villas-node
 
 # CIMpp and VILLASnode are installed here
 ENV LD_LIBRARY_PATH="/usr/local/lib64:${LD_LIBRARY_PATH}"
 
-# # Python dependencies
+# Python dependencies
 COPY requirements.txt requirements.txt
 RUN pip3 install -U setuptools
 RUN pip3 install -U wheel
 RUN pip3 install -r requirements.txt
-
-# # Remove this part in the future and use dedicated Jupyter Dockerfile
-# # Activate Jupyter extensions
-# RUN dnf -y --refresh install npm
-# RUN pip3 install jupyter jupyter_contrib_nbextensions nbconvert nbformat
 
 EXPOSE 8888
