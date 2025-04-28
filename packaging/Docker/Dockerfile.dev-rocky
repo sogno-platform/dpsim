@@ -2,7 +2,7 @@ FROM rockylinux:9
 
 ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
 ARG CIMPP_COMMIT=1b11d5c17bedf0ae042628b42ecb4e49df70b2f6
-ARG VILLAS_VERSION=825237cb11f687169a9455ecaa97b5dc6cbce26e
+ARG VILLAS_VERSION=e49064bd538d327dc3af0dd9369eab9a9f6ba71a
 
 ARG CMAKE_OPTS
 ARG MAKE_OPTS=-j4
@@ -135,24 +135,27 @@ RUN cd /tmp && \
 	make ${MAKE_OPTS} install && rm -rf /tmp/magma-2.6.0
 
 # Install VILLASnode and deps from source
+ENV CMAKE_OPTS="${CMAKE_OPTS} \
+		-DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc \
+		-DCMAKE_CUDA_ARCHITECTURES=60;61;70;75"
+
 RUN cd /tmp && \
-	git clone --recurse-submodules https://github.com/VILLASframework/node.git villas-node && \
-	cd villas-node && \
-	git checkout ${VILLAS_VERSION} && \
-	env MAKE_OPTS="" DEPS_NONINTERACTIVE=1 DEPS_SKIP="criterion,ethercat" bash packaging/deps.sh && \
-	mkdir -p build && cd build && \
-	cmake ${CMAKE_OPTS} .. \
-		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 && \
-	make ${MAKE_OPTS} install && \
-	rm -rf /tmp/villas-node
+		git clone --recurse-submodules https://github.com/leonardocarreras/node.git villas-node && \
+		cd villas-node && \
+		git checkout add-cuda-policies && \
+		env MAKE_OPTS="" DEPS_NONINTERACTIVE=1 bash packaging/deps.sh && \
+		mkdir -p build && cd build && \
+		cmake ${CMAKE_OPTS} .. \
+			-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
+			-DCMAKE_CUDA_FLAGS="-Xcompiler=-Wall,-Werror" && \
+		make ${MAKE_OPTS} install && \
+		rm -rf /tmp/villas-node
 
 # CIMpp and VILLASnode are installed here
 ENV LD_LIBRARY_PATH="/usr/local/lib64:${LD_LIBRARY_PATH}"
 
 # Python dependencies
 COPY requirements.txt requirements.txt
-RUN pip3 install -U setuptools
-RUN pip3 install -U wheel
-RUN pip3 install -r requirements.txt
+RUN pip3 install --upgrade wheel build setuptools packaging && pip3 install -r requirements.txt
 
 EXPOSE 8888
