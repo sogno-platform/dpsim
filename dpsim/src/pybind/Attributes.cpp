@@ -34,9 +34,8 @@ void addAttributes(py::module_ m) {
       .def("get", &CPS::Attribute<CPS::Real>::get)
       .def("set", &CPS::Attribute<CPS::Real>::set)
       .def("derive_scaled",
-           [](CPS::Attribute<CPS::Real> &self, CPS::Real scale) {
-             return self.deriveScaled(scale);
-           });
+           py::overload_cast<CPS::Real>(
+               &CPS::Attribute<CPS::Real>::template deriveScaled<CPS::Real>));
 
   py::class_<CPS::AttributeStatic<CPS::Real>,
              CPS::AttributePointer<CPS::AttributeStatic<CPS::Real>>,
@@ -52,18 +51,21 @@ void addAttributes(py::module_ m) {
       .def("get", &CPS::Attribute<CPS::Complex>::get)
       .def("set", &CPS::Attribute<CPS::Complex>::set)
       .def("derive_real",
-           [](CPS::Attribute<CPS::Complex> &self) { return self.deriveReal(); })
+           py::overload_cast<>(
+               &CPS::Attribute<CPS::Complex>::template deriveReal<>))
       .def("derive_imag",
-           [](CPS::Attribute<CPS::Complex> &self) { return self.deriveImag(); })
+           py::overload_cast<>(
+               &CPS::Attribute<CPS::Complex>::template deriveImag<>))
       .def("derive_mag",
-           [](CPS::Attribute<CPS::Complex> &self) { return self.deriveMag(); })
-      .def(
-          "derive_phase",
-          [](CPS::Attribute<CPS::Complex> &self) { return self.derivePhase(); })
+           py::overload_cast<>(
+               &CPS::Attribute<CPS::Complex>::template deriveMag<>))
+      .def("derive_phase",
+           py::overload_cast<>(
+               &CPS::Attribute<CPS::Complex>::template derivePhase<>))
       .def("derive_scaled",
-           [](CPS::Attribute<CPS::Complex> &self, CPS::Complex scale) {
-             return self.deriveScaled(scale);
-           });
+           py::overload_cast<CPS::Complex>(
+               &CPS::Attribute<CPS::Complex>::template deriveScaled<
+                   CPS::Complex>));
 
   py::class_<CPS::AttributeStatic<CPS::Complex>,
              CPS::AttributePointer<CPS::AttributeStatic<CPS::Complex>>,
