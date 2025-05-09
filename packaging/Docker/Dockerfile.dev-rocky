@@ -142,7 +142,7 @@ ENV CMAKE_OPTS="${CMAKE_OPTS} \
 RUN cd /tmp && \
 		git clone --recurse-submodules https://github.com/leonardocarreras/node.git villas-node && \
 		cd villas-node && \
-		git checkout add-cuda-policies && \
+		git checkout remove-feature-fpga-gpu && \
 		env MAKE_OPTS="" DEPS_NONINTERACTIVE=1 bash packaging/deps.sh && \
 		mkdir -p build && cd build && \
 		cmake ${CMAKE_OPTS} .. \
