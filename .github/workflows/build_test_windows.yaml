@@ -35,3 +35,31 @@ jobs:
         # TODO: Remove '-DCMAKE_POLICY_VERSION_MINIMUM=3.5' once spdlog version has been bumped
         cmake -DWITH_PYBIND=OFF -DCMAKE_POLICY_VERSION_MINIMUM="3.5" ..
         cmake --build . --target dpsim --parallel
+
+  windows-bindings:
+    name: Build on Windows with Pybind
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Create build folder
+      run: |
+        cd ${{ github.workspace }}
+        mkdir build
+
+    - name: Setup build directory cache
+      uses: actions/cache@v4
+      with:
+        path: ${{ github.workspace }}/build
+        key: build-windows-cache-${{ github.ref }}
+
+    - name: Build DPsim
+      run: |
+        pip install pybind11[global]
+        cd ${{ github.workspace }}
+        cd build
+        git describe --tags --abbrev=0 --match "v*"
+        # TODO: Remove '-DCMAKE_POLICY_VERSION_MINIMUM=3.5' once spdlog version has been bumped
+        cmake -DWITH_PYBIND=ON -DCMAKE_POLICY_VERSION_MINIMUM="3.5" ..
+        cmake --build . --target dpsim --parallel
