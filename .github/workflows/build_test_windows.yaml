@@ -34,7 +34,7 @@ jobs:
         git describe --tags --abbrev=0 --match "v*"
         # TODO: Remove '-DCMAKE_POLICY_VERSION_MINIMUM=3.5' once spdlog version has been bumped
         cmake -DWITH_PYBIND=OFF -DCMAKE_POLICY_VERSION_MINIMUM="3.5" ..
-        cmake --build . --target dpsim --parallel
+        cmake --build . --target dpsim --target dpsim-models --parallel
 
   windows-bindings:
     name: Build on Windows with Pybind
