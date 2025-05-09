@@ -71,7 +71,8 @@ RUN dnf -y install \
 	zeromq-devel \
 	libusb-devel \
 	lua-devel \
-	nanomsg-devel
+	nanomsg-devel \
+	git-svn
 
 # CUDARPC and dependencies
 RUN dnf install -y \
