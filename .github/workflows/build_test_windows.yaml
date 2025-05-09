@@ -52,7 +52,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ${{ github.workspace }}/build
-        key: build-windows-cache-${{ github.ref }}
+        key: build-windows-bindings-cache-${{ github.ref }}
 
     - name: Build DPsim
       run: |
@@ -62,4 +62,4 @@ jobs:
         git describe --tags --abbrev=0 --match "v*"
         # TODO: Remove '-DCMAKE_POLICY_VERSION_MINIMUM=3.5' once spdlog version has been bumped
         cmake -DWITH_PYBIND=ON -DCMAKE_POLICY_VERSION_MINIMUM="3.5" ..
-        cmake --build . --target dpsim --parallel
+        cmake --build . --target dpsimpy --parallel
