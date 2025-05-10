@@ -28,6 +28,8 @@ public:
 
   DataLoggerInterface() : mAttributes(){};
 
+  virtual ~DataLoggerInterface() = default;
+
   // Start the logger. After starting the number of columns should not be changed.
   virtual void start() = 0;
   // Stops the logger. Afterwards it should not be used anymore.
