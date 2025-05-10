@@ -27,7 +27,11 @@ endif()
 set(FILESYSTEM_LIBRARIES ${FILESYSTEM_LIBRARY})
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(Filesystem REQUIRED_VARS FILESYSTEM_LIBRARIES)
+if(NOT MSVC)
+	find_package_handle_standard_args(Filesystem REQUIRED_VARS FILESYSTEM_LIBRARIES)
+else()
+	find_package_handle_standard_args(Filesystem DEFAULT_MSG)
+endif()
 
 mark_as_advanced(FILESYSTEM_LIBRARY)
 
