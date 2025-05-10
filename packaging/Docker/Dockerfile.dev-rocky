@@ -155,6 +155,10 @@ RUN cd /tmp && \
 # CIMpp and VILLASnode are installed here
 ENV LD_LIBRARY_PATH="/usr/local/lib64:${LD_LIBRARY_PATH}"
 
+# This is a hack: the VILLASnode build system does not install the libraries in the correct location for OpenDSS
+RUN echo "/usr/local/openDSSC/bin" > /etc/ld.so.conf.d/opendssc.conf && \
+	ldconfig
+
 # Python dependencies
 COPY requirements.txt requirements.txt
 RUN pip3 install --upgrade wheel build setuptools packaging && pip3 install -r requirements.txt
