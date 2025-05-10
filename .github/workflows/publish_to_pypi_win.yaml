@@ -71,6 +71,7 @@ jobs:
       env:
         CIBW_BUILD: "${{ matrix.python }}-*"
         CIBW_ARCHS: "${{ matrix.cibw_arch }}"
+        CIBW_BEFORE_BUILD: "pip install pybind11[global]"
         CIBW_ENVIRONMENT: >
           CMAKE_ARGS="-DWITH_PYBIND=ON -DCMAKE_VERBOSE_MAKEFILE=ON"
           CMAKE_BUILD_PARALLEL_LEVEL=4
