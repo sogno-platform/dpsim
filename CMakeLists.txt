@@ -105,7 +105,8 @@ include(CheckSymbolExists)
 check_symbol_exists(timerfd_create sys/timerfd.h HAVE_TIMERFD)
 check_symbol_exists(getopt_long getopt.h HAVE_GETOPT)
 if(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
-	add_compile_options(-Ofast)
+	add_compile_options(-O3)
+	add_compile_options(-ffast-math)
 
 	# On Clang -Ofast enables -ffast-math which in turn enables -ffinite-math-only.
 	# This option causes all calls to functions checking for infinity or NaN to raise

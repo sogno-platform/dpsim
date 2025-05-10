@@ -70,9 +70,16 @@ void addDPPh1Components(py::module_ mDPPh1) {
       .def(py::init<std::string>())
       .def(py::init<std::string, CPS::Logger::Level>())
       .def("set_parameters",
-           py::overload_cast<CPS::Complex, CPS::Real>(
+           static_cast<void (CPS::Base::Ph1::VoltageSource::*)(CPS::Complex,
+                                                               CPS::Real)>(
+               &CPS::Base::Ph1::VoltageSource::setParameters),
+           py::arg("voltageRef"), py::arg("srcFreq") = -1)
+      .def("set_parameters",
+           static_cast<void (CPS::DP::Ph1::VoltageSourceNorton::*)(
+               CPS::Complex, CPS::Real, CPS::Real)>(
                &CPS::DP::Ph1::VoltageSourceNorton::setParameters),
-           "V_ref"_a, "f_src"_a = -1)
+           py::arg("voltageRef"), py::arg("srcFreq") = -1,
+           py::arg("resistance") = 1e9)
       .def("connect", &CPS::DP::Ph1::VoltageSourceNorton::connect);
 
   py::class_<CPS::DP::Ph1::CurrentSource,
