@@ -42,7 +42,8 @@ RUN dnf -y install \
 	libarchive \
 	openblas-devel \
 	gcc-gfortran \
-	coreutils-single
+	coreutils-single \
+	glib2-devel
 
 # Dependencies
 RUN dnf --refresh -y install \
