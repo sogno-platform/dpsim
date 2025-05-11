@@ -2,7 +2,7 @@ FROM fedora:42 AS base
 
 ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
 ARG CIMPP_COMMIT=1b11d5c17bedf0ae042628b42ecb4e49df70b2f6
-ARG VILLAS_VERSION=825237cb11f687169a9455ecaa97b5dc6cbce26e
+ARG VILLAS_VERSION=4df38d26d425117e538ad74bef27e62e353aadc3
 
 ARG CMAKE_OPTS
 ARG MAKE_OPTS=-j4
@@ -66,7 +66,8 @@ RUN dnf -y install \
 	libwebsockets-devel
 
 # Install optional VILLASnode dependencies
-RUN dnf -y install \
+RUN dnf -y remove systemd-standalone-tmpfiles || true && \
+	dnf -y install \
 	mosquitto-devel \
 	libconfig-devel \
 	libnl3-devel \

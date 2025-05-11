@@ -2,6 +2,7 @@ FROM rockylinux:9
 
 ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
 ARG CIMPP_COMMIT=1b11d5c17bedf0ae042628b42ecb4e49df70b2f6
+ARG VILLAS_VERSION=4df38d26d425117e538ad74bef27e62e353aadc3
 
 ARG CMAKE_OPTS
 ARG MAKE_OPTS=-j4
@@ -40,7 +41,9 @@ RUN dnf -y install \
 	wget \
 	libarchive \
 	openblas-devel \
-	gcc-gfortran
+	gcc-gfortran \
+	coreutils-single \
+	glib2-devel
 
 # Dependencies
 RUN dnf --refresh -y install \
@@ -61,7 +64,16 @@ RUN dnf -y install \
 	jansson-devel \
 	mosquitto-devel \
 	libjpeg-devel \
-	zlib-devel
+	zlib-devel \
+	protobuf-c-devel \
+	protobuf-devel \
+	libmodbus-devel \
+	librdkafka-devel \
+	zeromq-devel \
+	libusb-devel \
+	lua-devel \
+	nanomsg-devel \
+	git-svn
 
 # CUDARPC and dependencies
 RUN dnf install -y \
@@ -90,6 +102,14 @@ RUN dnf -y install \
 	qt5-qtbase qt5-qtsvg
 RUN pip3 install gprof2dot
 
+# Build & Install sundials
+RUN cd /tmp && \
+	git clone --branch v3.2.1 --recurse-submodules --depth 1 https://github.com/LLNL/sundials.git && \
+	mkdir -p sundials/build && cd sundials/build && \
+	cmake ${CMAKE_OPTS} .. \
+		-DCMAKE_BUILD_TYPE=Release && \
+	make ${MAKE_OPTS} install
+
 # Install CIMpp from source
 RUN cd /tmp && \
 	git clone https://github.com/sogno-platform/libcimpp.git && \
@@ -116,17 +136,32 @@ RUN cd /tmp && \
 		-DBUILD_SHARED_LIBS=on && \
 	make ${MAKE_OPTS} install && rm -rf /tmp/magma-2.6.0
 
+# Install VILLASnode and deps from source
+ENV CMAKE_OPTS="${CMAKE_OPTS} \
+		-DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc \
+		-DCMAKE_CUDA_ARCHITECTURES=60;61;70;75"
+
+RUN cd /tmp && \
+		git clone --recurse-submodules https://github.com/VILLASframework/node.git villas-node && \
+		cd villas-node && \
+		git checkout ${VILLAS_VERSION} && \
+		env MAKE_OPTS="" DEPS_NONINTERACTIVE=1 bash packaging/deps.sh && \
+		mkdir -p build && cd build && \
+		cmake ${CMAKE_OPTS} .. \
+			-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
+			-DCMAKE_CUDA_FLAGS="-Xcompiler=-Wall,-Werror" && \
+		make ${MAKE_OPTS} install && \
+		rm -rf /tmp/villas-node
+
 # CIMpp and VILLASnode are installed here
 ENV LD_LIBRARY_PATH="/usr/local/lib64:${LD_LIBRARY_PATH}"
 
-# # Python dependencies
-# ADD requirements.txt .
-# RUN pip3 install --upgrade wheel build setuptools packaging
-# RUN pip3 install -r requirements.txt
+# This is a hack: the VILLASnode build system does not install the libraries in the correct location for OpenDSS
+RUN echo "/usr/local/openDSSC/bin" > /etc/ld.so.conf.d/opendssc.conf && \
+	ldconfig
 
-# # Remove this part in the future and use dedicated Jupyter Dockerfile
-# # Activate Jupyter extensions
-# RUN dnf -y --refresh install npm
-# RUN pip3 install jupyter jupyter_contrib_nbextensions nbconvert nbformat
+# Python dependencies
+COPY requirements.txt requirements.txt
+RUN pip3 install --upgrade wheel build setuptools packaging && pip3 install -r requirements.txt
 
 EXPOSE 8888
