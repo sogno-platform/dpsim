@@ -1,0 +1,16 @@
+services:
+  dpsim:
+    build:
+      context: ../../../ #dpsim top-level folder
+      dockerfile: packaging/Docker/Dockerfile.dev
+    environment:
+      PYTHONPATH: /dpsim/build:/dpsim/build/Source/Python:/dpsim/Source/Python 
+    ports:
+      - "8888:8888"
+      - "12008:12008/udp"
+      - "12009:12009/udp"
+    volumes:
+      - ../../../:/dpsim
+    privileged: true
+    stdin_open: true
+    tty: true
