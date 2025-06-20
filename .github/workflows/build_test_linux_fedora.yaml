@@ -6,7 +6,7 @@ on:
     - master
   pull_request:
 
-## Build a##
+## Build ##
 
 jobs:
   linux-fedora-dpsimpy:
@@ -154,7 +154,7 @@ jobs:
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        slug: AnasBahr/dpsim
+        slug: sogno-platform/dpsim
 
   compare-notebook-results:
     name: Compare Notebook results
