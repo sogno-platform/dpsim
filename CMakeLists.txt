@@ -13,6 +13,15 @@ set(PROJECT_HOMEPAGE_URL "https://dpsim.fein-aachen.org/")
 set(PROJECT_VCS_URL "https://github.com/sogno-platform/dpsim")
 
 # Build options
+
+option(COVERAGE "Enable code coverage reporting" OFF)
+
+if(COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+	message(STATUS "Enabling code coverage")
+	add_compile_options(--coverage -O0 -g)
+	add_link_options(--coverage)
+endif()
+
 option(FETCH_EIGEN             "Fetch Eigen3 as module" OFF)
 option(FETCH_SUITESPARSE       "Fetch SuiteSparse as module" ON)
 option(FETCH_SPDLOG            "Fetch spdlog as module" OFF)
