@@ -17,9 +17,9 @@ set(PROJECT_VCS_URL "https://github.com/sogno-platform/dpsim")
 option(COVERAGE "Enable code coverage reporting" OFF)
 
 if(COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    message(STATUS "Enabling code coverage")
-    add_compile_options(--coverage -O0 -g)
-    add_link_options(--coverage)
+	message(STATUS "Enabling code coverage")
+	add_compile_options(--coverage -O0 -g)
+	add_link_options(--coverage)
 endif()
 
 option(FETCH_EIGEN             "Fetch Eigen3 as module" OFF)
