@@ -10,6 +10,8 @@
 
 [![License: MPL 2.0](https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
 
+[![codecov](https://codecov.io/gh/sogno-platform/dpsim/graph/badge.svg?token=FLUOQ8U7MH)](https://codecov.io/gh/sogno-platform/dpsim)
+
 DPsim is a solver library for dynamic power system simulation.
 
 - It supports both the electromagnetic transient (EMT) and dynamic phasor (DP) domain for dynamic simulation.
