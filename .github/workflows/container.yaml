@@ -120,6 +120,6 @@ jobs:
         id: docker_build_release
         uses: docker/build-push-action@v5
         with:
-         file: Dockerfile
+         file: .binder/Dockerfile
          push: true
          tags: sogno/dpsim:binder
