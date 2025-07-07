@@ -31,7 +31,7 @@ jobs:
     - name: Configure CMake
       shell: bash
       working-directory: ${{ github.workspace }}/build
-      run: cmake -DCIM_VERSION=CGMES_2.4.15_16FEB2016 $GITHUB_WORKSPACE
+      run: cmake -DCIM_VERSION=CGMES_2.4.15_16FEB2016 -DCOVERAGE=ON $GITHUB_WORKSPACE
 
     - name: Build dpsimpy and test examples
       shell: bash
@@ -67,7 +67,7 @@ jobs:
     - name: Configure CMake
       shell: bash
       working-directory: ${{ github.workspace }}/build
-      run: cmake -DCIM_VERSION=CGMES_2.4.15_16FEB2016 $GITHUB_WORKSPACE
+      run: cmake -DCIM_VERSION=CGMES_2.4.15_16FEB2016 -DCOVERAGE=ON $GITHUB_WORKSPACE
 
     - name: Build every target
       shell: bash
@@ -113,7 +113,7 @@ jobs:
 
     - name: Install parallel testing
       shell: bash
-      run: pip install pytest-xdist
+      run: pip install pytest pytest-xdist pytest-cov nbformat nbconvert
 
     - name: Run pytest
       shell: bash
@@ -122,13 +122,39 @@ jobs:
         PYTHONPATH: "${{ github.workspace }}/build"
       run: |
         cp -r python/src/dpsim build/
-        pytest -v examples/Notebooks -n auto
+        pytest -n auto --cov --cov-branch --cov-report=xml examples/Notebooks/
 
     - name: Archive notebook outputs
       uses: actions/upload-artifact@v4
       with:
         name: pytest-output-${{ github.sha }}
         path: outputs/
+
+    - name: Install lcov
+      run: sudo dnf install -y lcov
+
+    - name: Generate lcov report
+      run: |
+        lcov --capture --directory . --output-file coverage.info --rc lcov_branch_coverage=1 --ignore-errors mismatch
+        lcov --remove coverage.info '/usr/*' --output-file coverage.cleaned.info
+        lcov --list coverage.cleaned.info
+
+    - name: Upload coverage artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-fedora--${{ github.sha }}
+        path: |
+          build/coverage.info
+          build/coverage_report/
+          build/**/*.gc*
+          ${{ github.workspace }}/src/**/*.cpp
+
+
+    - name: Upload coverage report
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        slug: sogno-platform/dpsim
 
   compare-notebook-results:
     name: Compare Notebook results
