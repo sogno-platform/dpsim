@@ -141,13 +141,15 @@ SystemTopology buildTopology(CommandLineArgs &args,
 
   // Components
   auto vs = Ph3::ControlledVoltageSource::make("vs");
-  auto voltageRef = Matrix({{230e3}, {230e3}, {230e3}});
+  auto voltageRef = (Eigen::Vector3d() << 230e3, 230e3, 230e3).finished();
   vs->setParameters(voltageRef);
 
   auto load = Ph3::RXLoad::make("load");
-  auto active = Matrix({{125e6, 0, 0}, {0, 125e6, 0}, {0, 0, 125e6}});
-  // auto reactive = Matrix::Zero(3, 3);
-  auto reactive = Matrix({{50e6, 0, 0}, {0, 50e6, 0}, {0, 0, 50e6}});
+  auto active =
+      (Eigen::Matrix3d() << 125e6, 0, 0, 0, 125e6, 0, 0, 0, 125e6).finished();
+
+  auto reactive =
+      (Eigen::Matrix3d() << 50e6, 0, 0, 0, 50e6, 0, 0, 0, 50e6).finished();
   load->setParameters(active, reactive, 230e3, true);
 
   // Topology

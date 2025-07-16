@@ -151,18 +151,25 @@ SystemTopology buildTopology(CommandLineArgs &args,
   vs->setParameters(
       CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(230e3, 0)),
       50);
-
   auto r = Ph3::Resistor::make("R");
-  r->setParameters(Matrix{{10.4275, 0, 0}, {0, 10.4275, 0}, {0, 0, 10.4275}});
+  r->setParameters(
+      (Eigen::Matrix3d() << 10.4275, 0, 0, 0, 10.4275, 0, 0, 0, 10.4275)
+          .finished());
 
   auto l = Ph3::Inductor::make("L");
   l->setParameters(
-      Matrix{{0.325101, 0, 0}, {0, 0.325101, 0}, {0, 0, 0.325101}});
+      (Eigen::Matrix3d() << 0.325101, 0, 0, 0, 0.325101, 0, 0, 0, 0.325101)
+          .finished());
+
   auto r2 = Ph3::Resistor::make("R2");
-  r2->setParameters(Matrix{{5.29e6, 0, 0}, {0, 5.29e6, 0}, {0, 0, 5.29e6}});
+  r2->setParameters(
+      (Eigen::Matrix3d() << 5.29e6, 0, 0, 0, 5.29e6, 0, 0, 0, 5.29e6)
+          .finished());
 
   auto cs = Ph3::ControlledCurrentSource::make("cs");
-  cs->setParameters(Matrix{{0.0}, {0.0}, {0.0}});
+  cs->setParameters(
+      (Eigen::Matrix3d() << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+          .finished());
 
   // Topology
   vs->connect({SimNode::GND, bus1});
