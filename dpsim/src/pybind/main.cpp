@@ -97,6 +97,11 @@ PYBIND11_MODULE(dpsimpy, m) {
       .value("FullOrder", CPS::GeneratorType::FullOrder)
       .value("NONE", CPS::GeneratorType::None);
 
+  py::enum_<CPS::CouplingMethod>(m, "CouplingMethod")
+      .value("DELAY", CPS::CouplingMethod::DELAY)
+      .value("EXTRAPOLATION_ZOH", CPS::CouplingMethod::EXTRAPOLATION_ZOH)
+      .value("EXTRAPOLATION_LINEAR", CPS::CouplingMethod::EXTRAPOLATION_LINEAR);
+
   py::enum_<DPsim::Solver::Type>(m, "Solver")
       .value("MNA", DPsim::Solver::Type::MNA)
       .value("DAE", DPsim::Solver::Type::DAE)
