@@ -73,7 +73,7 @@ public:
 
   /// Initializes exciter parameters
   void setParameters(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf,
-                     Real Tr, Real maxVr = 1.0, Real minVr = -0.9);
+                     Real Tr, Real maxVr = 5.0, Real minVr = -5.0);
   /// Initializes exciter variables
   void initialize(Real Vh_init, Real Vf_init);
   /// Performs an step to update field voltage value
