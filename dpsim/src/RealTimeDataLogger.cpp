@@ -48,6 +48,16 @@ void RealTimeDataLogger::stop() {
   log->info("Stopping real-time data logger. Writing memory to file {}",
             mFilename.string());
 
+  const auto parent = mFilename.parent_path();
+  if (!parent.empty()) {
+    std::error_code ec;
+    std::filesystem::create_directories(parent, ec);
+    if (ec) {
+      throw std::runtime_error("Cannot create log directory '" +
+                               parent.string() + "': " + ec.message());
+    }
+  }
+
   auto mLogFile =
       std::ofstream(mFilename, std::ios_base::out | std::ios_base::trunc);
   if (!mLogFile.is_open()) {
@@ -66,7 +76,7 @@ void RealTimeDataLogger::stop() {
     mLogFile << '\n';
   }
   mLogFile.close();
-  log->info("Finished writing real-time data log to file {}.",
+  log->info("Finished writing real-time data log to file {}",
             mFilename.string());
 }
 
