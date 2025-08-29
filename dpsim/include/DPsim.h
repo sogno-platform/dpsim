@@ -11,6 +11,7 @@
 #include <dpsim/Utils.h>
 
 #ifndef _MSC_VER
+#include <dpsim/RealTimeDataLogger.h>
 #include <dpsim/RealTimeSimulation.h>
 #endif
 
