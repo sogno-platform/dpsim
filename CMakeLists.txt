@@ -280,14 +280,13 @@ if(WITH_PYBIND)
 endif()
 
 add_subdirectory(dpsim-models)
+if(WITH_VILLAS)
+	add_subdirectory(dpsim-villas)
+endif()
 add_subdirectory(dpsim)
 
 if(DPSIM_BUILD_DOC)
 	add_subdirectory(docs)
-endif()
-
-if(WITH_VILLAS)
-	add_subdirectory(dpsim-villas)
 endif()
 
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16")
