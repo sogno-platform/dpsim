@@ -3,68 +3,64 @@ name: Build & Profile RockyLinux
 on:
   workflow_dispatch:
 
-## Build ##
-
 jobs:
   profiling:
     name: Build with Profiling options
     runs-on: ubuntu-latest
     container: sogno/dpsim:dev-rocky
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        submodules: recursive
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
-    - name: Create Build Environment
-      run: mkdir build
+      - name: Create Build Environment
+        run: mkdir build
 
-    - name: Cache build directory
-      uses: actions/cache@v4
-      with:
-        path: ${{ github.workspace }}/build
-        key: build-cache-rocky-profiling-${{ github.ref }}
+      - name: Cache build directory
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/build
+          key: build-cache-rocky-profiling-${{ github.ref }}
 
-    - name: Configure CMake
-      shell: bash
-      working-directory: ${{ github.workspace }}/build
-      run: cmake $GITHUB_WORKSPACE -DWITH_PROFILING=ON -DWITH_ASAN=ON -DWITH_CUDA=OFF -DFETCH_SPDLOG=ON
+      - name: Configure CMake
+        shell: bash
+        working-directory: ${{ github.workspace }}/build
+        run: cmake $GITHUB_WORKSPACE -DWITH_PROFILING=ON -DWITH_ASAN=ON -DWITH_CUDA=OFF -DFETCH_SPDLOG=ON
 
-    - name: Build every target
-      shell: bash
-      working-directory: ${{ github.workspace }}/build
-      run: cmake --build . --parallel $(nproc)
+      - name: Build every target
+        shell: bash
+        working-directory: ${{ github.workspace }}/build
+        run: cmake --build . --parallel $(nproc)
 
-
-## Tests ##
   test-examples-1:
-    name: Test Examples 1/4
+    name: Test Examples 1/4 - WSCC_9bus_mult_coupled
     needs: [profiling]
-    uses: sogno-platform/dpsim/.github/workflows/run_and_profile_example.yaml@${{github.ref}}
-    with:
-      path: ./build/dpsim/examples/cxx/WSCC_9bus_mult_decoupled
-      name: WSCC_9bus_mult_decoupled
-
-  test-examples-2:
-    name: Test Examples 2/4
-    needs: [profiling]
-    uses: sogno-platform/dpsim/.github/workflows/run_and_profile_example.yaml@${{github.ref}}
+    uses: sogno-platform/dpsim/.github/workflows/run_and_profile_example.yaml@main
     with:
       path: ./build/dpsim/examples/cxx/WSCC_9bus_mult_coupled
       name: WSCC_9bus_mult_coupled
 
-  test-examples-3:
-    name: Test Examples 3/4
+  test-examples-2:
+    name: Test Examples 2/4 - WSCC_9bus_mult_decoupled
     needs: [profiling]
-    uses: sogno-platform/dpsim/.github/workflows/run_and_profile_example.yaml@${{github.ref}}
+    uses: sogno-platform/dpsim/.github/workflows/run_and_profile_example.yaml@main
+    with:
+      path: ./build/dpsim/examples/cxx/WSCC_9bus_mult_decoupled
+      name: WSCC_9bus_mult_decoupled
+
+  test-examples-3:
+    name: Test Examples 3/4 - EMT_WSCC_9bus_split_decoupled
+    needs: [profiling]
+    uses: sogno-platform/dpsim/.github/workflows/run_and_profile_example.yaml@main
     with:
       path: ./build/dpsim/examples/cxx/EMT_WSCC_9bus_split_decoupled
-      name: WSCC_9bus_split_decoupled
+      name: EMT_WSCC_9bus_split_decoupled
 
   test-examples-4:
-    name: Test Examples 4/4
+    name: Test Examples 4/4 - DP_WSCC_9bus_split_decoupled
     needs: [profiling]
-    uses: sogno-platform/dpsim/.github/workflows/run_and_profile_example.yaml@${{github.ref}}
+    uses: sogno-platform/dpsim/.github/workflows/run_and_profile_example.yaml@main
     with:
       path: ./build/dpsim/examples/cxx/DP_WSCC_9bus_split_decoupled
-      name: WSCC_9bus_split_decoupled
+      name: DP_WSCC_9bus_split_decoupled
