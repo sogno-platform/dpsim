@@ -10,6 +10,7 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <system_error>
 
 #include <dpsim-models/Attribute.h>
 #include <dpsim-models/PtrFactory.h>

@@ -323,6 +323,60 @@ PYBIND11_MODULE(dpsimpy, m) {
              logger.logAttribute(names, comp.attribute(attr));
            });
 
+  py::class_<DPsim::RealTimeDataLogger, DPsim::DataLoggerInterface,
+             std::shared_ptr<DPsim::RealTimeDataLogger>>(m,
+                                                         "RealTimeDataLogger")
+
+      .def(py::init([](py::object filename, DPsim::Real final_time,
+                       DPsim::Real time_step) {
+             py::object fspath =
+                 py::module_::import("os").attr("fspath")(filename);
+             std::string s = py::cast<std::string>(fspath);
+             std::filesystem::path p(s);
+             return std::make_shared<DPsim::RealTimeDataLogger>(p, final_time,
+                                                                time_step);
+           }),
+           "filename"_a, "final_time"_a, "time_step"_a)
+
+      .def(py::init([](py::object filename, std::size_t row_number) {
+             py::object fspath =
+                 py::module_::import("os").attr("fspath")(filename);
+             std::string s = py::cast<std::string>(fspath);
+             std::filesystem::path p(s);
+             return std::make_shared<DPsim::RealTimeDataLogger>(p, row_number);
+           }),
+           "filename"_a, "row_number"_a)
+
+      .def("log_attribute",
+           py::overload_cast<const CPS::String &, CPS::AttributeBase::Ptr,
+                             CPS::UInt, CPS::UInt>(
+               &DPsim::DataLoggerInterface::logAttribute),
+           "name"_a, "attr"_a, "max_cols"_a = 0, "max_rows"_a = 0)
+
+      .def("log_attribute",
+           py::overload_cast<const std::vector<CPS::String> &,
+                             CPS::AttributeBase::Ptr>(
+               &DPsim::DataLoggerInterface::logAttribute),
+           "names"_a, "attr"_a)
+
+      .def(
+          "log_attribute",
+          [](DPsim::RealTimeDataLogger &logger, const CPS::String &name,
+             const CPS::String &attr, const CPS::IdentifiedObject &comp,
+             CPS::UInt rowsMax, CPS::UInt colsMax) {
+            logger.logAttribute(name, comp.attribute(attr), rowsMax, colsMax);
+          },
+          "name"_a, "attr"_a, "comp"_a, "rows_max"_a = 0, "cols_max"_a = 0)
+
+      .def(
+          "log_attribute",
+          [](DPsim::RealTimeDataLogger &logger,
+             const std::vector<CPS::String> &names, const CPS::String &attr,
+             const CPS::IdentifiedObject &comp) {
+            logger.logAttribute(names, comp.attribute(attr));
+          },
+          "names"_a, "attr"_a, "comp"_a);
+
   py::class_<CPS::IdentifiedObject, std::shared_ptr<CPS::IdentifiedObject>>(
       m, "IdentifiedObject")
       .def("name", &CPS::IdentifiedObject::name)
