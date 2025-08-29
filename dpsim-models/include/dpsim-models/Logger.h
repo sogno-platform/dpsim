@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <memory>
+
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_INFO
 #include <spdlog/spdlog.h>
 
@@ -19,6 +21,7 @@
 
 #include <spdlog/fmt/ostr.h>
 
+#include <dpsim-models/Attribute.h>
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/MathUtils.h>
 
@@ -72,6 +75,8 @@ public:
 
 #if FMT_VERSION >= 90000
 template <>
+class fmt::formatter<CPS::String> : public fmt::ostream_formatter {};
+template <>
 class fmt::formatter<CPS::Complex> : public fmt::ostream_formatter {};
 template <>
 class fmt::formatter<CPS::Vector> : public fmt::ostream_formatter {};
@@ -115,4 +120,35 @@ class fmt::formatter<Eigen::Block<CPS::Matrix>>
 template <>
 class fmt::formatter<Eigen::Block<CPS::MatrixComp>>
     : public fmt::ostream_formatter {};
+
+namespace fmt {
+template <typename T> struct formatter<CPS::Attribute<T>> {
+  template <typename ParseContext> constexpr auto parse(ParseContext &ctx) {
+    return ctx.begin();
+  }
+
+  template <typename FormatContext>
+  auto format(const CPS::Attribute<T> &attr, FormatContext &ctx) const {
+    auto &nc = const_cast<CPS::Attribute<T> &>(attr);
+    return fmt::format_to(ctx.out(), "{}", nc.get());
+  }
+};
+
+template <typename T> struct formatter<std::shared_ptr<CPS::Attribute<T>>> {
+  template <typename ParseContext> constexpr auto parse(ParseContext &ctx) {
+    return ctx.begin();
+  }
+
+  template <typename FormatContext>
+  auto format(const std::shared_ptr<CPS::Attribute<T>> &p,
+              FormatContext &ctx) const {
+    if (!p)
+      return fmt::format_to(ctx.out(), "<null>");
+    auto &nc = const_cast<CPS::Attribute<T> &>(*p);
+    return fmt::format_to(ctx.out(), "{}", nc.get());
+  }
+};
+
+} // namespace fmt
+
 #endif
