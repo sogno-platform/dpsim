@@ -7,6 +7,7 @@
  *********************************************************************************/
 
 #include <dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h>
+#include <dpsim-models/Signal/ExciterDC1Simp.h>
 
 using namespace CPS;
 
@@ -579,20 +580,73 @@ void Base::ReducedOrderSynchronGenerator<VarType>::mnaCompPostStep(
 }
 
 template <typename VarType>
-void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(Real Ta, Real Ka,
-                                                              Real Te, Real Ke,
-                                                              Real Tf, Real Kf,
-                                                              Real Tr) {
-  mExciter = Signal::Exciter::make(**this->mName + "_Exciter", this->mLogLevel);
-  mExciter->setParameters(Ta, Ka, Te, Ke, Tf, Kf, Tr);
-  mHasExciter = true;
+void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(
+    std::shared_ptr<Base::Exciter> exciter,
+    std::shared_ptr<Base::ExciterParameters> params) {
+  mExciter = exciter;
+  mHasExciter = static_cast<bool>(mExciter);
+  if (!mExciter) {
+    SPDLOG_LOGGER_ERROR(
+        this->mSLog, "addExciter called with null exciter on {}", *this->mName);
+    return;
+  }
+  if (!params) {
+    SPDLOG_LOGGER_WARN(this->mSLog,
+                       "addExciter called without parameters on {}",
+                       *this->mName);
+    return;
+  }
+  mExciter->setParameters(params);
 }
 
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(
-    std::shared_ptr<Signal::Exciter> exciter) {
+    std::shared_ptr<Base::Exciter> exciter) {
   mExciter = exciter;
   mHasExciter = true;
+}
+
+// Deprecated: only for compatibility
+template <typename VarType>
+void CPS::Base::ReducedOrderSynchronGenerator<VarType>::addExciter(
+    Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr) {
+  SPDLOG_LOGGER_WARN(
+      this->mSLog,
+      "Deprecated API addExciter(Ta,Ka,Te,Ke,Tf,Kf,Tr) called on {}. "
+      "This overload will be removed in the future. "
+      "Please create an ExciterDC1Simp and parameters explicitly.",
+      *this->mName);
+
+  auto params = std::make_shared<CPS::Signal::ExciterDC1SimpParameters>();
+  params->Ta = Ta;
+  params->Ka = Ka;
+  params->Tef = Te; // map Te → Tef
+  params->Kef = Ke; // map Ke → Kef
+  params->Tf = Tf;
+  params->Kf = Kf;
+  params->Tr = Tr;
+
+  // Keep saturation disabled unless explicitly set elsewhere
+  params->Aef = 0.0;
+  params->Bef = 0.0;
+
+  // Apply legacy amplifier limits for the deprecated path
+  params->MaxVa = 1.0;
+  params->MinVa = -0.9;
+
+  auto name = (**this->mName) + std::string("_Exciter");
+  mExciter =
+      std::make_shared<CPS::Signal::ExciterDC1Simp>(name, this->mLogLevel);
+  mExciter->setParameters(params);
+  mHasExciter = true;
+
+  SPDLOG_LOGGER_INFO(
+      this->mSLog,
+      "Attached ExciterDC1Simp to {} (Ka={:.3g}, Ta={:.3g}, Kef={:.3g}, "
+      "Tef={:.3g}, "
+      "Kf={:.3g}, Tf={:.3g}, Tr={:.3g}, MaxVa={:.3g}, MinVa={:.3g})",
+      *this->mName, params->Ka, params->Ta, params->Kef, params->Tef,
+      params->Kf, params->Tf, params->Tr, params->MaxVa, params->MinVa);
 }
 
 template <typename VarType>
