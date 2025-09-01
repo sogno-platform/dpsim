@@ -28,8 +28,7 @@ endif()
 add_subdirectory(src)
 
 target_include_directories(dpsim-villas PUBLIC
-	${CMAKE_CURRENT_SOURCE_DIR}/include
-	${CMAKE_CURRENT_BINARY_DIR}/include
+	${DPSIM_VILLAS_INCLUDE_DIRS}
 )
 
 if(DPSIM_BUILD_EXAMPLES)
@@ -43,8 +42,7 @@ target_sources(dpsim-villas PUBLIC
 	FILE_SET public_headers
 	TYPE HEADERS
 	BASE_DIRS
-		${CMAKE_CURRENT_SOURCE_DIR}/include
-		${CMAKE_CURRENT_BINARY_DIR}/include
+		${DPSIM_VILLAS_INCLUDE_DIRS}
 	FILES
 		${HEADER_FILES}
 		${GENERATED_HEADER}
