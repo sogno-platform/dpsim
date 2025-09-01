@@ -153,13 +153,26 @@ int main(int argc, char *argv[]) {
   genSP->setModelAsNortonSource(true);
 
   // Exciter
-  std::shared_ptr<Signal::Exciter> exciterSP = nullptr;
+  std::shared_ptr<CPS::Signal::ExciterDC1Simp> exciterSP = nullptr;
   if (withExciter) {
-    exciterSP = Signal::Exciter::make("SynGen_Exciter", logLevel);
-    exciterSP->setParameters(excitationEremia.Ta, excitationEremia.Ka,
-                             excitationEremia.Te, excitationEremia.Ke,
-                             excitationEremia.Tf, excitationEremia.Kf,
-                             excitationEremia.Tr);
+    auto exParams = std::make_shared<CPS::Signal::ExciterDC1SimpParameters>();
+    exParams->Ta = excitationEremia.Ta;
+    exParams->Ka = excitationEremia.Ka;
+    exParams->Tef = excitationEremia.Te; // map Te → Tef
+    exParams->Kef = excitationEremia.Ke; // map Ke → Kef
+    exParams->Tf = excitationEremia.Tf;
+    exParams->Kf = excitationEremia.Kf;
+    exParams->Tr = excitationEremia.Tr;
+
+    exParams->Aef = 0.0;
+    exParams->Bef = 0.0;
+    exParams->MaxVa = 1.0;  // legacy +1.0
+    exParams->MinVa = -0.9; // legacy −0.9
+
+    exciterSP = std::make_shared<CPS::Signal::ExciterDC1Simp>("SynGen_Exciter",
+                                                              logLevel);
+    exciterSP->setParameters(exParams);
+
     genSP->addExciter(exciterSP);
   }
 

@@ -1,11 +1,19 @@
-#include <dpsim-models/Definitions.h>
-#include <dpsim-models/Logger.h>
 #include <map>
 
+#include <dpsim-models/Definitions.h>
+#include <dpsim-models/Logger.h>
+
+#include <dpsim-models/Base/Base_Exciter.h>
 #include <dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h>
+
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderPCM.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderTPM.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator6OrderPCM.h>
+
+#include <dpsim-models/Signal/ExciterDC1.h>
+#include <dpsim-models/Signal/ExciterDC1Simp.h>
+#include <dpsim-models/Signal/ExciterST1Simp.h>
+#include <dpsim-models/Signal/ExciterStatic.h>
 
 #pragma once
 
@@ -83,6 +91,19 @@ public:
     Factory<BaseClass>::get().registerExciter(type, Fn);
   }
 };
+
+namespace ExciterFactory {
+void registerExciters() {
+  FactoryRegistration<CPS::Base::Exciter> _ExciterDC1(
+      "DC1", new DerivedCreator<CPS::Signal::ExciterDC1, CPS::Base::Exciter>);
+  FactoryRegistration<CPS::Base::Exciter> _ExciterDC1Simp(
+      "DC1Simp",
+      new DerivedCreator<CPS::Signal::ExciterDC1Simp, CPS::Base::Exciter>);
+  FactoryRegistration<CPS::Base::Exciter> _ExciterST1Simp(
+      "ST1",
+      new DerivedCreator<CPS::Signal::ExciterST1Simp, CPS::Base::Exciter>);
+}
+} // namespace ExciterFactory
 
 namespace SynchronGeneratorFactory {
 namespace SP {

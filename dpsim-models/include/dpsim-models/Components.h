@@ -92,6 +92,7 @@
 #include <dpsim-models/EMT/EMT_Ph3_AvVoltSourceInverterStateSpace.h>
 #include <dpsim-models/EMT/EMT_Ph3_AvVoltageSourceInverterDQ.h>
 #include <dpsim-models/EMT/EMT_Ph3_Capacitor.h>
+#include <dpsim-models/EMT/EMT_Ph3_ControlledCurrentSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_ControlledVoltageSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_CurrentSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_Inductor.h>
@@ -128,7 +129,10 @@
 #include <dpsim-models/Signal/CosineFMGenerator.h>
 #include <dpsim-models/Signal/DecouplingLine.h>
 #include <dpsim-models/Signal/DecouplingLineEMT.h>
-#include <dpsim-models/Signal/Exciter.h>
+#include <dpsim-models/Signal/ExciterDC1.h>
+#include <dpsim-models/Signal/ExciterDC1Simp.h>
+#include <dpsim-models/Signal/ExciterST1Simp.h>
+#include <dpsim-models/Signal/ExciterStatic.h>
 #include <dpsim-models/Signal/FIRFilter.h>
 #include <dpsim-models/Signal/FrequencyRampGenerator.h>
 #include <dpsim-models/Signal/Integrator.h>

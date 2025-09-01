@@ -89,13 +89,27 @@ int main(int argc, char *argv[]) {
   genEMT->setModelAsNortonSource(true);
 
   // Exciter
-  std::shared_ptr<Signal::Exciter> exciterEMT = nullptr;
+  std::shared_ptr<CPS::Signal::ExciterDC1Simp> exciterEMT = nullptr;
   if (withExciter) {
-    exciterEMT = Signal::Exciter::make("SynGen_Exciter", logLevel);
-    exciterEMT->setParameters(excitationEremia.Ta, excitationEremia.Ka,
-                              excitationEremia.Te, excitationEremia.Ke,
-                              excitationEremia.Tf, excitationEremia.Kf,
-                              excitationEremia.Tr);
+    auto exParams = std::make_shared<CPS::Signal::ExciterDC1SimpParameters>();
+    exParams->Ta = excitationEremia.Ta;
+    exParams->Ka = excitationEremia.Ka;
+    exParams->Tef = excitationEremia.Te; // Te → Tef
+    exParams->Kef = excitationEremia.Ke; // Ke → Kef
+    exParams->Tf = excitationEremia.Tf;
+    exParams->Kf = excitationEremia.Kf;
+    exParams->Tr = excitationEremia.Tr;
+
+    // legacy example limits
+    exParams->Aef = 0.0;
+    exParams->Bef = 0.0;
+    exParams->MaxVa = 1.0;
+    exParams->MinVa = -0.9;
+
+    exciterEMT = std::make_shared<CPS::Signal::ExciterDC1Simp>("SynGen_Exciter",
+                                                               logLevel);
+    exciterEMT->setParameters(exParams);
+
     genEMT->addExciter(exciterEMT);
   }
 
