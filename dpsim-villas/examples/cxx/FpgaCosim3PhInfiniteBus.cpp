@@ -6,24 +6,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include <dpsim-models/Logger.h>
 #include <filesystem>
 #include <fstream>
 
 #include <DPsim.h>
-#include <dpsim-models/Attribute.h>
-#include <dpsim-models/EMT/EMT_Ph3_ControlledCurrentSource.h>
-#include <dpsim-models/EMT/EMT_Ph3_ControlledVoltageSource.h>
-#include <dpsim-models/EMT/EMT_Ph3_Inductor.h>
-#include <dpsim-models/EMT/EMT_Ph3_NetworkInjection.h>
-#include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
-#include <dpsim-models/SimNode.h>
-#include <dpsim-villas/InterfaceVillas.h>
-#include <dpsim-villas/InterfaceVillasQueueless.h>
-#include <dpsim/Event.h>
-#include <dpsim/RealTimeDataLogger.h>
-#include <dpsim/Utils.h>
-#include <memory>
+
+#include <dpsim-villas/Interfaces.h>
 
 using namespace DPsim;
 using namespace CPS::EMT;
@@ -153,16 +141,15 @@ SystemTopology buildTopology(CommandLineArgs &args,
       50);
 
   auto r = Ph3::Resistor::make("R");
-  r->setParameters(Matrix{{10.4275, 0, 0}, {0, 10.4275, 0}, {0, 0, 10.4275}});
+  r->setParameters(CPS::Math::singlePhaseParameterToThreePhase(10.4275));
 
   auto l = Ph3::Inductor::make("L");
-  l->setParameters(
-      Matrix{{0.325101, 0, 0}, {0, 0.325101, 0}, {0, 0, 0.325101}});
+  l->setParameters(CPS::Math::singlePhaseParameterToThreePhase(0.325101));
   auto r2 = Ph3::Resistor::make("R2");
-  r2->setParameters(Matrix{{5.29e6, 0, 0}, {0, 5.29e6, 0}, {0, 0, 5.29e6}});
+  r2->setParameters(CPS::Math::singlePhaseParameterToThreePhase(5.29e6));
 
   auto cs = Ph3::ControlledCurrentSource::make("cs");
-  cs->setParameters(Matrix{{0.0}, {0.0}, {0.0}});
+  cs->setParameters(CPS::Math::singlePhaseParameterToThreePhase(0.0));
 
   // Topology
   vs->connect({SimNode::GND, bus1});
