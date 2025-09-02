@@ -4,12 +4,14 @@
  * SPDX-FileCopyrightText: 2024 Niklas Eiling <niklas.eiling@eonerc.rwth-aachen.de>
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "dpsim-models/Attribute.h"
-#include <iomanip>
 
-#include <dpsim-models/Logger.h>
-#include <dpsim/RealTimeDataLogger.h>
+#include <iomanip>
 #include <memory>
+
+#include <dpsim/RealTimeDataLogger.h>
+
+#include <dpsim-models/Attribute.h>
+#include <dpsim-models/Logger.h>
 
 using namespace DPsim;
 
@@ -41,6 +43,21 @@ void RealTimeDataLogger::start() {
 }
 
 void RealTimeDataLogger::stop() {
+  auto log = CPS::Logger::get("RealTimeDataLogger", CPS::Logger::Level::off,
+                              CPS::Logger::Level::info);
+  log->info("Stopping real-time data logger. Writing memory to file {}",
+            mFilename.string());
+
+  const auto parent = mFilename.parent_path();
+  if (!parent.empty()) {
+    std::error_code ec;
+    std::filesystem::create_directories(parent, ec);
+    if (ec) {
+      throw std::runtime_error("Cannot create log directory '" +
+                               parent.string() + "': " + ec.message());
+    }
+  }
+
   auto mLogFile =
       std::ofstream(mFilename, std::ios_base::out | std::ios_base::trunc);
   if (!mLogFile.is_open()) {
@@ -59,6 +76,8 @@ void RealTimeDataLogger::stop() {
     mLogFile << '\n';
   }
   mLogFile.close();
+  log->info("Finished writing real-time data log to file {}",
+            mFilename.string());
 }
 
 void RealTimeDataLogger::log(Real time, Int timeStepCount) {
@@ -76,15 +95,21 @@ void RealTimeDataLogger::log(Real time, Int timeStepCount) {
   mAttributeData[mCurrentRow][0] = time;
   mCurrentAttribute = 1;
 
-  for (auto it : mAttributes) {
+  for (auto &it : mAttributes) {
+    auto base = it.second.getPtr(); // std::shared_ptr<CPS::AttributeBase>
+
     if (it.second->getType() == typeid(Real)) {
-      mAttributeData[mCurrentRow][mCurrentAttribute++] =
-          **std::dynamic_pointer_cast<std::shared_ptr<CPS::Attribute<Real>>>(
-              it.second.getPtr());
+      auto attr = std::dynamic_pointer_cast<CPS::Attribute<Real>>(base);
+      if (!attr) { /* skip */
+        continue;
+      }
+      mAttributeData[mCurrentRow][mCurrentAttribute++] = attr->get();
     } else if (it.second->getType() == typeid(Int)) {
-      mAttributeData[mCurrentRow][mCurrentAttribute++] =
-          **std::dynamic_pointer_cast<std::shared_ptr<CPS::Attribute<Int>>>(
-              it.second.getPtr());
+      auto attr = std::dynamic_pointer_cast<CPS::Attribute<Int>>(base);
+      if (!attr) { /* skip */
+        continue;
+      }
+      mAttributeData[mCurrentRow][mCurrentAttribute++] = attr->get();
     }
   }
 }
