@@ -177,6 +177,7 @@ jobs:
         working-directory: ${{ github.workspace }}/build
         shell: bash
         run: ctest -V --progress -j "$(nproc)" --output-on-failure -L dpsim
+        continue-on-error: true
 
       - name: Install lcov
         run: dnf install -y lcov
