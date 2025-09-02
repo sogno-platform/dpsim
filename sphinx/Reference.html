@@ -230,6 +230,10 @@
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.PowerflowBusType.value"><code class="docutils literal notranslate"><span class="pre">PowerflowBusType.value</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.RealTimeDataLogger"><code class="docutils literal notranslate"><span class="pre">RealTimeDataLogger</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.RealTimeDataLogger.log_attribute"><code class="docutils literal notranslate"><span class="pre">RealTimeDataLogger.log_attribute()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#dpsimpy.RealTimeSimulation"><code class="docutils literal notranslate"><span class="pre">RealTimeSimulation</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.RealTimeSimulation.add_logger"><code class="docutils literal notranslate"><span class="pre">RealTimeSimulation.add_logger()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.RealTimeSimulation.name"><code class="docutils literal notranslate"><span class="pre">RealTimeSimulation.name()</span></code></a></li>
@@ -1750,6 +1754,23 @@ and to parameterize all components of the network from Python.</p>
 <dt class="sig sig-object py" id="dpsimpy.PowerflowBusType.value">
 <em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#dpsimpy.PowerflowBusType.value" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.RealTimeDataLogger">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">RealTimeDataLogger</span></span><a class="headerlink" href="#dpsimpy.RealTimeDataLogger" title="Link to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.RealTimeDataLogger.log_attribute">
+<span class="sig-name descname"><span class="pre">log_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dpsimpy.RealTimeDataLogger.log_attribute" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>log_attribute(self: dpsimpy.RealTimeDataLogger, name: str, attr: dpsimpy.Attribute, max_cols: int = 0, max_rows: int = 0) -&gt; None</p></li>
+<li><p>log_attribute(self: dpsimpy.RealTimeDataLogger, names: list[str], attr: dpsimpy.Attribute) -&gt; None</p></li>
+<li><p>log_attribute(self: dpsimpy.RealTimeDataLogger, name: str, attr: str, comp: CPS::IdentifiedObject, rows_max: int = 0, cols_max: int = 0) -&gt; None</p></li>
+<li><p>log_attribute(self: dpsimpy.RealTimeDataLogger, names: list[str], attr: str, comp: CPS::IdentifiedObject) -&gt; None</p></li>
+</ol>
+</dd></dl>
 
 </dd></dl>
 
