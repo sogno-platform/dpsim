@@ -81,7 +81,7 @@ jobs:
         name: build-cache-examples-cpp-${{ github.sha }}
         retention-days: 1
 
-## Tests ##
+  ## Tests Python ##
   test-jupyter-notebooks:
     name: Run pytest over all notebooks
     runs-on: ubuntu-latest
@@ -131,30 +131,122 @@ jobs:
         path: outputs/
 
     - name: Install lcov
-      run: sudo dnf install -y lcov
+      run: dnf install -y lcov
 
-    - name: Generate lcov report
+    - name: Generate lcov report (pytest)
       run: |
-        lcov --capture --directory . --output-file coverage.info --rc lcov_branch_coverage=1 --ignore-errors mismatch
-        lcov --remove coverage.info '/usr/*' --output-file coverage.cleaned.info
-        lcov --list coverage.cleaned.info
+        mkdir -p build/coverage_report
+        lcov --capture --directory . --output-file build/coverage.pytest.info --rc lcov_branch_coverage=1 --ignore-errors mismatch
+        lcov --remove build/coverage.pytest.info '/usr/*' --output-file build/coverage.pytest.cleaned.info
+        lcov --list build/coverage.pytest.cleaned.info
 
-    - name: Upload coverage artifacts
+    - name: Upload coverage artifacts (pytest)
       uses: actions/upload-artifact@v4
       with:
-        name: coverage-fedora--${{ github.sha }}
+        name: coverage-fedora-pytest--${{ github.sha }}
         path: |
+          coverage.xml
+          build/coverage.pytest.info
+          build/coverage.pytest.cleaned.info
           build/coverage.info
           build/coverage_report/
           build/**/*.gc*
           ${{ github.workspace }}/src/**/*.cpp
 
+  ## Tests in C++
+  test-cpp:
+    name: Run C++ tests
+    runs-on: ubuntu-latest
+    needs: [linux-fedora-examples]
+    container: sogno/dpsim:dev
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Upload coverage report
+      - name: Restore build archive
+        uses: actions/download-artifact@v4
+        with:
+          name: build-cache-examples-cpp-${{ github.sha }}
+          path: ${{ github.workspace }}/build
+
+      - name: Prepare binary permissions
+        shell: bash
+        run: chmod -R +x ./build/dpsim/examples/cxx
+
+      - name: Run tests (ctest, parallel)
+        working-directory: ${{ github.workspace }}/build
+        shell: bash
+        run: ctest -V --progress -j "$(nproc)" --output-on-failure -L dpsim
+
+      - name: Install lcov
+        run: dnf install -y lcov
+
+      - name: Generate lcov report (ctest)
+        working-directory: ${{ github.workspace }}
+        shell: bash
+        run: |
+          lcov --capture --directory . --output-file build/coverage.ctest.info --rc lcov_branch_coverage=1 --ignore-errors mismatch
+          lcov --remove build/coverage.ctest.info '/usr/*' --output-file build/coverage.ctest.cleaned.info
+          lcov --list build/coverage.ctest.cleaned.info
+
+      - name: Upload coverage artifacts (ctest)
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-fedora-ctest--${{ github.sha }}
+          path: |
+            build/coverage.ctest.info
+            build/coverage.ctest.cleaned.info
+            build/**/*.gc*
+            ${{ github.workspace }}/src/**/*.cpp
+
+  ## Merge tests results
+  merge-coverage:
+    name: Merge LCOV (pytest+ctest) & upload to Codecov
+    runs-on: ubuntu-latest
+    needs: [test-jupyter-notebooks, test-cpp]
+    steps:
+    - name: Download pytest coverage artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: coverage-fedora-pytest--${{ github.sha }}
+        path: ${{ github.workspace }}/cov/pytest
+
+    - name: Download ctest coverage artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: coverage-fedora-ctest--${{ github.sha }}
+        path: ${{ github.workspace }}/cov/ctest
+
+    - name: Install lcov
+      run: sudo apt-get update && sudo apt-get install -y lcov
+
+    - name: Merge LCOV reports
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      run: |
+        mkdir -p cov/merged
+        lcov -a cov/pytest/build/coverage.pytest.cleaned.info \
+             -a cov/ctest/build/coverage.ctest.cleaned.info \
+             -o cov/merged/coverage.merged.info
+        lcov --list cov/merged/coverage.merged.info
+
+    - name: Upload merged coverage artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-fedora-merged--${{ github.sha }}
+        path: |
+          cov/merged/coverage.merged.info
+          cov/pytest/coverage.xml
+
+    - name: Upload to Codecov (merged)
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         slug: sogno-platform/dpsim
+        files: |
+          cov/merged/coverage.merged.info
+          cov/pytest/coverage.xml
+        fail_ci_if_error: false
 
   compare-notebook-results:
     name: Compare Notebook results
