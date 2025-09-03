@@ -248,3 +248,27 @@ endforeach()
 
 add_subdirectory(cim_graphviz)
 add_subdirectory(signals)
+
+if(COVERAGE)
+	# Register every EXECUTABLE target defined under THIS source dir (recursively)
+	function(dpsim_register_exec_tests dir)
+		get_property(_tgts DIRECTORY ${dir} PROPERTY BUILDSYSTEM_TARGETS)
+		foreach(t ${_tgts})
+			get_target_property(_type ${t} TYPE)
+			if(_type STREQUAL "EXECUTABLE")
+				add_test(NAME ${t} COMMAND $<TARGET_FILE:${t}>)
+				set_tests_properties(${t}
+					PROPERTIES
+						WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+						LABELS "dpsim")
+			endif()
+		endforeach()
+
+		get_property(_subs DIRECTORY ${dir} PROPERTY SUBDIRECTORIES)
+		foreach(s ${_subs})
+		dpsim_register_exec_tests(${s})
+		endforeach()
+	endfunction()
+
+	dpsim_register_exec_tests(${CMAKE_CURRENT_SOURCE_DIR})
+endif()
