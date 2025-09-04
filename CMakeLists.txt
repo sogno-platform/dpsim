@@ -297,7 +297,7 @@ endif()
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	include(FeatureSummary)
-	add_feature_info(CIM             WITH_CIM             "Loading Common Information Model (CIM) files")
+	add_feature_info(CIM             WITH_CIM             "Loading Common Information Model (CIM) library")
 	add_feature_info(CUDA            WITH_CUDA            "CUDA-based parallelization")
 	add_feature_info(Graphviz        WITH_GRAPHVIZ        "Graphviz graphs")
 	add_feature_info(GSL             WITH_GSL             "GNU Scientific library")
