@@ -16,6 +16,8 @@
 
 using namespace CPS;
 using namespace CPS::CIM;
+
+using CIMPP::String;
 using CIMPP::UnitMultiplier;
 
 Reader::Reader(String name, Logger::Level logLevel,
