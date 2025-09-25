@@ -102,6 +102,9 @@ void registerExciters() {
   FactoryRegistration<CPS::Base::Exciter> _ExciterST1Simp(
       "ST1",
       new DerivedCreator<CPS::Signal::ExciterST1Simp, CPS::Base::Exciter>);
+  FactoryRegistration<CPS::Base::Exciter> _ExciterStatic(
+      "Static",
+      new DerivedCreator<CPS::Signal::ExciterStatic, CPS::Base::Exciter>);
 }
 } // namespace ExciterFactory
 
