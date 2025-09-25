@@ -51,6 +51,9 @@
 #include <dpsim-models/DP/DP_Ph1_RXLoadSwitch.h>
 #include <dpsim-models/DP/DP_Ph1_ReducedOrderSynchronGeneratorVBR.h>
 #include <dpsim-models/DP/DP_Ph1_Resistor.h>
+#ifdef WITH_VILLAS
+#include <dpsim-models/DP/DP_Ph1_ProfileVoltageSource.h>
+#endif
 #include <dpsim-models/DP/DP_Ph1_RxLine.h>
 #include <dpsim-models/DP/DP_Ph1_SVC.h>
 #include <dpsim-models/DP/DP_Ph1_Switch.h>
