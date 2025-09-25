@@ -6,7 +6,6 @@
 using namespace std;
 using namespace DPsim;
 using namespace CPS;
-using namespace CPS::CIM;
 
 /*
  * This example runs the powerflow for the CIGRE MV benchmark system (neglecting the tap changers of the transformers)
@@ -26,8 +25,8 @@ int main(int argc, char **argv) {
   String simName = "Shmem_CIGRE_MV_PowerFlowTest";
   CPS::Real system_freq = 50;
 
-  CIM::Reader reader(simName, CPS::Logger::Level::debug,
-                     CPS::Logger::Level::off);
+  CPS::CIM::Reader reader(simName, CPS::Logger::Level::debug,
+                          CPS::Logger::Level::off);
   SystemTopology sys = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
 
 #ifdef WITH_RT
@@ -81,7 +80,11 @@ int main(int argc, char **argv) {
 
   sim.addInterface(intf);
 
-  sim.run(std::chrono::seconds(5));
+#ifdef WITH_RT
+  sim.run(10);
+#else
+  sim.run();
+#endif
 
   return 0;
 }
