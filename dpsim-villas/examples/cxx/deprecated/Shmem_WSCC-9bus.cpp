@@ -19,7 +19,8 @@ int main(int argc, char *argv[]) {
 
   String simName = "Shmem_WSCC-9bus";
 
-  CIMReader reader(simName, CPS::Logger::Level::info, CPS::Logger::Level::info);
+  CPS::CIM::Reader reader(simName, CPS::Logger::Level::info,
+                          CPS::Logger::Level::info);
   SystemTopology sys = reader.loadCIM(60, filenames);
 
 #ifdef WITH_RT
@@ -60,7 +61,11 @@ int main(int argc, char *argv[]) {
   }
 
   sim.addInterface(intf);
+#ifdef WITH_RT
+  sim.run(10);
+#else
   sim.run();
+#endif
 
   return 0;
 }

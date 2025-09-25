@@ -43,8 +43,8 @@ int main(int argc, char *argv[]) {
       filenames = args.positionalPaths();
     }
 
-    CIM::Reader reader(args.name, CPS::Logger::Level::info,
-                       CPS::Logger::Level::info);
+    CPS::CIM::Reader reader(args.name, CPS::Logger::Level::info,
+                            CPS::Logger::Level::info);
     SystemTopology sys = reader.loadCIM(args.sysFreq, filenames);
 
     // Extend system with controllable load (Profile)
@@ -118,7 +118,11 @@ int main(int argc, char *argv[]) {
       intf2->exportAttribute(v->derivePhase(), (i * 2) + 1, true);
     }
 
-    sim.run(args.startTime);
+#ifdef WITH_RT
+    sim.run(10);
+#else
+    sim.run();
+#endif
   }
 
   if (args.scenario == 1) {
@@ -178,7 +182,11 @@ int main(int argc, char *argv[]) {
     intf2->exportAttribute(load->mIntfCurrent->deriveCoeff<Complex>(0, 0), 2,
                            true);
 
-    sim.run(args.startTime);
+#ifdef WITH_RT
+    sim.run(10);
+#else
+    sim.run();
+#endif
   }
 
   return 0;

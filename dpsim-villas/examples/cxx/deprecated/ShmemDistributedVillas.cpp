@@ -130,7 +130,11 @@ int main(int argc, char *argv[]) {
     sim.addEvent(evt);
   }
 
+#ifdef WITH_RT
+  sim.run(10);
+#else
   sim.run();
+#endif
 
   return 0;
 }

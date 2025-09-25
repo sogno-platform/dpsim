@@ -81,7 +81,11 @@ int main(int argc, char *argv[]) {
   logger->logAttribute("i_evs", evs->mIntfCurrent, 1, 1);
   sim.addLogger(logger);
 
+#ifdef WITH_RT
+  sim.run(10);
+#else
   sim.run();
+#endif
 
   //std::ofstream of("task_dependencies.svg");
   //sim.dependencyGraph().render(of);

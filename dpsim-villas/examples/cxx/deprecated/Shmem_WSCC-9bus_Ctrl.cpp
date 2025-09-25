@@ -132,7 +132,11 @@ int main(int argc, char *argv[]) {
 
   sim.addInterface(intf);
   sim.addLogger(logger);
-  sim.run(args.startTime);
+#ifdef WITH_RT
+  sim.run(10);
+#else
+  sim.run();
+#endif
 
   return 0;
 }
