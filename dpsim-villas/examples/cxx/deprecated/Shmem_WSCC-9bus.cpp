@@ -4,7 +4,7 @@
 #include <list>
 
 #include <DPsim.h>
-#include <dpsim-villas/InterfaceShmem.h>
+#include <dpsim-villas/Interfaces.h>
 
 using namespace DPsim;
 using namespace CPS::DP;
@@ -22,7 +22,11 @@ int main(int argc, char *argv[]) {
   CIMReader reader(simName, CPS::Logger::Level::info, CPS::Logger::Level::info);
   SystemTopology sys = reader.loadCIM(60, filenames);
 
+#ifdef WITH_RT
   RealTimeSimulation sim(simName, CPS::Logger::Level::debug);
+#else
+  Simulation sim(simName, CPS::Logger::Level::debug);
+#endif
   sim.setSystem(sys);
   sim.setTimeStep(0.001);
   sim.setFinalTime(120);
@@ -30,20 +34,32 @@ int main(int argc, char *argv[]) {
   sim.setSolverType(Solver::Type::MNA);
   sim.doInitFromNodesAndTerminals(true);
 
-  InterfaceShmem intf("/dpsim-villas", "/villas-dpsim");
+  const std::string shmemConfig = R"STRING(
+    {
+      "type": "shmem",
+      "in": {
+        "name": "dpsim-villas"
+      },
+      "out": {
+        "name": "villas-dpsim"
+      },
+      "queuelen": 1024
+    })STRING";
+
+  auto intf = std::make_shared<InterfaceVillas>(shmemConfig);
 
   // Register exportable node voltages
   UInt o = 0;
   for (auto n : sys.mNodes) {
     auto v = n->attributeTyped<Complex>("v");
 
-    intf.exportReal(v->deriveMag(), o + 0);
-    intf.exportReal(v->derivePhase(), o + 1);
+    intf->exportAttribute(v->deriveMag(), o + 0, true);
+    intf->exportAttribute(v->derivePhase(), o + 1, true);
 
     o += 2;
   }
 
-  sim.addInterface(std::shared_ptr<Interface>(&intf));
+  sim.addInterface(intf);
   sim.run();
 
   return 0;

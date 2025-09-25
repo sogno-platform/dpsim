@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include <DPsim.h>
-#include <dpsim-villas/InterfaceShmem.h>
+#include <dpsim-villas/Interfaces.h>
 
 using namespace DPsim;
 using namespace CPS::Signal;
@@ -13,7 +13,19 @@ int main(int argc, char *argv[]) {
   Real finalTime = 10;
   String simName = "ShmemControllableSource";
 
-  InterfaceShmem intf("/dpsim01", "/dpsim10");
+  const std::string shmemConfig = R"STRING(
+    {
+      "type": "shmem",
+      "in": {
+        "name": "dpsim01"
+      },
+      "out": {
+        "name": "dpsim10"
+      },
+      "queuelen": 1024
+    })STRING";
+
+  auto intf = std::make_shared<InterfaceVillas>(shmemConfig);
 
   // Controllers and filter
   std::vector<Real> coefficients = {
@@ -49,20 +61,29 @@ int main(int argc, char *argv[]) {
   load->mActivePower->setReference(filtP->mOutput);
   load->mReactivePower->setReference(filtQ->mOutput);
 
-  filtP->setInput(intf.importReal(0));
-  filtQ->setInput(intf.importReal(1));
+  auto filtPInput = CPS::AttributeDynamic<Real>::make(0.0);
+  intf->importAttribute(filtPInput, 0, true);
+  filtP->setInput(filtPInput);
+
+  auto filtQInput = CPS::AttributeDynamic<Real>::make(0.0);
+  intf->importAttribute(filtQInput, 1, true);
+  filtQ->setInput(filtQInput);
 
   auto sys = SystemTopology(50, SystemNodeList{n1},
                             SystemComponentList{ecs, r1, load, filtP, filtQ});
 
+#ifdef WITH_RT
   RealTimeSimulation sim(simName, CPS::Logger::Level::info);
+#else
+  Simulation sim(simName, CPS::Logger::Level::info);
+#endif
   sim.setSystem(sys);
   sim.setTimeStep(timeStep);
   sim.setFinalTime(finalTime);
   sim.setDomain(Domain::DP);
   sim.setSolverType(Solver::Type::MNA);
 
-  sim.addInterface(std::shared_ptr<Interface>(&intf));
+  sim.addInterface(intf);
   sim.run();
 
   return 0;

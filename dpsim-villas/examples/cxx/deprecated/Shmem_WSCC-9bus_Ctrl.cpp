@@ -4,7 +4,7 @@
 #include <list>
 
 #include <DPsim.h>
-#include <dpsim-villas/InterfaceShmem.h>
+#include <dpsim-villas/Interfaces.h>
 
 using namespace DPsim;
 using namespace CPS::DP::Ph1;
@@ -59,7 +59,11 @@ int main(int argc, char *argv[]) {
   load->mActivePower->setReference(filtP->mOutput);
   sys.mComponents.push_back(filtP);
 
+#ifdef WITH_RT
   RealTimeSimulation sim(simName, CPS::Logger::Level::off);
+#else
+  Simulation sim(simName, CPS::Logger::Level::off);
+#endif
   sim.setSystem(sys);
   sim.setTimeStep(args.timeStep);
   sim.setFinalTime(args.duration);
@@ -67,7 +71,19 @@ int main(int argc, char *argv[]) {
   sim.setSolverType(Solver::Type::MNA);
   sim.doInitFromNodesAndTerminals(true);
 
-  InterfaceShmem intf("/dpsim1-villas", "/villas-dpsim1", nullptr, false);
+  const std::string shmemConfig = R"STRING(
+    {
+      "type": "shmem",
+      "in": {
+        "name": "dpsim1-villas"
+      },
+      "out": {
+        "name": "villas-dpsim1"
+      },
+      "queuelen": 1024
+    })STRING";
+
+  auto intf = std::make_shared<InterfaceVillas>(shmemConfig);
 
   auto logger = DataLogger::make(simName);
 
@@ -91,9 +107,9 @@ int main(int argc, char *argv[]) {
     std::cout << "Signal " << (i * 2) + 1 << ": Phas " << n->name()
               << std::endl;
 
-    intf.exportReal(v->deriveMag(), (i * 2) + 0);
+    intf->exportAttribute(v->deriveMag(), (i * 2) + 0, true);
     o++;
-    intf.exportReal(v->derivePhase(), (i * 2) + 1);
+    intf->exportAttribute(v->derivePhase(), (i * 2) + 1, true);
     o++;
 
     logger->logAttribute(fmt::format("mag_{}", i), v->deriveMag());
@@ -103,13 +119,18 @@ int main(int argc, char *argv[]) {
   logger->logAttribute("v3", sys.node<CPS::DP::SimNode>("BUS3")->mVoltage);
 
   // TODO gain by 20e8
-  filtP->setInput(intf.importReal(0));
-  filtP_profile->setInput(intf.importReal(1));
+  auto filtPInput = CPS::AttributeDynamic<Real>::make(0.0);
+  intf->importAttribute(filtPInput, 0, true);
+  filtP->setInput(filtPInput);
 
-  intf.exportReal(load->attributeTyped<Real>("P"), o++);
-  intf.exportReal(load_profile->attributeTyped<Real>("P"), o++);
+  auto filtPProfileInput = CPS::AttributeDynamic<Real>::make(0.0);
+  intf->importAttribute(filtPProfileInput, 1, true);
+  filtP_profile->setInput(filtPProfileInput);
 
-  sim.addInterface(std::shared_ptr<Interface>(&intf));
+  intf->exportAttribute(load->attributeTyped<Real>("P"), o++, true);
+  intf->exportAttribute(load_profile->attributeTyped<Real>("P"), o++, true);
+
+  sim.addInterface(intf);
   sim.addLogger(logger);
   sim.run(args.startTime);
 
