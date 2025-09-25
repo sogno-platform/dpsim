@@ -3,7 +3,7 @@
 #include <fstream>
 
 #include <DPsim.h>
-#include <dpsim-villas/InterfaceVillas.h>
+#include <dpsim-villas/Interfaces.h>
 
 using namespace DPsim;
 using namespace CPS::DP;

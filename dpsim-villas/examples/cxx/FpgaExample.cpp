@@ -7,23 +7,13 @@
 
 #include <filesystem>
 #include <fstream>
-
-#include <DPsim.h>
-#include <dpsim-models/Attribute.h>
-#include <dpsim-models/DP/DP_Ph1_CurrentSource.h>
-#include <dpsim-models/DP/DP_Ph1_ProfileVoltageSource.h>
-#include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
-#include <dpsim-models/SimNode.h>
-#include <dpsim-villas/InterfaceVillas.h>
-#include <dpsim-villas/InterfaceVillasQueueless.h>
-#include <dpsim/Event.h>
-#include <dpsim/RealTimeDataLogger.h>
-#include <dpsim/Utils.h>
 #include <memory>
 
+#include <DPsim.h>
+
+#include <dpsim-villas/Interfaces.h>
+
 using namespace DPsim;
-using namespace CPS::DP;
-using namespace CPS::DP::Ph1;
 
 const std::string buildFpgaConfig(CommandLineArgs &args) {
   std::filesystem::path fpgaIpPath =
@@ -101,17 +91,17 @@ SystemTopology loopbackTopology(CommandLineArgs &args,
                                 std::shared_ptr<Interface> intf,
                                 std::shared_ptr<DataLoggerInterface> logger) {
   // Nodes
-  auto n1 = SimNode::make("n1");
+  auto n1 = CPS::DP::SimNode::make("n1");
 
   // Components
-  auto vs = VoltageSource::make("v_s");
+  auto vs = CPS::DP::Ph1::VoltageSource::make("v_s");
   vs->setParameters(10.);
-  auto rl = Resistor::make("r_l");
+  auto rl = CPS::DP::Ph1::Resistor::make("r_l");
   rl->setParameters(1);
 
   // Topology
-  vs->connect({n1, SimNode::GND});
-  rl->connect({n1, SimNode::GND});
+  vs->connect({n1, CPS::DP::SimNode::GND});
+  rl->connect({n1, CPS::DP::SimNode::GND});
 
   // Interface
   auto seqnumAttribute = CPS::AttributeStatic<Int>::make(0);
@@ -125,7 +115,7 @@ SystemTopology loopbackTopology(CommandLineArgs &args,
     logger->logAttribute("rl_i", rl->mIntfCurrent);
   }
 
-  return SystemTopology(args.sysFreq, SystemNodeList{SimNode::GND, n1},
+  return SystemTopology(args.sysFreq, SystemNodeList{CPS::DP::SimNode::GND, n1},
                         SystemComponentList{vs, rl});
 }
 
@@ -133,22 +123,22 @@ SystemTopology hilTopology(CommandLineArgs &args,
                            std::shared_ptr<Interface> intf,
                            std::shared_ptr<DataLoggerInterface> logger) {
   // Nodes
-  auto n1 = SimNode::make("n1");
-  auto n2 = SimNode::make("n2");
+  auto n1 = CPS::DP::SimNode::make("n1");
+  auto n2 = CPS::DP::SimNode::make("n2");
 
   // Components
-  auto vs = VoltageSource::make("v_s");
+  auto vs = CPS::DP::Ph1::VoltageSource::make("v_s");
   vs->setParameters(Complex(1, 0), 50);
-  auto rs = Resistor::make("r_s");
+  auto rs = CPS::DP::Ph1::Resistor::make("r_s");
   rs->setParameters(1);
 
-  auto cs = CurrentSource::make("i_l");
+  auto cs = CPS::DP::Ph1::CurrentSource::make("i_l");
   cs->setParameters(Complex(0, 0));
 
   // Topology
-  vs->connect({n1, SimNode::GND});
+  vs->connect({n1, CPS::DP::SimNode::GND});
   cs->connect({n1, n2});
-  rs->connect({n2, SimNode::GND});
+  rs->connect({n2, CPS::DP::SimNode::GND});
 
   // Interface
   auto seqnumAttribute = CPS::AttributeStatic<Int>::make(0);
@@ -163,7 +153,8 @@ SystemTopology hilTopology(CommandLineArgs &args,
     logger->logAttribute("cs_i", cs->mIntfCurrent);
   }
 
-  return SystemTopology(args.sysFreq, SystemNodeList{SimNode::GND, n1, n2},
+  return SystemTopology(args.sysFreq,
+                        SystemNodeList{CPS::DP::SimNode::GND, n1, n2},
                         SystemComponentList{vs, rs, cs});
 }
 
@@ -171,21 +162,21 @@ SystemTopology profileTopology(CommandLineArgs &args,
                                std::shared_ptr<Interface> intf,
                                std::shared_ptr<DataLoggerInterface> logger) {
   // Nodes
-  auto n1 = SimNode::make("n1");
-  auto n2 = SimNode::make("n2");
+  auto n1 = CPS::DP::SimNode::make("n1");
+  auto n2 = CPS::DP::SimNode::make("n2");
 
   // Components
-  auto vs = ProfileVoltageSource::make("v_s", "data.bin");
-  auto rs = Resistor::make("r_s");
+  auto vs = CPS::DP::Ph1::ProfileVoltageSource::make("v_s", "data.bin");
+  auto rs = CPS::DP::Ph1::Resistor::make("r_s");
   rs->setParameters(1);
 
-  auto cs = CurrentSource::make("i_l");
+  auto cs = CPS::DP::Ph1::CurrentSource::make("i_l");
   cs->setParameters(Complex(0, 0));
 
   // Topology
-  vs->connect({n1, SimNode::GND});
+  vs->connect({n1, CPS::DP::SimNode::GND});
   cs->connect({n1, n2});
-  rs->connect({n2, SimNode::GND});
+  rs->connect({n2, CPS::DP::SimNode::GND});
 
   // Interface
   auto seqnumAttribute = CPS::AttributeStatic<Int>::make(0);
@@ -200,7 +191,8 @@ SystemTopology profileTopology(CommandLineArgs &args,
     logger->logAttribute("cs_i", cs->mIntfCurrent);
   }
 
-  return SystemTopology(args.sysFreq, SystemNodeList{SimNode::GND, n1, n2},
+  return SystemTopology(args.sysFreq,
+                        SystemNodeList{CPS::DP::SimNode::GND, n1, n2},
                         SystemComponentList{vs, rs, cs});
 }
 
@@ -232,16 +224,19 @@ std::shared_ptr<Event> getEvent(CommandLineArgs &args, SystemTopology &sys) {
         throw std::runtime_error(
             "frequencyDrop event only supported for topology \"hil\".");
       }
-      auto vs = std::dynamic_pointer_cast<VoltageSource>(sys.mComponents[0]);
-      return AttributeEvent<Real>::make(3, vs->mSrcFreq, 45.);
+      auto vs = std::dynamic_pointer_cast<CPS::DP::Ph1::VoltageSource>(
+          sys.mComponents[0]);
+      return AttributeEvent<CPS::Real>::make(3, vs->mSrcFreq, 45.);
     }
     if (event == "voltageDrop") {
       if (topology != "hil") {
         throw std::runtime_error(
             "voltageDrop event only supported for topology \"hil\".");
       }
-      auto vs = std::dynamic_pointer_cast<VoltageSource>(sys.mComponents[0]);
-      return AttributeEvent<Real>::make(3, vs->mVoltageRef->deriveReal(), 0.7);
+      auto vs = std::dynamic_pointer_cast<CPS::DP::Ph1::VoltageSource>(
+          sys.mComponents[0]);
+      return AttributeEvent<CPS::Real>::make(3, vs->mVoltageRef->deriveReal(),
+                                             0.7);
     }
   }
   return nullptr;
