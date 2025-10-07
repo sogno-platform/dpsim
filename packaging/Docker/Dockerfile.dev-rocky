@@ -1,8 +1,8 @@
 FROM rockylinux:9
 
 ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
-ARG CIMPP_COMMIT=1b11d5c17bedf0ae042628b42ecb4e49df70b2f6
-ARG VILLAS_VERSION=4df38d26d425117e538ad74bef27e62e353aadc3
+ARG CIMPP_COMMIT=051ee4c311572fe92b30120b897d22deb253e162
+ARG VILLAS_VERSION=5606793aaee2d1eeb663180d3e52718fa8bd5931
 
 ARG CMAKE_OPTS
 ARG MAKE_OPTS=-j4
@@ -145,9 +145,10 @@ RUN cd /tmp && \
 		git clone --recurse-submodules https://github.com/VILLASframework/node.git villas-node && \
 		cd villas-node && \
 		git checkout ${VILLAS_VERSION} && \
-		env MAKE_OPTS="" DEPS_NONINTERACTIVE=1 bash packaging/deps.sh && \
+		env MAKE_OPTS="" DEPS_NONINTERACTIVE=1 DEPS_SKIP=libxil bash packaging/deps.sh && \
 		mkdir -p build && cd build && \
 		cmake ${CMAKE_OPTS} .. \
+			-DCMAKE_CXX_FLAGS="$CMAKE_CXX_FLAGS -fpermissive" \
 			-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
 			-DCMAKE_CUDA_FLAGS="-Xcompiler=-Wall,-Werror" && \
 		make ${MAKE_OPTS} install && \

@@ -1,44 +1,48 @@
 FROM debian:11
 
 ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
-ARG CIMPP_COMMIT=1b11d5c17bedf0ae042628b42ecb4e49df70b2f6
-ARG VILLAS_VERSION=18cdd2a6364d05fbf413ca699616cd324abfcb54
+ARG LIBCIMPP_VERSION=2.2.0
+ARG VILLAS_VERSION=5606793aaee2d1eeb663180d3e52718fa8bd5931
 
 ARG CMAKE_OPTS
 ARG MAKE_OPTS=-j4
 
 LABEL \
-	org.opencontainers.image.title = "DPsim" \
-	org.opencontainers.image.licenses = "MPL 2.0" \
-	org.opencontainers.image.url = "http://dpsim.fein-aachen.org/" \
-	org.opencontainers.image.source = "https://github.com/sogno-platform/dpsim"
+	org.opencontainers.image.title="DPsim" \
+	org.opencontainers.image.licenses="MPL 2.0" \
+	org.opencontainers.image.url="http://dpsim.fein-aachen.org/" \
+	org.opencontainers.image.source="https://github.com/sogno-platform/dpsim"
 
-RUN apt-get -y update
-
-# Toolchain
-RUN apt-get -y install \
-	gcc g++ clang \
-	git \
-	make cmake pkg-config \
-	python3-pip \
-	wget
-
-# Tools needed for developement
-RUN apt-get -y install \
-	doxygen graphviz \
-	gdb
-
-# Dependencies
-RUN apt-get -y install \
-	python3-dev \
-	libeigen3-dev \
-	libxml2-dev \
-	libgraphviz-dev \
-	libgsl-dev \
-	libspdlog-dev \
-	pybind11-dev \
-	libspdlog-dev \
-	libfmt-dev
+RUN set -eux; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+		gcc g++ clang \
+		git \
+		make cmake pkg-config \
+		python3-pip \
+		wget \
+		doxygen graphviz \
+		gdb \
+		python3-dev \
+		libeigen3-dev \
+		libxml2-dev \
+		libgraphviz-dev \
+		libgsl-dev \
+		libspdlog-dev \
+		pybind11-dev \
+		libfmt-dev \
+		libssl-dev \
+		uuid-dev \
+		libcurl4-gnutls-dev \
+		libjansson-dev \
+		libwebsockets-dev \
+		libmosquitto-dev \
+		libconfig-dev \
+		libnl-3-dev \
+		protobuf-dev \
+		libprotobuf-c-dev; \
+	apt-get clean; \
+	rm -rf /var/lib/apt/lists/*
 
 # Build & Install sundials
 RUN cd /tmp && \
@@ -46,23 +50,8 @@ RUN cd /tmp && \
 	mkdir -p sundials/build && cd sundials/build && \
 	cmake ${CMAKE_OPTS} .. \
 		-DCMAKE_BUILD_TYPE=Release && \
-	make ${MAKE_OPTS} install
-
-## Install minimal VILLASnode dependencies
-RUN apt-get -y install \
-	libssl-dev \
-	uuid-dev \
-	libcurl4-gnutls-dev \
-	libjansson-dev \
-	libwebsockets-dev
-
-## Install optional VILLASnode dependencies
-RUN apt-get -y install \
-	libmosquitto-dev \
-	libconfig-dev \
-	libnl-3-dev \
-	protobuf-dev \
-	libprotobuf-c-dev
+	make ${MAKE_OPTS} install && \
+	rm -rf /tmp/sundials
 
 ## Install libiec61850 from source
 RUN cd /tmp && \
@@ -76,22 +65,28 @@ RUN cd /tmp && \
 	rm -rf /tmp/libiec61850-1.3.3
 
 ## Python dependencies
-ADD requirements.txt .
-RUN pip3 install -r requirements.txt
+COPY requirements.txt .
+RUN pip3 install --no-cache-dir --upgrade wheel build setuptools packaging && \
+	pip3 install --no-cache-dir -r requirements.txt && \
+	pip3 cache purge
 
-## Install CIMpp from source
-RUN cd /tmp && \
-	git clone https://github.com/sogno-platform/libcimpp.git && \
-	mkdir -p libcimpp/build && cd libcimpp/build && \
-	git checkout ${CIMPP_COMMIT} && \
-	git submodule update --init && \
-	cmake ${CMAKE_OPTS} .. \
-		-DBUILD_SHARED_LIBS=ON \
-		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib \
-		-DUSE_CIM_VERSION=${CIM_VERSION} \
-		-DBUILD_ARABICA_EXAMPLES=OFF && \
-	make ${MAKE_OPTS} install && \
-	rm -rf /tmp/libcimpp
+## Install libcimpp from prebuilt Debian packages
+RUN set -eux; \
+	case "${CIM_VERSION}" in \
+		CGMES_2.4.15_16FEB2016|CGMES_2.4.15_27JAN2020|CGMES_2.4.13_18DEC2013) \
+			libcimpp_pkg="libcimpp_${CIM_VERSION}-${LIBCIMPP_VERSION}-Linux.deb" ;; \
+		*) \
+			echo "Unsupported CIM_VERSION '${CIM_VERSION}' for prebuilt libcimpp package" >&2; \
+			exit 1 ;; \
+	esac; \
+	libcimpp_url="https://github.com/sogno-platform/libcimpp/releases/download/release%2Fv${LIBCIMPP_VERSION}/${libcimpp_pkg}"; \
+	wget -qO /tmp/libcimpp.deb "${libcimpp_url}"; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends /tmp/libcimpp.deb; \
+	rm -f /tmp/libcimpp.deb; \
+	ldconfig; \
+	apt-get clean; \
+	rm -rf /var/lib/apt/lists/*
 
 ## Install VILLASnode from source
 RUN cd /tmp && \
@@ -101,19 +96,28 @@ RUN cd /tmp && \
 	cmake ${CMAKE_OPTS} .. \
 		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib \
 		-DDOWNLOAD_GO=OFF && \
-	make install && \
+	make ${MAKE_OPTS} install && \
 	rm -rf /tmp/villas-node
 
 # Remove this part in the future and use dedicated Jupyter Dockerfile
 # Activate Jupyter extensions
-RUN apt-get -y install \
-	npm
+RUN set -eux; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends npm; \
+	rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install \
+RUN pip3 install --no-cache-dir \
 	jupyter \
 	jupyterlab \
 	jupyter_contrib_nbextensions \
 	nbconvert \
-	nbformat
+	nbformat && \
+	pip3 cache purge
+
+RUN set -eux; \
+	apt-get purge -y npm && \
+	apt-get autoremove -y && \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/*
 
 EXPOSE 8888

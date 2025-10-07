@@ -1,8 +1,9 @@
 FROM fedora:42 AS base
 
 ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
-ARG CIMPP_COMMIT=1b11d5c17bedf0ae042628b42ecb4e49df70b2f6
-ARG VILLAS_VERSION=4df38d26d425117e538ad74bef27e62e353aadc3
+ARG LIBCIMPP_VERSION=2.2.0
+ARG CIMPP_COMMIT=051ee4c311572fe92b30120b897d22deb253e162
+ARG VILLAS_VERSION=5606793aaee2d1eeb663180d3e52718fa8bd5931
 
 ARG CMAKE_OPTS
 ARG MAKE_OPTS=-j4
@@ -13,38 +14,42 @@ LABEL \
 	org.opencontainers.image.url="http://dpsim.fein-aachen.org/" \
 	org.opencontainers.image.source="https://github.com/sogno-platform/dpsim"
 
-RUN dnf -y update
-
-# Toolchain
-RUN dnf -y install \
-	gcc gcc-c++ clang \
-	git \
-	rpmdevtools rpm-build \
-	make cmake pkgconfig \
-	python3-pip \
-	cppcheck \
-	flex bison \
-	protobuf-compiler protobuf-c-compiler \
-	clang-tools-extra
-
-# Tools needed for developement
-RUN dnf -y install \
-	doxygen graphviz \
-	gdb \
-	procps-ng
-
-# Dependencies
-RUN dnf --refresh -y install \
-	python3-devel \
-	eigen3-devel \
-	libxml2-devel \
-	graphviz-devel \
-	spdlog-devel \
-	fmt-devel
-
-# Install some debuginfos
-RUN dnf -y debuginfo-install \
-	python3
+RUN set -eux; \
+	dnf -y update; \
+	dnf -y remove systemd-standalone-tmpfiles || true; \
+	dnf -y --refresh install \
+		gcc gcc-c++ clang \
+		git \
+		rpmdevtools rpm-build \
+		make cmake pkgconfig \
+		python3-pip \
+		curl \
+		cppcheck \
+		flex bison \
+		protobuf-compiler protobuf-c-compiler \
+		clang-tools-extra \
+		doxygen graphviz \
+		gdb \
+		procps-ng \
+		python3-devel \
+		eigen3-devel \
+		libxml2-devel \
+		graphviz-devel \
+		spdlog-devel \
+		fmt-devel \
+		openssl-devel \
+		libuuid-devel \
+		libcurl-devel \
+		jansson-devel \
+		libwebsockets-devel \
+		mosquitto-devel \
+		libconfig-devel \
+		libnl3-devel \
+		protobuf-devel \
+		protobuf-c-devel \
+		libre-devel; \
+	dnf clean all; \
+	rm -rf /var/cache/dnf /var/cache/yum
 
 # Build & Install sundials
 RUN cd /tmp && \
@@ -57,41 +62,28 @@ RUN cd /tmp && \
 # CIMpp and VILLASnode are installed here
 ENV LD_LIBRARY_PATH="/usr/local/lib64:${LD_LIBRARY_PATH}"
 
-# Install minimal VILLASnode dependencies
-RUN dnf -y install \
-	openssl-devel \
-	libuuid-devel \
-	libcurl-devel \
-	jansson-devel \
-	libwebsockets-devel
-
-# Install optional VILLASnode dependencies
-RUN dnf -y remove systemd-standalone-tmpfiles || true && \
-	dnf -y install \
-	mosquitto-devel \
-	libconfig-devel \
-	libnl3-devel \
-	protobuf-devel \
-	protobuf-c-devel \
-	libre-devel
-
 # Python dependencies
 COPY requirements.txt .
-RUN pip3 install --upgrade wheel build setuptools packaging && pip3 install -r requirements.txt
+RUN pip3 install --no-cache-dir --upgrade wheel build setuptools packaging && \
+	pip3 install --no-cache-dir -r requirements.txt && \
+	pip3 cache purge
 
-# Install CIMpp from source
-RUN cd /tmp && \
-	git clone https://github.com/sogno-platform/libcimpp.git && \
-	mkdir -p libcimpp/build && cd libcimpp/build && \
-	git checkout ${CIMPP_COMMIT} && \
-	git submodule update --init && \
-	cmake ${CMAKE_OPTS} ..\
-		-DBUILD_SHARED_LIBS=ON \
-		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
-		-DUSE_CIM_VERSION=${CIM_VERSION} \
-		-DBUILD_ARABICA_EXAMPLES=OFF && \
-	make ${MAKE_OPTS} install && \
-	rm -rf /tmp/libcimpp
+# Install libcimpp from prebuilt RPMs
+RUN set -eux; \
+	case "${CIM_VERSION}" in \
+		CGMES_2.4.15_16FEB2016|CGMES_2.4.15_27JAN2020|CGMES_2.4.13_18DEC2013) \
+			libcimpp_pkg="libcimpp_${CIM_VERSION}-${LIBCIMPP_VERSION}-Linux.rpm" ;; \
+		*) \
+			echo "Unsupported CIM_VERSION '${CIM_VERSION}' for prebuilt libcimpp package" >&2; \
+			exit 1 ;; \
+	esac; \
+	libcimpp_url="https://github.com/sogno-platform/libcimpp/releases/download/release%2Fv${LIBCIMPP_VERSION}/${libcimpp_pkg}"; \
+	curl -sSL "${libcimpp_url}" -o /tmp/libcimpp.rpm; \
+	dnf -y install /tmp/libcimpp.rpm; \
+	rm -f /tmp/libcimpp.rpm; \
+	ldconfig; \
+	dnf clean all; \
+	rm -rf /var/cache/dnf /var/cache/yum
 
 # Install VILLASnode from source (with fpga support)
 RUN cd /tmp && \
@@ -104,17 +96,18 @@ RUN cd /tmp && \
 	make ${MAKE_OPTS} install && \
 	rm -rf /tmp/villas-node
 
-# Remove this part in the future and use dedicated Jupyter Dockerfile
-# Activate Jupyter extensions
-RUN dnf -y --refresh install \
-	npm
-
-RUN pip3 install \
-	jupyter \
-	jupyterlab \
-	jupyter_contrib_nbextensions \
-	nbconvert \
-	nbformat
+RUN set -eux; \
+	dnf -y --refresh install npm; \
+	pip3 install --no-cache-dir \
+		jupyter \
+		jupyterlab \
+		jupyter_contrib_nbextensions \
+		nbconvert \
+		nbformat; \
+	pip3 cache purge; \
+	dnf -y remove npm; \
+	dnf clean all; \
+	rm -rf /var/cache/dnf /var/cache/yum
 
 EXPOSE 8888
 

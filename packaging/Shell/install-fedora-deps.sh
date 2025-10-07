@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CIM_VERSION=${CIM_VERSION:-CGMES_2.4.15_16FEB2016}
-VILLAS_VERSION=${VILLAS_VERSION:-66569cf9c43d2d7a4626b9a84321c4e340d3fe18}
+VILLAS_VERSION=${VILLAS_VERSION:-5606793aaee2d1eeb663180d3e52718fa8bd5931}
 
 MAKE_PROCS=${MAKE_PROCS:-$(nproc)}
 MAKE_OPTS+="-j${MAKE_PROCS}"
@@ -72,6 +72,6 @@ cd /tmp && \
 	mkdir -p villas-node/build && cd villas-node/build && \
     git checkout ${VILLAS_VERSION} && \
 	cmake ${CMAKE_OPTS} .. \
-        -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 && \
+		-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 && \
     make ${MAKE_OPTS} install && \
 	rm -rf /tmp/villas-node
