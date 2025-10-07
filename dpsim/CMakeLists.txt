@@ -11,7 +11,7 @@ set(DPSIM_INCLUDE_DIRS
 add_subdirectory(src)
 
 if(WITH_PYBIND)
-	set(DPSIMPY_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim/pybind)
+	set(DPSIMPY_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include/dpsim/pybind)
 	add_subdirectory(src/pybind)
 endif()
 

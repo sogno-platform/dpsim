@@ -114,13 +114,15 @@ include(CheckSymbolExists)
 check_symbol_exists(timerfd_create sys/timerfd.h HAVE_TIMERFD)
 check_symbol_exists(getopt_long getopt.h HAVE_GETOPT)
 if(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
-	add_compile_options(-Ofast)
+	if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+		# Clang 18+ deprecates -Ofast; use the equivalent O3 fast-math combo instead.
+		add_compile_options(-O3 -ffast-math)
+	else()
+		add_compile_options(-Ofast)
+	endif()
 
-	# On Clang -Ofast enables -ffast-math which in turn enables -ffinite-math-only.
-	# This option causes all calls to functions checking for infinity or NaN to raise
-	# a warning (e.g. std::isnan).
-	# As we also set -Werror, these warnings are causing the build to fail.
-	# With this compiler option, we explicitly silence this warning.
+	# On Clang -ffast-math enables -ffinite-math-only which triggers warnings for
+	# infinity/NaN checks. Silence those when supported so -Werror stays usable.
 	check_cxx_compiler_flag("-Wno-nan-infinity-disabled" CXX_SUPPORTS_WNAN_INFINITY_DISABLED)
 	if(CXX_SUPPORTS_WNAN_INFINITY_DISABLED)
 		add_compile_options(-Wno-nan-infinity-disabled)
@@ -297,7 +299,7 @@ endif()
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	include(FeatureSummary)
-	add_feature_info(CIM             WITH_CIM             "Loading Common Information Model (CIM) files")
+	add_feature_info(CIM             WITH_CIM             "Loading Common Information Model (CIM) library")
 	add_feature_info(CUDA            WITH_CUDA            "CUDA-based parallelization")
 	add_feature_info(Graphviz        WITH_GRAPHVIZ        "Graphviz graphs")
 	add_feature_info(GSL             WITH_GSL             "GNU Scientific library")

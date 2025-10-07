@@ -165,7 +165,7 @@ if(WITH_RT)
 endif()
 
 if(WITH_CIM)
-	list(APPEND LIBRARIES libcimpp)
+	list(APPEND LIBRARIES CIMPP::cimpp)
 
 	set(CIM_SOURCES
 		CIM/WSCC-9bus_CIM.cpp
