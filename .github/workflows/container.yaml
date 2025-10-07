@@ -105,6 +105,7 @@ jobs:
          tags: sogno/dpsim:manylinux
 
   create-docker-binder:
+    needs: create-docker-fedora-dev
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
