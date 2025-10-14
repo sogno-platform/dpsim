@@ -96,6 +96,7 @@ RUN cd /tmp && \
 	make ${MAKE_OPTS} install && \
 	rm -rf /tmp/villas-node
 
+# Remove this part in the future and use dedicated Jupyter Dockerfile
 RUN set -eux; \
 	dnf -y --refresh install npm; \
 	pip3 install --no-cache-dir \
