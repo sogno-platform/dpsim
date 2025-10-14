@@ -145,6 +145,7 @@ RUN cd /tmp && \
 		git clone --recurse-submodules https://github.com/VILLASframework/node.git villas-node && \
 		cd villas-node && \
 		git checkout ${VILLAS_VERSION} && \
+		# libxil is currently not working in the VILLASnode installer script, skip and use submodule for FPGA support
 		env MAKE_OPTS="" DEPS_NONINTERACTIVE=1 DEPS_SKIP=libxil bash packaging/deps.sh && \
 		mkdir -p build && cd build && \
 		cmake ${CMAKE_OPTS} .. \

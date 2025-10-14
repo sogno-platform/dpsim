@@ -115,17 +115,10 @@ check_symbol_exists(timerfd_create sys/timerfd.h HAVE_TIMERFD)
 check_symbol_exists(getopt_long getopt.h HAVE_GETOPT)
 if(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
 	if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-		# Clang 18+ deprecates -Ofast; use the equivalent O3 fast-math combo instead.
-		add_compile_options(-O3 -ffast-math)
+		# Clang 18+ deprecates -Ofast; use the equivalent O3 instead.
+		add_compile_options(-O3)
 	else()
 		add_compile_options(-Ofast)
-	endif()
-
-	# On Clang -ffast-math enables -ffinite-math-only which triggers warnings for
-	# infinity/NaN checks. Silence those when supported so -Werror stays usable.
-	check_cxx_compiler_flag("-Wno-nan-infinity-disabled" CXX_SUPPORTS_WNAN_INFINITY_DISABLED)
-	if(CXX_SUPPORTS_WNAN_INFINITY_DISABLED)
-		add_compile_options(-Wno-nan-infinity-disabled)
 	endif()
 
 	if(WITH_MARCH_NATIVE)
@@ -299,7 +292,7 @@ endif()
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	include(FeatureSummary)
-	add_feature_info(CIM             WITH_CIM             "Loading Common Information Model (CIM) library")
+	add_feature_info(CIM             WITH_CIM             "Common Information Model (CIM) support")
 	add_feature_info(CUDA            WITH_CUDA            "CUDA-based parallelization")
 	add_feature_info(Graphviz        WITH_GRAPHVIZ        "Graphviz graphs")
 	add_feature_info(GSL             WITH_GSL             "GNU Scientific library")
