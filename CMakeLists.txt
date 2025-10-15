@@ -61,6 +61,11 @@ if(WIN32)
 	cmake_policy(SET CMP0074 NEW)
 endif()
 
+# Define NOMINMAX to prevent Windows macros from breaking std::max
+if(WIN32)
+  add_compile_definitions(NOMINMAX)
+endif()
+
 # Allow shadowing of CMake targets
 # As we include dependencies via add_subdirectory()
 # we import their targets into the DPsim CMake tree
