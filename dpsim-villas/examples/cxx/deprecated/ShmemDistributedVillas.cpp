@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
 
     // Parameters
     evs->setParameters(Complex(0, 0));
-    vs->setParameters(Complex(10000, 0), 1);
+    vs->setParameters(Complex(10000, 0), -1, 1e9);
     l1->setParameters(0.1);
     r1->setParameters(1);
 
