@@ -4,6 +4,7 @@
 #include <dpsim-villas/Interfaces.h>
 #include <fstream>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 using namespace DPsim;
@@ -84,8 +85,8 @@ int main(int argc, char **argv) {
   villas_conf.open("villas_sent_data.conf");
 
   // Register exportable node voltages
-  string list_varnames[sys.mNodes.size() * 2];
-  UInt o = 0;
+  std::vector<std::string> list_varnames(sys.mNodes.size() * 2);
+  [[maybe_unused]] UInt o = 0;
   for (auto n : sys.mNodes) {
     UInt i;
     if (sscanf(n->name().c_str(), "N%u", &i) != 1) {

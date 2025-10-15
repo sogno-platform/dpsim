@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
   auto intf = std::make_shared<InterfaceVillas>(shmemConfig);
 
   // Register exportable node voltages
-  UInt o = 0;
+  [[maybe_unused]] UInt o = 0;
   for (auto n : sys.mNodes) {
     UInt i;
     if (sscanf(n->name().c_str(), "N%u", &i) != 1) {
