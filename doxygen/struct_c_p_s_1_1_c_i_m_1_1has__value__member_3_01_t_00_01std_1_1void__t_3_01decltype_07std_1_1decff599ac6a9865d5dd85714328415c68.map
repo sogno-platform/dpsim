@@ -1,0 +1,10 @@
+<map id="CPS::CIM::has_value_member&lt; T, std::void_t&lt; decltype(std::declval&lt; const T &amp; &gt;().value)&gt; &gt;" name="CPS::CIM::has_value_member&lt; T, std::void_t&lt; decltype(std::declval&lt; const T &amp; &gt;().value)&gt; &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="84,238,254,325"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,117,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="62,50,64,90,73,132,100,188,134,236,130,239,96,191,68,134,59,91,57,51"/>
+<area shape="rect" id="Node000004" href="$struct_c_p_s_1_1_c_i_m_1_1has__value__member.html" title=" " alt="" coords="83,84,263,133"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="92,42,144,82,141,86,89,46"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="290,94,400,124"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="350,139,346,178,339,198,328,216,295,245,255,264,253,259,292,240,324,212,334,195,340,177,344,139"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="173,149,173,157,172,238,166,238,168,157,168,148"/>
+</map>
