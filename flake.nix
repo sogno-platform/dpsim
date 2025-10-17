@@ -6,7 +6,6 @@
     flake-utils.url = "github:numtide/flake-utils";
     villas-node = {
       url = "github:VILLASframework/node";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -25,22 +24,20 @@
 
           # Required for old sundials version
           config.permittedInsecurePackages = [ "python-2.7.18.8" ];
-
           overlays = [
-            villas-node.overlays.default
-
-            (final: prev: {
+            (final: prev: let
+            villasPkg = villas-node.packages.${system}.villas-node;
+            in {
               readerwriterqueue = final.callPackage ./packaging/Nix/readerwriterqueue.nix { };
-              cimpp = final.callPackage ./packaging/Nix/cimpp.nix { };
-              suitesparse-dpsim = prev.callPackage ./packaging/Nix/suitesparse.nix { };
-              sundials321 = prev.callPackage ./packaging/Nix/sundials.nix { };
-              dpsim = pkgs.callPackage ./packaging/Nix/dpsim.nix { };
-              dpsimpy = pkgs.callPackage ./packaging/Nix/dpsimpy.nix { };
+              cimpp             = final.callPackage ./packaging/Nix/cimpp.nix { };
+              suitesparse-dpsim = prev.callPackage  ./packaging/Nix/suitesparse.nix { };
+              sundials321       = prev.callPackage  ./packaging/Nix/sundials.nix { };
+              dpsim             = final.callPackage ./packaging/Nix/dpsim.nix { villas-node=villasPkg; };
+              dpsimpy           = final.callPackage ./packaging/Nix/dpsimpy.nix { };
             })
           ];
         };
-      in
-      {
+      in {
         packages = {
           default = pkgs.dpsim;
 

@@ -10,6 +10,8 @@
 
 #include <list>
 #include <map>
+#include <type_traits>
+#include <utility>
 
 #include <dpsim-models/Components.h>
 #include <dpsim-models/Definitions.h>
@@ -54,6 +56,22 @@ class ConductingEquipment;
 
 namespace CPS {
 namespace CIM {
+template <typename T, typename = void>
+struct has_value_member : std::false_type {};
+
+template <typename T>
+struct has_value_member<T,
+                        std::void_t<decltype(std::declval<const T &>().value)>>
+    : std::true_type {};
+
+template <typename T> const auto &cimString(const T &field) {
+  if constexpr (has_value_member<T>::value) {
+    return field.value;
+  } else {
+    return field;
+  }
+}
+
 class InvalidTopology {};
 
 class Reader {

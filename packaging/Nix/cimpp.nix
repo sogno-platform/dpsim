@@ -29,8 +29,8 @@ stdenv.mkDerivation {
     owner = "sogno-platform";
     repo = "libcimpp";
     # rev = "release/v2.2.0";
-    rev = "1b11d5c17bedf0ae042628b42ecb4e49df70b2f6";
-    hash = "sha256-RBcV7HlgrKML03E/J9IGIkbKAK23KAXuFJOSXTFZ/i4=";
+    rev = "051ee4c311572fe92b30120b897d22deb253e162";
+    hash = "sha256-jyeiySIOPceH1/ZHRYsp1LczTlXuIapkMtCqlq2lZM0=";
     fetchSubmodules = true;
   };
 

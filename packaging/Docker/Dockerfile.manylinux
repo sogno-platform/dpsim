@@ -6,8 +6,8 @@
 FROM quay.io/pypa/manylinux_2_28_x86_64
 
 ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
-ARG CIMPP_COMMIT=1b11d5c17bedf0ae042628b42ecb4e49df70b2f6
-ARG VILLAS_VERSION=84df28645077e05e5115f92ef328d688400b35b9
+ARG CIMPP_COMMIT=051ee4c311572fe92b30120b897d22deb253e162
+ARG VILLAS_VERSION=5606793aaee2d1eeb663180d3e52718fa8bd5931
 
 ARG CMAKE_OPTS
 ARG MAKE_OPTS=-j4
@@ -31,7 +31,9 @@ RUN dnf install -y \
 	make cmake pkgconfig libtool \
 	autoconf automake autogen libtool flex bison \
 	python3-pip \
-	cppcheck
+	cppcheck \
+	ninja-build \
+	meson
 
 # Tools needed for development
 RUN dnf -y install \
@@ -98,7 +100,11 @@ RUN dnf install -y \
 	protobuf-devel \
 	nanomsg-devel \
 	zeromq-devel \
-	graphviz-devel
+	graphviz-devel \
+	git-svn \
+	subversion \
+	subversion-perl \
+	perl-Memoize
 
 # Install VILLASnode from source
 RUN cd /tmp && \
@@ -108,6 +114,7 @@ RUN cd /tmp && \
 	DEPS_SKIP=criterion,ethercat \
 	MAKE_OPTS="" \
 	CMAKE_OPTS=-DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+	NINJA=/usr/bin/ninja-build \
 	bash packaging/deps.sh && \
 	mkdir -p build && cd build && \
 	cmake ${CMAKE_OPTS} .. \
