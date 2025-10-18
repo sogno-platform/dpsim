@@ -35,7 +35,7 @@ template <typename VarType> MnaSolverPlugin<VarType>::~MnaSolverPlugin() {
 extern "C" void pluginLogger(const char *str) {
   CPS::Logger::Log log = CPS::Logger::get("Plugin", CPS::Logger::Level::debug,
                                           CPS::Logger::Level::debug);
-  log->info(str);
+  SPDLOG_LOGGER_INFO(log, str);
 }
 
 template <typename VarType>

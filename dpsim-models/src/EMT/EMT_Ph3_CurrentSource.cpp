@@ -39,10 +39,12 @@ void EMT::Ph3::CurrentSource::setParameters(MatrixComp currentRef,
   **mCurrentRef = currentRef;
   mSrcFreq->setReference(mSrcSig->mFreq);
 
-  mSLog->info("\nCurrent reference phasor [I]: {:s}"
+  SPDLOG_LOGGER_INFO(
+      mSLog, "\nCurrent reference phasor [I]: {:s}"
               "\nFrequency [Hz]: {:s}",
               Logger::matrixCompToString(currentRef),
-              Logger::realToString(srcFreq));
+              Logger::realToString(srcFreq)
+  );
 
   mParametersSet = true;
 }

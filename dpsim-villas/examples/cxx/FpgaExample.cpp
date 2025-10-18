@@ -92,7 +92,10 @@ const std::string buildFpgaConfig(CommandLineArgs &args) {
     {}
   }})STRING",
       cardConfig, signalOutConfig, signalInConfig);
-  DPsim::Logger::get("FpgaExample")->debug("Config for Node:\n{}", config);
+  SPDLOG_LOGGER_DEBUG(
+      DPsim::Logger::get("FpgaExample"),
+      "Config for Node:\n{}",
+      config);
   return config;
 }
 
@@ -278,7 +281,7 @@ int main(int argc, char *argv[]) {
   }
   sim.run();
 
-  CPS::Logger::get("FpgaExample")->info("Simulation finished.");
+  SPDLOG_LOGGER_INFO(CPS::Logger::get("FpgaExample"), "Simulation finished.");
   sim.logStepTimes("FpgaExample");
 
   //std::ofstream of("task_dependencies.svg");

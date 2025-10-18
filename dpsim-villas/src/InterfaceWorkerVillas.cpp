@@ -520,7 +520,7 @@ void InterfaceWorkerVillas::configureImport(UInt attributeId,
     mImports.emplace_back(
         [idx, log](Sample *smp) -> AttributeBase::Ptr {
           if (idx >= smp->length) {
-            log->error("incomplete data received from InterfaceVillas");
+            SPDLOG_LOGGER_ERROR(log, "incomplete data received from InterfaceVillas");
             return nullptr;
           }
           return AttributePointer<AttributeBase>(
@@ -533,7 +533,7 @@ void InterfaceWorkerVillas::configureImport(UInt attributeId,
     mImports.emplace_back(
         [idx, log](Sample *smp) -> AttributeBase::Ptr {
           if (idx >= smp->length) {
-            log->error("incomplete data received from InterfaceVillas");
+            SPDLOG_LOGGER_ERROR(log, "incomplete data received from InterfaceVillas");
             return nullptr;
           }
           return AttributePointer<AttributeBase>(
@@ -546,7 +546,7 @@ void InterfaceWorkerVillas::configureImport(UInt attributeId,
     mImports.emplace_back(
         [idx, log](Sample *smp) -> AttributeBase::Ptr {
           if (idx >= smp->length) {
-            log->error("incomplete data received from InterfaceVillas");
+            SPDLOG_LOGGER_ERROR(log, "incomplete data received from InterfaceVillas");
             return nullptr;
           }
           return AttributePointer<AttributeBase>(
@@ -559,7 +559,7 @@ void InterfaceWorkerVillas::configureImport(UInt attributeId,
     mImports.emplace_back(
         [idx, log](Sample *smp) -> AttributeBase::Ptr {
           if (idx >= smp->length) {
-            log->error("incomplete data received from InterfaceVillas");
+            SPDLOG_LOGGER_ERROR(log, "incomplete data received from InterfaceVillas");
             return nullptr;
           }
           return AttributePointer<AttributeBase>(

@@ -28,10 +28,10 @@ SimPowerComp<Real>::Ptr EMT::Ph3::ControlledCurrentSource::clone(String name) {
 
 void EMT::Ph3::ControlledCurrentSource::setParameters(Matrix currentRef) {
   **mCurrentRef = currentRef;
-
-  mSLog->info("\nCurrent reference phasor [I]: {:s}",
-              Logger::matrixCompToString(currentRef));
-
+  SPDLOG_LOGGER_INFO(
+      mSLog, "\nCurrent reference phasor [I]: {:s}",
+              Logger::matrixCompToString(currentRef)
+  );
   mParametersSet = true;
 }
 
