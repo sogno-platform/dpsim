@@ -1,4 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
+#ifdef _WIN32
+#define NOMINMAX
+#endif
 
 #include <algorithm>
 #include <chrono>
