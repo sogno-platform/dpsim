@@ -117,7 +117,8 @@ public:
     }
 #ifdef WITH_CUDA_SPARSE
     case DirectLinearSolverImpl::CUDASparse: {
-      SPDLOG_LOGGER_INFO(log, "creating GpuSparseAdapter solver implementation");
+      SPDLOG_LOGGER_INFO(log,
+                         "creating GpuSparseAdapter solver implementation");
       std::shared_ptr<MnaSolverDirect<VarType>> gpuSparseSolver =
           std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
       gpuSparseSolver->setDirectLinearSolverImplementation(

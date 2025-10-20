@@ -32,7 +32,8 @@ void RealTimeDataLogger::start() {
   auto log = CPS::Logger::get("RealTimeDataLogger", CPS::Logger::Level::off,
                               CPS::Logger::Level::info);
   SPDLOG_LOGGER_INFO(
-      log, "Preallocating memory for real-time data logger: {} rows for {} "
+      log,
+      "Preallocating memory for real-time data logger: {} rows for {} "
       "attributes ({} MB)",
       mRowNumber, mAttributes.size(), mb_size / (1024 * 1024));
   // We are doing real time so preallocate everything

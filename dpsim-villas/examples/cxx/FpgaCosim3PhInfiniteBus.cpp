@@ -133,10 +133,8 @@ const std::string buildFpgaConfig(CommandLineArgs &args) {
     {}
   }})STRING",
       cardConfig, signalOutConfig, signalInConfig);
-  SPDLOG_LOGGER_DEBUG(
-      DPsim::Logger::get("FpgaCosim3PhInfiniteBus"),
-      "Config for Node:\n{}",
-      config);
+  SPDLOG_LOGGER_DEBUG(DPsim::Logger::get("FpgaCosim3PhInfiniteBus"),
+                      "Config for Node:\n{}", config);
   return config;
 }
 
@@ -252,7 +250,8 @@ int main(int argc, char *argv[]) {
   }
   sim.run();
 
-  SPDLOG_LOGGER_INFO(CPS::Logger::get("FpgaCosim3PhInfiniteBus"), "Simulation finished.");
+  SPDLOG_LOGGER_INFO(CPS::Logger::get("FpgaCosim3PhInfiniteBus"),
+                     "Simulation finished.");
   sim.logStepTimes("FpgaCosim3PhInfiniteBus");
 
   // std::ofstream of("task_dependencies.svg");
