@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include <DPsim.h>
-#include <dpsim-villas/InterfaceShmem.h>
+#include <dpsim-villas/Interfaces.h>
 
 using namespace DPsim;
 using namespace CPS::DP;
@@ -27,7 +27,21 @@ int main(int argc, char *argv[]) {
     out = "/villas1-out";
   }
 
-  InterfaceShmem intf(in, out, nullptr);
+  const auto shmemConfig = fmt::format(
+      R"STRING(
+    {{
+      "type": "shmem",
+      "in": {{
+        "name": "{}"
+      }},
+      "out": {{
+        "name": "{}"
+      }},
+      "queuelen": 1024
+    }})STRING",
+      in, out);
+
+  auto intf = std::make_shared<InterfaceVillas>(shmemConfig);
 
   if (String(argv[1]) == "0") {
     // Nodes
@@ -49,15 +63,16 @@ int main(int argc, char *argv[]) {
 
     // Parameters
     evs->setParameters(Complex(0, 0));
-    vs->setParameters(Complex(10000, 0), 1);
+    vs->setParameters(Complex(10000, 0), -1, 1e9);
     l1->setParameters(0.1);
     r1->setParameters(1);
 
     comps = SystemComponentList{evs, vs, l1, r1};
     nodes = SystemNodeList{SimNode::GND, n1, n2, n3};
 
-    intf.importAttribute(evs->mVoltageRef, 0);
-    intf.exportAttribute(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0);
+    intf->importAttribute(evs->mVoltageRef, 0, true);
+    intf->exportAttribute(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0,
+                          true);
 
   } else if (String(argv[1]) == "1") {
     // Nodes
@@ -85,8 +100,9 @@ int main(int argc, char *argv[]) {
     comps = SystemComponentList{ecs, sw, r2A, r2B};
     nodes = SystemNodeList{SimNode::GND, n4, n5};
 
-    intf.importAttribute(ecs->mCurrentRef, 0);
-    intf.exportAttribute(ecs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0);
+    intf->importAttribute(ecs->mCurrentRef, 0, true);
+    intf->exportAttribute(ecs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0,
+                          true);
   } else {
     std::cerr << "invalid test number" << std::endl;
     std::exit(1);
@@ -97,11 +113,15 @@ int main(int argc, char *argv[]) {
 
   auto sys = SystemTopology(50, nodes, comps);
 
+#ifdef WITH_RT
   RealTimeSimulation sim(simName + argv[1]);
+#else
+  Simulation sim(simName + argv[1]);
+#endif
   sim.setSystem(sys);
   sim.setTimeStep(timeStep);
   sim.setFinalTime(20);
-  sim.addInterface(std::shared_ptr<Interface>(&intf));
+  sim.addInterface(intf);
 
   if (String(argv[1]) == "1") {
     auto evt = SwitchEvent::make(
@@ -110,7 +130,11 @@ int main(int argc, char *argv[]) {
     sim.addEvent(evt);
   }
 
+#ifdef WITH_RT
+  sim.run(10);
+#else
   sim.run();
+#endif
 
   return 0;
 }

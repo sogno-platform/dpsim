@@ -22,6 +22,8 @@
 #include <dpsim-models/CIM/Reader.h>
 #endif
 
+#include <dpsim-models/CSVReader.h>
+
 #ifdef WITH_OPENMP
 #include <dpsim/OpenMPLevelScheduler.h>
 #endif
@@ -37,4 +39,5 @@ using PhaseType = CPS::PhaseType;
 #ifdef WITH_CIM
 using CIMReader = CPS::CIM::Reader;
 #endif
+using CSVReader = CPS::CSVReader;
 } // namespace DPsim

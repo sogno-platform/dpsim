@@ -3,7 +3,7 @@
 #include <fstream>
 
 #include <DPsim.h>
-#include <dpsim-villas/InterfaceShmem.h>
+#include <dpsim-villas/Interfaces.h>
 
 using namespace DPsim;
 using namespace CPS::DP;
@@ -44,24 +44,32 @@ int main(int argc, char *argv[]) {
   auto sys = SystemTopology(50, SystemNodeList{SimNode::GND, n1, n2, n3, n4},
                             SystemComponentList{evs, rs, rl, ll, rL});
 
-#ifdef REALTIME
+#ifdef WITH_RT
   RealTimeSimulation sim(simName);
-  sim.setSystem(sys);
-  sim.setTimeStep(timeStep);
-  sim.setFinalTime(1.0);
-  InterfaceShmem intf("/villas1-in", "/villas1-out", nullptr, false);
 #else
   Simulation sim(simName);
+#endif
   sim.setSystem(sys);
   sim.setTimeStep(timeStep);
   sim.setFinalTime(1.0);
-  InterfaceShmem intf("/villas1-in", "/villas1-out");
-#endif
+
+  std::string shmemConfig = R"STRING(
+    {
+      "type": "shmem",
+      "in": {
+          "name": "villas1-in"
+      },
+      "out": {
+          "name": "villas1-out"
+      }
+    })STRING";
+
+  auto intf = std::make_shared<InterfaceVillas>(shmemConfig);
 
   // Interface
-  intf.importAttribute(evs->mVoltageRef, 0);
-  intf.exportAttribute(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0);
-  sim.addInterface(std::shared_ptr<Interface>(&intf));
+  intf->importAttribute(evs->mVoltageRef, 0, true);
+  intf->exportAttribute(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0, true);
+  sim.addInterface(intf);
 
   // Logger
   auto logger = DataLogger::make(simName);
@@ -73,7 +81,11 @@ int main(int argc, char *argv[]) {
   logger->logAttribute("i_evs", evs->mIntfCurrent, 1, 1);
   sim.addLogger(logger);
 
+#ifdef WITH_RT
+  sim.run(10);
+#else
   sim.run();
+#endif
 
   //std::ofstream of("task_dependencies.svg");
   //sim.dependencyGraph().render(of);

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include <DPsim.h>
-#include <dpsim-villas/InterfaceShmem.h>
+#include <dpsim-villas/Interfaces.h>
 
 using namespace DPsim;
 using namespace CPS::DP;
@@ -77,11 +77,25 @@ int main(int argc, char *argv[]) {
     sim.addLogger(logger);
 
     // Map attributes to interface entries
-    InterfaceShmem intf(in, out);
-    intf.importAttribute(evs->mVoltageRef, 0);
+    const auto shmemConfig = fmt::format(
+        R"STRING(
+    {{
+      "type": "shmem",
+      "in": {{
+        "name": "{}"
+      }},
+      "out": {{
+        "name": "{}"
+      }},
+      "queuelen": 1024
+    }})STRING",
+        in, out);
+
+    auto intf = std::make_shared<InterfaceVillas>(shmemConfig);
+    intf->importAttribute(evs->mVoltageRef, 0, true);
     auto evsAttrMinus = evs->mIntfCurrent->deriveCoeff<Complex>(0, 0);
-    intf.exportAttribute(evsAttrMinus, 0);
-    sim.addInterface(std::shared_ptr<Interface>(&intf));
+    intf->exportAttribute(evsAttrMinus, 0, true);
+    sim.addInterface(intf);
 
     MatrixComp initialEvsCurrent = MatrixComp::Zero(1, 1);
     initialEvsCurrent(0, 0) = Complex(5, 0);
@@ -122,14 +136,28 @@ int main(int argc, char *argv[]) {
     sim.addLogger(logger);
 
     // Map attributes to interface entries
-    InterfaceShmem intf(in, out);
-    intf.importAttribute(ecs->mCurrentRef, 0);
+    const auto shmemConfig = fmt::format(
+        R"STRING(
+    {{
+      "type": "shmem",
+      "in": {{
+        "name": "{}"
+      }},
+      "out": {{
+        "name": "{}"
+      }},
+      "queuelen": 1024
+    }})STRING",
+        in, out);
+
+    auto intf = std::make_shared<InterfaceVillas>(shmemConfig);
+    intf->importAttribute(ecs->mCurrentRef, 0, true);
     //intf.exportComplex(ecs->mIntfVoltage->coeff(0, 0), 0);
-    intf.exportAttribute(
+    intf->exportAttribute(
         ecs->mIntfVoltage->deriveCoeff<Complex>(0, 0)->deriveScaled(
             Complex(-1., 0)),
-        0);
-    sim.addInterface(std::shared_ptr<Interface>(&intf));
+        0, true);
+    sim.addInterface(intf);
 
     sim.run();
   }
