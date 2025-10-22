@@ -16,12 +16,6 @@ set(PROJECT_VCS_URL "https://github.com/sogno-platform/dpsim")
 
 option(COVERAGE "Enable code coverage reporting" OFF)
 
-if(COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-	message(STATUS "Enabling code coverage")
-	add_compile_options(--coverage -O0 -g)
-	add_link_options(--coverage)
-endif()
-
 option(FETCH_EIGEN             "Fetch Eigen3 as module" OFF)
 option(FETCH_SUITESPARSE       "Fetch SuiteSparse as module" ON)
 option(FETCH_SPDLOG            "Fetch spdlog as module" OFF)
@@ -272,6 +266,19 @@ endif()
 
 if(WITH_PYBIND)
 	set(CMAKE_INSTALL_PYTHON_SITEPACKAGESDIR "${CMAKE_INSTALL_LIBDIR}/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/site-packages")
+endif()
+
+if(COVERAGE)
+	message(STATUS "Enabling code coverage")
+	include(CTest)
+	enable_testing()
+	if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+		add_compile_options(-O0 -g --coverage)
+		add_link_options(--coverage)
+	elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+		add_compile_options(-O0 -g -fprofile-arcs -ftest-coverage)
+		add_link_options(-fprofile-arcs -ftest-coverage)
+	endif()
 endif()
 
 add_subdirectory(dpsim-models)
