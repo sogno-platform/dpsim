@@ -397,12 +397,12 @@ void Simulation::logStepTimes(String logName) {
     return;
   }
   Logger::setLogPattern(stepTimeLog, "%v");
-  stepTimeLog->info("step_time");
+  SPDLOG_LOGGER_INFO(stepTimeLog, "step_time");
 
   Real stepTimeSum = 0;
   for (auto meas : mStepTimes) {
     stepTimeSum += meas;
-    stepTimeLog->info("{:.9f}", meas);
+    SPDLOG_LOGGER_INFO(stepTimeLog, "{:.9f}", meas);
   }
   SPDLOG_LOGGER_INFO(mLog, "Average step time: {:.9f}",
                      stepTimeSum / mStepTimes.size());
@@ -411,7 +411,7 @@ void Simulation::logStepTimes(String logName) {
 void Simulation::checkForOverruns(String logName) {
   auto stepTimeLog = Logger::get(logName, Logger::Level::info);
   Logger::setLogPattern(stepTimeLog, "%v");
-  stepTimeLog->info("overruns");
+  SPDLOG_LOGGER_INFO(stepTimeLog, "overruns");
 
   int overruns = 0;
   for (auto meas : mStepTimes) {

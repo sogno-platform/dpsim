@@ -31,9 +31,11 @@ void RealTimeDataLogger::start() {
       static_cast<double>(mRowNumber) * (mAttributes.size() + 1) * sizeof(Real);
   auto log = CPS::Logger::get("RealTimeDataLogger", CPS::Logger::Level::off,
                               CPS::Logger::Level::info);
-  log->info("Preallocating memory for real-time data logger: {} rows for {} "
-            "attributes ({} MB)",
-            mRowNumber, mAttributes.size(), mb_size / (1024 * 1024));
+  SPDLOG_LOGGER_INFO(
+      log,
+      "Preallocating memory for real-time data logger: {} rows for {} "
+      "attributes ({} MB)",
+      mRowNumber, mAttributes.size(), mb_size / (1024 * 1024));
   // We are doing real time so preallocate everything
   mAttributeData.resize(mRowNumber);
   for (auto &it : mAttributeData) {
@@ -45,8 +47,9 @@ void RealTimeDataLogger::start() {
 void RealTimeDataLogger::stop() {
   auto log = CPS::Logger::get("RealTimeDataLogger", CPS::Logger::Level::off,
                               CPS::Logger::Level::info);
-  log->info("Stopping real-time data logger. Writing memory to file {}",
-            mFilename.string());
+  SPDLOG_LOGGER_INFO(
+      log, "Stopping real-time data logger. Writing memory to file {}",
+      mFilename.string());
 
   const auto parent = mFilename.parent_path();
   if (!parent.empty()) {
@@ -76,8 +79,8 @@ void RealTimeDataLogger::stop() {
     mLogFile << '\n';
   }
   mLogFile.close();
-  log->info("Finished writing real-time data log to file {}",
-            mFilename.string());
+  SPDLOG_LOGGER_INFO(log, "Finished writing real-time data log to file {}",
+                     mFilename.string());
 }
 
 void RealTimeDataLogger::log(Real time, Int timeStepCount) {
