@@ -89,14 +89,26 @@ int main(int argc, char *argv[]) {
               GridParams.VnomMV * sin(GridParams.initVoltAngle)));
   genDP->setModelAsNortonSource(true);
 
-  // Exciter
-  std::shared_ptr<Signal::Exciter> exciterDP = nullptr;
+  std::shared_ptr<CPS::Signal::ExciterDC1Simp> exciterDP = nullptr;
   if (withExciter) {
-    exciterDP = Signal::Exciter::make("SynGen_Exciter", logLevel);
-    exciterDP->setParameters(excitationEremia.Ta, excitationEremia.Ka,
-                             excitationEremia.Te, excitationEremia.Ke,
-                             excitationEremia.Tf, excitationEremia.Kf,
-                             excitationEremia.Tr);
+    auto p = std::make_shared<CPS::Signal::ExciterDC1SimpParameters>();
+    p->Ta = excitationEremia.Ta;
+    p->Ka = excitationEremia.Ka;
+    p->Tef = excitationEremia.Te; // Te → Tef
+    p->Kef = excitationEremia.Ke; // Ke → Kef
+    p->Tf = excitationEremia.Tf;
+    p->Kf = excitationEremia.Kf;
+    p->Tr = excitationEremia.Tr;
+
+    p->Aef = 0.0;
+    p->Bef = 0.0;
+    p->MaxVa = 1.0; // old limits were +1.0 / -0.9
+    p->MinVa = -0.9;
+
+    exciterDP = std::make_shared<CPS::Signal::ExciterDC1Simp>("SynGen_Exciter",
+                                                              logLevel);
+    exciterDP->setParameters(p);
+
     genDP->addExciter(exciterDP);
   }
 
