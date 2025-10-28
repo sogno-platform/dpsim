@@ -1,10 +1,5 @@
-/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *********************************************************************************/
+// SPDX-FileCopyrightText: 2025 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+// SPDX-License-Identifier: MPL-2.0
 
 #pragma once
 
@@ -25,12 +20,16 @@ namespace Ph1 {
 /// x represents any component states.
 class SSNTypeV2T : public MNASimPowerComp<Real>,
                    public SharedFactory<SSNTypeV2T> {
+private:
+  void ssnUpdateState();
+  void setSSNMatricesToZero();
+
 protected:
   Matrix mX;
   Matrix mU;
   Matrix mUOld;
   Matrix mW;
-  Matrix mY_hist;
+  Matrix mYHist;
 
 public:
   const CPS::Attribute<Matrix>::Ptr mA;
@@ -52,9 +51,8 @@ public:
   SimPowerComp<Real>::Ptr clone(String name) override;
 
   void manualInit(Matrix initialState, Matrix initialInput,
-                  Matrix initialOldInput, Real initCurr, Real initVol);
-  void ssnUpdateState();
-  void setSSNMatricesToZero();
+                  Matrix initialOldInput, Real initCurrent, Real initVoltage);
+
   // #### General ####
   void setParameters(const Matrix A, const Matrix B, const Matrix C,
                      const Matrix D);

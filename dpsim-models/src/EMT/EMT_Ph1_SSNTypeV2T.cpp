@@ -35,7 +35,7 @@ void EMT::Ph1::SSNTypeV2T::setParameters(const Matrix A, const Matrix B,
     **mA = A;
     mX = Matrix::Zero((**mA).rows(), 1);
   } catch (std::exception &e) {
-    std::cerr << "Component " << **mName << ": " << e.what() << std::endl;
+    SPDLOG_LOGGER_ERROR(mSLog, "Component {} : {}\n", **mName, e.what());
     setSSNMatricesToZero();
     return;
   }
@@ -53,7 +53,7 @@ void EMT::Ph1::SSNTypeV2T::setParameters(const Matrix A, const Matrix B,
     mU = Matrix::Zero((**mB).cols(), 1);
     mUOld = Matrix::Zero((**mB).cols(), 1);
   } catch (std::exception &e) {
-    std::cerr << "Component " << **mName << ": " << e.what() << std::endl;
+    SPDLOG_LOGGER_ERROR(mSLog, "Component {} : {}\n", **mName, e.what());
     setSSNMatricesToZero();
     return;
   }
@@ -69,7 +69,7 @@ void EMT::Ph1::SSNTypeV2T::setParameters(const Matrix A, const Matrix B,
           "matrices to scalar zero.");
     **mC = C;
   } catch (std::exception &e) {
-    std::cerr << "Component " << **mName << ": " << e.what() << std::endl;
+    SPDLOG_LOGGER_ERROR(mSLog, "Component {} : {}\n", **mName, e.what());
     setSSNMatricesToZero();
     return;
   }
@@ -86,7 +86,7 @@ void EMT::Ph1::SSNTypeV2T::setParameters(const Matrix A, const Matrix B,
           "zero.");
     **mD = D;
   } catch (std::exception &e) {
-    std::cerr << "Component " << **mName << ": " << e.what() << std::endl;
+    SPDLOG_LOGGER_ERROR(mSLog, "Component {} : {}\n", **mName, e.what());
     setSSNMatricesToZero();
     return;
   }
@@ -137,18 +137,18 @@ void EMT::Ph1::SSNTypeV2T::mnaCompApplySystemMatrixStamp(
 void EMT::Ph1::SSNTypeV2T::mnaCompApplyRightSideVectorStamp(
     Matrix &rightVector) {
   // Update internal state
-  mY_hist = (**mC) * ((**mdA) * mX + (**mdB) * mU);
+  mYHist = (**mC) * ((**mdA) * mX + (**mdB) * mU);
   if (terminalNotGrounded(0))
-    Math::setVectorElement(rightVector, matrixNodeIndex(0), mY_hist(0, 0));
+    Math::setVectorElement(rightVector, matrixNodeIndex(0), mYHist(0, 0));
   if (terminalNotGrounded(1))
-    Math::setVectorElement(rightVector, matrixNodeIndex(1), -mY_hist(0, 0));
+    Math::setVectorElement(rightVector, matrixNodeIndex(1), -mYHist(0, 0));
 }
 
 void EMT::Ph1::SSNTypeV2T::mnaCompAddPreStepDependencies(
     AttributeBase::List &prevStepDependencies,
     AttributeBase::List &attributeDependencies,
     AttributeBase::List &modifiedAttributes) {
-  // actually depends on L, but then we'd have to modify the system matrix anyway
+
   modifiedAttributes.push_back(mRightVector);
   prevStepDependencies.push_back(mIntfCurrent);
   prevStepDependencies.push_back(mIntfVoltage);
@@ -171,8 +171,8 @@ void EMT::Ph1::SSNTypeV2T::mnaCompAddPostStepDependencies(
 void EMT::Ph1::SSNTypeV2T::mnaCompPostStep(Real time, Int timeStepCount,
                                            Attribute<Matrix>::Ptr &leftVector) {
   mnaCompUpdateVoltage(**leftVector);
-  ssnUpdateState();
   mnaCompUpdateCurrent(**leftVector);
+  ssnUpdateState();
 }
 
 void EMT::Ph1::SSNTypeV2T::mnaCompUpdateVoltage(const Matrix &leftVector) {
@@ -190,7 +190,7 @@ void EMT::Ph1::SSNTypeV2T::mnaCompUpdateVoltage(const Matrix &leftVector) {
 }
 
 void EMT::Ph1::SSNTypeV2T::mnaCompUpdateCurrent(const Matrix &leftVector) {
-  **mIntfCurrent = mW * (**mIntfVoltage) + mY_hist;
+  **mIntfCurrent = mW * (**mIntfVoltage) + mYHist;
 }
 
 void CPS::EMT::Ph1::SSNTypeV2T::setSSNMatricesToZero() {
@@ -213,10 +213,10 @@ void EMT::Ph1::SSNTypeV2T::ssnUpdateState() {
 }
 
 void EMT::Ph1::SSNTypeV2T::manualInit(Matrix initialState, Matrix initialInput,
-                                      Matrix initialOldInput, Real initCurr,
-                                      Real initVol) {
+                                      Matrix initialOldInput, Real initCurrent,
+                                      Real initVoltage) {
   try {
-    if (mParametersSet = false)
+    if (mParametersSet == false)
       throw std::invalid_argument(
           "Set parameters first! Setting x, u, u_old to zero.");
     if (initialState.cols() != 1)
@@ -236,10 +236,10 @@ void EMT::Ph1::SSNTypeV2T::manualInit(Matrix initialState, Matrix initialInput,
     mX = initialState;
     mU = initialInput;
     mUOld = initialOldInput;
-    (**mIntfCurrent)(0, 0) = initCurr;
-    (**mIntfVoltage)(0, 0) = initVol;
+    (**mIntfCurrent)(0, 0) = initCurrent;
+    (**mIntfVoltage)(0, 0) = initVoltage;
   } catch (std::exception &e) {
-    std::cerr << "Component " << **mName << ": " << e.what() << std::endl;
+    SPDLOG_LOGGER_ERROR(mSLog, "Component {} : {}\n", **mName, e.what());
     (**mIntfCurrent)(0, 0) = 0;
     (**mIntfVoltage)(0, 0) = 0;
   }

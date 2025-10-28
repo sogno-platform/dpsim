@@ -1,10 +1,5 @@
-/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *********************************************************************************/
+// SPDX-FileCopyrightText: 2025 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+// SPDX-License-Identifier: MPL-2.0
 
 #pragma once
 
@@ -28,6 +23,14 @@ namespace SSN {
 /// across the whole circuit. States and past inputs are updated after each
 /// time step and are used to calculate the current (input) voltage,
 /// represented as MNA node voltages.
+/// SSN theory and variable naming based on
+/// C. Dufour, J. Mahseredjian and J. Belanger,
+/// "A combined state-space nodal method for the simulation of power system
+/// transients," 2011 IEEE Power and Energy Society General Meeting, Detroit,
+/// MI, USA, 2011, pp. 1-1, doi: 10.1109/PES.2011.6038887. keywords:
+/// {Mathematical model;Analytical models;Equations;Power system transients;
+/// Couplings;Switching circuits}
+
 class Full_Serial_RLC final : public MNASimPowerComp<Real>,
                               public SharedFactory<Full_Serial_RLC>,
                               public Base::Ph1::Resistor,
