@@ -621,81 +621,85 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00520" name="l00520"></a><span class="lineno">  520</span>    mImports.emplace_back(</div>
 <div class="line"><a id="l00521" name="l00521"></a><span class="lineno">  521</span>        [idx, log](Sample *smp) -&gt; AttributeBase::Ptr {</div>
 <div class="line"><a id="l00522" name="l00522"></a><span class="lineno">  522</span>          <span class="keywordflow">if</span> (idx &gt;= smp-&gt;length) {</div>
-<div class="line"><a id="l00523" name="l00523"></a><span class="lineno">  523</span>            log-&gt;error(<span class="stringliteral">&quot;incomplete data received from InterfaceVillas&quot;</span>);</div>
-<div class="line"><a id="l00524" name="l00524"></a><span class="lineno">  524</span>            <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00525" name="l00525"></a><span class="lineno">  525</span>          }</div>
-<div class="line"><a id="l00526" name="l00526"></a><span class="lineno">  526</span>          <span class="keywordflow">return</span> AttributePointer&lt;AttributeBase&gt;(</div>
-<div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span>              AttributeStatic&lt;Int&gt;::make(smp-&gt;data[idx].i));</div>
-<div class="line"><a id="l00528" name="l00528"></a><span class="lineno">  528</span>        },</div>
-<div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span>        0);</div>
-<div class="line"><a id="l00530" name="l00530"></a><span class="lineno">  530</span>    mImportSignals[idx] =</div>
-<div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span>        std::make_shared&lt;node::Signal&gt;(name, unit, node::SignalType::INTEGER);</div>
-<div class="line"><a id="l00532" name="l00532"></a><span class="lineno">  532</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (type == <span class="keyword">typeid</span>(Real)) {</div>
-<div class="line"><a id="l00533" name="l00533"></a><span class="lineno">  533</span>    mImports.emplace_back(</div>
-<div class="line"><a id="l00534" name="l00534"></a><span class="lineno">  534</span>        [idx, log](Sample *smp) -&gt; AttributeBase::Ptr {</div>
-<div class="line"><a id="l00535" name="l00535"></a><span class="lineno">  535</span>          <span class="keywordflow">if</span> (idx &gt;= smp-&gt;length) {</div>
-<div class="line"><a id="l00536" name="l00536"></a><span class="lineno">  536</span>            log-&gt;error(<span class="stringliteral">&quot;incomplete data received from InterfaceVillas&quot;</span>);</div>
-<div class="line"><a id="l00537" name="l00537"></a><span class="lineno">  537</span>            <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00538" name="l00538"></a><span class="lineno">  538</span>          }</div>
-<div class="line"><a id="l00539" name="l00539"></a><span class="lineno">  539</span>          <span class="keywordflow">return</span> AttributePointer&lt;AttributeBase&gt;(</div>
-<div class="line"><a id="l00540" name="l00540"></a><span class="lineno">  540</span>              AttributeStatic&lt;Real&gt;::make(smp-&gt;data[idx].f));</div>
-<div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span>        },</div>
-<div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span>        0);</div>
-<div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span>    mImportSignals[idx] =</div>
-<div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span>        std::make_shared&lt;node::Signal&gt;(name, unit, node::SignalType::FLOAT);</div>
-<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (type == <span class="keyword">typeid</span>(Complex)) {</div>
-<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>    mImports.emplace_back(</div>
-<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>        [idx, log](Sample *smp) -&gt; AttributeBase::Ptr {</div>
-<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>          <span class="keywordflow">if</span> (idx &gt;= smp-&gt;length) {</div>
-<div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span>            log-&gt;error(<span class="stringliteral">&quot;incomplete data received from InterfaceVillas&quot;</span>);</div>
-<div class="line"><a id="l00550" name="l00550"></a><span class="lineno">  550</span>            <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00551" name="l00551"></a><span class="lineno">  551</span>          }</div>
-<div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span>          <span class="keywordflow">return</span> AttributePointer&lt;AttributeBase&gt;(</div>
-<div class="line"><a id="l00553" name="l00553"></a><span class="lineno">  553</span>              AttributeStatic&lt;Complex&gt;::make(smp-&gt;data[idx].z));</div>
-<div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span>        },</div>
-<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span>        0);</div>
-<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span>    mImportSignals[idx] =</div>
-<div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span>        std::make_shared&lt;node::Signal&gt;(name, unit, node::SignalType::COMPLEX);</div>
-<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (type == <span class="keyword">typeid</span>(Bool)) {</div>
-<div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span>    mImports.emplace_back(</div>
-<div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span>        [idx, log](Sample *smp) -&gt; AttributeBase::Ptr {</div>
-<div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span>          <span class="keywordflow">if</span> (idx &gt;= smp-&gt;length) {</div>
-<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span>            log-&gt;error(<span class="stringliteral">&quot;incomplete data received from InterfaceVillas&quot;</span>);</div>
-<div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span>            <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span>          }</div>
-<div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>          <span class="keywordflow">return</span> AttributePointer&lt;AttributeBase&gt;(</div>
-<div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span>              AttributeStatic&lt;Bool&gt;::make(smp-&gt;data[idx].b));</div>
-<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>        },</div>
-<div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span>        0);</div>
-<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span>    mImportSignals[idx] =</div>
-<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>        std::make_shared&lt;node::Signal&gt;(name, unit, node::SignalType::BOOLEAN);</div>
-<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>    <span class="keywordflow">if</span> (mLog != <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>      SPDLOG_LOGGER_WARN(mLog, <span class="stringliteral">&quot;Unsupported attribute type! Interface &quot;</span></div>
-<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>                               <span class="stringliteral">&quot;configuration will remain unchanged!&quot;</span>);</div>
-<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>    }</div>
-<div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span>  }</div>
-<div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span>}</div>
-<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span> </div>
-<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span><span class="keywordtype">void</span> InterfaceWorkerVillas::printSignals()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span>  SPDLOG_LOGGER_INFO(</div>
-<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span>      mLog,</div>
-<div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span>      <span class="stringliteral">&quot;InterfaceWorkerVillas Settings: Queue Length: {}, Sample Length: {}&quot;</span>,</div>
-<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span>      mQueueLength, mSampleLength);</div>
-<div class="line"><a id="l00584" name="l00584"></a><span class="lineno">  584</span>  SPDLOG_LOGGER_INFO(mLog, <span class="stringliteral">&quot;Export signals:&quot;</span>);</div>
-<div class="line"><a id="l00585" name="l00585"></a><span class="lineno">  585</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;[<span class="keywordtype">id</span>, signal] : mExportSignals) {</div>
-<div class="line"><a id="l00586" name="l00586"></a><span class="lineno">  586</span>    SPDLOG_LOGGER_INFO(mLog, <span class="stringliteral">&quot;ID: {}, Name: {}, Unit: {}, Type: {}&quot;</span>, <span class="keywordtype">id</span>,</div>
-<div class="line"><a id="l00587" name="l00587"></a><span class="lineno">  587</span>                       signal-&gt;name, signal-&gt;unit,</div>
-<div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span>                       node::signalTypeToString(signal-&gt;type));</div>
-<div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span>  }</div>
-<div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span> </div>
-<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span>  SPDLOG_LOGGER_INFO(mLog, <span class="stringliteral">&quot;Import signals:&quot;</span>);</div>
-<div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;[<span class="keywordtype">id</span>, signal] : mImportSignals) {</div>
-<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span>    SPDLOG_LOGGER_INFO(mLog, <span class="stringliteral">&quot;ID: {}, Name: {}, Unit: {}, Type: {}&quot;</span>, <span class="keywordtype">id</span>,</div>
-<div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span>                       signal-&gt;name, signal-&gt;unit,</div>
-<div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>                       node::signalTypeToString(signal-&gt;type));</div>
-<div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>  }</div>
-<div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span>}</div>
+<div class="line"><a id="l00523" name="l00523"></a><span class="lineno">  523</span>            SPDLOG_LOGGER_ERROR(</div>
+<div class="line"><a id="l00524" name="l00524"></a><span class="lineno">  524</span>                log, <span class="stringliteral">&quot;incomplete data received from InterfaceVillas&quot;</span>);</div>
+<div class="line"><a id="l00525" name="l00525"></a><span class="lineno">  525</span>            <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00526" name="l00526"></a><span class="lineno">  526</span>          }</div>
+<div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span>          <span class="keywordflow">return</span> AttributePointer&lt;AttributeBase&gt;(</div>
+<div class="line"><a id="l00528" name="l00528"></a><span class="lineno">  528</span>              AttributeStatic&lt;Int&gt;::make(smp-&gt;data[idx].i));</div>
+<div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span>        },</div>
+<div class="line"><a id="l00530" name="l00530"></a><span class="lineno">  530</span>        0);</div>
+<div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span>    mImportSignals[idx] =</div>
+<div class="line"><a id="l00532" name="l00532"></a><span class="lineno">  532</span>        std::make_shared&lt;node::Signal&gt;(name, unit, node::SignalType::INTEGER);</div>
+<div class="line"><a id="l00533" name="l00533"></a><span class="lineno">  533</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (type == <span class="keyword">typeid</span>(Real)) {</div>
+<div class="line"><a id="l00534" name="l00534"></a><span class="lineno">  534</span>    mImports.emplace_back(</div>
+<div class="line"><a id="l00535" name="l00535"></a><span class="lineno">  535</span>        [idx, log](Sample *smp) -&gt; AttributeBase::Ptr {</div>
+<div class="line"><a id="l00536" name="l00536"></a><span class="lineno">  536</span>          <span class="keywordflow">if</span> (idx &gt;= smp-&gt;length) {</div>
+<div class="line"><a id="l00537" name="l00537"></a><span class="lineno">  537</span>            SPDLOG_LOGGER_ERROR(</div>
+<div class="line"><a id="l00538" name="l00538"></a><span class="lineno">  538</span>                log, <span class="stringliteral">&quot;incomplete data received from InterfaceVillas&quot;</span>);</div>
+<div class="line"><a id="l00539" name="l00539"></a><span class="lineno">  539</span>            <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00540" name="l00540"></a><span class="lineno">  540</span>          }</div>
+<div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span>          <span class="keywordflow">return</span> AttributePointer&lt;AttributeBase&gt;(</div>
+<div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span>              AttributeStatic&lt;Real&gt;::make(smp-&gt;data[idx].f));</div>
+<div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span>        },</div>
+<div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span>        0);</div>
+<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>    mImportSignals[idx] =</div>
+<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>        std::make_shared&lt;node::Signal&gt;(name, unit, node::SignalType::FLOAT);</div>
+<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (type == <span class="keyword">typeid</span>(Complex)) {</div>
+<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>    mImports.emplace_back(</div>
+<div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span>        [idx, log](Sample *smp) -&gt; AttributeBase::Ptr {</div>
+<div class="line"><a id="l00550" name="l00550"></a><span class="lineno">  550</span>          <span class="keywordflow">if</span> (idx &gt;= smp-&gt;length) {</div>
+<div class="line"><a id="l00551" name="l00551"></a><span class="lineno">  551</span>            SPDLOG_LOGGER_ERROR(</div>
+<div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span>                log, <span class="stringliteral">&quot;incomplete data received from InterfaceVillas&quot;</span>);</div>
+<div class="line"><a id="l00553" name="l00553"></a><span class="lineno">  553</span>            <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span>          }</div>
+<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span>          <span class="keywordflow">return</span> AttributePointer&lt;AttributeBase&gt;(</div>
+<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span>              AttributeStatic&lt;Complex&gt;::make(smp-&gt;data[idx].z));</div>
+<div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span>        },</div>
+<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span>        0);</div>
+<div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span>    mImportSignals[idx] =</div>
+<div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span>        std::make_shared&lt;node::Signal&gt;(name, unit, node::SignalType::COMPLEX);</div>
+<div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (type == <span class="keyword">typeid</span>(Bool)) {</div>
+<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span>    mImports.emplace_back(</div>
+<div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span>        [idx, log](Sample *smp) -&gt; AttributeBase::Ptr {</div>
+<div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span>          <span class="keywordflow">if</span> (idx &gt;= smp-&gt;length) {</div>
+<div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>            SPDLOG_LOGGER_ERROR(</div>
+<div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span>                log, <span class="stringliteral">&quot;incomplete data received from InterfaceVillas&quot;</span>);</div>
+<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>            <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span>          }</div>
+<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span>          <span class="keywordflow">return</span> AttributePointer&lt;AttributeBase&gt;(</div>
+<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>              AttributeStatic&lt;Bool&gt;::make(smp-&gt;data[idx].b));</div>
+<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>        },</div>
+<div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>        0);</div>
+<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>    mImportSignals[idx] =</div>
+<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>        std::make_shared&lt;node::Signal&gt;(name, unit, node::SignalType::BOOLEAN);</div>
+<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span>    <span class="keywordflow">if</span> (mLog != <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span>      SPDLOG_LOGGER_WARN(mLog, <span class="stringliteral">&quot;Unsupported attribute type! Interface &quot;</span></div>
+<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span>                               <span class="stringliteral">&quot;configuration will remain unchanged!&quot;</span>);</div>
+<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span>    }</div>
+<div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span>  }</div>
+<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span>}</div>
+<div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span> </div>
+<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span><span class="keywordtype">void</span> InterfaceWorkerVillas::printSignals()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00584" name="l00584"></a><span class="lineno">  584</span>  SPDLOG_LOGGER_INFO(</div>
+<div class="line"><a id="l00585" name="l00585"></a><span class="lineno">  585</span>      mLog,</div>
+<div class="line"><a id="l00586" name="l00586"></a><span class="lineno">  586</span>      <span class="stringliteral">&quot;InterfaceWorkerVillas Settings: Queue Length: {}, Sample Length: {}&quot;</span>,</div>
+<div class="line"><a id="l00587" name="l00587"></a><span class="lineno">  587</span>      mQueueLength, mSampleLength);</div>
+<div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span>  SPDLOG_LOGGER_INFO(mLog, <span class="stringliteral">&quot;Export signals:&quot;</span>);</div>
+<div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;[<span class="keywordtype">id</span>, signal] : mExportSignals) {</div>
+<div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span>    SPDLOG_LOGGER_INFO(mLog, <span class="stringliteral">&quot;ID: {}, Name: {}, Unit: {}, Type: {}&quot;</span>, <span class="keywordtype">id</span>,</div>
+<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span>                       signal-&gt;name, signal-&gt;unit,</div>
+<div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>                       node::signalTypeToString(signal-&gt;type));</div>
+<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span>  }</div>
+<div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span> </div>
+<div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>  SPDLOG_LOGGER_INFO(mLog, <span class="stringliteral">&quot;Import signals:&quot;</span>);</div>
+<div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;[<span class="keywordtype">id</span>, signal] : mImportSignals) {</div>
+<div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span>    SPDLOG_LOGGER_INFO(mLog, <span class="stringliteral">&quot;ID: {}, Name: {}, Unit: {}, Type: {}&quot;</span>, <span class="keywordtype">id</span>,</div>
+<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span>                       signal-&gt;name, signal-&gt;unit,</div>
+<div class="line"><a id="l00599" name="l00599"></a><span class="lineno">  599</span>                       node::signalTypeToString(signal-&gt;type));</div>
+<div class="line"><a id="l00600" name="l00600"></a><span class="lineno">  600</span>  }</div>
+<div class="line"><a id="l00601" name="l00601"></a><span class="lineno">  601</span>}</div>
 <div class="ttc" id="aclass_d_psim_1_1_interface_worker_html"><div class="ttname"><a href="class_d_psim_1_1_interface_worker.html">DPsim::InterfaceWorker</a></div><div class="ttdef"><b>Definition</b> <a href="_interface_worker_8h_source.html#l00018">InterfaceWorker.h:18</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_interface_worker_villas_html_a72cb1f35a612281678f1419cb701d5a6"><div class="ttname"><a href="class_d_psim_1_1_interface_worker_villas.html#a72cb1f35a612281678f1419cb701d5a6">DPsim::InterfaceWorkerVillas::close</a></div><div class="ttdeci">void close() override</div><div class="ttdef"><b>Definition</b> <a href="#l00167">InterfaceWorkerVillas.cpp:167</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_interface_worker_villas_html_a7fecbf348f751d0eeaca4a79bfd4a5cd"><div class="ttname"><a href="class_d_psim_1_1_interface_worker_villas.html#a7fecbf348f751d0eeaca4a79bfd4a5cd">DPsim::InterfaceWorkerVillas::open</a></div><div class="ttdeci">void open() override</div><div class="ttdef"><b>Definition</b> <a href="#l00036">InterfaceWorkerVillas.cpp:36</a></div></div>

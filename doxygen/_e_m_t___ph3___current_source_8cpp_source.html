@@ -137,180 +137,181 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  **mCurrentRef = currentRef;</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  mSrcFreq-&gt;setReference(mSrcSig-&gt;mFreq);</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <a class="code hl_variable" href="class_c_p_s_1_1_topological_power_comp.html#a7c61e480e446111d56ac35399643d5b0">mSLog</a>-&gt;info(<span class="stringliteral">&quot;\nCurrent reference phasor [I]: {:s}&quot;</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>              <span class="stringliteral">&quot;\nFrequency [Hz]: {:s}&quot;</span>,</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>              Logger::matrixCompToString(currentRef),</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>              Logger::realToString(srcFreq));</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <a class="code hl_variable" href="class_c_p_s_1_1_topological_power_comp.html#a7be81a0a95fe67af7776aad6e22b9665">mParametersSet</a> = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>}</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  SPDLOG_LOGGER_INFO(<a class="code hl_variable" href="class_c_p_s_1_1_topological_power_comp.html#a7c61e480e446111d56ac35399643d5b0">mSLog</a>,</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                     <span class="stringliteral">&quot;\nCurrent reference phasor [I]: {:s}&quot;</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                     <span class="stringliteral">&quot;\nFrequency [Hz]: {:s}&quot;</span>,</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                     Logger::matrixCompToString(currentRef),</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>                     Logger::realToString(srcFreq));</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <a class="code hl_variable" href="class_c_p_s_1_1_topological_power_comp.html#a7be81a0a95fe67af7776aad6e22b9665">mParametersSet</a> = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>}</div>
 </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="foldopen" id="foldopen00050" data-start="{" data-end="}">
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#ac738ee8b1dc689809d84ca3a9cb30544">   50</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#ac738ee8b1dc689809d84ca3a9cb30544">EMT::Ph3::CurrentSource::initializeFromNodesAndTerminals</a>(Real frequency) {</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  SPDLOG_LOGGER_INFO(</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>      <a class="code hl_variable" href="class_c_p_s_1_1_topological_power_comp.html#a7c61e480e446111d56ac35399643d5b0">mSLog</a>, <span class="stringliteral">&quot;\n--- Initialization from node voltages and terminal ---&quot;</span>);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="keywordflow">if</span> (!<a class="code hl_variable" href="class_c_p_s_1_1_topological_power_comp.html#a7be81a0a95fe67af7776aad6e22b9665">mParametersSet</a>) {</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keyword">auto</span> srcSigSine =</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        Signal::SineWaveGenerator::make(**<a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#a13661eab6b670e4a5a3aa5777f8fd5d0">mName</a> + <span class="stringliteral">&quot;_sw&quot;</span>, Logger::Level::off);</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="comment">// Complex(1,0) is used as initialPhasor for signal generator as only phase is used</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    srcSigSine-&gt;setParameters(Complex(1, 0), frequency);</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    mSrcSig = srcSigSine;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    Complex v_ref = initialSingleVoltage(1) - initialSingleVoltage(0);</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    Complex s_ref = <a class="code hl_function" href="class_c_p_s_1_1_sim_power_comp.html#a6b82b23bfd1af87d260af378361169e7">terminal</a>(1)-&gt;singlePower() - <a class="code hl_function" href="class_c_p_s_1_1_sim_power_comp.html#a6b82b23bfd1af87d260af378361169e7">terminal</a>(0)-&gt;singlePower();</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="comment">// Current flowing from T1 to T0 (rms value)</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    Complex i_ref = std::conj(s_ref / v_ref / sqrt(3.));</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    **mCurrentRef = <a class="code hl_function" href="class_c_p_s_1_1_math.html#afac1e51eed00267c2f5443c6b6ec8059">CPS::Math::singlePhaseVariableToThreePhase</a>(i_ref);</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    mSrcFreq-&gt;setReference(mSrcSig-&gt;attributeTyped&lt;Real&gt;(<span class="stringliteral">&quot;freq&quot;</span>));</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    SPDLOG_LOGGER_INFO(<a class="code hl_variable" href="class_c_p_s_1_1_topological_power_comp.html#a7c61e480e446111d56ac35399643d5b0">mSLog</a>,</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>                       <span class="stringliteral">&quot;\nReference current: {:s}&quot;</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>                       <span class="stringliteral">&quot;\nReference voltage: {:s}&quot;</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>                       <span class="stringliteral">&quot;\nReference power: {:s}&quot;</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>                       <span class="stringliteral">&quot;\nTerminal 0 voltage: {:s}&quot;</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>                       <span class="stringliteral">&quot;\nTerminal 1 voltage: {:s}&quot;</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>                       <span class="stringliteral">&quot;\nTerminal 0 power: {:s}&quot;</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>                       <span class="stringliteral">&quot;\nTerminal 1 power: {:s}&quot;</span>,</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>                       Logger::phasorToString(i_ref),</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>                       Logger::phasorToString(v_ref),</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>                       Logger::complexToString(s_ref),</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>                       Logger::phasorToString(initialSingleVoltage(0)),</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                       Logger::phasorToString(initialSingleVoltage(1)),</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>                       Logger::complexToString(<a class="code hl_function" href="class_c_p_s_1_1_sim_power_comp.html#a6b82b23bfd1af87d260af378361169e7">terminal</a>(0)-&gt;singlePower()),</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>                       Logger::complexToString(<a class="code hl_function" href="class_c_p_s_1_1_sim_power_comp.html#a6b82b23bfd1af87d260af378361169e7">terminal</a>(1)-&gt;singlePower()));</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    SPDLOG_LOGGER_INFO(</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        <a class="code hl_variable" href="class_c_p_s_1_1_topological_power_comp.html#a7c61e480e446111d56ac35399643d5b0">mSLog</a>,</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        <span class="stringliteral">&quot;\nInitialization from node voltages and terminal omitted (parameter &quot;</span></div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        <span class="stringliteral">&quot;already set).&quot;</span></div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="stringliteral">&quot;\nReference voltage: {:s}&quot;</span>,</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        Logger::matrixCompToString(<a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a3e10f199c595e0699725ad2cd4391c2c">attributeTyped&lt;MatrixComp&gt;</a>(<span class="stringliteral">&quot;I_ref&quot;</span>)-&gt;get()));</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  }</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  SPDLOG_LOGGER_INFO(</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>      <a class="code hl_variable" href="class_c_p_s_1_1_topological_power_comp.html#a7c61e480e446111d56ac35399643d5b0">mSLog</a>, <span class="stringliteral">&quot;\n--- Initialization from node voltages and terminal ---&quot;</span>);</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  <a class="code hl_variable" href="class_c_p_s_1_1_topological_power_comp.html#a7c61e480e446111d56ac35399643d5b0">mSLog</a>-&gt;flush();</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>}</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="foldopen" id="foldopen00051" data-start="{" data-end="}">
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#ac738ee8b1dc689809d84ca3a9cb30544">   51</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#ac738ee8b1dc689809d84ca3a9cb30544">EMT::Ph3::CurrentSource::initializeFromNodesAndTerminals</a>(Real frequency) {</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  SPDLOG_LOGGER_INFO(</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>      <a class="code hl_variable" href="class_c_p_s_1_1_topological_power_comp.html#a7c61e480e446111d56ac35399643d5b0">mSLog</a>, <span class="stringliteral">&quot;\n--- Initialization from node voltages and terminal ---&quot;</span>);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  <span class="keywordflow">if</span> (!<a class="code hl_variable" href="class_c_p_s_1_1_topological_power_comp.html#a7be81a0a95fe67af7776aad6e22b9665">mParametersSet</a>) {</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keyword">auto</span> srcSigSine =</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        Signal::SineWaveGenerator::make(**<a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#a13661eab6b670e4a5a3aa5777f8fd5d0">mName</a> + <span class="stringliteral">&quot;_sw&quot;</span>, Logger::Level::off);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="comment">// Complex(1,0) is used as initialPhasor for signal generator as only phase is used</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    srcSigSine-&gt;setParameters(Complex(1, 0), frequency);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    mSrcSig = srcSigSine;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    Complex v_ref = initialSingleVoltage(1) - initialSingleVoltage(0);</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    Complex s_ref = <a class="code hl_function" href="class_c_p_s_1_1_sim_power_comp.html#a6b82b23bfd1af87d260af378361169e7">terminal</a>(1)-&gt;singlePower() - <a class="code hl_function" href="class_c_p_s_1_1_sim_power_comp.html#a6b82b23bfd1af87d260af378361169e7">terminal</a>(0)-&gt;singlePower();</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="comment">// Current flowing from T1 to T0 (rms value)</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    Complex i_ref = std::conj(s_ref / v_ref / sqrt(3.));</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    **mCurrentRef = <a class="code hl_function" href="class_c_p_s_1_1_math.html#afac1e51eed00267c2f5443c6b6ec8059">CPS::Math::singlePhaseVariableToThreePhase</a>(i_ref);</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    mSrcFreq-&gt;setReference(mSrcSig-&gt;attributeTyped&lt;Real&gt;(<span class="stringliteral">&quot;freq&quot;</span>));</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    SPDLOG_LOGGER_INFO(<a class="code hl_variable" href="class_c_p_s_1_1_topological_power_comp.html#a7c61e480e446111d56ac35399643d5b0">mSLog</a>,</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>                       <span class="stringliteral">&quot;\nReference current: {:s}&quot;</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>                       <span class="stringliteral">&quot;\nReference voltage: {:s}&quot;</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>                       <span class="stringliteral">&quot;\nReference power: {:s}&quot;</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>                       <span class="stringliteral">&quot;\nTerminal 0 voltage: {:s}&quot;</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>                       <span class="stringliteral">&quot;\nTerminal 1 voltage: {:s}&quot;</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>                       <span class="stringliteral">&quot;\nTerminal 0 power: {:s}&quot;</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>                       <span class="stringliteral">&quot;\nTerminal 1 power: {:s}&quot;</span>,</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>                       Logger::phasorToString(i_ref),</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>                       Logger::phasorToString(v_ref),</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>                       Logger::complexToString(s_ref),</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                       Logger::phasorToString(initialSingleVoltage(0)),</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>                       Logger::phasorToString(initialSingleVoltage(1)),</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>                       Logger::complexToString(<a class="code hl_function" href="class_c_p_s_1_1_sim_power_comp.html#a6b82b23bfd1af87d260af378361169e7">terminal</a>(0)-&gt;singlePower()),</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>                       Logger::complexToString(<a class="code hl_function" href="class_c_p_s_1_1_sim_power_comp.html#a6b82b23bfd1af87d260af378361169e7">terminal</a>(1)-&gt;singlePower()));</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    SPDLOG_LOGGER_INFO(</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        <a class="code hl_variable" href="class_c_p_s_1_1_topological_power_comp.html#a7c61e480e446111d56ac35399643d5b0">mSLog</a>,</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        <span class="stringliteral">&quot;\nInitialization from node voltages and terminal omitted (parameter &quot;</span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="stringliteral">&quot;already set).&quot;</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        <span class="stringliteral">&quot;\nReference voltage: {:s}&quot;</span>,</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        Logger::matrixCompToString(<a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a3e10f199c595e0699725ad2cd4391c2c">attributeTyped&lt;MatrixComp&gt;</a>(<span class="stringliteral">&quot;I_ref&quot;</span>)-&gt;get()));</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  }</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  SPDLOG_LOGGER_INFO(</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>      <a class="code hl_variable" href="class_c_p_s_1_1_topological_power_comp.html#a7c61e480e446111d56ac35399643d5b0">mSLog</a>, <span class="stringliteral">&quot;\n--- Initialization from node voltages and terminal ---&quot;</span>);</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  <a class="code hl_variable" href="class_c_p_s_1_1_topological_power_comp.html#a7c61e480e446111d56ac35399643d5b0">mSLog</a>-&gt;flush();</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>}</div>
 </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
-<div class="foldopen" id="foldopen00097" data-start="{" data-end="}">
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#ae46e9b2838ba3ebf61e194df785691d6">   97</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#ae46e9b2838ba3ebf61e194df785691d6">EMT::Ph3::CurrentSource::mnaCompInitialize</a>(</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    Real omega, Real timeStep, Attribute&lt;Matrix&gt;::Ptr leftVector) {</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  <a class="code hl_function" href="class_c_p_s_1_1_sim_power_comp.html#aeae7b46840d1405f8794fc41ee594dee">updateMatrixNodeIndices</a>();</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>}</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
+<div class="foldopen" id="foldopen00098" data-start="{" data-end="}">
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#ae46e9b2838ba3ebf61e194df785691d6">   98</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#ae46e9b2838ba3ebf61e194df785691d6">EMT::Ph3::CurrentSource::mnaCompInitialize</a>(</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    Real omega, Real timeStep, Attribute&lt;Matrix&gt;::Ptr leftVector) {</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>  <a class="code hl_function" href="class_c_p_s_1_1_sim_power_comp.html#aeae7b46840d1405f8794fc41ee594dee">updateMatrixNodeIndices</a>();</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>}</div>
 </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
-<div class="foldopen" id="foldopen00102" data-start="{" data-end="}">
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#a9a7ca2ca9f299ef00bd9ca2111f7a482">  102</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#a9a7ca2ca9f299ef00bd9ca2111f7a482">EMT::Ph3::CurrentSource::mnaCompApplyRightSideVectorStamp</a>(</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    Matrix &amp;rightVector) {</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  <span class="keywordflow">if</span> (terminalNotGrounded(1)) {</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    Math::setVectorElement(rightVector, matrixNodeIndex(1, 0),</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>                           -(**<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">mIntfCurrent</a>)(0, 0));</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    Math::setVectorElement(rightVector, matrixNodeIndex(1, 1),</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>                           -(**<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">mIntfCurrent</a>)(1, 0));</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    Math::setVectorElement(rightVector, matrixNodeIndex(1, 2),</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>                           -(**<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">mIntfCurrent</a>)(2, 0));</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>  }</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  <span class="keywordflow">if</span> (terminalNotGrounded(0)) {</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    Math::setVectorElement(rightVector, matrixNodeIndex(0, 0),</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>                           (**<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">mIntfCurrent</a>)(0, 0));</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    Math::setVectorElement(rightVector, matrixNodeIndex(0, 1),</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                           (**<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">mIntfCurrent</a>)(1, 0));</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    Math::setVectorElement(rightVector, matrixNodeIndex(0, 2),</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                           (**<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">mIntfCurrent</a>)(2, 0));</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  }</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>}</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
+<div class="foldopen" id="foldopen00103" data-start="{" data-end="}">
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#a9a7ca2ca9f299ef00bd9ca2111f7a482">  103</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#a9a7ca2ca9f299ef00bd9ca2111f7a482">EMT::Ph3::CurrentSource::mnaCompApplyRightSideVectorStamp</a>(</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    Matrix &amp;rightVector) {</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>  <span class="keywordflow">if</span> (terminalNotGrounded(1)) {</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    Math::setVectorElement(rightVector, matrixNodeIndex(1, 0),</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>                           -(**<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">mIntfCurrent</a>)(0, 0));</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    Math::setVectorElement(rightVector, matrixNodeIndex(1, 1),</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>                           -(**<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">mIntfCurrent</a>)(1, 0));</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    Math::setVectorElement(rightVector, matrixNodeIndex(1, 2),</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>                           -(**<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">mIntfCurrent</a>)(2, 0));</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  }</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>  <span class="keywordflow">if</span> (terminalNotGrounded(0)) {</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    Math::setVectorElement(rightVector, matrixNodeIndex(0, 0),</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                           (**<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">mIntfCurrent</a>)(0, 0));</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    Math::setVectorElement(rightVector, matrixNodeIndex(0, 1),</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                           (**<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">mIntfCurrent</a>)(1, 0));</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    Math::setVectorElement(rightVector, matrixNodeIndex(0, 2),</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>                           (**<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">mIntfCurrent</a>)(2, 0));</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  }</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>}</div>
 </div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span><span class="keywordtype">void</span> EMT::Ph3::CurrentSource::updateCurrent(Real time) {</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  <span class="keywordflow">if</span> (mSrcSig != <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    mSrcSig-&gt;step(time);</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 3; i++) {</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>      (**mIntfCurrent)(i, 0) = RMS_TO_PEAK * Math::abs((**mCurrentRef)(i, 0)) *</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>                               cos(Math::phase(mSrcSig-&gt;getSignal()) +</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                                   Math::phase((**mCurrentRef)(i, 0)));</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    }</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    **mIntfCurrent = RMS_TO_PEAK * (**mCurrentRef).real();</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>  }</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>  SPDLOG_LOGGER_DEBUG(mSLog, <span class="stringliteral">&quot;\nUpdate current: {:s}&quot;</span>,</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>                      Logger::matrixToString(**mIntfCurrent));</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>}</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
-<div class="foldopen" id="foldopen00137" data-start="{" data-end="}">
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#add8c58020486a85650c4308a5f9ea961">  137</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#add8c58020486a85650c4308a5f9ea961">EMT::Ph3::CurrentSource::mnaCompAddPreStepDependencies</a>(</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    AttributeBase::List &amp;prevStepDependencies,</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    AttributeBase::List &amp;attributeDependencies,</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    AttributeBase::List &amp;modifiedAttributes) {</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>  attributeDependencies.push_back(mCurrentRef);</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>  modifiedAttributes.push_back(<a class="code hl_variable" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#ac70d8c6733b49d5d5565ba21c28b372e">mRightVector</a>);</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>  modifiedAttributes.push_back(<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a7210276935119e370dfb1f98d02c3a9a">mIntfVoltage</a>);</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>}</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span><span class="keywordtype">void</span> EMT::Ph3::CurrentSource::updateCurrent(Real time) {</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>  <span class="keywordflow">if</span> (mSrcSig != <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    mSrcSig-&gt;step(time);</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 3; i++) {</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>      (**mIntfCurrent)(i, 0) = RMS_TO_PEAK * Math::abs((**mCurrentRef)(i, 0)) *</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                               cos(Math::phase(mSrcSig-&gt;getSignal()) +</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>                                   Math::phase((**mCurrentRef)(i, 0)));</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    }</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    **mIntfCurrent = RMS_TO_PEAK * (**mCurrentRef).real();</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>  }</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>  SPDLOG_LOGGER_DEBUG(mSLog, <span class="stringliteral">&quot;\nUpdate current: {:s}&quot;</span>,</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>                      Logger::matrixToString(**mIntfCurrent));</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>}</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
+<div class="foldopen" id="foldopen00138" data-start="{" data-end="}">
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#add8c58020486a85650c4308a5f9ea961">  138</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#add8c58020486a85650c4308a5f9ea961">EMT::Ph3::CurrentSource::mnaCompAddPreStepDependencies</a>(</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    AttributeBase::List &amp;prevStepDependencies,</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    AttributeBase::List &amp;attributeDependencies,</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    AttributeBase::List &amp;modifiedAttributes) {</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>  attributeDependencies.push_back(mCurrentRef);</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>  modifiedAttributes.push_back(<a class="code hl_variable" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#ac70d8c6733b49d5d5565ba21c28b372e">mRightVector</a>);</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>  modifiedAttributes.push_back(<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a7210276935119e370dfb1f98d02c3a9a">mIntfVoltage</a>);</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>}</div>
 </div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span> </div>
-<div class="foldopen" id="foldopen00146" data-start="{" data-end="}">
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#af5d32d440cacc34df9cc33f0cfa6b509">  146</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#af5d32d440cacc34df9cc33f0cfa6b509">EMT::Ph3::CurrentSource::mnaCompPreStep</a>(Real time, Int timeStepCount) {</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>  updateCurrent(time);</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>  <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#a9a7ca2ca9f299ef00bd9ca2111f7a482">mnaCompApplyRightSideVectorStamp</a>(**<a class="code hl_variable" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#ac70d8c6733b49d5d5565ba21c28b372e">mRightVector</a>);</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>}</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
+<div class="foldopen" id="foldopen00147" data-start="{" data-end="}">
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#af5d32d440cacc34df9cc33f0cfa6b509">  147</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#af5d32d440cacc34df9cc33f0cfa6b509">EMT::Ph3::CurrentSource::mnaCompPreStep</a>(Real time, Int timeStepCount) {</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>  updateCurrent(time);</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>  <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#a9a7ca2ca9f299ef00bd9ca2111f7a482">mnaCompApplyRightSideVectorStamp</a>(**<a class="code hl_variable" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#ac70d8c6733b49d5d5565ba21c28b372e">mRightVector</a>);</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>}</div>
 </div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span> </div>
-<div class="foldopen" id="foldopen00151" data-start="{" data-end="}">
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#ad3457700b276871dd02efc0d84cadf35">  151</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#ad3457700b276871dd02efc0d84cadf35">EMT::Ph3::CurrentSource::mnaCompAddPostStepDependencies</a>(</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    AttributeBase::List &amp;prevStepDependencies,</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    AttributeBase::List &amp;attributeDependencies,</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    AttributeBase::List &amp;modifiedAttributes,</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    Attribute&lt;Matrix&gt;::Ptr &amp;leftVector) {</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>  attributeDependencies.push_back(leftVector);</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>  modifiedAttributes.push_back(<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a7210276935119e370dfb1f98d02c3a9a">mIntfVoltage</a>);</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>};</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
+<div class="foldopen" id="foldopen00152" data-start="{" data-end="}">
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#ad3457700b276871dd02efc0d84cadf35">  152</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#ad3457700b276871dd02efc0d84cadf35">EMT::Ph3::CurrentSource::mnaCompAddPostStepDependencies</a>(</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    AttributeBase::List &amp;prevStepDependencies,</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    AttributeBase::List &amp;attributeDependencies,</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    AttributeBase::List &amp;modifiedAttributes,</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    Attribute&lt;Matrix&gt;::Ptr &amp;leftVector) {</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>  attributeDependencies.push_back(leftVector);</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  modifiedAttributes.push_back(<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a7210276935119e370dfb1f98d02c3a9a">mIntfVoltage</a>);</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>};</div>
 </div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
-<div class="foldopen" id="foldopen00160" data-start="{" data-end="}">
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#af7761650e2479477f35ed97b49e8df94">  160</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#af7761650e2479477f35ed97b49e8df94">EMT::Ph3::CurrentSource::mnaCompPostStep</a>(</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    Real time, Int timeStepCount, Attribute&lt;Matrix&gt;::Ptr &amp;leftVector) {</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>  <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#a123edf9f9aec747724231b0b55ffabb6">mnaCompUpdateVoltage</a>(**leftVector);</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>}</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
+<div class="foldopen" id="foldopen00161" data-start="{" data-end="}">
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#af7761650e2479477f35ed97b49e8df94">  161</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#af7761650e2479477f35ed97b49e8df94">EMT::Ph3::CurrentSource::mnaCompPostStep</a>(</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    Real time, Int timeStepCount, Attribute&lt;Matrix&gt;::Ptr &amp;leftVector) {</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>  <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#a123edf9f9aec747724231b0b55ffabb6">mnaCompUpdateVoltage</a>(**leftVector);</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>}</div>
 </div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span> </div>
-<div class="foldopen" id="foldopen00165" data-start="{" data-end="}">
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#a123edf9f9aec747724231b0b55ffabb6">  165</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#a123edf9f9aec747724231b0b55ffabb6">EMT::Ph3::CurrentSource::mnaCompUpdateVoltage</a>(<span class="keyword">const</span> Matrix &amp;leftVector) {</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>  <span class="comment">// v1 - v0</span></div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>  **<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a7210276935119e370dfb1f98d02c3a9a">mIntfVoltage</a> = Matrix::Zero(3, 1);</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>  <span class="keywordflow">if</span> (terminalNotGrounded(1)) {</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    (**mIntfVoltage)(0, 0) =</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>        Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    (**mIntfVoltage)(1, 0) =</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>        Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));</div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    (**mIntfVoltage)(2, 0) =</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>        Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2));</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>  }</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>  <span class="keywordflow">if</span> (terminalNotGrounded(0)) {</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    (**mIntfVoltage)(0, 0) =</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>        (**<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a7210276935119e370dfb1f98d02c3a9a">mIntfVoltage</a>)(0, 0) -</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    (**mIntfVoltage)(1, 0) =</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        (**<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a7210276935119e370dfb1f98d02c3a9a">mIntfVoltage</a>)(1, 0) -</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>        Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    (**mIntfVoltage)(2, 0) =</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        (**<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a7210276935119e370dfb1f98d02c3a9a">mIntfVoltage</a>)(2, 0) -</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>  }</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>}</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span> </div>
+<div class="foldopen" id="foldopen00166" data-start="{" data-end="}">
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#a123edf9f9aec747724231b0b55ffabb6">  166</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#a123edf9f9aec747724231b0b55ffabb6">EMT::Ph3::CurrentSource::mnaCompUpdateVoltage</a>(<span class="keyword">const</span> Matrix &amp;leftVector) {</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>  <span class="comment">// v1 - v0</span></div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>  **<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a7210276935119e370dfb1f98d02c3a9a">mIntfVoltage</a> = Matrix::Zero(3, 1);</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>  <span class="keywordflow">if</span> (terminalNotGrounded(1)) {</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    (**mIntfVoltage)(0, 0) =</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>        Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    (**mIntfVoltage)(1, 0) =</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>        Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    (**mIntfVoltage)(2, 0) =</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>        Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2));</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>  }</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>  <span class="keywordflow">if</span> (terminalNotGrounded(0)) {</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    (**mIntfVoltage)(0, 0) =</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        (**<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a7210276935119e370dfb1f98d02c3a9a">mIntfVoltage</a>)(0, 0) -</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>        Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    (**mIntfVoltage)(1, 0) =</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>        (**<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a7210276935119e370dfb1f98d02c3a9a">mIntfVoltage</a>)(1, 0) -</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>        Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    (**mIntfVoltage)(2, 0) =</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        (**<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a7210276935119e370dfb1f98d02c3a9a">mIntfVoltage</a>)(2, 0) -</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>        Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>  }</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>}</div>
 </div>
-<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source_html_a123edf9f9aec747724231b0b55ffabb6"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#a123edf9f9aec747724231b0b55ffabb6">CPS::EMT::Ph3::CurrentSource::mnaCompUpdateVoltage</a></div><div class="ttdeci">void mnaCompUpdateVoltage(const Matrix &amp;leftVector) override</div><div class="ttdoc">Returns voltage through the component.</div><div class="ttdef"><b>Definition</b> <a href="#l00165">EMT_Ph3_CurrentSource.cpp:165</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source_html_a123edf9f9aec747724231b0b55ffabb6"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#a123edf9f9aec747724231b0b55ffabb6">CPS::EMT::Ph3::CurrentSource::mnaCompUpdateVoltage</a></div><div class="ttdeci">void mnaCompUpdateVoltage(const Matrix &amp;leftVector) override</div><div class="ttdoc">Returns voltage through the component.</div><div class="ttdef"><b>Definition</b> <a href="#l00166">EMT_Ph3_CurrentSource.cpp:166</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source_html_a14a315b0b412dbb8e3aff9941a60c8b8"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#a14a315b0b412dbb8e3aff9941a60c8b8">CPS::EMT::Ph3::CurrentSource::CurrentSource</a></div><div class="ttdeci">CurrentSource(String uid, String name, Logger::Level logLevel=Logger::Level::off)</div><div class="ttdoc">Defines UID, name and logging level.</div><div class="ttdef"><b>Definition</b> <a href="#l00013">EMT_Ph3_CurrentSource.cpp:13</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source_html_a776be6589cd0b4fa06865a0ceeaf5076"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#a776be6589cd0b4fa06865a0ceeaf5076">CPS::EMT::Ph3::CurrentSource::setParameters</a></div><div class="ttdeci">void setParameters(MatrixComp currentRef, Real srcFreq=50.0)</div><div class="ttdoc">Setter for reference current.</div><div class="ttdef"><b>Definition</b> <a href="#l00032">EMT_Ph3_CurrentSource.cpp:32</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source_html_a9a7ca2ca9f299ef00bd9ca2111f7a482"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#a9a7ca2ca9f299ef00bd9ca2111f7a482">CPS::EMT::Ph3::CurrentSource::mnaCompApplyRightSideVectorStamp</a></div><div class="ttdeci">void mnaCompApplyRightSideVectorStamp(Matrix &amp;rightVector) override</div><div class="ttdoc">Stamps right side (source) vector.</div><div class="ttdef"><b>Definition</b> <a href="#l00102">EMT_Ph3_CurrentSource.cpp:102</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source_html_ac738ee8b1dc689809d84ca3a9cb30544"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#ac738ee8b1dc689809d84ca3a9cb30544">CPS::EMT::Ph3::CurrentSource::initializeFromNodesAndTerminals</a></div><div class="ttdeci">void initializeFromNodesAndTerminals(Real frequency) override</div><div class="ttdoc">Initializes component from power flow data.</div><div class="ttdef"><b>Definition</b> <a href="#l00050">EMT_Ph3_CurrentSource.cpp:50</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source_html_ad3457700b276871dd02efc0d84cadf35"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#ad3457700b276871dd02efc0d84cadf35">CPS::EMT::Ph3::CurrentSource::mnaCompAddPostStepDependencies</a></div><div class="ttdeci">void mnaCompAddPostStepDependencies(AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes, Attribute&lt; Matrix &gt;::Ptr &amp;leftVector) override</div><div class="ttdoc">Add MNA post step dependencies.</div><div class="ttdef"><b>Definition</b> <a href="#l00151">EMT_Ph3_CurrentSource.cpp:151</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source_html_add8c58020486a85650c4308a5f9ea961"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#add8c58020486a85650c4308a5f9ea961">CPS::EMT::Ph3::CurrentSource::mnaCompAddPreStepDependencies</a></div><div class="ttdeci">void mnaCompAddPreStepDependencies(AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes) override</div><div class="ttdoc">Add MNA pre step dependencies.</div><div class="ttdef"><b>Definition</b> <a href="#l00137">EMT_Ph3_CurrentSource.cpp:137</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source_html_a9a7ca2ca9f299ef00bd9ca2111f7a482"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#a9a7ca2ca9f299ef00bd9ca2111f7a482">CPS::EMT::Ph3::CurrentSource::mnaCompApplyRightSideVectorStamp</a></div><div class="ttdeci">void mnaCompApplyRightSideVectorStamp(Matrix &amp;rightVector) override</div><div class="ttdoc">Stamps right side (source) vector.</div><div class="ttdef"><b>Definition</b> <a href="#l00103">EMT_Ph3_CurrentSource.cpp:103</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source_html_ac738ee8b1dc689809d84ca3a9cb30544"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#ac738ee8b1dc689809d84ca3a9cb30544">CPS::EMT::Ph3::CurrentSource::initializeFromNodesAndTerminals</a></div><div class="ttdeci">void initializeFromNodesAndTerminals(Real frequency) override</div><div class="ttdoc">Initializes component from power flow data.</div><div class="ttdef"><b>Definition</b> <a href="#l00051">EMT_Ph3_CurrentSource.cpp:51</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source_html_ad3457700b276871dd02efc0d84cadf35"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#ad3457700b276871dd02efc0d84cadf35">CPS::EMT::Ph3::CurrentSource::mnaCompAddPostStepDependencies</a></div><div class="ttdeci">void mnaCompAddPostStepDependencies(AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes, Attribute&lt; Matrix &gt;::Ptr &amp;leftVector) override</div><div class="ttdoc">Add MNA post step dependencies.</div><div class="ttdef"><b>Definition</b> <a href="#l00152">EMT_Ph3_CurrentSource.cpp:152</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source_html_add8c58020486a85650c4308a5f9ea961"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#add8c58020486a85650c4308a5f9ea961">CPS::EMT::Ph3::CurrentSource::mnaCompAddPreStepDependencies</a></div><div class="ttdeci">void mnaCompAddPreStepDependencies(AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes) override</div><div class="ttdoc">Add MNA pre step dependencies.</div><div class="ttdef"><b>Definition</b> <a href="#l00138">EMT_Ph3_CurrentSource.cpp:138</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source_html_ae15cdfc780a1dcf0d3b5151f9d143ead"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#ae15cdfc780a1dcf0d3b5151f9d143ead">CPS::EMT::Ph3::CurrentSource::clone</a></div><div class="ttdeci">SimPowerComp&lt; Real &gt;::Ptr clone(String name) override</div><div class="ttdoc">Returns a modified copy of the component with the given suffix added to the name and without.</div><div class="ttdef"><b>Definition</b> <a href="#l00025">EMT_Ph3_CurrentSource.cpp:25</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source_html_ae46e9b2838ba3ebf61e194df785691d6"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#ae46e9b2838ba3ebf61e194df785691d6">CPS::EMT::Ph3::CurrentSource::mnaCompInitialize</a></div><div class="ttdeci">void mnaCompInitialize(Real omega, Real timeStep, Attribute&lt; Matrix &gt;::Ptr leftVector) override</div><div class="ttdoc">Initializes internal variables of the component.</div><div class="ttdef"><b>Definition</b> <a href="#l00097">EMT_Ph3_CurrentSource.cpp:97</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source_html_af5d32d440cacc34df9cc33f0cfa6b509"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#af5d32d440cacc34df9cc33f0cfa6b509">CPS::EMT::Ph3::CurrentSource::mnaCompPreStep</a></div><div class="ttdeci">void mnaCompPreStep(Real time, Int timeStepCount) override</div><div class="ttdoc">MNA pre step operations.</div><div class="ttdef"><b>Definition</b> <a href="#l00146">EMT_Ph3_CurrentSource.cpp:146</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source_html_af7761650e2479477f35ed97b49e8df94"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#af7761650e2479477f35ed97b49e8df94">CPS::EMT::Ph3::CurrentSource::mnaCompPostStep</a></div><div class="ttdeci">void mnaCompPostStep(Real time, Int timeStepCount, Attribute&lt; Matrix &gt;::Ptr &amp;leftVector) override</div><div class="ttdoc">MNA post step operations.</div><div class="ttdef"><b>Definition</b> <a href="#l00160">EMT_Ph3_CurrentSource.cpp:160</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source_html_ae46e9b2838ba3ebf61e194df785691d6"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#ae46e9b2838ba3ebf61e194df785691d6">CPS::EMT::Ph3::CurrentSource::mnaCompInitialize</a></div><div class="ttdeci">void mnaCompInitialize(Real omega, Real timeStep, Attribute&lt; Matrix &gt;::Ptr leftVector) override</div><div class="ttdoc">Initializes internal variables of the component.</div><div class="ttdef"><b>Definition</b> <a href="#l00098">EMT_Ph3_CurrentSource.cpp:98</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source_html_af5d32d440cacc34df9cc33f0cfa6b509"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#af5d32d440cacc34df9cc33f0cfa6b509">CPS::EMT::Ph3::CurrentSource::mnaCompPreStep</a></div><div class="ttdeci">void mnaCompPreStep(Real time, Int timeStepCount) override</div><div class="ttdoc">MNA pre step operations.</div><div class="ttdef"><b>Definition</b> <a href="#l00147">EMT_Ph3_CurrentSource.cpp:147</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source_html_af7761650e2479477f35ed97b49e8df94"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#af7761650e2479477f35ed97b49e8df94">CPS::EMT::Ph3::CurrentSource::mnaCompPostStep</a></div><div class="ttdeci">void mnaCompPostStep(Real time, Int timeStepCount, Attribute&lt; Matrix &gt;::Ptr &amp;leftVector) override</div><div class="ttdoc">MNA post step operations.</div><div class="ttdef"><b>Definition</b> <a href="#l00161">EMT_Ph3_CurrentSource.cpp:161</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a13661eab6b670e4a5a3aa5777f8fd5d0"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a13661eab6b670e4a5a3aa5777f8fd5d0">CPS::IdentifiedObject::mName</a></div><div class="ttdeci">const Attribute&lt; String &gt;::Ptr mName</div><div class="ttdoc">Human readable name.</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00026">IdentifiedObject.h:26</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a3e10f199c595e0699725ad2cd4391c2c"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a3e10f199c595e0699725ad2cd4391c2c">CPS::IdentifiedObject::attributeTyped</a></div><div class="ttdeci">Attribute&lt; T &gt;::Ptr attributeTyped(const String &amp;name) const</div><div class="ttdoc">Return pointer to an attribute.</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00051">IdentifiedObject.h:51</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a66b765f33341283bc9b916c74047c749"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">CPS::IdentifiedObject::uid</a></div><div class="ttdeci">String uid()</div><div class="ttdoc">Returns unique id.</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00061">IdentifiedObject.h:61</a></div></div>
