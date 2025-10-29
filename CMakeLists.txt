@@ -63,7 +63,7 @@ endif()
 
 # Define NOMINMAX to prevent Windows macros from breaking std::max
 if(WIN32)
-  add_compile_definitions(NOMINMAX)
+	add_compile_definitions(NOMINMAX)
 endif()
 
 # Allow shadowing of CMake targets
