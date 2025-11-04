@@ -12,8 +12,8 @@
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/Logger.h>
 #include <dpsim-models/MNASimPowerComp.h>
-#include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Solver/MNASwitchInterface.h>
+#include <dpsim-models/Solver/MNAVariableCompInterface.h>
 
 namespace CPS {
 namespace DP {
@@ -27,7 +27,10 @@ namespace Ph3 {
 class SeriesSwitch : public MNASimPowerComp<Complex>,
                      public Base::Ph1::Switch,
                      public SharedFactory<SeriesSwitch>,
-                     public MNASwitchInterface {
+                     public MNASwitchInterface,
+                     public MNAVariableCompInterface {
+protected:
+  Bool mPrevState = false;
 
 public:
   /// Defines UID, name and logging level
@@ -68,6 +71,9 @@ public:
                                  Attribute<Matrix>::Ptr &leftVector) override;
   void mnaCompPostStep(Real time, Int timeStepCount,
                        Attribute<Matrix>::Ptr &leftVector) override;
+
+  // #### MNA section for variable component ####
+  Bool hasParameterChanged() override;
 };
 } // namespace Ph3
 } // namespace DP

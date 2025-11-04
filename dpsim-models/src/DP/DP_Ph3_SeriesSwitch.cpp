@@ -21,6 +21,9 @@ DP::Ph3::SeriesSwitch::SeriesSwitch(String uid, String name,
 
 void DP::Ph3::SeriesSwitch::initializeFromNodesAndTerminals(Real frequency) {
 
+  mTerminals[0]->setPhaseType(PhaseType::ABC);
+  mTerminals[1]->setPhaseType(PhaseType::ABC);
+
   Real impedance = (**mIsClosed) ? **mClosedResistance : **mOpenResistance;
   **mIntfVoltage = initialVoltage(1) - initialVoltage(0);
   **mIntfCurrent = **mIntfVoltage / impedance;
@@ -117,3 +120,13 @@ void DP::Ph3::SeriesSwitch::mnaCompUpdateCurrent(const Matrix &leftVector) {
                       std::abs((**mIntfCurrent)(0, 0)),
                       std::arg((**mIntfCurrent)(0, 0)));
 }
+
+Bool DP::Ph3::SeriesSwitch::hasParameterChanged() {
+  // Check if state of switch changed
+  if (!(mIsClosedPrev == this->mnaIsClosed())) {
+    mIsClosedPrev = this->mnaIsClosed();
+    return 1; //recompute system matrix
+  } else {
+    return 0; // do not recompute system matrix
+  }
+};
