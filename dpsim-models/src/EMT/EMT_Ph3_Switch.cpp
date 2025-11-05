@@ -23,14 +23,13 @@ EMT::Ph3::Switch::Switch(String uid, String name, Logger::Level logLevel)
 
 SimPowerComp<Real>::Ptr EMT::Ph3::Switch::clone(String name) {
   auto copy = Switch::make(name, mLogLevel);
-  copy->setParameters(**mOpenResistance, **mClosedResistance, **mSwitchClosed);
+  copy->setParameters(**mOpenResistance, **mClosedResistance, **mIsClosed);
   return copy;
 }
 
 void EMT::Ph3::Switch::initializeFromNodesAndTerminals(Real frequency) {
 
-  Matrix impedance =
-      (**mSwitchClosed) ? **mClosedResistance : **mOpenResistance;
+  Matrix impedance = (**mIsClosed) ? **mClosedResistance : **mOpenResistance;
   MatrixComp vInitABC = MatrixComp::Zero(3, 1);
   vInitABC(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
   vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
@@ -57,11 +56,11 @@ void EMT::Ph3::Switch::mnaCompInitialize(Real omega, Real timeStep,
   **mRightVector = Matrix::Zero(0, 0);
 }
 
-Bool EMT::Ph3::Switch::mnaIsClosed() { return **mSwitchClosed; }
+Bool EMT::Ph3::Switch::mnaIsClosed() { return **mIsClosed; }
 
 void EMT::Ph3::Switch::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
-  MatrixFixedSize<3, 3> conductance = (**mSwitchClosed)
+  MatrixFixedSize<3, 3> conductance = (**mIsClosed)
                                           ? (**mClosedResistance).inverse()
                                           : (**mOpenResistance).inverse();
 
@@ -130,8 +129,8 @@ void EMT::Ph3::Switch::mnaCompUpdateVoltage(const Matrix &leftVector) {
 
 void EMT::Ph3::Switch::mnaCompUpdateCurrent(const Matrix &leftVector) {
   Matrix conductance = Matrix::Zero(3, 3);
-  (**mSwitchClosed) ? Math::invertMatrix(**mClosedResistance, conductance)
-                    : Math::invertMatrix(**mOpenResistance, conductance);
+  (**mIsClosed) ? Math::invertMatrix(**mClosedResistance, conductance)
+                : Math::invertMatrix(**mOpenResistance, conductance);
 
   **mIntfCurrent = conductance * **mIntfVoltage;
 }
