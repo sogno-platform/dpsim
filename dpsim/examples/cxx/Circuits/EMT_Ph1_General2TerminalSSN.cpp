@@ -62,7 +62,7 @@ void EMT_Ph1_C1R1Vs_generalizedSSN() {
   // Components
 
   auto c = Ph1::SSNTypeI2T::make("c_genSSN");
-    //du_c/dt = i_c/c , y = u_c --> u = i_c, x = u_c, A = 0, B = 1/c, C = 1, D = 0
+  //du_c/dt = i_c/c , y = u_c --> u = i_c, x = u_c, A = 0, B = 1/c, C = 1, D = 0
   double c_param = 0.01;
   Matrix A = Matrix::Zero(1, 1);
   Matrix B = Matrix::Zero(1, 1);
