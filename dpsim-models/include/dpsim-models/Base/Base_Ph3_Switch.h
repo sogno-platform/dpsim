@@ -21,22 +21,22 @@ public:
   /// Resistance if switch is closed [ohm]
   const CPS::Attribute<Matrix>::Ptr mClosedResistance;
   /// Defines if Switch is open or closed
-  const CPS::Attribute<Bool>::Ptr mSwitchClosed;
+  const CPS::Attribute<Bool>::Ptr mIsClosed;
 
   explicit Switch(CPS::AttributeList::Ptr attributeList)
       : mOpenResistance(attributeList->create<Matrix>("R_open")),
         mClosedResistance(attributeList->create<Matrix>("R_closed")),
-        mSwitchClosed(attributeList->create<Bool>("is_closed")){};
+        mIsClosed(attributeList->create<Bool>("is_closed")){};
 
   ///
   void setParameters(Matrix openResistance, Matrix closedResistance,
                      Bool closed = false) {
     **mOpenResistance = openResistance;
     **mClosedResistance = closedResistance;
-    **mSwitchClosed = closed;
+    **mIsClosed = closed;
   }
-  void closeSwitch() { **mSwitchClosed = true; }
-  void openSwitch() { **mSwitchClosed = false; }
+  void closeSwitch() { **mIsClosed = true; }
+  void openSwitch() { **mIsClosed = false; }
 };
 } // namespace Ph3
 } // namespace Base
