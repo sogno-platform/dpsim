@@ -52,7 +52,29 @@ void addBaseComponents(py::module_ mBase) {
       .def("set_model_as_norton_source",
            &CPS::Base::ReducedOrderSynchronGenerator<
                CPS::Complex>::setModelAsNortonSource,
-           "model_as_norton_source"_a);
+           "model_as_norton_source"_a)
+      .def(
+          "add_exciter",
+          [](CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex> &self,
+             std::shared_ptr<CPS::Base::Exciter> exciter,
+             std::shared_ptr<CPS::Base::ExciterParameters> parameters) {
+            self.addExciter(exciter, parameters);
+          },
+          "exciter"_a, "parameters"_a)
+      .def(
+          "add_exciter",
+          [](CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex> &self,
+             std::shared_ptr<CPS::Base::Exciter> exciter) {
+            self.addExciter(exciter);
+          },
+          "exciter"_a)
+      .def(
+          "add_exciter",
+          [](CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex> &self,
+             CPS::Real Ta, CPS::Real Ka, CPS::Real Te, CPS::Real Ke,
+             CPS::Real Tf, CPS::Real Kf,
+             CPS::Real Tr) { self.addExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr); },
+          "Ta"_a, "Ka"_a, "Te"_a, "Ke"_a, "Tf"_a, "Kf"_a, "Tr"_a);
 
   py::class_<
       CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>,
@@ -75,5 +97,27 @@ void addBaseComponents(py::module_ mBase) {
       .def("set_model_as_norton_source",
            &CPS::Base::ReducedOrderSynchronGenerator<
                CPS::Real>::setModelAsNortonSource,
-           "model_as_norton_source"_a);
+           "model_as_norton_source"_a)
+      .def(
+          "add_exciter",
+          [](CPS::Base::ReducedOrderSynchronGenerator<CPS::Real> &self,
+             std::shared_ptr<CPS::Base::Exciter> exciter,
+             std::shared_ptr<CPS::Base::ExciterParameters> parameters) {
+            self.addExciter(exciter, parameters);
+          },
+          "exciter"_a, "parameters"_a)
+      .def(
+          "add_exciter",
+          [](CPS::Base::ReducedOrderSynchronGenerator<CPS::Real> &self,
+             std::shared_ptr<CPS::Base::Exciter> exciter) {
+            self.addExciter(exciter);
+          },
+          "exciter"_a)
+      .def(
+          "add_exciter",
+          [](CPS::Base::ReducedOrderSynchronGenerator<CPS::Real> &self,
+             CPS::Real Ta, CPS::Real Ka, CPS::Real Te, CPS::Real Ke,
+             CPS::Real Tf, CPS::Real Kf,
+             CPS::Real Tr) { self.addExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr); },
+          "Ta"_a, "Ka"_a, "Te"_a, "Ke"_a, "Tf"_a, "Kf"_a, "Tr"_a);
 }
