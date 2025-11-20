@@ -103,7 +103,8 @@ void simDecouplingLine_Ph3() {
   // Components
   auto vs = VoltageSource::make("v_1", Logger::Level::debug);
   Real VsRefRMS = 100000 * PEAK1PH_TO_RMS3PH;
-  MatrixComp VsRefPh3 = CPS::Math::singlePhaseVariableToThreePhase(Complex(VsRefRMS, 0));
+  MatrixComp VsRefPh3 =
+      CPS::Math::singlePhaseVariableToThreePhase(Complex(VsRefRMS, 0));
   vs->setParameters(VsRefPh3, 50);
 
   // Parametrization of components
@@ -112,10 +113,10 @@ void simDecouplingLine_Ph3() {
   Real capacitance = 1.0e-6;
 
   auto dline = DecouplingLineEMT_Ph3::make("dline", Logger::Level::debug);
-  dline->setParameters(n1, n2,
-                       CPS::Math::singlePhaseParameterToThreePhase(resistance),
-                       CPS::Math::singlePhaseParameterToThreePhase(inductance),
-                       CPS::Math::singlePhaseParameterToThreePhase(capacitance));
+  dline->setParameters(
+      n1, n2, CPS::Math::singlePhaseParameterToThreePhase(resistance),
+      CPS::Math::singlePhaseParameterToThreePhase(inductance),
+      CPS::Math::singlePhaseParameterToThreePhase(capacitance));
 
   auto load = Resistor::make("R_load", Logger::Level::debug);
   load->setParameters(CPS::Math::singlePhaseParameterToThreePhase(10000));
@@ -148,6 +149,6 @@ void simDecouplingLine_Ph3() {
 }
 
 int main(int argc, char *argv[]) {
-//   simElements();
+  //   simElements();
   simDecouplingLine_Ph3();
 }

@@ -16,7 +16,8 @@ using namespace CPS;
 using namespace CPS::EMT::Ph3;
 using namespace CPS::Signal;
 
-DecouplingLineEMT_Ph3::DecouplingLineEMT_Ph3(String name, Logger::Level logLevel)
+DecouplingLineEMT_Ph3::DecouplingLineEMT_Ph3(String name,
+                                             Logger::Level logLevel)
     : SimSignalComp(name, name, logLevel),
       mStates(mAttributes->create<Matrix>("states")),
       mSrcCur1Ref(mAttributes->create<Matrix>("i_src1", Matrix::Zero(3, 1))),
@@ -29,8 +30,9 @@ DecouplingLineEMT_Ph3::DecouplingLineEMT_Ph3(String name, Logger::Level logLevel
 }
 
 void DecouplingLineEMT_Ph3::setParameters(SimNode<Real>::Ptr node1,
-                                      SimNode<Real>::Ptr node2, Matrix resistance,
-                                      Matrix inductance, Matrix capacitance) {
+                                          SimNode<Real>::Ptr node2,
+                                          Matrix resistance, Matrix inductance,
+                                          Matrix capacitance) {
 
   mResistance = resistance;
   mInductance = inductance;
@@ -43,15 +45,17 @@ void DecouplingLineEMT_Ph3::setParameters(SimNode<Real>::Ptr node1,
   SPDLOG_LOGGER_INFO(mSLog, "surge impedance: {}", mSurgeImpedance);
   SPDLOG_LOGGER_INFO(mSLog, "delay: {}", mDelay);
 
-  mRes1->setParameters(Math::singlePhaseParameterToThreePhase(mSurgeImpedance(0,0) + mResistance(0,0) / 4));
+  mRes1->setParameters(Math::singlePhaseParameterToThreePhase(
+      mSurgeImpedance(0, 0) + mResistance(0, 0) / 4));
   mRes1->connect({SimNode<Real>::GND, node1});
-  mRes2->setParameters(Math::singlePhaseParameterToThreePhase(mSurgeImpedance(0,0) + mResistance(0,0) / 4));
+  mRes2->setParameters(Math::singlePhaseParameterToThreePhase(
+      mSurgeImpedance(0, 0) + mResistance(0, 0) / 4));
   /*Notice that, as opposed to the DecouplingLine Ph1, this resistor is connected from GND to node2,
    since currently the Ph3 resistor has the opposite sign convention for voltage and current, compared to the Ph1 countepart.*/
   mRes2->connect({SimNode<Real>::GND, node2});
-  mSrc1->setParameters(Matrix::Zero(3,1));
+  mSrc1->setParameters(Matrix::Zero(3, 1));
   mSrc1->connect({node1, SimNode<Real>::GND});
-  mSrc2->setParameters(Matrix::Zero(3,1));
+  mSrc2->setParameters(Matrix::Zero(3, 1));
   mSrc2->connect({node2, SimNode<Real>::GND});
 
   mSrcCur1 = mSrc1->mCurrentRef;
@@ -70,12 +74,15 @@ void DecouplingLineEMT_Ph3::initialize(Real omega, Real timeStep) {
   MatrixComp volt1 = -mNode1->initialVoltage();
   MatrixComp volt2 = -mNode2->initialVoltage();
 
-  MatrixComp initAdmittance = (mResistance +  Complex(0, omega) * mInductance).inverse() +
-                              Complex(0, omega) * mCapacitance / 2;
-  MatrixComp cur1 = initAdmittance * volt1 -
-                    (mResistance +  Complex(0, omega) * mInductance).inverse() * volt2;
-  MatrixComp cur2 = initAdmittance * volt2 -
-                    (mResistance +  Complex(0, omega) * mInductance).inverse() * volt1;
+  MatrixComp initAdmittance =
+      (mResistance + Complex(0, omega) * mInductance).inverse() +
+      Complex(0, omega) * mCapacitance / 2;
+  MatrixComp cur1 =
+      initAdmittance * volt1 -
+      (mResistance + Complex(0, omega) * mInductance).inverse() * volt2;
+  MatrixComp cur2 =
+      initAdmittance * volt2 -
+      (mResistance + Complex(0, omega) * mInductance).inverse() * volt1;
 
   SPDLOG_LOGGER_INFO(mSLog, "initial voltages: v_k {} v_m {}", volt1, volt2);
   SPDLOG_LOGGER_INFO(mSLog, "initial currents: i_km {} i_mk {}", cur1, cur2);
@@ -99,12 +106,15 @@ void DecouplingLineEMT_Ph3::step(Real time, Int timeStepCount) {
   Matrix volt2 = interpolate(mVolt2);
   Matrix cur1 = interpolate(mCur1);
   Matrix cur2 = interpolate(mCur2);
-  Matrix denom = (mSurgeImpedance + (mResistance / 4)) * (mSurgeImpedance + (mResistance / 4));
+  Matrix denom = (mSurgeImpedance + (mResistance / 4)) *
+                 (mSurgeImpedance + (mResistance / 4));
 
   if (timeStepCount == 0) {
     // initialization
-    **mSrcCur1Ref = cur1 - (mSurgeImpedance + mResistance / 4).inverse() * volt1;
-    **mSrcCur2Ref = cur2 - (mSurgeImpedance + mResistance / 4).inverse() * volt2;
+    **mSrcCur1Ref =
+        cur1 - (mSurgeImpedance + mResistance / 4).inverse() * volt1;
+    **mSrcCur2Ref =
+        cur2 - (mSurgeImpedance + mResistance / 4).inverse() * volt2;
   } else {
     // Update currents
     **mSrcCur1Ref = -mSurgeImpedance * denom.inverse() *
@@ -125,11 +135,13 @@ void DecouplingLineEMT_Ph3::PreStep::execute(Real time, Int timeStepCount) {
 }
 
 void DecouplingLineEMT_Ph3::postStep() {
-  // Update ringbuffers with new values  
+  // Update ringbuffers with new values
   mVolt1.row(mBufIdx) = -mRes1->intfVoltage().transpose();
   mVolt2.row(mBufIdx) = -mRes2->intfVoltage().transpose();
-  mCur1.row(mBufIdx) = -mRes1->intfCurrent().transpose() + mSrcCur1->get().real().transpose();
-  mCur2.row(mBufIdx) = -mRes2->intfCurrent().transpose() + mSrcCur2->get().real().transpose();
+  mCur1.row(mBufIdx) =
+      -mRes1->intfCurrent().transpose() + mSrcCur1->get().real().transpose();
+  mCur2.row(mBufIdx) =
+      -mRes2->intfCurrent().transpose() + mSrcCur2->get().real().transpose();
 
   mBufIdx++;
   if (mBufIdx == mBufSize)

@@ -19,7 +19,7 @@
 namespace CPS {
 namespace Signal {
 class DecouplingLineEMT_Ph3 : public SimSignalComp,
-                          public SharedFactory<DecouplingLineEMT_Ph3> {
+                              public SharedFactory<DecouplingLineEMT_Ph3> {
 protected:
   Real mDelay;
   Matrix mResistance = Matrix::Zero(3, 3);
@@ -50,7 +50,8 @@ public:
   ///FIXME: workaround for dependency analysis as long as the states aren't attributes
   const Attribute<Matrix>::Ptr mStates;
 
-  DecouplingLineEMT_Ph3(String name, Logger::Level logLevel = Logger::Level::info);
+  DecouplingLineEMT_Ph3(String name,
+                        Logger::Level logLevel = Logger::Level::info);
 
   void setParameters(SimNode<Real>::Ptr node1, SimNode<Real>::Ptr node2,
                      Matrix resistance, Matrix inductance, Matrix capacitance);
