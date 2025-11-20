@@ -11,33 +11,32 @@
 #include <vector>
 
 #include "dpsim-models/Definitions.h"
-#include "dpsim-models/EMT/EMT_Ph1_VoltageSource.h"
-#include <dpsim-models/EMT/EMT_Ph1_CurrentSource.h>
-#include <dpsim-models/EMT/EMT_Ph1_Resistor.h>
+#include "dpsim-models/EMT/EMT_Ph3_ControlledVoltageSource.h"
+#include <dpsim-models/EMT/EMT_Ph3_ControlledCurrentSource.h>
+#include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
 #include <dpsim-models/SimSignalComp.h>
 #include <dpsim-models/Task.h>
 
 namespace CPS {
 namespace Signal {
 
-class DecouplingIdealTransformer_EMT_Ph1 : public SimSignalComp,
-                          public SharedFactory<DecouplingIdealTransformer_EMT_Ph1> {
+class DecouplingIdealTransformer_EMT_Ph3 : public SimSignalComp,
+                          public SharedFactory<DecouplingIdealTransformer_EMT_Ph3> {
 protected:
   Real mDelay;
-
   std::shared_ptr<EMT::SimNode> mNode1, mNode2;
-  std::shared_ptr<EMT::Ph1::CurrentSource> mCurrentSrc;
-  std::shared_ptr<EMT::Ph1::VoltageSource> mVoltageSrc;
-  Attribute<Complex>::Ptr mSrcCurrent, mSrcVoltage;
+  std::shared_ptr<EMT::Ph3::ControlledCurrentSource> mCurrentSrc;
+  std::shared_ptr<EMT::Ph3::ControlledVoltageSource> mVoltageSrc;
+  Attribute<Matrix>::Ptr mSrcCurrent, mSrcVoltage;
 
   // Ringbuffers for the values of previous timesteps
   // TODO make these matrix attributes
-  std::vector<Real> mCur1, mVol2;
+  Matrix mCur1, mVol2;
 
   // Copy of the most recent elements of the ring buffers
   // They are used to perform extrapolation
-  std::vector<Real> mCur1Extrap, mVol2Extrap;
-  Real mCurrent1Extrap0;
+  Matrix mCur1Extrap, mVol2Extrap;
+  MatrixComp mCurrent1Extrap0;
 
   UInt mBufIdx = 0;
   UInt mMacroBufIdx = 0;
@@ -45,25 +44,25 @@ protected:
   Real mAlpha;
   CouplingMethod mCouplingMethod;
   UInt mExtrapolationDegree = 0;
-  Eigen::MatrixXd mVoltageSrcIntfCurr;
+  Matrix mVoltageSrcIntfCurr;
 
-  Real interpolate(std::vector<Real> &data);
-  Real extrapolate(std::vector<Real> &data);
+  Matrix interpolate(Matrix &data);
+  Matrix extrapolate(Matrix &data);
 
 public:
-  typedef std::shared_ptr<DecouplingIdealTransformer_EMT_Ph1> Ptr;
+  typedef std::shared_ptr<DecouplingIdealTransformer_EMT_Ph3> Ptr;
 
-  const Attribute<Real>::Ptr mSourceVoltageIntfVoltage;
-  const Attribute<Real>::Ptr mSourceVoltageIntfCurrent;
-  const Attribute<Real>::Ptr mSrcCurrentRef;
-  const Attribute<Real>::Ptr mSrcVoltageRef;
+  const Attribute<Matrix>::Ptr mSourceVoltageIntfVoltage;
+  const Attribute<Matrix>::Ptr mSourceVoltageIntfCurrent;
+  const Attribute<Matrix>::Ptr mSrcCurrentRef;
+  const Attribute<Matrix>::Ptr mSrcVoltageRef;
 
   ///FIXME: workaround for dependency analysis as long as the states aren't attributes
   const Attribute<Matrix>::Ptr mStates;
 
-  DecouplingIdealTransformer_EMT_Ph1(String name, Logger::Level logLevel = Logger::Level::info);
+  DecouplingIdealTransformer_EMT_Ph3(String name, Logger::Level logLevel = Logger::Level::info);
 
-  void setParameters(SimNode<Real>::Ptr node1, SimNode<Real>::Ptr node2, Real delay, Eigen::MatrixXd voltageSrcIntfCurr, Real current1Extrap0, CouplingMethod method = CouplingMethod::DELAY);
+  void setParameters(SimNode<Real>::Ptr node1, SimNode<Real>::Ptr node2, Real delay, Matrix voltageSrcIntfCurr, Matrix current1Extrap0, CouplingMethod method = CouplingMethod::DELAY);
   void initialize(Real omega, Real timeStep);
   void step(Real time, Int timeStepCount);
   void postStep();
@@ -72,7 +71,7 @@ public:
 
   class PreStep : public Task {
   public:
-    PreStep(DecouplingIdealTransformer_EMT_Ph1 &itm)
+    PreStep(DecouplingIdealTransformer_EMT_Ph3 &itm)
         : Task(**itm.mName + ".MnaPreStep"), mITM(itm) {
       mPrevStepDependencies.push_back(mITM.mStates);
       mModifiedAttributes.push_back(mITM.mVoltageSrc->mVoltageRef);
@@ -82,12 +81,12 @@ public:
     void execute(Real time, Int timeStepCount);
 
   private:
-    DecouplingIdealTransformer_EMT_Ph1 &mITM;
+    DecouplingIdealTransformer_EMT_Ph3 &mITM;
   };
 
   class PostStep : public Task {
   public:
-    PostStep(DecouplingIdealTransformer_EMT_Ph1 &itm)
+    PostStep(DecouplingIdealTransformer_EMT_Ph3 &itm)
         : Task(**itm.mName + ".PostStep"), mITM(itm) {
       mAttributeDependencies.push_back(mITM.mVoltageSrc->mIntfVoltage);
       mAttributeDependencies.push_back(mITM.mVoltageSrc->mIntfCurrent);
@@ -99,7 +98,7 @@ public:
     void execute(Real time, Int timeStepCount);
 
   private:
-    DecouplingIdealTransformer_EMT_Ph1 &mITM;
+    DecouplingIdealTransformer_EMT_Ph3 &mITM;
   };
 };
 } // namespace Signal

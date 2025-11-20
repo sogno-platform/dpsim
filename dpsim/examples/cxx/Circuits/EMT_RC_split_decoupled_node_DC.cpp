@@ -23,7 +23,7 @@ using namespace CPS;
 
 void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedObject::List &componentsAt1,
                   const IdentifiedObject::List &componentsAt2, Real ITMDelay, String method,
-                  Matrix irLine_0, Real i_inf_0) {
+                  Eigen::MatrixXd irLine_0, Real i_inf_0) {
 
   CouplingMethod cosimMethod = CouplingMethod::DELAY;
 
@@ -113,7 +113,6 @@ void doSim(String &name, SystemTopology &sys, Int threads, Real ts, bool isDecou
 
   // Logging
   auto logger = DataLogger::make(name);
-  logger->logAttribute("v_0", sys.node<EMT::SimNode>("n0")->attribute("v"));
   logger->logAttribute("v_1", sys.node<EMT::SimNode>("n1")->attribute("v"));
 	logger->logAttribute("i_rline", sys.component<EMT::Ph1::Resistor>("r_line")->mIntfCurrent, 1, 1);
 
@@ -147,18 +146,15 @@ void doSim(String &name, SystemTopology &sys, Int threads, Real ts, bool isDecou
 }
 
 SystemTopology buildTopology(String &name, float r1_r, float c1_c, float rLine_r, float r3_r,
-                             float c2_c, Matrix n1_v0, Matrix n2_v0) {
+                             float c2_c, Eigen::MatrixXd n1_v0, Eigen::MatrixXd n2_v0) {
   CPS::Logger::setLogDir("logs/" + name);
 
   // Nodes
 	auto gnd = EMT::SimNode::GND;
-  auto n0 = EMT::SimNode::make("n0");
 	auto n1 = EMT::SimNode::make("n1");
 	auto n2 = EMT::SimNode::make("n2");
 
 	// Components
-  auto vs = EMT::Ph1::VoltageSource::make("vs");
-  vs->setParameters(Complex(1, 0), 50);
 	auto r1 =  EMT::Ph1::Resistor::make("r_1");
 	r1->setParameters(r1_r);
 	auto c1 = EMT::Ph1::Capacitor::make("c_1");
@@ -174,16 +170,15 @@ SystemTopology buildTopology(String &name, float r1_r, float c1_c, float rLine_r
 	n2->setInitialVoltage(n2_v0 * PEAK1PH_TO_RMS3PH);
 
 	// Topology
-  vs->connect({ gnd, n0 });
-	r1->connect({ n0, n1 });
+	r1->connect({ n1, gnd });
 	rLine->connect({ n2, n1 });
 	c1->connect({ n1, gnd });
 	r3->connect({ n2, gnd });
 	c2->connect({ n2, gnd });
 
 	auto sys = SystemTopology(50,
-		SystemNodeList{gnd, n0, n1, n2},
-		SystemComponentList{vs, r1, c1, rLine, c2, r3});
+		SystemNodeList{gnd, n1, n2},
+		SystemComponentList{r1, c1, rLine, c2, r3});
 
 	return sys;
 }
@@ -223,19 +218,19 @@ int main(int argc, char *argv[]) {
 	float c2_c_1 = 1;
 
   // Initial conditions, given by the problem
-  Matrix n1_v0_1(1,1);
-  n1_v0_1(0,0) = 0.0;
-  Matrix n2_v0_1(1,1);
-  n2_v0_1(0,0) = 0.0;
+  Eigen::MatrixXd n1_v0_1(1,1);
+  n1_v0_1(0,0) = 5.0;
+  Eigen::MatrixXd n2_v0_1(1,1);
+  n2_v0_1(0,0) = 2.0;
 
-  Matrix irLine_0_1(1,1);
+  Eigen::MatrixXd irLine_0_1(1,1);
 	irLine_0_1(0,0) = (n1_v0_1(0,0) - n2_v0_1(0,0)) / rLine_r_1;
 
-  // Matrix ir3_0_1(1,1);
+  // Eigen::MatrixXd ir3_0_1(1,1);
 	// ir3_0_1(0,0) = (n2_v0_1(0,0)) / r3_r_1;
 
   // Monolithic Simulation
-  String simNameMonolithic = "EMT_RC_monolithic";
+  String simNameMonolithic = "EMT_RC_monolithic_DC";
   Logger::setLogDir("logs/" + simNameMonolithic);
   SystemTopology systemMonolithic = buildTopology(simNameMonolithic, r1_r_1, c1_c_1,
                                           rLine_r_1, r3_r_1, c2_c_1, n1_v0_1,
@@ -244,7 +239,7 @@ int main(int argc, char *argv[]) {
   doSim(simNameMonolithic, systemMonolithic, 0, timeStep);
 
   // Decoupled Simulation
-  String simNameDecoupled = "EMT_RC_split_decoupled_" + prefix + "_" + std::to_string(numThreads) + "_" + std::to_string(numSeq);
+  String simNameDecoupled = "EMT_RC_split_decoupled_DC_" + prefix + "_" + std::to_string(numThreads) + "_" + std::to_string(numSeq);
   Logger::setLogDir("logs/" + simNameDecoupled);
   SystemTopology systemDecoupled = buildTopology(simNameDecoupled, r1_r_1, c1_c_1,
                                           rLine_r_1, r3_r_1, c2_c_1, n1_v0_1,
