@@ -153,6 +153,7 @@
 #include <dpsim-models/Signal/DecouplingLineEMT.h>
 #include <dpsim-models/Signal/DecouplingLineEMT_Ph3.h>
 #include <dpsim-models/Signal/DecouplingIdealTransformer_EMT_Ph1.h>
+#include <dpsim-models/Signal/DecouplingIdealTransformer_EMT_Ph3.h>
 #include <dpsim-models/Signal/ExciterDC1.h>
 #include <dpsim-models/Signal/ExciterDC1Simp.h>
 #include <dpsim-models/Signal/ExciterST1Simp.h>

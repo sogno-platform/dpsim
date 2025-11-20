@@ -163,6 +163,7 @@ list(APPEND MODELS_SOURCES
 	Signal/DecouplingLineEMT.cpp
 	Signal/DecouplingLineEMT_Ph3.cpp
 	Signal/DecouplingIdealTransformer_EMT_Ph1.cpp
+	Signal/DecouplingIdealTransformer_EMT_Ph3.cpp
 	Signal/ExciterDC1.cpp
 	Signal/ExciterDC1Simp.cpp
 	Signal/ExciterST1Simp.cpp
