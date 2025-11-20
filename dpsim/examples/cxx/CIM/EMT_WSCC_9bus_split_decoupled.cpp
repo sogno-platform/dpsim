@@ -6,7 +6,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include "dpsim-models/Signal/DecouplingLineEMT_Ph3.h"
 #include <fstream>
 #include <iostream>
 #include <list>

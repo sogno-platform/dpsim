@@ -6,7 +6,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include "dpsim-models/Definitions.h"
 #include "dpsim/Definitions.h"
 #include <DPsim.h>
 
@@ -71,8 +70,6 @@ void simElements() {
   auto sys = SystemTopology(
       50, SystemNodeList{n1, n2, vn1},
       SystemComponentList{vs, res, ind, cap1, cap2, con1, con2, load});
-  //SystemComponentList{vs, res, ind, cap1, cap2, load});
-  //SystemComponentList{vs, res, ind, load});
 
   // Logging
   auto logger = DataLogger::make(simName);
@@ -149,6 +146,6 @@ void simDecouplingLine_Ph3() {
 }
 
 int main(int argc, char *argv[]) {
-  //   simElements();
+  simElements();
   simDecouplingLine_Ph3();
 }

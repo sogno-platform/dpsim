@@ -6,8 +6,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include "dpsim-models/Definitions.h"
-#include "dpsim-models/EMT/EMT_Ph3_Resistor.h"
 #include "dpsim-models/MathUtils.h"
 #include <Eigen/src/Core/Array.h>
 #include <dpsim-models/Signal/DecouplingLineEMT_Ph3.h>
