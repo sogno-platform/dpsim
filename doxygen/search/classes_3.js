@@ -7,13 +7,14 @@ var searchData=
   ['dcgenerator_4',['DCGenerator',['../class_c_p_s_1_1_signal_1_1_d_c_generator.html',1,'CPS::Signal']]],
   ['decouplingline_5',['DecouplingLine',['../class_c_p_s_1_1_signal_1_1_decoupling_line.html',1,'CPS::Signal']]],
   ['decouplinglineemt_6',['DecouplingLineEMT',['../class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html',1,'CPS::Signal']]],
-  ['denseluadapter_7',['DenseLUAdapter',['../class_d_psim_1_1_dense_l_u_adapter.html',1,'DPsim']]],
-  ['derivedcreator_8',['DerivedCreator',['../class_derived_creator.html',1,'']]],
-  ['diakopticssolver_9',['DiakopticsSolver',['../class_d_psim_1_1_diakoptics_solver.html',1,'DPsim']]],
-  ['directlinearsolver_10',['DirectLinearSolver',['../class_d_psim_1_1_direct_linear_solver.html',1,'DPsim']]],
-  ['directlinearsolverconfiguration_11',['DirectLinearSolverConfiguration',['../class_d_psim_1_1_direct_linear_solver_configuration.html',1,'DPsim']]],
-  ['dpdqinterface_12',['DPDQInterface',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html',1,'CPS::DP::Ph1']]],
-  ['dps_5fmagma_5fdata_13',['dps_magma_data',['../structdps__magma__data.html',1,'']]],
-  ['dpsim_5fcsr_5fmatrix_14',['dpsim_csr_matrix',['../structdpsim__csr__matrix.html',1,'']]],
-  ['dpsim_5fmna_5fplugin_15',['dpsim_mna_plugin',['../structdpsim__mna__plugin.html',1,'']]]
+  ['decouplinglineemt_5fph3_7',['DecouplingLineEMT_Ph3',['../class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t___ph3.html',1,'CPS::Signal']]],
+  ['denseluadapter_8',['DenseLUAdapter',['../class_d_psim_1_1_dense_l_u_adapter.html',1,'DPsim']]],
+  ['derivedcreator_9',['DerivedCreator',['../class_derived_creator.html',1,'']]],
+  ['diakopticssolver_10',['DiakopticsSolver',['../class_d_psim_1_1_diakoptics_solver.html',1,'DPsim']]],
+  ['directlinearsolver_11',['DirectLinearSolver',['../class_d_psim_1_1_direct_linear_solver.html',1,'DPsim']]],
+  ['directlinearsolverconfiguration_12',['DirectLinearSolverConfiguration',['../class_d_psim_1_1_direct_linear_solver_configuration.html',1,'DPsim']]],
+  ['dpdqinterface_13',['DPDQInterface',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html',1,'CPS::DP::Ph1']]],
+  ['dps_5fmagma_5fdata_14',['dps_magma_data',['../structdps__magma__data.html',1,'']]],
+  ['dpsim_5fcsr_5fmatrix_15',['dpsim_csr_matrix',['../structdpsim__csr__matrix.html',1,'']]],
+  ['dpsim_5fmna_5fplugin_16',['dpsim_mna_plugin',['../structdpsim__mna__plugin.html',1,'']]]
 ];
