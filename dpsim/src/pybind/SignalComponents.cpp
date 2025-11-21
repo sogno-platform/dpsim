@@ -48,6 +48,18 @@ void addSignalComponents(py::module_ mSignal) {
       .def("get_line_components",
            &CPS::Signal::DecouplingLineEMT::getLineComponents);
 
+  py::class_<CPS::Signal::DecouplingLineEMT_Ph3,
+             std::shared_ptr<CPS::Signal::DecouplingLineEMT_Ph3>,
+             CPS::SimSignalComp>(mSignal, "DecouplingLineEMT_Ph3",
+                                 py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::Signal::DecouplingLineEMT_Ph3::setParameters,
+           "node_1"_a, "node_2"_a, "resistance"_a, "inductance"_a,
+           "capacitance"_a)
+      .def("get_line_components",
+           &CPS::Signal::DecouplingLineEMT_Ph3::getLineComponents);
+
   py::class_<CPS::Signal::Exciter, std::shared_ptr<CPS::Signal::Exciter>,
              CPS::SimSignalComp>(mSignal, "Exciter", py::multiple_inheritance())
       .def(py::init<std::string>())
