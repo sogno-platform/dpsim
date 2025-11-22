@@ -482,6 +482,144 @@ struct ScenarioConfig {
 };
 } // namespace ThreeBus
 
+namespace KRK_TwoArea {
+struct ScenarioConfig {
+
+  //-----------Network-----------//
+  Real Vnom = 230e3;
+  Real nomFreq = 60;
+  Real nomOmega = nomFreq * 2 * PI;
+  Real nomFieldCurr = 1300;
+  Int poleNum = 2;
+
+  // Dynamic simulation, operational parameters for all the generators
+  Real Rs = 0.0025;
+  Real Ld = 1.8;
+  Real Lq = 1.7;
+  Real Ld_t = 0.3;
+  Real Lq_t = 0.5500;
+  Real Ld_s = 0.2500;
+  Real Lq_s = 0.2500;
+  Real Ll = 0.2;
+  Real Td0_t = 8.0;
+  Real Tq0_t = 0.45;
+  Real Td0_s = 0.0300;
+  Real Tq0_s = 0.05;
+
+  // Dynamic simulation, fundamental parameters for all the generators
+  Real L_ad = 1.6;
+  Real L_aq = 1.5;
+  Real L_fd = 0.10655;
+  Real R_fd = 0.00056;
+  Real L_1d = 0.10010;
+  Real R_1d = 0.01768;
+  Real L_1q = 0.45652;
+  Real R_1q = 0.01153;
+  Real L_2q = 0.05833;
+  Real R_2q = 0.02166;
+
+  // Additional parameters for the classical model
+  Real Xpd = 0.3;
+
+  //-----------Generator 1 (bus1)-----------//
+  Real nomPower_G1 = 900e6;
+  Real nomPhPhVoltRMS_G1 = 20e3;
+  Real nomFreq_G1 = 60;
+  Real H_G1 = 6.5;
+  // Initialization parameters
+  Real initActivePower_G1 = 700e6;
+  Real initMechPower_G1 = 7006;
+  Real initReactivePower_G1 = 185e6;
+  Real setPointVoltage_G1 = nomPhPhVoltRMS_G1 + 0.03 * nomPhPhVoltRMS_G1;
+
+  //-----------Generator 2 (bus2)-----------//
+  Real nomPower_G2 = 900e6;
+  Real nomPhPhVoltRMS_G2 = 20e3;
+  Real nomFreq_G2 = 60;
+  Real H_G2 = 6.5;
+  // Initialization parameters
+  Real initActivePower_G2 = 700e6;
+  Real initMechPower_G2 = 700e6;
+  Real initReactivePower_G2 = 235e6;
+  Real setPointVoltage_G2 = nomPhPhVoltRMS_G2 + 0.01 * nomPhPhVoltRMS_G2;
+
+  //-----------Generator 3 (bus3)-----------//
+  Real nomPower_G3 = 900e6;
+  Real nomPhPhVoltRMS_G3 = 20e3;
+  Real nomFreq_G3 = 60;
+  Real H_G3 = 6.175;
+  // Initialization parameters
+  Real initActivePower_G3 = 719e6;
+  Real initMechPower_G3 = 719e6;
+  Real initReactivePower_G3 = 176e6;
+  Real setPointVoltage_G3 = nomPhPhVoltRMS_G3 + 0.03 * nomPhPhVoltRMS_G3;
+
+  //-----------Generator 4 (bus4)-----------//
+  Real nomPower_G4 = 900e6;
+  Real nomPhPhVoltRMS_G4 = 20e3;
+  Real nomFreq_G4 = 60;
+  Real H_G4 = 6.175;
+  // Initialization parameters
+  Real initActivePower_G4 = 700e6;
+  Real initMechPower_G4 = 700e6;
+  Real initReactivePower_G4 = 202e6;
+  Real setPointVoltage_G4 = nomPhPhVoltRMS_G4 + 0.01 * nomPhPhVoltRMS_G4;
+
+  //-----------Transformers-----------//
+  Real t1_ratio = Vnom / nomPhPhVoltRMS_G1;
+  Real t2_ratio = Vnom / nomPhPhVoltRMS_G2;
+  Real t3_ratio = Vnom / nomPhPhVoltRMS_G3;
+  Real t4_ratio = Vnom / nomPhPhVoltRMS_G4;
+  Real transformerInductance = 0.15 * std::pow(t1_ratio, 2);
+
+  //-----------Load (bus7 and bus9)-----------
+  Real activePower_L7 = 967e6;
+  Real reactivePower_L7_inductive = 100e6;
+  Real reactivePower_L7_capacitive = 200e6;
+
+  Real activePower_L9 = 1767e6;
+  Real reactivePower_L9_inductive = 100e6;
+  Real reactivePower_L9_capacitive = 350e6;
+
+  // -----------Transmission Lines-----------//
+  Real r = 0.0529;
+  Real x = 0.529;
+  Real b = 3.308e-6;
+  Real g = 0;
+
+  //line 5-6 (25km)
+  Real lineResistance56 = r * 25;
+  Real lineInductance56 = (x / nomOmega) * 25;
+  Real lineCapacitance56 = (b / nomOmega) * 25;
+  Real lineConductance56 = 0;
+  //line 6-7 (10km)
+  Real lineResistance67 = r * 10;
+  Real lineInductance67 = (x / nomOmega) * 10;
+  Real lineCapacitance67 = (b / nomOmega) * 10;
+  Real lineConductance67 = 0;
+  //line 7-8 (110km)
+  Real lineResistance78 = r * 110;
+  Real lineInductance78 = (x / nomOmega) * 110;
+  Real lineCapacitance78 = (b / nomOmega) * 110;
+  Real lineConductance78 = 0;
+  //line 8-9 (110km)
+  Real lineResistance89 = r * 110;
+  Real lineInductance89 = (x / nomOmega) * 110;
+  Real lineCapacitance89 = (b / nomOmega) * 110;
+  Real lineConductance89 = 0;
+  //line 9-10 (10km)
+  Real lineResistance910 = r * 10;
+  Real lineInductance910 = (x / nomOmega) * 10;
+  Real lineCapacitance910 = (b / nomOmega) * 10;
+  Real lineConductance910 = 0;
+  //line 10-11 (25km)
+  Real lineResistance1011 = r * 25;
+  Real lineInductance1011 = (x / nomOmega) * 25;
+  Real lineCapacitance1011 = (b / nomOmega) * 25;
+  Real lineConductance1011 = 0;
+};
+} // namespace KRK_TwoArea
+
 namespace SGIB {
 
 struct ScenarioConfig {
