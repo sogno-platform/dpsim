@@ -13,11 +13,14 @@ using namespace CPS;
 using namespace CPS::EMT::Ph3;
 using namespace CPS::Signal;
 
-DecouplingIdealTransformer_EMT_Ph3::DecouplingIdealTransformer_EMT_Ph3(String name, Logger::Level logLevel)
+DecouplingIdealTransformer_EMT_Ph3::DecouplingIdealTransformer_EMT_Ph3(
+    String name, Logger::Level logLevel)
     : SimSignalComp(name, name, logLevel),
       mStates(mAttributes->create<Matrix>("states")),
-      mSourceVoltageIntfVoltage(mAttributes->create<Matrix>("v_intf", Matrix::Zero(3, 1))),
-      mSourceVoltageIntfCurrent(mAttributes->create<Matrix>("i_intf", Matrix::Zero(3, 1))),
+      mSourceVoltageIntfVoltage(
+          mAttributes->create<Matrix>("v_intf", Matrix::Zero(3, 1))),
+      mSourceVoltageIntfCurrent(
+          mAttributes->create<Matrix>("i_intf", Matrix::Zero(3, 1))),
       mSrcVoltageRef(mAttributes->create<Matrix>("v_ref", Matrix::Zero(3, 1))),
       mSrcCurrentRef(mAttributes->create<Matrix>("i_ref", Matrix::Zero(3, 1))) {
 
@@ -28,10 +31,9 @@ DecouplingIdealTransformer_EMT_Ph3::DecouplingIdealTransformer_EMT_Ph3(String na
   mSrcCurrent = mCurrentSrc->mCurrentRef;
 }
 
-void DecouplingIdealTransformer_EMT_Ph3::setParameters(SimNode<Real>::Ptr node1,
-                                      SimNode<Real>::Ptr node2,
-                                      Real delay, Matrix voltageSrcIntfCurr,
-                                      Matrix current1Extrap0, CouplingMethod method) {
+void DecouplingIdealTransformer_EMT_Ph3::setParameters(
+    SimNode<Real>::Ptr node1, SimNode<Real>::Ptr node2, Real delay,
+    Matrix voltageSrcIntfCurr, Matrix current1Extrap0, CouplingMethod method) {
 
   mNode1 = node1;
   mNode2 = node2;
@@ -43,11 +45,11 @@ void DecouplingIdealTransformer_EMT_Ph3::setParameters(SimNode<Real>::Ptr node1,
     mExtrapolationDegree = 1;
   }
 
-  mVoltageSrc->setParameters(Matrix::Zero(3,1));
+  mVoltageSrc->setParameters(Matrix::Zero(3, 1));
   mVoltageSrcIntfCurr = voltageSrcIntfCurr;
   mCurrent1Extrap0 = current1Extrap0;
   mVoltageSrc->connect({SimNode<Real>::GND, node1});
-  mCurrentSrc->setParameters(Matrix::Zero(3,1));
+  mCurrentSrc->setParameters(Matrix::Zero(3, 1));
   mCurrentSrc->connect({node2, SimNode<Real>::GND});
 }
 
@@ -56,8 +58,7 @@ void DecouplingIdealTransformer_EMT_Ph3::initialize(Real omega, Real timeStep) {
     mDelay = 0;
     mBufSize = 1;
     mAlpha = 1;
-  }
-  else {
+  } else {
     mBufSize = static_cast<UInt>(ceil(mDelay / timeStep));
     mAlpha = 1 - (mBufSize - mDelay / timeStep);
   }
@@ -88,8 +89,10 @@ void DecouplingIdealTransformer_EMT_Ph3::initialize(Real omega, Real timeStep) {
   mCur1 = cur1.real().transpose().replicate(mBufSize, 1);
   mVol2 = volt2.real().transpose().replicate(mBufSize, 1);
 
-  SPDLOG_LOGGER_INFO(mSLog, "Verify initial current: i_1 {}", mCurrentSrc->intfCurrent()(0, 0));
-  SPDLOG_LOGGER_INFO(mSLog, "Verify initial voltage: v_2 {}", mVoltageSrc->intfVoltage()(0, 0));
+  SPDLOG_LOGGER_INFO(mSLog, "Verify initial current: i_1 {}",
+                     mCurrentSrc->intfCurrent()(0, 0));
+  SPDLOG_LOGGER_INFO(mSLog, "Verify initial voltage: v_2 {}",
+                     mVoltageSrc->intfVoltage()(0, 0));
 
   mCur1Extrap = Matrix(mExtrapolationDegree + 1, 3);
   mCur1Extrap.row(0) = mCurrent1Extrap0.real().transpose();
@@ -108,10 +111,13 @@ Matrix DecouplingIdealTransformer_EMT_Ph3::interpolate(Matrix &data) {
 Matrix DecouplingIdealTransformer_EMT_Ph3::extrapolate(Matrix &data) {
   if (mCouplingMethod == CouplingMethod::EXTRAPOLATION_LINEAR) {
     Matrix c1 = data.row(mMacroBufIdx);
-    Matrix c2 = mMacroBufIdx == mExtrapolationDegree ? data.row(0) : data.row(mMacroBufIdx + 1);
-    Real delayFraction = (mDelay*(mBufIdx+1)) / static_cast<float>(mBufSize);
+    Matrix c2 = mMacroBufIdx == mExtrapolationDegree
+                    ? data.row(0)
+                    : data.row(mMacroBufIdx + 1);
+    Real delayFraction =
+        (mDelay * (mBufIdx + 1)) / static_cast<float>(mBufSize);
     Real tEval = mDelay + delayFraction;
-    return (((c2 - c1)/mDelay) * tEval + c1).transpose();
+    return (((c2 - c1) / mDelay) * tEval + c1).transpose();
   } else {
     return (data.row(mMacroBufIdx)).transpose();
   }
@@ -137,7 +143,8 @@ void DecouplingIdealTransformer_EMT_Ph3::step(Real time, Int timeStepCount) {
   mSrcCurrent->set(**mSrcCurrentRef);
 }
 
-void DecouplingIdealTransformer_EMT_Ph3::PreStep::execute(Real time, Int timeStepCount) {
+void DecouplingIdealTransformer_EMT_Ph3::PreStep::execute(Real time,
+                                                          Int timeStepCount) {
   mITM.step(time, timeStepCount);
 }
 
@@ -158,7 +165,8 @@ void DecouplingIdealTransformer_EMT_Ph3::postStep() {
   }
 }
 
-void DecouplingIdealTransformer_EMT_Ph3::PostStep::execute(Real time, Int timeStepCount) {
+void DecouplingIdealTransformer_EMT_Ph3::PostStep::execute(Real time,
+                                                           Int timeStepCount) {
   mITM.postStep();
 }
 

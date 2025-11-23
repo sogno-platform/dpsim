@@ -61,7 +61,7 @@ void SimNode<VarType>::initialize(Matrix frequencies) {
   **mVoltage = MatrixVar<VarType>::Zero(rowNum, mNumFreqs);
 }
 
-template <typename VarType> 
+template <typename VarType>
 std::shared_ptr<TopologicalNode> SimNode<VarType>::clone(String name) {
   auto nodeCpy = SimNode<VarType>::make(name, phaseType());
   nodeCpy->setInitialVoltage(initialVoltage());

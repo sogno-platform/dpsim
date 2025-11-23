@@ -16,7 +16,8 @@ using namespace CPS;
 using namespace CPS::SP::Ph1;
 using namespace CPS::Signal;
 
-DecouplingIdealTransformer_SP_Ph1::DecouplingIdealTransformer_SP_Ph1(String name, Logger::Level logLevel)
+DecouplingIdealTransformer_SP_Ph1::DecouplingIdealTransformer_SP_Ph1(
+    String name, Logger::Level logLevel)
     : SimSignalComp(name, name, logLevel),
       mStates(mAttributes->create<Matrix>("states")),
       mSourceVoltageIntfVoltage(mAttributes->create<Complex>("v_intf")),
@@ -33,10 +34,9 @@ DecouplingIdealTransformer_SP_Ph1::DecouplingIdealTransformer_SP_Ph1(String name
   mSrcCurrent = mCurrentSrc->mCurrentRef;
 }
 
-void DecouplingIdealTransformer_SP_Ph1::setParameters(SimNode<Complex>::Ptr node1,
-                                      SimNode<Complex>::Ptr node2,
-                                      Real delay, Matrix voltageSrcIntfCurr,
-                                      Complex current1Extrap0, CouplingMethod method) {
+void DecouplingIdealTransformer_SP_Ph1::setParameters(
+    SimNode<Complex>::Ptr node1, SimNode<Complex>::Ptr node2, Real delay,
+    Matrix voltageSrcIntfCurr, Complex current1Extrap0, CouplingMethod method) {
 
   mNode1 = node1;
   mNode2 = node2;
@@ -66,8 +66,7 @@ void DecouplingIdealTransformer_SP_Ph1::initialize(Real omega, Real timeStep) {
     mDelay = 0;
     mBufSize = 1;
     mAlpha = 1;
-  }
-  else {
+  } else {
     mBufSize = static_cast<UInt>(ceil(mDelay / timeStep));
     mAlpha = 1 - (mBufSize - mDelay / timeStep);
   }
@@ -77,7 +76,9 @@ void DecouplingIdealTransformer_SP_Ph1::initialize(Real omega, Real timeStep) {
   Complex cur1 = mVoltageSrc->mIntfCurrent->get()(0);
   Complex volt2 = mNode2->initialSingleVoltage() * RMS3PH_TO_PEAK1PH;
 
-  mVirtualNode->setInitialVoltage(mNode1->initialSingleVoltage() * RMS3PH_TO_PEAK1PH  - cur1 * mInternalSeriesResistance);
+  mVirtualNode->setInitialVoltage(mNode1->initialSingleVoltage() *
+                                      RMS3PH_TO_PEAK1PH -
+                                  cur1 * mInternalSeriesResistance);
 
   SPDLOG_LOGGER_INFO(mSLog, "initial current: i_1 {}", cur1);
   SPDLOG_LOGGER_INFO(mSLog, "initial voltage: v_2 {}", volt2);
@@ -87,8 +88,8 @@ void DecouplingIdealTransformer_SP_Ph1::initialize(Real omega, Real timeStep) {
   mVoltageSrc->setParameters(**mSrcVoltageRef);
   mCurrentSrc->setParameters(**mSrcCurrentRef);
 
-  Matrix mSourceCurrentIntfVoltage(1,1);
-  mSourceCurrentIntfVoltage(0,0) = std::abs(volt2);
+  Matrix mSourceCurrentIntfVoltage(1, 1);
+  mSourceCurrentIntfVoltage(0, 0) = std::abs(volt2);
   mCurrentSrc->setIntfVoltage(mSourceCurrentIntfVoltage);
 
   mVoltageSrc->setIntfVoltage(mSourceCurrentIntfVoltage);
@@ -101,8 +102,10 @@ void DecouplingIdealTransformer_SP_Ph1::initialize(Real omega, Real timeStep) {
   mCur1.resize(mBufSize, cur1);
   mVol2.resize(mBufSize, volt2);
 
-  SPDLOG_LOGGER_INFO(mSLog, "Verify initial current: i_1 {}", mCurrentSrc->intfCurrent()(0, 0));
-  SPDLOG_LOGGER_INFO(mSLog, "Verify initial voltage: v_2 {}", mVoltageSrc->intfVoltage()(0, 0));
+  SPDLOG_LOGGER_INFO(mSLog, "Verify initial current: i_1 {}",
+                     mCurrentSrc->intfCurrent()(0, 0));
+  SPDLOG_LOGGER_INFO(mSLog, "Verify initial voltage: v_2 {}",
+                     mVoltageSrc->intfVoltage()(0, 0));
 
   mCur1Extrap = std::vector<Complex>(mExtrapolationDegree + 1, Complex(0, 0));
   mCur1Extrap[0] = mCurrent1Extrap0;
@@ -112,19 +115,23 @@ void DecouplingIdealTransformer_SP_Ph1::initialize(Real omega, Real timeStep) {
   mVol2Extrap = std::vector<Complex>(mExtrapolationDegree + 1, volt2);
 }
 
-Complex DecouplingIdealTransformer_SP_Ph1::interpolate(std::vector<Complex> &data) {
+Complex
+DecouplingIdealTransformer_SP_Ph1::interpolate(std::vector<Complex> &data) {
   Complex c1 = data[mBufIdx];
   Complex c2 = mBufIdx == mBufSize - 1 ? data[0] : data[mBufIdx + 1];
   return mAlpha * c1 + (1 - mAlpha) * c2;
 }
 
-Complex DecouplingIdealTransformer_SP_Ph1::extrapolate(std::vector<Complex> &data) {
+Complex
+DecouplingIdealTransformer_SP_Ph1::extrapolate(std::vector<Complex> &data) {
   if (mCouplingMethod == CouplingMethod::EXTRAPOLATION_LINEAR) {
     Complex c1 = data[mMacroBufIdx];
-    Complex c2 = mMacroBufIdx == mExtrapolationDegree ? data[0] : data[mMacroBufIdx + 1];
-    Real delayFraction = (mDelay*(mBufIdx+1)) / static_cast<float>(mBufSize);
+    Complex c2 =
+        mMacroBufIdx == mExtrapolationDegree ? data[0] : data[mMacroBufIdx + 1];
+    Real delayFraction =
+        (mDelay * (mBufIdx + 1)) / static_cast<float>(mBufSize);
     Real tEval = mDelay + delayFraction;
-    return ((c2 - c1)/mDelay) * tEval + c1;
+    return ((c2 - c1) / mDelay) * tEval + c1;
   } else {
     return data[mMacroBufIdx];
   }
@@ -150,7 +157,8 @@ void DecouplingIdealTransformer_SP_Ph1::step(Real time, Int timeStepCount) {
   mSrcCurrent->set(**mSrcCurrentRef);
 }
 
-void DecouplingIdealTransformer_SP_Ph1::PreStep::execute(Real time, Int timeStepCount) {
+void DecouplingIdealTransformer_SP_Ph1::PreStep::execute(Real time,
+                                                         Int timeStepCount) {
   mITM.step(time, timeStepCount);
 }
 
@@ -171,7 +179,8 @@ void DecouplingIdealTransformer_SP_Ph1::postStep() {
   }
 }
 
-void DecouplingIdealTransformer_SP_Ph1::PostStep::execute(Real time, Int timeStepCount) {
+void DecouplingIdealTransformer_SP_Ph1::PostStep::execute(Real time,
+                                                          Int timeStepCount) {
   mITM.postStep();
 }
 

@@ -59,7 +59,7 @@ public:
          Logger::Level logLevel = Logger::Level::off);
 
   SimPowerComp<Real>::Ptr clone(String name) override;
-  
+
   // #### General ####
   virtual String description() override {
     return fmt::format("Active: {}MW, Reactive: {}MVAr, Voltage: {}kV",

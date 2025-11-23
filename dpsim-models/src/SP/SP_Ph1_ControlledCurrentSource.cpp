@@ -10,8 +10,8 @@
 
 using namespace CPS;
 
-SP::Ph1::ControlledCurrentSource::ControlledCurrentSource(String uid, String name,
-                                      Logger::Level logLevel)
+SP::Ph1::ControlledCurrentSource::ControlledCurrentSource(
+    String uid, String name, Logger::Level logLevel)
     : MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
       mCurrentRef(mAttributes->createDynamic<Complex>("I_ref")) {
   setTerminalNumber(2);
@@ -19,8 +19,8 @@ SP::Ph1::ControlledCurrentSource::ControlledCurrentSource(String uid, String nam
   **mIntfCurrent = MatrixComp::Zero(1, 1);
 }
 
-SP::Ph1::ControlledCurrentSource::ControlledCurrentSource(String name, Complex current,
-                                      Logger::Level logLevel)
+SP::Ph1::ControlledCurrentSource::ControlledCurrentSource(
+    String name, Complex current, Logger::Level logLevel)
     : ControlledCurrentSource(name, logLevel) {
   setParameters(current);
 }
@@ -30,13 +30,15 @@ void SP::Ph1::ControlledCurrentSource::setParameters(Complex current) {
   mParametersSet = true;
 }
 
-SimPowerComp<Complex>::Ptr SP::Ph1::ControlledCurrentSource::clone(String name) {
+SimPowerComp<Complex>::Ptr
+SP::Ph1::ControlledCurrentSource::clone(String name) {
   auto copy = ControlledCurrentSource::make(name, mLogLevel);
   copy->setParameters(**mCurrentRef);
   return copy;
 }
 
-void SP::Ph1::ControlledCurrentSource::initializeFromNodesAndTerminals(Real frequency) {
+void SP::Ph1::ControlledCurrentSource::initializeFromNodesAndTerminals(
+    Real frequency) {
 
   (**mIntfVoltage)(0, 0) = initialSingleVoltage(0) - initialSingleVoltage(1);
   (**mIntfCurrent)(0, 0) = **mCurrentRef;
@@ -69,7 +71,8 @@ void SP::Ph1::ControlledCurrentSource::mnaCompAddPreStepDependencies(
   modifiedAttributes.push_back(mIntfCurrent);
 }
 
-void SP::Ph1::ControlledCurrentSource::mnaCompPreStep(Real time, Int timeStepCount) {
+void SP::Ph1::ControlledCurrentSource::mnaCompPreStep(Real time,
+                                                      Int timeStepCount) {
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
@@ -99,7 +102,8 @@ void SP::Ph1::ControlledCurrentSource::mnaCompPostStep(
   mnaCompUpdateVoltage(**leftVector);
 }
 
-void SP::Ph1::ControlledCurrentSource::mnaCompUpdateVoltage(const Matrix &leftVector) {
+void SP::Ph1::ControlledCurrentSource::mnaCompUpdateVoltage(
+    const Matrix &leftVector) {
   (**mIntfVoltage)(0, 0) = 0;
   if (terminalNotGrounded(0))
     (**mIntfVoltage)(0, 0) =

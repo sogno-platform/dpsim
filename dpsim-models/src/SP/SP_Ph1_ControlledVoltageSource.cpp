@@ -10,8 +10,8 @@
 
 using namespace CPS;
 
-SP::Ph1::ControlledVoltageSource::ControlledVoltageSource(String uid, String name,
-                                      Logger::Level logLevel)
+SP::Ph1::ControlledVoltageSource::ControlledVoltageSource(
+    String uid, String name, Logger::Level logLevel)
     : MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
       mVoltageRef(mAttributes->createDynamic<Complex>("V_ref")),
       mSrcFreq(mAttributes->createDynamic<Real>("f_src")) {
@@ -21,7 +21,8 @@ SP::Ph1::ControlledVoltageSource::ControlledVoltageSource(String uid, String nam
   **mIntfCurrent = MatrixComp::Zero(1, 1);
 }
 
-SimPowerComp<Complex>::Ptr SP::Ph1::ControlledVoltageSource::clone(String name) {
+SimPowerComp<Complex>::Ptr
+SP::Ph1::ControlledVoltageSource::clone(String name) {
   auto copy = ControlledVoltageSource::make(name, mLogLevel);
   copy->setParameters(**mVoltageRef);
   return copy;
@@ -32,7 +33,8 @@ void SP::Ph1::ControlledVoltageSource::setParameters(Complex voltageRef) {
   mParametersSet = true;
 }
 
-void SP::Ph1::ControlledVoltageSource::initializeFromNodesAndTerminals(Real frequency) {
+void SP::Ph1::ControlledVoltageSource::initializeFromNodesAndTerminals(
+    Real frequency) {
   ///CHECK: The frequency parameter is unused
   if (**mVoltageRef == Complex(0, 0))
     **mVoltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);
@@ -140,7 +142,8 @@ void SP::Ph1::ControlledVoltageSource::updateVoltage(Real time) {
                       Logger::phasorToString((**mIntfVoltage)(0, 0)));
 }
 
-void SP::Ph1::ControlledVoltageSource::mnaCompPreStep(Real time, Int timeStepCount) {
+void SP::Ph1::ControlledVoltageSource::mnaCompPreStep(Real time,
+                                                      Int timeStepCount) {
   updateVoltage(time);
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
@@ -150,7 +153,8 @@ void SP::Ph1::ControlledVoltageSource::mnaCompPostStep(
   mnaCompUpdateCurrent(**leftVector);
 }
 
-void SP::Ph1::ControlledVoltageSource::mnaCompUpdateCurrent(const Matrix &leftVector) {
+void SP::Ph1::ControlledVoltageSource::mnaCompUpdateCurrent(
+    const Matrix &leftVector) {
   for (UInt freq = 0; freq < mNumFreqs; freq++) {
     (**mIntfCurrent)(0, freq) = Math::complexFromVectorElement(
         leftVector, mVirtualNodes[0]->matrixNodeIndex(), mNumFreqs, freq);

@@ -131,12 +131,7 @@ enum class GeneratorType {
 };
 enum class SGOrder { SG3Order, SG4Order, SG5Order, SG6aOrder, SG6bOrder };
 
-
-enum class CouplingMethod {
-  DELAY,
-  EXTRAPOLATION_ZOH,
-  EXTRAPOLATION_LINEAR
-};
+enum class CouplingMethod { DELAY, EXTRAPOLATION_ZOH, EXTRAPOLATION_LINEAR };
 
 // ### Exceptions ###
 class Exception : public std::exception {};

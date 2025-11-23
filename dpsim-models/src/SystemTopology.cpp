@@ -255,7 +255,7 @@ void SystemTopology::removeComponent(const String &name) {
 }
 
 void SystemTopology::removeNode(const String &name) {
-  for (auto it = mNodes.begin(); it != mNodes.end(); ) {
+  for (auto it = mNodes.begin(); it != mNodes.end();) {
     if ((*it)->name() == name) {
       it = mNodes.erase(it);
     } else {

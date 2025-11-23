@@ -52,7 +52,7 @@ SimPowerComp<Real>::Ptr EMT::Ph3::RXLoad::clone(String name) {
   if (doInitPowerFromTerminal) {
     initPowerFromTerminal();
   }
-  
+
   auto copy = RXLoad::make(name, mLogLevel);
   copy->setParameters(**mActivePower, **mReactivePower, **mNomVoltage);
   return copy;
@@ -105,10 +105,10 @@ void EMT::Ph3::RXLoad::initPowerFromTerminal() {
   **mNomVoltage = std::abs(mTerminals[0]->initialSingleVoltage());
 
   SPDLOG_LOGGER_INFO(mSLog,
-                      "\nActive Power [W]: {}"
-                      "\nReactive Power [VAr]: {}",
-                      Logger::matrixToString(**mActivePower),
-                      Logger::matrixToString(**mReactivePower));
+                     "\nActive Power [W]: {}"
+                     "\nReactive Power [VAr]: {}",
+                     Logger::matrixToString(**mActivePower),
+                     Logger::matrixToString(**mReactivePower));
   SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
 }
 

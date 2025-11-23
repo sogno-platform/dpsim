@@ -13,7 +13,8 @@ using namespace CPS;
 using namespace CPS::EMT::Ph1;
 using namespace CPS::Signal;
 
-DecouplingIdealTransformer_EMT_Ph1::DecouplingIdealTransformer_EMT_Ph1(String name, Logger::Level logLevel)
+DecouplingIdealTransformer_EMT_Ph1::DecouplingIdealTransformer_EMT_Ph1(
+    String name, Logger::Level logLevel)
     : SimSignalComp(name, name, logLevel),
       mStates(mAttributes->create<Matrix>("states")),
       mSourceVoltageIntfVoltage(mAttributes->create<Real>("v_intf")),
@@ -28,10 +29,10 @@ DecouplingIdealTransformer_EMT_Ph1::DecouplingIdealTransformer_EMT_Ph1(String na
   mSrcCurrent = mCurrentSrc->mCurrentRef;
 }
 
-void DecouplingIdealTransformer_EMT_Ph1::setParameters(SimNode<Real>::Ptr node1,
-                                      SimNode<Real>::Ptr node2,
-                                      Real delay, Eigen::MatrixXd voltageSrcIntfCurr,
-                                      Real current1Extrap0, CouplingMethod method) {
+void DecouplingIdealTransformer_EMT_Ph1::setParameters(
+    SimNode<Real>::Ptr node1, SimNode<Real>::Ptr node2, Real delay,
+    Eigen::MatrixXd voltageSrcIntfCurr, Real current1Extrap0,
+    CouplingMethod method) {
 
   mNode1 = node1;
   mNode2 = node2;
@@ -56,8 +57,7 @@ void DecouplingIdealTransformer_EMT_Ph1::initialize(Real omega, Real timeStep) {
     mDelay = 0;
     mBufSize = 1;
     mAlpha = 1;
-  }
-  else {
+  } else {
     mBufSize = static_cast<UInt>(ceil(mDelay / timeStep));
     mAlpha = 1 - (mBufSize - mDelay / timeStep);
   }
@@ -75,8 +75,8 @@ void DecouplingIdealTransformer_EMT_Ph1::initialize(Real omega, Real timeStep) {
   mVoltageSrc->setParameters(**mSrcVoltageRef);
   mCurrentSrc->setParameters(**mSrcCurrentRef);
 
-  Matrix mSourceCurrentIntfVoltage(1,1);
-  mSourceCurrentIntfVoltage(0,0) = volt2.real();
+  Matrix mSourceCurrentIntfVoltage(1, 1);
+  mSourceCurrentIntfVoltage(0, 0) = volt2.real();
   mCurrentSrc->setIntfVoltage(mSourceCurrentIntfVoltage);
 
   mVoltageSrc->setIntfVoltage(mSourceCurrentIntfVoltage);
@@ -89,8 +89,10 @@ void DecouplingIdealTransformer_EMT_Ph1::initialize(Real omega, Real timeStep) {
   mCur1.resize(mBufSize, cur1.real());
   mVol2.resize(mBufSize, volt2.real());
 
-  SPDLOG_LOGGER_INFO(mSLog, "Verify initial current: i_1 {}", mCurrentSrc->intfCurrent()(0, 0));
-  SPDLOG_LOGGER_INFO(mSLog, "Verify initial voltage: v_2 {}", mVoltageSrc->intfVoltage()(0, 0));
+  SPDLOG_LOGGER_INFO(mSLog, "Verify initial current: i_1 {}",
+                     mCurrentSrc->intfCurrent()(0, 0));
+  SPDLOG_LOGGER_INFO(mSLog, "Verify initial voltage: v_2 {}",
+                     mVoltageSrc->intfVoltage()(0, 0));
 
   mCur1Extrap.resize(mExtrapolationDegree + 1, 0);
   mCur1Extrap[0] = mCurrent1Extrap0;
@@ -107,10 +109,12 @@ Real DecouplingIdealTransformer_EMT_Ph1::interpolate(std::vector<Real> &data) {
 Real DecouplingIdealTransformer_EMT_Ph1::extrapolate(std::vector<Real> &data) {
   if (mCouplingMethod == CouplingMethod::EXTRAPOLATION_LINEAR) {
     Real c1 = data[mMacroBufIdx];
-    Real c2 = mMacroBufIdx == mExtrapolationDegree ? data[0] : data[mMacroBufIdx + 1];
-    Real delayFraction = (mDelay*(mBufIdx+1)) / static_cast<float>(mBufSize);
+    Real c2 =
+        mMacroBufIdx == mExtrapolationDegree ? data[0] : data[mMacroBufIdx + 1];
+    Real delayFraction =
+        (mDelay * (mBufIdx + 1)) / static_cast<float>(mBufSize);
     Real tEval = mDelay + delayFraction;
-    return ((c2 - c1)/mDelay) * tEval + c1;
+    return ((c2 - c1) / mDelay) * tEval + c1;
   } else {
     return data[mMacroBufIdx];
   }
@@ -136,7 +140,8 @@ void DecouplingIdealTransformer_EMT_Ph1::step(Real time, Int timeStepCount) {
   mSrcCurrent->set(**mSrcCurrentRef);
 }
 
-void DecouplingIdealTransformer_EMT_Ph1::PreStep::execute(Real time, Int timeStepCount) {
+void DecouplingIdealTransformer_EMT_Ph1::PreStep::execute(Real time,
+                                                          Int timeStepCount) {
   mITM.step(time, timeStepCount);
 }
 
@@ -157,7 +162,8 @@ void DecouplingIdealTransformer_EMT_Ph1::postStep() {
   }
 }
 
-void DecouplingIdealTransformer_EMT_Ph1::PostStep::execute(Real time, Int timeStepCount) {
+void DecouplingIdealTransformer_EMT_Ph1::PostStep::execute(Real time,
+                                                           Int timeStepCount) {
   mITM.postStep();
 }
 

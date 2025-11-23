@@ -60,13 +60,14 @@ void addSignalComponents(py::module_ mSignal) {
       .def("get_line_components",
            &CPS::Signal::DecouplingLineEMT_Ph3::getLineComponents);
 
-             py::class_<CPS::Signal::DecouplingIdealTransformer_SP_Ph1,
+  py::class_<CPS::Signal::DecouplingIdealTransformer_SP_Ph1,
              std::shared_ptr<CPS::Signal::DecouplingIdealTransformer_SP_Ph1>,
              CPS::SimSignalComp>(mSignal, "DecouplingIdealTransformer_SP_Ph1",
                                  py::multiple_inheritance())
       .def(py::init<std::string>())
       .def(py::init<std::string, CPS::Logger::Level>())
-      .def("set_parameters", &CPS::Signal::DecouplingIdealTransformer_SP_Ph1::setParameters,
+      .def("set_parameters",
+           &CPS::Signal::DecouplingIdealTransformer_SP_Ph1::setParameters,
            "node_1"_a, "node_2"_a, "delay"_a, "v_src_intf_cur"_a,
            "cur1_extrap_0"_a, "coupling_method"_a)
       .def("get_components",
@@ -80,7 +81,8 @@ void addSignalComponents(py::module_ mSignal) {
                                  py::multiple_inheritance())
       .def(py::init<std::string>())
       .def(py::init<std::string, CPS::Logger::Level>())
-      .def("set_parameters", &CPS::Signal::DecouplingIdealTransformer_EMT_Ph1::setParameters,
+      .def("set_parameters",
+           &CPS::Signal::DecouplingIdealTransformer_EMT_Ph1::setParameters,
            "node_1"_a, "node_2"_a, "delay"_a, "v_src_intf_cur"_a,
            "cur1_extrap_0"_a, "coupling_method"_a)
       .def("get_components",
@@ -92,7 +94,8 @@ void addSignalComponents(py::module_ mSignal) {
                                  py::multiple_inheritance())
       .def(py::init<std::string>())
       .def(py::init<std::string, CPS::Logger::Level>())
-      .def("set_parameters", &CPS::Signal::DecouplingIdealTransformer_EMT_Ph3::setParameters,
+      .def("set_parameters",
+           &CPS::Signal::DecouplingIdealTransformer_EMT_Ph3::setParameters,
            "node_1"_a, "node_2"_a, "delay"_a, "v_src_intf_cur"_a,
            "cur1_extrap_0"_a, "coupling_method"_a)
       .def("get_components",
