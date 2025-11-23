@@ -65,7 +65,7 @@ public:
                 phaseType) {}
 
   std::shared_ptr<TopologicalNode> clone(String name);
-  
+
   /// Initialize mVoltage according to mInitialVoltage
   void initialize();
   /// Initialize state matrices with size according to phase type and frequency number

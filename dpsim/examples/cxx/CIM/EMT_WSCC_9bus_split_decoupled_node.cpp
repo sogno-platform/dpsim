@@ -10,7 +10,6 @@
 #include "dpsim-models/EMT/EMT_Ph3_RXLoad.h"
 #include "dpsim-models/IdentifiedObject.h"
 #include "dpsim-models/Signal/DecouplingIdealTransformer_EMT_Ph1.h"
-#include <fstream>
 #include <iostream>
 #include <list>
 
@@ -20,14 +19,17 @@
 using namespace DPsim;
 using namespace CPS;
 
-void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedObject::List &componentsAt1,
-                    const IdentifiedObject::List &componentsAt2) {
+void decoupleNode(SystemTopology &sys, const String &nodeName,
+                  const IdentifiedObject::List &componentsAt1,
+                  const IdentifiedObject::List &componentsAt2) {
   SimNode<Real>::List newNodes;
   SimPowerComp<Real>::List newComponents;
 
   auto intfNode = sys.node<EMT::SimNode>(nodeName);
-  std::shared_ptr<TopologicalNode> nodeCopy1Topo = intfNode->clone(nodeName + "_1");
-  std::shared_ptr<TopologicalNode> nodeCopy2Topo = intfNode->clone(nodeName + "_2");
+  std::shared_ptr<TopologicalNode> nodeCopy1Topo =
+      intfNode->clone(nodeName + "_1");
+  std::shared_ptr<TopologicalNode> nodeCopy2Topo =
+      intfNode->clone(nodeName + "_2");
 
   auto nodeCopy1 = std::dynamic_pointer_cast<SimNode<Real>>(nodeCopy1Topo);
   auto nodeCopy2 = std::dynamic_pointer_cast<SimNode<Real>>(nodeCopy2Topo);
@@ -54,9 +56,9 @@ void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedO
     compCopy->connect(nodeCopies);
 
     // update the terminal powers for powerflow initialization
-    for (UInt nTerminal = 0; nTerminal < comp->terminalNumber();
-          nTerminal++) {
-      compCopy->terminal(nTerminal)->setPower(comp->terminal(nTerminal)->power());
+    for (UInt nTerminal = 0; nTerminal < comp->terminalNumber(); nTerminal++) {
+      compCopy->terminal(nTerminal)->setPower(
+          comp->terminal(nTerminal)->power());
     }
     newComponents.push_back(compCopy);
     sys.removeComponent(comp->name());
@@ -81,9 +83,9 @@ void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedO
     compCopy->connect(nodeCopies);
 
     // update the terminal powers for powerflow initialization
-    for (UInt nTerminal = 0; nTerminal < comp->terminalNumber();
-          nTerminal++) {
-      compCopy->terminal(nTerminal)->setPower(comp->terminal(nTerminal)->power());
+    for (UInt nTerminal = 0; nTerminal < comp->terminalNumber(); nTerminal++) {
+      compCopy->terminal(nTerminal)->setPower(
+          comp->terminal(nTerminal)->power());
     }
     newComponents.push_back(compCopy);
     sys.removeComponent(comp->name());
@@ -96,43 +98,42 @@ void decoupleNode(SystemTopology &sys, const String &nodeName, const IdentifiedO
   for (auto comp : newComponents)
     sys.addComponent(comp);
 
-  Eigen::MatrixXd i_0(1,1);
-  i_0(0,0) = 0;
+  Eigen::MatrixXd i_0(1, 1);
+  i_0(0, 0) = 0;
 
-  auto idealTrafo = Signal::DecouplingIdealTransformer_EMT_Ph1::make("itm_" + nodeName,
-                                                                Logger::Level::debug);
+  auto idealTrafo = Signal::DecouplingIdealTransformer_EMT_Ph1::make(
+      "itm_" + nodeName, Logger::Level::debug);
   idealTrafo->setParameters(nodeCopy1, nodeCopy2, 0.001, i_0, 0);
   sys.addComponent(idealTrafo);
   sys.addComponents(idealTrafo->getComponents());
 }
 
-void doSim(String &name, SystemTopology &sys, Int threads, bool isDecoupled = false) {
+void doSim(String &name, SystemTopology &sys, Int threads,
+           bool isDecoupled = false) {
 
   // Logging
   auto logger = DataLogger::make(name);
   for (Int bus = 1; bus <= 9; bus++) {
     String attrName = "v" + std::to_string(bus);
     String nodeName;
-    if (isDecoupled && (bus==5 || bus==6 || bus==8)) {
+    if (isDecoupled && (bus == 5 || bus == 6 || bus == 8)) {
       continue;
     } else {
       nodeName = "BUS" + std::to_string(bus);
     }
-    logger->logAttribute(attrName, sys.node<EMT::SimNode>(nodeName)->attribute("v"));
+    logger->logAttribute(attrName,
+                         sys.node<EMT::SimNode>(nodeName)->attribute("v"));
   }
 
   if (isDecoupled) {
-    logger->logAttribute("v5_1", sys.node<EMT::SimNode>("BUS5_1")->attribute("v"));
-    logger->logAttribute("v5_2", sys.node<EMT::SimNode>("BUS5_2")->attribute("v"));
-    // logger->logAttribute("v6_1", sys.node<EMT::SimNode>("BUS5_1")->attribute("v"));
-    // logger->logAttribute("v6_2", sys.node<EMT::SimNode>("BUS5_2")->attribute("v"));
-    // logger->logAttribute("v8_1", sys.node<EMT::SimNode>("BUS8_1")->attribute("v"));
-    // logger->logAttribute("v8_2", sys.node<EMT::SimNode>("BUS8_2")->attribute("v"));
+    logger->logAttribute("v5_1",
+                         sys.node<EMT::SimNode>("BUS5_1")->attribute("v"));
+    logger->logAttribute("v5_2",
+                         sys.node<EMT::SimNode>("BUS5_2")->attribute("v"));
   }
 
   Simulation sim(name, Logger::Level::debug);
   sim.setSystem(sys);
-  // sim.setTimeStep(0.00005);
   sim.setTimeStep(0.0001);
   sim.setFinalTime(0.5);
   sim.setDomain(Domain::EMT);
@@ -141,9 +142,6 @@ void doSim(String &name, SystemTopology &sys, Int threads, bool isDecoupled = fa
   sim.addLogger(logger);
   if (threads > 0)
     sim.setScheduler(std::make_shared<OpenMPLevelScheduler>(threads));
-
-  //std::ofstream of1("topology_graph.svg");
-  //sys.topologyGraph().render(of1));
 
   sim.run();
   sim.logStepTimes(name + "_step_times");
@@ -154,8 +152,7 @@ int main(int argc, char *argv[]) {
 
   std::list<fs::path> filenames;
   filenames = DPsim::Utils::findFiles(
-      {"WSCC-09_DI.xml", "WSCC-09_EQ.xml", "WSCC-09_SV.xml",
-       "WSCC-09_TP.xml"},
+      {"WSCC-09_DI.xml", "WSCC-09_EQ.xml", "WSCC-09_SV.xml", "WSCC-09_TP.xml"},
       "build/_deps/cim-data-src/WSCC-09/WSCC-09", "CIMPATH");
 
   Int numThreads = 0;
@@ -166,25 +163,30 @@ int main(int argc, char *argv[]) {
   if (args.options.find("seq") != args.options.end())
     numSeq = args.getOptionInt("seq");
 
-  std::cout << "Simulate with " << numThreads
-            << " threads, sequence number " << numSeq << std::endl;
+  std::cout << "Simulate with " << numThreads << " threads, sequence number "
+            << numSeq << std::endl;
 
   // Monolithic Simulation
   String simNameMonolithic = "WSCC-9bus_monolithic_EMT";
   Logger::setLogDir("logs/" + simNameMonolithic);
-  CIM::Reader readerMonolithic(simNameMonolithic, Logger::Level::debug, Logger::Level::debug);
+  CIM::Reader readerMonolithic(simNameMonolithic, Logger::Level::debug,
+                               Logger::Level::debug);
   SystemTopology systemMonolithic =
       readerMonolithic.loadCIM(60, filenames, Domain::EMT, PhaseType::ABC,
-                     CPS::GeneratorType::IdealVoltageSource);
+                               CPS::GeneratorType::IdealVoltageSource);
 
   doSim(simNameMonolithic, systemMonolithic, 0);
 
   // Decoupled Simulation
-  String simNameDecoupled = "WSCC_9bus_split_decoupled_node_EMT_" + std::to_string(numThreads) + "_" + std::to_string(numSeq);
+  String simNameDecoupled = "WSCC_9bus_split_decoupled_node_EMT_" +
+                            std::to_string(numThreads) + "_" +
+                            std::to_string(numSeq);
   Logger::setLogDir("logs/" + simNameDecoupled);
-  CIM::Reader readerDecoupled(simNameDecoupled, Logger::Level::debug, Logger::Level::debug);
-  SystemTopology systemDecoupled = readerDecoupled.loadCIM(60, filenames, Domain::EMT, PhaseType::ABC,
-                                   CPS::GeneratorType::IdealVoltageSource);
+  CIM::Reader readerDecoupled(simNameDecoupled, Logger::Level::debug,
+                              Logger::Level::debug);
+  SystemTopology systemDecoupled =
+      readerDecoupled.loadCIM(60, filenames, Domain::EMT, PhaseType::ABC,
+                              CPS::GeneratorType::IdealVoltageSource);
 
   IdentifiedObject::List components5_1;
   auto line75 = systemDecoupled.component<EMT::Ph3::PiLine>("LINE75");
@@ -217,7 +219,5 @@ int main(int argc, char *argv[]) {
   components8_2.push_back(load8);
 
   decoupleNode(systemDecoupled, "BUS5", components5_1, components5_2);
-  // decoupleNode(systemDecoupled, "BUS6", components6_1, components6_2);
-  // decoupleNode(systemDecoupled, "BUS8", components8_1, components8_2);
   doSim(simNameDecoupled, systemDecoupled, numThreads, true);
 }

@@ -41,16 +41,16 @@ void simMonolithic() {
 
   Real l_length = 220;
 
-  Real resistance = l_length*r;
-  Real inductance = l_length*(x_l/(2*PI*50));
-  Real capacitance = l_length*(b/(2*PI*50));
+  Real resistance = l_length * r;
+  Real inductance = l_length * (x_l / (2 * PI * 50));
+  Real capacitance = l_length * (b / (2 * PI * 50));
   Real conductance = 0;
-  
+
   // Real resistance = 5;
   // Real inductance = 0.16;
   // Real capacitance = 1.0e-6;
   // Real conductance = 1.0e-6;
-  
+
   // Components
   auto vs = VoltageSource::make("v_1", Logger::Level::debug);
   vs->setParameters(Complex(100000, 0), 50);
@@ -60,7 +60,7 @@ void simMonolithic() {
 
   auto line = PiLine::make("line", Logger::Level::debug);
   line->setParameters(resistance, inductance, capacitance, conductance);
-  
+
   auto load = Resistor::make("R_load", Logger::Level::debug);
   load->setParameters(10000);
 
@@ -122,7 +122,7 @@ void simMonolithic() {
 
 //   auto v_itm = VoltageSource::make("v_itm");
 //   auto i_itm = CurrentSource::make("i_itm");
-  
+
 //   auto load = Resistor::make("R_load", Logger::Level::debug);
 //   load->setParameters(10000);
 
@@ -176,16 +176,16 @@ void simITM_SP_Ph1() {
 
   Real l_length = 220;
 
-  Real resistance = l_length*r;
-  Real inductance = l_length*(x_l/(2*PI*50));
-  Real capacitance = l_length*(b/(2*PI*50));
+  Real resistance = l_length * r;
+  Real inductance = l_length * (x_l / (2 * PI * 50));
+  Real capacitance = l_length * (b / (2 * PI * 50));
   Real conductance = 0;
-  
+
   // Real resistance = 5;
   // Real inductance = 0.16;
   // Real capacitance = 1.0e-6;
   // Real conductance = 1.0e-6;
-  
+
   // Components
   auto vs = VoltageSource::make("v_1", Logger::Level::debug);
   vs->setParameters(Complex(100000, 0), 50);
@@ -196,9 +196,11 @@ void simITM_SP_Ph1() {
   auto line = PiLine::make("line", Logger::Level::debug);
   line->setParameters(resistance, inductance, capacitance, conductance);
 
-  auto itm = CPS::Signal::DecouplingIdealTransformer_SP_Ph1::make("itm", Logger::Level::debug);
-  itm->setParameters(n1_1, n1_2, 0, Matrix::Zero(1, 1), Complex(0,0), CPS::CouplingMethod::DELAY);
-  
+  auto itm = CPS::Signal::DecouplingIdealTransformer_SP_Ph1::make(
+      "itm", Logger::Level::debug);
+  itm->setParameters(n1_1, n1_2, 0, Matrix::Zero(1, 1), Complex(0, 0),
+                     CPS::CouplingMethod::DELAY);
+
   auto load = Resistor::make("R_load", Logger::Level::debug);
   load->setParameters(10000);
 

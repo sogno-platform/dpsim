@@ -20,8 +20,9 @@
 namespace CPS {
 namespace Signal {
 
-class DecouplingIdealTransformer_EMT_Ph3 : public SimSignalComp,
-                          public SharedFactory<DecouplingIdealTransformer_EMT_Ph3> {
+class DecouplingIdealTransformer_EMT_Ph3
+    : public SimSignalComp,
+      public SharedFactory<DecouplingIdealTransformer_EMT_Ph3> {
 protected:
   Real mDelay;
   std::shared_ptr<EMT::SimNode> mNode1, mNode2;
@@ -60,9 +61,13 @@ public:
   ///FIXME: workaround for dependency analysis as long as the states aren't attributes
   const Attribute<Matrix>::Ptr mStates;
 
-  DecouplingIdealTransformer_EMT_Ph3(String name, Logger::Level logLevel = Logger::Level::info);
+  DecouplingIdealTransformer_EMT_Ph3(
+      String name, Logger::Level logLevel = Logger::Level::info);
 
-  void setParameters(SimNode<Real>::Ptr node1, SimNode<Real>::Ptr node2, Real delay, Matrix voltageSrcIntfCurr, Matrix current1Extrap0, CouplingMethod method = CouplingMethod::DELAY);
+  void setParameters(SimNode<Real>::Ptr node1, SimNode<Real>::Ptr node2,
+                     Real delay, Matrix voltageSrcIntfCurr,
+                     Matrix current1Extrap0,
+                     CouplingMethod method = CouplingMethod::DELAY);
   void initialize(Real omega, Real timeStep);
   void step(Real time, Int timeStepCount);
   void postStep();

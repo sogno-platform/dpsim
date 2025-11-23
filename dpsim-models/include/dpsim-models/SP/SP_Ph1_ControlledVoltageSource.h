@@ -28,7 +28,7 @@ namespace Ph1 {
 /// positve and for the equation of node k as negative. Moreover
 /// a new equation ej - ek = V is added to the problem.
 class ControlledVoltageSource : public MNASimPowerComp<Complex>,
-                      public SharedFactory<ControlledVoltageSource> {
+                                public SharedFactory<ControlledVoltageSource> {
 private:
   ///
   void updateVoltage(Real time);
@@ -39,13 +39,14 @@ public:
 
   /// Defines UID, name, component parameters and logging level
   ControlledVoltageSource(String uid, String name,
-                Logger::Level loglevel = Logger::Level::off);
+                          Logger::Level loglevel = Logger::Level::off);
   /// Defines UID, name, component parameters and logging level
-  ControlledVoltageSource(String name, Logger::Level logLevel = Logger::Level::off)
+  ControlledVoltageSource(String name,
+                          Logger::Level logLevel = Logger::Level::off)
       : ControlledVoltageSource(name, name, logLevel) {}
   /// Defines name, component parameters and logging level
   ControlledVoltageSource(String name, Complex voltage,
-                Logger::Level logLevel = Logger::Level::off);
+                          Logger::Level logLevel = Logger::Level::off);
   ///
   SimPowerComp<Complex>::Ptr clone(String name) override;
 

@@ -11,6 +11,8 @@
 #include <dpsim-models/Config.h>
 
 #include <dpsim-models/SP/SP_Ph1_AvVoltageSourceInverterDQ.h>
+#include <dpsim-models/SP/SP_Ph1_ControlledCurrentSource.h>
+#include <dpsim-models/SP/SP_Ph1_ControlledVoltageSource.h>
 #include <dpsim-models/SP/SP_Ph1_Load.h>
 #include <dpsim-models/SP/SP_Ph1_NetworkInjection.h>
 #include <dpsim-models/SP/SP_Ph1_PQNode.h>
@@ -31,8 +33,6 @@
 #include <dpsim-models/SP/SP_Ph1_Transformer.h>
 #include <dpsim-models/SP/SP_Ph1_VDNode.h>
 #include <dpsim-models/SP/SP_Ph1_VoltageSource.h>
-#include <dpsim-models/SP/SP_Ph1_ControlledCurrentSource.h>
-#include <dpsim-models/SP/SP_Ph1_ControlledVoltageSource.h>
 #include <dpsim-models/SP/SP_Ph1_VoltageSourceInverter.h>
 #include <dpsim-models/SP/SP_Ph1_varResSwitch.h>
 

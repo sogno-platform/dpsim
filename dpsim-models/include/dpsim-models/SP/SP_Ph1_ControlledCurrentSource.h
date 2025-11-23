@@ -21,18 +21,19 @@ namespace Ph1 {
 ///
 /// A positive current is flowing out of node1 and into node2.
 class ControlledCurrentSource : public MNASimPowerComp<Complex>,
-                      public SharedFactory<ControlledCurrentSource> {
+                                public SharedFactory<ControlledCurrentSource> {
 public:
   const Attribute<Complex>::Ptr mCurrentRef;
   /// Defines UID, name and logging level
   ControlledCurrentSource(String uid, String name,
-                Logger::Level loglevel = Logger::Level::off);
+                          Logger::Level loglevel = Logger::Level::off);
   /// Defines name and logging level
-  ControlledCurrentSource(String name, Logger::Level logLevel = Logger::Level::off)
+  ControlledCurrentSource(String name,
+                          Logger::Level logLevel = Logger::Level::off)
       : ControlledCurrentSource(name, name, logLevel) {}
   /// Defines name, component parameters and logging level
   ControlledCurrentSource(String name, Complex current,
-                Logger::Level logLevel = Logger::Level::off);
+                          Logger::Level logLevel = Logger::Level::off);
 
   SimPowerComp<Complex>::Ptr clone(String copySuffix) override;
 
@@ -40,7 +41,7 @@ public:
   /// Initializes component from power flow data
   void initializeFromNodesAndTerminals(Real frequency) override;
   ///
-//   void setSourceValue(Complex current);
+  //   void setSourceValue(Complex current);
 
   void setParameters(Complex currentRef);
 
