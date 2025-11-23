@@ -161,7 +161,7 @@ jobs:
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        slug: AnasBahr/dpsim
+        slug: sogno-platform
         files: coverage.xml
         flags: pytest
         name: pytest-${{ github.sha }}
@@ -218,7 +218,7 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          # point to the lcov file you created
+          slug: sogno-platform
           files: ${{ github.workspace }}/build/coverage.ctest.cleaned.info
           flags: ctest
           name: ctest-${{ github.sha }}
