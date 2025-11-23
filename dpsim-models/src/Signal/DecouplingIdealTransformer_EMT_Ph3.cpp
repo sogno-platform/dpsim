@@ -7,10 +7,7 @@
  *********************************************************************************/
 
 #include "dpsim-models/Definitions.h"
-#include <algorithm>
 #include <dpsim-models/Signal/DecouplingIdealTransformer_EMT_Ph3.h>
-#include <iostream>
-#include <string>
 
 using namespace CPS;
 using namespace CPS::EMT::Ph3;
@@ -84,18 +81,12 @@ void DecouplingIdealTransformer_EMT_Ph3::initialize(Real omega, Real timeStep) {
   mVoltageSrc->setIntfVoltage(mSourceCurrentIntfVoltage);
   mVoltageSrc->setIntfCurrent(mVoltageSrcIntfCurr);
 
-  // mSrcVoltage->set(**mSrcVoltageRef);
-  // mSrcCurrent->set(**mSrcCurrentRef);
   **mSourceVoltageIntfVoltage = volt2.real();
   **mSourceVoltageIntfCurrent = mVoltageSrc->intfCurrent();
 
   // Resize ring buffers and initialize
   mCur1 = cur1.real().transpose().replicate(mBufSize, 1);
   mVol2 = volt2.real().transpose().replicate(mBufSize, 1);
-
-  // Eigen::MatrixXd frequencies(1,1);
-  // frequencies(0,0) = 50.0;
-  // mVoltageSrc->initialize(frequencies);
 
   SPDLOG_LOGGER_INFO(mSLog, "Verify initial current: i_1 {}", mCurrentSrc->intfCurrent()(0, 0));
   SPDLOG_LOGGER_INFO(mSLog, "Verify initial voltage: v_2 {}", mVoltageSrc->intfVoltage()(0, 0));
@@ -105,7 +96,6 @@ void DecouplingIdealTransformer_EMT_Ph3::initialize(Real omega, Real timeStep) {
   if (mExtrapolationDegree > 0) {
     mCur1Extrap.row(1) = mVoltageSrcIntfCurr.transpose();
   }
-  // std::cout << "mCur1Extrap: " << mCur1Extrap[0] << " " << mCur1Extrap[1] << std::endl;
   mVol2Extrap = volt2.real().transpose().replicate(mExtrapolationDegree + 1, 1);
 }
 
