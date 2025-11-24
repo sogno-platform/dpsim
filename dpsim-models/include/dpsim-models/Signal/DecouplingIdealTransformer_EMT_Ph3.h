@@ -12,6 +12,7 @@
 
 #include "dpsim-models/Definitions.h"
 #include "dpsim-models/EMT/EMT_Ph3_ControlledVoltageSource.h"
+#include "dpsim-models/MathUtils.h"
 #include <dpsim-models/EMT/EMT_Ph3_ControlledCurrentSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
 #include <dpsim-models/SimSignalComp.h>
@@ -25,7 +26,13 @@ class DecouplingIdealTransformer_EMT_Ph3
       public SharedFactory<DecouplingIdealTransformer_EMT_Ph3> {
 protected:
   Real mDelay;
-  std::shared_ptr<EMT::SimNode> mNode1, mNode2;
+  Matrix mInternalSeriesResistance =
+      CPS::Math::singlePhaseParameterToThreePhase(1e-6);
+  Matrix mInternalParallelResistance =
+      CPS::Math::singlePhaseParameterToThreePhase(1e6);
+
+  std::shared_ptr<EMT::SimNode> mNode1, mNode2, mVirtualNode;
+  std::shared_ptr<EMT::Ph3::Resistor> mRes1, mRes2;
   std::shared_ptr<EMT::Ph3::ControlledCurrentSource> mCurrentSrc;
   std::shared_ptr<EMT::Ph3::ControlledVoltageSource> mVoltageSrc;
   Attribute<Matrix>::Ptr mSrcCurrent, mSrcVoltage;
@@ -73,6 +80,7 @@ public:
   void postStep();
   Task::List getTasks();
   IdentifiedObject::List getComponents();
+  TopologicalNode::Ptr getVirtualNode();
 
   class PreStep : public Task {
   public:
