@@ -109,6 +109,7 @@ void decoupleNode(SystemTopology &sys, const String &nodeName,
                             i_inf_0, cosimMethod);
   sys.addComponent(idealTrafo);
   sys.addComponents(idealTrafo->getComponents());
+  sys.addNode(idealTrafo->getVirtualNode());
 }
 
 void doSim(String &name, SystemTopology &sys, Int threads, Real ts,

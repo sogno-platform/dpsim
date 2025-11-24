@@ -99,7 +99,9 @@ void addSignalComponents(py::module_ mSignal) {
            "node_1"_a, "node_2"_a, "delay"_a, "v_src_intf_cur"_a,
            "cur1_extrap_0"_a, "coupling_method"_a)
       .def("get_components",
-           &CPS::Signal::DecouplingIdealTransformer_EMT_Ph3::getComponents);
+           &CPS::Signal::DecouplingIdealTransformer_EMT_Ph3::getComponents)
+      .def("get_virtual_node",
+           &CPS::Signal::DecouplingIdealTransformer_EMT_Ph3::getVirtualNode);
 
   py::class_<CPS::Signal::Exciter, std::shared_ptr<CPS::Signal::Exciter>,
              CPS::SimSignalComp>(mSignal, "Exciter", py::multiple_inheritance())
