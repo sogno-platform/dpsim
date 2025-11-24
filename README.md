@@ -43,3 +43,13 @@ The project is released under the terms of the [MPL 2.0](https://mozilla.org/MPL
 [LF Energy Slack](https://slack.lfenergy.org/) - Chat with other users and developers and get help in the **#sogno** or **#sogno-dpsim** channel.
 
 For email inquiries, please contact the Institute for Automation of Complex Power Systems (ACS), which coordinates DPsim development: [post_acs@eonerc.rwth-aachen.de](mailto:post_acs@eonerc.rwth-aachen.de).
+
+## Contribute
+
+If you want to get more involved with DPsim, we welcome contributions of all kinds, including code, documentation, examples, models, bug reports, feature requests, and reviews.
+
+Please open a Pull Request or issue on [GitHub](https://github.com/sogno-platform/dpsim), or start a discussion there to propose ideas and get feedback from the community.
+
+## Contributors
+
+See [CONTRIBUTORS.md](CONTRIBUTORS.md) for a list of contributors.
