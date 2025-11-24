@@ -4,8 +4,7 @@
 #include <list>
 
 #include <DPsim.h>
-#include <dpsim-models/CIM/Reader.h>
-#include <dpsim-villas/InterfaceShmem.h>
+#include <dpsim-villas/Interfaces.h>
 
 using namespace DPsim;
 using namespace CPS;
@@ -15,6 +14,22 @@ using namespace CPS::Signal;
 int main(int argc, char *argv[]) {
 
   CommandLineArgs args(argc, argv, "Shmem_WSCC-9bus_CtrlDist", 0.001, 20, 60);
+
+  auto makeShmemConfig = [](const String &inName, const String &outName) {
+    return fmt::format(
+        R"STRING(
+    {{
+      "type": "shmem",
+      "in": {{
+        "name": "{}"
+      }},
+      "out": {{
+        "name": "{}"
+      }},
+      "queuelen": 1024
+    }})STRING",
+        inName, outName);
+  };
 
   if (args.scenario == 0) {
     // Find CIM files
@@ -28,8 +43,8 @@ int main(int argc, char *argv[]) {
       filenames = args.positionalPaths();
     }
 
-    CIM::Reader reader(args.name, CPS::Logger::Level::info,
-                       CPS::Logger::Level::info);
+    CPS::CIM::Reader reader(args.name, CPS::Logger::Level::info,
+                            CPS::Logger::Level::info);
     SystemTopology sys = reader.loadCIM(args.sysFreq, filenames);
 
     // Extend system with controllable load (Profile)
@@ -44,7 +59,11 @@ int main(int argc, char *argv[]) {
     ecs->connect({sys.node<DP::SimNode>("BUS4"), DP::SimNode::GND});
     sys.mComponents.push_back(ecs);
 
+#ifdef WITH_RT
     RealTimeSimulation sim(args.name + "_1", CPS::Logger::Level::debug);
+#else
+    Simulation sim(args.name + "_1", CPS::Logger::Level::debug);
+#endif
     sim.setSystem(sys);
     sim.setTimeStep(args.timeStep);
     sim.setFinalTime(args.duration);
@@ -52,10 +71,12 @@ int main(int argc, char *argv[]) {
     sim.setSolverType(Solver::Type::MNA);
     sim.doInitFromNodesAndTerminals(true);
 
-    InterfaceShmem intf1("/dpsim01", "/dpsim10", nullptr, false);
-    InterfaceShmem intf2("/dpsim1-villas", "/villas-dpsim1", nullptr, false);
-    sim.addInterface(std::shared_ptr<Interface>(&intf1));
-    sim.addInterface(std::shared_ptr<Interface>(&intf2));
+    auto intf1 = std::make_shared<InterfaceVillas>(
+        makeShmemConfig("dpsim01", "dpsim10"));
+    auto intf2 = std::make_shared<InterfaceVillas>(
+        makeShmemConfig("dpsim1-villas", "villas-dpsim1"));
+    sim.addInterface(intf1);
+    sim.addInterface(intf2);
 
     // Controllers and filter
     std::vector<Real> coefficients_profile = std::vector<Real>(2000, 1. / 2000);
@@ -66,11 +87,14 @@ int main(int argc, char *argv[]) {
     sys.mComponents.push_back(filtP_profile);
 
     // Register interface current source and voltage drop
-    intf1.importAttribute(ecs->mCurrentRef, 0);
-    intf1.exportAttribute(ecs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0);
+    intf1->importAttribute(ecs->mCurrentRef, 0, true);
+    intf1->exportAttribute(ecs->mIntfVoltage->deriveCoeff<Complex>(0, 0), 0,
+                           true);
 
     // TODO: gain by 20e8
-    filtP_profile->setInput(intf2.importReal(0));
+    auto filtPProfileInput = CPS::AttributeDynamic<Real>::make(0.0);
+    intf2->importAttribute(filtPProfileInput, 0, true);
+    filtP_profile->setInput(filtPProfileInput);
 
     // Register exportable node voltages
     for (auto n : sys.mNodes) {
@@ -90,11 +114,15 @@ int main(int argc, char *argv[]) {
       std::cout << "Signal " << (i * 2) + 1 << ": Phas " << n->name()
                 << std::endl;
 
-      intf2.exportReal(v->deriveMag(), (i * 2) + 0);
-      intf2.exportReal(v->derivePhase(), (i * 2) + 1);
+      intf2->exportAttribute(v->deriveMag(), (i * 2) + 0, true);
+      intf2->exportAttribute(v->derivePhase(), (i * 2) + 1, true);
     }
 
-    sim.run(args.startTime);
+#ifdef WITH_RT
+    sim.run(10);
+#else
+    sim.run();
+#endif
   }
 
   if (args.scenario == 1) {
@@ -120,30 +148,45 @@ int main(int argc, char *argv[]) {
 
     auto sys = SystemTopology(args.sysFreq, SystemNodeList{n1},
                               SystemComponentList{evs, load, filtP});
+#ifdef WITH_RT
     RealTimeSimulation sim(args.name + "_2");
+#else
+    Simulation sim(args.name + "_2");
+#endif
     sim.setSystem(sys);
     sim.setTimeStep(args.timeStep);
     sim.setFinalTime(args.duration);
 
-    InterfaceShmem intf1("/dpsim10", "/dpsim01", nullptr, false);
-    sim.addInterface(std::shared_ptr<Interface>(&intf1));
+    auto intf1 = std::make_shared<InterfaceVillas>(
+        makeShmemConfig("dpsim10", "dpsim01"));
+    sim.addInterface(intf1);
 
-    InterfaceShmem intf2("/dpsim2-villas", "/villas-dpsim2", nullptr, false);
-    sim.addInterface(std::shared_ptr<Interface>(&intf2));
+    auto intf2 = std::make_shared<InterfaceVillas>(
+        makeShmemConfig("dpsim2-villas", "villas-dpsim2"));
+    sim.addInterface(intf2);
 
     // Register voltage source reference and current flowing through source
     // multiply with -1 to consider passive sign convention
-    intf1.importAttribute(evs->mVoltageRef, 0);
+    intf1->importAttribute(evs->mVoltageRef, 0, true);
     // TODO: invalid sign
-    intf1.exportAttribute(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0);
+    intf1->exportAttribute(evs->mIntfCurrent->deriveCoeff<Complex>(0, 0), 0,
+                           true);
 
     // Register controllable load
-    filtP->setInput(intf2.importReal(0));
-    intf2.exportReal(load->mActivePower, 0);
-    intf2.exportComplex(load->mIntfVoltage->deriveCoeff<Complex>(0, 0), 1);
-    intf2.exportComplex(load->mIntfCurrent->deriveCoeff<Complex>(0, 0), 2);
+    auto filtPInput = CPS::AttributeDynamic<Real>::make(0.0);
+    intf2->importAttribute(filtPInput, 0, true);
+    filtP->setInput(filtPInput);
+    intf2->exportAttribute(load->mActivePower, 0, true);
+    intf2->exportAttribute(load->mIntfVoltage->deriveCoeff<Complex>(0, 0), 1,
+                           true);
+    intf2->exportAttribute(load->mIntfCurrent->deriveCoeff<Complex>(0, 0), 2,
+                           true);
 
-    sim.run(args.startTime);
+#ifdef WITH_RT
+    sim.run(10);
+#else
+    sim.run();
+#endif
   }
 
   return 0;

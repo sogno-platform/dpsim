@@ -1,0 +1,29 @@
+// SPDX-FileCopyrightText: 2025 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+// SPDX-License-Identifier: MPL-2.0
+
+#pragma once
+
+#ifndef DPSIM_VILLAS_CONFIG_H
+#define DPSIM_VILLAS_CONFIG_H
+
+#define DPSIM_VILLAS_VERSION "@PROJECT_VERSION@"
+
+// Features
+#cmakedefine WITH_RT
+#cmakedefine WITH_VILLAS
+#cmakedefine WITH_CIM
+#cmakedefine WITH_PYBIND
+#cmakedefine WITH_SUNDIALS
+#cmakedefine WITH_OPENMP
+#cmakedefine WITH_CUDA
+#cmakedefine WITH_CUDA_SPARSE
+#cmakedefine WITH_MAGMA
+#cmakedefine WITH_KLU
+#cmakedefine WITH_MNASOLVERPLUGIN
+#cmakedefine WITH_JSON
+#cmakedefine CGMES_BUILD
+
+#cmakedefine HAVE_GETOPT
+#cmakedefine HAVE_TIMERFD
+
+#endif

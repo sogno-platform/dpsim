@@ -6,20 +6,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include <dpsim-models/Logger.h>
 #include <filesystem>
 #include <fstream>
+#include <memory>
 
 #include <DPsim.h>
-#include <dpsim-models/Attribute.h>
-#include <dpsim-models/EMT/EMT_Ph3_ControlledVoltageSource.h>
-#include <dpsim-models/SimNode.h>
-#include <dpsim-villas/InterfaceVillas.h>
-#include <dpsim-villas/InterfaceVillasQueueless.h>
-#include <dpsim/Event.h>
-#include <dpsim/RealTimeDataLogger.h>
-#include <dpsim/Utils.h>
-#include <memory>
+
+#include <dpsim-villas/Interfaces.h>
 
 using namespace DPsim;
 using namespace CPS::EMT;
@@ -142,13 +135,13 @@ SystemTopology buildTopology(CommandLineArgs &args,
 
   // Components
   auto vs = Ph3::ControlledVoltageSource::make("vs");
-  auto voltageRef = Matrix({{230e3}, {230e3}, {230e3}});
+  auto voltageRef = CPS::Math::singlePhaseParameterToThreePhase(230e3);
   vs->setParameters(voltageRef);
 
   auto load = Ph3::RXLoad::make("load");
-  auto active = Matrix({{125e6, 0, 0}, {0, 125e6, 0}, {0, 0, 125e6}});
+  auto active = CPS::Math::singlePhaseParameterToThreePhase(125e6);
   // auto reactive = Matrix::Zero(3, 3);
-  auto reactive = Matrix({{50e6, 0, 0}, {0, 50e6, 0}, {0, 0, 50e6}});
+  auto reactive = CPS::Math::singlePhaseParameterToThreePhase(50e6);
   load->setParameters(active, reactive, 230e3, true);
 
   // Topology

@@ -7,20 +7,11 @@
 #include <filesystem>
 #include <fstream>
 
-#include "../examples/cxx/Examples.h"
 #include <DPsim.h>
-#include <dpsim-models/Attribute.h>
-#include <dpsim-models/DP/DP_Ph1_CurrentSource.h>
-#include <dpsim-models/EMT/EMT_Ph3_RXLoad.h>
-#include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorVBR.h>
-#include <dpsim-models/SimNode.h>
-#include <dpsim-villas/InterfaceVillas.h>
-#include <dpsim-villas/InterfaceVillasQueueless.h>
-#include <dpsim/Definitions.h>
-#include <dpsim/Event.h>
-#include <dpsim/RealTimeDataLogger.h>
-#include <dpsim/Utils.h>
-#include <memory>
+
+#include <dpsim-villas/Interfaces.h>
+
+#include "../examples/cxx/Examples.h"
 
 using namespace DPsim;
 using namespace CPS::EMT;
@@ -136,16 +127,16 @@ hilTopology(CommandLineArgs &args, std::shared_ptr<Interface> intf,
   sys.initWithPowerflow(systemPF, CPS::Domain::EMT);
 
   sys.component<CPS::EMT::Ph3::RXLoad>("LOAD5")->setParameters(
-      Matrix({{125e6, 0, 0}, {0, 125e6, 0}, {0, 0, 125e6}}),
-      Matrix({{90e6, 0, 0}, {0, 90e6, 0}, {0, 0, 90e6}}), 230e3, true);
+      CPS::Math::singlePhaseParameterToThreePhase(125e6),
+      CPS::Math::singlePhaseParameterToThreePhase(90e6), 230e3, true);
 
   sys.component<CPS::EMT::Ph3::RXLoad>("LOAD8")->setParameters(
-      Matrix({{100e6, 0, 0}, {0, 100e6, 0}, {0, 0, 100e6}}),
-      Matrix({{30e6, 0, 0}, {0, 30e6, 0}, {0, 0, 30e6}}), 230e3, true);
+      CPS::Math::singlePhaseParameterToThreePhase(100e6),
+      CPS::Math::singlePhaseParameterToThreePhase(30e6), 230e3, true);
 
   sys.component<CPS::EMT::Ph3::RXLoad>("LOAD6")->setParameters(
-      Matrix({{90e6, 0, 0}, {0, 90e6, 0}, {0, 0, 90e6}}),
-      Matrix({{30e6, 0, 0}, {0, 30e6, 0}, {0, 0, 30e6}}), 230e3, true);
+      CPS::Math::singlePhaseParameterToThreePhase(90e6),
+      CPS::Math::singlePhaseParameterToThreePhase(30e6), 230e3, true);
 
   auto gen1 = sys.component<CPS::EMT::Ph3::SynchronGeneratorVBR>("GEN1");
   gen1->addGovernor(govKundur.Ta_t, govKundur.Tb, govKundur.Tc, govKundur.Fa,

@@ -1,16 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include <DPsim.h>
-#include <dpsim-models/CIM/Reader.h>
-#include <dpsim-models/CSVReader.h>
-#include <dpsim-villas/InterfaceShmem.h>
+#include <dpsim-villas/Interfaces.h>
 #include <fstream>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 using namespace DPsim;
 using namespace CPS;
-using namespace CPS::CIM;
 
 /*
  * This example runs the powerflow for the CIGRE MV benchmark system (neglecting the tap changers of the transformers)
@@ -49,29 +47,46 @@ int main(int argc, char **argv) {
   String simName = "Shmem_CIGRE-MV-NoTap";
   CPS::Real system_freq = 50;
 
-  CIM::Reader reader(simName, CPS::Logger::Level::debug,
-                     CPS::Logger::Level::off);
+  CPS::CIM::Reader reader(simName, CPS::Logger::Level::debug,
+                          CPS::Logger::Level::off);
   SystemTopology sys = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
 
-  CSVReader csvreader(simName, loadProfilePath, assignList,
-                      CPS::Logger::Level::info);
+  CPS::CSVReader csvreader(simName, loadProfilePath, assignList,
+                           CPS::Logger::Level::info);
   csvreader.assignLoadProfile(sys, 0, args.timeStep, args.duration,
-                              CSVReader::Mode::MANUAL);
+                              CPS::CSVReader::Mode::MANUAL);
 
+#ifdef WITH_RT
   RealTimeSimulation sim(simName, args.logLevel);
+#else
+  Simulation sim(simName, args.logLevel);
+#endif
   sim.setSystem(sys);
   sim.setTimeStep(args.timeStep);
   sim.setFinalTime(args.duration);
   sim.setDomain(args.solver.domain);
   sim.setSolverType(args.solver.type);
-  InterfaceShmem intf("/dpsim1-villas", "/villas-dpsim1");
+
+  const std::string shmemConfig = R"STRING(
+    {
+      "type": "shmem",
+      "in": {
+        "name": "dpsim1-villas"
+      },
+      "out": {
+        "name": "villas-dpsim1"
+      },
+      "queuelen": 1024
+    })STRING";
+
+  auto intf = std::make_shared<InterfaceVillas>(shmemConfig);
 
   ofstream villas_conf;
   villas_conf.open("villas_sent_data.conf");
 
   // Register exportable node voltages
-  string list_varnames[sys.mNodes.size() * 2];
-  UInt o = 0;
+  std::vector<std::string> list_varnames(sys.mNodes.size() * 2);
+  [[maybe_unused]] UInt o = 0;
   for (auto n : sys.mNodes) {
     UInt i;
     if (sscanf(n->name().c_str(), "N%u", &i) != 1) {
@@ -88,9 +103,9 @@ int main(int argc, char **argv) {
     std::cout << "Signal " << (i * 2) + 1 << ": Phas " << n->name()
               << std::endl;
 
-    intf.exportReal(v->deriveMag(), (i * 2) + 0);
+    intf->exportAttribute(v->deriveMag(), (i * 2) + 0, true);
     o++;
-    intf.exportReal(v->derivePhase(), (i * 2) + 1);
+    intf->exportAttribute(v->derivePhase(), (i * 2) + 1, true);
     o++;
 
     list_varnames[(i * 2) + 0] = n->name() + ".V.mag";
@@ -102,9 +117,13 @@ int main(int argc, char **argv) {
   }
   villas_conf.close();
 
-  sim.addInterface(std::shared_ptr<Interface>(&intf));
+  sim.addInterface(intf);
 
-  sim.run(std::chrono::seconds(5));
+#ifdef WITH_RT
+  sim.run(10);
+#else
+  sim.run();
+#endif
 
   return 0;
 }

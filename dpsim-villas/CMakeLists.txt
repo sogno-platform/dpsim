@@ -1,3 +1,13 @@
+configure_file(
+	${CMAKE_CURRENT_SOURCE_DIR}/include/dpsim-villas/Config.h.in
+	${CMAKE_CURRENT_BINARY_DIR}/include/dpsim-villas/Config.h
+)
+
+set(DPSIM_VILLAS_INCLUDE_DIRS
+	${CMAKE_CURRENT_SOURCE_DIR}/include
+	${CMAKE_CURRENT_BINARY_DIR}/include
+)
+
 if(WITH_PYBIND)
 	pybind11_add_module(dpsimpyvillas src/pybind-dpsim-villas.cpp)
 	set_target_properties(dpsimpyvillas
@@ -17,17 +27,25 @@ endif()
 
 add_subdirectory(src)
 
+target_include_directories(dpsim-villas PUBLIC
+	${DPSIM_VILLAS_INCLUDE_DIRS}
+)
+
 if(DPSIM_BUILD_EXAMPLES)
 	add_subdirectory(examples)
 endif()
 
 file(GLOB_RECURSE HEADER_FILES include/*.h)
+set(GENERATED_HEADER ${CMAKE_CURRENT_BINARY_DIR}/include/dpsim-villas/Config.h)
 
 target_sources(dpsim-villas PUBLIC
 	FILE_SET public_headers
 	TYPE HEADERS
-	BASE_DIRS include
-	FILES "${HEADER_FILES}"
+	BASE_DIRS
+		${DPSIM_VILLAS_INCLUDE_DIRS}
+	FILES
+		${HEADER_FILES}
+		${GENERATED_HEADER}
 )
 
 install(TARGETS dpsim-villas
