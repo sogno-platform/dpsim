@@ -1,16 +1,13 @@
 # <img src="docs/images/dpsim.png" width=40 /> DPsim
 
 [![Build & Test RockyLinux](https://github.com/sogno-platform/dpsim/actions/workflows/build_test_linux_rocky.yaml/badge.svg)](https://github.com/sogno-platform/dpsim/actions/workflows/build_test_linux_rocky.yaml)
-
 [![Build & Test Fedora](https://github.com/sogno-platform/dpsim/actions/workflows/build_test_linux_fedora.yaml/badge.svg)](https://github.com/sogno-platform/dpsim/actions/workflows/build_test_linux_fedora.yaml)
-
 [![Build & Test Fedora Minimal](https://github.com/sogno-platform/dpsim/actions/workflows/build_test_linux_fedora_minimal.yaml/badge.svg)](https://github.com/sogno-platform/dpsim/actions/workflows/build_test_linux_fedora_minimal.yaml)
-
 [![Build & Test Windows](https://github.com/sogno-platform/dpsim/actions/workflows/build_test_windows.yaml/badge.svg)](https://github.com/sogno-platform/dpsim/actions/workflows/build_test_windows.yaml)
 
 [![License: MPL 2.0](https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
-
 [![codecov](https://codecov.io/gh/sogno-platform/dpsim/graph/badge.svg?token=FLUOQ8U7MH)](https://codecov.io/gh/sogno-platform/dpsim)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/4887/badge)](https://www.bestpractices.dev/projects/4887)
 
 DPsim is a solver library for dynamic power system simulation.
 
