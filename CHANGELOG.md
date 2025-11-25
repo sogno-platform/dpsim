@@ -29,6 +29,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 - Implement decoupling line emt ph3 (#422), improving nine bus decoupling example with 3ph decoupling line and adding test for decoupling line Ph3 to Line.ipynb example.
 - VILLASfpga cosimulation development (#325), adding n-eiling as codeowner of /dpsim-villas and fixing MNASolver to start loggers for vectors.
 - Villas Interface: Improve FpgaExample (#299), allowing different topologies to be tested and updating VILLAS_VERSION in Dockerfile.
+- Nix packaging (#357), adding GitHub CI workflow for building DPsim with Nix and Nix packaging.
+- chore: update docs on real-time and VILLASnode interfaces (#335)
 
 ### Changed
 
@@ -42,12 +44,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 - Change default linear solver to KLU (#250), fixing logging statements by using macros and removing explicit choice of SparseLU from cxx examples.
 - Update WSCC_9bus_mult examples and implement splitting examples in DP and EMT (#322), removing SP_Ph1_CurrentSource component and fixing path to CIM files in decoupling line diakoptics example.
 - Upgrade Fedora dockerfiles to v42 (#387), fixing KLU Adapter varying entry index check and adding libre to Dockerfile to fix one of the real-time errors using villas.
+- Add new action using the build wrapper from sonar directly (#296)
+- Allow builds without nlohmann/json library (#362)
+- feat(ci): Use trusted / OIDC publishing to PyPi.org (#375), only attempting upload to PyPi for pushes to master or tags.
+
+### Removed
+
+- Remove commented out code (#390)
+- Remove further RWTH gitlab dependencies (#261)
+- Remove Python versions 3.6 and 3.7 for PyPi upload (#229)
+- Disable test actions for PRs (#237)
+- chore(cmake): Remove deprecated options (#342)
+- Remove outdated and broken GitLab CI pipeline (#347)
 
 ### Fixed
 
 - 5th Order Synchronous Generator (#230), fixing some minor details and adding SG5Order to CIM Reader in DP and EMT domain.
 - Adding correct logger usage (#411)
-- Allow builds without nlohmann/json library (#362)
 - dpsim-villas: fix hardcoded paths (#327)
 - Enable compilation in gcc 14 and clang 18 (code fixes) (#294)
 - feat(cmake): Allow disable LTO builds (#341), adding WITH_MARCH_NATIVE option to enable native host arch builds.
@@ -76,26 +89,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 - Revision of power flow solver (#284), fixing PFSolver and minimizing file changes.
 - Trigger actions for PRs and pin the version of libcimpp (#329), pinning libcimpp version in containers and cmake and triggering relevant workflows on pull_request event.
 - Update actions in workflow and improve parallelisation and cache handling (#298), changing the profiling execution to manually triggered and enabling parallelisation with reorganized cache.
-
-### Removed
-
-- Remove commented out code (#390)
-- Remove further RWTH gitlab dependencies (#261)
-- Remove Python versions 3.6 and 3.7 for PyPi upload (#229)
-
-### Maintenance
-
-- Add new action using the build wrapper from sonar directly (#296)
 - Bump braces from 3.0.2 to 3.0.3 in /docs/hugo (#304)
 - Bump postcss from 8.4.20 to 8.4.31 in /docs/hugo (#281)
 - Bump version of black & black jupyter to 25.11.0 (#421)
 - Bump yaml from 2.1.3 to 2.2.2 in /docs/hugo (#215)
-- chore (deps): update to CIMpp rpm/deb install + bump VILLAS (#404), updating cmake fetch and finding of libcimpp and fixing dependent files and CIMReader.
-- chore(cmake): Remove deprecated options (#342)
-- chore(deps): Bump pypa/gh-action-pypi-publish from 1.12.4 to 1.13.0 in /.github/workflows (#405)
-- chore: update docs on real-time and VILLASnode interfaces (#335)
-- Disable test actions for PRs (#237)
-- feat(ci): Use trusted / OIDC publishing to PyPi.org (#375), only attempting upload to PyPi for pushes to master or tags.
 - fix clang compilation and FPGA integration (#293), fixing clang compiler errors and adding clang compilation to CI.
 - Fix CMake typos and style (#376)
 - Fix GitHub actions workflow for publishing to PyPi (#355), building with newer CMake versions and simplifying triggers for workflows.
@@ -110,12 +107,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 - fix(docs): Fix typo and wrong diff (#337)
 - fix(examples): Only build Fpga9BusHil example if build with CIMpp (#338), applying it twice.
 - fix(style): Remove duplicated typedef (#339)
-- fix: Cleanup code-style of setup.py (#336)
-- Nix packaging (#357), adding GitHub CI workflow for building DPsim with Nix and Nix packaging.
 - python: Harmonize comment style (#349)
-- Remove outdated and broken GitLab CI pipeline (#347)
+- chore(deps): Bump pypa/gh-action-pypi-publish from 1.12.4 to 1.13.0 in /.github/workflows (#405)
 - Update villas version (#245), updating python command to python3 in test-villas-examples actions and removing libwebsockets installation from source.
 - Use clang-format to format the whole codebase (#278), fixing missing includes and moving development scripts from configs/ to scripts./
+- chore (deps): update to CIMpp rpm/deb install + bump VILLAS (#404), updating cmake fetch and finding of libcimpp and fixing dependent files and CIMReader.
+- fix: Cleanup code-style of setup.py (#336)
 
 ## [v1.1.1] - 2023-07-13
 
@@ -123,10 +120,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 - Add latest publications to website (#161)
 - Introduce a common subclass for composite components (#177), adding comments for empty method implementations and renaming systemMatrixStamp methods for sparse matrices.
+- Build and push RockyLinux image (#148)
+- Update and expand documentation (#159), adding documentation on MNASimPowerComp and subcomponent handling.
+- Introduce common base class MNASimPowerComp (#178), fixing merge errors and addressing SonarCloud issues.
 
 ### Changed
 
 - Unify subcomponent handling and call MNA methods through the parent (#141)
+- Move documentation to main repo (#154), adding hugo website files and moving content from dpsim-docs repo.
+- Refactoring of direct linear solvers in MNA solver (#171), addressing further pull request comments and adding fetching of minimized suitesparse.
 
 ### Fixed
 
@@ -136,21 +138,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 - Fix missing 'this' in logger macros (#217)
 - Fix network frequency modulations and vsi snubber comps (#218), fixing some logging issues and trafo instantiation in dp and sp vsi for proper snubber comps.
 - Fix various issues related to attributes (#140), addressing SonarCloud code smells and moving method implementations into source files.
-- Introduce common base class MNASimPowerComp (#178), fixing merge errors and addressing SonarCloud issues.
 - Profiling based optimisation (#194), addressing pull request comments and applying switched component stamps.
 - Resolve FIXME comments (#142), addressing SonarCloud issues and renaming mMechPower attribute.
-
-### Maintenance
-
-- Build and push RockyLinux image (#148)
 - Cleanup of CMake and Docker files (#168), adding missing libcimpp dependency for cimviz and comment explaining CMAKE_POLICY_DEFAULT_CMP0077.
 - Deploy docs to FEIN website (#160), fixing repo url and subdir.
 - fix and update documentation (#165), updating Contribution Guidelines and Roadmap.
 - Fix implementation of exciter, new turbine governor model and refactor VBR models (#120), applying minor fixes and replacing validation notebook of reduced order SG models.
-- Move documentation to main repo (#154), adding hugo website files and moving content from dpsim-docs repo.
 - Reduced-order syngen models (#213), removing unused variable in MNASolverDirect and unused methods/variables of MNASyncGenInterface.
-- Refactoring of direct linear solvers in MNA solver (#171), addressing further pull request comments and adding fetching of minimized suitesparse.
-- Update and expand documentation (#159), adding documentation on MNASimPowerComp and subcomponent handling.
 
 ## [v1.1.0] - 2022-12-09
 
@@ -200,11 +194,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 - Trigger PyPi-Workflow for tags (#151)
 - update 9bus parallel notebook
 - update cps, updating shmem distributed direct nb and shmem direct examples.
-- update CPS
 - update file headers and replace gpl with mpl in most files
-- update inverter nbs
+- update inverter notebooks
 - update shmem example of cigre mv
 - update submodules path, updating dpsim results path in notebooks.
+- rename Terminal, renaming TopologicalComponent and Node class.
+- disable cim and render if deps not available, removing obsolete cim reader includes and working around github permission issue.
+- update ci, restructuring sphinx doxygen docs and removing notebook related sphinx cmake.
+- update cps, merging master and restructuring notebooks.
+- update docs url
+- update global scope of SynGenTrStab examples, adding Events category to examples and splitting examples in two categories: components & grids.
+- update install script and new dockerfile, updating docker dev and using libxml instead of libexpat in cimpp.
+- update shmem examples, using new cpp export methods in python interface and adding jupyter requirements file to docker fs.
+- updated installation instructions, showing cmake invocation during setup.py and allowing setting CMake options via envvar.
+- use correct minimum cmake version (3.13 instead of 3.12) because Policy CMP0076 requires 3.13, using different cache key for build with and without cuda and making CI build with CUDA support with CUDA dependencies in Dockerfile.dev.
+- use updated dpsim-villas and villas-node versions, removing pipeline build caches and updating fedora and pybind versions.
+
+### Deprecated
+
+- moving old examples into villas-deprecated folder.
+
+### Removed
+
+- disable macos build
+- harmonize namespace aliases of std::filesystem, removing useless printing of working directory in examples.
 
 ### Fixed
 
@@ -236,18 +249,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 - use correct attribute dependency, making the phase changeable through mVoltageRef and using member variables for attribute access.
 - use image for devcontainer, setting manual trigger for container workflow and fixing devcontainer.json.
 - use initialization list for mZigZag, adding comments on voltage source behaviour and removing constructor for removing the SignalGenerator.
-
-### Removed
-
-- harmonize namespace aliases of std::filesystem, removing useless printing of working directory in examples.
-- rename Terminal, renaming TopologicalComponent and Node class.
-
-### Maintenance
-
 - add comments, adding another export to Simulation::sync and increasing timeout to allow dpsim to catch all mqtt messages.
 - add link to build notebooks
-- disable cim and render if deps not available, removing obsolete cim reader includes and working around github permission issue.
-- disable macos build
 - enable tests for pull requests, updating sonar settings and adding sonar cache and multithreading.
 - examples: reduce sim time because of CI duration, fixing find pybind python in cmake.
 - fix .gitlab-ci.yml to include correct path to rocky Dockerfile, fixing docker labels and removing duplicate needs statement.
@@ -267,7 +270,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 - Merge pull request #46 from stv0g/ci-minimal-build
 - minor tweaks to gitlab-ci
 - move imports into cpp files, removing binary dir include for dpsimpy and clarifying Cpp version change.
-- output dpsimpyvillas into top-level build directory, exporting complex attributes instead of matrices and moving old examples into villas-deprecated folder.
+- output dpsimpyvillas into top-level build directory, exporting complex attributes instead of matrices
 - pybind: remove superfluous includes, removing unused VILLAS_VERSION variable from docker and allowing building examples without CIM support.
 - re-enable notebook test, re-enabling example and adding missing test examples.
 - reactivate continue_on_error parameter, adapting cigre mqtt example to run in pipeline and adding test for dpsim-mqtt-cigre example.
@@ -277,32 +280,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 - remove obsolete gitlab CI jobs, generating sphinx docs for new python interface.
 - Revert :Fix compilation without libcimpp and minor tweaks to CMake code-style
 - skip tests for old notebooks, adapting quickstart guide to dpsimpy and triggering actions on push to any branch.
-- update ci, restructuring sphinx doxygen docs and removing notebook related sphinx cmake.
-- update cps, merging master and restructuring notebooks.
-- update docs url
-- update global scope of SynGenTrStab examples, adding Events category to examples and splitting examples in two categories: components & grids.
-- update install script and new dockerfile, updating docker dev and using libxml instead of libexpat in cimpp.
-- update shmem examples, using new cpp export methods in python interface and adding jupyter requirements file to docker fs.
-- updated installation instructions, showing cmake invocation during setup.py and allowing setting CMake options via envvar.
-- use correct minimum cmake version (3.13 instead of 3.12) because Policy CMP0076 requires 3.13, using different cache key for build with and without cuda and making CI build with CUDA support with CUDA dependencies in Dockerfile.dev.
 - Use read-the-docs sphinx theme
-- use updated dpsim-villas and villas-node versions, removing pipeline build caches and updating fedora and pybind versions.
 
 ## [v1.0.0] - 2019-04-15
+
+### Changed
+
+- Merge branch 'dae-solver-test' into 'development', adding documentation on real-time execution of DPsim (closes #108) and merging development into dae-solver-test.
+- Merge branch 'gen-arkode' into 'development', updating Simulation.cpp and DataLogger.cpp.
 
 ### Fixed
 
 - Continued to fix odeint example problem, adding example program for odeint based on DP_SynGen_dq_ThreePhFault of Arkode and first implementation of odeint solver class.
 - Fixed initial value setting of odeint solver
-
-### Maintenance
-
 - adaptations for DQ SynGen class split, merging branch 'development' into parallel and updating cps submodule.
 - fixes for clang, adding parallel multimachine benchmark and fixing memleak in ODESolver.
 - ifdef for sim_ode, updating .gitmodules and cps.
 - include nbs in docs
-- Merge branch 'dae-solver-test' into 'development', adding documentation on real-time execution of DPsim (closes #108) and merging development into dae-solver-test.
-- Merge branch 'gen-arkode' into 'development', updating Simulation.cpp and DataLogger.cpp.
 - merge powerflow, applying minor logging fix in cigre mv powerflow test and writing config of data sent via villas.
 - update cps, merging branch 'development' into powerflow-integration and updating dockerfile.dev.
 
@@ -331,6 +325,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 - python: do not fail load _dpsim.Interface (closes #93), reverting "comment out interface python class".
 - python: separate EventChannel in header/source
 - updated copyright year in C++ example
+- merge changes into development, updating .gitlab-ci.yml and deactivating windows build until we have a runner again.
+- merging changes in mna solver, using new DataLogger and making MNASolver not rely on CIM::Reader.
+- merging changes into development, merging branch 'refactor-move-cps' into 'development' and not crashing if there are no CIM tests.
+- merging new commits from development and node-terminal update, updating CPowerSystems submodule and refactoring Add{Excitor,Goveronor} -> add{Excitor,Goveronor}.
+- Update Build.rst
+- updating libcps, merging attribute test and merging redesign-simulation into development.
+- shmem: libvillas-ext has been obsoleted by libvillas, simplifying dpsim.Simulation.run() and fixing error messages in CPS::Python::Component:getattro().
 
 ### Fixed
 
@@ -343,39 +344,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 - Merge branch 'development', changing shmem ids and increasing simulation time in wscc.
 - python: fix logging of node voltages (closes #97)
 - update CPS submodule, fixing attribute names in examples and python tests.
-
-### Maintenance
-
 - fix windows build
 - fixing CIM test yml, xfail for larger CIM example and removing TopologicalIsland from examples.
 - Fixing parallel support of node indices and CIM, removing deprecated line load test and fixing network description without node objects.
 - fixing segfault in mna solver when getting nodes, adding new examples and updating cps.
 - Merge branch 'development', merging generator examples and updating cps.
-- merge changes into development, updating .gitlab-ci.yml and deactivating windows build until we have a runner again.
-- merging changes in mna solver, using new DataLogger and making MNASolver not rely on CIM::Reader.
-- merging changes into development, merging branch 'refactor-move-cps' into 'development' and not crashing if there are no CIM tests.
-- merging new commits from development and node-terminal update, updating CPowerSystems submodule and refactoring Add{Excitor,Goveronor} -> add{Excitor,Goveronor}.
 - python: add some documentation to factory functions, fixing unit tests and changing NULL -> nullptr.
-- shmem: libvillas-ext has been obsoleted by libvillas, simplifying dpsim.Simulation.run() and fixing error messages in CPS::Python::Component:getattro().
 - tests: renamed python script in order to be selected by pytest, updating Python version of ShmemDistributedDirect test and refactoring examples for new lambda interface.
-- Update Build.rst
-- updating libcps, merging attribute test and merging redesign-simulation into development.
 
 ## [v0.1.3] - 2018-02-21
 
 ### Changed
 
 - Update CMakeLists.txt
+- refactor: DPsim::Components::Base -> DPsim::Component (closes #44), renaming "EMT_VoltageSourceNorton.{h, cpp}" to "EMT_VoltageSource_Norton.{h,cpp}" (see #43).
 
 ### Fixed
 
 - fixed mistakes after merging, using SynGenSimulation for VBR simulation and integrating new DP VBR model with nodal analysis.
 - Merge branch 'fix-transformer' into development merge, fixing CIM reader and example and applying minor changes in logging.
-
-### Maintenance
-
 - examples: disable another failing CIM test, disabling broken IEEE-9-bus CIM test and refactoring mSeq -> mSequence.
-- refactor: DPsim::Components::Base -> DPsim::Component (closes #44), renaming "EMT_VoltageSourceNorton.{h, cpp}" to "EMT_VoltageSource_Norton.{h,cpp}" (see #43).
 - version bump, fixing url and image links in readme.
 
 ## [v0.1.1] - 2018-01-12
@@ -389,17 +377,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 ### Changed
 
 - do not use shared_ptrs for simulation Loggers
+- Update .gitlab-ci.yml
+- Update FaultSimulation.cpp, updating Simulation.cpp and merging branch 'development' into 'refactor-component-element-naming'.
+- updated logdataline, fixing capitalization of filenames and excluding certain parts from Doxygen as they break Breathe.
 
-### Maintenance
+### Removed
+
+- refactor: rename namespace "DPsim::Component" -> "DPsim::Components", removing default constructor from components and naming base class files "Base_*.h".
+- simulation: remove obsolete Generator test classes, simplifying expression and fixing real time simulation support in python.
+
+### Fixed
 
 - examples: fix hardcoded path (this is still ugly), installing libraries to correct location on Fedora and adding setup.py for installing / packaging with setuptools.
 - fixed test builds
 - Merge branch 'python-log' into 'development', fixing Python CI test and python ctor of Simulation class.
-- refactor: rename namespace "DPsim::Component" -> "DPsim::Components", removing default constructor from components and naming base class files "Base_*.h".
-- simulation: remove obsolete Generator test classes, simplifying expression and fixing real time simulation support in python.
-- Update .gitlab-ci.yml
-- Update FaultSimulation.cpp, updating Simulation.cpp and merging branch 'development' into 'refactor-component-element-naming'.
-- updated logdataline, fixing capitalization of filenames and excluding certain parts from Doxygen as they break Breathe.
 
 ## [v0.1.0] - 2017-12-26
 
@@ -414,6 +405,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 - moved Simulink models to other repo, adding folder DPsimReferenceExamples and deleting folder SimulinkExamples.
 - Update LICENSE, adding license.
 - VBR DP, merging branch 'development' and adding logo.
+- Added omega_base to the equations of trapezoidal rule and implemented trapezoidal rule with current as state variable, implementing trapezoidal rule with flux as state for EMT and correcting mistake in equation of ifd.
+- Created voltage behind reactance model - in construction, adding trapezoidal rule to DP synchronous generator and merging branch 'rt-exceptions' into development.
 
 ### Changed
 
@@ -423,6 +416,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 - Update README.md
 - VBR euler, adding matlab script to compare plecs with c++ results for synchronous generator and only compiling shmem/RT parts on Linux.
 - VBR model - simulation of steady state
+- adjust CMakeLists.txt, merging branch 'development' and merging branch 'cim-xml' into development.
+- Merge branch 'dev-vsa' into 'master', updating LinearResistor.cpp and BaseComponent.h.
+
+### Removed
+
+- deleted vs project files, cmake works now in vs, adding vs folder to gitignore and deleting vs installation md file, updating build.rst.
 
 ### Fixed
 
@@ -430,12 +429,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 - Created Ideal Voltage Source EMT and fixed "virtual node", simplifying models with operational and fundamental parameters.
 - fix compiler warnings (closes #15), creating simplified model of synchronous machine and making all generator models use SynchGenBase.
 - implemented exciter and turbine to VBR DP model, fixing mistake in fault clearing function and adding Turbine Governor model.
-
-### Maintenance
-
-- Added omega_base to the equations of trapezoidal rule and implemented trapezoidal rule with current as state variable, implementing trapezoidal rule with flux as state for EMT and correcting mistake in equation of ifd.
-- adjust CMakeLists.txt, merging branch 'development' and merging branch 'cim-xml' into development.
-- Created voltage behind reactance model - in construction, adding trapezoidal rule to DP synchronous generator and merging branch 'rt-exceptions' into development.
-- deleted vs project files, cmake works now in vs, adding vs folder to gitignore and deleting vs installation md file, updating build.rst.
-- Merge branch 'dev-vsa' into 'master', updating LinearResistor.cpp and BaseComponent.h.
 - pass matrices via reference to silence compiler errors, adding Dockerfile and GitLab CI configuration and searching in standard location for Eigen.
