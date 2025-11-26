@@ -16,6 +16,9 @@ namespace Base {
 namespace Ph1 {
 /// Dynamic Phasor Three-Phase Switch
 class Switch {
+protected:
+  Bool mIsClosedPrev = false;
+
 public:
   /// Resistance if switch is open [ohm]
   const Attribute<Real>::Ptr mOpenResistance;

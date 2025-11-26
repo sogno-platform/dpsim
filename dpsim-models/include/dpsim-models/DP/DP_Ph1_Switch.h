@@ -12,8 +12,8 @@
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/Logger.h>
 #include <dpsim-models/MNASimPowerComp.h>
-#include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Solver/MNASwitchInterface.h>
+#include <dpsim-models/Solver/MNAVariableCompInterface.h>
 
 namespace CPS {
 namespace DP {
@@ -25,8 +25,8 @@ namespace Ph1 {
 class Switch : public MNASimPowerComp<Complex>,
                public Base::Ph1::Switch,
                public SharedFactory<Switch>,
-               public MNASwitchInterface {
-protected:
+               public MNASwitchInterface,
+               public MNAVariableCompInterface {
 public:
   /// Defines UID, name, component parameters and logging level
   Switch(String uid, String name, Logger::Level loglevel = Logger::Level::off);
@@ -68,6 +68,9 @@ public:
   void mnaCompApplySwitchSystemMatrixStamp(Bool closed,
                                            SparseMatrixRow &systemMatrix,
                                            Int freqIdx);
+
+  // #### MNA section for variable component ####
+  Bool hasParameterChanged();
 };
 } // namespace Ph1
 } // namespace DP

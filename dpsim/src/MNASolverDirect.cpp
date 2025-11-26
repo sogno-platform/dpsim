@@ -78,12 +78,7 @@ void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
   // Continue from base matrix
   mVariableSystemMatrix = mBaseSystemMatrix;
 
-  // Now stamp switches into matrix
-  SPDLOG_LOGGER_INFO(mSLog, "Stamping switches");
-  for (auto sw : mMNAIntfSwitches)
-    sw->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
-
-  // Now stamp initial state of variable elements into matrix
+  // Now stamp initial state of variable elements and switches into matrix
   SPDLOG_LOGGER_INFO(mSLog, "Stamping variable elements");
   for (auto varElem : mMNAIntfVariableComps)
     varElem->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
@@ -139,11 +134,7 @@ void MnaSolverDirect<VarType>::recomputeSystemMatrix(Real time) {
   // Start from base matrix
   mVariableSystemMatrix = mBaseSystemMatrix;
 
-  // Now stamp switches into matrix
-  for (auto sw : mMNAIntfSwitches)
-    sw->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
-
-  // Now stamp variable elements into matrix
+  // Now stamp variable elements and switches into matrix
   for (auto comp : mMNAIntfVariableComps)
     comp->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
 
