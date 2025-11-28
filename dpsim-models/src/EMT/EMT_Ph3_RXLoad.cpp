@@ -45,7 +45,17 @@ EMT::Ph3::RXLoad::RXLoad(String name, Matrix activePower, Matrix reactivePower,
       Complex((**mActivePower)(2, 2), (**mReactivePower)(2, 2));
 
   **mNomVoltage = volt;
-  initPowerFromTerminal = false;
+  doInitPowerFromTerminal = false;
+}
+
+SimPowerComp<Real>::Ptr EMT::Ph3::RXLoad::clone(String name) {
+  if (doInitPowerFromTerminal) {
+    initPowerFromTerminal();
+  }
+
+  auto copy = RXLoad::make(name, mLogLevel);
+  copy->setParameters(**mActivePower, **mReactivePower, **mNomVoltage);
+  return copy;
 }
 
 void EMT::Ph3::RXLoad::setParameters(Matrix activePower, Matrix reactivePower,
@@ -72,36 +82,40 @@ void EMT::Ph3::RXLoad::setParameters(Matrix activePower, Matrix reactivePower,
                      Logger::matrixToString(**mReactivePower));
   SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
 
-  initPowerFromTerminal = false;
+  doInitPowerFromTerminal = false;
+}
+
+void EMT::Ph3::RXLoad::initPowerFromTerminal() {
+  **mActivePower = Matrix::Zero(3, 3);
+  (**mActivePower)(0, 0) = mTerminals[0]->singleActivePower() / 3.;
+  (**mActivePower)(1, 1) = mTerminals[0]->singleActivePower() / 3.;
+  (**mActivePower)(2, 2) = mTerminals[0]->singleActivePower() / 3.;
+
+  **mReactivePower = Matrix::Zero(3, 3);
+  (**mReactivePower)(0, 0) = mTerminals[0]->singleReactivePower() / 3.;
+  (**mReactivePower)(1, 1) = mTerminals[0]->singleReactivePower() / 3.;
+  (**mReactivePower)(2, 2) = mTerminals[0]->singleReactivePower() / 3.;
+
+  // complex power
+  mPower = MatrixComp::Zero(3, 3);
+  mPower(0, 0) = {(**mActivePower)(0, 0), (**mReactivePower)(0, 0)};
+  mPower(1, 1) = {(**mActivePower)(1, 1), (**mReactivePower)(1, 1)};
+  mPower(2, 2) = {(**mActivePower)(2, 2), (**mReactivePower)(2, 2)};
+
+  **mNomVoltage = std::abs(mTerminals[0]->initialSingleVoltage());
+
+  SPDLOG_LOGGER_INFO(mSLog,
+                     "\nActive Power [W]: {}"
+                     "\nReactive Power [VAr]: {}",
+                     Logger::matrixToString(**mActivePower),
+                     Logger::matrixToString(**mReactivePower));
+  SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
 }
 
 void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 
-  if (initPowerFromTerminal) {
-    **mActivePower = Matrix::Zero(3, 3);
-    (**mActivePower)(0, 0) = mTerminals[0]->singleActivePower() / 3.;
-    (**mActivePower)(1, 1) = mTerminals[0]->singleActivePower() / 3.;
-    (**mActivePower)(2, 2) = mTerminals[0]->singleActivePower() / 3.;
-
-    **mReactivePower = Matrix::Zero(3, 3);
-    (**mReactivePower)(0, 0) = mTerminals[0]->singleReactivePower() / 3.;
-    (**mReactivePower)(1, 1) = mTerminals[0]->singleReactivePower() / 3.;
-    (**mReactivePower)(2, 2) = mTerminals[0]->singleReactivePower() / 3.;
-
-    // complex power
-    mPower = MatrixComp::Zero(3, 3);
-    mPower(0, 0) = {(**mActivePower)(0, 0), (**mReactivePower)(0, 0)};
-    mPower(1, 1) = {(**mActivePower)(1, 1), (**mReactivePower)(1, 1)};
-    mPower(2, 2) = {(**mActivePower)(2, 2), (**mReactivePower)(2, 2)};
-
-    **mNomVoltage = std::abs(mTerminals[0]->initialSingleVoltage());
-
-    SPDLOG_LOGGER_INFO(mSLog,
-                       "\nActive Power [W]: {}"
-                       "\nReactive Power [VAr]: {}",
-                       Logger::matrixToString(**mActivePower),
-                       Logger::matrixToString(**mReactivePower));
-    SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
+  if (doInitPowerFromTerminal) {
+    initPowerFromTerminal();
   }
 
   MatrixComp vInitABC = MatrixComp::Zero(3, 1);

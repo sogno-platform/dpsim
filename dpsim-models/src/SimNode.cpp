@@ -62,6 +62,13 @@ void SimNode<VarType>::initialize(Matrix frequencies) {
 }
 
 template <typename VarType>
+std::shared_ptr<TopologicalNode> SimNode<VarType>::clone(String name) {
+  auto nodeCpy = SimNode<VarType>::make(name, phaseType());
+  nodeCpy->setInitialVoltage(initialVoltage());
+  return nodeCpy;
+}
+
+template <typename VarType>
 VarType SimNode<VarType>::singleVoltage(PhaseType phaseType) {
   if (phaseType == PhaseType::B)
     return (**mVoltage)(1, 0);

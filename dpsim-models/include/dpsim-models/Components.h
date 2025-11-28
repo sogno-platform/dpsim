@@ -11,6 +11,8 @@
 #include <dpsim-models/Config.h>
 
 #include <dpsim-models/SP/SP_Ph1_AvVoltageSourceInverterDQ.h>
+#include <dpsim-models/SP/SP_Ph1_ControlledCurrentSource.h>
+#include <dpsim-models/SP/SP_Ph1_ControlledVoltageSource.h>
 #include <dpsim-models/SP/SP_Ph1_Load.h>
 #include <dpsim-models/SP/SP_Ph1_NetworkInjection.h>
 #include <dpsim-models/SP/SP_Ph1_PQNode.h>
@@ -130,6 +132,9 @@
 #include <dpsim-models/EMT/EMT_Ph3_Transformer.h>
 
 #include <dpsim-models/Signal/CosineFMGenerator.h>
+#include <dpsim-models/Signal/DecouplingIdealTransformer_EMT_Ph1.h>
+#include <dpsim-models/Signal/DecouplingIdealTransformer_EMT_Ph3.h>
+#include <dpsim-models/Signal/DecouplingIdealTransformer_SP_Ph1.h>
 #include <dpsim-models/Signal/DecouplingLine.h>
 #include <dpsim-models/Signal/DecouplingLineEMT.h>
 #include <dpsim-models/Signal/DecouplingLineEMT_Ph3.h>

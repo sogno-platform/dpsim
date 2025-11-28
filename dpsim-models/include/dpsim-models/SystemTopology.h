@@ -151,6 +151,8 @@ public:
   /// @param name name of the component
   void removeComponent(const String &name);
 
+  void removeNode(const String &name);
+
   ///
   template <typename VarType>
   int checkTopologySubnets(

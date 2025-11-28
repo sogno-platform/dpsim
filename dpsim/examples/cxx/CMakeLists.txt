@@ -36,6 +36,9 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_DecouplingLine_Ph3.cpp
 	Circuits/EMT_Ph3_R3C1L1CS1_RC_vs_SSN.cpp
 	Circuits/EMT_Ph3_RLC1VS1_RC_vs_SSN.cpp
+	Circuits/EMT_RC_split_decoupled_node_DC.cpp
+	Circuits/EMT_RC_split_decoupled_node.cpp
+	Circuits/EMT_RC_split_decoupled_node_Ph3.cpp
 
 	# EMT examples with PF initialization
 	Circuits/EMT_Slack_PiLine_PQLoad_with_PF_Init.cpp
@@ -45,9 +48,11 @@ set(CIRCUIT_SOURCES
 	# SP examples
 	Circuits/SP_Circuits.cpp
 	Circuits/SP_PiLine.cpp
+	Circuits/SP_ITM_withPiLine_Ph1.cpp
 	Circuits/SP_Slack_PiLine_VSI_with_PF_Init.cpp
 	Circuits/SP_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
 	Circuits/SP_Slack_PiLine_PQLoad_with_PF_Init.cpp
+	Circuits/SP_RC_split_decoupled_node.cpp
 
 	# Combined EMT/DP/SP examples
 	Circuits/EMT_DP_SP_Slack.cpp
@@ -141,6 +146,7 @@ list(APPEND TEST_SOURCES
 	Circuits/DP_SMIB_ReducedOrderSGIterative_LoadStep.cpp
 	Circuits/EMT_Ph3_R3C1L1CS1_RC_vs_SSN.cpp
 	Circuits/EMT_Ph3_RLC1VS1_RC_vs_SSN.cpp
+	Circuits/SP_ITM_withPiLine_Ph1.cpp
 )
 
 if(WITH_SUNDIALS)
@@ -198,6 +204,7 @@ if(WITH_CIM)
 		CIM/WSCC_9bus_mult_diakoptics.cpp
 		CIM/DP_WSCC_9bus_split_decoupled.cpp
 		CIM/EMT_WSCC_9bus_split_decoupled.cpp
+		CIM/EMT_WSCC_9bus_split_decoupled_node.cpp
 
 		# CIGRE MV examples
 		CIM/PF_CIGRE_MV_withDG.cpp
