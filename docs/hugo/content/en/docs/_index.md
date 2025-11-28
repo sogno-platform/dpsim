@@ -21,17 +21,21 @@ DPsim is a solver library for dynamic power system simulation.
 
 Using or want to use DPsim? Find out more here:
 
+[GitHub Discussions](https://github.com/sogno-platform/dpsim/discussions) - Ask questions, share ideas, and get community support.
+
 [LF Energy Slack](https://slack.lfenergy.org/) - Chat with other users and developers and get help in the **#sogno** or **#sogno-dpsim** channel.
 
-You can also send a direct message to:
+For email inquiries, please contact the Institute for Automation of Complex Power Systems (ACS), which coordinates DPsim development: [post_acs@eonerc.rwth-aachen.de](mailto:post_acs@eonerc.rwth-aachen.de).
 
-- Markus Mirz
-- Jan Dinkelbach
-- Steffen Vogel
+# How to contribute
 
-# Contribute
+If you want to get more involved with DPsim, we welcome contributions of all kinds, including code, documentation, examples, models, bug reports, feature requests, and reviews.
 
-If you want to get more involved by contributing to DPsim, please send us a Pull Request on [GitHub](https://github.com/sogno-platform/dpsim).
+Please open a Pull Request or issue on [GitHub](https://github.com/sogno-platform/dpsim), or start a discussion there to propose ideas and get feedback from the community.
+
+## Contributors
+
+See [CONTRIBUTORS.md](CONTRIBUTORS.md) for a list of contributors.
 
 # Publications
 
