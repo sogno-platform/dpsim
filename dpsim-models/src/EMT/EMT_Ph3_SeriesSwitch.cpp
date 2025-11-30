@@ -128,3 +128,13 @@ void EMT::Ph3::SeriesSwitch::mnaCompUpdateCurrent(const Matrix &leftVector) {
 
   SPDLOG_LOGGER_DEBUG(mSLog, "Current A: {}", (**mIntfCurrent)(0, 0));
 }
+
+Bool EMT::Ph3::SeriesSwitch::hasParameterChanged() {
+  // Check if state of switch changed
+  if (!(mIsClosedPrev == this->mnaIsClosed())) {
+    mIsClosedPrev = this->mnaIsClosed();
+    return 1; //recompute system matrix
+  } else {
+    return 0; // do not recompute system matrix
+  }
+};

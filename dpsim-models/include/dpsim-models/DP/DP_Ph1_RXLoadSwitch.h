@@ -17,6 +17,7 @@ namespace Ph1 {
 /// Constant impedance load model consisting of RLC elements
 class RXLoadSwitch : public CompositePowerComp<Complex>,
                      public MNASwitchInterface,
+                     public MNAVariableCompInterface,
                      public SharedFactory<RXLoadSwitch> {
 protected:
   /// Internal RXLoad
@@ -73,6 +74,9 @@ public:
   void mnaCompApplySwitchSystemMatrixStamp(Bool closed,
                                            SparseMatrixRow &systemMatrix,
                                            Int freqIdx) override;
+
+  // #### MNA section for variable component ####
+  Bool hasParameterChanged() override;
 };
 } // namespace Ph1
 } // namespace DP
