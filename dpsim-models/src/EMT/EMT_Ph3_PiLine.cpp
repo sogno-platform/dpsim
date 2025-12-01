@@ -227,3 +227,40 @@ void EMT::Ph3::PiLine::mnaCompUpdateVoltage(const Matrix &leftVector) {
 void EMT::Ph3::PiLine::mnaCompUpdateCurrent(const Matrix &leftVector) {
   **mIntfCurrent = mSubSeriesInductor->intfCurrent();
 }
+
+// #### Tear Methods ####
+MNAInterface::List EMT::Ph3::PiLine::mnaTearGroundComponents() {
+  MNAInterface::List gndComponents;
+
+  gndComponents.push_back(mSubParallelResistor0);
+  gndComponents.push_back(mSubParallelResistor1);
+
+  if ((**mParallelCap)(0, 0) > 0) {
+    gndComponents.push_back(mSubParallelCapacitor0);
+    gndComponents.push_back(mSubParallelCapacitor1);
+  }
+
+  return gndComponents;
+}
+
+void EMT::Ph3::PiLine::mnaTearInitialize(Real omega, Real timeStep) {
+  mSubSeriesResistor->mnaTearSetIdx(mTearIdx);
+  mSubSeriesResistor->mnaTearInitialize(omega, timeStep);
+  mSubSeriesInductor->mnaTearSetIdx(mTearIdx);
+  mSubSeriesInductor->mnaTearInitialize(omega, timeStep);
+}
+
+void EMT::Ph3::PiLine::mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) {
+  mSubSeriesResistor->mnaTearApplyMatrixStamp(tearMatrix);
+  mSubSeriesInductor->mnaTearApplyMatrixStamp(tearMatrix);
+}
+
+void EMT::Ph3::PiLine::mnaTearApplyVoltageStamp(Matrix &voltageVector) {
+  mSubSeriesInductor->mnaTearApplyVoltageStamp(voltageVector);
+}
+
+void EMT::Ph3::PiLine::mnaTearPostStep(MatrixComp voltage, MatrixComp current) {
+  mSubSeriesInductor->mnaTearPostStep(voltage - (**mSeriesRes * current),
+                                      current);
+  (**mIntfCurrent) = mSubSeriesInductor->intfCurrent();
+}

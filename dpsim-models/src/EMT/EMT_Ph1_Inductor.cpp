@@ -116,3 +116,25 @@ void EMT::Ph1::Inductor::mnaCompUpdateVoltage(const Matrix &leftVector) {
 void EMT::Ph1::Inductor::mnaCompUpdateCurrent(const Matrix &leftVector) {
   (**mIntfCurrent)(0, 0) = mEquivCond * (**mIntfVoltage)(0, 0) + mEquivCurrent;
 }
+
+// #### Tear Methods ####
+void EMT::Ph1::Inductor::mnaTearInitialize(Real omega, Real timeStep) {
+  updateMatrixNodeIndices();
+  mEquivCond = timeStep / (2.0 * **mInductance);
+  // Update internal state
+  mEquivCurrent = mEquivCond * (**mIntfVoltage)(0, 0) + (**mIntfCurrent)(0, 0);
+}
+
+void EMT::Ph1::Inductor::mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) {
+  Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, 1. / mEquivCond);
+}
+
+void EMT::Ph1::Inductor::mnaTearApplyVoltageStamp(Matrix &voltageVector) {
+  mEquivCurrent = mEquivCond * (**mIntfVoltage)(0, 0) + (**mIntfCurrent)(0, 0);
+  Math::addToVectorElement(voltageVector, mTearIdx, mEquivCurrent / mEquivCond);
+}
+
+void EMT::Ph1::Inductor::mnaTearPostStep(Complex voltage, Complex current) {
+  (**mIntfVoltage)(0, 0) = voltage.real();
+  (**mIntfCurrent)(0, 0) = mEquivCond * voltage.real() + mEquivCurrent;
+}

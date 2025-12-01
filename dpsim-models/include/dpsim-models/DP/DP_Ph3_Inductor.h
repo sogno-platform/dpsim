@@ -79,11 +79,11 @@ public:
                                  AttributeBase::List &attributeDependencies,
                                  AttributeBase::List &modifiedAttributes,
                                  Attribute<Matrix>::Ptr &leftVector) override;
-
+  // #### MNA Tear Section ####
   void mnaTearInitialize(Real omega, Real timestep) override;
   void mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) override;
   void mnaTearApplyVoltageStamp(Matrix &voltageVector) override;
-  void mnaTearPostStep(Complex voltage, Complex current) override;
+  void mnaTearPostStep(MatrixComp voltage, MatrixComp current) override;
 };
 } // namespace Ph3
 } // namespace DP
