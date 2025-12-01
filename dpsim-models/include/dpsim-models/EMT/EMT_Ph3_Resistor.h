@@ -10,13 +10,14 @@
 
 #include <dpsim-models/Base/Base_Ph3_Resistor.h>
 #include <dpsim-models/MNASimPowerComp.h>
-#include <dpsim-models/Solver/MNAInterface.h>
+#include <dpsim-models/Solver/MNATearInterface.h>
 namespace CPS {
 namespace EMT {
 namespace Ph3 {
 /// EMT Resistor
 class Resistor : public MNASimPowerComp<Real>,
                  public Base::Ph3::Resistor,
+                 public MNATearInterface,
                  public SharedFactory<Resistor> {
 protected:
 public:
@@ -56,6 +57,9 @@ public:
                                  AttributeBase::List &attributeDependencies,
                                  AttributeBase::List &modifiedAttributes,
                                  Attribute<Matrix>::Ptr &leftVector);
+
+  // #### MNA Tear Section ####
+  void mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) override;
 };
 } // namespace Ph3
 } // namespace EMT

@@ -164,6 +164,7 @@ void DP::Ph1::Resistor::mnaCompUpdateCurrentHarm() {
   }
 }
 
+// #### Tear Methods ####
 void DP::Ph1::Resistor::mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) {
   Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx,
                            Complex(**mResistance, 0));

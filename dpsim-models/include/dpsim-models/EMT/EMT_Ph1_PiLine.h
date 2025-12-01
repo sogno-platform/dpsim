@@ -8,23 +8,23 @@
 
 #pragma once
 
-#include <dpsim-models/Base/Base_Ph3_PiLine.h>
+#include <dpsim-models/Base/Base_Ph1_PiLine.h>
 #include <dpsim-models/CompositePowerComp.h>
-#include <dpsim-models/EMT/EMT_Ph3_Capacitor.h>
-#include <dpsim-models/EMT/EMT_Ph3_Inductor.h>
-#include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
+#include <dpsim-models/EMT/EMT_Ph1_Capacitor.h>
+#include <dpsim-models/EMT/EMT_Ph1_Inductor.h>
+#include <dpsim-models/EMT/EMT_Ph1_Resistor.h>
 #include <dpsim-models/Solver/MNATearInterface.h>
 
 namespace CPS {
 namespace EMT {
-namespace Ph3 {
+namespace Ph1 {
 /// \brief PI-line dynamic phasor model
 ///
 /// This model consists sub components to represent the
 /// RLC elements of a PI-line.
 class PiLine : public CompositePowerComp<Real>,
                public MNATearInterface,
-               public Base::Ph3::PiLine,
+               public Base::Ph1::PiLine,
                public SharedFactory<PiLine> {
 protected:
   /// Series Inductance submodel
@@ -81,8 +81,8 @@ public:
   void mnaTearInitialize(Real omega, Real timeStep) override;
   void mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) override;
   void mnaTearApplyVoltageStamp(Matrix &voltageVector) override;
-  void mnaTearPostStep(MatrixComp voltage, MatrixComp current) override;
+  void mnaTearPostStep(Complex voltage, Complex current) override;
 };
-} // namespace Ph3
+} // namespace Ph1
 } // namespace EMT
 } // namespace CPS
