@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     container: sogno/dpsim:dev
     outputs:
-      skip: ${{ steps.check-token.outputs.skip }} # Output to indicate if the job was skipped
+      skip: ${{ steps.check_token.outputs.skip }} # Output to indicate if the job was skipped
     env:
       BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory
     steps:
@@ -45,7 +45,7 @@ jobs:
 
       - name: Install sonar-scanner and build-wrapper
         if: steps.check_token.outputs.skip != 'true'
-        uses: sonarsource/sonarcloud-github-c-cpp@v2
+        uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v6
 
       - name: Create Build Folder
         if: steps.check_token.outputs.skip != 'true'
@@ -81,8 +81,10 @@ jobs:
 
       - name: Run sonar-scanner
         if: steps.check_token.outputs.skip != 'true'
+        uses: SonarSource/sonarqube-scan-action@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          sonar-scanner --define sonar.cfamily.compile-commands=${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json
+        with:
+          args: >
+            --define sonar.cfamily.compile-commands=${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json
