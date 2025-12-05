@@ -178,12 +178,34 @@ void DP::Ph3::Inductor::mnaCompUpdateCurrent(const Matrix &leftVector) {
   **mIntfCurrent = mEquivCond * **mIntfVoltage + mEquivCurrent;
 }
 
+// #### Tear Methods ####
 void DP::Ph3::Inductor::mnaTearInitialize(Real omega, Real timeStep) {
   initVars(omega, timeStep);
 }
 
-void DP::Ph3::Inductor::mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) {}
+void DP::Ph3::Inductor::mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) {
+  // Set diagonal entries
+  Math::addToMatrixElement(tearMatrix, mTearIdx * 3, mTearIdx * 3,
+                           1. / mEquivCond(0, 0)); // 1 /
+  Math::addToMatrixElement(tearMatrix, mTearIdx * 3 + 1, mTearIdx * 3 + 1,
+                           1. / mEquivCond(1, 1));
+  Math::addToMatrixElement(tearMatrix, mTearIdx * 3 + 2, mTearIdx * 3 + 2,
+                           1. / mEquivCond(2, 2));
+}
 
-void DP::Ph3::Inductor::mnaTearApplyVoltageStamp(Matrix &voltageVector) {}
+void DP::Ph3::Inductor::mnaTearApplyVoltageStamp(Matrix &voltageVector) {
+  mEquivCurrent =
+      mEquivCond * (**mIntfVoltage) + mPrevCurrFac * (**mIntfCurrent);
+  Math::addToVectorElement(voltageVector, mTearIdx * 3,
+                           mEquivCurrent(0, 0) / mEquivCond(0, 0));
+  Math::addToVectorElement(voltageVector, mTearIdx * 3 + 1,
+                           mEquivCurrent(1, 0) / mEquivCond(1, 1));
+  Math::addToVectorElement(voltageVector, mTearIdx * 3 + 2,
+                           mEquivCurrent(2, 0) / mEquivCond(2, 2));
+}
 
-void DP::Ph3::Inductor::mnaTearPostStep(Complex voltage, Complex current) {}
+void DP::Ph3::Inductor::mnaTearPostStep(MatrixComp voltage,
+                                        MatrixComp current) {
+  (**mIntfVoltage) = voltage;
+  (**mIntfCurrent) = mEquivCond * voltage + mEquivCurrent;
+}
