@@ -46,6 +46,7 @@ jobs:
       uses: pypa/cibuildwheel@v2.23.2
       env:
         CIBW_BUILD: "${{ matrix.python }}-${{ matrix.platform }}"
+        CIBW_MANYLINUX_X86_64_IMAGE: sogno/dpsim:manylinux
       with:
         output-dir: dist
 

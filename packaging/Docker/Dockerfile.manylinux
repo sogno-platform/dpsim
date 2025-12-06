@@ -122,9 +122,8 @@ RUN cd /tmp && \
 	make ${MAKE_OPTS} install && \
 	rm -rf /tmp/villas-node
 
-# Ensure libraries in /usr/local/lib64 are found
-ENV LD_LIBRARY_PATH="/usr/local/lib64:${LD_LIBRARY_PATH}"
-
-# Hack: VILLASnode/OpenDSSC libraries end up in /usr/local/openDSSC/bin
-# Make the dynamic linker aware of that directory
-RUN echo "/usr/local/openDSSC/bin" > /etc/ld.so.conf.d/opendssc.conf && \ ldconfig
+	# Fix OpenDSSC library path
+	RUN if [ -f /usr/local/openDSSC/bin/libOpenDSSC.so ]; then \
+		mkdir -p /usr/lib64; \
+		ln -sf /usr/local/openDSSC/bin/libOpenDSSC.so /usr/lib64/libOpenDSSC.so; \
+	fi
