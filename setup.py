@@ -67,7 +67,10 @@ class CMakeBuild(build_ext):
 setup(
     packages=find_packages("python/src"),
     package_dir={"dpsim": "python/src/dpsim"},
-    python_requires=">=3.8",
+    python_requires=">=3.9",
+    install_requires=[
+        "numpy>=2.0.0",
+    ],
     setup_requires=["pytest-runner", "wheel"],
     tests_require=["pytest", "pyyaml", "nbformat", "nbconvert"],
     ext_modules=[CMakeExtension("dpsimpy"), CMakeExtension("dpsimpyvillas")],
