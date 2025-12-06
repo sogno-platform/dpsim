@@ -22,7 +22,7 @@ In the repository, there is a Docker file with all required dependencies
 
 ```shell
 cd dpsim
-docker build -t sogno/dpsim:dev -f Packaging/Docker/Dockerfile.dev .
+docker build -t sogno/dpsim:dev -f packaging/Docker/Dockerfile.dev .
 ```
 
 Alternatively, the image can be pulled from DockerHub like so
