@@ -70,6 +70,8 @@ setup(
     python_requires=">=3.9",
     install_requires=[
         "numpy>=2.0.0",
+        "pandas>=2.0.0",
+        "scipy>=1.10.0",
     ],
     setup_requires=["pytest-runner", "wheel"],
     tests_require=["pytest", "pyyaml", "nbformat", "nbconvert"],
