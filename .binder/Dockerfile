@@ -19,8 +19,7 @@ RUN adduser \
 
 COPY . ${HOME}/dpsim
 ENV PATH="${HOME}/.local/bin:${PATH}"
-# FIXME: Temporary disable VILLAS to keep old behavior using WITH_VILLAS
-ENV CMAKE_OPTS="-DWITH_VILLAS=OFF"
+
 RUN python3 -m pip install notebook jupyterlab jupyterhub
 USER root
 RUN chown -R ${NB_UID} ${HOME}
