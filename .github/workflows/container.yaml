@@ -25,6 +25,7 @@ jobs:
          tags: sogno/dpsim:dev-rocky
 
   create-docker-fedora-release:
+    needs: create-docker-fedora-dev
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
