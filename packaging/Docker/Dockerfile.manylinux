@@ -121,3 +121,9 @@ RUN cd /tmp && \
 		-DCMAKE_POLICY_VERSION_MINIMUM=3.5 && \
 	make ${MAKE_OPTS} install && \
 	rm -rf /tmp/villas-node
+
+	# Fix OpenDSSC library path
+	RUN if [ -f /usr/local/openDSSC/bin/libOpenDSSC.so ]; then \
+		mkdir -p /usr/lib64; \
+		ln -sf /usr/local/openDSSC/bin/libOpenDSSC.so /usr/lib64/libOpenDSSC.so; \
+	fi
