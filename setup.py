@@ -51,9 +51,15 @@ class CMakeBuild(build_ext):
             ["cmake", sourcedir] + cmake_args, cwd=self.build_temp, env=env
         )
 
-        print(" ".join(["cmake", "--build", ".", "--target", "dpsimpy"] + build_args))
+        print(
+            " ".join(
+                ["cmake", "--build", ".", "--target", "dpsimpy", "dpsimpyvillas"]
+                + build_args
+            )
+        )
         subprocess.check_call(
-            ["cmake", "--build", ".", "--target", "dpsimpy"] + build_args,
+            ["cmake", "--build", ".", "--target", "dpsimpy", "dpsimpyvillas"]
+            + build_args,
             cwd=self.build_temp,
         )
 
@@ -61,10 +67,15 @@ class CMakeBuild(build_ext):
 setup(
     packages=find_packages("python/src"),
     package_dir={"dpsim": "python/src/dpsim"},
-    python_requires=">=3.8",
+    python_requires=">=3.9",
+    install_requires=[
+        "numpy>=2.0.0",
+        "pandas>=2.0.0",
+        "scipy>=1.10.0",
+    ],
     setup_requires=["pytest-runner", "wheel"],
     tests_require=["pytest", "pyyaml", "nbformat", "nbconvert"],
-    ext_modules=[CMakeExtension("dpsimpy")],
+    ext_modules=[CMakeExtension("dpsimpy"), CMakeExtension("dpsimpyvillas")],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
 )
