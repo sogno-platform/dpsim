@@ -12,37 +12,42 @@ on:
         required: true
         type: string
 
-
 jobs:
   profiling-examples:
     name: Run example with profiling
     runs-on: ubuntu-latest
     container: sogno/dpsim:dev-rocky
     steps:
-    - name: Restore Cache
-      uses: actions/cache@v4
-      with:
-        path: ${{ github.workspace }}/build
-        key: build-cache-rocky-profiling-${{ github.sha }}
+      - name: Restore Cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/build
+          key: build-cache-rocky-profiling-${{ github.sha }}
 
-    - name: Run Binary
-      run: ${{ inputs.path }} 2>&1 | tee output.log
+      - name: Run Binary
+        env:
+          BINARY_PATH: ${{ inputs.path }}
+        run: |
+          "$BINARY_PATH" 2>&1 | tee output.log
 
-    - name: Extract metrics
-      shell: bash
-      working-directory: ${{ github.workspace }}
-      run: |
-        cat output.log |
-        sed -n -E -e 's/^.*Average step time. ([0-9]+\.[0-9]+)$/step-time \1/p' |
-        tee -a metrics.txt
+      - name: Extract metrics
+        shell: bash
+        working-directory: ${{ github.workspace }}
+        run: |
+          cat output.log |
+          sed -n -E -e 's/^.*Average step time. ([0-9]+\.[0-9]+)$/step-time \1/p' |
+          tee -a metrics.txt
 
-    - name: Run Profiler
-      run: gprof ${{ inputs.path }} | gprof2dot -s | dot -Tpng -o profiling.png || true
+      - name: Run Profiler
+        env:
+          BINARY_PATH: ${{ inputs.path }}
+        run: |
+          gprof "$BINARY_PATH" | gprof2dot -s | dot -Tpng -o profiling.png || true
 
-    - name: Archive profiler output
-      uses: actions/upload-artifact@v4
-      with:
-        name: profiler-output-${{ inputs.name }}
-        path: |
-          metrics.txt
-          profiling.png
+      - name: Archive profiler output
+        uses: actions/upload-artifact@v4
+        with:
+          name: profiler-output-${{ inputs.name }}
+          path: |
+            metrics.txt
+            profiling.png
