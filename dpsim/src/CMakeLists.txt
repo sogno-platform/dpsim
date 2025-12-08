@@ -92,6 +92,17 @@ if(WITH_OPENMP)
 	list(APPEND DPSIM_LIBRARIES ${OpenMP_CXX_FLAGS})
 endif()
 
+if(WITH_VILLAS)
+	list(APPEND DPSIM_LIBRARIES
+		${VILLASNODE_LIBRARIES}
+		${VILLASCOMMON_LIBRARIES}
+		pthread
+	)
+	if(VILLASFPGA_LIBRARIES)
+		list(APPEND DPSIM_LIBRARIES ${VILLASFPGA_LIBRARIES})
+	endif()
+endif()
+
 add_library(dpsim ${DPSIM_SOURCES})
 target_link_libraries(dpsim PUBLIC ${DPSIM_LIBRARIES})
 target_include_directories(dpsim PUBLIC ${DPSIM_INCLUDE_DIRS})
