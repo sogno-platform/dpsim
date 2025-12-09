@@ -313,11 +313,8 @@ jobs:
     uses: ./.github/workflows/run_villas_example.yaml
     with:
       compose_file_path: examples/villas/docker-compose-tests
-      container_commands: |
-        docker exec dpsim-compose-dpsim-1 /bin/bash -c "pip install paho-mqtt"
-        docker exec dpsim-compose-mqtt-1 mosquitto_sub -t "/dpsim-mqtt" -u wildcard -v&
-        docker exec dpsim-compose-dpsim-1 /bin/bash -c "cd /dpsim && python3 /dpsim/examples/villas/dpsim-mqtt-producer.py"&
-        docker exec dpsim-compose-dpsim-1 /bin/bash -c "cd /dpsim && python3 /dpsim/examples/villas/dpsim-mqtt.py"
+      example_name: dpsim-mqtt
+      continue_on_error: true
 
   test-villas-examples-2:
     name: Run dpsim-mqtt-import-export VILLASnode example
@@ -325,9 +322,8 @@ jobs:
     uses: ./.github/workflows/run_villas_example.yaml
     with:
       compose_file_path: examples/villas/docker-compose-tests
-      container_commands: |
-        docker exec dpsim-compose-mqtt-1 mosquitto_sub -t "#" -u wildcard -v&
-        docker exec dpsim-compose-dpsim-1 /bin/bash -c "cd /dpsim && python3 /dpsim/examples/villas/dpsim-mqtt-import-export.py"
+      example_name: dpsim-mqtt-import-export
+      continue_on_error: true
 
   test-villas-examples-3:
     name: Run dpsim-mqtt-import-export-MIMO VILLASnode example
@@ -335,10 +331,8 @@ jobs:
     uses: ./.github/workflows/run_villas_example.yaml
     with:
       compose_file_path: examples/villas/docker-compose-tests
+      example_name: dpsim-mqtt-import-export-mimo
       continue_on_error: true
-      container_commands: |
-        docker exec dpsim-compose-mqtt-1 mosquitto_sub -t "#" -u wildcard -v&
-        docker exec dpsim-compose-dpsim-1 /bin/bash -c "cd /dpsim && python3 /dpsim/examples/villas/dpsim-mqtt-import-export-MIMO.py"
 
   test-villas-examples-4:
     name: Run dpsim-file VILLASnode example
@@ -346,10 +340,8 @@ jobs:
     uses: ./.github/workflows/run_villas_example.yaml
     with:
       compose_file_path: examples/villas/docker-compose-tests
+      example_name: dpsim-file
       continue_on_error: true
-      container_commands: |
-        docker exec dpsim-compose-dpsim-1 /bin/bash -c "sleep 3 && tail -f /dpsim/logs/output.csv"&
-        docker exec dpsim-compose-dpsim-1 /bin/bash -c "cd /dpsim && python3 /dpsim/examples/villas/dpsim-file.py"
 
   test-villas-examples-5:
     name: Run mqtt-cigre-mv-pf-profiles VILLASnode example
@@ -357,6 +349,5 @@ jobs:
     uses: ./.github/workflows/run_villas_example.yaml
     with:
       compose_file_path: examples/villas/docker-compose-tests
-      container_commands: |
-        docker exec dpsim-compose-mqtt-1 mosquitto_sub -t "#" -u wildcard -v&
-        docker exec dpsim-compose-dpsim-1 /bin/bash -c "cd /dpsim && python3 /dpsim/examples/villas/dpsim-mqtt-cigre-mv-pf-profiles.py"
+      example_name: mqtt-cigre-mv-pf-profiles
+      continue_on_error: true

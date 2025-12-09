@@ -7,8 +7,8 @@ on:
         description: 'Path to the multi-container compose file'
         required: true
         type: string
-      container_commands:
-        description: 'docker exec commands for running tests in the containers'
+      example_name:
+        description: 'Which VILLAS example to run'
         required: true
         type: string
       continue_on_error:
@@ -22,24 +22,64 @@ jobs:
     name: Run a VILLASnode example across multiple containers
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Restore build archive
-      uses: actions/download-artifact@v4
-      with:
-       name: build-cache-examples-cpp-${{ github.sha }}
-       path: ${{ github.workspace }}/build
+      - name: Restore build archive
+        uses: actions/download-artifact@v4
+        with:
+          name: build-cache-examples-cpp-${{ github.sha }}
+          path: ${{ github.workspace }}/build
 
-    - name: Start containers
-      run: cd ${{ inputs.compose_file_path }} && docker compose -p dpsim-compose up -d
+      - name: Start containers
+        working-directory: ${{ inputs.compose_file_path }}
+        run: docker compose -p dpsim-compose up -d
 
-    - name: Run container commands
-      timeout-minutes: 5
-      continue-on-error: ${{ inputs.continue_on_error }}
-      shell: bash
-      run: ${{ inputs.container_commands }}
+      - name: Run VILLAS example container commands
+        timeout-minutes: 5
+        continue-on-error: ${{ inputs.continue_on_error }}
+        shell: bash
+        env:
+          EXAMPLE_NAME: ${{ inputs.example_name }}
+        working-directory: ${{ github.workspace }}
+        run: |
+          set -e
 
-    - name: Stop containers
-      if: ${{ always() }}
-      run: cd ${{ inputs.compose_file_path }} && docker compose -p dpsim-compose down
+          case "$EXAMPLE_NAME" in
+            dpsim-mqtt)
+              docker exec dpsim-compose-dpsim-1 /bin/bash -c "pip install paho-mqtt"
+              docker exec dpsim-compose-mqtt-1 mosquitto_sub -t "/dpsim-mqtt" -u wildcard -v &
+              docker exec dpsim-compose-dpsim-1 /bin/bash -c "cd /dpsim && python3 /dpsim/examples/villas/dpsim-mqtt-producer.py" &
+              docker exec dpsim-compose-dpsim-1 /bin/bash -c "cd /dpsim && python3 /dpsim/examples/villas/dpsim-mqtt.py"
+              ;;
+
+            dpsim-mqtt-import-export)
+              docker exec dpsim-compose-mqtt-1 mosquitto_sub -t "#" -u wildcard -v &
+              docker exec dpsim-compose-dpsim-1 /bin/bash -c "cd /dpsim && python3 /dpsim/examples/villas/dpsim-mqtt-import-export.py"
+              ;;
+
+            dpsim-mqtt-import-export-mimo)
+              docker exec dpsim-compose-mqtt-1 mosquitto_sub -t "#" -u wildcard -v &
+              docker exec dpsim-compose-dpsim-1 /bin/bash -c "cd /dpsim && python3 /dpsim/examples/villas/dpsim-mqtt-import-export-MIMO.py"
+              ;;
+
+            dpsim-file)
+              docker exec dpsim-compose-dpsim-1 /bin/bash -c "sleep 3 && tail -f /dpsim/logs/output.csv" &
+              docker exec dpsim-compose-dpsim-1 /bin/bash -c "cd /dpsim && python3 /dpsim/examples/villas/dpsim-file.py"
+              ;;
+
+            mqtt-cigre-mv-pf-profiles)
+              docker exec dpsim-compose-mqtt-1 mosquitto_sub -t "#" -u wildcard -v &
+              docker exec dpsim-compose-dpsim-1 /bin/bash -c "cd /dpsim && python3 /dpsim/examples/villas/dpsim-mqtt-cigre-mv-pf-profiles.py"
+              ;;
+
+            *)
+              echo "Unknown EXAMPLE_NAME: $EXAMPLE_NAME" >&2
+              exit 1
+              ;;
+          esac
+
+      - name: Stop containers
+        if: ${{ always() }}
+        working-directory: ${{ inputs.compose_file_path }}
+        run: docker compose -p dpsim-compose down
