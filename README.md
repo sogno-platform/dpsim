@@ -19,16 +19,21 @@ DPsim is a solver library for dynamic power system simulation.
 - It can load models in the IEC61970 CIM / CGMES XML format.
 - It can be interfaced to a variety of protocols and interfaces via [VILLASnode](https://fein-aachen.org/projects/villas-node/).
 
-## Getting started using Binder
+## Getting started
+
+### Using Binder
 
 Click the badge below to explore the interactive Jupyter notebooks in your browser:
 
 [![Binder](https://2i2c.mybinder.org/badge_logo.svg)](https://2i2c.mybinder.org/v2/gh/sogno-platform/dpsim/HEAD?urlpath=%2Fdoc%2Ftree%2Fexamples%2FIndex.ipynb)
 
-Or install it using the command
-´´´
+### Using Python on Linux
+
+Install DPsim on Linux using the command
+
+```shell
 pip install dpsim
-´´´
+```
 
 ## Documentation
 
@@ -50,6 +55,8 @@ If you want to get more involved with DPsim, we welcome contributions of all kin
 
 Please open a Pull Request or issue on [GitHub](https://github.com/sogno-platform/dpsim), or start a discussion there to propose ideas and get feedback from the community.
 
+Have you developed something new and want to contribute it? Check the [documentation](https://dpsim.fein-aachen.org/) for details on the preferred way to organize your code contributions.
+
 ## Contributors
 
-See [CONTRIBUTORS.md](CONTRIBUTORS.md) for a list of contributors.
+See [CONTRIBUTORS.md](https://github.com/sogno-platform/dpsim/blob/master/CONTRIBUTORS.md) for a list of contributors.
