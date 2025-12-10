@@ -21,9 +21,13 @@ docker run -p 8888:8888 sogno/dpsim
 
 And access the session by opening the following link: <http://localhost:8888/lab?token=3adaa57df44cea75e60c0169e1b2a98ae8f7de130481b5bc>
 
-# Python
+# Python in Linux
 
-**Currently, the pypi packages are not maintained. Until we have updated the packages, please use the docker installation.**
+DPsim can be installed in Linux as a Python module:
+
+```shell
+pip install dpsim
+```
 
 ## Prerequisites
 
@@ -33,7 +37,7 @@ To get started, install the latest installer for Python 3.x from the [downloads 
 Then, run the Anaconda Prompt and create a new conda environment:
 
 ```shell
-conda create -n dpsim python=3.6
+conda create -n dpsim python=3.13
 ```
 
 After creating the environment you need to make sure that it is activated.
@@ -47,11 +51,13 @@ activate dpsim
 
 ## Pip Package Installation
 
-Then, DPsim can be installed as a Python module:
+Then, DPsim can be installed as a Python module in Linux:
 
 ```shell
 pip install dpsim
 ```
+
+Some examples also need additional packages to process the data or show graphics. Please have a look at the import section of them in case you run into any errors.
 
 # From Source
 
