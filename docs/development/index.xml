@@ -99,16 +99,45 @@ Make sure to adapt your PYTHONPATH variable if necessary.&lt;/p>
 &lt;/ul>
 &lt;h1 id="logging">Logging&lt;/h1>
 &lt;p>Debug or trace should be the default log level for information that might be nice to have but not necessary for every simulation case.&lt;/p>
-&lt;p>Calls to the logger that might occur during simulation must use spdlog macros, like SPDLOG_LOGGER_INFO.&lt;/p>
-&lt;h1 id="creating-new-releases">Creating New Releases&lt;/h1>
-&lt;p>Although DPsim currently does not have any conventions on versioning, the periodic creation of
+&lt;p>Calls to the logger that might occur during simulation must use spdlog macros, like &lt;code>SPDLOG_LOGGER_INFO&lt;/code>.&lt;/p>
+&lt;h1 id="pull-requests">Pull Requests&lt;/h1>
+&lt;p>There are no strict formal requirements besides the following:&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>&lt;strong>Developer Certificate of Origin (DCO)&lt;/strong>&lt;/p>
+&lt;p>We require a Developer Certificate of Origin. See more &lt;a href="https://github.com/lf-energy/tac/blob/main/process/contribution_guidelines.md#contribution-sign-off">here&lt;/a>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Code Formatting with &lt;code>pre-commit&lt;/code>&lt;/strong>&lt;/p>
+&lt;p>We enforce code formatting automatically using &lt;code>pre-commit&lt;/code>. Please run &lt;code>pre-commit install&lt;/code> the first time you clone the repository to run &lt;code>pre-commit&lt;/code> before each commit automatically. If you forgot to do this, you will need to use the command &lt;code>pre-commit run --all-files&lt;/code> one time to format your changes.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Development in Forks Only&lt;/strong>&lt;/p>
+&lt;p>We accept contributions made in forks only. The main repository is not intended for contributor-specific branches.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>SPDX Headers&lt;/strong>&lt;/p>
+&lt;p>Use SPDX headers to indicate copyright and licensing information, especially when introducing new files to the codebase. For example:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">/* Author: John Smith &amp;lt;John.Smith@example.com&amp;gt;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">* SPDX-FileCopyrightText: 2025 Example.com
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">* SPDX-License-Identifier: MPL-2.0
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">*/&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;h1 id="creating-new-releases-info-for-maintainers">Creating New Releases (info for maintainers)&lt;/h1>
+&lt;p>DPsim currently uses to &lt;a href="https://semver.org/">Semantic Versioning&lt;/a>. The periodic creation of
 new versions can help to mark significant changes and to analyze new portions of code using tools like SonarCloud.&lt;/p>
 &lt;p>A new version of DPsim has to be indicated as follows:&lt;/p>
 &lt;ul>
-&lt;li>Create a new tag with an increased version number&lt;/li>
 &lt;li>Update setup.cfg&lt;/li>
 &lt;li>Update CMakeLists.txt&lt;/li>
 &lt;li>Update sonar-project.properties&lt;/li>
+&lt;li>Update CHANGELOG.md and include all the unreleaed changes in the list&lt;/li>
+&lt;li>Create a new tag with an increased version number (can be done during the Release in GitHub)&lt;/li>
 &lt;/ul>
-&lt;p>Due to the creation of a new tag, a new PyPi package will be deployed automatically.
-To release an updated Docker image, the container workflow needs to be triggered manually.&lt;/p></description></item></channel></rss>
+&lt;h2 id="python-packages">Python Packages&lt;/h2>
+&lt;p>Due to the creation of a new tag, a new PyPi package will be deployed automatically.&lt;/p>
+&lt;p>Only Linux packages are currently available, other platforms will be supported in the future.&lt;/p>
+&lt;h2 id="container-images">Container Images&lt;/h2>
+&lt;p>To release an updated Docker image, the container workflow needs to be triggered manually.&lt;/p>
+&lt;p>If a Pull Request changes a container image, this is not updated automatically in the container image register.&lt;/p></description></item></channel></rss>

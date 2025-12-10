@@ -73,7 +73,7 @@ Your machine may run out of memory, when the simulation is long or you log too m
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>git clone https://github.com/sogno-platform/dpsim.git
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In the repository, there is a Docker file with all required dependencies&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> dpsim
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker build -t sogno/dpsim:dev -f Packaging/Docker/Dockerfile.dev .
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker build -t sogno/dpsim:dev -f packaging/Docker/Dockerfile.dev .
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Alternatively, the image can be pulled from DockerHub like so&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>docker pull sogno/dpsim:dev
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>For OS specific instructions on how to install requirements, see the sections below.&lt;/p>
@@ -194,21 +194,23 @@ Then, you could either build a docker image by yourself as described in the buil
 &lt;p>To start a Jupyter session, run a DPsim Docker container&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>docker run -p 8888:8888 sogno/dpsim
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>And access the session by opening the following link: &lt;a href="http://localhost:8888/lab?token=3adaa57df44cea75e60c0169e1b2a98ae8f7de130481b5bc">http://localhost:8888/lab?token=3adaa57df44cea75e60c0169e1b2a98ae8f7de130481b5bc&lt;/a>&lt;/p>
-&lt;h1 id="python">Python&lt;/h1>
-&lt;p>&lt;strong>Currently, the pypi packages are not maintained. Until we have updated the packages, please use the docker installation.&lt;/strong>&lt;/p>
-&lt;h2 id="prerequisites">Prerequisites&lt;/h2>
+&lt;h1 id="python-in-linux">Python in Linux&lt;/h1>
+&lt;p>DPsim can be installed in Linux as a Python module:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>pip install dpsim
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="prerequisites">Prerequisites&lt;/h2>
 &lt;p>First, you need to make sure that Python is installed and your version is compatible.
 An easy way to install Python and all required packages is the &lt;a href="https://www.anaconda.com/">Anaconda distribution&lt;/a>.
 To get started, install the latest installer for Python 3.x from the &lt;a href="https://www.anaconda.com/download/">downloads section&lt;/a>.
 Then, run the Anaconda Prompt and create a new conda environment:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>conda create -n dpsim &lt;span style="color:#000">python&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>3.6
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>conda create -n dpsim &lt;span style="color:#000">python&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>3.13
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>After creating the environment you need to make sure that it is activated.
 The current environment is displayed at the beginning of the command line in brackets.
 It should read &lt;em>&amp;quot;(dpsim)&amp;hellip;&amp;quot;&lt;/em>.
 In case it is not activated, run:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>activate dpsim
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="pip-package-installation">Pip Package Installation&lt;/h2>
-&lt;p>Then, DPsim can be installed as a Python module:&lt;/p>
+&lt;p>Then, DPsim can be installed as a Python module in Linux:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>pip install dpsim
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="from-source">From Source&lt;/h1>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Some examples also need additional packages to process the data or show graphics. Please have a look at the import section of them in case you run into any errors.&lt;/p>
+&lt;h1 id="from-source">From Source&lt;/h1>
 &lt;p>To build and install DPsim from the source files, please refer to the build section.&lt;/p></description></item></channel></rss>

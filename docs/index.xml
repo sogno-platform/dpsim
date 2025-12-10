@@ -455,7 +455,7 @@ Your machine may run out of memory, when the simulation is long or you log too m
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>git clone https://github.com/sogno-platform/dpsim.git
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In the repository, there is a Docker file with all required dependencies&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> dpsim
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker build -t sogno/dpsim:dev -f Packaging/Docker/Dockerfile.dev .
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker build -t sogno/dpsim:dev -f packaging/Docker/Dockerfile.dev .
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Alternatively, the image can be pulled from DockerHub like so&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>docker pull sogno/dpsim:dev
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>For OS specific instructions on how to install requirements, see the sections below.&lt;/p>
@@ -1234,23 +1234,25 @@ Then, you could either build a docker image by yourself as described in the buil
 &lt;p>To start a Jupyter session, run a DPsim Docker container&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>docker run -p 8888:8888 sogno/dpsim
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>And access the session by opening the following link: &lt;a href="http://localhost:8888/lab?token=3adaa57df44cea75e60c0169e1b2a98ae8f7de130481b5bc">http://localhost:8888/lab?token=3adaa57df44cea75e60c0169e1b2a98ae8f7de130481b5bc&lt;/a>&lt;/p>
-&lt;h1 id="python">Python&lt;/h1>
-&lt;p>&lt;strong>Currently, the pypi packages are not maintained. Until we have updated the packages, please use the docker installation.&lt;/strong>&lt;/p>
-&lt;h2 id="prerequisites">Prerequisites&lt;/h2>
+&lt;h1 id="python-in-linux">Python in Linux&lt;/h1>
+&lt;p>DPsim can be installed in Linux as a Python module:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>pip install dpsim
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="prerequisites">Prerequisites&lt;/h2>
 &lt;p>First, you need to make sure that Python is installed and your version is compatible.
 An easy way to install Python and all required packages is the &lt;a href="https://www.anaconda.com/">Anaconda distribution&lt;/a>.
 To get started, install the latest installer for Python 3.x from the &lt;a href="https://www.anaconda.com/download/">downloads section&lt;/a>.
 Then, run the Anaconda Prompt and create a new conda environment:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>conda create -n dpsim &lt;span style="color:#000">python&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>3.6
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>conda create -n dpsim &lt;span style="color:#000">python&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>3.13
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>After creating the environment you need to make sure that it is activated.
 The current environment is displayed at the beginning of the command line in brackets.
 It should read &lt;em>&amp;quot;(dpsim)&amp;hellip;&amp;quot;&lt;/em>.
 In case it is not activated, run:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>activate dpsim
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="pip-package-installation">Pip Package Installation&lt;/h2>
-&lt;p>Then, DPsim can be installed as a Python module:&lt;/p>
+&lt;p>Then, DPsim can be installed as a Python module in Linux:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>pip install dpsim
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="from-source">From Source&lt;/h1>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Some examples also need additional packages to process the data or show graphics. Please have a look at the import section of them in case you run into any errors.&lt;/p>
+&lt;h1 id="from-source">From Source&lt;/h1>
 &lt;p>To build and install DPsim from the source files, please refer to the build section.&lt;/p></description></item><item><title>Docs: Debugging</title><link>https://sogno-platform.github.io/dpsim/docs/development/debugging/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/development/debugging/</guid><description>
 &lt;h1 id="mixed-python-c-debugging">Mixed Python C++ Debugging&lt;/h1>
 &lt;h2 id="prerequisites">Prerequisites&lt;/h2>
@@ -1352,16 +1354,45 @@ Make sure to adapt your PYTHONPATH variable if necessary.&lt;/p>
 &lt;/ul>
 &lt;h1 id="logging">Logging&lt;/h1>
 &lt;p>Debug or trace should be the default log level for information that might be nice to have but not necessary for every simulation case.&lt;/p>
-&lt;p>Calls to the logger that might occur during simulation must use spdlog macros, like SPDLOG_LOGGER_INFO.&lt;/p>
-&lt;h1 id="creating-new-releases">Creating New Releases&lt;/h1>
-&lt;p>Although DPsim currently does not have any conventions on versioning, the periodic creation of
+&lt;p>Calls to the logger that might occur during simulation must use spdlog macros, like &lt;code>SPDLOG_LOGGER_INFO&lt;/code>.&lt;/p>
+&lt;h1 id="pull-requests">Pull Requests&lt;/h1>
+&lt;p>There are no strict formal requirements besides the following:&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>&lt;strong>Developer Certificate of Origin (DCO)&lt;/strong>&lt;/p>
+&lt;p>We require a Developer Certificate of Origin. See more &lt;a href="https://github.com/lf-energy/tac/blob/main/process/contribution_guidelines.md#contribution-sign-off">here&lt;/a>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Code Formatting with &lt;code>pre-commit&lt;/code>&lt;/strong>&lt;/p>
+&lt;p>We enforce code formatting automatically using &lt;code>pre-commit&lt;/code>. Please run &lt;code>pre-commit install&lt;/code> the first time you clone the repository to run &lt;code>pre-commit&lt;/code> before each commit automatically. If you forgot to do this, you will need to use the command &lt;code>pre-commit run --all-files&lt;/code> one time to format your changes.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Development in Forks Only&lt;/strong>&lt;/p>
+&lt;p>We accept contributions made in forks only. The main repository is not intended for contributor-specific branches.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>SPDX Headers&lt;/strong>&lt;/p>
+&lt;p>Use SPDX headers to indicate copyright and licensing information, especially when introducing new files to the codebase. For example:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">/* Author: John Smith &amp;lt;John.Smith@example.com&amp;gt;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">* SPDX-FileCopyrightText: 2025 Example.com
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">* SPDX-License-Identifier: MPL-2.0
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">*/&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;h1 id="creating-new-releases-info-for-maintainers">Creating New Releases (info for maintainers)&lt;/h1>
+&lt;p>DPsim currently uses to &lt;a href="https://semver.org/">Semantic Versioning&lt;/a>. The periodic creation of
 new versions can help to mark significant changes and to analyze new portions of code using tools like SonarCloud.&lt;/p>
 &lt;p>A new version of DPsim has to be indicated as follows:&lt;/p>
 &lt;ul>
-&lt;li>Create a new tag with an increased version number&lt;/li>
 &lt;li>Update setup.cfg&lt;/li>
 &lt;li>Update CMakeLists.txt&lt;/li>
 &lt;li>Update sonar-project.properties&lt;/li>
+&lt;li>Update CHANGELOG.md and include all the unreleaed changes in the list&lt;/li>
+&lt;li>Create a new tag with an increased version number (can be done during the Release in GitHub)&lt;/li>
 &lt;/ul>
-&lt;p>Due to the creation of a new tag, a new PyPi package will be deployed automatically.
-To release an updated Docker image, the container workflow needs to be triggered manually.&lt;/p></description></item></channel></rss>
+&lt;h2 id="python-packages">Python Packages&lt;/h2>
+&lt;p>Due to the creation of a new tag, a new PyPi package will be deployed automatically.&lt;/p>
+&lt;p>Only Linux packages are currently available, other platforms will be supported in the future.&lt;/p>
+&lt;h2 id="container-images">Container Images&lt;/h2>
+&lt;p>To release an updated Docker image, the container workflow needs to be triggered manually.&lt;/p>
+&lt;p>If a Pull Request changes a container image, this is not updated automatically in the container image register.&lt;/p></description></item></channel></rss>
