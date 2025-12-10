@@ -7,17 +7,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ### Added
 
+- Added this CHANGELOG.md file to track changes in the project.
 - Adapt DPsim to deploy it in Mybinder (#323), moving Dockerfile to new .binder folder and adding job for building the binder Dockerfile.
 - Add Code Coverage Report (#395), adding codecove badge and updating yaml file for code coverage.
 - Add CODEOWNERS (#290)
-- Add pre-commit (#352)
-- Add pre-commit /2 (#361)
-- Add pre-commit /3 (#363)
-- Add pre-commit /4 (#377)
-- Add pre-commit /5 (#382)
-- Add pre-commit /6 (#383)
-- Add pre-commit /7 (#385), harmonizing comments and indentation.
-- Add pre-commit /8 (#386), harmonizing capitalization of Markdown filenames.
+- Add pre-commit (#352, #361, #363, #377, #382, #383, #385, #386) to harmonize code
 - feat(cmake): Add install target (#381)
 - New queueless VILLAS interface / improve real-time performance (#316), creating DCGenerator in VoltageSource only if special setParameters is used and not always when the frequency is 0 (avoiding regressions), and adding DP_PH1_ProfileVoltageSource used for the villas / fpga interface.
 - Reuse conductance stamp code (#306), adding functions in MNAStampUtils for stamping value as a scalar matrix.
@@ -31,6 +25,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 - Villas Interface: Improve FpgaExample (#299), allowing different topologies to be tested and updating VILLAS_VERSION in Dockerfile.
 - Nix packaging (#357), adding GitHub CI workflow for building DPsim with Nix and Nix packaging.
 - chore: update docs on real-time and VILLASnode interfaces (#335)
+- Add dpsimpyvillas module to the CMake targets and include it in the Python wheel, using the correct Python install dependencies (#449)
 
 ### Changed
 
@@ -47,6 +42,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 - Add new action using the build wrapper from sonar directly (#296)
 - Allow builds without nlohmann/json library (#362)
 - feat(ci): Use trusted / OIDC publishing to PyPi.org (#375), only attempting upload to PyPi for pushes to master or tags.
+- Fixes to documentation and README, adding extra details about installation methods, contribution guidelines and how to try DPsim (#457).
+- Update documentation and packaging metadata contact information, add CONTRIBUTORS file and GitHub Discussions link, and improve contributor/community guidance (#429, #413).
+- Extend the changelog to include entries for older release versions and previously unreleased changes (#430).
+- Use the DPsim manylinux container for building the Python package and skip RC versions when publishing to PyPI.org, while still publishing RC versions to TestPyPI (#451).
 
 ### Removed
 
@@ -113,6 +112,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 - Use clang-format to format the whole codebase (#278), fixing missing includes and moving development scripts from configs/ to scripts./
 - chore (deps): update to CIMpp rpm/deb install + bump VILLAS (#404), updating cmake fetch and finding of libcimpp and fixing dependent files and CIMReader.
 - fix: Cleanup code-style of setup.py (#336)
+- Reactivate VILLAS support in the MyBinder Python packaging workflow and fix related compilation issues when using dpsimpy with VILLAS-enabled containers (#450, #434, resolves #445).
+- Create a symlink in the manylinux image to the install path of the OpenDSS C library to fix Python packaging and runtime loading issues (#448).
+- Link DPsim to VILLAS libraries via CMake to fix missing linkage in VILLAS-enabled builds and examples (#447).
+- Make the Fedora release workflow wait for the dpsim-dev container build to avoid race conditions in the release pipeline (#446).
+- Security fix for the profiling workflow, avoiding passing commands as inputs to scripts in the profiling job (#455).
+- Security fix for the VILLAS workflow, preventing commands from being passed as raw inputs into the shell (#454).
+- Adapt the Sonar workflow to avoid deprecated secret checks so that scans still run for pull requests from forks (#456).
+- Fix the Sonar workflow by bumping the action to the supported v6 version and adjusting configuration (#439).
 
 ## [v1.1.1] - 2023-07-13
 
