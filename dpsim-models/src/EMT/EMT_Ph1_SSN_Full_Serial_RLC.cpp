@@ -144,7 +144,6 @@ void EMT::Ph1::SSN::Full_Serial_RLC::mnaCompApplyRightSideVectorStamp(
   SPDLOG_LOGGER_DEBUG(
       mSLog, "\nHistory current term (mnaCompApplyRightSideVectorStamp): {:s}",
       Logger::matrixToString(mYHistory));
-  mSLog->flush();
 }
 
 void EMT::Ph1::SSN::Full_Serial_RLC::mnaCompAddPreStepDependencies(
@@ -195,7 +194,6 @@ void EMT::Ph1::SSN::Full_Serial_RLC::mnaCompUpdateVoltage(
   }
   SPDLOG_LOGGER_DEBUG(mSLog, "\nUpdate Voltage: {:s}",
                       Logger::matrixToString(**mIntfVoltage));
-  mSLog->flush();
 }
 
 void EMT::Ph1::SSN::Full_Serial_RLC::mnaCompUpdateCurrent(
@@ -204,7 +202,6 @@ void EMT::Ph1::SSN::Full_Serial_RLC::mnaCompUpdateCurrent(
 
   SPDLOG_LOGGER_DEBUG(mSLog, "\nUpdate Current: {:s}",
                       Logger::matrixToString(**mIntfCurrent));
-  mSLog->flush();
 }
 
 void EMT::Ph1::SSN::Full_Serial_RLC::setParameters(Real resistance,
