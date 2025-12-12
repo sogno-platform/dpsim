@@ -439,66 +439,81 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>}</div>
 </div>
 <div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span> </div>
-<div class="foldopen" id="foldopen00341" data-start="{" data-end="}">
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_math.html#ab4fbe7cafce1d49a7461a40dd0b67f04">  341</a></span>Matrix <a class="code hl_function" href="class_c_p_s_1_1_math.html#ab4fbe7cafce1d49a7461a40dd0b67f04">Math::applyStateSpaceTrapezoidalMatrices</a>(<span class="keyword">const</span> Matrix &amp;Ad,</div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>                                                <span class="keyword">const</span> Matrix &amp;Bd,</div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>                                                <span class="keyword">const</span> Matrix &amp;Cd,</div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>                                                <span class="keyword">const</span> Matrix &amp;statesPrevStep,</div>
-<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>                                                <span class="keyword">const</span> Matrix &amp;inputCurrStep,</div>
-<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>                                                <span class="keyword">const</span> Matrix &amp;inputPrevStep) {</div>
-<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>  <span class="keywordflow">return</span> Ad * statesPrevStep + Bd * (inputCurrStep + inputPrevStep) + Cd;</div>
-<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>}</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_math.html#a4d9024f94dbee45b8f0d947a225a6c69">Math::calculateStateSpaceTrapezoidalMatrices</a>(<span class="keyword">const</span> Matrix &amp;A,</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>                                                  <span class="keyword">const</span> Matrix &amp;B,</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>                                                  <span class="keyword">const</span> Real &amp;dt, Matrix &amp;Ad,</div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>                                                  Matrix &amp;Bd) {</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>  Matrix::Index n = A.rows();</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>  Matrix I = Matrix::Identity(n, n);</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span> </div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>  Matrix F1 = I + (dt / 2.) * A;</div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>  Matrix F2 = I - (dt / 2.) * A;</div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>  Matrix F2inv = F2.inverse();</div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span> </div>
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>  Ad = F2inv * F1;</div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>  Bd = F2inv * (dt / 2.) * B;</div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>}</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span> </div>
+<div class="foldopen" id="foldopen00356" data-start="{" data-end="}">
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_math.html#ab4fbe7cafce1d49a7461a40dd0b67f04">  356</a></span>Matrix <a class="code hl_function" href="class_c_p_s_1_1_math.html#ab4fbe7cafce1d49a7461a40dd0b67f04">Math::applyStateSpaceTrapezoidalMatrices</a>(<span class="keyword">const</span> Matrix &amp;Ad,</div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>                                                <span class="keyword">const</span> Matrix &amp;Bd,</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>                                                <span class="keyword">const</span> Matrix &amp;Cd,</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>                                                <span class="keyword">const</span> Matrix &amp;statesPrevStep,</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>                                                <span class="keyword">const</span> Matrix &amp;inputCurrStep,</div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>                                                <span class="keyword">const</span> Matrix &amp;inputPrevStep) {</div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>  <span class="keywordflow">return</span> Ad * statesPrevStep + Bd * (inputCurrStep + inputPrevStep) + Cd;</div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>}</div>
 </div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span> </div>
-<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span><span class="keywordtype">void</span> Math::FFT(std::vector&lt;Complex&gt; &amp;samples) {</div>
-<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>  <span class="comment">// DFT</span></div>
-<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>  <span class="keywordtype">size_t</span> N = samples.size();</div>
-<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>  <span class="keywordtype">size_t</span> k = N;</div>
-<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>  <span class="keywordtype">size_t</span> n;</div>
-<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>  <span class="keywordtype">double</span> thetaT = M_PI / N;</div>
-<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>  Complex phiT = Complex(cos(thetaT), -sin(thetaT)), T;</div>
-<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>  <span class="keywordflow">while</span> (k &gt; 1) {</div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>    n = k;</div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>    k &gt;&gt;= 1;</div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>    phiT = phiT * phiT;</div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>    T = 1.0L;</div>
-<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> l = 0; l &lt; k; l++) {</div>
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>      <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> a = l; a &lt; N; a += n) {</div>
-<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>        <span class="keywordtype">size_t</span> b = a + k;</div>
-<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>        Complex t = samples[a] - samples[b];</div>
-<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>        samples[a] += samples[b];</div>
-<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>        samples[b] = t * T;</div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>      }</div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>      T *= phiT;</div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>    }</div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>  }</div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>  <span class="comment">// Decimate</span></div>
-<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>  UInt m = <span class="keyword">static_cast&lt;</span>UInt<span class="keyword">&gt;</span>(log2(N));</div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>  <span class="keywordflow">for</span> (UInt a = 0; a &lt; N; a++) {</div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>    UInt b = a;</div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>    <span class="comment">// Reverse bits</span></div>
-<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>    b = (((b &amp; 0xaaaaaaaa) &gt;&gt; 1) | ((b &amp; 0x55555555) &lt;&lt; 1));</div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>    b = (((b &amp; 0xcccccccc) &gt;&gt; 2) | ((b &amp; 0x33333333) &lt;&lt; 2));</div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>    b = (((b &amp; 0xf0f0f0f0) &gt;&gt; 4) | ((b &amp; 0x0f0f0f0f) &lt;&lt; 4));</div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>    b = (((b &amp; 0xff00ff00) &gt;&gt; 8) | ((b &amp; 0x00ff00ff) &lt;&lt; 8));</div>
-<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>    b = ((b &gt;&gt; 16) | (b &lt;&lt; 16)) &gt;&gt; (32 - m);</div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>    <span class="keywordflow">if</span> (b &gt; a) {</div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>      Complex t = samples[a];</div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>      samples[a] = samples[b];</div>
-<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>      samples[b] = t;</div>
-<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>    }</div>
-<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>  }</div>
-<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>}</div>
-<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span> </div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>Complex Math::rotatingFrame2to1(Complex f2, Real theta1, Real theta2) {</div>
-<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>  Real delta = theta2 - theta1;</div>
-<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>  Real f1_real = f2.real() * cos(delta) - f2.imag() * sin(delta);</div>
-<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>  Real f1_imag = f2.real() * sin(delta) + f2.imag() * cos(delta);</div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>  <span class="keywordflow">return</span> Complex(f1_real, f1_imag);</div>
-<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>}</div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span> </div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span><span class="keywordtype">void</span> Math::FFT(std::vector&lt;Complex&gt; &amp;samples) {</div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>  <span class="comment">// DFT</span></div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>  <span class="keywordtype">size_t</span> N = samples.size();</div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>  <span class="keywordtype">size_t</span> k = N;</div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>  <span class="keywordtype">size_t</span> n;</div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>  <span class="keywordtype">double</span> thetaT = M_PI / N;</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>  Complex phiT = Complex(cos(thetaT), -sin(thetaT)), T;</div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>  <span class="keywordflow">while</span> (k &gt; 1) {</div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>    n = k;</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>    k &gt;&gt;= 1;</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>    phiT = phiT * phiT;</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>    T = 1.0L;</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> l = 0; l &lt; k; l++) {</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>      <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> a = l; a &lt; N; a += n) {</div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>        <span class="keywordtype">size_t</span> b = a + k;</div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>        Complex t = samples[a] - samples[b];</div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>        samples[a] += samples[b];</div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>        samples[b] = t * T;</div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>      }</div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>      T *= phiT;</div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>    }</div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>  }</div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>  <span class="comment">// Decimate</span></div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>  UInt m = <span class="keyword">static_cast&lt;</span>UInt<span class="keyword">&gt;</span>(log2(N));</div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>  <span class="keywordflow">for</span> (UInt a = 0; a &lt; N; a++) {</div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>    UInt b = a;</div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>    <span class="comment">// Reverse bits</span></div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>    b = (((b &amp; 0xaaaaaaaa) &gt;&gt; 1) | ((b &amp; 0x55555555) &lt;&lt; 1));</div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>    b = (((b &amp; 0xcccccccc) &gt;&gt; 2) | ((b &amp; 0x33333333) &lt;&lt; 2));</div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>    b = (((b &amp; 0xf0f0f0f0) &gt;&gt; 4) | ((b &amp; 0x0f0f0f0f) &lt;&lt; 4));</div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>    b = (((b &amp; 0xff00ff00) &gt;&gt; 8) | ((b &amp; 0x00ff00ff) &lt;&lt; 8));</div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>    b = ((b &gt;&gt; 16) | (b &lt;&lt; 16)) &gt;&gt; (32 - m);</div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>    <span class="keywordflow">if</span> (b &gt; a) {</div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>      Complex t = samples[a];</div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>      samples[a] = samples[b];</div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>      samples[b] = t;</div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>    }</div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>  }</div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>}</div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span> </div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>Complex Math::rotatingFrame2to1(Complex f2, Real theta1, Real theta2) {</div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>  Real delta = theta2 - theta1;</div>
+<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>  Real f1_real = f2.real() * cos(delta) - f2.imag() * sin(delta);</div>
+<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>  Real f1_imag = f2.real() * sin(delta) + f2.imag() * cos(delta);</div>
+<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>  <span class="keywordflow">return</span> Complex(f1_real, f1_imag);</div>
+<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>}</div>
 <div class="ttc" id="aclass_c_p_s_1_1_math_html_a037f3b5662cf7658156d87d107523781"><div class="ttname"><a href="class_c_p_s_1_1_math.html#a037f3b5662cf7658156d87d107523781">CPS::Math::singlePhasePowerToThreePhase</a></div><div class="ttdeci">static Matrix singlePhasePowerToThreePhase(Real power)</div><div class="ttdoc">To convert single phase power to symmetrical three phase.</div><div class="ttdef"><b>Definition</b> <a href="#l00217">MathUtils.cpp:217</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_math_html_a4d9024f94dbee45b8f0d947a225a6c69"><div class="ttname"><a href="class_c_p_s_1_1_math.html#a4d9024f94dbee45b8f0d947a225a6c69">CPS::Math::calculateStateSpaceTrapezoidalMatrices</a></div><div class="ttdeci">static void calculateStateSpaceTrapezoidalMatrices(const Matrix &amp;A, const Matrix &amp;B, const Matrix &amp;C, const Real &amp;dt, Matrix &amp;Ad, Matrix &amp;Bd, Matrix &amp;Cd)</div><div class="ttdoc">Calculate the discretized state space matrices Ad, Bd, Cd using trapezoidal rule.</div><div class="ttdef"><b>Definition</b> <a href="#l00324">MathUtils.cpp:324</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_math_html_ab4fbe7cafce1d49a7461a40dd0b67f04"><div class="ttname"><a href="class_c_p_s_1_1_math.html#ab4fbe7cafce1d49a7461a40dd0b67f04">CPS::Math::applyStateSpaceTrapezoidalMatrices</a></div><div class="ttdeci">static Matrix applyStateSpaceTrapezoidalMatrices(const Matrix &amp;Ad, const Matrix &amp;Bd, const Matrix &amp;Cd, const Matrix &amp;statesPrevStep, const Matrix &amp;inputCurrStep, const Matrix &amp;inputPrevStep)</div><div class="ttdoc">Apply the trapezoidal based state space matrices Ad, Bd, Cd to get the states at the current time ste...</div><div class="ttdef"><b>Definition</b> <a href="#l00341">MathUtils.cpp:341</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_math_html_ab4fbe7cafce1d49a7461a40dd0b67f04"><div class="ttname"><a href="class_c_p_s_1_1_math.html#ab4fbe7cafce1d49a7461a40dd0b67f04">CPS::Math::applyStateSpaceTrapezoidalMatrices</a></div><div class="ttdeci">static Matrix applyStateSpaceTrapezoidalMatrices(const Matrix &amp;Ad, const Matrix &amp;Bd, const Matrix &amp;Cd, const Matrix &amp;statesPrevStep, const Matrix &amp;inputCurrStep, const Matrix &amp;inputPrevStep)</div><div class="ttdoc">Apply the trapezoidal based state space matrices Ad, Bd, Cd to get the states at the current time ste...</div><div class="ttdef"><b>Definition</b> <a href="#l00356">MathUtils.cpp:356</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_math_html_ac5518b3d1f130bce937689486bdae3b2"><div class="ttname"><a href="class_c_p_s_1_1_math.html#ac5518b3d1f130bce937689486bdae3b2">CPS::Math::singlePhaseParameterToThreePhase</a></div><div class="ttdeci">static Matrix singlePhaseParameterToThreePhase(Real parameter)</div><div class="ttdoc">To convert single phase parameters to symmetrical three phase ones.</div><div class="ttdef"><b>Definition</b> <a href="#l00211">MathUtils.cpp:211</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_math_html_afac1e51eed00267c2f5443c6b6ec8059"><div class="ttname"><a href="class_c_p_s_1_1_math.html#afac1e51eed00267c2f5443c6b6ec8059">CPS::Math::singlePhaseVariableToThreePhase</a></div><div class="ttdeci">static MatrixComp singlePhaseVariableToThreePhase(Complex var_1ph)</div><div class="ttdoc">To convert single phase complex variables (voltages, currents) to symmetrical three phase ones.</div><div class="ttdef"><b>Definition</b> <a href="#l00205">MathUtils.cpp:205</a></div></div>
 </div><!-- fragment --></div><!-- contents -->

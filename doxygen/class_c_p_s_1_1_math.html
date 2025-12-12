@@ -176,6 +176,8 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a4d9024f94dbee45b8f0d947a225a6c69" id="r_a4d9024f94dbee45b8f0d947a225a6c69"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d9024f94dbee45b8f0d947a225a6c69">calculateStateSpaceTrapezoidalMatrices</a> (const Matrix &amp;A, const Matrix &amp;B, const Matrix &amp;C, const Real &amp;dt, Matrix &amp;Ad, Matrix &amp;Bd, Matrix &amp;Cd)</td></tr>
 <tr class="memdesc:a4d9024f94dbee45b8f0d947a225a6c69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the discretized state space matrices Ad, Bd, Cd using trapezoidal rule.  <br /></td></tr>
 <tr class="separator:a4d9024f94dbee45b8f0d947a225a6c69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cb29a26667767e426f3a8260a82b9c7" id="r_a2cb29a26667767e426f3a8260a82b9c7"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2cb29a26667767e426f3a8260a82b9c7">calculateStateSpaceTrapezoidalMatrices</a> (const Matrix &amp;A, const Matrix &amp;B, const Real &amp;dt, Matrix &amp;Ad, Matrix &amp;Bd)</td></tr>
+<tr class="separator:a2cb29a26667767e426f3a8260a82b9c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4fbe7cafce1d49a7461a40dd0b67f04" id="r_ab4fbe7cafce1d49a7461a40dd0b67f04"><td class="memItemLeft" align="right" valign="top">static Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab4fbe7cafce1d49a7461a40dd0b67f04">applyStateSpaceTrapezoidalMatrices</a> (const Matrix &amp;Ad, const Matrix &amp;Bd, const Matrix &amp;Cd, const Matrix &amp;statesPrevStep, const Matrix &amp;inputCurrStep, const Matrix &amp;inputPrevStep)</td></tr>
 <tr class="memdesc:ab4fbe7cafce1d49a7461a40dd0b67f04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply the trapezoidal based state space matrices Ad, Bd, Cd to get the states at the current time step.  <br /></td></tr>
 <tr class="separator:ab4fbe7cafce1d49a7461a40dd0b67f04"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -624,12 +626,12 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Apply the trapezoidal based state space matrices Ad, Bd, Cd to get the states at the current time step. </p>
 
-<p class="definition">Definition at line <a class="el" href="_math_utils_8cpp_source.html#l00341">341</a> of file <a class="el" href="_math_utils_8cpp_source.html">MathUtils.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_math_utils_8cpp_source.html#l00356">356</a> of file <a class="el" href="_math_utils_8cpp_source.html">MathUtils.cpp</a>.</p>
 
 </div>
 </div>
 <a id="a4d9024f94dbee45b8f0d947a225a6c69" name="a4d9024f94dbee45b8f0d947a225a6c69"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4d9024f94dbee45b8f0d947a225a6c69">&#9670;&#160;</a></span>calculateStateSpaceTrapezoidalMatrices()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d9024f94dbee45b8f0d947a225a6c69">&#9670;&#160;</a></span>calculateStateSpaceTrapezoidalMatrices() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -683,6 +685,52 @@ Static Public Member Functions</h2></td></tr>
 <p>Calculate the discretized state space matrices Ad, Bd, Cd using trapezoidal rule. </p>
 
 <p class="definition">Definition at line <a class="el" href="_math_utils_8cpp_source.html#l00324">324</a> of file <a class="el" href="_math_utils_8cpp_source.html">MathUtils.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a2cb29a26667767e426f3a8260a82b9c7" name="a2cb29a26667767e426f3a8260a82b9c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2cb29a26667767e426f3a8260a82b9c7">&#9670;&#160;</a></span>calculateStateSpaceTrapezoidalMatrices() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Math::calculateStateSpaceTrapezoidalMatrices </td>
+          <td>(</td>
+          <td class="paramtype">const Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Real &amp;</td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>Ad</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>Bd</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_math_utils_8cpp_source.html#l00341">341</a> of file <a class="el" href="_math_utils_8cpp_source.html">MathUtils.cpp</a>.</p>
 
 </div>
 </div>
@@ -777,7 +825,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_math_utils_8cpp_source.html#l00350">350</a> of file <a class="el" href="_math_utils_8cpp_source.html">MathUtils.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_math_utils_8cpp_source.html#l00365">365</a> of file <a class="el" href="_math_utils_8cpp_source.html">MathUtils.cpp</a>.</p>
 
 </div>
 </div>
@@ -1045,7 +1093,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_math_utils_8cpp_source.html#l00390">390</a> of file <a class="el" href="_math_utils_8cpp_source.html">MathUtils.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_math_utils_8cpp_source.html#l00405">405</a> of file <a class="el" href="_math_utils_8cpp_source.html">MathUtils.cpp</a>.</p>
 
 </div>
 </div>

@@ -6,8 +6,8 @@
 <area shape="poly" id="edge8_Node000001_Node000032" title=" " alt="" coords="859,537,990,548,990,553,858,543"/>
 <area shape="rect" id="Node000063" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="997,1365,1178,1414"/>
 <area shape="poly" id="edge11_Node000001_Node000063" title=" " alt="" coords="771,570,1079,1364,1074,1366,766,572"/>
-<area shape="rect" id="Node000095" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="997,250,1178,299"/>
-<area shape="poly" id="edge43_Node000001_Node000095" title=" " alt="" coords="796,496,1053,298,1056,302,799,500"/>
+<area shape="rect" id="Node000095" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="997,254,1178,303"/>
+<area shape="poly" id="edge43_Node000001_Node000095" title=" " alt="" coords="796,496,1052,302,1055,306,799,500"/>
 <area shape="rect" id="Node000002" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="454,461,612,510"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="628,503,661,510,660,515,627,508"/>
 <area shape="rect" id="Node000003" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="208,471,404,500"/>
@@ -84,20 +84,20 @@
 <area shape="poly" id="edge41_Node000063_Node000093" title=" " alt="" coords="1097,1429,1111,1498,1137,1586,1155,1632,1177,1678,1202,1721,1233,1761,1265,1788,1302,1809,1342,1823,1381,1832,1379,1837,1340,1828,1300,1814,1262,1793,1229,1765,1198,1724,1172,1680,1150,1634,1132,1587,1106,1499,1092,1430"/>
 <area shape="rect" id="Node000094" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="1361,1881,1557,1911"/>
 <area shape="poly" id="edge42_Node000063_Node000094" title=" " alt="" coords="1095,1429,1106,1508,1129,1610,1147,1665,1170,1719,1199,1770,1233,1817,1260,1841,1292,1860,1326,1874,1361,1883,1360,1888,1325,1879,1290,1865,1257,1846,1229,1821,1194,1773,1165,1721,1142,1667,1124,1612,1100,1509,1090,1429"/>
-<area shape="poly" id="edge44_Node000095_Node000024" title=" " alt="" coords="1153,304,1238,344,1334,383,1366,394,1365,399,1332,388,1236,349,1151,309"/>
-<area shape="poly" id="edge45_Node000095_Node000053" title=" " alt="" coords="1111,311,1132,345,1160,383,1193,419,1232,449,1263,464,1296,475,1362,488,1361,494,1294,480,1261,469,1230,453,1190,423,1156,386,1128,348,1106,314"/>
+<area shape="poly" id="edge44_Node000095_Node000024" title=" " alt="" coords="1156,308,1240,346,1334,383,1367,394,1365,399,1332,388,1238,350,1153,313"/>
+<area shape="poly" id="edge45_Node000095_Node000053" title=" " alt="" coords="1112,315,1133,348,1161,385,1194,420,1232,449,1263,464,1296,475,1362,488,1361,493,1294,480,1261,469,1230,453,1190,424,1157,388,1129,351,1107,318"/>
 <area shape="rect" id="Node000096" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_capacitor.html" title="Capacitor model." alt="" coords="1371,291,1547,320"/>
-<area shape="poly" id="edge46_Node000095_Node000096" title=" " alt="" coords="1194,281,1371,296,1371,301,1194,286"/>
+<area shape="poly" id="edge46_Node000095_Node000096" title=" " alt="" coords="1194,284,1371,297,1371,302,1194,289"/>
 <area shape="rect" id="Node000097" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_current_source.html" title="Ideal current source model." alt="" coords="1355,344,1563,374"/>
-<area shape="poly" id="edge47_Node000095_Node000097" title=" " alt="" coords="1194,297,1334,330,1385,341,1384,346,1332,335,1193,303"/>
+<area shape="poly" id="edge47_Node000095_Node000097" title=" " alt="" coords="1194,299,1334,330,1386,341,1385,346,1332,335,1193,304"/>
 <area shape="rect" id="Node000098" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_inductor.html" title="Inductor." alt="" coords="1373,5,1545,35"/>
-<area shape="poly" id="edge48_Node000095_Node000098" title=" " alt="" coords="1113,236,1150,189,1201,136,1262,84,1296,62,1332,44,1372,31,1373,36,1334,49,1299,67,1265,88,1205,139,1154,193,1117,239"/>
+<area shape="poly" id="edge48_Node000095_Node000098" title=" " alt="" coords="1113,240,1150,193,1200,138,1262,85,1296,63,1332,44,1372,31,1373,36,1334,49,1299,67,1265,90,1204,142,1154,196,1117,243"/>
 <area shape="rect" id="Node000099" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_resistor.html" title="EMT Resistor." alt="" coords="1375,59,1543,88"/>
-<area shape="poly" id="edge49_Node000095_Node000099" title=" " alt="" coords="1124,238,1163,203,1214,164,1271,127,1332,98,1374,85,1376,90,1334,103,1273,132,1217,169,1167,207,1127,242"/>
-<area shape="rect" id="Node000100" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_switch.html" title="One phase EMT switch." alt="" coords="1380,112,1538,142"/>
-<area shape="poly" id="edge50_Node000095_Node000100" title=" " alt="" coords="1143,240,1230,194,1332,151,1380,138,1381,143,1334,156,1232,199,1145,245"/>
-<area shape="rect" id="Node000101" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="1356,165,1563,195"/>
-<area shape="poly" id="edge51_Node000095_Node000101" title=" " alt="" coords="1187,243,1332,204,1381,193,1382,198,1334,209,1189,248"/>
-<area shape="rect" id="Node000102" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_norton.html" title="Voltage source as Norton equivalent." alt="" coords="1356,218,1563,267"/>
-<area shape="poly" id="edge52_Node000095_Node000102" title=" " alt="" coords="1193,263,1355,249,1356,254,1194,268"/>
+<area shape="poly" id="edge49_Node000095_Node000099" title=" " alt="" coords="1124,242,1215,168,1271,130,1332,98,1373,84,1375,89,1334,103,1274,134,1218,172,1128,246"/>
+<area shape="rect" id="Node000100" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_1_1_full___serial___r_l_c.html" title="Full_Serial_RLC." alt="" coords="1388,112,1530,160"/>
+<area shape="poly" id="edge50_Node000095_Node000100" title=" " alt="" coords="1153,245,1238,207,1332,170,1387,152,1389,157,1334,175,1240,212,1156,250"/>
+<area shape="rect" id="Node000101" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_type_i2_t.html" title="SSNTypeI2T Model for a one phase, two terminal I&#45;type SSN component which can be represented using a ..." alt="" coords="1363,184,1555,214"/>
+<area shape="poly" id="edge51_Node000095_Node000101" title=" " alt="" coords="1193,252,1230,244,1383,212,1384,217,1232,249,1194,258"/>
+<area shape="rect" id="Node000102" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_type_v2_t.html" title="SSNTypeV2T Model for a one phase, two terminal V&#45;type SSN component which can be represented using a ..." alt="" coords="1362,237,1557,267"/>
+<area shape="poly" id="edge52_Node000095_Node000102" title=" " alt="" coords="1194,269,1361,256,1361,262,1194,274"/>
 </map>
