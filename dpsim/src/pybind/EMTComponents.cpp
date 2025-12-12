@@ -119,6 +119,77 @@ void addEMTPh1Components(py::module_ mEMTPh1) {
       .def("open", &CPS::EMT::Ph1::Switch::open)
       .def("close", &CPS::EMT::Ph1::Switch::close)
       .def("connect", &CPS::EMT::Ph1::Switch::connect);
+
+  py::class_<CPS::EMT::Ph1::SSN::Full_Serial_RLC,
+             std::shared_ptr<CPS::EMT::Ph1::SSN::Full_Serial_RLC>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "Full_Serial_RLC",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters",
+           &CPS::EMT::Ph1::SSN::Full_Serial_RLC::setParameters, "R"_a, "L"_a,
+           "C"_a)
+      .def("connect", &CPS::EMT::Ph1::SSN::Full_Serial_RLC::connect)
+      .def_property("R", createAttributeGetter<CPS::Real>("R"),
+                    createAttributeSetter<CPS::Real>("R"))
+      .def_property("L", createAttributeGetter<CPS::Real>("L"),
+                    createAttributeSetter<CPS::Real>("L"))
+      .def_property("C", createAttributeGetter<CPS::Real>("C"),
+                    createAttributeSetter<CPS::Real>("C"));
+
+  py::class_<CPS::EMT::Ph1::SSNTypeI2T,
+             std::shared_ptr<CPS::EMT::Ph1::SSNTypeI2T>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "SSNTypeI2T",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::EMT::Ph1::SSNTypeI2T::setParameters, "A"_a,
+           "B"_a, "C"_a, "D"_a)
+      .def("manual_init", &CPS::EMT::Ph1::SSNTypeI2T::manualInit,
+           "initialState"_a, "initialInput"_a, "initialOldInput"_a,
+           "initCurr"_a, "initVol"_a)
+      .def("connect", &CPS::EMT::Ph1::SSNTypeI2T::connect)
+      .def_property("mA", createAttributeGetter<CPS::Matrix>("mA"),
+                    createAttributeSetter<CPS::Matrix>("mA"))
+      .def_property("mB", createAttributeGetter<CPS::Matrix>("mB"),
+                    createAttributeSetter<CPS::Matrix>("mB"))
+      .def_property("mC", createAttributeGetter<CPS::Matrix>("mC"),
+                    createAttributeSetter<CPS::Matrix>("mC"))
+      .def_property("mD", createAttributeGetter<CPS::Matrix>("mD"),
+                    createAttributeSetter<CPS::Matrix>("mD"))
+      .def_property("mdA", createAttributeGetter<CPS::Matrix>("mdA"),
+                    createAttributeSetter<CPS::Matrix>("mdA"))
+      .def_property("mdB", createAttributeGetter<CPS::Matrix>("mdB"),
+                    createAttributeSetter<CPS::Matrix>("mdB"))
+      .def_property("mdC", createAttributeGetter<CPS::Matrix>("mdC"),
+                    createAttributeSetter<CPS::Matrix>("mdC"));
+
+  py::class_<CPS::EMT::Ph1::SSNTypeV2T,
+             std::shared_ptr<CPS::EMT::Ph1::SSNTypeV2T>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "SSNTypeV2T",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::EMT::Ph1::SSNTypeV2T::setParameters, "A"_a,
+           "B"_a, "C"_a, "D"_a)
+      .def("manual_init", &CPS::EMT::Ph1::SSNTypeV2T::manualInit,
+           "initialState"_a, "initialInput"_a, "initialOldInput"_a,
+           "initCurr"_a, "initVol"_a)
+      .def("connect", &CPS::EMT::Ph1::SSNTypeV2T::connect)
+      .def_property("mA", createAttributeGetter<CPS::Matrix>("mA"),
+                    createAttributeSetter<CPS::Matrix>("mA"))
+      .def_property("mB", createAttributeGetter<CPS::Matrix>("mB"),
+                    createAttributeSetter<CPS::Matrix>("mB"))
+      .def_property("mC", createAttributeGetter<CPS::Matrix>("mC"),
+                    createAttributeSetter<CPS::Matrix>("mC"))
+      .def_property("mD", createAttributeGetter<CPS::Matrix>("mD"),
+                    createAttributeSetter<CPS::Matrix>("mD"))
+      .def_property("mdA", createAttributeGetter<CPS::Matrix>("mdA"),
+                    createAttributeSetter<CPS::Matrix>("mdA"))
+      .def_property("mdB", createAttributeGetter<CPS::Matrix>("mdB"),
+                    createAttributeSetter<CPS::Matrix>("mdB"))
+      .def_property("mdC", createAttributeGetter<CPS::Matrix>("mdC"),
+                    createAttributeSetter<CPS::Matrix>("mdC"));
 }
 
 void addEMTPh3Components(py::module_ mEMTPh3) {
@@ -487,10 +558,10 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            &CPS::EMT::Ph3::SSN::Full_Serial_RLC::setParameters, "R"_a, "L"_a,
            "C"_a)
       .def("connect", &CPS::EMT::Ph3::SSN::Full_Serial_RLC::connect)
-      .def_property("R", createAttributeGetter<CPS::Real>("R"),
-                    createAttributeSetter<CPS::Real>("R"))
-      .def_property("L", createAttributeGetter<CPS::Real>("L"),
-                    createAttributeSetter<CPS::Real>("L"))
-      .def_property("C", createAttributeGetter<CPS::Real>("C"),
-                    createAttributeSetter<CPS::Real>("C"));
+      .def_property("R", createAttributeGetter<CPS::Matrix>("R"),
+                    createAttributeSetter<CPS::Matrix>("R"))
+      .def_property("L", createAttributeGetter<CPS::Matrix>("L"),
+                    createAttributeSetter<CPS::Matrix>("L"))
+      .def_property("C", createAttributeGetter<CPS::Matrix>("C"),
+                    createAttributeSetter<CPS::Matrix>("C"));
 }
