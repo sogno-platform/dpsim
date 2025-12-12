@@ -119,6 +119,10 @@ public:
                                                      const Matrix &C,
                                                      const Real &dt, Matrix &Ad,
                                                      Matrix &Bd, Matrix &Cd);
+  static void calculateStateSpaceTrapezoidalMatrices(const Matrix &A,
+                                                     const Matrix &B,
+                                                     const Real &dt, Matrix &Ad,
+                                                     Matrix &Bd);
   /// Apply the trapezoidal based state space matrices Ad, Bd, Cd to get the states at the current time step
   static Matrix applyStateSpaceTrapezoidalMatrices(const Matrix &Ad,
                                                    const Matrix &Bd,
