@@ -338,6 +338,21 @@ void Math::calculateStateSpaceTrapezoidalMatrices(const Matrix &A,
   Cd = F2inv * dt * C;
 }
 
+void Math::calculateStateSpaceTrapezoidalMatrices(const Matrix &A,
+                                                  const Matrix &B,
+                                                  const Real &dt, Matrix &Ad,
+                                                  Matrix &Bd) {
+  Matrix::Index n = A.rows();
+  Matrix I = Matrix::Identity(n, n);
+
+  Matrix F1 = I + (dt / 2.) * A;
+  Matrix F2 = I - (dt / 2.) * A;
+  Matrix F2inv = F2.inverse();
+
+  Ad = F2inv * F1;
+  Bd = F2inv * (dt / 2.) * B;
+}
+
 Matrix Math::applyStateSpaceTrapezoidalMatrices(const Matrix &Ad,
                                                 const Matrix &Bd,
                                                 const Matrix &Cd,
