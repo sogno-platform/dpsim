@@ -12,7 +12,7 @@
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/Logger.h>
 #include <dpsim-models/MNASimPowerComp.h>
-#include <dpsim-models/Solver/MNAInterface.h>
+#include <dpsim-models/Solver/MNATearInterface.h>
 
 namespace CPS {
 namespace DP {
@@ -20,6 +20,7 @@ namespace Ph3 {
 ///
 class Resistor : public MNASimPowerComp<Complex>,
                  public Base::Ph3::Resistor,
+                 public MNATearInterface,
                  public SharedFactory<Resistor> {
 
 public:
@@ -54,6 +55,9 @@ public:
                                  Attribute<Matrix>::Ptr &leftVector) override;
   void mnaCompPostStep(Real time, Int timeStepCount,
                        Attribute<Matrix>::Ptr &leftVector) override;
+
+  // #### MNA Tear Section ####
+  void mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) override;
 };
 } // namespace Ph3
 } // namespace DP

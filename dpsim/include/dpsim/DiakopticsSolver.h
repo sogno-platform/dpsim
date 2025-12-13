@@ -76,6 +76,8 @@ private:
   Matrix mTearCurrents;
   /// Voltages across the removed network
   Matrix mTearVoltages;
+  /// PhaseType to identify matrix Sizes
+  CPS::PhaseType mPhaseType;
 
   void init(CPS::SystemTopology &system);
 

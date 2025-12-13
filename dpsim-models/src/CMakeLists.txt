@@ -54,6 +54,7 @@ list(APPEND MODELS_SOURCES
 	DP/DP_Ph3_Capacitor.cpp
 	DP/DP_Ph3_Inductor.cpp
 	DP/DP_Ph3_Resistor.cpp
+	DP/DP_Ph3_PiLine.cpp
 	DP/DP_Ph3_SeriesResistor.cpp
 	DP/DP_Ph3_SeriesSwitch.cpp
 	DP/DP_Ph3_SynchronGeneratorDQ.cpp
@@ -69,6 +70,7 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph1_VoltageSource.cpp
 	EMT/EMT_Ph1_VoltageSourceRamp.cpp
 	EMT/EMT_Ph1_VoltageSourceNorton.cpp
+	EMT/EMT_Ph1_PiLine.cpp
 	EMT/EMT_Ph1_Switch.cpp
 	EMT/EMT_Ph1_SSN_Full_Serial_RLC.cpp
 	EMT/EMT_Ph1_SSNTypeI2T.cpp

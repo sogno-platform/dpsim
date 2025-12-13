@@ -88,3 +88,8 @@ void EMT::Ph1::Resistor::mnaCompUpdateVoltage(const Matrix &leftVector) {
 void EMT::Ph1::Resistor::mnaCompUpdateCurrent(const Matrix &leftVector) {
   (**mIntfCurrent)(0, 0) = (**mIntfVoltage)(0, 0) / **mResistance;
 }
+
+// #### Tear Methods ####
+void EMT::Ph1::Resistor::mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) {
+  Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx, **mResistance);
+}
