@@ -91,6 +91,7 @@ $(function(){ initResizable(false); });
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">CPS::Base::Ph3::Switch Class Reference</div></div>
 </div><!--header-->
@@ -121,6 +122,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a51d83197c457140a3ac6c993fd0ebafd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1a0784d7c6bf0888e897d2ca151c1b0" id="r_ae1a0784d7c6bf0888e897d2ca151c1b0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae1a0784d7c6bf0888e897d2ca151c1b0">openSwitch</a> ()</td></tr>
 <tr class="separator:ae1a0784d7c6bf0888e897d2ca151c1b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af08602c4ecfecdb47762ffa5a4adc79e" id="r_af08602c4ecfecdb47762ffa5a4adc79e"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af08602c4ecfecdb47762ffa5a4adc79e">isClosed</a> ()</td></tr>
+<tr class="memdesc:af08602c4ecfecdb47762ffa5a4adc79e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if switch is closed.  <br /></td></tr>
+<tr class="separator:af08602c4ecfecdb47762ffa5a4adc79e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -133,6 +137,11 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ae1910acc67ad6e3d7f3bb65b340ce1c0" id="r_ae1910acc67ad6e3d7f3bb65b340ce1c0"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; Bool &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae1910acc67ad6e3d7f3bb65b340ce1c0">mIsClosed</a></td></tr>
 <tr class="memdesc:ae1910acc67ad6e3d7f3bb65b340ce1c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines if <a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html" title="Dynamic Phasor Three-Phase Switch.">Switch</a> is open or closed.  <br /></td></tr>
 <tr class="separator:ae1910acc67ad6e3d7f3bb65b340ce1c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:af3bbe83af0843cf3455db6e3b2928fcd" id="r_af3bbe83af0843cf3455db6e3b2928fcd"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af3bbe83af0843cf3455db6e3b2928fcd">mIsClosedPrev</a> = false</td></tr>
+<tr class="separator:af3bbe83af0843cf3455db6e3b2928fcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Dynamic Phasor Three-Phase <a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html" title="Dynamic Phasor Three-Phase Switch.">Switch</a>. </p>
@@ -162,7 +171,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___ph3___switch_8h_source.html#l00026">26</a> of file <a class="el" href="_base___ph3___switch_8h_source.html">Base_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___ph3___switch_8h_source.html#l00029">29</a> of file <a class="el" href="_base___ph3___switch_8h_source.html">Base_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -190,7 +199,36 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___ph3___switch_8h_source.html#l00038">38</a> of file <a class="el" href="_base___ph3___switch_8h_source.html">Base_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___ph3___switch_8h_source.html#l00041">41</a> of file <a class="el" href="_base___ph3___switch_8h_source.html">Base_Ph3_Switch.h</a>.</p>
+
+</div>
+</div>
+<a id="af08602c4ecfecdb47762ffa5a4adc79e" name="af08602c4ecfecdb47762ffa5a4adc79e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af08602c4ecfecdb47762ffa5a4adc79e">&#9670;&#160;</a></span>isClosed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Bool CPS::Base::Ph3::Switch::isClosed </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Check if switch is closed. </p>
+
+<p class="definition">Definition at line <a class="el" href="_base___ph3___switch_8h_source.html#l00045">45</a> of file <a class="el" href="_base___ph3___switch_8h_source.html">Base_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -217,7 +255,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___ph3___switch_8h_source.html#l00039">39</a> of file <a class="el" href="_base___ph3___switch_8h_source.html">Base_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___ph3___switch_8h_source.html#l00042">42</a> of file <a class="el" href="_base___ph3___switch_8h_source.html">Base_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -253,7 +291,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___ph3___switch_8h_source.html#l00032">32</a> of file <a class="el" href="_base___ph3___switch_8h_source.html">Base_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___ph3___switch_8h_source.html#l00035">35</a> of file <a class="el" href="_base___ph3___switch_8h_source.html">Base_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -272,7 +310,7 @@ Public Attributes</h2></td></tr>
 
 <p>Resistance if switch is closed [ohm]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___ph3___switch_8h_source.html#l00022">22</a> of file <a class="el" href="_base___ph3___switch_8h_source.html">Base_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___ph3___switch_8h_source.html#l00025">25</a> of file <a class="el" href="_base___ph3___switch_8h_source.html">Base_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -290,7 +328,31 @@ Public Attributes</h2></td></tr>
 
 <p>Defines if <a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html" title="Dynamic Phasor Three-Phase Switch.">Switch</a> is open or closed. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___ph3___switch_8h_source.html#l00024">24</a> of file <a class="el" href="_base___ph3___switch_8h_source.html">Base_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___ph3___switch_8h_source.html#l00027">27</a> of file <a class="el" href="_base___ph3___switch_8h_source.html">Base_Ph3_Switch.h</a>.</p>
+
+</div>
+</div>
+<a id="af3bbe83af0843cf3455db6e3b2928fcd" name="af3bbe83af0843cf3455db6e3b2928fcd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3bbe83af0843cf3455db6e3b2928fcd">&#9670;&#160;</a></span>mIsClosedPrev</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Bool CPS::Base::Ph3::Switch::mIsClosedPrev = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_base___ph3___switch_8h_source.html#l00019">19</a> of file <a class="el" href="_base___ph3___switch_8h_source.html">Base_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -308,7 +370,7 @@ Public Attributes</h2></td></tr>
 
 <p>Resistance if switch is open [ohm]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___ph3___switch_8h_source.html#l00020">20</a> of file <a class="el" href="_base___ph3___switch_8h_source.html">Base_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___ph3___switch_8h_source.html#l00023">23</a> of file <a class="el" href="_base___ph3___switch_8h_source.html">Base_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>

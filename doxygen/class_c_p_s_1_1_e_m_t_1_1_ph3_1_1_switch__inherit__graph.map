@@ -1,9 +1,9 @@
 <map id="CPS::EMT::Ph3::Switch" name="CPS::EMT::Ph3::Switch">
-<area shape="rect" id="Node000001" title="Dynamic phasor switch." alt="" coords="1235,219,1392,248"/>
-<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="1004,116,1186,165"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1168,169,1278,216,1276,221,1166,173"/>
+<area shape="rect" id="Node000001" title="Dynamic phasor switch." alt="" coords="1280,246,1437,275"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="1027,116,1208,165"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1211,168,1232,178,1290,211,1338,243,1335,247,1287,216,1229,183,1208,173"/>
 <area shape="rect" id="Node000003" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="722,53,881,102"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="897,95,1005,118,1003,124,896,100"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="897,94,1027,120,1026,125,896,99"/>
 <area shape="rect" id="Node000004" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="208,76,404,106"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="420,85,722,77,722,82,420,91"/>
 <area shape="rect" id="Node000006" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="454,5,612,54"/>
@@ -14,17 +14,19 @@
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="174,88,208,88,208,94,174,94"/>
 <area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="628,44,722,61,722,66,627,49"/>
 <area shape="rect" id="Node000007" href="$class_c_p_s_1_1_m_n_a_interface.html" title="Interface to be implemented by all models used by the MNA solver." alt="" coords="462,128,604,158"/>
-<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="619,140,1004,138,1004,143,619,145"/>
+<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="619,140,1026,138,1026,143,619,145"/>
 <area shape="rect" id="Node000008" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title="Base class for all MNA components that are transmitting power." alt="" coords="711,176,892,225"/>
 <area shape="poly" id="edge11_Node000008_Node000007" title=" " alt="" coords="620,159,711,178,710,184,618,164"/>
-<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="907,187,980,174,1022,163,1024,168,981,179,908,192"/>
+<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="907,186,980,174,1029,163,1030,168,981,179,908,191"/>
 <area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="628,201,711,199,711,205,628,206"/>
-<area shape="rect" id="Node000010" href="$class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html" title="Dynamic Phasor Three&#45;Phase Switch." alt="" coords="1014,192,1176,222"/>
-<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="1191,216,1235,221,1234,227,1191,221"/>
-<area shape="rect" id="Node000011" href="$class_shared_factory.html" title=" " alt="" coords="1009,246,1181,275"/>
-<area shape="poly" id="edge13_Node000001_Node000011" title=" " alt="" coords="1196,245,1234,241,1235,246,1196,251"/>
+<area shape="rect" id="Node000010" href="$class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html" title="Dynamic Phasor Three&#45;Phase Switch." alt="" coords="1037,192,1198,222"/>
+<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="1203,223,1289,242,1288,247,1202,228"/>
+<area shape="rect" id="Node000011" href="$class_shared_factory.html" title=" " alt="" coords="1032,246,1203,275"/>
+<area shape="poly" id="edge13_Node000001_Node000011" title=" " alt="" coords="1219,258,1280,258,1280,263,1219,263"/>
 <area shape="rect" id="Node000012" href="$class_shared_factory.html" title=" " alt="" coords="732,248,871,278"/>
-<area shape="poly" id="edge14_Node000011_Node000012" title=" " alt="" coords="887,260,1009,258,1009,264,887,265"/>
-<area shape="rect" id="Node000013" href="$class_c_p_s_1_1_m_n_a_switch_interface.html" title="MNA interface to be used by switching devices." alt="" coords="1005,299,1185,328"/>
-<area shape="poly" id="edge15_Node000001_Node000013" title=" " alt="" coords="1165,291,1185,285,1278,246,1280,251,1187,289,1167,296"/>
+<area shape="poly" id="edge14_Node000011_Node000012" title=" " alt="" coords="886,260,1031,258,1031,264,887,265"/>
+<area shape="rect" id="Node000013" href="$class_c_p_s_1_1_m_n_a_variable_comp_interface.html" title="MNA interface to be used by elements that require recomputing of the system matrix." alt="" coords="1004,299,1231,328"/>
+<area shape="poly" id="edge15_Node000001_Node000013" title=" " alt="" coords="1202,292,1288,273,1289,278,1203,298"/>
+<area shape="rect" id="Node000014" href="$class_c_p_s_1_1_m_n_a_switch_interface.html" title="MNA interface to be used by switching devices." alt="" coords="1027,352,1208,382"/>
+<area shape="poly" id="edge16_Node000001_Node000014" title=" " alt="" coords="1212,345,1230,338,1289,306,1336,273,1339,278,1292,311,1232,343,1214,350"/>
 </map>
