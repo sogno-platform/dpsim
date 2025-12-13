@@ -132,3 +132,7 @@ void DP::Ph1::RXLoadSwitch::updateSwitchState(Real time) {
     }
   }
 }
+
+Bool DP::Ph1::RXLoadSwitch::hasParameterChanged() {
+  return mSubSwitch->hasParameterChanged();
+};

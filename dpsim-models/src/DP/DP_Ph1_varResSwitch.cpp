@@ -103,11 +103,8 @@ void DP::Ph1::varResSwitch::mnaCompUpdateCurrent(const Matrix &leftVector) {
 }
 
 Bool DP::Ph1::varResSwitch::hasParameterChanged() {
-  //Get present state
-  Bool presentState = this->mnaIsClosed();
-
   // Check if state of switch changed from open to closed
-  if (!(mPrevState == presentState)) {
+  if (!(mIsClosedPrev == this->mnaIsClosed())) {
     // Switch is closed : change with 1/mDeltaRes
     if (this->mnaIsClosed() == true) {
       // mClosedResistance= 1./mDeltaRes*mPrevRes;
@@ -117,7 +114,7 @@ Bool DP::Ph1::varResSwitch::hasParameterChanged() {
       if (**mClosedResistance < mInitClosedRes) {
         **mClosedResistance = mInitClosedRes;
         mPrevRes = **mClosedResistance;
-        mPrevState = this->mnaIsClosed();
+        mIsClosedPrev = this->mnaIsClosed();
       }
     }
     // Switch is opened : change with mDeltaRes
@@ -128,7 +125,7 @@ Bool DP::Ph1::varResSwitch::hasParameterChanged() {
       if (**mOpenResistance > mInitOpenRes) {
         **mOpenResistance = mInitOpenRes;
         mPrevRes = **mOpenResistance;
-        mPrevState = this->mnaIsClosed();
+        mIsClosedPrev = this->mnaIsClosed();
       }
     }
     return 1; //recompute system matrix
@@ -142,7 +139,7 @@ void DP::Ph1::varResSwitch::setInitParameters(Real timestep) {
   mDeltaResClosed = 0;
   // mDeltaResOpen = 1.5; // assumption for 1ms step size
   mDeltaResOpen = 0.5 * timestep / 0.001 + 1;
-  mPrevState = **mIsClosed;
+  mIsClosedPrev = **mIsClosed;
   mPrevRes = (**mIsClosed) ? **mClosedResistance : **mOpenResistance;
   mInitClosedRes = **mClosedResistance;
   mInitOpenRes = **mOpenResistance;

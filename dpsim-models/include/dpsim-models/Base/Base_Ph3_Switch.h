@@ -15,6 +15,9 @@ namespace Base {
 namespace Ph3 {
 /// Dynamic Phasor Three-Phase Switch
 class Switch {
+protected:
+  Bool mIsClosedPrev = false;
+
 public:
   /// Resistance if switch is open [ohm]
   const CPS::Attribute<Matrix>::Ptr mOpenResistance;
@@ -37,6 +40,9 @@ public:
   }
   void closeSwitch() { **mIsClosed = true; }
   void openSwitch() { **mIsClosed = false; }
+
+  /// Check if switch is closed
+  Bool isClosed() { return **mIsClosed; }
 };
 } // namespace Ph3
 } // namespace Base
