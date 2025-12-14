@@ -64,7 +64,11 @@ void simulateDecoupled(std::list<fs::path> filenames, Int copies, Int threads,
   sim.setFinalTime(0.5);
   sim.setDomain(Domain::DP);
   if (threads > 0)
+#ifdef WITH_OPENMP
     sim.setScheduler(std::make_shared<OpenMPLevelScheduler>(threads));
+#else
+    sim.setScheduler(std::make_shared<ThreadLevelScheduler>(threads));
+#endif
 
   // Logging
   auto logger = DataLogger::make(simName);
