@@ -65,9 +65,9 @@ private:
   Real mEf_prev = 0;
 
   /// Input of voltage transducer
-  Real mVh;
+  const Attribute<Real>::Ptr mVh;
   /// Output of voltage transducer at time k-1
-  Real mVr;
+  const Attribute<Real>::Ptr mVr;
   /// Output of stablizing feedback at time k
   Real mVf;
   /// Input of amplifier at time k
@@ -77,7 +77,7 @@ private:
   /// Amplifier output at time k
   Real mVsat;
   /// Exciter output at time k (induced emf by the field current under no-load conditions)
-  Real mEf;
+  const Attribute<Real>::Ptr mEf;
 
 public:
   /// Constructor

@@ -7,7 +7,10 @@ using namespace CPS;
 using namespace CPS::Signal;
 
 ExciterDC1Simp::ExciterDC1Simp(const String &name, CPS::Logger::Level logLevel)
-    : SimSignalComp(name, name, logLevel) {}
+    : SimSignalComp(name, name, logLevel),
+      mVh(mAttributes->create<Real>("Vh", 0)),
+      mVr(mAttributes->create<Real>("Vr", 0)),
+      mEf(mAttributes->create<Real>("Ef", 0.0)) {}
 
 void ExciterDC1Simp::setParameters(
     std::shared_ptr<Base::ExciterParameters> parameters) {
@@ -43,25 +46,25 @@ void ExciterDC1Simp::setParameters(
 
 void ExciterDC1Simp::initialize(Real Vh_init, Real Ef_init) {
   //
-  mVh = Vh_init;
-  mEf = Ef_init;
+  **mVh = Vh_init;
+  **mEf = Ef_init;
   SPDLOG_LOGGER_INFO(mSLog,
                      "Initially set excitation system initial values:"
                      "\ninit Vh: {:e}"
                      "\ninit Ef: {:e}",
-                     mVh, mEf);
+                     **mVh, **mEf);
 
   /// init value of transducer output
-  mVr = mVh;
+  **mVr = **mVh;
 
   /// init value of stabilizing feedback output
   mVf = 0.0;
 
   /// ceiling function
-  mVsat = mParameters->Aef * exp(mParameters->Bef * abs(mEf));
+  mVsat = mParameters->Aef * exp(mParameters->Bef * abs(**mEf));
 
   /// init value of amplifier output
-  mVa = mParameters->Kef * mEf + mVsat * mEf;
+  mVa = mParameters->Kef * **mEf + mVsat * **mEf;
   if (mVa > mParameters->MaxVa)
     mVa = mParameters->MaxVa;
   if (mVa < mParameters->MinVa)
@@ -71,10 +74,10 @@ void ExciterDC1Simp::initialize(Real Vh_init, Real Ef_init) {
   mVin = mVa / mParameters->Ka;
 
   ///
-  mVref = mVr + mVin;
+  mVref = **mVr + mVin;
 
   /// check initial conditions
-  if (mEf - mVa / (mVsat + mParameters->Kef))
+  if (**mEf - mVa / (mVsat + mParameters->Kef))
     SPDLOG_LOGGER_WARN(mSLog, "\nInitial conditions are not consistent!!!");
 
   SPDLOG_LOGGER_INFO(mSLog,
@@ -83,19 +86,19 @@ void ExciterDC1Simp::initialize(Real Vh_init, Real Ef_init) {
                      "\ninit_Vr: {:e}"
                      "\ninit_Ef: {:e}"
                      "\ninit_Va: {:e}",
-                     mVref, mVr, mEf, mVa);
+                     mVref, **mVr, **mEf, mVa);
   mSLog->flush();
 }
 
 Real ExciterDC1Simp::step(Real mVd, Real mVq, Real dt, Real Vpss) {
   // Voltage magnitude calculation
-  mVh = sqrt(pow(mVd, 2.) + pow(mVq, 2.));
+  **mVh = sqrt(pow(mVd, 2.) + pow(mVq, 2.));
 
   // update state variables at time k-1
-  mVr_prev = mVr;
+  mVr_prev = **mVr;
   mVa_prev = mVa;
   mVf_prev = mVf;
-  mEf_prev = mEf;
+  mEf_prev = **mEf;
 
   // compute state variables at time k using euler forward
 
@@ -103,10 +106,10 @@ Real ExciterDC1Simp::step(Real mVd, Real mVq, Real dt, Real Vpss) {
   mVsat = mParameters->Aef * exp(mParameters->Bef * abs(mEf_prev));
 
   // Voltage Transducer equation
-  mVr = mVr_prev + dt / mParameters->Tr * (mVh - mVr_prev);
+  **mVr = **mVr + dt / mParameters->Tr * (**mVh - **mVr);
 
   // Voltage amplifier equation
-  mVin = mVref + Vpss - mVr_prev - mVf_prev;
+  mVin = mVref + Vpss - **mVr - mVf;
   mVa = mVa_prev + dt / mParameters->Ta * (mVin * mParameters->Ka - mVa_prev);
   if (mVa > mParameters->MaxVa)
     mVa = mParameters->MaxVa;
@@ -119,8 +122,8 @@ Real ExciterDC1Simp::step(Real mVd, Real mVq, Real dt, Real Vpss) {
             (mVa_prev - (mVsat + mParameters->Kef) * mEf_prev);
 
   // Exciter output
-  mEf = mEf_prev + dt / mParameters->Tef *
-                       (mVa_prev - (mVsat + mParameters->Kef) * mEf_prev);
+  **mEf = mEf_prev + dt / mParameters->Tef *
+                         (mVa_prev - (mVsat + mParameters->Kef) * mEf_prev);
 
-  return mEf;
+  return **mEf;
 }
