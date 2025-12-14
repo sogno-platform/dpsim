@@ -18,7 +18,9 @@ public:
 class Exciter {
 
 public:
-  ///
+  virtual ~Exciter() = default;
+
+  /// Sets exciter parameters
   virtual void
   setParameters(std::shared_ptr<Base::ExciterParameters> parameters) = 0;
 
