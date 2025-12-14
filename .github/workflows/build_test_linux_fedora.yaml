@@ -122,7 +122,9 @@ jobs:
         PYTHONPATH: "${{ github.workspace }}/build"
       run: |
         cp -r python/src/dpsim build/
-        pytest -n auto --cov --cov-branch --cov-report=xml examples/Notebooks/
+        pytest -n auto -vv -ra --tb=long --showlocals --durations=20 \
+          --cov --cov-branch --cov-report=xml --cov-report=term-missing \
+          examples/Notebooks/
 
     - name: Archive notebook outputs
       uses: actions/upload-artifact@v4
