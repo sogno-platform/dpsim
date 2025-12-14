@@ -38,8 +38,9 @@ void ExciterStatic::setParameters(
                        mParameters->Te, mParameters->Ka, mParameters->MaxEfd,
                        mParameters->MinEfd, mParameters->Kbc);
   } else {
-    std::cout << "Type of parameters class of " << this->name()
-              << " has to be ExciterStatic!" << std::endl;
+    SPDLOG_LOGGER_ERROR(
+        mSLog, "Type of parameters class of {} has to be ExciterStatic!",
+        this->name());
     throw CPS::TypeException();
   }
 }

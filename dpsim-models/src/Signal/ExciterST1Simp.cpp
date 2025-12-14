@@ -22,8 +22,9 @@ void Signal::ExciterST1Simp::setParameters(
                        "\nKa: {:e}\n",
                        mParameters->Tr, mParameters->Ka);
   } else {
-    std::cout << "Type of parameters class of " << this->name()
-              << " has to be ExciterST1Simp!" << std::endl;
+    SPDLOG_LOGGER_ERROR(
+        mSLog, "Type of parameters class of {} has to be ExciterST1Simp!",
+        this->name());
     throw CPS::TypeException();
   }
 }
