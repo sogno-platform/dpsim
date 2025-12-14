@@ -37,8 +37,9 @@ void Signal::ExciterDC1::setParameters(
                        mParameters->Aef, mParameters->Bef, mParameters->MaxVa,
                        mParameters->MinVa);
   } else {
-    std::cout << "Type of parameters class of " << this->name()
-              << " has to be ExciterDC1Parameters!" << std::endl;
+    SPDLOG_LOGGER_ERROR(
+        mSLog, "Type of parameters class of {} has to be ExciterDC1Parameters!",
+        this->name());
     throw CPS::TypeException();
   }
 }

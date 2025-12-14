@@ -34,8 +34,9 @@ void ExciterDC1Simp::setParameters(
                        mParameters->Tr, mParameters->Aef, mParameters->Bef,
                        mParameters->MaxVa, mParameters->MinVa);
   } else {
-    std::cout << "Type of parameters class of " << this->name()
-              << " has to be ExciterDC1Simp!" << std::endl;
+    SPDLOG_LOGGER_ERROR(
+        mSLog, "Type of parameters class of {} has to be ExciterDC1Simp!",
+        this->name());
     throw CPS::TypeException();
   }
 }
