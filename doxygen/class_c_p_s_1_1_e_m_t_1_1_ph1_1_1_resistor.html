@@ -102,7 +102,7 @@ $(function(){ initResizable(false); });
 <div class="dynheader">
 Inheritance diagram for CPS::EMT::Ph1::Resistor:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_resistor__inherit__graph.svg" width="100%" height="512"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_resistor__inherit__graph.svg" width="100%" height="546"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for CPS::EMT::Ph1::Resistor:</div>
@@ -144,6 +144,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a663b4ded7f2c60b39737ab2931b3c30a" id="r_a663b4ded7f2c60b39737ab2931b3c30a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a663b4ded7f2c60b39737ab2931b3c30a">mnaCompAddPostStepDependencies</a> (AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr &amp;leftVector) override</td></tr>
 <tr class="memdesc:a663b4ded7f2c60b39737ab2931b3c30a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add MNA post step dependencies.  <br /></td></tr>
 <tr class="separator:a663b4ded7f2c60b39737ab2931b3c30a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d25bb93278747653fa40bfd19979e4f" id="r_a5d25bb93278747653fa40bfd19979e4f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5d25bb93278747653fa40bfd19979e4f">mnaTearApplyMatrixStamp</a> (SparseMatrixRow &amp;tearMatrix) override</td></tr>
+<tr class="separator:a5d25bb93278747653fa40bfd19979e4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_c_p_s_1_1_m_n_a_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_c_p_s_1_1_m_n_a_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Real &gt;</a></td></tr>
 <tr class="memitem:ab9f66bb4639c7d0d73b47cef6be789c5 inherit pub_methods_class_c_p_s_1_1_m_n_a_sim_power_comp" id="r_ab9f66bb4639c7d0d73b47cef6be789c5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#ab9f66bb4639c7d0d73b47cef6be789c5">MNASimPowerComp</a> (String <a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, String name, Bool hasPreStep, Bool hasPostStep, Logger::Level logLevel)</td></tr>
 <tr class="memdesc:ab9f66bb4639c7d0d73b47cef6be789c5 inherit pub_methods_class_c_p_s_1_1_m_n_a_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Basic constructor that takes UID, name and log level.  <br /></td></tr>
@@ -376,6 +378,19 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaInitialize
 <tr class="separator:a50bf786c2ac4b9aa1f9bbd3eda4f2991 inherit pub_methods_class_c_p_s_1_1_base_1_1_ph1_1_1_resistor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8c1ba6fe97b0f86ac4924cb163591f2 inherit pub_methods_class_c_p_s_1_1_base_1_1_ph1_1_1_resistor" id="r_ad8c1ba6fe97b0f86ac4924cb163591f2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_resistor.html#ad8c1ba6fe97b0f86ac4924cb163591f2">setParameters</a> (Real resistance)</td></tr>
 <tr class="separator:ad8c1ba6fe97b0f86ac4924cb163591f2 inherit pub_methods_class_c_p_s_1_1_base_1_1_ph1_1_1_resistor"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_class_c_p_s_1_1_m_n_a_tear_interface"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_c_p_s_1_1_m_n_a_tear_interface')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a></td></tr>
+<tr class="memitem:af92023875982fbb1351d14dd0e30cf99 inherit pub_methods_class_c_p_s_1_1_m_n_a_tear_interface" id="r_af92023875982fbb1351d14dd0e30cf99"><td class="memItemLeft" align="right" valign="top">virtual MNAInterface::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html#af92023875982fbb1351d14dd0e30cf99">mnaTearGroundComponents</a> ()</td></tr>
+<tr class="separator:af92023875982fbb1351d14dd0e30cf99 inherit pub_methods_class_c_p_s_1_1_m_n_a_tear_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14640bf6c779d2d200d9eed88022053a inherit pub_methods_class_c_p_s_1_1_m_n_a_tear_interface" id="r_a14640bf6c779d2d200d9eed88022053a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html#a14640bf6c779d2d200d9eed88022053a">mnaTearInitialize</a> (Real omega, Real timeStep)</td></tr>
+<tr class="separator:a14640bf6c779d2d200d9eed88022053a inherit pub_methods_class_c_p_s_1_1_m_n_a_tear_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5d2da552ed5d0e98a37899dff440601 inherit pub_methods_class_c_p_s_1_1_m_n_a_tear_interface" id="r_af5d2da552ed5d0e98a37899dff440601"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html#af5d2da552ed5d0e98a37899dff440601">mnaTearApplyVoltageStamp</a> (Matrix &amp;currentVector)</td></tr>
+<tr class="separator:af5d2da552ed5d0e98a37899dff440601 inherit pub_methods_class_c_p_s_1_1_m_n_a_tear_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa977b70347339ec54709fd6bf9459a75 inherit pub_methods_class_c_p_s_1_1_m_n_a_tear_interface" id="r_aa977b70347339ec54709fd6bf9459a75"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html#aa977b70347339ec54709fd6bf9459a75">mnaTearPostStep</a> (Complex voltage, Complex current)</td></tr>
+<tr class="separator:aa977b70347339ec54709fd6bf9459a75 inherit pub_methods_class_c_p_s_1_1_m_n_a_tear_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71d2ba500e1243f30914663d8752fde2 inherit pub_methods_class_c_p_s_1_1_m_n_a_tear_interface" id="r_a71d2ba500e1243f30914663d8752fde2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html#a71d2ba500e1243f30914663d8752fde2">mnaTearPostStep</a> (MatrixComp voltage, MatrixComp current)</td></tr>
+<tr class="separator:a71d2ba500e1243f30914663d8752fde2 inherit pub_methods_class_c_p_s_1_1_m_n_a_tear_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73d1005579e98d1d04851792dd0dad01 inherit pub_methods_class_c_p_s_1_1_m_n_a_tear_interface" id="r_a73d1005579e98d1d04851792dd0dad01"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html#a73d1005579e98d1d04851792dd0dad01">mnaTearSetIdx</a> (UInt compIdx)</td></tr>
+<tr class="separator:a73d1005579e98d1d04851792dd0dad01 inherit pub_methods_class_c_p_s_1_1_m_n_a_tear_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -485,6 +500,9 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:af7497f9b94a45040b1601ac58f5e3d97 inherit pro_attribs_class_c_p_s_1_1_identified_object" id="r_af7497f9b94a45040b1601ac58f5e3d97"><td class="memItemLeft" align="right" valign="top">AttributeList::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#af7497f9b94a45040b1601ac58f5e3d97">mAttributes</a> = AttributeList::make()</td></tr>
 <tr class="memdesc:af7497f9b94a45040b1601ac58f5e3d97 inherit pro_attribs_class_c_p_s_1_1_identified_object"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a> List.  <br /></td></tr>
 <tr class="separator:af7497f9b94a45040b1601ac58f5e3d97 inherit pro_attribs_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_class_c_p_s_1_1_m_n_a_tear_interface"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_m_n_a_tear_interface')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a></td></tr>
+<tr class="memitem:a5c21f156daabad8a7a9278ed6ae23b43 inherit pro_attribs_class_c_p_s_1_1_m_n_a_tear_interface" id="r_a5c21f156daabad8a7a9278ed6ae23b43"><td class="memItemLeft" align="right" valign="top">UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html#a5c21f156daabad8a7a9278ed6ae23b43">mTearIdx</a></td></tr>
+<tr class="separator:a5c21f156daabad8a7a9278ed6ae23b43 inherit pro_attribs_class_c_p_s_1_1_m_n_a_tear_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>EMT <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_resistor.html" title="EMT Resistor.">Resistor</a>. </p>
@@ -550,7 +568,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Defines name, component parameters and logging level. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph1___resistor_8h_source.html#l00030">30</a> of file <a class="el" href="_e_m_t___ph1___resistor_8h_source.html">EMT_Ph1_Resistor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph1___resistor_8h_source.html#l00031">31</a> of file <a class="el" href="_e_m_t___ph1___resistor_8h_source.html">EMT_Ph1_Resistor.h</a>.</p>
 
 </div>
 </div>
@@ -687,7 +705,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph1___resistor_8h_source.html#l00046">46</a> of file <a class="el" href="_e_m_t___ph1___resistor_8h_source.html">EMT_Ph1_Resistor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph1___resistor_8h_source.html#l00047">47</a> of file <a class="el" href="_e_m_t___ph1___resistor_8h_source.html">EMT_Ph1_Resistor.h</a>.</p>
 
 </div>
 </div>
@@ -855,6 +873,35 @@ Additional Inherited Members</h2></td></tr>
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="_e_m_t___ph1___resistor_8cpp_source.html#l00076">76</a> of file <a class="el" href="_e_m_t___ph1___resistor_8cpp_source.html">EMT_Ph1_Resistor.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a5d25bb93278747653fa40bfd19979e4f" name="a5d25bb93278747653fa40bfd19979e4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d25bb93278747653fa40bfd19979e4f">&#9670;&#160;</a></span>mnaTearApplyMatrixStamp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void EMT::Ph1::Resistor::mnaTearApplyMatrixStamp </td>
+          <td>(</td>
+          <td class="paramtype">SparseMatrixRow &amp;</td>          <td class="paramname"><span class="paramname"><em>tearMatrix</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph1___resistor_8cpp_source.html#l00093">93</a> of file <a class="el" href="_e_m_t___ph1___resistor_8cpp_source.html">EMT_Ph1_Resistor.cpp</a>.</p>
 
 </div>
 </div>

@@ -1,9 +1,11 @@
 <map id="CPS::Base::Ph3::PiLine" name="CPS::Base::Ph3::PiLine">
-<area shape="rect" id="Node000001" title=" " alt="" coords="185,5,344,35"/>
-<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html" title="PI&#45;line dynamic phasor model." alt="" coords="5,83,161,113"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="217,44,118,85,116,80,215,39"/>
-<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html" title=" " alt="" coords="185,83,344,113"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="267,51,267,82,262,82,262,51"/>
-<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_rx_line.html" title=" " alt="" coords="368,83,516,113"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="313,39,409,80,407,85,310,44"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,85,165,115"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_pi_line.html" title="PI&#45;line dynamic phasor model." alt="" coords="219,5,366,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,76,212,44,243,33,245,38,214,49,136,81"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html" title="PI&#45;line dynamic phasor model." alt="" coords="215,59,370,88"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="179,85,214,81,214,86,180,91"/>
+<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html" title=" " alt="" coords="213,112,372,142"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="180,110,213,114,212,119,180,115"/>
+<area shape="rect" id="Node000005" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_rx_line.html" title=" " alt="" coords="218,165,366,195"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="136,119,214,151,245,162,243,167,212,156,134,124"/>
 </map>

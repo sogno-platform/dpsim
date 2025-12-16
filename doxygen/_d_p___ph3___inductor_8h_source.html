@@ -155,11 +155,11 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>                                 AttributeBase::List &amp;attributeDependencies,</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>                                 AttributeBase::List &amp;modifiedAttributes,</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                                 Attribute&lt;Matrix&gt;::Ptr &amp;leftVector) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  <span class="comment">// #### MNA Tear Section ####</span></div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  <span class="keywordtype">void</span> mnaTearInitialize(Real omega, Real timestep) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  <span class="keywordtype">void</span> mnaTearApplyMatrixStamp(SparseMatrixRow &amp;tearMatrix) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  <span class="keywordtype">void</span> mnaTearApplyVoltageStamp(Matrix &amp;voltageVector) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  <span class="keywordtype">void</span> mnaTearPostStep(Complex voltage, Complex current) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  <span class="keywordtype">void</span> mnaTearPostStep(MatrixComp voltage, MatrixComp current) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>};</div>
 </div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>} <span class="comment">// namespace Ph3</span></div>

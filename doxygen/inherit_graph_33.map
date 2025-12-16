@@ -1,11 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
 <area shape="rect" id="Node000000" href="$class_d_psim_1_1_data_logger_interface.html" title=" " alt="" coords="8,59,209,88"/>
 <area shape="rect" id="Node000001" href="$class_d_psim_1_1_data_logger.html" title=" " alt="" coords="288,32,430,62"/>
-<area shape="poly" id="edge508_Node000000_Node000001" title=" " alt="" coords="224,59,287,52,287,57,224,64"/>
+<area shape="poly" id="edge522_Node000000_Node000001" title=" " alt="" coords="224,59,287,52,287,57,224,64"/>
 <area shape="rect" id="Node000003" href="$class_d_psim_1_1_real_time_data_logger.html" title=" " alt="" coords="260,89,458,119"/>
-<area shape="poly" id="edge509_Node000000_Node000003" title=" " alt="" coords="224,85,260,89,259,95,224,90"/>
+<area shape="poly" id="edge523_Node000000_Node000003" title=" " alt="" coords="224,85,260,89,259,95,224,90"/>
 <area shape="rect" id="Node000002" href="$class_shared_factory.html" title=" " alt="" coords="5,5,212,35"/>
-<area shape="poly" id="edge510_Node000002_Node000001" title=" " alt="" coords="227,30,288,37,287,42,227,35"/>
+<area shape="poly" id="edge524_Node000002_Node000001" title=" " alt="" coords="227,30,288,37,287,42,227,35"/>
 <area shape="rect" id="Node000004" href="$class_shared_factory.html" title=" " alt="" coords="5,112,212,160"/>
-<area shape="poly" id="edge511_Node000004_Node000003" title=" " alt="" coords="227,118,259,114,259,120,227,124"/>
+<area shape="poly" id="edge525_Node000004_Node000003" title=" " alt="" coords="227,118,259,114,259,120,227,124"/>
 </map>

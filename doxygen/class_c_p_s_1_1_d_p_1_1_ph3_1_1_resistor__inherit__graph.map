@@ -1,9 +1,9 @@
 <map id="CPS::DP::Ph3::Resistor" name="CPS::DP::Ph3::Resistor">
-<area shape="rect" id="Node000001" title=" " alt="" coords="1277,190,1437,219"/>
-<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="1046,116,1227,165"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1238,167,1304,186,1303,192,1236,172"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="1277,214,1437,243"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="1046,115,1227,163"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1215,167,1229,173,1320,211,1318,215,1227,177,1213,172"/>
 <area shape="rect" id="Node000003" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="750,53,908,102"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="923,94,1046,119,1045,124,922,99"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="923,94,1046,118,1045,124,922,99"/>
 <area shape="rect" id="Node000004" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="208,76,404,106"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="420,85,749,77,749,82,420,91"/>
 <area shape="rect" id="Node000006" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="454,5,612,54"/>
@@ -14,15 +14,17 @@
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="174,88,208,88,208,94,174,94"/>
 <area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="627,42,749,62,748,67,627,48"/>
 <area shape="rect" id="Node000007" href="$class_c_p_s_1_1_m_n_a_interface.html" title="Interface to be implemented by all models used by the MNA solver." alt="" coords="462,128,604,158"/>
-<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="619,140,1045,138,1045,143,619,145"/>
+<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="619,140,1045,137,1045,142,619,145"/>
 <area shape="rect" id="Node000008" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title="Base class for all MNA components that are transmitting power." alt="" coords="738,176,919,225"/>
 <area shape="poly" id="edge11_Node000008_Node000007" title=" " alt="" coords="619,157,738,180,737,185,618,162"/>
-<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="934,188,1021,174,1063,163,1065,168,1022,179,935,194"/>
+<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="934,189,1021,174,1066,161,1068,166,1022,179,935,194"/>
 <area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="628,201,737,199,737,205,628,207"/>
-<area shape="rect" id="Node000010" href="$class_c_p_s_1_1_base_1_1_ph3_1_1_resistor.html" title=" " alt="" coords="1050,190,1223,219"/>
-<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="1238,202,1277,202,1277,207,1238,207"/>
-<area shape="rect" id="Node000011" href="$class_shared_factory.html" title=" " alt="" coords="1045,247,1228,276"/>
-<area shape="poly" id="edge13_Node000001_Node000011" title=" " alt="" coords="1210,240,1297,217,1298,222,1212,245"/>
-<area shape="rect" id="Node000012" href="$class_shared_factory.html" title=" " alt="" coords="759,248,898,278"/>
-<area shape="poly" id="edge14_Node000011_Node000012" title=" " alt="" coords="914,260,1045,259,1045,265,914,265"/>
+<area shape="rect" id="Node000010" href="$class_c_p_s_1_1_base_1_1_ph3_1_1_resistor.html" title=" " alt="" coords="1050,187,1223,216"/>
+<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="1238,211,1277,216,1276,221,1238,217"/>
+<area shape="rect" id="Node000011" href="$class_c_p_s_1_1_m_n_a_tear_interface.html" title=" " alt="" coords="1053,240,1220,270"/>
+<area shape="poly" id="edge13_Node000001_Node000011" title=" " alt="" coords="1235,240,1276,235,1277,241,1235,246"/>
+<area shape="rect" id="Node000012" href="$class_shared_factory.html" title=" " alt="" coords="1045,294,1228,323"/>
+<area shape="poly" id="edge14_Node000001_Node000012" title=" " alt="" coords="1207,286,1227,279,1320,241,1322,246,1229,284,1209,291"/>
+<area shape="rect" id="Node000013" href="$class_shared_factory.html" title=" " alt="" coords="759,294,898,323"/>
+<area shape="poly" id="edge15_Node000012_Node000013" title=" " alt="" coords="914,306,1045,306,1045,311,914,311"/>
 </map>

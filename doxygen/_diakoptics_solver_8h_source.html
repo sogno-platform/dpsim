@@ -148,138 +148,139 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  CPS::LUFactorized mTotalTearImpedance;</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  Matrix mTearCurrents;</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  Matrix mTearVoltages;</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  <span class="keywordtype">void</span> init(<a class="code hl_class" href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a> &amp;system);</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  CPS::PhaseType mPhaseType;</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  <span class="keywordtype">void</span> initSubnets(<span class="keyword">const</span> std::vector&lt;CPS::SystemTopology&gt; &amp;subnets);</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  <span class="keywordtype">void</span> collectVirtualNodes(<span class="keywordtype">int</span> net);</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  <span class="keywordtype">void</span> assignMatrixNodeIndices(<span class="keywordtype">int</span> net);</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  <span class="keywordtype">void</span> setSubnetSize(<span class="keywordtype">int</span> net, UInt nodes);</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  <span class="keywordtype">void</span> setLogColumns();</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  <span class="keywordtype">void</span> init(<a class="code hl_class" href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a> &amp;system);</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  <span class="keywordtype">void</span> initSubnets(<span class="keyword">const</span> std::vector&lt;CPS::SystemTopology&gt; &amp;subnets);</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  <span class="keywordtype">void</span> collectVirtualNodes(<span class="keywordtype">int</span> net);</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  <span class="keywordtype">void</span> assignMatrixNodeIndices(<span class="keywordtype">int</span> net);</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  <span class="keywordtype">void</span> setSubnetSize(<span class="keywordtype">int</span> net, UInt nodes);</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  <span class="keywordtype">void</span> createMatrices();</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  <span class="keywordtype">void</span> createTearMatrices(UInt totalSize);</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  <span class="keywordtype">void</span> initComponents();</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  <span class="keywordtype">void</span> setLogColumns();</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  <span class="keywordtype">void</span> createMatrices();</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  <span class="keywordtype">void</span> createTearMatrices(UInt totalSize);</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  <span class="keywordtype">void</span> initMatrices();</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  <span class="keywordtype">void</span> applyTearComponentStamp(UInt compIdx);</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  <span class="keywordtype">void</span> log(Real time, Int timeStepCount) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  <span class="keywordtype">void</span> initComponents();</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  <span class="keywordtype">void</span> initMatrices();</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  <span class="keywordtype">void</span> applyTearComponentStamp(UInt compIdx);</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_diakoptics_solver.html#aa20a0287a1c75033630a390ebdbbdcd9">  101</a></span>  <span class="keyword">const</span> CPS::Attribute&lt;Matrix&gt;::Ptr <a class="code hl_variable" href="class_d_psim_1_1_diakoptics_solver.html#aa20a0287a1c75033630a390ebdbbdcd9">mMappedTearCurrents</a>;</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span></div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_diakoptics_solver.html#a3824bf1dae3b37fc02ebfd9e5b83aa48">  104</a></span>  <span class="keyword">const</span> CPS::Attribute&lt;Matrix&gt;::Ptr <a class="code hl_variable" href="class_d_psim_1_1_diakoptics_solver.html#a3824bf1dae3b37fc02ebfd9e5b83aa48">mOrigLeftSideVector</a>;</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  DiakopticsSolver(String name, <a class="code hl_class" href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a> system,</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>                   CPS::IdentifiedObject::List tearComponents, Real timeStep,</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>                   CPS::Logger::Level logLevel);</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>  CPS::Task::List <a class="code hl_function" href="class_d_psim_1_1_diakoptics_solver.html#a1ce1ffbfed2de1a6d0cc018f62c9a216">getTasks</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  <span class="keywordtype">void</span> log(Real time, Int timeStepCount) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_diakoptics_solver.html#aa20a0287a1c75033630a390ebdbbdcd9">  103</a></span>  <span class="keyword">const</span> CPS::Attribute&lt;Matrix&gt;::Ptr <a class="code hl_variable" href="class_d_psim_1_1_diakoptics_solver.html#aa20a0287a1c75033630a390ebdbbdcd9">mMappedTearCurrents</a>;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span></div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_diakoptics_solver.html#a3824bf1dae3b37fc02ebfd9e5b83aa48">  106</a></span>  <span class="keyword">const</span> CPS::Attribute&lt;Matrix&gt;::Ptr <a class="code hl_variable" href="class_d_psim_1_1_diakoptics_solver.html#a3824bf1dae3b37fc02ebfd9e5b83aa48">mOrigLeftSideVector</a>;</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  DiakopticsSolver(String name, <a class="code hl_class" href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a> system,</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>                   CPS::IdentifiedObject::List tearComponents, Real timeStep,</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>                   CPS::Logger::Level logLevel);</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
-<div class="foldopen" id="foldopen00112" data-start="{" data-end="};">
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_diakoptics_solver_1_1_subnet_solve_task.html">  112</a></span>  <span class="keyword">class </span>SubnetSolveTask : <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_task.html">CPS::Task</a> {</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    SubnetSolveTask(DiakopticsSolver&lt;VarType&gt; &amp;solver, UInt net)</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        : Task(solver.<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a0be0551d1bafd32da01b1edf46006a22">mName</a> + <span class="stringliteral">&quot;.SubnetSolve_&quot;</span> + std::to_string(net)),</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>          mSolver(solver), mSubnet(solver.mSubnets[net]) {</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>      <span class="keywordflow">for</span> (<span class="keyword">auto</span> it : mSubnet.components) {</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        <span class="keywordflow">if</span> (it-&gt;getRightVector()-&gt;get().size() != 0) {</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>          mAttributeDependencies.push_back(it-&gt;getRightVector());</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        }</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>      }</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>      mModifiedAttributes.push_back(solver.<a class="code hl_variable" href="class_d_psim_1_1_diakoptics_solver.html#a3824bf1dae3b37fc02ebfd9e5b83aa48">mOrigLeftSideVector</a>);</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    }</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="keywordtype">void</span> execute(Real time, Int timeStepCount);</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  CPS::Task::List <a class="code hl_function" href="class_d_psim_1_1_diakoptics_solver.html#a1ce1ffbfed2de1a6d0cc018f62c9a216">getTasks</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
+<div class="foldopen" id="foldopen00114" data-start="{" data-end="};">
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_diakoptics_solver_1_1_subnet_solve_task.html">  114</a></span>  <span class="keyword">class </span>SubnetSolveTask : <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_task.html">CPS::Task</a> {</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    SubnetSolveTask(DiakopticsSolver&lt;VarType&gt; &amp;solver, UInt net)</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        : Task(solver.<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a0be0551d1bafd32da01b1edf46006a22">mName</a> + <span class="stringliteral">&quot;.SubnetSolve_&quot;</span> + std::to_string(net)),</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>          mSolver(solver), mSubnet(solver.mSubnets[net]) {</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>      <span class="keywordflow">for</span> (<span class="keyword">auto</span> it : mSubnet.components) {</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        <span class="keywordflow">if</span> (it-&gt;getRightVector()-&gt;get().size() != 0) {</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>          mAttributeDependencies.push_back(it-&gt;getRightVector());</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        }</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>      }</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>      mModifiedAttributes.push_back(solver.<a class="code hl_variable" href="class_d_psim_1_1_diakoptics_solver.html#a3824bf1dae3b37fc02ebfd9e5b83aa48">mOrigLeftSideVector</a>);</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    }</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    DiakopticsSolver&lt;VarType&gt; &amp;mSolver;</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    Subnet &amp;mSubnet;</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>  };</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    <span class="keywordtype">void</span> execute(Real time, Int timeStepCount);</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    DiakopticsSolver&lt;VarType&gt; &amp;mSolver;</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    Subnet &amp;mSubnet;</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>  };</div>
 </div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>  <span class="comment">// TODO better name</span></div>
-<div class="foldopen" id="foldopen00133" data-start="{" data-end="};">
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_diakoptics_solver_1_1_pre_solve_task.html">  133</a></span>  <span class="keyword">class </span>PreSolveTask : <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_task.html">CPS::Task</a> {</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    PreSolveTask(DiakopticsSolver&lt;VarType&gt; &amp;solver)</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        : Task(solver.<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a0be0551d1bafd32da01b1edf46006a22">mName</a> + <span class="stringliteral">&quot;.PreSolve&quot;</span>), mSolver(solver) {</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>      mAttributeDependencies.push_back(solver.<a class="code hl_variable" href="class_d_psim_1_1_diakoptics_solver.html#a3824bf1dae3b37fc02ebfd9e5b83aa48">mOrigLeftSideVector</a>);</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>      mModifiedAttributes.push_back(solver.<a class="code hl_variable" href="class_d_psim_1_1_diakoptics_solver.html#aa20a0287a1c75033630a390ebdbbdcd9">mMappedTearCurrents</a>);</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    }</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    <span class="keywordtype">void</span> execute(Real time, Int timeStepCount);</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>  <span class="comment">// TODO better name</span></div>
+<div class="foldopen" id="foldopen00135" data-start="{" data-end="};">
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_diakoptics_solver_1_1_pre_solve_task.html">  135</a></span>  <span class="keyword">class </span>PreSolveTask : <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_task.html">CPS::Task</a> {</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    PreSolveTask(DiakopticsSolver&lt;VarType&gt; &amp;solver)</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>        : Task(solver.<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a0be0551d1bafd32da01b1edf46006a22">mName</a> + <span class="stringliteral">&quot;.PreSolve&quot;</span>), mSolver(solver) {</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>      mAttributeDependencies.push_back(solver.<a class="code hl_variable" href="class_d_psim_1_1_diakoptics_solver.html#a3824bf1dae3b37fc02ebfd9e5b83aa48">mOrigLeftSideVector</a>);</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>      mModifiedAttributes.push_back(solver.<a class="code hl_variable" href="class_d_psim_1_1_diakoptics_solver.html#aa20a0287a1c75033630a390ebdbbdcd9">mMappedTearCurrents</a>);</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    }</div>
 <div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span> </div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    DiakopticsSolver&lt;VarType&gt; &amp;mSolver;</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>  };</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    <span class="keywordtype">void</span> execute(Real time, Int timeStepCount);</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span> </div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    DiakopticsSolver&lt;VarType&gt; &amp;mSolver;</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>  };</div>
 </div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
-<div class="foldopen" id="foldopen00147" data-start="{" data-end="};">
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_diakoptics_solver_1_1_solve_task.html">  147</a></span>  <span class="keyword">class </span>SolveTask : <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_task.html">CPS::Task</a> {</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    SolveTask(DiakopticsSolver&lt;VarType&gt; &amp;solver, UInt net)</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>        : Task(solver.<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a0be0551d1bafd32da01b1edf46006a22">mName</a> + <span class="stringliteral">&quot;.Solve_&quot;</span> + std::to_string(net)), mSolver(solver),</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>          mSubnet(solver.mSubnets[net]) {</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>      mAttributeDependencies.push_back(solver.<a class="code hl_variable" href="class_d_psim_1_1_diakoptics_solver.html#aa20a0287a1c75033630a390ebdbbdcd9">mMappedTearCurrents</a>);</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>      mModifiedAttributes.push_back(mSubnet.leftVector);</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    }</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span> </div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <span class="keywordtype">void</span> execute(Real time, Int timeStepCount);</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span> </div>
+<div class="foldopen" id="foldopen00149" data-start="{" data-end="};">
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_diakoptics_solver_1_1_solve_task.html">  149</a></span>  <span class="keyword">class </span>SolveTask : <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_task.html">CPS::Task</a> {</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    SolveTask(DiakopticsSolver&lt;VarType&gt; &amp;solver, UInt net)</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>        : Task(solver.<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a0be0551d1bafd32da01b1edf46006a22">mName</a> + <span class="stringliteral">&quot;.Solve_&quot;</span> + std::to_string(net)), mSolver(solver),</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>          mSubnet(solver.mSubnets[net]) {</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>      mAttributeDependencies.push_back(solver.<a class="code hl_variable" href="class_d_psim_1_1_diakoptics_solver.html#aa20a0287a1c75033630a390ebdbbdcd9">mMappedTearCurrents</a>);</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>      mModifiedAttributes.push_back(mSubnet.leftVector);</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    }</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    DiakopticsSolver&lt;VarType&gt; &amp;mSolver;</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    Subnet &amp;mSubnet;</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  };</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <span class="keywordtype">void</span> execute(Real time, Int timeStepCount);</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    DiakopticsSolver&lt;VarType&gt; &amp;mSolver;</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    Subnet &amp;mSubnet;</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>  };</div>
 </div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span> </div>
-<div class="foldopen" id="foldopen00163" data-start="{" data-end="};">
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_diakoptics_solver_1_1_post_solve_task.html">  163</a></span>  <span class="keyword">class </span>PostSolveTask : <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_task.html">CPS::Task</a> {</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    PostSolveTask(DiakopticsSolver&lt;VarType&gt; &amp;solver)</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        : Task(solver.<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a0be0551d1bafd32da01b1edf46006a22">mName</a> + <span class="stringliteral">&quot;.PostSolve&quot;</span>), mSolver(solver) {</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>      <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;net : solver.mSubnets) {</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>        mAttributeDependencies.push_back(net.leftVector);</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>      }</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>      mModifiedAttributes.push_back(Scheduler::external);</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    }</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span> </div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    <span class="keywordtype">void</span> execute(Real time, Int timeStepCount);</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span> </div>
+<div class="foldopen" id="foldopen00165" data-start="{" data-end="};">
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_diakoptics_solver_1_1_post_solve_task.html">  165</a></span>  <span class="keyword">class </span>PostSolveTask : <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_task.html">CPS::Task</a> {</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    PostSolveTask(DiakopticsSolver&lt;VarType&gt; &amp;solver)</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>        : Task(solver.<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a0be0551d1bafd32da01b1edf46006a22">mName</a> + <span class="stringliteral">&quot;.PostSolve&quot;</span>), mSolver(solver) {</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>      <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;net : solver.mSubnets) {</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>        mAttributeDependencies.push_back(net.leftVector);</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>      }</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>      mModifiedAttributes.push_back(Scheduler::external);</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    }</div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span> </div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    DiakopticsSolver&lt;VarType&gt; &amp;mSolver;</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>  };</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    <span class="keywordtype">void</span> execute(Real time, Int timeStepCount);</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span> </div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    DiakopticsSolver&lt;VarType&gt; &amp;mSolver;</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>  };</div>
 </div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span> </div>
-<div class="foldopen" id="foldopen00179" data-start="{" data-end="};">
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_diakoptics_solver_1_1_log_task.html">  179</a></span>  <span class="keyword">class </span>LogTask : <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_task.html">CPS::Task</a> {</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    LogTask(DiakopticsSolver&lt;VarType&gt; &amp;solver)</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>        : Task(solver.<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a0be0551d1bafd32da01b1edf46006a22">mName</a> + <span class="stringliteral">&quot;.Log&quot;</span>), mSolver(solver) {</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>      <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;net : solver.mSubnets) {</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        mAttributeDependencies.push_back(net.leftVector);</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>      }</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>      mModifiedAttributes.push_back(Scheduler::external);</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    }</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span> </div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    <span class="keywordtype">void</span> execute(Real time, Int timeStepCount);</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span> </div>
+<div class="foldopen" id="foldopen00181" data-start="{" data-end="};">
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_diakoptics_solver_1_1_log_task.html">  181</a></span>  <span class="keyword">class </span>LogTask : <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_task.html">CPS::Task</a> {</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    LogTask(DiakopticsSolver&lt;VarType&gt; &amp;solver)</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        : Task(solver.<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a0be0551d1bafd32da01b1edf46006a22">mName</a> + <span class="stringliteral">&quot;.Log&quot;</span>), mSolver(solver) {</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>      <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;net : solver.mSubnets) {</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>        mAttributeDependencies.push_back(net.leftVector);</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>      }</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>      mModifiedAttributes.push_back(Scheduler::external);</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    }</div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span> </div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    DiakopticsSolver&lt;VarType&gt; &amp;mSolver;</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>  };</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    <span class="keywordtype">void</span> execute(Real time, Int timeStepCount);</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span> </div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    DiakopticsSolver&lt;VarType&gt; &amp;mSolver;</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>  };</div>
 </div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>};</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>};</div>
 </div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>} <span class="comment">// namespace DPsim</span></div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>} <span class="comment">// namespace DPsim</span></div>
 <div class="ttc" id="aclass_c_p_s_1_1_attribute_list_html"><div class="ttname"><a href="class_c_p_s_1_1_attribute_list.html">CPS::AttributeList</a></div><div class="ttdoc">Base class of objects having attributes to access member variables.</div><div class="ttdef"><b>Definition</b> <a href="_attribute_list_8h_source.html#l00020">AttributeList.h:20</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_system_topology_html"><div class="ttname"><a href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a></div><div class="ttdef"><b>Definition</b> <a href="_system_topology_8h_source.html#l00023">SystemTopology.h:23</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_task_html"><div class="ttname"><a href="class_c_p_s_1_1_task.html">CPS::Task</a></div><div class="ttdoc">Tasks to be defined by every component.</div><div class="ttdef"><b>Definition</b> <a href="_task_8h_source.html#l00025">Task.h:25</a></div></div>
-<div class="ttc" id="aclass_d_psim_1_1_diakoptics_solver_html_a1ce1ffbfed2de1a6d0cc018f62c9a216"><div class="ttname"><a href="class_d_psim_1_1_diakoptics_solver.html#a1ce1ffbfed2de1a6d0cc018f62c9a216">DPsim::DiakopticsSolver::getTasks</a></div><div class="ttdeci">CPS::Task::List getTasks() override</div><div class="ttdoc">Get tasks for scheduler.</div><div class="ttdef"><b>Definition</b> <a href="_diakoptics_solver_8cpp_source.html#l00359">DiakopticsSolver.cpp:359</a></div></div>
-<div class="ttc" id="aclass_d_psim_1_1_diakoptics_solver_html_a3824bf1dae3b37fc02ebfd9e5b83aa48"><div class="ttname"><a href="class_d_psim_1_1_diakoptics_solver.html#a3824bf1dae3b37fc02ebfd9e5b83aa48">DPsim::DiakopticsSolver::mOrigLeftSideVector</a></div><div class="ttdeci">const CPS::Attribute&lt; Matrix &gt;::Ptr mOrigLeftSideVector</div><div class="ttdoc">Solutions of the split systems.</div><div class="ttdef"><b>Definition</b> <a href="#l00104">DiakopticsSolver.h:104</a></div></div>
-<div class="ttc" id="aclass_d_psim_1_1_diakoptics_solver_html_aa20a0287a1c75033630a390ebdbbdcd9"><div class="ttname"><a href="class_d_psim_1_1_diakoptics_solver.html#aa20a0287a1c75033630a390ebdbbdcd9">DPsim::DiakopticsSolver::mMappedTearCurrents</a></div><div class="ttdeci">const CPS::Attribute&lt; Matrix &gt;::Ptr mMappedTearCurrents</div><div class="ttdoc">Currents through the removed network (as &quot;seen&quot; from the other subnets)</div><div class="ttdef"><b>Definition</b> <a href="#l00101">DiakopticsSolver.h:101</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_diakoptics_solver_html_a1ce1ffbfed2de1a6d0cc018f62c9a216"><div class="ttname"><a href="class_d_psim_1_1_diakoptics_solver.html#a1ce1ffbfed2de1a6d0cc018f62c9a216">DPsim::DiakopticsSolver::getTasks</a></div><div class="ttdeci">CPS::Task::List getTasks() override</div><div class="ttdoc">Get tasks for scheduler.</div><div class="ttdef"><b>Definition</b> <a href="_diakoptics_solver_8cpp_source.html#l00477">DiakopticsSolver.cpp:477</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_diakoptics_solver_html_a3824bf1dae3b37fc02ebfd9e5b83aa48"><div class="ttname"><a href="class_d_psim_1_1_diakoptics_solver.html#a3824bf1dae3b37fc02ebfd9e5b83aa48">DPsim::DiakopticsSolver::mOrigLeftSideVector</a></div><div class="ttdeci">const CPS::Attribute&lt; Matrix &gt;::Ptr mOrigLeftSideVector</div><div class="ttdoc">Solutions of the split systems.</div><div class="ttdef"><b>Definition</b> <a href="#l00106">DiakopticsSolver.h:106</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_diakoptics_solver_html_aa20a0287a1c75033630a390ebdbbdcd9"><div class="ttname"><a href="class_d_psim_1_1_diakoptics_solver.html#aa20a0287a1c75033630a390ebdbbdcd9">DPsim::DiakopticsSolver::mMappedTearCurrents</a></div><div class="ttdeci">const CPS::Attribute&lt; Matrix &gt;::Ptr mMappedTearCurrents</div><div class="ttdoc">Currents through the removed network (as &quot;seen&quot; from the other subnets)</div><div class="ttdef"><b>Definition</b> <a href="#l00103">DiakopticsSolver.h:103</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_solver_html_a0be0551d1bafd32da01b1edf46006a22"><div class="ttname"><a href="class_d_psim_1_1_solver.html#a0be0551d1bafd32da01b1edf46006a22">DPsim::Solver::mName</a></div><div class="ttdeci">String mName</div><div class="ttdoc">Name for logging.</div><div class="ttdef"><b>Definition</b> <a href="_solver_8h_source.html#l00039">Solver.h:39</a></div></div>
 <div class="ttc" id="anamespace_d_psim_html"><div class="ttname"><a href="namespace_d_psim.html">DPsim</a></div><div class="ttdef"><b>Definition</b> <a href="_dense_l_u_adapter_8cpp_source.html#l00013">DenseLUAdapter.cpp:13</a></div></div>
 </div><!-- fragment --></div><!-- contents -->

@@ -213,11 +213,24 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span><span class="keywordtype">void</span> DP::Ph3::Resistor::mnaCompUpdateCurrent(<span class="keyword">const</span> Matrix &amp;leftVector) {</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  **mIntfCurrent = (**mResistance).inverse() * **mIntfVoltage;</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>  SPDLOG_LOGGER_DEBUG(mSLog, <span class="stringliteral">&quot;Current A: {} &lt; {}&quot;</span>,</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>  SPDLOG_LOGGER_DEBUG(mSLog, <span class="stringliteral">&quot;Current A: {} &lt; {}&quot;</span>,</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                      std::abs((**mIntfCurrent)(0, 0)),</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                      std::arg((**mIntfCurrent)(0, 0)));</div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>}</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="comment">// #### Tear Methods ####</span></div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="keywordtype">void</span> DP::Ph3::Resistor::mnaTearApplyMatrixStamp(SparseMatrixRow &amp;tearMatrix) {</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  MatrixFixedSizeComp&lt;3, 3&gt; conductance = Matrix::Zero(3, 3);</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>  conductance.real() = (**mResistance).inverse();</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  <span class="comment">// Set diagonal entries</span></div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>  Math::addToMatrixElement(tearMatrix, mTearIdx * 3, mTearIdx * 3,</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>                           1. / conductance(0, 0).real()); <span class="comment">// 1 /</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>  Math::addToMatrixElement(tearMatrix, mTearIdx * 3 + 1, mTearIdx * 3 + 1,</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>                           1. / conductance(1, 1).real());</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>  Math::addToMatrixElement(tearMatrix, mTearIdx * 3 + 2, mTearIdx * 3 + 2,</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>                           1. / conductance(2, 2).real());</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>}</div>
 <div class="ttc" id="aclass_c_p_s_1_1_base_1_1_ph3_1_1_resistor_html_ae67377a76a4d27a3103fcd010c6f92f4"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_ph3_1_1_resistor.html#ae67377a76a4d27a3103fcd010c6f92f4">CPS::Base::Ph3::Resistor::mResistance</a></div><div class="ttdeci">const CPS::Attribute&lt; Matrix &gt;::Ptr mResistance</div><div class="ttdoc">Resistance [ohm].</div><div class="ttdef"><b>Definition</b> <a href="_base___ph3___resistor_8h_source.html#l00019">Base_Ph3_Resistor.h:19</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_resistor_html_a46e06b46eb47ae2e1888f07ef98313f9"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_resistor.html#a46e06b46eb47ae2e1888f07ef98313f9">CPS::DP::Ph3::Resistor::clone</a></div><div class="ttdeci">SimPowerComp&lt; Complex &gt;::Ptr clone(String name) override</div><div class="ttdoc">Returns a modified copy of the component with the given suffix added to the name and without.</div><div class="ttdef"><b>Definition</b> <a href="#l00022">DP_Ph3_Resistor.cpp:22</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_resistor_html_a4e0232957b3f603d25772b8c18f4dabc"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_resistor.html#a4e0232957b3f603d25772b8c18f4dabc">CPS::DP::Ph3::Resistor::initializeFromNodesAndTerminals</a></div><div class="ttdeci">void initializeFromNodesAndTerminals(Real frequency) override</div><div class="ttdoc">Initializes component from power flow data.</div><div class="ttdef"><b>Definition</b> <a href="#l00028">DP_Ph3_Resistor.cpp:28</a></div></div>

@@ -291,15 +291,37 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>}</div>
 </div>
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span> </div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span><span class="keywordtype">void</span> DP::Ph3::Inductor::mnaTearInitialize(Real omega, Real timeStep) {</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>  initVars(omega, timeStep);</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>}</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span> </div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span><span class="keywordtype">void</span> DP::Ph3::Inductor::mnaTearApplyMatrixStamp(SparseMatrixRow &amp;tearMatrix) {}</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span> </div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span><span class="keywordtype">void</span> DP::Ph3::Inductor::mnaTearApplyVoltageStamp(Matrix &amp;voltageVector) {}</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span> </div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span><span class="keywordtype">void</span> DP::Ph3::Inductor::mnaTearPostStep(Complex voltage, Complex current) {}</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span><span class="comment">// #### Tear Methods ####</span></div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span><span class="keywordtype">void</span> DP::Ph3::Inductor::mnaTearInitialize(Real omega, Real timeStep) {</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>  initVars(omega, timeStep);</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>}</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span> </div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span><span class="keywordtype">void</span> DP::Ph3::Inductor::mnaTearApplyMatrixStamp(SparseMatrixRow &amp;tearMatrix) {</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>  <span class="comment">// Set diagonal entries</span></div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>  Math::addToMatrixElement(tearMatrix, mTearIdx * 3, mTearIdx * 3,</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>                           1. / mEquivCond(0, 0)); <span class="comment">// 1 /</span></div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>  Math::addToMatrixElement(tearMatrix, mTearIdx * 3 + 1, mTearIdx * 3 + 1,</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>                           1. / mEquivCond(1, 1));</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>  Math::addToMatrixElement(tearMatrix, mTearIdx * 3 + 2, mTearIdx * 3 + 2,</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>                           1. / mEquivCond(2, 2));</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>}</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span> </div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span><span class="keywordtype">void</span> DP::Ph3::Inductor::mnaTearApplyVoltageStamp(Matrix &amp;voltageVector) {</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>  mEquivCurrent =</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>      mEquivCond * (**mIntfVoltage) + mPrevCurrFac * (**mIntfCurrent);</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>  Math::addToVectorElement(voltageVector, mTearIdx * 3,</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>                           mEquivCurrent(0, 0) / mEquivCond(0, 0));</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>  Math::addToVectorElement(voltageVector, mTearIdx * 3 + 1,</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>                           mEquivCurrent(1, 0) / mEquivCond(1, 1));</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>  Math::addToVectorElement(voltageVector, mTearIdx * 3 + 2,</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>                           mEquivCurrent(2, 0) / mEquivCond(2, 2));</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>}</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span><span class="keywordtype">void</span> DP::Ph3::Inductor::mnaTearPostStep(MatrixComp voltage,</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>                                        MatrixComp current) {</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>  (**mIntfVoltage) = voltage;</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>  (**mIntfCurrent) = mEquivCond * voltage + mEquivCurrent;</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>}</div>
 <div class="ttc" id="aclass_c_p_s_1_1_base_1_1_ph3_1_1_inductor_html_a1678a7538083ab343bc1aba288dacc50"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html#a1678a7538083ab343bc1aba288dacc50">CPS::Base::Ph3::Inductor::mInductance</a></div><div class="ttdeci">const CPS::Attribute&lt; Matrix &gt;::Ptr mInductance</div><div class="ttdoc">Inductance [H].</div><div class="ttdef"><b>Definition</b> <a href="_base___ph3___inductor_8h_source.html#l00020">Base_Ph3_Inductor.h:20</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor_html_a0781bd97bbe109f853f08d25ea0352e2"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html#a0781bd97bbe109f853f08d25ea0352e2">CPS::DP::Ph3::Inductor::mnaCompInitialize</a></div><div class="ttdeci">void mnaCompInitialize(Real omega, Real timeStep, Attribute&lt; Matrix &gt;::Ptr leftVector) override</div><div class="ttdoc">Initializes internal variables of the component.</div><div class="ttdef"><b>Definition</b> <a href="#l00084">DP_Ph3_Inductor.cpp:84</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor_html_a09815490c86913b616aeedced04fd0aa"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html#a09815490c86913b616aeedced04fd0aa">CPS::DP::Ph3::Inductor::mnaCompApplySystemMatrixStamp</a></div><div class="ttdeci">void mnaCompApplySystemMatrixStamp(SparseMatrixRow &amp;systemMatrix) override</div><div class="ttdoc">Stamps system matrix.</div><div class="ttdef"><b>Definition</b> <a href="#l00093">DP_Ph3_Inductor.cpp:93</a></div></div>
