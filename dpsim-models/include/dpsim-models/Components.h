@@ -75,6 +75,7 @@
 
 #include <dpsim-models/DP/DP_Ph3_Capacitor.h>
 #include <dpsim-models/DP/DP_Ph3_Inductor.h>
+#include <dpsim-models/DP/DP_Ph3_PiLine.h>
 #include <dpsim-models/DP/DP_Ph3_Resistor.h>
 #include <dpsim-models/DP/DP_Ph3_SeriesResistor.h>
 #include <dpsim-models/DP/DP_Ph3_SeriesSwitch.h>
@@ -86,6 +87,7 @@
 #include <dpsim-models/EMT/EMT_Ph1_Capacitor.h>
 #include <dpsim-models/EMT/EMT_Ph1_CurrentSource.h>
 #include <dpsim-models/EMT/EMT_Ph1_Inductor.h>
+#include <dpsim-models/EMT/EMT_Ph1_PiLine.h>
 #include <dpsim-models/EMT/EMT_Ph1_Resistor.h>
 #include <dpsim-models/EMT/EMT_Ph1_SSNTypeI2T.h>
 #include <dpsim-models/EMT/EMT_Ph1_SSNTypeV2T.h>

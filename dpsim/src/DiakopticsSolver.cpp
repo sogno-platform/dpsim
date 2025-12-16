@@ -46,6 +46,8 @@ template <typename VarType>
 void DiakopticsSolver<VarType>::init(SystemTopology &system) {
   std::vector<SystemTopology> subnets;
   mSystem = system;
+  if (mSystem.mNodes.size() > 0)
+    mPhaseType = mSystem.mNodes.at(0)->phaseType();
   mSystemFrequency = system.mSystemFrequency;
 
   system.splitSubnets<VarType>(subnets);
@@ -234,19 +236,31 @@ template <typename VarType> void DiakopticsSolver<VarType>::createMatrices() {
 }
 
 template <> void DiakopticsSolver<Real>::createTearMatrices(UInt totalSize) {
-  mTearTopology = Matrix::Zero(totalSize, mTearComponents.size());
+  int phaseMultiplier = 1;
+  if (mPhaseType == PhaseType::ABC) {
+    phaseMultiplier = 3;
+  }
+  mTearTopology =
+      Matrix::Zero(totalSize, mTearComponents.size() * phaseMultiplier);
   mTearImpedance =
-      CPS::SparseMatrixRow(mTearComponents.size(), mTearComponents.size());
-  mTearCurrents = Matrix::Zero(mTearComponents.size(), 1);
-  mTearVoltages = Matrix::Zero(mTearComponents.size(), 1);
+      CPS::SparseMatrixRow(mTearComponents.size() * phaseMultiplier,
+                           mTearComponents.size() * phaseMultiplier);
+  mTearCurrents = Matrix::Zero(mTearComponents.size() * phaseMultiplier, 1);
+  mTearVoltages = Matrix::Zero(mTearComponents.size() * phaseMultiplier, 1);
 }
 
 template <> void DiakopticsSolver<Complex>::createTearMatrices(UInt totalSize) {
-  mTearTopology = Matrix::Zero(totalSize, 2 * mTearComponents.size());
-  mTearImpedance = CPS::SparseMatrixRow(2 * mTearComponents.size(),
-                                        2 * mTearComponents.size());
-  mTearCurrents = Matrix::Zero(2 * mTearComponents.size(), 1);
-  mTearVoltages = Matrix::Zero(2 * mTearComponents.size(), 1);
+  int phaseMultiplier = 1;
+  if (mPhaseType == PhaseType::ABC) {
+    phaseMultiplier = 3;
+  }
+  mTearTopology =
+      Matrix::Zero(totalSize, 2 * mTearComponents.size() * phaseMultiplier);
+  mTearImpedance =
+      CPS::SparseMatrixRow(2 * mTearComponents.size() * phaseMultiplier,
+                           2 * mTearComponents.size() * phaseMultiplier);
+  mTearCurrents = Matrix::Zero(2 * mTearComponents.size() * phaseMultiplier, 1);
+  mTearVoltages = Matrix::Zero(2 * mTearComponents.size() * phaseMultiplier, 1);
 }
 
 template <typename VarType> void DiakopticsSolver<VarType>::initComponents() {
@@ -325,13 +339,50 @@ template <typename VarType> void DiakopticsSolver<VarType>::initMatrices() {
 
 template <> void DiakopticsSolver<Real>::applyTearComponentStamp(UInt compIdx) {
   auto comp = mTearComponents[compIdx];
-  mTearTopology(mNodeSubnetMap[comp->node(0)]->sysOff +
-                    comp->node(0)->matrixNodeIndex(),
-                compIdx) = 1;
-  mTearTopology(mNodeSubnetMap[comp->node(1)]->sysOff +
-                    comp->node(1)->matrixNodeIndex(),
-                compIdx) = -1;
 
+  // Use triplets to populate the sparse matrix
+  std::vector<Eigen::Triplet<double>> triplets;
+
+  // Node 0 contributions
+  if (comp->node(0)->phaseType() == CPS::PhaseType::ABC) {
+    triplets.emplace_back(mNodeSubnetMap[comp->node(0)]->sysOff +
+                              comp->node(0)->matrixNodeIndex(PhaseType::A),
+                          compIdx * 3, 1);
+    triplets.emplace_back(mNodeSubnetMap[comp->node(0)]->sysOff +
+                              comp->node(0)->matrixNodeIndex(PhaseType::B),
+                          compIdx * 3 + 1, 1);
+    triplets.emplace_back(mNodeSubnetMap[comp->node(0)]->sysOff +
+                              comp->node(0)->matrixNodeIndex(PhaseType::C),
+                          compIdx * 3 + 2, 1);
+  } else {
+    triplets.emplace_back(mNodeSubnetMap[comp->node(0)]->sysOff +
+                              comp->node(0)->matrixNodeIndex(),
+                          compIdx, 1);
+  }
+
+  // Node 1 contributions
+  if (comp->node(0)->phaseType() == CPS::PhaseType::ABC) {
+    triplets.emplace_back(mNodeSubnetMap[comp->node(1)]->sysOff +
+                              comp->node(1)->matrixNodeIndex(PhaseType::A),
+                          compIdx * 3, -1);
+    triplets.emplace_back(mNodeSubnetMap[comp->node(1)]->sysOff +
+                              comp->node(1)->matrixNodeIndex(PhaseType::B),
+                          compIdx * 3 + 1, -1);
+    triplets.emplace_back(mNodeSubnetMap[comp->node(1)]->sysOff +
+                              comp->node(1)->matrixNodeIndex(PhaseType::C),
+                          compIdx * 3 + 2, -1);
+  } else {
+    triplets.emplace_back(mNodeSubnetMap[comp->node(1)]->sysOff +
+                              comp->node(1)->matrixNodeIndex(),
+                          compIdx, -1);
+  }
+
+  // Apply triplets to the sparse matrix
+  for (const auto &triplet : triplets) {
+    mTearTopology.coeffRef(triplet.row(), triplet.col()) += triplet.value();
+  }
+
+  // Call tear component stamp function
   auto tearComp = std::dynamic_pointer_cast<MNATearInterface>(comp);
   tearComp->mnaTearApplyMatrixStamp(mTearImpedance);
 }
@@ -340,18 +391,85 @@ template <>
 void DiakopticsSolver<Complex>::applyTearComponentStamp(UInt compIdx) {
   auto comp = mTearComponents[compIdx];
 
-  auto net1 = mNodeSubnetMap[comp->node(0)];
-  auto net2 = mNodeSubnetMap[comp->node(1)];
+  // Use triplets to populate the sparse matrix
+  std::vector<Eigen::Triplet<double>> triplets;
 
-  mTearTopology(net1->sysOff + comp->node(0)->matrixNodeIndex(), compIdx) = 1;
-  mTearTopology(net1->sysOff + net1->mCmplOff +
-                    comp->node(0)->matrixNodeIndex(),
-                mTearComponents.size() + compIdx) = 1;
-  mTearTopology(net2->sysOff + comp->node(1)->matrixNodeIndex(), compIdx) = -1;
-  mTearTopology(net2->sysOff + net2->mCmplOff +
-                    comp->node(1)->matrixNodeIndex(),
-                mTearComponents.size() + compIdx) = -1;
+  // Node 0 contributions
+  if (comp->node(0)->phaseType() == CPS::PhaseType::ABC) {
+    triplets.emplace_back(mNodeSubnetMap[comp->node(0)]->sysOff +
+                              comp->node(0)->matrixNodeIndex(PhaseType::A),
+                          compIdx * 3, 1);
+    triplets.emplace_back(mNodeSubnetMap[comp->node(0)]->sysOff +
+                              mNodeSubnetMap[comp->node(0)]->mCmplOff +
+                              comp->node(0)->matrixNodeIndex(PhaseType::A),
+                          mTearComponents.size() * 3 + compIdx * 3,
+                          double(1.0));
+    triplets.emplace_back(mNodeSubnetMap[comp->node(0)]->sysOff +
+                              comp->node(0)->matrixNodeIndex(PhaseType::B),
+                          compIdx * 3 + 1, 1);
+    triplets.emplace_back(mNodeSubnetMap[comp->node(0)]->sysOff +
+                              mNodeSubnetMap[comp->node(0)]->mCmplOff +
+                              comp->node(0)->matrixNodeIndex(PhaseType::B),
+                          mTearComponents.size() * 3 + compIdx * 3 + 1,
+                          double(1.0));
+    triplets.emplace_back(mNodeSubnetMap[comp->node(0)]->sysOff +
+                              comp->node(0)->matrixNodeIndex(PhaseType::C),
+                          compIdx * 3 + 2, 1);
+    triplets.emplace_back(mNodeSubnetMap[comp->node(0)]->sysOff +
+                              mNodeSubnetMap[comp->node(0)]->mCmplOff +
+                              comp->node(0)->matrixNodeIndex(PhaseType::C),
+                          mTearComponents.size() * 3 + compIdx * 3 + 2,
+                          double(1.0));
+  } else {
+    triplets.emplace_back(mNodeSubnetMap[comp->node(0)]->sysOff +
+                              comp->node(0)->matrixNodeIndex(),
+                          compIdx, 1);
+    triplets.emplace_back(mNodeSubnetMap[comp->node(0)]->sysOff +
+                              mNodeSubnetMap[comp->node(0)]->mCmplOff +
+                              comp->node(0)->matrixNodeIndex(),
+                          mTearComponents.size() + compIdx, double(1.0));
+  }
 
+  if (comp->node(0)->phaseType() == CPS::PhaseType::ABC) {
+    triplets.emplace_back(mNodeSubnetMap[comp->node(1)]->sysOff +
+                              comp->node(1)->matrixNodeIndex(PhaseType::A),
+                          compIdx * 3, -1);
+    triplets.emplace_back(mNodeSubnetMap[comp->node(1)]->sysOff +
+                              mNodeSubnetMap[comp->node(1)]->mCmplOff +
+                              comp->node(1)->matrixNodeIndex(PhaseType::A),
+                          mTearComponents.size() * 3 + compIdx * 3,
+                          double(-1.0));
+    triplets.emplace_back(mNodeSubnetMap[comp->node(1)]->sysOff +
+                              comp->node(1)->matrixNodeIndex(PhaseType::B),
+                          compIdx * 3 + 1, -1);
+    triplets.emplace_back(mNodeSubnetMap[comp->node(1)]->sysOff +
+                              mNodeSubnetMap[comp->node(1)]->mCmplOff +
+                              comp->node(1)->matrixNodeIndex(PhaseType::B),
+                          mTearComponents.size() * 3 + compIdx * 3 + 1,
+                          double(-1.0));
+    triplets.emplace_back(mNodeSubnetMap[comp->node(1)]->sysOff +
+                              comp->node(1)->matrixNodeIndex(PhaseType::C),
+                          compIdx * 3 + 2, -1);
+    triplets.emplace_back(mNodeSubnetMap[comp->node(1)]->sysOff +
+                              mNodeSubnetMap[comp->node(1)]->mCmplOff +
+                              comp->node(1)->matrixNodeIndex(PhaseType::C),
+                          mTearComponents.size() * 3 + compIdx * 3 + 2,
+                          double(-1.0));
+  } else {
+    triplets.emplace_back(mNodeSubnetMap[comp->node(1)]->sysOff +
+                              comp->node(1)->matrixNodeIndex(),
+                          compIdx, -1);
+    triplets.emplace_back(mNodeSubnetMap[comp->node(1)]->sysOff +
+                              mNodeSubnetMap[comp->node(1)]->mCmplOff +
+                              comp->node(1)->matrixNodeIndex(),
+                          mTearComponents.size() + compIdx, double(-1.0));
+  }
+  // Apply triplets to the sparse matrix
+  for (const auto &triplet : triplets) {
+    mTearTopology.coeffRef(triplet.row(), triplet.col()) += triplet.value();
+  }
+
+  // Call tear component stamp function
   auto tearComp = std::dynamic_pointer_cast<MNATearInterface>(comp);
   tearComp->mnaTearApplyMatrixStamp(mTearImpedance);
 }
@@ -434,8 +552,46 @@ void DiakopticsSolver<VarType>::SolveTask::execute(Real time,
   **mSubnet.leftVector = lBlock;
 }
 
-template <typename VarType>
-void DiakopticsSolver<VarType>::PostSolveTask::execute(Real time,
+template <>
+void DiakopticsSolver<Real>::PostSolveTask::execute(Real time,
+                                                    Int timeStepCount) {
+  // pass the voltages and current of the solution to the torn components
+  mSolver.mTearVoltages =
+      -mSolver.mTearTopology.transpose() * mSolver.mLeftSideVector;
+  for (UInt compIdx = 0; compIdx < mSolver.mTearComponents.size(); ++compIdx) {
+    auto comp = mSolver.mTearComponents[compIdx];
+    auto tComp = std::dynamic_pointer_cast<MNATearInterface>(comp);
+    if (mSolver.mPhaseType == CPS::PhaseType::ABC) {
+      Matrix voltage = Matrix::Zero(3, 1);
+      voltage << mSolver.mTearVoltages(compIdx * 3),
+          mSolver.mTearVoltages(compIdx * 3 + 1),
+          mSolver.mTearVoltages(compIdx * 3 + 2);
+
+      Matrix current = Matrix::Zero(3, 1);
+      current << mSolver.mTearCurrents(compIdx * 3),
+          mSolver.mTearCurrents(compIdx * 3 + 1),
+          mSolver.mTearCurrents(compIdx * 3 + 2);
+      tComp->mnaTearPostStep(voltage, current);
+    } else {
+      Complex voltage =
+          Math::complexFromVectorElement(mSolver.mTearVoltages, compIdx);
+      Complex current =
+          Math::complexFromVectorElement(mSolver.mTearCurrents, compIdx);
+      tComp->mnaTearPostStep(voltage, current);
+    }
+  }
+
+  // TODO split into separate task? (dependent on x, updating all v attributes)
+  for (UInt net = 0; net < mSolver.mSubnets.size(); ++net) {
+    for (UInt node = 0; node < mSolver.mSubnets[net].mRealNetNodeNum; ++node) {
+      mSolver.mSubnets[net].nodes[node]->mnaUpdateVoltage(
+          *(mSolver.mSubnets[net].leftVector));
+    }
+  }
+}
+
+template <>
+void DiakopticsSolver<Complex>::PostSolveTask::execute(Real time,
                                                        Int timeStepCount) {
   // pass the voltages and current of the solution to the torn components
   mSolver.mTearVoltages =
@@ -443,11 +599,29 @@ void DiakopticsSolver<VarType>::PostSolveTask::execute(Real time,
   for (UInt compIdx = 0; compIdx < mSolver.mTearComponents.size(); ++compIdx) {
     auto comp = mSolver.mTearComponents[compIdx];
     auto tComp = std::dynamic_pointer_cast<MNATearInterface>(comp);
-    Complex voltage =
-        Math::complexFromVectorElement(mSolver.mTearVoltages, compIdx);
-    Complex current =
-        Math::complexFromVectorElement(mSolver.mTearCurrents, compIdx);
-    tComp->mnaTearPostStep(voltage, current);
+    if (mSolver.mPhaseType == CPS::PhaseType::ABC) {
+      MatrixComp voltage = MatrixComp::Zero(3, 1);
+      voltage << Math::complexFromVectorElement(mSolver.mTearVoltages,
+                                                compIdx * 3),
+          Math::complexFromVectorElement(mSolver.mTearVoltages,
+                                         compIdx * 3 + 1),
+          Math::complexFromVectorElement(mSolver.mTearVoltages,
+                                         compIdx * 3 + 2);
+      MatrixComp current = MatrixComp::Zero(3, 1);
+      current << Math::complexFromVectorElement(mSolver.mTearCurrents,
+                                                compIdx * 3),
+          Math::complexFromVectorElement(mSolver.mTearCurrents,
+                                         compIdx * 3 + 1),
+          Math::complexFromVectorElement(mSolver.mTearCurrents,
+                                         compIdx * 3 + 2);
+      tComp->mnaTearPostStep(voltage, current);
+    } else {
+      Complex voltage =
+          Math::complexFromVectorElement(mSolver.mTearVoltages, compIdx);
+      Complex current =
+          Math::complexFromVectorElement(mSolver.mTearCurrents, compIdx);
+      tComp->mnaTearPostStep(voltage, current);
+    }
   }
 
   // TODO split into separate task? (dependent on x, updating all v attributes)

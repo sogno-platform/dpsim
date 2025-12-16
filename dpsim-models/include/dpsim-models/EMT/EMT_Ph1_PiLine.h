@@ -7,19 +7,19 @@
 
 #include <dpsim-models/Base/Base_Ph1_PiLine.h>
 #include <dpsim-models/CompositePowerComp.h>
-#include <dpsim-models/DP/DP_Ph1_Capacitor.h>
-#include <dpsim-models/DP/DP_Ph1_Inductor.h>
-#include <dpsim-models/DP/DP_Ph1_Resistor.h>
+#include <dpsim-models/EMT/EMT_Ph1_Capacitor.h>
+#include <dpsim-models/EMT/EMT_Ph1_Inductor.h>
+#include <dpsim-models/EMT/EMT_Ph1_Resistor.h>
 #include <dpsim-models/Solver/MNATearInterface.h>
 
 namespace CPS {
-namespace DP {
+namespace EMT {
 namespace Ph1 {
 /// \brief PI-line dynamic phasor model
 ///
 /// This model consists sub components to represent the
 /// RLC elements of a PI-line.
-class PiLine : public CompositePowerComp<Complex>,
+class PiLine : public CompositePowerComp<Real>,
                public MNATearInterface,
                public Base::Ph1::PiLine,
                public SharedFactory<PiLine> {
@@ -34,9 +34,9 @@ protected:
   std::shared_ptr<Capacitor> mSubParallelCapacitor0;
   /// Parallel resistor submodel at Terminal 1
   std::shared_ptr<Resistor> mSubParallelResistor1;
-  /// Parallel capacitor submodel at Terminal 1
+  // Parallel capacitor submodel at Terminal 1
   std::shared_ptr<Capacitor> mSubParallelCapacitor1;
-  /// Right side vectors of subcomponents
+  /// solver
   std::vector<const Matrix *> mRightVectorStamps;
 
 public:
@@ -46,7 +46,7 @@ public:
   PiLine(String name, Logger::Level logLevel = Logger::Level::off)
       : PiLine(name, name, logLevel) {}
 
-  SimPowerComp<Complex>::Ptr clone(String copySuffix) override;
+  SimPowerComp<Real>::Ptr clone(String copySuffix) override;
 
   // #### General ####
   /// Initializes component from power flow data
@@ -57,15 +57,17 @@ public:
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;
   /// Updates internal voltage variable of the component
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
-  /// MNA pre and post step operations
+  /// MNA pre step operations
   void mnaParentPreStep(Real time, Int timeStepCount) override;
+  /// MNA post step operations
   void mnaParentPostStep(Real time, Int timeStepCount,
                          Attribute<Matrix>::Ptr &leftVector) override;
-  /// add MNA pre and post step dependencies
+  /// Add MNA pre step dependencies
   void mnaParentAddPreStepDependencies(
       AttributeBase::List &prevStepDependencies,
       AttributeBase::List &attributeDependencies,
       AttributeBase::List &modifiedAttributes) override;
+  /// Add MNA post step dependencies
   void
   mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
                                    AttributeBase::List &attributeDependencies,
@@ -79,5 +81,5 @@ public:
   void mnaTearPostStep(Complex voltage, Complex current) override;
 };
 } // namespace Ph1
-} // namespace DP
+} // namespace EMT
 } // namespace CPS

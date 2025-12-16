@@ -10,7 +10,7 @@
 
 #include <dpsim-models/Base/Base_Ph1_Inductor.h>
 #include <dpsim-models/MNASimPowerComp.h>
-#include <dpsim-models/Solver/MNAInterface.h>
+#include <dpsim-models/Solver/MNATearInterface.h>
 
 namespace CPS {
 namespace EMT {
@@ -24,6 +24,7 @@ namespace Ph1 {
 /// frequency and the current source changes for each iteration.
 class Inductor : public MNASimPowerComp<Real>,
                  public Base::Ph1::Inductor,
+                 public MNATearInterface,
                  public SharedFactory<Inductor> {
 protected:
   /// DC equivalent current source [A]
@@ -74,6 +75,12 @@ public:
                                  AttributeBase::List &attributeDependencies,
                                  AttributeBase::List &modifiedAttributes,
                                  Attribute<Matrix>::Ptr &leftVector) override;
+
+  // #### Tearing methods ####
+  void mnaTearInitialize(Real omega, Real timestep) override;
+  void mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) override;
+  void mnaTearApplyVoltageStamp(Matrix &voltageVector) override;
+  void mnaTearPostStep(Complex voltage, Complex current) override;
 };
 } // namespace Ph1
 } // namespace EMT

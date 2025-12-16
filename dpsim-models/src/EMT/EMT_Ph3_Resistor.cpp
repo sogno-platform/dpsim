@@ -131,3 +131,16 @@ void EMT::Ph3::Resistor::mnaCompUpdateCurrent(const Matrix &leftVector) {
                       Logger::matrixToString(**mIntfCurrent));
   mSLog->flush();
 }
+
+// #### Tear Methods ####
+void EMT::Ph3::Resistor::mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) {
+  MatrixFixedSizeComp<3, 3> conductance = Matrix::Zero(3, 3);
+  conductance.real() = (**mResistance).inverse();
+  // Set diagonal entries
+  Math::addToMatrixElement(tearMatrix, mTearIdx * 3, mTearIdx * 3,
+                           1. / conductance(0, 0).real());
+  Math::addToMatrixElement(tearMatrix, mTearIdx * 3 + 1, mTearIdx * 3 + 1,
+                           1. / conductance(1, 1).real());
+  Math::addToMatrixElement(tearMatrix, mTearIdx * 3 + 2, mTearIdx * 3 + 2,
+                           1. / conductance(2, 2).real());
+}

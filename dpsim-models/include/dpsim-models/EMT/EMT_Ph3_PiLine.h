@@ -13,7 +13,7 @@
 #include <dpsim-models/EMT/EMT_Ph3_Capacitor.h>
 #include <dpsim-models/EMT/EMT_Ph3_Inductor.h>
 #include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
-#include <dpsim-models/Solver/MNAInterface.h>
+#include <dpsim-models/Solver/MNATearInterface.h>
 
 namespace CPS {
 namespace EMT {
@@ -23,6 +23,7 @@ namespace Ph3 {
 /// This model consists sub components to represent the
 /// RLC elements of a PI-line.
 class PiLine : public CompositePowerComp<Real>,
+               public MNATearInterface,
                public Base::Ph3::PiLine,
                public SharedFactory<PiLine> {
 protected:
@@ -75,6 +76,12 @@ public:
                                    AttributeBase::List &attributeDependencies,
                                    AttributeBase::List &modifiedAttributes,
                                    Attribute<Matrix>::Ptr &leftVector) override;
+
+  MNAInterface::List mnaTearGroundComponents() override;
+  void mnaTearInitialize(Real omega, Real timeStep) override;
+  void mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) override;
+  void mnaTearApplyVoltageStamp(Matrix &voltageVector) override;
+  void mnaTearPostStep(MatrixComp voltage, MatrixComp current) override;
 };
 } // namespace Ph3
 } // namespace EMT

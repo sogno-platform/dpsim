@@ -28,6 +28,8 @@ public:
   virtual void mnaTearApplyVoltageStamp(Matrix &currentVector) {}
   // Update the internal state based on the solution of the complete system
   virtual void mnaTearPostStep(Complex voltage, Complex current) {}
+  // Update the internal state based on the solution of the complete system
+  virtual void mnaTearPostStep(MatrixComp voltage, MatrixComp current) {}
 
   void mnaTearSetIdx(UInt compIdx) { mTearIdx = compIdx; }
 
