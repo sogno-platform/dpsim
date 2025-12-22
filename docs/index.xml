@@ -232,51 +232,7 @@ The general structure looks as follows.&lt;/p>
 &lt;li>&lt;code>Sources/Python/Module.cpp&lt;/code>&lt;/li>
 &lt;/ul></description></item><item><title>Docs: Roadmap</title><link>https://sogno-platform.github.io/dpsim/docs/roadmap/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/roadmap/</guid><description>
 &lt;p>Short-term planning for new features is done on the GitHub &lt;a href="https://github.com/orgs/sogno-platform/projects/1">Project board&lt;/a>.&lt;/p>
-&lt;p>You can also check the &lt;a href="https://github.com/sogno-platform/dpsim/issues">Issues List&lt;/a> or the &lt;a href="https://github.com/sogno-platform/dpsim/pulls">Pull Requests&lt;/a> on GitHub.&lt;/p>
-&lt;h1 id="under-development">Under Development&lt;/h1>
-&lt;ul>
-&lt;li>Solver
-&lt;ul>
-&lt;li>&lt;input disabled="" type="checkbox"> CUDA sparse implementation&lt;/li>
-&lt;li>&lt;input disabled="" type="checkbox"> improve online system matrix computation and refactorization to support nonlinear elements in network solution (NICSLU integration)&lt;/li>
-&lt;li>&lt;input checked="" disabled="" type="checkbox"> merge DAE solver branch&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>Interfaces
-&lt;ul>
-&lt;li>&lt;input checked="" disabled="" type="checkbox"> reimplement python interface using pybind and expose more models / functionalities&lt;/li>
-&lt;li>&lt;input checked="" disabled="" type="checkbox"> add python based examples using the VILLASnode interface&lt;/li>
-&lt;li>&lt;input checked="" disabled="" type="checkbox"> support matpower / pypower format for static simulation&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>Tests, Examples, CI
-&lt;ul>
-&lt;li>&lt;input checked="" disabled="" type="checkbox"> convert most of the examples to Python and test them against reference results in CI&lt;/li>
-&lt;li>&lt;input checked="" disabled="" type="checkbox"> convert more gitlab CI jobs to github actions&lt;/li>
-&lt;li>&lt;input disabled="" type="checkbox"> add IEEE39 system to examples&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>Models
-&lt;ul>
-&lt;li>&lt;input checked="" disabled="" type="checkbox"> VBR generator model&lt;/li>
-&lt;li>&lt;input disabled="" type="checkbox"> SVC&lt;/li>
-&lt;li>&lt;input disabled="" type="checkbox"> add tap-change to transfomer&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;h1 id="ideas">Ideas&lt;/h1>
-&lt;ul>
-&lt;li>Solver
-&lt;ul>
-&lt;li>&lt;input disabled="" type="checkbox"> improve integration of diakoptics solver&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>Interfaces
-&lt;ul>
-&lt;li>&lt;input disabled="" type="checkbox"> implement CIM reader in Python using new pybind interface and cimpy library&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul></description></item><item><title>Docs: Reference</title><link>https://sogno-platform.github.io/dpsim/docs/reference/</link><pubDate>Tue, 17 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/reference/</guid><description>
+&lt;p>You can also check the &lt;a href="https://github.com/sogno-platform/dpsim/issues">Issues List&lt;/a> or the &lt;a href="https://github.com/sogno-platform/dpsim/pulls">Pull Requests&lt;/a> on GitHub.&lt;/p></description></item><item><title>Docs: Reference</title><link>https://sogno-platform.github.io/dpsim/docs/reference/</link><pubDate>Tue, 17 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/reference/</guid><description>
 &lt;p>The &lt;a href="https://sogno-platform.github.io/dpsim/sphinx/about.html">Sphinx documentation&lt;/a> describes the Python API.&lt;/p>
 &lt;p>The &lt;a href="https://sogno-platform.github.io/dpsim/doxygen/index.html">Doxygen documentation&lt;/a> is automatically generated from the C++ code using Doxygen.
 It is helpful to understand the general structure of the C++ DPsim core components.&lt;/p></description></item><item><title>Docs: Contribution Guidelines</title><link>https://sogno-platform.github.io/dpsim/docs/contribution-guidelines/</link><pubDate>Wed, 03 May 2023 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/contribution-guidelines/</guid><description>
