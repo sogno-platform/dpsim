@@ -56,7 +56,7 @@ void DecouplingIdealTransformer_EMT_Ph3::setParameters(
   mVoltageSrc->setParameters(Matrix::Zero(3, 1));
   mVoltageSrcIntfCurr = voltageSrcIntfCurr;
   mCurrent1Extrap0 = current1Extrap0;
-  mVoltageSrc->connect({SimNode<Real>::GND, mVirtualNode});
+  mVoltageSrc->connect({mVirtualNode, SimNode<Real>::GND});
   mCurrentSrc->setParameters(Matrix::Zero(3, 1));
   mCurrentSrc->connect({node2, SimNode<Real>::GND});
 }
@@ -161,8 +161,8 @@ void DecouplingIdealTransformer_EMT_Ph3::PreStep::execute(Real time,
 
 void DecouplingIdealTransformer_EMT_Ph3::postStep() {
   // Update ringbuffers with new values
-  mCur1.row(mBufIdx) = mVoltageSrc->intfCurrent().transpose();
-  mVol2.row(mBufIdx) = -mCurrentSrc->intfVoltage().transpose();
+  mCur1.row(mBufIdx) = -mVoltageSrc->intfCurrent().transpose();
+  mVol2.row(mBufIdx) = mCurrentSrc->intfVoltage().transpose();
 
   mBufIdx++;
   if (mBufIdx == mBufSize) {

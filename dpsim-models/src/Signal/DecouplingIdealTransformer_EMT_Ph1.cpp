@@ -96,7 +96,9 @@ void DecouplingIdealTransformer_EMT_Ph1::initialize(Real omega, Real timeStep) {
 
   mCur1Extrap.resize(mExtrapolationDegree + 1, 0);
   mCur1Extrap[0] = mCurrent1Extrap0;
-  mCur1Extrap[1] = mVoltageSrcIntfCurr(0, 0);
+  if (mExtrapolationDegree > 0) {
+    mCur1Extrap[1] = mVoltageSrcIntfCurr(0, 0);
+  }
   mVol2Extrap.resize(mExtrapolationDegree + 1, volt2.real());
 }
 
