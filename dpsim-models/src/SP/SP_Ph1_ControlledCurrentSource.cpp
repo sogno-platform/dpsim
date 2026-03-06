@@ -62,6 +62,13 @@ void SP::Ph1::ControlledCurrentSource::mnaCompInitialize(
   (**mIntfCurrent)(0, 0) = **mCurrentRef;
 }
 
+void SP::Ph1::ControlledCurrentSource::updateCurrent(Real time) {
+  (**mIntfCurrent)(0, 0) = **mCurrentRef;
+
+  SPDLOG_LOGGER_DEBUG(mSLog, "\nUpdate current: {:s}",
+                      Logger::matrixToString(**mIntfCurrent));
+}
+
 void SP::Ph1::ControlledCurrentSource::mnaCompAddPreStepDependencies(
     AttributeBase::List &prevStepDependencies,
     AttributeBase::List &attributeDependencies,
@@ -73,6 +80,7 @@ void SP::Ph1::ControlledCurrentSource::mnaCompAddPreStepDependencies(
 
 void SP::Ph1::ControlledCurrentSource::mnaCompPreStep(Real time,
                                                       Int timeStepCount) {
+  updateCurrent(time);
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 

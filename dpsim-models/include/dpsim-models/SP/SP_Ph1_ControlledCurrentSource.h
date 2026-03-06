@@ -22,6 +22,11 @@ namespace Ph1 {
 /// A positive current is flowing out of node1 and into node2.
 class ControlledCurrentSource : public MNASimPowerComp<Complex>,
                                 public SharedFactory<ControlledCurrentSource> {
+
+protected:
+  // Updates current according to reference phasor and frequency
+  void updateCurrent(Real time);
+
 public:
   const Attribute<Complex>::Ptr mCurrentRef;
   /// Defines UID, name and logging level

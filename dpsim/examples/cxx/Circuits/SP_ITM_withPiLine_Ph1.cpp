@@ -14,7 +14,6 @@
 #include "dpsim-models/SimNode.h"
 #include "dpsim/Definitions.h"
 #include <DPsim.h>
-#include <memory>
 
 using namespace DPsim;
 using namespace CPS::SP;
@@ -32,7 +31,7 @@ void simMonolithic() {
   auto n1 = SimNode::make("n1");
   auto n2 = SimNode::make("n2");
 
-  Real R_1_R = 6000;
+  Real R_1_R = 80;
 
   // Parametrization of components
   Real r = 0.0529;
