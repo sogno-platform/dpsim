@@ -74,6 +74,8 @@
 #include <dpsim-models/DP/DP_Ph1_VoltageSourceNorton.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSourceRamp.h>
 #include <dpsim-models/DP/DP_Ph1_varResSwitch.h>
+#include <dpsim-models/DP/DP_Ph1_ControlledCurrentSource.h>
+#include <dpsim-models/DP/DP_Ph1_ControlledVoltageSource.h>
 
 #include <dpsim-models/DP/DP_Ph3_Capacitor.h>
 #include <dpsim-models/DP/DP_Ph3_Inductor.h>
@@ -157,6 +159,7 @@
 #include <dpsim-models/Signal/DecouplingIdealTransformer_SP_Ph1.h>
 #include <dpsim-models/Signal/DecouplingIdealTransformer_EMT_Ph1.h>
 #include <dpsim-models/Signal/DecouplingIdealTransformer_EMT_Ph3.h>
+#include <dpsim-models/Signal/DecouplingIdealTransformer_DP_Ph1.h>
 #include <dpsim-models/Signal/ExciterDC1.h>
 #include <dpsim-models/Signal/ExciterDC1Simp.h>
 #include <dpsim-models/Signal/ExciterST1Simp.h>

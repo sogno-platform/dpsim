@@ -20,6 +20,8 @@ list(APPEND MODELS_SOURCES
 	Base/Base_AvVoltageSourceInverterDQWithStateSpace.cpp
 
 	DP/DP_Ph1_Capacitor.cpp
+	DP/DP_Ph1_ControlledVoltageSource.cpp
+	DP/DP_Ph1_ControlledCurrentSource.cpp
 	DP/DP_Ph1_CurrentSource.cpp
 	DP/DP_Ph1_Inductor.cpp
 	DP/DP_Ph1_PiLine.cpp
@@ -167,6 +169,7 @@ list(APPEND MODELS_SOURCES
 	Signal/DecouplingIdealTransformer_SP_Ph1.cpp
 	Signal/DecouplingIdealTransformer_EMT_Ph1.cpp
 	Signal/DecouplingIdealTransformer_EMT_Ph3.cpp
+	Signal/DecouplingIdealTransformer_DP_Ph1.cpp
 	Signal/ExciterDC1.cpp
 	Signal/ExciterDC1Simp.cpp
 	Signal/ExciterST1Simp.cpp
