@@ -102,38 +102,38 @@ var sectionId = 'dynsection-0';
 </a>
 </g>
 </g>
-<!-- Node122 -->
-<g id="Node000122" class="node">
-<title>Node122</title>
-<g id="a_Node000122"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html" target="_top" xlink:title=" ">
+<!-- Node126 -->
+<g id="Node000126" class="node">
+<title>Node126</title>
+<g id="a_Node000126"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="336,-926.25 143,-926.25 143,-904 336,-904 336,-926.25"/>
 <text text-anchor="middle" x="239.5" y="-912.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph3::SynchronGeneratorVBR</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node122 -->
-<g id="edge47_Node000001_Node000122" class="edge">
-<title>Node1&#45;&gt;Node122</title>
-<g id="a_edge47_Node000001_Node000122"><a xlink:title=" ">
+<!-- Node1&#45;&gt;Node126 -->
+<g id="edge47_Node000001_Node000126" class="edge">
+<title>Node1&#45;&gt;Node126</title>
+<g id="a_edge47_Node000001_Node000126"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M117.57,-930.2C126.59,-929.08 136.03,-927.9 145.48,-926.72"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="117.37,-926.7 107.88,-931.41 118.23,-933.64 117.37,-926.7"/>
 </a>
 </g>
 </g>
-<!-- Node123 -->
-<g id="Node000123" class="node">
-<title>Node123</title>
-<g id="a_Node000123"><a xlink:href="class_c_p_s_1_1_m_n_a_sim_power_comp.html" target="_top" xlink:title="Base class for all MNA components that are transmitting power.">
+<!-- Node127 -->
+<g id="Node000127" class="node">
+<title>Node127</title>
+<g id="a_Node000127"><a xlink:href="class_c_p_s_1_1_m_n_a_sim_power_comp.html" target="_top" xlink:title="Base class for all MNA components that are transmitting power.">
 <polygon fill="#fff0f0" stroke="red" points="307.5,-980.38 171.5,-980.38 171.5,-943.88 307.5,-943.88 307.5,-980.38"/>
 <text text-anchor="start" x="179.5" y="-966.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::MNASimPowerComp</text>
 <text text-anchor="middle" x="239.5" y="-952.62" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; VarType &gt;</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node123 -->
-<g id="edge48_Node000001_Node000123" class="edge">
-<title>Node1&#45;&gt;Node123</title>
-<g id="a_edge48_Node000001_Node000123"><a xlink:title=" ">
+<!-- Node1&#45;&gt;Node127 -->
+<g id="edge48_Node000001_Node000127" class="edge">
+<title>Node1&#45;&gt;Node127</title>
+<g id="a_edge48_Node000001_Node000127"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M117.51,-946.39C134.81,-948.64 153.62,-951.08 171.14,-953.36"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="118.25,-942.95 107.88,-945.13 117.34,-949.89 118.25,-942.95"/>
 </a>
@@ -940,20 +940,20 @@ var sectionId = 'dynsection-0';
 </a>
 </g>
 </g>
-<!-- Node123&#45;&gt;Node2 -->
-<g id="edge49_Node000123_Node000002" class="edge">
-<title>Node123&#45;&gt;Node2</title>
-<g id="a_edge49_Node000123_Node000002"><a xlink:title=" ">
+<!-- Node127&#45;&gt;Node2 -->
+<g id="edge49_Node000127_Node000002" class="edge">
+<title>Node127&#45;&gt;Node2</title>
+<g id="a_edge49_Node000127_Node000002"><a xlink:title=" ">
 <path fill="none" stroke="orange" stroke-dasharray="5,2" d="M319.1,-965.25C351.04,-970.09 386.47,-980.44 412.5,-1001.88 467.38,-1047.06 488.09,-1134.97 494.75,-1173.39"/>
 <polygon fill="orange" stroke="orange" points="319.85,-961.82 309.47,-963.96 318.92,-968.76 319.85,-961.82"/>
 </a>
 </g>
 <text text-anchor="middle" x="383.25" y="-1006.62" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &lt; Complex &gt;</text>
 </g>
-<!-- Node123&#45;&gt;Node72 -->
-<g id="edge50_Node000123_Node000072" class="edge">
-<title>Node123&#45;&gt;Node72</title>
-<g id="a_edge50_Node000123_Node000072"><a xlink:title=" ">
+<!-- Node127&#45;&gt;Node72 -->
+<g id="edge50_Node000127_Node000072" class="edge">
+<title>Node127&#45;&gt;Node72</title>
+<g id="a_edge50_Node000127_Node000072"><a xlink:title=" ">
 <path fill="none" stroke="orange" stroke-dasharray="5,2" d="M317.68,-947.77C324.38,-944.39 330.64,-940.24 336,-935.12 425.64,-849.7 483.19,-438.61 495.17,-345.78"/>
 <polygon fill="orange" stroke="orange" points="316.75,-944.36 308.99,-951.57 319.56,-950.77 316.75,-944.36"/>
 </a>

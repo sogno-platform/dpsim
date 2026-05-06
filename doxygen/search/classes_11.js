@@ -12,5 +12,6 @@ var searchData=
   ['transformer_9',['Transformer',['../class_c_p_s_1_1_base_1_1_ph1_1_1_transformer.html',1,'CPS::Base::Ph1::Transformer'],['../class_c_p_s_1_1_base_1_1_ph3_1_1_transformer.html',1,'CPS::Base::Ph3::Transformer'],['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html',1,'CPS::DP::Ph1::Transformer'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html',1,'CPS::EMT::Ph3::Transformer'],['../class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html',1,'CPS::SP::Ph1::Transformer']]],
   ['turbinegovernor_10',['TurbineGovernor',['../class_c_p_s_1_1_signal_1_1_turbine_governor.html',1,'CPS::Signal']]],
   ['turbinegovernortype1_11',['TurbineGovernorType1',['../class_c_p_s_1_1_signal_1_1_turbine_governor_type1.html',1,'CPS::Signal']]],
-  ['typeexception_12',['TypeException',['../class_c_p_s_1_1_type_exception.html',1,'CPS']]]
+  ['twoterminalvtypessncomp_12',['TwoTerminalVTypeSSNComp',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html',1,'CPS::EMT::Ph3']]],
+  ['typeexception_13',['TypeException',['../class_c_p_s_1_1_type_exception.html',1,'CPS']]]
 ];

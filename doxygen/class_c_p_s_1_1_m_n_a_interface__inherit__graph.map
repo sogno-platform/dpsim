@@ -4,10 +4,10 @@
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,1226,195,1181,624,935,626,939,197,1185,118,1230"/>
 <area shape="rect" id="Node000072" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="579,2041,761,2090"/>
 <area shape="poly" id="edge33_Node000001_Node000072" title=" " alt="" coords="99,1277,653,2039,649,2042,95,1280"/>
-<area shape="rect" id="Node000122" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html" title=" " alt="" coords="196,1267,453,1296"/>
-<area shape="poly" id="edge47_Node000001_Node000122" title=" " alt="" coords="162,1259,200,1263,199,1269,162,1264"/>
-<area shape="rect" id="Node000123" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title="Base class for all MNA components that are transmitting power." alt="" coords="234,1194,415,1243"/>
-<area shape="poly" id="edge48_Node000001_Node000123" title=" " alt="" coords="162,1237,233,1228,234,1233,162,1242"/>
+<area shape="rect" id="Node000126" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html" title=" " alt="" coords="196,1267,453,1296"/>
+<area shape="poly" id="edge47_Node000001_Node000126" title=" " alt="" coords="162,1259,200,1263,199,1269,162,1264"/>
+<area shape="rect" id="Node000127" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title="Base class for all MNA components that are transmitting power." alt="" coords="234,1194,415,1243"/>
+<area shape="poly" id="edge48_Node000001_Node000127" title=" " alt="" coords="162,1237,233,1228,234,1233,162,1242"/>
 <area shape="rect" id="Node000003" href="$class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html" title=" " alt="" coords="817,698,1055,747"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="694,873,743,814,774,784,809,758,833,745,835,750,811,762,777,788,747,818,698,877"/>
 <area shape="rect" id="Node000020" href="$class_c_p_s_1_1_composite_power_comp.html" title=" " alt="" coords="839,772,1033,820"/>
@@ -96,6 +96,6 @@
 <area shape="poly" id="edge45_Node000072_Node000101" title=" " alt="" coords="706,2029,753,1990,809,1954,837,1941,839,1946,811,1959,756,1994,709,2033"/>
 <area shape="rect" id="Node000102" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html" title="average inverter model with LC filter" alt="" coords="836,1968,1036,2016"/>
 <area shape="poly" id="edge46_Node000072_Node000102" title=" " alt="" coords="774,2034,844,2015,846,2020,776,2039"/>
-<area shape="poly" id="edge49_Node000123_Node000002" title=" " alt="" coords="430,1212,495,1196,526,1182,554,1164,579,1139,600,1110,632,1047,652,985,662,937,668,938,657,987,637,1049,604,1113,583,1143,557,1168,529,1187,497,1201,431,1217"/>
-<area shape="poly" id="edge50_Node000123_Node000072" title=" " alt="" coords="430,1236,455,1253,477,1280,498,1315,537,1407,571,1520,601,1643,645,1881,668,2040,663,2041,640,1882,596,1645,566,1522,532,1409,494,1317,473,1283,452,1257,427,1240"/>
+<area shape="poly" id="edge49_Node000127_Node000002" title=" " alt="" coords="430,1212,495,1196,526,1182,554,1164,579,1139,600,1110,632,1047,652,985,662,937,668,938,657,987,637,1049,604,1113,583,1143,557,1168,529,1187,497,1201,431,1217"/>
+<area shape="poly" id="edge50_Node000127_Node000072" title=" " alt="" coords="430,1236,455,1253,477,1280,498,1315,537,1407,571,1520,601,1643,645,1881,668,2040,663,2041,640,1882,596,1645,566,1522,532,1409,494,1317,473,1283,452,1257,427,1240"/>
 </map>

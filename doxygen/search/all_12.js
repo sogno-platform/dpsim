@@ -26,7 +26,8 @@ var searchData=
   ['tret_23',['tret',['../class_d_psim_1_1_d_a_e_solver.html#adea56266dda0d3210123e4104625db83',1,'DPsim::DAESolver']]],
   ['turbinegovernor_24',['TurbineGovernor',['../class_c_p_s_1_1_signal_1_1_turbine_governor.html',1,'CPS::Signal::TurbineGovernor'],['../class_c_p_s_1_1_signal_1_1_turbine_governor.html#a4101b45912b0542b2536c1dea0b65770',1,'CPS::Signal::TurbineGovernor::TurbineGovernor()']]],
   ['turbinegovernortype1_25',['TurbineGovernorType1',['../class_c_p_s_1_1_signal_1_1_turbine_governor_type1.html',1,'CPS::Signal::TurbineGovernorType1'],['../class_c_p_s_1_1_signal_1_1_turbine_governor_type1.html#aaac3acb1f06ee5f61ea407c936cadb54',1,'CPS::Signal::TurbineGovernorType1::TurbineGovernorType1()']]],
-  ['type_26',['Type',['../class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919e',1,'DPsim::Solver']]],
-  ['type_27',['type',['../class_c_p_s_1_1_identified_object.html#a9a95f413fe2dd50b6e2a0369bda063e6',1,'CPS::IdentifiedObject']]],
-  ['typeexception_28',['TypeException',['../class_c_p_s_1_1_type_exception.html',1,'CPS']]]
+  ['twoterminalvtypessncomp_26',['TwoTerminalVTypeSSNComp',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html',1,'CPS::EMT::Ph3']]],
+  ['type_27',['Type',['../class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919e',1,'DPsim::Solver']]],
+  ['type_28',['type',['../class_c_p_s_1_1_identified_object.html#a9a95f413fe2dd50b6e2a0369bda063e6',1,'CPS::IdentifiedObject']]],
+  ['typeexception_29',['TypeException',['../class_c_p_s_1_1_type_exception.html',1,'CPS']]]
 ];
