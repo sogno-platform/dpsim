@@ -52,7 +52,7 @@ Complex Math::polar(Real abs, Real phase) {
 }
 
 Complex Math::polarDeg(Real abs, Real phase) {
-  return std::polar<Real>(abs, radtoDeg(phase));
+  return std::polar<Real>(abs, degToRad(phase));
 }
 
 void Math::setVectorElement(Matrix &mat, Matrix::Index row, Complex value,
