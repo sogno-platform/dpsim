@@ -65,6 +65,7 @@ list(APPEND MODELS_SOURCES
 
 	EMT/EMT_SSNComp.cpp
 	EMT/EMT_VTypeSSNComp.cpp
+	EMT/EMT_VTypeVariableSSNComp.cpp
 
 	EMT/EMT_Ph1_Capacitor.cpp
 	EMT/EMT_Ph1_CurrentSource.cpp
@@ -117,6 +118,8 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph3_SSN_Full_Serial_RLC.cpp
 	EMT/EMT_Ph3_GenericTwoTerminalVTypeSSN.cpp
 	EMT/EMT_Ph3_TwoTerminalVTypeSSNComp.cpp
+	EMT/EMT_Ph3_TwoTerminalVTypeVariableSSNComp.cpp
+	EMT/EMT_Ph3_PiecewiseLinearInductor.cpp
 
 	SP/SP_Ph1_VoltageSource.cpp
 	SP/SP_Ph1_Capacitor.cpp

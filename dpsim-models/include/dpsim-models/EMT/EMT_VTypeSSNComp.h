@@ -22,20 +22,20 @@ protected:
   VTypeSSNComp(String uid, String name, Int inputSize, Int outputSize,
                Logger::Level logLevel = Logger::Level::off);
 
-  Attribute<Matrix>::Ptr inputAttribute() const final;
-  Attribute<Matrix>::Ptr outputAttribute() const final;
+  Attribute<Matrix>::Ptr inputAttribute() const override final;
+  Attribute<Matrix>::Ptr outputAttribute() const override final;
 
   // Reconstruct the steady-state SSN input vector from node/terminal data.
   // For V-type SSN components, this corresponds to the interface voltage input.
   virtual MatrixComp buildInitialInputFromNodes(Real frequency) = 0;
 
 public:
-  void initializeFromNodesAndTerminals(Real frequency) final;
+  void initializeFromNodesAndTerminals(Real frequency) override;
 
-  void mnaCompUpdateCurrent(const Matrix &leftVector) final;
+  void mnaCompUpdateCurrent(const Matrix &leftVector) override final;
 
   void mnaCompPostStep(Real time, Int timeStepCount,
-                       Attribute<Matrix>::Ptr &leftVector) final;
+                       Attribute<Matrix>::Ptr &leftVector) override final;
 };
 
 } // namespace EMT

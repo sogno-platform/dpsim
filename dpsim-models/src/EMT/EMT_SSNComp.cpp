@@ -7,7 +7,7 @@ using namespace CPS;
 
 EMT::SSNComp::SSNComp(String uid, String name, Int inputSize, Int outputSize,
                       Logger::Level logLevel)
-    : MNASimPowerComp<Real>(uid, name, true, true, logLevel),
+    : MNASimPowerComp<Real>(uid, name, true, true, logLevel), mTimeStep(0.0),
       mW(Matrix::Zero(outputSize, inputSize)),
       mYHist(Matrix::Zero(outputSize, 1)), mInputSize(inputSize),
       mOutputSize(outputSize), mX(mAttributes->create<Matrix>("x")) {
@@ -71,17 +71,25 @@ void EMT::SSNComp::updateState(const Matrix &uOld, const Matrix &uNew) {
   **mX = mdA * (**mX) + mdB * (uNew + uOld);
 }
 
+void EMT::SSNComp::recomputeDiscreteModel() {
+  Math::calculateStateSpaceTrapezoidalMatrices(mA, mB, mTimeStep, mdA, mdB);
+  mW = mC * mdB + mD;
+}
+
+void EMT::SSNComp::updateStateSpaceModel() {
+  // For linear components, the default implementation does nothing.
+}
+
 void EMT::SSNComp::mnaCompInitialize(Real, Real timeStep,
                                      Attribute<Matrix>::Ptr) {
   if (!mParametersSet)
     throw std::logic_error(
         "setParameters() must be called before initialization.");
 
+  mTimeStep = timeStep;
   updateMatrixNodeIndices();
 
-  Math::calculateStateSpaceTrapezoidalMatrices(mA, mB, timeStep, mdA, mdB);
-
-  mW = mC * mdB + mD;
+  recomputeDiscreteModel();
   mYHist = calculateHistoryVector();
 }
 
@@ -94,7 +102,8 @@ void EMT::SSNComp::mnaCompAddPreStepDependencies(
   prevStepDependencies.push_back(inputAttribute());
 }
 
-void EMT::SSNComp::mnaCompPreStep(Real, Int) {
+void EMT::SSNComp::mnaCompPreStep(Real time, Int timeStepCount) {
+  updateStateSpaceModel();
   mYHist = calculateHistoryVector();
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
