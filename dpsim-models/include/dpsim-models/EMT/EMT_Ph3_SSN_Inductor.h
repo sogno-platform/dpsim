@@ -36,7 +36,7 @@ public:
   Inductor(String name, Logger::Level logLevel = Logger::Level::off)
       : Inductor(name, name, logLevel) {}
 
-  SimPowerComp<Real>::Ptr clone(String name) override;
+  SimPowerComp<Real>::Ptr clone(String name) override final;
 
   void setParameters(const Matrix &inductance);
 };

@@ -25,7 +25,7 @@ public:
                              Logger::Level logLevel = Logger::Level::off)
       : GenericTwoTerminalVTypeSSN(name, name, logLevel) {}
 
-  SimPowerComp<Real>::Ptr clone(String name) final;
+  SimPowerComp<Real>::Ptr clone(String name) override final;
 };
 
 } // namespace Ph3

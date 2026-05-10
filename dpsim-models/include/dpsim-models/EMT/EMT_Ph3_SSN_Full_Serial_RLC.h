@@ -41,7 +41,7 @@ public:
   Full_Serial_RLC(String name, Logger::Level logLevel = Logger::Level::off)
       : Full_Serial_RLC(name, name, logLevel) {}
 
-  SimPowerComp<Real>::Ptr clone(String name) override;
+  SimPowerComp<Real>::Ptr clone(String name) override final;
 
   void setParameters(const Matrix &resistance, const Matrix &inductance,
                      const Matrix &capacitance);

@@ -21,12 +21,13 @@ protected:
   TwoTerminalVTypeSSNComp(String uid, String name,
                           Logger::Level logLevel = Logger::Level::off);
 
-  MatrixComp buildInitialInputFromNodes(Real frequency) final;
+  MatrixComp buildInitialInputFromNodes(Real frequency) override final;
 
 public:
-  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) final;
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) final;
-  void mnaCompUpdateVoltage(const Matrix &leftVector) final;
+  void
+  mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override final;
+  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override final;
+  void mnaCompUpdateVoltage(const Matrix &leftVector) override final;
 };
 
 } // namespace Ph3
