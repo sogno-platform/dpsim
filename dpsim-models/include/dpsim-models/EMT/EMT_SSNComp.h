@@ -11,14 +11,10 @@ namespace EMT {
 
 /// \brief Abstract base class for EMT state-space nodal (SSN) components.
 ///
-/// This class provides the generic state-space and scheduling logic shared by
-/// all SSN component types:
-/// - storage of state-space matrices A, B, C, D
-/// - calculation of trapezoidal discrete-time matrices
-/// - steady-state initialization helpers
-/// - history-vector calculation
-/// - state update
-/// - generic pre-step and post-step dependency registration
+/// This class implements the common linear SSN logic shared by derived
+/// component types, including state-space parameter storage, trapezoidal
+/// discretization, steady-state initialization helpers, history-vector
+/// calculation, state update, and generic MNA scheduling.
 ///
 /// The exact interpretation of input and output quantities is defined in
 /// derived classes.
@@ -28,6 +24,8 @@ private:
   const Int mOutputSize;
 
 protected:
+  Real mTimeStep;
+
   Matrix mW;
   Matrix mYHist;
 
@@ -39,12 +37,12 @@ protected:
   Matrix mdA;
   Matrix mdB;
 
-  const CPS::Attribute<Matrix>::Ptr mX;
+  const Attribute<Matrix>::Ptr mX;
 
   SSNComp(String uid, String name, Int inputSize, Int outputSize,
           Logger::Level logLevel = Logger::Level::off);
 
-  Matrix calculateHistoryVector() const;
+  virtual Matrix calculateHistoryVector() const;
 
   MatrixComp calculateSteadyStateStateFromInput(const MatrixComp &u,
                                                 Real frequency) const;
@@ -52,6 +50,11 @@ protected:
                                                  const MatrixComp &u) const;
 
   void updateState(const Matrix &uOld, const Matrix &uNew);
+
+  void recomputeDiscreteModel();
+
+  /// Hook for variable/time-varying SSN components.
+  virtual void updateStateSpaceModel();
 
   virtual Attribute<Matrix>::Ptr inputAttribute() const = 0;
   virtual Attribute<Matrix>::Ptr outputAttribute() const = 0;
@@ -61,20 +64,20 @@ public:
                      const Matrix &D);
 
   void mnaCompInitialize(Real omega, Real timeStep,
-                         Attribute<Matrix>::Ptr leftVector) final;
+                         Attribute<Matrix>::Ptr leftVector) override final;
 
-  void
-  mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies,
-                                AttributeBase::List &attributeDependencies,
-                                AttributeBase::List &modifiedAttributes) final;
+  void mnaCompAddPreStepDependencies(
+      AttributeBase::List &prevStepDependencies,
+      AttributeBase::List &attributeDependencies,
+      AttributeBase::List &modifiedAttributes) override final;
 
-  void mnaCompPreStep(Real time, Int timeStepCount) final;
+  void mnaCompPreStep(Real time, Int timeStepCount) override final;
 
-  void
-  mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
-                                 AttributeBase::List &attributeDependencies,
-                                 AttributeBase::List &modifiedAttributes,
-                                 Attribute<Matrix>::Ptr &leftVector) final;
+  void mnaCompAddPostStepDependencies(
+      AttributeBase::List &prevStepDependencies,
+      AttributeBase::List &attributeDependencies,
+      AttributeBase::List &modifiedAttributes,
+      Attribute<Matrix>::Ptr &leftVector) override final;
 };
 
 } // namespace EMT

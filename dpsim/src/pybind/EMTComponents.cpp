@@ -576,4 +576,16 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "B"_a, "C"_a, "D"_a)
       .def("connect", &CPS::EMT::Ph3::GenericTwoTerminalVTypeSSN::connect)
       .def_property_readonly("x", createAttributeGetter<CPS::Matrix>("x"));
+
+  py::class_<CPS::EMT::Ph3::PiecewiseLinearInductor,
+             std::shared_ptr<CPS::EMT::Ph3::PiecewiseLinearInductor>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "PiecewiseLinearInductor",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters",
+           &CPS::EMT::Ph3::PiecewiseLinearInductor::setParameters,
+           "flux_breakpoints"_a, "current_breakpoints"_a)
+      .def("connect", &CPS::EMT::Ph3::PiecewiseLinearInductor::connect)
+      .def_property_readonly("x", createAttributeGetter<CPS::Matrix>("x"));
 }

@@ -87,6 +87,7 @@
 
 #include <dpsim-models/EMT/EMT_SSNComp.h>
 #include <dpsim-models/EMT/EMT_VTypeSSNComp.h>
+#include <dpsim-models/EMT/EMT_VTypeVariableSSNComp.h>
 
 #include <dpsim-models/EMT/EMT_Ph1_Capacitor.h>
 #include <dpsim-models/EMT/EMT_Ph1_CurrentSource.h>
@@ -132,6 +133,7 @@
 #endif
 #include <dpsim-models/EMT/EMT_Ph3_NetworkInjection.h>
 #include <dpsim-models/EMT/EMT_Ph3_PiLine.h>
+#include <dpsim-models/EMT/EMT_Ph3_PiecewiseLinearInductor.h>
 #include <dpsim-models/EMT/EMT_Ph3_RXLoad.h>
 #include <dpsim-models/EMT/EMT_Ph3_RxLine.h>
 #include <dpsim-models/EMT/EMT_Ph3_Switch.h>
@@ -139,6 +141,7 @@
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorTrStab.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorVBR.h>
 #include <dpsim-models/EMT/EMT_Ph3_Transformer.h>
+#include <dpsim-models/EMT/EMT_Ph3_TwoTerminalVTypeVariableSSNComp.h>
 
 #include <dpsim-models/Signal/CosineFMGenerator.h>
 #include <dpsim-models/Signal/DecouplingLine.h>

@@ -121,6 +121,7 @@ set(INVERTER_SOURCES
 
 set(SSN_SOURCES
 Components/EMT_Ph3_GenericTwoTerminalVTypeSSN.cpp
+Components/EMT_Ph3_PiecewiseLinearInductor.cpp
 )
 
 # Targets required for tests in the Jupyter Notebooks. This list is only for grouping the (already configured) targets, so every entry

@@ -3,23 +3,24 @@
 
 #pragma once
 
-#include <dpsim-models/EMT/EMT_VTypeSSNComp.h>
+#include <dpsim-models/EMT/EMT_VTypeVariableSSNComp.h>
 
 namespace CPS {
 namespace EMT {
 namespace Ph3 {
 
-/// \brief Abstract base class for three-phase, two-terminal, V-type SSN components.
+/// \brief Abstract base class for three-phase, two-terminal, variable V-type
+/// SSN components.
 ///
 /// This class implements the common three-phase/two-terminal logic:
 /// - reconstruction of the initial input voltage from terminal phasors
 /// - conductance matrix stamp
 /// - right-side history current stamp
 /// - interface voltage update from the MNA solution
-class TwoTerminalVTypeSSNComp : public VTypeSSNComp {
+class TwoTerminalVTypeVariableSSNComp : public VTypeVariableSSNComp {
 protected:
-  TwoTerminalVTypeSSNComp(String uid, String name,
-                          Logger::Level logLevel = Logger::Level::off);
+  TwoTerminalVTypeVariableSSNComp(String uid, String name,
+                                  Logger::Level logLevel = Logger::Level::off);
 
   MatrixComp buildInitialInputFromNodes(Real frequency) override final;
 
