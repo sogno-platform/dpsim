@@ -1,61 +1,67 @@
 <map id="CPS::MNAVariableCompInterface" name="CPS::MNAVariableCompInterface">
 <area shape="rect" id="Node000001" title="MNA interface to be used by elements that require recomputing of the system matrix." alt="" coords="5,551,232,580"/>
-<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load_switch.html" title="Constant impedance load model consisting of RLC elements." alt="" coords="315,172,510,202"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,535,136,467,164,379,185,333,210,288,241,247,278,212,313,193,315,198,281,216,245,251,215,291,190,335,169,381,141,469,127,536"/>
-<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_reduced_order_synchron_generator_v_b_r.html" title="Base class for DP VBR synchronous generator model single phase." alt="" coords="312,225,513,274"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="127,535,147,483,179,418,222,350,248,319,278,292,310,272,313,277,281,296,252,323,226,353,183,421,152,486,132,537"/>
-<area shape="rect" id="Node000009" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_s_v_c.html" title="SVC." alt="" coords="346,306,479,335"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="130,536,152,492,184,440,227,388,251,365,278,345,311,330,345,322,346,327,312,335,281,349,255,369,231,392,189,443,157,495,135,538"/>
-<area shape="rect" id="Node000010" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_switch.html" title="Dynamic phasor switch." alt="" coords="338,359,487,388"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="136,536,194,466,233,429,278,398,307,386,336,378,338,383,308,391,281,403,237,433,198,470,140,540"/>
-<area shape="rect" id="Node000011" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1var_res_switch.html" title="Switch with variable resistance to avoid numerical oscillations, when an inductive current is suddenl..." alt="" coords="317,412,508,442"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="146,538,205,493,241,470,279,451,315,439,317,444,281,456,243,475,208,498,150,543"/>
-<area shape="rect" id="Node000012" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html" title="Dynamic phasor three&#45;phase switch." alt="" coords="319,466,506,495"/>
-<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="170,542,279,504,324,493,326,498,280,510,172,547"/>
-<area shape="rect" id="Node000013" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_switch.html" title="One phase EMT switch." alt="" coords="334,519,491,548"/>
-<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="247,549,333,540,333,545,247,554"/>
-<area shape="rect" id="Node000014" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_reduced_order_synchron_generator_v_b_r.html" title="Base class for EMT VBR simplefied synchronous generator models." alt="" coords="308,572,517,621"/>
-<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="247,576,307,583,307,588,247,582"/>
-<area shape="rect" id="Node000020" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_series_switch.html" title="EMT three&#45;phase switch." alt="" coords="315,644,510,674"/>
-<area shape="poly" id="edge19_Node000001_Node000020" title=" " alt="" coords="166,585,220,608,280,630,323,641,322,646,279,635,218,613,164,590"/>
-<area shape="rect" id="Node000021" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch.html" title="Dynamic phasor switch." alt="" coords="334,698,491,727"/>
-<area shape="poly" id="edge20_Node000001_Node000021" title=" " alt="" coords="148,589,206,638,242,663,281,683,334,700,332,705,279,688,240,667,203,642,144,593"/>
-<area shape="rect" id="Node000022" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html" title=" " alt="" coords="280,751,545,780"/>
-<area shape="poly" id="edge21_Node000001_Node000022" title=" " alt="" coords="139,592,164,626,196,666,236,705,281,737,306,748,304,753,278,741,232,709,192,669,159,629,135,595"/>
-<area shape="rect" id="Node000023" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_reduced_order_synchron_generator_v_b_r.html" title="Base class for SP VBR synchronous generator model single phase." alt="" coords="313,808,512,857"/>
-<area shape="poly" id="edge22_Node000001_Node000023" title=" " alt="" coords="135,594,157,637,189,690,231,744,281,790,314,808,311,813,278,795,227,748,185,693,153,640,130,596"/>
-<area shape="rect" id="Node000029" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_switch.html" title="Dynamic phasor switch." alt="" coords="339,880,486,910"/>
-<area shape="poly" id="edge28_Node000001_Node000029" title=" " alt="" coords="129,595,146,654,176,728,197,766,221,803,249,837,281,866,309,881,339,889,338,894,307,886,278,871,245,841,216,806,192,769,171,730,141,655,124,597"/>
-<area shape="rect" id="Node000030" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1var_res_switch.html" title="Switch with variable resistance to avoid numerical oscillations, when an inductive current is suddenl..." alt="" coords="318,934,506,963"/>
-<area shape="poly" id="edge29_Node000001_Node000030" title=" " alt="" coords="127,596,141,664,169,752,189,798,214,843,245,884,281,920,299,931,319,938,317,943,297,935,278,924,241,888,210,846,184,801,164,754,136,665,121,597"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load_switch.html" title="Constant impedance load model consisting of RLC elements." alt="" coords="315,150,510,179"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,535,134,463,161,369,182,319,208,271,239,227,278,189,313,170,316,175,281,193,244,231,212,274,187,322,166,371,139,464,126,536"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_reduced_order_synchron_generator_v_b_r.html" title="Base class for DP VBR synchronous generator model single phase." alt="" coords="312,203,513,251"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="125,535,143,477,173,403,193,364,218,326,246,291,278,261,310,242,313,247,281,265,250,295,222,329,198,367,178,405,148,478,130,536"/>
+<area shape="rect" id="Node000009" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_s_v_c.html" title="SVC." alt="" coords="346,275,479,304"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="127,535,148,486,180,426,223,365,249,338,278,314,310,298,345,290,346,295,312,303,281,319,253,341,227,368,184,428,153,488,132,537"/>
+<area shape="rect" id="Node000010" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_switch.html" title="Dynamic phasor switch." alt="" coords="338,328,487,358"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="132,536,155,497,188,451,230,405,278,367,307,354,336,346,338,351,308,359,281,372,233,409,192,454,160,500,137,539"/>
+<area shape="rect" id="Node000011" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1var_res_switch.html" title="Switch with variable resistance to avoid numerical oscillations, when an inductive current is suddenl..." alt="" coords="317,382,508,411"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="140,537,198,477,236,446,278,421,315,407,317,412,281,425,239,451,202,481,144,541"/>
+<area shape="rect" id="Node000012" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html" title="Dynamic phasor three&#45;phase switch." alt="" coords="319,435,506,464"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="153,540,211,505,279,474,317,462,319,467,281,479,213,510,156,544"/>
+<area shape="rect" id="Node000013" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_switch.html" title="One phase EMT switch." alt="" coords="334,488,491,518"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="201,544,279,527,333,516,334,521,280,532,202,549"/>
+<area shape="rect" id="Node000014" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_reduced_order_synchron_generator_v_b_r.html" title="Base class for EMT VBR simplefied synchronous generator models." alt="" coords="308,541,517,590"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="247,563,307,563,307,568,247,568"/>
+<area shape="rect" id="Node000020" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_series_switch.html" title="EMT three&#45;phase switch." alt="" coords="315,614,510,643"/>
+<area shape="poly" id="edge19_Node000001_Node000020" title=" " alt="" coords="202,582,280,599,334,610,333,615,279,604,201,587"/>
+<area shape="rect" id="Node000021" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch.html" title="Dynamic phasor switch." alt="" coords="334,667,491,696"/>
+<area shape="poly" id="edge20_Node000001_Node000021" title=" " alt="" coords="156,587,213,621,281,652,334,667,332,673,279,658,211,626,153,592"/>
+<area shape="rect" id="Node000022" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html" title=" " alt="" coords="280,720,545,750"/>
+<area shape="poly" id="edge21_Node000001_Node000022" title=" " alt="" coords="144,591,202,650,239,681,281,706,309,717,307,722,278,711,236,685,198,654,140,594"/>
+<area shape="rect" id="Node000023" href="$class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html" title="Abstract base class for variable EMT V&#45;type SSN components." alt="" coords="295,774,530,803"/>
+<area shape="poly" id="edge22_Node000001_Node000023" title=" " alt="" coords="137,593,160,631,192,677,233,722,281,759,304,771,302,775,278,764,230,726,188,680,155,634,132,595"/>
+<area shape="rect" id="Node000026" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_reduced_order_synchron_generator_v_b_r.html" title="Base class for SP VBR synchronous generator model single phase." alt="" coords="313,868,512,917"/>
+<area shape="poly" id="edge25_Node000001_Node000026" title=" " alt="" coords="135,593,158,639,191,697,233,758,282,813,318,842,357,865,355,870,315,846,278,817,228,761,187,700,153,642,130,596"/>
+<area shape="rect" id="Node000032" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_switch.html" title="Dynamic phasor switch." alt="" coords="339,940,486,970"/>
+<area shape="poly" id="edge31_Node000001_Node000032" title=" " alt="" coords="126,595,140,665,168,755,188,802,213,848,244,890,281,926,309,942,339,950,338,955,307,947,278,930,240,894,209,851,183,805,163,757,135,666,121,596"/>
+<area shape="rect" id="Node000033" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1var_res_switch.html" title="Switch with variable resistance to avoid numerical oscillations, when an inductive current is suddenl..." alt="" coords="318,994,506,1023"/>
+<area shape="poly" id="edge32_Node000001_Node000033" title=" " alt="" coords="125,596,135,674,160,779,181,834,207,888,240,937,281,980,299,991,319,999,317,1004,296,996,278,984,236,940,202,890,176,836,155,780,130,675,119,596"/>
 <area shape="rect" id="Node000004" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator3_order_v_b_r.html" title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 3rd order synchronous generator model." alt="" coords="601,5,841,54"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="525,225,543,212,557,194,564,177,567,140,569,103,577,84,591,65,608,52,611,56,595,69,581,86,574,104,572,141,569,178,562,197,547,216,528,229"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="526,202,543,189,556,175,562,160,566,129,571,97,578,81,591,65,609,52,612,56,595,69,583,84,576,98,572,130,567,161,560,177,547,193,529,206"/>
 <area shape="rect" id="Node000005" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_v_b_r.html" title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 4th order synchronous generator model." alt="" coords="601,79,841,127"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="526,222,543,212,559,194,567,176,574,157,591,138,613,125,615,130,595,142,579,160,572,178,564,197,547,216,529,227"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="527,198,544,189,558,177,567,164,576,151,592,138,616,126,619,130,594,143,580,155,571,167,562,180,546,193,529,202"/>
 <area shape="rect" id="Node000006" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator5_order_v_b_r.html" title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 5th type 2 order synchronous generator model Ref: Mi..." alt="" coords="601,152,841,201"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="528,220,615,199,617,204,529,225"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="528,205,600,193,601,199,529,211"/>
 <area shape="rect" id="Node000007" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6a_order_v_b_r.html" title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 6th order synchronous generator model Marconato&#39;s mo..." alt="" coords="598,225,845,274"/>
-<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="529,247,597,247,597,252,529,252"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="529,233,597,238,597,243,529,238"/>
 <area shape="rect" id="Node000008" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6b_order_v_b_r.html" title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 6th order synchronous generator model Anderson &#45; Fou..." alt="" coords="597,299,845,347"/>
-<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="529,275,617,296,615,301,528,280"/>
+<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="528,254,546,261,594,283,630,296,628,301,592,288,544,265,526,259"/>
 <area shape="rect" id="Node000015" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator3_order_v_b_r.html" title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 3rd order synchronous generator model." alt="" coords="597,372,845,421"/>
-<area shape="poly" id="edge14_Node000014_Node000015" title=" " alt="" coords="529,569,543,558,556,544,563,528,566,497,571,464,578,448,591,432,608,419,611,423,595,436,582,451,576,466,572,497,568,530,560,546,547,562,532,573"/>
+<area shape="poly" id="edge14_Node000014_Node000015" title=" " alt="" coords="529,537,543,528,554,517,560,505,567,481,573,456,580,444,591,432,610,419,613,423,595,436,584,447,578,458,572,482,565,507,558,520,547,532,533,542"/>
 <area shape="rect" id="Node000016" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_v_b_r.html" title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 4th order synchronous generator model." alt="" coords="597,445,845,494"/>
-<area shape="poly" id="edge15_Node000014_Node000016" title=" " alt="" coords="530,566,543,558,558,546,567,532,576,518,591,505,615,492,618,497,595,509,580,522,571,535,562,549,547,563,533,570"/>
+<area shape="poly" id="edge15_Node000014_Node000016" title=" " alt="" coords="526,534,544,527,592,505,628,492,630,497,594,509,546,532,528,539"/>
 <area shape="rect" id="Node000017" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator5_order_v_b_r.html" title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 5th type 2 order synchronous generator model Ref: Mi..." alt="" coords="597,519,845,567"/>
-<area shape="poly" id="edge16_Node000014_Node000017" title=" " alt="" coords="531,573,596,562,597,567,532,578"/>
+<area shape="poly" id="edge16_Node000014_Node000017" title=" " alt="" coords="532,554,596,549,597,555,533,560"/>
 <area shape="rect" id="Node000018" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator6a_order_v_b_r.html" title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 6th order synchronous generator model Marconato&#39;s mo..." alt="" coords="594,592,849,641"/>
-<area shape="poly" id="edge17_Node000014_Node000018" title=" " alt="" coords="533,601,593,605,593,611,532,607"/>
+<area shape="poly" id="edge17_Node000014_Node000018" title=" " alt="" coords="533,583,593,593,592,598,532,588"/>
 <area shape="rect" id="Node000019" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator6b_order_v_b_r.html" title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 6th order synchronous generator model Anderson &#45; Fou..." alt="" coords="593,665,849,714"/>
-<area shape="poly" id="edge18_Node000014_Node000019" title=" " alt="" coords="525,623,546,630,594,650,632,662,630,667,592,655,544,635,524,628"/>
-<area shape="rect" id="Node000024" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator3_order_v_b_r.html" title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 3rd order synchronous generator model." alt="" coords="602,739,840,787"/>
-<area shape="poly" id="edge23_Node000023_Node000024" title=" " alt="" coords="526,804,609,785,610,791,527,809"/>
-<area shape="rect" id="Node000025" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator4_order_v_b_r.html" title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 4th order synchronous generator model." alt="" coords="602,812,840,861"/>
-<area shape="poly" id="edge24_Node000023_Node000025" title=" " alt="" coords="527,831,602,832,602,837,527,836"/>
-<area shape="rect" id="Node000026" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator5_order_v_b_r.html" title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 5th type 2 order synchronous generator model Ref: Mi..." alt="" coords="602,885,840,934"/>
-<area shape="poly" id="edge25_Node000023_Node000026" title=" " alt="" coords="527,858,622,882,621,887,526,863"/>
-<area shape="rect" id="Node000027" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator6a_order_v_b_r.html" title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 6th order synchronous generator model Marconato&#39;s mo..." alt="" coords="599,959,843,1007"/>
-<area shape="poly" id="edge26_Node000023_Node000027" title=" " alt="" coords="527,854,547,866,564,886,572,906,579,925,595,944,615,956,612,960,591,948,574,928,567,908,559,889,543,870,524,859"/>
-<area shape="rect" id="Node000028" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator6b_order_v_b_r.html" title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 6th order synchronous generator model Anderson&#45;Fouad..." alt="" coords="598,1032,844,1081"/>
-<area shape="poly" id="edge27_Node000023_Node000028" title=" " alt="" coords="527,852,547,866,562,885,569,905,572,943,574,981,581,999,595,1017,611,1030,608,1034,591,1021,576,1002,569,982,567,944,564,906,557,888,543,870,524,856"/>
+<area shape="poly" id="edge18_Node000014_Node000019" title=" " alt="" coords="532,592,546,599,562,612,571,625,580,638,594,650,619,662,616,667,592,655,576,642,567,628,558,616,544,604,530,597"/>
+<area shape="rect" id="Node000024" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_variable_s_s_n_comp.html" title="Abstract base class for three&#45;phase, two&#45;terminal, variable V&#45;type SSN components." alt="" coords="623,739,819,787"/>
+<area shape="poly" id="edge23_Node000023_Node000024" title=" " alt="" coords="545,775,622,768,623,774,545,780"/>
+<area shape="rect" id="Node000025" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_piecewise_linear_inductor.html" title="Three&#45;phase, two&#45;terminal, piecewise&#45;linear flux&#45;state inductor." alt="" coords="897,739,1075,787"/>
+<area shape="poly" id="edge24_Node000024_Node000025" title=" " alt="" coords="835,760,897,760,897,766,835,766"/>
+<area shape="rect" id="Node000027" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator3_order_v_b_r.html" title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 3rd order synchronous generator model." alt="" coords="602,812,840,861"/>
+<area shape="poly" id="edge26_Node000026_Node000027" title=" " alt="" coords="526,869,601,855,602,861,527,874"/>
+<area shape="rect" id="Node000028" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator4_order_v_b_r.html" title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 4th order synchronous generator model." alt="" coords="602,885,840,934"/>
+<area shape="poly" id="edge27_Node000026_Node000028" title=" " alt="" coords="527,896,602,900,602,906,527,901"/>
+<area shape="rect" id="Node000029" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator5_order_v_b_r.html" title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 5th type 2 order synchronous generator model Ref: Mi..." alt="" coords="602,959,840,1007"/>
+<area shape="poly" id="edge28_Node000026_Node000029" title=" " alt="" coords="524,919,546,926,594,943,633,956,632,961,592,948,544,931,522,924"/>
+<area shape="rect" id="Node000030" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator6a_order_v_b_r.html" title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 6th order synchronous generator model Marconato&#39;s mo..." alt="" coords="599,1032,843,1081"/>
+<area shape="poly" id="edge29_Node000026_Node000030" title=" " alt="" coords="527,914,547,926,565,949,572,973,578,995,595,1017,614,1029,611,1034,591,1021,573,998,567,974,560,952,543,930,524,918"/>
+<area shape="rect" id="Node000031" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator6b_order_v_b_r.html" title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 6th order synchronous generator model Anderson&#45;Fouad..." alt="" coords="598,1105,844,1154"/>
+<area shape="poly" id="edge30_Node000026_Node000031" title=" " alt="" coords="527,911,547,926,563,947,570,968,572,1010,573,1051,580,1071,595,1090,610,1103,607,1107,591,1094,575,1073,568,1052,567,1010,565,969,558,950,543,930,524,916"/>
 </map>

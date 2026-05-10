@@ -11,5 +11,6 @@ var searchData=
   ['voltagesourceinverter_8',['VoltageSourceInverter',['../class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source_inverter.html',1,'CPS::SP::Ph1']]],
   ['voltagesourcenorton_9',['VoltageSourceNorton',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_norton.html',1,'CPS::DP::Ph1::VoltageSourceNorton'],['../class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_norton.html',1,'CPS::EMT::Ph1::VoltageSourceNorton'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source_norton.html',1,'CPS::EMT::Ph3::VoltageSourceNorton']]],
   ['voltagesourceramp_10',['VoltageSourceRamp',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp.html',1,'CPS::DP::Ph1::VoltageSourceRamp'],['../class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_ramp.html',1,'CPS::EMT::Ph1::VoltageSourceRamp']]],
-  ['vtypessncomp_11',['VTypeSSNComp',['../class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html',1,'CPS::EMT']]]
+  ['vtypessncomp_11',['VTypeSSNComp',['../class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html',1,'CPS::EMT']]],
+  ['vtypevariablessncomp_12',['VTypeVariableSSNComp',['../class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html',1,'CPS::EMT']]]
 ];
