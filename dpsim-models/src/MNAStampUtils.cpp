@@ -237,3 +237,174 @@ void MNAStampUtils::addToMatrixElement(SparseMatrixRow &mat, Matrix::Index row,
 
   Math::addToMatrixElement(mat, row, column, value, maxFreq, freqIdx);
 }
+
+void MNAStampUtils::stampIdealTransformer(Real ratio, SparseMatrixRow &mat,
+
+                                          UInt primaryVirtualNode,
+                                          UInt secondaryNode, UInt branchEqNode,
+
+                                          Bool primaryNotGrounded,
+                                          Bool secondaryNotGrounded,
+
+                                          Int maxFreq, Int freqIdx,
+
+                                          const Logger::Log &mSLog) {
+
+  SPDLOG_LOGGER_DEBUG(
+      mSLog, "Start stamping single-phase ideal transformer (compat mode)...");
+
+  stampIdealTransformerTemplate<Real>(
+      ratio, mat, primaryVirtualNode, secondaryNode, branchEqNode,
+      primaryNotGrounded, secondaryNotGrounded, maxFreq, freqIdx, mSLog);
+
+  SPDLOG_LOGGER_DEBUG(mSLog, "Stamping completed.");
+}
+
+void MNAStampUtils::stampIdealTransformer(Complex ratio, SparseMatrixRow &mat,
+
+                                          UInt primaryVirtualNode,
+                                          UInt secondaryNode, UInt branchEqNode,
+
+                                          Bool primaryNotGrounded,
+                                          Bool secondaryNotGrounded,
+
+                                          const Logger::Log &mSLog, Int maxFreq,
+                                          Int freqIdx) {
+
+  SPDLOG_LOGGER_DEBUG(mSLog,
+                      "Start stamping single-phase ideal transformer (Complex) "
+                      "for frequency index {:d}...",
+                      freqIdx);
+
+  stampIdealTransformerTemplate<Complex>(
+      ratio, mat,
+
+      primaryVirtualNode, secondaryNode, branchEqNode,
+
+      primaryNotGrounded, secondaryNotGrounded,
+
+      maxFreq, freqIdx, mSLog);
+
+  SPDLOG_LOGGER_DEBUG(mSLog, "Stamping completed.");
+}
+
+template <typename T>
+void MNAStampUtils::stampIdealTransformerTemplate(
+    T ratio, SparseMatrixRow &mat,
+
+    UInt primaryVirtualNode, UInt secondaryNode, UInt branchEqNode,
+
+    Bool primaryNotGrounded, Bool secondaryNotGrounded,
+
+    Int maxFreq, Int freqIdx, const Logger::Log &mSLog) {
+
+  if (primaryNotGrounded) {
+    addToMatrixElement(mat, primaryVirtualNode, branchEqNode, T(-1.0), maxFreq,
+                       freqIdx, mSLog);
+
+    addToMatrixElement(mat, branchEqNode, primaryVirtualNode, T(1.0), maxFreq,
+                       freqIdx, mSLog);
+  }
+
+  if (secondaryNotGrounded) {
+    addToMatrixElement(mat, secondaryNode, branchEqNode, ratio, maxFreq,
+                       freqIdx, mSLog);
+
+    addToMatrixElement(mat, branchEqNode, secondaryNode, -ratio, maxFreq,
+                       freqIdx, mSLog);
+  }
+}
+
+template <typename T>
+void MNAStampUtils::stampIdealTransformerAs3x3Template(
+    T ratio, SparseMatrixRow &mat,
+
+    UInt primaryBaseNode, UInt secondaryBaseNode, UInt branchEqNode,
+
+    Bool primaryNotGrounded, Bool secondaryNotGrounded,
+
+    const Logger::Log &mSLog) {
+
+  constexpr UInt PHASES = 3;
+
+  SPDLOG_LOGGER_DEBUG(
+      mSLog, "Start stamping 3-phase ideal transformer (clean EMT model)...");
+
+  for (UInt i = 0; i < PHASES; i++) {
+
+    UInt p = primaryBaseNode + i;
+    UInt s = secondaryBaseNode + i;
+    UInt b = branchEqNode + i;
+
+    // ------------------------------------------------------------
+    // Primary coupling: Vp - Vs constraint
+    // ------------------------------------------------------------
+    if (primaryNotGrounded && secondaryNotGrounded) {
+      addToMatrixElement(mat, p, b, T(-1.0), 1, 0, mSLog);
+      addToMatrixElement(mat, b, p, T(1.0), 1, 0, mSLog);
+
+      addToMatrixElement(mat, s, b, T(1.0), 1, 0, mSLog);
+      addToMatrixElement(mat, b, s, T(-1.0), 1, 0, mSLog);
+    }
+
+    // ------------------------------------------------------------
+    // Ideal transformer ratio constraint:
+    // Vp = ratio * Vs
+    // implemented as coupling in branch equation
+    // ------------------------------------------------------------
+    if (primaryNotGrounded && secondaryNotGrounded) {
+      addToMatrixElement(mat, b, p, T(1.0), 1, 0, mSLog);
+      addToMatrixElement(mat, b, s, T(-ratio), 1, 0, mSLog);
+
+      addToMatrixElement(mat, p, b, T(1.0), 1, 0, mSLog);
+      addToMatrixElement(mat, s, b, T(-ratio), 1, 0, mSLog);
+    }
+  }
+
+  SPDLOG_LOGGER_DEBUG(
+      mSLog, "Finished stamping 3-phase ideal transformer (clean EMT model).");
+}
+
+void MNAStampUtils::stampIdealTransformerAs3x3(Real ratio, SparseMatrixRow &mat,
+
+                                               UInt primaryBaseNode,
+                                               UInt secondaryBaseNode,
+                                               UInt branchEqNode,
+
+                                               Bool primaryNotGrounded,
+                                               Bool secondaryNotGrounded,
+
+                                               const Logger::Log &mSLog) {
+
+  SPDLOG_LOGGER_DEBUG(
+      mSLog, "Start stamping 3-phase ideal transformer (Real EMT wrapper)...");
+
+  stampIdealTransformerAs3x3Template<Real>(
+      ratio, mat, primaryBaseNode, secondaryBaseNode, branchEqNode,
+      primaryNotGrounded, secondaryNotGrounded, mSLog);
+
+  SPDLOG_LOGGER_DEBUG(
+      mSLog, "Finished stamping 3-phase ideal transformer (Real EMT wrapper).");
+}
+
+void MNAStampUtils::stampIdealTransformerAs3x3(
+    Complex ratio, SparseMatrixRow &mat,
+
+    UInt primaryBaseNode, UInt secondaryBaseNode, UInt branchEqNode,
+
+    Bool primaryNotGrounded, Bool secondaryNotGrounded,
+
+    const Logger::Log &mSLog) {
+
+  SPDLOG_LOGGER_DEBUG(
+      mSLog,
+      "Start stamping 3-phase ideal transformer (Complex EMT wrapper)...");
+
+  stampIdealTransformerAs3x3Template<Complex>(
+      ratio, mat, primaryBaseNode, secondaryBaseNode, branchEqNode,
+      primaryNotGrounded, secondaryNotGrounded, mSLog);
+
+  SPDLOG_LOGGER_DEBUG(
+      mSLog,
+      "Finished stamping 3-phase ideal transformer (Complex EMT wrapper).");
+}
