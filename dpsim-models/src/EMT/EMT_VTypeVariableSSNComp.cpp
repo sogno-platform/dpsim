@@ -9,19 +9,78 @@ EMT::VTypeVariableSSNComp::VTypeVariableSSNComp(String uid, String name,
                                                 Int inputSize, Int outputSize,
                                                 Logger::Level logLevel)
     : VTypeSSNComp(uid, name, inputSize, outputSize, logLevel),
-      mParameterChanged(false), mF(Matrix::Zero(outputSize, 1)) {}
+      mParameterChanged(false), mE(Matrix::Zero(0, 1)), mdE(Matrix::Zero(0, 1)),
+      mF(Matrix::Zero(outputSize, 1)) {}
 
 Matrix EMT::VTypeVariableSSNComp::calculateHistoryVector() const {
-  return mC * (mdA * (**mX) + mdB * (**inputAttribute())) + mF;
+  return mC * (mdA * (**mX) + mdB * (**inputAttribute()) + mdE) + mF;
 }
 
+MatrixComp EMT::VTypeVariableSSNComp::calculateSteadyStateStateFromInput(
+    const MatrixComp &u, Real frequency) const {
+  const Real omega = 2.0 * PI * frequency;
+  MatrixComp h =
+      Complex(0.0, omega) * MatrixComp::Identity(mA.rows(), mA.cols()) -
+      mA.cast<Complex>();
+
+  return h.inverse() * (mB.cast<Complex>() * u + mE.cast<Complex>());
+}
+
+MatrixComp EMT::VTypeVariableSSNComp::calculateSteadyStateOutputFromInput(
+    const MatrixComp &x, const MatrixComp &u) const {
+  return mC.cast<Complex>() * x + mD.cast<Complex>() * u + mF.cast<Complex>();
+}
+
+void EMT::VTypeVariableSSNComp::updateState(const Matrix &uOld,
+                                            const Matrix &uNew) {
+  **mX = mdA * (**mX) + mdB * (uNew + uOld) + mdE;
+}
+
+void EMT::VTypeVariableSSNComp::recomputeDiscreteModel() {
+  Math::calculateStateSpaceTrapezoidalMatrices(mA, mB, mE, mTimeStep, mdA, mdB,
+                                               mdE);
+  mW = mC * mdB + mD;
+}
+
+const Matrix &EMT::VTypeVariableSSNComp::stateOffset() const { return mE; }
+
 const Matrix &EMT::VTypeVariableSSNComp::outputOffset() const { return mF; }
+
+void EMT::VTypeVariableSSNComp::setStateOffset(const Matrix &E) {
+  if (E.rows() != mA.rows() || E.cols() != 1)
+    throw std::invalid_argument("State offset vector has invalid dimensions.");
+
+  mE = E;
+}
 
 void EMT::VTypeVariableSSNComp::setOutputOffset(const Matrix &F) {
   if (F.rows() != mF.rows() || F.cols() != 1)
     throw std::invalid_argument("Output offset vector has invalid dimensions.");
 
   mF = F;
+}
+
+void EMT::VTypeVariableSSNComp::setParameters(const Matrix &A, const Matrix &B,
+                                              const Matrix &C,
+                                              const Matrix &D) {
+  setParameters(A, B, C, D, Matrix::Zero(A.rows(), 1),
+                Matrix::Zero(C.rows(), 1));
+}
+
+void EMT::VTypeVariableSSNComp::setParameters(const Matrix &A, const Matrix &B,
+                                              const Matrix &C, const Matrix &D,
+                                              const Matrix &E) {
+  setParameters(A, B, C, D, E, Matrix::Zero(C.rows(), 1));
+}
+
+void EMT::VTypeVariableSSNComp::setParameters(const Matrix &A, const Matrix &B,
+                                              const Matrix &C, const Matrix &D,
+                                              const Matrix &E,
+                                              const Matrix &F) {
+  SSNComp::setParameters(A, B, C, D);
+  setStateOffset(E);
+  setOutputOffset(F);
+  mdE = Matrix::Zero(mE.rows(), 1);
 }
 
 void EMT::VTypeVariableSSNComp::updateStateSpaceModel() {
@@ -50,13 +109,13 @@ void EMT::VTypeVariableSSNComp::initializeFromNodesAndTerminals(
                      "\n--- Initialization from nodes and terminals ---");
 
   // Fixed-point initialization for operating-point-dependent SSN models.
-  // This keeps the implementation generic while still allowing the component
-  // parameters to depend on the current state.
-  constexpr Int maxIterations = 10;
-  constexpr Real tolerance = 1e-9;
+  // The initial input is reconstructed from terminal quantities, then the
+  // component parameters are updated from the current state estimate and the
+  // steady-state state is recomputed. This is repeated until the state no
+  // longer changes noticeably or until the iteration limit is reached.
   Bool converged = false;
 
-  for (Int iter = 0; iter < maxIterations; ++iter) {
+  for (Int iter = 0; iter < mInitializationMaxIterations; ++iter) {
     const Matrix xPrev = **mX;
 
     updateComponentParameters();
@@ -65,7 +124,7 @@ void EMT::VTypeVariableSSNComp::initializeFromNodesAndTerminals(
         calculateSteadyStateStateFromInput(uInit, frequency);
     **mX = xInit.real();
 
-    if ((**mX).isApprox(xPrev, tolerance)) {
+    if ((**mX).isApprox(xPrev, mInitializationTolerance)) {
       converged = true;
       break;
     }
@@ -75,17 +134,17 @@ void EMT::VTypeVariableSSNComp::initializeFromNodesAndTerminals(
     SPDLOG_LOGGER_WARN(
         mSLog,
         "Fixed-point initialization did not converge within {} iterations.",
-        maxIterations);
+        mInitializationMaxIterations);
   }
 
-  // Ensure the output matrices correspond to the final initialized state.
+  // Ensure the local model corresponds to the final initialized state.
   updateComponentParameters();
 
   const MatrixComp xInit = (**mX).cast<Complex>();
-  const MatrixComp yInit = mC.cast<Complex>() * xInit +
-                           mD.cast<Complex>() * uInit + mF.cast<Complex>();
+  const MatrixComp yInit = calculateSteadyStateOutputFromInput(xInit, uInit);
 
   **mIntfCurrent = yInit.real();
+  updateLogAttributes(**mIntfVoltage);
   mParameterChanged = false;
 
   SPDLOG_LOGGER_INFO(

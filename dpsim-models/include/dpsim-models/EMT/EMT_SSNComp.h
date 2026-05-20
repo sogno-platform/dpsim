@@ -44,14 +44,18 @@ protected:
 
   virtual Matrix calculateHistoryVector() const;
 
-  MatrixComp calculateSteadyStateStateFromInput(const MatrixComp &u,
-                                                Real frequency) const;
-  MatrixComp calculateSteadyStateOutputFromInput(const MatrixComp &x,
-                                                 const MatrixComp &u) const;
+  virtual MatrixComp calculateSteadyStateStateFromInput(const MatrixComp &u,
+                                                        Real frequency) const;
+  virtual MatrixComp
+  calculateSteadyStateOutputFromInput(const MatrixComp &x,
+                                      const MatrixComp &u) const;
 
-  void updateState(const Matrix &uOld, const Matrix &uNew);
+  virtual void updateState(const Matrix &uOld, const Matrix &uNew);
 
-  void recomputeDiscreteModel();
+  /// Update derived attributes used for logging/inspection.
+  virtual void updateLogAttributes(const Matrix &u) const;
+
+  virtual void recomputeDiscreteModel();
 
   /// Hook for variable/time-varying SSN components.
   virtual void updateStateSpaceModel();
