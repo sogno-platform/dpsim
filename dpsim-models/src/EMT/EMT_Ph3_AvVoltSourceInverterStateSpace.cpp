@@ -1,411 +1,534 @@
-/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *********************************************************************************/
+// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+// SPDX-License-Identifier: MPL-2.0
+
+#include <cmath>
+#include <stdexcept>
 
 #include <dpsim-models/EMT/EMT_Ph3_AvVoltSourceInverterStateSpace.h>
 
 using namespace CPS;
 
-// !!! TODO: Adaptions to use in EMT_Ph3 models phase-to-ground peak variables
-// !!!       with initialization from phase-to-phase RMS variables
-
 EMT::Ph3::AvVoltSourceInverterStateSpace::AvVoltSourceInverterStateSpace(
     String uid, String name, Logger::Level logLevel)
-    : MNASimPowerComp<Real>(uid, name, true, true, logLevel),
-      Base::Ph1::VoltageSource(mAttributes),
-      mPref(mAttributes->create<Real>("P_ref")),
-      mQref(mAttributes->create<Real>("Q_ref")),
-      mThetaPLL(mAttributes->create<Real>("theta")),
-      mPhiPLL(mAttributes->create<Real>("phipll")),
-      mP(mAttributes->create<Real>("p")), mQ(mAttributes->create<Real>("q")),
-      mPhi_d(mAttributes->create<Real>("phid")),
-      mPhi_q(mAttributes->create<Real>("phiq")),
-      mGamma_d(mAttributes->create<Real>("gammad")),
-      mGamma_q(mAttributes->create<Real>("gammaq")),
-      mVcabc(mAttributes->create<Matrix>("V_cabc", Matrix::Zero(3, 1))) {
-  setTerminalNumber(2);
+    : TwoTerminalVTypeVariableSSNComp(uid, name, logLevel), mLf(0.0), mCf(0.0),
+      mRf(0.0), mRc(0.0), mOmegaN(0.0), mKpPLL(0.0), mKiPLL(0.0),
+      mOmegaCutoff(0.0), mPRef(0.0), mQRef(0.0), mKpPowerCtrl(0.0),
+      mKiPowerCtrl(0.0), mKpCurrCtrl(0.0), mKiCurrCtrl(0.0),
+      mVcD(mAttributes->create<Real>("vc_d")),
+      mVcQ(mAttributes->create<Real>("vc_q")),
+      mIrcD(mAttributes->create<Real>("irc_d")),
+      mIrcQ(mAttributes->create<Real>("irc_q")),
+      mPInst(mAttributes->create<Real>("p_inst")),
+      mQInst(mAttributes->create<Real>("q_inst")),
+      mOmegaPLL(mAttributes->create<Real>("omega_pll")) {
   **mIntfVoltage = Matrix::Zero(3, 1);
   **mIntfCurrent = Matrix::Zero(3, 1);
+
+  **mVcD = 0.0;
+  **mVcQ = 0.0;
+  **mIrcD = 0.0;
+  **mIrcQ = 0.0;
+  **mPInst = 0.0;
+  **mQInst = 0.0;
+  **mOmegaPLL = 0.0;
 }
 
 void EMT::Ph3::AvVoltSourceInverterStateSpace::setParameters(
-    Real sysOmega, Complex sysVoltNom, Real Pref, Real Qref, Real Lf, Real Cf,
-    Real Rf, Real Rc, Real Kp_pll, Real Ki_pll, Real Kp_powerCtrl,
-    Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl) {
+    Real lf, Real cf, Real rf, Real rc, Real omegaN, Real kpPLL, Real kiPLL,
+    Real omegaCutoff, Real pRef, Real qRef, Real kpPowerCtrl, Real kiPowerCtrl,
+    Real kpCurrCtrl, Real kiCurrCtrl) {
+  if (lf <= 0.0)
+    throw std::invalid_argument("Filter inductance lf must be positive.");
 
-  mLf = Lf;
-  mCf = Cf;
-  mRf = Rf;
-  mRc = Rc;
-  mYc = 1. / Rc;
+  if (cf <= 0.0)
+    throw std::invalid_argument("Filter capacitance cf must be positive.");
 
-  **mPref = Pref;
-  **mQref = Qref;
+  if (rf < 0.0)
+    throw std::invalid_argument("Filter resistance rf must be non-negative.");
 
-  mKpPLL = Kp_pll;
-  mKiPLL = Ki_pll;
+  if (rc <= 0.0)
+    throw std::invalid_argument("Coupling resistance rc must be positive.");
 
-  mKiPowerCtrld = Ki_powerCtrl;
-  mKiPowerCtrlq = Ki_powerCtrl;
+  if (omegaN <= 0.0)
+    throw std::invalid_argument(
+        "Nominal angular frequency omegaN must be positive.");
 
-  mKpPowerCtrld = Kp_powerCtrl;
-  mKpPowerCtrlq = Kp_powerCtrl;
+  if (omegaCutoff < 0.0)
+    throw std::invalid_argument(
+        "Power-filter cutoff frequency omegaCutoff must be non-negative.");
 
-  mKiCurrCtrld = Ki_currCtrl;
-  mKiCurrCtrlq = Ki_currCtrl;
+  if (kiPLL == 0.0)
+    throw std::invalid_argument("PLL integral gain kiPLL must be non-zero.");
 
-  mKpCurrCtrld = Kp_currCtrl;
-  mKpCurrCtrlq = Kp_currCtrl;
+  if (kiPowerCtrl == 0.0)
+    throw std::invalid_argument(
+        "Power-control integral gain kiPowerCtrl must be non-zero.");
 
-  // init with nodes at nominal voltage and branches have zero current flow.
-  Real srcFreq = 2. * M_PI * sysOmega;
-  Base::Ph1::VoltageSource::setParameters(sysVoltNom, srcFreq);
+  if (kiCurrCtrl == 0.0)
+    throw std::invalid_argument(
+        "Current-control integral gain kiCurrCtrl must be non-zero.");
 
-  mParametersSet = true;
+  mLf = lf;
+  mCf = cf;
+  mRf = rf;
+  mRc = rc;
+
+  mOmegaN = omegaN;
+  mKpPLL = kpPLL;
+  mKiPLL = kiPLL;
+
+  mOmegaCutoff = omegaCutoff;
+  mPRef = pRef;
+  mQRef = qRef;
+  mKpPowerCtrl = kpPowerCtrl;
+  mKiPowerCtrl = kiPowerCtrl;
+  mKpCurrCtrl = kpCurrCtrl;
+  mKiCurrCtrl = kiCurrCtrl;
+
+  const Matrix x0 = Matrix::Zero(mStateSize, 1);
+  const Matrix u0 = Matrix::Zero(3, 1);
+
+  Matrix aMatrix;
+  Matrix bMatrix;
+  Matrix cMatrix;
+  Matrix dMatrix;
+  Matrix eVector;
+  Matrix fVector;
+  buildStateSpaceModel(x0, u0, aMatrix, bMatrix, cMatrix, dMatrix, eVector,
+                       fVector);
+
+  VTypeVariableSSNComp::setParameters(aMatrix, bMatrix, cMatrix, dMatrix,
+                                      eVector, fVector);
 }
 
-void EMT::Ph3::AvVoltSourceInverterStateSpace::initializeStates(
-    Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-  mTimeStep = timeStep;
-  mOmegaN = omega;
-  mOmegaCutoff = omega;
-  // create matrices for state space representation
-  mA = Matrix::Zero(14, 14);
-  mB = Matrix::Zero(14, 6);
-  mC = Matrix::Zero(3, 14);
-  mD = Matrix::Zero(3, 6);
-  mStates = Matrix::Zero(14, 1);
-  mU = Matrix::Zero(6, 1);
-  Matrix initVgabc = Matrix::Zero(3, 1);
+Matrix EMT::Ph3::AvVoltSourceInverterStateSpace::getParkTransformMatrix(
+    Real theta) const {
+  Matrix transform(2, 3);
+  const Real k = std::sqrt(2.0 / 3.0);
 
-  Matrix Tabc_dq = getParkTransformMatrix(**mThetaPLL);
-  Matrix Td = Tabc_dq.row(0);
-  Matrix Tq = Tabc_dq.row(1);
-  Matrix Tdq_abc = getInverseParkTransformMatrix(**mThetaPLL);
-  Matrix Tabc1 = Tdq_abc.col(0);
-  Matrix Tabc2 = Tdq_abc.col(1);
-  mA << 0, mKiPLL, 0, 0, 0, 0, 0, 0, Tq, Matrix::Zero(1, 3), 0, 0, 0, 0, 0, 0,
-      0, 0, Tq, Matrix::Zero(1, 3), 0, 0, -mOmegaCutoff, 0, 0, 0, 0, 0,
-      Matrix::Zero(1, 3), Matrix::Zero(1, 3), 0, 0, 0, -mOmegaCutoff, 0, 0, 0,
-      0, Matrix::Zero(1, 3), Matrix::Zero(1, 3), 0, 0, -1, 0, 0, 0, 0, 0,
-      Matrix::Zero(1, 3), Matrix::Zero(1, 3), 0, 0, 0, -1, 0, 0, 0, 0,
-      Matrix::Zero(1, 3), Matrix::Zero(1, 3), 0, 0, -mKpPowerCtrld, 0,
-      mKiPowerCtrld, 0, 0, 0, Matrix::Zero(1, 3), -Td, //phi_d
-      0, 0, 0, -mKpPowerCtrlq, 0, mKiPowerCtrlq, 0, 0, Matrix::Zero(1, 3),
-      -Tq, //phi_q
-      // Vc_abc
-      Matrix::Zero(3, 8), 1. / mCf / mRc * Matrix::Identity(3, 3),
-      1. / mCf * Matrix::Identity(3, 3),
-      // If_abc
-      Matrix::Zero(3, 1), Matrix::Zero(3, 1),
-      -Tabc1 * mKpCurrCtrld * mKpPowerCtrld,
-      -Tabc2 * mKpCurrCtrlq * mKpPowerCtrlq,
-      Tabc1 * mKpCurrCtrld * mKiPowerCtrld,
-      Tabc2 * mKpCurrCtrlq * mKiPowerCtrlq, Tabc1 * mKiCurrCtrld,
-      Tabc2 * mKiCurrCtrlq, Matrix::Zero(3, 3),
-      -Tabc1 * mKpCurrCtrld * Td - Tabc2 * mKpCurrCtrlq * Tq;
+  transform.row(0) << k * std::cos(theta), k * std::cos(theta - 2.0 * PI / 3.0),
+      k * std::cos(theta + 2.0 * PI / 3.0);
 
-  mB << 1, 0, 0, Matrix::Zero(1, 3), 0, 0, 0, Matrix::Zero(1, 3), 0, 0, 0,
-      3. / 2. * mOmegaCutoff * sqrt(3) *
-          (Td * **mIntfCurrent * Td + Tq * **mIntfCurrent * Tq),
-      0, 0, 0,
-      3. / 2. * mOmegaCutoff * sqrt(3) *
-          (Tq * **mIntfCurrent * Td - Td * **mIntfCurrent * Tq),
-      0, 1, 0, Matrix::Zero(1, 3), 0, 0, 1, Matrix::Zero(1, 3), 0, 0, 0,
-      Matrix::Zero(1, 3), 0, 0, 0, Matrix::Zero(1, 3), Matrix::Zero(3, 1),
-      Matrix::Zero(3, 1), Matrix::Zero(3, 1),
-      -1 / mCf / mRc * Matrix::Identity(3, 3), Matrix::Zero(3, 1),
-      Tabc1 * mKpCurrCtrld * mKpPowerCtrld,
-      Tabc2 * mKpCurrCtrlq * mKpPowerCtrlq, Matrix::Zero(3, 3);
+  transform.row(1) << -k * std::sin(theta),
+      -k * std::sin(theta - 2.0 * PI / 3.0),
+      -k * std::sin(theta + 2.0 * PI / 3.0);
 
-  mC << Matrix::Zero(3, 8), 1 / mRc * Matrix::Identity(3, 3),
-      Matrix::Zero(3, 3);
-
-  mD << Matrix::Zero(3, 1), Matrix::Zero(3, 1), Matrix::Zero(3, 1),
-      -1 / mRc * Matrix::Identity(3, 3);
-
-  // #### initialize states ####
-  // initialize interface voltage at inverter terminal
-  initVgabc = **mVcabc;
-
-  **mThetaPLL = 0;
-  **mPhiPLL = -0.000060;
-  **mP = sqrt(3) * (3. / 2. *
-                    (Td * **mIntfCurrent * Td * **mVcabc +
-                     Tq * **mIntfCurrent * Tq * **mVcabc))
-                       .coeff(0, 0);
-  **mQ = sqrt(3) * (3. / 2. *
-                    (Tq * **mIntfCurrent * Td * **mVcabc -
-                     Td * **mIntfCurrent * Tq * **mVcabc))
-                       .coeff(0, 0);
-  **mPhi_d = 113.612992;
-  **mPhi_q = 22.045339;
-  **mGamma_d = 0.155978;
-  **mGamma_q = 0.006339;
-  **mVcabc = initVgabc;
-  mIfabc = Matrix::Zero(3, 1);
-
-  mStates << **mThetaPLL, **mPhiPLL, **mP, **mQ, **mPhi_d, **mPhi_q, **mGamma_d,
-      **mGamma_q, **mVcabc, mIfabc;
-
-  mU << omega, **mPref, **mQref, initVgabc;
-}
-
-void EMT::Ph3::AvVoltSourceInverterStateSpace::updateStates() {
-
-  Matrix newStates = Matrix::Zero(14, 1);
-  Matrix newU = Matrix::Zero(6, 1);
-
-  newU << mOmegaN, **mPref, **mQref, **mIntfVoltage;
-
-  newStates = Math::StateSpaceTrapezoidal(mStates, mA, mB, mTimeStep, newU, mU);
-
-  // update states
-  **mThetaPLL = newStates(0, 0);
-  **mPhiPLL = newStates(1, 0);
-  **mP = newStates(2, 0);
-  **mQ = newStates(3, 0);
-  **mPhi_d = newStates(4, 0);
-  **mPhi_q = newStates(5, 0);
-  **mGamma_d = newStates(6, 0);
-  **mGamma_d = newStates(7, 0);
-  **mVcabc = newStates.block(8, 0, 3, 1);
-  mIfabc = newStates.block(11, 0, 3, 1);
-  mStates = newStates;
-
-  mU = newU;
-
-  // update coefficients in A, B matrices due to linearization
-  updateLinearizedCoeffs();
-}
-
-void EMT::Ph3::AvVoltSourceInverterStateSpace::updateLinearizedCoeffs() {
-
-  Matrix Tabc_dq = getParkTransformMatrix(**mThetaPLL);
-  Matrix Td = Tabc_dq.row(0);
-  Matrix Tq = Tabc_dq.row(1);
-  Matrix Tdq_abc = getInverseParkTransformMatrix(**mThetaPLL);
-  Matrix Tabc1 = Tdq_abc.col(0);
-  Matrix Tabc2 = Tdq_abc.col(1);
-
-  mA.block(0, 8, 1, 3) = Tq;
-  mA.block(1, 8, 1, 3) = Tq;
-  mA.block(6, 11, 1, 3) = -Td;
-  mA.block(7, 11, 1, 3) = -Tq;
-
-  Matrix A_bottom = Matrix::Zero(3, 14);
-  A_bottom << Matrix::Zero(3, 1), Matrix::Zero(3, 1),
-      -Tabc1 * mKpCurrCtrld * mKpPowerCtrld,
-      -Tabc2 * mKpCurrCtrlq * mKpPowerCtrlq,
-      Tabc1 * mKpCurrCtrld * mKiPowerCtrld,
-      Tabc2 * mKpCurrCtrlq * mKiPowerCtrlq, Tabc1 * mKiCurrCtrld,
-      Tabc2 * mKiCurrCtrlq, Matrix::Zero(3, 3),
-      -Tabc1 * mKpCurrCtrld * Td - Tabc2 * mKpCurrCtrlq * Tq;
-  mA.block(11, 0, 3, 14) = A_bottom;
-  // Will it be faster to reconstruct the full B matrix (14x5) rather than doing three insertions?
-  mB.block(2, 2, 1, 3) =
-      3. / 2. * mOmegaCutoff * (Td * mIg_abc * Td + Tq * mIg_abc * Tq);
-  mB.block(3, 2, 1, 3) =
-      3. / 2. * mOmegaCutoff * (Tq * mIg_abc * Td - Td * mIg_abc * Tq);
-  Matrix B_bottom = Matrix::Zero(3, 6);
-  B_bottom << Matrix::Zero(3, 1), Tabc1 * mKpCurrCtrld * mKpPowerCtrld,
-      Tabc2 * mKpCurrCtrlq * mKpPowerCtrlq, Matrix::Zero(3, 3);
-  mB.block(11, 0, 3, 6) = B_bottom;
-}
-
-Matrix EMT::Ph3::AvVoltSourceInverterStateSpace::parkTransform(Real theta,
-                                                               Real fa, Real fb,
-                                                               Real fc) {
-
-  Matrix dqvector(2, 1);
-  // Park transform
-  Real d, q;
-
-  d = 2. / 3. * sin(theta) * fa + 2. / 3. * sin(theta - 2. * M_PI / 3.) * fb +
-      2. / 3. * sin(theta + 2. * M_PI / 3.) * fc;
-  q = 2. / 3. * cos(theta) * fa + 2. / 3. * cos(theta - 2. * M_PI / 3.) * fb +
-      2. / 3. * cos(theta + 2. * M_PI / 3.) * fc;
-
-  dqvector << d, q;
-
-  return dqvector;
-}
-
-Matrix
-EMT::Ph3::AvVoltSourceInverterStateSpace::getParkTransformMatrix(Real theta) {
-  Matrix Tdq = Matrix::Zero(2, 3);
-  Tdq << 2. / 3. * sin(theta), 2. / 3. * sin(theta - 2. * M_PI / 3.),
-      2. / 3. * sin(theta + 2. * M_PI / 3.), 2. / 3. * cos(theta),
-      2. / 3. * cos(theta - 2. * M_PI / 3.),
-      2. / 3. * cos(theta + 2. * M_PI / 3.);
-
-  return Tdq;
-}
-Matrix EMT::Ph3::AvVoltSourceInverterStateSpace::inverseParkTransform(
-    Real theta, Real fd, Real fq, Real zero) {
-
-  Matrix abcVector(3, 1);
-
-  // inverse Park transform
-  Real a, b, c;
-
-  a = sin(theta) * fd + cos(theta) * fq + 1. * zero;
-  b = sin(theta - 2. * M_PI / 3.) * fd + cos(theta - 2. * M_PI / 3.) * fq +
-      1. * zero;
-  c = sin(theta + 2. * M_PI / 3.) * fd + cos(theta + 2. * M_PI / 3.) * fq +
-      1. * zero;
-
-  abcVector << a, b, c;
-
-  return abcVector;
+  return transform;
 }
 
 Matrix EMT::Ph3::AvVoltSourceInverterStateSpace::getInverseParkTransformMatrix(
-    Real theta) {
-  Matrix Tabc = Matrix::Zero(3, 2);
-  Tabc << sin(theta), cos(theta), sin(theta - 2. * M_PI / 3.),
-      cos(theta - 2. * M_PI / 3.), sin(theta + 2. * M_PI / 3.),
-      cos(theta + 2. * M_PI / 3.);
+    Real theta) const {
+  Matrix transform(3, 2);
+  const Real k = std::sqrt(2.0 / 3.0);
 
-  return Tabc;
+  transform << k * std::cos(theta), -k * std::sin(theta),
+      k * std::cos(theta - 2.0 * PI / 3.0),
+      -k * std::sin(theta - 2.0 * PI / 3.0),
+      k * std::cos(theta + 2.0 * PI / 3.0),
+      -k * std::sin(theta + 2.0 * PI / 3.0);
+
+  return transform;
 }
 
-void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaCompInitialize(
-    Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-  updateMatrixNodeIndices();
-  Complex voltageRef = mVoltageRef->get();
-  (**mIntfVoltage)(0, 0) = voltageRef.real() * cos(Math::phase(voltageRef));
-  (**mIntfVoltage)(1, 0) =
-      voltageRef.real() * cos(Math::phase(voltageRef) - 2. / 3. * M_PI);
-  (**mIntfVoltage)(2, 0) =
-      voltageRef.real() * cos(Math::phase(voltageRef) + 2. / 3. * M_PI);
-  **mIntfCurrent = Matrix::Zero(3, 1);
-  initializeStates(omega, timeStep, leftVector);
+void EMT::Ph3::AvVoltSourceInverterStateSpace::updateLogAttributes(
+    const Matrix &u) const {
+  const Matrix &x = **mX;
+
+  const Matrix parkTransform = getParkTransformMatrix(x(ThetaPLL, 0));
+  const Matrix vcAbc = x.block(VcA, 0, 3, 1);
+  const Matrix iGridAbc = (vcAbc - u) / mRc;
+
+  **mVcD = (parkTransform.row(0) * vcAbc)(0, 0);
+  **mVcQ = (parkTransform.row(1) * vcAbc)(0, 0);
+  **mIrcD = (parkTransform.row(0) * iGridAbc)(0, 0);
+  **mIrcQ = (parkTransform.row(1) * iGridAbc)(0, 0);
+
+  **mPInst = **mVcD * **mIrcD + **mVcQ * **mIrcQ;
+  **mQInst = -**mVcD * **mIrcQ + **mVcQ * **mIrcD;
+
+  **mOmegaPLL = mOmegaN + mKpPLL * **mVcQ + mKiPLL * x(PhiPLL, 0);
 }
-void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaCompApplySystemMatrixStamp(
-    SparseMatrixRow &systemMatrix) {
-  // Apply matrix stamp for equivalent resistance
-  if (terminalNotGrounded(0)) {
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(0, 0), mYc);
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(0, 1), mYc);
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(0, 2), mYc);
+
+void EMT::Ph3::AvVoltSourceInverterStateSpace::initializeFromNodesAndTerminals(
+    Real frequency) {
+  if (!mParametersSet)
+    throw std::logic_error("setParameters() must be called before "
+                           "initializeFromNodesAndTerminals().");
+
+  // The generic SSN phasor initialization is not used because this component
+  // mixes EMT abc electrical states with dq-frame controller states. The filter
+  // states are initialized from balanced phasors; the controller states are
+  // initialized algebraically from the corresponding dq operating point.
+
+  const Real omega = 2.0 * PI * frequency;
+  const Complex j(0.0, 1.0);
+  const Complex powerRef(mPRef, mQRef);
+
+  const MatrixComp uPhasor = buildInitialInputFromNodes(frequency);
+
+  MatrixComp vcPhasor = uPhasor;
+  MatrixComp iInjPhasor = MatrixComp::Zero(3, 1);
+
+  for (Int iter = 0; iter < mInitializationMaxIterations; ++iter) {
+    const Complex vcA = vcPhasor(0, 0);
+
+    if (std::abs(vcA) < mInitializationTolerance) {
+      iInjPhasor.setZero();
+      break;
+    }
+
+    const Complex iA = std::conj(powerRef / (1.5 * vcA));
+
+    MatrixComp iNext(3, 1);
+    iNext << iA, iA * SHIFT_TO_PHASE_B, iA * SHIFT_TO_PHASE_C;
+
+    const MatrixComp vcNext = uPhasor + mRc * iNext;
+
+    iInjPhasor = iNext;
+
+    if ((vcNext - vcPhasor).norm() < mInitializationTolerance) {
+      vcPhasor = vcNext;
+      break;
+    }
+
+    vcPhasor = vcNext;
   }
-  if (terminalNotGrounded(1)) {
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0),
-                             matrixNodeIndex(1, 0), mYc);
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1),
-                             matrixNodeIndex(1, 1), mYc);
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2),
-                             matrixNodeIndex(1, 2), mYc);
-  }
-  if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
-                             matrixNodeIndex(1, 0), -mYc);
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0),
-                             matrixNodeIndex(0, 0), -mYc);
 
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1),
-                             matrixNodeIndex(1, 1), -mYc);
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1),
-                             matrixNodeIndex(0, 1), -mYc);
+  const MatrixComp ifPhasor = j * omega * mCf * vcPhasor + iInjPhasor;
+  const MatrixComp vRefPhasor = vcPhasor + (mRf + j * omega * mLf) * ifPhasor;
 
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2),
-                             matrixNodeIndex(1, 2), -mYc);
-    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2),
-                             matrixNodeIndex(0, 2), -mYc);
-  }
+  const Matrix vcAbc0 = vcPhasor.real();
+  const Matrix ifAbc0 = ifPhasor.real();
+  const Matrix iInjAbc0 = iInjPhasor.real();
+  const Matrix vRefAbc0 = vRefPhasor.real();
+
+  const Real theta0 = std::arg(vcPhasor(0, 0));
+  const Matrix parkTransform = getParkTransformMatrix(theta0);
+
+  const Matrix vcDq = parkTransform * vcAbc0;
+  const Matrix iDq = parkTransform * iInjAbc0;
+  const Matrix vRefDq = parkTransform * vRefAbc0;
+
+  const Real vcD = vcDq(0, 0);
+  const Real vcQ = vcDq(1, 0);
+  const Real ircD = iDq(0, 0);
+  const Real ircQ = iDq(1, 0);
+
+  const Real pInit = vcD * ircD + vcQ * ircQ;
+  const Real qInit = -vcD * ircQ + vcQ * ircD;
+
+  Matrix x0 = Matrix::Zero(mStateSize, 1);
+
+  x0(ThetaPLL, 0) = theta0;
+  x0(PhiPLL, 0) = (omega - mOmegaN) / mKiPLL;
+  x0(PFiltered, 0) = pInit;
+  x0(QFiltered, 0) = qInit;
+
+  x0(PhiD, 0) = (ircD + mKpPowerCtrl * (pInit - mPRef)) / mKiPowerCtrl;
+  x0(PhiQ, 0) = (ircQ - mKpPowerCtrl * (qInit - mQRef)) / mKiPowerCtrl;
+
+  const Real iRefD =
+      -mKpPowerCtrl * pInit + mKiPowerCtrl * x0(PhiD, 0) + mKpPowerCtrl * mPRef;
+  const Real iRefQ =
+      mKpPowerCtrl * qInit + mKiPowerCtrl * x0(PhiQ, 0) - mKpPowerCtrl * mQRef;
+
+  x0(GammaD, 0) = (vRefDq(0, 0) + mKpCurrCtrl * (ircD - iRefD)) / mKiCurrCtrl;
+  x0(GammaQ, 0) = (vRefDq(1, 0) + mKpCurrCtrl * (ircQ - iRefQ)) / mKiCurrCtrl;
+
+  x0.block(VcA, 0, 3, 1) = vcAbc0;
+  x0.block(IfA, 0, 3, 1) = ifAbc0;
+
+  **mX = x0;
+  **mIntfVoltage = uPhasor.real();
+  **mIntfCurrent = ((uPhasor - vcPhasor) / mRc).real();
+
+  updateComponentParameters();
+  updateLogAttributes(**mIntfVoltage);
+
+  SPDLOG_LOGGER_INFO(mSLog,
+                     "\n--- Inverter SSN phasor/dq initialization ---"
+                     "\nInput u: {:s}"
+                     "\nOutput y: {:s}"
+                     "\nState x: {:s}"
+                     "\nP/Q init: [{:.6e}, {:.6e}]"
+                     "\nVc dq: [{:.6e}, {:.6e}]"
+                     "\nIinj dq: [{:.6e}, {:.6e}]"
+                     "\n--- Initialization finished ---",
+                     Logger::matrixToString(**mIntfVoltage),
+                     Logger::matrixToString(**mIntfCurrent),
+                     Logger::matrixToString(**mX), pInit, qInit, vcD, vcQ, ircD,
+                     ircQ);
 }
 
-void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
-  // Apply matrix stamp for equivalent current source
-  if (terminalNotGrounded(0)) {
-    Math::setVectorElement(rightVector, matrixNodeIndex(0, 0),
-                           -mEquivCurrent(0, 0));
-    Math::setVectorElement(rightVector, matrixNodeIndex(0, 1),
-                           -mEquivCurrent(1, 0));
-    Math::setVectorElement(rightVector, matrixNodeIndex(0, 2),
-                           -mEquivCurrent(2, 0));
-  }
-  if (terminalNotGrounded(1)) {
-    Math::setVectorElement(rightVector, matrixNodeIndex(1, 0),
-                           mEquivCurrent(0, 0));
-    Math::setVectorElement(rightVector, matrixNodeIndex(1, 1),
-                           mEquivCurrent(1, 0));
-    Math::setVectorElement(rightVector, matrixNodeIndex(1, 2),
-                           mEquivCurrent(2, 0));
-  }
+void EMT::Ph3::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
+    const Matrix &x, const Matrix &u, Matrix &A, Matrix &B, Matrix &C,
+    Matrix &D, Matrix &E, Matrix &F) const {
+  // -------------------------------------------------------------------------
+  // 1) Operating point and Park transformation
+  // -------------------------------------------------------------------------
+  const Real theta0 = x(ThetaPLL, 0);
+  const Real pFiltered0 = x(PFiltered, 0);
+  const Real qFiltered0 = x(QFiltered, 0);
+  const Real phiD0 = x(PhiD, 0);
+  const Real phiQ0 = x(PhiQ, 0);
+  const Real gammaD0 = x(GammaD, 0);
+  const Real gammaQ0 = x(GammaQ, 0);
+  const Matrix vcAbc0 = x.block(VcA, 0, 3, 1);
+
+  const Matrix identity3 = Matrix::Identity(3, 3);
+
+  const Matrix parkTransform = getParkTransformMatrix(theta0);
+  const Matrix tD = parkTransform.row(0);
+  const Matrix tQ = parkTransform.row(1);
+  const Matrix inverseParkTransform = getInverseParkTransformMatrix(theta0);
+  const Matrix sD = inverseParkTransform.col(0);
+  const Matrix sQ = inverseParkTransform.col(1);
+
+  const Matrix dTdTheta = tQ;
+  const Matrix dTqTheta = -tD;
+  const Matrix dSdTheta = sQ;
+  const Matrix dSqTheta = -sD;
+
+  // -------------------------------------------------------------------------
+  // 2) PLL measurement equation
+  //
+  // vq(theta, Vc) ≈ aThetaPLL * theta + aVPLL * Vc + bVq
+  //
+  // theta_dot = omegaN + KpPLL * vq + KiPLL * phiPLL
+  // phiPLL_dot = vq
+  // -------------------------------------------------------------------------
+  const Real vq0 = (tQ * vcAbc0)(0, 0);
+  const Real aThetaPLL = (dTqTheta * vcAbc0)(0, 0);
+  const Matrix aVPLL = tQ;
+  const Real bVq = vq0 - aThetaPLL * theta0 - (aVPLL * vcAbc0)(0, 0);
+
+  // -------------------------------------------------------------------------
+  // 3) Grid-current measurement in dq
+  //
+  // i_rc = (Vc - u) / Rc
+  // i_dq = T(theta) * i_rc
+  //
+  // The controller uses positive current as inverter injection into the grid.
+  // The SSN output uses the opposite sign:
+  //
+  // y = (u - Vc) / Rc
+  // -------------------------------------------------------------------------
+  const Matrix iInjAbc0 = (vcAbc0 - u) / mRc;
+
+  const Real vcD0 = (tD * vcAbc0)(0, 0);
+  const Real vcQ0 = (tQ * vcAbc0)(0, 0);
+  const Real ircD0 = (tD * iInjAbc0)(0, 0);
+  const Real ircQ0 = (tQ * iInjAbc0)(0, 0);
+
+  const Matrix dVcDByVc = tD;
+  const Matrix dVcQByVc = tQ;
+  const Matrix dIrcDByVc = tD / mRc;
+  const Matrix dIrcQByVc = tQ / mRc;
+  const Matrix dIrcDByU = -tD / mRc;
+  const Matrix dIrcQByU = -tQ / mRc;
+
+  const Real dVcDByTheta = (dTdTheta * vcAbc0)(0, 0);
+  const Real dVcQByTheta = (dTqTheta * vcAbc0)(0, 0);
+  const Real dIrcDByTheta = (dTdTheta * iInjAbc0)(0, 0);
+  const Real dIrcQByTheta = (dTqTheta * iInjAbc0)(0, 0);
+
+  const Real bIrcD = ircD0 - dIrcDByTheta * theta0 -
+                     (dIrcDByVc * vcAbc0)(0, 0) - (dIrcDByU * u)(0, 0);
+
+  const Real bIrcQ = ircQ0 - dIrcQByTheta * theta0 -
+                     (dIrcQByVc * vcAbc0)(0, 0) - (dIrcQByU * u)(0, 0);
+
+  // -------------------------------------------------------------------------
+  // 4) Power measurement and power-filter states
+  //
+  // p = vc_d * irc_d + vc_q * irc_q
+  // q = -vc_d * irc_q + vc_q * irc_d
+  //
+  // P_dot = omegaCutoff * (p - P)
+  // Q_dot = omegaCutoff * (q - Q)
+  // -------------------------------------------------------------------------
+  const Real p0 = vcD0 * ircD0 + vcQ0 * ircQ0;
+  const Real dPByTheta = ircD0 * dVcDByTheta + vcD0 * dIrcDByTheta +
+                         ircQ0 * dVcQByTheta + vcQ0 * dIrcQByTheta;
+  const Matrix dPByVc =
+      ircD0 * dVcDByVc + vcD0 * dIrcDByVc + ircQ0 * dVcQByVc + vcQ0 * dIrcQByVc;
+  const Matrix dPByU = vcD0 * dIrcDByU + vcQ0 * dIrcQByU;
+  const Real bP =
+      p0 - dPByTheta * theta0 - (dPByVc * vcAbc0)(0, 0) - (dPByU * u)(0, 0);
+
+  const Real q0 = -vcD0 * ircQ0 + vcQ0 * ircD0;
+  const Real dQByTheta = -ircQ0 * dVcDByTheta - vcD0 * dIrcQByTheta +
+                         ircD0 * dVcQByTheta + vcQ0 * dIrcDByTheta;
+  const Matrix dQByVc = -ircQ0 * dVcDByVc - vcD0 * dIrcQByVc +
+                        ircD0 * dVcQByVc + vcQ0 * dIrcDByVc;
+  const Matrix dQByU = -vcD0 * dIrcQByU + vcQ0 * dIrcDByU;
+  const Real bQ =
+      q0 - dQByTheta * theta0 - (dQByVc * vcAbc0)(0, 0) - (dQByU * u)(0, 0);
+
+  // -------------------------------------------------------------------------
+  // 5) Outer power control
+  //
+  // phi_d_dot = Pref - P
+  // phi_q_dot = Q - Qref
+  //
+  // iRef_d = KpP * (Pref - P) + KiP * phi_d
+  // iRef_q = KpP * (Q - Qref) + KiP * phi_q
+  // -------------------------------------------------------------------------
+  const Real iRefD0 =
+      -mKpPowerCtrl * pFiltered0 + mKiPowerCtrl * phiD0 + mKpPowerCtrl * mPRef;
+  const Real iRefQ0 =
+      mKpPowerCtrl * qFiltered0 + mKiPowerCtrl * phiQ0 - mKpPowerCtrl * mQRef;
+
+  // -------------------------------------------------------------------------
+  // 6) Inner current control and bridge-voltage reference
+  //
+  // gamma_d_dot = iRef_d - irc_d
+  // gamma_q_dot = iRef_q - irc_q
+  //
+  // vRef_d = KpI * (iRef_d - irc_d) + KiI * gamma_d
+  // vRef_q = KpI * (iRef_q - irc_q) + KiI * gamma_q
+  //
+  // vRef_abc = T_inv(theta) * [vRef_d, vRef_q]
+  // -------------------------------------------------------------------------
+  const Real vRefD0 =
+      -mKpCurrCtrl * ircD0 + mKiCurrCtrl * gammaD0 + mKpCurrCtrl * iRefD0;
+  const Real vRefQ0 =
+      -mKpCurrCtrl * ircQ0 + mKiCurrCtrl * gammaQ0 + mKpCurrCtrl * iRefQ0;
+
+  const Matrix vRefAbc0 = sD * vRefD0 + sQ * vRefQ0;
+
+  const Real dVRefDByTheta = -mKpCurrCtrl * dIrcDByTheta;
+  const Matrix dVRefDByVc = -mKpCurrCtrl * dIrcDByVc;
+  const Matrix dVRefDByU = -mKpCurrCtrl * dIrcDByU;
+
+  const Real dVRefQByTheta = -mKpCurrCtrl * dIrcQByTheta;
+  const Matrix dVRefQByVc = -mKpCurrCtrl * dIrcQByVc;
+  const Matrix dVRefQByU = -mKpCurrCtrl * dIrcQByU;
+
+  Matrix dVRefAbcByX = Matrix::Zero(3, mStateSize);
+  Matrix dVRefAbcByU = Matrix::Zero(3, 3);
+
+  dVRefAbcByX.col(ThetaPLL) = dSdTheta * vRefD0 + dSqTheta * vRefQ0 +
+                              sD * dVRefDByTheta + sQ * dVRefQByTheta;
+
+  dVRefAbcByX.col(PFiltered) += sD * (-mKpCurrCtrl * mKpPowerCtrl);
+  dVRefAbcByX.col(PhiD) += sD * (mKpCurrCtrl * mKiPowerCtrl);
+  dVRefAbcByX.col(GammaD) += sD * mKiCurrCtrl;
+
+  dVRefAbcByX.col(QFiltered) += sQ * (mKpCurrCtrl * mKpPowerCtrl);
+  dVRefAbcByX.col(PhiQ) += sQ * (mKpCurrCtrl * mKiPowerCtrl);
+  dVRefAbcByX.col(GammaQ) += sQ * mKiCurrCtrl;
+
+  dVRefAbcByX.block(0, VcA, 3, 3) += sD * dVRefDByVc + sQ * dVRefQByVc;
+
+  dVRefAbcByU = sD * dVRefDByU + sQ * dVRefQByU;
+
+  const Matrix vRefAbcOffset = vRefAbc0 - dVRefAbcByX * x - dVRefAbcByU * u;
+
+  // -------------------------------------------------------------------------
+  // 7) Initialize affine state-space matrices
+  //
+  // x_dot ≈ A * x + B * u + E
+  // y     ≈ C * x + D * u + F
+  // -------------------------------------------------------------------------
+  A.setZero(mStateSize, mStateSize);
+  B.setZero(mStateSize, 3);
+  C.setZero(3, mStateSize);
+  D.setZero(3, 3);
+  E.setZero(mStateSize, 1);
+  F.setZero(3, 1);
+
+  // -------------------------------------------------------------------------
+  // 8) Stamp PLL rows
+  // -------------------------------------------------------------------------
+  A(ThetaPLL, ThetaPLL) = mKpPLL * aThetaPLL;
+  A(ThetaPLL, PhiPLL) = mKiPLL;
+  A.block(ThetaPLL, VcA, 1, 3) = mKpPLL * aVPLL;
+
+  A(PhiPLL, ThetaPLL) = aThetaPLL;
+  A.block(PhiPLL, VcA, 1, 3) = aVPLL;
+
+  E(ThetaPLL, 0) = mOmegaN + mKpPLL * bVq;
+  E(PhiPLL, 0) = bVq;
+
+  // -------------------------------------------------------------------------
+  // 9) Stamp power-filter rows
+  // -------------------------------------------------------------------------
+  A(PFiltered, ThetaPLL) = mOmegaCutoff * dPByTheta;
+  A(PFiltered, PFiltered) = -mOmegaCutoff;
+  A.block(PFiltered, VcA, 1, 3) = mOmegaCutoff * dPByVc;
+  B.block(PFiltered, 0, 1, 3) = mOmegaCutoff * dPByU;
+  E(PFiltered, 0) = mOmegaCutoff * bP;
+
+  A(QFiltered, ThetaPLL) = mOmegaCutoff * dQByTheta;
+  A(QFiltered, QFiltered) = -mOmegaCutoff;
+  A.block(QFiltered, VcA, 1, 3) = mOmegaCutoff * dQByVc;
+  B.block(QFiltered, 0, 1, 3) = mOmegaCutoff * dQByU;
+  E(QFiltered, 0) = mOmegaCutoff * bQ;
+
+  // -------------------------------------------------------------------------
+  // 10) Stamp outer-loop integrator rows
+  // -------------------------------------------------------------------------
+  A(PhiD, PFiltered) = -1.0;
+  E(PhiD, 0) = mPRef;
+
+  A(PhiQ, QFiltered) = 1.0;
+  E(PhiQ, 0) = -mQRef;
+
+  // -------------------------------------------------------------------------
+  // 11) Stamp current-loop integrator rows
+  // -------------------------------------------------------------------------
+  A(GammaD, PFiltered) = -mKpPowerCtrl;
+  A(GammaD, PhiD) = mKiPowerCtrl;
+  A(GammaD, ThetaPLL) = -dIrcDByTheta;
+  A.block(GammaD, VcA, 1, 3) = -dIrcDByVc;
+  B.block(GammaD, 0, 1, 3) = -dIrcDByU;
+  E(GammaD, 0) = mKpPowerCtrl * mPRef - bIrcD;
+
+  A(GammaQ, QFiltered) = mKpPowerCtrl;
+  A(GammaQ, PhiQ) = mKiPowerCtrl;
+  A(GammaQ, ThetaPLL) = -dIrcQByTheta;
+  A.block(GammaQ, VcA, 1, 3) = -dIrcQByVc;
+  B.block(GammaQ, 0, 1, 3) = -dIrcQByU;
+  E(GammaQ, 0) = -mKpPowerCtrl * mQRef - bIrcQ;
+
+  // -------------------------------------------------------------------------
+  // 12) Stamp electrical filter plant
+  //
+  // Vc_dot = If / Cf + (u - Vc) / (Cf * Rc)
+  // If_dot = (vRef_abc - Vc - Rf * If) / Lf
+  // -------------------------------------------------------------------------
+  A.block(VcA, VcA, 3, 3) = -1.0 / (mCf * mRc) * identity3;
+  A.block(VcA, IfA, 3, 3) = 1.0 / mCf * identity3;
+  B.block(VcA, 0, 3, 3) = 1.0 / (mCf * mRc) * identity3;
+
+  A.block(IfA, 0, 3, mStateSize) = (1.0 / mLf) * dVRefAbcByX;
+  A.block(IfA, VcA, 3, 3) += -1.0 / mLf * identity3;
+  A.block(IfA, IfA, 3, 3) += -mRf / mLf * identity3;
+  B.block(IfA, 0, 3, 3) = (1.0 / mLf) * dVRefAbcByU;
+  E.block(IfA, 0, 3, 1) = (1.0 / mLf) * vRefAbcOffset;
+
+  // -------------------------------------------------------------------------
+  // 13) Stamp SSN output
+  //
+  // y = (u - Vc) / Rc
+  // -------------------------------------------------------------------------
+  C.block(0, VcA, 3, 3) = -1.0 / mRc * identity3;
+  D = 1.0 / mRc * identity3;
 }
 
-void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaCompAddPreStepDependencies(
-    AttributeBase::List &prevStepDependencies,
-    AttributeBase::List &attributeDependencies,
-    AttributeBase::List &modifiedAttributes) {
-  attributeDependencies.push_back(mPref);
-  modifiedAttributes.push_back(mRightVector);
-  modifiedAttributes.push_back(mIntfVoltage);
-}
+Bool EMT::Ph3::AvVoltSourceInverterStateSpace::updateComponentParameters() {
+  Matrix E;
+  Matrix F;
 
-void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaCompPreStep(
-    Real time, Int timeStepCount) {
-  updateEquivCurrent(time);
-  mnaCompApplyRightSideVectorStamp(**mRightVector);
-}
+  // The local linearized SSN model is time-varying because the network abc
+  // states are coupled with dq-frame control through the Park transformation.
+  // Therefore the stamp is recomputed every step and the change check is
+  // intentionally skipped.
+  buildStateSpaceModel(**mX, **mIntfVoltage, mA, mB, mC, mD, E, F);
 
-void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaCompAddPostStepDependencies(
-    AttributeBase::List &prevStepDependencies,
-    AttributeBase::List &attributeDependencies,
-    AttributeBase::List &modifiedAttributes,
-    Attribute<Matrix>::Ptr &leftVector) {
-  attributeDependencies.push_back(leftVector);
-  modifiedAttributes.push_back(mIntfCurrent);
-}
+  setStateOffset(E);
+  setOutputOffset(F);
 
-void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaCompPostStep(
-    Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-  mnaCompUpdateVoltage(**leftVector);
-  updateStates();
-  mnaCompUpdateCurrent(**leftVector);
-}
-
-void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaCompUpdateVoltage(
-    const Matrix &leftVector) {
-  if (terminalNotGrounded(1)) {
-    (**mIntfVoltage)(0, 0) =
-        Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
-    (**mIntfVoltage)(1, 0) =
-        Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));
-    (**mIntfVoltage)(2, 0) =
-        Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2));
-  }
-  if (terminalNotGrounded(0)) {
-    (**mIntfVoltage)(0, 0) =
-        (**mIntfVoltage)(0, 0) -
-        Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
-    (**mIntfVoltage)(1, 0) =
-        (**mIntfVoltage)(1, 0) -
-        Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
-    (**mIntfVoltage)(2, 0) =
-        (**mIntfVoltage)(2, 0) -
-        Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
-  }
-}
-
-void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaCompUpdateCurrent(
-    const Matrix &leftVector) {
-  // signs are not verified
-  (**mIntfCurrent)(0, 0) = mEquivCurrent(0, 0) - (**mIntfVoltage)(0, 0) / mRc;
-  (**mIntfCurrent)(1, 0) = mEquivCurrent(1, 0) - (**mIntfVoltage)(1, 0) / mRc;
-  (**mIntfCurrent)(2, 0) = mEquivCurrent(2, 0) - (**mIntfVoltage)(2, 0) / mRc;
-}
-
-void EMT::Ph3::AvVoltSourceInverterStateSpace::updateEquivCurrent(Real time) {
-  mEquivCurrent = **mVcabc / mRc;
+  return true;
 }

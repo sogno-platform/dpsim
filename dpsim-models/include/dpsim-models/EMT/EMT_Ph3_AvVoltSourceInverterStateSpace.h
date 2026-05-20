@@ -1,162 +1,89 @@
-/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *********************************************************************************/
+// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+// SPDX-License-Identifier: MPL-2.0
 
 #pragma once
 
-#include <dpsim-models/Base/Base_Ph1_VoltageSource.h>
-#include <dpsim-models/MNASimPowerComp.h>
-#include <dpsim-models/Solver/MNAInterface.h>
+#include <dpsim-models/EMT/EMT_Ph3_TwoTerminalVTypeVariableSSNComp.h>
 
 namespace CPS {
 namespace EMT {
 namespace Ph3 {
 
-/// average inverter model with LC filter
-class AvVoltSourceInverterStateSpace
-    : public MNASimPowerComp<Real>,
-      public Base::Ph1::VoltageSource,
+class AvVoltSourceInverterStateSpace final
+    : public TwoTerminalVTypeVariableSSNComp,
       public SharedFactory<AvVoltSourceInverterStateSpace> {
-protected:
-  Real mTimeStep;
+private:
+  static constexpr Int mStateSize = 14;
 
-  /// filter paramter
+  enum StateIndex : Int {
+    ThetaPLL = 0,
+    PhiPLL = 1,
+    PFiltered = 2,
+    QFiltered = 3,
+    PhiD = 4,
+    PhiQ = 5,
+    GammaD = 6,
+    GammaQ = 7,
+    VcA = 8,
+    VcB = 9,
+    VcC = 10,
+    IfA = 11,
+    IfB = 12,
+    IfC = 13
+  };
+
   Real mLf;
   Real mCf;
   Real mRf;
-
-  /// PLL
-  Real mOmegaN;
-  Real mKiPLL;
-  Real mKpPLL;
-
-  /// Power controller
-  Real mOmegaCutoff;
-  Real mKiPowerCtrld;
-  Real mKiPowerCtrlq;
-  Real mKpPowerCtrld;
-  Real mKpPowerCtrlq;
-
-  /// Current controller
-  Real mKiCurrCtrld;
-  Real mKiCurrCtrlq;
-  Real mKpCurrCtrld;
-  Real mKpCurrCtrlq;
-
-  /// connection to grid
   Real mRc;
 
-public:
-  // ### parameters ###
-  const Attribute<Real>::Ptr mPref;
-  const Attribute<Real>::Ptr mQref;
+  Real mOmegaN;
+  Real mKpPLL;
+  Real mKiPLL;
 
-  // states
-  const Attribute<Real>::Ptr mThetaPLL;
-  const Attribute<Real>::Ptr mPhiPLL;
+  Real mOmegaCutoff;
+  Real mPRef;
+  Real mQRef;
+  Real mKpPowerCtrl;
+  Real mKiPowerCtrl;
+  Real mKpCurrCtrl;
+  Real mKiCurrCtrl;
 
-  const Attribute<Real>::Ptr mP;
-  const Attribute<Real>::Ptr mQ;
+  const Attribute<Real>::Ptr mVcD;
+  const Attribute<Real>::Ptr mVcQ;
+  const Attribute<Real>::Ptr mIrcD;
+  const Attribute<Real>::Ptr mIrcQ;
+  const Attribute<Real>::Ptr mPInst;
+  const Attribute<Real>::Ptr mQInst;
+  const Attribute<Real>::Ptr mOmegaPLL;
 
-  const Attribute<Real>::Ptr mPhi_d;
-  const Attribute<Real>::Ptr mPhi_q;
-
-  const Attribute<Real>::Ptr mGamma_d;
-  const Attribute<Real>::Ptr mGamma_q;
-
-  const Attribute<Matrix>::Ptr mVcabc;
+  Matrix getParkTransformMatrix(Real theta) const;
+  Matrix getInverseParkTransformMatrix(Real theta) const;
+  void buildStateSpaceModel(const Matrix &x, const Matrix &u, Matrix &A,
+                            Matrix &B, Matrix &C, Matrix &D, Matrix &E,
+                            Matrix &F) const;
 
 protected:
-  Matrix mIfabc = Matrix::Zero(3, 1);
-
-  // Norton equivalant voltage source
-  Matrix mEquivCurrent = Matrix::Zero(3, 1);
-  //  ### Real Voltage source parameters ###
-  /// conductance of mRc[S]
-  Real mYc;
-  // #### Matrices ####
-  Matrix mStates;
-  // u_old
-  Matrix mU;
-  /// output
-  Matrix mIg_abc = Matrix::Zero(3, 1);
-  Matrix mA;
-  Matrix mB;
-  Matrix mC;
-  Matrix mD;
-  // park transform matrix
-  Matrix mParkTransform;
+  Bool updateComponentParameters() override final;
+  void updateLogAttributes(const Matrix &u) const override final;
 
 public:
+  using SharedFactory<AvVoltSourceInverterStateSpace>::make;
+
   AvVoltSourceInverterStateSpace(String uid, String name,
                                  Logger::Level logLevel = Logger::Level::off);
   AvVoltSourceInverterStateSpace(String name,
                                  Logger::Level logLevel = Logger::Level::off)
       : AvVoltSourceInverterStateSpace(name, name, logLevel) {}
 
-  // initialize with parameters already set.
-  // sysVoltNom: phase voltage
+  void setParameters(Real lf, Real cf, Real rf, Real rc, Real omegaN,
+                     Real kpPLL, Real kiPLL, Real omegaCutoff, Real pRef,
+                     Real qRef, Real kpPowerCtrl, Real kiPowerCtrl,
+                     Real kpCurrCtrl, Real kiCurrCtrl);
 
-  void initializeStates(Real omega, Real timeStep,
-                        Attribute<Matrix>::Ptr leftVector);
-
-  void updateStates();
-
-  void setParameters(Real sysOmega, Complex sysVoltNom, Real Pref, Real Qref,
-                     Real Lf, Real Cf, Real Rf, Real Rc, Real Kp_pll,
-                     Real Ki_pll, Real Kp_powerCtrl, Real Ki_powerCtrl,
-                     Real Kp_currCtrl, Real Ki_currCtrl);
-
-  void setFilterParameters(Real Lf, Real Cf, Real Rf);
-
-  void setControllerParameters(Real Kp_pll, Real Ki_pll, Real Kp_powerCtrl,
-                               Real Ki_powerCtrl, Real Kp_currCtrl,
-                               Real Ki_currCtrl);
-
-  //update park transform coefficients inside A, B matrices according to the new states (thea_pll)
-  //update Ig_abc in matrix B
-  void updateLinearizedCoeffs();
-
-  Matrix getParkTransformMatrix(Real theta);
-  Matrix getInverseParkTransformMatrix(Real theta);
-  Matrix parkTransform(Real theta, Real fa, Real fb, Real fc);
-  Matrix inverseParkTransform(Real theta, Real fd, Real fq, Real zero = 0.);
-
-  // #### MNA section ####
-  /// Initializes internal variables of the component
-  void mnaCompInitialize(Real omega, Real timeStep,
-                         Attribute<Matrix>::Ptr leftVector) override;
-  /// Stamps system matrix
-  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
-  /// Stamps right side (source) vector
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
-  /// Update interface voltage from MNA system result
-  void mnaCompUpdateVoltage(const Matrix &leftVector) override;
-  /// Returns current through the component
-  void mnaCompUpdateCurrent(const Matrix &leftVector) override;
-  /// update equivalent current of the equivalent source
-  void updateEquivCurrent(Real time);
-
-  void mnaCompPreStep(Real time, Int timeStepCount) override;
-  void mnaCompPostStep(Real time, Int timeStepCount,
-                       Attribute<Matrix>::Ptr &leftVector) override;
-
-  /// Add MNA pre step dependencies
-  void mnaCompAddPreStepDependencies(
-      AttributeBase::List &prevStepDependencies,
-      AttributeBase::List &attributeDependencies,
-      AttributeBase::List &modifiedAttributes) override;
-  /// Add MNA post step dependencies
-  void
-  mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
-                                 AttributeBase::List &attributeDependencies,
-                                 AttributeBase::List &modifiedAttributes,
-                                 Attribute<Matrix>::Ptr &leftVector) override;
+  void initializeFromNodesAndTerminals(Real frequency) override final;
 };
+
 } // namespace Ph3
 } // namespace EMT
 } // namespace CPS
