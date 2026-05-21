@@ -3,8 +3,111 @@
 "><meta property="og:type" content="website"><meta property="og:url" content="https://sogno-platform.github.io/dpsim/docs/models/"><meta property="og:site_name" content="DPsim"><meta itemprop=name content="Models"><meta itemprop=description content="Mathematical description of the models implemented in DPsim.
 "><meta name=twitter:card content="summary"><meta name=twitter:title content="Models"><meta name=twitter:description content="Mathematical description of the models implemented in DPsim.
 "><link rel=preload href=/dpsim/scss/main.min.73bc65c1e18bb0cbd02b071f40b73b018bed23b1835e915c0f4f73a772a6713b.css as=style><link href=/dpsim/scss/main.min.73bc65c1e18bb0cbd02b071f40b73b018bed23b1835e915c0f4f73a772a6713b.css rel=stylesheet integrity><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity=sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK crossorigin=anonymous></script>
-<script defer src=https://unpkg.com/lunr@2.3.9/lunr.min.js integrity=sha384-203J0SNzyqHby3iU6hzvzltrWi/M41wOP5Gu+BiJMz5nwKykbkUx8Kp7iti0Lpli crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar"><a class=navbar-brand href=/dpsim/><span class="navbar-brand__logo navbar-logo"></span><span class=navbar-brand__name>DPsim</span></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-4 mb-2 mb-lg-0"><a class="nav-link active" href=/dpsim/docs/><span class=active>Documentation</span></a></li></ul></div><div class="navbar-nav d-none d-lg-block"><div class="td-search td-search--offline"><div class=td-search__icon></div><input type=search class="td-search__input form-control" placeholder="Search this site…" aria-label="Search this site…" autocomplete=off data-offline-search-index-json-src=/dpsim/offline-search-index.aa4361f9bad1970fdcd1f3dbc98b6258.json data-offline-search-base-href=/ data-offline-search-max-results=10></div></div></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>This is the multi-page printable view of this section.
-<a href=# onclick="return print(),!1">Click here to print</a>.</p><p><a href=/dpsim/docs/models/>Return to the regular view of this page</a>.</p></div><h1 class=title>Models</h1><div class=lead>Mathematical description of the models implemented in DPsim.</div><ul><li>1: <a href=#pg-4f0ffdeda8dbe1beb970d2ea3deea516>Transformer</a></li><li>2: <a href=#pg-e3f09e4f60e4251806fdb99a72cfdeb8>Branches</a></li><li>3: <a href=#pg-20dcbabac73548c157ffb4d9db6558a3>Induction Machine</a></li><li>4: <a href=#pg-de0ddf83de229c547755bc41e95768fd>RLC-Elements</a></li><li>5: <a href=#pg-6057766faa04ada82c116a6e9f46c38d>Synchronous Generator</a></li><li>6: <a href=#pg-ebd94d945756297966939d812b33d0b4>VS-Inverter</a></li></ul><div class=content><p>The following models are currently available:</p><ul><li>Dynamic phasors<ul><li>inductor, capacitor, resistor</li><li>current and voltage source</li><li>load (PQ and Z type)</li><li>pi-line</li><li>transmission line (Bergeron)</li><li>synchronous generator dq-frame full order (Kundur, Krause)</li><li>inverter averaged</li><li>inverter with harmonics (comparable to switched model)</li><li>switch</li></ul></li><li>EMT<ul><li>inductor, capacitor, resistor</li><li>current and voltage source</li><li>load (Z type)</li><li>pi-line</li><li>transmission line (Bergeron)</li><li>synchronous generator dq-frame full order (Kundur, Krause)</li><li>inverter averaged</li><li>switch</li></ul></li></ul></div></div><div class=td-content style=page-break-before:always><h1 id=pg-4f0ffdeda8dbe1beb970d2ea3deea516>1 - Transformer</h1><h1 id=2-winding-transformer>2-Winding Transformer</h1><p>The transformer model is composed of an RL-segment and an ideal transformer.
+<script defer src=https://unpkg.com/lunr@2.3.9/lunr.min.js integrity=sha384-203J0SNzyqHby3iU6hzvzltrWi/M41wOP5Gu+BiJMz5nwKykbkUx8Kp7iti0Lpli crossorigin=anonymous></script></head><body class=td-section><header><nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar"><a class=navbar-brand href=/dpsim/><span class="navbar-brand__logo navbar-logo"></span><span class=navbar-brand__name>DPsim</span></a><div class="td-navbar-nav-scroll ml-md-auto" id=main_navbar><ul class="navbar-nav mt-2 mt-lg-0"><li class="nav-item mr-4 mb-2 mb-lg-0"><a class="nav-link active" href=/dpsim/docs/><span class=active>Documentation</span></a></li></ul></div><div class="navbar-nav d-none d-lg-block"><div class="td-search td-search--offline"><div class=td-search__icon></div><input type=search class="td-search__input form-control" placeholder="Search this site…" aria-label="Search this site…" autocomplete=off data-offline-search-index-json-src=/dpsim/offline-search-index.c62cd260e29e025e9c4eb52951645523.json data-offline-search-base-href=/ data-offline-search-max-results=10></div></div></nav></header><div class="container-fluid td-outer"><div class=td-main><div class="row flex-xl-nowrap"><main class="col-12 col-md-9 col-xl-8 pl-md-5" role=main><div class=td-content><div class="pageinfo pageinfo-primary d-print-none"><p>This is the multi-page printable view of this section.
+<a href=# onclick="return print(),!1">Click here to print</a>.</p><p><a href=/dpsim/docs/models/>Return to the regular view of this page</a>.</p></div><h1 class=title>Models</h1><div class=lead>Mathematical description of the models implemented in DPsim.</div><ul><li>1: <a href=#pg-ebd94d945756297966939d812b33d0b4>Power Electronics</a></li><li>2: <a href=#pg-4f0ffdeda8dbe1beb970d2ea3deea516>Transformer</a></li><li>3: <a href=#pg-e3f09e4f60e4251806fdb99a72cfdeb8>Branches</a></li><li>4: <a href=#pg-20dcbabac73548c157ffb4d9db6558a3>Induction Machine</a></li><li>5: <a href=#pg-de0ddf83de229c547755bc41e95768fd>RLC-Elements</a></li><li>6: <a href=#pg-6057766faa04ada82c116a6e9f46c38d>Synchronous Generator</a></li></ul><div class=content><p>The following models are currently available:</p><ul><li>Dynamic phasors<ul><li>inductor, capacitor, resistor</li><li>current and voltage source</li><li>load (PQ and Z type)</li><li>pi-line</li><li>transmission line (Bergeron)</li><li>synchronous generator dq-frame full order (Kundur, Krause)</li><li>inverter averaged</li><li>inverter with harmonics (comparable to switched model)</li><li>switch</li></ul></li><li>EMT<ul><li>inductor, capacitor, resistor</li><li>current and voltage source</li><li>load (Z type)</li><li>pi-line</li><li>transmission line (Bergeron)</li><li>synchronous generator dq-frame full order (Kundur, Krause)</li><li>inverter averaged</li><li>switch</li></ul></li></ul></div></div><div class=td-content style=page-break-before:always><h1 id=pg-ebd94d945756297966939d812b33d0b4>1 - Power Electronics</h1><p>DPsim provides several averaged power-electronic inverter models for simulation using EMT, DP, and SP network modeling domains.</p><h1 id=three-phase-averaged-voltage-source-inverter-with-state-space-nodal-interface>Three-Phase Averaged Voltage Source Inverter with State-Space Nodal Interface</h1><p>The <code>EMT::Ph3::AvVoltSourceInverterStateSpace</code> model represents a grid-following averaged voltage source inverter in the EMT domain.
+It is implemented as a variable state-space nodal component and can therefore be directly stamped into the MNA system.
+The model includes a PLL, filtered active/reactive power measurement, outer power control, inner current control, and an LC filter with coupling resistance to the grid node.</p><p>The terminal input is the PCC voltage vector</p><p>$$
+\mathbf{u} =
+\begin{bmatrix}
+u_a & u_b & u_c
+\end{bmatrix}^\top ,
+$$</p><p>and the state vector is</p><p>$$
+\mathbf{x} =
+\begin{bmatrix}
+\theta_{\mathrm{PLL}} &
+\phi_{\mathrm{PLL}} &
+P &
+Q &
+\phi_d &
+\phi_q &
+\gamma_d &
+\gamma_q &
+v_{c,a} &
+v_{c,b} &
+v_{c,c} &
+i_{f,a} &
+i_{f,b} &
+i_{f,c}
+\end{bmatrix}^\top .
+$$</p><p>The model output is the interface current injected into the MNA system,</p><p>$$
+\mathbf{y} =
+\frac{\mathbf{u} - \mathbf{v}_c}{R_c}.
+$$</p><h2 id=model-equations>Model equations</h2><p>The controller uses the opposite current direction, i.e. positive current denotes inverter injection into the grid,</p><p>$$
+\mathbf{i}_{rc} =
+\frac{\mathbf{v}_c - \mathbf{u}}{R_c}.
+$$</p><p>The Park transformation with PLL angle $\theta_{\mathrm{PLL}}$ is used to obtain dq quantities,</p><h1 id=endbmatrix>$$
+\begin{bmatrix}
+v_{c,d} \
+v_{c,q}
+\end{bmatrix}</h1><h1 id=endbmatrix-1>\mathbf{T}(\theta_{\mathrm{PLL}})\mathbf{v}<em>c,
+\qquad
+\begin{bmatrix}
+i</em>{rc,d} \
+i_{rc,q}
+\end{bmatrix}</h1><p>\mathbf{T}(\theta_{\mathrm{PLL}})\mathbf{i}_{rc}.
+$$</p><p>The instantaneous active and reactive powers are calculated as</p><p>$$
+p = v_{c,d} i_{rc,d} + v_{c,q} i_{rc,q},
+$$</p><p>$$
+q = -v_{c,d} i_{rc,q} + v_{c,q} i_{rc,d}.
+$$</p><p>The PLL and power-filter dynamics are</p><h1 id=dottheta_mathrmpll>$$
+\dot{\theta}_{\mathrm{PLL}}</h1><p>\omega_n + K_{p,\mathrm{PLL}} v_{c,q} +
+K_{i,\mathrm{PLL}} \phi_{\mathrm{PLL}},
+$$</p><p>$$
+\dot{\phi}<em>{\mathrm{PLL}} = v</em>{c,q},
+$$</p><p>$$
+\dot{P} = \omega_c(p - P),
+\qquad
+\dot{Q} = \omega_c(q - Q).
+$$</p><p>The outer power-control integrators and current references are</p><p>$$
+\dot{\phi}<em>d = P</em>{\mathrm{ref}} - P,
+\qquad
+\dot{\phi}<em>q = Q - Q</em>{\mathrm{ref}},
+$$</p><h1 id=i_dmathrmref>$$
+i_{d,\mathrm{ref}}</h1><p>K_{p,P}(P_{\mathrm{ref}} - P) + K_{i,P}\phi_d,
+$$</p><h1 id=i_qmathrmref>$$
+i_{q,\mathrm{ref}}</h1><p>K_{p,P}(Q - Q_{\mathrm{ref}}) + K_{i,P}\phi_q.
+$$</p><p>The inner current-control integrators and voltage references are</p><p>$$
+\dot{\gamma}<em>d = i</em>{d,\mathrm{ref}} - i_{rc,d},
+\qquad
+\dot{\gamma}<em>q = i</em>{q,\mathrm{ref}} - i_{rc,q},
+$$</p><h1 id=v_dmathrmref>$$
+v_{d,\mathrm{ref}}</h1><p>K_{p,I}(i_{d,\mathrm{ref}} - i_{rc,d}) +
+K_{i,I}\gamma_d,
+$$</p><h1 id=v_qmathrmref>$$
+v_{q,\mathrm{ref}}</h1><p>K_{p,I}(i_{q,\mathrm{ref}} - i_{rc,q}) +
+K_{i,I}\gamma_q.
+$$</p><p>The reference voltage is transformed back to abc coordinates,</p><h1 id=mathbfv_mathrmref>$$
+\mathbf{v}_{\mathrm{ref}}</h1><p>\mathbf{T}^{-1}(\theta_{\mathrm{PLL}})
+\begin{bmatrix}
+v_{d,\mathrm{ref}} \
+v_{q,\mathrm{ref}}
+\end{bmatrix}.
+$$</p><p>The LC filter dynamics are</p><h1 id=dotmathbfv_c>$$
+\dot{\mathbf{v}}_c</h1><p>\frac{1}{C_f}\mathbf{i}_f
++
+\frac{1}{C_f R_c}(\mathbf{u} - \mathbf{v}_c),
+$$</p><h1 id=dotmathbfi_f>$$
+\dot{\mathbf{i}}_f</h1><h2 id=mathbfv_mathrmref-1>\frac{1}{L_f}
+\left(
+\mathbf{v}_{\mathrm{ref}}</h2><h2 id=mathbfv_c>\mathbf{v}_c</h2><p>R_f \mathbf{i}_f
+\right).
+$$</p><p>At each simulation step, the nonlinear model is locally linearized into the affine state-space form</p><p>$$
+\dot{\mathbf{x}}
+\approx
+\mathbf{A}\mathbf{x}
++
+\mathbf{B}\mathbf{u}
++
+\mathbf{E},
+$$</p><p>$$
+\mathbf{y}
+\approx
+\mathbf{C}\mathbf{x}
++
+\mathbf{D}\mathbf{u}
++
+\mathbf{F},
+$$</p><p>which is then discretized and stamped into the EMT MNA system.</p><h2 id=source-code-and-examples>Source code and examples</h2><ul><li>Source code: <a href=https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/include/dpsim-models/EMT/EMT_Ph3_AvVoltSourceInverterStateSpace.h>header</a>, <a href=https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/src/EMT/EMT_Ph3_AvVoltSourceInverterStateSpace.cpp>implementation</a></li><li><a href=https://github.com/sogno-platform/dpsim/blob/master/dpsim/examples/cxx/Components/EMT_Ph3_AvVoltSourceInverterStateSpace.cpp>C++ example</a></li><li><a href=https://github.com/sogno-platform/dpsim/blob/master/examples/Notebooks/Components/EMT_Ph3_AvVoltSourceInverterStateSpace.ipynb>Python notebook</a></li></ul></div><div class=td-content style=page-break-before:always><h1 id=pg-4f0ffdeda8dbe1beb970d2ea3deea516>2 - Transformer</h1><h1 id=2-winding-transformer>2-Winding Transformer</h1><p>The transformer model is composed of an RL-segment and an ideal transformer.
 The single line diagram is depicted in the figure below.</p><p><img src=electrical_transformer.svg alt=Transformer></p><p>If node reduction is not applied, two virtual nodes are created to stamp this model into the system matrix.</p><p>Furthermore, the ideal transformer has an additional equation, which requires an extension of the system matrix.
 The complete matrix stamp for the ideal transformer is</p><div class=math>$$\begin{array}{c|c c c}
 ~ & j & k & l \cr
@@ -26,7 +129,7 @@ i_{l} \cr
 \end{pmatrix}$$</div><p>The variable $j$ denotes the high voltage node while $k$ is the low voltage node.
 $l$ indicates the inserted row and column to accommodate the relation between the two voltages at the ends of the transformer.
 The transformer ratio is defined as $T = V_{j} / V_{k}$.
-A phase shift can be introduced if $T$ is considered as a complex number.</p></div><div class=td-content style=page-break-before:always><h1 id=pg-e3f09e4f60e4251806fdb99a72cfdeb8>2 - Branches</h1><h1 id=rx-line>RX-Line</h1><h1 id=pi-line>PI-Line</h1><h1 id=transformer>Transformer</h1></div><div class=td-content style=page-break-before:always><h1 id=pg-20dcbabac73548c157ffb4d9db6558a3>3 - Induction Machine</h1></div><div class=td-content style=page-break-before:always><h1 id=pg-de0ddf83de229c547755bc41e95768fd>4 - RLC-Elements</h1><h1 id=emt-equations-and-modified-nodal-analysis>EMT Equations and Modified Nodal Analysis</h1><h2 id=inductance>Inductance</h2><p>An inductance is described by</p><div class=math>$$v_j(t) - v_k(t) = v_L(t) = L \frac{\mathrm{d} i_L(t)}{\mathrm{d}t}$$</div><p>Integration results in an equation to compute the current at time $t$ from a previous state at $t - \Delta t$.</p><div class=math>$$i_L(t) = i_L(t - \Delta t) + \frac{1}{L} \ \int_{t - \Delta t}^{t} v_L(\tau) \ \mathrm{d} \tau$$</div><p>There are various methods to discretize this equation in order to solve it numerically.
+A phase shift can be introduced if $T$ is considered as a complex number.</p></div><div class=td-content style=page-break-before:always><h1 id=pg-e3f09e4f60e4251806fdb99a72cfdeb8>3 - Branches</h1><h1 id=rx-line>RX-Line</h1><h1 id=pi-line>PI-Line</h1><h1 id=transformer>Transformer</h1></div><div class=td-content style=page-break-before:always><h1 id=pg-20dcbabac73548c157ffb4d9db6558a3>4 - Induction Machine</h1></div><div class=td-content style=page-break-before:always><h1 id=pg-de0ddf83de229c547755bc41e95768fd>5 - RLC-Elements</h1><h1 id=emt-equations-and-modified-nodal-analysis>EMT Equations and Modified Nodal Analysis</h1><h2 id=inductance>Inductance</h2><p>An inductance is described by</p><div class=math>$$v_j(t) - v_k(t) = v_L(t) = L \frac{\mathrm{d} i_L(t)}{\mathrm{d}t}$$</div><p>Integration results in an equation to compute the current at time $t$ from a previous state at $t - \Delta t$.</p><div class=math>$$i_L(t) = i_L(t - \Delta t) + \frac{1}{L} \ \int_{t - \Delta t}^{t} v_L(\tau) \ \mathrm{d} \tau$$</div><p>There are various methods to discretize this equation in order to solve it numerically.
 The trapezoidal rule, an implicit second-order method, is commonly applied for circuit simulation:</p><div class=math>$$\int_{t - \Delta t}^{t} f(\tau) \ \mathrm{d} \tau \approx \frac{\Delta t}{2}(f(t) + f(t - \Delta t))$$</div><p>Applying the trapezoidal rule to leads to</p><div class=math>$$i_L(t) = i_L(t - \Delta t) + \frac{\Delta t}{2L}(v_L(t) + v_L(t - \Delta t))$$</div><p>This can be rewritten in terms of an equivalent conductance and current source and the number of time steps $k$ with size $\Delta t$.</p><div class=math>$$i_L(k) = g_L v_L(k) + i_{L,equiv}(k-1)$$</div><div class=math>$$i_{L,equiv}(k-1) = i_L(k-1) + \frac{\Delta t}{2L} v_L(k-1)$$</div><div class=math>$$g_L = \frac{\Delta t}{2L}$$</div><p>Hence, components described by differential equations are transformed into a DC equivalent circuit as depicted in the figure below.</p><p><img src=electrical_resistive_companion_inductance.svg alt="inductance resistive companion"></p><h2 id=capacitance>Capacitance</h2><p>The same procedure can be applied to a capacitance.
 Integration on both side yields</p><div class=math>$$i_C(t) = C \frac{\mathrm{d}}{\mathrm{d}t} \ v_C(t)$$</div><div class=math>$$v_C(t) = v_C(t - \Delta t) + \frac{1}{C} \int_{t - \Delta t}^t i_C(\tau) \mathrm{d} \tau$$</div><p>Finally, the equivalent circuit is described by a current source and a conductance.</p><div class=math>$$i_{C}(k) = g_{C} v_C(k) + i_{C,equiv}(k-1)$$</div><div class=math>$$i_{C,equiv}(k-1) = -i_{C}(k-1) - g_C v_C(k-1)$$</div><div class=math>$$g_{C} = \frac{2C}{\Delta t}$$</div><p>This equation set is visualized in the figure below.</p><p><img src=electrical_resistive_companion_capacitance.svg alt="capacitance resistive companion"></p><p>Hence, the vector of unknowns $\bm{x}$ and the source vector $\bm{b}$ become time dependent and this leads to the system description:</p><div class=math>$$\bm{A} \bm{x}(t) = \bm{b}(t)$$</div><p>To simulate the transient behavior of circuits, this linear equation has to be solved repeatedly.
 As long as the system topology and the time step is fixed, the system matrix is constant.</p><h2 id=extension-with-dynamic-phasors>Extension with Dynamic Phasors</h2><p>The dynamic phasor concept can be integrated with nodal analysis.
@@ -45,7 +148,7 @@ Therefore, the resistive companion representations of inductances and capacitanc
 b = \frac{\Delta t \omega}{2}$$</div><div class=math>$$\langle i_{C,equiv} \rangle(k-1) = - \frac{1-jb}{a} \ \langle v_C \rangle(k-1) - \langle i_C \rangle(k-1)$$</div><h2 id=rl-series-element>RL-series element</h2><p>In dynamic phasors the integration of the inductance equation yields</p><div class=math>$$\langle v \rangle(t) = L \frac{\mathrm{d}}{dt} \langle i \rangle(t) + j \omega L \ \langle i \rangle(t) + R \ \langle i \rangle(t)$$</div><div class=math>$$\langle i \rangle(t) = \langle i \rangle(t - \Delta t) + \int_{t - \Delta t}^t \frac{1}{L} \langle v \rangle(\tau) - j \omega \ \langle i \rangle(\tau) - \frac{R}{L} \ \langle i \rangle(\tau) \mathrm{d} \tau$$</div><p>Applying the trapezoidal method leads to the finite difference equation:</p><div class=math>$$\begin{split}
 \langle i \rangle(k) = \langle i \rangle(k-1) + \frac{\Delta t}{2} \bigg[ \frac{1}{L} (\langle v \rangle(k) + \langle v \rangle(k-1))
 - \left( j \omega + \frac{R}{L} \right) (\langle i \rangle(k) + \langle i \rangle(k-1)) \bigg]
-\end{split}$$</div><p>Solving this for $\langle i \rangle(k)$ results in the \ac{DP} equivalent circuit model:</p><div class=math>$$\langle i \rangle(k) = \frac{a + Ra^2 - jab}{(1+Ra)^2 + b^2} \langle v \rangle(k) + \langle i_{equiv} \rangle(k-1)$$</div><p>with</p><div class=math>$$a = \frac{\Delta t}{2L}, \qquad b = \frac{\Delta t \omega}{2}$$</div><div class=math>$$\langle i_{equiv} \rangle(k-1) = \frac{1 - b^2 - j2b + 2Ra + (Ra)^2 - j2Rab}{(1+Ra^2) + b^2} \langle i \rangle(k-1) + \frac{a + Ra^2 - jab}{(1+Ra)^2 + b^2} \langle v \rangle(k-1)$$</div></div><div class=td-content style=page-break-before:always><h1 id=pg-6057766faa04ada82c116a6e9f46c38d>5 - Synchronous Generator</h1><p>Two different synchronous machine models are currently available:</p><ul><li>the full order dq0 reference frame model (EMT, DP) [Kundur, Power system stability and control, 1994]</li><li>and the much simpler transient stability model (DP) [Eremia, Handbook of Electrical Power System Dynamics, 2003]</li></ul><p>The machine model is interfaced to the nodal analysis network solver through a current source, which only affects the source vector and not the system matrix <a href=https://ieeexplore.ieee.org/document/5411963>Wang2010</a>.</p><h1 id=basic-equations>Basic Equations</h1><p>The equations of the stator and rotor voltages are</p><div class=math>$$\begin{align}
+\end{split}$$</div><p>Solving this for $\langle i \rangle(k)$ results in the \ac{DP} equivalent circuit model:</p><div class=math>$$\langle i \rangle(k) = \frac{a + Ra^2 - jab}{(1+Ra)^2 + b^2} \langle v \rangle(k) + \langle i_{equiv} \rangle(k-1)$$</div><p>with</p><div class=math>$$a = \frac{\Delta t}{2L}, \qquad b = \frac{\Delta t \omega}{2}$$</div><div class=math>$$\langle i_{equiv} \rangle(k-1) = \frac{1 - b^2 - j2b + 2Ra + (Ra)^2 - j2Rab}{(1+Ra^2) + b^2} \langle i \rangle(k-1) + \frac{a + Ra^2 - jab}{(1+Ra)^2 + b^2} \langle v \rangle(k-1)$$</div></div><div class=td-content style=page-break-before:always><h1 id=pg-6057766faa04ada82c116a6e9f46c38d>6 - Synchronous Generator</h1><p>Two different synchronous machine models are currently available:</p><ul><li>the full order dq0 reference frame model (EMT, DP) [Kundur, Power system stability and control, 1994]</li><li>and the much simpler transient stability model (DP) [Eremia, Handbook of Electrical Power System Dynamics, 2003]</li></ul><p>The machine model is interfaced to the nodal analysis network solver through a current source, which only affects the source vector and not the system matrix <a href=https://ieeexplore.ieee.org/document/5411963>Wang2010</a>.</p><h1 id=basic-equations>Basic Equations</h1><p>The equations of the stator and rotor voltages are</p><div class=math>$$\begin{align}
 \mathbf{v}_{abcs} &= \mathbf{R}_s \mathbf{i}_{abcs} + \frac{d}{dt} \boldsymbol{\lambda}_{abcs} \\
 \mathbf{v}_{dqr} &= \mathbf{R}_r \mathbf{i}_{dqr} + \frac{d}{dt} \boldsymbol{\lambda}_{dqr}
 \end{align}$$</div><p>where</p><div class=math>$$\begin{align}
@@ -260,5 +363,5 @@ L_{aq} &=  \left( \frac{1}{L_{mq}} + \frac{1}{L_{ls}} + \frac{1}{L_{lkq1}} + \fr
 T_e &= \langle \lambda_{qs} \rangle_0 \langle i_{ds} \rangle_0 - \langle \lambda_{ds} \rangle_0 \langle i_{qs} \rangle_0 \\
 \frac{1}{\omega_s} \frac{d \delta_r}{dt} &= \omega_r - 1 \\
   \frac{d \omega_r}{dt} &= \frac{1}{2H} (T_m - T_e).
-\end{align}$$</div><h2 id=transient-stability-model>Transient Stability Model</h2></div><div class=td-content style=page-break-before:always><h1 id=pg-ebd94d945756297966939d812b33d0b4>6 - VS-Inverter</h1></div></main></div></div><footer class="bg-dark py-5 row d-print-none"><div class="container-fluid mx-sm-5"><div class=row><div class="col-6 col-sm-4 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank rel=noopener href=https://slack.lfenergy.org/ aria-label=Slack><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="GitHub Discussions" aria-label="GitHub Discussions"><a class=text-white target=_blank rel=noopener href=https://github.com/sogno-platform/dpsim/discussions aria-label="GitHub Discussions"><i class="fab fa-github"></i></a></li></ul></div><div class="col-6 col-sm-4 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank rel=noopener href=https://github.com/sogno-platform/dpsim aria-label=GitHub><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="RWTH GitLab" aria-label="RWTH GitLab"><a class=text-white target=_blank rel=noopener href=https://git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim aria-label="RWTH GitLab"><i class="fab fa-gitlab"></i></a></li></ul></div><div class="col-12 col-sm-4 text-center py-2 order-sm-2"><small class=text-white>&copy; 2026 The DPsim Authors All Rights Reserved</small></div></div></div></footer></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css integrity="sha512-6VMVcy7XQNyarhVuiL50FzpgCFKsyTd6YO93aaQEyET+BNaWvj0IgKR86Bf6+AmWczxAcSnL+JGjo+iStgO1gQ==" crossorigin=anonymous><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.js integrity="sha512-b9IKj4LCNrtCPBhceRcoYOHWW/S2q9fpl7iAJlyxYpykRj1SKM7FE9+E0NEnJ8g8ni47LBr2GuX9qzg/xeuwzQ==" crossorigin=anonymous></script><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/contrib/auto-render.min.js integrity="sha512-iWiuBS5nt6r60fCz26Nd0Zqe0nbk1ZTIQbl3Kv7kYsX+yKMUFHzjaH2+AnM6vp2Xs+gNmaBAVWJjSmuPw76Efg==" crossorigin=anonymous onload='renderMathInElement(document.body,{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"},{display:!0,left:"\\[",right:"\\]"}]})'></script><script src=/dpsim/js/main.min.2aff983e9d0d8ecff9ed53e14b657216e2d8d2aff059bf4a5651283020995f1b.js integrity="sha256-Kv+YPp0Njs/57VPhS2VyFuLY0q/wWb9KVlEoMCCZXxs=" crossorigin=anonymous></script>
+\end{align}$$</div><h2 id=transient-stability-model>Transient Stability Model</h2></div></main></div></div><footer class="bg-dark py-5 row d-print-none"><div class="container-fluid mx-sm-5"><div class=row><div class="col-6 col-sm-4 text-xs-center order-sm-2"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=Slack aria-label=Slack><a class=text-white target=_blank rel=noopener href=https://slack.lfenergy.org/ aria-label=Slack><i class="fab fa-slack"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="GitHub Discussions" aria-label="GitHub Discussions"><a class=text-white target=_blank rel=noopener href=https://github.com/sogno-platform/dpsim/discussions aria-label="GitHub Discussions"><i class="fab fa-github"></i></a></li></ul></div><div class="col-6 col-sm-4 text-right text-xs-center order-sm-3"><ul class="list-inline mb-0"><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title=GitHub aria-label=GitHub><a class=text-white target=_blank rel=noopener href=https://github.com/sogno-platform/dpsim aria-label=GitHub><i class="fab fa-github"></i></a></li><li class="list-inline-item mx-2 h3" data-toggle=tooltip data-placement=top title="RWTH GitLab" aria-label="RWTH GitLab"><a class=text-white target=_blank rel=noopener href=https://git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim aria-label="RWTH GitLab"><i class="fab fa-gitlab"></i></a></li></ul></div><div class="col-12 col-sm-4 text-center py-2 order-sm-2"><small class=text-white>&copy; 2026 The DPsim Authors All Rights Reserved</small></div></div></div></footer></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css integrity="sha512-6VMVcy7XQNyarhVuiL50FzpgCFKsyTd6YO93aaQEyET+BNaWvj0IgKR86Bf6+AmWczxAcSnL+JGjo+iStgO1gQ==" crossorigin=anonymous><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.js integrity="sha512-b9IKj4LCNrtCPBhceRcoYOHWW/S2q9fpl7iAJlyxYpykRj1SKM7FE9+E0NEnJ8g8ni47LBr2GuX9qzg/xeuwzQ==" crossorigin=anonymous></script><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/contrib/auto-render.min.js integrity="sha512-iWiuBS5nt6r60fCz26Nd0Zqe0nbk1ZTIQbl3Kv7kYsX+yKMUFHzjaH2+AnM6vp2Xs+gNmaBAVWJjSmuPw76Efg==" crossorigin=anonymous onload='renderMathInElement(document.body,{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"},{display:!0,left:"\\[",right:"\\]"}]})'></script><script src=/dpsim/js/main.min.2aff983e9d0d8ecff9ed53e14b657216e2d8d2aff059bf4a5651283020995f1b.js integrity="sha256-Kv+YPp0Njs/57VPhS2VyFuLY0q/wWb9KVlEoMCCZXxs=" crossorigin=anonymous></script>
 <script src=/dpsim/js/tabpane-persist.js></script></body></html>

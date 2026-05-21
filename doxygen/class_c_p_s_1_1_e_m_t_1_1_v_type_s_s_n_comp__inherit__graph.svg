@@ -47,7 +47,7 @@
   </g>
 </defs>
 <script type="application/ecmascript">
-var viewWidth = 1773;
+var viewWidth = 1790;
 var viewHeight = 252;
 var sectionId = 'dynsection-0';
 </script>
@@ -376,10 +376,10 @@ var sectionId = 'dynsection-0';
 <!-- Node17 -->
 <g id="Node000017" class="node">
 <title>Node17</title>
-<g id="a_Node000017"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_piecewise_linear_inductor.html" target="_top" xlink:title="Three&#45;phase, two&#45;terminal, piecewise&#45;linear flux&#45;state inductor.">
-<polygon fill="white" stroke="#666666" points="1764.5,-78.5 1631.5,-78.5 1631.5,-42 1764.5,-42 1764.5,-78.5"/>
-<text text-anchor="start" x="1639.5" y="-65" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::Piecewise</text>
-<text text-anchor="middle" x="1698" y="-50.75" font-family="Helvetica,sans-Serif" font-size="10.00">LinearInductor</text>
+<g id="a_Node000017"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#bfbfbf" points="1781.75,-106.5 1631.5,-106.5 1631.5,-70 1781.75,-70 1781.75,-106.5"/>
+<text text-anchor="start" x="1639.5" y="-93" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::AvVoltSource</text>
+<text text-anchor="middle" x="1706.62" y="-78.75" font-family="Helvetica,sans-Serif" font-size="10.00">InverterStateSpace</text>
 </a>
 </g>
 </g>
@@ -387,8 +387,27 @@ var sectionId = 'dynsection-0';
 <g id="edge19_Node000016_Node000017" class="edge">
 <title>Node16&#45;&gt;Node17</title>
 <g id="a_edge19_Node000016_Node000017"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1606.22,-60.25C1614.58,-60.25 1622.97,-60.25 1631.1,-60.25"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1606.39,-56.75 1596.39,-60.25 1606.39,-63.75 1606.39,-56.75"/>
+<path fill="none" stroke="#63b8ff" d="M1606.04,-73.08C1614.38,-74.35 1622.79,-75.63 1631.02,-76.88"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1606.67,-69.63 1596.26,-71.58 1605.62,-76.55 1606.67,-69.63"/>
+</a>
+</g>
+</g>
+<!-- Node18 -->
+<g id="Node000018" class="node">
+<title>Node18</title>
+<g id="a_Node000018"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_piecewise_linear_inductor.html" target="_top" xlink:title="Three&#45;phase, two&#45;terminal, piecewise&#45;linear flux&#45;state inductor.">
+<polygon fill="white" stroke="#666666" points="1773.12,-51.5 1640.12,-51.5 1640.12,-15 1773.12,-15 1773.12,-51.5"/>
+<text text-anchor="start" x="1648.12" y="-38" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::Piecewise</text>
+<text text-anchor="middle" x="1706.62" y="-23.75" font-family="Helvetica,sans-Serif" font-size="10.00">LinearInductor</text>
+</a>
+</g>
+</g>
+<!-- Node16&#45;&gt;Node18 -->
+<g id="edge20_Node000016_Node000018" class="edge">
+<title>Node16&#45;&gt;Node18</title>
+<g id="a_edge20_Node000016_Node000018"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1605.99,-47.89C1617.29,-46.23 1628.75,-44.55 1639.68,-42.94"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1605.64,-44.4 1596.26,-49.32 1606.66,-51.33 1605.64,-44.4"/>
 </a>
 </g>
 </g>

@@ -164,56 +164,63 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  **mX = mdA * (**mX) + mdB * (uNew + uOld);</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>}</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="keywordtype">void</span> EMT::SSNComp::recomputeDiscreteModel() {</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  <a class="code hl_function" href="class_c_p_s_1_1_math.html#a4d9024f94dbee45b8f0d947a225a6c69">Math::calculateStateSpaceTrapezoidalMatrices</a>(mA, mB, mTimeStep, mdA, mdB);</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  mW = mC * mdB + mD;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>}</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
-<div class="foldopen" id="foldopen00079" data-start="{" data-end="}">
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a9724afa03c40d7f38b47990a81aa1805">   79</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a9724afa03c40d7f38b47990a81aa1805">EMT::SSNComp::updateStateSpaceModel</a>() {</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  <span class="comment">// For linear components, the default implementation does nothing.</span></div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>}</div>
+<div class="foldopen" id="foldopen00074" data-start="{" data-end="}">
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a310a4a96c67380d3a583f21389e03be9">   74</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a310a4a96c67380d3a583f21389e03be9">EMT::SSNComp::updateLogAttributes</a>(<span class="keyword">const</span> Matrix &amp;)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  <span class="comment">// the default implementation does nothing.</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>}</div>
 </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="keywordtype">void</span> EMT::SSNComp::recomputeDiscreteModel() {</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  <a class="code hl_function" href="class_c_p_s_1_1_math.html#a4d9024f94dbee45b8f0d947a225a6c69">Math::calculateStateSpaceTrapezoidalMatrices</a>(mA, mB, mTimeStep, mdA, mdB);</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  mW = mC * mdB + mD;</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>}</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="keywordtype">void</span> EMT::SSNComp::mnaCompInitialize(Real, Real timeStep,</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>                                     Attribute&lt;Matrix&gt;::Ptr) {</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  <span class="keywordflow">if</span> (!mParametersSet)</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keywordflow">throw</span> std::logic_error(</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        <span class="stringliteral">&quot;setParameters() must be called before initialization.&quot;</span>);</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  mTimeStep = timeStep;</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  updateMatrixNodeIndices();</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  recomputeDiscreteModel();</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  mYHist = calculateHistoryVector();</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>}</div>
+<div class="foldopen" id="foldopen00083" data-start="{" data-end="}">
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a9724afa03c40d7f38b47990a81aa1805">   83</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a9724afa03c40d7f38b47990a81aa1805">EMT::SSNComp::updateStateSpaceModel</a>() {</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  <span class="comment">// For linear components, the default implementation does nothing.</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>}</div>
+</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="keywordtype">void</span> EMT::SSNComp::mnaCompInitialize(Real, Real timeStep,</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>                                     Attribute&lt;Matrix&gt;::Ptr) {</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  <span class="keywordflow">if</span> (!mParametersSet)</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keywordflow">throw</span> std::logic_error(</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        <span class="stringliteral">&quot;setParameters() must be called before initialization.&quot;</span>);</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  mTimeStep = timeStep;</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  updateMatrixNodeIndices();</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="keywordtype">void</span> EMT::SSNComp::mnaCompAddPreStepDependencies(</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    AttributeBase::List &amp;prevStepDependencies,</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    AttributeBase::List &amp;attributeDependencies,</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    AttributeBase::List &amp;modifiedAttributes) {</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>  modifiedAttributes.push_back(mRightVector);</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  prevStepDependencies.push_back(mX);</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  prevStepDependencies.push_back(inputAttribute());</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>}</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="keywordtype">void</span> EMT::SSNComp::mnaCompPreStep(Real time, Int timeStepCount) {</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  updateStateSpaceModel();</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>  mYHist = calculateHistoryVector();</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  mnaCompApplyRightSideVectorStamp(**mRightVector);</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>}</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span><span class="keywordtype">void</span> EMT::SSNComp::mnaCompAddPostStepDependencies(</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    AttributeBase::List &amp;prevStepDependencies,</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    AttributeBase::List &amp;attributeDependencies,</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    AttributeBase::List &amp;modifiedAttributes,</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    Attribute&lt;Matrix&gt;::Ptr &amp;leftVector) {</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>  attributeDependencies.push_back(leftVector);</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  modifiedAttributes.push_back(inputAttribute());</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>  modifiedAttributes.push_back(outputAttribute());</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  modifiedAttributes.push_back(mX);</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>}</div>
-<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_s_s_n_comp_html_a9724afa03c40d7f38b47990a81aa1805"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a9724afa03c40d7f38b47990a81aa1805">CPS::EMT::SSNComp::updateStateSpaceModel</a></div><div class="ttdeci">virtual void updateStateSpaceModel()</div><div class="ttdoc">Hook for variable/time-varying SSN components.</div><div class="ttdef"><b>Definition</b> <a href="#l00079">EMT_SSNComp.cpp:79</a></div></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  recomputeDiscreteModel();</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  mYHist = calculateHistoryVector();</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>}</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="keywordtype">void</span> EMT::SSNComp::mnaCompAddPreStepDependencies(</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    AttributeBase::List &amp;prevStepDependencies,</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    AttributeBase::List &amp;attributeDependencies,</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    AttributeBase::List &amp;modifiedAttributes) {</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  modifiedAttributes.push_back(mRightVector);</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>  prevStepDependencies.push_back(mX);</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  prevStepDependencies.push_back(inputAttribute());</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>}</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="keywordtype">void</span> EMT::SSNComp::mnaCompPreStep(Real time, Int timeStepCount) {</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>  updateStateSpaceModel();</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>  mYHist = calculateHistoryVector();</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  mnaCompApplyRightSideVectorStamp(**mRightVector);</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>}</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span><span class="keywordtype">void</span> EMT::SSNComp::mnaCompAddPostStepDependencies(</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    AttributeBase::List &amp;prevStepDependencies,</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    AttributeBase::List &amp;attributeDependencies,</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    AttributeBase::List &amp;modifiedAttributes,</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    Attribute&lt;Matrix&gt;::Ptr &amp;leftVector) {</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  attributeDependencies.push_back(leftVector);</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  modifiedAttributes.push_back(inputAttribute());</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>  modifiedAttributes.push_back(outputAttribute());</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  modifiedAttributes.push_back(mX);</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>}</div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_s_s_n_comp_html_a310a4a96c67380d3a583f21389e03be9"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a310a4a96c67380d3a583f21389e03be9">CPS::EMT::SSNComp::updateLogAttributes</a></div><div class="ttdeci">virtual void updateLogAttributes(const Matrix &amp;u) const</div><div class="ttdoc">Update derived attributes used for logging/inspection.</div><div class="ttdef"><b>Definition</b> <a href="#l00074">EMT_SSNComp.cpp:74</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_s_s_n_comp_html_a9724afa03c40d7f38b47990a81aa1805"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a9724afa03c40d7f38b47990a81aa1805">CPS::EMT::SSNComp::updateStateSpaceModel</a></div><div class="ttdeci">virtual void updateStateSpaceModel()</div><div class="ttdoc">Hook for variable/time-varying SSN components.</div><div class="ttdef"><b>Definition</b> <a href="#l00083">EMT_SSNComp.cpp:83</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_m_n_a_sim_power_comp_html"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp</a></div><div class="ttdoc">Base class for all MNA components that are transmitting power.</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_sim_power_comp_8h_source.html#l00013">MNASimPowerComp.h:13</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_math_html_a4d9024f94dbee45b8f0d947a225a6c69"><div class="ttname"><a href="class_c_p_s_1_1_math.html#a4d9024f94dbee45b8f0d947a225a6c69">CPS::Math::calculateStateSpaceTrapezoidalMatrices</a></div><div class="ttdeci">static void calculateStateSpaceTrapezoidalMatrices(const Matrix &amp;A, const Matrix &amp;B, const Matrix &amp;C, const Real &amp;dt, Matrix &amp;Ad, Matrix &amp;Bd, Matrix &amp;Cd)</div><div class="ttdoc">Calculate the discretized state space matrices Ad, Bd, Cd using trapezoidal rule.</div><div class="ttdef"><b>Definition</b> <a href="_math_utils_8cpp_source.html#l00324">MathUtils.cpp:324</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_topological_power_comp_html_a7be81a0a95fe67af7776aad6e22b9665"><div class="ttname"><a href="class_c_p_s_1_1_topological_power_comp.html#a7be81a0a95fe67af7776aad6e22b9665">CPS::TopologicalPowerComp::mParametersSet</a></div><div class="ttdeci">bool mParametersSet</div><div class="ttdoc">Flag indicating that parameters are set via setParameters() function.</div><div class="ttdef"><b>Definition</b> <a href="_topological_power_comp_8h_source.html#l00041">TopologicalPowerComp.h:41</a></div></div>

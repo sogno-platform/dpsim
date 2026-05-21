@@ -129,45 +129,49 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keyword">virtual</span> Matrix calculateHistoryVector() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  MatrixComp calculateSteadyStateStateFromInput(<span class="keyword">const</span> MatrixComp &amp;u,</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                                                Real frequency) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  MatrixComp calculateSteadyStateOutputFromInput(<span class="keyword">const</span> MatrixComp &amp;x,</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                                                 <span class="keyword">const</span> MatrixComp &amp;u) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <span class="keywordtype">void</span> updateState(<span class="keyword">const</span> Matrix &amp;uOld, <span class="keyword">const</span> Matrix &amp;uNew);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  <span class="keywordtype">void</span> recomputeDiscreteModel();</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a9724afa03c40d7f38b47990a81aa1805">updateStateSpaceModel</a>();</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  <span class="keyword">virtual</span> Attribute&lt;Matrix&gt;::Ptr inputAttribute() <span class="keyword">const</span> = 0;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  <span class="keyword">virtual</span> Attribute&lt;Matrix&gt;::Ptr outputAttribute() <span class="keyword">const</span> = 0;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  <span class="keywordtype">void</span> setParameters(<span class="keyword">const</span> Matrix &amp;A, <span class="keyword">const</span> Matrix &amp;B, <span class="keyword">const</span> Matrix &amp;C,</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>                     <span class="keyword">const</span> Matrix &amp;D);</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keyword">virtual</span> MatrixComp calculateSteadyStateStateFromInput(<span class="keyword">const</span> MatrixComp &amp;u,</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                                                        Real frequency) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keyword">virtual</span> MatrixComp</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  calculateSteadyStateOutputFromInput(<span class="keyword">const</span> MatrixComp &amp;x,</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                                      <span class="keyword">const</span> MatrixComp &amp;u) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> updateState(<span class="keyword">const</span> Matrix &amp;uOld, <span class="keyword">const</span> Matrix &amp;uNew);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a310a4a96c67380d3a583f21389e03be9">updateLogAttributes</a>(<span class="keyword">const</span> Matrix &amp;u) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> recomputeDiscreteModel();</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a9724afa03c40d7f38b47990a81aa1805">updateStateSpaceModel</a>();</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  <span class="keyword">virtual</span> Attribute&lt;Matrix&gt;::Ptr inputAttribute() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <span class="keyword">virtual</span> Attribute&lt;Matrix&gt;::Ptr outputAttribute() <span class="keyword">const</span> = 0;</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  <span class="keywordtype">void</span> mnaCompInitialize(Real omega, Real timeStep,</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>                         Attribute&lt;Matrix&gt;::Ptr leftVector) <span class="keyword">override</span> <span class="keyword">final</span>;</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  <span class="keywordtype">void</span> mnaCompAddPreStepDependencies(</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>      AttributeBase::List &amp;prevStepDependencies,</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>      AttributeBase::List &amp;attributeDependencies,</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>      AttributeBase::List &amp;modifiedAttributes) <span class="keyword">override</span> <span class="keyword">final</span>;</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  <span class="keywordtype">void</span> mnaCompPreStep(Real time, Int timeStepCount) <span class="keyword">override</span> <span class="keyword">final</span>;</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  <span class="keywordtype">void</span> mnaCompAddPostStepDependencies(</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>      AttributeBase::List &amp;prevStepDependencies,</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>      AttributeBase::List &amp;attributeDependencies,</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>      AttributeBase::List &amp;modifiedAttributes,</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>      Attribute&lt;Matrix&gt;::Ptr &amp;leftVector) <span class="keyword">override</span> <span class="keyword">final</span>;</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>};</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  <span class="keywordtype">void</span> setParameters(<span class="keyword">const</span> Matrix &amp;A, <span class="keyword">const</span> Matrix &amp;B, <span class="keyword">const</span> Matrix &amp;C,</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>                     <span class="keyword">const</span> Matrix &amp;D);</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  <span class="keywordtype">void</span> mnaCompInitialize(Real omega, Real timeStep,</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>                         Attribute&lt;Matrix&gt;::Ptr leftVector) <span class="keyword">override</span> <span class="keyword">final</span>;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  <span class="keywordtype">void</span> mnaCompAddPreStepDependencies(</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>      AttributeBase::List &amp;prevStepDependencies,</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>      AttributeBase::List &amp;attributeDependencies,</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>      AttributeBase::List &amp;modifiedAttributes) <span class="keyword">override</span> <span class="keyword">final</span>;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  <span class="keywordtype">void</span> mnaCompPreStep(Real time, Int timeStepCount) <span class="keyword">override</span> <span class="keyword">final</span>;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  <span class="keywordtype">void</span> mnaCompAddPostStepDependencies(</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>      AttributeBase::List &amp;prevStepDependencies,</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>      AttributeBase::List &amp;attributeDependencies,</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>      AttributeBase::List &amp;modifiedAttributes,</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>      Attribute&lt;Matrix&gt;::Ptr &amp;leftVector) <span class="keyword">override</span> <span class="keyword">final</span>;</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>};</div>
 </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>} <span class="comment">// namespace EMT</span></div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>} <span class="comment">// namespace CPS</span></div>
-<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_s_s_n_comp_html_a9724afa03c40d7f38b47990a81aa1805"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a9724afa03c40d7f38b47990a81aa1805">CPS::EMT::SSNComp::updateStateSpaceModel</a></div><div class="ttdeci">virtual void updateStateSpaceModel()</div><div class="ttdoc">Hook for variable/time-varying SSN components.</div><div class="ttdef"><b>Definition</b> <a href="_e_m_t___s_s_n_comp_8cpp_source.html#l00079">EMT_SSNComp.cpp:79</a></div></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>} <span class="comment">// namespace EMT</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>} <span class="comment">// namespace CPS</span></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_s_s_n_comp_html_a310a4a96c67380d3a583f21389e03be9"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a310a4a96c67380d3a583f21389e03be9">CPS::EMT::SSNComp::updateLogAttributes</a></div><div class="ttdeci">virtual void updateLogAttributes(const Matrix &amp;u) const</div><div class="ttdoc">Update derived attributes used for logging/inspection.</div><div class="ttdef"><b>Definition</b> <a href="_e_m_t___s_s_n_comp_8cpp_source.html#l00074">EMT_SSNComp.cpp:74</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_s_s_n_comp_html_a9724afa03c40d7f38b47990a81aa1805"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a9724afa03c40d7f38b47990a81aa1805">CPS::EMT::SSNComp::updateStateSpaceModel</a></div><div class="ttdeci">virtual void updateStateSpaceModel()</div><div class="ttdoc">Hook for variable/time-varying SSN components.</div><div class="ttdef"><b>Definition</b> <a href="_e_m_t___s_s_n_comp_8cpp_source.html#l00083">EMT_SSNComp.cpp:83</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a66b765f33341283bc9b916c74047c749"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">CPS::IdentifiedObject::uid</a></div><div class="ttdeci">String uid()</div><div class="ttdoc">Returns unique id.</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00061">IdentifiedObject.h:61</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_m_n_a_sim_power_comp_html_ab9f66bb4639c7d0d73b47cef6be789c5"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#ab9f66bb4639c7d0d73b47cef6be789c5">CPS::MNASimPowerComp&lt; Real &gt;::MNASimPowerComp</a></div><div class="ttdeci">MNASimPowerComp(String uid, String name, Bool hasPreStep, Bool hasPostStep, Logger::Level logLevel)</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_sim_power_comp_8h_source.html#l00032">MNASimPowerComp.h:32</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
