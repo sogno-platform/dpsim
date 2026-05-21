@@ -52,8 +52,7 @@ void EMT::Ph3::PiecewiseLinearInductor::setParameters(
   Matrix cMatrix = Matrix::Zero(3, 3);
   Matrix dMatrix = Matrix::Zero(3, 3);
 
-  SSNComp::setParameters(aMatrix, bMatrix, cMatrix, dMatrix);
-  setOutputOffset(Matrix::Zero(3, 1));
+  VTypeVariableSSNComp::setParameters(aMatrix, bMatrix, cMatrix, dMatrix);
 
   // Initialize C and f from the current operating point x = 0.
   updateComponentParameters();

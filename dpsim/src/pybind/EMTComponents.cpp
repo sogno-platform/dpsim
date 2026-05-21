@@ -588,4 +588,30 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "flux_breakpoints"_a, "current_breakpoints"_a)
       .def("connect", &CPS::EMT::Ph3::PiecewiseLinearInductor::connect)
       .def_property_readonly("x", createAttributeGetter<CPS::Matrix>("x"));
+
+  py::class_<CPS::EMT::Ph3::AvVoltSourceInverterStateSpace,
+             std::shared_ptr<CPS::EMT::Ph3::AvVoltSourceInverterStateSpace>,
+             CPS::SimPowerComp<CPS::Real>>(
+      mEMTPh3, "AvVoltSourceInverterStateSpace", py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def(py::init<std::string, std::string, CPS::Logger::Level>(), "uid"_a,
+           "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters",
+           &CPS::EMT::Ph3::AvVoltSourceInverterStateSpace::setParameters,
+           "Lf"_a, "Cf"_a, "Rf"_a, "Rc"_a, "omega_n"_a, "Kp_pll"_a, "Ki_pll"_a,
+           "omega_cutoff"_a, "p_ref"_a, "q_ref"_a, "Kp_power_ctrl"_a,
+           "Ki_power_ctrl"_a, "Kp_curr_ctrl"_a, "Ki_curr_ctrl"_a)
+      .def("connect", &CPS::EMT::Ph3::AvVoltSourceInverterStateSpace::connect)
+      .def_property_readonly("x", createAttributeGetter<CPS::Matrix>("x"))
+      .def_property_readonly("vc_d", createAttributeGetter<CPS::Real>("vc_d"))
+      .def_property_readonly("vc_q", createAttributeGetter<CPS::Real>("vc_q"))
+      .def_property_readonly("irc_d", createAttributeGetter<CPS::Real>("irc_d"))
+      .def_property_readonly("irc_q", createAttributeGetter<CPS::Real>("irc_q"))
+      .def_property_readonly("p_inst",
+                             createAttributeGetter<CPS::Real>("p_inst"))
+      .def_property_readonly("q_inst",
+                             createAttributeGetter<CPS::Real>("q_inst"))
+      .def_property_readonly("omega_pll",
+                             createAttributeGetter<CPS::Real>("omega_pll"));
 }

@@ -32,6 +32,7 @@ void EMT::VTypeSSNComp::initializeFromNodesAndTerminals(Real frequency) {
   **mX = xInit.real();
   **mIntfVoltage = uInit.real();
   **mIntfCurrent = yInit.real();
+  updateLogAttributes(**mIntfVoltage);
 
   SPDLOG_LOGGER_INFO(
       mSLog,
@@ -54,4 +55,5 @@ void EMT::VTypeSSNComp::mnaCompPostStep(Real, Int,
   mnaCompUpdateVoltage(**leftVector);
   mnaCompUpdateCurrent(**leftVector);
   updateState(uOld, **mIntfVoltage);
+  updateLogAttributes(**mIntfVoltage);
 }

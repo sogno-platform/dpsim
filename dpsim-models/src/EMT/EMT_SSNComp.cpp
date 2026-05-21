@@ -71,6 +71,10 @@ void EMT::SSNComp::updateState(const Matrix &uOld, const Matrix &uNew) {
   **mX = mdA * (**mX) + mdB * (uNew + uOld);
 }
 
+void EMT::SSNComp::updateLogAttributes(const Matrix &) const {
+  // the default implementation does nothing.
+}
+
 void EMT::SSNComp::recomputeDiscreteModel() {
   Math::calculateStateSpaceTrapezoidalMatrices(mA, mB, mTimeStep, mdA, mdB);
   mW = mC * mdB + mD;
