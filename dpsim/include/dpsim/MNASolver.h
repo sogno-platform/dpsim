@@ -23,6 +23,7 @@
 #include <dpsim-models/Solver/MNAVariableCompInterface.h>
 #include <dpsim/Config.h>
 #include <dpsim/DataLogger.h>
+#include <dpsim/MNAStateSpaceExtractor.h>
 #include <dpsim/Solver.h>
 
 /* std::size_t is the largest data type. No container can store
@@ -120,6 +121,13 @@ protected:
   /// LU refactorization measurements
   std::vector<Real> mRecomputationTimes;
 
+  // #### State-space extraction ####
+  /// Enables extraction of the MNA-coupled discrete-time state matrix.
+  Bool mStateSpaceExtraction = false;
+
+  /// Extractor for the MNA-coupled state-space model.
+  MNAStateSpaceExtractor::Ptr mStateSpaceExtractor;
+
   /// Constructor should not be called by users but by Simulation
   MnaSolver(String name, CPS::Domain domain = CPS::Domain::DP,
             CPS::Logger::Level logLevel = CPS::Logger::Level::info);
@@ -134,6 +142,8 @@ protected:
   void initializeSystemWithPrecomputedMatrices();
   /// Initialization of system matrices and source vector
   void initializeSystemWithVariableMatrix();
+  /// Initialization of state-space extraction.
+  void initializeStateSpaceExtractor();
   /// Identify Nodes and SimPowerComps and SimSignalComps
   void identifyTopologyObjects();
   /// Assign simulation node index according to index in the vector.
@@ -181,6 +191,8 @@ protected:
   virtual std::shared_ptr<CPS::Task> createLogTask() = 0;
   /// Create a solve task for this solver implementation
   virtual std::shared_ptr<CPS::Task> createSolveTaskHarm(UInt freqIdx) = 0;
+  /// Create state-space extraction task for this solver implementation.
+  virtual std::shared_ptr<CPS::Task> createStateSpaceExtractionTask() = 0;
 
   // #### Scheduler Task Methods ####
   /// Solves system for single frequency
@@ -217,5 +229,11 @@ public:
   Matrix &rightSideVector() { return mRightSideVector; }
   ///
   virtual CPS::Task::List getTasks() override;
+
+  /// Enable or disable MNA state-space extraction.
+  void doStateSpaceExtraction(Bool value = true);
+
+  /// Read-only access to the MNA state-space extractor.
+  const MNAStateSpaceExtractor &getStateSpaceExtractor() const;
 };
 } // namespace DPsim

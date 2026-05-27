@@ -9,6 +9,8 @@
 #include <dpsim/MNASolver.h>
 #include <dpsim/SequentialScheduler.h>
 #include <memory>
+#include <stdexcept>
+#include <type_traits>
 
 using namespace DPsim;
 using namespace CPS;
@@ -30,6 +32,21 @@ MnaSolver<VarType>::MnaSolver(String name, CPS::Domain domain,
 template <typename VarType>
 void MnaSolver<VarType>::setSystem(const CPS::SystemTopology &system) {
   mSystem = system;
+}
+
+template <typename VarType>
+void MnaSolver<VarType>::doStateSpaceExtraction(Bool value) {
+  mStateSpaceExtraction = value;
+}
+
+template <typename VarType>
+const MNAStateSpaceExtractor &
+MnaSolver<VarType>::getStateSpaceExtractor() const {
+  if (!mStateSpaceExtractor)
+    throw std::logic_error(
+        "MNA state-space extractor has not been initialized.");
+
+  return *mStateSpaceExtractor;
 }
 
 template <typename VarType> void MnaSolver<VarType>::initialize() {
@@ -93,6 +110,9 @@ template <typename VarType> void MnaSolver<VarType>::initialize() {
 
   // Initialize system matrices and source vector.
   initializeSystem();
+
+  if (mStateSpaceExtraction)
+    initializeStateSpaceExtractor();
 
   SPDLOG_LOGGER_INFO(mSLog, "--- Initialization finished ---");
   SPDLOG_LOGGER_INFO(mSLog, "--- Initial system matrices and vectors ---");
@@ -292,6 +312,43 @@ void MnaSolver<VarType>::initializeSystemWithVariableMatrix() {
     if (mSLog->should_log(spdlog::level::trace))
       mSLog->trace("\n{:s}", Logger::matrixToString(mRightSideVector));
   }
+}
+
+template <typename VarType>
+void MnaSolver<VarType>::initializeStateSpaceExtractor() {
+  if (mDomain != CPS::Domain::EMT) {
+    throw std::logic_error(
+        "MNA state-space extraction supports EMT domain only.");
+  }
+
+  if (!std::is_same<VarType, Real>::value) {
+    throw std::logic_error(
+        "MNA state-space extraction supports real-valued MNA systems only.");
+  }
+
+  if (mFrequencyParallel) {
+    throw std::logic_error(
+        "MNA state-space extraction does not support frequency-parallel "
+        "MNA systems.");
+  }
+
+  CPS::MNAInterface::List stateSpaceComponents;
+  stateSpaceComponents.insert(stateSpaceComponents.end(),
+                              mMNAComponents.begin(), mMNAComponents.end());
+  stateSpaceComponents.insert(stateSpaceComponents.end(),
+                              mMNAIntfVariableComps.begin(),
+                              mMNAIntfVariableComps.end());
+
+  const UInt mnaVectorSize = static_cast<UInt>((**mLeftSideVector).rows());
+
+  mStateSpaceExtractor = std::make_shared<MNAStateSpaceExtractor>();
+  mStateSpaceExtractor->initialize(stateSpaceComponents, mnaVectorSize,
+                                   mTimeStep);
+
+  SPDLOG_LOGGER_INFO(
+      mSLog,
+      "Initialized MNA state-space extractor with {:d} extraction states.",
+      mStateSpaceExtractor->getStateCount());
 }
 
 template <typename VarType>
@@ -617,8 +674,14 @@ template <typename VarType> Task::List MnaSolver<VarType>::getTasks() {
         l.push_back(task);
     }
     l.push_back(createSolveTaskRecomp());
+    if (mStateSpaceExtraction) {
+      l.push_back(createStateSpaceExtractionTask());
+    }
   } else {
     l.push_back(createSolveTask());
+    if (mStateSpaceExtraction) {
+      l.push_back(createStateSpaceExtractionTask());
+    }
     l.push_back(createLogTask());
   }
   return l;

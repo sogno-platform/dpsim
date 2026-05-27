@@ -3,10 +3,12 @@
 #include <algorithm>
 #include <chrono>
 #include <iomanip>
+#include <stdexcept>
 #include <typeindex>
 
 #include <dpsim-models/Utils.h>
 #include <dpsim/DiakopticsSolver.h>
+#include <dpsim/MNASolver.h>
 #include <dpsim/MNASolverFactory.h>
 #include <dpsim/PFSolverPowerPolar.h>
 #include <dpsim/SequentialScheduler.h>
@@ -144,14 +146,22 @@ template <typename VarType> void Simulation::createMNASolver() {
     // TODO: In the future, here we could possibly even use different
     // solvers for different subnets if deemed useful
     if (mTearComponents.size() > 0) {
+      if (mStateSpaceExtraction) {
+        throw std::logic_error("MNA state-space extraction does not support "
+                               "Diakoptics/tearing.");
+      }
       // Tear components available, use diakoptics
       solver = std::make_shared<DiakopticsSolver<VarType>>(
           **mName, subnets[net], mTearComponents, **mTimeStep, mLogLevel);
     } else {
       // Default case with lu decomposition from mna factory
-      solver = MnaSolverFactory::factory<VarType>(**mName + copySuffix, mDomain,
-                                                  mLogLevel, mDirectImpl,
-                                                  mSolverPluginName);
+      auto mnaSolver = MnaSolverFactory::factory<VarType>(
+          **mName + copySuffix, mDomain, mLogLevel, mDirectImpl,
+          mSolverPluginName);
+
+      mnaSolver->doStateSpaceExtraction(mStateSpaceExtraction);
+
+      solver = mnaSolver;
       solver->setTimeStep(**mTimeStep);
       solver->setLogSolveTimes(mLogStepTimes);
       solver->doSteadyStateInit(**mSteadyStateInit);
@@ -427,6 +437,25 @@ void Simulation::logLUTimes() {
   for (auto solver : mSolvers) {
     solver->logLUTimes();
   }
+}
+
+const MNAStateSpaceExtractor &
+Simulation::getStateSpaceExtractor(UInt solverIndex) const {
+  if (solverIndex >= mSolvers.size()) {
+    throw std::out_of_range(
+        "Simulation::getStateSpaceExtractor(): solver index out of range.");
+  }
+
+  const auto mnaSolver =
+      std::dynamic_pointer_cast<MnaSolver<Real>>(mSolvers[solverIndex]);
+
+  if (!mnaSolver) {
+    throw std::logic_error(
+        "Simulation::getStateSpaceExtractor(): selected solver is not a "
+        "real-valued MNA solver.");
+  }
+
+  return mnaSolver->getStateSpaceExtractor();
 }
 
 CPS::AttributeBase::Ptr Simulation::getIdObjAttribute(const String &comp,
