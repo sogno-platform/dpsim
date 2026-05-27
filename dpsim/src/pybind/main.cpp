@@ -161,6 +161,25 @@ PYBIND11_MODULE(dpsimpy, m) {
                getPartialRefactorizationMethod)
       .def("get_btf", &DPsim::DirectLinearSolverConfiguration::getBTF);
 
+  py::class_<DPsim::MNAStateSpaceExtractor>(m, "MNAStateSpaceExtractor")
+      .def("is_initialized", &DPsim::MNAStateSpaceExtractor::isInitialized)
+      .def("get_state_count", &DPsim::MNAStateSpaceExtractor::getStateCount)
+      .def("get_time_step", &DPsim::MNAStateSpaceExtractor::getTimeStep)
+      .def("get_discrete_state_matrix",
+           &DPsim::MNAStateSpaceExtractor::getDiscreteStateMatrix,
+           py::return_value_policy::reference_internal);
+
+  py::class_<DPsim::StateSpaceModalAnalysis>(m, "StateSpaceModalAnalysis")
+      .def(py::init<const DPsim::MNAStateSpaceExtractor &>(),
+           py::keep_alive<1, 2>())
+      .def("update", &DPsim::StateSpaceModalAnalysis::update)
+      .def("get_discrete_eigenvalues",
+           &DPsim::StateSpaceModalAnalysis::getDiscreteEigenvalues,
+           py::return_value_policy::reference_internal)
+      .def("get_continuous_eigenvalues",
+           &DPsim::StateSpaceModalAnalysis::getContinuousEigenvalues,
+           py::return_value_policy::reference_internal);
+
   py::class_<DPsim::Simulation>(m, "Simulation")
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
            "loglevel"_a = CPS::Logger::Level::off)
@@ -186,6 +205,12 @@ PYBIND11_MODULE(dpsimpy, m) {
            &DPsim::Simulation::doInitFromNodesAndTerminals)
       .def("do_system_matrix_recomputation",
            &DPsim::Simulation::doSystemMatrixRecomputation)
+      .def("do_state_space_extraction",
+           &DPsim::Simulation::doStateSpaceExtraction,
+           py::arg_v("value", true, "True"))
+      .def("get_state_space_extractor",
+           &DPsim::Simulation::getStateSpaceExtractor, "solver_index"_a = 0,
+           py::return_value_policy::reference_internal)
       .def("do_steady_state_init", &DPsim::Simulation::doSteadyStateInit)
       .def("do_frequency_parallelization",
            &DPsim::Simulation::doFrequencyParallelization)
