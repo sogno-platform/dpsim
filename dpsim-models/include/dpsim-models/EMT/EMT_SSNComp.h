@@ -64,6 +64,18 @@ protected:
   virtual Attribute<Matrix>::Ptr outputAttribute() const = 0;
 
 public:
+  /// Get number of internal state variables of the SSN model.
+  UInt getStateCount() const;
+
+  /// Get discrete state transition matrix used by the trapezoidal SSN model.
+  const Matrix &getDiscreteA() const;
+
+  /// Get discrete input matrix used by the trapezoidal SSN model.
+  const Matrix &getDiscreteB() const;
+
+  /// Get continuous-time output matrix of the SSN model.
+  const Matrix &getC() const;
+
   void setParameters(const Matrix &A, const Matrix &B, const Matrix &C,
                      const Matrix &D);
 
