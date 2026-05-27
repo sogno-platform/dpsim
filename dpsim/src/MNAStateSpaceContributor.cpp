@@ -12,7 +12,6 @@
 #include <dpsim-models/Solver/MNAVariableCompInterface.h>
 
 #include <stdexcept>
-#include <typeinfo>
 #include <utility>
 
 using namespace CPS;
@@ -196,9 +195,8 @@ MNAStateSpaceContributorFactory::create(const MNAInterface::Ptr &component) {
   if (std::dynamic_pointer_cast<EMT::Ph3::VoltageSource>(component))
     return nullptr;
 
-  throw std::invalid_argument(String("Unsupported component in MNA state-space "
-                                     "extraction. Dynamic type: ") +
-                              typeid(*component).name());
+  throw std::invalid_argument(
+      "Unsupported component in MNA state-space extraction.");
 }
 
 MNAStateSpaceContributor::List MNAStateSpaceContributorFactory::createList(
