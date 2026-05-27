@@ -8,6 +8,7 @@
 
 #include <dpsim/Config.h>
 #include <dpsim/Simulation.h>
+#include <dpsim/StateSpaceModalAnalysis.h>
 #include <dpsim/Utils.h>
 
 #ifndef _MSC_VER
