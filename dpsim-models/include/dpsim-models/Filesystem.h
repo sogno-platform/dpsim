@@ -9,8 +9,8 @@
 #pragma once
 
 #ifndef USE_GHC_FS
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
+#include <filesystem>
+namespace fs = std::filesystem;
 #else
 #include <ghc/filesystem.hpp>
 namespace fs = ghc::filesystem;
