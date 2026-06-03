@@ -1,4 +1,37 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DPsim – Concepts</title><link>https://sogno-platform.github.io/dpsim/docs/concepts/</link><description>Recent content in Concepts on DPsim</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://sogno-platform.github.io/dpsim/docs/concepts/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Dynamic Phasors</title><link>https://sogno-platform.github.io/dpsim/docs/concepts/dyn-phasors/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/concepts/dyn-phasors/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DPsim – Concepts</title><link>https://sogno-platform.github.io/dpsim/docs/concepts/</link><description>Recent content in Concepts on DPsim</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://sogno-platform.github.io/dpsim/docs/concepts/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: State-Space Extraction</title><link>https://sogno-platform.github.io/dpsim/docs/concepts/state-space-extraction-theory/</link><pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/concepts/state-space-extraction-theory/</guid><description>
+&lt;p>Discrete-time state-space model is extracted from the EMT MNA simulation model. The extracted model is assembled in the form:&lt;/p>
+&lt;div class="math">$$\mathbf{x}[k+1]
+=
+\mathbf{A}_{d,\mathrm{local}} \mathbf{x}[k]
++
+\mathbf{B}_{d,\mathrm{MNA}} \mathbf{x}_{\mathrm{MNA}}[k+1]$$&lt;/div>
+&lt;div class="math">$$\mathbf{Y} \mathbf{x}_{\mathrm{MNA}}[k+1]
+=
+\mathbf{C}_{d,\mathrm{MNA}} \mathbf{x}[k]$$&lt;/div>&lt;p>where:&lt;/p>
+&lt;ul>
+&lt;li>$\mathbf{x}$ is the extraction-state vector,&lt;/li>
+&lt;li>$\mathbf{x}_{\mathrm{MNA}}$ is the full MNA unknown vector,&lt;/li>
+&lt;li>$\mathbf{Y}$ is the active MNA system matrix,&lt;/li>
+&lt;li>$\mathbf{A}_{d,\mathrm{local}}$ contains local component state-transition contributions,&lt;/li>
+&lt;li>$\mathbf{B}_{d,\mathrm{MNA}}$ maps MNA unknowns to the state update,&lt;/li>
+&lt;li>$\mathbf{C}_{d,\mathrm{MNA}}$ maps extraction states to MNA current injections.&lt;/li>
+&lt;/ul>
+&lt;p>Eliminating the MNA unknown vector gives the global discrete-time state matrix&lt;/p>
+&lt;div class="math">$$\mathbf{A}_{d}
+=
+\mathbf{A}_{d,\mathrm{local}}
++
+\mathbf{B}_{d,\mathrm{MNA}}
+\operatorname{solve}
+\left(
+\mathbf{Y},
+\mathbf{C}_{d,\mathrm{MNA}}
+\right)$$&lt;/div>&lt;p>The resulting matrix $\mathbf{A}_{d}$ describes the homogeneous discrete-time dynamics of the EMT MNA simulation model at the current operating point and system-matrix configuration.&lt;/p>
+&lt;h1 id="references">References&lt;/h1>
+&lt;ul>
+&lt;li>J. A. Hollman and J. R. Marti, &lt;em>Step-by-step eigenvalue analysis with EMTP discrete-time solutions&lt;/em>, &lt;em>IEEE Transactions on Power Systems&lt;/em>, 2010. &lt;a href="https://doi.org/10.1109/TPWRS.2009.2039810">https://doi.org/10.1109/TPWRS.2009.2039810&lt;/a>&lt;/li>
+&lt;li>Y. Han, H. Sun, B. Huang, S. Qin, M. Mu, and Y. Yu, “Discrete-Time State-Space Construction Method for SSO Analysis of Renewable Power Generation Integrated AC/DC Hybrid System,” &lt;em>IEEE Transactions on Power Systems&lt;/em>, 2022. &lt;a href="https://doi.org/10.1109/TPWRS.2021.3115248">https://doi.org/10.1109/TPWRS.2021.3115248&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Docs: Dynamic Phasors</title><link>https://sogno-platform.github.io/dpsim/docs/concepts/dyn-phasors/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/concepts/dyn-phasors/</guid><description>
 &lt;p>In the power systems community, dynamic phasors were initially introduced for power electronics analysis &lt;a href="https://ieeexplore.ieee.org/document/76811">Sanders1991&lt;/a> as a more general approach than state-space averaging.
 They were used to construct efficient models for the dynamics of switching gate phenomena with a high level of detail as shown in &lt;a href="https://ieeexplore.ieee.org/abstract/document/744524">Mattavelli1999&lt;/a>.
 A few years later, dynamic phasors were also employed for power system simulation as described in &lt;a href="https://www.research-collection.ethz.ch/handle/20.500.11850/123490">Demiray2008&lt;/a>.

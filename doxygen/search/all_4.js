@@ -12,5 +12,6 @@ var searchData=
   ['eventqueue_9',['EventQueue',['../class_d_psim_1_1_event_queue.html',1,'DPsim']]],
   ['exception_10',['Exception',['../class_c_p_s_1_1_exception.html',1,'CPS']]],
   ['exciter_11',['Exciter',['../class_c_p_s_1_1_signal_1_1_exciter.html',1,'CPS::Signal::Exciter'],['../class_c_p_s_1_1_signal_1_1_exciter.html#a16ebe37f39f0dc80f73d6df58987a035',1,'CPS::Signal::Exciter::Exciter()']]],
-  ['exportattribute_12',['exportAttribute',['../class_d_psim_1_1_interface_villas.html#ae7b387d207f2d9d9a9db5b6708a49b4f',1,'DPsim::InterfaceVillas']]]
+  ['exportattribute_12',['exportAttribute',['../class_d_psim_1_1_interface_villas.html#ae7b387d207f2d9d9a9db5b6708a49b4f',1,'DPsim::InterfaceVillas']]],
+  ['extractstatespace_13',['extractStateSpace',['../class_d_psim_1_1_mna_solver_direct.html#a254eff56edade8402e13109166858612',1,'DPsim::MnaSolverDirect']]]
 ];

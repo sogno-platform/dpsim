@@ -237,160 +237,200 @@ The general structure looks as follows.&lt;/p>
 &lt;p>The &lt;a href="https://sogno-platform.github.io/dpsim/doxygen/index.html">Doxygen documentation&lt;/a> is automatically generated from the C++ code using Doxygen.
 It is helpful to understand the general structure of the C++ DPsim core components.&lt;/p></description></item><item><title>Docs: Contribution Guidelines</title><link>https://sogno-platform.github.io/dpsim/docs/contribution-guidelines/</link><pubDate>Wed, 03 May 2023 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/contribution-guidelines/</guid><description>
 &lt;p>We&amp;rsquo;d love to accept your patches and contributions to this project.
-Please send us a &lt;a href="https://github.com/sogno-platform/dpsim/pulls">pull request&lt;/a> or get in touch with us via mail or &lt;a href="https://lfenergy.slack.com/archives/C054GB551TL">slack&lt;/a> if you would like to contribute.&lt;/p></description></item><item><title>Docs: Power Electronics</title><link>https://sogno-platform.github.io/dpsim/docs/models/power-electronics/</link><pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/models/power-electronics/</guid><description>
+Please send us a &lt;a href="https://github.com/sogno-platform/dpsim/pulls">pull request&lt;/a> or get in touch with us via mail or &lt;a href="https://lfenergy.slack.com/archives/C054GB551TL">slack&lt;/a> if you would like to contribute.&lt;/p></description></item><item><title>Docs: State-Space Extraction</title><link>https://sogno-platform.github.io/dpsim/docs/concepts/state-space-extraction-theory/</link><pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/concepts/state-space-extraction-theory/</guid><description>
+&lt;p>Discrete-time state-space model is extracted from the EMT MNA simulation model. The extracted model is assembled in the form:&lt;/p>
+&lt;div class="math">$$\mathbf{x}[k+1]
+=
+\mathbf{A}_{d,\mathrm{local}} \mathbf{x}[k]
++
+\mathbf{B}_{d,\mathrm{MNA}} \mathbf{x}_{\mathrm{MNA}}[k+1]$$&lt;/div>
+&lt;div class="math">$$\mathbf{Y} \mathbf{x}_{\mathrm{MNA}}[k+1]
+=
+\mathbf{C}_{d,\mathrm{MNA}} \mathbf{x}[k]$$&lt;/div>&lt;p>where:&lt;/p>
+&lt;ul>
+&lt;li>$\mathbf{x}$ is the extraction-state vector,&lt;/li>
+&lt;li>$\mathbf{x}_{\mathrm{MNA}}$ is the full MNA unknown vector,&lt;/li>
+&lt;li>$\mathbf{Y}$ is the active MNA system matrix,&lt;/li>
+&lt;li>$\mathbf{A}_{d,\mathrm{local}}$ contains local component state-transition contributions,&lt;/li>
+&lt;li>$\mathbf{B}_{d,\mathrm{MNA}}$ maps MNA unknowns to the state update,&lt;/li>
+&lt;li>$\mathbf{C}_{d,\mathrm{MNA}}$ maps extraction states to MNA current injections.&lt;/li>
+&lt;/ul>
+&lt;p>Eliminating the MNA unknown vector gives the global discrete-time state matrix&lt;/p>
+&lt;div class="math">$$\mathbf{A}_{d}
+=
+\mathbf{A}_{d,\mathrm{local}}
++
+\mathbf{B}_{d,\mathrm{MNA}}
+\operatorname{solve}
+\left(
+\mathbf{Y},
+\mathbf{C}_{d,\mathrm{MNA}}
+\right)$$&lt;/div>&lt;p>The resulting matrix $\mathbf{A}_{d}$ describes the homogeneous discrete-time dynamics of the EMT MNA simulation model at the current operating point and system-matrix configuration.&lt;/p>
+&lt;h1 id="references">References&lt;/h1>
+&lt;ul>
+&lt;li>J. A. Hollman and J. R. Marti, &lt;em>Step-by-step eigenvalue analysis with EMTP discrete-time solutions&lt;/em>, &lt;em>IEEE Transactions on Power Systems&lt;/em>, 2010. &lt;a href="https://doi.org/10.1109/TPWRS.2009.2039810">https://doi.org/10.1109/TPWRS.2009.2039810&lt;/a>&lt;/li>
+&lt;li>Y. Han, H. Sun, B. Huang, S. Qin, M. Mu, and Y. Yu, “Discrete-Time State-Space Construction Method for SSO Analysis of Renewable Power Generation Integrated AC/DC Hybrid System,” &lt;em>IEEE Transactions on Power Systems&lt;/em>, 2022. &lt;a href="https://doi.org/10.1109/TPWRS.2021.3115248">https://doi.org/10.1109/TPWRS.2021.3115248&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Docs: State-Space Extraction</title><link>https://sogno-platform.github.io/dpsim/docs/overview/state-space-extraction-dpsim/</link><pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/overview/state-space-extraction-dpsim/</guid><description>
+&lt;p>State-space extraction is optional and can be enabled through the &lt;code>Simulation&lt;/code> API. During simulation setup, the MNA solver creates an &lt;code>MNAStateSpaceExtractor&lt;/code>. During the solver task flow, a state-space extraction task uses the active direct linear solver to update the extracted discrete-time state matrix.&lt;/p>
+&lt;h1 id="main-classes">Main classes&lt;/h1>
+&lt;p>The implementation is organized around three main parts:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>MNAStateSpaceExtractor&lt;/code> assembles and stores the extracted discrete-time state matrix.&lt;/li>
+&lt;li>&lt;code>MNAStateSpaceContributor&lt;/code> represents the state-space contribution of one supported component.&lt;/li>
+&lt;li>&lt;code>MNAStateSpaceContributorFactory&lt;/code> creates contributors for supported EMT components.&lt;/li>
+&lt;/ul>
+&lt;p>The extractor is owned by the MNA solver. Component contributors are created during solver initialization and are used to stamp the local matrices needed for the MNA-coupled state-space formulation.&lt;/p>
+&lt;h1 id="supported-scope">Supported scope&lt;/h1>
+&lt;p>State-space extraction is available for real-valued EMT simulations with the direct MNA solver.&lt;/p>
+&lt;p>Supported components with extraction states are:&lt;/p>
+&lt;ul>
+&lt;li>EMT 3-phase inductors,&lt;/li>
+&lt;li>EMT 3-phase capacitors,&lt;/li>
+&lt;li>EMT 3-phase two-terminal V-type SSN components.&lt;/li>
+&lt;/ul>
+&lt;p>Supported algebraic components without extraction states are:&lt;/p>
+&lt;ul>
+&lt;li>EMT 3-phase resistors,&lt;/li>
+&lt;li>EMT 3-phase voltage sources.&lt;/li>
+&lt;/ul>
+&lt;p>Other components are rejected explicitly when state-space extraction is enabled.&lt;/p>
+&lt;h1 id="usage">Usage&lt;/h1>
+&lt;p>In C++, state-space extraction can be enabled on a simulation as follows:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">Simulation&lt;/span> &lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;Example&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">setDomain&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Domain&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">EMT&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">setSolverType&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Solver&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Type&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">MNA&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">doStateSpaceExtraction&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87">true&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">run&lt;/span>&lt;span style="color:#000;font-weight:bold">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">const&lt;/span> &lt;span style="color:#204a87;font-weight:bold">auto&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">extractor&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">getStateSpaceExtractor&lt;/span>&lt;span style="color:#000;font-weight:bold">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">const&lt;/span> &lt;span style="color:#000">Matrix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">Ad&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">extractor&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">getDiscreteStateMatrix&lt;/span>&lt;span style="color:#000;font-weight:bold">();&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In Python, the corresponding API is:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">dpsimpy&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Simulation&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;Example&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">set_domain&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">dpsimpy&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Domain&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">EMT&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">set_solver&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">dpsimpy&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Solver&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">MNA&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">do_state_space_extraction&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">True&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">run&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">extractor&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">get_state_space_extractor&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">Ad&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">extractor&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">get_discrete_state_matrix&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="examples">Examples&lt;/h1>
+&lt;p>The feature is demonstrated in:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim/examples/cxx/StateSpace/EMT_Ph3_RLC_StateSpaceExtraction.cpp">C++ example&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/examples/Notebooks/StateSpace/EMT_Ph3_RLC_StateSpaceExtraction.ipynb">Python notebook&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>The examples compare equivalent EMT 3-phase RLC systems built from native MNA components and generic two-terminal V-type SSN components.&lt;/p></description></item><item><title>Docs: Power Electronics</title><link>https://sogno-platform.github.io/dpsim/docs/models/power-electronics/</link><pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/models/power-electronics/</guid><description>
 &lt;p>DPsim provides several averaged power-electronic inverter models for simulation using EMT, DP, and SP network modeling domains.&lt;/p>
 &lt;h1 id="three-phase-averaged-voltage-source-inverter-with-state-space-nodal-interface">Three-Phase Averaged Voltage Source Inverter with State-Space Nodal Interface&lt;/h1>
 &lt;p>The &lt;code>EMT::Ph3::AvVoltSourceInverterStateSpace&lt;/code> model represents a grid-following averaged voltage source inverter in the EMT domain.
 It is implemented as a variable state-space nodal component and can therefore be directly stamped into the MNA system.
 The model includes a PLL, filtered active/reactive power measurement, outer power control, inner current control, and an LC filter with coupling resistance to the grid node.&lt;/p>
 &lt;p>The terminal input is the PCC voltage vector&lt;/p>
-&lt;p>$$
-\mathbf{u} =
+&lt;div class="math">$$\mathbf{u} =
 \begin{bmatrix}
-u_a &amp;amp; u_b &amp;amp; u_c
-\end{bmatrix}^\top ,
-$$&lt;/p>
-&lt;p>and the state vector is&lt;/p>
-&lt;p>$$
-\mathbf{x} =
+u_a &amp; u_b &amp; u_c
+\end{bmatrix}^\top ,$$&lt;/div>&lt;p>and the state vector is&lt;/p>
+&lt;div class="math">$$\mathbf{x} =
 \begin{bmatrix}
-\theta_{\mathrm{PLL}} &amp;amp;
-\phi_{\mathrm{PLL}} &amp;amp;
-P &amp;amp;
-Q &amp;amp;
-\phi_d &amp;amp;
-\phi_q &amp;amp;
-\gamma_d &amp;amp;
-\gamma_q &amp;amp;
-v_{c,a} &amp;amp;
-v_{c,b} &amp;amp;
-v_{c,c} &amp;amp;
-i_{f,a} &amp;amp;
-i_{f,b} &amp;amp;
+\theta_{\mathrm{PLL}} &amp;
+\phi_{\mathrm{PLL}} &amp;
+P &amp;
+Q &amp;
+\phi_d &amp;
+\phi_q &amp;
+\gamma_d &amp;
+\gamma_q &amp;
+v_{c,a} &amp;
+v_{c,b} &amp;
+v_{c,c} &amp;
+i_{f,a} &amp;
+i_{f,b} &amp;
 i_{f,c}
-\end{bmatrix}^\top .
-$$&lt;/p>
-&lt;p>The model output is the interface current injected into the MNA system,&lt;/p>
-&lt;p>$$
-\mathbf{y} =
-\frac{\mathbf{u} - \mathbf{v}_c}{R_c}.
-$$&lt;/p>
-&lt;h2 id="model-equations">Model equations&lt;/h2>
+\end{bmatrix}^\top .$$&lt;/div>&lt;p>The model output is the interface current injected into the MNA system,&lt;/p>
+&lt;div class="math">$$\mathbf{y} =
+\frac{\mathbf{u} - \mathbf{v}_c}{R_c}.$$&lt;/div>&lt;h2 id="model-equations">Model equations&lt;/h2>
 &lt;p>The controller uses the opposite current direction, i.e. positive current denotes inverter injection into the grid,&lt;/p>
-&lt;p>$$
-\mathbf{i}_{rc} =
-\frac{\mathbf{v}_c - \mathbf{u}}{R_c}.
-$$&lt;/p>
-&lt;p>The Park transformation with PLL angle $\theta_{\mathrm{PLL}}$ is used to obtain dq quantities,&lt;/p>
-&lt;h1 id="endbmatrix">$$
-\begin{bmatrix}
-v_{c,d} \
+&lt;div class="math">$$\mathbf{i}_{rc} =
+\frac{\mathbf{v}_c - \mathbf{u}}{R_c}.$$&lt;/div>&lt;p>The Park transformation with PLL angle $\theta_{\mathrm{PLL}}$ is used to obtain dq quantities,&lt;/p>
+&lt;div class="math">$$\begin{bmatrix}
+v_{c,d} \\
 v_{c,q}
-\end{bmatrix}&lt;/h1>
-&lt;h1 id="endbmatrix-1">\mathbf{T}(\theta_{\mathrm{PLL}})\mathbf{v}&lt;em>c,
+\end{bmatrix}
+=
+\mathbf{T}(\theta_{\mathrm{PLL}})\mathbf{v}_c,
 \qquad
 \begin{bmatrix}
-i&lt;/em>{rc,d} \
+i_{rc,d} \\
 i_{rc,q}
-\end{bmatrix}&lt;/h1>
-&lt;p>\mathbf{T}(\theta_{\mathrm{PLL}})\mathbf{i}_{rc}.
-$$&lt;/p>
-&lt;p>The instantaneous active and reactive powers are calculated as&lt;/p>
-&lt;p>$$
-p = v_{c,d} i_{rc,d} + v_{c,q} i_{rc,q},
-$$&lt;/p>
-&lt;p>$$
-q = -v_{c,d} i_{rc,q} + v_{c,q} i_{rc,d}.
-$$&lt;/p>
-&lt;p>The PLL and power-filter dynamics are&lt;/p>
-&lt;h1 id="dottheta_mathrmpll">$$
-\dot{\theta}_{\mathrm{PLL}}&lt;/h1>
-&lt;p>\omega_n + K_{p,\mathrm{PLL}} v_{c,q} +
-K_{i,\mathrm{PLL}} \phi_{\mathrm{PLL}},
-$$&lt;/p>
-&lt;p>$$
-\dot{\phi}&lt;em>{\mathrm{PLL}} = v&lt;/em>{c,q},
-$$&lt;/p>
-&lt;p>$$
-\dot{P} = \omega_c(p - P),
+\end{bmatrix}
+=
+\mathbf{T}(\theta_{\mathrm{PLL}})\mathbf{i}_{rc}.$$&lt;/div>&lt;p>The instantaneous active and reactive powers are calculated as&lt;/p>
+&lt;div class="math">$$p = v_{c,d} i_{rc,d} + v_{c,q} i_{rc,q},$$&lt;/div>
+&lt;div class="math">$$q = -v_{c,d} i_{rc,q} + v_{c,q} i_{rc,d}.$$&lt;/div>&lt;p>The PLL and power-filter dynamics are&lt;/p>
+&lt;div class="math">$$\dot{\theta}_{\mathrm{PLL}}
+=
+\omega_n + K_{p,\mathrm{PLL}} v_{c,q} +
+K_{i,\mathrm{PLL}} \phi_{\mathrm{PLL}},$$&lt;/div>
+&lt;div class="math">$$\dot{\phi}_{\mathrm{PLL}} = v_{c,q},$$&lt;/div>
+&lt;div class="math">$$\dot{P} = \omega_c(p - P),
 \qquad
-\dot{Q} = \omega_c(q - Q).
-$$&lt;/p>
-&lt;p>The outer power-control integrators and current references are&lt;/p>
-&lt;p>$$
-\dot{\phi}&lt;em>d = P&lt;/em>{\mathrm{ref}} - P,
+\dot{Q} = \omega_c(q - Q).$$&lt;/div>&lt;p>The outer power-control integrators and current references are&lt;/p>
+&lt;div class="math">$$\dot{\phi}_d = P_{\mathrm{ref}} - P,
 \qquad
-\dot{\phi}&lt;em>q = Q - Q&lt;/em>{\mathrm{ref}},
-$$&lt;/p>
-&lt;h1 id="i_dmathrmref">$$
-i_{d,\mathrm{ref}}&lt;/h1>
-&lt;p>K_{p,P}(P_{\mathrm{ref}} - P) + K_{i,P}\phi_d,
-$$&lt;/p>
-&lt;h1 id="i_qmathrmref">$$
-i_{q,\mathrm{ref}}&lt;/h1>
-&lt;p>K_{p,P}(Q - Q_{\mathrm{ref}}) + K_{i,P}\phi_q.
-$$&lt;/p>
-&lt;p>The inner current-control integrators and voltage references are&lt;/p>
-&lt;p>$$
-\dot{\gamma}&lt;em>d = i&lt;/em>{d,\mathrm{ref}} - i_{rc,d},
+\dot{\phi}_q = Q - Q_{\mathrm{ref}},$$&lt;/div>
+&lt;div class="math">$$i_{d,\mathrm{ref}}
+=
+K_{p,P}(P_{\mathrm{ref}} - P) + K_{i,P}\phi_d,$$&lt;/div>
+&lt;div class="math">$$i_{q,\mathrm{ref}}
+=
+K_{p,P}(Q - Q_{\mathrm{ref}}) + K_{i,P}\phi_q.$$&lt;/div>&lt;p>The inner current-control integrators and voltage references are&lt;/p>
+&lt;div class="math">$$\dot{\gamma}_d = i_{d,\mathrm{ref}} - i_{rc,d},
 \qquad
-\dot{\gamma}&lt;em>q = i&lt;/em>{q,\mathrm{ref}} - i_{rc,q},
-$$&lt;/p>
-&lt;h1 id="v_dmathrmref">$$
-v_{d,\mathrm{ref}}&lt;/h1>
-&lt;p>K_{p,I}(i_{d,\mathrm{ref}} - i_{rc,d}) +
-K_{i,I}\gamma_d,
-$$&lt;/p>
-&lt;h1 id="v_qmathrmref">$$
-v_{q,\mathrm{ref}}&lt;/h1>
-&lt;p>K_{p,I}(i_{q,\mathrm{ref}} - i_{rc,q}) +
-K_{i,I}\gamma_q.
-$$&lt;/p>
-&lt;p>The reference voltage is transformed back to abc coordinates,&lt;/p>
-&lt;h1 id="mathbfv_mathrmref">$$
-\mathbf{v}_{\mathrm{ref}}&lt;/h1>
-&lt;p>\mathbf{T}^{-1}(\theta_{\mathrm{PLL}})
+\dot{\gamma}_q = i_{q,\mathrm{ref}} - i_{rc,q},$$&lt;/div>
+&lt;div class="math">$$v_{d,\mathrm{ref}}
+=
+K_{p,I}(i_{d,\mathrm{ref}} - i_{rc,d}) +
+K_{i,I}\gamma_d,$$&lt;/div>
+&lt;div class="math">$$v_{q,\mathrm{ref}}
+=
+K_{p,I}(i_{q,\mathrm{ref}} - i_{rc,q}) +
+K_{i,I}\gamma_q.$$&lt;/div>&lt;p>The reference voltage is transformed back to abc coordinates,&lt;/p>
+&lt;div class="math">$$\mathbf{v}_{\mathrm{ref}}
+=
+\mathbf{T}^{-1}(\theta_{\mathrm{PLL}})
 \begin{bmatrix}
-v_{d,\mathrm{ref}} \
+v_{d,\mathrm{ref}} \\
 v_{q,\mathrm{ref}}
-\end{bmatrix}.
-$$&lt;/p>
-&lt;p>The LC filter dynamics are&lt;/p>
-&lt;h1 id="dotmathbfv_c">$$
-\dot{\mathbf{v}}_c&lt;/h1>
-&lt;p>\frac{1}{C_f}\mathbf{i}_f
+\end{bmatrix}.$$&lt;/div>&lt;p>The LC filter dynamics are&lt;/p>
+&lt;div class="math">$$\dot{\mathbf{v}}_c
+=
+\frac{1}{C_f}\mathbf{i}_f
 +
-\frac{1}{C_f R_c}(\mathbf{u} - \mathbf{v}_c),
-$$&lt;/p>
-&lt;h1 id="dotmathbfi_f">$$
-\dot{\mathbf{i}}_f&lt;/h1>
-&lt;h2 id="mathbfv_mathrmref-1">\frac{1}{L_f}
+\frac{1}{C_f R_c}(\mathbf{u} - \mathbf{v}_c),$$&lt;/div>
+&lt;div class="math">$$\dot{\mathbf{i}}_f
+=
+\frac{1}{L_f}
 \left(
-\mathbf{v}_{\mathrm{ref}}&lt;/h2>
-&lt;h2 id="mathbfv_c">\mathbf{v}_c&lt;/h2>
-&lt;p>R_f \mathbf{i}_f
-\right).
-$$&lt;/p>
-&lt;p>At each simulation step, the nonlinear model is locally linearized into the affine state-space form&lt;/p>
-&lt;p>$$
-\dot{\mathbf{x}}
+\mathbf{v}_{\mathrm{ref}}
+-
+\mathbf{v}_c
+-
+R_f \mathbf{i}_f
+\right).$$&lt;/div>&lt;p>At each simulation step, the nonlinear model is locally linearized into the affine state-space form&lt;/p>
+&lt;div class="math">$$\dot{\mathbf{x}}
 \approx
 \mathbf{A}\mathbf{x}
 +
 \mathbf{B}\mathbf{u}
 +
-\mathbf{E},
-$$&lt;/p>
-&lt;p>$$
-\mathbf{y}
+\mathbf{E},$$&lt;/div>
+&lt;div class="math">$$\mathbf{y}
 \approx
 \mathbf{C}\mathbf{x}
 +
 \mathbf{D}\mathbf{u}
 +
-\mathbf{F},
-$$&lt;/p>
-&lt;p>which is then discretized and stamped into the EMT MNA system.&lt;/p>
+\mathbf{F},$$&lt;/div>&lt;p>which is then discretized and stamped into the EMT MNA system.&lt;/p>
 &lt;h2 id="source-code-and-examples">Source code and examples&lt;/h2>
 &lt;ul>
 &lt;li>Source code: &lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/include/dpsim-models/EMT/EMT_Ph3_AvVoltSourceInverterStateSpace.h">header&lt;/a>, &lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/src/EMT/EMT_Ph3_AvVoltSourceInverterStateSpace.cpp">implementation&lt;/a>&lt;/li>

@@ -183,7 +183,56 @@ A task T4 that depends on data modified by task T1 is scheduled to the level fol
 In the simplest case, all tasks of a level have to be finished before tasks of the next level are started.&lt;/p>
 &lt;p>&lt;img src="task_graph_levels.svg" alt="image">&lt;/p>
 &lt;p>The dependencies of tasks on data are determined by referencing the attributes that are read or modified by the task.
-The scheduler computes the schedule prior to the simulation from the task dependency graph resulting from the tasks&amp;rsquo; data dependencies.&lt;/p></description></item><item><title>Docs: Interfaces</title><link>https://sogno-platform.github.io/dpsim/docs/overview/interfaces/</link><pubDate>Thu, 13 Feb 2025 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/overview/interfaces/</guid><description>
+The scheduler computes the schedule prior to the simulation from the task dependency graph resulting from the tasks&amp;rsquo; data dependencies.&lt;/p></description></item><item><title>Docs: State-Space Extraction</title><link>https://sogno-platform.github.io/dpsim/docs/overview/state-space-extraction-dpsim/</link><pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/overview/state-space-extraction-dpsim/</guid><description>
+&lt;p>State-space extraction is optional and can be enabled through the &lt;code>Simulation&lt;/code> API. During simulation setup, the MNA solver creates an &lt;code>MNAStateSpaceExtractor&lt;/code>. During the solver task flow, a state-space extraction task uses the active direct linear solver to update the extracted discrete-time state matrix.&lt;/p>
+&lt;h1 id="main-classes">Main classes&lt;/h1>
+&lt;p>The implementation is organized around three main parts:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>MNAStateSpaceExtractor&lt;/code> assembles and stores the extracted discrete-time state matrix.&lt;/li>
+&lt;li>&lt;code>MNAStateSpaceContributor&lt;/code> represents the state-space contribution of one supported component.&lt;/li>
+&lt;li>&lt;code>MNAStateSpaceContributorFactory&lt;/code> creates contributors for supported EMT components.&lt;/li>
+&lt;/ul>
+&lt;p>The extractor is owned by the MNA solver. Component contributors are created during solver initialization and are used to stamp the local matrices needed for the MNA-coupled state-space formulation.&lt;/p>
+&lt;h1 id="supported-scope">Supported scope&lt;/h1>
+&lt;p>State-space extraction is available for real-valued EMT simulations with the direct MNA solver.&lt;/p>
+&lt;p>Supported components with extraction states are:&lt;/p>
+&lt;ul>
+&lt;li>EMT 3-phase inductors,&lt;/li>
+&lt;li>EMT 3-phase capacitors,&lt;/li>
+&lt;li>EMT 3-phase two-terminal V-type SSN components.&lt;/li>
+&lt;/ul>
+&lt;p>Supported algebraic components without extraction states are:&lt;/p>
+&lt;ul>
+&lt;li>EMT 3-phase resistors,&lt;/li>
+&lt;li>EMT 3-phase voltage sources.&lt;/li>
+&lt;/ul>
+&lt;p>Other components are rejected explicitly when state-space extraction is enabled.&lt;/p>
+&lt;h1 id="usage">Usage&lt;/h1>
+&lt;p>In C++, state-space extraction can be enabled on a simulation as follows:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">Simulation&lt;/span> &lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;Example&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">setDomain&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Domain&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">EMT&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">setSolverType&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Solver&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Type&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">MNA&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">doStateSpaceExtraction&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87">true&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">run&lt;/span>&lt;span style="color:#000;font-weight:bold">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">const&lt;/span> &lt;span style="color:#204a87;font-weight:bold">auto&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">extractor&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">getStateSpaceExtractor&lt;/span>&lt;span style="color:#000;font-weight:bold">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">const&lt;/span> &lt;span style="color:#000">Matrix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">Ad&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">extractor&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">getDiscreteStateMatrix&lt;/span>&lt;span style="color:#000;font-weight:bold">();&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In Python, the corresponding API is:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">dpsimpy&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Simulation&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;Example&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">set_domain&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">dpsimpy&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Domain&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">EMT&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">set_solver&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">dpsimpy&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Solver&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">MNA&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">do_state_space_extraction&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">True&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">run&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">extractor&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">get_state_space_extractor&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">Ad&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">extractor&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">get_discrete_state_matrix&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="examples">Examples&lt;/h1>
+&lt;p>The feature is demonstrated in:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim/examples/cxx/StateSpace/EMT_Ph3_RLC_StateSpaceExtraction.cpp">C++ example&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/examples/Notebooks/StateSpace/EMT_Ph3_RLC_StateSpaceExtraction.ipynb">Python notebook&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>The examples compare equivalent EMT 3-phase RLC systems built from native MNA components and generic two-terminal V-type SSN components.&lt;/p></description></item><item><title>Docs: Interfaces</title><link>https://sogno-platform.github.io/dpsim/docs/overview/interfaces/</link><pubDate>Thu, 13 Feb 2025 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/overview/interfaces/</guid><description>
 &lt;p>Interfaces can be used to exchange simulation signals between a DPsim simulation and other soft- or hardware, for example an MQTT-broker or an FPGA.
 Simulation signals in the form of &lt;a href="https://sogno-platform.github.io/dpsim/docs/overview/attributes/">Attributes&lt;/a> can be &lt;strong>imported&lt;/strong> or &lt;strong>exported&lt;/strong> once per simulation time step.
 Interfaces are subclasses of &lt;code>Interface&lt;/code> and implement the methods &lt;code>addExport&lt;/code> and &lt;code>addImport&lt;/code>, which add dependencies to the passed attribute that forward the attribute value from or to the interface.

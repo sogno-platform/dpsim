@@ -199,6 +199,13 @@
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Logger.set_log_dir"><code class="docutils literal notranslate"><span class="pre">Logger.set_log_dir()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.MNAStateSpaceExtractor"><code class="docutils literal notranslate"><span class="pre">MNAStateSpaceExtractor</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.MNAStateSpaceExtractor.get_discrete_state_matrix"><code class="docutils literal notranslate"><span class="pre">MNAStateSpaceExtractor.get_discrete_state_matrix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.MNAStateSpaceExtractor.get_state_count"><code class="docutils literal notranslate"><span class="pre">MNAStateSpaceExtractor.get_state_count()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.MNAStateSpaceExtractor.get_time_step"><code class="docutils literal notranslate"><span class="pre">MNAStateSpaceExtractor.get_time_step()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.MNAStateSpaceExtractor.is_initialized"><code class="docutils literal notranslate"><span class="pre">MNAStateSpaceExtractor.is_initialized()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#dpsimpy.Math"><code class="docutils literal notranslate"><span class="pre">Math</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Math.single_phase_parameter_to_three_phase"><code class="docutils literal notranslate"><span class="pre">Math.single_phase_parameter_to_three_phase()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Math.single_phase_power_to_three_phase"><code class="docutils literal notranslate"><span class="pre">Math.single_phase_power_to_three_phase()</span></code></a></li>
@@ -260,9 +267,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.do_frequency_parallelization"><code class="docutils literal notranslate"><span class="pre">Simulation.do_frequency_parallelization()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.do_init_from_nodes_and_terminals"><code class="docutils literal notranslate"><span class="pre">Simulation.do_init_from_nodes_and_terminals()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.do_split_subnets"><code class="docutils literal notranslate"><span class="pre">Simulation.do_split_subnets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.do_state_space_extraction"><code class="docutils literal notranslate"><span class="pre">Simulation.do_state_space_extraction()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.do_steady_state_init"><code class="docutils literal notranslate"><span class="pre">Simulation.do_steady_state_init()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.do_system_matrix_recomputation"><code class="docutils literal notranslate"><span class="pre">Simulation.do_system_matrix_recomputation()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.get_idobj_attr"><code class="docutils literal notranslate"><span class="pre">Simulation.get_idobj_attr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.get_state_space_extractor"><code class="docutils literal notranslate"><span class="pre">Simulation.get_state_space_extractor()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.log_attribute"><code class="docutils literal notranslate"><span class="pre">Simulation.log_attribute()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.log_idobj_attribute"><code class="docutils literal notranslate"><span class="pre">Simulation.log_idobj_attribute()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.log_lu_times"><code class="docutils literal notranslate"><span class="pre">Simulation.log_lu_times()</span></code></a></li>
@@ -293,6 +302,12 @@
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SolverBehaviour.Initialization"><code class="docutils literal notranslate"><span class="pre">SolverBehaviour.Initialization</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SolverBehaviour.Simulation"><code class="docutils literal notranslate"><span class="pre">SolverBehaviour.Simulation</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SolverBehaviour.value"><code class="docutils literal notranslate"><span class="pre">SolverBehaviour.value</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.StateSpaceModalAnalysis"><code class="docutils literal notranslate"><span class="pre">StateSpaceModalAnalysis</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.StateSpaceModalAnalysis.get_continuous_eigenvalues"><code class="docutils literal notranslate"><span class="pre">StateSpaceModalAnalysis.get_continuous_eigenvalues()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.StateSpaceModalAnalysis.get_discrete_eigenvalues"><code class="docutils literal notranslate"><span class="pre">StateSpaceModalAnalysis.get_discrete_eigenvalues()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.StateSpaceModalAnalysis.update"><code class="docutils literal notranslate"><span class="pre">StateSpaceModalAnalysis.update()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#dpsimpy.SystemTopology"><code class="docutils literal notranslate"><span class="pre">SystemTopology</span></code></a><ul>
@@ -1706,6 +1721,31 @@ and to parameterize all components of the network from Python.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.MNAStateSpaceExtractor">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">MNAStateSpaceExtractor</span></span><a class="headerlink" href="#dpsimpy.MNAStateSpaceExtractor" title="Link to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.MNAStateSpaceExtractor.get_discrete_state_matrix">
+<span class="sig-name descname"><span class="pre">get_discrete_state_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.MNAStateSpaceExtractor" title="dpsimpy.MNAStateSpaceExtractor"><span class="pre">dpsimpy.MNAStateSpaceExtractor</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.typing.NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'[m,</span> <span class="pre">n]'</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#dpsimpy.MNAStateSpaceExtractor.get_discrete_state_matrix" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.MNAStateSpaceExtractor.get_state_count">
+<span class="sig-name descname"><span class="pre">get_state_count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.MNAStateSpaceExtractor" title="dpsimpy.MNAStateSpaceExtractor"><span class="pre">dpsimpy.MNAStateSpaceExtractor</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#dpsimpy.MNAStateSpaceExtractor.get_state_count" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.MNAStateSpaceExtractor.get_time_step">
+<span class="sig-name descname"><span class="pre">get_time_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.MNAStateSpaceExtractor" title="dpsimpy.MNAStateSpaceExtractor"><span class="pre">dpsimpy.MNAStateSpaceExtractor</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#dpsimpy.MNAStateSpaceExtractor.get_time_step" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.MNAStateSpaceExtractor.is_initialized">
+<span class="sig-name descname"><span class="pre">is_initialized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.MNAStateSpaceExtractor" title="dpsimpy.MNAStateSpaceExtractor"><span class="pre">dpsimpy.MNAStateSpaceExtractor</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#dpsimpy.MNAStateSpaceExtractor.is_initialized" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="dpsimpy.Math">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">Math</span></span><a class="headerlink" href="#dpsimpy.Math" title="Link to this definition"></a></dt>
 <dd><dl class="py method">
@@ -1967,6 +2007,11 @@ and to parameterize all components of the network from Python.</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.Simulation.do_state_space_extraction">
+<span class="sig-name descname"><span class="pre">do_state_space_extraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.Simulation" title="dpsimpy.Simulation"><span class="pre">dpsimpy.Simulation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.Simulation.do_state_space_extraction" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="dpsimpy.Simulation.do_steady_state_init">
 <span class="sig-name descname"><span class="pre">do_steady_state_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.Simulation" title="dpsimpy.Simulation"><span class="pre">dpsimpy.Simulation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.Simulation.do_steady_state_init" title="Link to this definition"></a></dt>
 <dd></dd></dl>
@@ -1979,6 +2024,11 @@ and to parameterize all components of the network from Python.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dpsimpy.Simulation.get_idobj_attr">
 <span class="sig-name descname"><span class="pre">get_idobj_attr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.Simulation" title="dpsimpy.Simulation"><span class="pre">dpsimpy.Simulation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.Attribute" title="dpsimpy.Attribute"><span class="pre">dpsimpy.Attribute</span></a></span></span><a class="headerlink" href="#dpsimpy.Simulation.get_idobj_attr" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.Simulation.get_state_space_extractor">
+<span class="sig-name descname"><span class="pre">get_state_space_extractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.Simulation" title="dpsimpy.Simulation"><span class="pre">dpsimpy.Simulation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.MNAStateSpaceExtractor" title="dpsimpy.MNAStateSpaceExtractor"><span class="pre">dpsimpy.MNAStateSpaceExtractor</span></a></span></span><a class="headerlink" href="#dpsimpy.Simulation.get_state_space_extractor" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -2126,6 +2176,26 @@ and to parameterize all components of the network from Python.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="dpsimpy.SolverBehaviour.value">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#dpsimpy.SolverBehaviour.value" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.StateSpaceModalAnalysis">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">StateSpaceModalAnalysis</span></span><a class="headerlink" href="#dpsimpy.StateSpaceModalAnalysis" title="Link to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.StateSpaceModalAnalysis.get_continuous_eigenvalues">
+<span class="sig-name descname"><span class="pre">get_continuous_eigenvalues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.StateSpaceModalAnalysis" title="dpsimpy.StateSpaceModalAnalysis"><span class="pre">dpsimpy.StateSpaceModalAnalysis</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.typing.NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.complex128</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'[m,</span> <span class="pre">1]'</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#dpsimpy.StateSpaceModalAnalysis.get_continuous_eigenvalues" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.StateSpaceModalAnalysis.get_discrete_eigenvalues">
+<span class="sig-name descname"><span class="pre">get_discrete_eigenvalues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.StateSpaceModalAnalysis" title="dpsimpy.StateSpaceModalAnalysis"><span class="pre">dpsimpy.StateSpaceModalAnalysis</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.typing.NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.complex128</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'[m,</span> <span class="pre">1]'</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#dpsimpy.StateSpaceModalAnalysis.get_discrete_eigenvalues" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.StateSpaceModalAnalysis.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.StateSpaceModalAnalysis" title="dpsimpy.StateSpaceModalAnalysis"><span class="pre">dpsimpy.StateSpaceModalAnalysis</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.StateSpaceModalAnalysis.update" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

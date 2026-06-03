@@ -14,8 +14,11 @@ var searchData=
   ['mnasolverfactory_11',['MnaSolverFactory',['../class_d_psim_1_1_mna_solver_factory.html',1,'DPsim']]],
   ['mnasolverplugin_12',['MnaSolverPlugin',['../class_d_psim_1_1_mna_solver_plugin.html',1,'DPsim']]],
   ['mnastamputils_13',['MNAStampUtils',['../class_c_p_s_1_1_m_n_a_stamp_utils.html',1,'CPS']]],
-  ['mnaswitchinterface_14',['MNASwitchInterface',['../class_c_p_s_1_1_m_n_a_switch_interface.html',1,'CPS']]],
-  ['mnasyncgeninterface_15',['MNASyncGenInterface',['../class_c_p_s_1_1_m_n_a_sync_gen_interface.html',1,'CPS']]],
-  ['mnatearinterface_16',['MNATearInterface',['../class_c_p_s_1_1_m_n_a_tear_interface.html',1,'CPS']]],
-  ['mnavariablecompinterface_17',['MNAVariableCompInterface',['../class_c_p_s_1_1_m_n_a_variable_comp_interface.html',1,'CPS']]]
+  ['mnastatespacecontributor_14',['MNAStateSpaceContributor',['../class_d_psim_1_1_m_n_a_state_space_contributor.html',1,'DPsim']]],
+  ['mnastatespacecontributorfactory_15',['MNAStateSpaceContributorFactory',['../class_d_psim_1_1_m_n_a_state_space_contributor_factory.html',1,'DPsim']]],
+  ['mnastatespaceextractor_16',['MNAStateSpaceExtractor',['../class_d_psim_1_1_m_n_a_state_space_extractor.html',1,'DPsim']]],
+  ['mnaswitchinterface_17',['MNASwitchInterface',['../class_c_p_s_1_1_m_n_a_switch_interface.html',1,'CPS']]],
+  ['mnasyncgeninterface_18',['MNASyncGenInterface',['../class_c_p_s_1_1_m_n_a_sync_gen_interface.html',1,'CPS']]],
+  ['mnatearinterface_19',['MNATearInterface',['../class_c_p_s_1_1_m_n_a_tear_interface.html',1,'CPS']]],
+  ['mnavariablecompinterface_20',['MNAVariableCompInterface',['../class_c_p_s_1_1_m_n_a_variable_comp_interface.html',1,'CPS']]]
 ];

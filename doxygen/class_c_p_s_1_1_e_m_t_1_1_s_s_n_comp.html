@@ -114,6 +114,18 @@ Collaboration diagram for CPS::EMT::SSNComp:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:acd27f89e4a7caa4b48b40d235534b00c" id="r_acd27f89e4a7caa4b48b40d235534b00c"><td class="memItemLeft" align="right" valign="top">UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acd27f89e4a7caa4b48b40d235534b00c">getStateCount</a> () const</td></tr>
+<tr class="memdesc:acd27f89e4a7caa4b48b40d235534b00c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get number of internal state variables of the SSN model.  <br /></td></tr>
+<tr class="separator:acd27f89e4a7caa4b48b40d235534b00c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39184d0f0cc430de1752ac957adf2145" id="r_a39184d0f0cc430de1752ac957adf2145"><td class="memItemLeft" align="right" valign="top">const Matrix &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a39184d0f0cc430de1752ac957adf2145">getDiscreteA</a> () const</td></tr>
+<tr class="memdesc:a39184d0f0cc430de1752ac957adf2145"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get discrete state transition matrix used by the trapezoidal SSN model.  <br /></td></tr>
+<tr class="separator:a39184d0f0cc430de1752ac957adf2145"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ad4214e77d8c133396c9b1c71841612" id="r_a3ad4214e77d8c133396c9b1c71841612"><td class="memItemLeft" align="right" valign="top">const Matrix &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3ad4214e77d8c133396c9b1c71841612">getDiscreteB</a> () const</td></tr>
+<tr class="memdesc:a3ad4214e77d8c133396c9b1c71841612"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get discrete input matrix used by the trapezoidal SSN model.  <br /></td></tr>
+<tr class="separator:a3ad4214e77d8c133396c9b1c71841612"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57779f2b3dc6bf19240cf6e4c5c6b45e" id="r_a57779f2b3dc6bf19240cf6e4c5c6b45e"><td class="memItemLeft" align="right" valign="top">const Matrix &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a57779f2b3dc6bf19240cf6e4c5c6b45e">getC</a> () const</td></tr>
+<tr class="memdesc:a57779f2b3dc6bf19240cf6e4c5c6b45e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get continuous-time output matrix of the SSN model.  <br /></td></tr>
+<tr class="separator:a57779f2b3dc6bf19240cf6e4c5c6b45e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1211726d1d8598658312e3aa81df74ed" id="r_a1211726d1d8598658312e3aa81df74ed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1211726d1d8598658312e3aa81df74ed">setParameters</a> (const Matrix &amp;A, const Matrix &amp;B, const Matrix &amp;C, const Matrix &amp;D)</td></tr>
 <tr class="separator:a1211726d1d8598658312e3aa81df74ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb0ec546e4a735e1f6a8d4e377fb07a1" id="r_afb0ec546e4a735e1f6a8d4e377fb07a1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afb0ec546e4a735e1f6a8d4e377fb07a1">mnaCompInitialize</a> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector) override final</td></tr>
@@ -591,7 +603,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00049">49</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00059">59</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -622,7 +634,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00065">65</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00075">75</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -653,7 +665,91 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00054">54</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00064">64</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a57779f2b3dc6bf19240cf6e4c5c6b45e" name="a57779f2b3dc6bf19240cf6e4c5c6b45e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57779f2b3dc6bf19240cf6e4c5c6b45e">&#9670;&#160;</a></span>getC()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const Matrix &amp; EMT::SSNComp::getC </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get continuous-time output matrix of the SSN model. </p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00025">25</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a39184d0f0cc430de1752ac957adf2145" name="a39184d0f0cc430de1752ac957adf2145"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39184d0f0cc430de1752ac957adf2145">&#9670;&#160;</a></span>getDiscreteA()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const Matrix &amp; EMT::SSNComp::getDiscreteA </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get discrete state transition matrix used by the trapezoidal SSN model. </p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00021">21</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a3ad4214e77d8c133396c9b1c71841612" name="a3ad4214e77d8c133396c9b1c71841612"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ad4214e77d8c133396c9b1c71841612">&#9670;&#160;</a></span>getDiscreteB()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const Matrix &amp; EMT::SSNComp::getDiscreteB </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get discrete input matrix used by the trapezoidal SSN model. </p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00023">23</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+
+</div>
+</div>
+<a id="acd27f89e4a7caa4b48b40d235534b00c" name="acd27f89e4a7caa4b48b40d235534b00c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd27f89e4a7caa4b48b40d235534b00c">&#9670;&#160;</a></span>getStateCount()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">UInt EMT::SSNComp::getStateCount </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get number of internal state variables of the SSN model. </p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00017">17</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -694,7 +790,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00115">115</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00125">125</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -732,7 +828,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00100">100</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00110">110</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -768,7 +864,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00087">87</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00097">97</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -801,7 +897,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00109">109</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00119">119</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -828,7 +924,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00078">78</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00088">88</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -861,7 +957,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00017">17</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00027">27</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -892,7 +988,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#af95f151c6adbd7f0bdba10c963b342b9">CPS::EMT::Ph3::AvVoltSourceInverterStateSpace</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00074">74</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00084">84</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -923,7 +1019,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00070">70</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00080">80</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -954,7 +1050,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html#af8ddecfcac77d9c4659afabf53da35ae">CPS::EMT::VTypeVariableSSNComp</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00083">83</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00093">93</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>

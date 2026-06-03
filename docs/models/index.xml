@@ -5,153 +5,111 @@
 It is implemented as a variable state-space nodal component and can therefore be directly stamped into the MNA system.
 The model includes a PLL, filtered active/reactive power measurement, outer power control, inner current control, and an LC filter with coupling resistance to the grid node.&lt;/p>
 &lt;p>The terminal input is the PCC voltage vector&lt;/p>
-&lt;p>$$
-\mathbf{u} =
+&lt;div class="math">$$\mathbf{u} =
 \begin{bmatrix}
-u_a &amp;amp; u_b &amp;amp; u_c
-\end{bmatrix}^\top ,
-$$&lt;/p>
-&lt;p>and the state vector is&lt;/p>
-&lt;p>$$
-\mathbf{x} =
+u_a &amp; u_b &amp; u_c
+\end{bmatrix}^\top ,$$&lt;/div>&lt;p>and the state vector is&lt;/p>
+&lt;div class="math">$$\mathbf{x} =
 \begin{bmatrix}
-\theta_{\mathrm{PLL}} &amp;amp;
-\phi_{\mathrm{PLL}} &amp;amp;
-P &amp;amp;
-Q &amp;amp;
-\phi_d &amp;amp;
-\phi_q &amp;amp;
-\gamma_d &amp;amp;
-\gamma_q &amp;amp;
-v_{c,a} &amp;amp;
-v_{c,b} &amp;amp;
-v_{c,c} &amp;amp;
-i_{f,a} &amp;amp;
-i_{f,b} &amp;amp;
+\theta_{\mathrm{PLL}} &amp;
+\phi_{\mathrm{PLL}} &amp;
+P &amp;
+Q &amp;
+\phi_d &amp;
+\phi_q &amp;
+\gamma_d &amp;
+\gamma_q &amp;
+v_{c,a} &amp;
+v_{c,b} &amp;
+v_{c,c} &amp;
+i_{f,a} &amp;
+i_{f,b} &amp;
 i_{f,c}
-\end{bmatrix}^\top .
-$$&lt;/p>
-&lt;p>The model output is the interface current injected into the MNA system,&lt;/p>
-&lt;p>$$
-\mathbf{y} =
-\frac{\mathbf{u} - \mathbf{v}_c}{R_c}.
-$$&lt;/p>
-&lt;h2 id="model-equations">Model equations&lt;/h2>
+\end{bmatrix}^\top .$$&lt;/div>&lt;p>The model output is the interface current injected into the MNA system,&lt;/p>
+&lt;div class="math">$$\mathbf{y} =
+\frac{\mathbf{u} - \mathbf{v}_c}{R_c}.$$&lt;/div>&lt;h2 id="model-equations">Model equations&lt;/h2>
 &lt;p>The controller uses the opposite current direction, i.e. positive current denotes inverter injection into the grid,&lt;/p>
-&lt;p>$$
-\mathbf{i}_{rc} =
-\frac{\mathbf{v}_c - \mathbf{u}}{R_c}.
-$$&lt;/p>
-&lt;p>The Park transformation with PLL angle $\theta_{\mathrm{PLL}}$ is used to obtain dq quantities,&lt;/p>
-&lt;h1 id="endbmatrix">$$
-\begin{bmatrix}
-v_{c,d} \
+&lt;div class="math">$$\mathbf{i}_{rc} =
+\frac{\mathbf{v}_c - \mathbf{u}}{R_c}.$$&lt;/div>&lt;p>The Park transformation with PLL angle $\theta_{\mathrm{PLL}}$ is used to obtain dq quantities,&lt;/p>
+&lt;div class="math">$$\begin{bmatrix}
+v_{c,d} \\
 v_{c,q}
-\end{bmatrix}&lt;/h1>
-&lt;h1 id="endbmatrix-1">\mathbf{T}(\theta_{\mathrm{PLL}})\mathbf{v}&lt;em>c,
+\end{bmatrix}
+=
+\mathbf{T}(\theta_{\mathrm{PLL}})\mathbf{v}_c,
 \qquad
 \begin{bmatrix}
-i&lt;/em>{rc,d} \
+i_{rc,d} \\
 i_{rc,q}
-\end{bmatrix}&lt;/h1>
-&lt;p>\mathbf{T}(\theta_{\mathrm{PLL}})\mathbf{i}_{rc}.
-$$&lt;/p>
-&lt;p>The instantaneous active and reactive powers are calculated as&lt;/p>
-&lt;p>$$
-p = v_{c,d} i_{rc,d} + v_{c,q} i_{rc,q},
-$$&lt;/p>
-&lt;p>$$
-q = -v_{c,d} i_{rc,q} + v_{c,q} i_{rc,d}.
-$$&lt;/p>
-&lt;p>The PLL and power-filter dynamics are&lt;/p>
-&lt;h1 id="dottheta_mathrmpll">$$
-\dot{\theta}_{\mathrm{PLL}}&lt;/h1>
-&lt;p>\omega_n + K_{p,\mathrm{PLL}} v_{c,q} +
-K_{i,\mathrm{PLL}} \phi_{\mathrm{PLL}},
-$$&lt;/p>
-&lt;p>$$
-\dot{\phi}&lt;em>{\mathrm{PLL}} = v&lt;/em>{c,q},
-$$&lt;/p>
-&lt;p>$$
-\dot{P} = \omega_c(p - P),
+\end{bmatrix}
+=
+\mathbf{T}(\theta_{\mathrm{PLL}})\mathbf{i}_{rc}.$$&lt;/div>&lt;p>The instantaneous active and reactive powers are calculated as&lt;/p>
+&lt;div class="math">$$p = v_{c,d} i_{rc,d} + v_{c,q} i_{rc,q},$$&lt;/div>
+&lt;div class="math">$$q = -v_{c,d} i_{rc,q} + v_{c,q} i_{rc,d}.$$&lt;/div>&lt;p>The PLL and power-filter dynamics are&lt;/p>
+&lt;div class="math">$$\dot{\theta}_{\mathrm{PLL}}
+=
+\omega_n + K_{p,\mathrm{PLL}} v_{c,q} +
+K_{i,\mathrm{PLL}} \phi_{\mathrm{PLL}},$$&lt;/div>
+&lt;div class="math">$$\dot{\phi}_{\mathrm{PLL}} = v_{c,q},$$&lt;/div>
+&lt;div class="math">$$\dot{P} = \omega_c(p - P),
 \qquad
-\dot{Q} = \omega_c(q - Q).
-$$&lt;/p>
-&lt;p>The outer power-control integrators and current references are&lt;/p>
-&lt;p>$$
-\dot{\phi}&lt;em>d = P&lt;/em>{\mathrm{ref}} - P,
+\dot{Q} = \omega_c(q - Q).$$&lt;/div>&lt;p>The outer power-control integrators and current references are&lt;/p>
+&lt;div class="math">$$\dot{\phi}_d = P_{\mathrm{ref}} - P,
 \qquad
-\dot{\phi}&lt;em>q = Q - Q&lt;/em>{\mathrm{ref}},
-$$&lt;/p>
-&lt;h1 id="i_dmathrmref">$$
-i_{d,\mathrm{ref}}&lt;/h1>
-&lt;p>K_{p,P}(P_{\mathrm{ref}} - P) + K_{i,P}\phi_d,
-$$&lt;/p>
-&lt;h1 id="i_qmathrmref">$$
-i_{q,\mathrm{ref}}&lt;/h1>
-&lt;p>K_{p,P}(Q - Q_{\mathrm{ref}}) + K_{i,P}\phi_q.
-$$&lt;/p>
-&lt;p>The inner current-control integrators and voltage references are&lt;/p>
-&lt;p>$$
-\dot{\gamma}&lt;em>d = i&lt;/em>{d,\mathrm{ref}} - i_{rc,d},
+\dot{\phi}_q = Q - Q_{\mathrm{ref}},$$&lt;/div>
+&lt;div class="math">$$i_{d,\mathrm{ref}}
+=
+K_{p,P}(P_{\mathrm{ref}} - P) + K_{i,P}\phi_d,$$&lt;/div>
+&lt;div class="math">$$i_{q,\mathrm{ref}}
+=
+K_{p,P}(Q - Q_{\mathrm{ref}}) + K_{i,P}\phi_q.$$&lt;/div>&lt;p>The inner current-control integrators and voltage references are&lt;/p>
+&lt;div class="math">$$\dot{\gamma}_d = i_{d,\mathrm{ref}} - i_{rc,d},
 \qquad
-\dot{\gamma}&lt;em>q = i&lt;/em>{q,\mathrm{ref}} - i_{rc,q},
-$$&lt;/p>
-&lt;h1 id="v_dmathrmref">$$
-v_{d,\mathrm{ref}}&lt;/h1>
-&lt;p>K_{p,I}(i_{d,\mathrm{ref}} - i_{rc,d}) +
-K_{i,I}\gamma_d,
-$$&lt;/p>
-&lt;h1 id="v_qmathrmref">$$
-v_{q,\mathrm{ref}}&lt;/h1>
-&lt;p>K_{p,I}(i_{q,\mathrm{ref}} - i_{rc,q}) +
-K_{i,I}\gamma_q.
-$$&lt;/p>
-&lt;p>The reference voltage is transformed back to abc coordinates,&lt;/p>
-&lt;h1 id="mathbfv_mathrmref">$$
-\mathbf{v}_{\mathrm{ref}}&lt;/h1>
-&lt;p>\mathbf{T}^{-1}(\theta_{\mathrm{PLL}})
+\dot{\gamma}_q = i_{q,\mathrm{ref}} - i_{rc,q},$$&lt;/div>
+&lt;div class="math">$$v_{d,\mathrm{ref}}
+=
+K_{p,I}(i_{d,\mathrm{ref}} - i_{rc,d}) +
+K_{i,I}\gamma_d,$$&lt;/div>
+&lt;div class="math">$$v_{q,\mathrm{ref}}
+=
+K_{p,I}(i_{q,\mathrm{ref}} - i_{rc,q}) +
+K_{i,I}\gamma_q.$$&lt;/div>&lt;p>The reference voltage is transformed back to abc coordinates,&lt;/p>
+&lt;div class="math">$$\mathbf{v}_{\mathrm{ref}}
+=
+\mathbf{T}^{-1}(\theta_{\mathrm{PLL}})
 \begin{bmatrix}
-v_{d,\mathrm{ref}} \
+v_{d,\mathrm{ref}} \\
 v_{q,\mathrm{ref}}
-\end{bmatrix}.
-$$&lt;/p>
-&lt;p>The LC filter dynamics are&lt;/p>
-&lt;h1 id="dotmathbfv_c">$$
-\dot{\mathbf{v}}_c&lt;/h1>
-&lt;p>\frac{1}{C_f}\mathbf{i}_f
+\end{bmatrix}.$$&lt;/div>&lt;p>The LC filter dynamics are&lt;/p>
+&lt;div class="math">$$\dot{\mathbf{v}}_c
+=
+\frac{1}{C_f}\mathbf{i}_f
 +
-\frac{1}{C_f R_c}(\mathbf{u} - \mathbf{v}_c),
-$$&lt;/p>
-&lt;h1 id="dotmathbfi_f">$$
-\dot{\mathbf{i}}_f&lt;/h1>
-&lt;h2 id="mathbfv_mathrmref-1">\frac{1}{L_f}
+\frac{1}{C_f R_c}(\mathbf{u} - \mathbf{v}_c),$$&lt;/div>
+&lt;div class="math">$$\dot{\mathbf{i}}_f
+=
+\frac{1}{L_f}
 \left(
-\mathbf{v}_{\mathrm{ref}}&lt;/h2>
-&lt;h2 id="mathbfv_c">\mathbf{v}_c&lt;/h2>
-&lt;p>R_f \mathbf{i}_f
-\right).
-$$&lt;/p>
-&lt;p>At each simulation step, the nonlinear model is locally linearized into the affine state-space form&lt;/p>
-&lt;p>$$
-\dot{\mathbf{x}}
+\mathbf{v}_{\mathrm{ref}}
+-
+\mathbf{v}_c
+-
+R_f \mathbf{i}_f
+\right).$$&lt;/div>&lt;p>At each simulation step, the nonlinear model is locally linearized into the affine state-space form&lt;/p>
+&lt;div class="math">$$\dot{\mathbf{x}}
 \approx
 \mathbf{A}\mathbf{x}
 +
 \mathbf{B}\mathbf{u}
 +
-\mathbf{E},
-$$&lt;/p>
-&lt;p>$$
-\mathbf{y}
+\mathbf{E},$$&lt;/div>
+&lt;div class="math">$$\mathbf{y}
 \approx
 \mathbf{C}\mathbf{x}
 +
 \mathbf{D}\mathbf{u}
 +
-\mathbf{F},
-$$&lt;/p>
-&lt;p>which is then discretized and stamped into the EMT MNA system.&lt;/p>
+\mathbf{F},$$&lt;/div>&lt;p>which is then discretized and stamped into the EMT MNA system.&lt;/p>
 &lt;h2 id="source-code-and-examples">Source code and examples&lt;/h2>
 &lt;ul>
 &lt;li>Source code: &lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/include/dpsim-models/EMT/EMT_Ph3_AvVoltSourceInverterStateSpace.h">header&lt;/a>, &lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/src/EMT/EMT_Ph3_AvVoltSourceInverterStateSpace.cpp">implementation&lt;/a>&lt;/li>
