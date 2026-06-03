@@ -2,6 +2,8 @@ set(DPSIM_SOURCES
 	Simulation.cpp
 	MNASolver.cpp
 	MNASolverDirect.cpp
+	MNAStateSpaceContributor.cpp
+	MNAStateSpaceExtractor.cpp
 	DenseLUAdapter.cpp
 	SparseLUAdapter.cpp
 	DirectLinearSolverConfiguration.cpp
@@ -13,6 +15,7 @@ set(DPSIM_SOURCES
 	DataLogger.cpp
 	Scheduler.cpp
 	SequentialScheduler.cpp
+	StateSpaceModalAnalysis.cpp
 	ThreadScheduler.cpp
 	ThreadLevelScheduler.cpp
 	ThreadListScheduler.cpp

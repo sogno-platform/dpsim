@@ -14,6 +14,16 @@ EMT::SSNComp::SSNComp(String uid, String name, Int inputSize, Int outputSize,
   mParametersSet = false;
 }
 
+UInt EMT::SSNComp::getStateCount() const {
+  return static_cast<UInt>(mA.rows());
+}
+
+const Matrix &EMT::SSNComp::getDiscreteA() const { return mdA; }
+
+const Matrix &EMT::SSNComp::getDiscreteB() const { return mdB; }
+
+const Matrix &EMT::SSNComp::getC() const { return mC; }
+
 void EMT::SSNComp::setParameters(const Matrix &A, const Matrix &B,
                                  const Matrix &C, const Matrix &D) {
   mParametersSet = false;

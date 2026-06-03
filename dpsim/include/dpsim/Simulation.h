@@ -94,6 +94,8 @@ protected:
   Bool mInitFromNodesAndTerminals = true;
   /// Enable recomputation of system matrix during simulation
   Bool mSystemMatrixRecomputation = false;
+  /// Enable extraction of the MNA-coupled discrete-time state matrix.
+  Bool mStateSpaceExtraction = false;
 
   /// If tearing components exist, the Diakoptics
   /// solver is selected automatically.
@@ -213,6 +215,10 @@ public:
   void doSystemMatrixRecomputation(Bool value) {
     mSystemMatrixRecomputation = value;
   }
+  /// Enable extraction of the MNA-coupled discrete-time state matrix.
+  void doStateSpaceExtraction(Bool value = true) {
+    mStateSpaceExtraction = value;
+  }
   /// If logStepTimes is enabled, the time needed for every timesteps is logged
   /// and can be written to a file or the console using logStepTimes()
   void setLogStepTimes(Bool f) { mLogStepTimes = f; }
@@ -277,6 +283,12 @@ public:
   DataLogger::List &loggers() { return mLoggers; }
   std::shared_ptr<Scheduler> scheduler() { return mScheduler; }
   std::vector<Real> &stepTimes() { return mStepTimes; }
+  /// Read-only access to the MNA state-space extractor of one solver.
+  ///
+  /// If the system is split into subnetworks, one MNA solver is created per
+  /// subnet. The solverIndex selects the corresponding solver.
+  const MNAStateSpaceExtractor &
+  getStateSpaceExtractor(UInt solverIndex = 0) const;
 
   // #### Set component attributes during simulation ####
   /// CHECK: Can these be deleted? getIdObjAttribute + "**attr =" should suffice

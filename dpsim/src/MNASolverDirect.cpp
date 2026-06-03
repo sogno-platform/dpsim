@@ -111,7 +111,8 @@ void MnaSolverDirect<VarType>::solveWithSystemMatrixRecomputation(
     mRightSideVector += *stamp;
 
   // Get switch and variable comp status and update system matrix and lu factorization accordingly
-  if (hasVariableComponentChanged())
+  mVariableComponentChanged = hasVariableComponentChanged();
+  if (mVariableComponentChanged)
     recomputeSystemMatrix(time);
 
   // Calculate new solution vector
@@ -147,6 +148,21 @@ void MnaSolverDirect<VarType>::recomputeSystemMatrix(Real time) {
   std::chrono::duration<Real> diff = end - start;
   mRecomputationTimes.push_back(diff.count());
   ++mNumRecomputations;
+}
+
+template <typename VarType> void MnaSolverDirect<VarType>::extractStateSpace() {
+  if (!mStateSpaceExtractor)
+    return;
+
+  if (mSystemMatrixRecomputation) {
+    mStateSpaceExtractor->extract(*mDirectLinearSolverVariableSystemMatrix,
+                                  mVariableComponentChanged,
+                                  mVariableComponentChanged);
+  } else {
+    mStateSpaceExtractor->extract(
+        *mDirectLinearSolvers[mCurrentSwitchStatus][0], false,
+        mSystemMatrixChanged);
+  }
 }
 
 template <> void MnaSolverDirect<Real>::createEmptySystemMatrix() {
@@ -217,12 +233,20 @@ MnaSolverDirect<VarType>::createSolveTaskHarm(UInt freqIdx) {
 }
 
 template <typename VarType>
+std::shared_ptr<CPS::Task>
+MnaSolverDirect<VarType>::createStateSpaceExtractionTask() {
+  return std::make_shared<
+      typename MnaSolverDirect<VarType>::StateSpaceExtractionTask>(*this);
+}
+
+template <typename VarType>
 std::shared_ptr<CPS::Task> MnaSolverDirect<VarType>::createLogTask() {
   return std::make_shared<MnaSolverDirect<VarType>::LogTask>(*this);
 }
 
 template <typename VarType>
 void MnaSolverDirect<VarType>::solve(Real time, Int timeStepCount) {
+  const auto previousSwitchStatus = mCurrentSwitchStatus;
   // Reset source vector
   mRightSideVector.setZero();
 
@@ -300,6 +324,8 @@ void MnaSolverDirect<VarType>::solve(Real time, Int timeStepCount) {
       }
     } while (numCompsRequireIter > 0);
   }
+
+  mSystemMatrixChanged = (mCurrentSwitchStatus != previousSwitchStatus);
 
   // TODO split into separate task? (dependent on x, updating all v attributes)
   for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; ++nodeIdx)

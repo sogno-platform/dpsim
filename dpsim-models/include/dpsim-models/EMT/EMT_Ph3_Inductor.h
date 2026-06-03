@@ -42,6 +42,9 @@ public:
 
   SimPowerComp<Real>::Ptr clone(String name) override;
 
+  /// Get conductance stamped into the MNA system matrix.
+  const Matrix &getMNAConductance() const { return mEquivCond; }
+
   // #### General ####
   /// Initializes component from power flow data
   void initializeFromNodesAndTerminals(Real frequency) override;

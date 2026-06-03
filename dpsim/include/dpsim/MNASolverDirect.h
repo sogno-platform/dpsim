@@ -79,6 +79,11 @@ protected:
   /// LU factorization configuration
   DirectLinearSolverConfiguration mConfigurationInUse;
 
+  /// Tracks variable-component changes from the last solve step.
+  Bool mVariableComponentChanged = false;
+  /// Tracks active MNA system-matrix changes from the last solve step.
+  Bool mSystemMatrixChanged = false;
+
   using MnaSolver<VarType>::mSwitches;
   using MnaSolver<VarType>::mMNAIntfSwitches;
   using MnaSolver<VarType>::mMNAComponents;
@@ -103,6 +108,8 @@ protected:
   using MnaSolver<VarType>::mSolveTimes;
   using MnaSolver<VarType>::mRecomputationTimes;
   using MnaSolver<VarType>::mListVariableSystemMatrixEntries;
+  using MnaSolver<VarType>::mStateSpaceExtraction;
+  using MnaSolver<VarType>::mStateSpaceExtractor;
 
   // #### General
   /// Create system matrix
@@ -128,6 +135,8 @@ protected:
   std::shared_ptr<CPS::Task> createSolveTaskRecomp() override;
   /// Recomputes systems matrix
   virtual void recomputeSystemMatrix(Real time);
+  /// Runs state-space extraction using the active linear solver.
+  void extractStateSpace();
 
   // #### Scheduler Task Methods ####
   /// Create a solve task for this solver implementation
@@ -136,6 +145,8 @@ protected:
   std::shared_ptr<CPS::Task> createLogTask() override;
   /// Create a solve task for this solver implementation
   std::shared_ptr<CPS::Task> createSolveTaskHarm(UInt freqIdx) override;
+  /// Create state-space extraction task for this solver implementation.
+  std::shared_ptr<CPS::Task> createStateSpaceExtractionTask() override;
   /// Logging of system matrices and source vector
   void logSystemMatrices() override;
   /// Solves system for single frequency
@@ -253,6 +264,21 @@ public:
       mSolver.solveWithSystemMatrixRecomputation(time, timeStepCount);
       mSolver.log(time, timeStepCount);
     }
+
+  private:
+    MnaSolverDirect<VarType> &mSolver;
+  };
+
+  /// State-space extraction task.
+  class StateSpaceExtractionTask : public CPS::Task {
+  public:
+    StateSpaceExtractionTask(MnaSolverDirect<VarType> &solver)
+        : Task(solver.mName + ".StateSpaceExtraction"), mSolver(solver) {
+      mAttributeDependencies.push_back(solver.mLeftSideVector);
+      mModifiedAttributes.push_back(Scheduler::external);
+    }
+
+    void execute(Real time, Int timeStepCount) { mSolver.extractStateSpace(); }
 
   private:
     MnaSolverDirect<VarType> &mSolver;
