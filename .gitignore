@@ -14,9 +14,28 @@ wheelhouse/
 *.pdf
 *.svg
 *.png
+*.log
+*.whl
 examples/Notebooks/Grids/reference-results/
 villas_sent_data.conf
 *.so
+*.o
+
+# Allow images in documentation and notebook directories
+!docs/**/*.svg
+!docs/**/*.png
+!docs/**/*.jpg
+!docs/**/*.jpeg
+!docs/**/*.gif
+!docs/**/*.webp
+!docs/**/*.ico
+!examples/Notebooks/**/*.svg
+!examples/Notebooks/**/*.png
+!examples/Notebooks/**/*.jpg
+!examples/Notebooks/**/*.jpeg
+!examples/Notebooks/**/*.gif
+!examples/Notebooks/**/*.webp
+!examples/Notebooks/**/*.ico
 
 # Folders
 Libraries/
@@ -28,8 +47,7 @@ VisualStudio/
 cmake-build-debug/
 .idea/
 .vs/
-*.json
-!configs/example_configs_json/*.json
+compile_commands.json
 .vscode/
 
 # CMake
@@ -42,6 +60,30 @@ install_manifest.txt
 __MACOSX
 .DS_Store
 
+# Windows
+Thumbs.db
+
+# Docs
+docs/sphinx/_build/
+docs/doxygen/html/
+docs/doxygen/xml/
+docs/hugo/public/
+docs/hugo/node_modules/
+docs/_build/
+docs/_doctrees/
+docs/html/
+docs/hugo/resources/
+docs/hugo/.hugo_build.lock
+
+# Coverage
+*.gcda
+*.gcno
+*.gcov
+lcov.info
+htmlcov/
+.coverage
+coverage.xml
+
 # Python
 *.pyc
 .cache/
@@ -49,3 +91,9 @@ __pycache__/
 .eggs/
 *.egg-info/
 .ipynb_checkpoints/
+.mypy_cache/
+.ruff_cache/
+venv/
+.venv/
+env/
+.env/
