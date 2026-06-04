@@ -100,8 +100,8 @@ int main(int argc, char *argv[]) {
     p->Kf = excitationEremia.Kf;
     p->Tr = excitationEremia.Tr;
 
-    p->Aef = 0.0;
-    p->Bef = 0.0;
+    p->Aef = 0.33;
+    p->Bef = 0.1;
     p->MaxVa = 1.0; // old limits were +1.0 / -0.9
     p->MinVa = -0.9;
 

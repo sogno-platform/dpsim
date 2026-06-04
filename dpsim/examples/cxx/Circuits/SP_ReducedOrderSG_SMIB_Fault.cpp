@@ -164,8 +164,8 @@ int main(int argc, char *argv[]) {
     exParams->Kf = excitationEremia.Kf;
     exParams->Tr = excitationEremia.Tr;
 
-    exParams->Aef = 0.0;
-    exParams->Bef = 0.0;
+    exParams->Aef = 0.33;
+    exParams->Bef = 0.1;
     exParams->MaxVa = 1.0;  // legacy +1.0
     exParams->MinVa = -0.9; // legacy −0.9
 
