@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: recursive
 
@@ -24,7 +24,7 @@ jobs:
           nix_path: nixpkgs=channel:nixos-unstable
 
       - name: Setup Nix cache
-        uses: cachix/cachix-action@v14
+        uses: cachix/cachix-action@v17
         with:
           name: dpsim
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"

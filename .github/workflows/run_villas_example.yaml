@@ -23,10 +23,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Restore build archive
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: build-cache-examples-cpp-${{ github.sha }}
           path: ${{ github.workspace }}/build

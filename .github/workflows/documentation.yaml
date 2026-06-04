@@ -13,7 +13,7 @@ jobs:
     container: sogno/dpsim:dev
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Create Build Environment
       run: mkdir build
@@ -35,7 +35,7 @@ jobs:
         cp -r build/docs/doxygen/html/. reference/doxygen
 
     - name: Archive reference directory
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         path: ${{ github.workspace }}/reference
         name: reference-cache
@@ -51,21 +51,21 @@ jobs:
       contents: write
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
 
     - name: Setup Hugo
-      uses: peaceiris/actions-hugo@v3
+      uses: peaceiris/actions-hugo@v3.2.1
       with:
         hugo-version: '0.108.0'
         extended: true
 
     - name: Setup Node
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
-        node-version: '20'
+        node-version: '24'
 
     - name: Cache dependencies
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ~/.npm
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -76,7 +76,7 @@ jobs:
     - run: cd docs/hugo && hugo --minify
 
     - name: Restore reference archive
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
        name: reference-cache
        path: ${{ github.workspace }}/reference
@@ -87,7 +87,7 @@ jobs:
         cp -r docs/hugo/public/. public
 
     - name: Deploy page
-      uses: peaceiris/actions-gh-pages@v4
+      uses: peaceiris/actions-gh-pages@v4.1.0
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./public

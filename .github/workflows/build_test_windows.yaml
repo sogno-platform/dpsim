@@ -14,7 +14,7 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Create build folder
       run: |
@@ -22,7 +22,7 @@ jobs:
         mkdir build
 
     - name: Setup build directory cache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ${{ github.workspace }}/build
         key: build-windows-cache-${{ github.ref }}
@@ -41,7 +41,7 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Create build folder
       run: |
@@ -49,7 +49,7 @@ jobs:
         mkdir build
 
     - name: Setup build directory cache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ${{ github.workspace }}/build
         key: build-windows-bindings-cache-${{ github.ref }}

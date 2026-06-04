@@ -15,7 +15,7 @@ jobs:
     container: sogno/dpsim:dev
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         submodules: recursive
 
@@ -23,7 +23,7 @@ jobs:
       run: mkdir build
 
     - name: Setup build directory cache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ${{ github.workspace }}/build
         key: build-fedora-dir-cache-${{ github.ref }}
@@ -39,7 +39,7 @@ jobs:
       run: cmake --build . --target dpsimpy --target tests --target dpsimpyvillas --parallel $(nproc)
 
     - name: Archive build directory
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         path: ${{ github.workspace }}/build
         name: build-fedora-examples-cache-${{ github.sha }}
@@ -51,7 +51,7 @@ jobs:
     container: sogno/dpsim:dev
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         submodules: recursive
 
@@ -59,7 +59,7 @@ jobs:
       run: mkdir build
 
     - name: Setup build directory cache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ${{ github.workspace }}/build
         key: build-fedora-dir-example-cache-${{ github.ref }}
@@ -75,7 +75,7 @@ jobs:
       run: cmake --build . --parallel $(nproc)
 
     - name: Archive build directory
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         path: ${{ github.workspace }}/build
         name: build-cache-examples-cpp-${{ github.sha }}
@@ -89,10 +89,10 @@ jobs:
     container: sogno/dpsim:dev
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Restore build archive
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
        name: build-fedora-examples-cache-${{ github.sha }}
        path: ${{ github.workspace }}/build
@@ -125,7 +125,7 @@ jobs:
         pytest -n auto --cov --cov-branch --cov-report=xml examples/Notebooks/
 
     - name: Archive notebook outputs
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: pytest-output-${{ github.sha }}
         path: outputs/
@@ -140,7 +140,7 @@ jobs:
         lcov --list coverage.cleaned.info
 
     - name: Upload coverage artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: coverage-fedora--${{ github.sha }}
         path: |
@@ -151,7 +151,7 @@ jobs:
 
 
     - name: Upload coverage report
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v6
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         slug: sogno-platform/dpsim
@@ -162,13 +162,13 @@ jobs:
     needs: [test-jupyter-notebooks]
     steps:
     - name: Download new notebook results
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
        name: pytest-output-${{ github.sha }}
        path: ${{ github.workspace }}/notebooks-new
 
     - name: Download master notebook results
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ${{ github.workspace }}/notebooks-master
         key: notebook-output-cache-master-${{ github.sha }}
@@ -176,7 +176,7 @@ jobs:
           notebook-output-cache-master-
 
     - name: Download previous commit notebook results
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ${{ github.workspace }}/notebooks-previous
         key: notebook-output-cache-commit-${{ github.ref }}-${{ github.sha }}
@@ -213,7 +213,7 @@ jobs:
     needs: [linux-fedora-examples]
     steps:
     - name: Restore build archive
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
        name: build-cache-examples-cpp-${{ github.sha }}
        path: ${{ github.workspace }}/build
@@ -241,7 +241,7 @@ jobs:
     container: sogno/dpsim:dev
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Run cppcheck
       working-directory: ${{ github.workspace }}
@@ -301,7 +301,7 @@ jobs:
       continue-on-error: true
 
     - name: Archive cppcheck output
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       if: ${{ always() && steps.cppcheck.outcome == 'failure' }}
       with:
         name: cppcheck-output

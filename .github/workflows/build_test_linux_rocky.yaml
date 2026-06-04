@@ -15,7 +15,7 @@ jobs:
     container: sogno/dpsim:dev-rocky
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         submodules: recursive
 
@@ -23,7 +23,7 @@ jobs:
       run: mkdir build
 
     - name: Cache build directory
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ${{ github.workspace }}/build
         key: build-cache-rocky-${{ github.ref }}
@@ -44,7 +44,7 @@ jobs:
     container: sogno/dpsim:dev-rocky
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         submodules: recursive
 
@@ -52,7 +52,7 @@ jobs:
       run: mkdir build
 
     - name: Cache build directory
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ${{ github.workspace }}/build
         key: build-cache-rocky-clang-${{ github.ref }}
