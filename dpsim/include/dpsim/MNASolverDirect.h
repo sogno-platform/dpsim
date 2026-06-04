@@ -21,10 +21,12 @@
 #include <dpsim/DirectLinearSolver.h>
 #include <dpsim/DirectLinearSolverConfiguration.h>
 #include <dpsim/Solver.h>
+#ifdef WITH_SPARSE
+#include <dpsim/SparseLUAdapter.h>
+#endif
 #ifdef WITH_KLU
 #include <dpsim/KLUAdapter.h>
 #endif
-#include <dpsim/SparseLUAdapter.h>
 #ifdef WITH_CUDA
 #include <dpsim/GpuDenseAdapter.h>
 #ifdef WITH_CUDA_SPARSE
