@@ -19,7 +19,7 @@ jobs:
     container: sogno/dpsim:dev-rocky
     steps:
       - name: Restore Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ github.workspace }}/build
           key: build-cache-rocky-profiling-${{ github.sha }}
@@ -45,7 +45,7 @@ jobs:
           gprof "$BINARY_PATH" | gprof2dot -s | dot -Tpng -o profiling.png || true
 
       - name: Archive profiler output
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: profiler-output-${{ inputs.name }}
           path: |

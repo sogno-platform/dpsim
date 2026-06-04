@@ -15,7 +15,7 @@ jobs:
     container: sogno/dpsim:dev
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         submodules: recursive
 
@@ -24,7 +24,7 @@ jobs:
       run: python3 -m build --sdist --outdir dist/
 
     - name: Archive Python source distribution
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: dist-source
         path: dist/
@@ -38,7 +38,7 @@ jobs:
         python: [cp39, cp310, cp311, cp312, cp313]
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         submodules: recursive
 
@@ -51,7 +51,7 @@ jobs:
         output-dir: dist
 
     - name: Upload wheel as artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: dist-wheels-${{ matrix.python }}-${{ matrix.platform }}
         path: dist/
@@ -68,14 +68,14 @@ jobs:
 
     steps:
     - name: Download wheels from build jobs
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         pattern: dist-*
         merge-multiple: true
         path: dist/
 
     - name: Publish distribution to Test PyPI
-      uses: pypa/gh-action-pypi-publish@v1.13.0
+      uses: pypa/gh-action-pypi-publish@v1.14.0
       with:
         repository-url: https://test.pypi.org/legacy/
         skip-existing: true
@@ -92,11 +92,11 @@ jobs:
 
     steps:
     - name: Download wheels from build jobs
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         pattern: dist-*
         merge-multiple: true
         path: dist/
 
     - name: Publish distribution to PyPI
-      uses: pypa/gh-action-pypi-publish@v1.13.0
+      uses: pypa/gh-action-pypi-publish@v1.14.0
