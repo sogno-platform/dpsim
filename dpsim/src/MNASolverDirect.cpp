@@ -18,7 +18,13 @@ template <typename VarType>
 MnaSolverDirect<VarType>::MnaSolverDirect(String name, CPS::Domain domain,
                                           CPS::Logger::Level logLevel)
     : MnaSolver<VarType>(name, domain, logLevel) {
+#ifdef WITH_KLU
   mImplementationInUse = DirectLinearSolverImpl::KLU;
+#elif defined(WITH_SPARSE)
+  mImplementationInUse = DirectLinearSolverImpl::SparseLU;
+#else
+  mImplementationInUse = DirectLinearSolverImpl::DenseLU;
+#endif
 }
 
 template <typename VarType>
@@ -445,8 +451,10 @@ MnaSolverDirect<VarType>::createDirectSolverImplementation(
   switch (this->mImplementationInUse) {
   case DirectLinearSolverImpl::DenseLU:
     return std::make_shared<DenseLUAdapter>(mSLog);
+#ifdef WITH_SPARSE
   case DirectLinearSolverImpl::SparseLU:
     return std::make_shared<SparseLUAdapter>(mSLog);
+#endif // WITH_SPARSE
 #ifdef WITH_KLU
   case DirectLinearSolverImpl::KLU:
     return std::make_shared<KLUAdapter>(mSLog);

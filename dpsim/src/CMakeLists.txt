@@ -5,7 +5,6 @@ set(DPSIM_SOURCES
 	MNAStateSpaceContributor.cpp
 	MNAStateSpaceExtractor.cpp
 	DenseLUAdapter.cpp
-	SparseLUAdapter.cpp
 	DirectLinearSolverConfiguration.cpp
 	PFSolver.cpp
 	PFSolverPowerPolar.cpp
@@ -62,6 +61,10 @@ endif()
 
 if(WITH_JSON)
 	list(APPEND DPSIM_LIBRARIES nlohmann_json::nlohmann_json)
+endif()
+
+if(WITH_SPARSE)
+	list(APPEND DPSIM_SOURCES SparseLUAdapter.cpp)
 endif()
 
 if(WITH_KLU)

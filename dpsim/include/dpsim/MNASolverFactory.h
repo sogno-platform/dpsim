@@ -13,7 +13,9 @@
 #include <dpsim/DirectLinearSolverConfiguration.h>
 #include <dpsim/MNASolver.h>
 #include <dpsim/MNASolverDirect.h>
+#ifdef WITH_SPARSE
 #include <dpsim/SparseLUAdapter.h>
+#endif
 #ifdef WITH_KLU
 #include <dpsim/KLUAdapter.h>
 #endif
@@ -49,7 +51,10 @@ public:
         DirectLinearSolverImpl::CUDAMagma,
 #endif // WITH_MAGMA
 #endif // WITH_CUDA
-        DirectLinearSolverImpl::DenseLU,    DirectLinearSolverImpl::SparseLU,
+        DirectLinearSolverImpl::DenseLU,
+#ifdef WITH_SPARSE
+        DirectLinearSolverImpl::SparseLU,
+#endif // WITH_SPARSE
 #ifdef WITH_KLU
         DirectLinearSolverImpl::KLU
 #endif // WITH_KLU
@@ -76,10 +81,11 @@ public:
         "MnaSolverFactory", CPS::Logger::Level::info, CPS::Logger::Level::info);
 
     switch (implementation) {
-    /* TODO: have only one "solver" object of type MnaSolverDirect and only use setDirectLinearSolverImplementation in the switch-case.
+      /* TODO: have only one "solver" object of type MnaSolverDirect and only use setDirectLinearSolverImplementation in the switch-case.
      * This is not done now, since MnaSolverDirect and MnaSolver are distinct classes - and someone might add another subclass of MnaSolver
      * to the project (MnaSolverIterative?). It is planned to merge MnaSolverDirect and MnaSolver anyway, so this won't happen.
      */
+#ifdef WITH_SPARSE
     case DirectLinearSolverImpl::SparseLU: {
       SPDLOG_LOGGER_INFO(log, "creating SparseLUAdapter solver implementation");
       std::shared_ptr<MnaSolverDirect<VarType>> sparseSolver =
@@ -88,6 +94,7 @@ public:
           DirectLinearSolverImpl::SparseLU);
       return sparseSolver;
     }
+#endif // WITH_SPARSE
     case DirectLinearSolverImpl::DenseLU: {
       SPDLOG_LOGGER_INFO(log, "creating DenseLUAdapter solver implementation");
       std::shared_ptr<MnaSolverDirect<VarType>> denseSolver =
