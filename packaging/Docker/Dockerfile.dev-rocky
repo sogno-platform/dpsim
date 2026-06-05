@@ -163,7 +163,7 @@ RUN echo "/usr/local/openDSSC/bin" > /etc/ld.so.conf.d/opendssc.conf && \
 	ldconfig
 
 # Python dependencies
-COPY requirements.txt requirements.txt
-RUN pip3 install --upgrade wheel build setuptools packaging && pip3 install -r requirements.txt
+ADD pyproject.toml pyproject.toml
+RUN pip3 install --upgrade wheel build setuptools packaging && pip3 install .[dev]
 
 EXPOSE 8888

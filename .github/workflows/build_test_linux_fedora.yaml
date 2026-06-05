@@ -307,6 +307,27 @@ jobs:
         name: cppcheck-output
         path: cppcheck-output.log
 
+  check-python-deps:
+    name: Validate pyproject.toml extras resolve
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+    - uses: actions/setup-python@v6
+      with:
+        python-version: '3.x'
+    - name: Install pip-tools
+      run: pip install pip-tools
+    - name: Resolve all extras
+      run: |
+        tmpdir=$(mktemp -d)
+        cp pyproject.toml "$tmpdir/"
+        for extra in dev manylinux test; do
+          echo "--- Resolving extra: $extra ---"
+          pip-compile --no-strip-extras --output-file=- --extra "$extra" "$tmpdir/pyproject.toml"
+        done
+        rm -rf "$tmpdir"
+
   test-villas-examples-1:
     name: Run dpsim-mqtt VILLASnode example
     needs: [linux-fedora-examples]

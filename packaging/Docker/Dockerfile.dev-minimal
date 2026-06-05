@@ -21,9 +21,9 @@ RUN set -eux; \
 	rm -rf /var/cache/dnf /var/cache/yum
 
 # Python dependencies
-COPY requirements.txt .
+ADD pyproject.toml .
 RUN pip3 install --no-cache-dir --upgrade wheel build setuptools packaging && \
-	pip3 install --no-cache-dir -r requirements.txt && \
+	pip3 install --no-cache-dir .[dev] && \
 	pip3 cache purge
 
 EXPOSE 8888

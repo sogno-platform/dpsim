@@ -33,7 +33,10 @@ dnf --refresh -y install \
 # Python
 pip3 install -U setuptools
 pip3 install -U wheel
-pip3 install -r requirements.txt
+tmpdir=$(mktemp -d)
+cp pyproject.toml "$tmpdir/"
+pip3 install "$tmpdir[dev]"
+rm -rf "$tmpdir"
 
 # Activate Jupyter extensions
 dnf -y --refresh install npm

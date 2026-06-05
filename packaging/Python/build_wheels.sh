@@ -40,7 +40,10 @@ for PYDIR in ${PYDIRS}; do
 					   -DPYTHON_INCLUDE_DIRS=${INC} \
 					   -DPYTHON_LIBRARY=${LIB}"
 
-   "${PYDIR}/bin/pip" install --requirement requirements.txt
+   tmpdir=$(mktemp -d)
+   cp pyproject.toml "$tmpdir/"
+   "${PYDIR}/bin/pip" install "$tmpdir[manylinux]"
+   rm -rf "$tmpdir"
    "${PYDIR}/bin/pip" wheel . --wheel-dir boilerhouse --no-deps
    #"${PYDIR}/bin/python" ./setup.py bdist_wheel
 done

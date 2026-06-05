@@ -63,7 +63,10 @@ dnf -y install \
 
 pip3 install -U setuptools
 pip3 install -U wheel
-pip3 install -r requirements.txt
+tmpdir=$(mktemp -d)
+cp pyproject.toml "$tmpdir/"
+pip3 install "$tmpdir[dev]"
+rm -rf "$tmpdir"
 
 cd /tmp && \
 	git clone --recurse-submodules --depth 1 https://github.com/cim-iec/libcimpp.git && \
