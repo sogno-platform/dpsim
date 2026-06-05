@@ -144,6 +144,23 @@ struct TurbineGovernorPSAT2 {
   Real T5 = 0.2;
 };
 } // namespace TurbineGovernor
+
+namespace PSS1A {
+struct Parameters {
+  // PSS1A (IEEE type 1A) — typical Kundur test-case values
+  // Ref.: Milano - Power system modelling and scripting, p. 371
+  Real Kp = 0.0;
+  Real Kv = 0.0;
+  Real Kw = 20.0;
+  Real T1 = 0.14;
+  Real T2 = 0.04;
+  Real T3 = 0.14;
+  Real T4 = 0.04;
+  Real Vs_max = 0.1;
+  Real Vs_min = -0.1;
+  Real Tw = 10.0;
+};
+} // namespace PSS1A
 } // namespace Components
 
 namespace Grids {

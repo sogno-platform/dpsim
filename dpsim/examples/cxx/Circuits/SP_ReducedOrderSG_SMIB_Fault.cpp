@@ -1,6 +1,7 @@
 #include "../Examples.h"
 #include "../GeneratorFactory.h"
 #include <DPsim.h>
+#include <dpsim-models/Signal/PSS1A.h>
 
 using namespace DPsim;
 using namespace CPS;
@@ -20,6 +21,9 @@ const Examples::Components::ExcitationSystemEremia::Parameters excitationEremia;
 const Examples::Components::TurbineGovernor::TurbineGovernorPSAT1
     turbineGovernor;
 
+// Power System Stabilizer
+const Examples::Components::PSS1A::Parameters pss1aParams;
+
 int main(int argc, char *argv[]) {
 
   // Simulation parameters
@@ -32,6 +36,7 @@ int main(int argc, char *argv[]) {
   Real H = syngenKundur.H;
   bool withExciter = false;
   bool withTurbineGovernor = false;
+  bool withPSS = false;
   std::string SGModel = "4";
   std::string stepSize_str = "";
   std::string inertia_str = "";
@@ -55,6 +60,9 @@ int main(int argc, char *argv[]) {
     }
     if (args.options.find("WithTurbineGovernor") != args.options.end()) {
       withTurbineGovernor = args.getOptionBool("WithTurbineGovernor");
+    }
+    if (args.options.find("WithPSS") != args.options.end()) {
+      withPSS = args.getOptionBool("WithPSS");
     }
     if (args.options.find("FinalTime") != args.options.end()) {
       finalTime = args.getOptionReal("FinalTime");
@@ -174,6 +182,25 @@ int main(int argc, char *argv[]) {
     exciterSP->setParameters(exParams);
 
     genSP->addExciter(exciterSP);
+  }
+
+  // PSS — must be attached before the exciter initialises so Vpss = 0 at t=0
+  if (withPSS) {
+    if (!withExciter)
+      throw std::runtime_error("WithPSS requires WithExciter");
+    auto pssSP = Signal::PSS1A::make("SynGen_PSS", logLevel);
+    auto pssParams = Signal::PSS1AParameters::make();
+    pssParams->Kp = pss1aParams.Kp;
+    pssParams->Kv = pss1aParams.Kv;
+    pssParams->Kw = pss1aParams.Kw;
+    pssParams->T1 = pss1aParams.T1;
+    pssParams->T2 = pss1aParams.T2;
+    pssParams->T3 = pss1aParams.T3;
+    pssParams->T4 = pss1aParams.T4;
+    pssParams->Vs_max = pss1aParams.Vs_max;
+    pssParams->Vs_min = pss1aParams.Vs_min;
+    pssParams->Tw = pss1aParams.Tw;
+    genSP->addPSS(pssSP, pssParams);
   }
 
   // Turbine Governor
