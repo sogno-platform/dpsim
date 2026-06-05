@@ -24,10 +24,11 @@ apt-get -y install \
 	libgraphviz-dev \
 	libsundials-dev
 
-tmpdir=$(mktemp -d)
-cp pyproject.toml "$tmpdir/"
-pip3 install --user "$tmpdir[dev]"
-rm -rf "$tmpdir"
+pip3 install --user pip-tools
+python3 -m piptools compile --no-header --extra dev --output-file /tmp/requirements.txt pyproject.toml
+pip3 install --user -r /tmp/requirements.txt
+pip3 uninstall -y pip-tools
+rm /tmp/requirements.txt
 apt-get -y install npm
 pip3 install --user \
     jupyter \

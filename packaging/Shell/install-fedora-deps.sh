@@ -31,12 +31,11 @@ dnf --refresh -y install \
 	gsl-devel
 
 # Python
-pip3 install -U setuptools
-pip3 install -U wheel
-tmpdir=$(mktemp -d)
-cp pyproject.toml "$tmpdir/"
-pip3 install "$tmpdir[dev]"
-rm -rf "$tmpdir"
+pip3 install pip-tools
+pip-compile --no-header --extra dev --output-file /tmp/requirements.txt pyproject.toml
+pip3 install -r /tmp/requirements.txt
+pip3 uninstall -y pip-tools
+rm /tmp/requirements.txt
 
 # Activate Jupyter extensions
 dnf -y --refresh install npm
