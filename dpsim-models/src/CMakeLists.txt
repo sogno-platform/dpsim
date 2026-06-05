@@ -160,6 +160,7 @@ list(APPEND MODELS_SOURCES
 	Signal/ExciterDC1Simp.cpp
 	Signal/ExciterST1Simp.cpp
 	Signal/ExciterStatic.cpp
+	Signal/PSS1A.cpp
 	Signal/FIRFilter.cpp
 	Signal/TurbineGovernor.cpp
 	Signal/TurbineGovernorType1.cpp

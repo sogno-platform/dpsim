@@ -4,11 +4,13 @@
 #include <dpsim-models/Logger.h>
 
 #include <dpsim-models/Base/Base_Exciter.h>
+#include <dpsim-models/Base/Base_PSS.h>
 #include <dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h>
 
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderPCM.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderTPM.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator6OrderPCM.h>
+#include <dpsim-models/Signal/PSS1A.h>
 
 #include <dpsim-models/Signal/ExciterDC1.h>
 #include <dpsim-models/Signal/ExciterDC1Simp.h>
@@ -157,3 +159,10 @@ void registerSynchronGenerators() {
 } // namespace Ph1
 } // namespace DP
 } // namespace SynchronGeneratorFactory
+
+namespace PSSFactory {
+void registerPSSs() {
+  FactoryRegistration<CPS::Base::PSS> _PSS1A(
+      "PSS1A", new DerivedCreator<CPS::Signal::PSS1A, CPS::Base::PSS>);
+}
+} // namespace PSSFactory
