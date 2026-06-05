@@ -271,6 +271,70 @@ $$
 v_{ref}(t=0) = v_{in}(t=0) + v_{r}(t=0)
 $$
 
+## Power Systen Stabilizer (PSS)
+
+PSS is a controller of synchonous generators used to enhance damping electromechanical oscillations. The input of the PSS implemented in DPSim is the rotor speed of the machine. The PSS output $v_{pss}$ at time $t=k$ is a signal used as the input of the AVR to calculate the field voltage at $t=k+\Delta t$, $v_{fd}(k+\Delta t)$. At present, only one PSS is implemented in DiPSim which is a simplified version of the IEEE PSS1A type model.
+
+### IEEE PSS1A type PSS
+
+<center>
+<figure margin=30%>
+    <img src="./images/PSS_Type1.png" width=65% alt="DC1_exciter">
+    <figcaption>Fig. 6: Control diagram of the PSS Type 1 </br>
+                Adapted from: Milano, Power System Modelling and Scripting
+    </figcaption>
+</figure>
+</center>
+
+The control diagram of this PSS is depicted in Fig. 6. It includes a washout filter and two lead-lag blocks and is described by the following set of differential equations:
+$$
+    T_w \frac{d}{dt} v_1(t) = -(K_w \omega (t) + v_1(t)),
+$$
+$$
+    T_2 \frac{d}{dt} v_2(t) = ((1 - \frac{T_1}{T_2})(K_w \omega (t) + v_1(t)) - v_2(t)),
+$$
+$$
+    T_4 \frac{d}{dt} v_3(t) = ((1 - \frac{T_3}{T_4})(v_2(t) + (\frac{T_1}{T_2}(K_w \omega (t) + v_1(t)))) - v_3(t)),
+$$
+$$
+    v_{pss}(t) = v_3(t) + \frac{T_3}{T_4}(v_2(t) + \frac{T_1}{T_2}(K_w \omega (t) + v_1(t))),
+$$
+
+where $\omega (t)$ is the input signal of the PSS (rotor speed) and $v_{pss}(t)$ is the output signal of the PSS which is used as an optional signal of the AVR connected to the machine and it is used to modify the reference voltage of the AVR.
+
+The set of differential equations are discretized using forward euler in order to solve it numerically, which leads to the following set of algebraic equations:
+$$
+    v_1(k + \Delta t) = v_1(k) - \frac{\Delta t}{T_w} (K_w \omega (k) + v_1(k)),
+$$
+$$
+    v_2(k + \Delta t) = v_2(k) + \frac{\Delta t}{T_2} ((1-\frac{T_1}{T_2})(K_w \omega (k) + v_1(k)) - v_2(k)),
+$$
+$$
+    v_3(k + \Delta t) = v_3(k) + \frac{\Delta t}{T_4} ((1-\frac{T_3}{T_4})(v_2(k) + \frac{T_1}{T_2}(K_w \omega (k) + v_1(k))) - v_{pss}(k)),
+$$
+$$
+    v_{pss}(k) = v_3(k) + \frac{T_3}{T_4} (v_2(k) + \frac{T_1}{T_2} (K_w \omega (k) + v_1(k)))
+$$
+
+Since the values of all variables for $t=k$ are known, $v_{pss}(k)$ can be easily calculated using the discretised equations, which is carried out in the `preStep` function of the generator connected to each exciter. Then, $v_{pss}(k)$ is used as input of the AVR to calculate the field voltage at time $k+1$. The values $v_1(k+1)$, $v_2(k+1)$, $v_3(k+1)$ are stored and used to calculate the PSS output of the next time step.
+
+The initial values of all variables, which are used in the first simulation step, are calculated assuming that the simulation starts in the steady. This is equivalent to assume that all derivative are equal to zero, which leads to:
+$$
+    v_1(k=0) = -K_w \omega (k=0),
+$$
+$$
+    v_2(k=0) = 0,
+$$
+$$
+    v_3(k=0) = 0,
+$$
+$$
+    v_{PSS}(k=0) = 0,
+$$
+
+where $\omega(k=0)$ is calculated after the power flow analysis and after the initialization of synchronous machines (see section initialization of SG) and normally is equal to $1.0$ (pu).
+
+
 # References
 
 - [1] “IEEE Recommended Practice for Excitation System Models for Power System Stability Studies,” in IEEE Std 421.5-2016 (Revision of IEEE Std 421.5-2005) , vol., no., pp.1-207, 26 Aug. 2016, doi: 10.1109/IEEESTD.2016.7553421.
