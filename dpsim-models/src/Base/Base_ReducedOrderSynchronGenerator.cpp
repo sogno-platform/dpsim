@@ -355,6 +355,10 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
   if (mHasTurbineGovernor) {
     mTurbineGovernor->initialize(**mMechTorque);
   }
+  if (mHasPSS) {
+    mPSS->initialize(mNomOmega / mBase_OmMech, **mMechTorque, (**mVdq0)(0, 0),
+                     (**mVdq0)(1, 0));
+  }
 
   // initial electrical torque
   **mElecTorque =
@@ -435,6 +439,10 @@ void Base::ReducedOrderSynchronGenerator<
   if (mHasTurbineGovernor) {
     mTurbineGovernor->initialize(**mMechTorque);
   }
+  if (mHasPSS) {
+    mPSS->initialize(mNomOmega / mBase_OmMech, **mMechTorque, (**mVdq)(0, 0),
+                     (**mVdq)(1, 0));
+  }
 
   // initial electrical torque
   **mElecTorque =
@@ -490,8 +498,11 @@ void Base::ReducedOrderSynchronGenerator<Complex>::mnaCompPreStep(
 
   // update controller variables
   if (mHasExciter) {
+    Real Vpss = mHasPSS ? mPSS->step(**mOmMech, **mElecTorque, (**mVdq)(0, 0),
+                                     (**mVdq)(1, 0), mTimeStep)
+                        : 0.0;
     mEf_prev = **mEf;
-    **mEf = mExciter->step((**mVdq)(0, 0), (**mVdq)(1, 0), mTimeStep);
+    **mEf = mExciter->step((**mVdq)(0, 0), (**mVdq)(1, 0), mTimeStep, Vpss);
   }
   if (mHasTurbineGovernor) {
     mMechTorque_prev = **mMechTorque;
@@ -521,8 +532,11 @@ void Base::ReducedOrderSynchronGenerator<Real>::mnaCompPreStep(
 
   // update controller variables
   if (mHasExciter) {
+    Real Vpss = mHasPSS ? mPSS->step(**mOmMech, **mElecTorque, (**mVdq0)(0, 0),
+                                     (**mVdq0)(1, 0), mTimeStep)
+                        : 0.0;
     mEf_prev = **mEf;
-    **mEf = mExciter->step((**mVdq0)(0, 0), (**mVdq0)(1, 0), mTimeStep);
+    **mEf = mExciter->step((**mVdq0)(0, 0), (**mVdq0)(1, 0), mTimeStep, Vpss);
   }
   if (mHasTurbineGovernor) {
     mMechTorque_prev = **mMechTorque;
@@ -670,6 +684,22 @@ void Base::ReducedOrderSynchronGenerator<VarType>::addGovernor(
     std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernor) {
   mTurbineGovernor = turbineGovernor;
   mHasTurbineGovernor = true;
+}
+
+template <typename VarType>
+void Base::ReducedOrderSynchronGenerator<VarType>::addPSS(
+    std::shared_ptr<Base::PSS> pss,
+    std::shared_ptr<Base::PSSParameters> parameters) {
+  mPSS = pss;
+  mPSS->setParameters(parameters);
+  mHasPSS = true;
+}
+
+template <typename VarType>
+void Base::ReducedOrderSynchronGenerator<VarType>::addPSS(
+    std::shared_ptr<Base::PSS> pss) {
+  mPSS = pss;
+  mHasPSS = true;
 }
 
 // Declare specializations to move definitions to .cpp

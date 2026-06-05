@@ -60,11 +60,13 @@ void EMT::Ph3::SynchronGeneratorDQTrapez::stepInPerUnit(Real time) {
 
   // Update of fd winding voltage from exciter
   if (mHasExciter) {
-    // Get exciter output voltage
+    Real Vpss = mHasPSS ? mPSS->step(**mOmMech, **mElecTorque, mVsr(0, 0),
+                                     mVsr(3, 0), mTimeStep)
+                        : 0.0;
     // Note: scaled by Rfd/Lmd to transform from exciter pu system
     // to the synchronous generator pu system
     mVsr(1, 0) =
-        (mRfd / mLmd) * mExciter->step(mVsr(0, 0), mVsr(3, 0), mTimeStep);
+        (mRfd / mLmd) * mExciter->step(mVsr(0, 0), mVsr(3, 0), mTimeStep, Vpss);
   }
 
   // Update of mechanical torque from turbine governor

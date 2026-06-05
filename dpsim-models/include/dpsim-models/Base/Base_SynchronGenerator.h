@@ -10,6 +10,7 @@
 
 #include <dpsim-models/AttributeList.h>
 #include <dpsim-models/Base/Base_Exciter.h>
+#include <dpsim-models/Base/Base_PSS.h>
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/Signal/TurbineGovernor.h>
 
@@ -45,6 +46,11 @@ public:
   // Deprecated method
   void addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf,
                   Real Tr);
+  /// Attach a PSS (initialised separately) to this generator
+  void addPSS(std::shared_ptr<Base::PSS> pss,
+              std::shared_ptr<Base::PSSParameters> parameters);
+  /// Attach a pre-constructed PSS (parameters already set)
+  void addPSS(std::shared_ptr<Base::PSS> pss);
 
 protected:
   ///
@@ -271,6 +277,8 @@ protected:
   Bool mHasTurbineGovernor = false;
   /// Determines if Exciter is activated
   Bool mHasExciter = false;
+  /// Determines if PSS is activated
+  Bool mHasPSS = false;
 
   // Deprecated
   Real mInitTerminalVoltage = 0;
@@ -370,6 +378,8 @@ public:
   std::shared_ptr<Signal::TurbineGovernor> mTurbineGovernor;
   /// Signal component modelling voltage regulator and exciter
   std::shared_ptr<Base::Exciter> mExciter;
+  /// Power system stabilizer
+  std::shared_ptr<Base::PSS> mPSS;
 };
 } // namespace Base
 } // namespace CPS

@@ -438,3 +438,16 @@ void Base::SynchronGenerator::addGovernor(Real Ta, Real Tb, Real Tc, Real Fa,
   mTurbineGovernor->initialize(PmRef, Tm_init);
   mHasTurbineGovernor = true;
 }
+
+void Base::SynchronGenerator::addPSS(
+    std::shared_ptr<Base::PSS> pss,
+    std::shared_ptr<Base::PSSParameters> parameters) {
+  mPSS = pss;
+  mPSS->setParameters(parameters);
+  mHasPSS = true;
+}
+
+void Base::SynchronGenerator::addPSS(std::shared_ptr<Base::PSS> pss) {
+  mPSS = pss;
+  mHasPSS = true;
+}
