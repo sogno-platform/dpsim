@@ -7,8 +7,10 @@
  *********************************************************************************/
 
 #include <DPsim.h>
+#include <dpsim-models/Base/Base_PSS.h>
 #include <dpsim-models/CSVReader.h>
 #include <dpsim-models/IdentifiedObject.h>
+#include <dpsim-models/Signal/PSS1A.h>
 #include <dpsim/RealTimeSimulation.h>
 #include <dpsim/Simulation.h>
 #include <dpsim/pybind/SignalComponents.h>
@@ -177,6 +179,38 @@ void addSignalComponents(py::module_ mSignal) {
            "capacitance"_a)
       .def("get_line_components",
            &CPS::Signal::DecouplingLineEMT_Ph3::getLineComponents);
+
+
+  py::class_<CPS::Base::PSSParameters,
+             std::shared_ptr<CPS::Base::PSSParameters>>(mSignal,
+                                                        "PSSParameters");
+
+  py::class_<CPS::Base::PSS, std::shared_ptr<CPS::Base::PSS>>(mSignal, "PSS");
+
+  py::class_<CPS::Signal::PSS1AParameters,
+             std::shared_ptr<CPS::Signal::PSS1AParameters>,
+             CPS::Base::PSSParameters>(mSignal, "PSS1AParameters",
+                                       py::multiple_inheritance())
+      .def(py::init<>())
+      .def_readwrite("Kp", &CPS::Signal::PSS1AParameters::Kp)
+      .def_readwrite("Kv", &CPS::Signal::PSS1AParameters::Kv)
+      .def_readwrite("Kw", &CPS::Signal::PSS1AParameters::Kw)
+      .def_readwrite("T1", &CPS::Signal::PSS1AParameters::T1)
+      .def_readwrite("T2", &CPS::Signal::PSS1AParameters::T2)
+      .def_readwrite("T3", &CPS::Signal::PSS1AParameters::T3)
+      .def_readwrite("T4", &CPS::Signal::PSS1AParameters::T4)
+      .def_readwrite("Vs_max", &CPS::Signal::PSS1AParameters::Vs_max)
+      .def_readwrite("Vs_min", &CPS::Signal::PSS1AParameters::Vs_min)
+      .def_readwrite("Tw", &CPS::Signal::PSS1AParameters::Tw);
+
+  py::class_<CPS::Signal::PSS1A, std::shared_ptr<CPS::Signal::PSS1A>,
+             CPS::SimSignalComp, CPS::Base::PSS>(mSignal, "PSS1A",
+                                                 py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::Signal::PSS1A::setParameters,
+           "parameters"_a);
+
 
   py::class_<CPS::Signal::TurbineGovernorType1,
              std::shared_ptr<CPS::Signal::TurbineGovernorType1>,
