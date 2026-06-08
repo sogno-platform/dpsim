@@ -603,7 +603,12 @@ template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::addExciter(
     std::shared_ptr<Base::Exciter> exciter) {
   mExciter = exciter;
-  mHasExciter = true;
+  mHasExciter = static_cast<bool>(mExciter);
+  if (!mExciter) {
+    SPDLOG_LOGGER_ERROR(
+        this->mSLog, "addExciter called with null exciter on {}", *this->mName);
+    return;
+  }
 }
 
 // Deprecated: only for compatibility
