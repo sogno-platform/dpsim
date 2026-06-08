@@ -64,8 +64,11 @@ void doSim(String &name, SystemTopology &sys, Int threads) {
   sim.doInitFromNodesAndTerminals(true);
   sim.addLogger(logger);
   if (threads > 0)
+#ifdef WITH_OPENMP
     sim.setScheduler(std::make_shared<OpenMPLevelScheduler>(threads));
-
+#else
+    sim.setScheduler(std::make_shared<ThreadLevelScheduler>(threads));
+#endif
   //std::ofstream of1("topology_graph.svg");
   //sys.topologyGraph().render(of1));
 

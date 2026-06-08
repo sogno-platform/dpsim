@@ -84,7 +84,11 @@ void simulateCoupled(std::list<fs::path> filenames, CommandLineArgs &args,
   Simulation sim(simName, args);
   sim.setSystem(sys);
   if (threads > 0)
+#ifdef WITH_OPENMP
     sim.setScheduler(std::make_shared<OpenMPLevelScheduler>(threads));
+#else
+    sim.setScheduler(std::make_shared<ThreadLevelScheduler>(threads));
+#endif
 
   // Logging
   auto logger = DataLogger::make(simName);

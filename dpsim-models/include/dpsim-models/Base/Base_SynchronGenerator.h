@@ -9,8 +9,8 @@
 #pragma once
 
 #include <dpsim-models/AttributeList.h>
+#include <dpsim-models/Base/Base_Exciter.h>
 #include <dpsim-models/Definitions.h>
-#include <dpsim-models/Signal/Exciter.h>
 #include <dpsim-models/Signal/TurbineGovernor.h>
 
 namespace CPS {
@@ -35,7 +35,14 @@ public:
   /// Add governor and turbine
   void addGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K,
                    Real Tsr, Real Tsm, Real Tm_init, Real PmRef);
+
   /// Add voltage regulator and exciter
+  void addExciter(std::shared_ptr<Base::Exciter> exciter,
+                  std::shared_ptr<Base::ExciterParameters> params);
+  /// Add already constructed regulator and exciter
+  void addExciter(std::shared_ptr<Base::Exciter> exciter);
+
+  // Deprecated method
   void addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf,
                   Real Tr);
 
@@ -362,7 +369,7 @@ public:
   /// Signal component modelling governor control and steam turbine
   std::shared_ptr<Signal::TurbineGovernor> mTurbineGovernor;
   /// Signal component modelling voltage regulator and exciter
-  std::shared_ptr<Signal::Exciter> mExciter;
+  std::shared_ptr<Base::Exciter> mExciter;
 };
 } // namespace Base
 } // namespace CPS

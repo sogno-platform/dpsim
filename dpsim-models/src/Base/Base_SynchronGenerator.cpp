@@ -7,6 +7,7 @@
  *********************************************************************************/
 
 #include <dpsim-models/Base/Base_SynchronGenerator.h>
+#include <dpsim-models/Signal/ExciterDC1Simp.h>
 
 using namespace CPS;
 
@@ -385,11 +386,47 @@ Real Base::SynchronGenerator::calcHfromJ(Real J, Real omegaNominal,
   return J * 0.5 * omegaNominal * omegaNominal / polePairNumber;
 }
 
-void Base::SynchronGenerator::addExciter(Real Ta, Real Ka, Real Te, Real Ke,
-                                         Real Tf, Real Kf, Real Tr) {
-  mExciter = Signal::Exciter::make("Exciter", CPS::Logger::Level::info);
-  mExciter->setParameters(Ta, Ka, Te, Ke, Tf, Kf, Tr);
+void CPS::Base::SynchronGenerator::addExciter(Real Ta, Real Ka, Real Te,
+                                              Real Ke, Real Tf, Real Kf,
+                                              Real Tr) {
+  // CLI-only logger
+  auto log = CPS::Logger::get("SynchronGenerator",
+                              CPS::Logger::Level::off,   // file level
+                              CPS::Logger::Level::info); // CLI level
+
+  SPDLOG_LOGGER_WARN(
+      log, "Deprecated API addExciter(Ta,Ka,Te,Ke,Tf,Kf,Tr) called. "
+           "This overload will be removed in the future. "
+           "Please create an ExciterDC1Simp and parameters explicitly.");
+
+  auto params = std::make_shared<CPS::Signal::ExciterDC1SimpParameters>();
+  params->Ta = Ta;
+  params->Ka = Ka;
+  params->Tef = Te;
+  params->Kef = Ke;
+  params->Tf = Tf;
+  params->Kf = Kf;
+  params->Tr = Tr;
+
+  // Apply legacy amplifier limits for the deprecated path
+  params->MaxVa = 1.0;
+  params->MinVa = -0.9;
+
+  // No saturation by default
+  params->Aef = 0.0;
+  params->Bef = 0.0;
+
+  mExciter = std::make_shared<CPS::Signal::ExciterDC1Simp>(
+      "Exciter", CPS::Logger::Level::info);
+  mExciter->setParameters(params);
   mHasExciter = true;
+
+  SPDLOG_LOGGER_INFO(
+      log,
+      "Attached ExciterDC1Simp (Ka={:.3g}, Ta={:.3g}, Kef={:.3g}, Tef={:.3g}, "
+      "Kf={:.3g}, Tf={:.3g}, Tr={:.3g}, MaxVa={:.3g}, MinVa={:.3g})",
+      params->Ka, params->Ta, params->Kef, params->Tef, params->Kf, params->Tf,
+      params->Tr, params->MaxVa, params->MinVa);
 }
 
 void Base::SynchronGenerator::addGovernor(Real Ta, Real Tb, Real Tc, Real Fa,

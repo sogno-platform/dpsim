@@ -8,8 +8,8 @@
 
 #pragma once
 
+#include <dpsim-models/Base/Base_Exciter.h>
 #include <dpsim-models/MNASimPowerComp.h>
-#include <dpsim-models/Signal/Exciter.h>
 #include <dpsim-models/Signal/TurbineGovernorType1.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
@@ -39,6 +39,8 @@ public:
   /// (0,0) = Id
   /// (1,0) = Iq
   const Attribute<Matrix>::Ptr mIdq;
+  /// Electrical power
+  const Attribute<Complex>::Ptr mPower;
   /// stator electrical torque
   const Attribute<Real>::Ptr mElecTorque;
   /// Mechanical torque
@@ -89,9 +91,14 @@ public:
   void
   addGovernor(std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernor);
   /// Add voltage regulator and exciter
+  void addExciter(std::shared_ptr<Base::Exciter> exciter,
+                  std::shared_ptr<Base::ExciterParameters> params);
+  /// Add already constructed regulator and exciter
+  void addExciter(std::shared_ptr<Base::Exciter> exciter);
+
+  // Deprecated method
   void addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf,
                   Real Tr);
-  void addExciter(std::shared_ptr<Signal::Exciter> exciter);
 
   /// ### Setters ###
   void scaleInertiaConstant(Real scalingFactor);
@@ -262,11 +269,12 @@ protected:
   /// Signal component modelling governor control and steam turbine
   std::shared_ptr<Signal::TurbineGovernorType1> mTurbineGovernor;
   /// Signal component modelling voltage regulator and exciter
-  std::shared_ptr<Signal::Exciter> mExciter;
+  std::shared_ptr<Base::Exciter> mExciter;
 
   ///
   Real mTimeStep;
   Real mSimTime;
+  Real mVpss = 0;
 };
 } // namespace Base
 } // namespace CPS
