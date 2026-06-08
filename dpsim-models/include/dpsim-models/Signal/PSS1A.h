@@ -69,6 +69,7 @@ public:
   explicit PSS1A(const String &name) : SimSignalComp(name, name) {}
   PSS1A(const String &name, CPS::Logger::Level logLevel);
 
+  using SimSignalComp::initialize;
   void setParameters(std::shared_ptr<Base::PSSParameters> parameters) final;
   void initialize(Real omega, Real activePower, Real Vd, Real Vq) final;
   Real step(Real omega, Real activePower, Real Vd, Real Vq, Real dt) final;
