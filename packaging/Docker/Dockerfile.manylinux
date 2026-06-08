@@ -65,7 +65,8 @@ RUN cd /tmp && \
 # Python dependencies
 ADD pyproject.toml .
 RUN pip3 install --upgrade wheel build setuptools packaging
-RUN pip3 install --no-cache-dir pip-tools && \
+RUN pip3 install --upgrade pip && \
+	pip3 install --no-cache-dir pip-tools && \
 	pip-compile --no-header --extra manylinux --output-file /tmp/requirements.txt pyproject.toml && \
 	pip3 install --no-cache-dir -r /tmp/requirements.txt && \
 	pip3 uninstall -y pip-tools && \
