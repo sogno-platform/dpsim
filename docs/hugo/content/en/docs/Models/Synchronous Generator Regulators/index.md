@@ -50,7 +50,7 @@ $$
     v_{in}(t) = T_{c} \frac{d}{dt} v_b(t) + v_b(t).
 $$
 
-The ceiling function approximates the saturaiton of the excitation winding:
+The ceiling function approximates the saturation of the excitation winding:
 $$
     sat(t) = A_{ef} e^{(B_{ef} | v_{ef}(t) | )}
 $$
@@ -113,7 +113,7 @@ where $v_h(k=0)$, $v_{ef}(k=0)$ are calculated after the power flow analysis and
 </center>
 </br>
 
-Because the time constants $T_b$ and $T_c$ of the IEEE Type DC1 exciter model are frequenty small enough to be neglected, in DPSim a simplified model of this exciter which neglect these time constants is also implemented. The control diagram of this exciter is depicted in Fig. 2 and it is described by the following set of differential equations:
+Because the time constants $T_b$ and $T_c$ of the IEEE Type DC1 exciter model are frequently small enough to be neglected, in DPSim a simplified model of this exciter which neglect these time constants is also implemented. The control diagram of this exciter is depicted in Fig. 2 and it is described by the following set of differential equations:
 $$
     T_R \frac{d}{dt} v_R(t) = v_h(t) - v_R(t)
 $$
@@ -180,7 +180,7 @@ where $v_h(k=0)$, $v_{ef}(k=0)$ are calculated using the power flow analysis and
     </figcaption>
 </figure>
 </center>
-The control diagram of this is depicted in Fig. 3. It can be observed as a simplified version of the DC1 type exciter which is componsed only by the regulator, the amplifier and an optional transducer. To discretize the lead-lag compensator using using forward euler it is better to split this block into two parallel blocks as depicted in Fig. 4.
+The control diagram of this is depicted in Fig. 3. It can be observed as a simplified version of the DC1 type exciter which is composed only by the regulator, the amplifier and an optional transducer. To discretize the lead-lag compensator using forward euler it is better to split this block into two parallel blocks as depicted in Fig. 4.
 <center>
 <figure margin=20%>
     <img src="./images/ExciterStatic_split.drawio.svg" width=70% alt="Exciter static split">
@@ -228,7 +228,7 @@ To consider the saturation of $e_{fd}$ there are two different implementations, 
 
 $$
 e^{*}_{fd} = e_{fd, max} \quad \quad if \quad \quad e^{*}_{fd} > e_{fd, max} \\
-e^{*}_{fd} = e_{fd, min} \quad \quad if \quad \quad e^{*}_{fd} > e_{fd, min},
+e^{*}_{fd} = e_{fd, min} \quad \quad if \quad \quad e^{*}_{fd} < e_{fd, min},
 $$
 
 where $e^{*}_{fd}$ represents the output of the exciter.
@@ -268,7 +268,7 @@ x_{b}(t=0) = v_{in}(t=0),
 $$
 
 $$
-v_{ref}(t=0) = v_{in}(t=0) - v_{r}(t=0)
+v_{ref}(t=0) = v_{in}(t=0) + v_{r}(t=0)
 $$
 
 # References
