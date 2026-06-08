@@ -7,9 +7,10 @@
 #include <dpsim-models/EMT/EMT_Ph3_Inductor.h>
 #include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
 #include <dpsim-models/EMT/EMT_Ph3_TwoTerminalVTypeSSNComp.h>
+#include <dpsim-models/EMT/EMT_Ph3_TwoTerminalVTypeVariableSSNComp.h>
 #include <dpsim-models/EMT/EMT_Ph3_VoltageSource.h>
+#include <dpsim-models/EMT/EMT_VTypeSSNComp.h>
 #include <dpsim-models/SimPowerComp.h>
-#include <dpsim-models/Solver/MNAVariableCompInterface.h>
 
 #include <stdexcept>
 #include <utility>
@@ -49,11 +50,6 @@ void stampTwoTerminalCurrentInjectionMapping(const Matrix &K, Matrix &CdMna,
                                              const Matrix &outputMatrix) {
   CdMna.block(0, stateOffset, CdMna.rows(), outputMatrix.cols()) +=
       -K.transpose() * outputMatrix;
-}
-
-Bool isVariableMNAComponent(const MNAInterface::Ptr &component) {
-  return std::dynamic_pointer_cast<MNAVariableCompInterface>(component) !=
-         nullptr;
 }
 
 class EMTPh3InductorStateSpaceContributor final
@@ -124,8 +120,7 @@ class EMTPh3TwoTerminalVTypeSSNStateSpaceContributor final
     : public MNAStateSpaceContributor {
 public:
   EMTPh3TwoTerminalVTypeSSNStateSpaceContributor(
-      std::shared_ptr<EMT::Ph3::TwoTerminalVTypeSSNComp> component,
-      Bool isVariable)
+      std::shared_ptr<EMT::VTypeSSNComp> component, Bool isVariable)
       : mComponent(std::move(component)), mIsVariable(isVariable) {}
 
   UInt getStateCount() const override { return mComponent->getStateCount(); }
@@ -162,7 +157,7 @@ public:
   }
 
 private:
-  std::shared_ptr<EMT::Ph3::TwoTerminalVTypeSSNComp> mComponent;
+  std::shared_ptr<EMT::VTypeSSNComp> mComponent;
   Bool mIsVariable = false;
 };
 
@@ -183,10 +178,17 @@ MNAStateSpaceContributorFactory::create(const MNAInterface::Ptr &component) {
     return std::make_shared<EMTPh3CapacitorStateSpaceContributor>(capacitor);
   }
 
+  if (auto variableSsn =
+          std::dynamic_pointer_cast<EMT::Ph3::TwoTerminalVTypeVariableSSNComp>(
+              component)) {
+    return std::make_shared<EMTPh3TwoTerminalVTypeSSNStateSpaceContributor>(
+        variableSsn, true);
+  }
+
   if (auto ssn = std::dynamic_pointer_cast<EMT::Ph3::TwoTerminalVTypeSSNComp>(
           component)) {
     return std::make_shared<EMTPh3TwoTerminalVTypeSSNStateSpaceContributor>(
-        ssn, isVariableMNAComponent(component));
+        ssn, false);
   }
 
   if (std::dynamic_pointer_cast<EMT::Ph3::Resistor>(component))
