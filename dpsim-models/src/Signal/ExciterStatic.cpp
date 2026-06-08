@@ -16,14 +16,16 @@ void ExciterStatic::setParameters(
           parameters)) {
     mParameters = params;
 
-    if (mParameters->Tb == 0)
-      throw CPS::InvalidArgumentException(
-          "ExciterStatic: Tb must be non-zero (used as divisor in lead-lag "
-          "block)");
-    if (mParameters->Te == 0)
-      throw CPS::InvalidArgumentException(
-          "ExciterStatic: Te must be non-zero (used as divisor in exciter "
-          "output)");
+    if (mParameters->Tb == 0) {
+      SPDLOG_LOGGER_ERROR(mSLog, "ExciterStatic: Tb must be non-zero (used as "
+                                 "divisor in lead-lag block)");
+      throw CPS::InvalidArgumentException();
+    }
+    if (mParameters->Te == 0) {
+      SPDLOG_LOGGER_ERROR(mSLog, "ExciterStatic: Te must be non-zero (used as "
+                                 "divisor in exciter output)");
+      throw CPS::InvalidArgumentException();
+    }
 
     if (mParameters->Ta == mParameters->Tb) {
       SPDLOG_LOGGER_INFO(
