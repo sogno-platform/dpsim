@@ -15,6 +15,23 @@ void Signal::PSS1A::setParameters(
   if (auto params =
           std::dynamic_pointer_cast<Signal::PSS1AParameters>(parameters)) {
     mParameters = params;
+
+    if (mParameters->Tw == 0) {
+      SPDLOG_LOGGER_ERROR(mSLog, "PSS1A: Tw must be non-zero (used as "
+                                 "divisor in washout filter)");
+      throw CPS::InvalidArgumentException();
+    }
+    if (mParameters->T2 == 0) {
+      SPDLOG_LOGGER_ERROR(mSLog, "PSS1A: T2 must be non-zero (used as "
+                                 "divisor in first lead-lag block)");
+      throw CPS::InvalidArgumentException();
+    }
+    if (mParameters->T4 == 0) {
+      SPDLOG_LOGGER_ERROR(mSLog, "PSS1A: T4 must be non-zero (used as "
+                                 "divisor in second lead-lag block)");
+      throw CPS::InvalidArgumentException();
+    }
+
     SPDLOG_LOGGER_INFO(mSLog,
                        "\nPSS1A parameters:"
                        "\nKp: {:e}"
