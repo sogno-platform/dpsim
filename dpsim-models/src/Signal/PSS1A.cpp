@@ -53,8 +53,9 @@ void Signal::PSS1A::setParameters(
     mA = 1. - mParameters->T1 / mParameters->T2;
     mB = 1. - mParameters->T3 / mParameters->T4;
   } else {
-    std::cout << "Type of parameters class of " << this->name()
-              << " has to be PSS1AParameters!" << std::endl;
+    SPDLOG_LOGGER_ERROR(
+        mSLog, "Type of parameters class of {} has to be PSS1AParameters!",
+        this->name());
     throw CPS::TypeException();
   }
 }
