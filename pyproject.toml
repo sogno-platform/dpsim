@@ -10,10 +10,9 @@ authors = [
 ]
 description = "dynamic real-time power system simulator"
 readme = {file = "README.md", content-type = "text/markdown"}
-license = {text = "Mozilla Public License 2.0 (MPL 2.0)"}
+license = "MPL-2.0"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
 ]
 requires-python = ">=3.9"
 dependencies = [
