@@ -19,6 +19,26 @@ void ExciterDC1Simp::setParameters(
           parameters)) {
     mParameters = params;
 
+    if (mParameters->Tr == 0)
+      throw CPS::InvalidArgumentException(
+          "ExciterDC1Simp: Tr must be non-zero (used as divisor in voltage "
+          "transducer)");
+    if (mParameters->Ta == 0)
+      throw CPS::InvalidArgumentException(
+          "ExciterDC1Simp: Ta must be non-zero (used as divisor in amplifier)");
+    if (mParameters->Tf == 0)
+      throw CPS::InvalidArgumentException(
+          "ExciterDC1Simp: Tf must be non-zero (used as divisor in stabilizing "
+          "feedback)");
+    if (mParameters->Tef == 0)
+      throw CPS::InvalidArgumentException(
+          "ExciterDC1Simp: Tef must be non-zero (used as divisor in exciter "
+          "output)");
+    if (mParameters->Ka == 0)
+      throw CPS::InvalidArgumentException(
+          "ExciterDC1Simp: Ka must be non-zero (used as divisor when computing "
+          "initial amplifier input)");
+
     SPDLOG_LOGGER_INFO(mSLog,
                        "\nExciterDC1Simp parameters:"
                        "\nTa: {:e}"

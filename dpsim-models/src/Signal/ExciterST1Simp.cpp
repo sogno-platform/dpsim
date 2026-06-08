@@ -16,6 +16,15 @@ void Signal::ExciterST1Simp::setParameters(
           std::dynamic_pointer_cast<Signal::ExciterST1Parameters>(parameters)) {
     mParameters = params;
 
+    if (mParameters->Tr == 0)
+      throw CPS::InvalidArgumentException(
+          "ExciterST1Simp: Tr must be non-zero (used as divisor in voltage "
+          "transducer)");
+    if (mParameters->Ka == 0)
+      throw CPS::InvalidArgumentException(
+          "ExciterST1Simp: Ka must be non-zero (used as divisor when computing "
+          "initial voltage reference)");
+
     SPDLOG_LOGGER_INFO(mSLog,
                        "Exciter ST1Simp parameters:"
                        "\nTr: {:e}"

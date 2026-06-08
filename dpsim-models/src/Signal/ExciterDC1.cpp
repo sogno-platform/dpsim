@@ -15,6 +15,30 @@ void Signal::ExciterDC1::setParameters(
           std::dynamic_pointer_cast<Signal::ExciterDC1Parameters>(parameters)) {
     mParameters = params;
 
+    if (mParameters->Tr == 0)
+      throw CPS::InvalidArgumentException(
+          "ExciterDC1: Tr must be non-zero (used as divisor in voltage "
+          "transducer)");
+    if (mParameters->Tb == 0)
+      throw CPS::InvalidArgumentException(
+          "ExciterDC1: Tb must be non-zero (used as divisor in regulator "
+          "lead-lag block)");
+    if (mParameters->Ta == 0)
+      throw CPS::InvalidArgumentException(
+          "ExciterDC1: Ta must be non-zero (used as divisor in amplifier)");
+    if (mParameters->Tf == 0)
+      throw CPS::InvalidArgumentException(
+          "ExciterDC1: Tf must be non-zero (used as divisor in stabilizing "
+          "feedback)");
+    if (mParameters->Tef == 0)
+      throw CPS::InvalidArgumentException(
+          "ExciterDC1: Tef must be non-zero (used as divisor in exciter "
+          "output)");
+    if (mParameters->Ka == 0)
+      throw CPS::InvalidArgumentException(
+          "ExciterDC1: Ka must be non-zero (used as divisor when computing "
+          "initial amplifier input)");
+
     SPDLOG_LOGGER_INFO(mSLog,
                        "\nExciterDC1 parameters:"
                        "\nType: DC1"
