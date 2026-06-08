@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['pivseq_0',['pivSeq',['../struct_d_psim_1_1_gpu_dense_adapter_1_1_gpu_data.html#aa65224f26d107111ca065f03ac09362a',1,'DPsim::GpuDenseAdapter::GpuData']]],
-  ['probdim_1',['ProbDim',['../class_d_psim_1_1_o_d_eint_solver.html#a7cb88da0437f01c68d1e2ff5760ff974',1,'DPsim::ODEintSolver']]],
-  ['psm_5fin_2',['Psm_in',['../class_c_p_s_1_1_signal_1_1_turbine_governor.html#a42019ed831becddcebd7fe837378fc22',1,'CPS::Signal::TurbineGovernor']]],
-  ['psr_5fin_3',['Psr_in',['../class_c_p_s_1_1_signal_1_1_turbine_governor.html#af38ae623671ed8b50b2e4f6f5104e389',1,'CPS::Signal::TurbineGovernor']]]
+  ['l_5feq_0',['L_EQ',['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#aecbe5773a1db7014f43a2301d88a74c3',1,'CPS::DP::Ph3::SynchronGeneratorVBR']]],
+  ['ld0_1',['LD0',['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a455fbb1ee12b3326d3fe0a49c921d7be',1,'CPS::DP::Ph3::SynchronGeneratorVBR']]],
+  ['logger_2',['logger',['../struct_d_psim_1_1_simulation_1_1_logger_mapping.html#aac3698cd8fdb6f71515bb151dd23ba4b',1,'DPsim::Simulation::LoggerMapping']]],
+  ['ls_3',['LS',['../class_d_psim_1_1_d_a_e_solver.html#a292a6da4dc96988fceb6c57c960e11a3',1,'DPsim::DAESolver::LS'],['../class_d_psim_1_1_o_d_e_solver.html#a6ad990146018b3f5891b2d43bf421349',1,'DPsim::ODESolver::LS']]]
 ];

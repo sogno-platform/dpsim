@@ -721,7 +721,247 @@ Generate a Visual Studio project with CMake and use it to build the project&lt;/
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>mkdir -p build &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> build
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake ..
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make docs_cxx
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The resulting documentation will be generated in &lt;code>Documentation/html/Cxx&lt;/code>.&lt;/p></description></item><item><title>Docs: Interfacing with the MNA Solver</title><link>https://sogno-platform.github.io/dpsim/docs/overview/mnainterface/</link><pubDate>Mon, 19 Dec 2022 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/overview/mnainterface/</guid><description>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The resulting documentation will be generated in &lt;code>Documentation/html/Cxx&lt;/code>.&lt;/p></description></item><item><title>Docs: Synchronous Generator Regulators</title><link>https://sogno-platform.github.io/dpsim/docs/models/synchronous-generator-regulators/</link><pubDate>Mon, 23 Jan 2023 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/models/synchronous-generator-regulators/</guid><description>
+&lt;p>In DPSim, synchronous generator control systems are solved separately from the electric network. The outputs of the electric network (active and reactive power, node voltages, branch currents and rotor speed of synchronous generators) at time $k- \Delta t$ are used as the input of the controllers to calculate their states at time $k$. Because of the relatively slow response of the controllers, the error in the network solution due to the time delay $\Delta t$ introduced by this approach is negligible.&lt;/p>
+&lt;h1 id="exciter">Exciter&lt;/h1>
+&lt;p>DC1 type model is the standard IEEE type DC1 exciter, whereas the other model is a simplified version of the IEEE DC1 type model. The inputs of the exciters are the magnitude of the terminal voltage of the generator connected to the exciter $v_h$ and the voltage reference $v_{ref}$, which is defined as a variable since other devices such as over-excitation limiters or power system stabilizers (PSS) modify such reference with additional signals. At the moment, no over-excitation limiters have been implemented in DPSim so that the reference voltage is given by:
+$$
+v_{ref}(t) = v_{ref,0} + v_{pss}(t)
+$$
+where $v_{ref,0}$ is initialized after the power flow computations and $v_{pss}(t)$ is the output of the (optional) PSS connected to the exciter. The output of the exciter systems is the induced emf by the field current at $t=k + \Delta t$: $v_{ef}(k + \Delta t)$ (sometimes the alternative notation $e_{fd}(k + \Delta t)$ is used).&lt;/p>
+&lt;h2 id="ieee-type-dc1-exciter-model">IEEE Type DC1 exciter model&lt;/h2>
+&lt;center>
+&lt;figure margin=30%>
+&lt;img src="./images/DC1C_exciter.png" width=65% alt="DC1_exciter">
+&lt;figcaption>Fig. 1: Control diagram of the IEEE Type DC1 exciter &lt;/br>
+Adapted from: Milano, Frequency Variations in Power Systems
+&lt;/figcaption>
+&lt;/figure>
+&lt;/center>
+This model is used to represent field controlled dc commutator exciters with continuously acting voltage regulators (especially the direct-acting rheostatic, rotating
+amplifier, and magnetic amplifier types). The control diagram of this exciter is depicted in Fig. 1 and it is described by the following set of differential equations:
+&lt;/br>&lt;/br>
+&lt;p>$$
+T_{R} \frac{d}{dt} v_{R}(t) = v_{h}(t) - v_{R}(t)
+$$&lt;/p>
+&lt;p>$$
+T_{b} \frac{d}{dt} v_{b}(t) = v_{ref} - v_{R}(t) - v_{f}(t) - v_{b}(t),
+$$
+$$
+T_{a} \frac{d}{dt} v_{a}(t) = K_{a} v_{in}(t) - v_{a}(t),
+$$
+$$
+T_{f} \frac{d}{dt} v_{f}(t) - K_{f} \frac{d}{dt} v_{ef}(t) = -v_{f}(t),
+$$
+$$
+T_{ef} \frac{d}{dt} v_{ef}(t) = v_{a}(t) - (K_{ef} + sat(t)) v_{ef}(t),
+$$
+where $v_h$ is the module of the machine&amp;rsquo;s terminal voltage, and $v_{in}$ is the amplifier input signal, which for the IEEE Type DC1 is given by:
+$$
+v_{in}(t) = T_{c} \frac{d}{dt} v_b(t) + v_b(t).
+$$&lt;/p>
+&lt;p>The ceiling function approximates the saturation of the excitation winding:
+$$
+sat(t) = A_{ef} e^{(B_{ef} | v_{ef}(t) | )}
+$$&lt;/p>
+&lt;p>The set of differential equations are discretized using forward euler in order to solve it numerically, which leads to the following set of algebraic equations:
+$$
+v_R(k + \Delta t) = v_R(k) + \frac{\Delta t}{T_R} ( v_h(k) - v_R(k) ),
+$$
+$$
+v_b(k + \Delta t) = v_b(k)(1 - \frac{\Delta t}{T_b}) + \frac{\Delta t}{T_b} ( v_{ref}(k) - v_R(k) - v_f(k)),
+$$
+$$
+v_{in}(k + \Delta t) = \Delta t \cdot \frac{T_c}{T_b} (v_{ref}(k) - v_R(k) - v_{f}(k) - v_b(k)) + v_b(k+1),
+$$
+$$
+v_a(k + \Delta t) = v_a(k) + \frac{\Delta t}{T_a} ( v_{in}(k) K_a - v_a(k) ),
+$$
+$$
+v_f(k + \Delta t) = (1 - \frac{\Delta t}{T_f}) v_f(k) + \frac{\Delta t K_f}{T_f T_{ef}} ( v_{a}(k) - (K_{ef} + sat(k)) v_{ef}(k) ),
+$$
+$$
+v_{ef}(k + \Delta t) = v_{ef}(k) + \frac{\Delta t}{T_{ef}} ( v_{a}(k) - (sat(k) + K_{ef}) v_{ef}(k)),
+$$
+$$
+sat(k) = A_{ef} e^{(B_{ef} | v_{ef}(k) | )}
+$$&lt;/p>
+&lt;p>Since the values of all variables for $t=k$ are known, $v_{ef}(k+1)$ can be easily calculated using the discretised equations, which is carried out in the &lt;code>preStep&lt;/code> function of the generator connected to each exciter.&lt;/p>
+&lt;p>The initial values of all variables, which are used in the first simulation step, are calculated assuming that the simulation starts in the steady. This is equivalent to assume that all derivative are equal to zero, which leads to:
+$$
+v_R(k=0) = v_h(k=0),
+$$
+$$
+v_f(k=0) = 0
+$$
+$$
+v_a(k=0) = K_{ef} v_{ef}(k=0) + A_{ef} e^{B_{ef} |v_{ef} (k=0)|} v_{ef}(k=0),
+$$
+$$
+v_{in}(k=0) = \frac{v_a(k=0)}{K_a},
+$$
+$$
+v_b(k=0) = v_{in}(k=0),
+$$
+$$
+v_{ref}(t=0) = v_{in}(t=0) + v_b(t=0),
+$$
+where $v_h(k=0)$, $v_{ef}(k=0)$ are calculated after the power flow analysis and after the initialization of synchronous machines (see section initialization of SG).&lt;/p>
+&lt;h2 id="simplified-ieee-type-dc1-exciter-model-dc1simp">Simplified IEEE Type DC1 exciter model (DC1Simp)&lt;/h2>
+&lt;center>
+&lt;figure>
+&lt;img src="./images/DC1CSimp_exciter.png" width=65% alt="DC1A_exciter">
+&lt;figcaption>&lt;/br>Fig. 2: Control diagram of the IEEE Type DC1 exciter &lt;/br>
+Adapted from: Milano, Power System Modelling and Scripting
+&lt;/figcaption>
+&lt;/figure>
+&lt;/center>
+&lt;/br>
+&lt;p>Because the time constants $T_b$ and $T_c$ of the IEEE Type DC1 exciter model are frequently small enough to be neglected, in DPSim a simplified model of this exciter which neglect these time constants is also implemented. The control diagram of this exciter is depicted in Fig. 2 and it is described by the following set of differential equations:
+$$
+T_R \frac{d}{dt} v_R(t) = v_h(t) - v_R(t)
+$$
+$$
+T_a \frac{d}{dt} v_a(t) = - v_a(t) + K_a v_{in}(t)
+$$
+$$
+T_f \frac{d}{dt} v_f(t) - K_f \frac{d}{dt} v_{ef}(t) = -v_f(t),
+$$
+$$
+T_e \frac{d}{dt} v_{ef}(t) = v_a(t) - v_{ef}(t) (sat(t) + K_{ef})
+$$
+where $v_h$​ is the module of the machine&amp;rsquo;s terminal voltage, and $v_{in}$​ is the amplifier input signal, which is given by:
+$$
+v_{in}(t) = v_{ref} (t) - v_R(t) - v_f(t)
+$$
+The set of differential equations are discretized using forward euler in order to solve it numerically, which leads to the following set of algebraic equations:
+$$
+v_R(k + \Delta t) = v_R(k) + \frac{\Delta t}{T_R} ( v_h(k) - v_R(k) ),
+$$
+$$
+v_{in}(k) = v_{ref}(k) - v_R(k) - v_f(k),
+$$
+$$
+v_a(k + \Delta t) = v_a(k) + \frac{\Delta t}{T_a} ( v_{in}(k) K_a - v_a(k) ),
+$$
+$$
+v_f(k + \Delta t) = (1 - \frac{\Delta t}{T_f}) v_f(k) + \frac{\Delta t K_f}{T_f T_{ef}} ( v_{a}(k) - (K_{ef} + sat(k)) v_{ef}(k) ),
+$$
+$$
+v_{ef}(k + \Delta t) = v_{ef}(k) + \frac{\Delta t}{T_{ef}} ( v_{a}(k) - (sat(k) + K_{ef}) v_{ef}(k)),
+$$
+$$
+sat(k) = A_{ef} e^{(B_{ef} | v_{ef}(k) | )}
+$$&lt;/p>
+&lt;p>Since the values of all variables for $t=k$ are known, $v_{ef}(k+1)$ can be easily calculated using the discretised equations, which is carried out in the &lt;code>preStep&lt;/code> function of the generator connected to each exciter.&lt;/p>
+&lt;p>The initial values of all variables, which are used in the first simulation step, are calculated assuming that the simulation starts in the steady. This is equivalent to assume that all derivative are equal to zero, which leads to:
+$$
+v_R(k=0) = v_h(k=0),
+$$
+$$
+v_f(k=0) = 0,
+$$
+$$
+v_a(k=0) = K_{ef} v_{ef}(k=0) + A_{ef} e^{B_{ef} |v_{ef} (k=0)|} v_{ef}(k=0),
+$$
+$$
+v_{in}(k=0) = \frac{v_a(k=0)}{K_a},
+$$
+$$
+v_{ref}(t=0) = v_R(t=0) + v_{in}(t=0),
+$$
+where $v_h(k=0)$, $v_{ef}(k=0)$ are calculated using the power flow analysis and after the initialization of synchronous machines (see section initialization of SG).&lt;/p>
+&lt;h2 id="static-exciter">Static Exciter&lt;/h2>
+&lt;center>
+&lt;figure margin=30%>
+&lt;img src="./images/ExciterStatic.drawio.svg" width=70% alt="Exciter static">
+&lt;figcaption>Fig. 3: Control diagram of the Static Exciter &lt;/br>
+Adapted from [6]
+&lt;/figcaption>
+&lt;/figure>
+&lt;/center>
+The control diagram of this is depicted in Fig. 3. It can be observed as a simplified version of the DC1 type exciter which is composed only by the regulator, the amplifier and an optional transducer. To discretize the lead-lag compensator using forward euler it is better to split this block into two parallel blocks as depicted in Fig. 4.
+&lt;center>
+&lt;figure margin=20%>
+&lt;img src="./images/ExciterStatic_split.drawio.svg" width=70% alt="Exciter static split">
+&lt;figcaption>Fig. 4: Control diagram of the Static Exciter &lt;/br>
+&lt;/figcaption>
+&lt;/figure>
+&lt;/center>
+where:
+&lt;p>$$
+C_{a} = \frac{T_{a}}{T_{b}}, \quad C_{b} = \frac{T_{b}-T_{a}}{T_{b}}.
+$$
+and it is described by the following set of differential equations:
+$$
+T_{R} \frac{d}{dt} v_{r}(t) = v_{h}(t) - v_{r}(t)
+$$
+$$
+T_{b} \frac{d}{dt} x_{b}(t) = v_{in}(t) - x_{b}(t)
+$$
+$$
+T_{e} \frac{d}{dt} e_{fd}(t) = K_{a} v_{e}(t) - e_{fd}(t),
+$$&lt;/p>
+&lt;p>Then, the set of differential equations are discretized using forward euler in order to solve it numerically, which leads to the following set of algebraic equations:&lt;/p>
+&lt;p>$$
+v_r(k + \Delta t) = v_r(k) + \frac{\Delta t}{T_R} ( v_h(k) - v_r(k) ),
+$$
+$$
+v_{in}(k) = v_{ref}(k) - v_{r}(k),
+$$
+$$
+X_b(k + \Delta t) = \frac{\Delta t}{T_{b}} (v_{in}(k) - x_{b}(k)) + x_{b}(k),
+$$
+$$
+v_e(k) = K_{a} (C_{b} x_{b}(k) + C_{a} v_{in} (k)) ,
+$$
+$$
+e_{fd}(k + \Delta t) = \frac{\Delta t}{T_{e}}(v_{e}(k) - e_{fd}(k)) + e_{fd}(k).
+$$&lt;/p>
+&lt;p>To consider the saturation of $e_{fd}$ there are two different implementations, which is automatically selected depending of value of the parameter $K_{bc}$:&lt;/p>
+&lt;p>&lt;strong>Standard ($K_{bc}=0$):&lt;/strong>&lt;/p>
+&lt;p>$$
+e^{&lt;em>}&lt;em>{fd} = e&lt;/em>{fd, max} \quad \quad if \quad \quad e^{&lt;/em>}&lt;em>{fd} &amp;gt; e&lt;/em>{fd, max} \
+e^{&lt;em>}&lt;em>{fd} = e&lt;/em>{fd, min} \quad \quad if \quad \quad e^{&lt;/em>}&lt;em>{fd} &amp;lt; e&lt;/em>{fd, min},
+$$&lt;/p>
+&lt;p>where $e^{*}_{fd}$ represents the output of the exciter.&lt;/p>
+&lt;p>&lt;strong>Anti-windup ($K_{bc}&amp;gt;0$):&lt;/strong> for controllers with an integral component, i.e. also for PID controllers, the so-called &amp;ldquo;windup effect&amp;rdquo; can occur when using the &lt;em>standard&lt;/em> saturation function. A strategy for limiting the anti-windup effect is shown in Fig. 5.&lt;/p>
+&lt;center>
+&lt;figure margin=20%>
+&lt;img src="./images/ExciterStatic_windup.drawio.svg" width=70% alt="Exciter static split">
+&lt;figcaption>Fig. 5: Control diagram of the Static Exciter with anti windup strategy &lt;/br>
+&lt;/figcaption>
+&lt;/figure>
+&lt;/center>
+&lt;p>which means that the input of the differential equation describing $e_{fd}$, $v_{e}$, takes now the following form:&lt;/p>
+&lt;p>$$
+v_{e} = C_{a} v_{in} + C_{b} x_{b} - K_{bc} (e_{fd} - e_{fd}^{*})
+$$&lt;/p>
+&lt;p>The initial values of all variables, which are used in the first simulation step, are calculated assuming that the simulation starts in the steady. This is equivalent to assume that all derivative are equal to zero, which leads to:&lt;/p>
+&lt;p>$$
+v_{r}(t=0) = v_{h}(t=0),
+$$&lt;/p>
+&lt;p>$$
+v_{e}(t=0) = \frac{e_{fd}(t=0)}{K_{a}},
+$$&lt;/p>
+&lt;p>$$
+v_{in}(t=0) = \frac{v_{e}(t=0)}{C_{a}+C_{b}},
+$$&lt;/p>
+&lt;p>$$
+x_{b}(t=0) = v_{in}(t=0),
+$$&lt;/p>
+&lt;p>$$
+v_{ref}(t=0) = v_{in}(t=0) + v_{r}(t=0)
+$$&lt;/p>
+&lt;h1 id="references">References&lt;/h1>
+&lt;ul>
+&lt;li>[1] “IEEE Recommended Practice for Excitation System Models for Power System Stability Studies,” in IEEE Std 421.5-2016 (Revision of IEEE Std 421.5-2005) , vol., no., pp.1-207, 26 Aug. 2016, doi: 10.1109/IEEESTD.2016.7553421.&lt;/li>
+&lt;li>[2] F. Milano, “Power system modelling and scripting,” in Power System Modelling and Scripting. London: Springer-Verlag, 2010, ISBN: 978-3-642-13669-6. doi: 10.1007/978-3-642-13669-6.&lt;/li>
+&lt;li>[3] F. Milano, A. Manjavacas, “Frequency Variations in Power Systems: Modeling, State Estimation, and Control”. ISBN: 978-1-119-55184-3.&lt;/li>
+&lt;li>[4] F. Milano, “Power System Analysis Toolbox: Documentation for PSAT”, ISBN: 979-8573500560.&lt;/li>
+&lt;li>[5] M. Eremia; M. Shahidehpour, “Handbook of Electrical Power System Dynamics: Modeling, Stability, and Control”, &lt;a href="https://ieeexplore.ieee.org/book/6480471">https://ieeexplore.ieee.org/book/6480471&lt;/a>&lt;/li>
+&lt;li>[6] A. Roehder, B. Fuchs, J. Massman, M. Quester, A. Schnettler, “Transmission system stability assessment within an integrated grid development process”.&lt;/li>
+&lt;/ul></description></item><item><title>Docs: Interfacing with the MNA Solver</title><link>https://sogno-platform.github.io/dpsim/docs/overview/mnainterface/</link><pubDate>Mon, 19 Dec 2022 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/overview/mnainterface/</guid><description>
 &lt;p>The various solver classes based on &lt;code>MNASolver&lt;/code> are used to perform &lt;a href="https://sogno-platform.github.io/dpsim/docs/concepts/nodal-analysis/">Nodal Analysis&lt;/a> during a DPsim simulation. For components to be able to influence the input variables of the MNA, they have to implement certain methods defined in the &lt;code>MNAInterface&lt;/code> interface class. While it is possible to individually implement &lt;code>MNAInterface&lt;/code> for every
 component, the behavior of many components can be unified in a common base class. This base class is called &lt;code>MNASimPowerComp&amp;lt;T&amp;gt;&lt;/code>.
 Currently, it is the only class which directly implements &lt;code>MNAInterface&lt;/code> and in turn all MNA components inherit from this class.
