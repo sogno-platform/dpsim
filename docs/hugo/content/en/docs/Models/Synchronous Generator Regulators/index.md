@@ -334,7 +334,6 @@ $$
 
 where $\omega(k=0)$ is calculated after the power flow analysis and after the initialization of synchronous machines (see section initialization of SG) and normally is equal to $1.0$ (pu).
 
-
 # References
 
 - [1] “IEEE Recommended Practice for Excitation System Models for Power System Stability Studies,” in IEEE Std 421.5-2016 (Revision of IEEE Std 421.5-2005) , vol., no., pp.1-207, 26 Aug. 2016, doi: 10.1109/IEEESTD.2016.7553421.

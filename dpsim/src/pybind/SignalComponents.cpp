@@ -180,7 +180,6 @@ void addSignalComponents(py::module_ mSignal) {
       .def("get_line_components",
            &CPS::Signal::DecouplingLineEMT_Ph3::getLineComponents);
 
-
   py::class_<CPS::Base::PSSParameters,
              std::shared_ptr<CPS::Base::PSSParameters>>(mSignal,
                                                         "PSSParameters");
@@ -210,7 +209,6 @@ void addSignalComponents(py::module_ mSignal) {
       .def(py::init<std::string, CPS::Logger::Level>())
       .def("set_parameters", &CPS::Signal::PSS1A::setParameters,
            "parameters"_a);
-
 
   py::class_<CPS::Signal::TurbineGovernorType1,
              std::shared_ptr<CPS::Signal::TurbineGovernorType1>,
