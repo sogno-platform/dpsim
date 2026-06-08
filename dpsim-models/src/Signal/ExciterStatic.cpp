@@ -16,12 +16,20 @@ void ExciterStatic::setParameters(
           parameters)) {
     mParameters = params;
 
+    if (mParameters->Tb == 0)
+      throw CPS::InvalidArgumentException(
+          "ExciterStatic: Tb must be non-zero (used as divisor in lead-lag "
+          "block)");
+    if (mParameters->Te == 0)
+      throw CPS::InvalidArgumentException(
+          "ExciterStatic: Te must be non-zero (used as divisor in exciter "
+          "output)");
+
     if (mParameters->Ta == mParameters->Tb) {
       SPDLOG_LOGGER_INFO(
           mSLog,
-          "\n if Ta=Tb  the auxilary state variable Xb can be ignored, as Xb=0",
-          this->name());
-      throw CPS::TypeException();
+          "ExciterStatic: Ta == Tb; lead-lag block reduces to unity gain "
+          "(Cb=0, Xb has no effect on output). Simulation proceeds normally.");
     }
 
     SPDLOG_LOGGER_INFO(mSLog,
@@ -110,7 +118,7 @@ Real ExciterStatic::step(Real mVd, Real mVq, Real dt, Real Vpss) {
     mVr = mVh;
 
   /// Compute Vin at time k
-  mVin = mVref - mVr_prev + Vpss;
+  mVin = mVref - mVr + Vpss;
 
   /// Compute Xb at time k+1 using euler forward
   mXb = mXb_prev + (mVin - mXb_prev) * dt / mParameters->Tb;
