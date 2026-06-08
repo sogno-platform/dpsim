@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=42", "pytest-runner", "wheel"]
+requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
