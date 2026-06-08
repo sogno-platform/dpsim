@@ -690,6 +690,11 @@ template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::addPSS(
     std::shared_ptr<Base::PSS> pss,
     std::shared_ptr<Base::PSSParameters> parameters) {
+  if (!mHasExciter) {
+    SPDLOG_LOGGER_ERROR(this->mSLog, "Cannot attach PSS: no exciter present. "
+                                     "Attach an exciter first.");
+    throw CPS::InvalidArgumentException();
+  }
   mPSS = pss;
   mPSS->setParameters(parameters);
   mHasPSS = true;
@@ -698,6 +703,11 @@ void Base::ReducedOrderSynchronGenerator<VarType>::addPSS(
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::addPSS(
     std::shared_ptr<Base::PSS> pss) {
+  if (!mHasExciter) {
+    SPDLOG_LOGGER_ERROR(this->mSLog, "Cannot attach PSS: no exciter present. "
+                                     "Attach an exciter first.");
+    throw CPS::InvalidArgumentException();
+  }
   mPSS = pss;
   mHasPSS = true;
 }
