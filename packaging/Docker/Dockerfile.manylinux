@@ -63,9 +63,14 @@ RUN cd /tmp && \
 	make ${MAKE_OPTS} install
 
 # Python dependencies
-ADD requirements-manylinux.txt .
+ADD pyproject.toml .
 RUN pip3 install --upgrade wheel build setuptools packaging
-RUN pip3 install -r requirements-manylinux.txt
+RUN pip3 install --upgrade pip && \
+	pip3 install --no-cache-dir pip-tools && \
+	pip-compile --no-header --extra manylinux --output-file /tmp/requirements.txt pyproject.toml && \
+	pip3 install --no-cache-dir -r /tmp/requirements.txt && \
+	pip3 uninstall -y pip-tools && \
+	rm /tmp/requirements.txt
 
 # Install CIMpp from source
 RUN cd /tmp && \

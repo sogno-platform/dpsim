@@ -24,9 +24,18 @@ apt-get -y install \
 	libgraphviz-dev \
 	libsundials-dev
 
-pip3 install --user -r requirements.txt
-pip3 install --user -r requirements-jupyter.txt
+pip3 install --user pip-tools
+python3 -m piptools compile --no-header --extra dev --output-file /tmp/requirements.txt pyproject.toml
+pip3 install --user -r /tmp/requirements.txt
+pip3 uninstall -y pip-tools
+rm /tmp/requirements.txt
 apt-get -y install npm
+pip3 install --user \
+    jupyter \
+    jupyterlab \
+    jupyter_contrib_nbextensions \
+    nbconvert \
+    nbformat
 jupyter nbextension enable --py widgetsnbextension
 jupyter labextension install @jupyter-widgets/jupyterlab-manager
 

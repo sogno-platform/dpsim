@@ -3,7 +3,8 @@ import sys
 import platform
 import subprocess
 
-from setuptools import setup, find_packages, Extension
+import pybind11
+from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 
 
@@ -23,7 +24,8 @@ class CMakeBuild(build_ext):
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}",
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG={extdir}",
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE={extdir}",
-            f"-DPYTHON_EXECUTABLE={sys.executable}",
+            f"-DPython3_EXECUTABLE={sys.executable}",
+            f"-Dpybind11_DIR={pybind11.get_cmake_dir()}",
             f"-DCMAKE_BUILD_TYPE={cfg}",
             "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
         ]
@@ -71,16 +73,6 @@ if platform.system() != "Windows":
 
 
 setup(
-    packages=find_packages("python/src"),
-    package_dir={"dpsim": "python/src/dpsim"},
-    python_requires=">=3.9",
-    install_requires=[
-        "numpy>=2.0.0",
-        "pandas>=2.0.0",
-        "scipy>=1.10.0",
-    ],
-    setup_requires=["pytest-runner", "wheel"],
-    tests_require=["pytest", "pyyaml", "nbformat", "nbconvert"],
     ext_modules=ext_modules_list,
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,

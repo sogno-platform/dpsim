@@ -1,6 +1,66 @@
 [build-system]
-requires = ["setuptools>=42"]
+requires = ["setuptools>=42", "wheel", "pybind11>=2.10.3"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "dpsim"
+version = "1.2.1"
+authors = [
+    {name = "The DPsim Authors", email = "post_acs@eonerc.rwth-aachen.de"},
+]
+description = "dynamic real-time power system simulator"
+readme = {file = "README.md", content-type = "text/markdown"}
+license = "MPL-2.0"
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "numpy>=2.0.0",
+    "pandas>=2.0.0",
+    "scipy>=1.10.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/sogno-platform/dpsim"
+"Bug Tracker" = "https://github.com/sogno-platform/dpsim/issues"
+
+[project.optional-dependencies]
+# mirrors requirements.txt — standard dev environment (docs + test + villas)
+dev = [
+    "sphinx",
+    "sphinx_rtd_theme",
+    "pytest-runner",
+    "pytest",
+    "pyyaml",
+    "pybind11[global]",
+    "villas-dataprocessing>=0.2.6",
+    "villas-node",
+    "paho-mqtt==1.1",
+]
+# mirrors requirements-manylinux.txt — manylinux wheel build container
+manylinux = [
+    "sphinx",
+    "sphinx_rtd_theme",
+    "pytest-runner",
+    "pytest",
+    "pyyaml",
+    "pybind11[global]",
+]
+# Python test runner dependencies (from setup.py tests_require)
+test = [
+    "pytest",
+    "pyyaml",
+    "nbformat",
+    "nbconvert",
+]
+
+[tool.setuptools]
+package-dir = {"dpsim" = "python/src/dpsim"}
+
+[tool.setuptools.packages.find]
+where = ["python/src"]
+namespaces = false
 
 [tool.cibuildwheel]
 build-verbosity = 3

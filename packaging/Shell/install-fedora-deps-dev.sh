@@ -61,9 +61,11 @@ dnf -y install \
 	libconfig-devel \
     libnl3-devel
 
-pip3 install -U setuptools
-pip3 install -U wheel
-pip3 install -r requirements.txt
+pip3 install pip-tools
+pip-compile --no-header --extra dev --output-file /tmp/requirements.txt pyproject.toml
+pip3 install -r /tmp/requirements.txt
+pip3 uninstall -y pip-tools
+rm /tmp/requirements.txt
 
 cd /tmp && \
 	git clone --recurse-submodules --depth 1 https://github.com/cim-iec/libcimpp.git && \

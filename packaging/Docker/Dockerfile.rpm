@@ -40,15 +40,24 @@ RUN set -eux; \
 	dnf clean all; \
 	rm -rf /var/cache/dnf /var/cache/yum
 
-COPY requirements.txt .
-COPY requirements-jupyter.txt .
+ADD pyproject.toml .
 RUN pip3 install --no-cache-dir --upgrade wheel build setuptools packaging && \
-	pip3 install --no-cache-dir -r requirements.txt && \
-	pip3 install --no-cache-dir -r requirements-jupyter.txt && \
+	pip3 install --no-cache-dir pip-tools && \
+	pip-compile --no-header --extra dev --output-file /tmp/requirements.txt pyproject.toml && \
+	pip3 install --no-cache-dir -r /tmp/requirements.txt && \
+	pip3 uninstall -y pip-tools && \
+	rm /tmp/requirements.txt && \
 	pip3 cache purge
 
 RUN set -eux; \
 	dnf -y --refresh install npm; \
+	pip3 install --no-cache-dir \
+		jupyter \
+		jupyterlab \
+		jupyter_contrib_nbextensions \
+		nbconvert \
+		nbformat; \
+	pip3 cache purge; \
 	jupyter nbextension enable --py widgetsnbextension; \
 	jupyter labextension install @jupyter-widgets/jupyterlab-manager; \
 	dnf -y remove npm; \
