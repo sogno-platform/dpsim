@@ -79,6 +79,7 @@ void Signal::PSS1A::initialize(Real omega, Real activePower, Real Vd, Real Vq) {
 
   mOmega_prev = omega;
   mActivePower_prev = activePower;
+  mVh_prev = Vh;
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\nInitial values:"
@@ -93,7 +94,6 @@ void Signal::PSS1A::initialize(Real omega, Real activePower, Real Vd, Real Vq) {
 Real Signal::PSS1A::step(Real omega, Real activePower, Real Vd, Real Vq,
                          Real dt) {
   Real Vh = sqrt(pow(Vd, 2.) + pow(Vq, 2.));
-  mVh_prev = Vh;
 
   mV1_prev = mV1;
   mV2_prev = mV2;
