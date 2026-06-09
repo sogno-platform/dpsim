@@ -442,12 +442,17 @@ void Base::SynchronGenerator::addGovernor(Real Ta, Real Tb, Real Tc, Real Fa,
 void Base::SynchronGenerator::addPSS(
     std::shared_ptr<Base::PSS> pss,
     std::shared_ptr<Base::PSSParameters> parameters) {
+  auto log = CPS::Logger::get("SynchronGenerator", CPS::Logger::Level::off,
+                              CPS::Logger::Level::info);
   if (!mHasExciter) {
-    auto log = CPS::Logger::get("SynchronGenerator", CPS::Logger::Level::off,
-                                CPS::Logger::Level::info);
     SPDLOG_LOGGER_ERROR(
         log, "Cannot attach PSS: no exciter present. Attach an exciter first.");
     throw CPS::InvalidArgumentException();
+  }
+  if (!pss) {
+    SPDLOG_LOGGER_ERROR(log,
+                        "addPSS called with null PSS on SynchronGenerator");
+    return;
   }
   mPSS = pss;
   mPSS->setParameters(parameters);
@@ -455,12 +460,17 @@ void Base::SynchronGenerator::addPSS(
 }
 
 void Base::SynchronGenerator::addPSS(std::shared_ptr<Base::PSS> pss) {
+  auto log = CPS::Logger::get("SynchronGenerator", CPS::Logger::Level::off,
+                              CPS::Logger::Level::info);
   if (!mHasExciter) {
-    auto log = CPS::Logger::get("SynchronGenerator", CPS::Logger::Level::off,
-                                CPS::Logger::Level::info);
     SPDLOG_LOGGER_ERROR(
         log, "Cannot attach PSS: no exciter present. Attach an exciter first.");
     throw CPS::InvalidArgumentException();
+  }
+  if (!pss) {
+    SPDLOG_LOGGER_ERROR(log,
+                        "addPSS called with null PSS on SynchronGenerator");
+    return;
   }
   mPSS = pss;
   mHasPSS = true;

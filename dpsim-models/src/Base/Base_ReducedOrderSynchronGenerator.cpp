@@ -695,6 +695,11 @@ void Base::ReducedOrderSynchronGenerator<VarType>::addPSS(
                                      "Attach an exciter first.");
     throw CPS::InvalidArgumentException();
   }
+  if (!pss) {
+    SPDLOG_LOGGER_ERROR(this->mSLog, "addPSS called with null PSS on {}",
+                        *this->mName);
+    return;
+  }
   mPSS = pss;
   mPSS->setParameters(parameters);
   mHasPSS = true;
@@ -707,6 +712,11 @@ void Base::ReducedOrderSynchronGenerator<VarType>::addPSS(
     SPDLOG_LOGGER_ERROR(this->mSLog, "Cannot attach PSS: no exciter present. "
                                      "Attach an exciter first.");
     throw CPS::InvalidArgumentException();
+  }
+  if (!pss) {
+    SPDLOG_LOGGER_ERROR(this->mSLog, "addPSS called with null PSS on {}",
+                        *this->mName);
+    return;
   }
   mPSS = pss;
   mHasPSS = true;
