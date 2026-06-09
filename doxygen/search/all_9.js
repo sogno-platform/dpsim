@@ -4,5 +4,8 @@ var searchData=
   ['kbc_1',['Kbc',['../class_c_p_s_1_1_signal_1_1_exciter_static_parameters.html#a32d0a958fe2f8a43c95a80e80385be9c',1,'CPS::Signal::ExciterStaticParameters']]],
   ['kef_2',['Kef',['../class_c_p_s_1_1_signal_1_1_exciter_d_c1_parameters.html#a367de213cc456f2df5749ed57e75a505',1,'CPS::Signal::ExciterDC1Parameters::Kef'],['../class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ab3e99d5ec94029e303aaabf779905100',1,'CPS::Signal::ExciterDC1SimpParameters::Kef']]],
   ['kf_3',['Kf',['../class_c_p_s_1_1_signal_1_1_exciter_d_c1_parameters.html#a5ee3eaf187f12ad56d07cdad13f77f47',1,'CPS::Signal::ExciterDC1Parameters::Kf'],['../class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a468e72035be0b1e6b6eb871d108ce30f',1,'CPS::Signal::ExciterDC1SimpParameters::Kf']]],
-  ['kluadapter_4',['KLUAdapter',['../class_d_psim_1_1_k_l_u_adapter.html',1,'DPsim::KLUAdapter'],['../class_d_psim_1_1_k_l_u_adapter.html#ad109bcfac8eec87bc66fe72b3475d8a6',1,'DPsim::KLUAdapter::KLUAdapter()'],['../class_d_psim_1_1_k_l_u_adapter.html#ac76eef631b79fac5a71e73325c4006d0',1,'DPsim::KLUAdapter::KLUAdapter(CPS::Logger::Log log)']]]
+  ['kluadapter_4',['KLUAdapter',['../class_d_psim_1_1_k_l_u_adapter.html',1,'DPsim::KLUAdapter'],['../class_d_psim_1_1_k_l_u_adapter.html#ad109bcfac8eec87bc66fe72b3475d8a6',1,'DPsim::KLUAdapter::KLUAdapter()'],['../class_d_psim_1_1_k_l_u_adapter.html#ac76eef631b79fac5a71e73325c4006d0',1,'DPsim::KLUAdapter::KLUAdapter(CPS::Logger::Log log)']]],
+  ['kp_5',['Kp',['../class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html#a0725aa22a478dd507ba37b7f339f7df1',1,'CPS::Signal::PSS1AParameters']]],
+  ['kv_6',['Kv',['../class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html#a2550e5e0d490398934333033d2b025e1',1,'CPS::Signal::PSS1AParameters']]],
+  ['kw_7',['Kw',['../class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html#ac5538c189b17c81b55ee8c9b2fa58156',1,'CPS::Signal::PSS1AParameters']]]
 ];

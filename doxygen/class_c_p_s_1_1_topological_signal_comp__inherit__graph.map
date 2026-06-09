@@ -1,43 +1,45 @@
 <map id="CPS::TopologicalSignalComp" name="CPS::TopologicalSignalComp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="207,371,399,400"/>
-<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_sim_signal_comp.html" title=" " alt="" coords="447,371,593,400"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="415,383,447,383,447,388,415,388"/>
-<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="5,371,159,400"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="174,383,206,383,206,388,174,388"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="207,397,399,427"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_sim_signal_comp.html" title=" " alt="" coords="447,397,593,427"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="415,410,447,410,447,415,415,415"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="5,397,159,427"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="174,410,206,410,206,415,174,415"/>
 <area shape="rect" id="Node000004" href="$class_c_p_s_1_1_signal_1_1_decoupling_line.html" title=" " alt="" coords="654,5,847,35"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="520,355,528,290,547,207,562,163,582,120,608,80,640,45,656,33,659,38,643,49,612,83,587,122,567,165,552,208,533,291,526,355"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="519,382,526,313,543,222,559,174,579,127,606,83,640,45,656,33,659,38,643,49,610,86,584,129,564,176,548,223,531,313,525,382"/>
 <area shape="rect" id="Node000005" href="$class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html" title=" " alt="" coords="641,59,860,88"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="523,355,533,300,554,230,570,194,589,159,612,126,640,98,657,87,660,91,643,102,616,130,593,162,575,196,559,232,539,301,528,356"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="521,381,531,321,551,245,566,205,586,166,610,130,640,98,657,87,660,91,643,102,614,133,590,169,571,207,556,247,536,322,527,382"/>
 <area shape="rect" id="Node000006" href="$class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t___ph3.html" title=" " alt="" coords="654,112,847,160"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="528,355,543,314,567,264,599,214,640,170,656,159,659,163,643,174,603,217,571,267,548,316,533,357"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="526,381,540,335,563,279,595,221,616,194,640,170,655,159,658,163,643,174,620,197,600,224,568,281,545,337,531,383"/>
 <area shape="rect" id="Node000007" href="$class_c_p_s_1_1_signal_1_1_exciter_d_c1.html" title=" " alt="" coords="668,184,833,214"/>
-<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="533,356,574,289,604,253,640,223,667,210,669,215,643,228,608,257,578,292,537,358"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="530,382,546,345,570,302,601,259,640,223,667,209,669,214,643,228,605,263,574,305,551,347,535,384"/>
 <area shape="rect" id="Node000008" href="$class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp.html" title=" " alt="" coords="653,237,848,267"/>
-<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="542,357,585,315,611,294,640,276,667,265,669,270,643,281,615,299,588,319,546,361"/>
+<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="537,383,579,328,608,300,640,277,664,265,666,270,643,281,611,304,583,332,541,386"/>
 <area shape="rect" id="Node000009" href="$class_c_p_s_1_1_signal_1_1_exciter_s_t1_simp.html" title=" " alt="" coords="655,291,846,320"/>
-<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="565,361,640,330,678,318,680,323,642,335,567,366"/>
+<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="550,386,591,356,640,330,672,318,674,323,642,335,594,361,553,390"/>
 <area shape="rect" id="Node000010" href="$class_c_p_s_1_1_signal_1_1_exciter_static.html" title=" " alt="" coords="665,344,836,374"/>
-<area shape="poly" id="edge9_Node000003_Node000010" title=" " alt="" coords="608,373,664,366,665,371,609,378"/>
+<area shape="poly" id="edge9_Node000003_Node000010" title=" " alt="" coords="602,391,682,372,684,377,603,396"/>
 <area shape="rect" id="Node000011" href="$class_c_p_s_1_1_signal_1_1_f_i_r_filter.html" title=" " alt="" coords="676,397,825,427"/>
-<area shape="poly" id="edge10_Node000003_Node000011" title=" " alt="" coords="609,393,676,401,676,406,608,398"/>
+<area shape="poly" id="edge10_Node000003_Node000011" title=" " alt="" coords="609,410,676,410,676,415,609,415"/>
 <area shape="rect" id="Node000012" href="$class_c_p_s_1_1_signal_1_1_integrator.html" title=" " alt="" coords="670,451,831,480"/>
-<area shape="poly" id="edge11_Node000003_Node000012" title=" " alt="" coords="567,405,642,436,680,448,678,453,640,441,565,410"/>
+<area shape="poly" id="edge11_Node000003_Node000012" title=" " alt="" coords="603,428,684,447,682,453,602,434"/>
 <area shape="rect" id="Node000013" href="$class_c_p_s_1_1_signal_1_1_p_l_l.html" title=" " alt="" coords="691,504,810,534"/>
-<area shape="poly" id="edge12_Node000003_Node000013" title=" " alt="" coords="546,410,588,452,615,472,642,490,692,507,690,512,640,495,611,477,585,456,542,414"/>
-<area shape="rect" id="Node000014" href="$class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html" title=" " alt="" coords="641,557,860,587"/>
-<area shape="poly" id="edge13_Node000003_Node000014" title=" " alt="" coords="537,413,578,479,608,514,643,543,664,554,662,559,640,548,604,518,574,482,533,415"/>
-<area shape="rect" id="Node000015" href="$class_c_p_s_1_1_signal_1_1_signal_generator.html" title="Model to generate generic signals." alt="" coords="652,611,849,640"/>
-<area shape="poly" id="edge14_Node000003_Node000015" title=" " alt="" coords="532,414,547,456,570,505,602,555,621,577,643,597,662,608,659,612,640,601,617,581,598,558,565,508,542,458,527,416"/>
-<area shape="rect" id="Node000020" href="$class_c_p_s_1_1_signal_1_1_turbine_governor.html" title="Turbine governor model to be used with synchronous generator." alt="" coords="648,664,853,694"/>
-<area shape="poly" id="edge19_Node000003_Node000020" title=" " alt="" coords="529,415,541,467,562,530,596,595,617,625,643,650,660,661,658,666,640,654,613,628,591,598,557,533,536,468,524,416"/>
-<area shape="rect" id="Node000021" href="$class_c_p_s_1_1_signal_1_1_turbine_governor_type1.html" title=" " alt="" coords="648,717,853,766"/>
-<area shape="poly" id="edge20_Node000003_Node000021" title=" " alt="" coords="527,415,536,476,557,553,572,594,591,634,615,671,643,704,658,715,654,719,640,707,610,674,586,636,567,596,551,555,531,477,522,416"/>
-<area shape="rect" id="Node000016" href="$class_c_p_s_1_1_signal_1_1_cosine_f_m_generator.html" title="Model to generate signals containing a frequency ramp." alt="" coords="908,527,1129,556"/>
-<area shape="poly" id="edge15_Node000015_Node000016" title=" " alt="" coords="841,603,858,596,882,581,907,566,939,554,941,559,909,571,885,586,861,601,843,608"/>
-<area shape="rect" id="Node000017" href="$class_c_p_s_1_1_signal_1_1_d_c_generator.html" title="Model to generate sinusoidal signals." alt="" coords="929,580,1108,610"/>
-<area shape="poly" id="edge16_Node000015_Node000017" title=" " alt="" coords="865,610,928,602,928,608,865,615"/>
-<area shape="rect" id="Node000018" href="$class_c_p_s_1_1_signal_1_1_frequency_ramp_generator.html" title="Model to generate signals containing a frequency ramp." alt="" coords="920,633,1116,682"/>
-<area shape="poly" id="edge17_Node000015_Node000018" title=" " alt="" coords="865,637,920,643,920,648,865,642"/>
-<area shape="rect" id="Node000019" href="$class_c_p_s_1_1_signal_1_1_sine_wave_generator.html" title="Model to generate sinusoidal signals." alt="" coords="908,705,1129,735"/>
-<area shape="poly" id="edge18_Node000015_Node000019" title=" " alt="" coords="847,644,861,650,876,660,886,671,895,681,909,691,936,702,934,707,906,696,891,685,882,675,872,664,858,654,845,648"/>
+<area shape="poly" id="edge12_Node000003_Node000013" title=" " alt="" coords="553,434,594,463,642,490,692,506,690,511,640,495,591,468,550,439"/>
+<area shape="rect" id="Node000014" href="$class_c_p_s_1_1_signal_1_1_p_s_s1_a.html" title=" " alt="" coords="683,557,818,587"/>
+<area shape="poly" id="edge13_Node000003_Node000014" title=" " alt="" coords="541,438,583,492,611,520,643,543,683,560,681,565,640,548,608,524,579,496,537,442"/>
+<area shape="rect" id="Node000015" href="$class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html" title=" " alt="" coords="641,611,860,640"/>
+<area shape="poly" id="edge14_Node000003_Node000015" title=" " alt="" coords="535,441,551,477,574,519,605,561,643,597,663,608,661,613,640,601,601,565,570,522,546,479,530,443"/>
+<area shape="rect" id="Node000016" href="$class_c_p_s_1_1_signal_1_1_signal_generator.html" title="Model to generate generic signals." alt="" coords="652,664,849,694"/>
+<area shape="poly" id="edge15_Node000003_Node000016" title=" " alt="" coords="530,442,544,488,566,545,599,602,619,628,643,650,661,661,658,666,640,654,615,631,594,605,561,547,539,490,525,443"/>
+<area shape="rect" id="Node000021" href="$class_c_p_s_1_1_signal_1_1_turbine_governor.html" title="Turbine governor model to be used with synchronous generator." alt="" coords="648,717,853,747"/>
+<area shape="poly" id="edge20_Node000003_Node000021" title=" " alt="" coords="528,442,538,498,558,569,573,606,592,642,615,675,643,703,660,715,657,719,640,708,611,678,588,645,569,608,553,571,533,500,522,443"/>
+<area shape="rect" id="Node000022" href="$class_c_p_s_1_1_signal_1_1_turbine_governor_type1.html" title=" " alt="" coords="648,770,853,819"/>
+<area shape="poly" id="edge21_Node000003_Node000022" title=" " alt="" coords="526,442,534,507,553,592,568,636,588,680,613,721,643,757,657,768,654,772,639,761,608,724,583,682,563,638,548,593,529,508,521,443"/>
+<area shape="rect" id="Node000017" href="$class_c_p_s_1_1_signal_1_1_cosine_f_m_generator.html" title="Model to generate signals containing a frequency ramp." alt="" coords="908,580,1129,610"/>
+<area shape="poly" id="edge16_Node000016_Node000017" title=" " alt="" coords="841,656,858,650,882,635,907,619,939,608,941,613,909,624,885,639,861,655,843,661"/>
+<area shape="rect" id="Node000018" href="$class_c_p_s_1_1_signal_1_1_d_c_generator.html" title="Model to generate sinusoidal signals." alt="" coords="929,633,1108,663"/>
+<area shape="poly" id="edge17_Node000016_Node000018" title=" " alt="" coords="865,663,928,656,928,661,865,668"/>
+<area shape="rect" id="Node000019" href="$class_c_p_s_1_1_signal_1_1_frequency_ramp_generator.html" title="Model to generate signals containing a frequency ramp." alt="" coords="920,686,1116,735"/>
+<area shape="poly" id="edge18_Node000016_Node000019" title=" " alt="" coords="865,690,920,696,920,702,865,695"/>
+<area shape="rect" id="Node000020" href="$class_c_p_s_1_1_signal_1_1_sine_wave_generator.html" title="Model to generate sinusoidal signals." alt="" coords="908,759,1129,788"/>
+<area shape="poly" id="edge19_Node000016_Node000020" title=" " alt="" coords="847,697,861,703,876,714,886,724,895,735,909,744,936,756,934,761,906,749,891,739,882,728,872,718,858,708,845,702"/>
 </map>

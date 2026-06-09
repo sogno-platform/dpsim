@@ -140,6 +140,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a943d7a84c8b9e6068d532798f020da1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc6a0b6905e8a597573414e858d826d6" id="r_acc6a0b6905e8a597573414e858d826d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acc6a0b6905e8a597573414e858d826d6">addExciter</a> (Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr)</td></tr>
 <tr class="separator:acc6a0b6905e8a597573414e858d826d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4af1224cbd034142295c2c2fdec057aa" id="r_a4af1224cbd034142295c2c2fdec057aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4af1224cbd034142295c2c2fdec057aa">addPSS</a> (std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html">Base::PSS</a> &gt; pss, std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s_parameters.html">Base::PSSParameters</a> &gt; parameters)</td></tr>
+<tr class="memdesc:a4af1224cbd034142295c2c2fdec057aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attach a <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html" title="Base model for power system stabilizers.">PSS</a> (initialises parameters) to this generator.  <br /></td></tr>
+<tr class="separator:a4af1224cbd034142295c2c2fdec057aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ddc8710e63616bced3c5a3b1919f5dc" id="r_a0ddc8710e63616bced3c5a3b1919f5dc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ddc8710e63616bced3c5a3b1919f5dc">addPSS</a> (std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html">Base::PSS</a> &gt; pss)</td></tr>
+<tr class="memdesc:a0ddc8710e63616bced3c5a3b1919f5dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attach a pre-constructed <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html" title="Base model for power system stabilizers.">PSS</a> (parameters already set)  <br /></td></tr>
+<tr class="separator:a0ddc8710e63616bced3c5a3b1919f5dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12d3ce2bed7114c568f50335af396969" id="r_a12d3ce2bed7114c568f50335af396969"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a12d3ce2bed7114c568f50335af396969">scaleInertiaConstant</a> (Real scalingFactor)</td></tr>
 <tr class="separator:a12d3ce2bed7114c568f50335af396969"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_c_p_s_1_1_m_n_a_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_c_p_s_1_1_m_n_a_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; VarType &gt;</a></td></tr>
@@ -612,12 +618,18 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:ade4922d9d0870efc96bcc2a5dc6306dc" id="r_ade4922d9d0870efc96bcc2a5dc6306dc"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ade4922d9d0870efc96bcc2a5dc6306dc">mHasExciter</a> = false</td></tr>
 <tr class="memdesc:ade4922d9d0870efc96bcc2a5dc6306dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if <a class="el" href="class_c_p_s_1_1_base_1_1_exciter.html" title="Base model for exciters.">Exciter</a> is activated.  <br /></td></tr>
 <tr class="separator:ade4922d9d0870efc96bcc2a5dc6306dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca7afefca389006b3b9d2a6f968fa731" id="r_aca7afefca389006b3b9d2a6f968fa731"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aca7afefca389006b3b9d2a6f968fa731">mHasPSS</a> = false</td></tr>
+<tr class="memdesc:aca7afefca389006b3b9d2a6f968fa731"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html" title="Base model for power system stabilizers.">PSS</a> is activated.  <br /></td></tr>
+<tr class="separator:aca7afefca389006b3b9d2a6f968fa731"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4bca8e911465b0e0eb61b9150b15be1" id="r_af4bca8e911465b0e0eb61b9150b15be1"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_signal_1_1_turbine_governor_type1.html">Signal::TurbineGovernorType1</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af4bca8e911465b0e0eb61b9150b15be1">mTurbineGovernor</a></td></tr>
 <tr class="memdesc:af4bca8e911465b0e0eb61b9150b15be1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Signal component modelling governor control and steam turbine.  <br /></td></tr>
 <tr class="separator:af4bca8e911465b0e0eb61b9150b15be1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90e9656f08889a641f93462fd48ac037" id="r_a90e9656f08889a641f93462fd48ac037"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_base_1_1_exciter.html">Base::Exciter</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a90e9656f08889a641f93462fd48ac037">mExciter</a></td></tr>
 <tr class="memdesc:a90e9656f08889a641f93462fd48ac037"><td class="mdescLeft">&#160;</td><td class="mdescRight">Signal component modelling voltage regulator and exciter.  <br /></td></tr>
 <tr class="separator:a90e9656f08889a641f93462fd48ac037"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d65e7a01b66ba20e620380821769f15" id="r_a8d65e7a01b66ba20e620380821769f15"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html">Base::PSS</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8d65e7a01b66ba20e620380821769f15">mPSS</a></td></tr>
+<tr class="memdesc:a8d65e7a01b66ba20e620380821769f15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Power system stabilizer.  <br /></td></tr>
+<tr class="separator:a8d65e7a01b66ba20e620380821769f15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a640fb3acc9ef72eed262373a6e259605" id="r_a640fb3acc9ef72eed262373a6e259605"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a640fb3acc9ef72eed262373a6e259605">mTimeStep</a></td></tr>
 <tr class="separator:a640fb3acc9ef72eed262373a6e259605"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b3a7d29279b664add0a3f78a28b7639" id="r_a5b3a7d29279b664add0a3f78a28b7639"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b3a7d29279b664add0a3f78a28b7639">mSimTime</a></td></tr>
@@ -710,7 +722,7 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename VarType&gt;<br />
 class CPS::Base::ReducedOrderSynchronGenerator&lt; VarType &gt;</div>
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00020">20</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00021">21</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a6598fb1ae8f4efa2bcd9e1d8ffa9221e" name="a6598fb1ae8f4efa2bcd9e1d8ffa9221e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6598fb1ae8f4efa2bcd9e1d8ffa9221e">&#9670;&#160;</a></span>~ReducedOrderSynchronGenerator()</h2>
@@ -739,7 +751,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Destructor - does nothing. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00061">61</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00062">62</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -790,7 +802,7 @@ template&lt;typename VarType&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html#l00616">616</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html">Base_ReducedOrderSynchronGenerator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html#l00630">630</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html">Base_ReducedOrderSynchronGenerator.cpp</a>.</p>
 
 </div>
 </div>
@@ -813,7 +825,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Add already constructed regulator and exciter. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html#l00603">603</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html">Base_ReducedOrderSynchronGenerator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html#l00617">617</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html">Base_ReducedOrderSynchronGenerator.cpp</a>.</p>
 
 </div>
 </div>
@@ -840,7 +852,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Add voltage regulator and exciter. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html#l00583">583</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html">Base_ReducedOrderSynchronGenerator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html#l00597">597</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html">Base_ReducedOrderSynchronGenerator.cpp</a>.</p>
 
 </div>
 </div>
@@ -907,7 +919,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Add governor and turbine. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html#l00658">658</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html">Base_ReducedOrderSynchronGenerator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html#l00672">672</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html">Base_ReducedOrderSynchronGenerator.cpp</a>.</p>
 
 </div>
 </div>
@@ -928,7 +940,57 @@ template&lt;typename VarType&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html#l00669">669</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html">Base_ReducedOrderSynchronGenerator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html#l00683">683</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html">Base_ReducedOrderSynchronGenerator.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a0ddc8710e63616bced3c5a3b1919f5dc" name="a0ddc8710e63616bced3c5a3b1919f5dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ddc8710e63616bced3c5a3b1919f5dc">&#9670;&#160;</a></span>addPSS() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename VarType&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void Base::ReducedOrderSynchronGenerator::addPSS </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html">Base::PSS</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>pss</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Attach a pre-constructed <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html" title="Base model for power system stabilizers.">PSS</a> (parameters already set) </p>
+
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html#l00709">709</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html">Base_ReducedOrderSynchronGenerator.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a4af1224cbd034142295c2c2fdec057aa" name="a4af1224cbd034142295c2c2fdec057aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4af1224cbd034142295c2c2fdec057aa">&#9670;&#160;</a></span>addPSS() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename VarType&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void Base::ReducedOrderSynchronGenerator::addPSS </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html">Base::PSS</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>pss</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s_parameters.html">Base::PSSParameters</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>parameters</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Attach a <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html" title="Base model for power system stabilizers.">PSS</a> (initialises parameters) to this generator. </p>
+
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html#l00690">690</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html">Base_ReducedOrderSynchronGenerator.cpp</a>.</p>
 
 </div>
 </div>
@@ -1064,7 +1126,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; VarType &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html#l00567">567</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html">Base_ReducedOrderSynchronGenerator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html#l00581">581</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html">Base_ReducedOrderSynchronGenerator.cpp</a>.</p>
 
 </div>
 </div>
@@ -1106,7 +1168,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; VarType &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html#l00549">549</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html">Base_ReducedOrderSynchronGenerator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html#l00563">563</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html">Base_ReducedOrderSynchronGenerator.cpp</a>.</p>
 
 </div>
 </div>
@@ -1179,7 +1241,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; VarType &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html#l00475">475</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html">Base_ReducedOrderSynchronGenerator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html#l00483">483</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html">Base_ReducedOrderSynchronGenerator.cpp</a>.</p>
 
 </div>
 </div>
@@ -1219,7 +1281,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; VarType &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html#l00577">577</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html">Base_ReducedOrderSynchronGenerator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html#l00591">591</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html">Base_ReducedOrderSynchronGenerator.cpp</a>.</p>
 
 </div>
 </div>
@@ -1254,7 +1316,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; VarType &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html#l00558">558</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html">Base_ReducedOrderSynchronGenerator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html#l00572">572</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8cpp_source.html">Base_ReducedOrderSynchronGenerator.cpp</a>.</p>
 
 </div>
 </div>
@@ -1688,7 +1750,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00239">239</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00245">245</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1714,7 +1776,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00219">219</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00225">225</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1740,7 +1802,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00209">209</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00215">215</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1766,7 +1828,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00221">221</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00227">227</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1792,7 +1854,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00213">213</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00219">219</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1818,7 +1880,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00241">241</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00247">247</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1846,7 +1908,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Base peak current. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00169">169</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00175">175</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1874,7 +1936,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Base RMS current. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00167">167</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00173">173</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1902,7 +1964,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Base inductance. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00175">175</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00181">181</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1930,7 +1992,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Base omega electric. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00173">173</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00179">179</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1958,7 +2020,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Base omega mech. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00177">177</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00183">183</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1986,7 +2048,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Base peak voltage. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00165">165</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00171">171</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2014,7 +2076,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Base voltage RMS. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00163">163</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00169">169</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2042,7 +2104,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Base impedance. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00171">171</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00177">177</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2068,7 +2130,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00223">223</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00229">229</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2094,7 +2156,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00211">211</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00217">217</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2120,7 +2182,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00225">225</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00231">231</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2146,7 +2208,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00215">215</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00221">221</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2172,7 +2234,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00227">227</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00233">233</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2198,7 +2260,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00229">229</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00235">235</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2218,7 +2280,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Load angle (between q-axis and stator a-axis) </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00054">54</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00055">55</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2244,7 +2306,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00231">231</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00237">237</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2270,7 +2332,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00217">217</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00223">223</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2290,7 +2352,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>induced emf by the field current under no-load conditions at time k+1 (p.u.) </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00056">56</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00057">57</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2310,7 +2372,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>induced emf by the field current under no-load conditions at time k (p.u.) </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00058">58</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00059">59</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2330,7 +2392,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>stator electrical torque </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00045">45</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00046">46</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2358,7 +2420,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Signal component modelling voltage regulator and exciter. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00272">272</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00280">280</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2386,7 +2448,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Inertia. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00179">179</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00185">185</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2414,7 +2476,35 @@ template&lt;typename VarType&gt; </div>
 
 <p>Determines if <a class="el" href="class_c_p_s_1_1_base_1_1_exciter.html" title="Base model for exciters.">Exciter</a> is activated. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00268">268</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00274">274</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+
+</div>
+</div>
+<a id="aca7afefca389006b3b9d2a6f968fa731" name="aca7afefca389006b3b9d2a6f968fa731"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca7afefca389006b3b9d2a6f968fa731">&#9670;&#160;</a></span>mHasPSS</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename VarType&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Bool <a class="el" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html">CPS::Base::ReducedOrderSynchronGenerator</a>&lt; VarType &gt;::mHasPSS = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Determines if <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html" title="Base model for power system stabilizers.">PSS</a> is activated. </p>
+
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00276">276</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2442,7 +2532,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Determines if Turbine and Governor are activated. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00266">266</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00272">272</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2461,7 +2551,7 @@ template&lt;typename VarType&gt; </div>
 </div><div class="memdoc">
 <p>dq armature current (0,0) = Id (1,0) = Iq </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00041">41</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00042">42</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2480,7 +2570,7 @@ template&lt;typename VarType&gt; </div>
 </div><div class="memdoc">
 <p>dq0 armature current (0,0) = Id (1,0) = Iq (2,0) = I0 </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00033">33</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00034">34</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2508,7 +2598,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>initial armature voltage phase a (p.u.) </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00257">257</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00263">263</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2536,7 +2626,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>angle of initial armature current </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00259">259</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00265">265</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2564,7 +2654,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>initial electrical power </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00249">249</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00255">255</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2592,7 +2682,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Flag to remember when initial values are set. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00262">262</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00268">268</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2620,7 +2710,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>initial mechanical power </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00251">251</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00257">257</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2648,7 +2738,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>initial terminal voltage phase a (p.u.) </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00253">253</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00259">259</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2676,7 +2766,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>angle of initial armature voltage </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00255">255</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00261">261</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2704,7 +2794,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Complex interface current. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00245">245</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00251">251</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2732,7 +2822,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Complex interface voltage. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00247">247</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00253">253</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2760,7 +2850,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>0-axis inductance </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00187">187</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00193">193</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2788,7 +2878,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>d-axis inductance </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00183">183</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00189">189</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2816,7 +2906,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Subtransient d-axis inductance. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00193">193</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00199">199</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2844,7 +2934,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Subtransient d-axis inductance. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00189">189</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00195">195</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2872,7 +2962,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>d-axis inductance </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00185">185</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00191">191</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2900,7 +2990,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Subtransient q-axis inductance. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00195">195</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00201">201</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2928,7 +3018,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Subtransient q-axis inductance. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00191">191</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00197">197</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2948,7 +3038,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Mechanical torque. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00047">47</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00048">48</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2966,7 +3056,7 @@ template&lt;typename VarType&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00048">48</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00049">49</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2994,7 +3084,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Model flag indicating whether the machine is modelled as Norton or Thevenin equivalent. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00149">149</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00155">155</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3020,7 +3110,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00159">159</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00165">165</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3048,7 +3138,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Nominal Omega. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00161">161</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00167">167</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3076,7 +3166,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Nominal power. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00155">155</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00161">161</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3104,7 +3194,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Nominal voltage. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00157">157</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00163">163</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3124,7 +3214,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Rotor speed. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00050">50</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00051">51</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3144,7 +3234,35 @@ template&lt;typename VarType&gt; </div>
 
 <p>Electrical power. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00043">43</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00044">44</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+
+</div>
+</div>
+<a id="a8d65e7a01b66ba20e620380821769f15" name="a8d65e7a01b66ba20e620380821769f15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d65e7a01b66ba20e620380821769f15">&#9670;&#160;</a></span>mPSS</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename VarType&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html">Base::PSS</a>&gt; <a class="el" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html">CPS::Base::ReducedOrderSynchronGenerator</a>&lt; VarType &gt;::mPSS</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Power system stabilizer. </p>
+
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00282">282</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3170,7 +3288,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00151">151</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00157">157</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3196,7 +3314,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00276">276</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00286">286</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3224,7 +3342,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>d-axis additional leakage time constant </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00205">205</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00211">211</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3252,7 +3370,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Subtransient time constant of d-axis. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00201">201</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00207">207</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3280,7 +3398,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Transient time constant of d-axis. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00197">197</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00203">203</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3300,7 +3418,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>mechanical system angle (between d-axis and stator a-axis) </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00052">52</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00053">53</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3326,7 +3444,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00275">275</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00285">285</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3354,7 +3472,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Subtransient time constant of q-axis. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00203">203</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00209">209</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3382,7 +3500,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Transient time constant of q-axis. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00199">199</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00205">205</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3410,7 +3528,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Signal component modelling governor control and steam turbine. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00270">270</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00278">278</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3429,7 +3547,7 @@ template&lt;typename VarType&gt; </div>
 </div><div class="memdoc">
 <p>dq stator terminal voltage (0,0) = Vd (1,0) = Vq </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00037">37</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00038">38</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3448,7 +3566,7 @@ template&lt;typename VarType&gt; </div>
 </div><div class="memdoc">
 <p>dq stator terminal voltage (0,0) = Vd (1,0) = Vq (2,0) = V0 </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00028">28</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00029">29</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3474,7 +3592,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00277">277</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00287">287</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3500,7 +3618,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00233">233</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00239">239</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3526,7 +3644,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00235">235</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html#l00241">241</a> of file <a class="el" href="_base___reduced_order_synchron_generator_8h_source.html">Base_ReducedOrderSynchronGenerator.h</a>.</p>
 
 </div>
 </div>

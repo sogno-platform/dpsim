@@ -1,0 +1,15 @@
+<map id="CPS::Signal::PSS1A" name="CPS::Signal::PSS1A">
+<area shape="rect" id="Node000001" title=" " alt="" coords="187,260,322,290"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_sim_signal_comp.html" title=" " alt="" coords="28,181,175,211"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,216,228,257,226,262,142,220"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_topological_signal_comp.html" title=" " alt="" coords="5,84,198,114"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="104,130,104,181,99,181,99,130"/>
+<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="25,5,178,35"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="104,50,104,84,99,84,99,50"/>
+<area shape="rect" id="Node000005" href="$class_c_p_s_1_1_base_1_1_p_s_s.html" title="Base model for power system stabilizers." alt="" coords="199,181,311,211"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="258,226,258,260,252,260,252,226"/>
+<area shape="rect" id="Node000006" href="$class_shared_factory.html" title=" " alt="" coords="334,181,506,211"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="377,220,286,262,284,257,375,215"/>
+<area shape="rect" id="Node000007" href="$class_shared_factory.html" title=" " alt="" coords="350,84,490,114"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="423,130,423,181,418,181,418,130"/>
+</map>

@@ -32,6 +32,10 @@ var searchData=
   ['profilevoltagesource_29',['ProfileVoltageSource',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_profile_voltage_source.html',1,'CPS::DP::Ph1::ProfileVoltageSource'],['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_profile_voltage_source.html#a537e258098fc0c46eabab87ce94fbc37',1,'CPS::DP::Ph1::ProfileVoltageSource::ProfileVoltageSource(String uid, String name, std::filesystem::path sourceFile, Logger::Level loglevel=Logger::Level::off)'],['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_profile_voltage_source.html#a457fa806e7af45f95d0696c112115fba',1,'CPS::DP::Ph1::ProfileVoltageSource::ProfileVoltageSource(String name, std::filesystem::path sourceFile, Logger::Level logLevel=Logger::Level::off)']]],
   ['psm_5fin_30',['Psm_in',['../class_c_p_s_1_1_signal_1_1_turbine_governor.html#a42019ed831becddcebd7fe837378fc22',1,'CPS::Signal::TurbineGovernor']]],
   ['psr_5fin_31',['Psr_in',['../class_c_p_s_1_1_signal_1_1_turbine_governor.html#af38ae623671ed8b50b2e4f6f5104e389',1,'CPS::Signal::TurbineGovernor']]],
-  ['pvnode_32',['PVNode',['../class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_v_node.html',1,'CPS::SP::Ph1']]],
-  ['pyinterfacevillas_33',['PyInterfaceVillas',['../class_py_interface_villas.html',1,'']]]
+  ['pss_32',['PSS',['../class_c_p_s_1_1_base_1_1_p_s_s.html',1,'CPS::Base']]],
+  ['pss1a_33',['PSS1A',['../class_c_p_s_1_1_signal_1_1_p_s_s1_a.html',1,'CPS::Signal']]],
+  ['pss1aparameters_34',['PSS1AParameters',['../class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html',1,'CPS::Signal']]],
+  ['pssparameters_35',['PSSParameters',['../class_c_p_s_1_1_base_1_1_p_s_s_parameters.html',1,'CPS::Base']]],
+  ['pvnode_36',['PVNode',['../class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_v_node.html',1,'CPS::SP::Ph1']]],
+  ['pyinterfacevillas_37',['PyInterfaceVillas',['../class_py_interface_villas.html',1,'']]]
 ];

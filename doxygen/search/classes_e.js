@@ -17,6 +17,10 @@ var searchData=
   ['presolvetask_14',['PreSolveTask',['../class_d_psim_1_1_diakoptics_solver_1_1_pre_solve_task.html',1,'DPsim::DiakopticsSolver']]],
   ['prestep_15',['PreStep',['../class_c_p_s_1_1_signal_1_1_decoupling_line_1_1_pre_step.html',1,'CPS::Signal::DecouplingLine::PreStep'],['../class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_1_1_pre_step.html',1,'CPS::Signal::DecouplingLineEMT::PreStep'],['../class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t___ph3_1_1_pre_step.html',1,'CPS::Signal::DecouplingLineEMT_Ph3::PreStep'],['../class_c_p_s_1_1_signal_1_1_integrator_1_1_pre_step.html',1,'CPS::Signal::Integrator::PreStep'],['../class_c_p_s_1_1_signal_1_1_p_l_l_1_1_pre_step.html',1,'CPS::Signal::PLL::PreStep'],['../class_c_p_s_1_1_signal_1_1_power_controller_v_s_i_1_1_pre_step.html',1,'CPS::Signal::PowerControllerVSI::PreStep'],['../class_d_psim_1_1_interface_queued_1_1_pre_step.html',1,'DPsim::InterfaceQueued::PreStep'],['../class_d_psim_1_1_interface_villas_queueless_1_1_pre_step.html',1,'DPsim::InterfaceVillasQueueless::PreStep']]],
   ['profilevoltagesource_16',['ProfileVoltageSource',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_profile_voltage_source.html',1,'CPS::DP::Ph1']]],
-  ['pvnode_17',['PVNode',['../class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_v_node.html',1,'CPS::SP::Ph1']]],
-  ['pyinterfacevillas_18',['PyInterfaceVillas',['../class_py_interface_villas.html',1,'']]]
+  ['pss_17',['PSS',['../class_c_p_s_1_1_base_1_1_p_s_s.html',1,'CPS::Base']]],
+  ['pss1a_18',['PSS1A',['../class_c_p_s_1_1_signal_1_1_p_s_s1_a.html',1,'CPS::Signal']]],
+  ['pss1aparameters_19',['PSS1AParameters',['../class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html',1,'CPS::Signal']]],
+  ['pssparameters_20',['PSSParameters',['../class_c_p_s_1_1_base_1_1_p_s_s_parameters.html',1,'CPS::Base']]],
+  ['pvnode_21',['PVNode',['../class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_v_node.html',1,'CPS::SP::Ph1']]],
+  ['pyinterfacevillas_22',['PyInterfaceVillas',['../class_py_interface_villas.html',1,'']]]
 ];

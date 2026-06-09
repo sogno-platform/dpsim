@@ -144,6 +144,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>addExciter</b> (std::
 <tr class="separator:a25e657b8b2b51388368b6126f9c9087d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e0f9e0961d5c72a0e229e7b1d7a03e0" id="r_a1e0f9e0961d5c72a0e229e7b1d7a03e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1e0f9e0961d5c72a0e229e7b1d7a03e0">addExciter</a> (Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr)</td></tr>
 <tr class="separator:a1e0f9e0961d5c72a0e229e7b1d7a03e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ecf4746e704ac7793bc458b2f0eaaf0" id="r_a5ecf4746e704ac7793bc458b2f0eaaf0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5ecf4746e704ac7793bc458b2f0eaaf0">addPSS</a> (std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html">Base::PSS</a> &gt; pss, std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s_parameters.html">Base::PSSParameters</a> &gt; parameters)</td></tr>
+<tr class="memdesc:a5ecf4746e704ac7793bc458b2f0eaaf0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attach a <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html" title="Base model for power system stabilizers.">PSS</a> (initialised separately) to this generator.  <br /></td></tr>
+<tr class="separator:a5ecf4746e704ac7793bc458b2f0eaaf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25d4a8529012f28d9d237851c8fab0fe" id="r_a25d4a8529012f28d9d237851c8fab0fe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a25d4a8529012f28d9d237851c8fab0fe">addPSS</a> (std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html">Base::PSS</a> &gt; pss)</td></tr>
+<tr class="memdesc:a25d4a8529012f28d9d237851c8fab0fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attach a pre-constructed <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html" title="Base model for power system stabilizers.">PSS</a> (parameters already set)  <br /></td></tr>
+<tr class="separator:a25d4a8529012f28d9d237851c8fab0fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6e1cdc082a49b5d09a9f81e4e1276a0" id="r_ac6e1cdc082a49b5d09a9f81e4e1276a0"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac6e1cdc082a49b5d09a9f81e4e1276a0">~SynchronGenerator</a> ()</td></tr>
 <tr class="memdesc:ac6e1cdc082a49b5d09a9f81e4e1276a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor - does nothing.  <br /></td></tr>
 <tr class="separator:ac6e1cdc082a49b5d09a9f81e4e1276a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -236,6 +242,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a45350c057485893520ab26d1ffadb423" id="r_a45350c057485893520ab26d1ffadb423"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_base_1_1_exciter.html">Base::Exciter</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a45350c057485893520ab26d1ffadb423">mExciter</a></td></tr>
 <tr class="memdesc:a45350c057485893520ab26d1ffadb423"><td class="mdescLeft">&#160;</td><td class="mdescRight">Signal component modelling voltage regulator and exciter.  <br /></td></tr>
 <tr class="separator:a45350c057485893520ab26d1ffadb423"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a740767d2a01824d0db3d4ca481069297" id="r_a740767d2a01824d0db3d4ca481069297"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html">Base::PSS</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a740767d2a01824d0db3d4ca481069297">mPSS</a></td></tr>
+<tr class="memdesc:a740767d2a01824d0db3d4ca481069297"><td class="mdescLeft">&#160;</td><td class="mdescRight">Power system stabilizer.  <br /></td></tr>
+<tr class="separator:a740767d2a01824d0db3d4ca481069297"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -445,6 +454,9 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a2bb894751b16a6742c20a5fb1a1bbe85" id="r_a2bb894751b16a6742c20a5fb1a1bbe85"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2bb894751b16a6742c20a5fb1a1bbe85">mHasExciter</a> = false</td></tr>
 <tr class="memdesc:a2bb894751b16a6742c20a5fb1a1bbe85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if <a class="el" href="class_c_p_s_1_1_base_1_1_exciter.html" title="Base model for exciters.">Exciter</a> is activated.  <br /></td></tr>
 <tr class="separator:a2bb894751b16a6742c20a5fb1a1bbe85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2c3a2fd4d5a1bcb0f0702980d079bcf" id="r_ad2c3a2fd4d5a1bcb0f0702980d079bcf"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad2c3a2fd4d5a1bcb0f0702980d079bcf">mHasPSS</a> = false</td></tr>
+<tr class="memdesc:ad2c3a2fd4d5a1bcb0f0702980d079bcf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html" title="Base model for power system stabilizers.">PSS</a> is activated.  <br /></td></tr>
+<tr class="separator:ad2c3a2fd4d5a1bcb0f0702980d079bcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace7cf0eda9cb2ff0984b3ac505b06fd4" id="r_ace7cf0eda9cb2ff0984b3ac505b06fd4"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ace7cf0eda9cb2ff0984b3ac505b06fd4">mInitTerminalVoltage</a> = 0</td></tr>
 <tr class="separator:ace7cf0eda9cb2ff0984b3ac505b06fd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5536f0646d99d5c823b610326997982" id="r_ac5536f0646d99d5c823b610326997982"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac5536f0646d99d5c823b610326997982">mInitVoltAngle</a> = 0</td></tr>
@@ -454,7 +466,7 @@ Protected Attributes</h2></td></tr>
 <div class="textblock"><p>Base synchronous generator model. </p>
 <p>If parInPerUnit is not set, the parameters have to be given with their respective stator or rotor referred values. The calculation to per unit is performed in the initialization. The case where parInPerUnit is not set will be implemented later. parameter names include underscores and typical variables names found in literature instead of descriptive names in order to shorten formulas and increase the readability </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00025">25</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00026">26</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 </div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="a65017fe1b3466b9d514d76300ecb936e" name="a65017fe1b3466b9d514d76300ecb936e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a65017fe1b3466b9d514d76300ecb936e">&#9670;&#160;</a></span>ParameterType</h2>
@@ -478,7 +490,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Machine parameters type. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00033">33</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00034">34</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -505,7 +517,7 @@ Protected Attributes</h2></td></tr>
 <p>State type of machine variables. </p>
 <p>Determines if the machine states are considered in per unit, referred to the stator parameters or the rotor parameters. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00031">31</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00032">32</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -535,7 +547,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Constructor. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00280">280</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00288">288</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -564,7 +576,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Destructor - does nothing. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00315">315</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00323">323</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -684,6 +696,52 @@ Protected Attributes</h2></td></tr>
 <p>Add governor and turbine. </p>
 
 <p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8cpp_source.html#l00432">432</a> of file <a class="el" href="_base___synchron_generator_8cpp_source.html">Base_SynchronGenerator.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a25d4a8529012f28d9d237851c8fab0fe" name="a25d4a8529012f28d9d237851c8fab0fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25d4a8529012f28d9d237851c8fab0fe">&#9670;&#160;</a></span>addPSS() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Base::SynchronGenerator::addPSS </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html">Base::PSS</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>pss</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Attach a pre-constructed <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html" title="Base model for power system stabilizers.">PSS</a> (parameters already set) </p>
+
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8cpp_source.html#l00462">462</a> of file <a class="el" href="_base___synchron_generator_8cpp_source.html">Base_SynchronGenerator.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a5ecf4746e704ac7793bc458b2f0eaaf0" name="a5ecf4746e704ac7793bc458b2f0eaaf0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ecf4746e704ac7793bc458b2f0eaaf0">&#9670;&#160;</a></span>addPSS() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Base::SynchronGenerator::addPSS </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html">Base::PSS</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>pss</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s_parameters.html">Base::PSSParameters</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>parameters</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Attach a <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html" title="Base model for power system stabilizers.">PSS</a> (initialised separately) to this generator. </p>
+
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8cpp_source.html#l00442">442</a> of file <a class="el" href="_base___synchron_generator_8cpp_source.html">Base_SynchronGenerator.cpp</a>.</p>
 
 </div>
 </div>
@@ -1331,7 +1389,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Switch to determine the integration method for the machine model. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00367">367</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00375">375</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1441,7 +1499,7 @@ Protected Attributes</h2></td></tr>
 
 <p>base stator current peak </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00151">151</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00157">157</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1467,7 +1525,7 @@ Protected Attributes</h2></td></tr>
 
 <p>base stator current RMS </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00153">153</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00159">159</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1493,7 +1551,7 @@ Protected Attributes</h2></td></tr>
 
 <p>base field current </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00168">168</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00174">174</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1519,7 +1577,7 @@ Protected Attributes</h2></td></tr>
 
 <p>base stator inductance </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00161">161</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00167">167</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1545,7 +1603,7 @@ Protected Attributes</h2></td></tr>
 
 <p>base field inductance </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00174">174</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00180">180</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1571,7 +1629,7 @@ Protected Attributes</h2></td></tr>
 
 <p>base electrical angular frequency </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00157">157</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00163">163</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1597,7 +1655,7 @@ Protected Attributes</h2></td></tr>
 
 <p>base mechanical angular frequency </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00159">159</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00165">165</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1623,7 +1681,7 @@ Protected Attributes</h2></td></tr>
 
 <p>base flux linkage </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00165">165</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00171">171</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1649,7 +1707,7 @@ Protected Attributes</h2></td></tr>
 
 <p>base torque </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00163">163</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00169">169</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1675,7 +1733,7 @@ Protected Attributes</h2></td></tr>
 
 <p>base stator voltage (phase-to-ground peak) </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00147">147</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00153">153</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1701,7 +1759,7 @@ Protected Attributes</h2></td></tr>
 
 <p>base stator voltage (phase-to-ground RMS) </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00149">149</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00155">155</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1727,7 +1785,7 @@ Protected Attributes</h2></td></tr>
 
 <p>base field voltage </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00170">170</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00176">176</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1753,7 +1811,7 @@ Protected Attributes</h2></td></tr>
 
 <p>base stator impedance </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00155">155</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00161">161</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1779,7 +1837,7 @@ Protected Attributes</h2></td></tr>
 
 <p>base field impedance </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00172">172</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00178">178</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1805,7 +1863,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Determines if compensation elements are used. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00261">261</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00267">267</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1823,7 +1881,7 @@ Protected Attributes</h2></td></tr>
 
 <p>rotor angle delta </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00190">190</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00196">196</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1849,7 +1907,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Determinant of d-axis inductance matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00256">256</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00262">262</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1875,7 +1933,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Determinant of q-axis inductance matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00258">258</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00264">264</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1893,7 +1951,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Active part of the electrical power. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00198">198</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00204">204</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1911,7 +1969,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Reactive part of the electrical power. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00200">200</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00206">206</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1929,7 +1987,7 @@ Protected Attributes</h2></td></tr>
 
 <p>electrical torque </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00204">204</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00210">210</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1947,7 +2005,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Signal component modelling voltage regulator and exciter. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00372">372</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00380">380</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1973,7 +2031,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Flux state space matrix excluding omega term. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00246">246</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00252">252</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -1999,7 +2057,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Calculates currents from fluxes. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00250">250</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00256">256</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2025,7 +2083,33 @@ Protected Attributes</h2></td></tr>
 
 <p>Determines if <a class="el" href="class_c_p_s_1_1_base_1_1_exciter.html" title="Base model for exciters.">Exciter</a> is activated. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00273">273</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00279">279</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+
+</div>
+</div>
+<a id="ad2c3a2fd4d5a1bcb0f0702980d079bcf" name="ad2c3a2fd4d5a1bcb0f0702980d079bcf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2c3a2fd4d5a1bcb0f0702980d079bcf">&#9670;&#160;</a></span>mHasPSS</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Bool CPS::Base::SynchronGenerator::mHasPSS = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Determines if <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html" title="Base model for power system stabilizers.">PSS</a> is activated. </p>
+
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00281">281</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2051,7 +2135,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Determines if Turbine and Governor are activated. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00271">271</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00277">277</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2077,7 +2161,7 @@ Protected Attributes</h2></td></tr>
 
 <p>dq0 current calculated from terminal current </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00244">244</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00250">250</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2103,7 +2187,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Inductance matrix which is numerically equal to the reactance matrix in per unit. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00178">178</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00184">184</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2121,7 +2205,7 @@ Protected Attributes</h2></td></tr>
 
 <p>inertia constant H [s] for per unit or moment of inertia J [kg*m^2] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00194">194</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00200">200</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2145,7 +2229,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00141">141</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00147">147</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2171,7 +2255,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Flag to remember when initial values are set. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00062">62</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00068">68</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2195,7 +2279,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00143">143</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00149">149</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2219,7 +2303,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00276">276</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00284">284</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2243,7 +2327,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00142">142</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00148">148</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2267,7 +2351,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00277">277</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00285">285</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2293,7 +2377,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Inverse of the inductance matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00182">182</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00188">188</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2320,7 +2404,7 @@ Protected Attributes</h2></td></tr>
 <p>Vector of stator and rotor currents. </p>
 <p>i_d - stator current in d axis i_fd - Rotor current field winding i_kd - Rotor current damping winding in d axis i_q - stator current in q axis i_kq1 - Rotor current damping winding 1 in q axis i_kq2 - Rotor current damping winding 2 in q axis i_0 - stator current 0 component </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00226">226</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00232">232</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2346,7 +2430,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Inductance to calculate magnetizing flux linkage from winding flux linkages. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00252">252</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00258">258</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2372,7 +2456,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Inductance to calculate magnetizing flux linkage from winding flux linkages. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00254">254</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00260">260</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2390,7 +2474,7 @@ Protected Attributes</h2></td></tr>
 
 <p>d-axis inductance Ld [H] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00117">117</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00123">123</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2408,7 +2492,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Subtransient d-axis inductance [H]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00127">127</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00133">133</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2426,7 +2510,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Transient d-axis inductance [H]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00123">123</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00129">129</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2452,7 +2536,7 @@ Protected Attributes</h2></td></tr>
 
 <p>field winding inductance Lf [H] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00091">91</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00097">97</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2478,7 +2562,7 @@ Protected Attributes</h2></td></tr>
 
 <p>field inductance Lfd [H] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00089">89</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00095">95</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2504,7 +2588,7 @@ Protected Attributes</h2></td></tr>
 
 <p>d-axis damper inductance Lkd [H] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00097">97</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00103">103</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2530,7 +2614,7 @@ Protected Attributes</h2></td></tr>
 
 <p>q-axis damper inductance 1 Lkq1 [H] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00103">103</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00109">109</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2556,7 +2640,7 @@ Protected Attributes</h2></td></tr>
 
 <p>q-axis damper inductance 2 Lkq2 [H] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00109">109</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00115">115</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2574,7 +2658,7 @@ Protected Attributes</h2></td></tr>
 
 <p>leakage inductance Ll [H] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00115">115</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00121">121</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2600,7 +2684,7 @@ Protected Attributes</h2></td></tr>
 
 <p>field leakage inductance Llfd [H] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00087">87</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00093">93</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2626,7 +2710,7 @@ Protected Attributes</h2></td></tr>
 
 <p>d-axis damper leakage inductance Llkd [H] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00095">95</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00101">101</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2652,7 +2736,7 @@ Protected Attributes</h2></td></tr>
 
 <p>q-axis damper leakage inductance 1 Llkq1 [H] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00101">101</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00107">107</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2678,7 +2762,7 @@ Protected Attributes</h2></td></tr>
 
 <p>q-axis damper leakage inductance 2 Llkq2 [H] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00107">107</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00113">113</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2704,7 +2788,7 @@ Protected Attributes</h2></td></tr>
 
 <p>d-axis mutual inductance Lmd [H] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00081">81</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00087">87</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2730,7 +2814,7 @@ Protected Attributes</h2></td></tr>
 
 <p>q-axis mutual inductance Lmq [H] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00083">83</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00089">89</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2748,7 +2832,7 @@ Protected Attributes</h2></td></tr>
 
 <p>q-axis inductance Lq [H] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00119">119</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00125">125</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2766,7 +2850,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Subtransient q-axis inductance [H]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00129">129</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00135">135</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2784,7 +2868,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Transient q-axis inductance [H]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00125">125</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00131">131</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2802,7 +2886,7 @@ Protected Attributes</h2></td></tr>
 
 <p>mechanical Power Pm [W] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00202">202</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00208">208</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2820,7 +2904,7 @@ Protected Attributes</h2></td></tr>
 
 <p>mechanical torque </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00192">192</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00198">198</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2846,7 +2930,7 @@ Protected Attributes</h2></td></tr>
 
 <p>nominal field current Ifn [A] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00074">74</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00080">80</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2872,7 +2956,7 @@ Protected Attributes</h2></td></tr>
 
 <p>nominal frequency fn [Hz] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00070">70</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00076">76</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2898,7 +2982,7 @@ Protected Attributes</h2></td></tr>
 
 <p>nominal angular frequency wn [Hz] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00072">72</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00078">78</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2924,7 +3008,7 @@ Protected Attributes</h2></td></tr>
 
 <p>nominal power Pn [VA] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00066">66</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00072">72</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2950,7 +3034,7 @@ Protected Attributes</h2></td></tr>
 
 <p>nominal voltage Vn [V] (phase-to-phase RMS) </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00068">68</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00074">74</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -2976,7 +3060,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Number of damping windings in q. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00076">76</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00082">82</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3000,7 +3084,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00052">52</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00058">58</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3026,7 +3110,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Omega-flux matrix for state space system. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00248">248</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00254">254</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3044,7 +3128,7 @@ Protected Attributes</h2></td></tr>
 
 <p>rotor speed omega_r </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00196">196</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00202">202</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3068,7 +3152,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00060">60</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00066">66</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3094,7 +3178,7 @@ Protected Attributes</h2></td></tr>
 
 <p>mNumber of poles </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00078">78</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00084">84</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3121,7 +3205,25 @@ Protected Attributes</h2></td></tr>
 <p>Vector of stator and rotor fluxes. </p>
 <p>psi_d - stator flux linkage in d axis psi_fd - rotor flux linkage in field winding psi_kd - rotor flux linkage in damping winding from d axis psi_q - stator flux linkage in q axis psi_kq1 - rotor flux linkage in damping winding 1 from q axis psi_kq2 - rotor flux linkage in damping winding 2 from q axis psi_0 - stator flux linkage 0 component </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00236">236</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00242">242</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+
+</div>
+</div>
+<a id="a740767d2a01824d0db3d4ca481069297" name="a740767d2a01824d0db3d4ca481069297"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a740767d2a01824d0db3d4ca481069297">&#9670;&#160;</a></span>mPSS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html">Base::PSS</a>&gt; CPS::Base::SynchronGenerator::mPSS</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Power system stabilizer. </p>
+
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00382">382</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3147,7 +3249,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Compensation Resistance. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00263">263</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00269">269</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3173,7 +3275,7 @@ Protected Attributes</h2></td></tr>
 
 <p>resistance matrix </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00180">180</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00186">186</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3199,7 +3301,7 @@ Protected Attributes</h2></td></tr>
 
 <p>field resistance Rfd [Ohm] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00085">85</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00091">91</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3225,7 +3327,7 @@ Protected Attributes</h2></td></tr>
 
 <p>d-axis damper resistance Rkd [Ohm] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00093">93</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00099">99</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3251,7 +3353,7 @@ Protected Attributes</h2></td></tr>
 
 <p>q-axis damper resistance 1 Rkq1 [Ohm] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00099">99</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00105">105</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3277,7 +3379,7 @@ Protected Attributes</h2></td></tr>
 
 <p>q-axis damper resistance 2 Rkq2 [Ohm] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00105">105</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00111">111</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3295,7 +3397,7 @@ Protected Attributes</h2></td></tr>
 
 <p>stator resistance Rs [Ohm] </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00113">113</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00119">119</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3321,7 +3423,7 @@ Protected Attributes</h2></td></tr>
 
 <p>specifies if the machine parameters are transformed to per unit </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00058">58</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00064">64</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3347,7 +3449,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Simulation angular system speed. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00054">54</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00060">60</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3365,7 +3467,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Subtransient time constant of d-axis [s]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00135">135</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00141">141</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3383,7 +3485,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Transient time constant of d-axis [s]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00131">131</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00137">137</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3409,7 +3511,7 @@ Protected Attributes</h2></td></tr>
 
 <p>theta </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00186">186</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00192">192</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3435,7 +3537,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Simulation time step. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00056">56</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00062">62</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3453,7 +3555,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Subtransient time constant of q-axis [s]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00137">137</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00143">143</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3471,7 +3573,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Transient time constant of q-axis [s]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00133">133</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00139">139</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3489,7 +3591,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Signal component modelling governor control and steam turbine. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00370">370</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00378">378</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3516,7 +3618,7 @@ Protected Attributes</h2></td></tr>
 <p>dq0 voltage calculated from terminal voltage </p>
 <p>Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit. The initialization mode depends on the setting of state type. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00242">242</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00248">248</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -3550,7 +3652,7 @@ v_kq2 - Rotor voltage damping winding 2 in q axis <br  />
 v_0 - Stator voltage 0 component <br  />
  </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00216">216</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___synchron_generator_8h_source.html#l00222">222</a> of file <a class="el" href="_base___synchron_generator_8h_source.html">Base_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
