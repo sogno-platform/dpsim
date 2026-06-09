@@ -15,25 +15,25 @@ class PSS1AParameters : public Base::PSSParameters,
 
 public:
   /// Gain for active power (pu/pu)
-  Real Kp;
+  Real Kp = 0;
   /// Gain for bus voltage magnitude (pu/pu)
-  Real Kv;
+  Real Kv = 0;
   /// Stabilizer gain (pu/pu)
-  Real Kw;
+  Real Kw = 0;
   /// First stabilizer time constant (s)
-  Real T1;
+  Real T1 = 0;
   /// Second stabilizer time constant (s)
-  Real T2;
+  Real T2 = 0;
   /// Third stabilizer time constant (s)
-  Real T3;
+  Real T3 = 0;
   /// Fourth stabilizer time constant (s)
-  Real T4;
+  Real T4 = 0;
   /// Max stabilizer output signal (pu)
-  Real Vs_max;
+  Real Vs_max = 0;
   /// Min stabilizer output signal (pu)
-  Real Vs_min;
+  Real Vs_min = 0;
   /// Wash-out time constant (s)
-  Real Tw;
+  Real Tw = 0;
 };
 
 /// Power system stabilizer type 1A
@@ -55,7 +55,7 @@ private:
   Real mActivePower_prev;
   Real mVh_prev;
 
-protected:
+private:
   /// Wash-out output
   Real mV1;
   /// Output of the first phase compensation block
