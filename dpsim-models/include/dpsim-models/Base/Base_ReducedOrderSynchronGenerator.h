@@ -9,6 +9,7 @@
 #pragma once
 
 #include <dpsim-models/Base/Base_Exciter.h>
+#include <dpsim-models/Base/Base_PSS.h>
 #include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Signal/TurbineGovernorType1.h>
 #include <dpsim-models/Solver/MNAInterface.h>
@@ -99,6 +100,11 @@ public:
   // Deprecated method
   void addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf,
                   Real Tr);
+  /// Attach a PSS (initialises parameters) to this generator
+  void addPSS(std::shared_ptr<Base::PSS> pss,
+              std::shared_ptr<Base::PSSParameters> parameters);
+  /// Attach a pre-constructed PSS (parameters already set)
+  void addPSS(std::shared_ptr<Base::PSS> pss);
 
   /// ### Setters ###
   void scaleInertiaConstant(Real scalingFactor);
@@ -266,10 +272,14 @@ protected:
   Bool mHasTurbineGovernor = false;
   /// Determines if Exciter is activated
   Bool mHasExciter = false;
+  /// Determines if PSS is activated
+  Bool mHasPSS = false;
   /// Signal component modelling governor control and steam turbine
   std::shared_ptr<Signal::TurbineGovernorType1> mTurbineGovernor;
   /// Signal component modelling voltage regulator and exciter
   std::shared_ptr<Base::Exciter> mExciter;
+  /// Power system stabilizer
+  std::shared_ptr<Base::PSS> mPSS;
 
   ///
   Real mTimeStep;

@@ -7,8 +7,10 @@
  *********************************************************************************/
 
 #include <DPsim.h>
+#include <dpsim-models/Base/Base_PSS.h>
 #include <dpsim-models/CSVReader.h>
 #include <dpsim-models/IdentifiedObject.h>
+#include <dpsim-models/Signal/PSS1A.h>
 #include <dpsim/RealTimeSimulation.h>
 #include <dpsim/Simulation.h>
 #include <dpsim/pybind/BaseComponents.h>
@@ -74,7 +76,16 @@ void addBaseComponents(py::module_ mBase) {
              CPS::Real Ta, CPS::Real Ka, CPS::Real Te, CPS::Real Ke,
              CPS::Real Tf, CPS::Real Kf,
              CPS::Real Tr) { self.addExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr); },
-          "Ta"_a, "Ka"_a, "Te"_a, "Ke"_a, "Tf"_a, "Kf"_a, "Tr"_a);
+          "Ta"_a, "Ka"_a, "Te"_a, "Ke"_a, "Tf"_a, "Kf"_a, "Tr"_a)
+      .def("add_pss",
+           py::overload_cast<std::shared_ptr<CPS::Base::PSS>,
+                             std::shared_ptr<CPS::Base::PSSParameters>>(
+               &CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>::addPSS),
+           "pss"_a, "parameters"_a)
+      .def("add_pss",
+           py::overload_cast<std::shared_ptr<CPS::Base::PSS>>(
+               &CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>::addPSS),
+           "pss"_a);
 
   py::class_<
       CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>,
@@ -119,5 +130,14 @@ void addBaseComponents(py::module_ mBase) {
              CPS::Real Ta, CPS::Real Ka, CPS::Real Te, CPS::Real Ke,
              CPS::Real Tf, CPS::Real Kf,
              CPS::Real Tr) { self.addExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr); },
-          "Ta"_a, "Ka"_a, "Te"_a, "Ke"_a, "Tf"_a, "Kf"_a, "Tr"_a);
+          "Ta"_a, "Ka"_a, "Te"_a, "Ke"_a, "Tf"_a, "Kf"_a, "Tr"_a)
+      .def("add_pss",
+           py::overload_cast<std::shared_ptr<CPS::Base::PSS>,
+                             std::shared_ptr<CPS::Base::PSSParameters>>(
+               &CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>::addPSS),
+           "pss"_a, "parameters"_a)
+      .def("add_pss",
+           py::overload_cast<std::shared_ptr<CPS::Base::PSS>>(
+               &CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>::addPSS),
+           "pss"_a);
 }
