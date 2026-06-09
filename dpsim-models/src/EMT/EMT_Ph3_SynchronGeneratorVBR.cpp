@@ -285,7 +285,9 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompApplyRightSideVectorStamp(
 void EMT::Ph3::SynchronGeneratorVBR::stepInPerUnit() {
 
   // Update of mechanical torque from turbine governor
-  if (mHasTurbineGovernor)
+  if (mHasTurbineGovernorType1)
+    **mMechTorque = -mTurbineGovernorType1->step(**mOmMech, mTimeStep);
+  else if (mHasTurbineGovernor)
     **mMechTorque = -mTurbineGovernor->step(
         **mOmMech, 1, mInitElecPower.real() / mNomPower, mTimeStep);
 

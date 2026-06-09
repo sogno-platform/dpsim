@@ -432,11 +432,45 @@ void CPS::Base::SynchronGenerator::addExciter(Real Ta, Real Ka, Real Te,
 void Base::SynchronGenerator::addGovernor(Real Ta, Real Tb, Real Tc, Real Fa,
                                           Real Fb, Real Fc, Real K, Real Tsr,
                                           Real Tsm, Real Tm_init, Real PmRef) {
+  auto log = CPS::Logger::get("SynchronGenerator", CPS::Logger::Level::off,
+                              CPS::Logger::Level::info);
+  SPDLOG_LOGGER_WARN(
+      log, "addGovernor(Ta, Tb, ...) uses the legacy TurbineGovernor "
+           "model; prefer addGovernor(shared_ptr<TurbineGovernorType1>)");
   mTurbineGovernor = Signal::TurbineGovernor::make("TurbineGovernor",
                                                    CPS::Logger::Level::info);
   mTurbineGovernor->setParameters(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm);
   mTurbineGovernor->initialize(PmRef, Tm_init);
   mHasTurbineGovernor = true;
+}
+
+void Base::SynchronGenerator::addGovernor(
+    std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernor) {
+  auto log = CPS::Logger::get("SynchronGenerator", CPS::Logger::Level::off,
+                              CPS::Logger::Level::info);
+  if (!turbineGovernor) {
+    SPDLOG_LOGGER_ERROR(log,
+                        "addGovernor called with null TurbineGovernorType1");
+    return;
+  }
+  mTurbineGovernorType1 = turbineGovernor;
+  mHasTurbineGovernorType1 = true;
+}
+
+void Base::SynchronGenerator::addGovernor(Real T3, Real T4, Real T5, Real Tc,
+                                          Real Ts, Real R, Real Tmin, Real Tmax,
+                                          Real OmRef, Real TmRef) {
+  auto log = CPS::Logger::get("SynchronGenerator", CPS::Logger::Level::off,
+                              CPS::Logger::Level::info);
+  SPDLOG_LOGGER_WARN(log,
+                     "Scalar addGovernor(T3, T4, ...) is deprecated; create a "
+                     "TurbineGovernorType1 and use "
+                     "addGovernor(shared_ptr<TurbineGovernorType1>) instead");
+  auto gov = Signal::TurbineGovernorType1::make("TurbineGovernorType1",
+                                                CPS::Logger::Level::info);
+  gov->setParameters(T3, T4, T5, Tc, Ts, R, Tmin, Tmax, OmRef);
+  gov->initialize(TmRef);
+  addGovernor(gov);
 }
 
 void Base::SynchronGenerator::addPSS(

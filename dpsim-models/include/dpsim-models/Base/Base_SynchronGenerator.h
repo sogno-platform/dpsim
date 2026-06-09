@@ -13,6 +13,7 @@
 #include <dpsim-models/Base/Base_PSS.h>
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/Signal/TurbineGovernor.h>
+#include <dpsim-models/Signal/TurbineGovernorType1.h>
 
 namespace CPS {
 namespace Base {
@@ -33,9 +34,15 @@ public:
   /// \brief Machine parameters type.
   enum class ParameterType { perUnit, statorReferred, operational };
 
-  /// Add governor and turbine
+  // Deprecated — uses legacy TurbineGovernor; prefer addGovernor(TurbineGovernorType1)
   void addGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K,
                    Real Tsr, Real Tsm, Real Tm_init, Real PmRef);
+  /// Add TurbineGovernorType1 (already constructed and initialised)
+  void
+  addGovernor(std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernor);
+  // Deprecated scalar convenience — creates TurbineGovernorType1 internally; use object overload instead
+  void addGovernor(Real T3, Real T4, Real T5, Real Tc, Real Ts, Real R,
+                   Real Tmin, Real Tmax, Real OmRef, Real TmRef);
 
   /// Add voltage regulator and exciter
   void addExciter(std::shared_ptr<Base::Exciter> exciter,
@@ -273,8 +280,10 @@ protected:
   void initPerUnitStates();
 
   // #### Controllers ####
-  /// Determines if Turbine and Governor are activated
+  /// Determines if legacy TurbineGovernor is activated
   Bool mHasTurbineGovernor = false;
+  /// Determines if TurbineGovernorType1 is activated
+  Bool mHasTurbineGovernorType1 = false;
   /// Determines if Exciter is activated
   Bool mHasExciter = false;
   /// Determines if PSS is activated
@@ -374,8 +383,10 @@ public:
   /// Switch to determine the integration method for the machine model.
   void setNumericalMethod(NumericalMethod method) { mNumericalMethod = method; }
 
-  /// Signal component modelling governor control and steam turbine
+  /// Signal component modelling governor control and steam turbine (legacy)
   std::shared_ptr<Signal::TurbineGovernor> mTurbineGovernor;
+  /// Signal component modelling governor control and steam turbine (TurbineGovernorType1)
+  std::shared_ptr<Signal::TurbineGovernorType1> mTurbineGovernorType1;
   /// Signal component modelling voltage regulator and exciter
   std::shared_ptr<Base::Exciter> mExciter;
   /// Power system stabilizer
