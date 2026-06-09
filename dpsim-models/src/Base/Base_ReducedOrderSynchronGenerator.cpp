@@ -682,6 +682,12 @@ void Base::ReducedOrderSynchronGenerator<VarType>::addGovernor(
 template <typename VarType>
 void Base::ReducedOrderSynchronGenerator<VarType>::addGovernor(
     std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernor) {
+  if (!turbineGovernor) {
+    SPDLOG_LOGGER_ERROR(
+        this->mSLog, "addGovernor called with null TurbineGovernorType1 on {}",
+        *this->mName);
+    return;
+  }
   mTurbineGovernor = turbineGovernor;
   mHasTurbineGovernor = true;
 }

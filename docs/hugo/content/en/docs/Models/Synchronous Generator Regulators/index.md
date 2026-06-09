@@ -349,7 +349,7 @@ The input of the turbine governos models is the mechanical omega at time $t=k-\D
 
 <center>
 <figure margin=30%>
-    <img src="./images/TG_Type1.png" width=65% alt="DC1_exciter">
+    <img src="./images/TG_Type1.png" width=65% alt="TG_Type1_governor">
     <figcaption></br>Fig. 7: Control diagram of the turbine governor type 1 </br>
                 Source: Milano, Power System Modelling and Scripting
     </figcaption>
@@ -389,7 +389,7 @@ $$
     x_{g3}(k) = x_{g3}(k-\Delta t) + \frac{\Delta t}{T_5} ((1 - \frac{T_4}{T_5}) (x_{g2}(k-\Delta t) + \frac{T_3}{T_c} x_{g1}(k-\Delta t)) - x_{g3}(k-\Delta t)),
 $$
 $$
-    \tau_m(k) = x_{g3}(k) + \frac{T_4}{T_3} (x_{g2}(k) + \frac{T_3}{T_c} x_{g1}(k)),
+    \tau_m(k) = x_{g3}(k) + \frac{T_4}{T_5} (x_{g2}(k) + \frac{T_3}{T_c} x_{g1}(k)),
 $$
 Since the values of all variables for $t=k-\Delta t$ are known, $\tau_m(k)$ can be easily calculated using the discretised equations, which is carried out in the `preStep` function of the generator connected to each governor. Then, $\tau_m(k)$ is used to approximate the mechanical differential equations of the generator at time $k+\Delta t$.
 
