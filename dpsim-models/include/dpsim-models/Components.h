@@ -85,6 +85,7 @@
 #include <dpsim-models/DP/DP_Ph3_SynchronGeneratorDQODE.h>
 #endif
 
+#include <dpsim-models/EMT/EMT_ITypeSSNComp.h>
 #include <dpsim-models/EMT/EMT_SSNComp.h>
 #include <dpsim-models/EMT/EMT_VTypeSSNComp.h>
 #include <dpsim-models/EMT/EMT_VTypeVariableSSNComp.h>
@@ -108,6 +109,7 @@
 #include <dpsim-models/EMT/EMT_Ph3_ControlledCurrentSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_ControlledVoltageSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_CurrentSource.h>
+#include <dpsim-models/EMT/EMT_Ph3_GenericTwoTerminalITypeSSN.h>
 #include <dpsim-models/EMT/EMT_Ph3_GenericTwoTerminalVTypeSSN.h>
 #include <dpsim-models/EMT/EMT_Ph3_Inductor.h>
 #include <dpsim-models/EMT/EMT_Ph3_ReducedOrderSynchronGeneratorVBR.h>
@@ -125,6 +127,7 @@
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator6bOrderVBR.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorDQ.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorDQTrapez.h>
+#include <dpsim-models/EMT/EMT_Ph3_TwoTerminalITypeSSNComp.h>
 #include <dpsim-models/EMT/EMT_Ph3_TwoTerminalVTypeSSNComp.h>
 #include <dpsim-models/EMT/EMT_Ph3_VoltageSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_VoltageSourceNorton.h>

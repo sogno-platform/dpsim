@@ -577,6 +577,18 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
       .def("connect", &CPS::EMT::Ph3::GenericTwoTerminalVTypeSSN::connect)
       .def_property_readonly("x", createAttributeGetter<CPS::Matrix>("x"));
 
+  py::class_<CPS::EMT::Ph3::GenericTwoTerminalITypeSSN,
+             std::shared_ptr<CPS::EMT::Ph3::GenericTwoTerminalITypeSSN>,
+             CPS::SimPowerComp<CPS::Real>>(
+      mEMTPh3, "GenericTwoTerminalITypeSSN", py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters",
+           &CPS::EMT::Ph3::GenericTwoTerminalITypeSSN::setParameters, "A"_a,
+           "B"_a, "C"_a, "D"_a)
+      .def("connect", &CPS::EMT::Ph3::GenericTwoTerminalITypeSSN::connect)
+      .def_property_readonly("x", createAttributeGetter<CPS::Matrix>("x"));
+
   py::class_<CPS::EMT::Ph3::PiecewiseLinearInductor,
              std::shared_ptr<CPS::EMT::Ph3::PiecewiseLinearInductor>,
              CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "PiecewiseLinearInductor",
@@ -614,4 +626,16 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
                              createAttributeGetter<CPS::Real>("q_inst"))
       .def_property_readonly("omega_pll",
                              createAttributeGetter<CPS::Real>("omega_pll"));
+
+  py::class_<CPS::EMT::Ph3::SSN::Capacitor,
+             std::shared_ptr<CPS::EMT::Ph3::SSN::Capacitor>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SSN_Capacitor",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::EMT::Ph3::SSN::Capacitor::setParameters,
+           "C"_a)
+      .def("connect", &CPS::EMT::Ph3::SSN::Capacitor::connect)
+      .def_property("C", createAttributeGetter<CPS::Matrix>("C"),
+                    createAttributeSetter<CPS::Matrix>("C"));
 }
