@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
+#include <dpsim-models/MNAStampUtils.h>
 #include <dpsim-models/SP/SP_Ph1_Transformer.h>
 
 using namespace CPS;
@@ -361,44 +362,31 @@ void SP::Ph1::Transformer::mnaParentInitialize(
 
 void SP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
+
   // Ideal transformer equations
-  if (terminalNotGrounded(0)) {
-    Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(),
-                           mVirtualNodes[1]->matrixNodeIndex(),
-                           Complex(-1.0, 0));
-    Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(),
-                           mVirtualNodes[0]->matrixNodeIndex(),
-                           Complex(1.0, 0));
-  }
-  if (terminalNotGrounded(1)) {
-    Math::setMatrixElement(systemMatrix, matrixNodeIndex(1),
-                           mVirtualNodes[1]->matrixNodeIndex(), **mRatio);
-    Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(),
-                           matrixNodeIndex(1), -**mRatio);
-  }
+  MNAStampUtils::stampIdealTransformer(**mRatio, systemMatrix,
 
-  // Add subcomps to system matrix
-  for (auto subcomp : mSubComponents)
-    if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+                                       // Original:
+                                       // (v0,v1) += -1
+                                       mVirtualNodes[0]->matrixNodeIndex(),
+
+                                       // Original:
+                                       // (n1,v1) += ratio
+                                       matrixNodeIndex(1),
+
+                                       // Branch equation node (v1)
+                                       mVirtualNodes[1]->matrixNodeIndex(),
+
+                                       terminalNotGrounded(0),
+                                       terminalNotGrounded(1),
+
+                                       mSLog, mFrequencies.size(), 0);
+
+  // Add subcomponents to system matrix
+  for (auto subcomp : mSubComponents) {
+    if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp)) {
       mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
-
-  if (terminalNotGrounded(0)) {
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(Complex(-1.0, 0)),
-                       mVirtualNodes[0]->matrixNodeIndex(),
-                       mVirtualNodes[1]->matrixNodeIndex());
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(Complex(1.0, 0)),
-                       mVirtualNodes[1]->matrixNodeIndex(),
-                       mVirtualNodes[0]->matrixNodeIndex());
-  }
-  if (terminalNotGrounded(1)) {
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(**mRatio), matrixNodeIndex(1),
-                       mVirtualNodes[1]->matrixNodeIndex());
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(-**mRatio),
-                       mVirtualNodes[1]->matrixNodeIndex(), matrixNodeIndex(1));
+    }
   }
 }
 

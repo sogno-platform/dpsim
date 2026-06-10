@@ -52,6 +52,52 @@ public:
       UInt node2Index, Bool isTerminal1NotGrounded, Bool isTerminal2NotGrounded,
       const Logger::Log &mSLog, Int maxFreq = 1, Int freqIdx = 0);
 
+  static void stampIdealTransformer(Real ratio, SparseMatrixRow &mat,
+
+                                    UInt primaryVirtualNode, UInt secondaryNode,
+                                    UInt branchEqNode,
+
+                                    Bool primaryNotGrounded,
+                                    Bool secondaryNotGrounded,
+
+                                    Int maxFreq, Int freqIdx,
+
+                                    const Logger::Log &mSLog);
+
+  // Complex wrapper
+  static void stampIdealTransformer(Complex ratio, SparseMatrixRow &mat,
+
+                                    UInt primaryVirtualNode, UInt secondaryNode,
+                                    UInt branchEqNode,
+
+                                    Bool primaryNotGrounded,
+                                    Bool secondaryNotGrounded,
+
+                                    const Logger::Log &mSLog, Int maxFreq,
+                                    Int freqIdx);
+
+  static void stampIdealTransformerAs3x3(Real ratio, SparseMatrixRow &mat,
+
+                                         UInt primaryBaseNode,
+                                         UInt secondaryBaseNode,
+                                         UInt branchEqNode,
+
+                                         Bool primaryNotGrounded,
+                                         Bool secondaryNotGrounded,
+
+                                         const Logger::Log &mSLog);
+
+  static void stampIdealTransformerAs3x3(Complex ratio, SparseMatrixRow &mat,
+
+                                         UInt primaryBaseNode,
+                                         UInt secondaryBaseNode,
+                                         UInt branchEqNode,
+
+                                         Bool primaryNotGrounded,
+                                         Bool secondaryNotGrounded,
+
+                                         const Logger::Log &mSLog);
+
 private:
   template <typename T>
   static void stampValue(T value, SparseMatrixRow &mat, UInt node1Index,
@@ -100,5 +146,31 @@ private:
                                  Matrix::Index column, Complex value,
                                  Int maxFreq, Int freqIdx,
                                  const Logger::Log &mSLog);
+  // Template implementation
+  template <typename T>
+  static void stampIdealTransformerTemplate(T ratio, SparseMatrixRow &mat,
+
+                                            UInt primaryVirtualNode,
+                                            UInt secondaryNode,
+                                            UInt branchEqNode,
+
+                                            Bool primaryNotGrounded,
+                                            Bool secondaryNotGrounded,
+
+                                            Int maxFreq, Int freqIdx,
+
+                                            const Logger::Log &mSLog);
+
+  template <typename T>
+  static void stampIdealTransformerAs3x3Template(T ratio, SparseMatrixRow &mat,
+
+                                                 UInt primaryBaseNode,
+                                                 UInt secondaryBaseNode,
+                                                 UInt branchEqNode,
+
+                                                 Bool primaryNotGrounded,
+                                                 Bool secondaryNotGrounded,
+
+                                                 const Logger::Log &mSLog);
 };
 } // namespace CPS
