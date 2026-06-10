@@ -339,6 +339,60 @@ $$
 
 where $s(k=0) = K_w \omega(k=0) + K_p P(k=0) + K_v V_h(k=0)$ is evaluated after the power flow analysis and initialization of synchronous machines (see section initialization of SG). In steady state $\omega(k=0) = 1.0$ (pu), and if $K_p = K_v = 0$ then $v_2 = v_3 = v_{pss} = 0$.
 
+## Turbine Governor Models
+
+In DPsim there are two types of Turbine Governor implementations. The *Turbine Governor Type 1* implements both the turbine and the governor in one component. In contrast, Steam Turbine and Steam Turbine Governor are implemented as two separate classes and their objects are created independently. Steam/Hydro Turbine and Steam/Hydro Turbine Governor are two blocks that must be connected in series.
+
+The input of the turbine governor models is the mechanical omega at time $t=k-\Delta t$ and the output is the mechanical power at time $t=k$. This variable is then used by the SG to predict the mechanical omega at time $t=k+\Delta t$.
+
+### Turbine Governor Type 1
+
+<center>
+<figure margin=30%>
+    <img src="./images/TG_Type1.png" width=65% alt="TG_Type1_governor">
+    <figcaption></br>Fig. 7: Control diagram of the turbine governor type 1 </br>
+                Source: Milano, Power System Modelling and Scripting
+    </figcaption>
+</figure>
+</center>
+</br>
+
+This model includes a governor, a servo and a reheat block. The control diagram of this governor is depicted in Fig. 7 and it is described by the following set of differential equations:
+$$
+    p_{in}(t) = p_{ref} + \frac{1}{R} (\omega_{ref} - \omega(t)),
+$$
+$$
+    T_s \frac{d}{dt} x_{g1}(t) = p_{in}(t) - x_{g1}(t),
+$$
+$$
+    T_c \frac{d}{dt} x_{g2}(t) = \left(1 - \frac{T_3}{T_c}\right) x_{g1}(t) - x_{g2}(t),
+$$
+$$
+    T_5 \frac{d}{dt} x_{g3}(t) = \left(1 - \frac{T_4}{T_5}\right) \left(x_{g2}(t) + \frac{T_3}{T_c} x_{g1}(t)\right) - x_{g3}(t),
+$$
+$$
+    \tau_m(t) = x_{g3}(t) + \frac{T_4}{T_5} \left(x_{g2}(t) + \frac{T_3}{T_c} x_{g1}(t)\right),
+$$
+where $\omega(t)$ is the input signal and $\tau_m(t)$ is the output signal of the governor.
+
+The differential equations are discretized using the forward Euler method, which leads to the following set of algebraic equations:
+$$
+    p_{in}(k-\Delta t) = p_{ref} + \frac{1}{R} (\omega_{ref} - \omega(k-\Delta t)),
+$$
+$$
+    x_{g1}(k) = x_{g1}(k-\Delta t) + \frac{\Delta t}{T_s} \left(p_{in}(k-\Delta t) - x_{g1}(k-\Delta t)\right),
+$$
+$$
+    x_{g2}(k) = x_{g2}(k-\Delta t) + \frac{\Delta t}{T_c} \left(\left(1 - \frac{T_3}{T_c}\right) x_{g1}(k-\Delta t) - x_{g2}(k-\Delta t)\right),
+$$
+$$
+    x_{g3}(k) = x_{g3}(k-\Delta t) + \frac{\Delta t}{T_5} \left(\left(1 - \frac{T_4}{T_5}\right) \left(x_{g2}(k-\Delta t) + \frac{T_3}{T_c} x_{g1}(k-\Delta t)\right) - x_{g3}(k-\Delta t)\right),
+$$
+$$
+    \tau_m(k) = x_{g3}(k) + \frac{T_4}{T_5} \left(x_{g2}(k) + \frac{T_3}{T_c} x_{g1}(k)\right).
+$$
+Since all variables at $t=k-\Delta t$ are known, $\tau_m(k)$ is computed in the `preStep` of the generator and used to approximate the mechanical equations at time $k+\Delta t$.
+
 # References
 
 - [1] “IEEE Recommended Practice for Excitation System Models for Power System Stability Studies,” in IEEE Std 421.5-2016 (Revision of IEEE Std 421.5-2005) , vol., no., pp.1-207, 26 Aug. 2016, doi: 10.1109/IEEESTD.2016.7553421.

@@ -1,10 +1,5 @@
-/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *********************************************************************************/
+// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+// SPDX-License-Identifier: MPL-2.0
 
 #pragma once
 
@@ -21,38 +16,35 @@ class TurbineGovernorType1 : public SimSignalComp,
 private:
   // ### Steam Turbine Parameters ####
   /// Maximum turbine output
-  Real mTmax;
+  Real mTmax = 0;
   /// Minimum turbine output
-  Real mTmin;
+  Real mTmin = 0;
   /// Droop
-  Real mR;
+  Real mR = 0;
   /// Transient gain time constant (s)
-  Real mT3;
+  Real mT3 = 0;
   /// Power fraction time constant (s)
-  Real mT4;
+  Real mT4 = 0;
   /// Reheat time constant (s)
-  Real mT5;
+  Real mT5 = 0;
   /// Servo time constant (s)
-  Real mTc;
+  Real mTc = 0;
   /// Governor time constant (s)
-  Real mTs;
+  Real mTs = 0;
   /// Speed reference (pu)
-  Real mOmRef;
+  Real mOmRef = 0;
   /// Reference torque (pu)
-  Real mTmRef;
+  Real mTmRef = 0;
 
-  // ### Variables ###
-  /// Mechanical speed at time k-1
-  Real mOmega_prev;
+  // ### State variables (previous step) ###
   /// Governor output at time k-1
-  Real mXg1_prev;
+  Real mXg1_prev = 0;
   /// Servo output at time k-1
-  Real mXg2_prev;
+  Real mXg2_prev = 0;
   /// Reheat output at time k-1
-  Real mXg3_prev;
+  Real mXg3_prev = 0;
 
-protected:
-  // ### Variables ###
+  // ### State variables (current step) ###
   /// Governor output at time k
   const Attribute<Real>::Ptr mXg1;
   /// Servo output at time k
@@ -73,8 +65,9 @@ public:
   /// Initializes exciter parameters
   void setParameters(Real T3, Real T4, Real T5, Real Tc, Real Ts, Real R,
                      Real Tmin, Real Tmax, Real OmRef);
-  ///
-  void initialize(Real TmRef) override;
+  /// Set steady-state initial values for all governor/turbine states (call after
+  /// setParameters, before the first step).
+  void initializeStates(Real TmRef);
   /// Performs an step to update field voltage value
   Real step(Real Omega, Real dt);
 };

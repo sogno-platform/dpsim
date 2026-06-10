@@ -11,6 +11,7 @@
 #include <dpsim-models/CSVReader.h>
 #include <dpsim-models/IdentifiedObject.h>
 #include <dpsim-models/Signal/PSS1A.h>
+#include <dpsim-models/Signal/TurbineGovernorType1.h>
 #include <dpsim/RealTimeSimulation.h>
 #include <dpsim/Simulation.h>
 #include <dpsim/pybind/BaseComponents.h>
@@ -85,7 +86,24 @@ void addBaseComponents(py::module_ mBase) {
       .def("add_pss",
            py::overload_cast<std::shared_ptr<CPS::Base::PSS>>(
                &CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>::addPSS),
-           "pss"_a);
+           "pss"_a)
+      .def(
+          "add_governor",
+          [](CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex> &self,
+             std::shared_ptr<CPS::Signal::TurbineGovernorType1> governor) {
+            self.addGovernor(governor);
+          },
+          "governor"_a)
+      .def(
+          "add_governor",
+          [](CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex> &self,
+             CPS::Real T3, CPS::Real T4, CPS::Real T5, CPS::Real Tc,
+             CPS::Real Ts, CPS::Real R, CPS::Real Pmin, CPS::Real Pmax,
+             CPS::Real OmRef, CPS::Real TmRef) {
+            self.addGovernor(T3, T4, T5, Tc, Ts, R, Pmin, Pmax, OmRef, TmRef);
+          },
+          "T3"_a, "T4"_a, "T5"_a, "Tc"_a, "Ts"_a, "R"_a, "Pmin"_a, "Pmax"_a,
+          "OmRef"_a, "TmRef"_a);
 
   py::class_<
       CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>,
@@ -139,5 +157,22 @@ void addBaseComponents(py::module_ mBase) {
       .def("add_pss",
            py::overload_cast<std::shared_ptr<CPS::Base::PSS>>(
                &CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>::addPSS),
-           "pss"_a);
+           "pss"_a)
+      .def(
+          "add_governor",
+          [](CPS::Base::ReducedOrderSynchronGenerator<CPS::Real> &self,
+             std::shared_ptr<CPS::Signal::TurbineGovernorType1> governor) {
+            self.addGovernor(governor);
+          },
+          "governor"_a)
+      .def(
+          "add_governor",
+          [](CPS::Base::ReducedOrderSynchronGenerator<CPS::Real> &self,
+             CPS::Real T3, CPS::Real T4, CPS::Real T5, CPS::Real Tc,
+             CPS::Real Ts, CPS::Real R, CPS::Real Pmin, CPS::Real Pmax,
+             CPS::Real OmRef, CPS::Real TmRef) {
+            self.addGovernor(T3, T4, T5, Tc, Ts, R, Pmin, Pmax, OmRef, TmRef);
+          },
+          "T3"_a, "T4"_a, "T5"_a, "Tc"_a, "Ts"_a, "R"_a, "Pmin"_a, "Pmax"_a,
+          "OmRef"_a, "TmRef"_a);
 }

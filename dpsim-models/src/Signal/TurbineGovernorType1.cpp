@@ -1,10 +1,5 @@
-/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *********************************************************************************/
+// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+// SPDX-License-Identifier: MPL-2.0
 
 #include <dpsim-models/MathUtils.h>
 #include <dpsim-models/Signal/TurbineGovernorType1.h>
@@ -23,6 +18,22 @@ Signal::TurbineGovernorType1::TurbineGovernorType1(const String &name,
 void TurbineGovernorType1::setParameters(Real T3, Real T4, Real T5, Real Tc,
                                          Real Ts, Real R, Real Tmin, Real Tmax,
                                          Real OmRef) {
+  if (Ts == 0) {
+    SPDLOG_LOGGER_ERROR(mSLog, "Ts must not be zero for {}", this->name());
+    throw InvalidArgumentException();
+  }
+  if (Tc == 0) {
+    SPDLOG_LOGGER_ERROR(mSLog, "Tc must not be zero for {}", this->name());
+    throw InvalidArgumentException();
+  }
+  if (T5 == 0) {
+    SPDLOG_LOGGER_ERROR(mSLog, "T5 must not be zero for {}", this->name());
+    throw InvalidArgumentException();
+  }
+  if (R == 0) {
+    SPDLOG_LOGGER_ERROR(mSLog, "R must not be zero for {}", this->name());
+    throw InvalidArgumentException();
+  }
   mT3 = T3;
   mT4 = T4;
   mT5 = T5;
@@ -47,12 +58,16 @@ void TurbineGovernorType1::setParameters(Real T3, Real T4, Real T5, Real Tc,
                      mT3, mT4, mT5, mTc, mTs, mR, mTmin, mTmax, mOmRef);
 }
 
-void TurbineGovernorType1::initialize(Real TmRef) {
+void TurbineGovernorType1::initializeStates(Real TmRef) {
   mTmRef = TmRef;
   **mXg1 = TmRef;
   **mXg2 = (1 - mT3 / mTc) * **mXg1;
   **mXg3 = (1 - mT4 / mT5) * (**mXg2 + mT3 / mTc * **mXg1);
   **mTm = **mXg3 + mT4 / mT5 * (**mXg2 + mT3 / mTc * **mXg1);
+
+  mXg1_prev = **mXg1;
+  mXg2_prev = **mXg2;
+  mXg3_prev = **mXg3;
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "Governor initial values: \n"
