@@ -58,7 +58,7 @@ void TurbineGovernorType1::setParameters(Real T3, Real T4, Real T5, Real Tc,
                      mT3, mT4, mT5, mTc, mTs, mR, mTmin, mTmax, mOmRef);
 }
 
-void TurbineGovernorType1::initialize(Real TmRef) {
+void TurbineGovernorType1::initializeStates(Real TmRef) {
   mTmRef = TmRef;
   **mXg1 = TmRef;
   **mXg2 = (1 - mT3 / mTc) * **mXg1;

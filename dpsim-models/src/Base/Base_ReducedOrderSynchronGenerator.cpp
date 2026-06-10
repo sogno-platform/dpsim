@@ -353,7 +353,7 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
     mExciter->initialize(Math::abs(mInitVoltage), **mEf);
   }
   if (mHasTurbineGovernor) {
-    mTurbineGovernor->initialize(**mMechTorque);
+    mTurbineGovernor->initializeStates(**mMechTorque);
   }
   if (mHasPSS) {
     mPSS->initialize(mNomOmega / mBase_OmMech, **mMechTorque, (**mVdq0)(0, 0),
@@ -437,7 +437,7 @@ void Base::ReducedOrderSynchronGenerator<
     mExciter->initialize(Math::abs(mInitVoltage), **mEf);
   }
   if (mHasTurbineGovernor) {
-    mTurbineGovernor->initialize(**mMechTorque);
+    mTurbineGovernor->initializeStates(**mMechTorque);
   }
   if (mHasPSS) {
     mPSS->initialize(mNomOmega / mBase_OmMech, **mMechTorque, (**mVdq)(0, 0),
@@ -675,7 +675,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::addGovernor(
   mTurbineGovernor = Signal::TurbineGovernorType1::make(
       **this->mName + "_TurbineGovernor", this->mLogLevel);
   mTurbineGovernor->setParameters(T3, T4, T5, Tc, Ts, R, Pmin, Pmax, OmRef);
-  mTurbineGovernor->initialize(TmRef);
+  mTurbineGovernor->initializeStates(TmRef);
   mHasTurbineGovernor = true;
 }
 

@@ -65,8 +65,9 @@ public:
   /// Initializes exciter parameters
   void setParameters(Real T3, Real T4, Real T5, Real Tc, Real Ts, Real R,
                      Real Tmin, Real Tmax, Real OmRef);
-  ///
-  void initialize(Real TmRef) override;
+  /// Set steady-state initial values for all governor/turbine states (call after
+  /// setParameters, before the first step).
+  void initializeStates(Real TmRef);
   /// Performs an step to update field voltage value
   Real step(Real Omega, Real dt);
 };

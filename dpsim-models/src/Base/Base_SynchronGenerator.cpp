@@ -469,7 +469,7 @@ void Base::SynchronGenerator::addGovernor(Real T3, Real T4, Real T5, Real Tc,
   auto gov = Signal::TurbineGovernorType1::make("TurbineGovernorType1",
                                                 CPS::Logger::Level::info);
   gov->setParameters(T3, T4, T5, Tc, Ts, R, Tmin, Tmax, OmRef);
-  gov->initialize(TmRef);
+  gov->initializeStates(TmRef);
   addGovernor(gov);
 }
 
