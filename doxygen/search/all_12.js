@@ -38,9 +38,10 @@ var searchData=
   ['turbinegovernor_35',['TurbineGovernor',['../class_c_p_s_1_1_signal_1_1_turbine_governor.html',1,'CPS::Signal::TurbineGovernor'],['../class_c_p_s_1_1_signal_1_1_turbine_governor.html#a4101b45912b0542b2536c1dea0b65770',1,'CPS::Signal::TurbineGovernor::TurbineGovernor()']]],
   ['turbinegovernortype1_36',['TurbineGovernorType1',['../class_c_p_s_1_1_signal_1_1_turbine_governor_type1.html',1,'CPS::Signal::TurbineGovernorType1'],['../class_c_p_s_1_1_signal_1_1_turbine_governor_type1.html#aaac3acb1f06ee5f61ea407c936cadb54',1,'CPS::Signal::TurbineGovernorType1::TurbineGovernorType1()']]],
   ['tw_37',['Tw',['../class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html#a4a059d2dfa96cf59b590618e058b4c9b',1,'CPS::Signal::PSS1AParameters']]],
-  ['twoterminalvtypessncomp_38',['TwoTerminalVTypeSSNComp',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html',1,'CPS::EMT::Ph3']]],
-  ['twoterminalvtypevariablessncomp_39',['TwoTerminalVTypeVariableSSNComp',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_variable_s_s_n_comp.html',1,'CPS::EMT::Ph3']]],
-  ['type_40',['Type',['../class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919e',1,'DPsim::Solver']]],
-  ['type_41',['type',['../class_c_p_s_1_1_identified_object.html#a9a95f413fe2dd50b6e2a0369bda063e6',1,'CPS::IdentifiedObject']]],
-  ['typeexception_42',['TypeException',['../class_c_p_s_1_1_type_exception.html',1,'CPS']]]
+  ['twoterminalitypessncomp_38',['TwoTerminalITypeSSNComp',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_i_type_s_s_n_comp.html',1,'CPS::EMT::Ph3']]],
+  ['twoterminalvtypessncomp_39',['TwoTerminalVTypeSSNComp',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html',1,'CPS::EMT::Ph3']]],
+  ['twoterminalvtypevariablessncomp_40',['TwoTerminalVTypeVariableSSNComp',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_variable_s_s_n_comp.html',1,'CPS::EMT::Ph3']]],
+  ['type_41',['Type',['../class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919e',1,'DPsim::Solver']]],
+  ['type_42',['type',['../class_c_p_s_1_1_identified_object.html#a9a95f413fe2dd50b6e2a0369bda063e6',1,'CPS::IdentifiedObject']]],
+  ['typeexception_43',['TypeException',['../class_c_p_s_1_1_type_exception.html',1,'CPS']]]
 ];

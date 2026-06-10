@@ -67,8 +67,8 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_capacitor.html" target="_top" xlink:title="Capacitor model.">
-<polygon fill="white" stroke="#666666" points="290.75,-131.38 184,-131.38 184,-94.88 290.75,-94.88 290.75,-131.38"/>
+<g id="a_Node000004"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_capacitor.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#bfbfbf" points="290.75,-131.38 184,-131.38 184,-94.88 290.75,-94.88 290.75,-131.38"/>
 <text text-anchor="start" x="192" y="-117.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::SSN</text>
 <text text-anchor="middle" x="237.38" y="-103.62" font-family="Helvetica,sans-Serif" font-size="10.00">::Capacitor</text>
 </a>
