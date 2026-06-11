@@ -355,6 +355,10 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
   if (mHasTurbineGovernor) {
     mTurbineGovernor->initializeStates(**mMechTorque);
   }
+  if (mHasGovernorAndTurbine) {
+    mGovernor->initializeStates(**mMechTorque);
+    mTurbine->initializeStates(**mMechTorque);
+  }
   if (mHasPSS) {
     mPSS->initialize(mNomOmega / mBase_OmMech, **mMechTorque, (**mVdq0)(0, 0),
                      (**mVdq0)(1, 0));
@@ -439,6 +443,10 @@ void Base::ReducedOrderSynchronGenerator<
   if (mHasTurbineGovernor) {
     mTurbineGovernor->initializeStates(**mMechTorque);
   }
+  if (mHasGovernorAndTurbine) {
+    mGovernor->initializeStates(**mMechTorque);
+    mTurbine->initializeStates(**mMechTorque);
+  }
   if (mHasPSS) {
     mPSS->initialize(mNomOmega / mBase_OmMech, **mMechTorque, (**mVdq)(0, 0),
                      (**mVdq)(1, 0));
@@ -504,7 +512,11 @@ void Base::ReducedOrderSynchronGenerator<Complex>::mnaCompPreStep(
     mEf_prev = **mEf;
     **mEf = mExciter->step((**mVdq)(0, 0), (**mVdq)(1, 0), mTimeStep, Vpss);
   }
-  if (mHasTurbineGovernor) {
+  if (mHasGovernorAndTurbine) {
+    mMechTorque_prev = **mMechTorque;
+    Real Pgv = mGovernor->step(**mOmMech, mTimeStep);
+    **mMechTorque = mTurbine->step(Pgv, mTimeStep);
+  } else if (mHasTurbineGovernor) {
     mMechTorque_prev = **mMechTorque;
     **mMechTorque = mTurbineGovernor->step(**mOmMech, mTimeStep);
   }
@@ -538,7 +550,11 @@ void Base::ReducedOrderSynchronGenerator<Real>::mnaCompPreStep(
     mEf_prev = **mEf;
     **mEf = mExciter->step((**mVdq0)(0, 0), (**mVdq0)(1, 0), mTimeStep, Vpss);
   }
-  if (mHasTurbineGovernor) {
+  if (mHasGovernorAndTurbine) {
+    mMechTorque_prev = **mMechTorque;
+    Real Pgv = mGovernor->step(**mOmMech, mTimeStep);
+    **mMechTorque = mTurbine->step(Pgv, mTimeStep);
+  } else if (mHasTurbineGovernor) {
     mMechTorque_prev = **mMechTorque;
     **mMechTorque = mTurbineGovernor->step(**mOmMech, mTimeStep);
   }
@@ -690,6 +706,52 @@ void Base::ReducedOrderSynchronGenerator<VarType>::addGovernor(
   }
   mTurbineGovernor = turbineGovernor;
   mHasTurbineGovernor = true;
+}
+
+template <typename VarType>
+void Base::ReducedOrderSynchronGenerator<VarType>::addGovernorAndTurbine(
+    std::shared_ptr<Base::Governor> governor,
+    std::shared_ptr<Base::GovernorParameters> govParams,
+    std::shared_ptr<Base::Turbine> turbine,
+    std::shared_ptr<Base::TurbineParameters> turbineParams) {
+  if (!governor) {
+    SPDLOG_LOGGER_ERROR(this->mSLog,
+                        "addGovernorAndTurbine called with null governor on {}",
+                        *this->mName);
+    return;
+  }
+  if (!turbine) {
+    SPDLOG_LOGGER_ERROR(this->mSLog,
+                        "addGovernorAndTurbine called with null turbine on {}",
+                        *this->mName);
+    return;
+  }
+  governor->setParameters(govParams);
+  turbine->setParameters(turbineParams);
+  mGovernor = governor;
+  mTurbine = turbine;
+  mHasGovernorAndTurbine = true;
+}
+
+template <typename VarType>
+void Base::ReducedOrderSynchronGenerator<VarType>::addGovernorAndTurbine(
+    std::shared_ptr<Base::Governor> governor,
+    std::shared_ptr<Base::Turbine> turbine) {
+  if (!governor) {
+    SPDLOG_LOGGER_ERROR(this->mSLog,
+                        "addGovernorAndTurbine called with null governor on {}",
+                        *this->mName);
+    return;
+  }
+  if (!turbine) {
+    SPDLOG_LOGGER_ERROR(this->mSLog,
+                        "addGovernorAndTurbine called with null turbine on {}",
+                        *this->mName);
+    return;
+  }
+  mGovernor = governor;
+  mTurbine = turbine;
+  mHasGovernorAndTurbine = true;
 }
 
 template <typename VarType>
