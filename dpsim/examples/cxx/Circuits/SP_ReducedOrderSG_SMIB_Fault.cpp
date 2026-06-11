@@ -1,6 +1,8 @@
 #include "../Examples.h"
 #include "../GeneratorFactory.h"
 #include <DPsim.h>
+#include <dpsim-models/Signal/HydroTurbine.h>
+#include <dpsim-models/Signal/HydroTurbineGovernor.h>
 #include <dpsim-models/Signal/PSS1A.h>
 #include <dpsim-models/Signal/SteamTurbine.h>
 #include <dpsim-models/Signal/SteamTurbineGovernor.h>
@@ -30,6 +32,10 @@ const Examples::Components::PSS1A::Parameters pss1aParams;
 const Examples::Components::SteamGovernor::Parameters steamGovParams;
 const Examples::Components::SteamTurbine::Parameters steamTurbineParams;
 
+// Hydro Governor + Turbine
+const Examples::Components::HydroGovernor::Parameters hydroGovParams;
+const Examples::Components::HydroTurbine::Parameters hydroTurbineParams;
+
 int main(int argc, char *argv[]) {
 
   // Simulation parameters
@@ -44,6 +50,7 @@ int main(int argc, char *argv[]) {
   bool withTurbineGovernor = false;
   bool withPSS = false;
   bool withSteamGovernor = false;
+  bool withHydroGovernor = false;
   std::string SGModel = "4";
   std::string stepSize_str = "";
   std::string inertia_str = "";
@@ -73,6 +80,9 @@ int main(int argc, char *argv[]) {
     }
     if (args.options.find("WithSteamGovernor") != args.options.end()) {
       withSteamGovernor = args.getOptionBool("WithSteamGovernor");
+    }
+    if (args.options.find("WithHydroGovernor") != args.options.end()) {
+      withHydroGovernor = args.getOptionBool("WithHydroGovernor");
     }
     if (args.options.find("FinalTime") != args.options.end()) {
       finalTime = args.getOptionReal("FinalTime");
@@ -252,6 +262,27 @@ int main(int argc, char *argv[]) {
     auto steamTurb =
         Signal::SteamTurbine::make("SynGen_SteamTurbine", logLevel);
     genSP->addGovernorAndTurbine(steamGov, govParams, steamTurb, turbParams);
+  }
+
+  // Hydro Governor + Turbine (modular new API)
+  if (withHydroGovernor) {
+    auto govParams = Signal::HydroGorvernorParameters::make();
+    govParams->R = hydroGovParams.R;
+    govParams->T1 = hydroGovParams.T1;
+    govParams->T2 = hydroGovParams.T2;
+    govParams->T3 = hydroGovParams.T3;
+    govParams->Pmax = hydroGovParams.Pmax;
+    govParams->Pmin = hydroGovParams.Pmin;
+    govParams->OmRef = hydroGovParams.OmRef;
+
+    auto turbParams = Signal::HydroTurbineParameters::make();
+    turbParams->Tw = hydroTurbineParams.Tw;
+
+    auto hydroGov =
+        Signal::HydroTurbineGovernor::make("SynGen_HydroGovernor", logLevel);
+    auto hydroTurb =
+        Signal::HydroTurbine::make("SynGen_HydroTurbine", logLevel);
+    genSP->addGovernorAndTurbine(hydroGov, govParams, hydroTurb, turbParams);
   }
 
   // Grid bus as Slack
