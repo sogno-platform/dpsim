@@ -473,6 +473,46 @@ void Base::SynchronGenerator::addGovernor(Real T3, Real T4, Real T5, Real Tc,
   addGovernor(gov);
 }
 
+void Base::SynchronGenerator::addGovernorAndTurbine(
+    std::shared_ptr<Base::Governor> governor,
+    std::shared_ptr<Base::GovernorParameters> govParams,
+    std::shared_ptr<Base::Turbine> turbine,
+    std::shared_ptr<Base::TurbineParameters> turbineParams) {
+  auto log = CPS::Logger::get("SynchronGenerator", CPS::Logger::Level::off,
+                              CPS::Logger::Level::info);
+  if (!governor) {
+    SPDLOG_LOGGER_ERROR(log, "addGovernorAndTurbine called with null governor");
+    return;
+  }
+  if (!turbine) {
+    SPDLOG_LOGGER_ERROR(log, "addGovernorAndTurbine called with null turbine");
+    return;
+  }
+  governor->setParameters(govParams);
+  turbine->setParameters(turbineParams);
+  mGovernor = governor;
+  mTurbine = turbine;
+  mHasGovernorAndTurbine = true;
+}
+
+void Base::SynchronGenerator::addGovernorAndTurbine(
+    std::shared_ptr<Base::Governor> governor,
+    std::shared_ptr<Base::Turbine> turbine) {
+  auto log = CPS::Logger::get("SynchronGenerator", CPS::Logger::Level::off,
+                              CPS::Logger::Level::info);
+  if (!governor) {
+    SPDLOG_LOGGER_ERROR(log, "addGovernorAndTurbine called with null governor");
+    return;
+  }
+  if (!turbine) {
+    SPDLOG_LOGGER_ERROR(log, "addGovernorAndTurbine called with null turbine");
+    return;
+  }
+  mGovernor = governor;
+  mTurbine = turbine;
+  mHasGovernorAndTurbine = true;
+}
+
 void Base::SynchronGenerator::addPSS(
     std::shared_ptr<Base::PSS> pss,
     std::shared_ptr<Base::PSSParameters> parameters) {

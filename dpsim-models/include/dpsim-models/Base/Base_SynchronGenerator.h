@@ -10,7 +10,9 @@
 
 #include <dpsim-models/AttributeList.h>
 #include <dpsim-models/Base/Base_Exciter.h>
+#include <dpsim-models/Base/Base_Governor.h>
 #include <dpsim-models/Base/Base_PSS.h>
+#include <dpsim-models/Base/Base_Turbine.h>
 #include <dpsim-models/Definitions.h>
 #include <dpsim-models/Signal/TurbineGovernor.h>
 #include <dpsim-models/Signal/TurbineGovernorType1.h>
@@ -43,6 +45,16 @@ public:
   // Deprecated scalar convenience — creates TurbineGovernorType1 internally; use object overload instead
   void addGovernor(Real T3, Real T4, Real T5, Real Tc, Real Ts, Real R,
                    Real Tmin, Real Tmax, Real OmRef, Real TmRef);
+
+  /// Add a modular governor + turbine pair (new API for SteamTurbineGovernor / SteamTurbine)
+  void
+  addGovernorAndTurbine(std::shared_ptr<Base::Governor> governor,
+                        std::shared_ptr<Base::GovernorParameters> govParams,
+                        std::shared_ptr<Base::Turbine> turbine,
+                        std::shared_ptr<Base::TurbineParameters> turbineParams);
+  /// Add a pre-constructed governor + turbine pair (parameters already set)
+  void addGovernorAndTurbine(std::shared_ptr<Base::Governor> governor,
+                             std::shared_ptr<Base::Turbine> turbine);
 
   /// Add voltage regulator and exciter
   void addExciter(std::shared_ptr<Base::Exciter> exciter,
@@ -284,6 +296,8 @@ protected:
   Bool mHasTurbineGovernor = false;
   /// Determines if TurbineGovernorType1 is activated
   Bool mHasTurbineGovernorType1 = false;
+  /// Determines if modular Governor + Turbine pair is activated
+  Bool mHasGovernorAndTurbine = false;
   /// Determines if Exciter is activated
   Bool mHasExciter = false;
   /// Determines if PSS is activated
@@ -387,6 +401,10 @@ public:
   std::shared_ptr<Signal::TurbineGovernor> mTurbineGovernor;
   /// Signal component modelling governor control and steam turbine (TurbineGovernorType1)
   std::shared_ptr<Signal::TurbineGovernorType1> mTurbineGovernorType1;
+  /// Modular governor (SteamTurbineGovernor / HydroTurbineGovernor)
+  std::shared_ptr<Base::Governor> mGovernor;
+  /// Modular turbine (SteamTurbine / HydroTurbine)
+  std::shared_ptr<Base::Turbine> mTurbine;
   /// Signal component modelling voltage regulator and exciter
   std::shared_ptr<Base::Exciter> mExciter;
   /// Power system stabilizer
