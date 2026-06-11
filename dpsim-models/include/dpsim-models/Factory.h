@@ -12,6 +12,8 @@
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderPCM.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderTPM.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator6OrderPCM.h>
+#include <dpsim-models/Signal/HydroTurbine.h>
+#include <dpsim-models/Signal/HydroTurbineGovernor.h>
 #include <dpsim-models/Signal/PSS1A.h>
 #include <dpsim-models/Signal/SteamTurbine.h>
 #include <dpsim-models/Signal/SteamTurbineGovernor.h>
@@ -176,6 +178,9 @@ void registerGovernors() {
   FactoryRegistration<CPS::Base::Governor> _SteamGovernor(
       "SteamGovernor", new DerivedCreator<CPS::Signal::SteamTurbineGovernor,
                                           CPS::Base::Governor>);
+  FactoryRegistration<CPS::Base::Governor> _HydroGovernor(
+      "HydroGovernor", new DerivedCreator<CPS::Signal::HydroTurbineGovernor,
+                                          CPS::Base::Governor>);
 }
 } // namespace GovernorFactory
 
@@ -184,5 +189,8 @@ void registerTurbines() {
   FactoryRegistration<CPS::Base::Turbine> _SteamTurbine(
       "SteamTurbine",
       new DerivedCreator<CPS::Signal::SteamTurbine, CPS::Base::Turbine>);
+  FactoryRegistration<CPS::Base::Turbine> _HydroTurbine(
+      "HydroTurbine",
+      new DerivedCreator<CPS::Signal::HydroTurbine, CPS::Base::Turbine>);
 }
 } // namespace TurbineFactory

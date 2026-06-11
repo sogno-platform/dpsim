@@ -156,6 +156,8 @@
 #include <dpsim-models/Signal/ExciterStatic.h>
 #include <dpsim-models/Signal/FIRFilter.h>
 #include <dpsim-models/Signal/FrequencyRampGenerator.h>
+#include <dpsim-models/Signal/HydroTurbine.h>
+#include <dpsim-models/Signal/HydroTurbineGovernor.h>
 #include <dpsim-models/Signal/Integrator.h>
 #include <dpsim-models/Signal/PSS1A.h>
 #include <dpsim-models/Signal/SignalGenerator.h>
