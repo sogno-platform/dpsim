@@ -91,6 +91,10 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_SynGenTrStab_3Bus_SteadyState.cpp
 	Circuits/DP_SynGenTrStab_3Bus_Fault.cpp
 	Circuits/SP_SynGenTrStab_3Bus_Fault.cpp
+
+	# KRK Two Area System
+	Circuits/SP_SynGenTrStab_KRK_TwoArea_SteadyState.cpp
+	Circuits/SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState.cpp
 )
 
 if(WITH_JSON)
