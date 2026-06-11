@@ -166,6 +166,10 @@ list(APPEND MODELS_SOURCES
 	Signal/ExciterStatic.cpp
 	Signal/PSS1A.cpp
 	Signal/FIRFilter.cpp
+	Signal/SteamTurbineGovernor.cpp
+	Signal/SteamTurbine.cpp
+	Signal/HydroTurbineGovernor.cpp
+	Signal/HydroTurbine.cpp
 	Signal/TurbineGovernor.cpp
 	Signal/TurbineGovernorType1.cpp
 	Signal/PLL.cpp

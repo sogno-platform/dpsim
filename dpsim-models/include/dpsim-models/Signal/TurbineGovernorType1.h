@@ -57,7 +57,7 @@ private:
 public:
   ///
   explicit TurbineGovernorType1(const String &name)
-      : SimSignalComp(name, name) {}
+      : TurbineGovernorType1(name, CPS::Logger::Level::off) {}
 
   /// Constructor with log level
   TurbineGovernorType1(const String &name, CPS::Logger::Level logLevel);
