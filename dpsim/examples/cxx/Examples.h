@@ -187,6 +187,24 @@ struct Parameters {
   Real Tco = 0.3;
 };
 } // namespace SteamTurbine
+
+namespace HydroGovernor {
+struct Parameters {
+  Real R = 0.05;
+  Real T1 = 1.0;
+  Real T2 = 0.2;
+  Real T3 = 0.5;
+  Real Pmax = 1.0;
+  Real Pmin = 0.0;
+  Real OmRef = 1.0;
+};
+} // namespace HydroGovernor
+
+namespace HydroTurbine {
+struct Parameters {
+  Real Tw = 1.0;
+};
+} // namespace HydroTurbine
 } // namespace Components
 
 namespace Grids {
