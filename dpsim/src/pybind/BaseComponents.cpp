@@ -7,7 +7,9 @@
  *********************************************************************************/
 
 #include <DPsim.h>
+#include <dpsim-models/Base/Base_Governor.h>
 #include <dpsim-models/Base/Base_PSS.h>
+#include <dpsim-models/Base/Base_Turbine.h>
 #include <dpsim-models/CSVReader.h>
 #include <dpsim-models/IdentifiedObject.h>
 #include <dpsim-models/Signal/PSS1A.h>
@@ -103,7 +105,26 @@ void addBaseComponents(py::module_ mBase) {
             self.addGovernor(T3, T4, T5, Tc, Ts, R, Pmin, Pmax, OmRef, TmRef);
           },
           "T3"_a, "T4"_a, "T5"_a, "Tc"_a, "Ts"_a, "R"_a, "Pmin"_a, "Pmax"_a,
-          "OmRef"_a, "TmRef"_a);
+          "OmRef"_a, "TmRef"_a)
+      .def(
+          "add_governor_and_turbine",
+          [](CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex> &self,
+             std::shared_ptr<CPS::Base::Governor> governor,
+             std::shared_ptr<CPS::Base::GovernorParameters> govParams,
+             std::shared_ptr<CPS::Base::Turbine> turbine,
+             std::shared_ptr<CPS::Base::TurbineParameters> turbineParams) {
+            self.addGovernorAndTurbine(governor, govParams, turbine,
+                                       turbineParams);
+          },
+          "governor"_a, "gov_params"_a, "turbine"_a, "turbine_params"_a)
+      .def(
+          "add_governor_and_turbine",
+          [](CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex> &self,
+             std::shared_ptr<CPS::Base::Governor> governor,
+             std::shared_ptr<CPS::Base::Turbine> turbine) {
+            self.addGovernorAndTurbine(governor, turbine);
+          },
+          "governor"_a, "turbine"_a);
 
   py::class_<
       CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>,
@@ -174,5 +195,24 @@ void addBaseComponents(py::module_ mBase) {
             self.addGovernor(T3, T4, T5, Tc, Ts, R, Pmin, Pmax, OmRef, TmRef);
           },
           "T3"_a, "T4"_a, "T5"_a, "Tc"_a, "Ts"_a, "R"_a, "Pmin"_a, "Pmax"_a,
-          "OmRef"_a, "TmRef"_a);
+          "OmRef"_a, "TmRef"_a)
+      .def(
+          "add_governor_and_turbine",
+          [](CPS::Base::ReducedOrderSynchronGenerator<CPS::Real> &self,
+             std::shared_ptr<CPS::Base::Governor> governor,
+             std::shared_ptr<CPS::Base::GovernorParameters> govParams,
+             std::shared_ptr<CPS::Base::Turbine> turbine,
+             std::shared_ptr<CPS::Base::TurbineParameters> turbineParams) {
+            self.addGovernorAndTurbine(governor, govParams, turbine,
+                                       turbineParams);
+          },
+          "governor"_a, "gov_params"_a, "turbine"_a, "turbine_params"_a)
+      .def(
+          "add_governor_and_turbine",
+          [](CPS::Base::ReducedOrderSynchronGenerator<CPS::Real> &self,
+             std::shared_ptr<CPS::Base::Governor> governor,
+             std::shared_ptr<CPS::Base::Turbine> turbine) {
+            self.addGovernorAndTurbine(governor, turbine);
+          },
+          "governor"_a, "turbine"_a);
 }

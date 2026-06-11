@@ -4,13 +4,19 @@
 #include <dpsim-models/Logger.h>
 
 #include <dpsim-models/Base/Base_Exciter.h>
+#include <dpsim-models/Base/Base_Governor.h>
 #include <dpsim-models/Base/Base_PSS.h>
 #include <dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h>
+#include <dpsim-models/Base/Base_Turbine.h>
 
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderPCM.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderTPM.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator6OrderPCM.h>
+#include <dpsim-models/Signal/HydroTurbine.h>
+#include <dpsim-models/Signal/HydroTurbineGovernor.h>
 #include <dpsim-models/Signal/PSS1A.h>
+#include <dpsim-models/Signal/SteamTurbine.h>
+#include <dpsim-models/Signal/SteamTurbineGovernor.h>
 
 #include <dpsim-models/Signal/ExciterDC1.h>
 #include <dpsim-models/Signal/ExciterDC1Simp.h>
@@ -166,3 +172,25 @@ void registerPSSs() {
       "PSS1A", new DerivedCreator<CPS::Signal::PSS1A, CPS::Base::PSS>);
 }
 } // namespace PSSFactory
+
+namespace GovernorFactory {
+void registerGovernors() {
+  FactoryRegistration<CPS::Base::Governor> _SteamGovernor(
+      "SteamGovernor", new DerivedCreator<CPS::Signal::SteamTurbineGovernor,
+                                          CPS::Base::Governor>);
+  FactoryRegistration<CPS::Base::Governor> _HydroGovernor(
+      "HydroGovernor", new DerivedCreator<CPS::Signal::HydroTurbineGovernor,
+                                          CPS::Base::Governor>);
+}
+} // namespace GovernorFactory
+
+namespace TurbineFactory {
+void registerTurbines() {
+  FactoryRegistration<CPS::Base::Turbine> _SteamTurbine(
+      "SteamTurbine",
+      new DerivedCreator<CPS::Signal::SteamTurbine, CPS::Base::Turbine>);
+  FactoryRegistration<CPS::Base::Turbine> _HydroTurbine(
+      "HydroTurbine",
+      new DerivedCreator<CPS::Signal::HydroTurbine, CPS::Base::Turbine>);
+}
+} // namespace TurbineFactory
