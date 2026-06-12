@@ -227,7 +227,7 @@ int main(int argc, char *argv[]) {
 
   // Steam Governor + Turbine (modular new API)
   if (withSteamGovernor) {
-    auto govParams = Signal::SteamGorvernorParameters::make();
+    auto govParams = Signal::SteamGovernorParameters::make();
     govParams->R = steamGovParams.R;
     govParams->T1 = steamGovParams.T1;
     govParams->T2 = steamGovParams.T2;

@@ -10,9 +10,8 @@
 namespace CPS {
 namespace Signal {
 
-class SteamGorvernorParameters
-    : public Base::GovernorParameters,
-      public SharedFactory<SteamGorvernorParameters> {
+class SteamGovernorParameters : public Base::GovernorParameters,
+                                public SharedFactory<SteamGovernorParameters> {
 public:
   /// Droop — the value 1/K in the controller K(1+sT2)/(1+sT1)
   Real R = 0;
@@ -47,7 +46,7 @@ class SteamTurbineGovernor : public SimSignalComp,
                              public Base::Governor,
                              public SharedFactory<SteamTurbineGovernor> {
 private:
-  std::shared_ptr<SteamGorvernorParameters> mParameters;
+  std::shared_ptr<SteamGovernorParameters> mParameters;
 
   // ### Setpoints ###
   Real mPref = 0;

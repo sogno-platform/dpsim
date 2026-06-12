@@ -17,11 +17,11 @@ Signal::SteamTurbineGovernor::SteamTurbineGovernor(const String &name,
 void SteamTurbineGovernor::setParameters(
     std::shared_ptr<Base::GovernorParameters> parameters) {
   auto params =
-      std::dynamic_pointer_cast<Signal::SteamGorvernorParameters>(parameters);
+      std::dynamic_pointer_cast<Signal::SteamGovernorParameters>(parameters);
   if (!params) {
     SPDLOG_LOGGER_ERROR(
         mSLog,
-        "Type of parameters class of {} has to be SteamGorvernorParameters!",
+        "Type of parameters class of {} has to be SteamGovernorParameters!",
         this->name());
     throw CPS::TypeException();
   }

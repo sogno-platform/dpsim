@@ -240,21 +240,21 @@ void addSignalComponents(py::module_ mSignal) {
       mSignal, "Turbine");
 
   // SteamTurbineGovernor
-  py::class_<CPS::Signal::SteamGorvernorParameters,
-             std::shared_ptr<CPS::Signal::SteamGorvernorParameters>,
-             CPS::Base::GovernorParameters>(mSignal, "SteamGorvernorParameters",
+  py::class_<CPS::Signal::SteamGovernorParameters,
+             std::shared_ptr<CPS::Signal::SteamGovernorParameters>,
+             CPS::Base::GovernorParameters>(mSignal, "SteamGovernorParameters",
                                             py::multiple_inheritance())
       .def(py::init<>())
-      .def_readwrite("R", &CPS::Signal::SteamGorvernorParameters::R)
-      .def_readwrite("T1", &CPS::Signal::SteamGorvernorParameters::T1)
-      .def_readwrite("T2", &CPS::Signal::SteamGorvernorParameters::T2)
-      .def_readwrite("T3", &CPS::Signal::SteamGorvernorParameters::T3)
-      .def_readwrite("dPmax", &CPS::Signal::SteamGorvernorParameters::dPmax)
-      .def_readwrite("dPmin", &CPS::Signal::SteamGorvernorParameters::dPmin)
-      .def_readwrite("Pmax", &CPS::Signal::SteamGorvernorParameters::Pmax)
-      .def_readwrite("Pmin", &CPS::Signal::SteamGorvernorParameters::Pmin)
-      .def_readwrite("OmRef", &CPS::Signal::SteamGorvernorParameters::OmRef)
-      .def_readwrite("Kbc", &CPS::Signal::SteamGorvernorParameters::Kbc);
+      .def_readwrite("R", &CPS::Signal::SteamGovernorParameters::R)
+      .def_readwrite("T1", &CPS::Signal::SteamGovernorParameters::T1)
+      .def_readwrite("T2", &CPS::Signal::SteamGovernorParameters::T2)
+      .def_readwrite("T3", &CPS::Signal::SteamGovernorParameters::T3)
+      .def_readwrite("dPmax", &CPS::Signal::SteamGovernorParameters::dPmax)
+      .def_readwrite("dPmin", &CPS::Signal::SteamGovernorParameters::dPmin)
+      .def_readwrite("Pmax", &CPS::Signal::SteamGovernorParameters::Pmax)
+      .def_readwrite("Pmin", &CPS::Signal::SteamGovernorParameters::Pmin)
+      .def_readwrite("OmRef", &CPS::Signal::SteamGovernorParameters::OmRef)
+      .def_readwrite("Kbc", &CPS::Signal::SteamGovernorParameters::Kbc);
 
   py::class_<CPS::Signal::SteamTurbineGovernor,
              std::shared_ptr<CPS::Signal::SteamTurbineGovernor>,
