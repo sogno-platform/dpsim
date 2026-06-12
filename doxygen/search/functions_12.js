@@ -16,6 +16,5 @@ var searchData=
   ['transformparameterstoperunitsystem_13',['transformParametersToPerUnitSystem',['../class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#a3c08b6edde029a78300577700c4a733f',1,'CPS::SP::Ph1::RXLine']]],
   ['trapezoidalfluxstates_14',['trapezoidalFluxStates',['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q.html#a682339bdc0780fcbe11a5dfeca88773c',1,'CPS::DP::Ph3::SynchronGeneratorDQ']]],
   ['turbinegovernor_15',['TurbineGovernor',['../class_c_p_s_1_1_signal_1_1_turbine_governor.html#a4101b45912b0542b2536c1dea0b65770',1,'CPS::Signal::TurbineGovernor']]],
-  ['turbinegovernortype1_16',['TurbineGovernorType1',['../class_c_p_s_1_1_signal_1_1_turbine_governor_type1.html#aaac3acb1f06ee5f61ea407c936cadb54',1,'CPS::Signal::TurbineGovernorType1']]],
-  ['type_17',['type',['../class_c_p_s_1_1_identified_object.html#a9a95f413fe2dd50b6e2a0369bda063e6',1,'CPS::IdentifiedObject']]]
+  ['type_16',['type',['../class_c_p_s_1_1_identified_object.html#a9a95f413fe2dd50b6e2a0369bda063e6',1,'CPS::IdentifiedObject']]]
 ];

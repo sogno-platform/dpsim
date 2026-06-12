@@ -40,7 +40,7 @@ var searchData=
   ['trh_37',['Trh',['../class_c_p_s_1_1_signal_1_1_steam_turbine_parameters.html#a33fd261c8c1bd64ebe1d5783eac79b13',1,'CPS::Signal::SteamTurbineParameters']]],
   ['turbine_38',['Turbine',['../class_c_p_s_1_1_base_1_1_turbine.html',1,'CPS::Base']]],
   ['turbinegovernor_39',['TurbineGovernor',['../class_c_p_s_1_1_signal_1_1_turbine_governor.html',1,'CPS::Signal::TurbineGovernor'],['../class_c_p_s_1_1_signal_1_1_turbine_governor.html#a4101b45912b0542b2536c1dea0b65770',1,'CPS::Signal::TurbineGovernor::TurbineGovernor()']]],
-  ['turbinegovernortype1_40',['TurbineGovernorType1',['../class_c_p_s_1_1_signal_1_1_turbine_governor_type1.html',1,'CPS::Signal::TurbineGovernorType1'],['../class_c_p_s_1_1_signal_1_1_turbine_governor_type1.html#aaac3acb1f06ee5f61ea407c936cadb54',1,'CPS::Signal::TurbineGovernorType1::TurbineGovernorType1()']]],
+  ['turbinegovernortype1_40',['TurbineGovernorType1',['../class_c_p_s_1_1_signal_1_1_turbine_governor_type1.html',1,'CPS::Signal']]],
   ['turbineparameters_41',['TurbineParameters',['../class_c_p_s_1_1_base_1_1_turbine_parameters.html',1,'CPS::Base']]],
   ['tw_42',['Tw',['../class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html#a4a059d2dfa96cf59b590618e058b4c9b',1,'CPS::Signal::PSS1AParameters']]],
   ['twoterminalitypessncomp_43',['TwoTerminalITypeSSNComp',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_i_type_s_s_n_comp.html',1,'CPS::EMT::Ph3']]],
