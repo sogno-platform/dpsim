@@ -304,6 +304,10 @@ void Base::SynchronGenerator::initPerUnitStates() {
     // to the exciter pu system
     mExciter->initialize(init_vt_abs, (mLmd / mRfd) * init_vfd);
   }
+  if (mHasGovernorAndTurbine) {
+    mGovernor->initializeStates(**mMechTorque);
+    mTurbine->initializeStates(**mMechTorque);
+  }
 }
 
 void Base::SynchronGenerator::calcStateSpaceMatrixDQ() {
