@@ -55,12 +55,8 @@ private:
   const Attribute<Real>::Ptr mTm;
 
 public:
-  ///
-  explicit TurbineGovernorType1(const String &name)
-      : SimSignalComp(name, name) {}
-
-  /// Constructor with log level
-  TurbineGovernorType1(const String &name, CPS::Logger::Level logLevel);
+  TurbineGovernorType1(const String &name,
+                       Logger::Level logLevel = Logger::Level::off);
 
   /// Initializes exciter parameters
   void setParameters(Real T3, Real T4, Real T5, Real Tc, Real Ts, Real R,
