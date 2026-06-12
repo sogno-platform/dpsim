@@ -1,7 +1,9 @@
 import os
 import sys
 import platform
+import shutil
 import subprocess
+import tempfile
 
 import pybind11
 from setuptools import setup, Extension
@@ -65,6 +67,46 @@ class CMakeBuild(build_ext):
                 ["cmake", "--build", ".", "--target", target] + build_args,
                 cwd=self.build_temp,
             )
+
+        self._generate_stubs(extdir, targets)
+
+    def _generate_stubs(self, extdir, targets):
+        stub_env = os.environ.copy()
+        stub_env["PYTHONPATH"] = extdir + os.pathsep + stub_env.get("PYTHONPATH", "")
+
+        with tempfile.TemporaryDirectory() as stub_tmp:
+            for module in targets:
+                print(f"generating stubs for {module}")
+                result = subprocess.run(
+                    [
+                        sys.executable,
+                        "-m",
+                        "pybind11_stubgen",
+                        module,
+                        "--output-dir",
+                        stub_tmp,
+                    ],
+                    env=stub_env,
+                )
+                if result.returncode != 0:
+                    print(
+                        f"warning: stub generation for {module} failed (exit {result.returncode}), skipping"
+                    )
+                    continue
+
+                src = os.path.join(stub_tmp, module)
+                dst = os.path.join(extdir, module)
+                if os.path.isdir(src):
+                    if os.path.exists(dst):
+                        shutil.rmtree(dst)
+                    shutil.copytree(src, dst)
+                    # PEP 561 marker so type checkers recognise the package as typed
+                    open(os.path.join(dst, "py.typed"), "w").close()
+                else:
+                    # flat .pyi file (no submodules)
+                    stub_file = src + ".pyi"
+                    if os.path.isfile(stub_file):
+                        shutil.copy2(stub_file, extdir)
 
 
 ext_modules_list = [CMakeExtension("dpsimpy")]
