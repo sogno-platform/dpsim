@@ -25,12 +25,12 @@ void SteamTurbineGovernor::setParameters(
         this->name());
     throw CPS::TypeException();
   }
-  if (params->T3 == 0) {
-    SPDLOG_LOGGER_ERROR(mSLog, "T3 must not be zero for {}", this->name());
+  if (params->T3 <= 0) {
+    SPDLOG_LOGGER_ERROR(mSLog, "T3 must be positive for {}", this->name());
     throw CPS::InvalidArgumentException();
   }
-  if (params->R == 0) {
-    SPDLOG_LOGGER_ERROR(mSLog, "R must not be zero for {}", this->name());
+  if (params->R <= 0) {
+    SPDLOG_LOGGER_ERROR(mSLog, "R must be positive for {}", this->name());
     throw CPS::InvalidArgumentException();
   }
   mParameters = params;
