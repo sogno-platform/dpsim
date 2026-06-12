@@ -1058,6 +1058,94 @@ $$
 \tau_m(k) = x_{g3}(k) + \frac{T_4}{T_5} \left(x_{g2}(k) + \frac{T_3}{T_c} x_{g1}(k)\right).
 $$
 Since all variables at $t=k-\Delta t$ are known, $\tau_m(k)$ is computed in the &lt;code>preStep&lt;/code> of the generator and used to approximate the mechanical equations at time $k+\Delta t$.&lt;/p>
+&lt;h1 id="steam-governor">Steam Governor&lt;/h1>
+&lt;center>
+&lt;figure margin=30%>
+&lt;img src="./images/SteamGovernor.drawio.svg" width=65% alt="Steam Governor">
+&lt;figcaption>&lt;/br>Fig. 8: Control diagram of the steam turbine governor &lt;/br>
+Adapted from [6]
+&lt;/figcaption>
+&lt;/figure>
+&lt;/center>
+&lt;/br>
+&lt;p>The control diagram of this model is depicted in Fig. 8. This model receives as input the frequency deviation $\Delta\omega = \omega_{ref} - \omega$ from the nominal frequency (normally $50,\text{Hz}$ or $60,\text{Hz}$) and produces the valve opening signal $p_{gv}$ for the turbine. $p_{ref}$ is the mechanical power produced at nominal frequency. The governor implements a lead-lag controller $\frac{K(1+sT_2)}{(1+sT_1)}$ where $K=1/R$ and $R$ is the droop coefficient, followed by a PT1 integrator with embedded rate limiters and an anti-windup loop. To avoid unnecessary dead-beat behaviour, complex transfer functions with more than one pole and zero are decomposed via partial fraction expansion into parallel PT1 elements, as shown in Fig. 9.&lt;/p>
+&lt;center>
+&lt;figure margin=30%>
+&lt;img src="./images/SteamGovernor_split.drawio.svg" width=90% alt="Steam Governor split">
+&lt;figcaption>&lt;/br>Fig. 9: Control diagram of the steam turbine governor after partial-fraction decomposition &lt;/br>
+&lt;/figcaption>
+&lt;/figure>
+&lt;/center>
+&lt;/br>
+&lt;p>Analogous to the static exciter model, the integrator uses an anti-windup strategy as shown in Fig. 10.&lt;/p>
+&lt;center>
+&lt;figure margin=30%>
+&lt;img src="./images/SteamGovernor_windup.drawio.svg" width=90% alt="Steam Governor anti-windup">
+&lt;figcaption>&lt;/br>Fig. 10: Control diagram of the steam turbine governor with anti-windup strategy &lt;/br>
+&lt;/figcaption>
+&lt;/figure>
+&lt;/center>
+&lt;/br>
+&lt;p>The forward-Euler discretised equations are:
+$$
+\Delta \omega (k-\Delta t) = \omega_{ref} - \omega (k-\Delta t),
+$$
+$$
+p_{1}(k) = p_{1}(k-\Delta t) + \frac{\Delta t}{T_{1}} \left(\Delta \omega (k-\Delta t) \cdot \frac{T_{1} - T_{2}}{T_{1}} - p_{1}(k-\Delta t)\right),
+$$
+$$
+p(k-\Delta t) = \frac{1}{R} \left(p_{1}(k-\Delta t) + \Delta \omega(k-\Delta t) \cdot \frac{T_{2}}{T_{1}}\right),
+$$
+$$
+\dot{p}(k-\Delta t) = \frac{1}{T_{3}}\left(p(k-\Delta t) + p_{ref} - p_{gv}(k-\Delta t)\right) - K_{bc} \left(p_{gv}^{&lt;em>}(k-\Delta t) - p_{gv}(k-\Delta t)\right),
+$$
+$$
+p_{gv}^{&lt;/em>}(k) = p_{gv}^{*}(k-\Delta t) + \Delta t \cdot \dot{p}(k-\Delta t),
+$$&lt;/p>
+&lt;p>and&lt;/p>
+&lt;p>$$
+p_{gv}(k) = p_{gv}^{&lt;em>}(k) \quad \text{if} \quad P_{m,\min} \leq p_{gv}^{&lt;/em>}(k) \leq P_{m,\max}, \
+p_{gv}(k) = P_{m,\max} \quad \text{if} \quad p_{gv}^{&lt;em>}(k) &amp;gt; P_{m,\max}, \
+p_{gv}(k) = P_{m,\min} \quad \text{if} \quad p_{gv}^{&lt;/em>}(k) &amp;lt; P_{m,\min}.
+$$&lt;/p>
+&lt;p>If $T_1 = 0$ the $p_1(k)$ equation is skipped and $p(k)$ is instead:
+$$
+p(k-\Delta t) = \frac{1}{R} \left(\Delta \omega(k-\Delta t) + \frac{T_{2}}{\Delta t} \left(\Delta \omega(k-\Delta t) - \Delta \omega(k-2\Delta t)\right)\right).
+$$&lt;/p>
+&lt;p>Assuming the simulation starts in steady state (all derivatives zero, $\Delta\omega(0)=0$), the initial values are:
+$$
+p_{1}(t=0) = 0, \quad p(t=0) = 0, \quad p_{ref} = p_{gv}^{*}(t=0) = p_{gv}(t=0).
+$$&lt;/p>
+&lt;h1 id="steam-turbine">Steam Turbine&lt;/h1>
+&lt;center>
+&lt;figure margin=30%>
+&lt;img src="./images/SteamTurbine.drawio.svg" width=65% alt="Steam Turbine">
+&lt;figcaption>&lt;/br>Fig. 11: Control diagram of the steam turbine &lt;/br>
+Adapted from [6]
+&lt;/figcaption>
+&lt;/figure>
+&lt;/center>
+&lt;/br>
+&lt;p>The steam turbine receives the valve opening signal $p_{gv}$ from the Steam Governor and outputs mechanical power $p_m$ to the synchronous generator. It is divided into high-pressure (HP), intermediate-pressure (IP), and low-pressure (LP) stages, each modelled as a first-order lag with time constants $T_{CH}$, $T_{RH}$, $T_{CO}$ respectively. Setting a time constant to zero disables that lag element. The total mechanical power is a weighted sum of each stage: $F_{HP} + F_{IP} + F_{LP} = 1$ must hold. The forward-Euler discretised equations are:&lt;/p>
+&lt;p>$$
+p_{hp}(k) = p_{hp}(k-\Delta t) + \frac{\Delta t}{T_{CH}} \left(p_{gv}(k-\Delta t) - p_{hp}(k-\Delta t)\right),
+$$
+$$
+p_{ip}(k) = p_{ip}(k-\Delta t) + \frac{\Delta t}{T_{RH}} \left(p_{hp}(k-\Delta t) - p_{ip}(k-\Delta t)\right),
+$$
+$$
+p_{lp}(k) = p_{lp}(k-\Delta t) + \frac{\Delta t}{T_{CO}} \left(p_{ip}(k-\Delta t) - p_{lp}(k-\Delta t)\right),
+$$
+$$
+p_{m}(k) = F_{HP} \cdot p_{hp}(k) + F_{IP} \cdot p_{ip}(k) + F_{LP} \cdot p_{lp}(k).
+$$&lt;/p>
+&lt;p>Assuming the simulation starts in steady state (all derivatives zero), the initial values are:
+$$
+p_{hp}(t=0) = p_{gv}(t=0), \quad p_{ip}(t=0) = p_{hp}(t=0), \quad p_{lp}(t=0) = p_{ip}(t=0),
+$$
+$$
+p_{m}(t=0) = F_{HP} \cdot p_{hp}(t=0) + F_{IP} \cdot p_{ip}(t=0) + F_{LP} \cdot p_{lp}(t=0).
+$$&lt;/p>
 &lt;h1 id="references">References&lt;/h1>
 &lt;ul>
 &lt;li>[1] “IEEE Recommended Practice for Excitation System Models for Power System Stability Studies,” in IEEE Std 421.5-2016 (Revision of IEEE Std 421.5-2005) , vol., no., pp.1-207, 26 Aug. 2016, doi: 10.1109/IEEESTD.2016.7553421.&lt;/li>

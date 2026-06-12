@@ -1,0 +1,26 @@
+<map id="CPS::Signal::SteamTurbineGovernor" name="CPS::Signal::SteamTurbineGovernor">
+<area shape="rect" id="Node000001" title=" " alt="" coords="1613,101,1797,150"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_sim_signal_comp.html" title=" " alt="" coords="1387,57,1533,87"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1547,88,1613,103,1612,108,1545,93"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_topological_signal_comp.html" title=" " alt="" coords="942,57,1135,87"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1150,70,1386,70,1386,75,1150,75"/>
+<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="740,57,893,87"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="908,70,942,70,942,75,908,75"/>
+<area shape="rect" id="Node000005" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="471,57,640,87"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="655,70,739,70,739,75,655,75"/>
+<area shape="rect" id="Node000006" href="$class_c_p_s_1_1_attribute_base.html" title=" " alt="" coords="12,5,152,35"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="167,21,300,29,448,46,493,54,492,59,447,51,299,34,167,26"/>
+<area shape="rect" id="Node000008" href="$class_c_p_s_1_1_attribute.html" title=" " alt="" coords="216,57,354,87"/>
+<area shape="poly" id="edge8_Node000008_Node000006" title=" " alt="" coords="158,37,224,54,223,59,157,42"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="208,112,361,179"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="376,118,497,85,498,90,377,123"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="369,70,471,70,471,75,369,75"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="5,60,159,127"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="173,81,215,77,215,82,174,87"/>
+<area shape="rect" id="Node000010" href="$class_c_p_s_1_1_base_1_1_governor.html" title="Base model for Governors." alt="" coords="1384,111,1536,140"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="1551,123,1613,123,1613,128,1551,128"/>
+<area shape="rect" id="Node000011" href="$class_shared_factory.html" title=" " alt="" coords="1356,164,1564,212"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="1572,157,1612,146,1614,152,1573,162"/>
+<area shape="rect" id="Node000012" href="$class_shared_factory.html" title=" " alt="" coords="969,173,1108,203"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="1124,186,1355,186,1355,191,1124,191"/>
+</map>
