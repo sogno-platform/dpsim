@@ -9,7 +9,9 @@
 #pragma once
 
 #include <dpsim-models/Base/Base_Exciter.h>
+#include <dpsim-models/Base/Base_Governor.h>
 #include <dpsim-models/Base/Base_PSS.h>
+#include <dpsim-models/Base/Base_Turbine.h>
 #include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Signal/TurbineGovernorType1.h>
 #include <dpsim-models/Solver/MNAInterface.h>
@@ -86,11 +88,20 @@ public:
   void setInitialValues(Complex initComplexElectricalPower,
                         Real initMechanicalPower, Complex initTerminalVoltage);
 
-  /// Add governor and turbine
+  /// Add governor and turbine (TurbineGovernorType1 legacy API)
   void addGovernor(Real T3, Real T4, Real T5, Real Tc, Real Ts, Real R,
                    Real Pmin, Real Pmax, Real OmRef, Real TmRef);
   void
   addGovernor(std::shared_ptr<Signal::TurbineGovernorType1> turbineGovernor);
+  /// Add a modular governor + turbine pair (new API for SteamTurbineGovernor / SteamTurbine)
+  void
+  addGovernorAndTurbine(std::shared_ptr<Base::Governor> governor,
+                        std::shared_ptr<Base::GovernorParameters> govParams,
+                        std::shared_ptr<Base::Turbine> turbine,
+                        std::shared_ptr<Base::TurbineParameters> turbineParams);
+  /// Add a pre-constructed governor + turbine pair (parameters already set)
+  void addGovernorAndTurbine(std::shared_ptr<Base::Governor> governor,
+                             std::shared_ptr<Base::Turbine> turbine);
   /// Add voltage regulator and exciter
   void addExciter(std::shared_ptr<Base::Exciter> exciter,
                   std::shared_ptr<Base::ExciterParameters> params);
@@ -268,14 +279,20 @@ protected:
   Bool mInitialValuesSet = false;
 
   // #### Controllers ####
-  /// Determines if Turbine and Governor are activated
+  /// Determines if TurbineGovernorType1 is activated
   Bool mHasTurbineGovernor = false;
+  /// Determines if modular Governor + Turbine pair is activated
+  Bool mHasGovernorAndTurbine = false;
   /// Determines if Exciter is activated
   Bool mHasExciter = false;
   /// Determines if PSS is activated
   Bool mHasPSS = false;
-  /// Signal component modelling governor control and steam turbine
+  /// TurbineGovernorType1 (legacy)
   std::shared_ptr<Signal::TurbineGovernorType1> mTurbineGovernor;
+  /// Modular governor (SteamTurbineGovernor / HydroTurbineGovernor)
+  std::shared_ptr<Base::Governor> mGovernor;
+  /// Modular turbine (SteamTurbine / HydroTurbine)
+  std::shared_ptr<Base::Turbine> mTurbine;
   /// Signal component modelling voltage regulator and exciter
   std::shared_ptr<Base::Exciter> mExciter;
   /// Power system stabilizer

@@ -161,6 +161,32 @@ struct Parameters {
   Real Tw = 10.0;
 };
 } // namespace PSS1A
+
+namespace SteamGovernor {
+struct Parameters {
+  Real R = 0.04;
+  Real T1 = 0.0;
+  Real T2 = 0.2;
+  Real T3 = 0.1;
+  Real dPmax = 50;
+  Real dPmin = -50;
+  Real Pmax = 1.0;
+  Real Pmin = 0.0;
+  Real OmRef = 1.0;
+  Real Kbc = 0.0;
+};
+} // namespace SteamGovernor
+
+namespace SteamTurbine {
+struct Parameters {
+  Real Fhp = 0.3;
+  Real Fip = 0.3;
+  Real Flp = 0.4;
+  Real Tch = 0.1;
+  Real Trh = 4.0;
+  Real Tco = 0.3;
+};
+} // namespace SteamTurbine
 } // namespace Components
 
 namespace Grids {

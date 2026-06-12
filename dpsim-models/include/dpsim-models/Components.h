@@ -160,5 +160,7 @@
 #include <dpsim-models/Signal/PSS1A.h>
 #include <dpsim-models/Signal/SignalGenerator.h>
 #include <dpsim-models/Signal/SineWaveGenerator.h>
+#include <dpsim-models/Signal/SteamTurbine.h>
+#include <dpsim-models/Signal/SteamTurbineGovernor.h>
 #include <dpsim-models/Signal/TurbineGovernor.h>
 #include <dpsim-models/Signal/TurbineGovernorType1.h>

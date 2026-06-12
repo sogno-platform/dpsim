@@ -70,7 +70,10 @@ void EMT::Ph3::SynchronGeneratorDQTrapez::stepInPerUnit(Real time) {
   }
 
   // Update of mechanical torque from turbine governor
-  if (mHasTurbineGovernorType1)
+  if (mHasGovernorAndTurbine) {
+    Real Pgv = mGovernor->step(**mOmMech, mTimeStep);
+    **mMechTorque = mTurbine->step(Pgv, mTimeStep);
+  } else if (mHasTurbineGovernorType1)
     **mMechTorque = mTurbineGovernorType1->step(**mOmMech, mTimeStep);
   else if (mHasTurbineGovernor)
     **mMechTorque = mTurbineGovernor->step(
