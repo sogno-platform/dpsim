@@ -10,10 +10,8 @@
 namespace CPS {
 namespace Signal {
 
-// Note: "Gorvernor" spelling preserved from upstream to avoid breaking other code.
-class HydroGorvernorParameters
-    : public Base::GovernorParameters,
-      public SharedFactory<HydroGorvernorParameters> {
+class HydroGovernorParameters : public Base::GovernorParameters,
+                                public SharedFactory<HydroGovernorParameters> {
 public:
   /// Droop coefficient
   Real R = 0;
@@ -40,7 +38,7 @@ class HydroTurbineGovernor : public SimSignalComp,
                              public Base::Governor,
                              public SharedFactory<HydroTurbineGovernor> {
 private:
-  std::shared_ptr<HydroGorvernorParameters> mParameters;
+  std::shared_ptr<HydroGovernorParameters> mParameters;
 
   // ### Setpoints ###
   Real mPref = 0;
@@ -65,13 +63,8 @@ private:
   Real mCb = 0;
 
 public:
-  explicit HydroTurbineGovernor(const String &name)
-      : SimSignalComp(name, name), mDelOm(mAttributes->create<Real>("DelOm")),
-        mX1(mAttributes->create<Real>("X1")),
-        mX2(mAttributes->create<Real>("X2")),
-        mPgv(mAttributes->create<Real>("Pgv")) {}
-
-  HydroTurbineGovernor(const String &name, CPS::Logger::Level logLevel);
+  HydroTurbineGovernor(const String &name,
+                       CPS::Logger::Level logLevel = CPS::Logger::Level::off);
 
   void
   setParameters(std::shared_ptr<Base::GovernorParameters> parameters) final;

@@ -38,11 +38,8 @@ private:
   Real mX1_next = 0;
 
 public:
-  explicit HydroTurbine(const String &name)
-      : SimSignalComp(name, name), mX1(mAttributes->create<Real>("X1")),
-        mPm(mAttributes->create<Real>("Pm")) {}
-
-  HydroTurbine(const String &name, CPS::Logger::Level logLevel);
+  HydroTurbine(const String &name,
+               CPS::Logger::Level logLevel = CPS::Logger::Level::off);
 
   void setParameters(std::shared_ptr<Base::TurbineParameters> parameters) final;
   void initializeStates(Real Pminit) final;

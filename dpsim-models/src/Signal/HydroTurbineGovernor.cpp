@@ -17,24 +17,24 @@ Signal::HydroTurbineGovernor::HydroTurbineGovernor(const String &name,
 void HydroTurbineGovernor::setParameters(
     std::shared_ptr<Base::GovernorParameters> parameters) {
   auto params =
-      std::dynamic_pointer_cast<Signal::HydroGorvernorParameters>(parameters);
+      std::dynamic_pointer_cast<Signal::HydroGovernorParameters>(parameters);
   if (!params) {
     SPDLOG_LOGGER_ERROR(
         mSLog,
-        "Type of parameters class of {} has to be HydroGorvernorParameters!",
+        "Type of parameters class of {} has to be HydroGovernorParameters!",
         this->name());
     throw CPS::TypeException();
   }
-  if (params->R == 0) {
-    SPDLOG_LOGGER_ERROR(mSLog, "R must not be zero for {}", this->name());
+  if (params->R <= 0) {
+    SPDLOG_LOGGER_ERROR(mSLog, "R must be positive for {}", this->name());
     throw CPS::InvalidArgumentException();
   }
-  if (params->T1 == 0) {
-    SPDLOG_LOGGER_ERROR(mSLog, "T1 must not be zero for {}", this->name());
+  if (params->T1 <= 0) {
+    SPDLOG_LOGGER_ERROR(mSLog, "T1 must be positive for {}", this->name());
     throw CPS::InvalidArgumentException();
   }
-  if (params->T3 == 0) {
-    SPDLOG_LOGGER_ERROR(mSLog, "T3 must not be zero for {}", this->name());
+  if (params->T3 <= 0) {
+    SPDLOG_LOGGER_ERROR(mSLog, "T3 must be positive for {}", this->name());
     throw CPS::InvalidArgumentException();
   }
   if (params->T1 == params->T3) {

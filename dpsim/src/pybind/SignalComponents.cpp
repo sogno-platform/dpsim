@@ -294,18 +294,18 @@ void addSignalComponents(py::module_ mSignal) {
            "Pminit"_a);
 
   // HydroTurbineGovernor
-  py::class_<CPS::Signal::HydroGorvernorParameters,
-             std::shared_ptr<CPS::Signal::HydroGorvernorParameters>,
-             CPS::Base::GovernorParameters>(mSignal, "HydroGorvernorParameters",
+  py::class_<CPS::Signal::HydroGovernorParameters,
+             std::shared_ptr<CPS::Signal::HydroGovernorParameters>,
+             CPS::Base::GovernorParameters>(mSignal, "HydroGovernorParameters",
                                             py::multiple_inheritance())
       .def(py::init<>())
-      .def_readwrite("R", &CPS::Signal::HydroGorvernorParameters::R)
-      .def_readwrite("T1", &CPS::Signal::HydroGorvernorParameters::T1)
-      .def_readwrite("T2", &CPS::Signal::HydroGorvernorParameters::T2)
-      .def_readwrite("T3", &CPS::Signal::HydroGorvernorParameters::T3)
-      .def_readwrite("Pmax", &CPS::Signal::HydroGorvernorParameters::Pmax)
-      .def_readwrite("Pmin", &CPS::Signal::HydroGorvernorParameters::Pmin)
-      .def_readwrite("OmRef", &CPS::Signal::HydroGorvernorParameters::OmRef);
+      .def_readwrite("R", &CPS::Signal::HydroGovernorParameters::R)
+      .def_readwrite("T1", &CPS::Signal::HydroGovernorParameters::T1)
+      .def_readwrite("T2", &CPS::Signal::HydroGovernorParameters::T2)
+      .def_readwrite("T3", &CPS::Signal::HydroGovernorParameters::T3)
+      .def_readwrite("Pmax", &CPS::Signal::HydroGovernorParameters::Pmax)
+      .def_readwrite("Pmin", &CPS::Signal::HydroGovernorParameters::Pmin)
+      .def_readwrite("OmRef", &CPS::Signal::HydroGovernorParameters::OmRef);
 
   py::class_<CPS::Signal::HydroTurbineGovernor,
              std::shared_ptr<CPS::Signal::HydroTurbineGovernor>,
