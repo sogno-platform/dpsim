@@ -1,0 +1,9 @@
+<map id="CPS::Signal::HydroTurbineParameters" name="CPS::Signal::HydroTurbineParameters">
+<area shape="rect" id="Node000001" title=" " alt="" coords="35,200,218,249"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_base_1_1_turbine_parameters.html" title=" " alt="" coords="5,112,216,141"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,156,125,199,120,200,113,157"/>
+<area shape="rect" id="Node000003" href="$class_shared_factory.html" title=" " alt="" coords="240,102,448,151"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="277,160,181,202,179,197,275,155"/>
+<area shape="rect" id="Node000004" href="$class_shared_factory.html" title=" " alt="" coords="274,5,414,35"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="346,51,346,101,341,101,341,51"/>
+</map>

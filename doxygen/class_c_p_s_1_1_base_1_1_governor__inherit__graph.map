@@ -1,5 +1,7 @@
 <map id="CPS::Base::Governor" name="CPS::Base::Governor">
-<area shape="rect" id="Node000001" title="Base model for Governors." alt="" coords="21,5,173,35"/>
-<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_signal_1_1_steam_turbine_governor.html" title=" " alt="" coords="5,83,189,132"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,50,100,82,94,82,94,50"/>
+<area shape="rect" id="Node000001" title="Base model for Governors." alt="" coords="124,5,275,35"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_signal_1_1_hydro_turbine_governor.html" title=" " alt="" coords="5,83,188,132"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="172,47,127,84,123,80,169,43"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_signal_1_1_steam_turbine_governor.html" title=" " alt="" coords="212,83,395,132"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="230,43,276,80,272,85,226,47"/>
 </map>

@@ -1146,6 +1146,82 @@ $$
 $$
 p_{m}(t=0) = F_{HP} \cdot p_{hp}(t=0) + F_{IP} \cdot p_{ip}(t=0) + F_{LP} \cdot p_{lp}(t=0).
 $$&lt;/p>
+&lt;h1 id="hydro-turbine-governor">Hydro Turbine Governor&lt;/h1>
+&lt;center>
+&lt;figure margin=30%>
+&lt;img src="./images/HydroGovernor.drawio.svg" width=65% alt="Hydro Governor">
+&lt;figcaption>&lt;/br>Fig. 12: Control diagram of a hydro turbine governor &lt;/br>
+Adapted from [6]
+&lt;/figcaption>
+&lt;/figure>
+&lt;/center>
+&lt;/br>
+&lt;p>The Hydro Turbine Governor receives the frequency deviation $\Delta\omega = \omega_{ref} - \omega$ as input and produces the valve/gate opening signal $p_{gv}$ for the turbine. $p_{ref}$ is the mechanical power produced at nominal frequency. The controller transfer function is $K\frac{1+sT_2}{(1+sT_1)(1+sT_3)}$, where $K=\frac{1}{R}$ and $R$ is the droop coefficient. The transfer function is decomposed into two parallel PT1 blocks as shown in Fig. 13.&lt;/p>
+&lt;center>
+&lt;figure margin=30%>
+&lt;img src="./images/HydroGovernor_split.drawio.svg" width=65% alt="Hydro Governor split">
+&lt;figcaption>&lt;/br>Fig. 13: Control diagram of a hydro turbine governor after partial-fraction decomposition &lt;/br>
+&lt;/figcaption>
+&lt;/figure>
+&lt;/center>
+&lt;/br>
+&lt;p>The forward-Euler discretised equations are:
+$$
+x_{1}(k) = x_{1}(k-\Delta t) + \frac{\Delta t}{T_{1}} \left(\Delta\omega(k-\Delta t) - x_{1}(k-\Delta t)\right),
+$$
+$$
+x_{2}(k) = x_{2}(k-\Delta t) + \frac{\Delta t}{T_{3}} \left(\Delta\omega(k-\Delta t) - x_{2}(k-\Delta t)\right),
+$$
+$$
+p^{*}&lt;em>{gv}(k) = \frac{1}{R}\left(A \cdot x&lt;/em>{1}(k) + B \cdot x_{2}(k)\right) + p_{ref},
+$$&lt;/p>
+&lt;p>where
+$$
+A = \frac{T_{1}-T_{2}}{T_{1}-T_{3}}, \qquad B = \frac{T_{2}-T_{3}}{T_{1}-T_{3}},
+$$&lt;/p>
+&lt;p>and the output limiter is applied as:
+$$
+p_{gv}(k) = \begin{cases}
+P_{m,\max} &amp;amp; \text{if } p^{&lt;em>}&lt;em>{gv}(k) &amp;gt; P&lt;/em>{m,\max}, \
+P_{m,\min} &amp;amp; \text{if } p^{&lt;/em>}&lt;em>{gv}(k) &amp;lt; P&lt;/em>{m,\min}, \
+p^{*}_{gv}(k) &amp;amp; \text{otherwise.}
+\end{cases}
+$$&lt;/p>
+&lt;p>Assuming the simulation starts in steady state (all derivatives zero, $\Delta\omega(t=0)=0$), the initial values are:
+$$
+x_{1}(t=0) = 0, \quad x_{2}(t=0) = 0, \quad p_{ref} = p_{gv}(t=0).
+$$&lt;/p>
+&lt;h1 id="hydro-turbine">Hydro Turbine&lt;/h1>
+&lt;center>
+&lt;figure margin=30%>
+&lt;img src="./images/HydroTurbine.drawio.svg" width=65% alt="Hydro Turbine">
+&lt;figcaption>&lt;/br>Fig. 14: Control diagram of a hydro turbine &lt;/br>
+Adapted from [6]
+&lt;/figcaption>
+&lt;/figure>
+&lt;/center>
+&lt;/br>
+&lt;p>The Hydro Turbine receives the gate opening signal $p_{gv}$ from the Hydro Turbine Governor and outputs mechanical power $p_m$ to the synchronous generator. The transfer function is specified by the water starting time $T_W$ and can be represented as the sum of two parallel blocks as shown in Fig. 15.&lt;/p>
+&lt;center>
+&lt;figure margin=30%>
+&lt;img src="./images/HydroTurbine_split.drawio.svg" width=65% alt="Hydro Turbine split">
+&lt;figcaption>&lt;/br>Fig. 15: Control diagram of a hydro turbine after decomposition &lt;/br>
+Adapted from [6]
+&lt;/figcaption>
+&lt;/figure>
+&lt;/center>
+&lt;/br>
+&lt;p>The forward-Euler discretised equations are:
+$$
+x_{1}(k) = x_{1}(k-\Delta t) + \frac{\Delta t}{0.5,T_{W}} \left(p_{gv}(k-\Delta t) - x_{1}(k-\Delta t)\right),
+$$
+$$
+p_{m}(k) = 3,x_{1}(k) - 2,p_{gv}(k).
+$$&lt;/p>
+&lt;p>Assuming the simulation starts in steady state (all derivatives zero), the initial values are:
+$$
+x_{1}(t=0) = p_{gv}(t=0), \quad p_{m}(t=0) = p_{gv}(t=0).
+$$&lt;/p>
 &lt;h1 id="references">References&lt;/h1>
 &lt;ul>
 &lt;li>[1] “IEEE Recommended Practice for Excitation System Models for Power System Stability Studies,” in IEEE Std 421.5-2016 (Revision of IEEE Std 421.5-2005) , vol., no., pp.1-207, 26 Aug. 2016, doi: 10.1109/IEEESTD.2016.7553421.&lt;/li>
