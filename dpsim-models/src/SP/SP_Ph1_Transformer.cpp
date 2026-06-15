@@ -84,15 +84,17 @@ SimPowerComp<Complex>::Ptr SP::Ph1::Transformer::clone(String name) {
   return copy;
 }
 
-void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
-  mNominalOmega = 2. * PI * frequency;
-  mReactance = mNominalOmega * **mInductance;
-  SPDLOG_LOGGER_INFO(mSLog, "Reactance={} [Ohm] (referred to primary side)",
-                     mReactance);
+void SP::Ph1::Transformer::createSubComponents() {
+  if (mSubCompCreated)
+    return;
+  mSubCompCreated = true;
 
-  // Component parameters are referred to higher voltage side.
-  // Switch terminals to have terminal 0 at higher voltage side
-  // if transformer is connected the other way around.
+  // Use mFrequencies (set by SystemTopology::addComponent) so omega is
+  // available before initializeFromNodesAndTerminals sets mNominalOmega.
+  if (mNominalOmega == 0)
+    mNominalOmega = 2. * PI * mFrequencies(0, 0);
+
+  // Switch terminals so that terminal 0 is always the higher-voltage side.
   if (Math::abs(**mRatio) < 1.) {
     **mRatio = 1. / **mRatio;
     mRatioAbs = std::abs(**mRatio);
@@ -112,15 +114,6 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
                        mRatioAbs, mRatioPhase);
   }
 
-  // Set initial voltage of virtual node in between
-  mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(1) * **mRatio);
-
-  // Static calculations from load flow data
-  Complex impedance = {**mResistance, mReactance};
-  (**mIntfVoltage)(0, 0) =
-      mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0);
-  (**mIntfCurrent)(0, 0) = (**mIntfVoltage)(0, 0) / impedance;
-
   // Create series sub components
   mSubInductor = std::make_shared<SP::Ph1::Inductor>(
       **mUID + "_ind", **mName + "_ind", Logger::Level::off);
@@ -129,7 +122,6 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
   if (mNumVirtualNodes == 3) {
-    mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(0));
     mSubResistor = std::make_shared<SP::Ph1::Resistor>(
         **mUID + "_res", **mName + "_res", Logger::Level::off);
     mSubResistor->setParameters(**mResistance);
@@ -203,6 +195,27 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
   }
+}
+
+void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
+  createSubComponents();
+
+  mNominalOmega = 2. * PI * frequency;
+  mReactance = mNominalOmega * **mInductance;
+  SPDLOG_LOGGER_INFO(mSLog, "Reactance={} [Ohm] (referred to primary side)",
+                     mReactance);
+
+  // Set initial voltage of virtual node in between
+  mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(1) * **mRatio);
+
+  // Static calculations from load flow data
+  Complex impedance = {**mResistance, mReactance};
+  (**mIntfVoltage)(0, 0) =
+      mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0);
+  (**mIntfCurrent)(0, 0) = (**mIntfVoltage)(0, 0) / impedance;
+
+  if (mNumVirtualNodes == 3)
+    mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(0));
 
   // Initialize electrical subcomponents
   SPDLOG_LOGGER_INFO(mSLog, "Electrical subcomponents: ");

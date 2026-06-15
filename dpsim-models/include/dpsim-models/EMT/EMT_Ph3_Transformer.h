@@ -23,6 +23,8 @@ class Transformer : public CompositePowerComp<Real>,
                     public SharedFactory<Transformer>,
                     public Base::Ph3::Transformer {
 private:
+  /// True after createSubComponents() runs; prevents double-construction.
+  bool mSubCompCreated = false;
   /// Internal resistor to model losses
   std::shared_ptr<EMT::Ph3::Resistor> mSubResistor;
   /// Internal inductor to model losses
@@ -65,6 +67,8 @@ public:
   void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower,
                      Real ratioAbs, Real ratioPhase, Matrix resistance,
                      Matrix inductance);
+  /// Constructs and registers MNA subcomponents; idempotent.
+  void createSubComponents() override;
   /// Initializes component from power flow data
   void initializeFromNodesAndTerminals(Real frequency) override;
 

@@ -38,6 +38,8 @@ protected:
   std::shared_ptr<DP::Ph1::Resistor> mSubResistor;
   /// Right side vectors of subcomponents
   std::vector<const Matrix *> mRightVectorStamps;
+  /// True after createSubComponents() runs; prevents double-construction.
+  bool mSubCompCreated = false;
 
 public:
   /// Active power [Watt]
@@ -54,6 +56,8 @@ public:
   SimPowerComp<Complex>::Ptr clone(String name) override;
 
   // #### General ####
+  /// Constructs and registers MNA subcomponents; idempotent.
+  void createSubComponents() override;
   /// Initialize component from power flow data
   void initializeFromNodesAndTerminals(Real frequency) override;
   /// Set model specific parameters

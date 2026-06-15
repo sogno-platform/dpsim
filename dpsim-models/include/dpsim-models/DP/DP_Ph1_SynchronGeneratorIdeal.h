@@ -21,6 +21,8 @@ class SynchronGeneratorIdeal : public CompositePowerComp<Complex>,
 private:
   /// Inner voltage source that represents the generator
   std::shared_ptr<DP::Ph1::VoltageSource> mSubVoltageSource;
+  /// True after createSubComponents() runs; prevents double-construction.
+  bool mSubCompCreated = false;
 
 public:
   /// Voltage set point [V]
@@ -36,6 +38,8 @@ public:
   SimPowerComp<Complex>::Ptr clone(String name) override;
 
   // #### General ####
+  /// Constructs and registers MNA subcomponents; idempotent.
+  void createSubComponents() override;
   /// Initializes component from power flow data
   void initializeFromNodesAndTerminals(Real frequency) override;
 

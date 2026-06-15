@@ -26,25 +26,22 @@ SimPowerComp<Complex>::Ptr DP::Ph1::PiLine::clone(String name) {
   return copy;
 }
 
-void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
+void DP::Ph1::PiLine::createSubComponents() {
+  if (mSubCompCreated)
+    return;
+  mSubCompCreated = true;
 
-  // Static calculation
-  Real omega = 2. * PI * frequency;
-  Complex impedance = {**mSeriesRes, omega * **mSeriesInd};
-  (**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
-  (**mIntfCurrent)(0, 0) = (**mIntfVoltage)(0, 0) / impedance;
+  // By default there is always a small conductance to ground to
+  // avoid problems with floating nodes.
+  Real defaultParallelCond = 1e-6;
+  **mParallelCond =
+      (**mParallelCond > 0) ? **mParallelCond : defaultParallelCond;
 
-  // Initialization of virtual node
-  mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0) +
-                                      (**mIntfCurrent)(0, 0) * **mSeriesRes);
-
-  // Create series sub components
   mSubSeriesResistor =
       std::make_shared<DP::Ph1::Resistor>(**mName + "_res", mLogLevel);
   mSubSeriesResistor->setParameters(**mSeriesRes);
   mSubSeriesResistor->connect({mTerminals[0]->node(), mVirtualNodes[0]});
   mSubSeriesResistor->initialize(mFrequencies);
-  mSubSeriesResistor->initializeFromNodesAndTerminals(frequency);
   addMNASubComponent(mSubSeriesResistor,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
@@ -54,25 +51,16 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
   mSubSeriesInductor->setParameters(**mSeriesInd);
   mSubSeriesInductor->connect({mVirtualNodes[0], mTerminals[1]->node()});
   mSubSeriesInductor->initialize(mFrequencies);
-  mSubSeriesInductor->initializeFromNodesAndTerminals(frequency);
   addMNASubComponent(mSubSeriesInductor,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
-  // By default there is always a small conductance to ground to
-  // avoid problems with floating nodes.
-  Real defaultParallelCond = 1e-6;
-  **mParallelCond =
-      (**mParallelCond > 0) ? **mParallelCond : defaultParallelCond;
-
-  // Create parallel sub components
   mSubParallelResistor0 =
       std::make_shared<DP::Ph1::Resistor>(**mName + "_con0", mLogLevel);
   mSubParallelResistor0->setParameters(2. / **mParallelCond);
   mSubParallelResistor0->connect(
       SimNode::List{SimNode::GND, mTerminals[0]->node()});
   mSubParallelResistor0->initialize(mFrequencies);
-  mSubParallelResistor0->initializeFromNodesAndTerminals(frequency);
   addMNASubComponent(mSubParallelResistor0,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
@@ -83,7 +71,6 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
   mSubParallelResistor1->connect(
       SimNode::List{SimNode::GND, mTerminals[1]->node()});
   mSubParallelResistor1->initialize(mFrequencies);
-  mSubParallelResistor1->initializeFromNodesAndTerminals(frequency);
   addMNASubComponent(mSubParallelResistor1,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
@@ -95,7 +82,6 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
     mSubParallelCapacitor0->connect(
         SimNode::List{SimNode::GND, mTerminals[0]->node()});
     mSubParallelCapacitor0->initialize(mFrequencies);
-    mSubParallelCapacitor0->initializeFromNodesAndTerminals(frequency);
     addMNASubComponent(mSubParallelCapacitor0,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
@@ -106,10 +92,33 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
     mSubParallelCapacitor1->connect(
         SimNode::List{SimNode::GND, mTerminals[1]->node()});
     mSubParallelCapacitor1->initialize(mFrequencies);
-    mSubParallelCapacitor1->initializeFromNodesAndTerminals(frequency);
     addMNASubComponent(mSubParallelCapacitor1,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+  }
+}
+
+void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
+  createSubComponents();
+
+  // Static calculation
+  Real omega = 2. * PI * frequency;
+  Complex impedance = {**mSeriesRes, omega * **mSeriesInd};
+  (**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
+  (**mIntfCurrent)(0, 0) = (**mIntfVoltage)(0, 0) / impedance;
+
+  // Initialization of virtual node
+  mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0) +
+                                      (**mIntfCurrent)(0, 0) * **mSeriesRes);
+
+  // Initialize subcomponents
+  mSubSeriesResistor->initializeFromNodesAndTerminals(frequency);
+  mSubSeriesInductor->initializeFromNodesAndTerminals(frequency);
+  mSubParallelResistor0->initializeFromNodesAndTerminals(frequency);
+  mSubParallelResistor1->initializeFromNodesAndTerminals(frequency);
+  if (**mParallelCap >= 0) {
+    mSubParallelCapacitor0->initializeFromNodesAndTerminals(frequency);
+    mSubParallelCapacitor1->initializeFromNodesAndTerminals(frequency);
   }
 
   SPDLOG_LOGGER_INFO(

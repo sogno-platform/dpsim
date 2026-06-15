@@ -31,6 +31,8 @@ class SVC : public MNASimPowerComp<Complex>,
             public MNAVariableCompInterface,
             public SharedFactory<SVC> {
 protected:
+  /// True after createSubComponents() runs; prevents double-construction.
+  bool mSubCompCreated = false;
   /// ### internal components
   /// Internal inductor
   std::shared_ptr<DP::Ph1::Inductor> mSubInductor;
@@ -74,6 +76,8 @@ public:
       : SVC(name, name, logLevel) {}
 
   // #### General ####
+  /// Constructs subcomponents; idempotent.
+  void createSubComponents() override;
   /// Initializes states from power flow data
   void initializeFromNodesAndTerminals(Real frequency);
 

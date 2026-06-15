@@ -52,6 +52,8 @@ private:
   /// Capacitance [F]
   Real mCapacitance;
 
+  /// True after createSubComponents() runs; prevents double-construction.
+  bool mSubCompCreated = false;
   /// Internal inductor
   std::shared_ptr<SP::Ph1::Inductor> mSubInductor;
   /// Internal capacitor
@@ -69,6 +71,8 @@ public:
   void setParameters(Real activePower, Real reactivePower, Real nominalVoltage);
 
   // #### General ####
+  /// Constructs and registers MNA subcomponents; idempotent.
+  void createSubComponents() override;
   /// Initializes component from power flow data
   void initializeFromNodesAndTerminals(Real frequency) override;
   /// Load profile data

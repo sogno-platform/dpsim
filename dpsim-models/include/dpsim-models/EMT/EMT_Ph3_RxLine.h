@@ -22,6 +22,8 @@ class RxLine : public CompositePowerComp<Real>,
                public Base::Ph3::PiLine,
                public SharedFactory<RxLine> {
 protected:
+  /// True after createSubComponents() runs; prevents double-construction.
+  bool mSubCompCreated = false;
   /// Inductance submodel
   std::shared_ptr<Inductor> mSubInductor;
   /// Resistor submodel
@@ -39,6 +41,8 @@ public:
   SimPowerComp<Real>::Ptr clone(String name) override;
 
   // #### General ####
+  /// Constructs and registers MNA subcomponents; idempotent.
+  void createSubComponents() override;
   /// Initializes component from power flow data
   void initializeFromNodesAndTerminals(Real frequency) override;
 

@@ -27,6 +27,8 @@ class PiLine : public CompositePowerComp<Real>,
                public Base::Ph3::PiLine,
                public SharedFactory<PiLine> {
 protected:
+  /// True after createSubComponents() runs; prevents double-construction.
+  bool mSubCompCreated = false;
   /// Series Inductance submodel
   std::shared_ptr<Inductor> mSubSeriesInductor;
   /// Series Resistor submodel
@@ -52,6 +54,8 @@ public:
   SimPowerComp<Real>::Ptr clone(String copySuffix) override;
 
   // #### General ####
+  /// Constructs and registers MNA subcomponents; idempotent.
+  void createSubComponents() override;
   /// Initializes component from power flow data
   void initializeFromNodesAndTerminals(Real frequency) override;
 

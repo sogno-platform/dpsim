@@ -38,6 +38,8 @@ protected:
   std::shared_ptr<Capacitor> mSubParallelCapacitor1;
   /// Right side vectors of subcomponents
   std::vector<const Matrix *> mRightVectorStamps;
+  /// True after createSubComponents() runs; prevents double-construction.
+  bool mSubCompCreated = false;
 
 public:
   /// Defines UID, name and logging level
@@ -49,6 +51,8 @@ public:
   SimPowerComp<Complex>::Ptr clone(String copySuffix) override;
 
   // #### General ####
+  /// Constructs and registers MNA subcomponents; idempotent.
+  void createSubComponents() override;
   /// Initializes component from power flow data
   void initializeFromNodesAndTerminals(Real frequency) override;
 

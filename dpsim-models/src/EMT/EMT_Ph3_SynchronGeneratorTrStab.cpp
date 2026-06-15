@@ -137,8 +137,32 @@ void EMT::Ph3::SynchronGeneratorTrStab::setInitialValues(Complex elecPower,
   mInitMechPower = mechPower;
 }
 
+void EMT::Ph3::SynchronGeneratorTrStab::createSubComponents() {
+  if (mSubCompCreated)
+    return;
+  mSubCompCreated = true;
+
+  mSubVoltageSource =
+      EMT::Ph3::VoltageSource::make(**mName + "_src", mLogLevel);
+  mSubVoltageSource->connect({SimNode::GND, mVirtualNodes[0]});
+  mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[1], 0);
+  mSubVoltageSource->initialize(mFrequencies);
+  addMNASubComponent(mSubVoltageSource,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+
+  mSubInductor = EMT::Ph3::Inductor::make(**mName + "_ind", mLogLevel);
+  mSubInductor->setParameters(
+      CPS::Math::singlePhaseParameterToThreePhase(mLpd));
+  mSubInductor->connect({mVirtualNodes[0], terminal(0)->node()});
+  mSubInductor->initialize(mFrequencies);
+  addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+}
+
 void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(
     Real frequency) {
+  createSubComponents();
 
   // Initialize omega mech with nominal system frequency
   **mOmMech = mNomOmega;
@@ -194,27 +218,10 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(
   MatrixComp vref = MatrixComp::Zero(3, 1);
   vref = CPS::Math::singlePhaseVariableToThreePhase(**mEp);
 
-  // Create sub voltage source for emf
-  mSubVoltageSource =
-      EMT::Ph3::VoltageSource::make(**mName + "_src", mLogLevel);
+  // Set emf on the already-created voltage source, then initialize it.
   mSubVoltageSource->setParameters(vref, frequency);
-  mSubVoltageSource->connect({SimNode::GND, mVirtualNodes[0]});
-  mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[1], 0);
-  mSubVoltageSource->initialize(mFrequencies);
   mSubVoltageSource->initializeFromNodesAndTerminals(frequency);
-  addMNASubComponent(mSubVoltageSource,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-
-  // Create sub inductor as Xpd
-  mSubInductor = EMT::Ph3::Inductor::make(**mName + "_ind", mLogLevel);
-  mSubInductor->setParameters(
-      CPS::Math::singlePhaseParameterToThreePhase(mLpd));
-  mSubInductor->connect({mVirtualNodes[0], terminal(0)->node()});
-  mSubInductor->initialize(mFrequencies);
   mSubInductor->initializeFromNodesAndTerminals(frequency);
-  addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialize according to powerflow ---"

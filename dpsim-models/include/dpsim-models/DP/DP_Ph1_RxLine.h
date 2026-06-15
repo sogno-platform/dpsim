@@ -28,6 +28,8 @@ protected:
   std::shared_ptr<Resistor> mSubResistor;
   /// Inductor end to ground resistor to facilitate initialization
   std::shared_ptr<Resistor> mInitialResistor;
+  /// True after createSubComponents() runs; prevents double-construction.
+  bool mSubCompCreated = false;
 
 public:
   /// Defines UID, name, logging level
@@ -39,6 +41,8 @@ public:
   SimPowerComp<Complex>::Ptr clone(String name) override;
 
   // #### General ####
+  /// Constructs and registers MNA subcomponents; idempotent.
+  void createSubComponents() override;
   /// Initializes component from power flow data
   void initializeFromNodesAndTerminals(Real frequency) override;
 

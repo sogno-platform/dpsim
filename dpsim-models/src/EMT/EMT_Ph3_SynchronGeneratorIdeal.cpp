@@ -36,8 +36,10 @@ SimPowerComp<Real>::Ptr EMT::Ph3::SynchronGeneratorIdeal::clone(String name) {
   return SynchronGeneratorIdeal::make(name, mLogLevel);
 }
 
-void EMT::Ph3::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(
-    Real frequency) {
+void EMT::Ph3::SynchronGeneratorIdeal::createSubComponents() {
+  if (mSubCompCreated)
+    return;
+  mSubCompCreated = true;
 
   if (mSourceType == CPS::GeneratorType::IdealVoltageSource) {
     mSubVoltageSource =
@@ -62,11 +64,17 @@ void EMT::Ph3::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(
     mSubComponents[0]->setTerminalAt(terminal(0), 1);
 
   mSubComponents[0]->initialize(mFrequencies);
-  mSubComponents[0]->initializeFromNodesAndTerminals(frequency);
 
   if (mSourceType == CPS::GeneratorType::IdealVoltageSource)
     mRefVoltage->setReference(
         mSubComponents[0]->attributeTyped<MatrixComp>("V_ref"));
+}
+
+void EMT::Ph3::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(
+    Real frequency) {
+  createSubComponents();
+
+  mSubComponents[0]->initializeFromNodesAndTerminals(frequency);
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"

@@ -27,7 +27,83 @@ SimPowerComp<Complex>::Ptr DP::Ph3::PiLine::clone(String name) {
   return copy;
 }
 
+void DP::Ph3::PiLine::createSubComponents() {
+  if (mSubCompCreated)
+    return;
+  mSubCompCreated = true;
+
+  // By default there is always a small conductance to ground to
+  // avoid problems with floating nodes.
+  Matrix defaultParallelCond = Matrix::Zero(3, 3);
+  defaultParallelCond << 1e-6, 0, 0, 0, 1e-6, 0, 0, 0, 1e-6;
+  **mParallelCond =
+      ((**mParallelCond)(0, 0) > 0) ? **mParallelCond : defaultParallelCond;
+
+  // Create series sub components
+  mSubSeriesResistor =
+      std::make_shared<DP::Ph3::Resistor>(**mName + "_res", mLogLevel);
+  mSubSeriesResistor->setParameters(**mSeriesRes);
+  mSubSeriesResistor->connect({mTerminals[0]->node(), mVirtualNodes[0]});
+  mSubSeriesResistor->initialize(mFrequencies);
+  addMNASubComponent(mSubSeriesResistor,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+
+  mSubSeriesInductor =
+      std::make_shared<DP::Ph3::Inductor>(**mName + "_ind", mLogLevel);
+  mSubSeriesInductor->setParameters(**mSeriesInd);
+  mSubSeriesInductor->connect({mVirtualNodes[0], mTerminals[1]->node()});
+  mSubSeriesInductor->initialize(mFrequencies);
+  addMNASubComponent(mSubSeriesInductor,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+
+  // Create parallel sub components
+  mSubParallelResistor0 =
+      std::make_shared<DP::Ph3::Resistor>(**mName + "_con0", mLogLevel);
+  mSubParallelResistor0->setParameters(2. * (**mParallelCond).inverse());
+  mSubParallelResistor0->connect(
+      SimNode::List{SimNode::GND, mTerminals[0]->node()});
+  mSubParallelResistor0->initialize(mFrequencies);
+  addMNASubComponent(mSubParallelResistor0,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+
+  mSubParallelResistor1 =
+      std::make_shared<DP::Ph3::Resistor>(**mName + "_con1", mLogLevel);
+  mSubParallelResistor1->setParameters(2. * (**mParallelCond).inverse());
+  mSubParallelResistor1->connect(
+      SimNode::List{SimNode::GND, mTerminals[1]->node()});
+  mSubParallelResistor1->initialize(mFrequencies);
+  addMNASubComponent(mSubParallelResistor1,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+
+  if ((**mParallelCap)(0, 0) > 0) {
+    mSubParallelCapacitor0 =
+        std::make_shared<DP::Ph3::Capacitor>(**mName + "_cap0", mLogLevel);
+    mSubParallelCapacitor0->setParameters(**mParallelCap / 2.);
+    mSubParallelCapacitor0->connect(
+        SimNode::List{SimNode::GND, mTerminals[0]->node()});
+    mSubParallelCapacitor0->initialize(mFrequencies);
+    addMNASubComponent(mSubParallelCapacitor0,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+
+    mSubParallelCapacitor1 =
+        std::make_shared<DP::Ph3::Capacitor>(**mName + "_cap1", mLogLevel);
+    mSubParallelCapacitor1->setParameters(**mParallelCap / 2.);
+    mSubParallelCapacitor1->connect(
+        SimNode::List{SimNode::GND, mTerminals[1]->node()});
+    mSubParallelCapacitor1->initialize(mFrequencies);
+    addMNASubComponent(mSubParallelCapacitor1,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+  }
+}
+
 void DP::Ph3::PiLine::initializeFromNodesAndTerminals(Real frequency) {
+  createSubComponents();
 
   // Static calculation
   Real omega = 2. * PI * frequency;
@@ -60,79 +136,14 @@ void DP::Ph3::PiLine::initializeFromNodesAndTerminals(Real frequency) {
   mVirtualNodes[0]->setInitialVoltage(PEAK1PH_TO_RMS3PH *
                                       (vInitTerm0 + **mSeriesRes * iInit));
 
-  // Create series sub components
-  mSubSeriesResistor =
-      std::make_shared<DP::Ph3::Resistor>(**mName + "_res", mLogLevel);
-  mSubSeriesResistor->setParameters(**mSeriesRes);
-  mSubSeriesResistor->connect({mTerminals[0]->node(), mVirtualNodes[0]});
-  mSubSeriesResistor->initialize(mFrequencies);
+  // Initialize subcomponents
   mSubSeriesResistor->initializeFromNodesAndTerminals(frequency);
-  addMNASubComponent(mSubSeriesResistor,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
-
-  mSubSeriesInductor =
-      std::make_shared<DP::Ph3::Inductor>(**mName + "_ind", mLogLevel);
-  mSubSeriesInductor->setParameters(**mSeriesInd);
-  mSubSeriesInductor->connect({mVirtualNodes[0], mTerminals[1]->node()});
-  mSubSeriesInductor->initialize(mFrequencies);
   mSubSeriesInductor->initializeFromNodesAndTerminals(frequency);
-  addMNASubComponent(mSubSeriesInductor,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-
-  // By default there is always a small conductance to ground to
-  // avoid problems with floating nodes.
-  Matrix defaultParallelCond = Matrix::Zero(3, 3);
-  defaultParallelCond << 1e-6, 0, 0, 0, 1e-6, 0, 0, 0, 1e-6;
-  **mParallelCond =
-      ((**mParallelCond)(0, 0) > 0) ? **mParallelCond : defaultParallelCond;
-
-  // Create parallel sub components
-  mSubParallelResistor0 =
-      std::make_shared<DP::Ph3::Resistor>(**mName + "_con0", mLogLevel);
-  mSubParallelResistor0->setParameters(2. * (**mParallelCond).inverse());
-  mSubParallelResistor0->connect(
-      SimNode::List{SimNode::GND, mTerminals[0]->node()});
-  mSubParallelResistor0->initialize(mFrequencies);
   mSubParallelResistor0->initializeFromNodesAndTerminals(frequency);
-  addMNASubComponent(mSubParallelResistor0,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
-
-  mSubParallelResistor1 =
-      std::make_shared<DP::Ph3::Resistor>(**mName + "_con1", mLogLevel);
-  mSubParallelResistor1->setParameters(2. * (**mParallelCond).inverse());
-  mSubParallelResistor1->connect(
-      SimNode::List{SimNode::GND, mTerminals[1]->node()});
-  mSubParallelResistor1->initialize(mFrequencies);
   mSubParallelResistor1->initializeFromNodesAndTerminals(frequency);
-  addMNASubComponent(mSubParallelResistor1,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
-
   if ((**mParallelCap)(0, 0) > 0) {
-    mSubParallelCapacitor0 =
-        std::make_shared<DP::Ph3::Capacitor>(**mName + "_cap0", mLogLevel);
-    mSubParallelCapacitor0->setParameters(**mParallelCap / 2.);
-    mSubParallelCapacitor0->connect(
-        SimNode::List{SimNode::GND, mTerminals[0]->node()});
-    mSubParallelCapacitor0->initialize(mFrequencies);
     mSubParallelCapacitor0->initializeFromNodesAndTerminals(frequency);
-    addMNASubComponent(mSubParallelCapacitor0,
-                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-
-    mSubParallelCapacitor1 =
-        std::make_shared<DP::Ph3::Capacitor>(**mName + "_cap1", mLogLevel);
-    mSubParallelCapacitor1->setParameters(**mParallelCap / 2.);
-    mSubParallelCapacitor1->connect(
-        SimNode::List{SimNode::GND, mTerminals[1]->node()});
-    mSubParallelCapacitor1->initialize(mFrequencies);
     mSubParallelCapacitor1->initializeFromNodesAndTerminals(frequency);
-    addMNASubComponent(mSubParallelCapacitor1,
-                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
   }
 
   SPDLOG_LOGGER_INFO(

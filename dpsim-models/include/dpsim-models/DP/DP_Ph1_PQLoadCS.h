@@ -23,6 +23,8 @@ class PQLoadCS : public CompositePowerComp<Complex>,
 protected:
   /// Internal current source
   std::shared_ptr<DP::Ph1::CurrentSource> mSubCurrentSource;
+  /// True after createSubComponents() runs; prevents double-construction.
+  bool mSubCompCreated = false;
   void updateSetPoint();
   void updateIntfValues();
 
@@ -47,6 +49,8 @@ public:
   SimPowerComp<Complex>::Ptr clone(String name) override;
 
   // #### General ####
+  /// Constructs and registers MNA subcomponents; idempotent.
+  void createSubComponents() override;
   /// Initializes component from power flow data
   void initializeFromNodesAndTerminals(Real frequency) override;
 

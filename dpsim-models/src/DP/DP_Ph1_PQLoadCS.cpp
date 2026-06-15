@@ -50,31 +50,39 @@ SimPowerComp<Complex>::Ptr DP::Ph1::PQLoadCS::clone(String name) {
   return copy;
 }
 
-void DP::Ph1::PQLoadCS::initializeFromNodesAndTerminals(Real frequency) {
-  // Get power from Terminals if it was not set previously.
+void DP::Ph1::PQLoadCS::createSubComponents() {
+  if (mSubCompCreated)
+    return;
+  mSubCompCreated = true;
+
+  // Get power from terminals if not provided via setParameters().
   if (**mActivePower == 0 && **mReactivePower == 0 && !mParametersSet) {
     **mActivePower = mTerminals[0]->singleActivePower();
     **mReactivePower = mTerminals[0]->singleReactivePower();
     **mNomVoltage = std::abs(mTerminals[0]->initialSingleVoltage());
   }
   Complex power = Complex(**mActivePower, **mReactivePower);
-
-  Complex current;
-  if (**mNomVoltage != 0)
-    current = std::conj(power / **mNomVoltage);
-  else
-    current = 0;
+  Complex current =
+      (**mNomVoltage != 0) ? std::conj(power / **mNomVoltage) : Complex(0);
 
   mSubCurrentSource =
       std::make_shared<DP::Ph1::CurrentSource>(**mName + "_cs", mLogLevel);
   mSubCurrentSource->setParameters(current);
   // A positive power should result in a positive current to ground.
   mSubCurrentSource->connect({mTerminals[0]->node(), SimNode::GND});
-  mSubCurrentSource->initializeFromNodesAndTerminals(frequency);
   addMNASubComponent(mSubCurrentSource,
                      MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+}
+
+void DP::Ph1::PQLoadCS::initializeFromNodesAndTerminals(Real frequency) {
+  createSubComponents();
+  mSubCurrentSource->initializeFromNodesAndTerminals(frequency);
   updateIntfValues();
+
+  Complex power = Complex(**mActivePower, **mReactivePower);
+  Complex current =
+      (**mNomVoltage != 0) ? std::conj(power / **mNomVoltage) : Complex(0);
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"

@@ -26,8 +26,43 @@ DP::Ph1::SVC::SVC(String uid, String name, Logger::Level logLevel)
 
 Bool DP::Ph1::SVC::ValueChanged() { return mValueChange; }
 
-void DP::Ph1::SVC::initializeFromNodesAndTerminals(Real frequency) {
+void DP::Ph1::SVC::createSubComponents() {
+  if (mSubCompCreated)
+    return;
+  mSubCompCreated = true;
 
+  Real omega = 2. * PI * mFrequencies(0, 0);
+  Real LInit = 1e6 / omega;
+  Real CInit = 1e-6 / omega;
+
+  // Inductor with Switch
+  mSubInductor =
+      std::make_shared<DP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
+  mSubInductor->setParameters(LInit);
+  mSubInductor->connect({SimNode::GND, mVirtualNodes[0]});
+  mSubInductor->initialize(mFrequencies);
+
+  mSubInductorSwitch =
+      std::make_shared<DP::Ph1::Switch>(**mName + "_Lswitch", mLogLevel);
+  mSubInductorSwitch->setParameters(mSwitchROpen, mSwitchRClosed, false);
+  mSubInductorSwitch->connect({mVirtualNodes[0], mTerminals[0]->node()});
+  mSubInductorSwitch->initialize(mFrequencies);
+
+  // Capacitor with Switch
+  mSubCapacitor =
+      std::make_shared<DP::Ph1::Capacitor>(**mName + "_cap", mLogLevel);
+  mSubCapacitor->setParameters(CInit);
+  mSubCapacitor->connect({SimNode::GND, mVirtualNodes[1]});
+  mSubCapacitor->initialize(mFrequencies);
+
+  mSubCapacitorSwitch =
+      std::make_shared<DP::Ph1::Switch>(**mName + "_Cswitch", mLogLevel);
+  mSubCapacitorSwitch->setParameters(mSwitchROpen, mSwitchRClosed, false);
+  mSubCapacitorSwitch->connect({mVirtualNodes[1], mTerminals[0]->node()});
+  mSubCapacitorSwitch->initialize(mFrequencies);
+}
+
+void DP::Ph1::SVC::initializeFromNodesAndTerminals(Real frequency) {
   // initial state is both switches are open
   Real omega = 2. * PI * frequency;
   // init L and C with small/high values (both have high impedance)
@@ -69,35 +104,11 @@ void DP::Ph1::SVC::initializeFromNodesAndTerminals(Real frequency) {
       (**mIntfVoltage)(0, 0) - CImpedance * (**mIntfCurrent)(0, 0);
   mVirtualNodes[1]->setInitialVoltage(VCSwitch);
 
-  // create elements
-  // Inductor with Switch
-  mSubInductor =
-      std::make_shared<DP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
-  mSubInductor->setParameters(LInit);
-  mSubInductor->connect({SimNode::GND, mVirtualNodes[0]});
-  mSubInductor->initialize(mFrequencies);
+  createSubComponents();
+
   mSubInductor->initializeFromNodesAndTerminals(frequency);
-
-  mSubInductorSwitch =
-      std::make_shared<DP::Ph1::Switch>(**mName + "_Lswitch", mLogLevel);
-  mSubInductorSwitch->setParameters(mSwitchROpen, mSwitchRClosed, false);
-  mSubInductorSwitch->connect({mVirtualNodes[0], mTerminals[0]->node()});
-  mSubInductorSwitch->initialize(mFrequencies);
   mSubInductorSwitch->initializeFromNodesAndTerminals(frequency);
-
-  // Capacitor with Switch
-  mSubCapacitor =
-      std::make_shared<DP::Ph1::Capacitor>(**mName + "_cap", mLogLevel);
-  mSubCapacitor->setParameters(CInit);
-  mSubCapacitor->connect({SimNode::GND, mVirtualNodes[1]});
-  mSubCapacitor->initialize(mFrequencies);
   mSubCapacitor->initializeFromNodesAndTerminals(frequency);
-
-  mSubCapacitorSwitch =
-      std::make_shared<DP::Ph1::Switch>(**mName + "_Cswitch", mLogLevel);
-  mSubCapacitorSwitch->setParameters(mSwitchROpen, mSwitchRClosed, false);
-  mSubCapacitorSwitch->connect({mVirtualNodes[1], mTerminals[0]->node()});
-  mSubCapacitorSwitch->initialize(mFrequencies);
   mSubCapacitorSwitch->initializeFromNodesAndTerminals(frequency);
 
   SPDLOG_LOGGER_INFO(mSLog,

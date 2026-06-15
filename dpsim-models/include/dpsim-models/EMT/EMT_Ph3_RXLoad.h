@@ -22,6 +22,8 @@ namespace Ph3 {
 /// Model as current source and read from CSV files
 class RXLoad : public CompositePowerComp<Real>, public SharedFactory<RXLoad> {
 protected:
+  /// True after createSubComponents() runs; prevents double-construction.
+  bool mSubCompCreated = false;
   /// Power [Watt]
   MatrixComp mPower;
   /// Resistance [Ohm]
@@ -67,6 +69,8 @@ public:
   ///
   void setParameters(Matrix activePower, Matrix reactivePower, Real volt,
                      bool reactanceInSeries = false);
+  /// Constructs and registers MNA subcomponents; idempotent.
+  void createSubComponents() override;
   /// Initializes component from power flow data
   void initializeFromNodesAndTerminals(Real frequency) override;
 

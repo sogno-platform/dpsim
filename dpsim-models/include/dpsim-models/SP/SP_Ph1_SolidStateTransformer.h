@@ -23,6 +23,8 @@ namespace Ph1 {
 class SolidStateTransformer : public CompositePowerComp<Complex>,
                               public SharedFactory<SolidStateTransformer> {
 private:
+  /// True after createSubComponents() runs; prevents double-construction.
+  bool mSubCompCreated = false;
   ///
   std::shared_ptr<SP::Ph1::Load> mSubLoadSide1;
   ///
@@ -63,6 +65,8 @@ public:
   SimPowerComp<Complex>::Ptr clone(String name);
 
   // #### Power Flow Section ####
+  /// Constructs and registers MNA subcomponents; idempotent.
+  void createSubComponents() override;
   /// Initializes component
   void initializeFromNodesAndTerminals(Real frequency);
   ///

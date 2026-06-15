@@ -57,11 +57,12 @@ void EMT::Ph3::Transformer::setParameters(Real nomVoltageEnd1,
   mParametersSet = true;
 }
 
-void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
+void EMT::Ph3::Transformer::createSubComponents() {
+  if (mSubCompCreated)
+    return;
+  mSubCompCreated = true;
 
-  // Component parameters are referred to higher voltage side.
-  // Switch terminals to have terminal 0 at higher voltage side
-  // if transformer is connected the other way around.
+  // Switch terminals so terminal 0 is always the higher-voltage side.
   if (Math::abs(**mRatio) < 1.) {
     **mRatio = 1. / **mRatio;
     std::shared_ptr<SimTerminal<Real>> tmp = mTerminals[0];
@@ -79,43 +80,6 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
                        std::abs(**mRatio), std::arg(**mRatio));
   }
 
-  // Set initial voltage of virtual node in between
-  mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(1) * **mRatio);
-
-  // Static calculations from load flow data
-  Real omega = 2. * PI * frequency;
-  MatrixComp impedance = MatrixComp::Zero(3, 3);
-  impedance << Complex(mResistance(0, 0), omega * mInductance(0, 0)),
-      Complex(mResistance(0, 1), omega * mInductance(0, 1)),
-      Complex(mResistance(0, 2), omega * mInductance(0, 2)),
-      Complex(mResistance(1, 0), omega * mInductance(1, 0)),
-      Complex(mResistance(1, 1), omega * mInductance(1, 1)),
-      Complex(mResistance(1, 2), omega * mInductance(1, 2)),
-      Complex(mResistance(2, 0), omega * mInductance(2, 0)),
-      Complex(mResistance(2, 1), omega * mInductance(2, 1)),
-      Complex(mResistance(2, 2), omega * mInductance(2, 2));
-
-  SPDLOG_LOGGER_INFO(mSLog,
-                     "Resistance (referred to higher voltage side) = {} [Ohm]",
-                     Logger::matrixToString(mResistance));
-  SPDLOG_LOGGER_INFO(mSLog,
-                     "Inductance (referred to higher voltage side) = {} [H]",
-                     Logger::matrixToString(mInductance));
-  SPDLOG_LOGGER_INFO(mSLog,
-                     "Reactance (referred to higher voltage side) = {} [Ohm]",
-                     Logger::matrixToString(omega * mInductance));
-
-  MatrixComp vInitABC = MatrixComp::Zero(3, 1);
-  vInitABC(0, 0) =
-      RMS3PH_TO_PEAK1PH *
-      (mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0));
-  vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
-  vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
-
-  MatrixComp iInit = impedance.inverse() * vInitABC;
-  **mIntfCurrent = iInit.real();
-  **mIntfVoltage = vInitABC.real();
-
   // Create series sub components
   mSubInductor =
       std::make_shared<EMT::Ph3::Inductor>(**mName + "_ind", mLogLevel);
@@ -124,7 +88,6 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
   if (mNumVirtualNodes == 3) {
-    mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(0));
     mSubResistor =
         std::make_shared<EMT::Ph3::Resistor>(**mName + "_res", mLogLevel);
     addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
@@ -139,6 +102,7 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
   // Create parallel sub components (three-phase power)
   Real pSnub = P_SNUB_TRANSFORMER * mRatedPower;
   Real qSnub = Q_SNUB_TRANSFORMER * mRatedPower;
+  Real omega = 2. * PI * mFrequencies(0, 0);
 
   // A snubber conductance is added on the higher voltage side
   Real snubberResistance1 = std::pow(std::abs(mNominalVoltageEnd1), 2) / pSnub;
@@ -197,6 +161,50 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
   addMNASubComponent(mSubSnubCapacitor2,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+}
+
+void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
+  createSubComponents();
+
+  // Set initial voltage of virtual node in between
+  mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(1) * **mRatio);
+
+  // Static calculations from load flow data
+  Real omega = 2. * PI * frequency;
+  MatrixComp impedance = MatrixComp::Zero(3, 3);
+  impedance << Complex(mResistance(0, 0), omega * mInductance(0, 0)),
+      Complex(mResistance(0, 1), omega * mInductance(0, 1)),
+      Complex(mResistance(0, 2), omega * mInductance(0, 2)),
+      Complex(mResistance(1, 0), omega * mInductance(1, 0)),
+      Complex(mResistance(1, 1), omega * mInductance(1, 1)),
+      Complex(mResistance(1, 2), omega * mInductance(1, 2)),
+      Complex(mResistance(2, 0), omega * mInductance(2, 0)),
+      Complex(mResistance(2, 1), omega * mInductance(2, 1)),
+      Complex(mResistance(2, 2), omega * mInductance(2, 2));
+
+  SPDLOG_LOGGER_INFO(mSLog,
+                     "Resistance (referred to higher voltage side) = {} [Ohm]",
+                     Logger::matrixToString(mResistance));
+  SPDLOG_LOGGER_INFO(mSLog,
+                     "Inductance (referred to higher voltage side) = {} [H]",
+                     Logger::matrixToString(mInductance));
+  SPDLOG_LOGGER_INFO(mSLog,
+                     "Reactance (referred to higher voltage side) = {} [Ohm]",
+                     Logger::matrixToString(omega * mInductance));
+
+  MatrixComp vInitABC = MatrixComp::Zero(3, 1);
+  vInitABC(0, 0) =
+      RMS3PH_TO_PEAK1PH *
+      (mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0));
+  vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
+  vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
+
+  MatrixComp iInit = impedance.inverse() * vInitABC;
+  **mIntfCurrent = iInit.real();
+  **mIntfVoltage = vInitABC.real();
+
+  if (mNumVirtualNodes == 3)
+    mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(0));
 
   // Initialize electrical subcomponents
   SPDLOG_LOGGER_INFO(mSLog, "Electrical subcomponents: ");

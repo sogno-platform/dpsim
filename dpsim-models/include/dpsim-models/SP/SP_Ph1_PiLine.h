@@ -44,6 +44,8 @@ public:
   const Attribute<Matrix>::Ptr mReactivePowerBranch;
 
 protected:
+  /// True after createSubComponents() runs; prevents double-construction.
+  bool mSubCompCreated = false;
   /// CHECK: Which of these really need to be member variables?
   ///base current [A]
   Real mBaseCurrent;
@@ -103,6 +105,8 @@ public:
   ///
   void setParameters(Real resistance, Real inductance, Real capacitance = -1,
                      Real conductance = -1);
+  /// Constructs and registers MNA subcomponents; idempotent.
+  void createSubComponents() override;
   /// Initializes component from power flow data
   void initializeFromNodesAndTerminals(Real frequency) override;
 

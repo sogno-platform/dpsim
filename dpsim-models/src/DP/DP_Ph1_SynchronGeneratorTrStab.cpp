@@ -155,8 +155,36 @@ void DP::Ph1::SynchronGeneratorTrStab::setInitialValues(Complex elecPower,
   mInitMechPower = mechPower;
 }
 
+void DP::Ph1::SynchronGeneratorTrStab::createSubComponents() {
+  if (mSubCompCreated)
+    return;
+  mSubCompCreated = true;
+
+  // Create the inner voltage source (Ep).  Parameters (mEp) depend on the
+  // power-flow solution and are not yet known here; they are applied in
+  // initializeFromNodesAndTerminals after the static calculation.
+  mSubVoltageSource = DP::Ph1::VoltageSource::make(**mName + "_src", mLogLevel);
+  mSubVoltageSource->connect({SimNode::GND, mVirtualNodes[0]});
+  // Alias the sub-source's virtual node to parent VN1 so the KCL row in the
+  // system matrix uses the same node index as the parent's VN1.
+  mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[1], 0);
+  mSubVoltageSource->initialize(mFrequencies);
+  addMNASubComponent(mSubVoltageSource,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+
+  // Create the inner inductor representing X'd.
+  mSubInductor = DP::Ph1::Inductor::make(**mName + "_ind", mLogLevel);
+  mSubInductor->setParameters(mLpd);
+  mSubInductor->connect({mVirtualNodes[0], terminal(0)->node()});
+  mSubInductor->initialize(mFrequencies);
+  addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+}
+
 void DP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(
     Real frequency) {
+  createSubComponents();
 
   // Initialize omega mech with nominal system frequency
   **mOmMech = mNomOmega;
@@ -193,25 +221,10 @@ void DP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(
   // Initialize node between X'd and Ep
   mVirtualNodes[0]->setInitialVoltage(**mEp);
 
-  // Create sub voltage source for emf
-  mSubVoltageSource = DP::Ph1::VoltageSource::make(**mName + "_src", mLogLevel);
+  // Set emf on the already-created voltage source, then initialize it.
   mSubVoltageSource->setParameters(**mEp);
-  mSubVoltageSource->connect({SimNode::GND, mVirtualNodes[0]});
-  mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[1], 0);
-  mSubVoltageSource->initialize(mFrequencies);
   mSubVoltageSource->initializeFromNodesAndTerminals(frequency);
-  addMNASubComponent(mSubVoltageSource,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-
-  // Create sub inductor as Xpd
-  mSubInductor = DP::Ph1::Inductor::make(**mName + "_ind", mLogLevel);
-  mSubInductor->setParameters(mLpd);
-  mSubInductor->connect({mVirtualNodes[0], terminal(0)->node()});
-  mSubInductor->initialize(mFrequencies);
   mSubInductor->initializeFromNodesAndTerminals(frequency);
-  addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialize according to powerflow ---"
