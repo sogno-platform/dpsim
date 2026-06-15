@@ -266,7 +266,7 @@ int main(int argc, char *argv[]) {
 
   // Hydro Governor + Turbine (modular new API)
   if (withHydroGovernor) {
-    auto govParams = Signal::HydroGorvernorParameters::make();
+    auto govParams = Signal::HydroGovernorParameters::make();
     govParams->R = hydroGovParams.R;
     govParams->T1 = hydroGovParams.T1;
     govParams->T2 = hydroGovParams.T2;
