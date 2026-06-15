@@ -110,9 +110,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0dc36a3635efcf7fc1f8d18adcc1cc45" id="r_a0dc36a3635efcf7fc1f8d18adcc1cc45"><td class="memItemLeft" align="right" valign="top"><a id="a0dc36a3635efcf7fc1f8d18adcc1cc45" name="a0dc36a3635efcf7fc1f8d18adcc1cc45"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setParameters</b> (std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s_parameters.html">Base::PSSParameters</a> &gt; parameters)=0</td></tr>
 <tr class="separator:a0dc36a3635efcf7fc1f8d18adcc1cc45"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0c948fd335c06b8b2b114ef4bcc48d4" id="r_af0c948fd335c06b8b2b114ef4bcc48d4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af0c948fd335c06b8b2b114ef4bcc48d4">initialize</a> (Real omega, Real activePower, Real Vd, Real Vq)=0</td></tr>
-<tr class="memdesc:af0c948fd335c06b8b2b114ef4bcc48d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html" title="Base model for power system stabilizers.">PSS</a> state variables from power-flow solution.  <br /></td></tr>
-<tr class="separator:af0c948fd335c06b8b2b114ef4bcc48d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78d0bd0d3d59af2e86a275e4278f3f00" id="r_a78d0bd0d3d59af2e86a275e4278f3f00"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a78d0bd0d3d59af2e86a275e4278f3f00">initializeStates</a> (Real omega, Real activePower, Real Vd, Real Vq)=0</td></tr>
+<tr class="memdesc:a78d0bd0d3d59af2e86a275e4278f3f00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html" title="Base model for power system stabilizers.">PSS</a> state variables from power-flow solution.  <br /></td></tr>
+<tr class="separator:a78d0bd0d3d59af2e86a275e4278f3f00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7c6abd5a316fe17b1f10cf9c9e235786" id="r_a7c6abd5a316fe17b1f10cf9c9e235786"><td class="memItemLeft" align="right" valign="top">virtual Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7c6abd5a316fe17b1f10cf9c9e235786">step</a> (Real omega, Real activePower, Real Vd, Real Vq, Real dt)=0</td></tr>
 <tr class="separator:a7c6abd5a316fe17b1f10cf9c9e235786"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -121,8 +121,8 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setParameters
 
 <p class="definition">Definition at line <a class="el" href="_base___p_s_s_8h_source.html#l00018">18</a> of file <a class="el" href="_base___p_s_s_8h_source.html">Base_PSS.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="af0c948fd335c06b8b2b114ef4bcc48d4" name="af0c948fd335c06b8b2b114ef4bcc48d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af0c948fd335c06b8b2b114ef4bcc48d4">&#9670;&#160;</a></span>initialize()</h2>
+<a id="a78d0bd0d3d59af2e86a275e4278f3f00" name="a78d0bd0d3d59af2e86a275e4278f3f00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78d0bd0d3d59af2e86a275e4278f3f00">&#9670;&#160;</a></span>initializeStates()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -131,7 +131,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setParameters
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void CPS::Base::PSS::initialize </td>
+          <td class="memname">virtual void CPS::Base::PSS::initializeStates </td>
           <td>(</td>
           <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>omega</em></span>, </td>
         </tr>
@@ -160,7 +160,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setParameters
 
 <p>Initializes <a class="el" href="class_c_p_s_1_1_base_1_1_p_s_s.html" title="Base model for power system stabilizers.">PSS</a> state variables from power-flow solution. </p>
 
-<p>Implemented in <a class="el" href="class_c_p_s_1_1_signal_1_1_p_s_s1_a.html#a4e1b97406a06f7e53f5c49074c2d2af7">CPS::Signal::PSS1A</a>.</p>
+<p>Implemented in <a class="el" href="class_c_p_s_1_1_signal_1_1_p_s_s1_a.html#a4b51dbeb54e5ca6e733c447b290de735">CPS::Signal::PSS1A</a>.</p>
 
 </div>
 </div>

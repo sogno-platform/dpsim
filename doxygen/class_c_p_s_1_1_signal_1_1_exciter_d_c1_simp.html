@@ -115,9 +115,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aca9f0f0b3fd4eff9eca6d69ced8a0b5b" id="r_aca9f0f0b3fd4eff9eca6d69ced8a0b5b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aca9f0f0b3fd4eff9eca6d69ced8a0b5b">setParameters</a> (std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_base_1_1_exciter_parameters.html">Base::ExciterParameters</a> &gt; parameters) final</td></tr>
 <tr class="memdesc:aca9f0f0b3fd4eff9eca6d69ced8a0b5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes exciter parameters.  <br /></td></tr>
 <tr class="separator:aca9f0f0b3fd4eff9eca6d69ced8a0b5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa879ef05f9f836c3ea7f6d8db2730719" id="r_aa879ef05f9f836c3ea7f6d8db2730719"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa879ef05f9f836c3ea7f6d8db2730719">initialize</a> (Real Vh_init, Real Vf_init) final</td></tr>
-<tr class="memdesc:aa879ef05f9f836c3ea7f6d8db2730719"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes exciter variables.  <br /></td></tr>
-<tr class="separator:aa879ef05f9f836c3ea7f6d8db2730719"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab96902cf0356dcbf922c1a5767252735" id="r_ab96902cf0356dcbf922c1a5767252735"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab96902cf0356dcbf922c1a5767252735">initializeStates</a> (Real Vh_init, Real Vf_init) final</td></tr>
+<tr class="memdesc:ab96902cf0356dcbf922c1a5767252735"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes exciter variables.  <br /></td></tr>
+<tr class="separator:ab96902cf0356dcbf922c1a5767252735"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad627e40e71f83777f9b4509aebe68443" id="r_ad627e40e71f83777f9b4509aebe68443"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad627e40e71f83777f9b4509aebe68443">step</a> (Real mVd, Real mVq, Real dt, Real Vpss=0) final</td></tr>
 <tr class="memdesc:ad627e40e71f83777f9b4509aebe68443"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs an step to update field voltage value.  <br /></td></tr>
 <tr class="separator:ad627e40e71f83777f9b4509aebe68443"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -133,6 +133,8 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setParameters
 <tr class="separator:a8648de6f1a8ba743bbf1c6de096bad3d inherit pub_methods_class_c_p_s_1_1_sim_signal_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a921a46b50d7bf90c149266f938aaca9d inherit pub_methods_class_c_p_s_1_1_sim_signal_comp" id="r_a921a46b50d7bf90c149266f938aaca9d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a921a46b50d7bf90c149266f938aaca9d">initialize</a> (Real timeStep)</td></tr>
 <tr class="separator:a921a46b50d7bf90c149266f938aaca9d inherit pub_methods_class_c_p_s_1_1_sim_signal_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d407713350acb4eaa93049ca4960672 inherit pub_methods_class_c_p_s_1_1_sim_signal_comp" id="r_a4d407713350acb4eaa93049ca4960672"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a4d407713350acb4eaa93049ca4960672">initialize</a> (Real omega, Real timeStep)</td></tr>
+<tr class="separator:a4d407713350acb4eaa93049ca4960672 inherit pub_methods_class_c_p_s_1_1_sim_signal_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a39aa9f7a81ecaccbb8933fbdf8c09041 inherit pub_methods_class_c_p_s_1_1_sim_signal_comp" id="r_a39aa9f7a81ecaccbb8933fbdf8c09041"><td class="memItemLeft" align="right" valign="top">virtual Task::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a39aa9f7a81ecaccbb8933fbdf8c09041">getTasks</a> ()</td></tr>
 <tr class="separator:a39aa9f7a81ecaccbb8933fbdf8c09041 inherit pub_methods_class_c_p_s_1_1_sim_signal_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36683fa7c374d9010a7c24bbb7f83d88 inherit pub_methods_class_c_p_s_1_1_sim_signal_comp" id="r_a36683fa7c374d9010a7c24bbb7f83d88"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a36683fa7c374d9010a7c24bbb7f83d88">setBehaviour</a> (Behaviour behaviour)</td></tr>
@@ -247,8 +249,8 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aa879ef05f9f836c3ea7f6d8db2730719" name="aa879ef05f9f836c3ea7f6d8db2730719"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa879ef05f9f836c3ea7f6d8db2730719">&#9670;&#160;</a></span>initialize()</h2>
+<a id="ab96902cf0356dcbf922c1a5767252735" name="ab96902cf0356dcbf922c1a5767252735"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab96902cf0356dcbf922c1a5767252735">&#9670;&#160;</a></span>initializeStates()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -257,7 +259,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void ExciterDC1Simp::initialize </td>
+          <td class="memname">void ExciterDC1Simp::initializeStates </td>
           <td>(</td>
           <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>Vh_init</em></span>, </td>
         </tr>
@@ -282,7 +284,7 @@ Additional Inherited Members</h2></td></tr>
 <p>init value of amplifier input</p>
 <p>check initial conditions</p>
 
-<p>Implements <a class="el" href="class_c_p_s_1_1_base_1_1_exciter.html#a300213f318faed5d460fad32a10aac15">CPS::Base::Exciter</a>.</p>
+<p>Implements <a class="el" href="class_c_p_s_1_1_base_1_1_exciter.html#aeff6beab9a711373cac710709b92834c">CPS::Base::Exciter</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="_exciter_d_c1_simp_8cpp_source.html#l00077">77</a> of file <a class="el" href="_exciter_d_c1_simp_8cpp_source.html">ExciterDC1Simp.cpp</a>.</p>
 

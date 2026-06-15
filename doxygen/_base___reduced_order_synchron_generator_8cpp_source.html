@@ -464,7 +464,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span> </div>
 <div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>  <span class="comment">// Initialize controllers</span></div>
 <div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>  <span class="keywordflow">if</span> (mHasExciter) {</div>
-<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>    mExciter-&gt;initialize(Math::abs(mInitVoltage), **mEf);</div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>    mExciter-&gt;initializeStates(Math::abs(mInitVoltage), **mEf);</div>
 <div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>  }</div>
 <div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>  <span class="keywordflow">if</span> (mHasTurbineGovernor) {</div>
 <div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>    mTurbineGovernor-&gt;initializeStates(**mMechTorque);</div>
@@ -474,8 +474,8 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>    mTurbine-&gt;initializeStates(**mMechTorque);</div>
 <div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>  }</div>
 <div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>  <span class="keywordflow">if</span> (mHasPSS) {</div>
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>    mPSS-&gt;initialize(mNomOmega / mBase_OmMech, **mMechTorque, (**mVdq0)(0, 0),</div>
-<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>                     (**mVdq0)(1, 0));</div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>    mPSS-&gt;initializeStates(mNomOmega / mBase_OmMech, **mMechTorque,</div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>                           (**mVdq0)(0, 0), (**mVdq0)(1, 0));</div>
 <div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>  }</div>
 <div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span> </div>
 <div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>  <span class="comment">// initial electrical torque</span></div>
@@ -552,7 +552,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span> </div>
 <div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span>  <span class="comment">// Initialize controllers</span></div>
 <div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>  <span class="keywordflow">if</span> (mHasExciter) {</div>
-<div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span>    mExciter-&gt;initialize(Math::abs(mInitVoltage), **mEf);</div>
+<div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span>    mExciter-&gt;initializeStates(Math::abs(mInitVoltage), **mEf);</div>
 <div class="line"><a id="l00442" name="l00442"></a><span class="lineno">  442</span>  }</div>
 <div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span>  <span class="keywordflow">if</span> (mHasTurbineGovernor) {</div>
 <div class="line"><a id="l00444" name="l00444"></a><span class="lineno">  444</span>    mTurbineGovernor-&gt;initializeStates(**mMechTorque);</div>
@@ -562,8 +562,8 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00448" name="l00448"></a><span class="lineno">  448</span>    mTurbine-&gt;initializeStates(**mMechTorque);</div>
 <div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span>  }</div>
 <div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span>  <span class="keywordflow">if</span> (mHasPSS) {</div>
-<div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span>    mPSS-&gt;initialize(mNomOmega / mBase_OmMech, **mMechTorque, (**mVdq)(0, 0),</div>
-<div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span>                     (**mVdq)(1, 0));</div>
+<div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span>    mPSS-&gt;initializeStates(mNomOmega / mBase_OmMech, **mMechTorque,</div>
+<div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span>                           (**mVdq)(0, 0), (**mVdq)(1, 0));</div>
 <div class="line"><a id="l00453" name="l00453"></a><span class="lineno">  453</span>  }</div>
 <div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span> </div>
 <div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span>  <span class="comment">// initial electrical torque</span></div>
@@ -991,7 +991,7 @@ $(function(){ initResizable(false); });
 <div class="ttc" id="aclass_c_p_s_1_1_base_1_1_reduced_order_synchron_generator_html_af4bca8e911465b0e0eb61b9150b15be1"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#af4bca8e911465b0e0eb61b9150b15be1">CPS::Base::ReducedOrderSynchronGenerator::mTurbineGovernor</a></div><div class="ttdeci">std::shared_ptr&lt; Signal::TurbineGovernorType1 &gt; mTurbineGovernor</div><div class="ttdoc">TurbineGovernorType1 (legacy)</div><div class="ttdef"><b>Definition</b> <a href="_base___reduced_order_synchron_generator_8h_source.html#l00291">Base_ReducedOrderSynchronGenerator.h:291</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_base_1_1_reduced_order_synchron_generator_html_af85ef69bb8cc47132b71c4e74c4f3a97"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#af85ef69bb8cc47132b71c4e74c4f3a97">CPS::Base::ReducedOrderSynchronGenerator&lt; Complex &gt;::mLd_t</a></div><div class="ttdeci">Real mLd_t</div><div class="ttdef"><b>Definition</b> <a href="_base___reduced_order_synchron_generator_8h_source.html#l00206">Base_ReducedOrderSynchronGenerator.h:206</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a13661eab6b670e4a5a3aa5777f8fd5d0"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a13661eab6b670e4a5a3aa5777f8fd5d0">CPS::IdentifiedObject::mName</a></div><div class="ttdeci">const Attribute&lt; String &gt;::Ptr mName</div><div class="ttdoc">Human readable name.</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00026">IdentifiedObject.h:26</a></div></div>
-<div class="ttc" id="aclass_c_p_s_1_1_invalid_argument_exception_html"><div class="ttname"><a href="class_c_p_s_1_1_invalid_argument_exception.html">CPS::InvalidArgumentException</a></div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00139">Definitions.h:139</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_invalid_argument_exception_html"><div class="ttname"><a href="class_c_p_s_1_1_invalid_argument_exception.html">CPS::InvalidArgumentException</a></div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00140">Definitions.h:140</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_m_n_a_sim_power_comp_html"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp</a></div><div class="ttdoc">Base class for all MNA components that are transmitting power.</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_sim_power_comp_8h_source.html#l00013">MNASimPowerComp.h:13</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_m_n_a_sim_power_comp_html_ac70d8c6733b49d5d5565ba21c28b372e"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#ac70d8c6733b49d5d5565ba21c28b372e">CPS::MNASimPowerComp::mRightVector</a></div><div class="ttdeci">Attribute&lt; Matrix &gt;::Ptr mRightVector</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_sim_power_comp_8h_source.html#l00026">MNASimPowerComp.h:26</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html_a7210276935119e370dfb1f98d02c3a9a"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html#a7210276935119e370dfb1f98d02c3a9a">CPS::SimPowerComp::mIntfVoltage</a></div><div class="ttdeci">const Attribute&lt; MatrixVar&lt; VarType &gt; &gt;::Ptr mIntfVoltage</div><div class="ttdoc">Voltage between terminals.</div><div class="ttdef"><b>Definition</b> <a href="_sim_power_comp_8h_source.html#l00045">SimPowerComp.h:45</a></div></div>
