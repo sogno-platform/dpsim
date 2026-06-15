@@ -134,6 +134,10 @@ PYBIND11_MODULE(dpsimpy, m) {
       .value("HOURS", CPS::CSVReader::DataFormat::HOURS)
       .value("MINUTES", CPS::CSVReader::DataFormat::MINUTES);
 
+  py::enum_<DPsim::StateSpaceAnalysisFrame>(m, "StateSpaceAnalysisFrame")
+      .value("Native", DPsim::StateSpaceAnalysisFrame::Native)
+      .value("GlobalDQ0", DPsim::StateSpaceAnalysisFrame::GlobalDQ0);
+
   m.attr("RMS3PH_TO_PEAK1PH") = RMS3PH_TO_PEAK1PH;
   m.attr("PEAK1PH_TO_RMS3PH") = PEAK1PH_TO_RMS3PH;
   m.attr("P_SNUB_TRANSFORMER") = P_SNUB_TRANSFORMER;
@@ -172,6 +176,11 @@ PYBIND11_MODULE(dpsimpy, m) {
   py::class_<DPsim::StateSpaceModalAnalysis>(m, "StateSpaceModalAnalysis")
       .def(py::init<const DPsim::MNAStateSpaceExtractor &>(),
            py::keep_alive<1, 2>())
+      .def("set_analysis_frame",
+           &DPsim::StateSpaceModalAnalysis::setAnalysisFrame)
+      .def("set_global_dq0_frame",
+           &DPsim::StateSpaceModalAnalysis::setGlobalDq0Frame, "omega"_a,
+           "theta0"_a = 0.0)
       .def("update", &DPsim::StateSpaceModalAnalysis::update)
       .def("get_discrete_eigenvalues",
            &DPsim::StateSpaceModalAnalysis::getDiscreteEigenvalues,
