@@ -42,6 +42,7 @@ void MNAStateSpaceExtractor::initialize(
   mStateCount = nextStateOffset;
 
   allocateMatrices();
+  collectMetadata();
 
   stampStaticMatrices();
   restampVariableMatrices();
@@ -60,6 +61,9 @@ void MNAStateSpaceExtractor::reset() {
 
   mHasVariableContributors = false;
   mStateMatrixValid = false;
+  mMetadata = StateSpaceMetadata{};
+  mLastExtractionTime = 0.0;
+  mHasExtractionTime = false;
 
   mContributorEntries.clear();
 
@@ -80,10 +84,13 @@ void MNAStateSpaceExtractor::reset() {
 
 void MNAStateSpaceExtractor::extract(DirectLinearSolver &linearSolver,
                                      Bool variableModelChanged,
-                                     Bool systemMatrixChanged) {
+                                     Bool systemMatrixChanged, Real time) {
   if (!mInitialized)
     throw std::logic_error(
         "MNAStateSpaceExtractor::extract() called before initialize().");
+
+  mLastExtractionTime = time;
+  mHasExtractionTime = true;
 
   if (mStateCount == 0) {
     mStateMatrixValid = true;
@@ -117,6 +124,24 @@ void MNAStateSpaceExtractor::allocateMatrices() {
   mCdMna = Matrix::Zero(mMnaVectorSize, mStateCount);
 
   mAd = Matrix::Zero(mStateCount, mStateCount);
+}
+
+void MNAStateSpaceExtractor::collectMetadata() {
+  mMetadata = StateSpaceMetadata{};
+
+  for (const auto &entry : mContributorEntries) {
+    entry.contributor->contributeMetadata(mMetadata, entry.stateOffset);
+  }
+
+  for (const auto &abcBlock : mMetadata.abcStateIndexTriples) {
+    for (const auto idx : abcBlock) {
+      if (idx >= mStateCount) {
+        throw std::runtime_error(
+            "MNAStateSpaceExtractor: abc metadata index is outside the "
+            "extracted state vector.");
+      }
+    }
+  }
 }
 
 void MNAStateSpaceExtractor::stampStaticMatrices() {

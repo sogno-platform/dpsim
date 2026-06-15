@@ -3,6 +3,9 @@
 
 #pragma once
 
+#include <array>
+#include <vector>
+
 #include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
@@ -66,6 +69,12 @@ protected:
 public:
   /// Get number of internal state variables of the SSN model.
   UInt getStateCount() const;
+
+  /// Get local abc-frame state index triples.
+  ///
+  /// Returned indices are local SSN state indices. The MNA state-space
+  /// contributor adds the global extracted-state offset.
+  virtual std::vector<std::array<UInt, 3>> getLocalAbcStateIndexTriples() const;
 
   /// Get discrete state transition matrix used by the trapezoidal SSN model.
   const Matrix &getDiscreteA() const;

@@ -3,6 +3,9 @@
 
 #pragma once
 
+#include <array>
+#include <vector>
+
 #include <dpsim-models/EMT/EMT_Ph3_TwoTerminalVTypeVariableSSNComp.h>
 
 namespace CPS {
@@ -80,6 +83,9 @@ public:
                      Real kpPLL, Real kiPLL, Real omegaCutoff, Real pRef,
                      Real qRef, Real kpPowerCtrl, Real kiPowerCtrl,
                      Real kpCurrCtrl, Real kiCurrCtrl);
+
+  std::vector<std::array<UInt, 3>>
+  getLocalAbcStateIndexTriples() const override;
 
   void initializeFromNodesAndTerminals(Real frequency) override final;
 };

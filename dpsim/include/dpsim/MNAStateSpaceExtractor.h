@@ -35,7 +35,7 @@ public:
                   Real timeStep);
 
   void extract(DirectLinearSolver &linearSolver, Bool variableModelChanged,
-               Bool systemMatrixChanged);
+               Bool systemMatrixChanged, Real time);
 
   Bool isInitialized() const { return mInitialized; }
 
@@ -44,6 +44,12 @@ public:
   Real getTimeStep() const { return mTimeStep; }
 
   const Matrix &getDiscreteStateMatrix() const { return mAd; }
+
+  const StateSpaceMetadata &getMetadata() const { return mMetadata; }
+
+  Bool hasExtractionTime() const { return mHasExtractionTime; }
+
+  Real getLastExtractionTime() const { return mLastExtractionTime; }
 
 private:
   struct ContributorEntry {
@@ -54,6 +60,8 @@ private:
   void reset();
 
   void allocateMatrices();
+
+  void collectMetadata();
 
   void stampStaticMatrices();
 
@@ -74,6 +82,12 @@ private:
   Bool mHasVariableContributors = false;
 
   Bool mStateMatrixValid = false;
+
+  StateSpaceMetadata mMetadata;
+
+  Real mLastExtractionTime = 0.0;
+
+  Bool mHasExtractionTime = false;
 
   std::vector<ContributorEntry> mContributorEntries;
 
