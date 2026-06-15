@@ -21,6 +21,8 @@ public:
   typedef std::vector<Ptr> List;
 
   // #### MNA Base Functions ####
+  /// Constructs and registers MNA subcomponents; called before collectVirtualNodes so virtual nodes exist before matrix sizing.
+  virtual void createSubComponents() {}
   /// Initializes variables of components
   virtual void mnaInitialize(Real omega, Real timeStep) = 0;
   virtual void mnaInitialize(Real omega, Real timeStep,

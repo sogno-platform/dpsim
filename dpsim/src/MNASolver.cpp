@@ -79,6 +79,10 @@ template <typename VarType> void MnaSolver<VarType>::initialize() {
   // We need to differentiate between power and signal components and
   // ground nodes should be ignored.
   identifyTopologyObjects();
+  // Ensure all subcomponents (and their virtual nodes) are registered before
+  // collectVirtualNodes() sizes the system matrices.
+  for (auto comp : mMNAComponents)
+    comp->createSubComponents();
   // These steps complete the network information.
   collectVirtualNodes();
   assignMatrixNodeIndices();
@@ -503,7 +507,12 @@ template <typename VarType> void MnaSolver<VarType>::collectVirtualNodes() {
     if (pComp->hasSubComponents()) {
       for (auto pSubComp : pComp->subComponents()) {
         for (UInt node = 0; node < pSubComp->virtualNodesNumber(); ++node) {
-          mNodes.push_back(pSubComp->virtualNode(node));
+          auto vnode = pSubComp->virtualNode(node);
+          // Skip if already registered (e.g. parent reused its VN via
+          // setVirtualNodeAt).
+          if (std::find(mNodes.begin(), mNodes.end(), vnode) != mNodes.end())
+            continue;
+          mNodes.push_back(vnode);
           SPDLOG_LOGGER_INFO(mSLog, "Collected virtual node {} of {}",
                              virtualNode, node, pComp->name());
         }
