@@ -82,6 +82,36 @@ void EMT::Ph3::RXLoad::createSubComponents() {
 
   Real omega = 2. * PI * mFrequencies(0, 0);
 
+  // Read load parameters from terminal for CIM-loaded components so that
+  // mResistance and mReactance can be computed before initializeFromNodesAndTerminals.
+  if (initPowerFromTerminal) {
+    **mActivePower = Matrix::Zero(3, 3);
+    (**mActivePower)(0, 0) = mTerminals[0]->singleActivePower() / 3.;
+    (**mActivePower)(1, 1) = mTerminals[0]->singleActivePower() / 3.;
+    (**mActivePower)(2, 2) = mTerminals[0]->singleActivePower() / 3.;
+    **mReactivePower = Matrix::Zero(3, 3);
+    (**mReactivePower)(0, 0) = mTerminals[0]->singleReactivePower() / 3.;
+    (**mReactivePower)(1, 1) = mTerminals[0]->singleReactivePower() / 3.;
+    (**mReactivePower)(2, 2) = mTerminals[0]->singleReactivePower() / 3.;
+    mPower = MatrixComp::Zero(3, 3);
+    mPower(0, 0) = {(**mActivePower)(0, 0), (**mReactivePower)(0, 0)};
+    mPower(1, 1) = {(**mActivePower)(1, 1), (**mReactivePower)(1, 1)};
+    mPower(2, 2) = {(**mActivePower)(2, 2), (**mReactivePower)(2, 2)};
+    **mNomVoltage = std::abs(mTerminals[0]->initialSingleVoltage());
+    initPowerFromTerminal = false;
+  }
+
+  // Compute derived impedance values needed to parametrize sub-components.
+  if ((**mActivePower)(0, 0) != 0) {
+    mResistance =
+        std::pow(**mNomVoltage / sqrt(3), 2) * (**mActivePower).inverse();
+  }
+  if ((**mReactivePower)(0, 0) != 0)
+    mReactance =
+        std::pow(**mNomVoltage / sqrt(3), 2) * (**mReactivePower).inverse();
+  else
+    mReactance = Matrix::Zero(3, 3);
+
   if ((**mActivePower)(0, 0) != 0) {
     mSubResistor =
         std::make_shared<EMT::Ph3::Resistor>(**mName + "_res", mLogLevel);

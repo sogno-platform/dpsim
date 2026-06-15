@@ -105,6 +105,24 @@ void SP::Ph1::Load::createSubComponents() {
 
   Real omega = 2. * PI * mFrequencies(0, 0);
 
+  // Read load parameters from terminal for CIM-loaded components so that
+  // mResistance and mReactance can be computed before initializeFromNodesAndTerminals.
+  if (!mParametersSet) {
+    setParameters(mTerminals[0]->singleActivePower(),
+                  mTerminals[0]->singleReactivePower(),
+                  std::abs(mTerminals[0]->initialSingleVoltage()));
+  }
+
+  // Compute derived impedance values needed to parametrize sub-components.
+  if (**mActivePower != 0) {
+    mResistance = std::pow(mNomVoltage, 2) / **mActivePower;
+    mConductance = 1.0 / mResistance;
+  }
+  if (**mReactivePower != 0)
+    mReactance = std::pow(mNomVoltage, 2) / **mReactivePower;
+  else
+    mReactance = 0;
+
   // Instantiate subResistor for active power consumption
   if (**mActivePower != 0) {
     mSubResistor = std::make_shared<SP::Ph1::Resistor>(
