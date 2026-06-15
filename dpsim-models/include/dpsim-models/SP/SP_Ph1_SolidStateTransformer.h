@@ -62,13 +62,13 @@ public:
                         Logger::Level logLevel = Logger::Level::off)
       : SolidStateTransformer(name, name, logLevel){};
   ///
-  SimPowerComp<Complex>::Ptr clone(String name);
+  SimPowerComp<Complex>::Ptr clone(String name) override;
 
   // #### Power Flow Section ####
   /// Constructs and registers MNA subcomponents; idempotent.
   void createSubComponents() override;
   /// Initializes component
-  void initializeFromNodesAndTerminals(Real frequency);
+  void initializeFromNodesAndTerminals(Real frequency) override;
   ///
   void setParameters(Real nomV1, Real nomV2, Real Pref, Real Q1ref, Real Q2ref);
   ///
