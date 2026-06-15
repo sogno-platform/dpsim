@@ -50,6 +50,12 @@ void stampTwoTerminalCurrentInjectionMapping(const Matrix &K, Matrix &CdMna,
       -K.transpose() * outputMatrix;
 }
 
+void addThreePhaseAbcStateMetadata(StateSpaceMetadata &metadata,
+                                   UInt stateOffset) {
+  metadata.abcStateIndexTriples.push_back(
+      {stateOffset + 0, stateOffset + 1, stateOffset + 2});
+}
+
 class EMTPh3InductorStateSpaceContributor final
     : public MNAStateSpaceContributor {
 public:
@@ -80,8 +86,7 @@ public:
 
   void contributeMetadata(StateSpaceMetadata &metadata,
                           UInt stateOffset) const override {
-    metadata.abcStateIndexTriples.push_back(
-        {stateOffset + 0, stateOffset + 1, stateOffset + 2});
+    addThreePhaseAbcStateMetadata(metadata, stateOffset);
   }
 
 private:
@@ -118,8 +123,7 @@ public:
 
   void contributeMetadata(StateSpaceMetadata &metadata,
                           UInt stateOffset) const override {
-    metadata.abcStateIndexTriples.push_back(
-        {stateOffset + 0, stateOffset + 1, stateOffset + 2});
+    addThreePhaseAbcStateMetadata(metadata, stateOffset);
   }
 
 private:
