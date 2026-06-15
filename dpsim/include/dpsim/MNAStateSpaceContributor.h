@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <array>
 #include <memory>
 #include <vector>
 
@@ -10,6 +11,13 @@
 #include <dpsim/Definitions.h>
 
 namespace DPsim {
+
+struct StateSpaceMetadata {
+  /// Global extracted-state index triples representing native abc-frame states.
+  ///
+  /// Each triple is transformed as one abc -> dq0 block in modal analysis.
+  std::vector<std::array<UInt, 3>> abcStateIndexTriples;
+};
 
 /// Live adapter that contributes one component's local state-space blocks to
 /// the MNA-coupled state-space extraction.
@@ -37,6 +45,13 @@ public:
   /// Stamp this component's current local state-space contribution.
   virtual void stamp(Matrix &AdLocal, Matrix &BdMna, Matrix &CdMna,
                      UInt stateOffset, UInt mnaVectorSize) const = 0;
+
+  /// Contribute metadata for this component's extracted states.
+  ///
+  /// stateOffset is the first global extracted-state index of this contributor.
+  /// The default implementation contributes no frame metadata.
+  virtual void contributeMetadata(StateSpaceMetadata &metadata,
+                                  UInt stateOffset) const {}
 };
 
 /// Factory for supported EMT real-valued MNA state-space contributors.

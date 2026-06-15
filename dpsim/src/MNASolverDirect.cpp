@@ -156,18 +156,19 @@ void MnaSolverDirect<VarType>::recomputeSystemMatrix(Real time) {
   ++mNumRecomputations;
 }
 
-template <typename VarType> void MnaSolverDirect<VarType>::extractStateSpace() {
+template <typename VarType>
+void MnaSolverDirect<VarType>::extractStateSpace(Real time) {
   if (!mStateSpaceExtractor)
     return;
 
   if (mSystemMatrixRecomputation) {
     mStateSpaceExtractor->extract(*mDirectLinearSolverVariableSystemMatrix,
                                   mVariableComponentChanged,
-                                  mVariableComponentChanged);
+                                  mVariableComponentChanged, time);
   } else {
     mStateSpaceExtractor->extract(
         *mDirectLinearSolvers[mCurrentSwitchStatus][0], false,
-        mSystemMatrixChanged);
+        mSystemMatrixChanged, time);
   }
 }
 

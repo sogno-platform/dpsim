@@ -1,6 +1,5 @@
 // SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
 // SPDX-License-Identifier: MPL-2.0
-
 #include <dpsim/MNAStateSpaceContributor.h>
 
 #include <dpsim-models/EMT/EMT_Ph3_Capacitor.h>
@@ -11,7 +10,6 @@
 #include <dpsim-models/EMT/EMT_Ph3_VoltageSource.h>
 #include <dpsim-models/EMT/EMT_VTypeSSNComp.h>
 #include <dpsim-models/SimPowerComp.h>
-
 #include <stdexcept>
 #include <utility>
 
@@ -80,6 +78,12 @@ public:
                                             Matrix::Identity(3, 3));
   }
 
+  void contributeMetadata(StateSpaceMetadata &metadata,
+                          UInt stateOffset) const override {
+    metadata.abcStateIndexTriples.push_back(
+        {stateOffset + 0, stateOffset + 1, stateOffset + 2});
+  }
+
 private:
   std::shared_ptr<EMT::Ph3::Inductor> mComponent;
 };
@@ -110,6 +114,12 @@ public:
 
     stampTwoTerminalCurrentInjectionMapping(K, CdMna, stateOffset,
                                             Matrix::Identity(3, 3));
+  }
+
+  void contributeMetadata(StateSpaceMetadata &metadata,
+                          UInt stateOffset) const override {
+    metadata.abcStateIndexTriples.push_back(
+        {stateOffset + 0, stateOffset + 1, stateOffset + 2});
   }
 
 private:
@@ -154,6 +164,24 @@ public:
         inputUpdate * K;
 
     stampTwoTerminalCurrentInjectionMapping(K, CdMna, stateOffset, outputC);
+  }
+
+  void contributeMetadata(StateSpaceMetadata &metadata,
+                          UInt stateOffset) const override {
+    const UInt localStateCount = getStateCount();
+
+    for (auto abcBlock : mComponent->getLocalAbcStateIndexTriples()) {
+      for (auto &idx : abcBlock) {
+        if (idx >= localStateCount) {
+          throw std::runtime_error(
+              "SSN component returned an invalid abc state index.");
+        }
+
+        idx += stateOffset;
+      }
+
+      metadata.abcStateIndexTriples.push_back(abcBlock);
+    }
   }
 
 private:

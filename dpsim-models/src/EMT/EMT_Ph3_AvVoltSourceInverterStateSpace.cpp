@@ -101,6 +101,14 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::setParameters(
                                       eVector, fVector);
 }
 
+std::vector<std::array<UInt, 3>>
+EMT::Ph3::AvVoltSourceInverterStateSpace::getLocalAbcStateIndexTriples() const {
+  return {
+      {static_cast<UInt>(VcA), static_cast<UInt>(VcB), static_cast<UInt>(VcC)},
+      {static_cast<UInt>(IfA), static_cast<UInt>(IfB), static_cast<UInt>(IfC)},
+  };
+}
+
 Matrix EMT::Ph3::AvVoltSourceInverterStateSpace::getParkTransformMatrix(
     Real theta) const {
   Matrix transform(2, 3);

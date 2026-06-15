@@ -18,6 +18,11 @@ UInt EMT::SSNComp::getStateCount() const {
   return static_cast<UInt>(mA.rows());
 }
 
+std::vector<std::array<UInt, 3>>
+EMT::SSNComp::getLocalAbcStateIndexTriples() const {
+  return {};
+}
+
 const Matrix &EMT::SSNComp::getDiscreteA() const { return mdA; }
 
 const Matrix &EMT::SSNComp::getDiscreteB() const { return mdB; }

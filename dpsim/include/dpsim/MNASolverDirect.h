@@ -138,7 +138,7 @@ protected:
   /// Recomputes systems matrix
   virtual void recomputeSystemMatrix(Real time);
   /// Runs state-space extraction using the active linear solver.
-  void extractStateSpace();
+  void extractStateSpace(Real time);
 
   // #### Scheduler Task Methods ####
   /// Create a solve task for this solver implementation
@@ -280,7 +280,9 @@ public:
       mModifiedAttributes.push_back(Scheduler::external);
     }
 
-    void execute(Real time, Int timeStepCount) { mSolver.extractStateSpace(); }
+    void execute(Real time, Int timeStepCount) {
+      mSolver.extractStateSpace(time);
+    }
 
   private:
     MnaSolverDirect<VarType> &mSolver;
