@@ -12,6 +12,8 @@
 #include <dpsim-models/Base/Base_Turbine.h>
 #include <dpsim-models/CSVReader.h>
 #include <dpsim-models/IdentifiedObject.h>
+#include <dpsim-models/Signal/HydroTurbine.h>
+#include <dpsim-models/Signal/HydroTurbineGovernor.h>
 #include <dpsim-models/Signal/PSS1A.h>
 #include <dpsim-models/Signal/SteamTurbine.h>
 #include <dpsim-models/Signal/SteamTurbineGovernor.h>
@@ -289,5 +291,49 @@ void addSignalComponents(py::module_ mSignal) {
       .def("set_parameters", &CPS::Signal::SteamTurbine::setParameters,
            "parameters"_a)
       .def("initialize_states", &CPS::Signal::SteamTurbine::initializeStates,
+           "Pminit"_a);
+
+  // HydroTurbineGovernor
+  py::class_<CPS::Signal::HydroGovernorParameters,
+             std::shared_ptr<CPS::Signal::HydroGovernorParameters>,
+             CPS::Base::GovernorParameters>(mSignal, "HydroGovernorParameters",
+                                            py::multiple_inheritance())
+      .def(py::init<>())
+      .def_readwrite("R", &CPS::Signal::HydroGovernorParameters::R)
+      .def_readwrite("T1", &CPS::Signal::HydroGovernorParameters::T1)
+      .def_readwrite("T2", &CPS::Signal::HydroGovernorParameters::T2)
+      .def_readwrite("T3", &CPS::Signal::HydroGovernorParameters::T3)
+      .def_readwrite("Pmax", &CPS::Signal::HydroGovernorParameters::Pmax)
+      .def_readwrite("Pmin", &CPS::Signal::HydroGovernorParameters::Pmin)
+      .def_readwrite("OmRef", &CPS::Signal::HydroGovernorParameters::OmRef);
+
+  py::class_<CPS::Signal::HydroTurbineGovernor,
+             std::shared_ptr<CPS::Signal::HydroTurbineGovernor>,
+             CPS::SimSignalComp, CPS::Base::Governor>(
+      mSignal, "HydroTurbineGovernor", py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::Signal::HydroTurbineGovernor::setParameters,
+           "parameters"_a)
+      .def("initialize_states",
+           &CPS::Signal::HydroTurbineGovernor::initializeStates, "Pref"_a);
+
+  // HydroTurbine
+  py::class_<CPS::Signal::HydroTurbineParameters,
+             std::shared_ptr<CPS::Signal::HydroTurbineParameters>,
+             CPS::Base::TurbineParameters>(mSignal, "HydroTurbineParameters",
+                                           py::multiple_inheritance())
+      .def(py::init<>())
+      .def_readwrite("Tw", &CPS::Signal::HydroTurbineParameters::Tw);
+
+  py::class_<CPS::Signal::HydroTurbine,
+             std::shared_ptr<CPS::Signal::HydroTurbine>, CPS::SimSignalComp,
+             CPS::Base::Turbine>(mSignal, "HydroTurbine",
+                                 py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::Signal::HydroTurbine::setParameters,
+           "parameters"_a)
+      .def("initialize_states", &CPS::Signal::HydroTurbine::initializeStates,
            "Pminit"_a);
 }
