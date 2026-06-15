@@ -60,7 +60,8 @@ void Signal::PSS1A::setParameters(
   }
 }
 
-void Signal::PSS1A::initialize(Real omega, Real activePower, Real Vd, Real Vq) {
+void Signal::PSS1A::initializeStates(Real omega, Real activePower, Real Vd,
+                                     Real Vq) {
   Real Vh = sqrt(pow(Vd, 2.) + pow(Vq, 2.));
 
   mV1 = -(mParameters->Kw * omega + mParameters->Kp * activePower +

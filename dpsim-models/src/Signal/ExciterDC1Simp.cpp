@@ -74,7 +74,7 @@ void ExciterDC1Simp::setParameters(
   }
 }
 
-void ExciterDC1Simp::initialize(Real Vh_init, Real Ef_init) {
+void ExciterDC1Simp::initializeStates(Real Vh_init, Real Ef_init) {
   //
   **mVh = Vh_init;
   **mEf = Ef_init;

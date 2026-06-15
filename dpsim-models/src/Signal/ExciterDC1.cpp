@@ -78,7 +78,7 @@ void Signal::ExciterDC1::setParameters(
   }
 }
 
-void Signal::ExciterDC1::initialize(Real Vh_init, Real Ef_init) {
+void Signal::ExciterDC1::initializeStates(Real Vh_init, Real Ef_init) {
 
   mVh = Vh_init;
   mEf = Ef_init;
