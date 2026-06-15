@@ -68,7 +68,8 @@ class CMakeBuild(build_ext):
                 cwd=self.build_temp,
             )
 
-        self._generate_stubs(extdir, targets)
+        if ext.name == targets[0]:
+            self._generate_stubs(extdir, targets)
 
     def _generate_stubs(self, extdir, targets):
         stub_env = os.environ.copy()
@@ -89,10 +90,9 @@ class CMakeBuild(build_ext):
                     env=stub_env,
                 )
                 if result.returncode != 0:
-                    print(
-                        f"warning: stub generation for {module} failed (exit {result.returncode}), skipping"
+                    raise RuntimeError(
+                        f"stub generation for {module} failed (exit {result.returncode})"
                     )
-                    continue
 
                 src = os.path.join(stub_tmp, module)
                 dst = os.path.join(extdir, module)
@@ -107,6 +107,10 @@ class CMakeBuild(build_ext):
                     stub_file = src + ".pyi"
                     if os.path.isfile(stub_file):
                         shutil.copy2(stub_file, extdir)
+                    else:
+                        raise RuntimeError(
+                            f"stub generation for {module} succeeded but {stub_file} not found"
+                        )
 
 
 ext_modules_list = [CMakeExtension("dpsimpy")]
