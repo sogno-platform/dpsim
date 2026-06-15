@@ -78,7 +78,7 @@ void Signal::ExciterDC1::setParameters(
   }
 }
 
-void Signal::ExciterDC1::initialize(Real Vh_init, Real Ef_init) {
+void Signal::ExciterDC1::initializeStates(Real Vh_init, Real Ef_init) {
 
   mVh = Vh_init;
   mEf = Ef_init;
@@ -115,7 +115,7 @@ void Signal::ExciterDC1::initialize(Real Vh_init, Real Ef_init) {
   mVref = mVr + mVin;
 
   /// check initial conditions
-  if (mEf - mVa / (mVsat + mParameters->Kef))
+  if (std::abs(mEf - mVa / (mVsat + mParameters->Kef)) > DOUBLE_EPSILON)
     SPDLOG_LOGGER_WARN(mSLog, "\nInitial conditions are not consistent!!!");
 
   SPDLOG_LOGGER_INFO(mSLog,

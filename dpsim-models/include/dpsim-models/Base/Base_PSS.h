@@ -24,7 +24,8 @@ public:
   setParameters(std::shared_ptr<Base::PSSParameters> parameters) = 0;
 
   /// Initializes PSS state variables from power-flow solution
-  virtual void initialize(Real omega, Real activePower, Real Vd, Real Vq) = 0;
+  virtual void initializeStates(Real omega, Real activePower, Real Vd,
+                                Real Vq) = 0;
 
   /// @returns V_pss: stabilizing signal fed into the exciter
   virtual Real step(Real omega, Real activePower, Real Vd, Real Vq,

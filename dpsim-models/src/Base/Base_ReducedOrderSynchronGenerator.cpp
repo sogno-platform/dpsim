@@ -350,7 +350,7 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
 
   // Initialize controllers
   if (mHasExciter) {
-    mExciter->initialize(Math::abs(mInitVoltage), **mEf);
+    mExciter->initializeStates(Math::abs(mInitVoltage), **mEf);
   }
   if (mHasTurbineGovernor) {
     mTurbineGovernor->initializeStates(**mMechTorque);
@@ -360,8 +360,8 @@ void Base::ReducedOrderSynchronGenerator<Real>::initializeFromNodesAndTerminals(
     mTurbine->initializeStates(**mMechTorque);
   }
   if (mHasPSS) {
-    mPSS->initialize(mNomOmega / mBase_OmMech, **mMechTorque, (**mVdq0)(0, 0),
-                     (**mVdq0)(1, 0));
+    mPSS->initializeStates(mNomOmega / mBase_OmMech, **mMechTorque,
+                           (**mVdq0)(0, 0), (**mVdq0)(1, 0));
   }
 
   // initial electrical torque
@@ -438,7 +438,7 @@ void Base::ReducedOrderSynchronGenerator<
 
   // Initialize controllers
   if (mHasExciter) {
-    mExciter->initialize(Math::abs(mInitVoltage), **mEf);
+    mExciter->initializeStates(Math::abs(mInitVoltage), **mEf);
   }
   if (mHasTurbineGovernor) {
     mTurbineGovernor->initializeStates(**mMechTorque);
@@ -448,8 +448,8 @@ void Base::ReducedOrderSynchronGenerator<
     mTurbine->initializeStates(**mMechTorque);
   }
   if (mHasPSS) {
-    mPSS->initialize(mNomOmega / mBase_OmMech, **mMechTorque, (**mVdq)(0, 0),
-                     (**mVdq)(1, 0));
+    mPSS->initializeStates(mNomOmega / mBase_OmMech, **mMechTorque,
+                           (**mVdq)(0, 0), (**mVdq)(1, 0));
   }
 
   // initial electrical torque

@@ -55,7 +55,7 @@ void ExciterStatic::setParameters(
   }
 }
 
-void ExciterStatic::initialize(Real Vh_init, Real Ef_init) {
+void ExciterStatic::initializeStates(Real Vh_init, Real Ef_init) {
 
   mVh = Vh_init;
   mEfd = Ef_init;

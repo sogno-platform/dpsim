@@ -41,7 +41,7 @@ void Signal::ExciterST1Simp::setParameters(
   }
 }
 
-void Signal::ExciterST1Simp::initialize(Real Vh_init, Real Ef_init) {
+void Signal::ExciterST1Simp::initializeStates(Real Vh_init, Real Ef_init) {
 
   mVh = Vh_init;
   mEf = Ef_init;
