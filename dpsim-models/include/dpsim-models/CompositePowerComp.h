@@ -17,10 +17,10 @@ class CompositePowerComp : public MNASimPowerComp<VarType> {
 
 private:
   MNAInterface::List mSubcomponentsMNA;
-  MNAInterface::List mSubcomponentsBeforePreStep;
-  MNAInterface::List mSubcomponentsAfterPreStep;
-  MNAInterface::List mSubcomponentsBeforePostStep;
-  MNAInterface::List mSubcomponentsAfterPostStep;
+  MNAInterface::List mSubcomponentsPreStepBeforeParent;
+  MNAInterface::List mSubcomponentsPreStepAfterParent;
+  MNAInterface::List mSubcomponentsPostStepBeforeParent;
+  MNAInterface::List mSubcomponentsPostStepAfterParent;
 
   std::vector<CPS::Attribute<Matrix>::Ptr> mRightVectorStamps;
 
