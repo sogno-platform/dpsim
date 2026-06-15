@@ -18,7 +18,7 @@ public:
 };
 
 /// Hydro turbine — water starting time model.
-/// Transfer function: (1 - 0.5*s*Tw) / (1 + 0.5*s*Tw)
+/// Transfer function: (1 - s*Tw) / (1 + 0.5*s*Tw)
 /// Ref.: A. Roehder, B. Fuchs, J. Massman, M. Quester, A. Schnettler,
 ///       "Transmission system stability assessment within an integrated grid
 ///       development process"
