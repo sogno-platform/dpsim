@@ -304,9 +304,17 @@
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SolverBehaviour.value"><code class="docutils literal notranslate"><span class="pre">SolverBehaviour.value</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.StateSpaceAnalysisFrame"><code class="docutils literal notranslate"><span class="pre">StateSpaceAnalysisFrame</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.StateSpaceAnalysisFrame.GlobalDQ0"><code class="docutils literal notranslate"><span class="pre">StateSpaceAnalysisFrame.GlobalDQ0</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.StateSpaceAnalysisFrame.Native"><code class="docutils literal notranslate"><span class="pre">StateSpaceAnalysisFrame.Native</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.StateSpaceAnalysisFrame.value"><code class="docutils literal notranslate"><span class="pre">StateSpaceAnalysisFrame.value</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#dpsimpy.StateSpaceModalAnalysis"><code class="docutils literal notranslate"><span class="pre">StateSpaceModalAnalysis</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.StateSpaceModalAnalysis.get_continuous_eigenvalues"><code class="docutils literal notranslate"><span class="pre">StateSpaceModalAnalysis.get_continuous_eigenvalues()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.StateSpaceModalAnalysis.get_discrete_eigenvalues"><code class="docutils literal notranslate"><span class="pre">StateSpaceModalAnalysis.get_discrete_eigenvalues()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.StateSpaceModalAnalysis.set_analysis_frame"><code class="docutils literal notranslate"><span class="pre">StateSpaceModalAnalysis.set_analysis_frame()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.StateSpaceModalAnalysis.set_global_dq0_frame"><code class="docutils literal notranslate"><span class="pre">StateSpaceModalAnalysis.set_global_dq0_frame()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.StateSpaceModalAnalysis.update"><code class="docutils literal notranslate"><span class="pre">StateSpaceModalAnalysis.update()</span></code></a></li>
 </ul>
 </li>
@@ -2181,6 +2189,34 @@ and to parameterize all components of the network from Python.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.StateSpaceAnalysisFrame">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">StateSpaceAnalysisFrame</span></span><a class="headerlink" href="#dpsimpy.StateSpaceAnalysisFrame" title="Link to this definition"></a></dt>
+<dd><p>Members:</p>
+<p>Native</p>
+<p>GlobalDQ0</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.StateSpaceAnalysisFrame.GlobalDQ0">
+<span class="sig-name descname"><span class="pre">GlobalDQ0</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;StateSpaceAnalysisFrame.GlobalDQ0:</span> <span class="pre">1&gt;</span></span><a class="headerlink" href="#dpsimpy.StateSpaceAnalysisFrame.GlobalDQ0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.StateSpaceAnalysisFrame.Native">
+<span class="sig-name descname"><span class="pre">Native</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;StateSpaceAnalysisFrame.Native:</span> <span class="pre">0&gt;</span></span><a class="headerlink" href="#dpsimpy.StateSpaceAnalysisFrame.Native" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">StateSpaceAnalysisFrame.name</span> <span class="pre">-&gt;</span> <span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.StateSpaceAnalysisFrame.value">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#dpsimpy.StateSpaceAnalysisFrame.value" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="dpsimpy.StateSpaceModalAnalysis">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">StateSpaceModalAnalysis</span></span><a class="headerlink" href="#dpsimpy.StateSpaceModalAnalysis" title="Link to this definition"></a></dt>
 <dd><dl class="py method">
@@ -2191,6 +2227,16 @@ and to parameterize all components of the network from Python.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dpsimpy.StateSpaceModalAnalysis.get_discrete_eigenvalues">
 <span class="sig-name descname"><span class="pre">get_discrete_eigenvalues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.StateSpaceModalAnalysis" title="dpsimpy.StateSpaceModalAnalysis"><span class="pre">dpsimpy.StateSpaceModalAnalysis</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.typing.NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.complex128</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'[m,</span> <span class="pre">1]'</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#dpsimpy.StateSpaceModalAnalysis.get_discrete_eigenvalues" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.StateSpaceModalAnalysis.set_analysis_frame">
+<span class="sig-name descname"><span class="pre">set_analysis_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.StateSpaceModalAnalysis" title="dpsimpy.StateSpaceModalAnalysis"><span class="pre">dpsimpy.StateSpaceModalAnalysis</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.StateSpaceAnalysisFrame" title="dpsimpy.StateSpaceAnalysisFrame"><span class="pre">dpsimpy.StateSpaceAnalysisFrame</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.StateSpaceModalAnalysis.set_analysis_frame" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.StateSpaceModalAnalysis.set_global_dq0_frame">
+<span class="sig-name descname"><span class="pre">set_global_dq0_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.StateSpaceModalAnalysis" title="dpsimpy.StateSpaceModalAnalysis"><span class="pre">dpsimpy.StateSpaceModalAnalysis</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.StateSpaceModalAnalysis.set_global_dq0_frame" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">

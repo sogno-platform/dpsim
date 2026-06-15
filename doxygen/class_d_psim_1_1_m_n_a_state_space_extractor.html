@@ -107,8 +107,8 @@ Public Types</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a5b5403a66a2733ed09252550a6a5c398" id="r_a5b5403a66a2733ed09252550a6a5c398"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b5403a66a2733ed09252550a6a5c398">initialize</a> (const CPS::MNAInterface::List &amp;components, UInt mnaVectorSize, Real timeStep)</td></tr>
 <tr class="separator:a5b5403a66a2733ed09252550a6a5c398"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad9b0bf9b50c04cbc6bfad29e9426c4a4" id="r_ad9b0bf9b50c04cbc6bfad29e9426c4a4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad9b0bf9b50c04cbc6bfad29e9426c4a4">extract</a> (<a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a> &amp;linearSolver, Bool variableModelChanged, Bool systemMatrixChanged)</td></tr>
-<tr class="separator:ad9b0bf9b50c04cbc6bfad29e9426c4a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83dba1f2a8468df523b878c05b9ff437" id="r_a83dba1f2a8468df523b878c05b9ff437"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a83dba1f2a8468df523b878c05b9ff437">extract</a> (<a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a> &amp;linearSolver, Bool variableModelChanged, Bool systemMatrixChanged, Real time)</td></tr>
+<tr class="separator:a83dba1f2a8468df523b878c05b9ff437"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac026aa9d179ce92b58b77862855b0185" id="r_ac026aa9d179ce92b58b77862855b0185"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac026aa9d179ce92b58b77862855b0185">isInitialized</a> () const</td></tr>
 <tr class="separator:ac026aa9d179ce92b58b77862855b0185"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6e404146e77cb5b4d46149c8b6eae8f" id="r_ac6e404146e77cb5b4d46149c8b6eae8f"><td class="memItemLeft" align="right" valign="top">UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac6e404146e77cb5b4d46149c8b6eae8f">getStateCount</a> () const</td></tr>
@@ -117,6 +117,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aa40eed08aa7f69c3143c4b0a580475c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6668f307d935de225c541be2301bdcf2" id="r_a6668f307d935de225c541be2301bdcf2"><td class="memItemLeft" align="right" valign="top">const Matrix &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6668f307d935de225c541be2301bdcf2">getDiscreteStateMatrix</a> () const</td></tr>
 <tr class="separator:a6668f307d935de225c541be2301bdcf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcd2db840a547bb380233556fc2c40fe" id="r_adcd2db840a547bb380233556fc2c40fe"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="struct_d_psim_1_1_state_space_metadata.html">StateSpaceMetadata</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adcd2db840a547bb380233556fc2c40fe">getMetadata</a> () const</td></tr>
+<tr class="separator:adcd2db840a547bb380233556fc2c40fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa80a8a93659987276b056edfca528e76" id="r_aa80a8a93659987276b056edfca528e76"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa80a8a93659987276b056edfca528e76">hasExtractionTime</a> () const</td></tr>
+<tr class="separator:aa80a8a93659987276b056edfca528e76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01e50ec6162fa83b5cbf4f32d51223cd" id="r_a01e50ec6162fa83b5cbf4f32d51223cd"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a01e50ec6162fa83b5cbf4f32d51223cd">getLastExtractionTime</a> () const</td></tr>
+<tr class="separator:a01e50ec6162fa83b5cbf4f32d51223cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Extracts the discrete-time state matrix implied by a real-valued EMT MNA model.</p>
@@ -144,8 +150,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ad9b0bf9b50c04cbc6bfad29e9426c4a4" name="ad9b0bf9b50c04cbc6bfad29e9426c4a4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad9b0bf9b50c04cbc6bfad29e9426c4a4">&#9670;&#160;</a></span>extract()</h2>
+<a id="a83dba1f2a8468df523b878c05b9ff437" name="a83dba1f2a8468df523b878c05b9ff437"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83dba1f2a8468df523b878c05b9ff437">&#9670;&#160;</a></span>extract()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -163,12 +169,17 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Bool</td>          <td class="paramname"><span class="paramname"><em>systemMatrixChanged</em></span>&#160;)</td>
+          <td class="paramtype">Bool</td>          <td class="paramname"><span class="paramname"><em>systemMatrixChanged</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>time</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_extractor_8cpp_source.html#l00081">81</a> of file <a class="el" href="_m_n_a_state_space_extractor_8cpp_source.html">MNAStateSpaceExtractor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_extractor_8cpp_source.html#l00085">85</a> of file <a class="el" href="_m_n_a_state_space_extractor_8cpp_source.html">MNAStateSpaceExtractor.cpp</a>.</p>
 
 </div>
 </div>
@@ -196,6 +207,60 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_extractor_8h_source.html#l00046">46</a> of file <a class="el" href="_m_n_a_state_space_extractor_8h_source.html">MNAStateSpaceExtractor.h</a>.</p>
+
+</div>
+</div>
+<a id="a01e50ec6162fa83b5cbf4f32d51223cd" name="a01e50ec6162fa83b5cbf4f32d51223cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01e50ec6162fa83b5cbf4f32d51223cd">&#9670;&#160;</a></span>getLastExtractionTime()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Real DPsim::MNAStateSpaceExtractor::getLastExtractionTime </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_extractor_8h_source.html#l00052">52</a> of file <a class="el" href="_m_n_a_state_space_extractor_8h_source.html">MNAStateSpaceExtractor.h</a>.</p>
+
+</div>
+</div>
+<a id="adcd2db840a547bb380233556fc2c40fe" name="adcd2db840a547bb380233556fc2c40fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcd2db840a547bb380233556fc2c40fe">&#9670;&#160;</a></span>getMetadata()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="struct_d_psim_1_1_state_space_metadata.html">StateSpaceMetadata</a> &amp; DPsim::MNAStateSpaceExtractor::getMetadata </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_extractor_8h_source.html#l00048">48</a> of file <a class="el" href="_m_n_a_state_space_extractor_8h_source.html">MNAStateSpaceExtractor.h</a>.</p>
 
 </div>
 </div>
@@ -250,6 +315,33 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_extractor_8h_source.html#l00044">44</a> of file <a class="el" href="_m_n_a_state_space_extractor_8h_source.html">MNAStateSpaceExtractor.h</a>.</p>
+
+</div>
+</div>
+<a id="aa80a8a93659987276b056edfca528e76" name="aa80a8a93659987276b056edfca528e76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa80a8a93659987276b056edfca528e76">&#9670;&#160;</a></span>hasExtractionTime()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Bool DPsim::MNAStateSpaceExtractor::hasExtractionTime </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_extractor_8h_source.html#l00050">50</a> of file <a class="el" href="_m_n_a_state_space_extractor_8h_source.html">MNAStateSpaceExtractor.h</a>.</p>
 
 </div>
 </div>

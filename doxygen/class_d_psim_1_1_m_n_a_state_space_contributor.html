@@ -118,6 +118,8 @@ virtual UInt&#160;</td><td class="memItemRight" valign="bottom"><b>getStateCount
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>stamp</b> (Matrix &amp;AdLocal, Matrix &amp;BdMna, Matrix &amp;CdMna, UInt stateOffset, UInt mnaVectorSize) const =0</td></tr>
 <tr class="memdesc:a7b8a1b895d35affdc1559fcbdc870c6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamp this component's current local state-space contribution. <br /></td></tr>
 <tr class="separator:a7b8a1b895d35affdc1559fcbdc870c6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d2b8e23bc8da2b5f9e8c1b4c1174630" id="r_a9d2b8e23bc8da2b5f9e8c1b4c1174630"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9d2b8e23bc8da2b5f9e8c1b4c1174630">contributeMetadata</a> (<a class="el" href="struct_d_psim_1_1_state_space_metadata.html">StateSpaceMetadata</a> &amp;metadata, UInt stateOffset) const</td></tr>
+<tr class="separator:a9d2b8e23bc8da2b5f9e8c1b4c1174630"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Live adapter that contributes one component's local state-space blocks to the MNA-coupled state-space extraction.</p>
@@ -125,7 +127,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>stamp</b> (Ma
 <p>x[k+1] = AdLocal x[k] + BdMna xMNA[k+1] Y xMNA[k+1] = CdMna x[k]</p>
 <p>where x is the extraction-state vector and xMNA is the full MNA unknown vector. CdMna maps extraction states to MNA current injections. </p>
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_contributor_8h_source.html#l00024">24</a> of file <a class="el" href="_m_n_a_state_space_contributor_8h_source.html">MNAStateSpaceContributor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_contributor_8h_source.html#l00032">32</a> of file <a class="el" href="_m_n_a_state_space_contributor_8h_source.html">MNAStateSpaceContributor.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a3f40edaf81f811a71d0eca14a9a0fb1c" name="a3f40edaf81f811a71d0eca14a9a0fb1c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3f40edaf81f811a71d0eca14a9a0fb1c">&#9670;&#160;</a></span>List</h2>
@@ -139,7 +141,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>stamp</b> (Ma
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_contributor_8h_source.html#l00027">27</a> of file <a class="el" href="_m_n_a_state_space_contributor_8h_source.html">MNAStateSpaceContributor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_contributor_8h_source.html#l00035">35</a> of file <a class="el" href="_m_n_a_state_space_contributor_8h_source.html">MNAStateSpaceContributor.h</a>.</p>
 
 </div>
 </div>
@@ -155,11 +157,44 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>stamp</b> (Ma
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_contributor_8h_source.html#l00026">26</a> of file <a class="el" href="_m_n_a_state_space_contributor_8h_source.html">MNAStateSpaceContributor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_contributor_8h_source.html#l00034">34</a> of file <a class="el" href="_m_n_a_state_space_contributor_8h_source.html">MNAStateSpaceContributor.h</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a9d2b8e23bc8da2b5f9e8c1b4c1174630" name="a9d2b8e23bc8da2b5f9e8c1b4c1174630"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d2b8e23bc8da2b5f9e8c1b4c1174630">&#9670;&#160;</a></span>contributeMetadata()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void DPsim::MNAStateSpaceContributor::contributeMetadata </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_d_psim_1_1_state_space_metadata.html">StateSpaceMetadata</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>metadata</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">UInt</td>          <td class="paramname"><span class="paramname"><em>stateOffset</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Contribute metadata for this component's extracted states.</p>
+<p>stateOffset is the first global extracted-state index of this contributor. The default implementation contributes no frame metadata. </p>
+
+<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_contributor_8h_source.html#l00053">53</a> of file <a class="el" href="_m_n_a_state_space_contributor_8h_source.html">MNAStateSpaceContributor.h</a>.</p>
+
+</div>
+</div>
 <a id="a344ac3a6fdacbdf041fda92835cf49c3" name="a344ac3a6fdacbdf041fda92835cf49c3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a344ac3a6fdacbdf041fda92835cf49c3">&#9670;&#160;</a></span>isVariable()</h2>
 
@@ -185,7 +220,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>stamp</b> (Ma
 
 <p>Returns true if the local matrices may change during simulation. </p>
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_contributor_8h_source.html#l00035">35</a> of file <a class="el" href="_m_n_a_state_space_contributor_8h_source.html">MNAStateSpaceContributor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_contributor_8h_source.html#l00043">43</a> of file <a class="el" href="_m_n_a_state_space_contributor_8h_source.html">MNAStateSpaceContributor.h</a>.</p>
 
 </div>
 </div>
