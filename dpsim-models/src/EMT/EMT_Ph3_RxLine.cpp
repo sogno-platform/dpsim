@@ -56,7 +56,7 @@ void EMT::Ph3::RxLine::createSubComponents() {
 
   mInitialResistor =
       std::make_shared<EMT::Ph3::Resistor>(**mName + "_snubber_res", mLogLevel);
-  Matrix defaultSnubRes = Matrix::Zero(3, 1);
+  Matrix defaultSnubRes = Matrix::Zero(3, 3);
   defaultSnubRes << 1e6, 0, 0, 0, 1e6, 0, 0, 0, 1e6;
   mInitialResistor->setParameters(defaultSnubRes);
   mInitialResistor->connect({SimNode::GND, mTerminals[1]->node()});
