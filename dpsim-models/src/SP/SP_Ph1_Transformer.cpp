@@ -89,11 +89,6 @@ void SP::Ph1::Transformer::createSubComponents() {
     return;
   mSubCompCreated = true;
 
-  // Use mFrequencies (set by SystemTopology::addComponent) so omega is
-  // available before initializeFromNodesAndTerminals sets mNominalOmega.
-  if (mNominalOmega == 0)
-    mNominalOmega = 2. * PI * mFrequencies(0, 0);
-
   // Switch terminals so that terminal 0 is always the higher-voltage side.
   if (Math::abs(**mRatio) < 1.) {
     **mRatio = 1. / **mRatio;
@@ -133,42 +128,66 @@ void SP::Ph1::Transformer::createSubComponents() {
     mSubInductor->connect({node(0), mVirtualNodes[0]});
   }
 
-  // Create parallel sub components for init and mna behaviour
+  // Create parallel sub components for init and mna behaviour. Their
+  // values are computed and pushed in from
+  // initializeParentFromNodesAndTerminals(), since they depend on
+  // mNominalOmega/mRatedPower which may not be available yet for
+  // CIM-loaded components during this pre-pass. Existence only depends on
+  // mBehaviour, which is safe to read here.
   if (mBehaviour == TopologicalPowerComp::Behaviour::Initialization ||
       mBehaviour == TopologicalPowerComp::Behaviour::MNASimulation) {
 
+    mSubSnubResistor1 =
+        std::make_shared<SP::Ph1::Resistor>(**mName + "_snub_res1", mLogLevel);
+    mSubSnubResistor1->connect({node(0), SP::SimNode::GND});
+    addMNASubComponent(mSubSnubResistor1,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+
+    mSubSnubResistor2 =
+        std::make_shared<SP::Ph1::Resistor>(**mName + "_snub_res2", mLogLevel);
+    mSubSnubResistor2->connect({node(1), SP::SimNode::GND});
+    addMNASubComponent(mSubSnubResistor2,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+
+    mSubSnubCapacitor2 =
+        std::make_shared<SP::Ph1::Capacitor>(**mName + "_snub_cap2", mLogLevel);
+    mSubSnubCapacitor2->connect({node(1), SP::SimNode::GND});
+    addMNASubComponent(mSubSnubCapacitor2,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+  }
+}
+
+void SP::Ph1::Transformer::initializeParentFromNodesAndTerminals(
+    Real frequency) {
+  mNominalOmega = 2. * PI * frequency;
+  mReactance = mNominalOmega * **mInductance;
+  SPDLOG_LOGGER_INFO(mSLog, "Reactance={} [Ohm] (referred to primary side)",
+                     mReactance);
+
+  if (mSubSnubResistor1) {
     Real pSnub = P_SNUB_TRANSFORMER * **mRatedPower;
     Real qSnub = Q_SNUB_TRANSFORMER * **mRatedPower;
 
     // A snubber conductance is added on the higher voltage side
     mSnubberResistance1 = std::pow(std::abs(mNominalVoltageEnd1), 2) / pSnub;
-    mSubSnubResistor1 =
-        std::make_shared<SP::Ph1::Resistor>(**mName + "_snub_res1", mLogLevel);
     mSubSnubResistor1->setParameters(mSnubberResistance1);
-    mSubSnubResistor1->connect({node(0), SP::SimNode::GND});
     SPDLOG_LOGGER_INFO(
         mSLog,
         "Snubber Resistance 1 (connected to higher voltage side {}) = {} [Ohm]",
         node(0)->name(), Logger::realToString(mSnubberResistance1));
     mSubSnubResistor1->setBaseVoltage(mNominalVoltageEnd1);
-    addMNASubComponent(mSubSnubResistor1,
-                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
     // A snubber conductance is added on the lower voltage side
     mSnubberResistance2 = std::pow(std::abs(mNominalVoltageEnd2), 2) / pSnub;
-    mSubSnubResistor2 =
-        std::make_shared<SP::Ph1::Resistor>(**mName + "_snub_res2", mLogLevel);
     mSubSnubResistor2->setParameters(mSnubberResistance2);
-    mSubSnubResistor2->connect({node(1), SP::SimNode::GND});
     SPDLOG_LOGGER_INFO(
         mSLog,
         "Snubber Resistance 2 (connected to lower voltage side {}) = {} [Ohm]",
         node(1)->name(), Logger::realToString(mSnubberResistance2));
     mSubSnubResistor2->setBaseVoltage(mNominalVoltageEnd2);
-    addMNASubComponent(mSubSnubResistor2,
-                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
     // // A snubber capacitance is added to higher voltage side (not used as capacitor at high voltage side made it worse)
     // mSnubberCapacitance1 = qSnub / std::pow(std::abs(mNominalVoltageEnd1),2) / mNominalOmega;
@@ -182,27 +201,13 @@ void SP::Ph1::Transformer::createSubComponents() {
     // A snubber capacitance is added to lower voltage side
     mSnubberCapacitance2 =
         qSnub / std::pow(std::abs(mNominalVoltageEnd2), 2) / mNominalOmega;
-    mSubSnubCapacitor2 =
-        std::make_shared<SP::Ph1::Capacitor>(**mName + "_snub_cap2", mLogLevel);
     mSubSnubCapacitor2->setParameters(mSnubberCapacitance2);
-    mSubSnubCapacitor2->connect({node(1), SP::SimNode::GND});
     SPDLOG_LOGGER_INFO(
         mSLog,
         "Snubber Capacitance 2 (connected to lower voltage side {}) = {} [F]",
         node(1)->name(), Logger::realToString(mSnubberCapacitance2));
     mSubSnubCapacitor2->setBaseVoltage(mNominalVoltageEnd2);
-    addMNASubComponent(mSubSnubCapacitor2,
-                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
   }
-}
-
-void SP::Ph1::Transformer::initializeParentFromNodesAndTerminals(
-    Real frequency) {
-  mNominalOmega = 2. * PI * frequency;
-  mReactance = mNominalOmega * **mInductance;
-  SPDLOG_LOGGER_INFO(mSLog, "Reactance={} [Ohm] (referred to primary side)",
-                     mReactance);
 
   // Set initial voltage of virtual node in between
   mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(1) * **mRatio);

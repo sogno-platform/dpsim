@@ -142,19 +142,15 @@ void DP::Ph1::Transformer::createSubComponents() {
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
-  // Use mFrequencies (set by SystemTopology::addComponent) to compute omega so
-  // the capacitance value is available before initializeFromNodesAndTerminals.
-  Real omega = 2. * PI * mFrequencies(0, 0);
-  mSnubberCapacitance2 =
-      qSnub / std::pow(std::abs(mNominalVoltageEnd2), 2) / omega;
+  // The capacitance value depends on omega, which is computed from the
+  // simulation frequency in initializeParentFromNodesAndTerminals() rather
+  // than mFrequencies here, since the latter may not be available yet for
+  // CIM-loaded components during this pre-pass. The capacitor is created
+  // here (its existence doesn't depend on that value) but parametrized
+  // there.
   mSubSnubCapacitor2 =
       std::make_shared<DP::Ph1::Capacitor>(**mName + "_snub_cap2", mLogLevel);
-  mSubSnubCapacitor2->setParameters(mSnubberCapacitance2);
   mSubSnubCapacitor2->connect({node(1), DP::SimNode::GND});
-  SPDLOG_LOGGER_INFO(
-      mSLog,
-      "Snubber Capacitance 2 (connected to lower voltage side {}) = {} [F]",
-      node(1)->name(), Logger::realToString(mSnubberCapacitance2));
   addMNASubComponent(mSubSnubCapacitor2,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
@@ -162,6 +158,16 @@ void DP::Ph1::Transformer::createSubComponents() {
 
 void DP::Ph1::Transformer::initializeParentFromNodesAndTerminals(
     Real frequency) {
+  Real omega = 2. * PI * frequency;
+  Real qSnub = Q_SNUB_TRANSFORMER * **mRatedPower;
+  mSnubberCapacitance2 =
+      qSnub / std::pow(std::abs(mNominalVoltageEnd2), 2) / omega;
+  mSubSnubCapacitor2->setParameters(mSnubberCapacitance2);
+  SPDLOG_LOGGER_INFO(
+      mSLog,
+      "Snubber Capacitance 2 (connected to lower voltage side {}) = {} [F]",
+      node(1)->name(), Logger::realToString(mSnubberCapacitance2));
+
   // Set initial voltage of virtual node in between
   mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(1) * **mRatio);
 
@@ -169,7 +175,6 @@ void DP::Ph1::Transformer::initializeParentFromNodesAndTerminals(
     mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(0));
 
   // Static calculations from load flow data
-  Real omega = 2. * PI * frequency;
   Complex impedance = {**mResistance, omega * **mInductance};
   SPDLOG_LOGGER_INFO(mSLog, "Reactance={} [Ohm] (referred to primary side)",
                      omega * **mInductance);

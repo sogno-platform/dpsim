@@ -31,14 +31,16 @@ void DP::Ph1::SVC::createSubComponents() {
     return;
   mSubCompCreated = true;
 
-  Real omega = 2. * PI * mFrequencies(0, 0);
-  Real LInit = 1e6 / omega;
-  Real CInit = 1e-6 / omega;
+  // Inductor/capacitor values depend on omega, which is computed from the
+  // simulation frequency in initializeFromNodesAndTerminals() rather than
+  // mFrequencies here, since the latter is not guaranteed to be populated
+  // yet during this pre-pass. They are created here (existence doesn't
+  // depend on that value) but parametrized there, before their own
+  // initializeFromNodesAndTerminals() runs.
 
   // Inductor with Switch
   mSubInductor =
       std::make_shared<DP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
-  mSubInductor->setParameters(LInit);
   mSubInductor->connect({SimNode::GND, mVirtualNodes[0]});
   mSubInductor->initialize(mFrequencies);
 
@@ -51,7 +53,6 @@ void DP::Ph1::SVC::createSubComponents() {
   // Capacitor with Switch
   mSubCapacitor =
       std::make_shared<DP::Ph1::Capacitor>(**mName + "_cap", mLogLevel);
-  mSubCapacitor->setParameters(CInit);
   mSubCapacitor->connect({SimNode::GND, mVirtualNodes[1]});
   mSubCapacitor->initialize(mFrequencies);
 
@@ -105,6 +106,8 @@ void DP::Ph1::SVC::initializeFromNodesAndTerminals(Real frequency) {
   mVirtualNodes[1]->setInitialVoltage(VCSwitch);
 
   createSubComponents();
+  mSubInductor->setParameters(LInit);
+  mSubCapacitor->setParameters(CInit);
 
   mSubInductor->initializeFromNodesAndTerminals(frequency);
   mSubInductorSwitch->initializeFromNodesAndTerminals(frequency);

@@ -103,14 +103,31 @@ void SP::Ph1::Load::createSubComponents() {
     return;
   mSubCompCreated = true;
 
-  Real omega = 2. * PI * mFrequencies(0, 0);
+  // No topology is created here: whether a resistor and/or an inductor xor
+  // a capacitor exist depends on the sign of the load's power, and omega
+  // depends on the simulation frequency, neither of which are guaranteed
+  // to be available yet for CIM-loaded components during the solver's
+  // topology pre-pass. Sub-components are created in
+  // initializeParentFromNodesAndTerminals() instead; this is safe since
+  // this load introduces no new virtual nodes.
+}
 
-  // Read load parameters from terminal for CIM-loaded components so that
-  // mResistance and mReactance can be computed before initializeFromNodesAndTerminals.
+void SP::Ph1::Load::initializeParentFromNodesAndTerminals(Real frequency) {
+  Real omega = 2. * PI * frequency;
+
+  // Read load parameters from terminal for CIM-loaded components.
   if (!mParametersSet) {
     setParameters(mTerminals[0]->singleActivePower(),
                   mTerminals[0]->singleReactivePower(),
                   std::abs(mTerminals[0]->initialSingleVoltage()));
+  }
+
+  if (mNomVoltage == 0) {
+    SPDLOG_LOGGER_WARN(
+        mSLog,
+        "Nominal voltage of load {} is 0; resulting impedance will be "
+        "degenerate (zero resistance/inductance/capacitance).",
+        **mName);
   }
 
   // Compute derived impedance values needed to parametrize sub-components.
@@ -129,7 +146,6 @@ void SP::Ph1::Load::createSubComponents() {
         **mUID + "_res", **mName + "_res", Logger::Level::off);
     mSubResistor->setParameters(mResistance);
     mSubResistor->connect({SimNode::GND, mTerminals[0]->node()});
-    mSubResistor->initialize(mFrequencies);
     addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
   }
@@ -141,7 +157,6 @@ void SP::Ph1::Load::createSubComponents() {
         **mUID + "_res", **mName + "_ind", Logger::Level::off);
     mSubInductor->setParameters(mInductance);
     mSubInductor->connect({SimNode::GND, mTerminals[0]->node()});
-    mSubInductor->initialize(mFrequencies);
     addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
   } else if (mReactance < 0) {
@@ -150,13 +165,10 @@ void SP::Ph1::Load::createSubComponents() {
         **mUID + "_res", **mName + "_cap", Logger::Level::off);
     mSubCapacitor->setParameters(mCapacitance);
     mSubCapacitor->connect({SimNode::GND, mTerminals[0]->node()});
-    mSubCapacitor->initialize(mFrequencies);
     addMNASubComponent(mSubCapacitor, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
   }
-}
 
-void SP::Ph1::Load::initializeParentFromNodesAndTerminals(Real frequency) {
   (**mIntfVoltage)(0, 0) = mTerminals[0]->initialSingleVoltage();
   (**mIntfCurrent)(0, 0) = std::conj(Complex(attributeTyped<Real>("P")->get(),
                                              attributeTyped<Real>("Q")->get()) /

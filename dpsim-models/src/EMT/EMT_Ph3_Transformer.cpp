@@ -101,8 +101,6 @@ void EMT::Ph3::Transformer::createSubComponents() {
 
   // Create parallel sub components (three-phase power)
   Real pSnub = P_SNUB_TRANSFORMER * mRatedPower;
-  Real qSnub = Q_SNUB_TRANSFORMER * mRatedPower;
-  Real omega = 2. * PI * mFrequencies(0, 0);
 
   // A snubber conductance is added on the higher voltage side
   Real snubberResistance1 = std::pow(std::abs(mNominalVoltageEnd1), 2) / pSnub;
@@ -136,28 +134,15 @@ void EMT::Ph3::Transformer::createSubComponents() {
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
-  // // A snubber capacitance is added to higher voltage side (not used as capacitor at high voltage side made it worse)
-  // Real snubberCapacitance1 = qSnub / std::pow(std::abs(mNominalVoltageEnd1),2) / omega;
-  // mSnubberCapacitance1 = Math::singlePhaseParameterToThreePhase*(snubberCapacitance1);
-  // mSubSnubCapacitor1 = std::make_shared<EMT::Ph3::Capacitor>(**mName + "_snub_cap1", mLogLevel);
-  // mSubSnubCapacitor1->setParameters(mSnubberCapacitance1);
-  // mSubSnubCapacitor1->connect({ node(0), EMT::SimNode::GND });
-  // SPDLOG_LOGGER_INFO(mSLog, "Snubber Capacitance 1 (connected to higher voltage side {}) = \n{} [F] \n ", node(0)->name(), Logger::matrixToString(mSnubberCapacitance1));
-  // mSubComponents.push_back(mSubSnubCapacitor1);
-
-  // A snubber capacitance is added to lower voltage side
-  Real snubberCapacitance2 =
-      qSnub / std::pow(std::abs(mNominalVoltageEnd2), 2) / omega;
-  mSnubberCapacitance2 =
-      Math::singlePhaseParameterToThreePhase(snubberCapacitance2);
+  // A snubber capacitance is added to lower voltage side. Its value depends
+  // on omega, computed from the simulation frequency in
+  // initializeParentFromNodesAndTerminals() rather than mFrequencies here,
+  // since the latter may not be available yet for CIM-loaded components
+  // during this pre-pass. The capacitor is created here (its existence
+  // doesn't depend on that value) but parametrized there.
   mSubSnubCapacitor2 =
       std::make_shared<EMT::Ph3::Capacitor>(**mName + "_snub_cap2", mLogLevel);
-  mSubSnubCapacitor2->setParameters(mSnubberCapacitance2);
   mSubSnubCapacitor2->connect({node(1), EMT::SimNode::GND});
-  SPDLOG_LOGGER_INFO(
-      mSLog,
-      "Snubber Capacitance 2 (connected to lower voltage side {}) = {} [F]",
-      node(1)->name(), Logger::matrixToString(mSnubberCapacitance2));
   addMNASubComponent(mSubSnubCapacitor2,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
@@ -170,6 +155,27 @@ void EMT::Ph3::Transformer::initializeParentFromNodesAndTerminals(
 
   // Static calculations from load flow data
   Real omega = 2. * PI * frequency;
+
+  Real qSnub = Q_SNUB_TRANSFORMER * mRatedPower;
+
+  // // A snubber capacitance is added to higher voltage side (not used as capacitor at high voltage side made it worse)
+  // Real snubberCapacitance1 = qSnub / std::pow(std::abs(mNominalVoltageEnd1),2) / omega;
+  // mSnubberCapacitance1 = Math::singlePhaseParameterToThreePhase*(snubberCapacitance1);
+  // mSubSnubCapacitor1 = std::make_shared<EMT::Ph3::Capacitor>(**mName + "_snub_cap1", mLogLevel);
+  // mSubSnubCapacitor1->setParameters(mSnubberCapacitance1);
+  // mSubSnubCapacitor1->connect({ node(0), EMT::SimNode::GND });
+  // SPDLOG_LOGGER_INFO(mSLog, "Snubber Capacitance 1 (connected to higher voltage side {}) = \n{} [F] \n ", node(0)->name(), Logger::matrixToString(mSnubberCapacitance1));
+  // mSubComponents.push_back(mSubSnubCapacitor1);
+
+  Real snubberCapacitance2 =
+      qSnub / std::pow(std::abs(mNominalVoltageEnd2), 2) / omega;
+  mSnubberCapacitance2 =
+      Math::singlePhaseParameterToThreePhase(snubberCapacitance2);
+  mSubSnubCapacitor2->setParameters(mSnubberCapacitance2);
+  SPDLOG_LOGGER_INFO(
+      mSLog,
+      "Snubber Capacitance 2 (connected to lower voltage side {}) = {} [F]",
+      node(1)->name(), Logger::matrixToString(mSnubberCapacitance2));
   MatrixComp impedance = MatrixComp::Zero(3, 3);
   impedance << Complex(mResistance(0, 0), omega * mInductance(0, 0)),
       Complex(mResistance(0, 1), omega * mInductance(0, 1)),

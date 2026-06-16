@@ -55,19 +55,8 @@ void DP::Ph1::PQLoadCS::createSubComponents() {
     return;
   mSubCompCreated = true;
 
-  // Get power from terminals if not provided via setParameters().
-  if (**mActivePower == 0 && **mReactivePower == 0 && !mParametersSet) {
-    **mActivePower = mTerminals[0]->singleActivePower();
-    **mReactivePower = mTerminals[0]->singleReactivePower();
-    **mNomVoltage = std::abs(mTerminals[0]->initialSingleVoltage());
-  }
-  Complex power = Complex(**mActivePower, **mReactivePower);
-  Complex current =
-      (**mNomVoltage != 0) ? std::conj(power / **mNomVoltage) : Complex(0);
-
   mSubCurrentSource =
       std::make_shared<DP::Ph1::CurrentSource>(**mName + "_cs", mLogLevel);
-  mSubCurrentSource->setParameters(current);
   // A positive power should result in a positive current to ground.
   mSubCurrentSource->connect({mTerminals[0]->node(), SimNode::GND});
   addMNASubComponent(mSubCurrentSource,
@@ -76,12 +65,21 @@ void DP::Ph1::PQLoadCS::createSubComponents() {
 }
 
 void DP::Ph1::PQLoadCS::initializeParentFromNodesAndTerminals(Real frequency) {
-  mSubCurrentSource->initializeFromNodesAndTerminals(frequency);
-  updateIntfValues();
-
+  // Get power from terminals if not provided via setParameters(). Deferred
+  // to here (Phase B) since terminal power flow results are not guaranteed
+  // to be available yet for CIM-loaded components during createSubComponents().
+  if (**mActivePower == 0 && **mReactivePower == 0 && !mParametersSet) {
+    **mActivePower = mTerminals[0]->singleActivePower();
+    **mReactivePower = mTerminals[0]->singleReactivePower();
+    **mNomVoltage = std::abs(mTerminals[0]->initialSingleVoltage());
+  }
   Complex power = Complex(**mActivePower, **mReactivePower);
   Complex current =
       (**mNomVoltage != 0) ? std::conj(power / **mNomVoltage) : Complex(0);
+  mSubCurrentSource->setParameters(current);
+
+  mSubCurrentSource->initializeFromNodesAndTerminals(frequency);
+  updateIntfValues();
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"

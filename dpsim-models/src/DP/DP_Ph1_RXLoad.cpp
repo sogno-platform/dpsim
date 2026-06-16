@@ -36,13 +36,23 @@ void DP::Ph1::RXLoad::createSubComponents() {
     return;
   mSubCompCreated = true;
 
+  // No topology is created here: whether a resistor and/or an inductor xor
+  // a capacitor exist depends on the sign of the load's power, which for
+  // non-explicitly-parametrized loads is only known once terminal power
+  // flow results are available - i.e. not before
+  // initializeParentFromNodesAndTerminals() runs. Sub-components are
+  // created there instead; this is safe since this load introduces no new
+  // virtual nodes.
+}
+
+void DP::Ph1::RXLoad::initializeParentFromNodesAndTerminals(Real frequency) {
   if (!mParametersSet) {
     setParameters(mTerminals[0]->singleActivePower(),
                   mTerminals[0]->singleReactivePower(),
                   std::abs(mTerminals[0]->initialSingleVoltage()));
   }
 
-  Real omega = 2. * PI * mFrequencies(0, 0);
+  Real omega = 2. * PI * frequency;
 
   if (**mActivePower != 0) {
     mResistance = std::pow(**mNomVoltage, 2) / **mActivePower;
@@ -50,7 +60,6 @@ void DP::Ph1::RXLoad::createSubComponents() {
         std::make_shared<DP::Ph1::Resistor>(**mName + "_res", mLogLevel);
     mSubResistor->setParameters(mResistance);
     mSubResistor->connect({SimNode::GND, mTerminals[0]->node()});
-    mSubResistor->initialize(mFrequencies);
     addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
   } else {
@@ -67,7 +76,6 @@ void DP::Ph1::RXLoad::createSubComponents() {
         std::make_shared<DP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
     mSubInductor->setParameters(mInductance);
     mSubInductor->connect({SimNode::GND, mTerminals[0]->node()});
-    mSubInductor->initialize(mFrequencies);
     addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
   } else if (mReactance < 0) {
@@ -76,14 +84,11 @@ void DP::Ph1::RXLoad::createSubComponents() {
         std::make_shared<DP::Ph1::Capacitor>(**mName + "_cap", mLogLevel);
     mSubCapacitor->setParameters(mCapacitance);
     mSubCapacitor->connect({SimNode::GND, mTerminals[0]->node()});
-    mSubCapacitor->initialize(mFrequencies);
     addMNASubComponent(mSubCapacitor,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
   }
-}
 
-void DP::Ph1::RXLoad::initializeParentFromNodesAndTerminals(Real frequency) {
   (**mIntfVoltage)(0, 0) = mTerminals[0]->initialSingleVoltage();
   (**mIntfCurrent)(0, 0) = std::conj(Complex(**mActivePower, **mReactivePower) /
                                      (**mIntfVoltage)(0, 0));
