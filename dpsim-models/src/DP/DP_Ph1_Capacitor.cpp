@@ -40,10 +40,7 @@ void DP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
   Complex impedance = {0, -1. / (omega * **mCapacitance)};
   (**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 
-  // Use the admittance form (I = V * jwC) so a zero capacitance (an open
-  // branch) yields zero current. Dividing by the impedance instead would be a
-  // division by an infinite value, producing a NaN current that then
-  // propagates into the source vector.
+  // Admittance form (I = V*jwC): a zero capacitance gives 0 current, not a NaN from 1/(omega*C).
   (**mIntfCurrent)(0, 0) =
       (**mIntfVoltage)(0, 0) * Complex(0, omega * **mCapacitance);
 

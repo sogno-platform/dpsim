@@ -80,14 +80,9 @@ void EMT::Ph3::RXLoad::createSubComponents() {
     return;
   mSubCompCreated = true;
 
-  // No topology is created here: which of {resistor, inductor, capacitor}
-  // exist depends on the sign of the load's active/reactive power, which
-  // for CIM-loaded components (initPowerFromTerminal) is only known once
-  // terminal power flow results are available - i.e. not before
-  // initializeParentFromNodesAndTerminals() runs. Sub-components are
-  // created there instead; this is safe since they introduce no new
-  // virtual nodes (the series-mode virtual node, if any, is already
-  // declared up front in setParameters()).
+  // Intentionally empty: which of R/L/C exist depends on the load power sign, known only in
+  // initializeParentFromNodesAndTerminals(), where the sub-components are created. Safe: any
+  // series-mode virtual node is already declared in setParameters().
 }
 
 void EMT::Ph3::RXLoad::initializeParentFromNodesAndTerminals(Real frequency) {

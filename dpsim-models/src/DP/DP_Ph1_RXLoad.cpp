@@ -36,13 +36,8 @@ void DP::Ph1::RXLoad::createSubComponents() {
     return;
   mSubCompCreated = true;
 
-  // No topology is created here: whether a resistor and/or an inductor xor
-  // a capacitor exist depends on the sign of the load's power, which for
-  // non-explicitly-parametrized loads is only known once terminal power
-  // flow results are available - i.e. not before
-  // initializeParentFromNodesAndTerminals() runs. Sub-components are
-  // created there instead; this is safe since this load introduces no new
-  // virtual nodes.
+  // Intentionally empty: which of R/L/C exist depends on the load power sign, known only in
+  // initializeParentFromNodesAndTerminals(), where the sub-components are created. Safe: no new virtual nodes.
 }
 
 void DP::Ph1::RXLoad::initializeParentFromNodesAndTerminals(Real frequency) {

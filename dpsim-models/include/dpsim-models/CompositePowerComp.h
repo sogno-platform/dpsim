@@ -45,19 +45,12 @@ public:
   /// Destructor - does not do anything
   virtual ~CompositePowerComp() = default;
 
-  /// @brief Two-phase init contract: createSubComponents() (topology) has
-  /// already run via the solver's pre-pass, or is invoked here as an
-  /// idempotent safety net for paths that reach this composite without it
-  /// (e.g. the power-flow solver). initializeParentFromNodesAndTerminals()
-  /// then derives values and may push them into sub-components via
-  /// setParameters(), before each sub-component is recursively initialized
-  /// with frequencies and its own node/terminal data - reaching arbitrary
-  /// nesting depth for composites built from composites.
+  /// Final init contract: createSubComponents() (idempotent), then
+  /// initializeParentFromNodesAndTerminals(), then recurse into sub-components.
+  /// See docs Overview/subcomponents.md.
   void initializeFromNodesAndTerminals(Real frequency) override final;
 
-  /// Component-specific value derivation. Runs after topology
-  /// (createSubComponents()) and before sub-component initialization, so
-  /// derived values can be pushed into sub-components via setParameters().
+  /// Component value derivation; runs after topology, before sub-component init.
   virtual void initializeParentFromNodesAndTerminals(Real frequency) = 0;
 
   /// @brief Add a new subcomponent implementing MNA methods

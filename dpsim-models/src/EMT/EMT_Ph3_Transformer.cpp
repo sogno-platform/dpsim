@@ -134,12 +134,7 @@ void EMT::Ph3::Transformer::createSubComponents() {
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
-  // A snubber capacitance is added to lower voltage side. Its value depends
-  // on omega, computed from the simulation frequency in
-  // initializeParentFromNodesAndTerminals() rather than mFrequencies here,
-  // since the latter may not be available yet for CIM-loaded components
-  // during this pre-pass. The capacitor is created here (its existence
-  // doesn't depend on that value) but parametrized there.
+  // LV-side snubber capacitor created here; its omega-dependent value is set in initializeParentFromNodesAndTerminals().
   mSubSnubCapacitor2 =
       std::make_shared<EMT::Ph3::Capacitor>(**mName + "_snub_cap2", mLogLevel);
   mSubSnubCapacitor2->connect({node(1), EMT::SimNode::GND});

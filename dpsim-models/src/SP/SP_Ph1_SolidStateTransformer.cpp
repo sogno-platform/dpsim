@@ -59,10 +59,7 @@ void SP::Ph1::SolidStateTransformer::createSubComponents() {
 void SP::Ph1::SolidStateTransformer::initializeParentFromNodesAndTerminals(
     Real frequency) {
 
-  // Parametrize the sub-loads here (Phase B), before the framework's
-  // recursive sub-init loop calls Load::initializeFromNodesAndTerminals();
-  // otherwise an unparametrized Load would fall back to reading its own
-  // terminal, which is wrong for these internally-driven SST sub-loads.
+  // Parametrize the sub-loads before the recursive sub-init runs, else each Load wrongly reads its own terminal.
   mSubLoadSide1->setParameters(**mPref, **mQ1ref, mNominalVoltageEnd1);
   mSubLoadSide2->setParameters(mP2, **mQ2ref, mNominalVoltageEnd2);
 

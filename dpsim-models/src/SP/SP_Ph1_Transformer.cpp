@@ -128,12 +128,8 @@ void SP::Ph1::Transformer::createSubComponents() {
     mSubInductor->connect({node(0), mVirtualNodes[0]});
   }
 
-  // Create parallel sub components for init and mna behaviour. Their
-  // values are computed and pushed in from
-  // initializeParentFromNodesAndTerminals(), since they depend on
-  // mNominalOmega/mRatedPower which may not be available yet for
-  // CIM-loaded components during this pre-pass. Existence only depends on
-  // mBehaviour, which is safe to read here.
+  // Snubber sub-components created here (existence depends only on mBehaviour); their
+  // omega/power-dependent values are set in initializeParentFromNodesAndTerminals().
   if (mBehaviour == TopologicalPowerComp::Behaviour::Initialization ||
       mBehaviour == TopologicalPowerComp::Behaviour::MNASimulation) {
 

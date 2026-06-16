@@ -142,12 +142,7 @@ void DP::Ph1::Transformer::createSubComponents() {
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
-  // The capacitance value depends on omega, which is computed from the
-  // simulation frequency in initializeParentFromNodesAndTerminals() rather
-  // than mFrequencies here, since the latter may not be available yet for
-  // CIM-loaded components during this pre-pass. The capacitor is created
-  // here (its existence doesn't depend on that value) but parametrized
-  // there.
+  // Capacitor created here; its omega-dependent value is set in initializeParentFromNodesAndTerminals().
   mSubSnubCapacitor2 =
       std::make_shared<DP::Ph1::Capacitor>(**mName + "_snub_cap2", mLogLevel);
   mSubSnubCapacitor2->connect({node(1), DP::SimNode::GND});

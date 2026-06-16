@@ -65,9 +65,7 @@ void DP::Ph1::PQLoadCS::createSubComponents() {
 }
 
 void DP::Ph1::PQLoadCS::initializeParentFromNodesAndTerminals(Real frequency) {
-  // Get power from terminals if not provided via setParameters(). Deferred
-  // to here (Phase B) since terminal power flow results are not guaranteed
-  // to be available yet for CIM-loaded components during createSubComponents().
+  // Read power from terminals here, not in createSubComponents(): power-flow results aren't available that early.
   if (**mActivePower == 0 && **mReactivePower == 0 && !mParametersSet) {
     **mActivePower = mTerminals[0]->singleActivePower();
     **mReactivePower = mTerminals[0]->singleReactivePower();

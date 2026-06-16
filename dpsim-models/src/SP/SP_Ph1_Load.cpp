@@ -103,19 +103,14 @@ void SP::Ph1::Load::createSubComponents() {
     return;
   mSubCompCreated = true;
 
-  // No topology is created here: whether a resistor and/or an inductor xor
-  // a capacitor exist depends on the sign of the load's power, and omega
-  // depends on the simulation frequency, neither of which are guaranteed
-  // to be available yet for CIM-loaded components during the solver's
-  // topology pre-pass. Sub-components are created in
-  // initializeParentFromNodesAndTerminals() instead; this is safe since
-  // this load introduces no new virtual nodes.
+  // Intentionally empty: which of R/L/C exist depends on the load power sign and omega, known only in
+  // initializeParentFromNodesAndTerminals(), where the sub-components are created. Safe: no new virtual nodes.
 }
 
 void SP::Ph1::Load::initializeParentFromNodesAndTerminals(Real frequency) {
   Real omega = 2. * PI * frequency;
 
-  // Read load parameters from terminal for CIM-loaded components.
+  // Read load parameters from the terminal when not set explicitly.
   if (!mParametersSet) {
     setParameters(mTerminals[0]->singleActivePower(),
                   mTerminals[0]->singleReactivePower(),
