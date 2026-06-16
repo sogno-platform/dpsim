@@ -39,7 +39,13 @@ void DP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
   Real omega = 2 * PI * frequency;
   Complex impedance = {0, -1. / (omega * **mCapacitance)};
   (**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
-  (**mIntfCurrent)(0, 0) = (**mIntfVoltage)(0, 0) / impedance;
+
+  // Use the admittance form (I = V * jwC) so a zero capacitance (an open
+  // branch) yields zero current. Dividing by the impedance instead would be a
+  // division by an infinite value, producing a NaN current that then
+  // propagates into the source vector.
+  (**mIntfCurrent)(0, 0) =
+      (**mIntfVoltage)(0, 0) * Complex(0, omega * **mCapacitance);
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\nCapacitance [F]: {:s}"

@@ -75,7 +75,7 @@ void DP::Ph1::PiLine::createSubComponents() {
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 
-  if (**mParallelCap >= 0) {
+  if (**mParallelCap > 0) {
     mSubParallelCapacitor0 =
         std::make_shared<DP::Ph1::Capacitor>(**mName + "_cap0", mLogLevel);
     mSubParallelCapacitor0->setParameters(**mParallelCap / 2.);
@@ -180,7 +180,7 @@ MNAInterface::List DP::Ph1::PiLine::mnaTearGroundComponents() {
   gndComponents.push_back(mSubParallelResistor0);
   gndComponents.push_back(mSubParallelResistor1);
 
-  if (**mParallelCap >= 0) {
+  if (**mParallelCap > 0) {
     gndComponents.push_back(mSubParallelCapacitor0);
     gndComponents.push_back(mSubParallelCapacitor1);
   }
