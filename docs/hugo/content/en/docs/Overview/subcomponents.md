@@ -17,7 +17,35 @@ In the constructor of `CompositePowerComp<T>`, the parameters `hasPreStep` and `
 be set to automatically create and register a `MNAPreStep` or `MNAPostStep` task that will call the `mnaCompPreStep` or `mnaCompPostStep` method on execution.
 Additionally, all subcomponents should be registered as soon as they are created using the `addMNASubComponent`-method. This method takes
 multiple parameters defining how and in what order the subcomponent's pre- and post- steps should be called, as well as if the subcomponent
-should be stamped into the system `rightVector`:
+should be stamped into the system `rightVector`.
+
+## Initialization lifecycle
+
+Composite components are initialized in three phases, each driven by the framework rather than left to ad-hoc ordering:
+
+1. **Phase A - Topology** (`createSubComponents()`). Decides *which* sub-components exist and *how* they are wired: `make_shared`, `connect()` to network/virtual nodes, and `addMNASubComponent()`. This runs in a pre-pass before the MNA system matrix is sized, so any virtual nodes owned by sub-components are visible to `collectVirtualNodes()`. Because it runs before power-flow results or the simulation frequency are guaranteed to be available, `createSubComponents()` must not read terminal data (`initialSingleVoltage()`, `singleActivePower()`, ...), system frequency (`mFrequencies(0,0)`), or compute any power-/impedance-derived value. It must be idempotent - guard the body with `mSubCompCreated`.
+1. **Phase B - Parameterization** (`initializeParentFromNodesAndTerminals(Real frequency)`). Decides *what values* the sub-components carry. This is where terminal reads, frequency-dependent impedance/admittance calculations, and `setParameters()` calls on sub-components belong. It receives the simulation frequency as an honest argument, so there is no need to fall back on `mFrequencies(0,0)`.
+1. **Phase C - MNA init** (`mnaCompInitialize()`). Unchanged; already recurses into sub-components.
+
+`CompositePowerComp<VarType>::initializeFromNodesAndTerminals()` is `final` and owns the contract:
+
+```cpp
+void initializeFromNodesAndTerminals(Real frequency) final {
+  createSubComponents();                            // idempotent safety net for paths
+                                                     //   that reach this composite without
+                                                     //   the solver's pre-pass having run
+  initializeParentFromNodesAndTerminals(frequency); // parent derives values,
+                                                     //   setParameters() on subs
+  for (auto subComp : mSubComponents) {
+    subComp->initialize(mFrequencies);              // propagate frequencies down
+    subComp->initializeFromNodesAndTerminals(frequency);
+  }
+}
+```
+
+Concrete composites do not override `initializeFromNodesAndTerminals()` - they implement the pure-virtual `initializeParentFromNodesAndTerminals(Real frequency)` hook instead. The loop above re-enters this same `final` wrapper for any sub-component that is itself a composite, so initialization reaches arbitrary nesting depth (e.g. a composite that creates another composite as a sub-component, which in turn creates plain `R`/`L`/`C` sub-components) without each level having to manually call `initialize()`/`initializeFromNodesAndTerminals()` on its children.
+
+A sub-component whose very existence (not just its value) depends on a value only available in Phase B - e.g. choosing an inductor vs. a capacitor based on the sign of a computed reactive power - cannot use the "create in Phase A, parametrize in Phase B" split below. In that case, create *and* register the sub-component directly inside `initializeParentFromNodesAndTerminals()`. This is safe: nothing consumes `mSubComponents`/the MNA-registered sub-component list before `MnaSolver::initialize()` has finished running Phase B for every component, and as long as the sub-component introduces no new virtual nodes (those must already be declared in the constructor or `setParameters()`, before `collectVirtualNodes()` runs).
 
 ```cpp
 // DP_Ph1_PiLine.cpp
@@ -29,12 +57,17 @@ DP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
   //...
 }
 
-void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
-  //...
+void DP::Ph1::PiLine::createSubComponents() {
+  if (mSubCompCreated)
+    return;
+  mSubCompCreated = true;
+
   // Create series sub components
   mSubSeriesResistor = std::make_shared<DP::Ph1::Resistor>(**mName + "_res", mLogLevel);
 
-  // Setup mSubSeriesResistor...
+  // Setup mSubSeriesResistor... (only from values already known from this
+  // component's own setParameters()/constructor/Attributes - no terminal or
+  // frequency reads here)
 
   // Register the resistor as a subcomponent. The resistor's pre- and post-step will be called before the pre- and post-step of the parent,
   // and the resistor does not contribute to the `rightVector`.
@@ -47,6 +80,15 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
   // Register the inductor as a subcomponent. The inductor's pre- and post-step will be called before the pre- and post-step of the parent,
   // and the inductor does contribute to the `rightVector`.
   addMNASubComponent(mSubSeriesInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+  //...
+}
+
+void DP::Ph1::PiLine::initializeParentFromNodesAndTerminals(Real frequency) {
+  //...
+  // Frequency-dependent values are derived here, where `frequency` is an
+  // honest argument, instead of in createSubComponents().
+  Real omega = 2. * PI * frequency;
+  Complex impedance = {**mSeriesRes, omega * **mSeriesInd};
   //...
 }
 ```
