@@ -197,9 +197,8 @@ void SP::Ph1::Transformer::createSubComponents() {
   }
 }
 
-void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
-  createSubComponents();
-
+void SP::Ph1::Transformer::initializeParentFromNodesAndTerminals(
+    Real frequency) {
   mNominalOmega = 2. * PI * frequency;
   mReactance = mNominalOmega * **mInductance;
   SPDLOG_LOGGER_INFO(mSLog, "Reactance={} [Ohm] (referred to primary side)",
@@ -216,14 +215,6 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 
   if (mNumVirtualNodes == 3)
     mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(0));
-
-  // Initialize electrical subcomponents
-  SPDLOG_LOGGER_INFO(mSLog, "Electrical subcomponents: ");
-  for (auto subcomp : mSubComponents) {
-    SPDLOG_LOGGER_INFO(mSLog, "- {}", subcomp->name());
-    subcomp->initialize(mFrequencies);
-    subcomp->initializeFromNodesAndTerminals(frequency);
-  }
 
   SPDLOG_LOGGER_INFO(
       mSLog,

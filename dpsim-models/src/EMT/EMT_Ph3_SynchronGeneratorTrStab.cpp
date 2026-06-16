@@ -160,10 +160,8 @@ void EMT::Ph3::SynchronGeneratorTrStab::createSubComponents() {
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 }
 
-void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(
+void EMT::Ph3::SynchronGeneratorTrStab::initializeParentFromNodesAndTerminals(
     Real frequency) {
-  createSubComponents();
-
   // Initialize omega mech with nominal system frequency
   **mOmMech = mNomOmega;
 
@@ -218,10 +216,9 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(
   MatrixComp vref = MatrixComp::Zero(3, 1);
   vref = CPS::Math::singlePhaseVariableToThreePhase(**mEp);
 
-  // Set emf on the already-created voltage source, then initialize it.
+  // Set emf on the already-created voltage source; the framework's generic
+  // sub-init loop will initialize it after this hook returns.
   mSubVoltageSource->setParameters(vref, frequency);
-  mSubVoltageSource->initializeFromNodesAndTerminals(frequency);
-  mSubInductor->initializeFromNodesAndTerminals(frequency);
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialize according to powerflow ---"

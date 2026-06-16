@@ -156,35 +156,7 @@ void SP::Ph1::Load::createSubComponents() {
   }
 }
 
-void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
-
-  if (!mParametersSet) {
-    setParameters(mTerminals[0]->singleActivePower(),
-                  mTerminals[0]->singleReactivePower(),
-                  std::abs(mTerminals[0]->initialSingleVoltage()));
-  }
-
-  // Compute impedance values before creating subcomponents
-  if (**mActivePower != 0) {
-    mResistance = std::pow(mNomVoltage, 2) / **mActivePower;
-    mConductance = 1.0 / mResistance;
-  }
-
-  if (**mReactivePower != 0)
-    mReactance = std::pow(mNomVoltage, 2) / **mReactivePower;
-  else
-    mReactance = 0;
-
-  createSubComponents();
-
-  if (**mActivePower != 0)
-    mSubResistor->initializeFromNodesAndTerminals(frequency);
-
-  if (mReactance > 0)
-    mSubInductor->initializeFromNodesAndTerminals(frequency);
-  else if (mReactance < 0)
-    mSubCapacitor->initializeFromNodesAndTerminals(frequency);
-
+void SP::Ph1::Load::initializeParentFromNodesAndTerminals(Real frequency) {
   (**mIntfVoltage)(0, 0) = mTerminals[0]->initialSingleVoltage();
   (**mIntfCurrent)(0, 0) = std::conj(Complex(attributeTyped<Real>("P")->get(),
                                              attributeTyped<Real>("Q")->get()) /

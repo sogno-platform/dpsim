@@ -190,7 +190,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::setInitialStateValues(
                                              gamma_dInit, gamma_qInit);
 }
 
-void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(
+void DP::Ph1::AvVoltageSourceInverterDQ::initializeParentFromNodesAndTerminals(
     Real frequency) {
 
   // set initial interface quantities

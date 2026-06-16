@@ -93,7 +93,7 @@ public:
   /// Constructs and registers MNA subcomponents without emf value; idempotent.
   void createSubComponents() override;
   ///
-  void initializeFromNodesAndTerminals(Real frequency) override;
+  void initializeParentFromNodesAndTerminals(Real frequency) override;
 
   // #### MNA Functions ####
   /// Initializes variables of component

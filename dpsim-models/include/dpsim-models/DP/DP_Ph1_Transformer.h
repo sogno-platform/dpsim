@@ -73,7 +73,7 @@ public:
   /// Constructs and registers MNA subcomponents (incl. terminal swap); idempotent.
   void createSubComponents() override;
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency) override;
+  void initializeParentFromNodesAndTerminals(Real frequency) override;
 
   // #### MNA section ####
   /// Initializes internal variables of the component

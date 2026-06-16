@@ -163,9 +163,8 @@ void EMT::Ph3::Transformer::createSubComponents() {
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 }
 
-void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
-  createSubComponents();
-
+void EMT::Ph3::Transformer::initializeParentFromNodesAndTerminals(
+    Real frequency) {
   // Set initial voltage of virtual node in between
   mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(1) * **mRatio);
 
@@ -205,14 +204,6 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 
   if (mNumVirtualNodes == 3)
     mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(0));
-
-  // Initialize electrical subcomponents
-  SPDLOG_LOGGER_INFO(mSLog, "Electrical subcomponents: ");
-  for (auto subcomp : mSubComponents) {
-    SPDLOG_LOGGER_INFO(mSLog, "- {}", subcomp->name());
-    subcomp->initialize(mFrequencies);
-    subcomp->initializeFromNodesAndTerminals(frequency);
-  }
 
   SPDLOG_LOGGER_INFO(
       mSLog,

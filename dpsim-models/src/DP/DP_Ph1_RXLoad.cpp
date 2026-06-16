@@ -83,16 +83,7 @@ void DP::Ph1::RXLoad::createSubComponents() {
   }
 }
 
-void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
-  createSubComponents();
-
-  if (mSubResistor)
-    mSubResistor->initializeFromNodesAndTerminals(frequency);
-  if (mSubInductor)
-    mSubInductor->initializeFromNodesAndTerminals(frequency);
-  if (mSubCapacitor)
-    mSubCapacitor->initializeFromNodesAndTerminals(frequency);
-
+void DP::Ph1::RXLoad::initializeParentFromNodesAndTerminals(Real frequency) {
   (**mIntfVoltage)(0, 0) = mTerminals[0]->initialSingleVoltage();
   (**mIntfCurrent)(0, 0) = std::conj(Complex(**mActivePower, **mReactivePower) /
                                      (**mIntfVoltage)(0, 0));

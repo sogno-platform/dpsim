@@ -107,8 +107,8 @@ public:
                      Real conductance = -1);
   /// Constructs and registers MNA subcomponents; idempotent.
   void createSubComponents() override;
-  /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency) override;
+  /// Derives values from power flow data and pushes them to subcomponents
+  void initializeParentFromNodesAndTerminals(Real frequency) override;
 
   // #### Powerflow section ####
   /// Get base voltage

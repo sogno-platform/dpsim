@@ -58,7 +58,7 @@ void SP::Ph1::SolidStateTransformer::createSubComponents() {
                      MNA_SUBCOMP_TASK_ORDER::NO_TASK, false);
 }
 
-void SP::Ph1::SolidStateTransformer::initializeFromNodesAndTerminals(
+void SP::Ph1::SolidStateTransformer::initializeParentFromNodesAndTerminals(
     Real frequency) {
 
   if (std::isinf(mP2)) {
@@ -71,8 +71,6 @@ void SP::Ph1::SolidStateTransformer::initializeFromNodesAndTerminals(
     throw std::invalid_argument(
         "power at primary and secondary sides should be opposite");
   }
-
-  createSubComponents();
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"

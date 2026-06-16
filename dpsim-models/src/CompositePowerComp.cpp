@@ -5,6 +5,19 @@
 using namespace CPS;
 
 template <typename VarType>
+void CompositePowerComp<VarType>::initializeFromNodesAndTerminals(
+    Real frequency) {
+  this->createSubComponents();
+
+  initializeParentFromNodesAndTerminals(frequency);
+
+  for (auto subComp : this->mSubComponents) {
+    subComp->initialize(this->mFrequencies);
+    subComp->initializeFromNodesAndTerminals(frequency);
+  }
+}
+
+template <typename VarType>
 void CompositePowerComp<VarType>::addMNASubComponent(
     typename SimPowerComp<VarType>::Ptr subc,
     MNA_SUBCOMP_TASK_ORDER preStepOrder, MNA_SUBCOMP_TASK_ORDER postStepOrder,

@@ -65,9 +65,7 @@ void EMT::Ph3::RxLine::createSubComponents() {
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 }
 
-void EMT::Ph3::RxLine::initializeFromNodesAndTerminals(Real frequency) {
-  createSubComponents();
-
+void EMT::Ph3::RxLine::initializeParentFromNodesAndTerminals(Real frequency) {
   // Static calculation
   Real omega = 2. * PI * frequency;
   MatrixComp impedance = MatrixComp::Zero(3, 3);
@@ -98,11 +96,6 @@ void EMT::Ph3::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 
   mVirtualNodes[0]->setInitialVoltage(vInitTerm0 +
                                       **mSeriesRes * **mIntfCurrent);
-
-  // Initialize subcomponents
-  mSubResistor->initializeFromNodesAndTerminals(frequency);
-  mSubInductor->initializeFromNodesAndTerminals(frequency);
-  mInitialResistor->initializeFromNodesAndTerminals(frequency);
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"

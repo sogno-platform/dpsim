@@ -68,7 +68,7 @@ public:
   /// Constructs and registers MNA subcomponents; idempotent.
   void createSubComponents() override;
   /// Initializes component
-  void initializeFromNodesAndTerminals(Real frequency) override;
+  void initializeParentFromNodesAndTerminals(Real frequency) override;
   ///
   void setParameters(Real nomV1, Real nomV2, Real Pref, Real Q1ref, Real Q2ref);
   ///

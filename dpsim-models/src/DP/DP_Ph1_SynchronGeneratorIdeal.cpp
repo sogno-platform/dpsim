@@ -45,11 +45,8 @@ void DP::Ph1::SynchronGeneratorIdeal::createSubComponents() {
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 }
 
-void DP::Ph1::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(
+void DP::Ph1::SynchronGeneratorIdeal::initializeParentFromNodesAndTerminals(
     Real frequency) {
-  createSubComponents();
-  mSubVoltageSource->initializeFromNodesAndTerminals(frequency);
-
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"
                      "\nVoltage across: {:s}"

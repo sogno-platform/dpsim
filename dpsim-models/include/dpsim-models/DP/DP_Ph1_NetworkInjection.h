@@ -53,7 +53,7 @@ public:
 
   // #### General ####
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency) override;
+  void initializeParentFromNodesAndTerminals(Real frequency) override;
   /// Setter for reference voltage and frequency with a sine wave generator
   /// This will initialize the values of mVoltageRef and mSrcFreq to match the given parameters
   /// However, the attributes can be modified during the simulation to dynamically change the magnitude, frequency, and phase of the sine wave.

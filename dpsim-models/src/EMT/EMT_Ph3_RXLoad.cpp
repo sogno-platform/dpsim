@@ -158,7 +158,7 @@ void EMT::Ph3::RXLoad::createSubComponents() {
   }
 }
 
-void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
+void EMT::Ph3::RXLoad::initializeParentFromNodesAndTerminals(Real frequency) {
 
   if (initPowerFromTerminal) {
     **mActivePower = Matrix::Zero(3, 3);
@@ -227,8 +227,9 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
                                         mResistance * **mIntfCurrent);
   }
 
-  createSubComponents();
-
+  // Sub-components already exist (createSubComponents() ran before this
+  // hook); read back their post-init current here since the framework's
+  // generic sub-init loop runs after this hook returns.
   if ((**mActivePower)(0, 0) != 0) {
     mSubResistor->initializeFromNodesAndTerminals(frequency);
     if (!mReactanceInSeries) {

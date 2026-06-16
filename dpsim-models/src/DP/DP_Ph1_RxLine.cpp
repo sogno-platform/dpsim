@@ -59,17 +59,11 @@ void DP::Ph1::RxLine::createSubComponents() {
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 }
 
-void DP::Ph1::RxLine::initializeFromNodesAndTerminals(Real frequency) {
-  createSubComponents();
-
+void DP::Ph1::RxLine::initializeParentFromNodesAndTerminals(Real frequency) {
   (**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
   (**mIntfCurrent)(0, 0) = 0;
   mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0) +
                                       (**mIntfCurrent)(0, 0) * **mSeriesRes);
-
-  mSubResistor->initializeFromNodesAndTerminals(frequency);
-  mSubInductor->initializeFromNodesAndTerminals(frequency);
-  mInitialResistor->initializeFromNodesAndTerminals(frequency);
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"

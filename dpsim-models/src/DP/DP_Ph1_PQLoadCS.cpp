@@ -75,8 +75,7 @@ void DP::Ph1::PQLoadCS::createSubComponents() {
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 }
 
-void DP::Ph1::PQLoadCS::initializeFromNodesAndTerminals(Real frequency) {
-  createSubComponents();
+void DP::Ph1::PQLoadCS::initializeParentFromNodesAndTerminals(Real frequency) {
   mSubCurrentSource->initializeFromNodesAndTerminals(frequency);
   updateIntfValues();
 

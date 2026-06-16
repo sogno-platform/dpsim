@@ -196,7 +196,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setInitialStateValues(
                                              gamma_dInit, gamma_qInit);
 }
 
-void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(
+void EMT::Ph3::AvVoltageSourceInverterDQ::initializeParentFromNodesAndTerminals(
     Real frequency) {
 
   // use complex interface quantities for initialization calculations

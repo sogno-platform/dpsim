@@ -150,19 +150,12 @@ void SP::Ph1::RXLine::createSubComponents() {
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 }
 
-void SP::Ph1::RXLine::initializeFromNodesAndTerminals(Real frequency) {
-  createSubComponents();
-
+void SP::Ph1::RXLine::initializeParentFromNodesAndTerminals(Real frequency) {
   (**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
   Complex impedance = {**mSeriesRes, **mSeriesInd * 2. * PI * frequency};
   (**mIntfCurrent)(0, 0) = (**mIntfVoltage)(0, 0) / impedance;
   mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0) +
                                       (**mIntfCurrent)(0, 0) * **mSeriesRes);
-
-  // Initialize subcomponents
-  mSubResistor->initializeFromNodesAndTerminals(frequency);
-  mSubInductor->initializeFromNodesAndTerminals(frequency);
-  mInitialResistor->initializeFromNodesAndTerminals(frequency);
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"

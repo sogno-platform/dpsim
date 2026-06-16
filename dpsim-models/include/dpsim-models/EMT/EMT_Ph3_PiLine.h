@@ -56,8 +56,8 @@ public:
   // #### General ####
   /// Constructs and registers MNA subcomponents; idempotent.
   void createSubComponents() override;
-  /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency) override;
+  /// Derives values from power flow data and pushes them to subcomponents
+  void initializeParentFromNodesAndTerminals(Real frequency) override;
 
   // #### MNA section ####
   /// Updates internal current variable of the component

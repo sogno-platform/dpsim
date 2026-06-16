@@ -238,9 +238,7 @@ void SP::Ph1::PiLine::createSubComponents() {
   }
 }
 
-void SP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
-  createSubComponents();
-
+void SP::Ph1::PiLine::initializeParentFromNodesAndTerminals(Real frequency) {
   // Static calculation
   Real omega = 2. * PI * frequency;
   Complex impedance = {**mSeriesRes, omega * **mSeriesInd};
@@ -250,18 +248,6 @@ void SP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
   // Initialization of virtual node
   mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0) +
                                       (**mIntfCurrent)(0, 0) * **mSeriesRes);
-
-  // Initialize subcomponents
-  mSubSeriesResistor->initializeFromNodesAndTerminals(frequency);
-  mSubSeriesInductor->initializeFromNodesAndTerminals(frequency);
-  if (**mParallelCond >= 0) {
-    mSubParallelResistor0->initializeFromNodesAndTerminals(frequency);
-    mSubParallelResistor1->initializeFromNodesAndTerminals(frequency);
-  }
-  if (**mParallelCap >= 0) {
-    mSubParallelCapacitor0->initializeFromNodesAndTerminals(frequency);
-    mSubParallelCapacitor1->initializeFromNodesAndTerminals(frequency);
-  }
 
   SPDLOG_LOGGER_INFO(
       mSLog,

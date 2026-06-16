@@ -70,12 +70,8 @@ void EMT::Ph3::SynchronGeneratorIdeal::createSubComponents() {
         mSubComponents[0]->attributeTyped<MatrixComp>("V_ref"));
 }
 
-void EMT::Ph3::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(
+void EMT::Ph3::SynchronGeneratorIdeal::initializeParentFromNodesAndTerminals(
     Real frequency) {
-  createSubComponents();
-
-  mSubComponents[0]->initializeFromNodesAndTerminals(frequency);
-
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"
                      "\nTerminal 0 voltage: {:s}"

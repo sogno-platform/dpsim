@@ -160,9 +160,8 @@ void DP::Ph1::Transformer::createSubComponents() {
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 }
 
-void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
-  createSubComponents();
-
+void DP::Ph1::Transformer::initializeParentFromNodesAndTerminals(
+    Real frequency) {
   // Set initial voltage of virtual node in between
   mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(1) * **mRatio);
 
@@ -177,14 +176,6 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
   (**mIntfVoltage)(0, 0) =
       mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0);
   (**mIntfCurrent)(0, 0) = (**mIntfVoltage)(0, 0) / impedance;
-
-  // Initialize electrical subcomponents
-  SPDLOG_LOGGER_INFO(mSLog, "Electrical subcomponents: ");
-  for (auto subcomp : mSubComponents) {
-    SPDLOG_LOGGER_INFO(mSLog, "- {}", subcomp->name());
-    subcomp->initialize(mFrequencies);
-    subcomp->initializeFromNodesAndTerminals(frequency);
-  }
 
   SPDLOG_LOGGER_INFO(
       mSLog,

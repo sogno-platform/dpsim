@@ -102,9 +102,7 @@ void DP::Ph3::PiLine::createSubComponents() {
   }
 }
 
-void DP::Ph3::PiLine::initializeFromNodesAndTerminals(Real frequency) {
-  createSubComponents();
-
+void DP::Ph3::PiLine::initializeParentFromNodesAndTerminals(Real frequency) {
   // Static calculation
   Real omega = 2. * PI * frequency;
   MatrixComp impedance = MatrixComp::Zero(3, 3);
@@ -135,16 +133,6 @@ void DP::Ph3::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 
   mVirtualNodes[0]->setInitialVoltage(PEAK1PH_TO_RMS3PH *
                                       (vInitTerm0 + **mSeriesRes * iInit));
-
-  // Initialize subcomponents
-  mSubSeriesResistor->initializeFromNodesAndTerminals(frequency);
-  mSubSeriesInductor->initializeFromNodesAndTerminals(frequency);
-  mSubParallelResistor0->initializeFromNodesAndTerminals(frequency);
-  mSubParallelResistor1->initializeFromNodesAndTerminals(frequency);
-  if ((**mParallelCap)(0, 0) > 0) {
-    mSubParallelCapacitor0->initializeFromNodesAndTerminals(frequency);
-    mSubParallelCapacitor1->initializeFromNodesAndTerminals(frequency);
-  }
 
   SPDLOG_LOGGER_INFO(
       mSLog,

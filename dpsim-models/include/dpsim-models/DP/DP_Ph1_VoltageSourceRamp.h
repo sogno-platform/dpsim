@@ -47,7 +47,7 @@ public:
 
   // #### General ####
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency) override;
+  void initializeParentFromNodesAndTerminals(Real frequency) override;
   ///
   void setParameters(Complex voltage, Complex addVoltage, Real srcFreq,
                      Real addSrcFreq, Real switchTime, Real rampTime);

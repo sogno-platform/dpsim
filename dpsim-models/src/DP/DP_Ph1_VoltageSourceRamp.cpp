@@ -59,10 +59,8 @@ void DP::Ph1::VoltageSourceRamp::initialize(Matrix frequencies) {
                      MNA_SUBCOMP_TASK_ORDER::NO_TASK, true);
 }
 
-void DP::Ph1::VoltageSourceRamp::initializeFromNodesAndTerminals(
-    Real frequency) {
-  mSubVoltageSource->initializeFromNodesAndTerminals(frequency);
-}
+void DP::Ph1::VoltageSourceRamp::initializeParentFromNodesAndTerminals(
+    Real frequency) {}
 
 void DP::Ph1::VoltageSourceRamp::updateState(Real time) {
   (**mIntfVoltage)(0, 0) = **mVoltageRef;
