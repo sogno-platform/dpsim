@@ -648,5 +648,6 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
       .def("set_parameters",
            &CPS::EMT::Ph3::GenericFourTerminalVTypeSSN::setParameters, "A"_a,
            "B"_a, "C"_a, "D"_a)
-      .def("connect", &CPS::EMT::Ph3::GenericFourTerminalVTypeSSN::connect);
+      .def("connect", &CPS::EMT::Ph3::GenericFourTerminalVTypeSSN::connect)
+      .def_property_readonly("x", createAttributeGetter<CPS::Matrix>("x"));
 }

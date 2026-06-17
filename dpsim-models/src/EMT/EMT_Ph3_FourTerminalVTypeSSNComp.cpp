@@ -10,6 +10,7 @@ EMT::Ph3::FourTerminalVTypeSSNComp::FourTerminalVTypeSSNComp(
     String uid, String name, Logger::Level logLevel)
     : EMT::VTypeSSNComp(uid, name, 6, 6, logLevel) {
 
+  mPhaseType = PhaseType::ABC;
   setTerminalNumber(4);
 
   const Matrix identity3 = Matrix::Identity(3, 3);
@@ -57,9 +58,26 @@ void EMT::Ph3::FourTerminalVTypeSSNComp::mnaCompUpdateVoltage(
 }
 
 MatrixComp
-EMT::Ph3::FourTerminalVTypeSSNComp::buildInitialInputFromNodes(Real frequency) {
+EMT::Ph3::FourTerminalVTypeSSNComp::buildInitialInputFromNodes(Real) {
+  MatrixComp vInitABC = MatrixComp::Zero(6, 1);
 
-  return MatrixComp::Zero(6, 1);
+  // Interface voltage convention:
+  // u = [v_terminal2 - v_terminal0;
+  //      v_terminal3 - v_terminal1]
+
+  // First three-phase interface voltage: v20 = v2 - v0
+  vInitABC(0, 0) = RMS3PH_TO_PEAK1PH * initialSingleVoltage(2) -
+                   RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
+  vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
+  vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
+
+  // Second three-phase interface voltage: v31 = v3 - v1
+  vInitABC(3, 0) = RMS3PH_TO_PEAK1PH * initialSingleVoltage(3) -
+                   RMS3PH_TO_PEAK1PH * initialSingleVoltage(1);
+  vInitABC(4, 0) = vInitABC(3, 0) * SHIFT_TO_PHASE_B;
+  vInitABC(5, 0) = vInitABC(3, 0) * SHIFT_TO_PHASE_C;
+
+  return vInitABC;
 }
 
 void EMT::Ph3::FourTerminalVTypeSSNComp::mnaCompApplySystemMatrixStamp(
