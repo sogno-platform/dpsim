@@ -21,13 +21,13 @@ should be stamped into the system `rightVector`.
 
 ## Initialization lifecycle
 
-Composite components are initialized in three stages, each driven by the framework rather than left to ad-hoc ordering. (These are distinct from the electrical phases A/B/C of a three-phase component.)
+Composite components are initialized in three stages, each with a defined role. (These are distinct from the electrical phases A/B/C of a three-phase component.)
 
-1. **Topology stage** (`createSubComponents()`). Decides *which* sub-components exist and *how* they are wired: `make_shared`, `connect()` to network/virtual nodes, and `addMNASubComponent()`. This runs in a pre-pass before the MNA system matrix is sized, so any virtual nodes owned by sub-components are visible to `collectVirtualNodes()`. Because it runs before power-flow results or the simulation frequency are guaranteed to be available, `createSubComponents()` must not read terminal data (`initialSingleVoltage()`, `singleActivePower()`, ...), system frequency (`mFrequencies(0,0)`), or compute any power-/impedance-derived value. It must be idempotent - guard the body with `mSubCompCreated`.
-1. **Parameterization stage** (`initializeParentFromNodesAndTerminals(Real frequency)`). Decides *what values* the sub-components carry. This is where terminal reads, frequency-dependent impedance/admittance calculations, and `setParameters()` calls on sub-components belong. It receives the simulation frequency as an honest argument, so there is no need to fall back on `mFrequencies(0,0)`.
+1. **Topology stage** (`createSubComponents()`). Decides *which* sub-components exist and *how* they are wired: `make_shared`, `connect()` to network/virtual nodes, and `addMNASubComponent()`. This runs in a pre-pass before the MNA system matrix is sized, so any virtual nodes owned by sub-components are visible to `collectVirtualNodes()`. Because it runs before power-flow results or the simulation frequency are guaranteed to be available, `createSubComponents()` must not read terminal data (`initialSingleVoltage()`, `singleActivePower()`, ...), system frequency (`mFrequencies(0,0)`), or compute any power-/impedance-derived value. It must be idempotent — guard the body with `mSubCompCreated` (a protected field inherited from `CompositePowerComp`).
+1. **Parameterization stage** (`initializeParentFromNodesAndTerminals(Real frequency)`). Sets the values the sub-components created in stage 1 will use. This is where terminal reads, frequency-dependent impedance/admittance calculations, and `setParameters()` calls on sub-components belong. The simulation frequency is passed in as a direct argument, so there is no need to access `mFrequencies(0,0)`. This is the hook concrete composites must implement — do *not* override `initializeFromNodesAndTerminals()` directly; the base class owns that method and calls this hook at the right time.
 1. **MNA-init stage** (`mnaCompInitialize()`). Unchanged; already recurses into sub-components.
 
-`CompositePowerComp<VarType>::initializeFromNodesAndTerminals()` is `final` and owns the contract:
+`CompositePowerComp<VarType>::initializeFromNodesAndTerminals()` is `final` and sequences these stages:
 
 ```cpp
 void initializeFromNodesAndTerminals(Real frequency) final {
@@ -43,11 +43,11 @@ void initializeFromNodesAndTerminals(Real frequency) final {
 }
 ```
 
-Concrete composites do not override `initializeFromNodesAndTerminals()` - they implement the pure-virtual `initializeParentFromNodesAndTerminals(Real frequency)` hook instead. The loop above re-enters this same `final` wrapper for any sub-component that is itself a composite, so initialization reaches arbitrary nesting depth (e.g. a composite that creates another composite as a sub-component, which in turn creates plain `R`/`L`/`C` sub-components) without each level having to manually call `initialize()`/`initializeFromNodesAndTerminals()` on its children.
+The loop re-enters this same `final` wrapper for any sub-component that is itself a composite, so the whole tree initializes correctly without each level manually calling `initialize()`/`initializeFromNodesAndTerminals()` on its children.
 
-A sub-component whose very existence (not just its value) depends on a value only available in the parameterization stage - e.g. choosing an inductor vs. a capacitor based on the sign of a computed reactive power - cannot use the "create in the topology stage, parametrize in the parameterization stage" split below. In that case, create *and* register the sub-component directly inside `initializeParentFromNodesAndTerminals()`. This is safe: nothing consumes `mSubComponents`/the MNA-registered sub-component list before `MnaSolver::initialize()` has finished running the parameterization stage for every component, and as long as the sub-component introduces no new virtual nodes (those must already be declared in the constructor or `setParameters()`, before `collectVirtualNodes()` runs).
+A sub-component whose very existence (not just its value) depends on a parameterization-stage value — e.g. picking an inductor vs. a capacitor based on the sign of computed reactive power — cannot be registered in `createSubComponents()`. Create *and* register it directly inside `initializeParentFromNodesAndTerminals()` instead. This is safe because the MNA-registered sub-component list is not consumed until `MnaSolver::initialize()` finishes the parameterization stage for all components. The one constraint: the late-registered sub-component must not introduce new virtual nodes — those must be declared in the constructor or `setParameters()`, before `collectVirtualNodes()` runs.
 
-Parameterization-stage value derivation must be numerically safe at degenerate inputs. Because the parent derives sub-component values from terminal power, voltage, and frequency, a zero rated power, zero reactance, or zero capacitance can turn an impedance/admittance expression into a division by zero and inject `NaN`/`inf` into the system matrix or source vector - which then propagates through every later time step. Guard such expressions explicitly: derive a branch current from an admittance (`V * jwC`) rather than from an impedance (`V / Z`), and create an optional shunt branch only when its value is strictly positive (a zero-valued branch is an open circuit and stamps nothing, so omitting it is numerically equivalent and avoids the singular impedance). A composite can otherwise build a wrong-but-non-crashing topology, so prefer an explicit check and log over relying on a value happening to be non-zero.
+Value derivation in the parameterization stage must be numerically safe at degenerate inputs. Sub-component values come from terminal power, voltage, and frequency, so a zero rated power, zero reactance, or zero capacitance can produce a division by zero and inject `NaN`/`inf` into the system matrix or source vector, which then persists for the rest of the simulation. Guard such expressions: use admittance form (`Y = jwC`, branch current `V * Y`) rather than impedance form (`V / Z`), and create optional shunt branches only when their value is strictly positive — a zero-valued shunt is just an open circuit. A degenerate value that slips through will produce a wrong but non-crashing topology, so an explicit check with a log message is better than assuming the value is nonzero.
 
 ```cpp
 // DP_Ph1_PiLine.cpp
@@ -87,8 +87,7 @@ void DP::Ph1::PiLine::createSubComponents() {
 
 void DP::Ph1::PiLine::initializeParentFromNodesAndTerminals(Real frequency) {
   //...
-  // Frequency-dependent values are derived here, where `frequency` is an
-  // honest argument, instead of in createSubComponents().
+  // Frequency-dependent values go here, not in createSubComponents().
   Real omega = 2. * PI * frequency;
   Complex impedance = {**mSeriesRes, omega * **mSeriesInd};
   //...
