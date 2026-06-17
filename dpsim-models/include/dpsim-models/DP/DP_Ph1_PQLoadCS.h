@@ -24,7 +24,6 @@ protected:
   /// Internal current source
   std::shared_ptr<DP::Ph1::CurrentSource> mSubCurrentSource;
   /// True after createSubComponents() runs; prevents double-construction.
-  bool mSubCompCreated = false;
   void updateSetPoint();
   void updateIntfValues();
 

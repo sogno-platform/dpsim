@@ -32,7 +32,6 @@ class SVC : public MNASimPowerComp<Complex>,
             public SharedFactory<SVC> {
 protected:
   /// True after createSubComponents() runs; prevents double-construction.
-  bool mSubCompCreated = false;
   /// ### internal components
   /// Internal inductor
   std::shared_ptr<DP::Ph1::Inductor> mSubInductor;

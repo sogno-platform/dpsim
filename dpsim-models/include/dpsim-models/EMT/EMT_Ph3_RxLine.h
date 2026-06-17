@@ -23,7 +23,6 @@ class RxLine : public CompositePowerComp<Real>,
                public SharedFactory<RxLine> {
 protected:
   /// True after createSubComponents() runs; prevents double-construction.
-  bool mSubCompCreated = false;
   /// Inductance submodel
   std::shared_ptr<Inductor> mSubInductor;
   /// Resistor submodel

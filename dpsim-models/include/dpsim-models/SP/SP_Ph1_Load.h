@@ -53,7 +53,6 @@ private:
   Real mCapacitance;
 
   /// True after createSubComponents() runs; prevents double-construction.
-  bool mSubCompCreated = false;
   /// Internal inductor
   std::shared_ptr<SP::Ph1::Inductor> mSubInductor;
   /// Internal capacitor

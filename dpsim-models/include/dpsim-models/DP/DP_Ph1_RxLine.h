@@ -29,7 +29,6 @@ protected:
   /// Inductor end to ground resistor to facilitate initialization
   std::shared_ptr<Resistor> mInitialResistor;
   /// True after createSubComponents() runs; prevents double-construction.
-  bool mSubCompCreated = false;
 
 public:
   /// Defines UID, name, logging level

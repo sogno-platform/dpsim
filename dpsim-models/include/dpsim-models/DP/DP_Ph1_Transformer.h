@@ -49,7 +49,6 @@ private:
   /// Boolean for considering resistive losses with sub resistor
   Bool mWithResistiveLosses;
   /// True after createSubComponents() runs; prevents double-construction.
-  bool mSubCompCreated = false;
 
 public:
   /// Defines UID, name and logging level

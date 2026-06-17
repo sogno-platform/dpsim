@@ -42,7 +42,6 @@ protected:
   /// Nominal system angle
   Real mThetaN = 0;
   /// True after createSubComponents() runs; prevents double-construction.
-  bool mSubCompCreated = false;
 
 public:
   // #### Model specific variables ####

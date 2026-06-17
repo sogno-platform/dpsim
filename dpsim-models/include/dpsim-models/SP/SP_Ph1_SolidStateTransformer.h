@@ -24,7 +24,6 @@ class SolidStateTransformer : public CompositePowerComp<Complex>,
                               public SharedFactory<SolidStateTransformer> {
 private:
   /// True after createSubComponents() runs; prevents double-construction.
-  bool mSubCompCreated = false;
   ///
   std::shared_ptr<SP::Ph1::Load> mSubLoadSide1;
   ///

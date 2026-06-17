@@ -45,7 +45,6 @@ public:
 
 protected:
   /// True after createSubComponents() runs; prevents double-construction.
-  bool mSubCompCreated = false;
   /// CHECK: Which of these really need to be member variables?
   ///base current [A]
   Real mBaseCurrent;

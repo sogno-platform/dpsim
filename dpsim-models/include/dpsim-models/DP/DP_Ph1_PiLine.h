@@ -39,7 +39,6 @@ protected:
   /// Right side vectors of subcomponents
   std::vector<const Matrix *> mRightVectorStamps;
   /// True after createSubComponents() runs; prevents double-construction.
-  bool mSubCompCreated = false;
 
 public:
   /// Defines UID, name and logging level

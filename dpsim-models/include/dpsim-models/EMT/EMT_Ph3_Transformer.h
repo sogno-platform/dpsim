@@ -24,7 +24,6 @@ class Transformer : public CompositePowerComp<Real>,
                     public Base::Ph3::Transformer {
 private:
   /// True after createSubComponents() runs; prevents double-construction.
-  bool mSubCompCreated = false;
   /// Internal resistor to model losses
   std::shared_ptr<EMT::Ph3::Resistor> mSubResistor;
   /// Internal inductor to model losses

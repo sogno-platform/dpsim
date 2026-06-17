@@ -44,7 +44,6 @@ protected:
   /// Flag for usage of actual mechanical speed for torque conversion (otherwise mNomOmega is used)
   Bool mConvertWithOmegaMech = true;
   /// True after createSubComponents() runs; prevents double-construction.
-  bool mSubCompCreated = false;
 
 public:
   // #### Model specific variables ####

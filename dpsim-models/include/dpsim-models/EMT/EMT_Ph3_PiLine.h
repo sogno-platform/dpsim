@@ -28,7 +28,6 @@ class PiLine : public CompositePowerComp<Real>,
                public SharedFactory<PiLine> {
 protected:
   /// True after createSubComponents() runs; prevents double-construction.
-  bool mSubCompCreated = false;
   /// Series Inductance submodel
   std::shared_ptr<Inductor> mSubSeriesInductor;
   /// Series Resistor submodel

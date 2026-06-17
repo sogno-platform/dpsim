@@ -23,7 +23,6 @@ private:
   /// Specifies type of ideal source
   CPS::GeneratorType mSourceType;
   /// True after createSubComponents() runs; prevents double-construction.
-  bool mSubCompCreated = false;
   /// Inner voltage source that represents the generator
   std::shared_ptr<EMT::Ph3::VoltageSource> mSubVoltageSource;
   /// Inner voltage source that represents the generator

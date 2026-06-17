@@ -24,6 +24,11 @@ private:
 
   std::vector<CPS::Attribute<Matrix>::Ptr> mRightVectorStamps;
 
+protected:
+  /// Guards createSubComponents() against double-execution; set it to true at
+  /// the top of every override. Provided here so subclasses need not redeclare.
+  bool mSubCompCreated = false;
+
 public:
   using Type = VarType;
   using Ptr = std::shared_ptr<CompositePowerComp<VarType>>;
@@ -45,12 +50,16 @@ public:
   /// Destructor - does not do anything
   virtual ~CompositePowerComp() = default;
 
-  /// Final init contract: createSubComponents() (idempotent), then
+  /// Sequences the three init stages: createSubComponents(), then
   /// initializeParentFromNodesAndTerminals(), then recurse into sub-components.
   /// See docs Overview/subcomponents.md.
   void initializeFromNodesAndTerminals(Real frequency) override final;
 
-  /// Component value derivation; runs after topology, before sub-component init.
+  /// Pure-virtual hook for the parameterization stage. Concrete composites
+  /// implement this instead of overriding initializeFromNodesAndTerminals().
+  /// Reads terminal data, computes frequency-dependent values, and calls
+  /// setParameters() on sub-components. The simulation frequency is passed
+  /// directly so there is no need to access mFrequencies(0,0).
   virtual void initializeParentFromNodesAndTerminals(Real frequency) = 0;
 
   /// @brief Add a new subcomponent implementing MNA methods

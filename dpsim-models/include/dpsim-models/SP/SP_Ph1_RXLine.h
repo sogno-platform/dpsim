@@ -56,7 +56,6 @@ protected:
   MatrixComp mY_element;
 
   /// True after createSubComponents() runs; prevents double-construction.
-  bool mSubCompCreated = false;
   /// Inductance submodel
   std::shared_ptr<Inductor> mSubInductor;
   /// Resistor submodel

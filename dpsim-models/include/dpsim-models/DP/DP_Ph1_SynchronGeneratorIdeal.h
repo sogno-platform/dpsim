@@ -22,7 +22,6 @@ private:
   /// Inner voltage source that represents the generator
   std::shared_ptr<DP::Ph1::VoltageSource> mSubVoltageSource;
   /// True after createSubComponents() runs; prevents double-construction.
-  bool mSubCompCreated = false;
 
 public:
   /// Voltage set point [V]

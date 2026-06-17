@@ -23,7 +23,6 @@ namespace Ph3 {
 class RXLoad : public CompositePowerComp<Real>, public SharedFactory<RXLoad> {
 protected:
   /// True after createSubComponents() runs; prevents double-construction.
-  bool mSubCompCreated = false;
   /// Power [Watt]
   MatrixComp mPower;
   /// Resistance [Ohm]
