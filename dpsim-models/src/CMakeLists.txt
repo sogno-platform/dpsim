@@ -120,9 +120,11 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph3_SSN_Full_Serial_RLC.cpp
 	EMT/EMT_Ph3_GenericTwoTerminalVTypeSSN.cpp
 	EMT/EMT_Ph3_GenericTwoTerminalITypeSSN.cpp
+	EMT/EMT_Ph3_GenericFourTerminalVTypeSSN.cpp
 	EMT/EMT_Ph3_TwoTerminalVTypeSSNComp.cpp
 	EMT/EMT_Ph3_TwoTerminalITypeSSNComp.cpp
 	EMT/EMT_Ph3_TwoTerminalVTypeVariableSSNComp.cpp
+	EMT/EMT_Ph3_FourTerminalVTypeSSNComp.cpp
 	EMT/EMT_Ph3_PiecewiseLinearInductor.cpp
 
 	SP/SP_Ph1_VoltageSource.cpp
