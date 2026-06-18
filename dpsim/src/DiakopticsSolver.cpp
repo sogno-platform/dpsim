@@ -285,6 +285,11 @@ template <typename VarType> void DiakopticsSolver<VarType>::initComponents() {
   // Initialize signal components.
   for (auto comp : mSimSignalComps)
     comp->initialize(mSystem.mSystemOmega, mTimeStep);
+
+  // Initialize nodes
+  for (UInt net = 0; net < mSubnets.size(); ++net)
+    for (auto node : mSubnets[net].nodes)
+      node->initialize();
 }
 
 template <typename VarType> void DiakopticsSolver<VarType>::initMatrices() {
