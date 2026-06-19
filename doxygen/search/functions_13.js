@@ -13,10 +13,11 @@ var searchData=
   ['updatepowerinjection_10',['updatePowerInjection',['../class_c_p_s_1_1_s_p_1_1_ph1_1_1_network_injection.html#adaf0685e47db580a714fc4a7c0b3d4ff',1,'CPS::SP::Ph1::NetworkInjection::updatePowerInjection()'],['../class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator.html#ad9ca5cf9df9637943797db64ec2131f1',1,'CPS::SP::Ph1::SynchronGenerator::updatePowerInjection()']]],
   ['updatepq_11',['updatePQ',['../class_c_p_s_1_1_s_p_1_1_ph1_1_1_load.html#ab9eaf400402fce5fad0adfcc03c17dc3',1,'CPS::SP::Ph1::Load']]],
   ['updatereactivepowerinjection_12',['updateReactivePowerInjection',['../class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator.html#ab8024e3d12b3b12bc4b318c718ecce16',1,'CPS::SP::Ph1::SynchronGenerator']]],
-  ['updatesolution_13',['updateSolution',['../class_d_psim_1_1_p_f_solver.html#ae8bcb79d12fa9e493886b8d4ef841e87',1,'DPsim::PFSolver::updateSolution()'],['../class_d_psim_1_1_p_f_solver_power_polar.html#a4a8708055d6971eeb1cde6e7c1d7f64e',1,'DPsim::PFSolverPowerPolar::updateSolution()']]],
-  ['updatestate_14',['updateState',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_norton.html#a853afcfa060aa338ab314587adb4388d',1,'CPS::DP::Ph1::VoltageSourceNorton']]],
-  ['updatestatespacemodel_15',['updateStateSpaceModel',['../class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a9724afa03c40d7f38b47990a81aa1805',1,'CPS::EMT::SSNComp::updateStateSpaceModel()'],['../class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html#af8ddecfcac77d9c4659afabf53da35ae',1,'CPS::EMT::VTypeVariableSSNComp::updateStateSpaceModel()']]],
-  ['updateswitchstate_16',['updateSwitchState',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load_switch.html#a2a87ce25e36fba00e9637764a447b968',1,'CPS::DP::Ph1::RXLoadSwitch']]],
-  ['updateswitchstatus_17',['updateSwitchStatus',['../class_d_psim_1_1_mna_solver.html#a7bf9fb141c483f932de2073ca8f64547',1,'DPsim::MnaSolver']]],
-  ['useprotectionswitches_18',['useProtectionSwitches',['../class_c_p_s_1_1_c_i_m_1_1_reader.html#a61ad5bec56b65b1d6234676ef589038c',1,'CPS::CIM::Reader']]]
+  ['updatesetpoint_13',['updateSetPoint',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#a9a6d97b55b157d88d516ccc366f9426e',1,'CPS::DP::Ph1::PQLoadCS']]],
+  ['updatesolution_14',['updateSolution',['../class_d_psim_1_1_p_f_solver.html#ae8bcb79d12fa9e493886b8d4ef841e87',1,'DPsim::PFSolver::updateSolution()'],['../class_d_psim_1_1_p_f_solver_power_polar.html#a4a8708055d6971eeb1cde6e7c1d7f64e',1,'DPsim::PFSolverPowerPolar::updateSolution()']]],
+  ['updatestate_15',['updateState',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_norton.html#a853afcfa060aa338ab314587adb4388d',1,'CPS::DP::Ph1::VoltageSourceNorton']]],
+  ['updatestatespacemodel_16',['updateStateSpaceModel',['../class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a9724afa03c40d7f38b47990a81aa1805',1,'CPS::EMT::SSNComp::updateStateSpaceModel()'],['../class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html#af8ddecfcac77d9c4659afabf53da35ae',1,'CPS::EMT::VTypeVariableSSNComp::updateStateSpaceModel()']]],
+  ['updateswitchstate_17',['updateSwitchState',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load_switch.html#a2a87ce25e36fba00e9637764a447b968',1,'CPS::DP::Ph1::RXLoadSwitch']]],
+  ['updateswitchstatus_18',['updateSwitchStatus',['../class_d_psim_1_1_mna_solver.html#a7bf9fb141c483f932de2073ca8f64547',1,'DPsim::MnaSolver']]],
+  ['useprotectionswitches_19',['useProtectionSwitches',['../class_c_p_s_1_1_c_i_m_1_1_reader.html#a61ad5bec56b65b1d6234676ef589038c',1,'CPS::CIM::Reader']]]
 ];

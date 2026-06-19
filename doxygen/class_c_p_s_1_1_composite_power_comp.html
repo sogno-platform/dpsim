@@ -91,8 +91,9 @@ $(function(){ initResizable(false); });
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="class_c_p_s_1_1_composite_power_comp-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">CPS::CompositePowerComp&lt; VarType &gt; Class Template Reference</div></div>
+  <div class="headertitle"><div class="title">CPS::CompositePowerComp&lt; VarType &gt; Class Template Reference<span class="mlabels"><span class="mlabel abstract">abstract</span></span></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -166,6 +167,10 @@ Public Member Functions</h2></td></tr>
 virtual&#160;</td><td class="memItemRight" valign="bottom"><b>~CompositePowerComp</b> ()=default</td></tr>
 <tr class="memdesc:acd5001ab92e80e42d9beaadc1a8dca1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor - does not do anything. <br /></td></tr>
 <tr class="separator:acd5001ab92e80e42d9beaadc1a8dca1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dbb1714bcd34e498da06e26fe460c00" id="r_a9dbb1714bcd34e498da06e26fe460c00"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9dbb1714bcd34e498da06e26fe460c00">initializeFromNodesAndTerminals</a> (Real frequency) override final</td></tr>
+<tr class="separator:a9dbb1714bcd34e498da06e26fe460c00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49dac74f4584c6f7c5061647a1fa1d22" id="r_a49dac74f4584c6f7c5061647a1fa1d22"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a49dac74f4584c6f7c5061647a1fa1d22">initializeParentFromNodesAndTerminals</a> (Real frequency)=0</td></tr>
+<tr class="separator:a49dac74f4584c6f7c5061647a1fa1d22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36787ca664e85614aca65a2683547147" id="r_a36787ca664e85614aca65a2683547147"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a36787ca664e85614aca65a2683547147">addMNASubComponent</a> (typename <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; VarType &gt;::Ptr subc, MNA_SUBCOMP_TASK_ORDER preStepOrder, MNA_SUBCOMP_TASK_ORDER postStepOrder, Bool contributeToRightVector)</td></tr>
 <tr class="memdesc:a36787ca664e85614aca65a2683547147"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a new subcomponent implementing MNA methods.  <br /></td></tr>
 <tr class="separator:a36787ca664e85614aca65a2683547147"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -381,9 +386,6 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><b>~MNASimPowerComp</
 <tr class="memitem:a69a018f851bb62cf5147e25a93f2cb2c inherit pub_methods_class_c_p_s_1_1_sim_power_comp" id="r_a69a018f851bb62cf5147e25a93f2cb2c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a69a018f851bb62cf5147e25a93f2cb2c">initialize</a> (Matrix frequencies)</td></tr>
 <tr class="memdesc:a69a018f851bb62cf5147e25a93f2cb2c inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize components with correct network frequencies.  <br /></td></tr>
 <tr class="separator:a69a018f851bb62cf5147e25a93f2cb2c inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4401f844a3f389e07a37ef1716d84dcd inherit pub_methods_class_c_p_s_1_1_sim_power_comp" id="r_a4401f844a3f389e07a37ef1716d84dcd"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a4401f844a3f389e07a37ef1716d84dcd">initializeFromNodesAndTerminals</a> (Real frequency)</td></tr>
-<tr class="memdesc:a4401f844a3f389e07a37ef1716d84dcd inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes Component variables according to power flow data stored in Nodes.  <br /></td></tr>
-<tr class="separator:a4401f844a3f389e07a37ef1716d84dcd inherit pub_methods_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_c_p_s_1_1_topological_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_c_p_s_1_1_topological_power_comp')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_c_p_s_1_1_topological_power_comp.html">CPS::TopologicalPowerComp</a></td></tr>
 <tr class="memitem:ad738f90256252a9bd5e06415916c1adf inherit pub_methods_class_c_p_s_1_1_topological_power_comp" id="r_ad738f90256252a9bd5e06415916c1adf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_power_comp.html#ad738f90256252a9bd5e06415916c1adf">TopologicalPowerComp</a> (String <a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, String name, Logger::Level logLevel=Logger::Level::off)</td></tr>
 <tr class="memdesc:ad738f90256252a9bd5e06415916c1adf inherit pub_methods_class_c_p_s_1_1_topological_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Basic constructor that takes UID, name and log level.  <br /></td></tr>
@@ -422,6 +424,9 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><b>~MNASimPowerComp</
 <tr class="memitem:ae08800e327db6af9a7249cabefe4ba2f inherit pub_methods_class_c_p_s_1_1_identified_object" id="r_ae08800e327db6af9a7249cabefe4ba2f"><td class="memItemLeft" align="right" valign="top">virtual String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#ae08800e327db6af9a7249cabefe4ba2f">description</a> ()</td></tr>
 <tr class="separator:ae08800e327db6af9a7249cabefe4ba2f inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_c_p_s_1_1_m_n_a_interface"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_c_p_s_1_1_m_n_a_interface')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html">CPS::MNAInterface</a></td></tr>
+<tr class="memitem:a780dfe2d2caa891938f3e4e9796cca1d inherit pub_methods_class_c_p_s_1_1_m_n_a_interface" id="r_a780dfe2d2caa891938f3e4e9796cca1d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a780dfe2d2caa891938f3e4e9796cca1d">createSubComponents</a> ()</td></tr>
+<tr class="memdesc:a780dfe2d2caa891938f3e4e9796cca1d inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs and registers MNA subcomponents; called before collectVirtualNodes so virtual nodes exist before matrix sizing.  <br /></td></tr>
+<tr class="separator:a780dfe2d2caa891938f3e4e9796cca1d inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa583b6d80d2ff9a01dab0446698a8cad inherit pub_methods_class_c_p_s_1_1_m_n_a_interface" id="r_aa583b6d80d2ff9a01dab0446698a8cad"><td class="memItemLeft" align="right" valign="top">
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaInitialize</b> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector)=0</td></tr>
 <tr class="separator:aa583b6d80d2ff9a01dab0446698a8cad inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -438,28 +443,10 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaInitialize
 <tr class="memdesc:aca665eb0006e91958366aefca2863ee0 inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes variables of components. <br /></td></tr>
 <tr class="separator:aca665eb0006e91958366aefca2863ee0 inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
-Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header pub_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; VarType &gt;</a></td></tr>
-<tr class="memitem:ac70d8c6733b49d5d5565ba21c28b372e inherit pub_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp" id="r_ac70d8c6733b49d5d5565ba21c28b372e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#ac70d8c6733b49d5d5565ba21c28b372e">mRightVector</a></td></tr>
-<tr class="separator:ac70d8c6733b49d5d5565ba21c28b372e inherit pub_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a33660cd957a580e2a6c7687dfdcb8ff5 inherit pub_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp" id="r_a33660cd957a580e2a6c7687dfdcb8ff5"><td class="memItemLeft" align="right" valign="top">Task::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a33660cd957a580e2a6c7687dfdcb8ff5">mMnaTasks</a></td></tr>
-<tr class="memdesc:a33660cd957a580e2a6c7687dfdcb8ff5 inherit pub_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of tasks that relate to using MNA for this component (usually pre-step and/or post-step)  <br /></td></tr>
-<tr class="separator:a33660cd957a580e2a6c7687dfdcb8ff5 inherit pub_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_attribs_class_c_p_s_1_1_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_attribs_class_c_p_s_1_1_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt; VarType &gt;</a></td></tr>
-<tr class="memitem:a7210276935119e370dfb1f98d02c3a9a inherit pub_attribs_class_c_p_s_1_1_sim_power_comp" id="r_a7210276935119e370dfb1f98d02c3a9a"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; MatrixVar&lt; VarType &gt; &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a7210276935119e370dfb1f98d02c3a9a">mIntfVoltage</a></td></tr>
-<tr class="memdesc:a7210276935119e370dfb1f98d02c3a9a inherit pub_attribs_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Voltage between terminals.  <br /></td></tr>
-<tr class="separator:a7210276935119e370dfb1f98d02c3a9a inherit pub_attribs_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a141d3e207fff12a4808e3f562a99fda1 inherit pub_attribs_class_c_p_s_1_1_sim_power_comp" id="r_a141d3e207fff12a4808e3f562a99fda1"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; MatrixVar&lt; VarType &gt; &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">mIntfCurrent</a></td></tr>
-<tr class="memdesc:a141d3e207fff12a4808e3f562a99fda1 inherit pub_attribs_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current through component.  <br /></td></tr>
-<tr class="separator:a141d3e207fff12a4808e3f562a99fda1 inherit pub_attribs_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_attribs_class_c_p_s_1_1_identified_object"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_attribs_class_c_p_s_1_1_identified_object')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="class_c_p_s_1_1_identified_object.html">CPS::IdentifiedObject</a></td></tr>
-<tr class="memitem:a13661eab6b670e4a5a3aa5777f8fd5d0 inherit pub_attribs_class_c_p_s_1_1_identified_object" id="r_a13661eab6b670e4a5a3aa5777f8fd5d0"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; String &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a13661eab6b670e4a5a3aa5777f8fd5d0">mName</a></td></tr>
-<tr class="memdesc:a13661eab6b670e4a5a3aa5777f8fd5d0 inherit pub_attribs_class_c_p_s_1_1_identified_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Human readable name.  <br /></td></tr>
-<tr class="separator:a13661eab6b670e4a5a3aa5777f8fd5d0 inherit pub_attribs_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad143c517fdb9d0deca573f15169e97e8 inherit pub_attribs_class_c_p_s_1_1_identified_object" id="r_ad143c517fdb9d0deca573f15169e97e8"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; String &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#ad143c517fdb9d0deca573f15169e97e8">mUID</a></td></tr>
-<tr class="memdesc:ad143c517fdb9d0deca573f15169e97e8 inherit pub_attribs_class_c_p_s_1_1_identified_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unique identifier.  <br /></td></tr>
-<tr class="separator:ad143c517fdb9d0deca573f15169e97e8 inherit pub_attribs_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:a230c4cafd696f2c14f9d3fef031cf988" id="r_a230c4cafd696f2c14f9d3fef031cf988"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a230c4cafd696f2c14f9d3fef031cf988">mSubCompCreated</a> = false</td></tr>
+<tr class="separator:a230c4cafd696f2c14f9d3fef031cf988"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt; VarType &gt;</a></td></tr>
 <tr class="memitem:a16fef50583bd2c58806acbf6185698cb inherit pro_attribs_class_c_p_s_1_1_sim_power_comp" id="r_a16fef50583bd2c58806acbf6185698cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_terminal.html">SimTerminal</a>&lt; VarType &gt;::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a16fef50583bd2c58806acbf6185698cb">mTerminals</a></td></tr>
 <tr class="memdesc:a16fef50583bd2c58806acbf6185698cb inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of Terminals.  <br /></td></tr>
@@ -505,6 +492,29 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:af7497f9b94a45040b1601ac58f5e3d97 inherit pro_attribs_class_c_p_s_1_1_identified_object" id="r_af7497f9b94a45040b1601ac58f5e3d97"><td class="memItemLeft" align="right" valign="top">AttributeList::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#af7497f9b94a45040b1601ac58f5e3d97">mAttributes</a> = AttributeList::make()</td></tr>
 <tr class="memdesc:af7497f9b94a45040b1601ac58f5e3d97 inherit pro_attribs_class_c_p_s_1_1_identified_object"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a> List.  <br /></td></tr>
 <tr class="separator:af7497f9b94a45040b1601ac58f5e3d97 inherit pro_attribs_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; VarType &gt;</a></td></tr>
+<tr class="memitem:ac70d8c6733b49d5d5565ba21c28b372e inherit pub_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp" id="r_ac70d8c6733b49d5d5565ba21c28b372e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#ac70d8c6733b49d5d5565ba21c28b372e">mRightVector</a></td></tr>
+<tr class="separator:ac70d8c6733b49d5d5565ba21c28b372e inherit pub_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33660cd957a580e2a6c7687dfdcb8ff5 inherit pub_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp" id="r_a33660cd957a580e2a6c7687dfdcb8ff5"><td class="memItemLeft" align="right" valign="top">Task::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a33660cd957a580e2a6c7687dfdcb8ff5">mMnaTasks</a></td></tr>
+<tr class="memdesc:a33660cd957a580e2a6c7687dfdcb8ff5 inherit pub_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of tasks that relate to using MNA for this component (usually pre-step and/or post-step)  <br /></td></tr>
+<tr class="separator:a33660cd957a580e2a6c7687dfdcb8ff5 inherit pub_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_attribs_class_c_p_s_1_1_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_attribs_class_c_p_s_1_1_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt; VarType &gt;</a></td></tr>
+<tr class="memitem:a7210276935119e370dfb1f98d02c3a9a inherit pub_attribs_class_c_p_s_1_1_sim_power_comp" id="r_a7210276935119e370dfb1f98d02c3a9a"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; MatrixVar&lt; VarType &gt; &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a7210276935119e370dfb1f98d02c3a9a">mIntfVoltage</a></td></tr>
+<tr class="memdesc:a7210276935119e370dfb1f98d02c3a9a inherit pub_attribs_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Voltage between terminals.  <br /></td></tr>
+<tr class="separator:a7210276935119e370dfb1f98d02c3a9a inherit pub_attribs_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a141d3e207fff12a4808e3f562a99fda1 inherit pub_attribs_class_c_p_s_1_1_sim_power_comp" id="r_a141d3e207fff12a4808e3f562a99fda1"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; MatrixVar&lt; VarType &gt; &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">mIntfCurrent</a></td></tr>
+<tr class="memdesc:a141d3e207fff12a4808e3f562a99fda1 inherit pub_attribs_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current through component.  <br /></td></tr>
+<tr class="separator:a141d3e207fff12a4808e3f562a99fda1 inherit pub_attribs_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_attribs_class_c_p_s_1_1_identified_object"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_attribs_class_c_p_s_1_1_identified_object')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="class_c_p_s_1_1_identified_object.html">CPS::IdentifiedObject</a></td></tr>
+<tr class="memitem:a13661eab6b670e4a5a3aa5777f8fd5d0 inherit pub_attribs_class_c_p_s_1_1_identified_object" id="r_a13661eab6b670e4a5a3aa5777f8fd5d0"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; String &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a13661eab6b670e4a5a3aa5777f8fd5d0">mName</a></td></tr>
+<tr class="memdesc:a13661eab6b670e4a5a3aa5777f8fd5d0 inherit pub_attribs_class_c_p_s_1_1_identified_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Human readable name.  <br /></td></tr>
+<tr class="separator:a13661eab6b670e4a5a3aa5777f8fd5d0 inherit pub_attribs_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad143c517fdb9d0deca573f15169e97e8 inherit pub_attribs_class_c_p_s_1_1_identified_object" id="r_ad143c517fdb9d0deca573f15169e97e8"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; String &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#ad143c517fdb9d0deca573f15169e97e8">mUID</a></td></tr>
+<tr class="memdesc:ad143c517fdb9d0deca573f15169e97e8 inherit pub_attribs_class_c_p_s_1_1_identified_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unique identifier.  <br /></td></tr>
+<tr class="separator:ad143c517fdb9d0deca573f15169e97e8 inherit pub_attribs_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename VarType&gt;<br />
@@ -526,7 +536,7 @@ template&lt;typename VarType&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00030">30</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00035">35</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
 
 </div>
 </div>
@@ -544,7 +554,7 @@ template&lt;typename VarType&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00029">29</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00034">34</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
 
 </div>
 </div>
@@ -562,7 +572,7 @@ template&lt;typename VarType&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00028">28</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00033">33</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
 
 </div>
 </div>
@@ -613,7 +623,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Basic constructor that takes UID, name and log level. </p>
 
-<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00033">33</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00038">38</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
 
 </div>
 </div>
@@ -658,7 +668,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Basic constructor that takes name and log level and sets the UID to name as well. </p>
 
-<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00039">39</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00044">44</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
 
 </div>
 </div>
@@ -704,7 +714,69 @@ template&lt;typename VarType&gt; </div>
   </dd>
 </dl>
 
+<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8cpp_source.html#l00021">21</a> of file <a class="el" href="_composite_power_comp_8cpp_source.html">CompositePowerComp.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a9dbb1714bcd34e498da06e26fe460c00" name="a9dbb1714bcd34e498da06e26fe460c00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9dbb1714bcd34e498da06e26fe460c00">&#9670;&#160;</a></span>initializeFromNodesAndTerminals()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename VarType&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CompositePowerComp::initializeFromNodesAndTerminals </td>
+          <td>(</td>
+          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>frequency</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel final">final</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Sequences the three init stages: <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a780dfe2d2caa891938f3e4e9796cca1d" title="Constructs and registers MNA subcomponents; called before collectVirtualNodes so virtual nodes exist ...">createSubComponents()</a>, then <a class="el" href="#a49dac74f4584c6f7c5061647a1fa1d22">initializeParentFromNodesAndTerminals()</a>, then recurse into sub-components. See docs Overview/subcomponents.md. </p>
+
+<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a4401f844a3f389e07a37ef1716d84dcd">CPS::SimPowerComp&lt; VarType &gt;</a>.</p>
+
 <p class="definition">Definition at line <a class="el" href="_composite_power_comp_8cpp_source.html#l00008">8</a> of file <a class="el" href="_composite_power_comp_8cpp_source.html">CompositePowerComp.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a49dac74f4584c6f7c5061647a1fa1d22" name="a49dac74f4584c6f7c5061647a1fa1d22"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49dac74f4584c6f7c5061647a1fa1d22">&#9670;&#160;</a></span>initializeParentFromNodesAndTerminals()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename VarType&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void <a class="el" href="class_c_p_s_1_1_composite_power_comp.html">CPS::CompositePowerComp</a>&lt; VarType &gt;::initializeParentFromNodesAndTerminals </td>
+          <td>(</td>
+          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>frequency</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Pure-virtual hook for the parameterization stage. Concrete composites implement this instead of overriding <a class="el" href="#a9dbb1714bcd34e498da06e26fe460c00">initializeFromNodesAndTerminals()</a>. Reads terminal data, computes frequency-dependent values, and calls setParameters() on sub-components. The simulation frequency is passed directly so there is no need to access <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a6933742098fdd8bde1b8ea909808e5f9" title="List of considered network frequencies.">mFrequencies(0,0)</a>. </p>
+
+<p>Implemented in <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html#a3eaa29a4cc017660320bf844b41b60e8">CPS::DP::Ph1::AvVoltageSourceInverterDQ</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_network_injection.html#adbbc37462345de0e6ddfd1ed6db73e19">CPS::DP::Ph1::NetworkInjection</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_pi_line.html#ae4b852dd69f7837fcdee1a058f2e42ce">CPS::DP::Ph1::PiLine</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#a2467c1b6dd7a6e3ee862339dff5e2c98">CPS::DP::Ph1::PQLoadCS</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_rx_line.html#a2c98434016b67b731d651459fd07593a">CPS::DP::Ph1::RxLine</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#ac04e5b265c90701794b89d199f003d82">CPS::DP::Ph1::RXLoad</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load_switch.html#a2aeac3672d7cae401c7e8dcec0fac99b">CPS::DP::Ph1::RXLoadSwitch</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_ideal.html#a75720706c5c6882b3411ccf5316031a3">CPS::DP::Ph1::SynchronGeneratorIdeal</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#ab73fedb0074a9b8b3fe488d31605bc8c">CPS::DP::Ph1::SynchronGeneratorTrStab</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html#a9cac75846ce60288c4f70361afd4f1f1">CPS::DP::Ph1::Transformer</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp.html#aaaba9a0562977636a7bbf1db9ec08e64">CPS::DP::Ph1::VoltageSourceRamp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_pi_line.html#aa04b88603646e69bf24177f423b39093">CPS::DP::Ph3::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_pi_line.html#ae440c9b8fba877955b071b4f118c1680">CPS::EMT::Ph1::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_ramp.html#a4284aefc5a2901efdedd327b1a5ef28e">CPS::EMT::Ph1::VoltageSourceRamp</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q.html#a6cea0b08acedc53804ed2ee34f2c0b28">CPS::EMT::Ph3::AvVoltageSourceInverterDQ</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_network_injection.html#a24aae350c7272933a64582c0198bcbb5">CPS::EMT::Ph3::NetworkInjection</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html#a5f33a37e3cbf7512912db78fbb0da179">CPS::EMT::Ph3::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#af54e7d257d4f0a624551ee687b351cdf">CPS::EMT::Ph3::RxLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_r_x_load.html#a6161927473d63857fe9551c2418a371f">CPS::EMT::Ph3::RXLoad</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_ideal.html#af86e3f37102b3e555fd7fbf6e86e4b95">CPS::EMT::Ph3::SynchronGeneratorIdeal</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_tr_stab.html#a7b22eb5aa0a1853c9a10a71d1207ac4e">CPS::EMT::Ph3::SynchronGeneratorTrStab</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html#a87551509a1c3a58f653ff9d41c471e14">CPS::EMT::Ph3::Transformer</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html#a764914988474aeafe942d38e62d1d087">CPS::SP::Ph1::AvVoltageSourceInverterDQ</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_load.html#aefebfe462bea047bb70e64fcd71c402c">CPS::SP::Ph1::Load</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_network_injection.html#afce3874dc654cfe6d0ee99a09d5c8b0e">CPS::SP::Ph1::NetworkInjection</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_pi_line.html#a89594510f889f7ea2ef561a9a5295538">CPS::SP::Ph1::PiLine</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#a3cec26e125252756f7f431d858c5e58e">CPS::SP::Ph1::RXLine</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_solid_state_transformer.html#a779037ea59490e6c4772fecd69f4b3ab">CPS::SP::Ph1::SolidStateTransformer</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#a6e6ea64ee8253cac52315e09ddb52079">CPS::SP::Ph1::SynchronGeneratorTrStab</a>, and <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html#ac3b139d72f6f9a9b1fb1f27af97cda5b">CPS::SP::Ph1::Transformer</a>.</p>
 
 </div>
 </div>
@@ -749,7 +821,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Add MNA post step dependencies. </p>
 
-<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8cpp_source.html#l00120">120</a> of file <a class="el" href="_composite_power_comp_8cpp_source.html">CompositePowerComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8cpp_source.html#l00133">133</a> of file <a class="el" href="_composite_power_comp_8cpp_source.html">CompositePowerComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -791,7 +863,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; VarType &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8cpp_source.html#l00107">107</a> of file <a class="el" href="_composite_power_comp_8cpp_source.html">CompositePowerComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8cpp_source.html#l00120">120</a> of file <a class="el" href="_composite_power_comp_8cpp_source.html">CompositePowerComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -824,7 +896,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; VarType &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8cpp_source.html#l00072">72</a> of file <a class="el" href="_composite_power_comp_8cpp_source.html">CompositePowerComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8cpp_source.html#l00085">85</a> of file <a class="el" href="_composite_power_comp_8cpp_source.html">CompositePowerComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -859,7 +931,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Reimplemented in <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html#a688e79bd75a718085dc3052301113998">CPS::DP::Ph1::Transformer</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html#a5d9e26d5d19ed96f3a8d8d794f68a659">CPS::EMT::Ph3::Transformer</a>, and <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html#a22eba8b5f47599c5d0a3617c78facec2">CPS::SP::Ph1::Transformer</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8cpp_source.html#l00063">63</a> of file <a class="el" href="_composite_power_comp_8cpp_source.html">CompositePowerComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8cpp_source.html#l00076">76</a> of file <a class="el" href="_composite_power_comp_8cpp_source.html">CompositePowerComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -899,7 +971,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Initializes variables of components. </p>
 
-<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8cpp_source.html#l00049">49</a> of file <a class="el" href="_composite_power_comp_8cpp_source.html">CompositePowerComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8cpp_source.html#l00062">62</a> of file <a class="el" href="_composite_power_comp_8cpp_source.html">CompositePowerComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -939,7 +1011,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>MNA post step operations. </p>
 
-<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8cpp_source.html#l00095">95</a> of file <a class="el" href="_composite_power_comp_8cpp_source.html">CompositePowerComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8cpp_source.html#l00108">108</a> of file <a class="el" href="_composite_power_comp_8cpp_source.html">CompositePowerComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -976,7 +1048,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; VarType &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8cpp_source.html#l00084">84</a> of file <a class="el" href="_composite_power_comp_8cpp_source.html">CompositePowerComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8cpp_source.html#l00097">97</a> of file <a class="el" href="_composite_power_comp_8cpp_source.html">CompositePowerComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -1019,7 +1091,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00107">107</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00124">124</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
 
 </div>
 </div>
@@ -1059,7 +1131,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Reimplemented in <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html#abae9179126d1e31c7bbe34bc2fe2f5ff">CPS::DP::Ph1::AvVoltageSourceInverterDQ</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_network_injection.html#ab7a8a9bce1fa7fd4b8fb6d146ed3bfa4">CPS::DP::Ph1::NetworkInjection</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_pi_line.html#ad6b7c75f2de4e042f30be8b8559db9bf">CPS::DP::Ph1::PiLine</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#abf08a94201458861202242b6d3065ad6">CPS::DP::Ph1::RXLoad</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load_switch.html#a963da108e48f995602e2f96b214b8ebf">CPS::DP::Ph1::RXLoadSwitch</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_ideal.html#a72735714680a75212c0df2525a02d875">CPS::DP::Ph1::SynchronGeneratorIdeal</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#a549031246d6d3fea33bef7b0499087ce">CPS::DP::Ph1::SynchronGeneratorTrStab</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html#adefb5afcf884027a1ced8bc8f76a4dae">CPS::DP::Ph1::Transformer</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_pi_line.html#a8af152965fed67f0487efec3e45777a6">CPS::DP::Ph3::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_pi_line.html#aae8f26c00e6457a9c9cd09543bcc90eb">CPS::EMT::Ph1::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q.html#abdeef37c11b3d8d3a9dac051d0c6b16e">CPS::EMT::Ph3::AvVoltageSourceInverterDQ</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_network_injection.html#aefdbbdaa09d95ad8670ebd27d8f7f309">CPS::EMT::Ph3::NetworkInjection</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html#af730e5d19238e5f852d3581eddc64ab7">CPS::EMT::Ph3::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_ideal.html#a71ece4e226d7d63d5075e5a74f00bb7e">CPS::EMT::Ph3::SynchronGeneratorIdeal</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html#a192af20b874424113ef12a8362aa9bc4">CPS::EMT::Ph3::Transformer</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html#ac61273a4074483944798d4e8b3f58b48">CPS::SP::Ph1::AvVoltageSourceInverterDQ</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_network_injection.html#a56f773b485945e4ed824ca0bc97e8ba0">CPS::SP::Ph1::NetworkInjection</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#af0c28f826755087e1d3f98e0a9878125">CPS::SP::Ph1::SynchronGeneratorTrStab</a>, and <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html#a1d5ea9ffbda7590e2c311efebbad82ef">CPS::SP::Ph1::Transformer</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00101">101</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00118">118</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
 
 </div>
 </div>
@@ -1090,7 +1162,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Reimplemented in <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_network_injection.html#a62492c133401eaa5f01565c968347834">CPS::DP::Ph1::NetworkInjection</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_network_injection.html#a00232dd91a332443415e147f6f0c811f">CPS::EMT::Ph3::NetworkInjection</a>, and <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_network_injection.html#a37b62901963d519e43bebc025ccfc0c7">CPS::SP::Ph1::NetworkInjection</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00090">90</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00107">107</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
 
 </div>
 </div>
@@ -1119,7 +1191,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00087">87</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00104">104</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
 
 </div>
 </div>
@@ -1157,7 +1229,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00083">83</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00100">100</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
 
 </div>
 </div>
@@ -1195,7 +1267,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00096">96</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00113">113</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
 
 </div>
 </div>
@@ -1230,7 +1302,35 @@ template&lt;typename VarType&gt; </div>
 
 <p>Reimplemented in <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html#a031bc7bd6a3bbcfbaf8459282f39bff2">CPS::DP::Ph1::AvVoltageSourceInverterDQ</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_network_injection.html#a56a6580e12587f094b3737de4c0bc98f">CPS::DP::Ph1::NetworkInjection</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_pi_line.html#a071c8b9b8f2a869a8c80d3027a2cca8b">CPS::DP::Ph1::PiLine</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#a5381bbb0a0be7033362868556ea7c8bf">CPS::DP::Ph1::PQLoadCS</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_rx_line.html#abb6671ebf6a7c706b6a248508373967c">CPS::DP::Ph1::RxLine</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#ac09e839b89024b05606770f293338b85">CPS::DP::Ph1::RXLoad</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load_switch.html#acfb25979998f6fb36882c0e40e1420c2">CPS::DP::Ph1::RXLoadSwitch</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_ideal.html#a77505ab084faa4c4a4e925bdf0599ced">CPS::DP::Ph1::SynchronGeneratorIdeal</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#acbd96d67f42eca9f5ad546441597c7fc">CPS::DP::Ph1::SynchronGeneratorTrStab</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html#a99d4e5aa6a7114d2d2641bf5149985bf">CPS::DP::Ph1::Transformer</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_pi_line.html#a1d57fb59d4c8fd9f1e106a8df0a41930">CPS::DP::Ph3::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_pi_line.html#af1ea4f22e482ea97c7d76d030b373ce4">CPS::EMT::Ph1::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q.html#acf207a5bd69857e32c13201c59a6cc6d">CPS::EMT::Ph3::AvVoltageSourceInverterDQ</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_network_injection.html#aa33c715f914ff61b8a4e010bbd834dda">CPS::EMT::Ph3::NetworkInjection</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html#a6dcd8ba15572da6ec8b68ae9e967350e">CPS::EMT::Ph3::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#abb803fb5217433710bc210cfcbfdd578">CPS::EMT::Ph3::RxLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_r_x_load.html#aa9478f03d1eb45ff8d4847c3da04f7bf">CPS::EMT::Ph3::RXLoad</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_ideal.html#a73d8a0f7e753013e250ae438b9d34809">CPS::EMT::Ph3::SynchronGeneratorIdeal</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_tr_stab.html#a6e816a25a8e0fad1d6327c33947a49da">CPS::EMT::Ph3::SynchronGeneratorTrStab</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html#aa3e24b9f4b029e63c5c1bfd7ff90e5c5">CPS::EMT::Ph3::Transformer</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html#a11f79e96dbc3dab0214fc934b62054b9">CPS::SP::Ph1::AvVoltageSourceInverterDQ</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_network_injection.html#aa1ed174c615c514ce2d9772a639dd691">CPS::SP::Ph1::NetworkInjection</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#a071a1e766517ccde50e62583642d62c3">CPS::SP::Ph1::SynchronGeneratorTrStab</a>, and <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html#ae531225c1f4fa5e1100433c1b81cf616">CPS::SP::Ph1::Transformer</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00093">93</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00110">110</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a230c4cafd696f2c14f9d3fef031cf988" name="a230c4cafd696f2c14f9d3fef031cf988"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a230c4cafd696f2c14f9d3fef031cf988">&#9670;&#160;</a></span>mSubCompCreated</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename VarType&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="class_c_p_s_1_1_composite_power_comp.html">CPS::CompositePowerComp</a>&lt; VarType &gt;::mSubCompCreated = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Guards <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a780dfe2d2caa891938f3e4e9796cca1d" title="Constructs and registers MNA subcomponents; called before collectVirtualNodes so virtual nodes exist ...">createSubComponents()</a> against double-execution; set it to true at the top of every override. Provided here so subclasses need not redeclare. </p>
+
+<p class="definition">Definition at line <a class="el" href="_composite_power_comp_8h_source.html#l00030">30</a> of file <a class="el" href="_composite_power_comp_8h_source.html">CompositePowerComp.h</a>.</p>
 
 </div>
 </div>

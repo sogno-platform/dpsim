@@ -122,9 +122,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0de67068f155ec56e2625297c58569f4" id="r_a0de67068f155ec56e2625297c58569f4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0de67068f155ec56e2625297c58569f4">clone</a> (String copySuffix) override</td></tr>
 <tr class="memdesc:a0de67068f155ec56e2625297c58569f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">DEPRECATED: Delete method.  <br /></td></tr>
 <tr class="separator:a0de67068f155ec56e2625297c58569f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a58486b625829bda174d9802e60fb07f8" id="r_a58486b625829bda174d9802e60fb07f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a58486b625829bda174d9802e60fb07f8">initializeFromNodesAndTerminals</a> (Real frequency) override</td></tr>
-<tr class="memdesc:a58486b625829bda174d9802e60fb07f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data.  <br /></td></tr>
-<tr class="separator:a58486b625829bda174d9802e60fb07f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad54f4a3f622775c3ab6d2835448f268e" id="r_ad54f4a3f622775c3ab6d2835448f268e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad54f4a3f622775c3ab6d2835448f268e">createSubComponents</a> () override</td></tr>
+<tr class="memdesc:ad54f4a3f622775c3ab6d2835448f268e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs and registers MNA subcomponents; idempotent.  <br /></td></tr>
+<tr class="separator:ad54f4a3f622775c3ab6d2835448f268e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f33a37e3cbf7512912db78fbb0da179" id="r_a5f33a37e3cbf7512912db78fbb0da179"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5f33a37e3cbf7512912db78fbb0da179">initializeParentFromNodesAndTerminals</a> (Real frequency) override</td></tr>
+<tr class="memdesc:a5f33a37e3cbf7512912db78fbb0da179"><td class="mdescLeft">&#160;</td><td class="mdescRight">Derives values from power flow data and pushes them to subcomponents.  <br /></td></tr>
+<tr class="separator:a5f33a37e3cbf7512912db78fbb0da179"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a69692d31e783a6290598a87dc26837e9" id="r_a69692d31e783a6290598a87dc26837e9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a69692d31e783a6290598a87dc26837e9">mnaCompUpdateCurrent</a> (const Matrix &amp;leftVector) override</td></tr>
 <tr class="memdesc:a69692d31e783a6290598a87dc26837e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates internal current variable of the component.  <br /></td></tr>
 <tr class="separator:a69692d31e783a6290598a87dc26837e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -164,6 +167,8 @@ Public Member Functions</h2></td></tr>
 virtual&#160;</td><td class="memItemRight" valign="bottom"><b>~CompositePowerComp</b> ()=default</td></tr>
 <tr class="memdesc:acd5001ab92e80e42d9beaadc1a8dca1c inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor - does not do anything. <br /></td></tr>
 <tr class="separator:acd5001ab92e80e42d9beaadc1a8dca1c inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dbb1714bcd34e498da06e26fe460c00 inherit pub_methods_class_c_p_s_1_1_composite_power_comp" id="r_a9dbb1714bcd34e498da06e26fe460c00"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a9dbb1714bcd34e498da06e26fe460c00">initializeFromNodesAndTerminals</a> (Real frequency) override final</td></tr>
+<tr class="separator:a9dbb1714bcd34e498da06e26fe460c00 inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36787ca664e85614aca65a2683547147 inherit pub_methods_class_c_p_s_1_1_composite_power_comp" id="r_a36787ca664e85614aca65a2683547147"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a36787ca664e85614aca65a2683547147">addMNASubComponent</a> (typename <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Real &gt;::Ptr subc, MNA_SUBCOMP_TASK_ORDER preStepOrder, MNA_SUBCOMP_TASK_ORDER postStepOrder, Bool contributeToRightVector)</td></tr>
 <tr class="memdesc:a36787ca664e85614aca65a2683547147 inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a new subcomponent implementing MNA methods.  <br /></td></tr>
 <tr class="separator:a36787ca664e85614aca65a2683547147 inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -435,7 +440,6 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaInitialize
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a8ef89b484c3ac91cba38f699ef12e5b6" id="r_a8ef89b484c3ac91cba38f699ef12e5b6"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor.html">Inductor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ef89b484c3ac91cba38f699ef12e5b6">mSubSeriesInductor</a></td></tr>
-<tr class="memdesc:a8ef89b484c3ac91cba38f699ef12e5b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Series Inductance submodel.  <br /></td></tr>
 <tr class="separator:a8ef89b484c3ac91cba38f699ef12e5b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2d34572263af5fc90292d4a5bb73a8c" id="r_ad2d34572263af5fc90292d4a5bb73a8c"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_resistor.html">Resistor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad2d34572263af5fc90292d4a5bb73a8c">mSubSeriesResistor</a></td></tr>
 <tr class="memdesc:ad2d34572263af5fc90292d4a5bb73a8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Series <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_resistor.html" title="EMT Resistor.">Resistor</a> submodel.  <br /></td></tr>
@@ -453,6 +457,9 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:add7b265ff77cc6310b6d89c84786eac6" id="r_add7b265ff77cc6310b6d89c84786eac6"><td class="memItemLeft" align="right" valign="top">std::vector&lt; const Matrix * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#add7b265ff77cc6310b6d89c84786eac6">mRightVectorStamps</a></td></tr>
 <tr class="memdesc:add7b265ff77cc6310b6d89c84786eac6"><td class="mdescLeft">&#160;</td><td class="mdescRight">solver  <br /></td></tr>
 <tr class="separator:add7b265ff77cc6310b6d89c84786eac6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_class_c_p_s_1_1_composite_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_composite_power_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_composite_power_comp.html">CPS::CompositePowerComp&lt; Real &gt;</a></td></tr>
+<tr class="memitem:a230c4cafd696f2c14f9d3fef031cf988 inherit pro_attribs_class_c_p_s_1_1_composite_power_comp" id="r_a230c4cafd696f2c14f9d3fef031cf988"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a230c4cafd696f2c14f9d3fef031cf988">mSubCompCreated</a></td></tr>
+<tr class="separator:a230c4cafd696f2c14f9d3fef031cf988 inherit pro_attribs_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt; Real &gt;</a></td></tr>
 <tr class="memitem:a16fef50583bd2c58806acbf6185698cb inherit pro_attribs_class_c_p_s_1_1_sim_power_comp" id="r_a16fef50583bd2c58806acbf6185698cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_terminal.html">SimTerminal</a>&lt; Real &gt;::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a16fef50583bd2c58806acbf6185698cb">mTerminals</a></td></tr>
 <tr class="memdesc:a16fef50583bd2c58806acbf6185698cb inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of Terminals.  <br /></td></tr>
@@ -647,7 +654,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Defines name and logging level. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html#l00049">49</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html">EMT_Ph3_PiLine.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html#l00050">50</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html">EMT_Ph3_PiLine.h</a>.</p>
 
 </div>
 </div>
@@ -683,8 +690,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a58486b625829bda174d9802e60fb07f8" name="a58486b625829bda174d9802e60fb07f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a58486b625829bda174d9802e60fb07f8">&#9670;&#160;</a></span>initializeFromNodesAndTerminals()</h2>
+<a id="ad54f4a3f622775c3ab6d2835448f268e" name="ad54f4a3f622775c3ab6d2835448f268e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad54f4a3f622775c3ab6d2835448f268e">&#9670;&#160;</a></span>createSubComponents()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -693,7 +700,38 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void EMT::Ph3::PiLine::initializeFromNodesAndTerminals </td>
+          <td class="memname">void EMT::Ph3::PiLine::createSubComponents </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructs and registers MNA subcomponents; idempotent. </p>
+
+<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a780dfe2d2caa891938f3e4e9796cca1d">CPS::MNAInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00035">35</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a5f33a37e3cbf7512912db78fbb0da179" name="a5f33a37e3cbf7512912db78fbb0da179"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f33a37e3cbf7512912db78fbb0da179">&#9670;&#160;</a></span>initializeParentFromNodesAndTerminals()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void EMT::Ph3::PiLine::initializeParentFromNodesAndTerminals </td>
           <td>(</td>
           <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>frequency</em></span></td><td>)</td>
           <td></td>
@@ -706,11 +744,11 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Initializes component from power flow data. </p>
+<p>Derives values from power flow data and pushes them to subcomponents. </p>
 
-<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a4401f844a3f389e07a37ef1716d84dcd">CPS::SimPowerComp&lt; Real &gt;</a>.</p>
+<p>Implements <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a49dac74f4584c6f7c5061647a1fa1d22">CPS::CompositePowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00035">35</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00110">110</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
 
 </div>
 </div>
@@ -741,7 +779,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00227">227</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00226">226</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
 
 </div>
 </div>
@@ -772,7 +810,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00203">203</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00202">202</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
 
 </div>
 </div>
@@ -815,7 +853,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Add MNA post step dependencies. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00187">187</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00186">186</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
 
 </div>
 </div>
@@ -855,7 +893,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_composite_power_comp.html">CPS::CompositePowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00174">174</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00173">173</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
 
 </div>
 </div>
@@ -893,7 +931,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>MNA post step operations. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00197">197</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00196">196</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
 
 </div>
 </div>
@@ -928,7 +966,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_composite_power_comp.html">CPS::CompositePowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00183">183</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00182">182</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
 
 </div>
 </div>
@@ -957,7 +995,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00253">253</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00252">252</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
 
 </div>
 </div>
@@ -986,7 +1024,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00258">258</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00257">257</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
 
 </div>
 </div>
@@ -1015,7 +1053,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00232">232</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00231">231</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
 
 </div>
 </div>
@@ -1048,7 +1086,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00246">246</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00245">245</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
 
 </div>
 </div>
@@ -1081,7 +1119,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00262">262</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html#l00261">261</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8cpp_source.html">EMT_Ph3_PiLine.cpp</a>.</p>
 
 </div>
 </div>
@@ -1108,7 +1146,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>solver </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html#l00043">43</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html">EMT_Ph3_PiLine.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html#l00044">44</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html">EMT_Ph3_PiLine.h</a>.</p>
 
 </div>
 </div>
@@ -1132,7 +1170,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html#l00037">37</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html">EMT_Ph3_PiLine.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html#l00038">38</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html">EMT_Ph3_PiLine.h</a>.</p>
 
 </div>
 </div>
@@ -1156,7 +1194,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html#l00041">41</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html">EMT_Ph3_PiLine.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html#l00042">42</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html">EMT_Ph3_PiLine.h</a>.</p>
 
 </div>
 </div>
@@ -1182,7 +1220,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Parallel <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_resistor.html" title="EMT Resistor.">Resistor</a> submodel at Terminal 0. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html#l00035">35</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html">EMT_Ph3_PiLine.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html#l00036">36</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html">EMT_Ph3_PiLine.h</a>.</p>
 
 </div>
 </div>
@@ -1208,7 +1246,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Parallel resistor submodel at Terminal 1. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html#l00039">39</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html">EMT_Ph3_PiLine.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html#l00040">40</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html">EMT_Ph3_PiLine.h</a>.</p>
 
 </div>
 </div>
@@ -1231,10 +1269,9 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>True after <a class="el" href="#ad54f4a3f622775c3ab6d2835448f268e" title="Constructs and registers MNA subcomponents; idempotent.">createSubComponents()</a> runs; prevents double-construction. Series Inductance submodel </p>
 
-<p>Series Inductance submodel. </p>
-
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html#l00031">31</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html">EMT_Ph3_PiLine.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html#l00032">32</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html">EMT_Ph3_PiLine.h</a>.</p>
 
 </div>
 </div>
@@ -1260,7 +1297,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Series <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_resistor.html" title="EMT Resistor.">Resistor</a> submodel. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html#l00033">33</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html">EMT_Ph3_PiLine.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html#l00034">34</a> of file <a class="el" href="_e_m_t___ph3___pi_line_8h_source.html">EMT_Ph3_PiLine.h</a>.</p>
 
 </div>
 </div>

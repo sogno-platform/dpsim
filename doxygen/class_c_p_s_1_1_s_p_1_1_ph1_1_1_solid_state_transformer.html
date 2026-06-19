@@ -112,12 +112,15 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aad3ee4de7bc3e12197dd45beb168ddb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a429b42438e42086d7c1ef5595cca603b" id="r_a429b42438e42086d7c1ef5595cca603b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a429b42438e42086d7c1ef5595cca603b">SolidStateTransformer</a> (String name, Logger::Level logLevel=Logger::Level::off)</td></tr>
 <tr class="separator:a429b42438e42086d7c1ef5595cca603b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad046cf3f49711658dacfe4b06356db5d" id="r_ad046cf3f49711658dacfe4b06356db5d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad046cf3f49711658dacfe4b06356db5d">clone</a> (String name)</td></tr>
-<tr class="memdesc:ad046cf3f49711658dacfe4b06356db5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a modified copy of the component with the given suffix added to the name and without.  <br /></td></tr>
-<tr class="separator:ad046cf3f49711658dacfe4b06356db5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a81a0560e1b59c140663aaddf21ed4595" id="r_a81a0560e1b59c140663aaddf21ed4595"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a81a0560e1b59c140663aaddf21ed4595">initializeFromNodesAndTerminals</a> (Real frequency)</td></tr>
-<tr class="memdesc:a81a0560e1b59c140663aaddf21ed4595"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component.  <br /></td></tr>
-<tr class="separator:a81a0560e1b59c140663aaddf21ed4595"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad18cddc7be20f65da5f8d72bbfbd2258" id="r_ad18cddc7be20f65da5f8d72bbfbd2258"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad18cddc7be20f65da5f8d72bbfbd2258">clone</a> (String name) override</td></tr>
+<tr class="memdesc:ad18cddc7be20f65da5f8d72bbfbd2258"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a modified copy of the component with the given suffix added to the name and without.  <br /></td></tr>
+<tr class="separator:ad18cddc7be20f65da5f8d72bbfbd2258"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3de91f856ead2586da549b9f17f2259d" id="r_a3de91f856ead2586da549b9f17f2259d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3de91f856ead2586da549b9f17f2259d">createSubComponents</a> () override</td></tr>
+<tr class="memdesc:a3de91f856ead2586da549b9f17f2259d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs and registers MNA subcomponents; idempotent.  <br /></td></tr>
+<tr class="separator:a3de91f856ead2586da549b9f17f2259d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a779037ea59490e6c4772fecd69f4b3ab" id="r_a779037ea59490e6c4772fecd69f4b3ab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a779037ea59490e6c4772fecd69f4b3ab">initializeParentFromNodesAndTerminals</a> (Real frequency) override</td></tr>
+<tr class="memdesc:a779037ea59490e6c4772fecd69f4b3ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component.  <br /></td></tr>
+<tr class="separator:a779037ea59490e6c4772fecd69f4b3ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73aaaab45a0f4aab62733454836b04a0" id="r_a73aaaab45a0f4aab62733454836b04a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a73aaaab45a0f4aab62733454836b04a0">setParameters</a> (Real nomV1, Real nomV2, Real Pref, Real Q1ref, Real Q2ref)</td></tr>
 <tr class="separator:a73aaaab45a0f4aab62733454836b04a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae238cf1221aa387d712cb1b6401c32ed" id="r_ae238cf1221aa387d712cb1b6401c32ed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae238cf1221aa387d712cb1b6401c32ed">calculatePerUnitParameters</a> (Real baseApparentPower, Real baseOmega)</td></tr>
@@ -135,6 +138,8 @@ Public Member Functions</h2></td></tr>
 virtual&#160;</td><td class="memItemRight" valign="bottom"><b>~CompositePowerComp</b> ()=default</td></tr>
 <tr class="memdesc:acd5001ab92e80e42d9beaadc1a8dca1c inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor - does not do anything. <br /></td></tr>
 <tr class="separator:acd5001ab92e80e42d9beaadc1a8dca1c inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dbb1714bcd34e498da06e26fe460c00 inherit pub_methods_class_c_p_s_1_1_composite_power_comp" id="r_a9dbb1714bcd34e498da06e26fe460c00"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a9dbb1714bcd34e498da06e26fe460c00">initializeFromNodesAndTerminals</a> (Real frequency) override final</td></tr>
+<tr class="separator:a9dbb1714bcd34e498da06e26fe460c00 inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36787ca664e85614aca65a2683547147 inherit pub_methods_class_c_p_s_1_1_composite_power_comp" id="r_a36787ca664e85614aca65a2683547147"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a36787ca664e85614aca65a2683547147">addMNASubComponent</a> (typename <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr subc, MNA_SUBCOMP_TASK_ORDER preStepOrder, MNA_SUBCOMP_TASK_ORDER postStepOrder, Bool contributeToRightVector)</td></tr>
 <tr class="memdesc:a36787ca664e85614aca65a2683547147 inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a new subcomponent implementing MNA methods.  <br /></td></tr>
 <tr class="separator:a36787ca664e85614aca65a2683547147 inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -479,6 +484,9 @@ Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_static_methods_class_shared_factory"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_static_methods_class_shared_factory')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="class_shared_factory.html">SharedFactory&lt; SolidStateTransformer &gt;</a></td></tr>
 <tr class="memitem:a2ffdfd3b547bb9cb777f33e1bf6ec7ef inherit pub_static_methods_class_shared_factory" id="r_a2ffdfd3b547bb9cb777f33e1bf6ec7ef"><td class="memItemLeft" align="right" valign="top">static std::shared_ptr&lt; SolidStateTransformer &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">make</a> (Args &amp;&amp;...args)</td></tr>
 <tr class="separator:a2ffdfd3b547bb9cb777f33e1bf6ec7ef inherit pub_static_methods_class_shared_factory"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_class_c_p_s_1_1_composite_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_composite_power_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_composite_power_comp.html">CPS::CompositePowerComp&lt; Complex &gt;</a></td></tr>
+<tr class="memitem:a230c4cafd696f2c14f9d3fef031cf988 inherit pro_attribs_class_c_p_s_1_1_composite_power_comp" id="r_a230c4cafd696f2c14f9d3fef031cf988"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a230c4cafd696f2c14f9d3fef031cf988">mSubCompCreated</a></td></tr>
+<tr class="separator:a230c4cafd696f2c14f9d3fef031cf988 inherit pro_attribs_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt; Complex &gt;</a></td></tr>
 <tr class="memitem:a16fef50583bd2c58806acbf6185698cb inherit pro_attribs_class_c_p_s_1_1_sim_power_comp" id="r_a16fef50583bd2c58806acbf6185698cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_terminal.html">SimTerminal</a>&lt; Complex &gt;::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a16fef50583bd2c58806acbf6185698cb">mTerminals</a></td></tr>
 <tr class="memdesc:a16fef50583bd2c58806acbf6185698cb inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of Terminals.  <br /></td></tr>
@@ -584,7 +592,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___solid_state_transformer_8h_source.html#l00059">59</a> of file <a class="el" href="_s_p___ph1___solid_state_transformer_8h_source.html">SP_Ph1_SolidStateTransformer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___solid_state_transformer_8h_source.html#l00060">60</a> of file <a class="el" href="_s_p___ph1___solid_state_transformer_8h_source.html">SP_Ph1_SolidStateTransformer.h</a>.</p>
 
 </div>
 </div>
@@ -608,12 +616,12 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___solid_state_transformer_8cpp_source.html#l00077">77</a> of file <a class="el" href="_s_p___ph1___solid_state_transformer_8cpp_source.html">SP_Ph1_SolidStateTransformer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___solid_state_transformer_8cpp_source.html#l00086">86</a> of file <a class="el" href="_s_p___ph1___solid_state_transformer_8cpp_source.html">SP_Ph1_SolidStateTransformer.cpp</a>.</p>
 
 </div>
 </div>
-<a id="ad046cf3f49711658dacfe4b06356db5d" name="ad046cf3f49711658dacfe4b06356db5d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad046cf3f49711658dacfe4b06356db5d">&#9670;&#160;</a></span>clone()</h2>
+<a id="ad18cddc7be20f65da5f8d72bbfbd2258" name="ad18cddc7be20f65da5f8d72bbfbd2258"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad18cddc7be20f65da5f8d72bbfbd2258">&#9670;&#160;</a></span>clone()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -630,7 +638,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel virtual">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -640,6 +648,37 @@ Additional Inherited Members</h2></td></tr>
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">CPS::SimPowerComp&lt; Complex &gt;</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="_s_p___ph1___solid_state_transformer_8cpp_source.html#l00027">27</a> of file <a class="el" href="_s_p___ph1___solid_state_transformer_8cpp_source.html">SP_Ph1_SolidStateTransformer.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a3de91f856ead2586da549b9f17f2259d" name="a3de91f856ead2586da549b9f17f2259d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3de91f856ead2586da549b9f17f2259d">&#9670;&#160;</a></span>createSubComponents()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SP::Ph1::SolidStateTransformer::createSubComponents </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructs and registers MNA subcomponents; idempotent. </p>
+
+<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a780dfe2d2caa891938f3e4e9796cca1d">CPS::MNAInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___solid_state_transformer_8cpp_source.html#l00043">43</a> of file <a class="el" href="_s_p___ph1___solid_state_transformer_8cpp_source.html">SP_Ph1_SolidStateTransformer.cpp</a>.</p>
 
 </div>
 </div>
@@ -658,12 +697,12 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___solid_state_transformer_8cpp_source.html#l00095">95</a> of file <a class="el" href="_s_p___ph1___solid_state_transformer_8cpp_source.html">SP_Ph1_SolidStateTransformer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___solid_state_transformer_8cpp_source.html#l00104">104</a> of file <a class="el" href="_s_p___ph1___solid_state_transformer_8cpp_source.html">SP_Ph1_SolidStateTransformer.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a81a0560e1b59c140663aaddf21ed4595" name="a81a0560e1b59c140663aaddf21ed4595"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a81a0560e1b59c140663aaddf21ed4595">&#9670;&#160;</a></span>initializeFromNodesAndTerminals()</h2>
+<a id="a779037ea59490e6c4772fecd69f4b3ab" name="a779037ea59490e6c4772fecd69f4b3ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a779037ea59490e6c4772fecd69f4b3ab">&#9670;&#160;</a></span>initializeParentFromNodesAndTerminals()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -672,7 +711,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void SP::Ph1::SolidStateTransformer::initializeFromNodesAndTerminals </td>
+          <td class="memname">void SP::Ph1::SolidStateTransformer::initializeParentFromNodesAndTerminals </td>
           <td>(</td>
           <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>frequency</em></span></td><td>)</td>
           <td></td>
@@ -680,16 +719,16 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel virtual">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Initializes component. </p>
 
-<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a4401f844a3f389e07a37ef1716d84dcd">CPS::SimPowerComp&lt; Complex &gt;</a>.</p>
+<p>Implements <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a49dac74f4584c6f7c5061647a1fa1d22">CPS::CompositePowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___solid_state_transformer_8cpp_source.html#l00043">43</a> of file <a class="el" href="_s_p___ph1___solid_state_transformer_8cpp_source.html">SP_Ph1_SolidStateTransformer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___solid_state_transformer_8cpp_source.html#l00059">59</a> of file <a class="el" href="_s_p___ph1___solid_state_transformer_8cpp_source.html">SP_Ph1_SolidStateTransformer.cpp</a>.</p>
 
 </div>
 </div>
@@ -746,7 +785,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Power [watt]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___solid_state_transformer_8h_source.html#l00049">49</a> of file <a class="el" href="_s_p___ph1___solid_state_transformer_8h_source.html">SP_Ph1_SolidStateTransformer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___solid_state_transformer_8h_source.html#l00050">50</a> of file <a class="el" href="_s_p___ph1___solid_state_transformer_8h_source.html">SP_Ph1_SolidStateTransformer.h</a>.</p>
 
 </div>
 </div>
@@ -764,7 +803,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reactive power at primary side [var]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___solid_state_transformer_8h_source.html#l00051">51</a> of file <a class="el" href="_s_p___ph1___solid_state_transformer_8h_source.html">SP_Ph1_SolidStateTransformer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___solid_state_transformer_8h_source.html#l00052">52</a> of file <a class="el" href="_s_p___ph1___solid_state_transformer_8h_source.html">SP_Ph1_SolidStateTransformer.h</a>.</p>
 
 </div>
 </div>
@@ -782,7 +821,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reactive power at secondary side [var]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___solid_state_transformer_8h_source.html#l00053">53</a> of file <a class="el" href="_s_p___ph1___solid_state_transformer_8h_source.html">SP_Ph1_SolidStateTransformer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___solid_state_transformer_8h_source.html#l00054">54</a> of file <a class="el" href="_s_p___ph1___solid_state_transformer_8h_source.html">SP_Ph1_SolidStateTransformer.h</a>.</p>
 
 </div>
 </div>

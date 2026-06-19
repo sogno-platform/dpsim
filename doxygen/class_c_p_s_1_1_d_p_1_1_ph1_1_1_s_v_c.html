@@ -120,36 +120,39 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad14d78727cbeccde19fe2099eb344331" id="r_ad14d78727cbeccde19fe2099eb344331"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad14d78727cbeccde19fe2099eb344331">SVC</a> (String name, Logger::Level logLevel=Logger::Level::off)</td></tr>
 <tr class="memdesc:ad14d78727cbeccde19fe2099eb344331"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines name and log level.  <br /></td></tr>
 <tr class="separator:ad14d78727cbeccde19fe2099eb344331"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab5cd2aac49f02c943d2a59a13e484b3f" id="r_ab5cd2aac49f02c943d2a59a13e484b3f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab5cd2aac49f02c943d2a59a13e484b3f">initializeFromNodesAndTerminals</a> (Real frequency)</td></tr>
-<tr class="memdesc:ab5cd2aac49f02c943d2a59a13e484b3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes states from power flow data.  <br /></td></tr>
-<tr class="separator:ab5cd2aac49f02c943d2a59a13e484b3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af81a3e8e6106548276631d50763d12c2" id="r_af81a3e8e6106548276631d50763d12c2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af81a3e8e6106548276631d50763d12c2">mnaCompInitialize</a> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector)</td></tr>
-<tr class="memdesc:af81a3e8e6106548276631d50763d12c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes MNA specific variables.  <br /></td></tr>
-<tr class="separator:af81a3e8e6106548276631d50763d12c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a220927800ac3adc69b9729302ec588d2" id="r_a220927800ac3adc69b9729302ec588d2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a220927800ac3adc69b9729302ec588d2">mnaCompApplySystemMatrixStamp</a> (SparseMatrixRow &amp;systemMatrix)</td></tr>
-<tr class="memdesc:a220927800ac3adc69b9729302ec588d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix.  <br /></td></tr>
-<tr class="separator:a220927800ac3adc69b9729302ec588d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab0a4b85fb34f14daa2df411c20e92196" id="r_ab0a4b85fb34f14daa2df411c20e92196"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab0a4b85fb34f14daa2df411c20e92196">mnaCompApplyRightSideVectorStamp</a> (Matrix &amp;rightVector)</td></tr>
-<tr class="memdesc:ab0a4b85fb34f14daa2df411c20e92196"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps right side (source) vector.  <br /></td></tr>
-<tr class="separator:ab0a4b85fb34f14daa2df411c20e92196"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a328a8e36b38d44e4305d03e27dde8dc6" id="r_a328a8e36b38d44e4305d03e27dde8dc6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a328a8e36b38d44e4305d03e27dde8dc6">mnaCompUpdateVoltage</a> (const Matrix &amp;leftVector)</td></tr>
-<tr class="memdesc:a328a8e36b38d44e4305d03e27dde8dc6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update interface voltage from MNA system results.  <br /></td></tr>
-<tr class="separator:a328a8e36b38d44e4305d03e27dde8dc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69238b1ab2d4946ceb3c90fef2b3aa4a" id="r_a69238b1ab2d4946ceb3c90fef2b3aa4a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a69238b1ab2d4946ceb3c90fef2b3aa4a">mnaCompUpdateCurrent</a> (const Matrix &amp;leftVector)</td></tr>
-<tr class="memdesc:a69238b1ab2d4946ceb3c90fef2b3aa4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update interface current from MNA system results.  <br /></td></tr>
-<tr class="separator:a69238b1ab2d4946ceb3c90fef2b3aa4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab9069bebbf9740b1055d64b497f08715" id="r_ab9069bebbf9740b1055d64b497f08715"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab9069bebbf9740b1055d64b497f08715">mnaCompPreStep</a> (Real time, Int timeStepCount)</td></tr>
-<tr class="memdesc:ab9069bebbf9740b1055d64b497f08715"><td class="mdescLeft">&#160;</td><td class="mdescRight">MNA pre step operations.  <br /></td></tr>
-<tr class="separator:ab9069bebbf9740b1055d64b497f08715"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac58b68d68ba53260507175c46c8605b1" id="r_ac58b68d68ba53260507175c46c8605b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac58b68d68ba53260507175c46c8605b1">mnaCompPostStep</a> (Real time, Int timeStepCount, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr &amp;leftVector)</td></tr>
-<tr class="memdesc:ac58b68d68ba53260507175c46c8605b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">MNA post step operations.  <br /></td></tr>
-<tr class="separator:ac58b68d68ba53260507175c46c8605b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0e9486fb41f4b8307148c048d60e656" id="r_aa0e9486fb41f4b8307148c048d60e656"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa0e9486fb41f4b8307148c048d60e656">mnaCompAddPreStepDependencies</a> (AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes)</td></tr>
-<tr class="memdesc:aa0e9486fb41f4b8307148c048d60e656"><td class="mdescLeft">&#160;</td><td class="mdescRight">add MNA pre step dependencies  <br /></td></tr>
-<tr class="separator:aa0e9486fb41f4b8307148c048d60e656"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b57230a4422293fc636dba9dd8f3c04" id="r_a8b57230a4422293fc636dba9dd8f3c04"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8b57230a4422293fc636dba9dd8f3c04">mnaCompAddPostStepDependencies</a> (AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr &amp;leftVector)</td></tr>
-<tr class="memdesc:a8b57230a4422293fc636dba9dd8f3c04"><td class="mdescLeft">&#160;</td><td class="mdescRight">add MNA post step dependencies  <br /></td></tr>
-<tr class="separator:a8b57230a4422293fc636dba9dd8f3c04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3619b1cdd52c87c9dd918c0f9fb77643" id="r_a3619b1cdd52c87c9dd918c0f9fb77643"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3619b1cdd52c87c9dd918c0f9fb77643">createSubComponents</a> () override</td></tr>
+<tr class="memdesc:a3619b1cdd52c87c9dd918c0f9fb77643"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs subcomponents; idempotent.  <br /></td></tr>
+<tr class="separator:a3619b1cdd52c87c9dd918c0f9fb77643"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa72c8506dc0834cf43bde02f0182d876" id="r_aa72c8506dc0834cf43bde02f0182d876"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa72c8506dc0834cf43bde02f0182d876">initializeFromNodesAndTerminals</a> (Real frequency) override</td></tr>
+<tr class="memdesc:aa72c8506dc0834cf43bde02f0182d876"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes states from power flow data.  <br /></td></tr>
+<tr class="separator:aa72c8506dc0834cf43bde02f0182d876"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a2a406506aecca9cb5f775c64a7426f" id="r_a4a2a406506aecca9cb5f775c64a7426f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4a2a406506aecca9cb5f775c64a7426f">mnaCompInitialize</a> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector) override</td></tr>
+<tr class="memdesc:a4a2a406506aecca9cb5f775c64a7426f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes MNA specific variables.  <br /></td></tr>
+<tr class="separator:a4a2a406506aecca9cb5f775c64a7426f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d98ed58f71bd6a6e7c6bf2ecf80cb6b" id="r_a0d98ed58f71bd6a6e7c6bf2ecf80cb6b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0d98ed58f71bd6a6e7c6bf2ecf80cb6b">mnaCompApplySystemMatrixStamp</a> (SparseMatrixRow &amp;systemMatrix) override</td></tr>
+<tr class="memdesc:a0d98ed58f71bd6a6e7c6bf2ecf80cb6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix.  <br /></td></tr>
+<tr class="separator:a0d98ed58f71bd6a6e7c6bf2ecf80cb6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e3bb50228d3f161c9bfb5b9035ba13b" id="r_a9e3bb50228d3f161c9bfb5b9035ba13b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9e3bb50228d3f161c9bfb5b9035ba13b">mnaCompApplyRightSideVectorStamp</a> (Matrix &amp;rightVector) override</td></tr>
+<tr class="memdesc:a9e3bb50228d3f161c9bfb5b9035ba13b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps right side (source) vector.  <br /></td></tr>
+<tr class="separator:a9e3bb50228d3f161c9bfb5b9035ba13b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3cb0fecd0a1a9c88a9d0ad60a49191ed" id="r_a3cb0fecd0a1a9c88a9d0ad60a49191ed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3cb0fecd0a1a9c88a9d0ad60a49191ed">mnaCompUpdateVoltage</a> (const Matrix &amp;leftVector) override</td></tr>
+<tr class="memdesc:a3cb0fecd0a1a9c88a9d0ad60a49191ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update interface voltage from MNA system results.  <br /></td></tr>
+<tr class="separator:a3cb0fecd0a1a9c88a9d0ad60a49191ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a115ebfaf838fe234a83847147ef41da8" id="r_a115ebfaf838fe234a83847147ef41da8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a115ebfaf838fe234a83847147ef41da8">mnaCompUpdateCurrent</a> (const Matrix &amp;leftVector) override</td></tr>
+<tr class="memdesc:a115ebfaf838fe234a83847147ef41da8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update interface current from MNA system results.  <br /></td></tr>
+<tr class="separator:a115ebfaf838fe234a83847147ef41da8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac22e060e56678dab60eff2abd7ddd8b1" id="r_ac22e060e56678dab60eff2abd7ddd8b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac22e060e56678dab60eff2abd7ddd8b1">mnaCompPreStep</a> (Real time, Int timeStepCount) override</td></tr>
+<tr class="memdesc:ac22e060e56678dab60eff2abd7ddd8b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">MNA pre step operations.  <br /></td></tr>
+<tr class="separator:ac22e060e56678dab60eff2abd7ddd8b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f0eef758b8a13003f79b1dea5bbe88d" id="r_a0f0eef758b8a13003f79b1dea5bbe88d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0f0eef758b8a13003f79b1dea5bbe88d">mnaCompPostStep</a> (Real time, Int timeStepCount, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr &amp;leftVector) override</td></tr>
+<tr class="memdesc:a0f0eef758b8a13003f79b1dea5bbe88d"><td class="mdescLeft">&#160;</td><td class="mdescRight">MNA post step operations.  <br /></td></tr>
+<tr class="separator:a0f0eef758b8a13003f79b1dea5bbe88d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad87dd73ce4e915e763c34e751bd958a8" id="r_ad87dd73ce4e915e763c34e751bd958a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad87dd73ce4e915e763c34e751bd958a8">mnaCompAddPreStepDependencies</a> (AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes) override</td></tr>
+<tr class="memdesc:ad87dd73ce4e915e763c34e751bd958a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">add MNA pre step dependencies  <br /></td></tr>
+<tr class="separator:ad87dd73ce4e915e763c34e751bd958a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a950156ed4163012a845afac59d328a76" id="r_a950156ed4163012a845afac59d328a76"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a950156ed4163012a845afac59d328a76">mnaCompAddPostStepDependencies</a> (AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr &amp;leftVector) override</td></tr>
+<tr class="memdesc:a950156ed4163012a845afac59d328a76"><td class="mdescLeft">&#160;</td><td class="mdescRight">add MNA post step dependencies  <br /></td></tr>
+<tr class="separator:a950156ed4163012a845afac59d328a76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a38aa95b72e8ea5a5eaa5e8e12732ab70" id="r_a38aa95b72e8ea5a5eaa5e8e12732ab70"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a38aa95b72e8ea5a5eaa5e8e12732ab70">ValueChanged</a> ()</td></tr>
 <tr class="separator:a38aa95b72e8ea5a5eaa5e8e12732ab70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab26e974c4c59fc1989a164249ca7d49a" id="r_ab26e974c4c59fc1989a164249ca7d49a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab26e974c4c59fc1989a164249ca7d49a">setSwitchState</a> ()</td></tr>
@@ -679,7 +682,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Defines name and log level. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00073">73</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00074">74</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
 
 </div>
 </div>
@@ -699,12 +702,43 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00246">246</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00260">260</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
 
 </div>
 </div>
-<a id="ab5cd2aac49f02c943d2a59a13e484b3f" name="ab5cd2aac49f02c943d2a59a13e484b3f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab5cd2aac49f02c943d2a59a13e484b3f">&#9670;&#160;</a></span>initializeFromNodesAndTerminals()</h2>
+<a id="a3619b1cdd52c87c9dd918c0f9fb77643" name="a3619b1cdd52c87c9dd918c0f9fb77643"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3619b1cdd52c87c9dd918c0f9fb77643">&#9670;&#160;</a></span>createSubComponents()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DP::Ph1::SVC::createSubComponents </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructs subcomponents; idempotent. </p>
+
+<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a780dfe2d2caa891938f3e4e9796cca1d">CPS::MNAInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00029">29</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
+
+</div>
+</div>
+<a id="aa72c8506dc0834cf43bde02f0182d876" name="aa72c8506dc0834cf43bde02f0182d876"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa72c8506dc0834cf43bde02f0182d876">&#9670;&#160;</a></span>initializeFromNodesAndTerminals()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -721,7 +755,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel virtual">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -730,7 +764,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a4401f844a3f389e07a37ef1716d84dcd">CPS::SimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00029">29</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00066">66</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
 
 </div>
 </div>
@@ -749,15 +783,18 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00364">364</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00378">378</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a8b57230a4422293fc636dba9dd8f3c04" name="a8b57230a4422293fc636dba9dd8f3c04"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8b57230a4422293fc636dba9dd8f3c04">&#9670;&#160;</a></span>mnaCompAddPostStepDependencies()</h2>
+<a id="a950156ed4163012a845afac59d328a76" name="a950156ed4163012a845afac59d328a76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a950156ed4163012a845afac59d328a76">&#9670;&#160;</a></span>mnaCompAddPostStepDependencies()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void DP::Ph1::SVC::mnaCompAddPostStepDependencies </td>
@@ -780,16 +817,21 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramtype"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr &amp;</td>          <td class="paramname"><span class="paramname"><em>leftVector</em></span>&#160;)</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>add MNA post step dependencies </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00193">193</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00207">207</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
 
 </div>
 </div>
-<a id="aa0e9486fb41f4b8307148c048d60e656" name="aa0e9486fb41f4b8307148c048d60e656"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa0e9486fb41f4b8307148c048d60e656">&#9670;&#160;</a></span>mnaCompAddPreStepDependencies()</h2>
+<a id="ad87dd73ce4e915e763c34e751bd958a8" name="ad87dd73ce4e915e763c34e751bd958a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad87dd73ce4e915e763c34e751bd958a8">&#9670;&#160;</a></span>mnaCompAddPreStepDependencies()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -815,7 +857,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel virtual">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -824,12 +866,12 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00157">157</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00171">171</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
 
 </div>
 </div>
-<a id="ab0a4b85fb34f14daa2df411c20e92196" name="ab0a4b85fb34f14daa2df411c20e92196"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab0a4b85fb34f14daa2df411c20e92196">&#9670;&#160;</a></span>mnaCompApplyRightSideVectorStamp()</h2>
+<a id="a9e3bb50228d3f161c9bfb5b9035ba13b" name="a9e3bb50228d3f161c9bfb5b9035ba13b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e3bb50228d3f161c9bfb5b9035ba13b">&#9670;&#160;</a></span>mnaCompApplyRightSideVectorStamp()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -846,7 +888,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel virtual">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -855,12 +897,12 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00150">150</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00164">164</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a220927800ac3adc69b9729302ec588d2" name="a220927800ac3adc69b9729302ec588d2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a220927800ac3adc69b9729302ec588d2">&#9670;&#160;</a></span>mnaCompApplySystemMatrixStamp()</h2>
+<a id="a0d98ed58f71bd6a6e7c6bf2ecf80cb6b" name="a0d98ed58f71bd6a6e7c6bf2ecf80cb6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d98ed58f71bd6a6e7c6bf2ecf80cb6b">&#9670;&#160;</a></span>mnaCompApplySystemMatrixStamp()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -877,7 +919,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel virtual">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -886,15 +928,18 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00142">142</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00156">156</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
 
 </div>
 </div>
-<a id="af81a3e8e6106548276631d50763d12c2" name="af81a3e8e6106548276631d50763d12c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af81a3e8e6106548276631d50763d12c2">&#9670;&#160;</a></span>mnaCompInitialize()</h2>
+<a id="a4a2a406506aecca9cb5f775c64a7426f" name="a4a2a406506aecca9cb5f775c64a7426f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a2a406506aecca9cb5f775c64a7426f">&#9670;&#160;</a></span>mnaCompInitialize()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void DP::Ph1::SVC::mnaCompInitialize </td>
@@ -912,19 +957,27 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramtype"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr</td>          <td class="paramname"><span class="paramname"><em>leftVector</em></span>&#160;)</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Initializes MNA specific variables. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00117">117</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00131">131</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
 
 </div>
 </div>
-<a id="ac58b68d68ba53260507175c46c8605b1" name="ac58b68d68ba53260507175c46c8605b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac58b68d68ba53260507175c46c8605b1">&#9670;&#160;</a></span>mnaCompPostStep()</h2>
+<a id="a0f0eef758b8a13003f79b1dea5bbe88d" name="a0f0eef758b8a13003f79b1dea5bbe88d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f0eef758b8a13003f79b1dea5bbe88d">&#9670;&#160;</a></span>mnaCompPostStep()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void DP::Ph1::SVC::mnaCompPostStep </td>
@@ -942,16 +995,21 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramtype"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr &amp;</td>          <td class="paramname"><span class="paramname"><em>leftVector</em></span>&#160;)</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>MNA post step operations. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00218">218</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00232">232</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
 
 </div>
 </div>
-<a id="ab9069bebbf9740b1055d64b497f08715" name="ab9069bebbf9740b1055d64b497f08715"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab9069bebbf9740b1055d64b497f08715">&#9670;&#160;</a></span>mnaCompPreStep()</h2>
+<a id="ac22e060e56678dab60eff2abd7ddd8b1" name="ac22e060e56678dab60eff2abd7ddd8b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac22e060e56678dab60eff2abd7ddd8b1">&#9670;&#160;</a></span>mnaCompPreStep()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -972,7 +1030,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel virtual">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -981,12 +1039,12 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00175">175</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00189">189</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a69238b1ab2d4946ceb3c90fef2b3aa4a" name="a69238b1ab2d4946ceb3c90fef2b3aa4a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a69238b1ab2d4946ceb3c90fef2b3aa4a">&#9670;&#160;</a></span>mnaCompUpdateCurrent()</h2>
+<a id="a115ebfaf838fe234a83847147ef41da8" name="a115ebfaf838fe234a83847147ef41da8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a115ebfaf838fe234a83847147ef41da8">&#9670;&#160;</a></span>mnaCompUpdateCurrent()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1003,7 +1061,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel virtual">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1012,12 +1070,12 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00240">240</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00254">254</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a328a8e36b38d44e4305d03e27dde8dc6" name="a328a8e36b38d44e4305d03e27dde8dc6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a328a8e36b38d44e4305d03e27dde8dc6">&#9670;&#160;</a></span>mnaCompUpdateVoltage()</h2>
+<a id="a3cb0fecd0a1a9c88a9d0ad60a49191ed" name="a3cb0fecd0a1a9c88a9d0ad60a49191ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3cb0fecd0a1a9c88a9d0ad60a49191ed">&#9670;&#160;</a></span>mnaCompUpdateVoltage()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1034,7 +1092,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel virtual">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1043,7 +1101,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00232">232</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00246">246</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
 
 </div>
 </div>
@@ -1062,7 +1120,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00445">445</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00459">459</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
 
 </div>
 </div>
@@ -1081,7 +1139,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00285">285</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html#l00299">299</a> of file <a class="el" href="_d_p___ph1___s_v_c_8cpp_source.html">DP_Ph1_SVC.cpp</a>.</p>
 
 </div>
 </div>
@@ -1125,7 +1183,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00052">52</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00053">53</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
 
 </div>
 </div>
@@ -1149,7 +1207,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00050">50</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00051">51</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
 
 </div>
 </div>
@@ -1173,7 +1231,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00058">58</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00059">59</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
 
 </div>
 </div>
@@ -1197,7 +1255,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00064">64</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00065">65</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
 
 </div>
 </div>
@@ -1221,7 +1279,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00043">43</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00044">44</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
 
 </div>
 </div>
@@ -1245,7 +1303,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00056">56</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00057">57</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
 
 </div>
 </div>
@@ -1269,7 +1327,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00057">57</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00058">58</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
 
 </div>
 </div>
@@ -1293,7 +1351,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00061">61</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00062">62</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
 
 </div>
 </div>
@@ -1317,7 +1375,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00062">62</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00063">63</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
 
 </div>
 </div>
@@ -1341,7 +1399,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00063">63</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00064">64</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
 
 </div>
 </div>
@@ -1367,7 +1425,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Internal capacitor. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00039">39</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00040">40</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
 
 </div>
 </div>
@@ -1391,7 +1449,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00040">40</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00041">41</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
 
 </div>
 </div>
@@ -1414,10 +1472,10 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<h3>internal components</h3>
+<p>True after <a class="el" href="#a3619b1cdd52c87c9dd918c0f9fb77643" title="Constructs subcomponents; idempotent.">createSubComponents()</a> runs; prevents double-construction. </p><h3>internal components</h3>
 <p>Internal inductor </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00036">36</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00037">37</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
 
 </div>
 </div>
@@ -1441,7 +1499,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00037">37</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00038">38</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
 
 </div>
 </div>
@@ -1465,7 +1523,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00049">49</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00050">50</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
 
 </div>
 </div>
@@ -1489,7 +1547,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00048">48</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00049">49</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
 
 </div>
 </div>
@@ -1513,7 +1571,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00047">47</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00048">48</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
 
 </div>
 </div>
@@ -1537,7 +1595,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00055">55</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00056">56</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
 
 </div>
 </div>
@@ -1561,7 +1619,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00042">42</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00043">43</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
 
 </div>
 </div>
@@ -1577,7 +1635,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00068">68</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00069">69</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
 
 </div>
 </div>
@@ -1593,7 +1651,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00067">67</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___s_v_c_8h_source.html#l00068">68</a> of file <a class="el" href="_d_p___ph1___s_v_c_8h_source.html">DP_Ph1_SVC.h</a>.</p>
 
 </div>
 </div>

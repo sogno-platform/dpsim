@@ -115,6 +115,9 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a780dfe2d2caa891938f3e4e9796cca1d" id="r_a780dfe2d2caa891938f3e4e9796cca1d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a780dfe2d2caa891938f3e4e9796cca1d">createSubComponents</a> ()</td></tr>
+<tr class="memdesc:a780dfe2d2caa891938f3e4e9796cca1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs and registers MNA subcomponents; called before collectVirtualNodes so virtual nodes exist before matrix sizing.  <br /></td></tr>
+<tr class="separator:a780dfe2d2caa891938f3e4e9796cca1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19f3b3770b99fc16550413b2f77dbf2b" id="r_a19f3b3770b99fc16550413b2f77dbf2b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a19f3b3770b99fc16550413b2f77dbf2b">mnaInitialize</a> (Real omega, Real timeStep)=0</td></tr>
 <tr class="memdesc:a19f3b3770b99fc16550413b2f77dbf2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes variables of components.  <br /></td></tr>
 <tr class="separator:a19f3b3770b99fc16550413b2f77dbf2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -205,6 +208,37 @@ virtual <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Ma
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a780dfe2d2caa891938f3e4e9796cca1d" name="a780dfe2d2caa891938f3e4e9796cca1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a780dfe2d2caa891938f3e4e9796cca1d">&#9670;&#160;</a></span>createSubComponents()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void CPS::MNAInterface::createSubComponents </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructs and registers MNA subcomponents; called before collectVirtualNodes so virtual nodes exist before matrix sizing. </p>
+
+<p>Reimplemented in <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_pi_line.html#abf403a79e23af776abb026dc443b84b2">CPS::DP::Ph1::PiLine</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#a916b4273ccfebed943c2f2c2979113b7">CPS::DP::Ph1::PQLoadCS</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_rx_line.html#abca476ec430f52f35c7abbe7ee3adc38">CPS::DP::Ph1::RxLine</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#af104d35a2f803aa0177ae06e7d055e09">CPS::DP::Ph1::RXLoad</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_s_v_c.html#a3619b1cdd52c87c9dd918c0f9fb77643">CPS::DP::Ph1::SVC</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_ideal.html#a3ac938c8db2b7f8a307f79b2f00428ec">CPS::DP::Ph1::SynchronGeneratorIdeal</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#aac75ff5b7c201e84d65dbb247cdf2abc">CPS::DP::Ph1::SynchronGeneratorTrStab</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html#a679284758a4f9b9f84914c638e946057">CPS::DP::Ph1::Transformer</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_pi_line.html#aaa41e75303abd4985c04581b37ebc347">CPS::DP::Ph3::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_pi_line.html#a8323c4419c5125780b96b833513fe917">CPS::EMT::Ph1::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html#ad54f4a3f622775c3ab6d2835448f268e">CPS::EMT::Ph3::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#ac29da6211a1d77de29c35757950a8d59">CPS::EMT::Ph3::RxLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_r_x_load.html#a34fcf4db94272f8b1c79985116f6bf3b">CPS::EMT::Ph3::RXLoad</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_ideal.html#ac2c3080cd78dd5ece40de1ceb8574cb9">CPS::EMT::Ph3::SynchronGeneratorIdeal</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_tr_stab.html#abc3e5a512bb33f246248eb49218b7e3c">CPS::EMT::Ph3::SynchronGeneratorTrStab</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html#a9248b3b5a9c0b25262bf641b365e925f">CPS::EMT::Ph3::Transformer</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_load.html#a9dcc5dab583da3edb1340a7a07369724">CPS::SP::Ph1::Load</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_pi_line.html#a01c5724378081a047ffde56b474587a4">CPS::SP::Ph1::PiLine</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#a4b91fa33bb51df0aabc7d4a6ef71d374">CPS::SP::Ph1::RXLine</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_solid_state_transformer.html#a3de91f856ead2586da549b9f17f2259d">CPS::SP::Ph1::SolidStateTransformer</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#a86bdf87084a52d70da7482212b4b6eea">CPS::SP::Ph1::SynchronGeneratorTrStab</a>, and <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html#ac1788a9cf382633de211895844afbbda">CPS::SP::Ph1::Transformer</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_m_n_a_interface_8h_source.html#l00025">25</a> of file <a class="el" href="_m_n_a_interface_8h_source.html">MNAInterface.h</a>.</p>
+
+</div>
+</div>
 <a id="a19edf22751b0e9666ba1e232e34bffde" name="a19edf22751b0e9666ba1e232e34bffde"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a19edf22751b0e9666ba1e232e34bffde">&#9670;&#160;</a></span>mnaAddPreStepDependencies()</h2>
 

@@ -113,7 +113,7 @@ Collaboration diagram for CPS::DP::Ph1::Transformer:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a5b4fdfa87b379b567b0f0d180bc04c25" id="r_a5b4fdfa87b379b567b0f0d180bc04c25"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b4fdfa87b379b567b0f0d180bc04c25">Transformer</a> (String <a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, String name, Logger::Level logLevel=Logger::Level::off, Bool withResistiveLosses=false)</td></tr>
-<tr class="memdesc:a5b4fdfa87b379b567b0f0d180bc04c25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines UID, name and logging level.  <br /></td></tr>
+<tr class="memdesc:a5b4fdfa87b379b567b0f0d180bc04c25"><td class="mdescLeft">&#160;</td><td class="mdescRight">True after <a class="el" href="#a679284758a4f9b9f84914c638e946057" title="Constructs and registers MNA subcomponents (incl. terminal swap); idempotent.">createSubComponents()</a> runs; prevents double-construction.  <br /></td></tr>
 <tr class="separator:a5b4fdfa87b379b567b0f0d180bc04c25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b9760b965cc1b7a6b44e4f4118c58fa" id="r_a3b9760b965cc1b7a6b44e4f4118c58fa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3b9760b965cc1b7a6b44e4f4118c58fa">Transformer</a> (String name, Logger::Level logLevel=Logger::Level::off)</td></tr>
 <tr class="memdesc:a3b9760b965cc1b7a6b44e4f4118c58fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines name and logging level.  <br /></td></tr>
@@ -127,9 +127,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a50e2a8a68a5a3e376f19f64f1659a4d7" id="r_a50e2a8a68a5a3e376f19f64f1659a4d7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a50e2a8a68a5a3e376f19f64f1659a4d7">setParameters</a> (Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs, Real ratioPhase, Real resistance, Real inductance)</td></tr>
 <tr class="memdesc:a50e2a8a68a5a3e376f19f64f1659a4d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set transformer specific parameters.  <br /></td></tr>
 <tr class="separator:a50e2a8a68a5a3e376f19f64f1659a4d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13a9461c532cd7b7bff3a3bbd2b515e2" id="r_a13a9461c532cd7b7bff3a3bbd2b515e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a13a9461c532cd7b7bff3a3bbd2b515e2">initializeFromNodesAndTerminals</a> (Real frequency) override</td></tr>
-<tr class="memdesc:a13a9461c532cd7b7bff3a3bbd2b515e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data.  <br /></td></tr>
-<tr class="separator:a13a9461c532cd7b7bff3a3bbd2b515e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a679284758a4f9b9f84914c638e946057" id="r_a679284758a4f9b9f84914c638e946057"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a679284758a4f9b9f84914c638e946057">createSubComponents</a> () override</td></tr>
+<tr class="memdesc:a679284758a4f9b9f84914c638e946057"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs and registers MNA subcomponents (incl. terminal swap); idempotent.  <br /></td></tr>
+<tr class="separator:a679284758a4f9b9f84914c638e946057"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9cac75846ce60288c4f70361afd4f1f1" id="r_a9cac75846ce60288c4f70361afd4f1f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9cac75846ce60288c4f70361afd4f1f1">initializeParentFromNodesAndTerminals</a> (Real frequency) override</td></tr>
+<tr class="memdesc:a9cac75846ce60288c4f70361afd4f1f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data.  <br /></td></tr>
+<tr class="separator:a9cac75846ce60288c4f70361afd4f1f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9bce25816dbb1b344c37970838e6955f" id="r_a9bce25816dbb1b344c37970838e6955f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9bce25816dbb1b344c37970838e6955f">mnaParentInitialize</a> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector) override</td></tr>
 <tr class="memdesc:a9bce25816dbb1b344c37970838e6955f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes internal variables of the component.  <br /></td></tr>
 <tr class="separator:a9bce25816dbb1b344c37970838e6955f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -165,6 +168,8 @@ Public Member Functions</h2></td></tr>
 virtual&#160;</td><td class="memItemRight" valign="bottom"><b>~CompositePowerComp</b> ()=default</td></tr>
 <tr class="memdesc:acd5001ab92e80e42d9beaadc1a8dca1c inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor - does not do anything. <br /></td></tr>
 <tr class="separator:acd5001ab92e80e42d9beaadc1a8dca1c inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dbb1714bcd34e498da06e26fe460c00 inherit pub_methods_class_c_p_s_1_1_composite_power_comp" id="r_a9dbb1714bcd34e498da06e26fe460c00"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a9dbb1714bcd34e498da06e26fe460c00">initializeFromNodesAndTerminals</a> (Real frequency) override final</td></tr>
+<tr class="separator:a9dbb1714bcd34e498da06e26fe460c00 inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36787ca664e85614aca65a2683547147 inherit pub_methods_class_c_p_s_1_1_composite_power_comp" id="r_a36787ca664e85614aca65a2683547147"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a36787ca664e85614aca65a2683547147">addMNASubComponent</a> (typename <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr subc, MNA_SUBCOMP_TASK_ORDER preStepOrder, MNA_SUBCOMP_TASK_ORDER postStepOrder, Bool contributeToRightVector)</td></tr>
 <tr class="memdesc:a36787ca664e85614aca65a2683547147 inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a new subcomponent implementing MNA methods.  <br /></td></tr>
 <tr class="separator:a36787ca664e85614aca65a2683547147 inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -504,6 +509,9 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:a53b0a88ec4051dcf55a0b8598a8b6534 inherit pub_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer" id="r_a53b0a88ec4051dcf55a0b8598a8b6534"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_transformer.html#a53b0a88ec4051dcf55a0b8598a8b6534">mInductance</a></td></tr>
 <tr class="memdesc:a53b0a88ec4051dcf55a0b8598a8b6534 inherit pub_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inductance [H].  <br /></td></tr>
 <tr class="separator:a53b0a88ec4051dcf55a0b8598a8b6534 inherit pub_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_class_c_p_s_1_1_composite_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_composite_power_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_composite_power_comp.html">CPS::CompositePowerComp&lt; Complex &gt;</a></td></tr>
+<tr class="memitem:a230c4cafd696f2c14f9d3fef031cf988 inherit pro_attribs_class_c_p_s_1_1_composite_power_comp" id="r_a230c4cafd696f2c14f9d3fef031cf988"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a230c4cafd696f2c14f9d3fef031cf988">mSubCompCreated</a></td></tr>
+<tr class="separator:a230c4cafd696f2c14f9d3fef031cf988 inherit pro_attribs_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt; Complex &gt;</a></td></tr>
 <tr class="memitem:a16fef50583bd2c58806acbf6185698cb inherit pro_attribs_class_c_p_s_1_1_sim_power_comp" id="r_a16fef50583bd2c58806acbf6185698cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_terminal.html">SimTerminal</a>&lt; Complex &gt;::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a16fef50583bd2c58806acbf6185698cb">mTerminals</a></td></tr>
 <tr class="memdesc:a16fef50583bd2c58806acbf6185698cb inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of Terminals.  <br /></td></tr>
@@ -591,7 +599,8 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Defines UID, name and logging level. </p>
+<p>True after <a class="el" href="#a679284758a4f9b9f84914c638e946057" title="Constructs and registers MNA subcomponents (incl. terminal swap); idempotent.">createSubComponents()</a> runs; prevents double-construction. </p>
+<p>Defines UID, name and logging level </p>
 
 <p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00013">13</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
 
@@ -626,7 +635,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Defines name and logging level. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8h_source.html#l00058">58</a> of file <a class="el" href="_d_p___ph1___transformer_8h_source.html">DP_Ph1_Transformer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8h_source.html#l00059">59</a> of file <a class="el" href="_d_p___ph1___transformer_8h_source.html">DP_Ph1_Transformer.h</a>.</p>
 
 </div>
 </div>
@@ -662,8 +671,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a13a9461c532cd7b7bff3a3bbd2b515e2" name="a13a9461c532cd7b7bff3a3bbd2b515e2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a13a9461c532cd7b7bff3a3bbd2b515e2">&#9670;&#160;</a></span>initializeFromNodesAndTerminals()</h2>
+<a id="a679284758a4f9b9f84914c638e946057" name="a679284758a4f9b9f84914c638e946057"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a679284758a4f9b9f84914c638e946057">&#9670;&#160;</a></span>createSubComponents()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -672,7 +681,38 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void DP::Ph1::Transformer::initializeFromNodesAndTerminals </td>
+          <td class="memname">void DP::Ph1::Transformer::createSubComponents </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructs and registers MNA subcomponents (incl. terminal swap); idempotent. </p>
+
+<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a780dfe2d2caa891938f3e4e9796cca1d">CPS::MNAInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00074">74</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a9cac75846ce60288c4f70361afd4f1f1" name="a9cac75846ce60288c4f70361afd4f1f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9cac75846ce60288c4f70361afd4f1f1">&#9670;&#160;</a></span>initializeParentFromNodesAndTerminals()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DP::Ph1::Transformer::initializeParentFromNodesAndTerminals </td>
           <td>(</td>
           <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>frequency</em></span></td><td>)</td>
           <td></td>
@@ -687,9 +727,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Initializes component from power flow data. </p>
 
-<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a4401f844a3f389e07a37ef1716d84dcd">CPS::SimPowerComp&lt; Complex &gt;</a>.</p>
+<p>Implements <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a49dac74f4584c6f7c5061647a1fa1d22">CPS::CompositePowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00074">74</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00154">154</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
 
 </div>
 </div>
@@ -720,7 +760,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#aa41b67cc103b1371b42e21cfc8d9611d">CPS::CompositePowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00217">217</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00206">206</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
 
 </div>
 </div>
@@ -751,7 +791,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00289">289</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00278">278</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
 
 </div>
 </div>
@@ -782,7 +822,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00293">293</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00282">282</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
 
 </div>
 </div>
@@ -825,7 +865,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Add MNA post step dependencies. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00273">273</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00262">262</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
 
 </div>
 </div>
@@ -865,7 +905,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_composite_power_comp.html">CPS::CompositePowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00260">260</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00249">249</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
 
 </div>
 </div>
@@ -903,7 +943,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Initializes internal variables of the component. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00207">207</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00196">196</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
 
 </div>
 </div>
@@ -941,7 +981,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>MNA post step operations. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00283">283</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00272">272</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
 
 </div>
 </div>
@@ -976,7 +1016,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_composite_power_comp.html">CPS::CompositePowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00269">269</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00258">258</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
 
 </div>
 </div>

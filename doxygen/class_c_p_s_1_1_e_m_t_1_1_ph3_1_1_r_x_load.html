@@ -127,9 +127,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ae4016733017a86baa96b1820e4e7aa47"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28405422f22c2b260d8bb6a394d2bb40" id="r_a28405422f22c2b260d8bb6a394d2bb40"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a28405422f22c2b260d8bb6a394d2bb40">setParameters</a> (Matrix activePower, Matrix reactivePower, Real volt, bool reactanceInSeries=false)</td></tr>
 <tr class="separator:a28405422f22c2b260d8bb6a394d2bb40"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1527d2409dd1dfdbe88e698ba61adcc" id="r_aa1527d2409dd1dfdbe88e698ba61adcc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa1527d2409dd1dfdbe88e698ba61adcc">initializeFromNodesAndTerminals</a> (Real frequency) override</td></tr>
-<tr class="memdesc:aa1527d2409dd1dfdbe88e698ba61adcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data.  <br /></td></tr>
-<tr class="separator:aa1527d2409dd1dfdbe88e698ba61adcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34fcf4db94272f8b1c79985116f6bf3b" id="r_a34fcf4db94272f8b1c79985116f6bf3b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a34fcf4db94272f8b1c79985116f6bf3b">createSubComponents</a> () override</td></tr>
+<tr class="memdesc:a34fcf4db94272f8b1c79985116f6bf3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs and registers MNA subcomponents; idempotent.  <br /></td></tr>
+<tr class="separator:a34fcf4db94272f8b1c79985116f6bf3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6161927473d63857fe9551c2418a371f" id="r_a6161927473d63857fe9551c2418a371f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6161927473d63857fe9551c2418a371f">initializeParentFromNodesAndTerminals</a> (Real frequency) override</td></tr>
+<tr class="memdesc:a6161927473d63857fe9551c2418a371f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Derives values from power flow data and pushes them to subcomponents.  <br /></td></tr>
+<tr class="separator:a6161927473d63857fe9551c2418a371f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc8c144a8f7ea0f32562a80d4f575490" id="r_abc8c144a8f7ea0f32562a80d4f575490"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abc8c144a8f7ea0f32562a80d4f575490">mnaCompUpdateCurrent</a> (const Matrix &amp;leftVector) override</td></tr>
 <tr class="separator:abc8c144a8f7ea0f32562a80d4f575490"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a925764b455880984ea360bf729944a70" id="r_a925764b455880984ea360bf729944a70"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a925764b455880984ea360bf729944a70">mnaCompUpdateVoltage</a> (const Matrix &amp;leftVector) override</td></tr>
@@ -154,6 +157,8 @@ Public Member Functions</h2></td></tr>
 virtual&#160;</td><td class="memItemRight" valign="bottom"><b>~CompositePowerComp</b> ()=default</td></tr>
 <tr class="memdesc:acd5001ab92e80e42d9beaadc1a8dca1c inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor - does not do anything. <br /></td></tr>
 <tr class="separator:acd5001ab92e80e42d9beaadc1a8dca1c inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dbb1714bcd34e498da06e26fe460c00 inherit pub_methods_class_c_p_s_1_1_composite_power_comp" id="r_a9dbb1714bcd34e498da06e26fe460c00"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a9dbb1714bcd34e498da06e26fe460c00">initializeFromNodesAndTerminals</a> (Real frequency) override final</td></tr>
+<tr class="separator:a9dbb1714bcd34e498da06e26fe460c00 inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36787ca664e85614aca65a2683547147 inherit pub_methods_class_c_p_s_1_1_composite_power_comp" id="r_a36787ca664e85614aca65a2683547147"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a36787ca664e85614aca65a2683547147">addMNASubComponent</a> (typename <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Real &gt;::Ptr subc, MNA_SUBCOMP_TASK_ORDER preStepOrder, MNA_SUBCOMP_TASK_ORDER postStepOrder, Bool contributeToRightVector)</td></tr>
 <tr class="memdesc:a36787ca664e85614aca65a2683547147 inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a new subcomponent implementing MNA methods.  <br /></td></tr>
 <tr class="separator:a36787ca664e85614aca65a2683547147 inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -448,7 +453,6 @@ Public Attributes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a32acee523cbe0cd3f5af03d65cfde76d" id="r_a32acee523cbe0cd3f5af03d65cfde76d"><td class="memItemLeft" align="right" valign="top">MatrixComp&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a32acee523cbe0cd3f5af03d65cfde76d">mPower</a></td></tr>
-<tr class="memdesc:a32acee523cbe0cd3f5af03d65cfde76d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Power [Watt].  <br /></td></tr>
 <tr class="separator:a32acee523cbe0cd3f5af03d65cfde76d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a570591c26db1d44a684cd26bb2819574" id="r_a570591c26db1d44a684cd26bb2819574"><td class="memItemLeft" align="right" valign="top">Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a570591c26db1d44a684cd26bb2819574">mResistance</a></td></tr>
 <tr class="memdesc:a570591c26db1d44a684cd26bb2819574"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resistance [Ohm].  <br /></td></tr>
@@ -476,6 +480,9 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a2f7e6dd3afc4df6cc618ce5692222b55" id="r_a2f7e6dd3afc4df6cc618ce5692222b55"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_resistor.html">EMT::Ph3::Resistor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2f7e6dd3afc4df6cc618ce5692222b55">mSubResistor</a></td></tr>
 <tr class="memdesc:a2f7e6dd3afc4df6cc618ce5692222b55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal resistance.  <br /></td></tr>
 <tr class="separator:a2f7e6dd3afc4df6cc618ce5692222b55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_class_c_p_s_1_1_composite_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_composite_power_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_composite_power_comp.html">CPS::CompositePowerComp&lt; Real &gt;</a></td></tr>
+<tr class="memitem:a230c4cafd696f2c14f9d3fef031cf988 inherit pro_attribs_class_c_p_s_1_1_composite_power_comp" id="r_a230c4cafd696f2c14f9d3fef031cf988"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a230c4cafd696f2c14f9d3fef031cf988">mSubCompCreated</a></td></tr>
+<tr class="separator:a230c4cafd696f2c14f9d3fef031cf988 inherit pro_attribs_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt; Real &gt;</a></td></tr>
 <tr class="memitem:a16fef50583bd2c58806acbf6185698cb inherit pro_attribs_class_c_p_s_1_1_sim_power_comp" id="r_a16fef50583bd2c58806acbf6185698cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_terminal.html">SimTerminal</a>&lt; Real &gt;::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a16fef50583bd2c58806acbf6185698cb">mTerminals</a></td></tr>
 <tr class="memdesc:a16fef50583bd2c58806acbf6185698cb inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of Terminals.  <br /></td></tr>
@@ -670,6 +677,37 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a34fcf4db94272f8b1c79985116f6bf3b" name="a34fcf4db94272f8b1c79985116f6bf3b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34fcf4db94272f8b1c79985116f6bf3b">&#9670;&#160;</a></span>createSubComponents()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void EMT::Ph3::RXLoad::createSubComponents </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructs and registers MNA subcomponents; idempotent. </p>
+
+<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a780dfe2d2caa891938f3e4e9796cca1d">CPS::MNAInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html#l00078">78</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html">EMT_Ph3_RXLoad.cpp</a>.</p>
+
+</div>
+</div>
 <a id="ae4016733017a86baa96b1820e4e7aa47" name="ae4016733017a86baa96b1820e4e7aa47"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae4016733017a86baa96b1820e4e7aa47">&#9670;&#160;</a></span>description()</h2>
 
@@ -695,12 +733,12 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_identified_object.html">CPS::IdentifiedObject</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00062">62</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00063">63</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
 
 </div>
 </div>
-<a id="aa1527d2409dd1dfdbe88e698ba61adcc" name="aa1527d2409dd1dfdbe88e698ba61adcc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa1527d2409dd1dfdbe88e698ba61adcc">&#9670;&#160;</a></span>initializeFromNodesAndTerminals()</h2>
+<a id="a6161927473d63857fe9551c2418a371f" name="a6161927473d63857fe9551c2418a371f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6161927473d63857fe9551c2418a371f">&#9670;&#160;</a></span>initializeParentFromNodesAndTerminals()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -709,7 +747,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals </td>
+          <td class="memname">void EMT::Ph3::RXLoad::initializeParentFromNodesAndTerminals </td>
           <td>(</td>
           <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>frequency</em></span></td><td>)</td>
           <td></td>
@@ -722,11 +760,11 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Initializes component from power flow data. </p>
+<p>Derives values from power flow data and pushes them to subcomponents. </p>
 
-<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a4401f844a3f389e07a37ef1716d84dcd">CPS::SimPowerComp&lt; Real &gt;</a>.</p>
+<p>Implements <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a49dac74f4584c6f7c5061647a1fa1d22">CPS::CompositePowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html#l00078">78</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html">EMT_Ph3_RXLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html#l00088">88</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html">EMT_Ph3_RXLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -755,7 +793,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html#l00263">263</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html">EMT_Ph3_RXLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html#l00295">295</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html">EMT_Ph3_RXLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -784,7 +822,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html#l00253">253</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html">EMT_Ph3_RXLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html#l00285">285</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html">EMT_Ph3_RXLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -825,7 +863,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html#l00233">233</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html">EMT_Ph3_RXLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html#l00265">265</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html">EMT_Ph3_RXLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -863,7 +901,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_composite_power_comp.html">CPS::CompositePowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html#l00226">226</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html">EMT_Ph3_RXLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html#l00258">258</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html">EMT_Ph3_RXLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -899,7 +937,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html#l00247">247</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html">EMT_Ph3_RXLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html#l00279">279</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html">EMT_Ph3_RXLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -934,7 +972,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_composite_power_comp.html">CPS::CompositePowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html#l00243">243</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html">EMT_Ph3_RXLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html#l00275">275</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8cpp_source.html">EMT_Ph3_RXLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -992,7 +1030,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00036">36</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00037">37</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
 
 </div>
 </div>
@@ -1010,7 +1048,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Active power [Watt]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00048">48</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00049">49</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
 
 </div>
 </div>
@@ -1036,7 +1074,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Capacitance [F]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00034">34</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00035">35</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
 
 </div>
 </div>
@@ -1062,7 +1100,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Inductance [H]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00032">32</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00033">33</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
 
 </div>
 </div>
@@ -1080,7 +1118,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Nominal voltage [V]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00052">52</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00053">53</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
 
 </div>
 </div>
@@ -1103,10 +1141,9 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>True after <a class="el" href="#a34fcf4db94272f8b1c79985116f6bf3b" title="Constructs and registers MNA subcomponents; idempotent.">createSubComponents()</a> runs; prevents double-construction. Power [Watt] </p>
 
-<p>Power [Watt]. </p>
-
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00026">26</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00027">27</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
 
 </div>
 </div>
@@ -1132,7 +1169,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reactance [Ohm]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00030">30</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00031">31</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
 
 </div>
 </div>
@@ -1158,7 +1195,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>If set to true, the reactance is in series with the resistor. Otherwise it is parallel to the resistor. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00038">38</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00039">39</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
 
 </div>
 </div>
@@ -1176,7 +1213,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reactive power [VAr]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00050">50</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00051">51</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
 
 </div>
 </div>
@@ -1202,7 +1239,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Resistance [Ohm]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00028">28</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00029">29</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
 
 </div>
 </div>
@@ -1228,7 +1265,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Internal capacitor. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00042">42</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00043">43</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
 
 </div>
 </div>
@@ -1254,7 +1291,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Internal inductor. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00040">40</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00041">41</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
 
 </div>
 </div>
@@ -1280,7 +1317,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Internal resistance. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00044">44</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html#l00045">45</a> of file <a class="el" href="_e_m_t___ph3___r_x_load_8h_source.html">EMT_Ph3_RXLoad.h</a>.</p>
 
 </div>
 </div>

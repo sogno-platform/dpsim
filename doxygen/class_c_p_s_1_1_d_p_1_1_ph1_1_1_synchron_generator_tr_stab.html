@@ -143,9 +143,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6cd8ca89242120425a9876387398178a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46a946ebfdfb4dec3afee34225f00293" id="r_a46a946ebfdfb4dec3afee34225f00293"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a46a946ebfdfb4dec3afee34225f00293">step</a> (Real time)</td></tr>
 <tr class="separator:a46a946ebfdfb4dec3afee34225f00293"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a32b80d330d3a7a8a0dd996dd917bc67e" id="r_a32b80d330d3a7a8a0dd996dd917bc67e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a32b80d330d3a7a8a0dd996dd917bc67e">initializeFromNodesAndTerminals</a> (Real frequency) override</td></tr>
-<tr class="memdesc:a32b80d330d3a7a8a0dd996dd917bc67e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes Component variables according to power flow data stored in Nodes.  <br /></td></tr>
-<tr class="separator:a32b80d330d3a7a8a0dd996dd917bc67e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac75ff5b7c201e84d65dbb247cdf2abc" id="r_aac75ff5b7c201e84d65dbb247cdf2abc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac75ff5b7c201e84d65dbb247cdf2abc">createSubComponents</a> () override</td></tr>
+<tr class="memdesc:aac75ff5b7c201e84d65dbb247cdf2abc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs and registers MNA subcomponents without emf value; idempotent.  <br /></td></tr>
+<tr class="separator:aac75ff5b7c201e84d65dbb247cdf2abc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab73fedb0074a9b8b3fe488d31605bc8c" id="r_ab73fedb0074a9b8b3fe488d31605bc8c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab73fedb0074a9b8b3fe488d31605bc8c">initializeParentFromNodesAndTerminals</a> (Real frequency) override</td></tr>
+<tr class="separator:ab73fedb0074a9b8b3fe488d31605bc8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a86cb6ef0514985bbb1dbbae696be6bcb" id="r_a86cb6ef0514985bbb1dbbae696be6bcb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a86cb6ef0514985bbb1dbbae696be6bcb">mnaParentInitialize</a> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector) override</td></tr>
 <tr class="memdesc:a86cb6ef0514985bbb1dbbae696be6bcb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes variables of component.  <br /></td></tr>
 <tr class="separator:a86cb6ef0514985bbb1dbbae696be6bcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -175,6 +177,8 @@ Public Member Functions</h2></td></tr>
 virtual&#160;</td><td class="memItemRight" valign="bottom"><b>~CompositePowerComp</b> ()=default</td></tr>
 <tr class="memdesc:acd5001ab92e80e42d9beaadc1a8dca1c inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor - does not do anything. <br /></td></tr>
 <tr class="separator:acd5001ab92e80e42d9beaadc1a8dca1c inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dbb1714bcd34e498da06e26fe460c00 inherit pub_methods_class_c_p_s_1_1_composite_power_comp" id="r_a9dbb1714bcd34e498da06e26fe460c00"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a9dbb1714bcd34e498da06e26fe460c00">initializeFromNodesAndTerminals</a> (Real frequency) override final</td></tr>
+<tr class="separator:a9dbb1714bcd34e498da06e26fe460c00 inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36787ca664e85614aca65a2683547147 inherit pub_methods_class_c_p_s_1_1_composite_power_comp" id="r_a36787ca664e85614aca65a2683547147"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a36787ca664e85614aca65a2683547147">addMNASubComponent</a> (typename <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr subc, MNA_SUBCOMP_TASK_ORDER preStepOrder, MNA_SUBCOMP_TASK_ORDER postStepOrder, Bool contributeToRightVector)</td></tr>
 <tr class="memdesc:a36787ca664e85614aca65a2683547147 inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a new subcomponent implementing MNA methods.  <br /></td></tr>
 <tr class="separator:a36787ca664e85614aca65a2683547147 inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -489,7 +493,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>addExciter</b> (std::
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a54155d5c93e7e6a7296a381378d8369d" id="r_a54155d5c93e7e6a7296a381378d8369d"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Complex &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a54155d5c93e7e6a7296a381378d8369d">mEp</a></td></tr>
-<tr class="memdesc:a54155d5c93e7e6a7296a381378d8369d"><td class="mdescLeft">&#160;</td><td class="mdescRight">emf behind transient reactance  <br /></td></tr>
+<tr class="memdesc:a54155d5c93e7e6a7296a381378d8369d"><td class="mdescLeft">&#160;</td><td class="mdescRight">True after <a class="el" href="#aac75ff5b7c201e84d65dbb247cdf2abc" title="Constructs and registers MNA subcomponents without emf value; idempotent.">createSubComponents()</a> runs; prevents double-construction.  <br /></td></tr>
 <tr class="separator:a54155d5c93e7e6a7296a381378d8369d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac31da92345493c6e860a90711c72d62a" id="r_ac31da92345493c6e860a90711c72d62a"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac31da92345493c6e860a90711c72d62a">mEp_abs</a></td></tr>
 <tr class="separator:ac31da92345493c6e860a90711c72d62a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -631,6 +635,9 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:aa0fbab2566711bd041c0ae5076c40046" id="r_aa0fbab2566711bd041c0ae5076c40046"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa0fbab2566711bd041c0ae5076c40046">mConvertWithOmegaMech</a> = true</td></tr>
 <tr class="memdesc:aa0fbab2566711bd041c0ae5076c40046"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag for usage of actual mechanical speed for torque conversion (otherwise mNomOmega is used)  <br /></td></tr>
 <tr class="separator:aa0fbab2566711bd041c0ae5076c40046"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_class_c_p_s_1_1_composite_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_composite_power_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_composite_power_comp.html">CPS::CompositePowerComp&lt; Complex &gt;</a></td></tr>
+<tr class="memitem:a230c4cafd696f2c14f9d3fef031cf988 inherit pro_attribs_class_c_p_s_1_1_composite_power_comp" id="r_a230c4cafd696f2c14f9d3fef031cf988"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a230c4cafd696f2c14f9d3fef031cf988">mSubCompCreated</a></td></tr>
+<tr class="separator:a230c4cafd696f2c14f9d3fef031cf988 inherit pro_attribs_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt; Complex &gt;</a></td></tr>
 <tr class="memitem:a16fef50583bd2c58806acbf6185698cb inherit pro_attribs_class_c_p_s_1_1_sim_power_comp" id="r_a16fef50583bd2c58806acbf6185698cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_terminal.html">SimTerminal</a>&lt; Complex &gt;::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a16fef50583bd2c58806acbf6185698cb">mTerminals</a></td></tr>
 <tr class="memdesc:a16fef50583bd2c58806acbf6185698cb inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of Terminals.  <br /></td></tr>
@@ -1016,7 +1023,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html#l00067">67</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html">DP_Ph1_SynchronGeneratorTrStab.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html#l00068">68</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html">DP_Ph1_SynchronGeneratorTrStab.h</a>.</p>
 
 </div>
 </div>
@@ -1052,8 +1059,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a32b80d330d3a7a8a0dd996dd917bc67e" name="a32b80d330d3a7a8a0dd996dd917bc67e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a32b80d330d3a7a8a0dd996dd917bc67e">&#9670;&#160;</a></span>initializeFromNodesAndTerminals()</h2>
+<a id="aac75ff5b7c201e84d65dbb247cdf2abc" name="aac75ff5b7c201e84d65dbb247cdf2abc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac75ff5b7c201e84d65dbb247cdf2abc">&#9670;&#160;</a></span>createSubComponents()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1062,7 +1069,38 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void DP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals </td>
+          <td class="memname">void DP::Ph1::SynchronGeneratorTrStab::createSubComponents </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructs and registers MNA subcomponents without emf value; idempotent. </p>
+
+<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a780dfe2d2caa891938f3e4e9796cca1d">CPS::MNAInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html#l00158">158</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html">DP_Ph1_SynchronGeneratorTrStab.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ab73fedb0074a9b8b3fe488d31605bc8c" name="ab73fedb0074a9b8b3fe488d31605bc8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab73fedb0074a9b8b3fe488d31605bc8c">&#9670;&#160;</a></span>initializeParentFromNodesAndTerminals()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DP::Ph1::SynchronGeneratorTrStab::initializeParentFromNodesAndTerminals </td>
           <td>(</td>
           <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>frequency</em></span></td><td>)</td>
           <td></td>
@@ -1074,12 +1112,11 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Pure-virtual hook for the parameterization stage. Concrete composites implement this instead of overriding <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a9dbb1714bcd34e498da06e26fe460c00">initializeFromNodesAndTerminals()</a>. Reads terminal data, computes frequency-dependent values, and calls setParameters() on sub-components. The simulation frequency is passed directly so there is no need to access <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a6933742098fdd8bde1b8ea909808e5f9">mFrequencies(0,0)</a>. </p>
 
-<p>Initializes Component variables according to power flow data stored in Nodes. </p>
+<p>Implements <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a49dac74f4584c6f7c5061647a1fa1d22">CPS::CompositePowerComp&lt; Complex &gt;</a>.</p>
 
-<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a4401f844a3f389e07a37ef1716d84dcd">CPS::SimPowerComp&lt; Complex &gt;</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html#l00158">158</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html">DP_Ph1_SynchronGeneratorTrStab.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html#l00185">185</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html">DP_Ph1_SynchronGeneratorTrStab.cpp</a>.</p>
 
 </div>
 </div>
@@ -1108,7 +1145,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html#l00323">323</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html">DP_Ph1_SynchronGeneratorTrStab.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html#l00333">333</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html">DP_Ph1_SynchronGeneratorTrStab.cpp</a>.</p>
 
 </div>
 </div>
@@ -1137,7 +1174,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html#l00316">316</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html">DP_Ph1_SynchronGeneratorTrStab.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html#l00326">326</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html">DP_Ph1_SynchronGeneratorTrStab.cpp</a>.</p>
 
 </div>
 </div>
@@ -1178,7 +1215,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html#l00288">288</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html">DP_Ph1_SynchronGeneratorTrStab.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html#l00298">298</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html">DP_Ph1_SynchronGeneratorTrStab.cpp</a>.</p>
 
 </div>
 </div>
@@ -1217,7 +1254,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_composite_power_comp.html">CPS::CompositePowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html#l00278">278</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html">DP_Ph1_SynchronGeneratorTrStab.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html#l00288">288</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html">DP_Ph1_SynchronGeneratorTrStab.cpp</a>.</p>
 
 </div>
 </div>
@@ -1255,7 +1292,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Initializes variables of component. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html#l00272">272</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html">DP_Ph1_SynchronGeneratorTrStab.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html#l00282">282</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html">DP_Ph1_SynchronGeneratorTrStab.cpp</a>.</p>
 
 </div>
 </div>
@@ -1293,7 +1330,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Retrieves calculated voltage from simulation for next step. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html#l00310">310</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html">DP_Ph1_SynchronGeneratorTrStab.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html#l00320">320</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html">DP_Ph1_SynchronGeneratorTrStab.cpp</a>.</p>
 
 </div>
 </div>
@@ -1327,7 +1364,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_composite_power_comp.html">CPS::CompositePowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html#l00297">297</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html">DP_Ph1_SynchronGeneratorTrStab.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html#l00307">307</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html">DP_Ph1_SynchronGeneratorTrStab.cpp</a>.</p>
 
 </div>
 </div>
@@ -1449,7 +1486,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html#l00330">330</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html">DP_Ph1_SynchronGeneratorTrStab.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html#l00340">340</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html">DP_Ph1_SynchronGeneratorTrStab.cpp</a>.</p>
 
 </div>
 </div>
@@ -1573,7 +1610,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html#l00230">230</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html">DP_Ph1_SynchronGeneratorTrStab.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html#l00240">240</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8cpp_source.html">DP_Ph1_SynchronGeneratorTrStab.cpp</a>.</p>
 
 </div>
 </div>
@@ -1618,7 +1655,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Angle by which the emf Ep is leading the terminal voltage. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html#l00058">58</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html">DP_Ph1_SynchronGeneratorTrStab.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html#l00059">59</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html">DP_Ph1_SynchronGeneratorTrStab.h</a>.</p>
 
 </div>
 </div>
@@ -1634,9 +1671,10 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>True after <a class="el" href="#aac75ff5b7c201e84d65dbb247cdf2abc" title="Constructs and registers MNA subcomponents without emf value; idempotent.">createSubComponents()</a> runs; prevents double-construction. </p>
 <p>emf behind transient reactance </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html#l00050">50</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html">DP_Ph1_SynchronGeneratorTrStab.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html#l00051">51</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html">DP_Ph1_SynchronGeneratorTrStab.h</a>.</p>
 
 </div>
 </div>
@@ -1653,7 +1691,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 <p>fixed absolute value of emf behind transient reactance CHECK: Is this necessary / could this be derived from mEp? </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html#l00053">53</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html">DP_Ph1_SynchronGeneratorTrStab.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html#l00054">54</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html">DP_Ph1_SynchronGeneratorTrStab.h</a>.</p>
 
 </div>
 </div>
@@ -1670,7 +1708,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 <p>Angle by which the emf Ep is leading the system reference frame CHECK: Is this necessary / could this be derived from mEp? </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html#l00056">56</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html">DP_Ph1_SynchronGeneratorTrStab.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html#l00057">57</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html">DP_Ph1_SynchronGeneratorTrStab.h</a>.</p>
 
 </div>
 </div>
@@ -1764,7 +1802,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html#l00062">62</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html">DP_Ph1_SynchronGeneratorTrStab.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html#l00063">63</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html">DP_Ph1_SynchronGeneratorTrStab.h</a>.</p>
 
 </div>
 </div>
@@ -1780,7 +1818,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html#l00060">60</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html">DP_Ph1_SynchronGeneratorTrStab.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html#l00061">61</a> of file <a class="el" href="_d_p___ph1___synchron_generator_tr_stab_8h_source.html">DP_Ph1_SynchronGeneratorTrStab.h</a>.</p>
 
 </div>
 </div>
