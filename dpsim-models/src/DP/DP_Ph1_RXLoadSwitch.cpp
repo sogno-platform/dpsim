@@ -47,11 +47,9 @@ void DP::Ph1::RXLoadSwitch::initializeParentFromNodesAndTerminals(
   }
 
   mSubRXLoad->connect({virtualNode(0)});
-  mSubRXLoad->initialize(mFrequencies);
   mSubRXLoad->initializeFromNodesAndTerminals(frequency);
 
   mSubSwitch->connect({node(0)});
-  mSubSwitch->initialize(mFrequencies);
   mSubSwitch->initializeFromNodesAndTerminals(frequency);
 
   **mIntfVoltage = **mSubRXLoad->mIntfVoltage;

@@ -39,7 +39,6 @@ void DP::Ph1::SynchronGeneratorIdeal::createSubComponents() {
   // Alias the sub-source's virtual node to parent VN0 so the transformer row
   // in the system matrix uses the same index.
   mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[0], 0);
-  mSubVoltageSource->initialize(mFrequencies);
   addMNASubComponent(mSubVoltageSource,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);

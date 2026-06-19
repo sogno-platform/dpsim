@@ -63,8 +63,6 @@ void EMT::Ph3::SynchronGeneratorIdeal::createSubComponents() {
   if (mSourceType == CPS::GeneratorType::IdealCurrentSource)
     mSubComponents[0]->setTerminalAt(terminal(0), 1);
 
-  mSubComponents[0]->initialize(mFrequencies);
-
   if (mSourceType == CPS::GeneratorType::IdealVoltageSource)
     mRefVoltage->setReference(
         mSubComponents[0]->attributeTyped<MatrixComp>("V_ref"));
