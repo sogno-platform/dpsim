@@ -168,6 +168,9 @@ public:
         : Task(solver.mName + ".PostSolve"), mSolver(solver) {
       for (auto &net : solver.mSubnets) {
         mAttributeDependencies.push_back(net.leftVector);
+        for (UInt node = 0; node < net.mRealNetNodeNum; ++node) {
+          mModifiedAttributes.push_back(net.nodes[node]->attribute("v"));
+        }
       }
       mModifiedAttributes.push_back(Scheduler::external);
     }
