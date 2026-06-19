@@ -9,10 +9,10 @@
 #pragma once
 
 #include <dpsim-models/Base/Base_Ph1_SVC.h>
+#include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/DP/DP_Ph1_Capacitor.h>
 #include <dpsim-models/DP/DP_Ph1_Inductor.h>
 #include <dpsim-models/DP/DP_Ph1_Switch.h>
-#include <dpsim-models/Solver/MNAInterface.h>
 #include <dpsim-models/Solver/MNAVariableCompInterface.h>
 
 namespace CPS {
@@ -26,19 +26,17 @@ namespace Ph1 {
 /// The equivalent DC circuit is a resistance in parallel with a current source.
 /// The resistance is constant for a defined time step and system
 /// frequency and the current source changes for each iteration.
-class SVC : public MNASimPowerComp<Complex>,
+class SVC : public CompositePowerComp<Complex>,
             public Base::Ph1::SVC,
             public MNAVariableCompInterface,
             public SharedFactory<SVC> {
 protected:
-  /// True after createSubComponents() runs; prevents double-construction.
-  /// ### internal components
   /// Internal inductor
   std::shared_ptr<DP::Ph1::Inductor> mSubInductor;
-  std::shared_ptr<DP::Ph1::Switch> mSubInductorProtectionSwitch;
+  std::shared_ptr<DP::Ph1::Switch> mSubInductorSwitch;
   /// Internal capacitor
   std::shared_ptr<DP::Ph1::Capacitor> mSubCapacitor;
-  std::shared_ptr<DP::Ph1::Switch> mSubCapacitorProtectionSwitch;
+  std::shared_ptr<DP::Ph1::Switch> mSubCapacitorSwitch;
 
   Bool mValueChange = false;
   Bool mInductiveMode = false;
@@ -77,38 +75,33 @@ public:
   // #### General ####
   /// Constructs subcomponents; idempotent.
   void createSubComponents() override;
-  /// Initializes states from power flow data
-  void initializeFromNodesAndTerminals(Real frequency) override;
+  /// Initializes states from power flow data (parent-specific part).
+  void initializeParentFromNodesAndTerminals(Real frequency) override;
 
   // #### MNA section ####
-  /// Initializes MNA specific variables
-  void mnaCompInitialize(Real omega, Real timeStep,
-                         Attribute<Matrix>::Ptr leftVector) override;
-  //void mnaCompInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors);
-  /// Stamps system matrix
-  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
-  /// Stamps right side (source) vector
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
   /// Update interface voltage from MNA system results
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
   /// Update interface current from MNA system results
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;
-  /// MNA pre step operations
-  void mnaCompPreStep(Real time, Int timeStepCount) override;
-  /// MNA post step operations
-  void mnaCompPostStep(Real time, Int timeStepCount,
-                       Attribute<Matrix>::Ptr &leftVector) override;
-  /// add MNA pre step dependencies
-  void mnaCompAddPreStepDependencies(
+  /// MNA pre step operations (parent-specific)
+  void mnaParentPreStep(Real time, Int timeStepCount) override;
+  /// MNA post step operations (parent-specific)
+  void mnaParentPostStep(Real time, Int timeStepCount,
+                         Attribute<Matrix>::Ptr &leftVector) override;
+  /// add MNA pre step dependencies (parent-specific)
+  void mnaParentAddPreStepDependencies(
       AttributeBase::List &prevStepDependencies,
       AttributeBase::List &attributeDependencies,
       AttributeBase::List &modifiedAttributes) override;
-  /// add MNA post step dependencies
+  /// add MNA post step dependencies (parent-specific)
   void
-  mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
-                                 AttributeBase::List &attributeDependencies,
-                                 AttributeBase::List &modifiedAttributes,
-                                 Attribute<Matrix>::Ptr &leftVector) override;
+  mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
+                                   AttributeBase::List &attributeDependencies,
+                                   AttributeBase::List &modifiedAttributes,
+                                   Attribute<Matrix>::Ptr &leftVector) override;
+
+  // #### Variable component interface ####
+  Bool hasParameterChanged() override { return mValueChange; }
 
   // #### Tearing methods ####
   Bool ValueChanged();

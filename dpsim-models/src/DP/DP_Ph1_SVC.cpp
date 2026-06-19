@@ -11,7 +11,7 @@
 using namespace CPS;
 
 DP::Ph1::SVC::SVC(String uid, String name, Logger::Level logLevel)
-    : MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
+    : CompositePowerComp<Complex>(uid, name, true, true, logLevel),
       mVpcc(mAttributes->create<Real>("Vpcc", 0)),
       mVmeasPrev(mAttributes->create<Real>("Vmeas", 0)) {
   setTerminalNumber(1);
@@ -31,39 +31,42 @@ void DP::Ph1::SVC::createSubComponents() {
     return;
   mSubCompCreated = true;
 
-  // Inductor/capacitor values depend on omega, which is computed from the
-  // simulation frequency in initializeFromNodesAndTerminals() rather than
-  // mFrequencies here, since the latter is not guaranteed to be populated
-  // yet during this pre-pass. They are created here (existence doesn't
-  // depend on that value) but parametrized there, before their own
-  // initializeFromNodesAndTerminals() runs.
+  // Inductor/capacitor values depend on omega computed from the simulation
+  // frequency in initializeParentFromNodesAndTerminals(). They are created
+  // here (topology) and parametrized there (values).
 
   // Inductor with Switch
   mSubInductor =
       std::make_shared<DP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
   mSubInductor->connect({SimNode::GND, mVirtualNodes[0]});
-  mSubInductor->initialize(mFrequencies);
+  addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
   mSubInductorSwitch =
       std::make_shared<DP::Ph1::Switch>(**mName + "_Lswitch", mLogLevel);
   mSubInductorSwitch->setParameters(mSwitchROpen, mSwitchRClosed, false);
   mSubInductorSwitch->connect({mVirtualNodes[0], mTerminals[0]->node()});
-  mSubInductorSwitch->initialize(mFrequencies);
+  addMNASubComponent(mSubInductorSwitch,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 
   // Capacitor with Switch
   mSubCapacitor =
       std::make_shared<DP::Ph1::Capacitor>(**mName + "_cap", mLogLevel);
   mSubCapacitor->connect({SimNode::GND, mVirtualNodes[1]});
-  mSubCapacitor->initialize(mFrequencies);
+  addMNASubComponent(mSubCapacitor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
   mSubCapacitorSwitch =
       std::make_shared<DP::Ph1::Switch>(**mName + "_Cswitch", mLogLevel);
   mSubCapacitorSwitch->setParameters(mSwitchROpen, mSwitchRClosed, false);
   mSubCapacitorSwitch->connect({mVirtualNodes[1], mTerminals[0]->node()});
-  mSubCapacitorSwitch->initialize(mFrequencies);
+  addMNASubComponent(mSubCapacitorSwitch,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 }
 
-void DP::Ph1::SVC::initializeFromNodesAndTerminals(Real frequency) {
+void DP::Ph1::SVC::initializeParentFromNodesAndTerminals(Real frequency) {
   // initial state is both switches are open
   Real omega = 2. * PI * frequency;
   // init L and C with small/high values (both have high impedance)
@@ -105,14 +108,8 @@ void DP::Ph1::SVC::initializeFromNodesAndTerminals(Real frequency) {
       (**mIntfVoltage)(0, 0) - CImpedance * (**mIntfCurrent)(0, 0);
   mVirtualNodes[1]->setInitialVoltage(VCSwitch);
 
-  createSubComponents();
   mSubInductor->setParameters(LInit);
   mSubCapacitor->setParameters(CInit);
-
-  mSubInductor->initializeFromNodesAndTerminals(frequency);
-  mSubInductorSwitch->initializeFromNodesAndTerminals(frequency);
-  mSubCapacitor->initializeFromNodesAndTerminals(frequency);
-  mSubCapacitorSwitch->initializeFromNodesAndTerminals(frequency);
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"
@@ -128,70 +125,14 @@ void DP::Ph1::SVC::initializeFromNodesAndTerminals(Real frequency) {
 
 // #### MNA functions ####
 
-void DP::Ph1::SVC::mnaCompInitialize(Real omega, Real timeStep,
-                                     Attribute<Matrix>::Ptr leftVector) {
-  updateMatrixNodeIndices();
-
-  SPDLOG_LOGGER_INFO(mSLog, "\nTerminal 0 connected to {:s} = sim node {:d}",
-                     mTerminals[0]->node()->name(),
-                     mTerminals[0]->node()->matrixNodeIndex());
-
-  mSubInductor->mnaInitialize(omega, timeStep, leftVector);
-  mRightVectorStamps.push_back(
-      &mSubInductor->attributeTyped<Matrix>("right_vector")->get());
-
-  mSubInductorSwitch->mnaInitialize(omega, timeStep, leftVector);
-  mRighteVctorStamps.push_back(
-      &mSubInductorSwitch->attributeTyped<Matrix>("right_vector")->get());
-
-  mSubCapacitor->mnaInitialize(omega, timeStep, leftVector);
-  mRightVectorStamps.push_back(
-      &mSubCapacitor->attributeTyped<Matrix>("right_vector")->get());
-
-  mSubCapacitorSwitch->mnaInitialize(omega, timeStep, leftVector);
-  mRightVectorStamps.push_back(
-      &mSubCapacitorSwitch->attributeTyped<Matrix>("right_vector")->get());
-}
-
-void DP::Ph1::SVC::mnaCompApplySystemMatrixStamp(
-    SparseMatrixRow &systemMatrix) {
-  mSubInductor->mnaApplySystemMatrixStamp(systemMatrix);
-  mSubCapacitor->mnaApplySystemMatrixStamp(systemMatrix);
-  mSubCapacitorSwitch->mnaApplySystemMatrixStamp(systemMatrix);
-  mSubInductorSwitch->mnaApplySystemMatrixStamp(systemMatrix);
-}
-
-void DP::Ph1::SVC::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {
-  mSubInductor->mnaApplyRightSideVectorStamp(rightVector);
-  mSubCapacitor->mnaApplyRightSideVectorStamp(rightVector);
-  mSubCapacitorSwitch->mnaApplyRightSideVectorStamp(rightVector);
-  mSubInductorSwitch->mnaApplyRightSideVectorStamp(rightVector);
-}
-
-void DP::Ph1::SVC::mnaCompAddPreStepDependencies(
+void DP::Ph1::SVC::mnaParentAddPreStepDependencies(
     AttributeBase::List &prevStepDependencies,
     AttributeBase::List &attributeDependencies,
     AttributeBase::List &modifiedAttributes) {
-  // add pre-step dependencies of subcomponents
-  mSubInductor->mnaAddPreStepDependencies(
-      prevStepDependencies, attributeDependencies, modifiedAttributes);
-  mSubInductorSwitch->mnaAddPreStepDependencies(
-      prevStepDependencies, attributeDependencies, modifiedAttributes);
-  mSubCapacitor->mnaAddPreStepDependencies(
-      prevStepDependencies, attributeDependencies, modifiedAttributes);
-  mSubCapacitorSwitch->mnaAddPreStepDependencies(
-      prevStepDependencies, attributeDependencies, modifiedAttributes);
-
-  // add pre-step dependencies of component itself
   modifiedAttributes.push_back(mRightVector);
 }
 
-void DP::Ph1::SVC::mnaCompPreStep(Real time, Int timeStepCount) {
-  mSubInductor->mnaPreStep(time, timeStepCount);
-  mSubInductorSwitch->mnaPreStep(time, timeStepCount);
-  mSubCapacitor->mnaPreStep(time, timeStepCount);
-  mSubCapacitorSwitch->mnaPreStep(time, timeStepCount);
-
+void DP::Ph1::SVC::mnaParentPreStep(Real time, Int timeStepCount) {
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 
   if (time > 0.1 && !mDisconnect) {
@@ -204,39 +145,20 @@ void DP::Ph1::SVC::mnaCompPreStep(Real time, Int timeStepCount) {
   }
 }
 
-void DP::Ph1::SVC::mnaCompAddPostStepDependencies(
+void DP::Ph1::SVC::mnaParentAddPostStepDependencies(
     AttributeBase::List &prevStepDependencies,
     AttributeBase::List &attributeDependencies,
     AttributeBase::List &modifiedAttributes,
     Attribute<Matrix>::Ptr &leftVector) {
-  // add post-step dependencies of subcomponents
-  mSubInductor->mnaAddPostStepDependencies(prevStepDependencies,
-                                           attributeDependencies,
-                                           modifiedAttributes, leftVector);
-  mSubInductorSwitch->mnaAddPostStepDependencies(
-      prevStepDependencies, attributeDependencies, modifiedAttributes,
-      leftVector);
-  mSubCapacitor->mnaAddPostStepDependencies(prevStepDependencies,
-                                            attributeDependencies,
-                                            modifiedAttributes, leftVector);
-  mSubCapacitorSwitch->mnaAddPostStepDependencies(
-      prevStepDependencies, attributeDependencies, modifiedAttributes,
-      leftVector);
-
-  // add post-step dependencies of component itself
   attributeDependencies.push_back(leftVector);
   modifiedAttributes.push_back(mIntfVoltage);
   modifiedAttributes.push_back(mIntfCurrent);
 }
 
-void DP::Ph1::SVC::mnaCompPostStep(Real time, Int timeStepCount) {
-  mSubInductor->mnaPostStep(time, timeStepCount, leftVector);
-  mSubInductorSwitch->mnaPostStep(time, timeStepCount, leftVector);
-  mSubCapacitor->mnaPostStep(time, timeStepCount, leftVector);
-  mSubCapacitorSwitch->mnaPostStep(time, timeStepCount, leftVector);
-
-  mnaCompUpdateVoltage(**mLeftVector);
-  mnaCompUpdateCurrent(**mLeftVector);
+void DP::Ph1::SVC::mnaParentPostStep(Real time, Int timeStepCount,
+                                     Attribute<Matrix>::Ptr &leftVector) {
+  mnaCompUpdateVoltage(**leftVector);
+  mnaCompUpdateCurrent(**leftVector);
 
   mDeltaT = time - mPrevTimeStep;
   mPrevTimeStep = time;
@@ -302,7 +224,6 @@ void DP::Ph1::SVC::updateSusceptance() {
   Real Fac1 = mDeltaT / (2 * mTr);
   Real Fac2 = mDeltaT * mKr / (2 * mTr);
 
-  Complex vintf = (**mIntfVoltage)(0, 0);
   Real V = Math::abs((**mIntfVoltage)(0, 0).real());
 
   // Pt1 with trapez rule for voltage measurement
@@ -313,25 +234,18 @@ void DP::Ph1::SVC::updateSusceptance() {
   Real deltaVPrev = (**mVmeasPrev - mRefVolt) / mNomVolt;
 
   // calc new B with trapezoidal rule
-  //Real B = (1/(1+Fac1)) * (Fac2 * (mDeltaV + deltaVPrev) + (1-Fac1) * mBPrev);
   Real B = (1 / (1 + Fac1)) *
            (Fac2 * (**mDeltaV + deltaVPrev) + (1 - Fac1) * **mBPrev);
-  //SPDLOG_LOGGER_INFO(mSLog, "New B value: percent={}, absolute={}", 100 * B, B * mBN);
 
   // check bounds
   if (B > mBMax) {
     B = mBMax;
-    //SPDLOG_LOGGER_DEBUG(mSLog, "New B value exceeds Bmax");
   } else if (B < mBMin) {
     B = mBMin;
-    //SPDLOG_LOGGER_DEBUG(mSLog, "New B value exceeds Bmin");
   }
 
   // set new B if it has a new value and difference is big enough
   if (B != **mBPrev) {
-    //if (B != mBPrev && mBSetCounter > 0.001){
-    //mValueChange = true;
-    //mBSetCounter = 0;
     Real omega = 2 * M_PI * mFrequencies(0, 0);
 
     if (B > 0) {
@@ -341,7 +255,6 @@ void DP::Ph1::SVC::updateSusceptance() {
       if (Math::abs(1 - inductance / mLPrev) > 0.01) {
         mInductiveMode = true;
         mSubInductor->updateInductance(inductance, mDeltaT);
-        //SPDLOG_LOGGER_DEBUG(mSLog, "Inductive Mode: New Inductance: L = {} [H]", inductance);
         mLPrev = inductance;
 
         mValueChange = true;
@@ -354,7 +267,6 @@ void DP::Ph1::SVC::updateSusceptance() {
       if (Math::abs(1 - capacitance / mCPrev) > 0.01) {
         mInductiveMode = false;
         mSubCapacitor->updateCapacitance(capacitance, mDeltaT);
-        //SPDLOG_LOGGER_DEBUG(mSLog, "Capacitive Mode: New Capacitance: C = {} [F]", capacitance);
         mCPrev = capacitance;
 
         mValueChange = true;
