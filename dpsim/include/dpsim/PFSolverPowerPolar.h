@@ -40,13 +40,13 @@ protected:
   void generateInitialSolution(Real time,
                                bool keep_last_solution = false) override;
   /// Calculate the Jacobian
-  void calculateJacobian();
+  void calculateJacobian() override;
   /// Update solution in each iteration
-  void updateSolution();
+  void updateSolution() override;
   /// Set final solution
-  void setSolution();
+  void setSolution() override;
   /// Calculate mismatch
-  void calculateMismatch();
+  void calculateMismatch() override;
 
   // Helper methods
   /// Resize solution vector
