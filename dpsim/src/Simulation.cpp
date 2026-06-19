@@ -34,6 +34,7 @@ Simulation::Simulation(String name, Logger::Level logLevel)
     : mName(AttributeStatic<String>::make(name)),
       mFinalTime(AttributeStatic<Real>::make(0.001)),
       mTimeStep(AttributeStatic<Real>::make(0.001)),
+      mPFKeepLastSolution(CPS::AttributeStatic<Bool>::make(false)),
       mSplitSubnets(AttributeStatic<Bool>::make(true)),
       mSteadyStateInit(AttributeStatic<Bool>::make(false)),
       mLogLevel(logLevel) {
@@ -45,6 +46,7 @@ Simulation::Simulation(String name, CommandLineArgs &args)
       mSolverPluginName(args.solverPluginName),
       mFinalTime(AttributeStatic<Real>::make(args.duration)),
       mTimeStep(AttributeStatic<Real>::make(args.timeStep)),
+      mPFKeepLastSolution(CPS::AttributeStatic<Bool>::make(false)),
       mSplitSubnets(AttributeStatic<Bool>::make(true)),
       mSteadyStateInit(AttributeStatic<Bool>::make(false)),
       mLogLevel(args.logLevel), mDomain(args.solver.domain),
@@ -89,24 +91,35 @@ void Simulation::initialize() {
 
 template <typename VarType> void Simulation::createSolvers() {
   Solver::Ptr solver;
+
   switch (mSolverType) {
   case Solver::Type::MNA:
     createMNASolver<VarType>();
     break;
+
 #ifdef WITH_SUNDIALS
   case Solver::Type::DAE:
     solver = std::make_shared<DAESolver>(**mName, mSystem, **mTimeStep, 0.0);
     mSolvers.push_back(solver);
     break;
 #endif /* WITH_SUNDIALS */
-  case Solver::Type::NRP:
-    solver = std::make_shared<PFSolverPowerPolar>(**mName, mSystem, **mTimeStep,
-                                                  mLogLevel);
+
+  case Solver::Type::NRP: {
+    auto pfSolver = std::make_shared<PFSolverPowerPolar>(
+        **mName, mSystem, **mTimeStep, mLogLevel);
+
+    pfSolver->setKeepLastSolution(**mPFKeepLastSolution);
+
+    solver = pfSolver;
+
     solver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
     solver->setSolverAndComponentBehaviour(mSolverBehaviour);
     solver->initialize();
+
     mSolvers.push_back(solver);
     break;
+  }
+
   default:
     throw UnsupportedSolverException();
   }
@@ -308,6 +321,12 @@ Graph::Graph Simulation::dependencyGraph() {
   return g;
 }
 #endif
+
+void Simulation::setPFKeepLastSolution(Bool value) {
+  **mPFKeepLastSolution = value;
+}
+
+Bool Simulation::getPFKeepLastSolution() const { return **mPFKeepLastSolution; }
 
 void Simulation::start() {
   SPDLOG_LOGGER_INFO(mLog, "Initialize simulation: {}", **mName);
