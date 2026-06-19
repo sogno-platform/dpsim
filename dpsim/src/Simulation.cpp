@@ -11,6 +11,7 @@
 #include <dpsim/MNASolver.h>
 #include <dpsim/MNASolverFactory.h>
 #include <dpsim/PFSolverPowerPolar.h>
+#include <dpsim/PFSolverPowerPolarSparse.h>
 #include <dpsim/SequentialScheduler.h>
 #include <dpsim/Simulation.h>
 #include <dpsim/Utils.h>
@@ -35,6 +36,7 @@ Simulation::Simulation(String name, Logger::Level logLevel)
       mFinalTime(AttributeStatic<Real>::make(0.001)),
       mTimeStep(AttributeStatic<Real>::make(0.001)),
       mPFKeepLastSolution(CPS::AttributeStatic<Bool>::make(false)),
+      mPFSolverUseSparse(CPS::AttributeStatic<Bool>::make(false)),
       mSplitSubnets(AttributeStatic<Bool>::make(true)),
       mSteadyStateInit(AttributeStatic<Bool>::make(false)),
       mLogLevel(logLevel) {
@@ -47,6 +49,7 @@ Simulation::Simulation(String name, CommandLineArgs &args)
       mFinalTime(AttributeStatic<Real>::make(args.duration)),
       mTimeStep(AttributeStatic<Real>::make(args.timeStep)),
       mPFKeepLastSolution(CPS::AttributeStatic<Bool>::make(false)),
+      mPFSolverUseSparse(CPS::AttributeStatic<Bool>::make(false)),
       mSplitSubnets(AttributeStatic<Bool>::make(true)),
       mSteadyStateInit(AttributeStatic<Bool>::make(false)),
       mLogLevel(args.logLevel), mDomain(args.solver.domain),
@@ -105,8 +108,19 @@ template <typename VarType> void Simulation::createSolvers() {
 #endif /* WITH_SUNDIALS */
 
   case Solver::Type::NRP: {
-    auto pfSolver = std::make_shared<PFSolverPowerPolar>(
-        **mName, mSystem, **mTimeStep, mLogLevel);
+    std::shared_ptr<PFSolver> pfSolver;
+#if defined(WITH_KLU) || defined(WITH_SPARSE)
+    if (**mPFSolverUseSparse)
+      pfSolver = std::make_shared<PFSolverPowerPolarSparse>(
+          **mName, mSystem, **mTimeStep, mLogLevel);
+    else
+      pfSolver = std::make_shared<PFSolverPowerPolar>(**mName, mSystem,
+                                                      **mTimeStep, mLogLevel);
+#else
+    // No sparse linear solver available: fall back to the dense solver.
+    pfSolver = std::make_shared<PFSolverPowerPolar>(**mName, mSystem,
+                                                    **mTimeStep, mLogLevel);
+#endif
 
     pfSolver->setKeepLastSolution(**mPFKeepLastSolution);
 
@@ -327,6 +341,12 @@ void Simulation::setPFKeepLastSolution(Bool value) {
 }
 
 Bool Simulation::getPFKeepLastSolution() const { return **mPFKeepLastSolution; }
+
+void Simulation::setPFSolverUseSparse(Bool value) {
+  **mPFSolverUseSparse = value;
+}
+
+Bool Simulation::getPFSolverUseSparse() const { return **mPFSolverUseSparse; }
 
 void Simulation::start() {
   SPDLOG_LOGGER_INFO(mLog, "Initialize simulation: {}", **mName);

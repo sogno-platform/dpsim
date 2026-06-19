@@ -8,6 +8,7 @@ set(DPSIM_SOURCES
 	DirectLinearSolverConfiguration.cpp
 	PFSolver.cpp
 	PFSolverPowerPolar.cpp
+	PFSolverPowerPolarSparse.cpp
 	Utils.cpp
 	Timer.cpp
 	Event.cpp

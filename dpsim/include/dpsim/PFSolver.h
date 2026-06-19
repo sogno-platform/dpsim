@@ -128,6 +128,10 @@ protected:
   CPS::Real B(int i, int j);
   /// Solves the powerflow problem
   Bool solvePowerflow();
+  /// Allocate Jacobian storage; dense by default, sparse subclass overrides
+  virtual void setUpJacobianStorage();
+  /// Solve the linearized system mJ*mX = mF into mX; sparse subclass overrides
+  virtual void solveJacobianSystem();
   /// Check whether below tolerance
   CPS::Bool checkConvergence();
   /// Logging for integer vectors

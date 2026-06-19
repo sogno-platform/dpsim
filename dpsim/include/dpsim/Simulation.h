@@ -43,6 +43,11 @@ public:
 
   const CPS::Attribute<Bool>::Ptr mPFKeepLastSolution;
 
+  /// Use the sparse-Jacobian powerflow solver (scales to large grids).
+  /// Default false (dense solver); opt in via setPFSolverUseSparse(true).
+  /// Ignored (dense solver used) if no sparse linear solver is available.
+  const CPS::Attribute<Bool>::Ptr mPFSolverUseSparse;
+
   /// Determines if the network should be split
   /// into subnetworks at decoupling lines.
   /// If the system is split, each subsystem is
@@ -236,6 +241,10 @@ public:
   void setPFKeepLastSolution(Bool value);
 
   Bool getPFKeepLastSolution() const;
+
+  void setPFSolverUseSparse(Bool value);
+
+  Bool getPFSolverUseSparse() const;
 
   // #### Simulation Control ####
   /// Create solver instances etc.
