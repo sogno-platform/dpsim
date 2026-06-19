@@ -47,7 +47,7 @@ public:
 
   // #### General ####
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency) override;
+  void initializeParentFromNodesAndTerminals(Real frequency) override;
   /// Setter for reference voltage parameters
   void setParameters(MatrixComp voltageRef, Real srcFreq = 50.0);
   /// Setter for reference signal of type frequency ramp

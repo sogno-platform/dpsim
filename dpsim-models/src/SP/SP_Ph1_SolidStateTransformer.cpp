@@ -40,8 +40,28 @@ void SP::Ph1::SolidStateTransformer::setParameters(Real nomV1, Real nomV2,
   mP2 = -1 * std::sqrt(Pref * Pref + Q1ref * Q1ref - Q2ref * Q2ref);
 }
 
-void SP::Ph1::SolidStateTransformer::initializeFromNodesAndTerminals(
+void SP::Ph1::SolidStateTransformer::createSubComponents() {
+  if (mSubCompCreated)
+    return;
+  mSubCompCreated = true;
+
+  mSubLoadSide1 = Load::make(**mName + "_subLoad1", mLogLevel);
+  mSubLoadSide2 = Load::make(**mName + "_subLoad2", mLogLevel);
+  mSubLoadSide1->connect({mTerminals[0]->node()});
+  mSubLoadSide2->connect({mTerminals[1]->node()});
+
+  addMNASubComponent(mSubLoadSide1, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
+                     MNA_SUBCOMP_TASK_ORDER::NO_TASK, false);
+  addMNASubComponent(mSubLoadSide2, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
+                     MNA_SUBCOMP_TASK_ORDER::NO_TASK, false);
+}
+
+void SP::Ph1::SolidStateTransformer::initializeParentFromNodesAndTerminals(
     Real frequency) {
+
+  // Parametrize the sub-loads before the recursive sub-init runs, else each Load wrongly reads its own terminal.
+  mSubLoadSide1->setParameters(**mPref, **mQ1ref, mNominalVoltageEnd1);
+  mSubLoadSide2->setParameters(mP2, **mQ2ref, mNominalVoltageEnd2);
 
   if (std::isinf(mP2)) {
     std::stringstream ss;
@@ -53,17 +73,6 @@ void SP::Ph1::SolidStateTransformer::initializeFromNodesAndTerminals(
     throw std::invalid_argument(
         "power at primary and secondary sides should be opposite");
   }
-  mSubLoadSide1 = Load::make(**mName + "_subLoad1", mLogLevel);
-  mSubLoadSide1->setParameters(**mPref, **mQ1ref, mNominalVoltageEnd1);
-  mSubLoadSide2 = Load::make(**mName + "_subLoad2", mLogLevel);
-  mSubLoadSide2->setParameters(mP2, **mQ2ref, mNominalVoltageEnd2);
-  mSubLoadSide1->connect({mTerminals[0]->node()});
-  mSubLoadSide2->connect({mTerminals[1]->node()});
-
-  addMNASubComponent(mSubLoadSide1, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
-                     MNA_SUBCOMP_TASK_ORDER::NO_TASK, false);
-  addMNASubComponent(mSubLoadSide2, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
-                     MNA_SUBCOMP_TASK_ORDER::NO_TASK, false);
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"

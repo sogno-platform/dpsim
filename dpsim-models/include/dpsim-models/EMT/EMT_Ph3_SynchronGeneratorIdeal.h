@@ -22,6 +22,7 @@ class SynchronGeneratorIdeal : public CompositePowerComp<Real>,
 private:
   /// Specifies type of ideal source
   CPS::GeneratorType mSourceType;
+  /// True after createSubComponents() runs; prevents double-construction.
   /// Inner voltage source that represents the generator
   std::shared_ptr<EMT::Ph3::VoltageSource> mSubVoltageSource;
   /// Inner voltage source that represents the generator
@@ -42,8 +43,10 @@ public:
   SimPowerComp<Real>::Ptr clone(String name) override;
 
   // #### General ####
+  /// Constructs and registers MNA subcomponents; idempotent.
+  void createSubComponents() override;
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency) override;
+  void initializeParentFromNodesAndTerminals(Real frequency) override;
 
   // #### MNA section ####
   /// MNA pre step operations

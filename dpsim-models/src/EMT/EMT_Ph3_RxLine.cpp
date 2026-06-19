@@ -34,8 +34,38 @@ SimPowerComp<Real>::Ptr EMT::Ph3::RxLine::clone(String name) {
   return copy;
 }
 
-void EMT::Ph3::RxLine::initializeFromNodesAndTerminals(Real frequency) {
+void EMT::Ph3::RxLine::createSubComponents() {
+  if (mSubCompCreated)
+    return;
+  mSubCompCreated = true;
 
+  // Default model with virtual node in between
+  mSubResistor =
+      std::make_shared<EMT::Ph3::Resistor>(**mName + "_res", mLogLevel);
+  mSubResistor->setParameters(**mSeriesRes);
+  mSubResistor->connect({mTerminals[0]->node(), mVirtualNodes[0]});
+  addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+
+  mSubInductor =
+      std::make_shared<EMT::Ph3::Inductor>(**mName + "_ind", mLogLevel);
+  mSubInductor->setParameters(**mSeriesInd);
+  mSubInductor->connect({mVirtualNodes[0], mTerminals[1]->node()});
+  addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+
+  mInitialResistor =
+      std::make_shared<EMT::Ph3::Resistor>(**mName + "_snubber_res", mLogLevel);
+  Matrix defaultSnubRes = Matrix::Zero(3, 3);
+  defaultSnubRes << 1e6, 0, 0, 0, 1e6, 0, 0, 0, 1e6;
+  mInitialResistor->setParameters(defaultSnubRes);
+  mInitialResistor->connect({SimNode::GND, mTerminals[1]->node()});
+  addMNASubComponent(mInitialResistor,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+}
+
+void EMT::Ph3::RxLine::initializeParentFromNodesAndTerminals(Real frequency) {
   // Static calculation
   Real omega = 2. * PI * frequency;
   MatrixComp impedance = MatrixComp::Zero(3, 3);
@@ -66,34 +96,6 @@ void EMT::Ph3::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 
   mVirtualNodes[0]->setInitialVoltage(vInitTerm0 +
                                       **mSeriesRes * **mIntfCurrent);
-
-  // Default model with virtual node in between
-  mSubResistor =
-      std::make_shared<EMT::Ph3::Resistor>(**mName + "_res", mLogLevel);
-  mSubResistor->setParameters(**mSeriesRes);
-  mSubResistor->connect({mTerminals[0]->node(), mVirtualNodes[0]});
-  mSubResistor->initializeFromNodesAndTerminals(frequency);
-  addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
-
-  mSubInductor =
-      std::make_shared<EMT::Ph3::Inductor>(**mName + "_ind", mLogLevel);
-  mSubInductor->setParameters(**mSeriesInd);
-  mSubInductor->connect({mVirtualNodes[0], mTerminals[1]->node()});
-  mSubInductor->initializeFromNodesAndTerminals(frequency);
-  addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-
-  mInitialResistor =
-      std::make_shared<EMT::Ph3::Resistor>(**mName + "_snubber_res", mLogLevel);
-  Matrix defaultSnubRes = Matrix::Zero(3, 1);
-  defaultSnubRes << 1e6, 0, 0, 0, 1e6, 0, 0, 0, 1e6;
-  mInitialResistor->setParameters(defaultSnubRes);
-  mInitialResistor->connect({SimNode::GND, mTerminals[1]->node()});
-  mInitialResistor->initializeFromNodesAndTerminals(frequency);
-  addMNASubComponent(mInitialResistor,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"

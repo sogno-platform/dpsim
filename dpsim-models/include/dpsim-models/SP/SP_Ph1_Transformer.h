@@ -26,6 +26,7 @@ class Transformer : public CompositePowerComp<Complex>,
                     public PFSolverInterfaceBranch {
 
 private:
+  /// True after createSubComponents() runs; prevents double-construction.
   /// Internal resistor to model losses
   std::shared_ptr<SP::Ph1::Resistor> mSubResistor;
   /// Internal inductor to model losses
@@ -130,8 +131,10 @@ public:
   void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower,
                      Real ratioAbs, Real ratioPhase, Real resistance,
                      Real inductance);
+  /// Constructs and registers MNA subcomponents; idempotent.
+  void createSubComponents() override;
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency) override;
+  void initializeParentFromNodesAndTerminals(Real frequency) override;
 
   // #### Powerflow section ####
   /// Get nominal voltage at end 1

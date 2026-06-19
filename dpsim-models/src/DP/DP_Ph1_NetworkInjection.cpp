@@ -94,16 +94,10 @@ void DP::Ph1::NetworkInjection::setParameters(Complex initialPhasor,
                      Logger::realToString(baseFrequency));
 }
 
-void DP::Ph1::NetworkInjection::initializeFromNodesAndTerminals(
+void DP::Ph1::NetworkInjection::initializeParentFromNodesAndTerminals(
     Real frequency) {
   // Connect electrical subcomponents
   mSubVoltageSource->connect({SimNode::GND, node(0)});
-
-  // Initialize electrical subcomponents
-  for (auto subcomp : mSubComponents) {
-    subcomp->initialize(mFrequencies);
-    subcomp->initializeFromNodesAndTerminals(frequency);
-  }
 }
 
 // #### MNA functions ####

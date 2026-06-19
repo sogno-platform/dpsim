@@ -41,6 +41,7 @@ protected:
   Matrix mStates;
   /// Nominal system angle
   Real mThetaN = 0;
+  /// True after createSubComponents() runs; prevents double-construction.
 
 public:
   // #### Model specific variables ####
@@ -89,8 +90,10 @@ public:
                                Real Xpd, Real inertia, Real Rs = 0, Real D = 0);
   ///
   void step(Real time);
+  /// Constructs and registers MNA subcomponents without emf value; idempotent.
+  void createSubComponents() override;
   ///
-  void initializeFromNodesAndTerminals(Real frequency) override;
+  void initializeParentFromNodesAndTerminals(Real frequency) override;
 
   // #### MNA Functions ####
   /// Initializes variables of component

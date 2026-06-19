@@ -28,26 +28,16 @@ SimPowerComp<Real>::Ptr EMT::Ph1::PiLine::clone(String name) {
   return copy;
 }
 
-void EMT::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
+void EMT::Ph1::PiLine::createSubComponents() {
+  if (mSubCompCreated)
+    return;
+  mSubCompCreated = true;
 
   // By default there is always a small conductance to ground to
   // avoid problems with floating nodes.
-
   Real defaultParallelCond = 1e-6;
   **mParallelCond =
       (**mParallelCond > 0) ? **mParallelCond : defaultParallelCond;
-
-  // Static calculation
-  Real omega = 2. * PI * frequency;
-  Complex impedance = {**mSeriesRes, omega * **mSeriesInd};
-  Complex voltage =
-      RMS3PH_TO_PEAK1PH * (initialSingleVoltage(1) - initialSingleVoltage(0));
-  (**mIntfVoltage)(0, 0) = voltage.real();
-  (**mIntfCurrent)(0, 0) = (voltage / impedance).real();
-
-  // Initialization of virtual node
-  mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0) +
-                                      (**mIntfCurrent)(0, 0) * **mSeriesRes);
 
   // Create series sub components
   mSubSeriesResistor =
@@ -55,7 +45,6 @@ void EMT::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
   mSubSeriesResistor->setParameters(**mSeriesRes);
   mSubSeriesResistor->connect({mTerminals[0]->node(), mVirtualNodes[0]});
   mSubSeriesResistor->initialize(mFrequencies);
-  mSubSeriesResistor->initializeFromNodesAndTerminals(frequency);
   addMNASubComponent(mSubSeriesResistor,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
@@ -65,7 +54,6 @@ void EMT::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
   mSubSeriesInductor->setParameters(**mSeriesInd);
   mSubSeriesInductor->connect({mVirtualNodes[0], mTerminals[1]->node()});
   mSubSeriesInductor->initialize(mFrequencies);
-  mSubSeriesInductor->initializeFromNodesAndTerminals(frequency);
   addMNASubComponent(mSubSeriesInductor,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
@@ -77,7 +65,6 @@ void EMT::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
   mSubParallelResistor0->connect(
       SimNode::List{SimNode::GND, mTerminals[0]->node()});
   mSubParallelResistor0->initialize(mFrequencies);
-  mSubParallelResistor0->initializeFromNodesAndTerminals(frequency);
   addMNASubComponent(mSubParallelResistor0,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
@@ -88,7 +75,6 @@ void EMT::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
   mSubParallelResistor1->connect(
       SimNode::List{SimNode::GND, mTerminals[1]->node()});
   mSubParallelResistor1->initialize(mFrequencies);
-  mSubParallelResistor1->initializeFromNodesAndTerminals(frequency);
   addMNASubComponent(mSubParallelResistor1,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
@@ -100,7 +86,6 @@ void EMT::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
     mSubParallelCapacitor0->connect(
         SimNode::List{SimNode::GND, mTerminals[0]->node()});
     mSubParallelCapacitor0->initialize(mFrequencies);
-    mSubParallelCapacitor0->initializeFromNodesAndTerminals(frequency);
     addMNASubComponent(mSubParallelCapacitor0,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
@@ -111,11 +96,24 @@ void EMT::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
     mSubParallelCapacitor1->connect(
         SimNode::List{SimNode::GND, mTerminals[1]->node()});
     mSubParallelCapacitor1->initialize(mFrequencies);
-    mSubParallelCapacitor1->initializeFromNodesAndTerminals(frequency);
     addMNASubComponent(mSubParallelCapacitor1,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
   }
+}
+
+void EMT::Ph1::PiLine::initializeParentFromNodesAndTerminals(Real frequency) {
+  // Static calculation
+  Real omega = 2. * PI * frequency;
+  Complex impedance = {**mSeriesRes, omega * **mSeriesInd};
+  Complex voltage =
+      RMS3PH_TO_PEAK1PH * (initialSingleVoltage(1) - initialSingleVoltage(0));
+  (**mIntfVoltage)(0, 0) = voltage.real();
+  (**mIntfCurrent)(0, 0) = (voltage / impedance).real();
+
+  // Initialization of virtual node
+  mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0) +
+                                      (**mIntfCurrent)(0, 0) * **mSeriesRes);
 
   SPDLOG_LOGGER_DEBUG(mSLog,
                       "\n--debug--"

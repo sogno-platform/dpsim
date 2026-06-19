@@ -121,20 +121,16 @@ SimPowerComp<Complex>::Ptr SP::Ph1::RXLine::clone(String name) {
   return copy;
 }
 
-void SP::Ph1::RXLine::initializeFromNodesAndTerminals(Real frequency) {
-
-  (**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
-  Complex impedance = {**mSeriesRes, **mSeriesInd * 2. * PI * frequency};
-  (**mIntfCurrent)(0, 0) = (**mIntfVoltage)(0, 0) / impedance;
-  mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0) +
-                                      (**mIntfCurrent)(0, 0) * **mSeriesRes);
+void SP::Ph1::RXLine::createSubComponents() {
+  if (mSubCompCreated)
+    return;
+  mSubCompCreated = true;
 
   // Default model with virtual node in between
   mSubResistor =
       std::make_shared<SP::Ph1::Resistor>(**mName + "_res", mLogLevel);
   mSubResistor->setParameters(**mSeriesRes);
   mSubResistor->connect({mTerminals[0]->node(), mVirtualNodes[0]});
-  mSubResistor->initializeFromNodesAndTerminals(frequency);
   addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
@@ -142,7 +138,6 @@ void SP::Ph1::RXLine::initializeFromNodesAndTerminals(Real frequency) {
       std::make_shared<SP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
   mSubInductor->setParameters(**mSeriesInd);
   mSubInductor->connect({mVirtualNodes[0], mTerminals[1]->node()});
-  mSubInductor->initializeFromNodesAndTerminals(frequency);
   addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
@@ -150,10 +145,17 @@ void SP::Ph1::RXLine::initializeFromNodesAndTerminals(Real frequency) {
       std::make_shared<SP::Ph1::Resistor>(**mName + "_snubber_res", mLogLevel);
   mInitialResistor->setParameters(1e6);
   mInitialResistor->connect({SimNode::GND, mTerminals[1]->node()});
-  mInitialResistor->initializeFromNodesAndTerminals(frequency);
   addMNASubComponent(mInitialResistor,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+}
+
+void SP::Ph1::RXLine::initializeParentFromNodesAndTerminals(Real frequency) {
+  (**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
+  Complex impedance = {**mSeriesRes, **mSeriesInd * 2. * PI * frequency};
+  (**mIntfCurrent)(0, 0) = (**mIntfVoltage)(0, 0) / impedance;
+  mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0) +
+                                      (**mIntfCurrent)(0, 0) * **mSeriesRes);
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"

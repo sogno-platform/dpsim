@@ -48,6 +48,7 @@ private:
 
   /// Boolean for considering resistive losses with sub resistor
   Bool mWithResistiveLosses;
+  /// True after createSubComponents() runs; prevents double-construction.
 
 public:
   /// Defines UID, name and logging level
@@ -68,8 +69,10 @@ public:
   void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower,
                      Real ratioAbs, Real ratioPhase, Real resistance,
                      Real inductance);
+  /// Constructs and registers MNA subcomponents (incl. terminal swap); idempotent.
+  void createSubComponents() override;
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency) override;
+  void initializeParentFromNodesAndTerminals(Real frequency) override;
 
   // #### MNA section ####
   /// Initializes internal variables of the component

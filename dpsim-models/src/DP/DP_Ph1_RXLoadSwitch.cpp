@@ -36,7 +36,8 @@ DP::Ph1::RXLoadSwitch::RXLoadSwitch(String name, Logger::Level logLevel)
 
 Bool DP::Ph1::RXLoadSwitch::mnaIsClosed() { return mSubSwitch->isClosed(); }
 
-void DP::Ph1::RXLoadSwitch::initializeFromNodesAndTerminals(Real frequency) {
+void DP::Ph1::RXLoadSwitch::initializeParentFromNodesAndTerminals(
+    Real frequency) {
 
   if (!mParametersSet) {
     // use powerflow results

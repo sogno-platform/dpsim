@@ -75,7 +75,18 @@ void EMT::Ph3::RXLoad::setParameters(Matrix activePower, Matrix reactivePower,
   initPowerFromTerminal = false;
 }
 
-void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
+void EMT::Ph3::RXLoad::createSubComponents() {
+  if (mSubCompCreated)
+    return;
+  mSubCompCreated = true;
+
+  // Intentionally empty: which of R/L/C exist depends on the load power sign, known only in
+  // initializeParentFromNodesAndTerminals(), where the sub-components are created. Safe: any
+  // series-mode virtual node is already declared in setParameters().
+}
+
+void EMT::Ph3::RXLoad::initializeParentFromNodesAndTerminals(Real frequency) {
+  Real omega = 2. * PI * frequency;
 
   if (initPowerFromTerminal) {
     **mActivePower = Matrix::Zero(3, 3);
@@ -102,6 +113,60 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
                        Logger::matrixToString(**mActivePower),
                        Logger::matrixToString(**mReactivePower));
     SPDLOG_LOGGER_INFO(mSLog, "Nominal Voltage={} [V]", **mNomVoltage);
+  }
+
+  // Compute derived impedance values and create+parametrize sub-components
+  // now that power and voltage are guaranteed to be known.
+  if ((**mActivePower)(0, 0) != 0) {
+    mResistance =
+        std::pow(**mNomVoltage / sqrt(3), 2) * (**mActivePower).inverse();
+  }
+  if ((**mReactivePower)(0, 0) != 0)
+    mReactance =
+        std::pow(**mNomVoltage / sqrt(3), 2) * (**mReactivePower).inverse();
+  else
+    mReactance = Matrix::Zero(3, 3);
+
+  if ((**mActivePower)(0, 0) != 0) {
+    mSubResistor =
+        std::make_shared<EMT::Ph3::Resistor>(**mName + "_res", mLogLevel);
+    mSubResistor->setParameters(mResistance);
+    if (mReactanceInSeries) {
+      mSubResistor->connect({mTerminals[0]->node(), mVirtualNodes[0]});
+    } else {
+      mSubResistor->connect({SimNode::GND, mTerminals[0]->node()});
+    }
+    addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+  }
+
+  if (mReactance(0, 0) > 0) {
+    mInductance = mReactance / omega;
+
+    mSubInductor =
+        std::make_shared<EMT::Ph3::Inductor>(**mName + "_ind", mLogLevel);
+    mSubInductor->setParameters(mInductance);
+    if (mReactanceInSeries) {
+      mSubInductor->connect({SimNode::GND, mVirtualNodes[0]});
+    } else {
+      mSubInductor->connect({SimNode::GND, mTerminals[0]->node()});
+    }
+    addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+  } else if (mReactance(0, 0) < 0) {
+    mCapacitance = -1. / omega * mReactance.inverse();
+
+    mSubCapacitor =
+        std::make_shared<EMT::Ph3::Capacitor>(**mName + "_cap", mLogLevel);
+    mSubCapacitor->setParameters(mCapacitance);
+    if (mReactanceInSeries) {
+      mSubCapacitor->connect({SimNode::GND, mVirtualNodes[0]});
+    } else {
+      mSubCapacitor->connect({SimNode::GND, mTerminals[0]->node()});
+    }
+    addMNASubComponent(mSubCapacitor,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
   }
 
   MatrixComp vInitABC = MatrixComp::Zero(3, 1);
@@ -144,60 +209,27 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
                                         mResistance * **mIntfCurrent);
   }
 
+  // Sub-components were just created above; initialize them now so their
+  // post-init current can be read back before this hook returns (the
+  // framework's generic sub-init loop would otherwise run too late for
+  // that).
   if ((**mActivePower)(0, 0) != 0) {
-    mSubResistor =
-        std::make_shared<EMT::Ph3::Resistor>(**mName + "_res", mLogLevel);
-    mSubResistor->setParameters(mResistance);
-    if (mReactanceInSeries) {
-      mSubResistor->connect({mTerminals[0]->node(), mVirtualNodes[0]});
-    } else {
-      mSubResistor->connect({SimNode::GND, mTerminals[0]->node()});
-    }
     mSubResistor->initialize(mFrequencies);
     mSubResistor->initializeFromNodesAndTerminals(frequency);
-    addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-
     if (!mReactanceInSeries) {
       **mIntfCurrent += mSubResistor->intfCurrent();
     }
   }
 
   if (mReactance(0, 0) > 0) {
-    mInductance = mReactance / (2 * PI * frequency);
-
-    mSubInductor =
-        std::make_shared<EMT::Ph3::Inductor>(**mName + "_ind", mLogLevel);
-    mSubInductor->setParameters(mInductance);
-    if (mReactanceInSeries) {
-      mSubInductor->connect({SimNode::GND, mVirtualNodes[0]});
-    } else {
-      mSubInductor->connect({SimNode::GND, mTerminals[0]->node()});
-    }
     mSubInductor->initialize(mFrequencies);
     mSubInductor->initializeFromNodesAndTerminals(frequency);
-    addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-
     if (!mReactanceInSeries) {
       **mIntfCurrent += mSubInductor->intfCurrent();
     }
   } else if (mReactance(0, 0) < 0) {
-    mCapacitance = -1 / (2 * PI * frequency) * mReactance.inverse();
-
-    mSubCapacitor =
-        std::make_shared<EMT::Ph3::Capacitor>(**mName + "_cap", mLogLevel);
-    mSubCapacitor->setParameters(mCapacitance);
-    if (mReactanceInSeries) {
-      mSubCapacitor->connect({SimNode::GND, mVirtualNodes[0]});
-    } else {
-      mSubCapacitor->connect({SimNode::GND, mTerminals[0]->node()});
-    }
     mSubCapacitor->initialize(mFrequencies);
     mSubCapacitor->initializeFromNodesAndTerminals(frequency);
-    addMNASubComponent(mSubCapacitor,
-                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
     if (!mReactanceInSeries) {
       **mIntfCurrent += mSubCapacitor->intfCurrent();
     }

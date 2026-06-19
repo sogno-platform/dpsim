@@ -161,9 +161,29 @@ void SP::Ph1::SynchronGeneratorTrStab::setInitialValues(Complex elecPower,
   mInitMechPower = mechPower;
 }
 
-void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(
-    Real frequency) {
+void SP::Ph1::SynchronGeneratorTrStab::createSubComponents() {
+  if (mSubCompCreated)
+    return;
+  mSubCompCreated = true;
 
+  mSubVoltageSource = SP::Ph1::VoltageSource::make(**mName + "_src", mLogLevel);
+  mSubVoltageSource->connect({SimNode::GND, mVirtualNodes[0]});
+  mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[1], 0);
+  mSubVoltageSource->initialize(mFrequencies);
+  addMNASubComponent(mSubVoltageSource,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+
+  mSubInductor = SP::Ph1::Inductor::make(**mName + "_ind", mLogLevel);
+  mSubInductor->setParameters(mLpd);
+  mSubInductor->connect({mVirtualNodes[0], terminal(0)->node()});
+  mSubInductor->initialize(mFrequencies);
+  addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+}
+
+void SP::Ph1::SynchronGeneratorTrStab::initializeParentFromNodesAndTerminals(
+    Real frequency) {
   // Initialize omega mech with nominal system frequency
   **mOmMech = mNomOmega;
 
@@ -203,25 +223,9 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(
   // Initialize node between X'd and Ep
   mVirtualNodes[0]->setInitialVoltage(**mEp);
 
-  // Create sub voltage source for emf
-  mSubVoltageSource = SP::Ph1::VoltageSource::make(**mName + "_src", mLogLevel);
+  // Set emf on the already-created voltage source; the framework's generic
+  // sub-init loop will initialize it after this hook returns.
   mSubVoltageSource->setParameters(**mEp);
-  mSubVoltageSource->connect({SimNode::GND, mVirtualNodes[0]});
-  mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[1], 0);
-  mSubVoltageSource->initialize(mFrequencies);
-  mSubVoltageSource->initializeFromNodesAndTerminals(frequency);
-  addMNASubComponent(mSubVoltageSource,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
-
-  // Create sub inductor as Xpd
-  mSubInductor = SP::Ph1::Inductor::make(**mName + "_ind", mLogLevel);
-  mSubInductor->setParameters(mLpd);
-  mSubInductor->connect({mVirtualNodes[0], terminal(0)->node()});
-  mSubInductor->initialize(mFrequencies);
-  mSubInductor->initializeFromNodesAndTerminals(frequency);
-  addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialize according to powerflow ---"

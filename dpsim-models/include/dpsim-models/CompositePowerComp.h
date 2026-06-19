@@ -17,12 +17,17 @@ class CompositePowerComp : public MNASimPowerComp<VarType> {
 
 private:
   MNAInterface::List mSubcomponentsMNA;
-  MNAInterface::List mSubcomponentsBeforePreStep;
-  MNAInterface::List mSubcomponentsAfterPreStep;
-  MNAInterface::List mSubcomponentsBeforePostStep;
-  MNAInterface::List mSubcomponentsAfterPostStep;
+  MNAInterface::List mSubcomponentsPreStepBeforeParent;
+  MNAInterface::List mSubcomponentsPreStepAfterParent;
+  MNAInterface::List mSubcomponentsPostStepBeforeParent;
+  MNAInterface::List mSubcomponentsPostStepAfterParent;
 
   std::vector<CPS::Attribute<Matrix>::Ptr> mRightVectorStamps;
+
+protected:
+  /// Guards createSubComponents() against double-execution; set it to true at
+  /// the top of every override. Provided here so subclasses need not redeclare.
+  bool mSubCompCreated = false;
 
 public:
   using Type = VarType;
@@ -44,6 +49,18 @@ public:
 
   /// Destructor - does not do anything
   virtual ~CompositePowerComp() = default;
+
+  /// Sequences the three init stages: createSubComponents(), then
+  /// initializeParentFromNodesAndTerminals(), then recurse into sub-components.
+  /// See docs Overview/subcomponents.md.
+  void initializeFromNodesAndTerminals(Real frequency) override final;
+
+  /// Pure-virtual hook for the parameterization stage. Concrete composites
+  /// implement this instead of overriding initializeFromNodesAndTerminals().
+  /// Reads terminal data, computes frequency-dependent values, and calls
+  /// setParameters() on sub-components. The simulation frequency is passed
+  /// directly so there is no need to access mFrequencies(0,0).
+  virtual void initializeParentFromNodesAndTerminals(Real frequency) = 0;
 
   /// @brief Add a new subcomponent implementing MNA methods
   /// @param subc The new subcomponent

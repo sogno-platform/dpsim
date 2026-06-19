@@ -94,16 +94,10 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef,
                      Logger::realToString(baseFrequency));
 }
 
-void EMT::Ph3::NetworkInjection::initializeFromNodesAndTerminals(
+void EMT::Ph3::NetworkInjection::initializeParentFromNodesAndTerminals(
     Real frequency) {
   // Connect electrical subcomponents
   mSubVoltageSource->connect({SimNode::GND, node(0)});
-
-  // Initialize electrical subcomponents
-  for (auto subcomp : mSubComponents) {
-    subcomp->initialize(mFrequencies);
-    subcomp->initializeFromNodesAndTerminals(frequency);
-  }
 }
 
 // #### MNA functions ####

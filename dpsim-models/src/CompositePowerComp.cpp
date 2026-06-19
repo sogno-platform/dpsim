@@ -5,6 +5,19 @@
 using namespace CPS;
 
 template <typename VarType>
+void CompositePowerComp<VarType>::initializeFromNodesAndTerminals(
+    Real frequency) {
+  this->createSubComponents();
+
+  initializeParentFromNodesAndTerminals(frequency);
+
+  for (auto subComp : this->mSubComponents) {
+    subComp->initialize(this->mFrequencies);
+    subComp->initializeFromNodesAndTerminals(frequency);
+  }
+}
+
+template <typename VarType>
 void CompositePowerComp<VarType>::addMNASubComponent(
     typename SimPowerComp<VarType>::Ptr subc,
     MNA_SUBCOMP_TASK_ORDER preStepOrder, MNA_SUBCOMP_TASK_ORDER postStepOrder,
@@ -22,11 +35,11 @@ void CompositePowerComp<VarType>::addMNASubComponent(
     case MNA_SUBCOMP_TASK_ORDER::NO_TASK:
       break;
     case MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT: {
-      this->mSubcomponentsBeforePreStep.push_back(mnasubcomp);
+      this->mSubcomponentsPreStepBeforeParent.push_back(mnasubcomp);
       break;
     }
     case MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT: {
-      this->mSubcomponentsAfterPreStep.push_back(mnasubcomp);
+      this->mSubcomponentsPreStepAfterParent.push_back(mnasubcomp);
       break;
     }
     }
@@ -34,11 +47,11 @@ void CompositePowerComp<VarType>::addMNASubComponent(
     case MNA_SUBCOMP_TASK_ORDER::NO_TASK:
       break;
     case MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT: {
-      this->mSubcomponentsBeforePostStep.push_back(mnasubcomp);
+      this->mSubcomponentsPostStepBeforeParent.push_back(mnasubcomp);
       break;
     }
     case MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT: {
-      this->mSubcomponentsAfterPostStep.push_back(mnasubcomp);
+      this->mSubcomponentsPostStepAfterParent.push_back(mnasubcomp);
       break;
     }
     }
@@ -82,11 +95,11 @@ void CompositePowerComp<VarType>::mnaCompApplyRightSideVectorStamp(
 
 template <typename VarType>
 void CompositePowerComp<VarType>::mnaCompPreStep(Real time, Int timeStepCount) {
-  for (auto subComp : mSubcomponentsBeforePreStep) {
+  for (auto subComp : mSubcomponentsPreStepBeforeParent) {
     subComp->mnaPreStep(time, timeStepCount);
   }
   mnaParentPreStep(time, timeStepCount);
-  for (auto subComp : mSubcomponentsAfterPreStep) {
+  for (auto subComp : mSubcomponentsPreStepAfterParent) {
     subComp->mnaPreStep(time, timeStepCount);
   }
 }
@@ -94,11 +107,11 @@ void CompositePowerComp<VarType>::mnaCompPreStep(Real time, Int timeStepCount) {
 template <typename VarType>
 void CompositePowerComp<VarType>::mnaCompPostStep(
     Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-  for (auto subComp : mSubcomponentsBeforePostStep) {
+  for (auto subComp : mSubcomponentsPostStepBeforeParent) {
     subComp->mnaPostStep(time, timeStepCount, leftVector);
   }
   mnaParentPostStep(time, timeStepCount, leftVector);
-  for (auto subComp : mSubcomponentsAfterPostStep) {
+  for (auto subComp : mSubcomponentsPostStepAfterParent) {
     subComp->mnaPostStep(time, timeStepCount, leftVector);
   }
 }

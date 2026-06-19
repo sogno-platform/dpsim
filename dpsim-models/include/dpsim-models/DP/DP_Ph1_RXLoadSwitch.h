@@ -37,8 +37,8 @@ public:
   RXLoadSwitch(String name, Logger::Level logLevel = Logger::Level::off);
 
   // #### General ####
-  /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency) override;
+  /// Derives values from power flow data and pushes them to subcomponents
+  void initializeParentFromNodesAndTerminals(Real frequency) override;
   /// Sets model specific parameters
   void setParameters(Real activePower, Real reactivePower, Real nomVolt,
                      Real openResistance, Real closedResistance,

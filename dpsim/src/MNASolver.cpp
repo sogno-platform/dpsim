@@ -6,8 +6,10 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
+#include <algorithm>
 #include <dpsim/MNASolver.h>
 #include <dpsim/SequentialScheduler.h>
+#include <functional>
 #include <memory>
 #include <stdexcept>
 #include <type_traits>
@@ -79,6 +81,50 @@ template <typename VarType> void MnaSolver<VarType>::initialize() {
   // We need to differentiate between power and signal components and
   // ground nodes should be ignored.
   identifyTopologyObjects();
+  // Ensure all subcomponents (and their virtual nodes) are registered before
+  // collectVirtualNodes() sizes the system matrices. Recurses into nested
+  // sub-components so e.g. SST -> Load -> {R, L, C} is fully created.
+  CPS::MNAInterface::List allMNAComps;
+  allMNAComps.insert(allMNAComps.end(), mMNAComponents.begin(),
+                     mMNAComponents.end());
+  allMNAComps.insert(allMNAComps.end(), mMNAIntfVariableComps.begin(),
+                     mMNAIntfVariableComps.end());
+  allMNAComps.insert(allMNAComps.end(), mMNAIntfSwitches.begin(),
+                     mMNAIntfSwitches.end());
+
+  // Some composites (e.g. AvVoltageSourceInverterDQ) eagerly create and
+  // register their subcomponents in their own constructor, before those
+  // subcomponents are connected (connect() only happens later, in
+  // initializeParentFromNodesAndTerminals()). Calling createSubComponents()
+  // on such a not-yet-connected subcomponent crashes, since it relies on
+  // its own terminals being wired up. Only subcomponents that are newly
+  // registered as a direct result of THIS createSubComponents() call (the
+  // lazy create+connect+register pattern, e.g. SST -> Load -> {R, L, C})
+  // are guaranteed to already be connected, so only recurse into those.
+  std::function<void(CPS::MNAInterface::Ptr)> createSubComponentsRec =
+      [&](CPS::MNAInterface::Ptr comp) {
+        auto pComp =
+            std::dynamic_pointer_cast<CPS::SimPowerComp<VarType>>(comp);
+        typename CPS::SimPowerComp<VarType>::List subCompsBefore =
+            pComp ? pComp->subComponents()
+                  : typename CPS::SimPowerComp<VarType>::List();
+
+        comp->createSubComponents();
+
+        if (pComp) {
+          for (auto subComp : pComp->subComponents()) {
+            bool isNew = std::find(subCompsBefore.begin(), subCompsBefore.end(),
+                                   subComp) == subCompsBefore.end();
+            if (!isNew)
+              continue;
+            if (auto subMna =
+                    std::dynamic_pointer_cast<CPS::MNAInterface>(subComp))
+              createSubComponentsRec(subMna);
+          }
+        }
+      };
+  for (auto comp : allMNAComps)
+    createSubComponentsRec(comp);
   // These steps complete the network information.
   collectVirtualNodes();
   assignMatrixNodeIndices();
@@ -503,9 +549,21 @@ template <typename VarType> void MnaSolver<VarType>::collectVirtualNodes() {
     if (pComp->hasSubComponents()) {
       for (auto pSubComp : pComp->subComponents()) {
         for (UInt node = 0; node < pSubComp->virtualNodesNumber(); ++node) {
-          mNodes.push_back(pSubComp->virtualNode(node));
-          SPDLOG_LOGGER_INFO(mSLog, "Collected virtual node {} of {}",
-                             virtualNode, node, pComp->name());
+          auto vnode = pSubComp->virtualNode(node);
+          // Skip if already registered (e.g. parent reused its VN via
+          // setVirtualNodeAt).
+          bool alreadyRegistered = false;
+          for (auto registeredNode : mNodes) {
+            if (registeredNode == vnode) {
+              alreadyRegistered = true;
+              break;
+            }
+          }
+          if (alreadyRegistered)
+            continue;
+          mNodes.push_back(vnode);
+          SPDLOG_LOGGER_INFO(mSLog, "Collected virtual node {} of {}", node,
+                             pSubComp->name());
         }
       }
     }

@@ -189,7 +189,7 @@ void SP::Ph1::AvVoltageSourceInverterDQ::setInitialStateValues(
                                              gamma_dInit, gamma_qInit);
 }
 
-void SP::Ph1::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(
+void SP::Ph1::AvVoltageSourceInverterDQ::initializeParentFromNodesAndTerminals(
     Real frequency) {
 
   // set initial interface quantities

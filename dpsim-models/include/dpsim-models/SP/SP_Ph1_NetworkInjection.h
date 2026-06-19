@@ -66,7 +66,7 @@ public:
 
   // #### General ####
   /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency) override;
+  void initializeParentFromNodesAndTerminals(Real frequency) override;
 
   // #### Powerflow section ####
   /// Set parameters relevant for PF solver

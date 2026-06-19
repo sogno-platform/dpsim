@@ -141,16 +141,10 @@ SimPowerComp<Complex>::Ptr SP::Ph1::NetworkInjection::clone(String name) {
   return copy;
 }
 
-void SP::Ph1::NetworkInjection::initializeFromNodesAndTerminals(
+void SP::Ph1::NetworkInjection::initializeParentFromNodesAndTerminals(
     Real frequency) {
   // Connect electrical subcomponents
   mSubVoltageSource->connect({SimNode::GND, node(0)});
-
-  // Initialize electrical subcomponents
-  for (auto subcomp : mSubComponents) {
-    subcomp->initialize(mFrequencies);
-    subcomp->initializeFromNodesAndTerminals(frequency);
-  }
 }
 
 // #### MNA functions ####

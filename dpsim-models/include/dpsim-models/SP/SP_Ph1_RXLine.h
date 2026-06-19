@@ -55,6 +55,7 @@ protected:
   // #### Admittance matrix stamp ####
   MatrixComp mY_element;
 
+  /// True after createSubComponents() runs; prevents double-construction.
   /// Inductance submodel
   std::shared_ptr<Inductor> mSubInductor;
   /// Resistor submodel
@@ -120,8 +121,10 @@ public:
   SimPowerComp<Complex>::Ptr clone(String name) override;
 
   // #### General ####
-  /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency) override;
+  /// Constructs and registers MNA subcomponents; idempotent.
+  void createSubComponents() override;
+  /// Derives values from power flow data and pushes them to subcomponents
+  void initializeParentFromNodesAndTerminals(Real frequency) override;
 
   // #### MNA section ####
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
