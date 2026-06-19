@@ -694,23 +694,30 @@ void PFSolverPowerPolar::calculateJacobian() {
 void PFSolverPowerPolar::updateSolution() {
   UInt npqpv = mNumPQBuses + mNumPVBuses;
 
-  const double alphaD = 0.6;
-  const double alphaV = 0.6;
+  // Scale the whole Newton step by one factor (=1 near solution) to bound the
+  // max voltage/angle change without altering the search direction.
+  const double maxDVpu = 0.1;      // max |dV| per step [pu]
+  const double maxDThetaRad = 0.2; // max |dTheta| per step [rad]
+
+  // mX: [0,npqpv) angle incr (PQ+PV), then rel. voltage dV/V (PQ only).
+  double scale = 1.0;
+  for (UInt a = 0; a < npqpv; ++a) {
+    double dTheta = std::abs(mX.coeff(a));
+    if (dTheta > maxDThetaRad)
+      scale = std::min(scale, maxDThetaRad / dTheta);
+  }
+  for (UInt b = 0; b < mNumPQBuses; ++b) {
+    double dVrel = std::abs(mX.coeff(npqpv + b));
+    if (dVrel > maxDVpu)
+      scale = std::min(scale, maxDVpu / dVrel);
+  }
 
   for (UInt a = 0; a < npqpv; ++a) {
     UInt k = mPQPVBusIndices[a];
-
-    double dD = alphaD * mX.coeff(a);
-    dD = std::clamp(dD, -0.15, 0.15);
-    sol_D(k) += dD;
-
-    if (a < mNumPQBuses) {
-      double dVrel = alphaV * mX.coeff(a + npqpv);
-      dVrel = std::clamp(dVrel, -0.25, 0.25);
-
-      sol_V(k) *= std::exp(dVrel);
-      sol_V(k) = std::clamp(sol_V(k), 0.7, 1.3);
-    }
+    sol_D(k) += scale * mX.coeff(a);
+    // additive-relative update, consistent with the Jacobian
+    if (a < mNumPQBuses)
+      sol_V(k) *= (1.0 + scale * mX.coeff(a + npqpv));
   }
 
   for (auto node : mSystem.mNodes) {

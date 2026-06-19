@@ -78,9 +78,9 @@ protected:
   std::map<CPS::TopologicalNode::Ptr, CPS::Real> mBaseVoltageAtNode;
 
   /// Solver tolerance
-  Real mTolerance = 1e-6;
+  Real mTolerance = 1e-8;
   /// Maximum number of iterations
-  CPS::UInt mMaxIterations = 80;
+  CPS::UInt mMaxIterations = 20;
   /// Actual number of iterations
   CPS::UInt mIterations;
   /// Base power of per-unit system
