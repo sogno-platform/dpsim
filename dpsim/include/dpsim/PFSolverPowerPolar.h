@@ -30,17 +30,23 @@ protected:
   CPS::Vector Pesp;
   CPS::Vector Qesp;
 
+  // Cache for last converged solution
+  CPS::Vector mLastConvergedV;
+  CPS::Vector mLastConvergedD;
+  bool mHasLastConvergedSolution = false;
+
   // Core methods
   /// Generate initial solution for current time step
-  void generateInitialSolution(Real time, bool keep_last_solution = false);
+  void generateInitialSolution(Real time,
+                               bool keep_last_solution = false) override;
   /// Calculate the Jacobian
-  void calculateJacobian();
+  void calculateJacobian() override;
   /// Update solution in each iteration
-  void updateSolution();
+  void updateSolution() override;
   /// Set final solution
-  void setSolution();
+  void setSolution() override;
   /// Calculate mismatch
-  void calculateMismatch();
+  void calculateMismatch() override;
 
   // Helper methods
   /// Resize solution vector

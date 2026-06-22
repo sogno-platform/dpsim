@@ -41,6 +41,8 @@ public:
   /// Simulation timestep
   const CPS::Attribute<Real>::Ptr mTimeStep;
 
+  const CPS::Attribute<Bool>::Ptr mPFKeepLastSolution;
+
   /// Determines if the network should be split
   /// into subnetworks at decoupling lines.
   /// If the system is split, each subsystem is
@@ -230,6 +232,10 @@ public:
   void setSteadStIniTimeLimit(Real v) { mSteadStIniTimeLimit = v; }
   /// set steady state initialization accuracy limit
   void setSteadStIniAccLimit(Real v) { mSteadStIniAccLimit = v; }
+
+  void setPFKeepLastSolution(Bool value);
+
+  Bool getPFKeepLastSolution() const;
 
   // #### Simulation Control ####
   /// Create solver instances etc.

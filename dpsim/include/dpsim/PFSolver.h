@@ -78,9 +78,9 @@ protected:
   std::map<CPS::TopologicalNode::Ptr, CPS::Real> mBaseVoltageAtNode;
 
   /// Solver tolerance
-  Real mTolerance = 1e-8;
+  Real mTolerance = 1e-6;
   /// Maximum number of iterations
-  CPS::UInt mMaxIterations = 9;
+  CPS::UInt mMaxIterations = 80;
   /// Actual number of iterations
   CPS::UInt mIterations;
   /// Base power of per-unit system
@@ -91,6 +91,9 @@ protected:
   CPS::Bool solutionInitialized = false;
   /// Flag whether complex solution vectors are initialized
   CPS::Bool solutionComplexInitialized = false;
+
+  /// Use last converged solution as initial guess
+  CPS::Bool mKeepLastSolution = false;
 
   /// Generate initial solution for current time step
   virtual void generateInitialSolution(Real time,
@@ -151,6 +154,12 @@ public:
                                    CPS::PowerflowBusType powerFlowBusType);
   /// set solver and component to initialization or simulation behaviour
   void setSolverAndComponentBehaviour(Solver::Behaviour behaviour) override;
+
+  void setKeepLastSolution(CPS::Bool keepLastSolution) {
+    mKeepLastSolution = keepLastSolution;
+  }
+
+  CPS::Bool getKeepLastSolution() const { return mKeepLastSolution; }
 
   class SolveTask : public CPS::Task {
   public:

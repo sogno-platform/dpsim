@@ -638,4 +638,16 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
       .def("connect", &CPS::EMT::Ph3::SSN::Capacitor::connect)
       .def_property("C", createAttributeGetter<CPS::Matrix>("C"),
                     createAttributeSetter<CPS::Matrix>("C"));
+
+  py::class_<CPS::EMT::Ph3::GenericFourTerminalVTypeSSN,
+             std::shared_ptr<CPS::EMT::Ph3::GenericFourTerminalVTypeSSN>,
+             CPS::SimPowerComp<CPS::Real>>(
+      mEMTPh3, "GenericFourTerminalVTypeSSN", py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters",
+           &CPS::EMT::Ph3::GenericFourTerminalVTypeSSN::setParameters, "A"_a,
+           "B"_a, "C"_a, "D"_a)
+      .def("connect", &CPS::EMT::Ph3::GenericFourTerminalVTypeSSN::connect)
+      .def_property_readonly("x", createAttributeGetter<CPS::Matrix>("x"));
 }

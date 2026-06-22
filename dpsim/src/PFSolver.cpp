@@ -340,6 +340,29 @@ void PFSolver::determineNodeBaseVoltages() {
     }
     mBaseVoltageAtNode[node] = baseVoltage_;
   }
+  UInt numMissing = 0;
+  UInt numZero = 0;
+
+  for (auto node : mSystem.mNodes) {
+
+    auto it = mBaseVoltageAtNode.find(node);
+
+    if (it == mBaseVoltageAtNode.end()) {
+      SPDLOG_LOGGER_WARN(mSLog, "No base voltage entry for {}", node->name());
+
+      numMissing++;
+      continue;
+    }
+
+    if (std::abs(it->second) < 1e-6) {
+      SPDLOG_LOGGER_WARN(mSLog, "Zero base voltage for {}", node->name());
+
+      numZero++;
+    }
+  }
+
+  SPDLOG_LOGGER_INFO(mSLog, "Base voltage summary: missing={}, zero={}",
+                     numMissing, numZero);
 }
 
 void PFSolver::setVDNode(CPS::String name) {
@@ -441,13 +464,19 @@ CPS::Bool PFSolver::checkConvergence() {
 }
 
 Bool PFSolver::solvePowerflow() {
+
+  // Reset values for new power flow run
+  isConverged = false;
+  mIterations = 0;
+  mX.setZero();
+  mF.setZero();
+
   // Calculate the mismatch according to the initial solution
   calculateMismatch();
 
   // Check whether model already converged
   isConverged = checkConvergence();
 
-  mIterations = 0;
   for (unsigned i = 1; i < mMaxIterations && !isConverged; ++i) {
 
     calculateJacobian();
@@ -476,7 +505,7 @@ Bool PFSolver::solvePowerflow() {
 
 void PFSolver::SolveTask::execute(Real time, Int timeStepCount) {
   // apply keepLastSolution to save computation time
-  mSolver.generateInitialSolution(time);
+  mSolver.generateInitialSolution(time, mSolver.mKeepLastSolution);
   mSolver.solvePowerflow();
   mSolver.setSolution();
 }

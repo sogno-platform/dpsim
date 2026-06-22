@@ -199,6 +199,10 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("set_system", &DPsim::Simulation::setSystem)
       .def("run", &DPsim::Simulation::run)
       .def("set_solver", &DPsim::Simulation::setSolverType)
+      .def("set_pf_keep_last_solution",
+           &DPsim::Simulation::setPFKeepLastSolution)
+      .def("get_pf_keep_last_solution",
+           &DPsim::Simulation::getPFKeepLastSolution)
       .def("set_domain", &DPsim::Simulation::setDomain)
       .def("start", &DPsim::Simulation::start)
       .def("next", &DPsim::Simulation::next)
