@@ -307,10 +307,10 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:acd5273ea346ed192a7d54d7226410d6f" id="r_acd5273ea346ed192a7d54d7226410d6f"><td class="memItemLeft" align="right" valign="top">std::map&lt; CPS::TopologicalNode::Ptr, CPS::Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acd5273ea346ed192a7d54d7226410d6f">mBaseVoltageAtNode</a></td></tr>
 <tr class="memdesc:acd5273ea346ed192a7d54d7226410d6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map providing determined base voltages for each node.  <br /></td></tr>
 <tr class="separator:acd5273ea346ed192a7d54d7226410d6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a392625f747c3f2298d68d75eff97dd1f" id="r_a392625f747c3f2298d68d75eff97dd1f"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a392625f747c3f2298d68d75eff97dd1f">mTolerance</a> = 1e-6</td></tr>
+<tr class="memitem:a392625f747c3f2298d68d75eff97dd1f" id="r_a392625f747c3f2298d68d75eff97dd1f"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a392625f747c3f2298d68d75eff97dd1f">mTolerance</a> = 1e-8</td></tr>
 <tr class="memdesc:a392625f747c3f2298d68d75eff97dd1f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA.">Solver</a> tolerance.  <br /></td></tr>
 <tr class="separator:a392625f747c3f2298d68d75eff97dd1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8004e2d65a7b509d202dcc0c894f3d71" id="r_a8004e2d65a7b509d202dcc0c894f3d71"><td class="memItemLeft" align="right" valign="top">CPS::UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8004e2d65a7b509d202dcc0c894f3d71">mMaxIterations</a> = 80</td></tr>
+<tr class="memitem:a8004e2d65a7b509d202dcc0c894f3d71" id="r_a8004e2d65a7b509d202dcc0c894f3d71"><td class="memItemLeft" align="right" valign="top">CPS::UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8004e2d65a7b509d202dcc0c894f3d71">mMaxIterations</a> = 20</td></tr>
 <tr class="memdesc:a8004e2d65a7b509d202dcc0c894f3d71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of iterations.  <br /></td></tr>
 <tr class="separator:a8004e2d65a7b509d202dcc0c894f3d71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab90685a20601320d4b54266fc6dd01e0" id="r_ab90685a20601320d4b54266fc6dd01e0"><td class="memItemLeft" align="right" valign="top">CPS::UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab90685a20601320d4b54266fc6dd01e0">mIterations</a></td></tr>
@@ -1425,7 +1425,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">CPS::UInt DPsim::PFSolver::mMaxIterations = 80</td>
+          <td class="memname">CPS::UInt DPsim::PFSolver::mMaxIterations = 20</td>
         </tr>
       </table>
   </td>
@@ -1789,7 +1789,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real DPsim::PFSolver::mTolerance = 1e-6</td>
+          <td class="memname">Real DPsim::PFSolver::mTolerance = 1e-8</td>
         </tr>
       </table>
   </td>
