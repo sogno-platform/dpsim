@@ -56,9 +56,11 @@
 #ifdef WITH_VILLAS
 #include <dpsim-models/DP/DP_Ph1_ProfileVoltageSource.h>
 #endif
+#include <dpsim-models/DP/DP_ITypeSSNComp.h>
 #include <dpsim-models/DP/DP_Ph1_ControlledCurrentSource.h>
 #include <dpsim-models/DP/DP_Ph1_ControlledVoltageSource.h>
 #include <dpsim-models/DP/DP_Ph1_RxLine.h>
+#include <dpsim-models/DP/DP_Ph1_SSN_Full_Serial_RLC.h>
 #include <dpsim-models/DP/DP_Ph1_SVC.h>
 #include <dpsim-models/DP/DP_Ph1_Switch.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator3OrderVBR.h>
@@ -72,10 +74,13 @@
 #include <dpsim-models/DP/DP_Ph1_SynchronGeneratorIdeal.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGeneratorTrStab.h>
 #include <dpsim-models/DP/DP_Ph1_Transformer.h>
+#include <dpsim-models/DP/DP_Ph1_TwoTerminalVTypeSSNComp.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSourceNorton.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSourceRamp.h>
 #include <dpsim-models/DP/DP_Ph1_varResSwitch.h>
+#include <dpsim-models/DP/DP_SSNComp.h>
+#include <dpsim-models/DP/DP_VTypeSSNComp.h>
 
 #include <dpsim-models/DP/DP_Ph3_Capacitor.h>
 #include <dpsim-models/DP/DP_Ph3_Inductor.h>

@@ -28,6 +28,8 @@
 /dpsim-models/include/dpsim-models/DP/DP_Ph1_SynchronGenerator6bOrderVBR.h @martinmoraga
 /dpsim-models/include/dpsim-models/DP/DP_Ph1_SynchronGeneratorTrStab.h @gnakti
 /dpsim-models/include/dpsim-models/DP/DP_Ph1_varResSwitch.h @gnakti
+/dpsim-models/include/dpsim-models/DP/DP_Ph1_TwoTerminalVTypeSSNComp.h @leonardocarreras
+/dpsim-models/include/dpsim-models/DP/DP_Ph1_SSN_Full_Serial_RLC.h @leonardocarreras
 /dpsim-models/include/dpsim-models/EMT/EMT_SSNComp.h @georgii-tishenin
 /dpsim-models/include/dpsim-models/EMT/EMT_VTypeSSNComp.h @georgii-tishenin
 /dpsim-models/include/dpsim-models/EMT/EMT_VTypeVariableSSNComp.h @georgii-tishenin
@@ -57,6 +59,8 @@
 /dpsim-models/src/DP/DP_Ph1_SynchronGenerator6bOrderVBR.cpp @martinmoraga
 /dpsim-models/src/DP/DP_Ph1_SynchronGeneratorTrStab.cpp @gnakti
 /dpsim-models/src/DP/DP_Ph1_varResSwitch.cpp @gnakti
+/dpsim-models/src/DP/DP_Ph1_TwoTerminalVTypeSSNComp.cpp @leonardocarreras
+/dpsim-models/src/DP/DP_Ph1_SSN_Full_Serial_RLC.cpp @leonardocarreras
 /dpsim-models/src/EMT/EMT_SSNComp.cpp @georgii-tishenin
 /dpsim-models/src/EMT/EMT_VTypeSSNComp.cpp @georgii-tishenin
 /dpsim-models/src/EMT/EMT_VTypeVariableSSNComp.cpp @georgii-tishenin
