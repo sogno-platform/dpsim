@@ -194,6 +194,30 @@ void addDPPh1Components(py::module_ mDPPh1) {
            "R"_a, "L"_a, "C"_a)
       .def("connect", &CPS::DP::Ph1::SSN::Full_Serial_RLC::connect);
 
+  py::class_<CPS::DP::Ph1::GenericTwoTerminalVTypeSSN,
+             std::shared_ptr<CPS::DP::Ph1::GenericTwoTerminalVTypeSSN>,
+             CPS::SimPowerComp<CPS::Complex>>(
+      mDPPh1, "GenericTwoTerminalVTypeSSN", py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters",
+           &CPS::DP::Ph1::GenericTwoTerminalVTypeSSN::setParameters, "A"_a,
+           "B"_a, "C"_a, "D"_a)
+      .def("connect", &CPS::DP::Ph1::GenericTwoTerminalVTypeSSN::connect)
+      .def_property_readonly("x", createAttributeGetter<CPS::MatrixComp>("x"));
+
+  py::class_<CPS::DP::Ph1::GenericTwoTerminalITypeSSN,
+             std::shared_ptr<CPS::DP::Ph1::GenericTwoTerminalITypeSSN>,
+             CPS::SimPowerComp<CPS::Complex>>(
+      mDPPh1, "GenericTwoTerminalITypeSSN", py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters",
+           &CPS::DP::Ph1::GenericTwoTerminalITypeSSN::setParameters, "A"_a,
+           "B"_a, "C"_a, "D"_a)
+      .def("connect", &CPS::DP::Ph1::GenericTwoTerminalITypeSSN::connect)
+      .def_property_readonly("x", createAttributeGetter<CPS::MatrixComp>("x"));
+
   py::class_<CPS::DP::Ph1::SynchronGeneratorTrStab,
              std::shared_ptr<CPS::DP::Ph1::SynchronGeneratorTrStab>,
              CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "SynchronGeneratorTrStab",
