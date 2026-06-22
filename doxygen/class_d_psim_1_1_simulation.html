@@ -186,6 +186,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0feef16bcbdce2ae41dc295ae90c7aab" id="r_a0feef16bcbdce2ae41dc295ae90c7aab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0feef16bcbdce2ae41dc295ae90c7aab">setSteadStIniAccLimit</a> (Real v)</td></tr>
 <tr class="memdesc:a0feef16bcbdce2ae41dc295ae90c7aab"><td class="mdescLeft">&#160;</td><td class="mdescRight">set steady state initialization accuracy limit  <br /></td></tr>
 <tr class="separator:a0feef16bcbdce2ae41dc295ae90c7aab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e7bcaf323f234d067c3bdd5ee7305bc" id="r_a4e7bcaf323f234d067c3bdd5ee7305bc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4e7bcaf323f234d067c3bdd5ee7305bc">setPFKeepLastSolution</a> (Bool value)</td></tr>
+<tr class="separator:a4e7bcaf323f234d067c3bdd5ee7305bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a994f5666e6dc73e0e3105c8b166d0703" id="r_a994f5666e6dc73e0e3105c8b166d0703"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a994f5666e6dc73e0e3105c8b166d0703">getPFKeepLastSolution</a> () const</td></tr>
+<tr class="separator:a994f5666e6dc73e0e3105c8b166d0703"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e7d1624005c861948f1a07e6986770e" id="r_a6e7d1624005c861948f1a07e6986770e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6e7d1624005c861948f1a07e6986770e">initialize</a> ()</td></tr>
 <tr class="memdesc:a6e7d1624005c861948f1a07e6986770e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create solver instances etc.  <br /></td></tr>
 <tr class="separator:a6e7d1624005c861948f1a07e6986770e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -284,6 +288,8 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a40be48cb7e32c3705830b046bd1cf859" id="r_a40be48cb7e32c3705830b046bd1cf859"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a40be48cb7e32c3705830b046bd1cf859">mTimeStep</a></td></tr>
 <tr class="memdesc:a40be48cb7e32c3705830b046bd1cf859"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_d_psim_1_1_simulation.html" title="The Simulation holds a SystemTopology and a Solver.">Simulation</a> timestep.  <br /></td></tr>
 <tr class="separator:a40be48cb7e32c3705830b046bd1cf859"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ff1be75ba8ae44c329274899d8a5652" id="r_a6ff1be75ba8ae44c329274899d8a5652"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; Bool &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6ff1be75ba8ae44c329274899d8a5652">mPFKeepLastSolution</a></td></tr>
+<tr class="separator:a6ff1be75ba8ae44c329274899d8a5652"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96f4295268cb99ee414c94c7e99cd659" id="r_a96f4295268cb99ee414c94c7e99cd659"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; Bool &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a96f4295268cb99ee414c94c7e99cd659">mSplitSubnets</a></td></tr>
 <tr class="separator:a96f4295268cb99ee414c94c7e99cd659"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e88baea9433f15e123d6a29fb45c0cf" id="r_a4e88baea9433f15e123d6a29fb45c0cf"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; Bool &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4e88baea9433f15e123d6a29fb45c0cf">mSteadyStateInit</a></td></tr>
@@ -443,7 +449,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Creates simulation with name and <a class="el" href="class_d_psim_1_1_command_line_args.html">CommandLineArgs</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00043">43</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00044">44</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
 
 </div>
 </div>
@@ -497,7 +503,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Desctructor. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00163">163</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00165">165</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -527,7 +533,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Schedule an event in the simulation. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00253">253</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00259">259</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -554,7 +560,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00267">267</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00273">273</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -583,7 +589,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Add a new data logger. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00255">255</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00261">261</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -604,7 +610,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Check for overruns. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00421">421</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00440">440</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
 
 </div>
 </div>
@@ -633,7 +639,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Helper function for constructors. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00055">55</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00057">57</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
 
 </div>
 </div>
@@ -664,7 +670,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Subroutine for MNA only because there are many MNA options. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00131">131</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00144">144</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
 
 </div>
 </div>
@@ -695,7 +701,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Create solvers depending on simulation settings. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00090">90</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00092">92</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
 
 </div>
 </div>
@@ -724,7 +730,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Compute phasors of different frequencies in parallel. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00213">213</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00215">215</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -751,7 +757,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00196">196</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00198">198</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -778,7 +784,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00200">200</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00202">202</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -807,7 +813,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Enable extraction of the MNA-coupled discrete-time state matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00219">219</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00221">221</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -836,7 +842,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>activate steady state initialization </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00228">228</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00230">230</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -863,7 +869,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00215">215</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00217">217</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -890,7 +896,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00280">280</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00286">286</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -915,7 +921,26 @@ template&lt;typename VarType&gt; </div>
 
 <p>CHECK: Can these be deleted? getIdObjAttribute + "**attr =" should suffice. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00461">461</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00480">480</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a994f5666e6dc73e0e3105c8b166d0703" name="a994f5666e6dc73e0e3105c8b166d0703"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a994f5666e6dc73e0e3105c8b166d0703">&#9670;&#160;</a></span>getPFKeepLastSolution()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Bool Simulation::getPFKeepLastSolution </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00329">329</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
 
 </div>
 </div>
@@ -936,7 +961,7 @@ template&lt;typename VarType&gt; </div>
 <p>Read-only access to the MNA state-space extractor of one solver.</p>
 <p>If the system is split into subnetworks, one MNA solver is created per subnet. The solverIndex selects the corresponding solver. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00443">443</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00462">462</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
 
 </div>
 </div>
@@ -957,7 +982,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Create solver instances etc. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00065">65</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00067">67</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
 
 </div>
 </div>
@@ -982,7 +1007,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>CHECK: Can we store the attribute name / UID intrinsically inside the attribute? </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00489">489</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00508">508</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
 
 </div>
 </div>
@@ -1009,7 +1034,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00283">283</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00289">289</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1032,7 +1057,7 @@ template&lt;typename VarType&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00483">483</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00502">502</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
 
 </div>
 </div>
@@ -1053,7 +1078,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Write LU decomposition times measurements to log file. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00436">436</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00455">455</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
 
 </div>
 </div>
@@ -1074,7 +1099,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Write step time measurements to log file. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00403">403</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00422">422</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
 
 </div>
 </div>
@@ -1101,7 +1126,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00278">278</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00284">284</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1122,7 +1147,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Run until next time step. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00364">364</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00383">383</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
 
 </div>
 </div>
@@ -1151,7 +1176,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Prepare schedule for simulation. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00196">196</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00209">209</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
 
 </div>
 </div>
@@ -1172,7 +1197,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Run simulation until total time is elapsed. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00373">373</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00392">392</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
 
 </div>
 </div>
@@ -1193,7 +1218,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Create the schedule for the independent tasks. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00221">221</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00234">234</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
 
 </div>
 </div>
@@ -1220,7 +1245,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00284">284</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00290">290</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1247,7 +1272,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00187">187</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00189">189</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1274,7 +1299,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00183">183</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00185">185</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1301,7 +1326,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00173">173</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00175">175</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1328,7 +1353,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00171">171</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00173">173</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1356,7 +1381,7 @@ template&lt;typename VarType&gt; </div>
 </div><div class="memdoc">
 <p>If logStepTimes is enabled, the time needed for every timesteps is logged and can be written to a file or the console using <a class="el" href="#a5e329000de74b24b9f24562c76932e93" title="Write step time measurements to log file.">logStepTimes()</a> </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00224">224</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00226">226</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1383,7 +1408,26 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00192">192</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00194">194</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+
+</div>
+</div>
+<a id="a4e7bcaf323f234d067c3bdd5ee7305bc" name="a4e7bcaf323f234d067c3bdd5ee7305bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e7bcaf323f234d067c3bdd5ee7305bc">&#9670;&#160;</a></span>setPFKeepLastSolution()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Simulation::setPFKeepLastSolution </td>
+          <td>(</td>
+          <td class="paramtype">Bool</td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00325">325</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
 
 </div>
 </div>
@@ -1412,7 +1456,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Set the scheduling method. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00209">209</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00211">211</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1441,7 +1485,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>set solver and component to initialization or simulation behaviour </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00179">179</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00181">181</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1468,7 +1512,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00175">175</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00177">177</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1497,7 +1541,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>set steady state initialization accuracy limit </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00232">232</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00234">234</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1526,7 +1570,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>set steady state initialization time limit </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00230">230</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00232">232</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1553,7 +1597,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00167">167</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00169">169</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1580,7 +1624,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00204">204</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00206">206</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1607,7 +1651,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00169">169</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00171">171</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1628,7 +1672,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Start simulation without advancing in time. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00312">312</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00331">331</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
 
 </div>
 </div>
@@ -1657,7 +1701,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Solve system A * x = z for x and current time. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00383">383</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00402">402</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
 
 </div>
 </div>
@@ -1684,7 +1728,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00285">285</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00291">291</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1705,7 +1749,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Stop simulation including scheduler and interfaces. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00344">344</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00363">363</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
 
 </div>
 </div>
@@ -1726,7 +1770,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Synchronize simulation with remotes by exchanging intial state over interfaces. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00184">184</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8cpp_source.html#l00197">197</a> of file <a class="el" href="_simulation_8cpp_source.html">Simulation.cpp</a>.</p>
 
 </div>
 </div>
@@ -1753,7 +1797,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00279">279</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00285">285</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1780,7 +1824,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00282">282</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00288">288</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1807,7 +1851,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00281">281</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00287">287</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1832,7 +1876,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00090">90</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00092">92</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1856,7 +1900,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00092">92</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00094">94</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1880,7 +1924,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00082">82</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00084">84</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1906,7 +1950,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>The simulation event queue. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00061">61</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00063">63</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1949,7 +1993,7 @@ template&lt;typename VarType&gt; </div>
 </div><div class="memdoc">
 <p>Determines if the system matrix is split into several smaller matrices, one for each frequency. This can only be done if the network is composed of linear components that do no create cross frequency coupling. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00108">108</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00110">110</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1973,7 +2017,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00094">94</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00096">96</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -1997,7 +2041,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00110">110</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00112">112</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2023,7 +2067,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Vector of Interfaces. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00127">127</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00129">129</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2041,7 +2085,7 @@ template&lt;typename VarType&gt; </div>
 
 <p><a class="el" href="class_d_psim_1_1_simulation.html" title="The Simulation holds a SystemTopology and a Solver.">Simulation</a> logger. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00153">153</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00155">155</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2067,7 +2111,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>The data loggers. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00137">137</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00139">139</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2093,7 +2137,7 @@ template&lt;typename VarType&gt; </div>
 
 <p><a class="el" href="class_d_psim_1_1_simulation.html" title="The Simulation holds a SystemTopology and a Solver.">Simulation</a> log level. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00074">74</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00076">76</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2119,7 +2163,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>activate collection of step times </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00078">78</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00080">80</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2144,7 +2188,7 @@ template&lt;typename VarType&gt; </div>
 </div><div class="memdoc">
 <h3>SynGen <a class="el" href="class_d_psim_1_1_interface.html">Interface</a></h3>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00149">149</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00151">151</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2163,6 +2207,22 @@ template&lt;typename VarType&gt; </div>
 <p><a class="el" href="class_d_psim_1_1_simulation.html" title="The Simulation holds a SystemTopology and a Solver.">Simulation</a> name. </p>
 
 <p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00036">36</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+
+</div>
+</div>
+<a id="a6ff1be75ba8ae44c329274899d8a5652" name="a6ff1be75ba8ae44c329274899d8a5652"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ff1be75ba8ae44c329274899d8a5652">&#9670;&#160;</a></span>mPFKeepLastSolution</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt;Bool&gt;::Ptr DPsim::Simulation::mPFKeepLastSolution</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00044">44</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2188,7 +2248,7 @@ template&lt;typename VarType&gt; </div>
 
 <p><a class="el" href="class_d_psim_1_1_scheduler.html">Scheduler</a> used for task scheduling. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00120">120</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00122">122</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2214,7 +2274,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Measured calculation time for simulation. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00070">70</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00072">72</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2240,7 +2300,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>End time point to measure calculation time. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00068">68</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00070">70</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2266,7 +2326,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Start time point to measure calculation time. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00066">66</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00068">68</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2290,7 +2350,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00086">86</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00088">88</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2332,7 +2392,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00088">88</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00090">90</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2356,7 +2416,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00084">84</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00086">86</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2373,7 +2433,7 @@ template&lt;typename VarType&gt; </div>
 </div><div class="memdoc">
 <p>Determines if the network should be split into subnetworks at decoupling lines. If the system is split, each subsystem is solved by a dedicated MNA solver. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00048">48</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00050">50</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2399,7 +2459,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Enable extraction of the MNA-coupled discrete-time state matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00098">98</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00100">100</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2425,7 +2485,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>steady state initialization accuracy limit </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00116">116</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00118">118</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2451,7 +2511,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>steady state initialization time limit </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00114">114</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00116">116</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2468,7 +2528,7 @@ template&lt;typename VarType&gt; </div>
 </div><div class="memdoc">
 <p>Determines if steady-state initialization should be executed prior to the simulation. By default the initialization is disabled. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00053">53</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00055">55</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2494,7 +2554,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>(Real) time needed for the timesteps </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00076">76</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00078">78</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2520,7 +2580,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>System list. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00063">63</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00065">65</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2546,7 +2606,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Enable recomputation of system matrix during simulation. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00096">96</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00098">98</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2572,7 +2632,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Task dependencies as incoming / outgoing edges. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00124">124</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00126">126</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2596,7 +2656,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00124">124</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00126">126</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2622,7 +2682,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>List of all tasks to be scheduled. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00122">122</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00124">124</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2647,7 +2707,7 @@ template&lt;typename VarType&gt; </div>
 </div><div class="memdoc">
 <p>If tearing components exist, the Diakoptics solver is selected automatically. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00102">102</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00104">104</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2673,7 +2733,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Time variable that is incremented at every step. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00057">57</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00059">59</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>
@@ -2717,7 +2777,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Number of step which have been executed for this simulation. </p>
 
-<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00059">59</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_simulation_8h_source.html#l00061">61</a> of file <a class="el" href="_simulation_8h_source.html">Simulation.h</a>.</p>
 
 </div>
 </div>

@@ -1,7 +1,7 @@
 var searchData=
 [
   ['g_0',['G',['../class_d_psim_1_1_p_f_solver.html#af9a352f3fc0553839375f39ec45194f4',1,'DPsim::PFSolver']]],
-  ['generateinitialsolution_1',['generateInitialSolution',['../class_d_psim_1_1_p_f_solver.html#ae1861098db7c0eb9ff96385c1b0c16a8',1,'DPsim::PFSolver::generateInitialSolution()'],['../class_d_psim_1_1_p_f_solver_power_polar.html#a2b0f4520d28e083a77f44d420c2ce1ad',1,'DPsim::PFSolverPowerPolar::generateInitialSolution()']]],
+  ['generateinitialsolution_1',['generateInitialSolution',['../class_d_psim_1_1_p_f_solver.html#ae1861098db7c0eb9ff96385c1b0c16a8',1,'DPsim::PFSolver::generateInitialSolution()'],['../class_d_psim_1_1_p_f_solver_power_polar.html#aa5aec69b6d9d35c6bbb7056fb406ba6b',1,'DPsim::PFSolverPowerPolar::generateInitialSolution()']]],
   ['get_2',['get',['../class_c_p_s_1_1_attribute.html#a98da5df203d168850e101521ea6c3147',1,'CPS::Attribute::get()'],['../class_c_p_s_1_1_attribute_static.html#afb45fd1fef503e937889728179be9234',1,'CPS::AttributeStatic::get()'],['../class_c_p_s_1_1_attribute_dynamic.html#aecfa0a8e0fd67a4e7528375fe82f0e43',1,'CPS::AttributeDynamic::get()']]],
   ['get_5finverseparktransformmatrix_3',['get_inverseParkTransformMatrix',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_reduced_order_synchron_generator_v_b_r.html#a05e6bd44b16147250b2b757ad2fe72e5',1,'CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR']]],
   ['get_5fparktransformmatrix_4',['get_parkTransformMatrix',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_reduced_order_synchron_generator_v_b_r.html#afa04e64f7eb96711ac179b5663a9989f',1,'CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR']]],

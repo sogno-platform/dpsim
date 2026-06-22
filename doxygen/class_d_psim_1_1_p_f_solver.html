@@ -132,6 +132,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acd0834f9a232d7d9aebda905d379c0a2" id="r_acd0834f9a232d7d9aebda905d379c0a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acd0834f9a232d7d9aebda905d379c0a2">setSolverAndComponentBehaviour</a> (Solver::Behaviour behaviour) override</td></tr>
 <tr class="memdesc:acd0834f9a232d7d9aebda905d379c0a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">set solver and component to initialization or simulation behaviour  <br /></td></tr>
 <tr class="separator:acd0834f9a232d7d9aebda905d379c0a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af36f7edebd9a6727acac2d02cc81b9d6" id="r_af36f7edebd9a6727acac2d02cc81b9d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af36f7edebd9a6727acac2d02cc81b9d6">setKeepLastSolution</a> (CPS::Bool keepLastSolution)</td></tr>
+<tr class="separator:af36f7edebd9a6727acac2d02cc81b9d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a721f540678a262722d12114618860789" id="r_a721f540678a262722d12114618860789"><td class="memItemLeft" align="right" valign="top">CPS::Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a721f540678a262722d12114618860789">getKeepLastSolution</a> () const</td></tr>
+<tr class="separator:a721f540678a262722d12114618860789"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_d_psim_1_1_solver"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_d_psim_1_1_solver')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td></tr>
 <tr class="memitem:a43f3a5b98bf07a364645fa5f8193a5e7 inherit pub_methods_class_d_psim_1_1_solver" id="r_a43f3a5b98bf07a364645fa5f8193a5e7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a43f3a5b98bf07a364645fa5f8193a5e7">Solver</a> (String name, CPS::Logger::Level logLevel)</td></tr>
 <tr class="separator:a43f3a5b98bf07a364645fa5f8193a5e7 inherit pub_methods_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -303,10 +307,10 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:acd5273ea346ed192a7d54d7226410d6f" id="r_acd5273ea346ed192a7d54d7226410d6f"><td class="memItemLeft" align="right" valign="top">std::map&lt; CPS::TopologicalNode::Ptr, CPS::Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acd5273ea346ed192a7d54d7226410d6f">mBaseVoltageAtNode</a></td></tr>
 <tr class="memdesc:acd5273ea346ed192a7d54d7226410d6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map providing determined base voltages for each node.  <br /></td></tr>
 <tr class="separator:acd5273ea346ed192a7d54d7226410d6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a392625f747c3f2298d68d75eff97dd1f" id="r_a392625f747c3f2298d68d75eff97dd1f"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a392625f747c3f2298d68d75eff97dd1f">mTolerance</a> = 1e-8</td></tr>
+<tr class="memitem:a392625f747c3f2298d68d75eff97dd1f" id="r_a392625f747c3f2298d68d75eff97dd1f"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a392625f747c3f2298d68d75eff97dd1f">mTolerance</a> = 1e-6</td></tr>
 <tr class="memdesc:a392625f747c3f2298d68d75eff97dd1f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA.">Solver</a> tolerance.  <br /></td></tr>
 <tr class="separator:a392625f747c3f2298d68d75eff97dd1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8004e2d65a7b509d202dcc0c894f3d71" id="r_a8004e2d65a7b509d202dcc0c894f3d71"><td class="memItemLeft" align="right" valign="top">CPS::UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8004e2d65a7b509d202dcc0c894f3d71">mMaxIterations</a> = 9</td></tr>
+<tr class="memitem:a8004e2d65a7b509d202dcc0c894f3d71" id="r_a8004e2d65a7b509d202dcc0c894f3d71"><td class="memItemLeft" align="right" valign="top">CPS::UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8004e2d65a7b509d202dcc0c894f3d71">mMaxIterations</a> = 80</td></tr>
 <tr class="memdesc:a8004e2d65a7b509d202dcc0c894f3d71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of iterations.  <br /></td></tr>
 <tr class="separator:a8004e2d65a7b509d202dcc0c894f3d71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab90685a20601320d4b54266fc6dd01e0" id="r_ab90685a20601320d4b54266fc6dd01e0"><td class="memItemLeft" align="right" valign="top">CPS::UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab90685a20601320d4b54266fc6dd01e0">mIterations</a></td></tr>
@@ -324,6 +328,9 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a9a453fe8dd3f8226ef4f80b2af6b0120" id="r_a9a453fe8dd3f8226ef4f80b2af6b0120"><td class="memItemLeft" align="right" valign="top">CPS::Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9a453fe8dd3f8226ef4f80b2af6b0120">solutionComplexInitialized</a> = false</td></tr>
 <tr class="memdesc:a9a453fe8dd3f8226ef4f80b2af6b0120"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag whether complex solution vectors are initialized.  <br /></td></tr>
 <tr class="separator:a9a453fe8dd3f8226ef4f80b2af6b0120"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16ab82c0bdc7d872276da28ae4ad081b" id="r_a16ab82c0bdc7d872276da28ae4ad081b"><td class="memItemLeft" align="right" valign="top">CPS::Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a16ab82c0bdc7d872276da28ae4ad081b">mKeepLastSolution</a> = false</td></tr>
+<tr class="memdesc:a16ab82c0bdc7d872276da28ae4ad081b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use last converged solution as initial guess.  <br /></td></tr>
+<tr class="separator:a16ab82c0bdc7d872276da28ae4ad081b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_d_psim_1_1_solver"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_d_psim_1_1_solver')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td></tr>
 <tr class="memitem:a0be0551d1bafd32da01b1edf46006a22 inherit pro_attribs_class_d_psim_1_1_solver" id="r_a0be0551d1bafd32da01b1edf46006a22"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a0be0551d1bafd32da01b1edf46006a22">mName</a></td></tr>
 <tr class="memdesc:a0be0551d1bafd32da01b1edf46006a22 inherit pro_attribs_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Name for logging.  <br /></td></tr>
@@ -447,7 +454,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00145">145</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00148">148</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -510,7 +517,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Gets the imaginary part of admittance matrix element. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00432">432</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00455">455</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -539,7 +546,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Calculate the Jacobian. </p>
 
-<p>Implemented in <a class="el" href="class_d_psim_1_1_p_f_solver_power_polar.html#a72e79054b0389cd6830cd09b8b48bd5e">DPsim::PFSolverPowerPolar</a>.</p>
+<p>Implemented in <a class="el" href="class_d_psim_1_1_p_f_solver_power_polar.html#ac33f2122b939c3f759985e4012cf3473">DPsim::PFSolverPowerPolar</a>.</p>
 
 </div>
 </div>
@@ -568,7 +575,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Calculate mismatch. </p>
 
-<p>Implemented in <a class="el" href="class_d_psim_1_1_p_f_solver_power_polar.html#ac1d79e68c3686b2688789883220ff1f8">DPsim::PFSolverPowerPolar</a>.</p>
+<p>Implemented in <a class="el" href="class_d_psim_1_1_p_f_solver_power_polar.html#a913effdf7c949d032e81a453653b2021">DPsim::PFSolverPowerPolar</a>.</p>
 
 </div>
 </div>
@@ -597,7 +604,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Check whether below tolerance. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00434">434</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00457">457</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -626,7 +633,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Compose admittance matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00405">405</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00428">428</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -717,7 +724,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Gets the real part of admittance matrix element. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00430">430</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00453">453</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -750,7 +757,34 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Generate initial solution for current time step. </p>
 
-<p>Implemented in <a class="el" href="class_d_psim_1_1_p_f_solver_power_polar.html#a2b0f4520d28e083a77f44d420c2ce1ad">DPsim::PFSolverPowerPolar</a>.</p>
+<p>Implemented in <a class="el" href="class_d_psim_1_1_p_f_solver_power_polar.html#aa5aec69b6d9d35c6bbb7056fb406ba6b">DPsim::PFSolverPowerPolar</a>.</p>
+
+</div>
+</div>
+<a id="a721f540678a262722d12114618860789" name="a721f540678a262722d12114618860789"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a721f540678a262722d12114618860789">&#9670;&#160;</a></span>getKeepLastSolution()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">CPS::Bool DPsim::PFSolver::getKeepLastSolution </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00162">162</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -781,7 +815,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_d_psim_1_1_solver.html#ae02c8cdd80fd1eb66d6cf19035167bca">DPsim::Solver</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00484">484</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00513">513</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -870,7 +904,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Logging for integer vectors. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00131">131</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00134">134</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -895,7 +929,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Allows to modify the powerflow bus type of a specific component. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00362">362</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00385">385</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -928,6 +962,33 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="af36f7edebd9a6727acac2d02cc81b9d6" name="af36f7edebd9a6727acac2d02cc81b9d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af36f7edebd9a6727acac2d02cc81b9d6">&#9670;&#160;</a></span>setKeepLastSolution()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DPsim::PFSolver::setKeepLastSolution </td>
+          <td>(</td>
+          <td class="paramtype">CPS::Bool</td>          <td class="paramname"><span class="paramname"><em>keepLastSolution</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00158">158</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+
+</div>
+</div>
 <a id="ad08a34ee8235a0dc9c7ba766eb4d7733" name="ad08a34ee8235a0dc9c7ba766eb4d7733"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad08a34ee8235a0dc9c7ba766eb4d7733">&#9670;&#160;</a></span>setSolution()</h2>
 
@@ -953,7 +1014,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Set final solution. </p>
 
-<p>Implemented in <a class="el" href="class_d_psim_1_1_p_f_solver_power_polar.html#a1daf2530a2d21beebad807e40c9d1b4e">DPsim::PFSolverPowerPolar</a>.</p>
+<p>Implemented in <a class="el" href="class_d_psim_1_1_p_f_solver_power_polar.html#afefad2f606c3bc0728174d5318341026">DPsim::PFSolverPowerPolar</a>.</p>
 
 </div>
 </div>
@@ -984,7 +1045,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_d_psim_1_1_solver.html#a9acdaabc5d46b35299fd5af1d893b840">DPsim::Solver</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00377">377</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00400">400</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -1005,7 +1066,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Set a node to VD using its name. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00345">345</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00368">368</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -1034,7 +1095,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Solves the powerflow problem. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00443">443</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00466">466</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -1063,7 +1124,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Update solution in each iteration. </p>
 
-<p>Implemented in <a class="el" href="class_d_psim_1_1_p_f_solver_power_polar.html#a4a8708055d6971eeb1cde6e7c1d7f64e">DPsim::PFSolverPowerPolar</a>.</p>
+<p>Implemented in <a class="el" href="class_d_psim_1_1_p_f_solver_power_polar.html#ac443d87ef708bccf073326dff7b0b4e6">DPsim::PFSolverPowerPolar</a>.</p>
 
 </div>
 </div>
@@ -1276,6 +1337,32 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a16ab82c0bdc7d872276da28ae4ad081b" name="a16ab82c0bdc7d872276da28ae4ad081b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16ab82c0bdc7d872276da28ae4ad081b">&#9670;&#160;</a></span>mKeepLastSolution</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">CPS::Bool DPsim::PFSolver::mKeepLastSolution = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Use last converged solution as initial guess. </p>
+
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00096">96</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+
+</div>
+</div>
 <a id="a472a43d426b6c7a5ec8d08a665a98493" name="a472a43d426b6c7a5ec8d08a665a98493"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a472a43d426b6c7a5ec8d08a665a98493">&#9670;&#160;</a></span>mLines</h2>
 
@@ -1338,7 +1425,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">CPS::UInt DPsim::PFSolver::mMaxIterations = 9</td>
+          <td class="memname">CPS::UInt DPsim::PFSolver::mMaxIterations = 80</td>
         </tr>
       </table>
   </td>
@@ -1702,7 +1789,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real DPsim::PFSolver::mTolerance = 1e-8</td>
+          <td class="memname">Real DPsim::PFSolver::mTolerance = 1e-6</td>
         </tr>
       </table>
   </td>

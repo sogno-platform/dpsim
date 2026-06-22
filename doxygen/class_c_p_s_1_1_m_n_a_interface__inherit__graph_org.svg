@@ -55,38 +55,38 @@
 </a>
 </g>
 </g>
-<!-- Node132 -->
-<g id="Node000132" class="node">
-<title>Node132</title>
-<g id="a_Node000132"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html" target="_top" xlink:title=" ">
+<!-- Node134 -->
+<g id="Node000134" class="node">
+<title>Node134</title>
+<g id="a_Node000134"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="336,-914.25 143,-914.25 143,-892 336,-892 336,-914.25"/>
 <text text-anchor="middle" x="239.5" y="-900.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph3::SynchronGeneratorVBR</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node132 -->
-<g id="edge47_Node000001_Node000132" class="edge">
-<title>Node1&#45;&gt;Node132</title>
-<g id="a_edge47_Node000001_Node000132"><a xlink:title=" ">
+<!-- Node1&#45;&gt;Node134 -->
+<g id="edge47_Node000001_Node000134" class="edge">
+<title>Node1&#45;&gt;Node134</title>
+<g id="a_edge47_Node000001_Node000134"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M117.57,-918.2C126.59,-917.08 136.03,-915.9 145.48,-914.72"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="117.37,-914.7 107.88,-919.41 118.23,-921.64 117.37,-914.7"/>
 </a>
 </g>
 </g>
-<!-- Node133 -->
-<g id="Node000133" class="node">
-<title>Node133</title>
-<g id="a_Node000133"><a xlink:href="class_c_p_s_1_1_m_n_a_sim_power_comp.html" target="_top" xlink:title="Base class for all MNA components that are transmitting power.">
+<!-- Node135 -->
+<g id="Node000135" class="node">
+<title>Node135</title>
+<g id="a_Node000135"><a xlink:href="class_c_p_s_1_1_m_n_a_sim_power_comp.html" target="_top" xlink:title="Base class for all MNA components that are transmitting power.">
 <polygon fill="#fff0f0" stroke="red" points="307.5,-968.38 171.5,-968.38 171.5,-931.88 307.5,-931.88 307.5,-968.38"/>
 <text text-anchor="start" x="179.5" y="-954.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::MNASimPowerComp</text>
 <text text-anchor="middle" x="239.5" y="-940.62" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; VarType &gt;</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node133 -->
-<g id="edge48_Node000001_Node000133" class="edge">
-<title>Node1&#45;&gt;Node133</title>
-<g id="a_edge48_Node000001_Node000133"><a xlink:title=" ">
+<!-- Node1&#45;&gt;Node135 -->
+<g id="edge48_Node000001_Node000135" class="edge">
+<title>Node1&#45;&gt;Node135</title>
+<g id="a_edge48_Node000001_Node000135"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M117.51,-934.39C134.81,-936.64 153.62,-939.08 171.14,-941.36"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="118.25,-930.95 107.88,-933.13 117.34,-937.89 118.25,-930.95"/>
 </a>
@@ -892,20 +892,20 @@
 </a>
 </g>
 </g>
-<!-- Node133&#45;&gt;Node2 -->
-<g id="edge49_Node000133_Node000002" class="edge">
-<title>Node133&#45;&gt;Node2</title>
-<g id="a_edge49_Node000133_Node000002"><a xlink:title=" ">
+<!-- Node135&#45;&gt;Node2 -->
+<g id="edge49_Node000135_Node000002" class="edge">
+<title>Node135&#45;&gt;Node2</title>
+<g id="a_edge49_Node000135_Node000002"><a xlink:title=" ">
 <path fill="none" stroke="orange" stroke-dasharray="5,2" d="M319.02,-953.35C350.94,-958.21 386.38,-968.54 412.5,-989.88 466.45,-1033.94 487.62,-1119.71 494.57,-1157.49"/>
 <polygon fill="orange" stroke="orange" points="319.77,-949.92 309.4,-952.06 318.84,-956.86 319.77,-949.92"/>
 </a>
 </g>
 <text text-anchor="middle" x="383.25" y="-994.62" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &lt; Complex &gt;</text>
 </g>
-<!-- Node133&#45;&gt;Node72 -->
-<g id="edge50_Node000133_Node000072" class="edge">
-<title>Node133&#45;&gt;Node72</title>
-<g id="a_edge50_Node000133_Node000072"><a xlink:title=" ">
+<!-- Node135&#45;&gt;Node72 -->
+<g id="edge50_Node000135_Node000072" class="edge">
+<title>Node135&#45;&gt;Node72</title>
+<g id="a_edge50_Node000135_Node000072"><a xlink:title=" ">
 <path fill="none" stroke="orange" stroke-dasharray="5,2" d="M317.65,-935.74C324.36,-932.37 330.62,-928.22 336,-923.12 424.12,-839.61 482.73,-437.32 495.07,-345.72"/>
 <polygon fill="orange" stroke="orange" points="316.72,-932.33 308.96,-939.54 319.52,-938.74 316.72,-932.33"/>
 </a>
