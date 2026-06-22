@@ -184,6 +184,16 @@ void addDPPh1Components(py::module_ mDPPh1) {
            &CPS::DP::Ph1::varResSwitch::setInitParameters, "time_step"_a)
       .def("connect", &CPS::DP::Ph1::varResSwitch::connect);
 
+  py::class_<CPS::DP::Ph1::SSN::Full_Serial_RLC,
+             std::shared_ptr<CPS::DP::Ph1::SSN::Full_Serial_RLC>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "Full_Serial_RLC",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::DP::Ph1::SSN::Full_Serial_RLC::setParameters,
+           "R"_a, "L"_a, "C"_a)
+      .def("connect", &CPS::DP::Ph1::SSN::Full_Serial_RLC::connect);
+
   py::class_<CPS::DP::Ph1::SynchronGeneratorTrStab,
              std::shared_ptr<CPS::DP::Ph1::SynchronGeneratorTrStab>,
              CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "SynchronGeneratorTrStab",
