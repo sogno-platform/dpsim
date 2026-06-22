@@ -607,11 +607,19 @@ class Reader:
         gen_data = self.mpc_gen_data.loc[
             self.mpc_gen_data["bus"] == self.mpc_bus_data.at[index, "bus_i"]
         ]
-        gen_baseS = gen_data["mBase"] * mw_w  # gen base MVA default is mpc.baseMVA
+        gen_baseS = (
+            gen_data["mBase"].values[0] * mw_w
+        )  # gen base MVA default is mpc.baseMVA
         gen_baseV = self.mpc_bus_data.at[index, "baseKV"] * kv_v  # gen base kV
-        gen_v = gen_data["Vg"] * gen_baseV  # gen set point voltage (gen['Vg'] in p.u.)
-        gen_p = gen_data["Pg"] * mw_w  # gen ini. active power (gen['Pg'] in MVA)
-        gen_q = gen_data["Qg"] * mw_w  # gen ini. reactive power (gen['Qg'] in MVAr)
+        gen_v = (
+            gen_data["Vg"].values[0] * gen_baseV
+        )  # gen set point voltage (gen['Vg'] in p.u.)
+        gen_p = (
+            gen_data["Pg"].values[0] * mw_w
+        )  # gen ini. active power (gen['Pg'] in MVA)
+        gen_q = (
+            gen_data["Qg"].values[0] * mw_w
+        )  # gen ini. reactive power (gen['Qg'] in MVAr)
 
         gen = None
         if self.domain == Domain.PF:
@@ -923,7 +931,7 @@ class Reader:
             self.mpc_gen_data["bus"] == self.mpc_bus_data.at[index, "bus_i"]
         ]
         extnet_baseV = self.mpc_bus_data.at[index, "baseKV"] * kv_v
-        extnet_v = extnet["Vg"] * extnet_baseV
+        extnet_v = extnet["Vg"].values[0] * extnet_baseV
         if self.domain == Domain.EMT:
             extnet_v = dpsimpy.Math.single_phase_variable_to_three_phase(extnet_v)
 
