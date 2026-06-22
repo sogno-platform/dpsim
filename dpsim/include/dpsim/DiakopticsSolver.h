@@ -11,9 +11,12 @@
 #include <dpsim-models/AttributeList.h>
 #include <dpsim-models/SimSignalComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
+#include <dpsim-models/Solver/MNAVariableCompInterface.h>
 #include <dpsim/DataLogger.h>
+#include <dpsim/DirectLinearSolver.h>
 #include <dpsim/Solver.h>
 
+#include <atomic>
 #include <unordered_map>
 
 namespace DPsim {
@@ -35,15 +38,23 @@ private:
     UInt mVirtualNodeNum;
     /// Offset of block in system matrix
     UInt sysOff;
-    /// Factorization of the subnet's block
-    CPS::LUFactorized luFactorization;
+    /// Sparse direct linear solver (KLU) for the subnet's block
+    std::shared_ptr<DirectLinearSolver> directLinearSolver;
+    /// Subnet system matrix holding the current variable-element values
+    SparseMatrix systemMatrix;
+    /// Index pairs of varying matrix entries within this subnet
+    std::vector<std::pair<UInt, UInt>> listVariableEntries;
+    /// Tear-topology columns coupled to this subnet (restrict Schur recompute)
+    std::vector<UInt> tearColumns;
     /// List of all right side vector contributions
     std::vector<const Matrix *> rightVectorStamps;
     /// Left-side vector of the subnet AFTER complete step
     CPS::Attribute<Matrix>::Ptr leftVector;
+    // #### MNA specific attributes related to system recomputation
+    /// List of components that indicate system matrix recomputation
+    CPS::MNAVariableCompInterface::List mVariableComps;
   };
 
-  ///
   Real mSystemFrequency;
   /// System list
   CPS::SystemTopology mSystem;
@@ -63,15 +74,19 @@ private:
   Matrix mLeftSideVector;
   /// Complete matrix in block form
   Matrix mSystemMatrix;
-  /// Inverse of the complete system matrix (only used for initialization)
-  Matrix mSystemInverse;
+  /// Y_block^-1 * C (block-diagonal solve of the tear topology)
+  Matrix mSystemInverseTearTopology;
   /// Topology of the network removal
   Matrix mTearTopology;
   /// Impedance of the removed network
   CPS::SparseMatrixRow mTearImpedance;
-  /// (Factorization of the) impedance matrix for the removed network, including
-  /// the influence of other subnets
+  /// LU factorization of the tear-impedance Schur complement
   CPS::LUFactorized mTotalTearImpedance;
+  /// Tear-impedance Schur complement Z_tear + C^T * Y_block^-1 * C (un-factorized)
+  Matrix mTearSchur;
+  /// Set by a subnet recompute to request a Schur/LU rebuild in PreSolveTask.
+  /// Written concurrently by parallel SubnetSolveTasks, so it must be atomic.
+  std::atomic<bool> mTearSchurNeedsRebuild{false};
   /// Currents through the removed network
   Matrix mTearCurrents;
   /// Voltages across the removed network
@@ -125,6 +140,9 @@ public:
     }
 
     void execute(Real time, Int timeStepCount);
+    void recomputeSubnetMatrix(Real time);
+    /// Check whether status of variable MNA elements has changed
+    Bool hasVariableComponentChanged();
 
   private:
     DiakopticsSolver<VarType> &mSolver;
