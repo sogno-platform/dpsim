@@ -13,6 +13,7 @@
 #include <dpsim-models/MathUtils.h>
 #include <dpsim-models/Solver/MNATearInterface.h>
 #include <dpsim/Definitions.h>
+#include <dpsim/KLUAdapter.h>
 
 using namespace CPS;
 using namespace DPsim;
@@ -80,6 +81,11 @@ void DiakopticsSolver<VarType>::initSubnets(
       auto sigComp = std::dynamic_pointer_cast<CPS::SimSignalComp>(comp);
       if (sigComp)
         mSimSignalComps.push_back(sigComp);
+
+      auto mnaVarComp =
+          std::dynamic_pointer_cast<CPS::MNAVariableCompInterface>(comp);
+      if (mnaVarComp)
+        mSubnets[i].mVariableComps.push_back(mnaVarComp);
     }
   }
 
@@ -217,7 +223,6 @@ template <> void DiakopticsSolver<Complex>::setLogColumns() {
 template <typename VarType> void DiakopticsSolver<VarType>::createMatrices() {
   UInt totalSize = mSubnets.back().sysOff + mSubnets.back().sysSize;
   mSystemMatrix = Matrix::Zero(totalSize, totalSize);
-  mSystemInverse = Matrix::Zero(totalSize, totalSize);
 
   mRightSideVector = Matrix::Zero(totalSize, 1);
   mLeftSideVector = Matrix::Zero(totalSize, 1);
@@ -294,22 +299,24 @@ template <typename VarType> void DiakopticsSolver<VarType>::initComponents() {
 
 template <typename VarType> void DiakopticsSolver<VarType>::initMatrices() {
   for (auto &net : mSubnets) {
-    // We can't directly pass the block reference to mnaApplySystemMatrixStamp,
-    // because it expects a concrete Matrix. It can't be changed to accept some common
-    // base class like DenseBase because that would make it a template function (as
-    // Eigen uses CRTP for polymorphism), which is impossible for virtual functions.
-    CPS::SparseMatrixRow partSys =
-        CPS::SparseMatrixRow(net.sysSize, net.sysSize);
+    // mnaApplySystemMatrixStamp needs a concrete Matrix, not a block reference
+    // (it is virtual, so it cannot be templated to accept a block expression).
+    net.systemMatrix = SparseMatrix(net.sysSize, net.sysSize);
     for (auto comp : net.components) {
-      comp->mnaApplySystemMatrixStamp(partSys);
+      comp->mnaApplySystemMatrixStamp(net.systemMatrix);
     }
     auto block =
         mSystemMatrix.block(net.sysOff, net.sysOff, net.sysSize, net.sysSize);
-    block = partSys;
+    block = net.systemMatrix;
     SPDLOG_LOGGER_INFO(mSLog, "Block: \n{}", block);
-    net.luFactorization = Eigen::PartialPivLU<Matrix>(partSys);
-    SPDLOG_LOGGER_INFO(mSLog, "Factorization: \n{}",
-                       net.luFactorization.matrixLU());
+    net.listVariableEntries.clear();
+    for (auto varElem : net.mVariableComps)
+      for (auto varEntry : varElem->mVariableSystemMatrixEntries)
+        net.listVariableEntries.push_back(varEntry);
+    net.directLinearSolver = std::make_shared<KLUAdapter>(mSLog);
+    net.directLinearSolver->preprocessing(net.systemMatrix,
+                                          net.listVariableEntries);
+    net.directLinearSolver->factorize(net.systemMatrix);
   }
   SPDLOG_LOGGER_INFO(mSLog, "Complete system matrix: \n{}", mSystemMatrix);
 
@@ -320,13 +327,25 @@ template <typename VarType> void DiakopticsSolver<VarType>::initMatrices() {
   SPDLOG_LOGGER_INFO(mSLog, "Topology matrix: \n{}", mTearTopology);
   SPDLOG_LOGGER_INFO(mSLog, "Removed impedance matrix: \n{}", mTearImpedance);
   // TODO this can be sped up as well by using the block diagonal form of Yinv
+  mSystemInverseTearTopology =
+      Matrix::Zero(mTearTopology.rows(), mTearTopology.cols());
   for (auto &net : mSubnets) {
-    mSystemInverse.block(net.sysOff, net.sysOff, net.sysSize, net.sysSize) =
-        net.luFactorization.inverse();
+    Matrix tearTopoBlock =
+        mTearTopology.block(net.sysOff, 0, net.sysSize, mTearTopology.cols());
+    mSystemInverseTearTopology.block(net.sysOff, 0, net.sysSize,
+                                     mTearTopology.cols()) =
+        net.directLinearSolver->solve(tearTopoBlock);
+
+    // Cache tear columns coupled to this subnet (used by recomputeSubnetMatrix)
+    net.tearColumns.clear();
+    for (UInt col = 0; col < static_cast<UInt>(mTearTopology.cols()); ++col) {
+      if (!tearTopoBlock.col(col).isZero())
+        net.tearColumns.push_back(col);
+    }
   }
-  mTotalTearImpedance = Eigen::PartialPivLU<Matrix>(
-      mTearImpedance +
-      mTearTopology.transpose() * mSystemInverse * mTearTopology);
+  mTearSchur =
+      mTearImpedance + mTearTopology.transpose() * mSystemInverseTearTopology;
+  mTotalTearImpedance = Eigen::PartialPivLU<Matrix>(mTearSchur);
   SPDLOG_LOGGER_INFO(mSLog,
                      "Total removed impedance matrix LU decomposition: \n{}",
                      mTotalTearImpedance.matrixLU());
@@ -510,6 +529,54 @@ template <typename VarType> Task::List DiakopticsSolver<VarType>::getTasks() {
 }
 
 template <typename VarType>
+void DiakopticsSolver<VarType>::SubnetSolveTask::recomputeSubnetMatrix(
+    Real time) {
+
+  mSubnet.systemMatrix.setZero();
+  for (auto comp : mSubnet.components) {
+    comp->mnaApplySystemMatrixStamp(mSubnet.systemMatrix);
+  }
+  mSubnet.directLinearSolver->partialRefactorize(mSubnet.systemMatrix,
+                                                 mSubnet.listVariableEntries);
+
+  // A change in this subnet only affects its own tear columns: re-solve and
+  // update this subnet's block of Y^-1 C. The shared Schur complement
+  // and its factorization are rebuilt once in PreSolveTask after all
+  // subnet solves
+  const auto &cols = mSubnet.tearColumns;
+  const UInt nJ = static_cast<UInt>(cols.size());
+  if (nJ == 0)
+    return;
+
+  Matrix tearTopoBlock(mSubnet.sysSize, nJ);
+  for (UInt c = 0; c < nJ; ++c)
+    tearTopoBlock.col(c) = mSolver.mTearTopology.block(mSubnet.sysOff, cols[c],
+                                                       mSubnet.sysSize, 1);
+
+  Matrix invTopoBlock = mSubnet.directLinearSolver->solve(tearTopoBlock);
+
+  for (UInt c = 0; c < nJ; ++c)
+    mSolver.mSystemInverseTearTopology.block(
+        mSubnet.sysOff, cols[c], mSubnet.sysSize, 1) = invTopoBlock.col(c);
+
+  mSolver.mTearSchurNeedsRebuild = true;
+}
+
+template <typename VarType>
+Bool DiakopticsSolver<VarType>::SubnetSolveTask::hasVariableComponentChanged() {
+  bool changed = false;
+  for (auto varElem : mSubnet.mVariableComps) {
+    if (varElem->hasParameterChanged()) {
+      auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(varElem);
+      // if we return true here directly, not all functions are called
+      // and some internal bools lead to further recalculation at t+1
+      changed = true;
+    }
+  }
+  return changed;
+}
+
+template <typename VarType>
 void DiakopticsSolver<VarType>::SubnetSolveTask::execute(Real time,
                                                          Int timeStepCount) {
   auto rBlock =
@@ -521,13 +588,28 @@ void DiakopticsSolver<VarType>::SubnetSolveTask::execute(Real time,
 
   auto lBlock = (**mSolver.mOrigLeftSideVector)
                     .block(mSubnet.sysOff, 0, mSubnet.sysSize, 1);
+
+  if (hasVariableComponentChanged()) {
+    recomputeSubnetMatrix(time);
+  }
   // Solve Y' * v' = I
-  lBlock = mSubnet.luFactorization.solve(rBlock);
+  Matrix rhs = rBlock;
+  lBlock = mSubnet.directLinearSolver->solve(rhs);
 }
 
 template <typename VarType>
 void DiakopticsSolver<VarType>::PreSolveTask::execute(Real time,
                                                       Int timeStepCount) {
+  // Rebuild tear Schur complement and factorization once if any subnet
+  // recomputed. Runs single-threaded after SubnetSolveTasks
+  if (mSolver.mTearSchurNeedsRebuild.exchange(false)) {
+    mSolver.mTearSchur =
+        mSolver.mTearImpedance +
+        mSolver.mTearTopology.transpose() * mSolver.mSystemInverseTearTopology;
+    mSolver.mTotalTearImpedance =
+        Eigen::PartialPivLU<Matrix>(mSolver.mTearSchur);
+  }
+
   mSolver.mTearVoltages.setZero();
   for (auto comp : mSolver.mTearComponents) {
     auto tComp = std::dynamic_pointer_cast<MNATearInterface>(comp);
@@ -553,7 +635,8 @@ void DiakopticsSolver<VarType>::SolveTask::execute(Real time,
                     .block(mSubnet.sysOff, 0, mSubnet.sysSize, 1);
   // Solve Y' * x = C * i
   // v = v' + x
-  lBlock += mSubnet.luFactorization.solve(rBlock);
+  Matrix rhs = rBlock;
+  lBlock += mSubnet.directLinearSolver->solve(rhs);
   **mSubnet.leftVector = lBlock;
 }
 

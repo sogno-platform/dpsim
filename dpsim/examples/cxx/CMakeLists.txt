@@ -34,6 +34,7 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_VSI.cpp
 	Circuits/EMT_PiLine.cpp
 	Circuits/EMT_DecouplingLine_Ph3.cpp
+	Circuits/EMT_Diakoptics.cpp
 	Circuits/EMT_Ph3_R3C1L1CS1_RC_vs_SSN.cpp
 	Circuits/EMT_Ph3_RLC1VS1_RC_vs_SSN.cpp
 	Circuits/EMT_Ph1_General2TerminalSSN.cpp
@@ -220,6 +221,10 @@ if(WITH_CIM)
 		CIM/EMT_CIGRE_MV_withoutDG.cpp
 		CIM/EMT_CIGRE_MV_withDG.cpp
 		CIM/EMT_CIGRE_MV_withDG_withLoadStep.cpp
+
+		# IEEE 39 examples
+		CIM/EMT_IEEE_39bus_CIM.cpp
+		CIM/EMT_IEEE_39bus_Multi_CIM.cpp
 	)
 
 	list(APPEND TEST_SOURCES
@@ -228,6 +233,7 @@ if(WITH_CIM)
 		CIM/EMT_WSCC-9bus_IdealCS.cpp
 		CIM/EMT_WSCC-9bus_IdealVS.cpp
 		CIM/SP_WSCC9bus_SGReducedOrderVBR.cpp
+		CIM/EMT_IEEE_39bus_Multi_CIM.cpp
 	)
 
 	if(WITH_RT)
