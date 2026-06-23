@@ -10,8 +10,7 @@
 
 #include <list>
 #include <map>
-#include <type_traits>
-#include <utility>
+#include <vector>
 
 #include <dpsim-models/Components.h>
 #include <dpsim-models/Definitions.h>
@@ -47,6 +46,8 @@ class ExternalNetworkInjection;
 class EnergyConsumer;
 class PowerTransformer;
 class EquivalentShunt;
+class LinearShuntCompensator;
+class StaticVarCompensator;
 class TopologicalNode;
 class ConductingEquipment;
 }; // namespace CIMPP
@@ -56,23 +57,9 @@ class ConductingEquipment;
 
 namespace CPS {
 namespace CIM {
-template <typename T, typename = void>
-struct has_value_member : std::false_type {};
-
-template <typename T>
-struct has_value_member<T,
-                        std::void_t<decltype(std::declval<const T &>().value)>>
-    : std::true_type {};
-
-template <typename T> const auto &cimString(const T &field) {
-  if constexpr (has_value_member<T>::value) {
-    return field.value;
-  } else {
-    return field;
-  }
-}
-
 class InvalidTopology {};
+
+enum class MappingMode { Default, CgmesPowerFlow };
 
 class Reader {
 private:
@@ -82,7 +69,7 @@ private:
   Logger::Level mComponentLogLevel;
   /// Model from CIM++
   CIMModel *mModel;
-  /// All components after mapping
+  /// All components after mapping. Kept for compatibility with older reader versions.
   IdentifiedObject::List mComponents;
   /// System frequency (has to be given to convert between reactances
   /// in CIM and inductances used inside the simulation)
@@ -97,6 +84,9 @@ private:
   ///
   /// This can be different from the phase type of an individual node.
   PhaseType mPhase;
+  /// Mapping behavior. Default keeps legacy/simple-CIM behavior. CgmesPowerFlow
+  /// enables the CreteValley/CGMES power-flow specific mappings.
+  MappingMode mMappingMode = MappingMode::Default;
   /// Maps the RID of a topological node to a PowerflowNode which holds its simulation matrix index
   /// as given in the component constructors (0 for the first node, -1 or GND for ground).
   std::map<String, TopologicalNode::Ptr> mPowerflowNodes;
@@ -115,7 +105,7 @@ private:
   /// activates global shunt resistor setting
   Bool mSetShuntConductance = false;
   /// global shunt resistor value
-  Real mShuntConductanceValue = 1e-6;
+  Real mShuntConductanceValue = -1;
 
   // #### General Functions ####
   /// Resolves unit multipliers.
@@ -164,6 +154,13 @@ private:
   mapExternalNetworkInjection(CIMPP::ExternalNetworkInjection *extnet);
   /// Returns a shunt
   TopologicalPowerComp::Ptr mapEquivalentShunt(CIMPP::EquivalentShunt *shunt);
+  /// Returns a linear shunt compensator. In CgmesPowerFlow mode for SP, this is
+  /// mapped as an equivalent PQ load for CreteValley-style files.
+  TopologicalPowerComp::Ptr
+  mapLinearShuntCompensator(CIMPP::LinearShuntCompensator *shunt);
+  /// Returns a static var compensator. Only mapped in CgmesPowerFlow mode.
+  TopologicalPowerComp::Ptr
+  mapStaticVarCompensator(CIMPP::StaticVarCompensator *svc);
 
   // #### Helper Functions ####
   /// Determine base voltage associated with object
@@ -177,6 +174,13 @@ public:
          Logger::Level componentLogLevel = Logger::Level::off);
   ///
   virtual ~Reader();
+
+  /// Selects how CIM components are mapped.
+  /// Default: legacy/simple-CIM compatible behavior.
+  /// CgmesPowerFlow: CreteValley/CGMES PF behavior using equipment P/Q,
+  /// absolute voltage setpoints, PQ shunt equivalents, and VD reference generators.
+  void setMappingMode(MappingMode mode);
+  MappingMode mappingMode() const;
 
   /// Parses data from CIM files into the CPS data structure
   SystemTopology loadCIM(Real systemFrequency, const fs::path &filename,
@@ -203,6 +207,9 @@ public:
   void setShuntConductance(Real v);
   /// If set, some components like loads include protection switches
   void useProtectionSwitches(Bool value = true);
+
+  /// Returns SV PF results if available in the imported CGMES files.
+  std::map<String, std::vector<CPS::Real>> getPowerFlowResults();
 };
 } // namespace CIM
 } // namespace CPS

@@ -14,6 +14,7 @@ SP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(
     String uid, String name, Logger::Level logLevel, Bool withTrafo)
     : CompositePowerComp<Complex>(uid, name, true, true, logLevel),
       mOmegaN(mAttributes->create<Real>("Omega_nom")),
+      mVnom(mAttributes->create<Real>("vnom")),
       mPref(mAttributes->create<Real>("P_ref")),
       mQref(mAttributes->create<Real>("Q_ref")),
       mVcd(mAttributes->create<Real>("Vc_d", 0)),
@@ -30,10 +31,10 @@ SP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(
   if (withTrafo) {
     setVirtualNodeNumber(4);
     mConnectionTransformer = SP::Ph1::Transformer::make(
-        **mName + "_trans", **mName + "_trans", mLogLevel, false);
+        **mName + "_trans", **mName + "_trans", mLogLevel);
     addMNASubComponent(mConnectionTransformer,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
   } else {
     setVirtualNodeNumber(3);
   }
@@ -106,7 +107,7 @@ void SP::Ph1::AvVoltageSourceInverterDQ::setParameters(Real sysOmega,
   mPowerControllerVSI->setParameters(Pref, Qref);
 
   **mOmegaN = sysOmega;
-  mVnom = sysVoltNom;
+  **mVnom = sysVoltNom;
   **mPref = Pref;
   **mQref = Qref;
 }
@@ -131,11 +132,10 @@ void SP::Ph1::AvVoltageSourceInverterDQ::setTransformerParameters(
                      mTransformerRatioAbs, mTransformerRatioPhase);
 
   if (mWithConnectionTransformer)
-    // TODO: resistive losses neglected so far (mWithResistiveLosses=false)
     mConnectionTransformer->setParameters(
         mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2,
-        mTransformerRatedPower, mTransformerRatioAbs, mTransformerRatioPhase,
-        mTransformerResistance, mTransformerInductance);
+        mTransformerRatioAbs, mTransformerRatioPhase, mTransformerResistance,
+        mTransformerInductance);
 }
 
 void SP::Ph1::AvVoltageSourceInverterDQ::setControllerParameters(
@@ -293,8 +293,6 @@ void SP::Ph1::AvVoltageSourceInverterDQ::initializeParentFromNodesAndTerminals(
         Logger::phasorToString(mVirtualNodes[3]->initialSingleVoltage()));
   SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialization from powerflow finished ---");
 }
-
-Real SP::Ph1::AvVoltageSourceInverterDQ::getNomVoltage() const { return mVnom; }
 
 void SP::Ph1::AvVoltageSourceInverterDQ::mnaParentInitialize(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {

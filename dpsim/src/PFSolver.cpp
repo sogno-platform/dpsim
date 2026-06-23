@@ -269,7 +269,7 @@ void PFSolver::determineNodeBaseVoltages() {
       if (std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ> vsi =
               std::dynamic_pointer_cast<
                   CPS::SP::Ph1::AvVoltageSourceInverterDQ>(comp)) {
-        baseVoltage_ = vsi->getNomVoltage();
+        baseVoltage_ = **vsi->mVnom;
         SPDLOG_LOGGER_INFO(
             mSLog,
             "Choose base voltage {}V of {} to convert pu-solution of {}.",
@@ -295,14 +295,14 @@ void PFSolver::determineNodeBaseVoltages() {
                      std::dynamic_pointer_cast<CPS::SP::Ph1::Transformer>(
                          comp)) {
         if (trans->terminal(0)->node()->name() == node->name()) {
-          baseVoltage_ = trans->getNominalVoltageEnd1();
+          baseVoltage_ = **trans->mNominalVoltageEnd1;
           SPDLOG_LOGGER_INFO(
               mSLog,
               "Choose base voltage {}V of {} to convert pu-solution of {}.",
               baseVoltage_, trans->name(), node->name());
           break;
         } else if (trans->terminal(1)->node()->name() == node->name()) {
-          baseVoltage_ = trans->getNominalVoltageEnd2();
+          baseVoltage_ = **trans->mNominalVoltageEnd2;
           SPDLOG_LOGGER_INFO(
               mSLog,
               "Choose base voltage {}V of {} to convert pu-solution of {}.",

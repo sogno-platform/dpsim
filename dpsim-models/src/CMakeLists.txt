@@ -33,6 +33,7 @@ list(APPEND MODELS_SOURCES
 	DP/DP_Ph1_VoltageSourceRamp.cpp
 	DP/DP_Ph1_VoltageSourceNorton.cpp
 	DP/DP_Ph1_Switch.cpp
+	DP/DP_Ph1_Shunt.cpp
 	DP/DP_Ph1_SynchronGeneratorIdeal.cpp
 	DP/DP_Ph1_SynchronGeneratorTrStab.cpp
 	DP/DP_Ph1_ReducedOrderSynchronGeneratorVBR.cpp
@@ -100,6 +101,7 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph3_NetworkInjection.cpp
 	EMT/EMT_Ph3_Transformer.cpp
 	EMT/EMT_Ph3_Switch.cpp
+	EMT/EMT_Ph3_Shunt.cpp
 	EMT/EMT_Ph3_ReducedOrderSynchronGeneratorVBR.cpp
 	EMT/EMT_Ph3_SynchronGenerator3OrderVBR.cpp
 	EMT/EMT_Ph3_SynchronGenerator4OrderVBR.cpp

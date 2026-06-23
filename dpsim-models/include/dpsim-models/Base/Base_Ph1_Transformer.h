@@ -15,13 +15,11 @@ namespace CPS {
 namespace Base {
 namespace Ph1 {
 class Transformer {
-protected:
-  /// Nominal voltage of primary side
-  Real mNominalVoltageEnd1;
-  /// Nominal voltage of secondary side
-  Real mNominalVoltageEnd2;
-
 public:
+  /// Nominal voltage of primary side
+  const Attribute<Real>::Ptr mNominalVoltageEnd1;
+  /// Nominal voltage of secondary side
+  const Attribute<Real>::Ptr mNominalVoltageEnd2;
   /// Rated Apparent Power [VA]
   const Attribute<Real>::Ptr mRatedPower;
   /// Complex transformer ratio
@@ -30,21 +28,34 @@ public:
   const Attribute<Real>::Ptr mResistance;
   /// Inductance [H]
   const Attribute<Real>::Ptr mInductance;
+  /// Susceptance [Ohm]
+  const Attribute<Real>::Ptr mCapacitance;
+  /// Conductance [H]
+  const Attribute<Real>::Ptr mConductance;
 
   explicit Transformer(CPS::AttributeList::Ptr attributeList)
-      : mRatedPower(attributeList->create<Real>("S")),
+      : mNominalVoltageEnd1(
+            attributeList->create<Real>("nominal_voltage_end1")),
+        mNominalVoltageEnd2(
+            attributeList->create<Real>("nominal_voltage_end2")),
+        mRatedPower(attributeList->create<Real>("S")),
         mRatio(attributeList->create<Complex>("ratio")),
         mResistance(attributeList->create<Real>("R")),
-        mInductance(attributeList->create<Real>("L")){};
+        mInductance(attributeList->create<Real>("L")),
+        mCapacitance(attributeList->create<Real>("C")),
+        mConductance(attributeList->create<Real>("G")){};
 
   ///
   void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs,
-                     Real ratioPhase, Real resistance, Real inductance) {
-    mNominalVoltageEnd1 = nomVoltageEnd1;
-    mNominalVoltageEnd2 = nomVoltageEnd2;
+                     Real ratioPhase, Real resistance, Real inductance,
+                     Real capacitance = 0, Real conductance = 0) {
+    **mNominalVoltageEnd1 = nomVoltageEnd1;
+    **mNominalVoltageEnd2 = nomVoltageEnd2;
     **mRatio = std::polar<Real>(ratioAbs, ratioPhase);
     **mResistance = resistance;
     **mInductance = inductance;
+    **mCapacitance = capacitance;
+    **mConductance = conductance;
   }
 };
 } // namespace Ph1
