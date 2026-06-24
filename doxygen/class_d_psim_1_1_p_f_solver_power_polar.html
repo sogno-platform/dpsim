@@ -104,7 +104,7 @@ $(function(){ initResizable(false); });
 <div class="dynheader">
 Inheritance diagram for DPsim::PFSolverPowerPolar:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_d_psim_1_1_p_f_solver_power_polar__inherit__graph.svg" width="206" height="196"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_d_psim_1_1_p_f_solver_power_polar__inherit__graph.svg" width="206" height="292"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for DPsim::PFSolverPowerPolar:</div>
@@ -255,6 +255,12 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:aea79ac039c4a306a4031b5d2ced80936 inherit pro_methods_class_d_psim_1_1_p_f_solver" id="r_aea79ac039c4a306a4031b5d2ced80936"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#aea79ac039c4a306a4031b5d2ced80936">solvePowerflow</a> ()</td></tr>
 <tr class="memdesc:aea79ac039c4a306a4031b5d2ced80936 inherit pro_methods_class_d_psim_1_1_p_f_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solves the powerflow problem.  <br /></td></tr>
 <tr class="separator:aea79ac039c4a306a4031b5d2ced80936 inherit pro_methods_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a544e34df9b360d061eda9e86766dd797 inherit pro_methods_class_d_psim_1_1_p_f_solver" id="r_a544e34df9b360d061eda9e86766dd797"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#a544e34df9b360d061eda9e86766dd797">setUpJacobianStorage</a> ()</td></tr>
+<tr class="memdesc:a544e34df9b360d061eda9e86766dd797 inherit pro_methods_class_d_psim_1_1_p_f_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate Jacobian storage; dense by default, sparse subclass overrides.  <br /></td></tr>
+<tr class="separator:a544e34df9b360d061eda9e86766dd797 inherit pro_methods_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ff5d3144e7383618e604c323e223a4b inherit pro_methods_class_d_psim_1_1_p_f_solver" id="r_a2ff5d3144e7383618e604c323e223a4b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#a2ff5d3144e7383618e604c323e223a4b">solveJacobianSystem</a> ()</td></tr>
+<tr class="memdesc:a2ff5d3144e7383618e604c323e223a4b inherit pro_methods_class_d_psim_1_1_p_f_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the linearized system mJ*mX = mF into mX; sparse subclass overrides.  <br /></td></tr>
+<tr class="separator:a2ff5d3144e7383618e604c323e223a4b inherit pro_methods_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e1d270a50382feb080ba969bacbc5c6 inherit pro_methods_class_d_psim_1_1_p_f_solver" id="r_a7e1d270a50382feb080ba969bacbc5c6"><td class="memItemLeft" align="right" valign="top">CPS::Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#a7e1d270a50382feb080ba969bacbc5c6">checkConvergence</a> ()</td></tr>
 <tr class="memdesc:a7e1d270a50382feb080ba969bacbc5c6 inherit pro_methods_class_d_psim_1_1_p_f_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check whether below tolerance.  <br /></td></tr>
 <tr class="separator:a7e1d270a50382feb080ba969bacbc5c6 inherit pro_methods_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -582,6 +588,8 @@ Additional Inherited Members</h2></td></tr>
 <p>Calculate the Jacobian. </p>
 
 <p>Implements <a class="el" href="class_d_psim_1_1_p_f_solver.html#ac9ef7bef9648ad4e3acfa421a482b583">DPsim::PFSolver</a>.</p>
+
+<p>Reimplemented in <a class="el" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#ab6d0e02735c8bde13ee08689f9f5451a">DPsim::PFSolverPowerPolarSparse</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00184">184</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
 

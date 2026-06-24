@@ -33,9 +33,10 @@ var searchData=
   ['inverseparktransform_30',['inverseParkTransform',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a8eedde8742359fac3ed8a9a72f18cf98',1,'CPS::EMT::Ph3::SynchronGeneratorVBR']]],
   ['inverter_31',['Inverter',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html',1,'CPS::DP::Ph1::Inverter'],['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html#a73edf7fa7b55a0a86d4366c7833e11c1',1,'CPS::DP::Ph1::Inverter::Inverter(String name, String uid, Logger::Level logLevel=Logger::Level::off)'],['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html#a2747e7bea2e6e15e5b2ab11dd38a7707',1,'CPS::DP::Ph1::Inverter::Inverter(String name, Logger::Level logLevel=Logger::Level::off)']]],
   ['isclosed_32',['isClosed',['../class_c_p_s_1_1_base_1_1_ph1_1_1_switch.html#a374a30aef0f7082e171340f18e4da4ce',1,'CPS::Base::Ph1::Switch::isClosed()'],['../class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html#af08602c4ecfecdb47762ffa5a4adc79e',1,'CPS::Base::Ph3::Switch::isClosed()']]],
-  ['isconverged_33',['isConverged',['../class_d_psim_1_1_p_f_solver.html#aae9024454fc6ab26e140ebbf0973664e',1,'DPsim::PFSolver']]],
-  ['isstatic_34',['isStatic',['../class_c_p_s_1_1_attribute_base.html#a3f9c6108086afcc87b26520c6fffa5c4',1,'CPS::AttributeBase::isStatic()'],['../class_c_p_s_1_1_attribute_static.html#ab7423b869b379a6f084889f83266896e',1,'CPS::AttributeStatic::isStatic()'],['../class_c_p_s_1_1_attribute_dynamic.html#ad48bbe0d95a615ce21ac1fca9cfb0df1',1,'CPS::AttributeDynamic::isStatic()']]],
-  ['isvariable_35',['isVariable',['../class_d_psim_1_1_m_n_a_state_space_contributor.html#a344ac3a6fdacbdf041fda92835cf49c3',1,'DPsim::MNAStateSpaceContributor']]],
-  ['iterator_36',['iterator',['../class_d_psim_1_1cuda_1_1_vector_1_1iterator.html',1,'DPsim::cuda::Vector']]],
-  ['itypessncomp_37',['ITypeSSNComp',['../class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html',1,'CPS::EMT']]]
+  ['isconnected_33',['isConnected',['../class_d_psim_1_1_p_f_solver_power_polar_sparse.html#a81b10ddbc39ad79b212a22b877be8469',1,'DPsim::PFSolverPowerPolarSparse']]],
+  ['isconverged_34',['isConverged',['../class_d_psim_1_1_p_f_solver.html#aae9024454fc6ab26e140ebbf0973664e',1,'DPsim::PFSolver']]],
+  ['isstatic_35',['isStatic',['../class_c_p_s_1_1_attribute_base.html#a3f9c6108086afcc87b26520c6fffa5c4',1,'CPS::AttributeBase::isStatic()'],['../class_c_p_s_1_1_attribute_static.html#ab7423b869b379a6f084889f83266896e',1,'CPS::AttributeStatic::isStatic()'],['../class_c_p_s_1_1_attribute_dynamic.html#ad48bbe0d95a615ce21ac1fca9cfb0df1',1,'CPS::AttributeDynamic::isStatic()']]],
+  ['isvariable_36',['isVariable',['../class_d_psim_1_1_m_n_a_state_space_contributor.html#a344ac3a6fdacbdf041fda92835cf49c3',1,'DPsim::MNAStateSpaceContributor']]],
+  ['iterator_37',['iterator',['../class_d_psim_1_1cuda_1_1_vector_1_1iterator.html',1,'DPsim::cuda::Vector']]],
+  ['itypessncomp_38',['ITypeSSNComp',['../class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html',1,'CPS::EMT']]]
 ];

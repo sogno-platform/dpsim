@@ -1,7 +1,7 @@
 var searchData=
 [
   ['calculatebranchflow_0',['calculateBranchFlow',['../class_d_psim_1_1_p_f_solver_power_polar.html#a11e97bcba6c30822abe6afd12d6a2302',1,'DPsim::PFSolverPowerPolar']]],
-  ['calculatejacobian_1',['calculateJacobian',['../class_d_psim_1_1_p_f_solver.html#ac9ef7bef9648ad4e3acfa421a482b583',1,'DPsim::PFSolver::calculateJacobian()'],['../class_d_psim_1_1_p_f_solver_power_polar.html#ac33f2122b939c3f759985e4012cf3473',1,'DPsim::PFSolverPowerPolar::calculateJacobian()']]],
+  ['calculatejacobian_1',['calculateJacobian',['../class_d_psim_1_1_p_f_solver.html#ac9ef7bef9648ad4e3acfa421a482b583',1,'DPsim::PFSolver::calculateJacobian()'],['../class_d_psim_1_1_p_f_solver_power_polar.html#ac33f2122b939c3f759985e4012cf3473',1,'DPsim::PFSolverPowerPolar::calculateJacobian()'],['../class_d_psim_1_1_p_f_solver_power_polar_sparse.html#ab6d0e02735c8bde13ee08689f9f5451a',1,'DPsim::PFSolverPowerPolarSparse::calculateJacobian()']]],
   ['calculatel_2',['CalculateL',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#af8fd6b77ae3390027a8467ee1fc3f40c',1,'CPS::EMT::Ph3::SynchronGeneratorVBR']]],
   ['calculatemismatch_3',['calculateMismatch',['../class_d_psim_1_1_p_f_solver.html#a9227590cf4be2b8d7da361ea72291b61',1,'DPsim::PFSolver::calculateMismatch()'],['../class_d_psim_1_1_p_f_solver_power_polar.html#a913effdf7c949d032e81a453653b2021',1,'DPsim::PFSolverPowerPolar::calculateMismatch() override']]],
   ['calculatenodalinjection_4',['calculateNodalInjection',['../class_d_psim_1_1_p_f_solver_power_polar.html#aea0c6bbfc7e86cf0b88580326f561cc9',1,'DPsim::PFSolverPowerPolar']]],

@@ -105,7 +105,7 @@ $(function(){ initResizable(false); });
 <div class="dynheader">
 Inheritance diagram for DPsim::PFSolver:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_d_psim_1_1_p_f_solver__inherit__graph.svg" width="206" height="196"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_d_psim_1_1_p_f_solver__inherit__graph.svg" width="206" height="292"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for DPsim::PFSolver:</div>
@@ -220,6 +220,12 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:aea79ac039c4a306a4031b5d2ced80936" id="r_aea79ac039c4a306a4031b5d2ced80936"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aea79ac039c4a306a4031b5d2ced80936">solvePowerflow</a> ()</td></tr>
 <tr class="memdesc:aea79ac039c4a306a4031b5d2ced80936"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solves the powerflow problem.  <br /></td></tr>
 <tr class="separator:aea79ac039c4a306a4031b5d2ced80936"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a544e34df9b360d061eda9e86766dd797" id="r_a544e34df9b360d061eda9e86766dd797"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a544e34df9b360d061eda9e86766dd797">setUpJacobianStorage</a> ()</td></tr>
+<tr class="memdesc:a544e34df9b360d061eda9e86766dd797"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate Jacobian storage; dense by default, sparse subclass overrides.  <br /></td></tr>
+<tr class="separator:a544e34df9b360d061eda9e86766dd797"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ff5d3144e7383618e604c323e223a4b" id="r_a2ff5d3144e7383618e604c323e223a4b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2ff5d3144e7383618e604c323e223a4b">solveJacobianSystem</a> ()</td></tr>
+<tr class="memdesc:a2ff5d3144e7383618e604c323e223a4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the linearized system mJ*mX = mF into mX; sparse subclass overrides.  <br /></td></tr>
+<tr class="separator:a2ff5d3144e7383618e604c323e223a4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e1d270a50382feb080ba969bacbc5c6" id="r_a7e1d270a50382feb080ba969bacbc5c6"><td class="memItemLeft" align="right" valign="top">CPS::Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e1d270a50382feb080ba969bacbc5c6">checkConvergence</a> ()</td></tr>
 <tr class="memdesc:a7e1d270a50382feb080ba969bacbc5c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check whether below tolerance.  <br /></td></tr>
 <tr class="separator:a7e1d270a50382feb080ba969bacbc5c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -454,7 +460,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00148">148</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00152">152</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -484,7 +490,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Assignment of matrix indices for nodes. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00068">68</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00078">78</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -517,7 +523,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Gets the imaginary part of admittance matrix element. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00455">455</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00465">465</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -546,7 +552,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Calculate the Jacobian. </p>
 
-<p>Implemented in <a class="el" href="class_d_psim_1_1_p_f_solver_power_polar.html#ac33f2122b939c3f759985e4012cf3473">DPsim::PFSolverPowerPolar</a>.</p>
+<p>Implemented in <a class="el" href="class_d_psim_1_1_p_f_solver_power_polar.html#ac33f2122b939c3f759985e4012cf3473">DPsim::PFSolverPowerPolar</a>, and <a class="el" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#ab6d0e02735c8bde13ee08689f9f5451a">DPsim::PFSolverPowerPolarSparse</a>.</p>
 
 </div>
 </div>
@@ -604,7 +610,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Check whether below tolerance. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00457">457</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00467">467</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -633,7 +639,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Compose admittance matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00428">428</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00438">438</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -662,7 +668,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Determine base voltages for each node. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00260">260</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00270">270</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -691,7 +697,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Determine bus type for all buses. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00147">147</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00157">157</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -724,7 +730,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Gets the real part of admittance matrix element. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00453">453</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00463">463</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -784,7 +790,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00162">162</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00166">166</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -815,7 +821,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_d_psim_1_1_solver.html#ae02c8cdd80fd1eb66d6cf19035167bca">DPsim::Solver</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00513">513</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00520">520</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -875,7 +881,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Initialization of individual components. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00082">82</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00092">92</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -904,7 +910,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Logging for integer vectors. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00134">134</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00138">138</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -929,7 +935,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Allows to modify the powerflow bus type of a specific component. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00385">385</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00395">395</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -958,7 +964,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Set apparent base power of per-unit system. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00124">124</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00134">134</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -985,7 +991,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00158">158</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00162">162</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -1045,7 +1051,38 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_d_psim_1_1_solver.html#a9acdaabc5d46b35299fd5af1d893b840">DPsim::Solver</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00400">400</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00410">410</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a544e34df9b360d061eda9e86766dd797" name="a544e34df9b360d061eda9e86766dd797"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a544e34df9b360d061eda9e86766dd797">&#9670;&#160;</a></span>setUpJacobianStorage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void PFSolver::setUpJacobianStorage </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Allocate Jacobian storage; dense by default, sparse subclass overrides. </p>
+
+<p>Reimplemented in <a class="el" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#aad1768818c70fb8d2a59cb2eef80a19b">DPsim::PFSolverPowerPolarSparse</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00068">68</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -1066,7 +1103,38 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Set a node to VD using its name. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00368">368</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00378">378</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a2ff5d3144e7383618e604c323e223a4b" name="a2ff5d3144e7383618e604c323e223a4b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ff5d3144e7383618e604c323e223a4b">&#9670;&#160;</a></span>solveJacobianSystem()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void PFSolver::solveJacobianSystem </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Solve the linearized system mJ*mX = mF into mX; sparse subclass overrides. </p>
+
+<p>Reimplemented in <a class="el" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#af52d4576ad7bec4b32a6286ffbcad30d">DPsim::PFSolverPowerPolarSparse</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00072">72</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -1095,7 +1163,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Solves the powerflow problem. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00466">466</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00476">476</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>

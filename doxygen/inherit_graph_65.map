@@ -4,10 +4,10 @@
 <area shape="poly" id="edge601_Node000000_Node000001" title=" " alt="" coords="199,50,231,50,231,55,199,55"/>
 <area shape="rect" id="Node000002" href="$class_d_psim_1_1_diakoptics_solver.html" title=" " alt="" coords="428,58,599,107"/>
 <area shape="poly" id="edge602_Node000001_Node000002" title=" " alt="" coords="378,61,428,68,428,73,377,66"/>
-<area shape="rect" id="Node000012" href="$class_d_psim_1_1_simulation.html" title="The Simulation holds a SystemTopology and a Solver." alt="" coords="448,5,580,35"/>
-<area shape="poly" id="edge603_Node000001_Node000012" title=" " alt="" coords="377,38,447,27,447,33,378,43"/>
-<area shape="rect" id="Node000013" href="$class_d_psim_1_1_real_time_simulation.html" title="Extending Simulation class by real&#45;time functionality." alt="" coords="668,5,857,35"/>
-<area shape="poly" id="edge604_Node000012_Node000013" title=" " alt="" coords="595,18,668,18,668,23,595,23"/>
+<area shape="rect" id="Node000013" href="$class_d_psim_1_1_simulation.html" title="The Simulation holds a SystemTopology and a Solver." alt="" coords="448,5,580,35"/>
+<area shape="poly" id="edge603_Node000001_Node000013" title=" " alt="" coords="377,38,447,27,447,33,378,43"/>
+<area shape="rect" id="Node000014" href="$class_d_psim_1_1_real_time_simulation.html" title="Extending Simulation class by real&#45;time functionality." alt="" coords="668,5,857,35"/>
+<area shape="poly" id="edge604_Node000013_Node000014" title=" " alt="" coords="595,18,668,18,668,23,595,23"/>
 <area shape="rect" id="Node000003" href="$class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA." alt="" coords="243,211,350,240"/>
 <area shape="poly" id="edge606_Node000003_Node000002" title=" " alt="" coords="318,197,358,156,409,117,430,105,432,110,411,121,361,160,322,201"/>
 <area shape="rect" id="Node000004" href="$class_d_psim_1_1_d_a_e_solver.html" title="Solver class which uses Differential Algebraic Equation(DAE) systems." alt="" coords="448,131,580,160"/>
@@ -22,8 +22,10 @@
 <area shape="poly" id="edge612_Node000003_Node000010" title=" " alt="" coords="321,251,361,292,385,312,411,330,453,346,451,351,409,335,382,317,357,296,317,254"/>
 <area shape="rect" id="Node000006" href="$class_d_psim_1_1_mna_solver_direct.html" title="Solver class using Modified Nodal Analysis (MNA)." alt="" coords="677,174,848,223"/>
 <area shape="poly" id="edge608_Node000005_Node000006" title=" " alt="" coords="633,196,677,196,677,202,633,202"/>
-<area shape="rect" id="Node000007" href="$class_d_psim_1_1_mna_solver_plugin.html" title=" " alt="" coords="908,174,1080,223"/>
-<area shape="poly" id="edge609_Node000006_Node000007" title=" " alt="" coords="863,196,907,196,907,202,863,202"/>
+<area shape="rect" id="Node000007" href="$class_d_psim_1_1_mna_solver_plugin.html" title=" " alt="" coords="919,174,1091,223"/>
+<area shape="poly" id="edge609_Node000006_Node000007" title=" " alt="" coords="864,196,918,196,918,202,864,202"/>
 <area shape="rect" id="Node000011" href="$class_d_psim_1_1_p_f_solver_power_polar.html" title="Powerflow solver class considering power mismatch and voltages in polar coordinates." alt="" coords="665,344,860,374"/>
 <area shape="poly" id="edge613_Node000010_Node000011" title=" " alt="" coords="590,356,665,356,665,362,590,362"/>
+<area shape="rect" id="Node000012" href="$class_d_psim_1_1_p_f_solver_power_polar_sparse.html" title=" " alt="" coords="908,334,1102,383"/>
+<area shape="poly" id="edge614_Node000011_Node000012" title=" " alt="" coords="875,356,907,356,907,362,875,362"/>
 </map>

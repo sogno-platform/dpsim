@@ -14,8 +14,10 @@
 <area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="81,198,116,239,138,259,162,276,204,293,202,298,159,281,135,264,112,243,77,201"/>
 <area shape="rect" id="Node000005" href="$class_d_psim_1_1_mna_solver_direct.html" title="Solver class using Modified Nodal Analysis (MNA)." alt="" coords="428,121,599,170"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="384,143,427,143,427,148,384,148"/>
-<area shape="rect" id="Node000006" href="$class_d_psim_1_1_mna_solver_plugin.html" title=" " alt="" coords="658,121,831,170"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="614,143,658,143,658,148,614,148"/>
+<area shape="rect" id="Node000006" href="$class_d_psim_1_1_mna_solver_plugin.html" title=" " alt="" coords="669,121,842,170"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="614,143,669,143,669,148,614,148"/>
 <area shape="rect" id="Node000010" href="$class_d_psim_1_1_p_f_solver_power_polar.html" title="Powerflow solver class considering power mismatch and voltages in polar coordinates." alt="" coords="416,291,610,320"/>
 <area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="341,303,416,303,416,308,341,308"/>
+<area shape="rect" id="Node000011" href="$class_d_psim_1_1_p_f_solver_power_polar_sparse.html" title=" " alt="" coords="658,281,853,330"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="626,303,658,303,658,308,626,308"/>
 </map>
