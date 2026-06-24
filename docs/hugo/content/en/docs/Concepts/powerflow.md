@@ -79,6 +79,11 @@ This results in four different formulations of the powerflow problem:
 
 To solve the problem using NR, we need to formulate $\textbf{J} (\vec{x})$ and $\vec{f} (\vec{x})$ for each powerflow problem formulation.
 
+Of these four, DPsim currently implements the **power mismatch function with polar
+coordinates**, detailed below. It is the formulation used by both the dense
+(`PFSolverPowerPolar`) and sparse (`PFSolverPowerPolarSparse`) solvers; the other three
+are not implemented.
+
 ## Powerflow Problem with Power Mismatch Function and Polar Coordinates
 
 ### Formulation of Mismatch Function
@@ -181,6 +186,13 @@ J_{jj}^{QV} &= \frac{\partial Q_{j}(\vec{x})}{\partial \vert V_{j} \vert } = \fr
 \end{align}
 ```
 
+The formulas above use the voltage magnitude $\vert V_k \vert$ as the unknown. The DPsim
+implementation instead uses the *relative* voltage increment $\Delta \vert V_k \vert / \vert V_k \vert$,
+which scales every voltage-magnitude column ($J^{PV}$, $J^{QV}$) by $\vert V_k \vert$. For
+example $J_{jj}^{PV}$ becomes $P_j(\vec{x}) + G_{jj} \vert V_j \vert^2$. This is paired with
+the multiplicative voltage update $\vert V_k \vert \leftarrow \vert V_k \vert (1 + \Delta \vert V_k \vert / \vert V_k \vert)$,
+so the solution is identical; only the scaling of the voltage columns differs.
+
 The linear system of equations that is solved in every Newton iteration can be written in matrix form as follows:
 
 ```math
@@ -224,3 +236,55 @@ To sum up, the NR algorithm, for application to the power flow problem is:
 1. Evaluate the Jacobian matrix $\textbf{J}^{(i)}$ and compute $\Delta \vec{x}^{(i)}$.
 1. Compute the update solution vector $\vec{x}^{(i+1)}$. Return to step 3.
 1. Stop.
+
+## Convergence and Step Control
+
+The iteration is governed by two parameters:
+
+* **Tolerance** (default $10^{-8}$): the run is converged once every entry of the
+  mismatch vector satisfies $\vert f_{i}(\vec{x}) \vert <$ tolerance (an infinity-norm
+  test over all $\Delta P$ and $\Delta Q$ components).
+* **Maximum iterations** (default $20$): an upper bound on the number of Newton steps
+  per power flow solve.
+
+To improve robustness far from the solution, the full Newton step is **scaled by a
+single factor** $\alpha \in (0, 1]$ rather than damped component-wise. The factor is the
+largest value that keeps the per-step changes within fixed bounds:
+
+```math
+\alpha = \min \left( 1,\ \frac{\Delta\theta_{max}}{\max_k \vert \Delta\theta_k \vert},\ \frac{\Delta V_{max}}{\max_k \vert \Delta V_k / V_k \vert} \right)
+```
+
+with $\Delta\theta_{max} = 0.2\ \text{rad}$ and $\Delta V_{max} = 0.1\ \text{pu}$. Because
+the whole step is scaled by one factor, the Newton search direction is preserved, so
+$\alpha = 1$ near the solution and quadratic convergence is retained; $\alpha < 1$ only
+bounds large early steps. Voltage magnitudes are updated multiplicatively
+($V_k \leftarrow V_k (1 + \alpha\, \Delta V_k / V_k)$), consistent with the relative
+voltage increment used in the Jacobian.
+
+# Solver Implementations
+
+DPsim ships two implementations of the Newton-Raphson power flow solver with power
+mismatch and polar coordinates. Both produce identical results (to round-off); they
+differ only in how the Jacobian is stored and factorized:
+
+* `PFSolverPowerPolar` (dense): assembles a dense Jacobian and computes a fresh
+  factorization every Newton iteration. This is the default.
+* `PFSolverPowerPolarSparse` (sparse): assembles the Jacobian into a sparse matrix
+  whose sparsity pattern is fixed (derived once from the network admittance matrix).
+  The symbolic factorization (ordering) is analyzed once and reused; only the numeric
+  values are recomputed each Newton iteration. The first iteration of every power flow
+  solve does a full factorization with pivoting, and subsequent iterations refactorize
+  while reusing that ordering (via KLU when available). This scales better on large,
+  sparse grids.
+
+The dense solver is used by default. To opt in to the sparse solver:
+
+```python
+sim.set_pf_solver_use_sparse(True)
+```
+
+The flag is ignored and the dense solver is used if DPsim was built without a sparse
+linear solver. The benchmark notebook
+`examples/Notebooks/Grids/PF_Sparse_vs_Dense.ipynb` runs a range of network sizes both
+ways, verifies the converged voltages match, and compares run time.

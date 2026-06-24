@@ -60,9 +60,19 @@ void PFSolver::initialize() {
   determineNodeBaseVoltages();
   composeAdmittanceMatrix();
 
-  mJ.setZero(mNumUnknowns, mNumUnknowns);
+  setUpJacobianStorage();
   mX.setZero(mNumUnknowns);
   mF.setZero(mNumUnknowns);
+}
+
+void PFSolver::setUpJacobianStorage() {
+  mJ.setZero(mNumUnknowns, mNumUnknowns);
+}
+
+void PFSolver::solveJacobianSystem() {
+  auto sparseJ = mJ.sparseView();
+  Eigen::SparseLU<SparseMatrix> lu(sparseJ);
+  mX = lu.solve(mF);
 }
 
 void PFSolver::assignMatrixNodeIndices() {
@@ -480,12 +490,9 @@ Bool PFSolver::solvePowerflow() {
   for (unsigned i = 1; i < mMaxIterations && !isConverged; ++i) {
 
     calculateJacobian();
-    auto sparseJ = mJ.sparseView();
 
     // Solve system mJ*mX = mF
-    Eigen::SparseLU<SparseMatrix> lu(sparseJ);
-
-    mX = lu.solve(mF); /* code */
+    solveJacobianSystem();
 
     // Calculate new solution based on mX increments obtained from equation system
     updateSolution();
