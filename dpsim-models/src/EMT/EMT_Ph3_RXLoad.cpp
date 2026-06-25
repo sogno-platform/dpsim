@@ -50,9 +50,9 @@ EMT::Ph3::RXLoad::RXLoad(String name, Matrix activePower, Matrix reactivePower,
 
 SimPowerComp<Real>::Ptr EMT::Ph3::RXLoad::clone(String name) {
   if (initPowerFromTerminal) {
-    initializeParentFromNodesAndTerminals(mP);
+    initializeParentFromNodesAndTerminals(mFrequencies(0,0));
   }
-  
+
   auto copy = RXLoad::make(name, mLogLevel);
   copy->setParameters(**mActivePower, **mReactivePower, **mNomVoltage);
   return copy;
