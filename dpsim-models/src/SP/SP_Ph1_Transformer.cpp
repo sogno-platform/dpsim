@@ -107,6 +107,8 @@ void SP::Ph1::Transformer::createSubComponents() {
         mNominalVoltageEnd1, mNominalVoltageEnd2);
     SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio = {} [ ] Phase Shift = {} [deg]",
                        mRatioAbs, mRatioPhase);
+    // Refresh index cache after terminal swap so pfApplyAdmittanceMatrixStamp uses the correct order.
+    updateMatrixNodeIndices();
   }
 
   // Create series sub components
