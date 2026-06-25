@@ -10,8 +10,8 @@
 
 using namespace CPS;
 
-DP::Ph1::ControlledCurrentSource::ControlledCurrentSource(String uid, String name,
-                                      Logger::Level logLevel)
+DP::Ph1::ControlledCurrentSource::ControlledCurrentSource(
+    String uid, String name, Logger::Level logLevel)
     : MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
       mCurrentRef(mAttributes->createDynamic<Complex>("I_ref")) {
   setTerminalNumber(2);
@@ -24,13 +24,15 @@ void DP::Ph1::ControlledCurrentSource::setParameters(Complex currentRef) {
   mParametersSet = true;
 }
 
-SimPowerComp<Complex>::Ptr DP::Ph1::ControlledCurrentSource::clone(String name) {
+SimPowerComp<Complex>::Ptr
+DP::Ph1::ControlledCurrentSource::clone(String name) {
   auto copy = ControlledCurrentSource::make(name, mLogLevel);
   copy->setParameters(**mCurrentRef);
   return copy;
 }
 
-void DP::Ph1::ControlledCurrentSource::initializeFromNodesAndTerminals(Real frequency) {
+void DP::Ph1::ControlledCurrentSource::initializeFromNodesAndTerminals(
+    Real frequency) {
 
   (**mIntfVoltage)(0, 0) = initialSingleVoltage(0) - initialSingleVoltage(1);
   (**mIntfCurrent)(0, 0) = **mCurrentRef;
@@ -70,7 +72,8 @@ void DP::Ph1::ControlledCurrentSource::mnaCompAddPreStepDependencies(
   modifiedAttributes.push_back(mIntfCurrent);
 }
 
-void DP::Ph1::ControlledCurrentSource::mnaCompPreStep(Real time, Int timeStepCount) {
+void DP::Ph1::ControlledCurrentSource::mnaCompPreStep(Real time,
+                                                      Int timeStepCount) {
   updateCurrent(time);
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
@@ -101,7 +104,8 @@ void DP::Ph1::ControlledCurrentSource::mnaCompPostStep(
   mnaCompUpdateVoltage(**leftVector);
 }
 
-void DP::Ph1::ControlledCurrentSource::mnaCompUpdateVoltage(const Matrix &leftVector) {
+void DP::Ph1::ControlledCurrentSource::mnaCompUpdateVoltage(
+    const Matrix &leftVector) {
   (**mIntfVoltage)(0, 0) = 0;
   if (terminalNotGrounded(0))
     (**mIntfVoltage)(0, 0) =

@@ -138,7 +138,6 @@ DecouplingIdealTransformer_DP_Ph1::extrapolate(std::vector<Complex> &data) {
   }
 }
 
-
 void DecouplingIdealTransformer_DP_Ph1::step(Real time, Int timeStepCount) {
   Complex volt1, cur2;
   if (mCouplingMethod == CouplingMethod::DELAY) {

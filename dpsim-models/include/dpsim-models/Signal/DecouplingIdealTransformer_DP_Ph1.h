@@ -10,8 +10,8 @@
 
 #include <vector>
 
-#include "dpsim-models/Definitions.h"
 #include "dpsim-models/DP/DP_Ph1_ControlledVoltageSource.h"
+#include "dpsim-models/Definitions.h"
 #include "dpsim-models/SimNode.h"
 #include "dpsim-models/TopologicalNode.h"
 #include <dpsim-models/DP/DP_Ph1_ControlledCurrentSource.h>

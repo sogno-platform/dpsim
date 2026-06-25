@@ -229,7 +229,7 @@ void addSignalComponents(py::module_ mSignal) {
       .def("get_virtual_node",
            &CPS::Signal::DecouplingIdealTransformer_EMT_Ph3::getVirtualNode);
 
-    py::class_<CPS::Signal::DecouplingIdealTransformer_DP_Ph1,
+  py::class_<CPS::Signal::DecouplingIdealTransformer_DP_Ph1,
              std::shared_ptr<CPS::Signal::DecouplingIdealTransformer_DP_Ph1>,
              CPS::SimSignalComp>(mSignal, "DecouplingIdealTransformer_DP_Ph1",
                                  py::multiple_inheritance())

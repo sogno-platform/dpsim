@@ -53,7 +53,8 @@ void DP::Ph1::ControlledVoltageSource::initializeFromNodesAndTerminals(
   mSLog->flush();
 }
 
-SimPowerComp<Complex>::Ptr DP::Ph1::ControlledVoltageSource::clone(String name) {
+SimPowerComp<Complex>::Ptr
+DP::Ph1::ControlledVoltageSource::clone(String name) {
   auto copy = ControlledVoltageSource::make(name, mLogLevel);
   copy->setParameters(**mVoltageRef);
   return copy;
@@ -63,9 +64,9 @@ void DP::Ph1::ControlledVoltageSource::mnaCompInitialize(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
 
-    (**mIntfVoltage)(0, 0) = **mVoltageRef;
+  (**mIntfVoltage)(0, 0) = **mVoltageRef;
 
-    SPDLOG_LOGGER_INFO(mSLog,
+  SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- MNA initialization ---"
                      "\nInitial voltage {:s}"
                      "\nInitial current {:s}"
@@ -141,7 +142,7 @@ void DP::Ph1::ControlledVoltageSource::mnaCompAddPreStepDependencies(
 }
 
 void DP::Ph1::ControlledVoltageSource::mnaCompPreStep(Real time,
-                                                       Int timeStepCount) {
+                                                      Int timeStepCount) {
   updateVoltage(time);
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 }

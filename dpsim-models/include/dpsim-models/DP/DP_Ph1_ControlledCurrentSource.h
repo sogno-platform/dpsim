@@ -22,7 +22,7 @@ namespace Ph1 {
 /// In case of a dynamic phasor simulation, a frequency different
 /// from zero is added on top of the system frequency.
 class ControlledCurrentSource : public MNASimPowerComp<Complex>,
-                      public SharedFactory<ControlledCurrentSource> {
+                                public SharedFactory<ControlledCurrentSource> {
 protected:
   // Updates current according to reference phasor and frequency
   void updateCurrent(Real time);
@@ -31,9 +31,10 @@ public:
   const Attribute<Complex>::Ptr mCurrentRef;
   /// Defines UID, name and logging level
   ControlledCurrentSource(String uid, String name,
-                Logger::Level loglevel = Logger::Level::off);
+                          Logger::Level loglevel = Logger::Level::off);
   /// Defines name and logging level
-  ControlledCurrentSource(String name, Logger::Level logLevel = Logger::Level::off)
+  ControlledCurrentSource(String name,
+                          Logger::Level logLevel = Logger::Level::off)
       : ControlledCurrentSource(name, name, logLevel) {}
 
   void setParameters(Complex currentRef);
