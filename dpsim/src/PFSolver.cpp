@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
+#include <dpsim-models/MathUtils.h>
 #include <dpsim/PFSolver.h>
 #include <dpsim/SequentialScheduler.h>
 #include <iostream>
@@ -467,6 +468,10 @@ CPS::Real PFSolver::B(int i, int j) { return mY.coeff(i, j).imag(); }
 CPS::Bool PFSolver::checkConvergence() {
   // Converged if all mismatches are below the tolerance
   for (CPS::UInt i = 0; i < mNumUnknowns; i++) {
+    if (!Math::isFinite(mF(i))) {
+      SPDLOG_LOGGER_WARN(mSLog, "mF[{}] not finite (NaN/Inf)", i);
+      return false;
+    }
     if (abs(mF(i)) > mTolerance)
       return false;
   }
