@@ -255,6 +255,7 @@ void SystemTopology::removeComponent(const String &name) {
 }
 
 void SystemTopology::removeNode(const String &name) {
+  // TODO: Check if any components are connected to the node and remove them as well
   for (auto it = mNodes.begin(); it != mNodes.end();) {
     if ((*it)->name() == name) {
       it = mNodes.erase(it);
