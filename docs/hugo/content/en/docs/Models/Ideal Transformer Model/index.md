@@ -9,12 +9,12 @@ The Ideal Transformer Model (ITM) is a signal component that splits a circuit in
 
 <center>
 <figure margin=30%>
-    <img src="./images/ITM.svg" width=70% alt="ITM">
+    <img src="./images/ITM.svg" width=100% alt="ITM">
     <figcaption>Fig. 1: Ideal Transformer Model Circuit diagram.
     </figcaption>
 </figure>
 </center>
 
-To add an ITM, users must split the cirtuit and create the copies of the PCC node. An example of this process can be found in the Notebook [ITM.ipynb](../../../../../../../examples/Notebooks/Components/ITM.ipynb).
+To add an ITM, users must split the cirtuit and create the copies of the PCC node. An example of this process can be found in the Notebook `ITM.ipynb`.
 
 To avoid connections of the controlled voltage source with a capacitor, or the controlled current source with an inductor, the resistors $R_{\mathrm{series}}$ and $R_{\mathrm{parallel}}$ are included.
