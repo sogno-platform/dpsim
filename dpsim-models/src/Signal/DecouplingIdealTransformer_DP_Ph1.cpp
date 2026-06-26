@@ -1,17 +1,11 @@
-/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *********************************************************************************/
+// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+// SPDX-License-Identifier: MPL-2.0
 
 #include "dpsim-models/Attribute.h"
 #include "dpsim-models/Definitions.h"
 #include "dpsim-models/TopologicalNode.h"
 #include <cstdlib>
 #include <dpsim-models/Signal/DecouplingIdealTransformer_DP_Ph1.h>
-#include <iostream>
 
 using namespace CPS;
 using namespace CPS::DP::Ph1;
@@ -108,12 +102,12 @@ void DecouplingIdealTransformer_DP_Ph1::initialize(Real omega, Real timeStep) {
   SPDLOG_LOGGER_INFO(mSLog, "Verify initial voltage: v_2 {}",
                      mVoltageSrc->intfVoltage()(0, 0));
 
-  mCur1Extrap = std::vector<Complex>(mExtrapolationDegree + 1, 3);
+  mCur1Extrap = std::vector<Complex>(mExtrapolationDegree + 1);
   mCur1Extrap[0] = mCurrent1Extrap0;
   if (mExtrapolationDegree > 0) {
     mCur1Extrap[1] = mVoltageSrcIntfCurr(0, 0);
   }
-  mVol2Extrap = std::vector<Complex>(mExtrapolationDegree + 1, 1);
+  mVol2Extrap = std::vector<Complex>(mExtrapolationDegree + 1);
 }
 
 Complex

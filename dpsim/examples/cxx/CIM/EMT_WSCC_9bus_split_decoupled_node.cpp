@@ -1,16 +1,10 @@
-/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *********************************************************************************/
+// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+// SPDX-License-Identifier: MPL-2.0
 
 #include "dpsim-models/EMT/EMT_Ph3_PiLine.h"
 #include "dpsim-models/EMT/EMT_Ph3_RXLoad.h"
 #include "dpsim-models/IdentifiedObject.h"
 #include "dpsim-models/Signal/DecouplingIdealTransformer_EMT_Ph1.h"
-#include <iostream>
 #include <list>
 
 #include <DPsim.h>
@@ -94,7 +88,7 @@ void decoupleNode(SystemTopology &sys, const String &nodeName,
   for (auto comp : newComponents)
     sys.addComponent(comp);
 
-  Eigen::MatrixXd i_0(1, 1);
+  Matrix i_0(1, 1);
   i_0(0, 0) = 0;
 
   auto idealTrafo = Signal::DecouplingIdealTransformer_EMT_Ph1::make(

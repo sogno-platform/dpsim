@@ -19,8 +19,8 @@ DP::Ph1::ControlledVoltageSource::ControlledVoltageSource(
 {
   setVirtualNodeNumber(1);
   setTerminalNumber(2);
-  **mIntfVoltage = Matrix::Zero(1, 1);
-  **mIntfCurrent = Matrix::Zero(1, 1);
+  **mIntfVoltage = MatrixComp::Zero(1, 1);
+  **mIntfCurrent = MatrixComp::Zero(1, 1);
 }
 
 void DP::Ph1::ControlledVoltageSource::setParameters(Complex voltageRef) {

@@ -1,10 +1,5 @@
-/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *********************************************************************************/
+// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+// SPDX-License-Identifier: MPL-2.0
 
 #pragma once
 
@@ -69,7 +64,7 @@ public:
       String name, Logger::Level logLevel = Logger::Level::info);
 
   void setParameters(SimNode<Real>::Ptr node1, SimNode<Real>::Ptr node2,
-                     Real delay, Eigen::MatrixXd voltageSrcIntfCurr,
+                     Real delay, Matrix voltageSrcIntfCurr,
                      Real current1Extrap0,
                      CouplingMethod method = CouplingMethod::DELAY);
   void initialize(Real omega, Real timeStep);
