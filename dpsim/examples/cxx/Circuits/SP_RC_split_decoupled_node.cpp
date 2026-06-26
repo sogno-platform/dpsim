@@ -237,8 +237,10 @@ int main(int argc, char *argv[]) {
   if (args.options.find("prefix") != args.options.end())
     prefix = args.getOptionString("prefix");
 
-  std::cout << "Simulate with " << numThreads << " threads, sequence number "
-            << numSeq << ", co-simulation method " << cosimMethod << std::endl;
+  SPDLOG_LOGGER_INFO(
+      DPsim::Logger::get("SP_RC_split_decoupled_node"),
+      "Simulate with {} threads, sequence number {}, co-simulation method {}",
+      numThreads, numSeq, cosimMethod);
 
   float r1_r_1 = 0.1;
   float c1_c_1 = 1;

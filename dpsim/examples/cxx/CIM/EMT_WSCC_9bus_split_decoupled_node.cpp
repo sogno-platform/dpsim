@@ -39,13 +39,11 @@ void decoupleNode(SystemTopology &sys, const String &nodeName,
 
   for (auto genComp : componentsAt1) {
     auto comp = std::dynamic_pointer_cast<SimPowerComp<Real>>(genComp);
-    std::cout << "Cloning component: " << comp->name() << std::endl;
     auto compCopy = comp->clone(comp->name());
 
     SimNode<Real>::List nodeCopies;
     for (UInt nNode = 0; nNode < comp->terminalNumber(); nNode++) {
       String origNodeName = comp->node(nNode)->name();
-      std::cout << "Processing components' node " << origNodeName << std::endl;
       if (origNodeName == nodeName) {
         nodeCopies.push_back(nodeCopy1);
       } else {
@@ -66,13 +64,11 @@ void decoupleNode(SystemTopology &sys, const String &nodeName,
 
   for (auto genComp : componentsAt2) {
     auto comp = std::dynamic_pointer_cast<SimPowerComp<Real>>(genComp);
-    std::cout << "Cloning component: " << comp->name() << std::endl;
     auto compCopy = comp->clone(comp->name());
 
     SimNode<Real>::List nodeCopies;
     for (UInt nNode = 0; nNode < comp->terminalNumber(); nNode++) {
       String origNodeName = comp->node(nNode)->name();
-      std::cout << "Processing components' node " << origNodeName << std::endl;
       if (origNodeName == nodeName) {
         nodeCopies.push_back(nodeCopy2);
       } else {
@@ -163,8 +159,9 @@ int main(int argc, char *argv[]) {
   if (args.options.find("seq") != args.options.end())
     numSeq = args.getOptionInt("seq");
 
-  std::cout << "Simulate with " << numThreads << " threads, sequence number "
-            << numSeq << std::endl;
+  SPDLOG_LOGGER_INFO(DPsim::Logger::get("EMT_WSCC_9bus_split_decoupled_node"),
+                     "Simulate with {} threads, sequence number {}", numThreads,
+                     numSeq);
 
   // Monolithic Simulation
   String simNameMonolithic = "WSCC-9bus_monolithic_EMT";
