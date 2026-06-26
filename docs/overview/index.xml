@@ -183,7 +183,345 @@ A task T4 that depends on data modified by task T1 is scheduled to the level fol
 In the simplest case, all tasks of a level have to be finished before tasks of the next level are started.&lt;/p>
 &lt;p>&lt;img src="task_graph_levels.svg" alt="image">&lt;/p>
 &lt;p>The dependencies of tasks on data are determined by referencing the attributes that are read or modified by the task.
-The scheduler computes the schedule prior to the simulation from the task dependency graph resulting from the tasks&amp;rsquo; data dependencies.&lt;/p></description></item><item><title>Docs: State-Space Extraction</title><link>https://sogno-platform.github.io/dpsim/docs/overview/state-space-extraction-dpsim/</link><pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/overview/state-space-extraction-dpsim/</guid><description>
+The scheduler computes the schedule prior to the simulation from the task dependency graph resulting from the tasks&amp;rsquo; data dependencies.&lt;/p></description></item><item><title>Docs: Component and Solver Initialization</title><link>https://sogno-platform.github.io/dpsim/docs/overview/initialization/</link><pubDate>Thu, 18 Jun 2026 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/overview/initialization/</guid><description>
+&lt;p>Initialization is the phase between constructing the system topology and running the first timestep.
+Its job is to size the system matrices, derive initial state from power-flow results, register MNA tasks, and stamp static conductances.
+Two constraints drive its structure:&lt;/p>
+&lt;ul>
+&lt;li>The system matrix size depends on the total number of simulation nodes, including &lt;strong>virtual nodes&lt;/strong> declared by composite components and their sub-components. All virtual nodes must therefore be known &lt;em>before&lt;/em> the matrices are allocated.&lt;/li>
+&lt;li>Component parameter values (impedances, initial phasors) depend on terminal voltages and powers, which are only available &lt;em>after&lt;/em> a power-flow solve.&lt;/li>
+&lt;/ul>
+&lt;p>These two constraints impose an ordering that is captured in the solver&amp;rsquo;s initialization sequence.&lt;/p>
+&lt;hr>
+&lt;h1 id="mna-solver-initialization-sequence">MNA Solver Initialization Sequence&lt;/h1>
+&lt;p>&lt;code>MnaSolver::initialize()&lt;/code> executes the following steps in order.&lt;/p>
+&lt;div class="mermaid">
+flowchart TD
+start([Simulation::run]) --> init[MnaSolver::initialize]
+init --> s1["S1: identifyTopologyObjects()\nSort into mMNAComponents,\nmSimSignalComps, ..."]
+s1 --> s2["S2: createSubComponents() pre-pass\nRecursively instantiate sub-components\nso all virtual nodes exist"]
+s2 --> s3["S3: collectVirtualNodes()\nassignMatrixNodeIndices()\nMatrix size is now fixed"]
+s3 --> s4["S4: createEmptyVectors()\ncreateEmptySystemMatrix()"]
+s4 --> s5a["S5a: initializeFromNodesAndTerminals(freq)\nfor each SimPowerComp"]
+s5a --> s5b["S5b: initialize(omega, dt)\nfor each SimSignalComp"]
+s5b --> s5c["S5c: mnaInitialize(omega, dt, v)\nfor each MNAInterface component"]
+s5c --> cond{mSteadyStateInit?}
+cond -- yes --> s6["S6: steadyStateInitialization()\nIterate MNA until phasors converge"]
+s6 --> s7
+cond -- no --> s7["S7: setBehaviour(MNASimulation)\non all components"]
+s7 --> s8["S8: initializeSystem()\nStamp static elements,\ncompute LU factorizations"]
+s8 --> done([Ready for timesteps])
+&lt;/div>
+&lt;h2 id="step-1--identify-topology-objects">Step 1 — Identify topology objects&lt;/h2>
+&lt;p>&lt;code>identifyTopologyObjects()&lt;/code> iterates over &lt;code>SystemTopology::mComponents&lt;/code> and sorts each component into one of four lists:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>List&lt;/th>
+&lt;th>Contents&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>mMNAComponents&lt;/code>&lt;/td>
+&lt;td>Static MNA power components&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>mMNAIntfVariableComps&lt;/code>&lt;/td>
+&lt;td>Variable-stamp MNA components (e.g. under &lt;code>MNAVariableCompInterface&lt;/code>)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>mMNAIntfSwitches&lt;/code>&lt;/td>
+&lt;td>Components with a switch interface&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>mSimSignalComps&lt;/code>&lt;/td>
+&lt;td>Signal components (&lt;code>SimSignalComp&lt;/code>)&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>Ground nodes are excluded here.&lt;/p>
+&lt;h2 id="step-2--create-sub-components-pre-pass">Step 2 — Create sub-components (pre-pass)&lt;/h2>
+&lt;p>Before the matrix can be sized, every composite component&amp;rsquo;s sub-component tree must be fully instantiated so that all virtual nodes are visible.
+The solver calls &lt;code>createSubComponents()&lt;/code> recursively on every MNA component:&lt;/p>
+&lt;ul>
+&lt;li>Only sub-components &lt;em>newly registered&lt;/em> by this call are recursed into, because eagerly-constructed sub-components (created in the constructor before &lt;code>connect()&lt;/code> has run) are not yet safe to recurse into.&lt;/li>
+&lt;li>This step is a pre-pass only — it must not set parameter values derived from terminal data or frequency.&lt;/li>
+&lt;/ul>
+&lt;p>For details on the three-stage composite lifecycle (&lt;code>createSubComponents&lt;/code>, &lt;code>initializeParentFromNodesAndTerminals&lt;/code>, &lt;code>mnaCompInitialize&lt;/code>), see &lt;a href="https://sogno-platform.github.io/dpsim/docs/overview/subcomponents/">Subcomponent Handling&lt;/a>.&lt;/p>
+&lt;h2 id="step-3--collect-virtual-nodes-and-assign-indices">Step 3 — Collect virtual nodes and assign indices&lt;/h2>
+&lt;p>&lt;code>collectVirtualNodes()&lt;/code> visits every component and calls &lt;code>virtualNodes()&lt;/code> to collect all virtual &lt;code>SimNode&lt;/code> objects, then appends them to the solver&amp;rsquo;s node list.
+&lt;code>assignMatrixNodeIndices()&lt;/code> then assigns a contiguous integer index to every simulation node (real and virtual), which determines the row/column layout of the system matrices.&lt;/p>
+&lt;p>After this step the matrix size is fixed.&lt;/p>
+&lt;h2 id="step-4--allocate-empty-matrices">Step 4 — Allocate empty matrices&lt;/h2>
+&lt;p>&lt;code>createEmptyVectors()&lt;/code> and &lt;code>createEmptySystemMatrix()&lt;/code> allocate the left-side vector, right-side vector, system matrix (dense or sparse depending on the solver variant), and switch-variant copies.
+For sparse solvers, &lt;code>mBaseSystemMatrix&lt;/code> and &lt;code>mLuFactorizations&lt;/code> are also allocated here, with one variant per switch combination.&lt;/p>
+&lt;h2 id="step-5--initialize-components-initializecomponents">Step 5 — Initialize components (&lt;code>initializeComponents&lt;/code>)&lt;/h2>
+&lt;p>This step has three sub-passes over the component lists.&lt;/p>
+&lt;h3 id="5a--power-components-initializefromnodesandterminals">5a — Power components: &lt;code>initializeFromNodesAndTerminals&lt;/code>&lt;/h3>
+&lt;p>For every &lt;code>SimPowerComp&amp;lt;VarType&amp;gt;&lt;/code> in &lt;code>mMNAComponents&lt;/code> and &lt;code>mMNAIntfVariableComps&lt;/code>:&lt;/p>
+&lt;ol>
+&lt;li>&lt;code>checkForUnconnectedTerminals()&lt;/code> validates connectivity.&lt;/li>
+&lt;li>If &lt;code>mInitFromNodesAndTerminals&lt;/code> is set (the default), &lt;code>initializeFromNodesAndTerminals(mSystem.mSystemFrequency)&lt;/code> is called.&lt;/li>
+&lt;/ol>
+&lt;p>This is where components read their terminal voltages and powers and derive physical parameters (impedances, initial phasor values, per-unit quantities).
+For composite components &lt;code>initializeFromNodesAndTerminals()&lt;/code> is &lt;code>final&lt;/code> in &lt;code>CompositePowerComp&lt;/code> and sequences the three lifecycle stages automatically; non-composite power components override it directly.&lt;/p>
+&lt;h3 id="5b--signal-components-initializeomega-timestep">5b — Signal components: &lt;code>initialize(omega, timeStep)&lt;/code>&lt;/h3>
+&lt;p>Each &lt;code>SimSignalComp&lt;/code> in &lt;code>mSimSignalComps&lt;/code> receives &lt;code>initialize(mSystem.mSystemOmega, mTimeStep)&lt;/code>.
+This is the hook for signal-domain components (regulators, governors, PSS blocks) to allocate their state buffers, set initial values, and wire up attribute connections.&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;strong>Naming constraint.&lt;/strong> Do not use &lt;code>initialize(Real)&lt;/code> or &lt;code>initialize(Real, Real)&lt;/code> as a user-facing initialization hook for power components — those signatures match the solver&amp;rsquo;s signal-comp hook and will be called by the solver rather than by the component author&amp;rsquo;s intent. Use &lt;code>initializeFromNodesAndTerminals()&lt;/code> or a named method such as &lt;code>initializeStates()&lt;/code> instead.&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="5c--mna-components-mnainitialize">5c — MNA components: &lt;code>mnaInitialize&lt;/code>&lt;/h3>
+&lt;p>Each MNA component (including switches) receives &lt;code>mnaInitialize(omega, timeStep, leftVector)&lt;/code>.
+In &lt;code>MNASimPowerComp&lt;/code> this method:&lt;/p>
+&lt;ol>
+&lt;li>Clears and re-registers &lt;code>MNAPreStep&lt;/code> / &lt;code>MNAPostStep&lt;/code> tasks according to the &lt;code>hasPreStep&lt;/code> / &lt;code>hasPostStep&lt;/code> flags.&lt;/li>
+&lt;li>Initializes &lt;code>mRightVector&lt;/code> to zero with the correct size.&lt;/li>
+&lt;li>Calls &lt;code>mnaCompInitialize(omega, timeStep, leftVector)&lt;/code> on the component.&lt;/li>
+&lt;/ol>
+&lt;p>In &lt;code>mnaCompInitialize&lt;/code>, component classes call &lt;code>updateMatrixNodeIndices()&lt;/code> and perform any one-time MNA setup that requires the final node layout (e.g. allocating per-component history vectors sized to the system).&lt;/p>
+&lt;p>Nodes are initialized last via &lt;code>SimNode::initialize()&lt;/code>, which zeros the node voltage.&lt;/p>
+&lt;h2 id="step-6--optional-steady-state-initialization">Step 6 — Optional steady-state initialization&lt;/h2>
+&lt;p>If &lt;code>mSteadyStateInit&lt;/code> is set, &lt;code>steadyStateInitialization()&lt;/code> iterates the MNA solve until the phasor solution converges.
+The flag &lt;code>mIsInInitialization&lt;/code> is set to &lt;code>true&lt;/code> for this sub-phase so that components can distinguish initialization solves from simulation solves via &lt;code>mBehaviour&lt;/code> (see below).&lt;/p>
+&lt;h2 id="step-7--set-simulation-behaviour">Step 7 — Set simulation behaviour&lt;/h2>
+&lt;p>After initialization solves are complete, the solver calls &lt;code>setBehaviour(TopologicalPowerComp::Behaviour::MNASimulation)&lt;/code> on every &lt;code>TopologicalPowerComp&lt;/code> and &lt;code>setBehaviour(SimSignalComp::Behaviour::Simulation)&lt;/code> on every &lt;code>SimSignalComp&lt;/code>.&lt;/p>
+&lt;p>The &lt;code>Behaviour&lt;/code> enum (defined in &lt;code>TopologicalPowerComp&lt;/code>) has three values:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Value&lt;/th>
+&lt;th>When active&lt;/th>
+&lt;th>Typical use&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>Behaviour::Initialization&lt;/code>&lt;/td>
+&lt;td>During PF steady-state init pass&lt;/td>
+&lt;td>Components may disable transient update equations&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>Behaviour::PFSimulation&lt;/code>&lt;/td>
+&lt;td>During PFSolver run&lt;/td>
+&lt;td>Activates power-flow-specific stamping&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>Behaviour::MNASimulation&lt;/code>&lt;/td>
+&lt;td>After &lt;code>initialize()&lt;/code> completes&lt;/td>
+&lt;td>Normal simulation; components should be in their run-time mode&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>Components that need different behaviour between initialization and simulation check &lt;code>mBehaviour&lt;/code> in their pre/post-step methods or in &lt;code>mnaCompPreStep&lt;/code>.&lt;/p>
+&lt;h2 id="step-8--initialize-system-matrices-initializesystem">Step 8 — Initialize system matrices (&lt;code>initializeSystem&lt;/code>)&lt;/h2>
+&lt;p>&lt;code>initializeSystem()&lt;/code> selects one of three paths:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Parallel frequencies&lt;/strong> (&lt;code>initializeSystemWithParallelFrequencies&lt;/code>): stamps each frequency into a separate thread.&lt;/li>
+&lt;li>&lt;strong>Variable matrix&lt;/strong> (&lt;code>initializeSystemWithVariableMatrix&lt;/code>): used by &lt;code>MnaSolverSysRecomp&lt;/code>; saves static switch matrices as base matrices and adds variable elements on top.&lt;/li>
+&lt;li>&lt;strong>Precomputed matrices&lt;/strong> (&lt;code>initializeSystemWithPrecomputedMatrices&lt;/code>): the common path. Calls &lt;code>switchedMatrixStamp()&lt;/code> for each switch combination, which iterates over all static MNA components and calls &lt;code>mnaApplySystemMatrixStamp()&lt;/code> and &lt;code>mnaApplyRightSideVectorStamp()&lt;/code>. LU factorizations are computed for each variant.&lt;/li>
+&lt;/ul>
+&lt;p>After this step the solver is ready to execute timesteps.&lt;/p>
+&lt;hr>
+&lt;h1 id="component-class-hierarchy-and-init-hooks">Component Class Hierarchy and Init Hooks&lt;/h1>
+&lt;p>The following diagram shows which initialization methods live in which class, and the override points for component authors.&lt;/p>
+&lt;div class="mermaid">
+classDiagram
+class TopologicalPowerComp {
++Behaviour mBehaviour
++setBehaviour(b)
+}
+class SimPowerComp~T~ {
++initialize(Matrix frequencies)
++initializeFromNodesAndTerminals(Real freq)
++virtualNodes()
+}
+class MNASimPowerComp~T~ {
++mnaInitialize(omega, dt, v) final
++mnaCompInitialize(omega, dt, v)*
++mnaCompApplySystemMatrixStamp()*
++mnaCompPreStep()*
++mnaCompPostStep()*
+}
+class CompositePowerComp~T~ {
++createSubComponents()*
++initializeFromNodesAndTerminals(freq) final
++initializeParentFromNodesAndTerminals(freq)*
++mnaParentInitialize(omega, dt, v)*
++mnaParentPreStep()*
++mnaParentPostStep()*
+}
+class SimSignalComp {
++initialize(Real omega, Real dt)*
+}
+TopologicalPowerComp &lt;|-- SimPowerComp
+SimPowerComp &lt;|-- MNASimPowerComp
+MNASimPowerComp &lt;|-- CompositePowerComp
+&lt;/div>
+&lt;p>Methods marked &lt;code>*&lt;/code> are the virtual override points for component authors.
+Methods marked &lt;code>final&lt;/code> must not be overridden; the base class sequences them correctly.&lt;/p>
+&lt;hr>
+&lt;h1 id="component-method-contracts">Component Method Contracts&lt;/h1>
+&lt;p>The table below summarizes which initialization method has which responsibilities. A tick means the operation &lt;em>belongs&lt;/em> in that method; a cross means it must not appear there.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Responsibility&lt;/th>
+&lt;th style="text-align:center">Constructor / &lt;code>setParameters&lt;/code>&lt;/th>
+&lt;th style="text-align:center">&lt;code>createSubComponents&lt;/code>&lt;/th>
+&lt;th style="text-align:center">&lt;code>initializeFromNodesAndTerminals&lt;/code>&lt;/th>
+&lt;th style="text-align:center">&lt;code>mnaCompInitialize&lt;/code>&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Declare virtual node count&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Allocate sub-component objects&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>connect()&lt;/code> sub-components to virtual nodes&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>addMNASubComponent()&lt;/code> registration&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Read terminal voltage / power&lt;/td>
+&lt;td style="text-align:center">✗&lt;/td>
+&lt;td style="text-align:center">✗&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Read system frequency&lt;/td>
+&lt;td style="text-align:center">✗&lt;/td>
+&lt;td style="text-align:center">✗&lt;/td>
+&lt;td style="text-align:center">✓ (via argument)&lt;/td>
+&lt;td style="text-align:center">✓ (via &lt;code>omega&lt;/code>)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Compute impedance / admittance&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">✗&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Call &lt;code>setParameters()&lt;/code> on sub-components&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Call &lt;code>updateMatrixNodeIndices()&lt;/code>&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Allocate per-step vectors (history, right vector)&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Register MNA tasks (handled by base class)&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">✓ (via &lt;code>mnaCompInitialize&lt;/code>)&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="common-pitfalls">Common pitfalls&lt;/h2>
+&lt;ul>
+&lt;li>&lt;strong>Accessing terminals in the constructor or &lt;code>createSubComponents&lt;/code>&lt;/strong>: terminal data (initial voltage, connected power) is not yet populated. The topology is set up but power-flow has not run.&lt;/li>
+&lt;li>&lt;strong>Accessing &lt;code>mFrequencies(0,0)&lt;/code> in &lt;code>createSubComponents&lt;/code>&lt;/strong>: the system frequency matrix is set on &lt;code>SimPowerComp&lt;/code> via &lt;code>initialize(Matrix)&lt;/code> which only runs later. Use the &lt;code>frequency&lt;/code> argument passed to &lt;code>initializeParentFromNodesAndTerminals&lt;/code> or the &lt;code>omega&lt;/code> argument in &lt;code>mnaCompInitialize&lt;/code>.&lt;/li>
+&lt;li>&lt;strong>Zero-valued shunt branches&lt;/strong>: a capacitor or reactor with zero admittance injects a zero row/column into the system matrix, which makes the LU factorization singular. Guard with a strict &lt;code>&amp;gt; 0&lt;/code> check and omit the branch rather than inserting a zero stamp.&lt;/li>
+&lt;li>&lt;strong>Late-registered virtual nodes&lt;/strong>: any virtual node that appears for the first time &lt;em>after&lt;/em> &lt;code>collectVirtualNodes()&lt;/code> (Step 3) will not have a matrix index assigned, and the solver will crash or silently produce wrong results. All virtual nodes must be declared in the constructor or &lt;code>setParameters()&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h1 id="composite-component-initialization-sequence">Composite Component Initialization Sequence&lt;/h1>
+&lt;p>The following diagram shows how the solver and a composite component interact during initialization. For further details see &lt;a href="https://sogno-platform.github.io/dpsim/docs/overview/subcomponents/">Subcomponent Handling&lt;/a>.&lt;/p>
+&lt;div class="mermaid">
+sequenceDiagram
+participant MNA as MnaSolver
+participant CC as CompositePowerComp
+participant SC as SubComponent
+Note over MNA,SC: Step 2 - pre-pass (topology only)
+MNA->>CC: createSubComponents()
+CC->>SC: make_shared + connect() + addMNASubComponent()
+Note over MNA,SC: Step 3 - matrix sizing
+MNA->>CC: collectVirtualNodes()
+MNA->>MNA: assignMatrixNodeIndices()
+Note over MNA,SC: Step 5a - parameterization
+MNA->>CC: initializeFromNodesAndTerminals(freq)
+CC->>CC: createSubComponents() idempotent guard
+CC->>CC: initializeParentFromNodesAndTerminals(freq)
+CC->>SC: initialize(frequencies)
+CC->>SC: initializeFromNodesAndTerminals(freq)
+Note over MNA,SC: Step 5c - MNA setup
+MNA->>CC: mnaInitialize(omega, dt, v)
+CC->>SC: mnaInitialize(omega, dt, v)
+CC->>CC: mnaParentInitialize(omega, dt, v)
+&lt;/div>
+&lt;hr>
+&lt;h1 id="pfsolver-initialization">PFSolver Initialization&lt;/h1>
+&lt;p>&lt;code>PFSolver::initialize()&lt;/code> follows a simpler sequence because it operates only on single-phase SP components with no sub-component tree and does not need a &lt;code>createSubComponents&lt;/code> pre-pass.&lt;/p>
+&lt;div class="mermaid">
+flowchart TD
+pf[PFSolver::initialize] --> p1[Classify components\ninto generator/load/line/... lists]
+p1 --> p2[setBaseApparentPower\nCompute per-unit base]
+p2 --> p3[assignMatrixNodeIndices]
+p3 --> p4[initializeComponents\ninitializeFromNodesAndTerminals\ncalculatePerUnitParameters]
+p4 --> p5[determinePFBusType\nPQ / PV / VD]
+p5 --> p6[determineNodeBaseVoltages]
+p6 --> p7[composeAdmittanceMatrix\nBuild Y-bus]
+p7 --> done([Ready to solve power flow])
+&lt;/div>
+&lt;p>&lt;code>PFSolver::setSolverAndComponentBehaviour()&lt;/code> is the equivalent of Step 7 for the MNA solver: it calls &lt;code>setBehaviour(Behaviour::PFSimulation)&lt;/code> or &lt;code>setBehaviour(Behaviour::Initialization)&lt;/code> on all components to allow them to switch stamping modes.&lt;/p>
+&lt;hr>
+&lt;h1 id="known-design-issues-issue-59">Known Design Issues (issue #59)&lt;/h1>
+&lt;p>The following areas were identified in &lt;a href="https://github.com/sogno-platform/dpsim/issues/59">GitHub issue #59&lt;/a> as needing improvement.&lt;/p>
+&lt;h2 id="simpowercompinitializematrix-frequencies-naming-clash">&lt;code>SimPowerComp::initialize(Matrix frequencies)&lt;/code> naming clash&lt;/h2>
+&lt;p>&lt;code>SimPowerComp&amp;lt;T&amp;gt;::initialize(Matrix frequencies)&lt;/code> is called by the solver to propagate frequency information down the component tree.
+It is &lt;em>not&lt;/em> a hook for component authors — a component that overrides it takes over responsibility for calling the base class version, which is easy to forget.
+The recommended path is:&lt;/p>
+&lt;ul>
+&lt;li>For power components, use &lt;code>initializeFromNodesAndTerminals()&lt;/code> or &lt;code>initializeParentFromNodesAndTerminals()&lt;/code>.&lt;/li>
+&lt;li>For signal components, use the &lt;code>initialize(Real omega, Real timeStep)&lt;/code> hook provided by &lt;code>SimSignalComp&lt;/code>.&lt;/li>
+&lt;li>For anything else (e.g. setting up state-space matrices), add a named helper called from one of the above.&lt;/li>
+&lt;/ul>
+&lt;p>The base implementation of &lt;code>SimPowerComp::initialize(Matrix)&lt;/code> should be renamed to something that cannot be accidentally overridden (e.g. &lt;code>propagateFrequencies()&lt;/code>), and an &lt;code>override&lt;/code> guard should be added to catch accidental overrides.&lt;/p>
+&lt;h2 id="sub-component-construction-in-constructors">Sub-component construction in constructors&lt;/h2>
+&lt;p>Some components create and register sub-components eagerly in their constructor before &lt;code>connect()&lt;/code> has been called on those sub-components.
+This works today because the solver&amp;rsquo;s &lt;code>createSubComponents&lt;/code> pre-pass skips already-registered sub-components, but it couples topology creation to object construction and makes components harder to reason about.
+The long-term goal is to migrate all sub-component construction to &lt;code>createSubComponents()&lt;/code>, giving a clear rule: the constructor only allocates and the topology stage wires.&lt;/p>
+&lt;h2 id="signal-component-initialize-not-sequenced-with-power-flow">Signal component &lt;code>initialize&lt;/code> not sequenced with power flow&lt;/h2>
+&lt;p>Signal components receive &lt;code>initialize(omega, timeStep)&lt;/code> &lt;em>after&lt;/em> &lt;code>initializeFromNodesAndTerminals&lt;/code> on power components but &lt;em>before&lt;/em> the MNA tasks are registered.
+If a signal component&amp;rsquo;s initial state depends on the power-flow solution (e.g. an exciter initializing to match the generator terminal voltage), it must read the relevant attribute values directly — there is no formal mechanism today to express this dependency in the initialization sequence.
+A future improvement would be to give signal components access to the settled power-flow solution before their &lt;code>initialize&lt;/code> is called.&lt;/p></description></item><item><title>Docs: State-Space Extraction</title><link>https://sogno-platform.github.io/dpsim/docs/overview/state-space-extraction-dpsim/</link><pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/overview/state-space-extraction-dpsim/</guid><description>
 &lt;p>State-space extraction is optional and can be enabled through the &lt;code>Simulation&lt;/code> API. During simulation setup, the MNA solver creates an &lt;code>MNAStateSpaceExtractor&lt;/code>. During the solver task flow, a state-space extraction task uses the active direct linear solver to update the extracted discrete-time state matrix.&lt;/p>
 &lt;h1 id="main-classes">Main classes&lt;/h1>
 &lt;p>The implementation is organized around three main parts:&lt;/p>
