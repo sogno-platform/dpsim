@@ -151,6 +151,25 @@ void DiakopticsSolver<VarType>::collectVirtualNodes(int net) {
         mSubnets[net].nodes.push_back(pComp->virtualNode(node));
       }
     }
+
+    if (pComp->hasSubComponents()) {
+      for (auto pSubComp : pComp->subComponents()) {
+        for (UInt node = 0; node < pSubComp->virtualNodesNumber(); ++node) {
+          auto vnode = pSubComp->virtualNode(node);
+          bool alreadyRegistered = false;
+          for (auto registeredNode : mSubnets[net].nodes) {
+            if (registeredNode == vnode) {
+              alreadyRegistered = true;
+              break;
+            }
+          }
+          if (alreadyRegistered)
+            continue;
+          ++(mSubnets[net].mVirtualNodeNum);
+          mSubnets[net].nodes.push_back(vnode);
+        }
+      }
+    }
   }
   SPDLOG_LOGGER_INFO(mSLog, "Subnet {} has {} real network nodes.", net,
                      mSubnets[net].mRealNetNodeNum);
