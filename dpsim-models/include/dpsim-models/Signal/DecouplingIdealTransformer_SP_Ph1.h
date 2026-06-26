@@ -52,7 +52,10 @@ protected:
   UInt mExtrapolationDegree = 0;
   Matrix mVoltageSrcIntfCurr;
 
+  // Get an approximate value of the signal in between steps when the delay is not an integer multiple of the step size
   Complex interpolate(std::vector<Complex> &data);
+
+  // Estimates the value of the input signal in the next step
   Complex extrapolate(std::vector<Complex> &data);
 
 public:

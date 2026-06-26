@@ -48,7 +48,10 @@ protected:
   UInt mExtrapolationDegree = 0;
   Eigen::MatrixXd mVoltageSrcIntfCurr;
 
+  // Get an approximate value of the signal in between steps when the delay is not an integer multiple of the step size
   Real interpolate(std::vector<Real> &data);
+
+  // Estimates the value of the input signal in the next step
   Real extrapolate(std::vector<Real> &data);
 
 public:
