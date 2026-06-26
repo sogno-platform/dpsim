@@ -1,0 +1,6 @@
+{{ if not (.Page.Scratch.Get "hasMermaid") }}
+  {{ .Page.Scratch.Set "hasMermaid" true }}
+{{ end }}
+<div class="mermaid">
+  {{- .Inner | safeHTML }}
+</div>
