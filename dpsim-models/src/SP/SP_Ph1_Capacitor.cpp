@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
+#include <dpsim-models/MathUtils.h>
 #include <dpsim-models/SP/SP_Ph1_Capacitor.h>
 
 using namespace CPS;
@@ -28,8 +29,10 @@ void SP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 
   Real omega = 2 * PI * frequency;
   mSusceptance = Complex(0, omega * **mCapacitance);
+  // Capacitor admittance is the susceptance (jwC); compute it directly to
+  // avoid manufacturing NaN at C = 0 via a 1/impedance round-trip.
+  mAdmittance = mSusceptance;
   mImpedance = Complex(1, 0) / mSusceptance;
-  mAdmittance = Complex(1, 0) / mImpedance;
   (**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
   **mIntfCurrent = mSusceptance * **mIntfVoltage;
 
@@ -129,7 +132,7 @@ void SP::Ph1::Capacitor::calculatePerUnitParameters(Real baseApparentPower) {
                      mBaseVoltage, mBaseImpedance);
 
   mImpedancePerUnit = mImpedance / mBaseImpedance;
-  mAdmittancePerUnit = 1. / mImpedancePerUnit;
+  mAdmittancePerUnit = mSusceptance * mBaseImpedance;
   SPDLOG_LOGGER_INFO(mSLog, "Impedance={} [pu]  Admittance={} [pu]",
                      Logger::complexToString(mImpedancePerUnit),
                      Logger::complexToString(mAdmittancePerUnit));
@@ -138,13 +141,13 @@ void SP::Ph1::Capacitor::calculatePerUnitParameters(Real baseApparentPower) {
 void SP::Ph1::Capacitor::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow &Y) {
   int bus1 = this->matrixNodeIndex(0);
 
-  if (std::isinf(mAdmittancePerUnit.real()) ||
-      std::isinf(mAdmittancePerUnit.imag())) {
-    std::cout << "Y:" << mAdmittancePerUnit << std::endl;
-    std::stringstream ss;
-    ss << "Capacitor >>" << this->name()
-       << ": infinite or nan values at node: " << bus1;
-    throw std::invalid_argument(ss.str());
+  if (!Math::isFinite(mAdmittancePerUnit)) {
+    SPDLOG_LOGGER_ERROR(mSLog,
+                        "Capacitor {}: non-finite per-unit admittance {} at "
+                        "node {}",
+                        this->name(),
+                        Logger::complexToString(mAdmittancePerUnit), bus1);
+    throw InvalidArgumentException();
   }
 
   //set the circuit matrix values

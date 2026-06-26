@@ -34,6 +34,11 @@ public:
   static Complex polar(Real abs, Real phase);
   static Complex polarDeg(Real abs, Real phase);
 
+  // -Ofast/-ffast-math folds std::isnan/isfinite to false; test the IEEE-754
+  // exponent bits directly instead.
+  static bool isFinite(Real value);
+  static bool isFinite(Complex value);
+
   // #### Vector Operations ####
   //
   // | Re(row,0)_harm1 | Re(row,colOffset)_harm1 |
