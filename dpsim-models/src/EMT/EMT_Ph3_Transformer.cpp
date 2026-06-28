@@ -7,6 +7,7 @@
  *********************************************************************************/
 
 #include <dpsim-models/EMT/EMT_Ph3_Transformer.h>
+#include <dpsim-models/MNAStampUtils.h>
 
 using namespace CPS;
 
@@ -232,110 +233,26 @@ void EMT::Ph3::Transformer::mnaParentInitialize(
       mTerminals[0]->node()->name(), mTerminals[0]->node()->matrixNodeIndex(),
       mTerminals[1]->node()->name(), mTerminals[1]->node()->matrixNodeIndex());
 }
-
 void EMT::Ph3::Transformer::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
-  // Ideal transformer equations
-  if (terminalNotGrounded(0)) {
-    Math::setMatrixElement(
-        systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A),
-        mVirtualNodes[1]->matrixNodeIndex(PhaseType::A), -1.);
-    Math::setMatrixElement(
-        systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B),
-        mVirtualNodes[1]->matrixNodeIndex(PhaseType::B), -1.);
-    Math::setMatrixElement(
-        systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C),
-        mVirtualNodes[1]->matrixNodeIndex(PhaseType::C), -1.);
 
-    Math::setMatrixElement(systemMatrix,
-                           mVirtualNodes[1]->matrixNodeIndex(PhaseType::A),
-                           mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), 1.);
-    Math::setMatrixElement(systemMatrix,
-                           mVirtualNodes[1]->matrixNodeIndex(PhaseType::B),
-                           mVirtualNodes[0]->matrixNodeIndex(PhaseType::B), 1.);
-    Math::setMatrixElement(systemMatrix,
-                           mVirtualNodes[1]->matrixNodeIndex(PhaseType::C),
-                           mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), 1.);
-  }
-  if (terminalNotGrounded(1)) {
-    Math::setMatrixElement(systemMatrix, matrixNodeIndex(1, 0),
-                           mVirtualNodes[1]->matrixNodeIndex(PhaseType::A),
-                           (**mRatio).real());
-    Math::setMatrixElement(systemMatrix, matrixNodeIndex(1, 1),
-                           mVirtualNodes[1]->matrixNodeIndex(PhaseType::B),
-                           (**mRatio).real());
-    Math::setMatrixElement(systemMatrix, matrixNodeIndex(1, 2),
-                           mVirtualNodes[1]->matrixNodeIndex(PhaseType::C),
-                           (**mRatio).real());
-    Math::setMatrixElement(systemMatrix,
-                           mVirtualNodes[1]->matrixNodeIndex(PhaseType::A),
-                           matrixNodeIndex(1, 0), -(**mRatio).real());
-    Math::setMatrixElement(systemMatrix,
-                           mVirtualNodes[1]->matrixNodeIndex(PhaseType::B),
-                           matrixNodeIndex(1, 1), -(**mRatio).real());
-    Math::setMatrixElement(systemMatrix,
-                           mVirtualNodes[1]->matrixNodeIndex(PhaseType::C),
-                           matrixNodeIndex(1, 2), -(**mRatio).real());
-  }
+  MNAStampUtils::stampIdealTransformerAs3x3(
+      **mRatio, systemMatrix,
 
-  // Add subcomps to system matrix
-  for (auto subcomp : mSubComponents)
-    if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
-      mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
+      // Primary base (A-phase start)
+      mVirtualNodes[0]->matrixNodeIndex(PhaseType::A),
 
-  if (terminalNotGrounded(0)) {
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(Complex(-1.0, 0)),
-                       mVirtualNodes[0]->matrixNodeIndex(PhaseType::A),
-                       mVirtualNodes[1]->matrixNodeIndex(PhaseType::A));
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(Complex(-1.0, 0)),
-                       mVirtualNodes[0]->matrixNodeIndex(PhaseType::B),
-                       mVirtualNodes[1]->matrixNodeIndex(PhaseType::B));
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(Complex(-1.0, 0)),
-                       mVirtualNodes[0]->matrixNodeIndex(PhaseType::C),
-                       mVirtualNodes[1]->matrixNodeIndex(PhaseType::C));
+      // Secondary base (A-phase start)
+      mVirtualNodes[1]->matrixNodeIndex(PhaseType::A),
 
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(Complex(1.0, 0)),
-                       mVirtualNodes[1]->matrixNodeIndex(PhaseType::A),
-                       mVirtualNodes[0]->matrixNodeIndex(PhaseType::A));
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(Complex(1.0, 0)),
-                       mVirtualNodes[1]->matrixNodeIndex(PhaseType::B),
-                       mVirtualNodes[0]->matrixNodeIndex(PhaseType::B));
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(Complex(1.0, 0)),
-                       mVirtualNodes[1]->matrixNodeIndex(PhaseType::C),
-                       mVirtualNodes[0]->matrixNodeIndex(PhaseType::C));
-  }
-  if (terminalNotGrounded(1)) {
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(**mRatio), matrixNodeIndex(1, 0),
-                       mVirtualNodes[1]->matrixNodeIndex(PhaseType::A));
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(**mRatio), matrixNodeIndex(1, 1),
-                       mVirtualNodes[1]->matrixNodeIndex(PhaseType::B));
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(**mRatio), matrixNodeIndex(1, 2),
-                       mVirtualNodes[1]->matrixNodeIndex(PhaseType::C));
+      // Branch equation node (SINGLE node, not phased)
+      mVirtualNodes[1]->matrixNodeIndex(PhaseType::A),
 
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(-**mRatio),
-                       mVirtualNodes[1]->matrixNodeIndex(PhaseType::A),
-                       matrixNodeIndex(1, 0));
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(-**mRatio),
-                       mVirtualNodes[1]->matrixNodeIndex(PhaseType::B),
-                       matrixNodeIndex(1, 1));
-    SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(-**mRatio),
-                       mVirtualNodes[1]->matrixNodeIndex(PhaseType::C),
-                       matrixNodeIndex(1, 2));
-  }
+      // Grounding flags
+      terminalNotGrounded(0), terminalNotGrounded(1),
+
+      mSLog);
 }
-
 void EMT::Ph3::Transformer::mnaParentAddPreStepDependencies(
     AttributeBase::List &prevStepDependencies,
     AttributeBase::List &attributeDependencies,
