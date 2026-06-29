@@ -15,7 +15,7 @@ concurrency:
 jobs:
   linux-fedora-dpsimpy:
     name: Build dpsimpy and tests examples on Fedora Linux
-    runs-on: ubuntu-latest
+    runs-on: sogno-platform-dpsim-runner
     container: sogno/dpsim:dev
     steps:
     - name: Checkout
@@ -51,7 +51,7 @@ jobs:
 
   linux-fedora-examples:
     name: Build Cxx examples on Fedora Linux
-    runs-on: ubuntu-latest
+    runs-on: sogno-platform-dpsim-runner
     container: sogno/dpsim:dev
     steps:
     - name: Checkout
@@ -88,7 +88,7 @@ jobs:
 ## Tests ##
   test-jupyter-notebooks:
     name: Run pytest over all notebooks
-    runs-on: ubuntu-latest
+    runs-on: sogno-platform-dpsim-runner
     needs: [linux-fedora-dpsimpy]
     container: sogno/dpsim:dev
     steps:
@@ -164,7 +164,7 @@ jobs:
 
   compare-notebook-results:
     name: Compare Notebook results
-    runs-on: ubuntu-latest
+    runs-on: sogno-platform-dpsim-runner
     needs: [test-jupyter-notebooks]
     steps:
     - name: Download new notebook results
@@ -214,7 +214,7 @@ jobs:
 
   test-binaries:
     name: Execute WSCC 9 bus example
-    runs-on: ubuntu-latest
+    runs-on: sogno-platform-dpsim-runner
     container: sogno/dpsim:dev
     needs: [linux-fedora-examples]
     steps:
@@ -243,7 +243,7 @@ jobs:
 
   cpp-check:
     name: Scan Sourcecode with Cppcheck
-    runs-on: ubuntu-latest
+    runs-on: sogno-platform-dpsim-runner
     container: sogno/dpsim:dev
     steps:
     - name: Checkout
@@ -315,7 +315,7 @@ jobs:
 
   check-python-deps:
     name: Validate pyproject.toml extras resolve
-    runs-on: ubuntu-latest
+    runs-on: sogno-platform-dpsim-runner
     steps:
     - name: Checkout
       uses: actions/checkout@v6

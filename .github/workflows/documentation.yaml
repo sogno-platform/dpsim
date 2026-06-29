@@ -9,7 +9,7 @@ on:
 
 jobs:
   generate-reference:
-    runs-on: ubuntu-latest
+    runs-on: sogno-platform-dpsim-runner
     container: sogno/dpsim:dev
     steps:
     - name: Checkout
@@ -42,7 +42,7 @@ jobs:
         retention-days: 1
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: sogno-platform-dpsim-runner
     needs: [generate-reference]
 
     permissions:
