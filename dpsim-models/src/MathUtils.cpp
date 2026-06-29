@@ -8,6 +8,9 @@
 
 #include <dpsim-models/MathUtils.h>
 
+#include <cstdint>
+#include <cstring>
+
 using namespace CPS;
 
 // #### Angular Operations ####
@@ -53,6 +56,16 @@ Complex Math::polar(Real abs, Real phase) {
 
 Complex Math::polarDeg(Real abs, Real phase) {
   return std::polar<Real>(abs, degToRad(phase));
+}
+
+bool Math::isFinite(Real value) {
+  uint64_t bits;
+  std::memcpy(&bits, &value, sizeof(bits));
+  return (bits & 0x7FF0000000000000ULL) != 0x7FF0000000000000ULL;
+}
+
+bool Math::isFinite(Complex value) {
+  return isFinite(value.real()) && isFinite(value.imag());
 }
 
 void Math::setVectorElement(Matrix &mat, Matrix::Index row, Complex value,
