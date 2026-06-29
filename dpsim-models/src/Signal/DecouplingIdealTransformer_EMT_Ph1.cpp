@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include "dpsim-models/Definitions.h"
+#include "dpsim-models/TopologicalNode.h"
 #include <dpsim-models/Signal/DecouplingIdealTransformer_EMT_Ph1.h>
 
 using namespace CPS;
@@ -17,6 +18,8 @@ DecouplingIdealTransformer_EMT_Ph1::DecouplingIdealTransformer_EMT_Ph1(
       mSrcVoltageRef(mAttributes->create<Real>("v_ref")),
       mSrcCurrentRef(mAttributes->create<Real>("i_ref")) {
 
+  mRes1 = Resistor::make(name + "_r1", logLevel);
+  mRes2 = Resistor::make(name + "_r2", logLevel);
   mVoltageSrc = VoltageSource::make(name + "_v", logLevel);
   mCurrentSrc = CurrentSource::make(name + "_i", logLevel);
 
@@ -30,6 +33,7 @@ void DecouplingIdealTransformer_EMT_Ph1::setParameters(
 
   mNode1 = node1;
   mNode2 = node2;
+  mVirtualNode = SimNode<Real>::make(name() + "_virtual", PhaseType::Single);
 
   mDelay = delay;
   mCouplingMethod = method;
@@ -38,10 +42,14 @@ void DecouplingIdealTransformer_EMT_Ph1::setParameters(
     mExtrapolationDegree = 1;
   }
 
+  mRes1->setParameters(mInternalSeriesResistance);
+  mRes1->connect({node1, mVirtualNode});
+  mRes2->setParameters(mInternalParallelResistance);
+  mRes2->connect({node2, SimNode<Real>::GND});
   mVoltageSrc->setParameters(0);
   mVoltageSrcIntfCurr = voltageSrcIntfCurr;
   mCurrent1Extrap0 = current1Extrap0;
-  mVoltageSrc->connect({SimNode<Real>::GND, node1});
+  mVoltageSrc->connect({SimNode<Real>::GND, mVirtualNode});
   mCurrentSrc->setParameters(0);
   mCurrentSrc->connect({SimNode<Real>::GND, node2});
 }
@@ -60,6 +68,9 @@ void DecouplingIdealTransformer_EMT_Ph1::initialize(Real omega, Real timeStep) {
   mVoltageSrc->setIntfCurrent(mVoltageSrcIntfCurr);
   Complex cur1 = mVoltageSrc->mIntfCurrent->get()(0);
   Complex volt2 = mNode2->initialSingleVoltage() * RMS3PH_TO_PEAK1PH;
+
+  mVirtualNode->setInitialVoltage(mNode1->initialSingleVoltage() -
+                                  mInternalSeriesResistance * cur1);
 
   SPDLOG_LOGGER_INFO(mSLog, "initial current: i_1 {}", cur1);
   SPDLOG_LOGGER_INFO(mSLog, "initial voltage: v_2 {}", volt2);
@@ -169,5 +180,9 @@ Task::List DecouplingIdealTransformer_EMT_Ph1::getTasks() {
 }
 
 IdentifiedObject::List DecouplingIdealTransformer_EMT_Ph1::getComponents() {
-  return IdentifiedObject::List({mVoltageSrc, mCurrentSrc});
+  return IdentifiedObject::List({mRes1, mRes2, mVoltageSrc, mCurrentSrc});
+}
+
+TopologicalNode::Ptr DecouplingIdealTransformer_EMT_Ph1::getVirtualNode() {
+  return mVirtualNode;
 }

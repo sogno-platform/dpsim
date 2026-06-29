@@ -20,8 +20,11 @@ class DecouplingIdealTransformer_EMT_Ph1
       public SharedFactory<DecouplingIdealTransformer_EMT_Ph1> {
 protected:
   Real mDelay;
+  Real mInternalSeriesResistance = 1e-6;
+  Real mInternalParallelResistance = 1e6;
 
-  std::shared_ptr<EMT::SimNode> mNode1, mNode2;
+  std::shared_ptr<EMT::SimNode> mNode1, mNode2, mVirtualNode;
+  std::shared_ptr<EMT::Ph1::Resistor> mRes1, mRes2;
   std::shared_ptr<EMT::Ph1::CurrentSource> mCurrentSrc;
   std::shared_ptr<EMT::Ph1::VoltageSource> mVoltageSrc;
   Attribute<Complex>::Ptr mSrcCurrent, mSrcVoltage;
@@ -72,6 +75,7 @@ public:
   void postStep();
   Task::List getTasks();
   IdentifiedObject::List getComponents();
+  TopologicalNode::Ptr getVirtualNode();
 
   class PreStep : public Task {
   public:
