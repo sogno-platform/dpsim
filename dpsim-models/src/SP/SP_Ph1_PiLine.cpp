@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
+#include <dpsim-models/MathUtils.h>
 #include <dpsim-models/SP/SP_Ph1_PiLine.h>
 
 using namespace CPS;
@@ -133,16 +134,13 @@ void SP::Ph1::PiLine::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow &Y) {
   //check for inf or nan
   for (int i = 0; i < 2; i++)
     for (int j = 0; j < 2; j++)
-      if (std::isinf(mY_element.coeff(i, j).real()) ||
-          std::isinf(mY_element.coeff(i, j).imag())) {
-        std::cout << mY_element << std::endl;
-        std::stringstream ss;
-        ss << "Line>>" << this->name()
-           << ": infinite or nan values in the element Y at: " << i << "," << j;
-        throw std::invalid_argument(ss.str());
-        std::cout << "Line>>" << this->name()
-                  << ": infinite or nan values in the element Y at: " << i
-                  << "," << j << std::endl;
+      if (!Math::isFinite(mY_element.coeff(i, j))) {
+        SPDLOG_LOGGER_ERROR(
+            mSLog,
+            "Line {}: non-finite per-unit admittance {} in element Y({},{})",
+            this->name(), Logger::complexToString(mY_element.coeff(i, j)), i,
+            j);
+        throw InvalidArgumentException();
       }
 
   //set the circuit matrix values

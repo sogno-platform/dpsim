@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
+#include <dpsim-models/MathUtils.h>
 #include <dpsim-models/SP/SP_Ph1_Shunt.h>
 
 using namespace CPS;
@@ -56,12 +57,12 @@ void SP::Ph1::Shunt::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow &Y) {
   int bus1 = this->matrixNodeIndex(0);
   Complex Y_element = Complex(**mConductancePerUnit, **mSusceptancePerUnit);
 
-  if (std::isinf(Y_element.real()) || std::isinf(Y_element.imag())) {
-    std::cout << "Y:" << Y_element << std::endl;
-    std::stringstream ss;
-    ss << "Shunt>>" << this->name()
-       << ": infinite or nan values at node: " << bus1;
-    throw std::invalid_argument(ss.str());
+  if (!Math::isFinite(Y_element)) {
+    SPDLOG_LOGGER_ERROR(mSLog,
+                        "Shunt {}: non-finite per-unit admittance {} at "
+                        "node {}",
+                        this->name(), Logger::complexToString(Y_element), bus1);
+    throw InvalidArgumentException();
   }
 
   //set the circuit matrix values
