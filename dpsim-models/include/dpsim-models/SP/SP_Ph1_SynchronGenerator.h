@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <limits>
+
 #include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/PFSolverInterfaceBus.h>
 
@@ -38,6 +40,14 @@ public:
   const Attribute<Real>::Ptr mSetPointReactivePowerPerUnit;
   /// Voltage set point of the machine [pu]
   const Attribute<Real>::Ptr mSetPointVoltagePerUnit;
+  /// Maximum reactive power limit [VAr] (default +inf = unlimited)
+  const Attribute<Real>::Ptr mReactivePowerMax;
+  /// Minimum reactive power limit [VAr] (default -inf = unlimited)
+  const Attribute<Real>::Ptr mReactivePowerMin;
+  /// Maximum reactive power limit [pu]
+  const Attribute<Real>::Ptr mReactivePowerMaxPerUnit;
+  /// Minimum reactive power limit [pu]
+  const Attribute<Real>::Ptr mReactivePowerMinPerUnit;
 
   /// Defines UID, name and logging level
   SynchronGenerator(String uid, String name,
@@ -45,11 +55,15 @@ public:
   /// Defines name and logging level
   SynchronGenerator(String name, Logger::Level logLevel = Logger::Level::off)
       : SynchronGenerator(name, name, logLevel) {}
-  /// Setter for synchronous generator parameters
+  /// Setter for synchronous generator parameters. qLimMax/qLimMin are the
+  /// reactive-power limits [VAr] enforced by the PF Q-limit outer loop; the
+  /// default +/-inf means unlimited (no PV->PQ switching for this machine).
   void setParameters(Real ratedApparentPower, Real ratedVoltage,
                      Real setPointActivePower, Real setPointVoltage,
                      PowerflowBusType powerflowBusType,
-                     Real setPointReactivepower = 0);
+                     Real setPointReactivepower = 0,
+                     Real qLimMax = std::numeric_limits<Real>::infinity(),
+                     Real qLimMin = -std::numeric_limits<Real>::infinity());
   // #### Powerflow section ####
   Real getBaseVoltage() const;
   /// Set base voltage
