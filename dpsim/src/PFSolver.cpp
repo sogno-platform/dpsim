@@ -156,9 +156,9 @@ void PFSolver::setBaseApparentPower() {
 }
 
 void PFSolver::determinePFBusType() {
-  mPQBusIndices.clear();
-  mPVBusIndices.clear();
-  mVDBusIndices.clear();
+  mPQBuses.clear();
+  mPVBuses.clear();
+  mVDBuses.clear();
 
   SPDLOG_LOGGER_INFO(mSLog, "-- Determine powerflow bus type for each node");
 
@@ -199,48 +199,41 @@ void PFSolver::determinePFBusType() {
       SPDLOG_LOGGER_INFO(
           mSLog, "{}: only PQ type component connected -> set as PQ bus",
           node->name());
-      mPQBusIndices.push_back(node->matrixNodeIndex());
       mPQBuses.push_back(node);
     } // no component connected -> set as PQ bus (P & Q will be zero)
     else if (!connectedPV && !connectedPQ && !connectedVD) {
       SPDLOG_LOGGER_INFO(mSLog, "{}: no component connected -> set as PQ bus",
                          node->name());
-      mPQBusIndices.push_back(node->matrixNodeIndex());
       mPQBuses.push_back(node);
     } // only PV type component connected -> set as PV bus
     else if (connectedPV && !connectedPQ && !connectedVD) {
       SPDLOG_LOGGER_INFO(
           mSLog, "{}: only PV type component connected -> set as PV bus",
           node->name());
-      mPVBusIndices.push_back(node->matrixNodeIndex());
       mPVBuses.push_back(node);
     } // PV and PQ type component connected -> set as PV bus (TODO: bus type should be modifiable by user afterwards)
     else if (connectedPV && connectedPQ && !connectedVD) {
       SPDLOG_LOGGER_INFO(
           mSLog, "{}: PV and PQ type component connected -> set as PV bus",
           node->name());
-      mPVBusIndices.push_back(node->matrixNodeIndex());
       mPVBuses.push_back(node);
     } // only VD type component connected -> set as VD bus
     else if (!connectedPV && !connectedPQ && connectedVD) {
       SPDLOG_LOGGER_INFO(
           mSLog, "{}: only VD type component connected -> set as VD bus",
           node->name());
-      mVDBusIndices.push_back(node->matrixNodeIndex());
       mVDBuses.push_back(node);
     } // VD and PV type component connect -> set as VD bus
     else if (connectedPV && !connectedPQ && connectedVD) {
       SPDLOG_LOGGER_INFO(
           mSLog, "{}: VD and PV type component connect -> set as VD bus",
           node->name());
-      mVDBusIndices.push_back(node->matrixNodeIndex());
       mVDBuses.push_back(node);
     } // VD, PV and PQ type component connect -> set as VD bus
     else if (connectedPV && connectedPQ && connectedVD) {
       SPDLOG_LOGGER_INFO(
           mSLog, "{}: VD, PV and PQ type component connect -> set as VD bus",
           node->name());
-      mVDBusIndices.push_back(node->matrixNodeIndex());
       mVDBuses.push_back(node);
     } else {
       std::stringstream ss;
@@ -250,22 +243,51 @@ void PFSolver::determinePFBusType() {
     }
   }
 
+  rebuildBusIndexAggregates();
+
+  SPDLOG_LOGGER_INFO(mSLog, "#### Create index vectors for power flow solver:");
+  SPDLOG_LOGGER_INFO(mSLog, "PQ Buses: {}", logVector(mPQBusIndices));
+  SPDLOG_LOGGER_INFO(mSLog, "PV Buses: {}", logVector(mPVBusIndices));
+  SPDLOG_LOGGER_INFO(mSLog, "VD Buses: {}", logVector(mVDBusIndices));
+}
+
+void PFSolver::rebuildBusIndexAggregates() {
+  // Derive the index vectors, counts and aggregate ordering from the current
+  // PQ/PV/VD node lists. Called once after the initial classification and again
+  // after every Q-limit PV<->PQ switch.
+  mPQBusIndices.clear();
+  mPVBusIndices.clear();
+  mVDBusIndices.clear();
+  for (auto node : mPQBuses)
+    mPQBusIndices.push_back(node->matrixNodeIndex());
+  for (auto node : mPVBuses)
+    mPVBusIndices.push_back(node->matrixNodeIndex());
+  for (auto node : mVDBuses)
+    mVDBusIndices.push_back(node->matrixNodeIndex());
+
   mNumPQBuses = mPQBusIndices.size();
   mNumPVBuses = mPVBusIndices.size();
   mNumVDBuses = mVDBusIndices.size();
   mNumUnknowns = 2 * mNumPQBuses + mNumPVBuses;
 
   // Aggregate PQ bus and PV bus index vectors for easy handling in solver
+  mPQPVBusIndices.clear();
   mPQPVBusIndices.reserve(mNumPQBuses + mNumPVBuses);
   mPQPVBusIndices.insert(mPQPVBusIndices.end(), mPQBusIndices.begin(),
                          mPQBusIndices.end());
   mPQPVBusIndices.insert(mPQPVBusIndices.end(), mPVBusIndices.begin(),
                          mPVBusIndices.end());
+}
 
-  SPDLOG_LOGGER_INFO(mSLog, "#### Create index vectors for power flow solver:");
-  SPDLOG_LOGGER_INFO(mSLog, "PQ Buses: {}", logVector(mPQBusIndices));
-  SPDLOG_LOGGER_INFO(mSLog, "PV Buses: {}", logVector(mPVBusIndices));
-  SPDLOG_LOGGER_INFO(mSLog, "VD Buses: {}", logVector(mVDBusIndices));
+void PFSolver::reclassifyBuses() {
+  // After PV<->PQ switching has mutated the node lists, re-derive the index
+  // vectors and resize the linear-system storage. sol_V/sol_D live per node in
+  // the polar subclass and are untouched, so they carry into the next solve as
+  // a warm start.
+  rebuildBusIndexAggregates();
+  setUpJacobianStorage();
+  mX.setZero(mNumUnknowns);
+  mF.setZero(mNumUnknowns);
 }
 
 void PFSolver::determineNodeBaseVoltages() {
@@ -478,7 +500,7 @@ CPS::Bool PFSolver::checkConvergence() {
   return true;
 }
 
-Bool PFSolver::solvePowerflow() {
+Bool PFSolver::runNewtonRaphson() {
 
   // Reset values for new power flow run
   isConverged = false;
@@ -513,6 +535,13 @@ Bool PFSolver::solvePowerflow() {
     mIterations = i;
   }
   return isConverged;
+}
+
+Bool PFSolver::solvePowerflow() {
+  // Outer loop placeholder: today a single Newton-Raphson solve. The Q-limit
+  // PV<->PQ switching loop (which re-runs runNewtonRaphson after reclassifyBuses)
+  // is added on top of this.
+  return runNewtonRaphson();
 }
 
 void PFSolver::SolveTask::execute(Real time, Int timeStepCount) {

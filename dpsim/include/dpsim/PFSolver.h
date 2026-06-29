@@ -117,6 +117,12 @@ protected:
   void setBaseApparentPower();
   /// Determine bus type for all buses
   void determinePFBusType();
+  /// Rebuild index vectors + counts from the PQ/PV/VD node lists (after an
+  /// initial classification or a Q-limit reclassification)
+  void rebuildBusIndexAggregates();
+  /// Re-derive index vectors and resize the system after PV<->PQ switching;
+  /// the per-node solution vectors are preserved as a warm start
+  void reclassifyBuses();
   /// Determine base voltages for each node
   void determineNodeBaseVoltages();
 
@@ -128,6 +134,9 @@ protected:
   CPS::Real B(int i, int j);
   /// Solves the powerflow problem
   Bool solvePowerflow();
+  /// Run a single Newton-Raphson solve to convergence with the current bus
+  /// classification (the inner loop of solvePowerflow)
+  Bool runNewtonRaphson();
   /// Allocate Jacobian storage; dense by default, sparse subclass overrides
   virtual void setUpJacobianStorage();
   /// Solve the linearized system mJ*mX = mF into mX; sparse subclass overrides
