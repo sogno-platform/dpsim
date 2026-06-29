@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: sogno-platform-dpsim-runner
     steps:
     - uses: actions/checkout@v6
 

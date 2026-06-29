@@ -9,7 +9,7 @@ on:
 jobs:
   sonarcloud:
     name: Prepare and run Sonar Scan
-    runs-on: ubuntu-latest
+    runs-on: sogno-platform-dpsim-runner
     container: sogno/dpsim:dev
     env:
       BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory
