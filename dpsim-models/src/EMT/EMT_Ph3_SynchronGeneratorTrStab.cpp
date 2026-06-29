@@ -146,7 +146,6 @@ void EMT::Ph3::SynchronGeneratorTrStab::createSubComponents() {
       EMT::Ph3::VoltageSource::make(**mName + "_src", mLogLevel);
   mSubVoltageSource->connect({SimNode::GND, mVirtualNodes[0]});
   mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[1], 0);
-  mSubVoltageSource->initialize(mFrequencies);
   addMNASubComponent(mSubVoltageSource,
                      MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
@@ -155,7 +154,6 @@ void EMT::Ph3::SynchronGeneratorTrStab::createSubComponents() {
   mSubInductor->setParameters(
       CPS::Math::singlePhaseParameterToThreePhase(mLpd));
   mSubInductor->connect({mVirtualNodes[0], terminal(0)->node()});
-  mSubInductor->initialize(mFrequencies);
   addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 }

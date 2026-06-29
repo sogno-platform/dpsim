@@ -41,7 +41,6 @@ void DP::Ph1::PiLine::createSubComponents() {
       std::make_shared<DP::Ph1::Resistor>(**mName + "_res", mLogLevel);
   mSubSeriesResistor->setParameters(**mSeriesRes);
   mSubSeriesResistor->connect({mTerminals[0]->node(), mVirtualNodes[0]});
-  mSubSeriesResistor->initialize(mFrequencies);
   addMNASubComponent(mSubSeriesResistor,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
@@ -50,7 +49,6 @@ void DP::Ph1::PiLine::createSubComponents() {
       std::make_shared<DP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
   mSubSeriesInductor->setParameters(**mSeriesInd);
   mSubSeriesInductor->connect({mVirtualNodes[0], mTerminals[1]->node()});
-  mSubSeriesInductor->initialize(mFrequencies);
   addMNASubComponent(mSubSeriesInductor,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
@@ -60,7 +58,6 @@ void DP::Ph1::PiLine::createSubComponents() {
   mSubParallelResistor0->setParameters(2. / **mParallelCond);
   mSubParallelResistor0->connect(
       SimNode::List{SimNode::GND, mTerminals[0]->node()});
-  mSubParallelResistor0->initialize(mFrequencies);
   addMNASubComponent(mSubParallelResistor0,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
@@ -70,7 +67,6 @@ void DP::Ph1::PiLine::createSubComponents() {
   mSubParallelResistor1->setParameters(2. / **mParallelCond);
   mSubParallelResistor1->connect(
       SimNode::List{SimNode::GND, mTerminals[1]->node()});
-  mSubParallelResistor1->initialize(mFrequencies);
   addMNASubComponent(mSubParallelResistor1,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
@@ -81,7 +77,6 @@ void DP::Ph1::PiLine::createSubComponents() {
     mSubParallelCapacitor0->setParameters(**mParallelCap / 2.);
     mSubParallelCapacitor0->connect(
         SimNode::List{SimNode::GND, mTerminals[0]->node()});
-    mSubParallelCapacitor0->initialize(mFrequencies);
     addMNASubComponent(mSubParallelCapacitor0,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
@@ -91,7 +86,6 @@ void DP::Ph1::PiLine::createSubComponents() {
     mSubParallelCapacitor1->setParameters(**mParallelCap / 2.);
     mSubParallelCapacitor1->connect(
         SimNode::List{SimNode::GND, mTerminals[1]->node()});
-    mSubParallelCapacitor1->initialize(mFrequencies);
     addMNASubComponent(mSubParallelCapacitor1,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);

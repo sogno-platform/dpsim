@@ -168,7 +168,6 @@ void DP::Ph1::SynchronGeneratorTrStab::createSubComponents() {
   // Alias the sub-source's virtual node to parent VN1 so the KCL row in the
   // system matrix uses the same node index as the parent's VN1.
   mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[1], 0);
-  mSubVoltageSource->initialize(mFrequencies);
   addMNASubComponent(mSubVoltageSource,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
@@ -177,7 +176,6 @@ void DP::Ph1::SynchronGeneratorTrStab::createSubComponents() {
   mSubInductor = DP::Ph1::Inductor::make(**mName + "_ind", mLogLevel);
   mSubInductor->setParameters(mLpd);
   mSubInductor->connect({mVirtualNodes[0], terminal(0)->node()});
-  mSubInductor->initialize(mFrequencies);
   addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 }

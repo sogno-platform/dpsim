@@ -37,7 +37,6 @@ void DP::Ph1::RxLine::createSubComponents() {
       std::make_shared<DP::Ph1::Resistor>(**mName + "_res", mLogLevel);
   mSubResistor->setParameters(**mSeriesRes);
   mSubResistor->connect({mTerminals[0]->node(), mVirtualNodes[0]});
-  mSubResistor->initialize(mFrequencies);
   addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
 
@@ -45,7 +44,6 @@ void DP::Ph1::RxLine::createSubComponents() {
       std::make_shared<DP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
   mSubInductor->setParameters(**mSeriesInd);
   mSubInductor->connect({mVirtualNodes[0], mTerminals[1]->node()});
-  mSubInductor->initialize(mFrequencies);
   addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
@@ -53,7 +51,6 @@ void DP::Ph1::RxLine::createSubComponents() {
       std::make_shared<DP::Ph1::Resistor>(**mName + "_snubber_res", mLogLevel);
   mInitialResistor->setParameters(1e6);
   mInitialResistor->connect({SimNode::GND, mTerminals[1]->node()});
-  mInitialResistor->initialize(mFrequencies);
   addMNASubComponent(mInitialResistor,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
