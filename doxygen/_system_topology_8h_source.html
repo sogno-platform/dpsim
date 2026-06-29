@@ -223,25 +223,27 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_system_topology.html#aca76db46611e3854d752f903d41c2f91">multiply</a>(Int numberCopies);</div>
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span></div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_system_topology.html#a4e531684191248682d03cb2fc05227bd">removeComponent</a>(<span class="keyword">const</span> String &amp;name);</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span></div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>  <span class="keywordtype">int</span> checkTopologySubnets(</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>      std::unordered_map&lt;<span class="keyword">typename</span> CPS::SimNode&lt;VarType&gt;::Ptr, <span class="keywordtype">int</span>&gt; &amp;subnet);</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span></div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  <span class="keywordtype">void</span> splitSubnets(std::vector&lt;CPS::SystemTopology&gt; &amp;splitSystems);</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span> </div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span><span class="preprocessor">#ifdef WITH_GRAPHVIZ</span></div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>  <a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_graph.html">Graph::Graph</a> topologyGraph();</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>  String render();</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>  <span class="keywordtype">void</span> renderToFile(String filename);</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span> </div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt; <span class="keywordtype">void</span> multiplyPowerComps(Int numberCopies);</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>};</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span> </div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>  <span class="keywordtype">void</span> removeNode(<span class="keyword">const</span> String &amp;name);</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span></div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  <span class="keywordtype">int</span> checkTopologySubnets(</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>      std::unordered_map&lt;<span class="keyword">typename</span> CPS::SimNode&lt;VarType&gt;::Ptr, <span class="keywordtype">int</span>&gt; &amp;subnet);</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span></div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>  <span class="keywordtype">void</span> splitSubnets(std::vector&lt;CPS::SystemTopology&gt; &amp;splitSystems);</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span> </div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span><span class="preprocessor">#ifdef WITH_GRAPHVIZ</span></div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>  <a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_graph.html">Graph::Graph</a> topologyGraph();</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>  String render();</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>  <span class="keywordtype">void</span> renderToFile(String filename);</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span> </div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt; <span class="keywordtype">void</span> multiplyPowerComps(Int numberCopies);</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>};</div>
 </div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>} <span class="comment">// namespace CPS</span></div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>} <span class="comment">// namespace CPS</span></div>
 <div class="ttc" id="aclass_c_p_s_1_1_graph_1_1_graph_html"><div class="ttname"><a href="class_c_p_s_1_1_graph_1_1_graph.html">CPS::Graph::Graph</a></div><div class="ttdef"><b>Definition</b> <a href="_graph_8h_source.html#l00049">Graph.h:49</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_system_topology_html"><div class="ttname"><a href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a></div><div class="ttdef"><b>Definition</b> <a href="#l00023">SystemTopology.h:23</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_system_topology_html_a12e9e37d578ec3f95b444ffe7f2eb436"><div class="ttname"><a href="class_c_p_s_1_1_system_topology.html#a12e9e37d578ec3f95b444ffe7f2eb436">CPS::SystemTopology::mSystemOmega</a></div><div class="ttdeci">Real mSystemOmega</div><div class="ttdoc">System angular frequency - omega.</div><div class="ttdef"><b>Definition</b> <a href="#l00044">SystemTopology.h:44</a></div></div>

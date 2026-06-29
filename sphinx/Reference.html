@@ -126,6 +126,13 @@
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.CSVReaderMode.value"><code class="docutils literal notranslate"><span class="pre">CSVReaderMode.value</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.CouplingMethod"><code class="docutils literal notranslate"><span class="pre">CouplingMethod</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.CouplingMethod.DELAY"><code class="docutils literal notranslate"><span class="pre">CouplingMethod.DELAY</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.CouplingMethod.EXTRAPOLATION_LINEAR"><code class="docutils literal notranslate"><span class="pre">CouplingMethod.EXTRAPOLATION_LINEAR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.CouplingMethod.EXTRAPOLATION_ZOH"><code class="docutils literal notranslate"><span class="pre">CouplingMethod.EXTRAPOLATION_ZOH</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.CouplingMethod.value"><code class="docutils literal notranslate"><span class="pre">CouplingMethod.value</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#dpsimpy.DataLoggerInterface"><code class="docutils literal notranslate"><span class="pre">DataLoggerInterface</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.DataLoggerInterface.log_attribute"><code class="docutils literal notranslate"><span class="pre">DataLoggerInterface.log_attribute()</span></code></a></li>
 </ul>
@@ -323,9 +330,9 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#dpsimpy.SystemTopology"><code class="docutils literal notranslate"><span class="pre">SystemTopology</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SystemTopology.add"><code class="docutils literal notranslate"><span class="pre">SystemTopology.add()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SystemTopology.add_component"><code class="docutils literal notranslate"><span class="pre">SystemTopology.add_component()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SystemTopology.add_components"><code class="docutils literal notranslate"><span class="pre">SystemTopology.add_components()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SystemTopology.add_node"><code class="docutils literal notranslate"><span class="pre">SystemTopology.add_node()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SystemTopology.add_tear_component"><code class="docutils literal notranslate"><span class="pre">SystemTopology.add_tear_component()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SystemTopology.component"><code class="docutils literal notranslate"><span class="pre">SystemTopology.component()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SystemTopology.components"><code class="docutils literal notranslate"><span class="pre">SystemTopology.components</span></code></a></li>
@@ -1383,6 +1390,40 @@ and to parameterize all components of the network from Python.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.CouplingMethod">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">CouplingMethod</span></span><a class="headerlink" href="#dpsimpy.CouplingMethod" title="Link to this definition"></a></dt>
+<dd><p>Members:</p>
+<p>DELAY</p>
+<p>EXTRAPOLATION_ZOH</p>
+<p>EXTRAPOLATION_LINEAR</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.CouplingMethod.DELAY">
+<span class="sig-name descname"><span class="pre">DELAY</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;CouplingMethod.DELAY:</span> <span class="pre">0&gt;</span></span><a class="headerlink" href="#dpsimpy.CouplingMethod.DELAY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.CouplingMethod.EXTRAPOLATION_LINEAR">
+<span class="sig-name descname"><span class="pre">EXTRAPOLATION_LINEAR</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;CouplingMethod.EXTRAPOLATION_LINEAR:</span> <span class="pre">2&gt;</span></span><a class="headerlink" href="#dpsimpy.CouplingMethod.EXTRAPOLATION_LINEAR" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.CouplingMethod.EXTRAPOLATION_ZOH">
+<span class="sig-name descname"><span class="pre">EXTRAPOLATION_ZOH</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;CouplingMethod.EXTRAPOLATION_ZOH:</span> <span class="pre">1&gt;</span></span><a class="headerlink" href="#dpsimpy.CouplingMethod.EXTRAPOLATION_ZOH" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">CouplingMethod.name</span> <span class="pre">-&gt;</span> <span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.CouplingMethod.value">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#dpsimpy.CouplingMethod.value" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="dpsimpy.DataLoggerInterface">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">DataLoggerInterface</span></span><a class="headerlink" href="#dpsimpy.DataLoggerInterface" title="Link to this definition"></a></dt>
 <dd><dl class="py method">
@@ -2274,23 +2315,24 @@ and to parameterize all components of the network from Python.</p>
 <dt class="sig sig-object py" id="dpsimpy.SystemTopology">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">SystemTopology</span></span><a class="headerlink" href="#dpsimpy.SystemTopology" title="Link to this definition"></a></dt>
 <dd><dl class="py method">
-<dt class="sig sig-object py" id="dpsimpy.SystemTopology.add">
-<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dpsimpy.SystemTopology.add" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="dpsimpy.SystemTopology.add_component">
+<span class="sig-name descname"><span class="pre">add_component</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dpsimpy.SystemTopology.add_component" title="Link to this definition"></a></dt>
 <dd><p>Overloaded function.</p>
 <ol class="arabic simple">
-<li><p>add(self: dpsimpy.SystemTopology, arg0: CPS::IdentifiedObject) -&gt; None</p></li>
-<li><p>add(self: dpsimpy.SystemTopology, arg0: collections.abc.Sequence[CPS::IdentifiedObject]) -&gt; None</p></li>
+<li><p>add_component(self: dpsimpy.SystemTopology, arg0: CPS::IdentifiedObject) -&gt; None</p></li>
+<li><p>add_component(self: dpsimpy.SystemTopology, arg0: collections.abc.Sequence[CPS::IdentifiedObject]) -&gt; None</p></li>
+<li><p>add_component(self: dpsimpy.SystemTopology, arg0: CPS::IdentifiedObject) -&gt; None</p></li>
 </ol>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dpsimpy.SystemTopology.add_component">
-<span class="sig-name descname"><span class="pre">add_component</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.SystemTopology" title="dpsimpy.SystemTopology"><span class="pre">dpsimpy.SystemTopology</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CPS::IdentifiedObject</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.SystemTopology.add_component" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="dpsimpy.SystemTopology.add_components">
+<span class="sig-name descname"><span class="pre">add_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.SystemTopology" title="dpsimpy.SystemTopology"><span class="pre">dpsimpy.SystemTopology</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence[CPS::IdentifiedObject]</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.SystemTopology.add_components" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="dpsimpy.SystemTopology.add_components">
-<span class="sig-name descname"><span class="pre">add_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.SystemTopology" title="dpsimpy.SystemTopology"><span class="pre">dpsimpy.SystemTopology</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence[CPS::IdentifiedObject]</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.SystemTopology.add_components" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="dpsimpy.SystemTopology.add_node">
+<span class="sig-name descname"><span class="pre">add_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.SystemTopology" title="dpsimpy.SystemTopology"><span class="pre">dpsimpy.SystemTopology</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CPS::TopologicalNode</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.SystemTopology.add_node" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
