@@ -253,9 +253,6 @@ int main(int argc, char *argv[]) {
   Eigen::MatrixXd irLine_0_1(1, 1);
   irLine_0_1(0, 0) = (n1_v0_1(0, 0) - n2_v0_1(0, 0)) / rLine_r_1;
 
-  // Eigen::MatrixXd ir3_0_1(1,1);
-  // ir3_0_1(0,0) = (n2_v0_1(0,0)) / r3_r_1;
-
   // Monolithic Simulation
   String simNameMonolithic = "EMT_RC_monolithic_DC";
   Logger::setLogDir("logs/" + simNameMonolithic);
@@ -282,9 +279,7 @@ int main(int argc, char *argv[]) {
   IdentifiedObject::List components2;
   auto c2 = systemDecoupled.component<EMT::Ph1::Capacitor>("c_2");
   components2.push_back(c2);
-  // c2->setIntfVoltage(n2_v0_1);
   auto r3 = systemDecoupled.component<EMT::Ph1::Resistor>("r_3");
-  // r3->setIntfCurrent(ir3_0_1);
   components2.push_back(r3);
 
   decoupleNode(systemDecoupled, "n2", components1, components2, delay,

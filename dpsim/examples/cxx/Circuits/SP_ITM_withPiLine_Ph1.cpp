@@ -45,11 +45,6 @@ void simMonolithic() {
   Real capacitance = l_length * (b / (2 * PI * 50));
   Real conductance = 0;
 
-  // Real resistance = 5;
-  // Real inductance = 0.16;
-  // Real capacitance = 1.0e-6;
-  // Real conductance = 1.0e-6;
-
   // Components
   auto vs = VoltageSource::make("v_1", Logger::Level::debug);
   vs->setParameters(Complex(100000, 0), 50);
@@ -89,71 +84,6 @@ void simMonolithic() {
   sim.run();
 }
 
-// void simElements() {
-//   Real timeStep = 0.00005;
-//   Real finalTime = 0.2;
-//   String simName = "SP_DecouplingITM_Ph1_withPiLine_Elements";
-//   Logger::setLogDir("logs/" + simName);
-
-//   // Nodes
-//   auto n0 = SimNode::make("n0");
-//   auto n1 = SimNode::make("n1");
-//   auto n2_1 = SimNode::make("n2_1");
-//   auto n2_2 = SimNode::make("n2_2");
-
-//   Real R_1_R = 60;
-
-//   // Parametrization of components
-//   Real resistance = 5;
-//   Real inductance = 0.16;
-//   Real capacitance = 1.0e-6;
-//   Real conductance = 1.0e-6;
-
-//   // Components
-//   auto vs = VoltageSource::make("v_1", Logger::Level::debug);
-//   vs->setParameters(Complex(10000, 0), 50);
-
-//   auto R_1 = Resistor::make("R_1", Logger::Level::debug);
-//   R_1->setParameters(R_1_R);
-
-//   auto line = PiLine::make("line", Logger::Level::debug);
-//   line->setParameters(resistance, inductance, capacitance, conductance);
-
-//   auto v_itm = VoltageSource::make("v_itm");
-//   auto i_itm = CurrentSource::make("i_itm");
-
-//   auto load = Resistor::make("R_load", Logger::Level::debug);
-//   load->setParameters(10000);
-
-//   // Topology
-//   vs->connect({SimNode::GND, n0});
-//   R_1->connect({n0, n1});
-//   line->connect({n1, n2_1});
-//   v_itm->connect({SimNode::GND, n2_1});
-//   i_itm->connect({SimNode::GND, n2_2});
-//   load->connect({n2_2, SimNode::GND});
-
-//   auto sys = SystemTopology(50, SystemNodeList{n0, n1, n2_1, n2_2},
-//                             SystemComponentList{vs, R_1, line, v_itm, i_itm, load});
-
-//   // Logging
-//   auto logger = DataLogger::make(simName);
-//   logger->logAttribute("v1", n1->attribute("v"));
-//   logger->logAttribute("v2_1", n2_1->attribute("v"));
-//   logger->logAttribute("v2_2", n2_2->attribute("v"));
-//   logger->logAttribute("iline", line->attribute("i_intf"));
-//   logger->logAttribute("iload", load->attribute("i_intf"));
-
-//   Simulation sim(simName, Logger::Level::debug);
-//   sim.setSystem(sys);
-//   sim.setDomain(Domain::SP);
-//   sim.setTimeStep(timeStep);
-//   sim.setFinalTime(finalTime);
-//   sim.addLogger(logger);
-
-//   sim.run();
-// }
-
 void simITM_SP_Ph1() {
   Real timeStep = 0.00005;
   Real finalTime = 0.1;
@@ -180,11 +110,6 @@ void simITM_SP_Ph1() {
   Real capacitance = l_length * (b / (2 * PI * 50));
   Real conductance = 0;
 
-  // Real resistance = 5;
-  // Real inductance = 0.16;
-  // Real capacitance = 1.0e-6;
-  // Real conductance = 1.0e-6;
-
   // Components
   auto vs = VoltageSource::make("v_1", Logger::Level::debug);
   vs->setParameters(Complex(100000, 0), 50);
@@ -202,9 +127,6 @@ void simITM_SP_Ph1() {
 
   auto load = Resistor::make("R_load", Logger::Level::debug);
   load->setParameters(10000);
-
-  // n1_1->setInitialVoltage(100000);
-  // n1_2->setInitialVoltage(100000);
 
   // Topology
   vs->connect({SimNode::GND, n0});
