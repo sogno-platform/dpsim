@@ -233,7 +233,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            py::overload_cast<CPS::MatrixComp, CPS::Real>(
                &CPS::EMT::Ph3::CurrentSource::setParameters),
            "I_ref"_a, "f_src"_a = 50)
-      .def("connect", &CPS::EMT::Ph3::VoltageSource::connect)
+      .def("connect", &CPS::EMT::Ph3::CurrentSource::connect)
       .def_property("I_ref", createAttributeGetter<CPS::MatrixComp>("I_ref"),
                     createAttributeSetter<CPS::MatrixComp>("V_ref"))
       .def_property("f_src", createAttributeGetter<CPS::Real>("f_src"),

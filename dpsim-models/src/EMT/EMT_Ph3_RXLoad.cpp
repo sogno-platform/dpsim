@@ -48,6 +48,14 @@ EMT::Ph3::RXLoad::RXLoad(String name, Matrix activePower, Matrix reactivePower,
   initPowerFromTerminal = false;
 }
 
+SimPowerComp<Real>::Ptr EMT::Ph3::RXLoad::clone(String name) {
+  auto copy = RXLoad::make(name, mLogLevel);
+  if (!initPowerFromTerminal)
+    copy->setParameters(**mActivePower, **mReactivePower, **mNomVoltage,
+                        mReactanceInSeries);
+  return copy;
+}
+
 void EMT::Ph3::RXLoad::setParameters(Matrix activePower, Matrix reactivePower,
                                      Real volt, bool reactanceInSeries) {
   **mActivePower = activePower;
