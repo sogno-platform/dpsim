@@ -45,8 +45,8 @@ The `Solver` instance is then created by the `Simulation`.
 
 An important function of the `Simulation` is to collect all tasks, which have to be executed during the simulation.
 These tasks include computation steps of the individual power system component models as well as read and write tasks of the interfaces and logging variables etc.
-Before the scheduling is done, `Simulation` calls a function, e.g. `getTasks()`, in order to retrieve the tasks from instances of the four classes mentioned previously.
-The power system model element tasks are collected by the `Solver` instances and relayed to the `Simulation`.
+Before the scheduling is done, `Simulation` calls `getTasks()` to retrieve the tasks from three of these classes: `Solver`, `Interface` and `Logger`.
+The power system component and signal-model tasks are collected by the `Solver` instances and relayed to the `Simulation`, while interfaces and loggers contribute their own tasks directly.
 
 All power system element classes inherit from the `IdentifiedObject` class.
 This class corresponds with the `IdentifiedObject` of the IEC61970 CIM and has a `uid` and `name` attribute as well.
