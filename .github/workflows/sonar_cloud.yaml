@@ -18,7 +18,7 @@ concurrency:
 jobs:
   build:
     name: Build for Sonar Scan
-    runs-on: ubuntu-latest
+    runs-on: sogno-platform-dpsim-runner
     container: sogno/dpsim:dev
     env:
       BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory

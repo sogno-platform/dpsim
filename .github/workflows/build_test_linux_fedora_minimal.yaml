@@ -15,7 +15,7 @@ concurrency:
 jobs:
   linux-fedora-minimal:
     name: Build with minimal configuration on Fedora Linux
-    runs-on: ubuntu-latest
+    runs-on: sogno-platform-dpsim-runner
     container: sogno/dpsim:dev-minimal
     steps:
     - name: Checkout
