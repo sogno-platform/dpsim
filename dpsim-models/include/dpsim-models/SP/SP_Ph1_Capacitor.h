@@ -33,13 +33,9 @@ protected:
   /// base current [A]
   Real mBaseCurrent;
 
-  /// Impedance [pu]
-  Complex mImpedancePerUnit;
   /// Admittance [pu]
   Complex mAdmittancePerUnit;
 
-  /// Impedance [Ohm]
-  Complex mImpedance;
   /// Admittance [S]
   Complex mAdmittance;
   /// Susceptance [S]
