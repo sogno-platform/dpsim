@@ -12,9 +12,7 @@ jobs:
   linux-fedora-minimal:
     name: Build with minimal configuration on Fedora Linux
     runs-on: sogno-platform-dpsim-runner
-    container:
-      image: sogno/dpsim:dev-minimal
-      options: --privileged
+    container: sogno/dpsim:dev-minimal
     steps:
     - name: Checkout
       uses: actions/checkout@v6
