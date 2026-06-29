@@ -1,30 +1,38 @@
 <map id="CPS::DP::Ph1::SVC" name="CPS::DP::Ph1::SVC">
-<area shape="rect" id="Node000001" title="SVC." alt="" coords="1321,214,1454,243"/>
-<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="1068,115,1249,163"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1257,167,1273,173,1357,211,1355,215,1271,177,1255,172"/>
-<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="750,53,908,102"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="924,93,1068,120,1067,125,923,98"/>
-<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="208,76,404,106"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="420,85,749,77,749,82,420,91"/>
-<area shape="rect" id="Node000006" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="454,5,612,54"/>
-<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="378,69,453,48,454,54,380,74"/>
-<area shape="rect" id="Node000009" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="454,181,612,230"/>
-<area shape="poly" id="edge10_Node000009_Node000004" title=" " alt="" coords="349,111,455,167,478,178,475,183,452,172,347,116"/>
-<area shape="rect" id="Node000005" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="5,76,159,106"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="174,88,208,88,208,94,174,94"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="627,42,749,62,748,67,627,48"/>
-<area shape="rect" id="Node000007" href="$class_c_p_s_1_1_m_n_a_interface.html" title="Interface to be implemented by all models used by the MNA solver." alt="" coords="462,128,604,158"/>
-<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="619,140,1067,137,1067,142,619,145"/>
-<area shape="rect" id="Node000008" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title="Base class for all MNA components that are transmitting power." alt="" coords="738,176,919,225"/>
-<area shape="poly" id="edge11_Node000008_Node000007" title=" " alt="" coords="619,157,738,180,737,185,618,162"/>
-<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="935,188,1021,174,1074,161,1075,167,1022,179,935,193"/>
-<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="628,201,737,199,737,205,628,207"/>
-<area shape="rect" id="Node000010" href="$class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html" title="Static VAR compensator (SVC)" alt="" coords="1086,187,1231,216"/>
-<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="1247,209,1321,218,1320,223,1246,215"/>
-<area shape="rect" id="Node000011" href="$class_c_p_s_1_1_m_n_a_variable_comp_interface.html" title="MNA interface to be used by elements that require recomputing of the system matrix." alt="" coords="1045,240,1272,270"/>
-<area shape="poly" id="edge13_Node000001_Node000011" title=" " alt="" coords="1286,237,1320,233,1321,239,1287,243"/>
-<area shape="rect" id="Node000012" href="$class_shared_factory.html" title=" " alt="" coords="1081,294,1236,323"/>
-<area shape="poly" id="edge14_Node000001_Node000012" title=" " alt="" coords="1247,286,1271,279,1356,241,1358,246,1273,284,1249,292"/>
-<area shape="rect" id="Node000013" href="$class_shared_factory.html" title=" " alt="" coords="759,294,898,323"/>
-<area shape="poly" id="edge15_Node000012_Node000013" title=" " alt="" coords="914,306,1080,306,1080,311,914,311"/>
+<area shape="rect" id="Node000001" title="SVC." alt="" coords="1641,220,1775,250"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_composite_power_comp.html" title=" " alt="" coords="1382,121,1576,170"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1577,173,1593,179,1678,217,1675,222,1591,184,1575,178"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="1052,76,1233,125"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1249,112,1381,130,1381,135,1248,117"/>
+<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="750,5,908,54"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="923,48,1022,70,1052,77,1051,82,1021,75,922,53"/>
+<area shape="rect" id="Node000005" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="208,48,404,78"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="373,41,453,24,526,16,583,13,714,18,750,20,749,25,714,23,583,19,527,21,454,30,374,46"/>
+<area shape="rect" id="Node000007" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="454,39,612,87"/>
+<area shape="poly" id="edge7_Node000007_Node000005" title=" " alt="" coords="419,60,453,60,453,66,419,66"/>
+<area shape="rect" id="Node000010" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="454,164,612,213"/>
+<area shape="poly" id="edge11_Node000010_Node000005" title=" " alt="" coords="345,84,455,150,477,161,474,166,452,155,342,89"/>
+<area shape="rect" id="Node000006" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="5,48,159,78"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="174,60,208,60,208,66,174,66"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="627,50,749,36,749,41,628,55"/>
+<area shape="rect" id="Node000008" href="$class_c_p_s_1_1_m_n_a_interface.html" title="Interface to be implemented by all models used by the MNA solver." alt="" coords="462,111,604,140"/>
+<area shape="poly" id="edge8_Node000003_Node000008" title=" " alt="" coords="619,117,636,116,1051,100,1051,106,636,122,619,123"/>
+<area shape="rect" id="Node000009" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title="Base class for all MNA components that are transmitting power." alt="" coords="738,128,919,177"/>
+<area shape="poly" id="edge12_Node000009_Node000008" title=" " alt="" coords="619,131,738,142,737,147,619,136"/>
+<area shape="rect" id="Node000012" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title="Base class for all MNA components that are transmitting power." alt="" coords="738,201,919,250"/>
+<area shape="poly" id="edge16_Node000012_Node000008" title=" " alt="" coords="595,143,755,198,753,203,593,148"/>
+<area shape="poly" id="edge9_Node000003_Node000009" title=" " alt="" coords="934,139,1021,126,1051,120,1052,125,1022,131,935,144"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="627,174,737,161,738,166,627,180"/>
+<area shape="poly" id="edge15_Node000012_Node000010" title=" " alt="" coords="628,203,636,204,738,216,737,221,636,210,627,208"/>
+<area shape="rect" id="Node000011" href="$class_c_p_s_1_1_composite_power_comp.html" title="Base class for composite power components." alt="" coords="1045,165,1240,214"/>
+<area shape="poly" id="edge13_Node000002_Node000011" title=" " alt="" coords="1254,172,1381,156,1382,161,1255,178"/>
+<area shape="poly" id="edge14_Node000011_Node000012" title=" " alt="" coords="934,211,1045,198,1045,203,935,216"/>
+<area shape="rect" id="Node000013" href="$class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html" title="Static VAR compensator (SVC)" alt="" coords="1406,194,1552,223"/>
+<area shape="poly" id="edge17_Node000001_Node000013" title=" " alt="" coords="1567,216,1641,225,1641,230,1567,221"/>
+<area shape="rect" id="Node000014" href="$class_c_p_s_1_1_m_n_a_variable_comp_interface.html" title="MNA interface to be used by elements that require recomputing of the system matrix." alt="" coords="1366,247,1592,276"/>
+<area shape="poly" id="edge18_Node000001_Node000014" title=" " alt="" coords="1607,244,1641,240,1641,245,1607,249"/>
+<area shape="rect" id="Node000015" href="$class_shared_factory.html" title=" " alt="" coords="1401,300,1556,330"/>
+<area shape="poly" id="edge19_Node000001_Node000015" title=" " alt="" coords="1568,293,1591,286,1677,248,1679,253,1593,291,1569,298"/>
+<area shape="rect" id="Node000016" href="$class_shared_factory.html" title=" " alt="" coords="1073,300,1212,330"/>
+<area shape="poly" id="edge20_Node000015_Node000016" title=" " alt="" coords="1228,312,1401,312,1401,318,1228,318"/>
 </map>
