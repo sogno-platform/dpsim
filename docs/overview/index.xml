@@ -29,8 +29,8 @@ The &lt;code>Solver&lt;/code> instance is then created by the &lt;code>Simulatio
 &lt;p>&lt;img src="dpsim_classes_simulation.svg" alt="image">&lt;/p>
 &lt;p>An important function of the &lt;code>Simulation&lt;/code> is to collect all tasks, which have to be executed during the simulation.
 These tasks include computation steps of the individual power system component models as well as read and write tasks of the interfaces and logging variables etc.
-Before the scheduling is done, &lt;code>Simulation&lt;/code> calls a function, e.g. &lt;code>getTasks()&lt;/code>, in order to retrieve the tasks from instances of the four classes mentioned previously.
-The power system model element tasks are collected by the &lt;code>Solver&lt;/code> instances and relayed to the &lt;code>Simulation&lt;/code>.&lt;/p>
+Before the scheduling is done, &lt;code>Simulation&lt;/code> calls &lt;code>getTasks()&lt;/code> to retrieve the tasks from three of these classes: &lt;code>Solver&lt;/code>, &lt;code>Interface&lt;/code> and &lt;code>Logger&lt;/code>.
+The power system component and signal-model tasks are collected by the &lt;code>Solver&lt;/code> instances and relayed to the &lt;code>Simulation&lt;/code>, while interfaces and loggers contribute their own tasks directly.&lt;/p>
 &lt;p>All power system element classes inherit from the &lt;code>IdentifiedObject&lt;/code> class.
 This class corresponds with the &lt;code>IdentifiedObject&lt;/code> of the IEC61970 CIM and has a &lt;code>uid&lt;/code> and &lt;code>name&lt;/code> attribute as well.&lt;/p>
 &lt;p>&lt;img src="dpsim_classes_identifiedobject.svg" alt="image">&lt;/p>
@@ -177,13 +177,235 @@ For the usual &lt;code>MNAPreStep&lt;/code> and &lt;code>MNAPostStep&lt;/code> t
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">modifiedAttributes&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">push_back&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mIntfCurrent&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Here, the MNA post step depends on the solution vector of the system, &lt;code>leftVector&lt;/code>, and modifies &lt;code>mIntfVoltage&lt;/code> and &lt;code>mIntfCurrent&lt;/code>.
-Therefore, this task needs to be scheduled after the system solution that computes &lt;code>leftVector&lt;/code> and before tasks that require the voltage and current interface vectors of the inductance, e.g. the task logging these values.&lt;/p></description></item><item><title>Docs: Scheduling</title><link>https://sogno-platform.github.io/dpsim/docs/overview/scheduling/</link><pubDate>Fri, 01 May 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/overview/scheduling/</guid><description>
-&lt;p>DPsim implements level scheduling.
-A task T4 that depends on data modified by task T1 is scheduled to the level following the level of task T1.
-In the simplest case, all tasks of a level have to be finished before tasks of the next level are started.&lt;/p>
+Therefore, this task needs to be scheduled after the system solution that computes &lt;code>leftVector&lt;/code> and before tasks that require the voltage and current interface vectors of the inductance, e.g. the task logging these values.&lt;/p></description></item><item><title>Docs: Task Scheduling</title><link>https://sogno-platform.github.io/dpsim/docs/overview/scheduling/</link><pubDate>Fri, 01 May 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/overview/scheduling/</guid><description>
+&lt;p>Within each simulation timestep, DPsim executes a set of &lt;strong>tasks&lt;/strong>: discrete units of computation contributed by components, the solver, interfaces, and loggers.
+Before the first timestep the scheduler collects all tasks, resolves their data dependencies into a directed acyclic graph, and produces an ordered schedule.
+That schedule is then replayed on every timestep with no further graph analysis.&lt;/p>
+&lt;hr>
+&lt;h1 id="tasks">Tasks&lt;/h1>
+&lt;h2 id="the-task-base-class">The Task base class&lt;/h2>
+&lt;p>Every task is an instance of a class that inherits from &lt;code>CPS::Task&lt;/code>
+(&lt;code>dpsim-models/include/dpsim-models/Task.h&lt;/code>).
+Each subclass implements one member function:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">virtual&lt;/span> &lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">execute&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Real&lt;/span> &lt;span style="color:#000">time&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">Int&lt;/span> &lt;span style="color:#000">timeStepCount&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To participate in scheduling, a task declares its data dependencies through three attribute lists that are populated in the task&amp;rsquo;s constructor:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>List&lt;/th>
+&lt;th>Meaning&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>mAttributeDependencies&lt;/code>&lt;/td>
+&lt;td>Attributes this task &lt;em>reads&lt;/em> in &lt;code>execute()&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>mModifiedAttributes&lt;/code>&lt;/td>
+&lt;td>Attributes this task &lt;em>writes&lt;/em> in &lt;code>execute()&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>mPrevStepDependencies&lt;/code>&lt;/td>
+&lt;td>Attributes whose value from the &lt;em>previous&lt;/em> timestep this task needs&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>All three lists hold &lt;code>AttributeBase::Ptr&lt;/code> objects, the same pointers used throughout the component model.
+See &lt;a href="https://sogno-platform.github.io/dpsim/docs/overview/attributes/">Attributes&lt;/a> for details on the attribute system.&lt;/p>
+&lt;p>Only attributes can participate in scheduling.
+Plain C++ member variables (a &lt;code>Real&lt;/code>, a &lt;code>Matrix&lt;/code>, an internal state struct) are invisible to the scheduler, so no dependency edge can be formed around them.
+The same constraint applies to simulation data recording: both the CSV logger (&lt;code>DataLogger&lt;/code>) and the real-time data logger (&lt;code>RealTimeDataLogger&lt;/code>) implement &lt;code>DataLoggerInterface&lt;/code>, whose &lt;code>logAttribute()&lt;/code> member function only accepts &lt;code>AttributeBase::Ptr&lt;/code>.
+The VILLASnode interface works the same way.
+Any value that needs to cross a task boundary, be recorded to a data file, or be exchanged with an external tool must be stored in an &lt;code>Attribute&amp;lt;T&amp;gt;&lt;/code>.&lt;/p>
+&lt;p>The component text logger (&lt;code>CPS::Logger&lt;/code>, backed by spdlog) is a separate mechanism used for human-readable debug and diagnostic output.
+It is not part of the scheduling system and can print any value regardless of whether it is an attribute.&lt;/p>
+&lt;p>For practical rules on when a variable should be an attribute versus a plain member variable, see &lt;a href="https://sogno-platform.github.io/dpsim/docs/development/attribute-usage/">Attribute Usage Guidelines&lt;/a>.&lt;/p>
+&lt;h2 id="common-component-task-conventions">Common component task conventions&lt;/h2>
+&lt;p>The names below are component and solver conventions, not scheduler-level concepts.
+The scheduler only sees the attribute dependencies a task declares; it has no notion of a &amp;ldquo;PreStep&amp;rdquo; or &amp;ldquo;PostStep&amp;rdquo; and never orders tasks by these names.&lt;/p>
+&lt;p>MNA components typically define two task classes per component:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Task&lt;/th>
+&lt;th>Typical responsibility&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>MnaPreStep&lt;/code>&lt;/td>
+&lt;td>Component-specific preparation before the matrix solve, often updating internal state and stamping the right-hand-side contribution&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>MnaPostStep&lt;/code>&lt;/td>
+&lt;td>Component-specific update after the matrix solve, often reading the solution vector to update interface voltages and currents&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>This is a common pattern rather than a fixed rule; the exact work each task does is component-specific.
+Signal-domain components (regulators, governors, control blocks) define their own task list via &lt;code>getTasks()&lt;/code>; many separate previous-step state handling from output updates, for example a &lt;code>PreStep&lt;/code> that copies state from the previous step and a &lt;code>Step&lt;/code> that updates the block outputs.&lt;/p>
+&lt;p>The solver itself contributes a task that solves the MNA system; individual components do not depend on it by name, they depend on &lt;code>leftVector&lt;/code> instead (see below).&lt;/p>
+&lt;hr>
+&lt;h1 id="building-the-schedule">Building the schedule&lt;/h1>
+&lt;h2 id="task-collection">Task collection&lt;/h2>
+&lt;p>&lt;code>Simulation::prepSchedule()&lt;/code> collects all tasks before the first timestep from three top-level sources:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Solvers&lt;/strong>: each solver contributes its task list via &lt;code>Solver::getTasks()&lt;/code>. For MNA solvers this list bundles:
+&lt;ul>
+&lt;li>the matrix-solve task,&lt;/li>
+&lt;li>MNA component pre-/post-step tasks from &lt;code>MNASimPowerComp::mnaTasks()&lt;/code> (built during solver initialization via &lt;code>mnaAddPreStepDependencies()&lt;/code> / &lt;code>mnaAddPostStepDependencies()&lt;/code>),&lt;/li>
+&lt;li>signal-domain component tasks returned by &lt;code>SimSignalComp::getTasks()&lt;/code>,&lt;/li>
+&lt;li>optional solver-side tasks, such as state-space extraction, when enabled.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>Interfaces&lt;/strong>: each interface contributes its own tasks via &lt;code>Interface::getTasks()&lt;/code>. These typically depend on the attributes exchanged with external systems.&lt;/li>
+&lt;li>&lt;strong>Loggers&lt;/strong>: each logger contributes a logging task via &lt;code>Logger::getTask()&lt;/code>, depending on the logged attributes so values are written after the producing tasks have run.&lt;/li>
+&lt;/ul>
+&lt;p>All tasks are placed in a flat &lt;code>Task::List&lt;/code> and handed to the scheduler.&lt;/p>
+&lt;h2 id="dependency-resolution">Dependency resolution&lt;/h2>
+&lt;p>&lt;code>Scheduler::resolveDeps()&lt;/code> (&lt;code>dpsim/src/Scheduler.cpp&lt;/code>) translates the attribute-level declarations into directed edges between tasks.
+For every attribute in &lt;code>mModifiedAttributes&lt;/code>, it finds all tasks that list that attribute in their &lt;code>mAttributeDependencies&lt;/code> and adds an edge:&lt;/p>
+&lt;pre tabindex="0">&lt;code>task A writes attr_X
+task B reads attr_X
+────────────────────────
+edge: A → B (A must run before B)
+&lt;/code>&lt;/pre>&lt;p>A special &lt;code>Root&lt;/code> sentinel task is inserted as a sink for all &lt;code>mPrevStepDependencies&lt;/code> entries.
+Its role is explained in the pruning step below.&lt;/p>
+&lt;h2 id="topological-sort-and-pruning">Topological sort and pruning&lt;/h2>
+&lt;p>&lt;code>Scheduler::topologicalSort()&lt;/code> first runs a backward breadth-first search (BFS) from &lt;code>Root&lt;/code>, marking every task that transitively contributes to a simulation output.
+Tasks not reachable in this pass are &lt;strong>dropped&lt;/strong> from the schedule because they produce data no downstream consumer reads in the current timestep.&lt;/p>
+&lt;p>Kahn&amp;rsquo;s algorithm then processes the remaining tasks in dependency order and appends them to the schedule.
+The result is a flat, ordered list in which every task appears after all of its current-step predecessors.&lt;/p>
+&lt;p>The &lt;code>Root&lt;/code> sentinel matters here: it holds a reference to an external attribute updated by an interface or by the solver, so the backward BFS reaches it and keeps every task that writes previous-timestep state, even when that output is only consumed in the next timestep.&lt;/p>
+&lt;h2 id="level-scheduling">Level scheduling&lt;/h2>
+&lt;p>For parallel execution the ordered list is converted into levels by &lt;code>Scheduler::levelSchedule()&lt;/code>.
+Each task is assigned to the level one greater than the highest-level task it depends on:&lt;/p>
+&lt;pre tabindex="0">&lt;code>level 0 │ T1 T2 T3 ← no dependencies; can all start at once
+level 1 │ T4 T5 ← depend only on level-0 tasks
+level 2 │ T6 ← depends on T4 or T5
+&lt;/code>&lt;/pre>&lt;p>Tasks within the same level have no data dependencies between them and can execute in parallel.
+The scheduler guarantees that all tasks in level &lt;em>k&lt;/em> finish before any task in level &lt;em>k+1&lt;/em> starts.&lt;/p>
 &lt;p>&lt;img src="task_graph_levels.svg" alt="image">&lt;/p>
-&lt;p>The dependencies of tasks on data are determined by referencing the attributes that are read or modified by the task.
-The scheduler computes the schedule prior to the simulation from the task dependency graph resulting from the tasks&amp;rsquo; data dependencies.&lt;/p></description></item><item><title>Docs: Component and Solver Initialization</title><link>https://sogno-platform.github.io/dpsim/docs/overview/initialization/</link><pubDate>Thu, 18 Jun 2026 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/overview/initialization/</guid><description>
+&lt;h2 id="scheduler-variants">Scheduler variants&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Class&lt;/th>
+&lt;th>Parallelism strategy&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>SequentialScheduler&lt;/code>&lt;/td>
+&lt;td>Single-threaded; follows topological order&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>ThreadLevelScheduler&lt;/code>&lt;/td>
+&lt;td>Distributes each level across &lt;em>N&lt;/em> worker threads&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>ThreadListScheduler&lt;/code>&lt;/td>
+&lt;td>Distributes tasks greedily across &lt;em>N&lt;/em> threads&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>OpenMPLevelScheduler&lt;/code>&lt;/td>
+&lt;td>Uses &lt;code>#pragma omp parallel for&lt;/code> per level&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>The scheduler is chosen at &lt;code>Simulation&lt;/code> construction time; &lt;code>SequentialScheduler&lt;/code> is the default.&lt;/p>
+&lt;h2 id="per-timestep-execution">Per-timestep execution&lt;/h2>
+&lt;p>&lt;code>Scheduler::step(time, timeStepCount)&lt;/code> is called once per timestep.
+For the sequential scheduler:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">for&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">auto&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span> &lt;span style="color:#f57900">task&lt;/span> &lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000">mSchedule&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">task&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">-&amp;gt;&lt;/span>&lt;span style="color:#000">execute&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">time&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">timeStepCount&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Parallel schedulers distribute tasks across threads within each level and synchronize with a barrier before advancing to the next level.&lt;/p>
+&lt;hr>
+&lt;h1 id="developer-guide-adding-tasks-to-a-component">Developer guide: adding tasks to a component&lt;/h1>
+&lt;h2 id="signal-components">Signal components&lt;/h2>
+&lt;p>Signal components inherit from &lt;code>SimSignalComp&lt;/code> and return their tasks from &lt;code>getTasks()&lt;/code>.
+The usual pattern is to define inner &lt;code>Task&lt;/code> classes whose constructors populate the dependency lists, then instantiate them in &lt;code>getTasks()&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">class&lt;/span> &lt;span style="color:#000">MyComponent&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:&lt;/span> &lt;span style="color:#204a87;font-weight:bold">public&lt;/span> &lt;span style="color:#000">SimSignalComp&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">public&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">const&lt;/span> &lt;span style="color:#000">Attribute&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">Real&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;gt;::&lt;/span>&lt;span style="color:#000">Ptr&lt;/span> &lt;span style="color:#000">mInput&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// written by upstream component
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#204a87;font-weight:bold">const&lt;/span> &lt;span style="color:#000">Attribute&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">Real&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;gt;::&lt;/span>&lt;span style="color:#000">Ptr&lt;/span> &lt;span style="color:#000">mOutput&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// read by downstream component
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#204a87;font-weight:bold">const&lt;/span> &lt;span style="color:#000">Attribute&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">Real&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;gt;::&lt;/span>&lt;span style="color:#000">Ptr&lt;/span> &lt;span style="color:#000">mOutputPrev&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// state carried across timesteps
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">class&lt;/span> &lt;span style="color:#000">PreStep&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:&lt;/span> &lt;span style="color:#204a87;font-weight:bold">public&lt;/span> &lt;span style="color:#000">Task&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">public&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">explicit&lt;/span> &lt;span style="color:#000">PreStep&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">MyComponent&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span> &lt;span style="color:#000">comp&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ce5c00;font-weight:bold">:&lt;/span> &lt;span style="color:#000">Task&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">**&lt;/span>&lt;span style="color:#000">comp&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">mName&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">+&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;.PreStep&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">),&lt;/span> &lt;span style="color:#000">mComp&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">comp&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">mPrevStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">push_back&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mComp&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">mOutput&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">mModifiedAttributes&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">push_back&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mComp&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">mOutputPrev&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">execute&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Real&lt;/span> &lt;span style="color:#000">time&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">Int&lt;/span> &lt;span style="color:#000">timeStepCount&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#204a87;font-weight:bold">override&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ce5c00;font-weight:bold">**&lt;/span>&lt;span style="color:#000">mComp&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">mOutputPrev&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">**&lt;/span>&lt;span style="color:#000">mComp&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">mOutput&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">private&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">MyComponent&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span> &lt;span style="color:#000">mComp&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">};&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">class&lt;/span> &lt;span style="color:#000">Step&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:&lt;/span> &lt;span style="color:#204a87;font-weight:bold">public&lt;/span> &lt;span style="color:#000">Task&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">public&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">explicit&lt;/span> &lt;span style="color:#000">Step&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">MyComponent&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span> &lt;span style="color:#000">comp&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ce5c00;font-weight:bold">:&lt;/span> &lt;span style="color:#000">Task&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">**&lt;/span>&lt;span style="color:#000">comp&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">mName&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">+&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;.Step&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">),&lt;/span> &lt;span style="color:#000">mComp&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">comp&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">mAttributeDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">push_back&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mComp&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">mInput&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">mModifiedAttributes&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">push_back&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mComp&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">mOutput&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">execute&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Real&lt;/span> &lt;span style="color:#000">time&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">Int&lt;/span> &lt;span style="color:#000">timeStepCount&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#204a87;font-weight:bold">override&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">mComp&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">signalStep&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">time&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">timeStepCount&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">private&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">MyComponent&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span> &lt;span style="color:#000">mComp&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">};&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">Task&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span> &lt;span style="color:#000">getTasks&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span> &lt;span style="color:#204a87;font-weight:bold">override&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span> &lt;span style="color:#000">std&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">make_shared&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">PreStep&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;gt;&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#204a87;font-weight:bold">this&lt;/span>&lt;span style="color:#000;font-weight:bold">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">std&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">make_shared&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">Step&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;gt;&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span>&lt;span style="color:#204a87;font-weight:bold">this&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">};&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">};&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>PreStep&lt;/code> uses &lt;code>mPrevStepDependencies&lt;/code> for &lt;code>mOutput&lt;/code> because it reads the value produced &lt;em>last&lt;/em> timestep, not the value that &lt;code>Step&lt;/code> will produce &lt;em>this&lt;/em> timestep.
+Using &lt;code>mAttributeDependencies&lt;/code> here would create a same-step dependency on &lt;code>Step&lt;/code> and force &lt;code>PreStep&lt;/code> after &lt;code>Step&lt;/code>, which is backwards.&lt;/p>
+&lt;h2 id="mna-power-components">MNA power components&lt;/h2>
+&lt;p>MNA components inherit from &lt;code>MNASimPowerComp&amp;lt;VarType&amp;gt;&lt;/code>.
+Instead of &lt;code>getTasks()&lt;/code>, they implement two hook functions that &lt;code>MNASimPowerComp&lt;/code> calls when it builds the &lt;code>MnaPreStep&lt;/code> and &lt;code>MnaPostStep&lt;/code> tasks during solver initialization.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">DP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Ph1&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">MyComponent&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">mnaAddPreStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span> &lt;span style="color:#000">prevStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span> &lt;span style="color:#000">attributeDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span> &lt;span style="color:#000">modifiedAttributes&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">prevStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">push_back&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mIntfCurrent&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// read from previous step
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">modifiedAttributes&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">push_back&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mRightVector&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// stamp right-hand side
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">DP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Ph1&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">MyComponent&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">mnaAddPostStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span> &lt;span style="color:#000">prevStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span> &lt;span style="color:#000">attributeDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span> &lt;span style="color:#000">modifiedAttributes&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">Attribute&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">Matrix&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;gt;::&lt;/span>&lt;span style="color:#000">Ptr&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span> &lt;span style="color:#000">leftVector&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">attributeDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">push_back&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">leftVector&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// wait for matrix solve
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">modifiedAttributes&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">push_back&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mIntfVoltage&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">modifiedAttributes&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">push_back&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mIntfCurrent&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>PostStep&lt;/code> must always list &lt;code>leftVector&lt;/code> in &lt;code>attributeDependencies&lt;/code>.
+This creates the edge from the solver&amp;rsquo;s matrix-solve task to every component&amp;rsquo;s &lt;code>PostStep&lt;/code>, ensuring the solution vector is available before voltages and currents are extracted.&lt;/p>
+&lt;h2 id="dependency-declaration-checklist">Dependency declaration checklist&lt;/h2>
+&lt;ul>
+&lt;li>Every attribute &lt;em>read&lt;/em> inside &lt;code>execute()&lt;/code> must appear in &lt;code>mAttributeDependencies&lt;/code> or &lt;code>mPrevStepDependencies&lt;/code>.&lt;/li>
+&lt;li>Every attribute &lt;em>written&lt;/em> inside &lt;code>execute()&lt;/code> must appear in &lt;code>mModifiedAttributes&lt;/code>.&lt;/li>
+&lt;li>State carried from the previous timestep goes in &lt;code>mPrevStepDependencies&lt;/code>, not &lt;code>mAttributeDependencies&lt;/code>.&lt;/li>
+&lt;li>&lt;code>MnaPostStep&lt;/code> must list &lt;code>leftVector&lt;/code> in &lt;code>attributeDependencies&lt;/code>.&lt;/li>
+&lt;li>No attribute should appear in both &lt;code>mAttributeDependencies&lt;/code> and &lt;code>mPrevStepDependencies&lt;/code> for the same task.&lt;/li>
+&lt;/ul>
+&lt;p>Missing a declaration does not always cause a crash; it silently produces incorrect results or a wrong execution order, which is harder to debug.
+Two common failure modes follow from the pruning step:&lt;/p>
+&lt;ul>
+&lt;li>A &lt;code>PreStep&lt;/code> or &lt;code>PostStep&lt;/code> task is dropped entirely because none of its declared modified attributes is needed by another task, a logger, an interface, or a previous-step dependency. The simulation then runs but its results are always wrong.&lt;/li>
+&lt;li>The same task appears to work only when a particular variable is logged or exchanged by an interface, because that logger or interface adds a dependency on the attribute and keeps the producing task reachable. The results then depend on logger or interface configuration even though the physical model did not change.&lt;/li>
+&lt;/ul>
+&lt;p>Declare dependencies conservatively.&lt;/p></description></item><item><title>Docs: Component and Solver Initialization</title><link>https://sogno-platform.github.io/dpsim/docs/overview/initialization/</link><pubDate>Thu, 18 Jun 2026 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/overview/initialization/</guid><description>
 &lt;p>Initialization is the phase between constructing the system topology and running the first timestep.
 Its job is to size the system matrices, derive initial state from power-flow results, register MNA tasks, and stamp static conductances.
 Two constraints drive its structure:&lt;/p>
