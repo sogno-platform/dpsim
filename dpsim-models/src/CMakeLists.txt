@@ -52,6 +52,12 @@ list(APPEND MODELS_SOURCES
 	DP/DP_Ph1_varResSwitch.cpp
 	DP/DP_Ph1_DPDQInterface.cpp
 
+	DP/DP_SSNComp.cpp
+	DP/DP_VTypeSSNComp.cpp
+	DP/DP_ITypeSSNComp.cpp
+	DP/DP_Ph1_TwoTerminalVTypeSSNComp.cpp
+	DP/DP_Ph1_SSN_Full_Serial_RLC.cpp
+
 	DP/DP_Ph3_VoltageSource.cpp
 	DP/DP_Ph3_Capacitor.cpp
 	DP/DP_Ph3_Inductor.cpp
