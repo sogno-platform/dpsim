@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
+#include <dpsim-models/MathUtils.h>
 #include <dpsim-models/SP/SP_Ph1_SolidStateTransformer.h>
 
 using namespace CPS;
@@ -63,11 +64,12 @@ void SP::Ph1::SolidStateTransformer::initializeParentFromNodesAndTerminals(
   mSubLoadSide1->setParameters(**mPref, **mQ1ref, mNominalVoltageEnd1);
   mSubLoadSide2->setParameters(mP2, **mQ2ref, mNominalVoltageEnd2);
 
-  if (std::isinf(mP2)) {
-    std::stringstream ss;
-    ss << "SST >>" << this->name()
-       << ": infinite or nan values. Or initialized before setting parameters.";
-    throw std::invalid_argument(ss.str());
+  if (!Math::isFinite(mP2)) {
+    SPDLOG_LOGGER_ERROR(mSLog,
+                        "SST {}: non-finite secondary-side power {} (or "
+                        "initialized before setting parameters)",
+                        this->name(), mP2);
+    throw InvalidArgumentException();
   }
   if ((**mPref * mP2) > 0) {
     throw std::invalid_argument(

@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
+#include <dpsim-models/MathUtils.h>
 #include <dpsim-models/SP/SP_Ph1_Transformer.h>
 
 using namespace CPS;
@@ -307,15 +308,14 @@ void SP::Ph1::Transformer::pfApplyAdmittanceMatrixStamp(
   //check for inf or nan
   for (int i = 0; i < 2; i++)
     for (int j = 0; j < 2; j++)
-      if (std::isinf(mY_element.coeff(i, j).real()) ||
-          std::isinf(mY_element.coeff(i, j).imag())) {
-        std::cout << mY_element << std::endl;
-        std::cout << "Zl:" << mLeakage << std::endl;
-        std::cout << "tap:" << mRatioAbsPerUnit << std::endl;
-        std::stringstream ss;
-        ss << "Transformer>>" << this->name()
-           << ": infinite or nan values in the element Y at: " << i << "," << j;
-        throw std::invalid_argument(ss.str());
+      if (!Math::isFinite(mY_element.coeff(i, j))) {
+        SPDLOG_LOGGER_ERROR(
+            mSLog,
+            "Transformer {}: non-finite per-unit admittance {} "
+            "in element Y({},{}) (leakage {}, tap {})",
+            this->name(), Logger::complexToString(mY_element.coeff(i, j)), i, j,
+            Logger::complexToString(mLeakage), mRatioAbsPerUnit);
+        throw InvalidArgumentException();
       }
 
   //set the circuit matrix values

@@ -32,16 +32,13 @@ void SP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
   // Capacitor admittance is the susceptance (jwC); compute it directly to
   // avoid manufacturing NaN at C = 0 via a 1/impedance round-trip.
   mAdmittance = mSusceptance;
-  mImpedance = Complex(1, 0) / mSusceptance;
   (**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
   **mIntfCurrent = mSusceptance * **mIntfVoltage;
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\nCapacitance [F]: {:s}"
-                     "\nImpedance [Ohm]: {:s}"
                      "\nAdmittance [S]: {:s}",
                      Logger::realToString(**mCapacitance),
-                     Logger::complexToString(mImpedance),
                      Logger::complexToString(mAdmittance));
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"
@@ -131,10 +128,8 @@ void SP::Ph1::Capacitor::calculatePerUnitParameters(Real baseApparentPower) {
   SPDLOG_LOGGER_INFO(mSLog, "Base Voltage={} [V]  Base Impedance={} [Ohm]",
                      mBaseVoltage, mBaseImpedance);
 
-  mImpedancePerUnit = mImpedance / mBaseImpedance;
   mAdmittancePerUnit = mSusceptance * mBaseImpedance;
-  SPDLOG_LOGGER_INFO(mSLog, "Impedance={} [pu]  Admittance={} [pu]",
-                     Logger::complexToString(mImpedancePerUnit),
+  SPDLOG_LOGGER_INFO(mSLog, "Admittance={} [pu]",
                      Logger::complexToString(mAdmittancePerUnit));
 }
 
