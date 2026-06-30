@@ -59,6 +59,8 @@
 #include <dpsim-models/DP/DP_ITypeSSNComp.h>
 #include <dpsim-models/DP/DP_Ph1_ControlledCurrentSource.h>
 #include <dpsim-models/DP/DP_Ph1_ControlledVoltageSource.h>
+#include <dpsim-models/DP/DP_Ph1_GenericTwoTerminalITypeSSN.h>
+#include <dpsim-models/DP/DP_Ph1_GenericTwoTerminalVTypeSSN.h>
 #include <dpsim-models/DP/DP_Ph1_RxLine.h>
 #include <dpsim-models/DP/DP_Ph1_SSN_Full_Serial_RLC.h>
 #include <dpsim-models/DP/DP_Ph1_SVC.h>
@@ -74,6 +76,7 @@
 #include <dpsim-models/DP/DP_Ph1_SynchronGeneratorIdeal.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGeneratorTrStab.h>
 #include <dpsim-models/DP/DP_Ph1_Transformer.h>
+#include <dpsim-models/DP/DP_Ph1_TwoTerminalITypeSSNComp.h>
 #include <dpsim-models/DP/DP_Ph1_TwoTerminalVTypeSSNComp.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSourceNorton.h>
