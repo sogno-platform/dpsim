@@ -51,6 +51,18 @@ There are no strict formal requirements besides the following:
     */
     ```
 
+1. **Linear History (no merge commits)**
+
+    DPsim maintains a linear git history.
+    Never merge the target branch into your feature branch — rebase instead:
+
+    ```bash
+    git rebase origin/main
+    git push --force-with-lease
+    ```
+
+    A `pre-commit` hook enforces this automatically once you have run `pre-commit install`.
+
 # Creating New Releases (info for maintainers)
 
 DPsim currently uses to [Semantic Versioning](https://semver.org/). The periodic creation of

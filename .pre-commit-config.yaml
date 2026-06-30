@@ -48,3 +48,22 @@ repos:
     hooks:
       - id: markdownlint
         args: [-r, "~MD013,~MD033,~MD024"]
+
+  - repo: local
+    hooks:
+      - id: no-merge-commits
+        name: no merge commits (use rebase)
+        language: system
+        entry: >-
+          bash -c '[ ! -f .git/MERGE_HEAD ] || {
+          echo "";
+          echo "Error: merge commits are not allowed in DPsim.";
+          echo "Please rebase your branch onto the target branch instead:";
+          echo "";
+          echo "  git rebase origin/main";
+          echo "  git push --force-with-lease";
+          echo "";
+          exit 1; }'
+        stages: [pre-commit]
+        always_run: true
+        pass_filenames: false
