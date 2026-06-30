@@ -245,6 +245,11 @@ void PFSolver::determinePFBusType() {
 
   rebuildBusIndexAggregates();
 
+  // Snapshot the original classification so each PF solve can be reset to it
+  // before Q-limit switching (the solver is reused across timesteps).
+  mPQBusesOrig = mPQBuses;
+  mPVBusesOrig = mPVBuses;
+
   SPDLOG_LOGGER_INFO(mSLog, "#### Create index vectors for power flow solver:");
   SPDLOG_LOGGER_INFO(mSLog, "PQ Buses: {}", logVector(mPQBusIndices));
   SPDLOG_LOGGER_INFO(mSLog, "PV Buses: {}", logVector(mPVBusIndices));
@@ -277,6 +282,15 @@ void PFSolver::rebuildBusIndexAggregates() {
                          mPQBusIndices.end());
   mPQPVBusIndices.insert(mPQPVBusIndices.end(), mPVBusIndices.begin(),
                          mPVBusIndices.end());
+}
+
+void PFSolver::resetToOriginalClassification() {
+  // Restore the pre-switching PV/PQ classification and clear Q-limit state so a
+  // fresh PF solve does not inherit conversions from a previous one.
+  mPQBuses = mPQBusesOrig;
+  mPVBuses = mPVBusesOrig;
+  clearReactiveLimitState();
+  reclassifyBuses();
 }
 
 void PFSolver::reclassifyBuses() {
@@ -538,10 +552,21 @@ Bool PFSolver::runNewtonRaphson() {
 }
 
 Bool PFSolver::solvePowerflow() {
-  // Outer loop placeholder: today a single Newton-Raphson solve. The Q-limit
-  // PV<->PQ switching loop (which re-runs runNewtonRaphson after reclassifyBuses)
-  // is added on top of this.
-  return runNewtonRaphson();
+  Bool converged = runNewtonRaphson();
+
+  if (!mEnforceReactiveLimits)
+    return converged;
+
+  // Q-limit outer loop: after each converged inner solve, switch PV buses that
+  // violated their reactive limits to PQ (pinned at the limit) and pinned buses
+  // whose constraint relaxed back to PV; re-solve until no bus switches.
+  for (CPS::UInt outer = 0; converged && outer < mMaxOuterIterations; ++outer) {
+    if (!enforceReactiveLimits())
+      break; // all generators within their reactive limits
+    reclassifyBuses();
+    converged = runNewtonRaphson();
+  }
+  return converged;
 }
 
 void PFSolver::SolveTask::execute(Real time, Int timeStepCount) {
