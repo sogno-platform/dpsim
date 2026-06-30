@@ -135,7 +135,7 @@ var searchData=
   ['solvetaskharm_132',['SolveTaskHarm',['../class_d_psim_1_1_mna_solver_direct_1_1_solve_task_harm.html',1,'DPsim::MnaSolverDirect']]],
   ['solvetaskrecomp_133',['SolveTaskRecomp',['../class_d_psim_1_1_mna_solver_direct_1_1_solve_task_recomp.html',1,'DPsim::MnaSolverDirect']]],
   ['sparseluadapter_134',['SparseLUAdapter',['../class_d_psim_1_1_sparse_l_u_adapter.html',1,'DPsim']]],
-  ['ssncomp_135',['SSNComp',['../class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html',1,'CPS::EMT']]],
+  ['ssncomp_135',['SSNComp',['../class_c_p_s_1_1_d_p_1_1_s_s_n_comp.html',1,'CPS::DP::SSNComp'],['../class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html',1,'CPS::EMT::SSNComp']]],
   ['ssntypei2t_136',['SSNTypeI2T',['../class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_type_i2_t.html',1,'CPS::EMT::Ph1']]],
   ['ssntypev2t_137',['SSNTypeV2T',['../class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_type_v2_t.html',1,'CPS::EMT::Ph1']]],
   ['statespaceextractiontask_138',['StateSpaceExtractionTask',['../class_d_psim_1_1_mna_solver_direct_1_1_state_space_extraction_task.html',1,'DPsim::MnaSolverDirect']]],

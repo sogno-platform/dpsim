@@ -15,7 +15,7 @@ var searchData=
   ['turbinegovernortype1_12',['TurbineGovernorType1',['../class_c_p_s_1_1_signal_1_1_turbine_governor_type1.html',1,'CPS::Signal']]],
   ['turbineparameters_13',['TurbineParameters',['../class_c_p_s_1_1_base_1_1_turbine_parameters.html',1,'CPS::Base']]],
   ['twoterminalitypessncomp_14',['TwoTerminalITypeSSNComp',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_i_type_s_s_n_comp.html',1,'CPS::EMT::Ph3']]],
-  ['twoterminalvtypessncomp_15',['TwoTerminalVTypeSSNComp',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html',1,'CPS::EMT::Ph3']]],
+  ['twoterminalvtypessncomp_15',['TwoTerminalVTypeSSNComp',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_v_type_s_s_n_comp.html',1,'CPS::DP::Ph1::TwoTerminalVTypeSSNComp'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html',1,'CPS::EMT::Ph3::TwoTerminalVTypeSSNComp']]],
   ['twoterminalvtypevariablessncomp_16',['TwoTerminalVTypeVariableSSNComp',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_variable_s_s_n_comp.html',1,'CPS::EMT::Ph3']]],
   ['typeexception_17',['TypeException',['../class_c_p_s_1_1_type_exception.html',1,'CPS']]]
 ];

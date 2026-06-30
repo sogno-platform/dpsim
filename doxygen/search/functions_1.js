@@ -4,5 +4,8 @@ var searchData=
   ['barrier_1',['Barrier',['../class_d_psim_1_1_barrier.html#a790d2f16f23a55628d88dfd18a3c3b66',1,'DPsim::Barrier::Barrier()=delete'],['../class_d_psim_1_1_barrier.html#af663935e2505d654b273608fc0ab0234',1,'DPsim::Barrier::Barrier(Int limit, Bool useCondition=false)']]],
   ['besselfirstkind_5fn_2',['besselFirstKind_n',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html#a68e99ab543670bf65deadf3c57a1dae0',1,'CPS::DP::Ph1::Inverter']]],
   ['besselfirstkind_5fn_5fopt_3',['besselFirstKind_n_opt',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html#a72ee00e1957d8947e2ecb0f8a5c712fd',1,'CPS::DP::Ph1::Inverter']]],
-  ['buildjacobianpattern_4',['buildJacobianPattern',['../class_d_psim_1_1_p_f_solver_power_polar_sparse.html#afb045522cac6b3fbd334ada701a8a5bc',1,'DPsim::PFSolverPowerPolarSparse']]]
+  ['buildaugmenteda_4',['buildAugmentedA',['../class_c_p_s_1_1_d_p_1_1_s_s_n_comp.html#a51e1d7f4b0fa8ecf3d5685c0cfd22f0b',1,'CPS::DP::SSNComp']]],
+  ['buildaugmentedb_5',['buildAugmentedB',['../class_c_p_s_1_1_d_p_1_1_s_s_n_comp.html#abd05e1224e0689de1ca91686a3654d7f',1,'CPS::DP::SSNComp']]],
+  ['buildinitialinputfromnodes_6',['buildInitialInputFromNodes',['../class_c_p_s_1_1_d_p_1_1_i_type_s_s_n_comp.html#af9f906a23ba53a06961ee21dc8517abd',1,'CPS::DP::ITypeSSNComp::buildInitialInputFromNodes()'],['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_v_type_s_s_n_comp.html#a0d29c5f270d523e912ab1cb76b884454',1,'CPS::DP::Ph1::TwoTerminalVTypeSSNComp::buildInitialInputFromNodes()'],['../class_c_p_s_1_1_d_p_1_1_v_type_s_s_n_comp.html#a47ce5efb2117a44d07557a1d28a3457b',1,'CPS::DP::VTypeSSNComp::buildInitialInputFromNodes()']]],
+  ['buildjacobianpattern_7',['buildJacobianPattern',['../class_d_psim_1_1_p_f_solver_power_polar_sparse.html#afb045522cac6b3fbd334ada701a8a5bc',1,'DPsim::PFSolverPowerPolarSparse']]]
 ];

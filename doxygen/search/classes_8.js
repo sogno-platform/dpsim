@@ -14,5 +14,5 @@ var searchData=
   ['invalidtopology_11',['InvalidTopology',['../class_c_p_s_1_1_c_i_m_1_1_invalid_topology.html',1,'CPS::CIM']]],
   ['inverter_12',['Inverter',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html',1,'CPS::DP::Ph1']]],
   ['iterator_13',['iterator',['../class_d_psim_1_1cuda_1_1_vector_1_1iterator.html',1,'DPsim::cuda::Vector']]],
-  ['itypessncomp_14',['ITypeSSNComp',['../class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html',1,'CPS::EMT']]]
+  ['itypessncomp_14',['ITypeSSNComp',['../class_c_p_s_1_1_d_p_1_1_i_type_s_s_n_comp.html',1,'CPS::DP::ITypeSSNComp'],['../class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html',1,'CPS::EMT::ITypeSSNComp']]]
 ];
