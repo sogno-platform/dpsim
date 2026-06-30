@@ -43,7 +43,7 @@ var searchData=
   ['turbinegovernortype1_40',['TurbineGovernorType1',['../class_c_p_s_1_1_signal_1_1_turbine_governor_type1.html',1,'CPS::Signal']]],
   ['turbineparameters_41',['TurbineParameters',['../class_c_p_s_1_1_base_1_1_turbine_parameters.html',1,'CPS::Base']]],
   ['tw_42',['Tw',['../class_c_p_s_1_1_signal_1_1_hydro_turbine_parameters.html#a205e5b35292ed0563d482b339c5d21d0',1,'CPS::Signal::HydroTurbineParameters::Tw'],['../class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html#a4a059d2dfa96cf59b590618e058b4c9b',1,'CPS::Signal::PSS1AParameters::Tw']]],
-  ['twoterminalitypessncomp_43',['TwoTerminalITypeSSNComp',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_i_type_s_s_n_comp.html',1,'CPS::EMT::Ph3']]],
+  ['twoterminalitypessncomp_43',['TwoTerminalITypeSSNComp',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html',1,'CPS::DP::Ph1::TwoTerminalITypeSSNComp'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_i_type_s_s_n_comp.html',1,'CPS::EMT::Ph3::TwoTerminalITypeSSNComp']]],
   ['twoterminalvtypessncomp_44',['TwoTerminalVTypeSSNComp',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_v_type_s_s_n_comp.html',1,'CPS::DP::Ph1::TwoTerminalVTypeSSNComp'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html',1,'CPS::EMT::Ph3::TwoTerminalVTypeSSNComp']]],
   ['twoterminalvtypevariablessncomp_45',['TwoTerminalVTypeVariableSSNComp',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_variable_s_s_n_comp.html',1,'CPS::EMT::Ph3']]],
   ['type_46',['Type',['../class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919e',1,'DPsim::Solver']]],

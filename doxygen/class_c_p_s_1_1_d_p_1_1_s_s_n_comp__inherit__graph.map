@@ -1,9 +1,9 @@
 <map id="CPS::DP::SSNComp" name="CPS::DP::SSNComp">
 <area shape="rect" id="Node000001" title="Abstract base class for DP/SFA state&#45;space nodal (SSN) components." alt="" coords="1276,65,1414,95"/>
-<area shape="rect" id="Node000010" href="$class_c_p_s_1_1_d_p_1_1_i_type_s_s_n_comp.html" title="Abstract base for DP I&#45;type SSN components (input current, output voltage)." alt="" coords="1465,39,1638,68"/>
-<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="1430,67,1464,62,1465,67,1430,72"/>
-<area shape="rect" id="Node000011" href="$class_c_p_s_1_1_d_p_1_1_v_type_s_s_n_comp.html" title="Abstract base for DP V&#45;type SSN components (input voltage, output current)." alt="" coords="1464,92,1640,122"/>
-<area shape="poly" id="edge13_Node000001_Node000011" title=" " alt="" coords="1431,88,1464,93,1463,98,1430,94"/>
+<area shape="rect" id="Node000010" href="$class_c_p_s_1_1_d_p_1_1_i_type_s_s_n_comp.html" title="Abstract base for DP I&#45;type SSN components (input current, output voltage)." alt="" coords="1465,35,1638,64"/>
+<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="1429,65,1464,60,1465,65,1430,70"/>
+<area shape="rect" id="Node000013" href="$class_c_p_s_1_1_d_p_1_1_v_type_s_s_n_comp.html" title="Abstract base for DP V&#45;type SSN components (input voltage, output current)." alt="" coords="1464,91,1640,120"/>
+<area shape="poly" id="edge15_Node000001_Node000013" title=" " alt="" coords="1431,88,1464,92,1463,97,1430,93"/>
 <area shape="rect" id="Node000002" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="1045,56,1227,104"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1242,78,1276,78,1276,83,1242,83"/>
 <area shape="rect" id="Node000003" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="750,129,908,178"/>
@@ -23,8 +23,14 @@
 <area shape="poly" id="edge11_Node000008_Node000007" title=" " alt="" coords="620,35,738,59,737,64,618,40"/>
 <area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="935,78,1045,78,1045,83,935,83"/>
 <area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="628,81,737,79,737,84,628,86"/>
-<area shape="rect" id="Node000012" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_v_type_s_s_n_comp.html" title="Single&#45;phase, two&#45;terminal V&#45;type SSN stamping layer." alt="" coords="1689,82,1878,131"/>
-<area shape="poly" id="edge14_Node000011_Node000012" title=" " alt="" coords="1655,104,1689,104,1689,110,1655,110"/>
-<area shape="rect" id="Node000013" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_s_s_n_1_1_full___serial___r_l_c.html" title="Series RLC one&#45;port as a DP V&#45;type SSN component." alt="" coords="1927,82,2069,131"/>
-<area shape="poly" id="edge15_Node000012_Node000013" title=" " alt="" coords="1893,104,1927,104,1927,110,1893,110"/>
+<area shape="rect" id="Node000011" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html" title="Single&#45;phase, two&#45;terminal I&#45;type SSN stamping layer." alt="" coords="1689,22,1878,71"/>
+<area shape="poly" id="edge13_Node000010_Node000011" title=" " alt="" coords="1654,46,1689,45,1689,51,1654,51"/>
+<area shape="rect" id="Node000012" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_generic_two_terminal_i_type_s_s_n.html" title="Generic single&#45;phase, two&#45;terminal I&#45;type SSN component." alt="" coords="1927,22,2111,71"/>
+<area shape="poly" id="edge14_Node000011_Node000012" title=" " alt="" coords="1893,44,1927,44,1927,50,1893,50"/>
+<area shape="rect" id="Node000014" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_v_type_s_s_n_comp.html" title="Single&#45;phase, two&#45;terminal V&#45;type SSN stamping layer." alt="" coords="1689,96,1878,144"/>
+<area shape="poly" id="edge16_Node000013_Node000014" title=" " alt="" coords="1656,109,1689,112,1689,117,1655,115"/>
+<area shape="rect" id="Node000015" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_generic_two_terminal_v_type_s_s_n.html" title="Generic single&#45;phase, two&#45;terminal V&#45;type SSN component." alt="" coords="1927,169,2111,218"/>
+<area shape="poly" id="edge17_Node000014_Node000015" title=" " alt="" coords="1879,147,1939,166,1938,171,1877,152"/>
+<area shape="rect" id="Node000016" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_s_s_n_1_1_full___serial___r_l_c.html" title="Series RLC one&#45;port as a DP V&#45;type SSN component." alt="" coords="1948,96,2090,144"/>
+<area shape="poly" id="edge18_Node000014_Node000016" title=" " alt="" coords="1894,118,1947,118,1947,123,1894,123"/>
 </map>

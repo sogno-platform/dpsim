@@ -47,7 +47,7 @@
   </g>
 </defs>
 <script type="application/ecmascript">
-var viewWidth = 1556;
+var viewWidth = 1588;
 var viewHeight = 178;
 var sectionId = 'dynsection-0';
 </script>
@@ -68,8 +68,8 @@ var sectionId = 'dynsection-0';
 <g id="Node000010" class="node">
 <title>Node10</title>
 <g id="a_Node000010"><a xlink:href="class_c_p_s_1_1_d_p_1_1_i_type_s_s_n_comp.html" target="_top" xlink:title="Abstract base for DP I&#45;type SSN components (input current, output voltage).">
-<polygon fill="white" stroke="#666666" points="1224.88,-145.38 1094.88,-145.38 1094.88,-123.12 1224.88,-123.12 1224.88,-145.38"/>
-<text text-anchor="middle" x="1159.88" y="-131.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::ITypeSSNComp</text>
+<polygon fill="white" stroke="#666666" points="1224.88,-148.38 1094.88,-148.38 1094.88,-126.12 1224.88,-126.12 1224.88,-148.38"/>
+<text text-anchor="middle" x="1159.88" y="-134.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::ITypeSSNComp</text>
 </a>
 </g>
 </g>
@@ -77,26 +77,26 @@ var sectionId = 'dynsection-0';
 <g id="edge12_Node000001_Node000010" class="edge">
 <title>Node1&#45;&gt;Node10</title>
 <g id="a_edge12_Node000001_Node000010"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1068.42,-122.43C1077.05,-123.55 1085.93,-124.71 1094.59,-125.85"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1069.12,-118.99 1058.75,-121.16 1068.21,-125.93 1069.12,-118.99"/>
+<path fill="none" stroke="#63b8ff" d="M1068.42,-123.65C1077.05,-124.95 1085.93,-126.28 1094.59,-127.59"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1069.15,-120.22 1058.74,-122.2 1068.11,-127.15 1069.15,-120.22"/>
 </a>
 </g>
 </g>
-<!-- Node11 -->
-<g id="Node000011" class="node">
-<title>Node11</title>
-<g id="a_Node000011"><a xlink:href="class_c_p_s_1_1_d_p_1_1_v_type_s_s_n_comp.html" target="_top" xlink:title="Abstract base for DP V&#45;type SSN components (input voltage, output current).">
-<polygon fill="white" stroke="#666666" points="1226,-105.38 1093.75,-105.38 1093.75,-83.12 1226,-83.12 1226,-105.38"/>
-<text text-anchor="middle" x="1159.88" y="-91.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::VTypeSSNComp</text>
+<!-- Node13 -->
+<g id="Node000013" class="node">
+<title>Node13</title>
+<g id="a_Node000013"><a xlink:href="class_c_p_s_1_1_d_p_1_1_v_type_s_s_n_comp.html" target="_top" xlink:title="Abstract base for DP V&#45;type SSN components (input voltage, output current).">
+<polygon fill="white" stroke="#666666" points="1226,-106.38 1093.75,-106.38 1093.75,-84.12 1226,-84.12 1226,-106.38"/>
+<text text-anchor="middle" x="1159.88" y="-92.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::VTypeSSNComp</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node11 -->
-<g id="edge13_Node000001_Node000011" class="edge">
-<title>Node1&#45;&gt;Node11</title>
-<g id="a_edge13_Node000001_Node000011"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1068.65,-106.04C1076.85,-104.97 1085.27,-103.87 1093.51,-102.79"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1068.21,-102.57 1058.75,-107.34 1069.12,-109.51 1068.21,-102.57"/>
+<!-- Node1&#45;&gt;Node13 -->
+<g id="edge15_Node000001_Node000013" class="edge">
+<title>Node1&#45;&gt;Node13</title>
+<g id="a_edge15_Node000001_Node000013"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1068.65,-106.45C1076.85,-105.44 1085.27,-104.39 1093.51,-103.37"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1068.24,-102.98 1058.75,-107.68 1069.1,-109.92 1068.24,-102.98"/>
 </a>
 </g>
 </g>
@@ -278,13 +278,32 @@ var sectionId = 'dynsection-0';
 </a>
 </g>
 </g>
+<!-- Node11 -->
+<g id="Node000011" class="node">
+<title>Node11</title>
+<g id="a_Node000011"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html" target="_top" xlink:title="Single&#45;phase, two&#45;terminal I&#45;type SSN stamping layer.">
+<polygon fill="white" stroke="#666666" points="1404.25,-157.5 1263,-157.5 1263,-121 1404.25,-121 1404.25,-157.5"/>
+<text text-anchor="start" x="1271" y="-144" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph1::TwoTerminal</text>
+<text text-anchor="middle" x="1333.62" y="-129.75" font-family="Helvetica,sans-Serif" font-size="10.00">ITypeSSNComp</text>
+</a>
+</g>
+</g>
+<!-- Node10&#45;&gt;Node11 -->
+<g id="edge13_Node000010_Node000011" class="edge">
+<title>Node10&#45;&gt;Node11</title>
+<g id="a_edge13_Node000010_Node000011"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1236.59,-138.13C1245.26,-138.23 1254.06,-138.34 1262.64,-138.44"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1236.87,-134.63 1226.83,-138.02 1236.79,-141.63 1236.87,-134.63"/>
+</a>
+</g>
+</g>
 <!-- Node12 -->
 <g id="Node000012" class="node">
 <title>Node12</title>
-<g id="a_Node000012"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_v_type_s_s_n_comp.html" target="_top" xlink:title="Single&#45;phase, two&#45;terminal V&#45;type SSN stamping layer.">
-<polygon fill="white" stroke="#666666" points="1404.25,-112.5 1263,-112.5 1263,-76 1404.25,-76 1404.25,-112.5"/>
-<text text-anchor="start" x="1271" y="-99" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph1::TwoTerminal</text>
-<text text-anchor="middle" x="1333.62" y="-84.75" font-family="Helvetica,sans-Serif" font-size="10.00">VTypeSSNComp</text>
+<g id="a_Node000012"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_generic_two_terminal_i_type_s_s_n.html" target="_top" xlink:title="Generic single&#45;phase, two&#45;terminal I&#45;type SSN component.">
+<polygon fill="white" stroke="#666666" points="1579.5,-157.5 1441.25,-157.5 1441.25,-121 1579.5,-121 1579.5,-157.5"/>
+<text text-anchor="start" x="1449.25" y="-144" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph1::GenericTwo</text>
+<text text-anchor="middle" x="1510.38" y="-129.75" font-family="Helvetica,sans-Serif" font-size="10.00">TerminalITypeSSN</text>
 </a>
 </g>
 </g>
@@ -292,27 +311,65 @@ var sectionId = 'dynsection-0';
 <g id="edge14_Node000011_Node000012" class="edge">
 <title>Node11&#45;&gt;Node12</title>
 <g id="a_edge14_Node000011_Node000012"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1237.54,-94.25C1245.86,-94.25 1254.29,-94.25 1262.52,-94.25"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1237.81,-90.75 1227.81,-94.25 1237.81,-97.75 1237.81,-90.75"/>
+<path fill="none" stroke="#63b8ff" d="M1416.02,-139.25C1424.37,-139.25 1432.8,-139.25 1440.99,-139.25"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1416.21,-135.75 1406.21,-139.25 1416.21,-142.75 1416.21,-135.75"/>
 </a>
 </g>
 </g>
-<!-- Node13 -->
-<g id="Node000013" class="node">
-<title>Node13</title>
-<g id="a_Node000013"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_s_s_n_1_1_full___serial___r_l_c.html" target="_top" xlink:title="Series RLC one&#45;port as a DP V&#45;type SSN component.">
-<polygon fill="white" stroke="#666666" points="1548,-112.5 1441.25,-112.5 1441.25,-76 1548,-76 1548,-112.5"/>
-<text text-anchor="start" x="1449.25" y="-99" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph1::SSN::</text>
-<text text-anchor="middle" x="1494.62" y="-84.75" font-family="Helvetica,sans-Serif" font-size="10.00">Full_Serial_RLC</text>
+<!-- Node14 -->
+<g id="Node000014" class="node">
+<title>Node14</title>
+<g id="a_Node000014"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_v_type_s_s_n_comp.html" target="_top" xlink:title="Single&#45;phase, two&#45;terminal V&#45;type SSN stamping layer.">
+<polygon fill="white" stroke="#666666" points="1404.25,-102.5 1263,-102.5 1263,-66 1404.25,-66 1404.25,-102.5"/>
+<text text-anchor="start" x="1271" y="-89" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph1::TwoTerminal</text>
+<text text-anchor="middle" x="1333.62" y="-74.75" font-family="Helvetica,sans-Serif" font-size="10.00">VTypeSSNComp</text>
 </a>
 </g>
 </g>
-<!-- Node12&#45;&gt;Node13 -->
-<g id="edge15_Node000012_Node000013" class="edge">
-<title>Node12&#45;&gt;Node13</title>
-<g id="a_edge15_Node000012_Node000013"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1415.71,-94.25C1424.35,-94.25 1432.97,-94.25 1441.15,-94.25"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1415.88,-90.75 1405.88,-94.25 1415.88,-97.75 1415.88,-90.75"/>
+<!-- Node13&#45;&gt;Node14 -->
+<g id="edge16_Node000013_Node000014" class="edge">
+<title>Node13&#45;&gt;Node14</title>
+<g id="a_edge16_Node000013_Node000014"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1237.54,-90.34C1245.86,-89.81 1254.29,-89.27 1262.52,-88.74"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1237.56,-86.83 1227.81,-90.96 1238.01,-93.82 1237.56,-86.83"/>
+</a>
+</g>
+</g>
+<!-- Node15 -->
+<g id="Node000015" class="node">
+<title>Node15</title>
+<g id="a_Node000015"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_generic_two_terminal_v_type_s_s_n.html" target="_top" xlink:title="Generic single&#45;phase, two&#45;terminal V&#45;type SSN component.">
+<polygon fill="white" stroke="#666666" points="1579.5,-47.5 1441.25,-47.5 1441.25,-11 1579.5,-11 1579.5,-47.5"/>
+<text text-anchor="start" x="1449.25" y="-34" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph1::GenericTwo</text>
+<text text-anchor="middle" x="1510.38" y="-19.75" font-family="Helvetica,sans-Serif" font-size="10.00">TerminalVTypeSSN</text>
+</a>
+</g>
+</g>
+<!-- Node14&#45;&gt;Node15 -->
+<g id="edge17_Node000014_Node000015" class="edge">
+<title>Node14&#45;&gt;Node15</title>
+<g id="a_edge17_Node000014_Node000015"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1404.59,-62.23C1419.63,-57.5 1435.38,-52.54 1449.98,-47.94"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1403.72,-58.83 1395.23,-65.18 1405.82,-65.51 1403.72,-58.83"/>
+</a>
+</g>
+</g>
+<!-- Node16 -->
+<g id="Node000016" class="node">
+<title>Node16</title>
+<g id="a_Node000016"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_s_s_n_1_1_full___serial___r_l_c.html" target="_top" xlink:title="Series RLC one&#45;port as a DP V&#45;type SSN component.">
+<polygon fill="white" stroke="#666666" points="1563.75,-102.5 1457,-102.5 1457,-66 1563.75,-66 1563.75,-102.5"/>
+<text text-anchor="start" x="1465" y="-89" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph1::SSN::</text>
+<text text-anchor="middle" x="1510.38" y="-74.75" font-family="Helvetica,sans-Serif" font-size="10.00">Full_Serial_RLC</text>
+</a>
+</g>
+</g>
+<!-- Node14&#45;&gt;Node16 -->
+<g id="edge18_Node000014_Node000016" class="edge">
+<title>Node14&#45;&gt;Node16</title>
+<g id="a_edge18_Node000014_Node000016"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1416.14,-84.25C1429.86,-84.25 1443.77,-84.25 1456.51,-84.25"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1416.21,-80.75 1406.21,-84.25 1416.21,-87.75 1416.21,-80.75"/>
 </a>
 </g>
 </g>
