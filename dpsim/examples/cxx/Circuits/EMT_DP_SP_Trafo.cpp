@@ -112,7 +112,7 @@ void simTrafoSP1ph() {
   // Components
   auto vs = SP::Ph1::VoltageSource::make("v_1", Logger::Level::debug);
   auto trafo =
-      SP::Ph1::Transformer::make("trafo", "trafo", Logger::Level::debug, true);
+      SP::Ph1::Transformer::make("trafo", "trafo", Logger::Level::debug);
   auto loadRes = SP::Ph1::Resistor::make("r_1", Logger::Level::debug);
 
   // Topology
@@ -122,7 +122,7 @@ void simTrafoSP1ph() {
 
   // Parameters
   vs->setParameters(CPS::Math::polar(voltageHVSide, 0));
-  trafo->setParameters(voltageHVSide, voltageMVSide, trafoPower, ratio, 0,
+  trafo->setParameters(voltageHVSide, voltageMVSide, trafoPower, ratio, 0.0,
                        trafoResistance, trafoInductance);
   loadRes->setParameters(loadResistanceMVSide);
 
@@ -247,7 +247,7 @@ void simTrafoDP1ph() {
   // Components
   auto vs = DP::Ph1::VoltageSource::make("v_1", Logger::Level::debug);
   auto trafo =
-      DP::Ph1::Transformer::make("trafo", "trafo", Logger::Level::debug, true);
+      DP::Ph1::Transformer::make("trafo", "trafo", Logger::Level::debug);
   auto loadRes = DP::Ph1::Resistor::make("r_1", Logger::Level::debug);
 
   // Topology

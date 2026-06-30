@@ -60,6 +60,7 @@
 #include <dpsim-models/DP/DP_Ph1_ControlledVoltageSource.h>
 #include <dpsim-models/DP/DP_Ph1_RxLine.h>
 #include <dpsim-models/DP/DP_Ph1_SVC.h>
+#include <dpsim-models/DP/DP_Ph1_Shunt.h>
 #include <dpsim-models/DP/DP_Ph1_Switch.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator3OrderVBR.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderPCM.h>
@@ -145,6 +146,7 @@
 #include <dpsim-models/EMT/EMT_Ph3_PiecewiseLinearInductor.h>
 #include <dpsim-models/EMT/EMT_Ph3_RXLoad.h>
 #include <dpsim-models/EMT/EMT_Ph3_RxLine.h>
+#include <dpsim-models/EMT/EMT_Ph3_Shunt.h>
 #include <dpsim-models/EMT/EMT_Ph3_Switch.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorIdeal.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorTrStab.h>
