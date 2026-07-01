@@ -562,9 +562,18 @@ class Reader:
                         dpsimpy.Math.single_phase_parameter_to_three_phase(transf_l),
                     )
                 else:
+                    # The transformer snubbers are sized as a fraction of rated power, so
+                    # mRatedPower=0 yields NaN snubber admittances. Use the branch's own MVA
+                    # rating (rateA) so the snubber tracks the device; matpower uses rateA=0
+                    # for "unrated", so fall back to the system base only in that case.
+                    branch_rateA = self.mpc_branch_data.at[index, "rateA"] * mw_w
+                    rated_power = (
+                        branch_rateA if branch_rateA > 0 else self.mpc_base_power_MVA
+                    )
                     trafo.set_parameters(
                         fbus_baseV,
                         tbus_baseV,
+                        rated_power,
                         np.abs(transf_ratioAbs),
                         np.angle(transf_ratioAbs),
                         transf_r,

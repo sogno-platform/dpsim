@@ -56,7 +56,7 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
       **mResistance, **mInductance);
   SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio={} [/] Phase Shift={} [deg]",
                      std::abs(**mRatio), std::arg(**mRatio));
-  SPDLOG_LOGGER_INFO(mSLog, "Rated Power ={} [W]", **mRatedPower);
+  SPDLOG_LOGGER_INFO(mSLog, "Rated Power ={} [VA]", **mRatedPower);
 
   mRatioAbs = std::abs(**mRatio);
   mRatioPhase = std::arg(**mRatio);
@@ -69,8 +69,16 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
                                          Real ratioAbs, Real ratioPhase,
                                          Real resistance, Real inductance) {
 
+  // Rated power is the nameplate apparent-power magnitude |S|, so it cannot be
+  // negative (a negative value is a caller error, not the unset default of 0).
+  if (ratedPower < 0) {
+    SPDLOG_LOGGER_ERROR(mSLog, "Rated power {} [VA] is negative; must be >= 0",
+                        ratedPower);
+    throw InvalidArgumentException();
+  }
+
   **mRatedPower = ratedPower;
-  SPDLOG_LOGGER_INFO(mSLog, "Rated Power ={} [W]", **mRatedPower);
+  SPDLOG_LOGGER_INFO(mSLog, "Rated Power ={} [VA]", **mRatedPower);
 
   SP::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratioAbs,
                                       ratioPhase, resistance, inductance);
@@ -131,10 +139,21 @@ void SP::Ph1::Transformer::createSubComponents() {
     mSubInductor->connect({node(0), mVirtualNodes[0]});
   }
 
-  // Snubber sub-components created here (existence depends only on mBehaviour); their
-  // omega/power-dependent values are set in initializeParentFromNodesAndTerminals().
-  if (mBehaviour == TopologicalPowerComp::Behaviour::Initialization ||
-      mBehaviour == TopologicalPowerComp::Behaviour::MNASimulation) {
+  // Snubber sub-components created here; their omega/power-dependent values are set in
+  // initializeParentFromNodesAndTerminals(). Snubbers are sized off the rated power, so
+  // without a valid rating they collapse to infinite resistance and zero capacitance
+  // (NaN admittance) that poisons the system matrix; skip creating them in that case.
+  bool snubbersEnabled =
+      (mBehaviour == TopologicalPowerComp::Behaviour::Initialization ||
+       mBehaviour == TopologicalPowerComp::Behaviour::MNASimulation);
+  if (snubbersEnabled && **mRatedPower <= 0) {
+    SPDLOG_LOGGER_WARN(mSLog,
+                       "Rated power is {} [VA]; snubbers disabled for this "
+                       "transformer (cannot be sized off non-positive power).",
+                       **mRatedPower);
+    snubbersEnabled = false;
+  }
+  if (snubbersEnabled) {
 
     mSubSnubResistor1 =
         std::make_shared<SP::Ph1::Resistor>(**mName + "_snub_res1", mLogLevel);
