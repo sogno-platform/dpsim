@@ -20,7 +20,7 @@ on:
 jobs:
   run-villas-example:
     name: Run a VILLASnode example across multiple containers
-    runs-on: ubuntu-latest
+    runs-on: sogno-platform-dpsim-runner
     steps:
       - name: Checkout
         uses: actions/checkout@v6
