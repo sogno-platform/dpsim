@@ -2,10 +2,14 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <Eigen/Eigenvalues>
-#include <cmath>
+#include <Eigen/LU>
+
 #include <dpsim/StateSpaceModalAnalysis.h>
+
+#include <cmath>
 #include <limits>
 #include <stdexcept>
+#include <string>
 
 namespace DPsim {
 
@@ -29,6 +33,8 @@ Matrix parkTransformDQ0(Real theta) {
   return transform;
 }
 
+String fallbackStateName(UInt index) { return "x" + std::to_string(index); }
+
 } // namespace
 
 StateSpaceModalAnalysis::StateSpaceModalAnalysis(
@@ -45,10 +51,23 @@ void StateSpaceModalAnalysis::update() {
   if (Ad.rows() == 0) {
     mDiscreteEigenvalues.resize(0);
     mContinuousEigenvalues.resize(0);
+
+    mRightEigenvectors.resize(0, 0);
+    mLeftEigenvectors.resize(0, 0);
+    mParticipationFactors.resize(0, 0);
+
+    mStateNames.clear();
+
     return;
   }
 
-  Eigen::EigenSolver<Matrix> eigenSolver(Ad, false);
+  if (Ad.rows() != Ad.cols())
+    throw std::logic_error(
+        "StateSpaceModalAnalysis requires a square state matrix.");
+
+  mStateNames = buildStateNamesInAnalysisFrame();
+
+  Eigen::EigenSolver<Matrix> eigenSolver(Ad, true);
 
   if (eigenSolver.info() != Eigen::Success)
     throw std::runtime_error(
@@ -61,6 +80,27 @@ void StateSpaceModalAnalysis::update() {
   for (Eigen::Index idx = 0; idx < mDiscreteEigenvalues.rows(); ++idx)
     mContinuousEigenvalues(idx) =
         mapDiscreteToContinuous(mDiscreteEigenvalues(idx));
+
+  mRightEigenvectors = eigenSolver.eigenvectors();
+
+  Eigen::FullPivLU<CPS::MatrixComp> eigenvectorLu(mRightEigenvectors);
+
+  if (!eigenvectorLu.isInvertible())
+    throw std::runtime_error(
+        "StateSpaceModalAnalysis: cannot compute participation factors because "
+        "the eigenvector matrix is singular.");
+
+  mLeftEigenvectors = eigenvectorLu.inverse();
+
+  mParticipationFactors.resize(mRightEigenvectors.rows(),
+                               mRightEigenvectors.cols());
+
+  for (Eigen::Index mode = 0; mode < mRightEigenvectors.cols(); ++mode) {
+    for (Eigen::Index state = 0; state < mRightEigenvectors.rows(); ++state) {
+      mParticipationFactors(state, mode) =
+          mRightEigenvectors(state, mode) * mLeftEigenvectors(mode, state);
+    }
+  }
 }
 
 Matrix
@@ -108,15 +148,50 @@ Matrix StateSpaceModalAnalysis::buildGlobalDq0Transformation(Real theta) const {
 
   const Matrix park = parkTransformDQ0(theta);
 
-  for (const auto &abcBlock : mExtractor.getMetadata().abcStateIndexTriples) {
+  for (const auto &abcBlock : mExtractor.getMetadata().abcStateBlocks) {
     for (UInt row = 0; row < 3; ++row) {
       for (UInt col = 0; col < 3; ++col) {
-        transform(abcBlock[row], abcBlock[col]) = park(row, col);
+        transform(abcBlock.indices[row], abcBlock.indices[col]) =
+            park(row, col);
       }
     }
   }
 
   return transform;
+}
+
+std::vector<String>
+StateSpaceModalAnalysis::buildStateNamesInAnalysisFrame() const {
+  const UInt stateCount = mExtractor.getStateCount();
+  const auto &metadata = mExtractor.getMetadata();
+
+  std::vector<String> stateNames(stateCount);
+
+  for (UInt idx = 0; idx < stateCount; ++idx) {
+    if (idx < metadata.stateNames.size() && !metadata.stateNames[idx].empty())
+      stateNames[idx] = metadata.stateNames[idx];
+    else
+      stateNames[idx] = fallbackStateName(idx);
+  }
+
+  if (mAnalysisFrame == StateSpaceAnalysisFrame::Native)
+    return stateNames;
+
+  if (mAnalysisFrame == StateSpaceAnalysisFrame::GlobalDQ0) {
+    for (const auto &abcBlock : metadata.abcStateBlocks) {
+      if (abcBlock.name.empty())
+        throw std::logic_error(
+            "GlobalDQ0 modal analysis requires named abc state blocks.");
+
+      stateNames[abcBlock.indices[0]] = abcBlock.name + "_d";
+      stateNames[abcBlock.indices[1]] = abcBlock.name + "_q";
+      stateNames[abcBlock.indices[2]] = abcBlock.name + "_0";
+    }
+
+    return stateNames;
+  }
+
+  throw std::logic_error("Unsupported state-space analysis frame.");
 }
 
 CPS::Complex

@@ -5,6 +5,7 @@
 #include <dpsim/MNAStateSpaceExtractor.h>
 
 #include <stdexcept>
+#include <string>
 
 namespace DPsim {
 
@@ -128,13 +129,24 @@ void MNAStateSpaceExtractor::allocateMatrices() {
 
 void MNAStateSpaceExtractor::collectMetadata() {
   mMetadata = StateSpaceMetadata{};
+  mMetadata.stateNames.resize(mStateCount);
 
   for (const auto &entry : mContributorEntries) {
     entry.contributor->contributeMetadata(mMetadata, entry.stateOffset);
   }
 
-  for (const auto &abcBlock : mMetadata.abcStateIndexTriples) {
-    for (const auto idx : abcBlock) {
+  for (UInt idx = 0; idx < mStateCount; ++idx) {
+    if (mMetadata.stateNames[idx].empty())
+      mMetadata.stateNames[idx] = "x" + std::to_string(idx);
+  }
+
+  for (const auto &abcBlock : mMetadata.abcStateBlocks) {
+    if (abcBlock.name.empty()) {
+      throw std::runtime_error(
+          "MNAStateSpaceExtractor: abc metadata block has an empty name.");
+    }
+
+    for (const auto idx : abcBlock.indices) {
       if (idx >= mStateCount) {
         throw std::runtime_error(
             "MNAStateSpaceExtractor: abc metadata index is outside the "
