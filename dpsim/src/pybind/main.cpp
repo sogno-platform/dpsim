@@ -192,6 +192,17 @@ PYBIND11_MODULE(dpsimpy, m) {
            py::return_value_policy::reference_internal)
       .def("get_continuous_eigenvalues",
            &DPsim::StateSpaceModalAnalysis::getContinuousEigenvalues,
+           py::return_value_policy::reference_internal)
+      .def("get_right_eigenvectors",
+           &DPsim::StateSpaceModalAnalysis::getRightEigenvectors,
+           py::return_value_policy::reference_internal)
+      .def("get_left_eigenvectors",
+           &DPsim::StateSpaceModalAnalysis::getLeftEigenvectors,
+           py::return_value_policy::reference_internal)
+      .def("get_participation_factors",
+           &DPsim::StateSpaceModalAnalysis::getParticipationFactors,
+           py::return_value_policy::reference_internal)
+      .def("get_state_names", &DPsim::StateSpaceModalAnalysis::getStateNames,
            py::return_value_policy::reference_internal);
 
   py::class_<DPsim::Simulation>(m, "Simulation")
