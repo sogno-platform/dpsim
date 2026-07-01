@@ -18,7 +18,15 @@ SP::Ph1::SynchronGenerator::SynchronGenerator(String uid, String name,
       mSetPointVoltage(mAttributes->create<Real>("V_set")),
       mSetPointActivePowerPerUnit(mAttributes->create<Real>("P_set_pu")),
       mSetPointReactivePowerPerUnit(mAttributes->create<Real>("Q_set_pu")),
-      mSetPointVoltagePerUnit(mAttributes->create<Real>("V_set_pu")) {
+      mSetPointVoltagePerUnit(mAttributes->create<Real>("V_set_pu")),
+      mReactivePowerMax(mAttributes->create<Real>(
+          "Q_max", std::numeric_limits<Real>::infinity())),
+      mReactivePowerMin(mAttributes->create<Real>(
+          "Q_min", -std::numeric_limits<Real>::infinity())),
+      mReactivePowerMaxPerUnit(mAttributes->create<Real>(
+          "Q_max_pu", std::numeric_limits<Real>::infinity())),
+      mReactivePowerMinPerUnit(mAttributes->create<Real>(
+          "Q_min_pu", -std::numeric_limits<Real>::infinity())) {
 
   SPDLOG_LOGGER_INFO(mSLog, "Create {} of type {}", name, this->type());
   mSLog->flush();
@@ -29,10 +37,12 @@ SP::Ph1::SynchronGenerator::SynchronGenerator(String uid, String name,
 void SP::Ph1::SynchronGenerator::setParameters(
     Real ratedApparentPower, Real ratedVoltage, Real setPointActivePower,
     Real setPointVoltage, PowerflowBusType powerflowBusType,
-    Real setPointReactivePower) {
+    Real setPointReactivePower, Real qLimMax, Real qLimMin) {
   **mSetPointActivePower = setPointActivePower;
   **mSetPointReactivePower = setPointReactivePower;
   **mSetPointVoltage = setPointVoltage;
+  **mReactivePowerMax = qLimMax;
+  **mReactivePowerMin = qLimMin;
   mPowerflowBusType = powerflowBusType;
 
   SPDLOG_LOGGER_INFO(mSLog, "Rated Apparent Power={} [VA] Rated Voltage={} [V]",
@@ -40,6 +50,8 @@ void SP::Ph1::SynchronGenerator::setParameters(
   SPDLOG_LOGGER_INFO(mSLog,
                      "Active Power Set Point={} [W] Voltage Set Point={} [V]",
                      **mSetPointActivePower, **mSetPointVoltage);
+  SPDLOG_LOGGER_INFO(mSLog, "Reactive Power Limits Qmin={} Qmax={} [VAr]",
+                     **mReactivePowerMin, **mReactivePowerMax);
   mSLog->flush();
 }
 
@@ -63,6 +75,9 @@ void SP::Ph1::SynchronGenerator::calculatePerUnitParameters(
   **mSetPointReactivePowerPerUnit =
       **mSetPointReactivePower / mBaseApparentPower;
   **mSetPointVoltagePerUnit = **mSetPointVoltage / mBaseVoltage;
+  // +/-inf limits divide to +/-inf in pu (still "unlimited"); finite limits scale.
+  **mReactivePowerMaxPerUnit = **mReactivePowerMax / mBaseApparentPower;
+  **mReactivePowerMinPerUnit = **mReactivePowerMin / mBaseApparentPower;
   SPDLOG_LOGGER_INFO(mSLog,
                      "Active Power Set Point={} [pu] Voltage Set Point={} [pu]",
                      **mSetPointActivePowerPerUnit, **mSetPointVoltagePerUnit);

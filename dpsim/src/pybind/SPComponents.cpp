@@ -6,6 +6,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
+#include <limits>
+
 #include <DPsim.h>
 #include <dpsim-models/CSVReader.h>
 #include <dpsim-models/IdentifiedObject.h>
@@ -149,7 +151,9 @@ void addSPPh1Components(py::module_ mSPPh1) {
       .def("set_parameters", (&CPS::SP::Ph1::SynchronGenerator::setParameters),
            "rated_apparent_power"_a, "rated_voltage"_a,
            "set_point_active_power"_a, "set_point_voltage"_a,
-           "powerflow_bus_type"_a, "set_point_reactive_power"_a = 0)
+           "powerflow_bus_type"_a, "set_point_reactive_power"_a = 0,
+           "q_limit_max"_a = std::numeric_limits<double>::infinity(),
+           "q_limit_min"_a = -std::numeric_limits<double>::infinity())
       .def("set_base_voltage", &CPS::SP::Ph1::SynchronGenerator::setBaseVoltage,
            "base_voltage"_a)
       .def("connect", &CPS::SP::Ph1::SynchronGenerator::connect)
