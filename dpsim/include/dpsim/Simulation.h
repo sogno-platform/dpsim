@@ -48,6 +48,10 @@ public:
   /// Ignored (dense solver used) if no sparse linear solver is available.
   const CPS::Attribute<Bool>::Ptr mPFSolverUseSparse;
 
+  /// Enforce generator reactive-power limits in the powerflow via PV<->PQ
+  /// switching. Default false; opt in via setPFSolverEnforceReactiveLimits(true).
+  const CPS::Attribute<Bool>::Ptr mPFEnforceReactiveLimits;
+
   /// Determines if the network should be split
   /// into subnetworks at decoupling lines.
   /// If the system is split, each subsystem is
@@ -245,6 +249,10 @@ public:
   void setPFSolverUseSparse(Bool value);
 
   Bool getPFSolverUseSparse() const;
+
+  void setPFSolverEnforceReactiveLimits(Bool value);
+
+  Bool getPFSolverEnforceReactiveLimits() const;
 
   // #### Simulation Control ####
   /// Create solver instances etc.
