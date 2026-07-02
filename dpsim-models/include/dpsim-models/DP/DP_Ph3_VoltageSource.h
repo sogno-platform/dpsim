@@ -30,7 +30,8 @@ private:
   void updateVoltage(Real time);
 
 public:
-  const Attribute<Complex>::Ptr mVoltageRef;
+  /// Reference voltage phasor, independent per phase (A, B, C)
+  const Attribute<MatrixComp>::Ptr mVoltageRef;
   /// Defines UID, name, component parameters and logging level
   VoltageSource(String uid, String name,
                 Logger::Level loglevel = Logger::Level::off);
@@ -38,12 +39,13 @@ public:
   VoltageSource(String name, Logger::Level logLevel = Logger::Level::off)
       : VoltageSource(name, name, logLevel) {}
   /// Defines name, component parameters and logging level
-  VoltageSource(String name, Complex voltage,
+  VoltageSource(String name, MatrixComp voltage,
                 Logger::Level logLevel = Logger::Level::off);
 
   SimPowerComp<Complex>::Ptr clone(String name) override;
 
-  void setParameters(Complex voltageRef);
+  /// Setter for reference voltage, one phasor per phase
+  void setParameters(MatrixComp voltageRef);
   // #### General ####
   /// Initializes component from power flow data
   void initializeFromNodesAndTerminals(Real frequency) override;

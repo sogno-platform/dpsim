@@ -311,7 +311,7 @@ void DP_Ph3_VS_R2L3(CommandLineArgs &args) {
 
   // Components
   auto vs = Ph3::VoltageSource::make("vs");
-  vs->setParameters(10);
+  vs->setParameters(CPS::Math::singlePhaseVariableToThreePhase(10));
   auto r1 = Ph3::Resistor::make("r_1");
   Matrix r1_param = Matrix::Zero(3, 3);
   r1_param << 1., 0, 0, 0, 1., 0, 0, 0, 1.;
@@ -364,7 +364,7 @@ void DP_Ph3_VS_RC1(CommandLineArgs &args) {
 
   // Components
   auto vs = Ph3::VoltageSource::make("vs");
-  vs->setParameters(Complex(10, 0));
+  vs->setParameters(CPS::Math::singlePhaseVariableToThreePhase(Complex(10, 0)));
   auto r1 = Ph3::Resistor::make("r_1");
   Matrix r1_param = Matrix::Zero(3, 3);
   r1_param << 1., 0, 0, 0, 1., 0, 0, 0, 1.;

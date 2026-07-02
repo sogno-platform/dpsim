@@ -13,10 +13,11 @@ using namespace CPS;
 DP::Ph3::VoltageSource::VoltageSource(String uid, String name,
                                       Logger::Level logLevel)
     : MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
-      mVoltageRef(mAttributes->create<Complex>("V_ref")) {
+      mVoltageRef(mAttributes->create<MatrixComp>("V_ref")) {
   mPhaseType = PhaseType::ABC;
   setVirtualNodeNumber(1);
   setTerminalNumber(2);
+  **mVoltageRef = MatrixComp::Zero(3, 1);
   **mIntfVoltage = MatrixComp::Zero(3, 1);
   **mIntfCurrent = MatrixComp::Zero(3, 1);
 }
@@ -27,30 +28,21 @@ SimPowerComp<Complex>::Ptr DP::Ph3::VoltageSource::clone(String name) {
   return copy;
 }
 
-void DP::Ph3::VoltageSource::setParameters(Complex voltageRef) {
+void DP::Ph3::VoltageSource::setParameters(MatrixComp voltageRef) {
   **mVoltageRef = voltageRef;
   mParametersSet = true;
 }
 
 void DP::Ph3::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
-  if (**mVoltageRef == Complex(0, 0))
-    **mVoltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);
+  if ((**mVoltageRef).isZero())
+    **mVoltageRef = CPS::Math::singlePhaseVariableToThreePhase(
+        initialSingleVoltage(1) - initialSingleVoltage(0));
 }
 
 void DP::Ph3::VoltageSource::mnaCompInitialize(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
-  (**mIntfVoltage)(0, 0) = **mVoltageRef;
-  (**mIntfVoltage)(1, 0) =
-      Complex(Math::abs(**mVoltageRef) *
-                  cos(Math::phase(**mVoltageRef) - 2. / 3. * M_PI),
-              Math::abs(**mVoltageRef) *
-                  sin(Math::phase(**mVoltageRef) - 2. / 3. * M_PI));
-  (**mIntfVoltage)(2, 0) =
-      Complex(Math::abs(**mVoltageRef) *
-                  cos(Math::phase(**mVoltageRef) + 2. / 3. * M_PI),
-              Math::abs(**mVoltageRef) *
-                  sin(Math::phase(**mVoltageRef) + 2. / 3. * M_PI));
+  **mIntfVoltage = **mVoltageRef;
 }
 
 void DP::Ph3::VoltageSource::mnaCompApplySystemMatrixStamp(
@@ -115,18 +107,7 @@ void DP::Ph3::VoltageSource::mnaCompApplyRightSideVectorStamp(
 }
 
 void DP::Ph3::VoltageSource::updateVoltage(Real time) {
-  // can't we just do nothing??
-  (**mIntfVoltage)(0, 0) = **mVoltageRef;
-  (**mIntfVoltage)(1, 0) =
-      Complex(Math::abs(**mVoltageRef) *
-                  cos(Math::phase(**mVoltageRef) - 2. / 3. * M_PI),
-              Math::abs(**mVoltageRef) *
-                  sin(Math::phase(**mVoltageRef) - 2. / 3. * M_PI));
-  (**mIntfVoltage)(2, 0) =
-      Complex(Math::abs(**mVoltageRef) *
-                  cos(Math::phase(**mVoltageRef) + 2. / 3. * M_PI),
-              Math::abs(**mVoltageRef) *
-                  sin(Math::phase(**mVoltageRef) + 2. / 3. * M_PI));
+  **mIntfVoltage = **mVoltageRef;
 }
 
 void DP::Ph3::VoltageSource::mnaCompAddPreStepDependencies(
@@ -172,6 +153,6 @@ void DP::Ph3::VoltageSource::daeResidual(double ttime, const double state[],
                                          std::vector<int> &off) {}
 
 Complex DP::Ph3::VoltageSource::daeInitialize() {
-  (**mIntfVoltage)(0, 0) = **mVoltageRef;
-  return **mVoltageRef;
+  **mIntfVoltage = **mVoltageRef;
+  return (**mVoltageRef)(0, 0);
 }

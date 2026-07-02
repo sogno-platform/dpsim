@@ -86,6 +86,7 @@
 #include <dpsim-models/DP/DP_VTypeSSNComp.h>
 
 #include <dpsim-models/DP/DP_Ph3_Capacitor.h>
+#include <dpsim-models/DP/DP_Ph3_CurrentSource.h>
 #include <dpsim-models/DP/DP_Ph3_Inductor.h>
 #include <dpsim-models/DP/DP_Ph3_PiLine.h>
 #include <dpsim-models/DP/DP_Ph3_Resistor.h>
