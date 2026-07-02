@@ -526,4 +526,38 @@ void addDPPh3Components(py::module_ mDPPh3) {
       .def("open", &CPS::DP::Ph3::SeriesSwitch::open)
       .def("close", &CPS::DP::Ph3::SeriesSwitch::close)
       .def("connect", &CPS::DP::Ph3::SeriesSwitch::connect);
+
+  py::class_<CPS::DP::Ph3::SSN::Full_Serial_RLC,
+             std::shared_ptr<CPS::DP::Ph3::SSN::Full_Serial_RLC>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh3, "Full_Serial_RLC",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::DP::Ph3::SSN::Full_Serial_RLC::setParameters,
+           "R"_a, "L"_a, "C"_a)
+      .def("connect", &CPS::DP::Ph3::SSN::Full_Serial_RLC::connect);
+
+  py::class_<CPS::DP::Ph3::GenericTwoTerminalVTypeSSN,
+             std::shared_ptr<CPS::DP::Ph3::GenericTwoTerminalVTypeSSN>,
+             CPS::SimPowerComp<CPS::Complex>>(
+      mDPPh3, "GenericTwoTerminalVTypeSSN", py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters",
+           &CPS::DP::Ph3::GenericTwoTerminalVTypeSSN::setParameters, "A"_a,
+           "B"_a, "C"_a, "D"_a)
+      .def("connect", &CPS::DP::Ph3::GenericTwoTerminalVTypeSSN::connect)
+      .def_property_readonly("x", createAttributeGetter<CPS::MatrixComp>("x"));
+
+  py::class_<CPS::DP::Ph3::GenericTwoTerminalITypeSSN,
+             std::shared_ptr<CPS::DP::Ph3::GenericTwoTerminalITypeSSN>,
+             CPS::SimPowerComp<CPS::Complex>>(
+      mDPPh3, "GenericTwoTerminalITypeSSN", py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters",
+           &CPS::DP::Ph3::GenericTwoTerminalITypeSSN::setParameters, "A"_a,
+           "B"_a, "C"_a, "D"_a)
+      .def("connect", &CPS::DP::Ph3::GenericTwoTerminalITypeSSN::connect)
+      .def_property_readonly("x", createAttributeGetter<CPS::MatrixComp>("x"));
 }
