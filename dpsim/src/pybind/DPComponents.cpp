@@ -464,6 +464,57 @@ void addDPPh1Components(py::module_ mDPPh1) {
 }
 
 void addDPPh3Components(py::module_ mDPPh3) {
+  py::class_<CPS::DP::Ph3::VoltageSource,
+             std::shared_ptr<CPS::DP::Ph3::VoltageSource>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh3, "VoltageSource",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::DP::Ph3::VoltageSource::setParameters,
+           "V_ref"_a, "f_src"_a = 0.0)
+      .def("connect", &CPS::DP::Ph3::VoltageSource::connect)
+      .def_property("V_ref", createAttributeGetter<CPS::MatrixComp>("V_ref"),
+                    createAttributeSetter<CPS::MatrixComp>("V_ref"))
+      .def_property("f_src", createAttributeGetter<CPS::Real>("f_src"),
+                    createAttributeSetter<CPS::Real>("f_src"));
+
+  py::class_<CPS::DP::Ph3::CurrentSource,
+             std::shared_ptr<CPS::DP::Ph3::CurrentSource>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh3, "CurrentSource",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::DP::Ph3::CurrentSource::setParameters,
+           "I_ref"_a, "f_src"_a = 0.0)
+      .def("connect", &CPS::DP::Ph3::CurrentSource::connect)
+      .def_property("I_ref", createAttributeGetter<CPS::MatrixComp>("I_ref"),
+                    createAttributeSetter<CPS::MatrixComp>("I_ref"))
+      .def_property("f_src", createAttributeGetter<CPS::Real>("f_src"),
+                    createAttributeSetter<CPS::Real>("f_src"));
+
+  py::class_<CPS::DP::Ph3::Resistor, std::shared_ptr<CPS::DP::Ph3::Resistor>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh3, "Resistor",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::DP::Ph3::Resistor::setParameters, "R"_a)
+      .def("connect", &CPS::DP::Ph3::Resistor::connect);
+
+  py::class_<CPS::DP::Ph3::Inductor, std::shared_ptr<CPS::DP::Ph3::Inductor>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh3, "Inductor",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::DP::Ph3::Inductor::setParameters, "L"_a)
+      .def("connect", &CPS::DP::Ph3::Inductor::connect);
+
+  py::class_<CPS::DP::Ph3::Capacitor, std::shared_ptr<CPS::DP::Ph3::Capacitor>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh3, "Capacitor",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::DP::Ph3::Capacitor::setParameters, "C"_a)
+      .def("connect", &CPS::DP::Ph3::Capacitor::connect);
 
 #ifdef WITH_SUNDIALS
 
