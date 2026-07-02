@@ -114,9 +114,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a420ece2920d9101c5630363952f5515f" id="r_a420ece2920d9101c5630363952f5515f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a420ece2920d9101c5630363952f5515f">SynchronGenerator</a> (String name, Logger::Level logLevel=Logger::Level::off)</td></tr>
 <tr class="memdesc:a420ece2920d9101c5630363952f5515f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines name and logging level.  <br /></td></tr>
 <tr class="separator:a420ece2920d9101c5630363952f5515f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abffcca1cf1fa5af820dd80bc513988e6" id="r_abffcca1cf1fa5af820dd80bc513988e6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abffcca1cf1fa5af820dd80bc513988e6">setParameters</a> (Real ratedApparentPower, Real ratedVoltage, Real setPointActivePower, Real setPointVoltage, PowerflowBusType powerflowBusType, Real setPointReactivepower=0)</td></tr>
-<tr class="memdesc:abffcca1cf1fa5af820dd80bc513988e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setter for synchronous generator parameters.  <br /></td></tr>
-<tr class="separator:abffcca1cf1fa5af820dd80bc513988e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee02a85a64f1449292d4d4a669f685f1" id="r_aee02a85a64f1449292d4d4a669f685f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aee02a85a64f1449292d4d4a669f685f1">setParameters</a> (Real ratedApparentPower, Real ratedVoltage, Real setPointActivePower, Real setPointVoltage, PowerflowBusType powerflowBusType, Real setPointReactivepower=0, Real qLimMax=std::numeric_limits&lt; Real &gt;::infinity(), Real qLimMin=-std::numeric_limits&lt; Real &gt;::infinity())</td></tr>
+<tr class="separator:aee02a85a64f1449292d4d4a669f685f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e9812ceca4a41937a1df668fa348cc4" id="r_a0e9812ceca4a41937a1df668fa348cc4"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0e9812ceca4a41937a1df668fa348cc4">getBaseVoltage</a> () const</td></tr>
 <tr class="separator:a0e9812ceca4a41937a1df668fa348cc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95d2a1ce61e2569b6f6bfdcb3adcad4b" id="r_a95d2a1ce61e2569b6f6bfdcb3adcad4b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a95d2a1ce61e2569b6f6bfdcb3adcad4b">setBaseVoltage</a> (Real baseVoltage)</td></tr>
@@ -309,6 +308,18 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ac214cf4c07bde1b490ba8a43bc8106f8" id="r_ac214cf4c07bde1b490ba8a43bc8106f8"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac214cf4c07bde1b490ba8a43bc8106f8">mSetPointVoltagePerUnit</a></td></tr>
 <tr class="memdesc:ac214cf4c07bde1b490ba8a43bc8106f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Voltage set point of the machine [pu].  <br /></td></tr>
 <tr class="separator:ac214cf4c07bde1b490ba8a43bc8106f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a103e63afd73ecf4d0b7badda47ccfcf1" id="r_a103e63afd73ecf4d0b7badda47ccfcf1"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a103e63afd73ecf4d0b7badda47ccfcf1">mReactivePowerMax</a></td></tr>
+<tr class="memdesc:a103e63afd73ecf4d0b7badda47ccfcf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum reactive power limit [VAr] (default +inf = unlimited)  <br /></td></tr>
+<tr class="separator:a103e63afd73ecf4d0b7badda47ccfcf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62ecc9ad3a5ab87dc1c7fb420e875805" id="r_a62ecc9ad3a5ab87dc1c7fb420e875805"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a62ecc9ad3a5ab87dc1c7fb420e875805">mReactivePowerMin</a></td></tr>
+<tr class="memdesc:a62ecc9ad3a5ab87dc1c7fb420e875805"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimum reactive power limit [VAr] (default -inf = unlimited)  <br /></td></tr>
+<tr class="separator:a62ecc9ad3a5ab87dc1c7fb420e875805"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae620ae6a29ef9cd9d8e8c687f80bdb81" id="r_ae620ae6a29ef9cd9d8e8c687f80bdb81"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae620ae6a29ef9cd9d8e8c687f80bdb81">mReactivePowerMaxPerUnit</a></td></tr>
+<tr class="memdesc:ae620ae6a29ef9cd9d8e8c687f80bdb81"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum reactive power limit [pu].  <br /></td></tr>
+<tr class="separator:ae620ae6a29ef9cd9d8e8c687f80bdb81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78b1debc572795988076a00a516b7faa" id="r_a78b1debc572795988076a00a516b7faa"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a78b1debc572795988076a00a516b7faa">mReactivePowerMinPerUnit</a></td></tr>
+<tr class="memdesc:a78b1debc572795988076a00a516b7faa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimum reactive power limit [pu].  <br /></td></tr>
+<tr class="separator:a78b1debc572795988076a00a516b7faa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_class_c_p_s_1_1_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_attribs_class_c_p_s_1_1_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt; Complex &gt;</a></td></tr>
 <tr class="memitem:a7210276935119e370dfb1f98d02c3a9a inherit pub_attribs_class_c_p_s_1_1_sim_power_comp" id="r_a7210276935119e370dfb1f98d02c3a9a"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; MatrixVar&lt; Complex &gt; &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a7210276935119e370dfb1f98d02c3a9a">mIntfVoltage</a></td></tr>
 <tr class="memdesc:a7210276935119e370dfb1f98d02c3a9a inherit pub_attribs_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Voltage between terminals.  <br /></td></tr>
@@ -417,7 +428,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html#l00019">19</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html">SP_Ph1_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html#l00021">21</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html">SP_Ph1_SynchronGenerator.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ab2a71609471700c8f77c0128722f9e16" name="ab2a71609471700c8f77c0128722f9e16"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab2a71609471700c8f77c0128722f9e16">&#9670;&#160;</a></span>SynchronGenerator() <span class="overload">[1/2]</span></h2>
@@ -478,7 +489,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Defines name and logging level. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html#l00046">46</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html">SP_Ph1_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html#l00056">56</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html">SP_Ph1_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -504,7 +515,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Initializes component from power flow data. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html#l00054">54</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html">SP_Ph1_SynchronGenerator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html#l00066">66</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html">SP_Ph1_SynchronGenerator.cpp</a>.</p>
 
 </div>
 </div>
@@ -525,7 +536,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Get Apparent power of Powerflow solution. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html#l00110">110</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html">SP_Ph1_SynchronGenerator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html#l00125">125</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html">SP_Ph1_SynchronGenerator.cpp</a>.</p>
 
 </div>
 </div>
@@ -544,7 +555,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html#l00048">48</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html">SP_Ph1_SynchronGenerator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html#l00060">60</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html">SP_Ph1_SynchronGenerator.cpp</a>.</p>
 
 </div>
 </div>
@@ -575,7 +586,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_c_p_s_1_1_p_f_solver_interface_bus.html">CPS::PFSolverInterfaceBus</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html#l00072">72</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html">SP_Ph1_SynchronGenerator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html#l00087">87</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html">SP_Ph1_SynchronGenerator.cpp</a>.</p>
 
 </div>
 </div>
@@ -596,12 +607,12 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Set base voltage. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html#l00050">50</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html">SP_Ph1_SynchronGenerator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html#l00062">62</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html">SP_Ph1_SynchronGenerator.cpp</a>.</p>
 
 </div>
 </div>
-<a id="abffcca1cf1fa5af820dd80bc513988e6" name="abffcca1cf1fa5af820dd80bc513988e6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abffcca1cf1fa5af820dd80bc513988e6">&#9670;&#160;</a></span>setParameters()</h2>
+<a id="aee02a85a64f1449292d4d4a669f685f1" name="aee02a85a64f1449292d4d4a669f685f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee02a85a64f1449292d4d4a669f685f1">&#9670;&#160;</a></span>setParameters()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -634,14 +645,23 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>setPointReactivepower</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
+          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>setPointReactivepower</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>qLimMax</em></span><span class="paramdefsep"> = </span><span class="paramdefval">std::numeric_limits&lt;Real&gt;::infinity()</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>qLimMin</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-std::numeric_limits&lt;Real&gt;::infinity()</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Setter for synchronous generator parameters. qLimMax/qLimMin are the reactive-power limits [VAr] enforced by the PF Q-limit outer loop; the default +/-inf means unlimited (no PV-&gt;PQ switching for this machine). </p>
 
-<p>Setter for synchronous generator parameters. </p>
-
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html#l00029">29</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html">SP_Ph1_SynchronGenerator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html#l00037">37</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html">SP_Ph1_SynchronGenerator.cpp</a>.</p>
 
 </div>
 </div>
@@ -662,7 +682,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Update active &amp; reactive power injection (VD bus) </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html#l00102">102</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html">SP_Ph1_SynchronGenerator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html#l00117">117</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html">SP_Ph1_SynchronGenerator.cpp</a>.</p>
 
 </div>
 </div>
@@ -683,11 +703,83 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Update reactive power injection (PV Bus) </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html#l00094">94</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html">SP_Ph1_SynchronGenerator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html#l00109">109</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8cpp_source.html">SP_Ph1_SynchronGenerator.cpp</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="a103e63afd73ecf4d0b7badda47ccfcf1" name="a103e63afd73ecf4d0b7badda47ccfcf1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a103e63afd73ecf4d0b7badda47ccfcf1">&#9670;&#160;</a></span>mReactivePowerMax</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;Real&gt;::Ptr CPS::SP::Ph1::SynchronGenerator::mReactivePowerMax</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Maximum reactive power limit [VAr] (default +inf = unlimited) </p>
+
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html#l00044">44</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html">SP_Ph1_SynchronGenerator.h</a>.</p>
+
+</div>
+</div>
+<a id="ae620ae6a29ef9cd9d8e8c687f80bdb81" name="ae620ae6a29ef9cd9d8e8c687f80bdb81"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae620ae6a29ef9cd9d8e8c687f80bdb81">&#9670;&#160;</a></span>mReactivePowerMaxPerUnit</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;Real&gt;::Ptr CPS::SP::Ph1::SynchronGenerator::mReactivePowerMaxPerUnit</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Maximum reactive power limit [pu]. </p>
+
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html#l00048">48</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html">SP_Ph1_SynchronGenerator.h</a>.</p>
+
+</div>
+</div>
+<a id="a62ecc9ad3a5ab87dc1c7fb420e875805" name="a62ecc9ad3a5ab87dc1c7fb420e875805"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62ecc9ad3a5ab87dc1c7fb420e875805">&#9670;&#160;</a></span>mReactivePowerMin</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;Real&gt;::Ptr CPS::SP::Ph1::SynchronGenerator::mReactivePowerMin</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Minimum reactive power limit [VAr] (default -inf = unlimited) </p>
+
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html#l00046">46</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html">SP_Ph1_SynchronGenerator.h</a>.</p>
+
+</div>
+</div>
+<a id="a78b1debc572795988076a00a516b7faa" name="a78b1debc572795988076a00a516b7faa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78b1debc572795988076a00a516b7faa">&#9670;&#160;</a></span>mReactivePowerMinPerUnit</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;Real&gt;::Ptr CPS::SP::Ph1::SynchronGenerator::mReactivePowerMinPerUnit</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Minimum reactive power limit [pu]. </p>
+
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html#l00050">50</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html">SP_Ph1_SynchronGenerator.h</a>.</p>
+
+</div>
+</div>
 <a id="aa3bc7028c9a25f79c2fb7b8930e1d560" name="aa3bc7028c9a25f79c2fb7b8930e1d560"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa3bc7028c9a25f79c2fb7b8930e1d560">&#9670;&#160;</a></span>mSetPointActivePower</h2>
 
@@ -702,7 +794,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Active power set point of the machine [W]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html#l00030">30</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html">SP_Ph1_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html#l00032">32</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html">SP_Ph1_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -720,7 +812,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Active power set point of the machine [pu]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html#l00036">36</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html">SP_Ph1_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html#l00038">38</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html">SP_Ph1_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -738,7 +830,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reactive power set point of the machine [VAr]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html#l00032">32</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html">SP_Ph1_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html#l00034">34</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html">SP_Ph1_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -756,7 +848,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reactive power set point of the machine [pu]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html#l00038">38</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html">SP_Ph1_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html#l00040">40</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html">SP_Ph1_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -774,7 +866,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Voltage set point of the machine [V]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html#l00034">34</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html">SP_Ph1_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html#l00036">36</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html">SP_Ph1_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -792,7 +884,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Voltage set point of the machine [pu]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html#l00040">40</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html">SP_Ph1_SynchronGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html#l00042">42</a> of file <a class="el" href="_s_p___ph1___synchron_generator_8h_source.html">SP_Ph1_SynchronGenerator.h</a>.</p>
 
 </div>
 </div>
