@@ -114,13 +114,21 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a22ddee816f0f70f80a093cb895d1b04b" id="r_a22ddee816f0f70f80a093cb895d1b04b"><td class="memItemLeft" align="right" valign="top">const CPS::VectorComp &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a22ddee816f0f70f80a093cb895d1b04b">getContinuousEigenvalues</a> () const</td></tr>
 <tr class="memdesc:a22ddee816f0f70f80a093cb895d1b04b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Continuous-time EMT eigenvalues reconstructed from discrete eigenvalues.  <br /></td></tr>
 <tr class="separator:a22ddee816f0f70f80a093cb895d1b04b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4de60436697036782c0792d142fc270" id="r_ac4de60436697036782c0792d142fc270"><td class="memItemLeft" align="right" valign="top">const CPS::MatrixComp &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac4de60436697036782c0792d142fc270">getRightEigenvectors</a> () const</td></tr>
+<tr class="separator:ac4de60436697036782c0792d142fc270"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f9b32325be20b4cca2a89d8b9038321" id="r_a9f9b32325be20b4cca2a89d8b9038321"><td class="memItemLeft" align="right" valign="top">const CPS::MatrixComp &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9f9b32325be20b4cca2a89d8b9038321">getLeftEigenvectors</a> () const</td></tr>
+<tr class="separator:a9f9b32325be20b4cca2a89d8b9038321"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7baeb23711e59df3bf7d6f333d8086e" id="r_ac7baeb23711e59df3bf7d6f333d8086e"><td class="memItemLeft" align="right" valign="top">const CPS::MatrixComp &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac7baeb23711e59df3bf7d6f333d8086e">getParticipationFactors</a> () const</td></tr>
+<tr class="separator:ac7baeb23711e59df3bf7d6f333d8086e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a193bf972b0707dabeeca360d3172f738" id="r_a193bf972b0707dabeeca360d3172f738"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; String &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a193bf972b0707dabeeca360d3172f738">getStateNames</a> () const</td></tr>
+<tr class="separator:a193bf972b0707dabeeca360d3172f738"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Performs modal analysis of an extracted discrete-time state-space model.</p>
 <p>The analysis uses the state matrix provided by <a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">MNAStateSpaceExtractor</a> and maps discrete-time eigenvalues to continuous-time EMT eigenvalues with the trapezoidal-rule relation:</p>
 <p>lambda = 2 / dt * (z - 1) / (z + 1) </p>
 
-<p class="definition">Definition at line <a class="el" href="_state_space_modal_analysis_8h_source.html#l00022">22</a> of file <a class="el" href="_state_space_modal_analysis_8h_source.html">StateSpaceModalAnalysis.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_state_space_modal_analysis_8h_source.html#l00024">24</a> of file <a class="el" href="_state_space_modal_analysis_8h_source.html">StateSpaceModalAnalysis.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a4c6bbb878c514bdb1c87874c5a50f4f0" name="a4c6bbb878c514bdb1c87874c5a50f4f0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4c6bbb878c514bdb1c87874c5a50f4f0">&#9670;&#160;</a></span>StateSpaceModalAnalysis()</h2>
@@ -145,7 +153,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_state_space_modal_analysis_8cpp_source.html#l00034">34</a> of file <a class="el" href="_state_space_modal_analysis_8cpp_source.html">StateSpaceModalAnalysis.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_state_space_modal_analysis_8cpp_source.html#l00040">40</a> of file <a class="el" href="_state_space_modal_analysis_8cpp_source.html">StateSpaceModalAnalysis.cpp</a>.</p>
 
 </div>
 </div>
@@ -175,7 +183,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Continuous-time EMT eigenvalues reconstructed from discrete eigenvalues. </p>
 
-<p class="definition">Definition at line <a class="el" href="_state_space_modal_analysis_8h_source.html#l00052">52</a> of file <a class="el" href="_state_space_modal_analysis_8h_source.html">StateSpaceModalAnalysis.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_state_space_modal_analysis_8h_source.html#l00054">54</a> of file <a class="el" href="_state_space_modal_analysis_8h_source.html">StateSpaceModalAnalysis.h</a>.</p>
 
 </div>
 </div>
@@ -204,7 +212,126 @@ Public Member Functions</h2></td></tr>
 
 <p>Eigenvalues of the extracted discrete-time state matrix in the selected analysis frame. </p>
 
-<p class="definition">Definition at line <a class="el" href="_state_space_modal_analysis_8h_source.html#l00047">47</a> of file <a class="el" href="_state_space_modal_analysis_8h_source.html">StateSpaceModalAnalysis.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_state_space_modal_analysis_8h_source.html#l00049">49</a> of file <a class="el" href="_state_space_modal_analysis_8h_source.html">StateSpaceModalAnalysis.h</a>.</p>
+
+</div>
+</div>
+<a id="a9f9b32325be20b4cca2a89d8b9038321" name="a9f9b32325be20b4cca2a89d8b9038321"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f9b32325be20b4cca2a89d8b9038321">&#9670;&#160;</a></span>getLeftEigenvectors()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const CPS::MatrixComp &amp; DPsim::StateSpaceModalAnalysis::getLeftEigenvectors </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Left eigenvectors of the selected discrete analysis state matrix.</p>
+<p>Rows correspond to modes and are normalized such that <a class="el" href="#a9f9b32325be20b4cca2a89d8b9038321">getLeftEigenvectors()</a> * <a class="el" href="#ac4de60436697036782c0792d142fc270">getRightEigenvectors()</a> = I. </p>
+
+<p class="definition">Definition at line <a class="el" href="_state_space_modal_analysis_8h_source.html#l00070">70</a> of file <a class="el" href="_state_space_modal_analysis_8h_source.html">StateSpaceModalAnalysis.h</a>.</p>
+
+</div>
+</div>
+<a id="ac7baeb23711e59df3bf7d6f333d8086e" name="ac7baeb23711e59df3bf7d6f333d8086e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7baeb23711e59df3bf7d6f333d8086e">&#9670;&#160;</a></span>getParticipationFactors()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const CPS::MatrixComp &amp; DPsim::StateSpaceModalAnalysis::getParticipationFactors </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Participation factors of the selected discrete analysis state matrix.</p>
+<p>P(state, mode) = rightEigenvectors(state, mode)</p><ul>
+<li>leftEigenvectors(mode, state)</li>
+</ul>
+<p>Rows correspond to states, columns correspond to modes. Columns follow the same mode order as <a class="el" href="#a2d7e99b1d8750525e5583d629b9b21f6" title="Eigenvalues of the extracted discrete-time state matrix in the selected analysis frame.">getDiscreteEigenvalues()</a> and <a class="el" href="#a22ddee816f0f70f80a093cb895d1b04b" title="Continuous-time EMT eigenvalues reconstructed from discrete eigenvalues.">getContinuousEigenvalues()</a>. </p>
+
+<p class="definition">Definition at line <a class="el" href="_state_space_modal_analysis_8h_source.html#l00081">81</a> of file <a class="el" href="_state_space_modal_analysis_8h_source.html">StateSpaceModalAnalysis.h</a>.</p>
+
+</div>
+</div>
+<a id="ac4de60436697036782c0792d142fc270" name="ac4de60436697036782c0792d142fc270"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4de60436697036782c0792d142fc270">&#9670;&#160;</a></span>getRightEigenvectors()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const CPS::MatrixComp &amp; DPsim::StateSpaceModalAnalysis::getRightEigenvectors </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Right eigenvectors of the selected discrete analysis state matrix.</p>
+<p>Columns correspond to modes in the same order as <a class="el" href="#a2d7e99b1d8750525e5583d629b9b21f6" title="Eigenvalues of the extracted discrete-time state matrix in the selected analysis frame.">getDiscreteEigenvalues()</a>. These eigenvectors represent mode shapes in the selected analysis frame. </p>
+
+<p class="definition">Definition at line <a class="el" href="_state_space_modal_analysis_8h_source.html#l00062">62</a> of file <a class="el" href="_state_space_modal_analysis_8h_source.html">StateSpaceModalAnalysis.h</a>.</p>
+
+</div>
+</div>
+<a id="a193bf972b0707dabeeca360d3172f738" name="a193bf972b0707dabeeca360d3172f738"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a193bf972b0707dabeeca360d3172f738">&#9670;&#160;</a></span>getStateNames()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::vector&lt; String &gt; &amp; DPsim::StateSpaceModalAnalysis::getStateNames </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>State names in the selected analysis frame.</p>
+<p>In Native frame, registered abc states keep their native abc names. In GlobalDQ0 frame, registered abc state blocks are labelled as dq0 states. </p>
+
+<p class="definition">Definition at line <a class="el" href="_state_space_modal_analysis_8h_source.html#l00089">89</a> of file <a class="el" href="_state_space_modal_analysis_8h_source.html">StateSpaceModalAnalysis.h</a>.</p>
 
 </div>
 </div>
@@ -231,9 +358,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>Select the coordinate frame used for modal analysis.</p>
-<p>Native uses the extracted EMT state matrix directly. GlobalDQ0 transforms registered abc state triples to a global dq0 frame. </p>
+<p>Native uses the extracted EMT state matrix directly. GlobalDQ0 transforms registered abc state blocks to a global dq0 frame. </p>
 
-<p class="definition">Definition at line <a class="el" href="_state_space_modal_analysis_8h_source.html#l00030">30</a> of file <a class="el" href="_state_space_modal_analysis_8h_source.html">StateSpaceModalAnalysis.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_state_space_modal_analysis_8h_source.html#l00032">32</a> of file <a class="el" href="_state_space_modal_analysis_8h_source.html">StateSpaceModalAnalysis.h</a>.</p>
 
 </div>
 </div>
@@ -266,7 +393,7 @@ Public Member Functions</h2></td></tr>
 <p>Set the global dq0 frame.</p>
 <p>omega is the constant synchronous angular speed. theta0 is the global frame angle at t = 0. </p>
 
-<p class="definition">Definition at line <a class="el" href="_state_space_modal_analysis_8h_source.html#l00038">38</a> of file <a class="el" href="_state_space_modal_analysis_8h_source.html">StateSpaceModalAnalysis.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_state_space_modal_analysis_8h_source.html#l00040">40</a> of file <a class="el" href="_state_space_modal_analysis_8h_source.html">StateSpaceModalAnalysis.h</a>.</p>
 
 </div>
 </div>
@@ -287,7 +414,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Update modal quantities from the current extracted state matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="_state_space_modal_analysis_8cpp_source.html#l00038">38</a> of file <a class="el" href="_state_space_modal_analysis_8cpp_source.html">StateSpaceModalAnalysis.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_state_space_modal_analysis_8cpp_source.html#l00044">44</a> of file <a class="el" href="_state_space_modal_analysis_8cpp_source.html">StateSpaceModalAnalysis.cpp</a>.</p>
 
 </div>
 </div>

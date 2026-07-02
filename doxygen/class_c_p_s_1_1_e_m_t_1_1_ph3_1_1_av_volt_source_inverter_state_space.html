@@ -112,10 +112,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ae6e9221e970fedd6a4550f8a9689cfc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28114201f4bf3d209d074e907d3d47c2" id="r_a28114201f4bf3d209d074e907d3d47c2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a28114201f4bf3d209d074e907d3d47c2">AvVoltSourceInverterStateSpace</a> (String name, Logger::Level logLevel=Logger::Level::off)</td></tr>
 <tr class="separator:a28114201f4bf3d209d074e907d3d47c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5089e058c7fcf389929c0d3f452e448e" id="r_a5089e058c7fcf389929c0d3f452e448e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; String &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5089e058c7fcf389929c0d3f452e448e">getLocalStateNames</a> () const override final</td></tr>
+<tr class="separator:a5089e058c7fcf389929c0d3f452e448e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2becc195929f6f32729a1665337beea4" id="r_a2becc195929f6f32729a1665337beea4"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="struct_c_p_s_1_1_e_m_t_1_1_s_s_n_comp_1_1_local_abc_state_block.html">SSNComp::LocalAbcStateBlock</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2becc195929f6f32729a1665337beea4">getLocalAbcStateBlocks</a> () const override final</td></tr>
+<tr class="separator:a2becc195929f6f32729a1665337beea4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26917ce9ece5fc8247ac815e5891f260" id="r_a26917ce9ece5fc8247ac815e5891f260"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a26917ce9ece5fc8247ac815e5891f260">setParameters</a> (Real lf, Real cf, Real rf, Real rc, Real omegaN, Real kpPLL, Real kiPLL, Real omegaCutoff, Real pRef, Real qRef, Real kpPowerCtrl, Real kiPowerCtrl, Real kpCurrCtrl, Real kiCurrCtrl)</td></tr>
 <tr class="separator:a26917ce9ece5fc8247ac815e5891f260"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a321bbc91c4fbfcf7be666cc33c621b2d" id="r_a321bbc91c4fbfcf7be666cc33c621b2d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::array&lt; UInt, 3 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a321bbc91c4fbfcf7be666cc33c621b2d">getLocalAbcStateIndexTriples</a> () const override</td></tr>
-<tr class="separator:a321bbc91c4fbfcf7be666cc33c621b2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af75ab79a8ab33a35a5d224111c9c2e18" id="r_af75ab79a8ab33a35a5d224111c9c2e18"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af75ab79a8ab33a35a5d224111c9c2e18">initializeFromNodesAndTerminals</a> (Real frequency) override final</td></tr>
 <tr class="memdesc:af75ab79a8ab33a35a5d224111c9c2e18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes Component variables according to power flow data stored in Nodes.  <br /></td></tr>
 <tr class="separator:af75ab79a8ab33a35a5d224111c9c2e18"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -647,8 +649,8 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a321bbc91c4fbfcf7be666cc33c621b2d" name="a321bbc91c4fbfcf7be666cc33c621b2d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a321bbc91c4fbfcf7be666cc33c621b2d">&#9670;&#160;</a></span>getLocalAbcStateIndexTriples()</h2>
+<a id="a2becc195929f6f32729a1665337beea4" name="a2becc195929f6f32729a1665337beea4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2becc195929f6f32729a1665337beea4">&#9670;&#160;</a></span>getLocalAbcStateBlocks()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -657,7 +659,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt; std::array&lt; UInt, 3 &gt; &gt; EMT::Ph3::AvVoltSourceInverterStateSpace::getLocalAbcStateIndexTriples </td>
+          <td class="memname">std::vector&lt; <a class="el" href="struct_c_p_s_1_1_e_m_t_1_1_s_s_n_comp_1_1_local_abc_state_block.html">EMT::SSNComp::LocalAbcStateBlock</a> &gt; EMT::Ph3::AvVoltSourceInverterStateSpace::getLocalAbcStateBlocks </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -665,16 +667,48 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel final">final</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Get local abc-frame state index triples.</p>
+<p>Get local abc-frame state blocks.</p>
 <p>Returned indices are local SSN state indices. The MNA state-space contributor adds the global extracted-state offset. </p>
 
-<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a545355a727a3216f6026a7158ef2fe08">CPS::EMT::SSNComp</a>.</p>
+<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#abb142067488f8644db36725e9aed3e6f">CPS::EMT::SSNComp</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00105">105</a> of file <a class="el" href="_e_m_t___ph3___av_volt_source_inverter_state_space_8cpp_source.html">EMT_Ph3_AvVoltSourceInverterStateSpace.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00046">46</a> of file <a class="el" href="_e_m_t___ph3___av_volt_source_inverter_state_space_8cpp_source.html">EMT_Ph3_AvVoltSourceInverterStateSpace.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a5089e058c7fcf389929c0d3f452e448e" name="a5089e058c7fcf389929c0d3f452e448e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5089e058c7fcf389929c0d3f452e448e">&#9670;&#160;</a></span>getLocalStateNames()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; String &gt; EMT::Ph3::AvVoltSourceInverterStateSpace::getLocalStateNames </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel final">final</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Get local SSN state names.</p>
+<p>Returned names are local to this SSN component. The MNA state-space contributor adds the component name to form global extracted-state names.</p>
+<p>The default implementation returns no names. Missing names are filled with generic fallback names by the extractor. </p>
+
+<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a2bad652e725bb37fbc6472f333da9aa6">CPS::EMT::SSNComp</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00037">37</a> of file <a class="el" href="_e_m_t___ph3___av_volt_source_inverter_state_space_8cpp_source.html">EMT_Ph3_AvVoltSourceInverterStateSpace.cpp</a>.</p>
 
 </div>
 </div>
@@ -705,7 +739,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a4401f844a3f389e07a37ef1716d84dcd">CPS::SimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00160">160</a> of file <a class="el" href="_e_m_t___ph3___av_volt_source_inverter_state_space_8cpp_source.html">EMT_Ph3_AvVoltSourceInverterStateSpace.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00171">171</a> of file <a class="el" href="_e_m_t___ph3___av_volt_source_inverter_state_space_8cpp_source.html">EMT_Ph3_AvVoltSourceInverterStateSpace.cpp</a>.</p>
 
 </div>
 </div>
@@ -788,7 +822,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00036">36</a> of file <a class="el" href="_e_m_t___ph3___av_volt_source_inverter_state_space_8cpp_source.html">EMT_Ph3_AvVoltSourceInverterStateSpace.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00055">55</a> of file <a class="el" href="_e_m_t___ph3___av_volt_source_inverter_state_space_8cpp_source.html">EMT_Ph3_AvVoltSourceInverterStateSpace.cpp</a>.</p>
 
 </div>
 </div>
@@ -818,7 +852,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html#a4cdab5c112f74f00125febd04692d113">CPS::EMT::VTypeVariableSSNComp</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00528">528</a> of file <a class="el" href="_e_m_t___ph3___av_volt_source_inverter_state_space_8cpp_source.html">EMT_Ph3_AvVoltSourceInverterStateSpace.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00539">539</a> of file <a class="el" href="_e_m_t___ph3___av_volt_source_inverter_state_space_8cpp_source.html">EMT_Ph3_AvVoltSourceInverterStateSpace.cpp</a>.</p>
 
 </div>
 </div>
@@ -849,7 +883,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a310a4a96c67380d3a583f21389e03be9">CPS::EMT::SSNComp</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00141">141</a> of file <a class="el" href="_e_m_t___ph3___av_volt_source_inverter_state_space_8cpp_source.html">EMT_Ph3_AvVoltSourceInverterStateSpace.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00152">152</a> of file <a class="el" href="_e_m_t___ph3___av_volt_source_inverter_state_space_8cpp_source.html">EMT_Ph3_AvVoltSourceInverterStateSpace.cpp</a>.</p>
 
 </div>
 </div>

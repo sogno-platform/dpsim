@@ -97,28 +97,49 @@ $(function(){ initResizable(false); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a5354fa02eded4f5ece60b08c15171589" id="r_a5354fa02eded4f5ece60b08c15171589"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::array&lt; UInt, 3 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5354fa02eded4f5ece60b08c15171589">abcStateIndexTriples</a></td></tr>
-<tr class="separator:a5354fa02eded4f5ece60b08c15171589"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3927751c6535b5cdff10339cc0ef7f86" id="r_a3927751c6535b5cdff10339cc0ef7f86"><td class="memItemLeft" align="right" valign="top">std::vector&lt; String &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3927751c6535b5cdff10339cc0ef7f86">stateNames</a></td></tr>
+<tr class="memdesc:a3927751c6535b5cdff10339cc0ef7f86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Names of extracted states in native extracted-state order.  <br /></td></tr>
+<tr class="separator:a3927751c6535b5cdff10339cc0ef7f86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a005bd7785ce91c81abee99b10be60617" id="r_a005bd7785ce91c81abee99b10be60617"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="struct_d_psim_1_1_state_space_abc_state_block.html">StateSpaceAbcStateBlock</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a005bd7785ce91c81abee99b10be60617">abcStateBlocks</a></td></tr>
+<tr class="separator:a005bd7785ce91c81abee99b10be60617"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_contributor_8h_source.html#l00015">15</a> of file <a class="el" href="_m_n_a_state_space_contributor_8h_source.html">MNAStateSpaceContributor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_contributor_8h_source.html#l00026">26</a> of file <a class="el" href="_m_n_a_state_space_contributor_8h_source.html">MNAStateSpaceContributor.h</a>.</p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
-<a id="a5354fa02eded4f5ece60b08c15171589" name="a5354fa02eded4f5ece60b08c15171589"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5354fa02eded4f5ece60b08c15171589">&#9670;&#160;</a></span>abcStateIndexTriples</h2>
+<a id="a005bd7785ce91c81abee99b10be60617" name="a005bd7785ce91c81abee99b10be60617"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a005bd7785ce91c81abee99b10be60617">&#9670;&#160;</a></span>abcStateBlocks</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;std::array&lt;UInt, 3&gt; &gt; DPsim::StateSpaceMetadata::abcStateIndexTriples</td>
+          <td class="memname">std::vector&lt;<a class="el" href="struct_d_psim_1_1_state_space_abc_state_block.html">StateSpaceAbcStateBlock</a>&gt; DPsim::StateSpaceMetadata::abcStateBlocks</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Global extracted-state index triples representing native abc-frame states.</p>
-<p>Each triple is transformed as one abc -&gt; dq0 block in modal analysis. </p>
+<p>Global extracted-state blocks representing native abc-frame states.</p>
+<p>Each block is transformed as one abc -&gt; dq0 block in modal analysis. </p>
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_contributor_8h_source.html#l00019">19</a> of file <a class="el" href="_m_n_a_state_space_contributor_8h_source.html">MNAStateSpaceContributor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_contributor_8h_source.html#l00033">33</a> of file <a class="el" href="_m_n_a_state_space_contributor_8h_source.html">MNAStateSpaceContributor.h</a>.</p>
+
+</div>
+</div>
+<a id="a3927751c6535b5cdff10339cc0ef7f86" name="a3927751c6535b5cdff10339cc0ef7f86"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3927751c6535b5cdff10339cc0ef7f86">&#9670;&#160;</a></span>stateNames</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;String&gt; DPsim::StateSpaceMetadata::stateNames</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Names of extracted states in native extracted-state order. </p>
+
+<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_contributor_8h_source.html#l00028">28</a> of file <a class="el" href="_m_n_a_state_space_contributor_8h_source.html">MNAStateSpaceContributor.h</a>.</p>
 
 </div>
 </div>

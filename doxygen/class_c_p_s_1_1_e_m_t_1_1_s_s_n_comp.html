@@ -89,6 +89,7 @@ $(function(){ initResizable(false); });
 <div id="doc-content">
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
@@ -112,13 +113,20 @@ Collaboration diagram for CPS::EMT::SSNComp:</div>
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp__coll__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_c_p_s_1_1_e_m_t_1_1_s_s_n_comp_1_1_local_abc_state_block.html">LocalAbcStateBlock</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:acd27f89e4a7caa4b48b40d235534b00c" id="r_acd27f89e4a7caa4b48b40d235534b00c"><td class="memItemLeft" align="right" valign="top">UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acd27f89e4a7caa4b48b40d235534b00c">getStateCount</a> () const</td></tr>
 <tr class="memdesc:acd27f89e4a7caa4b48b40d235534b00c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get number of internal state variables of the SSN model.  <br /></td></tr>
 <tr class="separator:acd27f89e4a7caa4b48b40d235534b00c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a545355a727a3216f6026a7158ef2fe08" id="r_a545355a727a3216f6026a7158ef2fe08"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; std::array&lt; UInt, 3 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a545355a727a3216f6026a7158ef2fe08">getLocalAbcStateIndexTriples</a> () const</td></tr>
-<tr class="separator:a545355a727a3216f6026a7158ef2fe08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bad652e725bb37fbc6472f333da9aa6" id="r_a2bad652e725bb37fbc6472f333da9aa6"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; String &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2bad652e725bb37fbc6472f333da9aa6">getLocalStateNames</a> () const</td></tr>
+<tr class="separator:a2bad652e725bb37fbc6472f333da9aa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb142067488f8644db36725e9aed3e6f" id="r_abb142067488f8644db36725e9aed3e6f"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; <a class="el" href="struct_c_p_s_1_1_e_m_t_1_1_s_s_n_comp_1_1_local_abc_state_block.html">LocalAbcStateBlock</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb142067488f8644db36725e9aed3e6f">getLocalAbcStateBlocks</a> () const</td></tr>
+<tr class="separator:abb142067488f8644db36725e9aed3e6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a39184d0f0cc430de1752ac957adf2145" id="r_a39184d0f0cc430de1752ac957adf2145"><td class="memItemLeft" align="right" valign="top">const Matrix &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a39184d0f0cc430de1752ac957adf2145">getDiscreteA</a> () const</td></tr>
 <tr class="memdesc:a39184d0f0cc430de1752ac957adf2145"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get discrete state transition matrix used by the trapezoidal SSN model.  <br /></td></tr>
 <tr class="separator:a39184d0f0cc430de1752ac957adf2145"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -608,7 +616,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00066">66</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00068">68</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -639,7 +647,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00082">82</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00084">84</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -670,7 +678,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00071">71</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00073">73</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -691,7 +699,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Get continuous-time output matrix of the SSN model. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00032">32</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00034">34</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -712,7 +720,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Get discrete state transition matrix used by the trapezoidal SSN model. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00028">28</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00030">30</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -733,12 +741,12 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Get discrete input matrix used by the trapezoidal SSN model. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00030">30</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00032">32</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a545355a727a3216f6026a7158ef2fe08" name="a545355a727a3216f6026a7158ef2fe08"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a545355a727a3216f6026a7158ef2fe08">&#9670;&#160;</a></span>getLocalAbcStateIndexTriples()</h2>
+<a id="abb142067488f8644db36725e9aed3e6f" name="abb142067488f8644db36725e9aed3e6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb142067488f8644db36725e9aed3e6f">&#9670;&#160;</a></span>getLocalAbcStateBlocks()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -747,7 +755,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt; std::array&lt; UInt, 3 &gt; &gt; EMT::SSNComp::getLocalAbcStateIndexTriples </td>
+          <td class="memname">std::vector&lt; <a class="el" href="struct_c_p_s_1_1_e_m_t_1_1_s_s_n_comp_1_1_local_abc_state_block.html">EMT::SSNComp::LocalAbcStateBlock</a> &gt; EMT::SSNComp::getLocalAbcStateBlocks </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -759,12 +767,44 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Get local abc-frame state index triples.</p>
+<p>Get local abc-frame state blocks.</p>
 <p>Returned indices are local SSN state indices. The MNA state-space contributor adds the global extracted-state offset. </p>
 
-<p>Reimplemented in <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a321bbc91c4fbfcf7be666cc33c621b2d">CPS::EMT::Ph3::AvVoltSourceInverterStateSpace</a>.</p>
+<p>Reimplemented in <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a2becc195929f6f32729a1665337beea4">CPS::EMT::Ph3::AvVoltSourceInverterStateSpace</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00022">22</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00024">24</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a2bad652e725bb37fbc6472f333da9aa6" name="a2bad652e725bb37fbc6472f333da9aa6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bad652e725bb37fbc6472f333da9aa6">&#9670;&#160;</a></span>getLocalStateNames()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; String &gt; EMT::SSNComp::getLocalStateNames </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Get local SSN state names.</p>
+<p>Returned names are local to this SSN component. The MNA state-space contributor adds the component name to form global extracted-state names.</p>
+<p>The default implementation returns no names. Missing names are filled with generic fallback names by the extractor. </p>
+
+<p>Reimplemented in <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a5089e058c7fcf389929c0d3f452e448e">CPS::EMT::Ph3::AvVoltSourceInverterStateSpace</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00021">21</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -826,7 +866,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00132">132</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00134">134</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -864,7 +904,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00117">117</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00119">119</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -900,7 +940,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00104">104</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00106">106</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -933,7 +973,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00126">126</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00128">128</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -960,7 +1000,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00095">95</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00097">97</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -993,7 +1033,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00034">34</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00036">36</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -1024,7 +1064,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#af95f151c6adbd7f0bdba10c963b342b9">CPS::EMT::Ph3::AvVoltSourceInverterStateSpace</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00091">91</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00093">93</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -1055,7 +1095,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00087">87</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00089">89</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
@@ -1086,7 +1126,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html#af8ddecfcac77d9c4659afabf53da35ae">CPS::EMT::VTypeVariableSSNComp</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00100">100</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html#l00102">102</a> of file <a class="el" href="_e_m_t___s_s_n_comp_8cpp_source.html">EMT_SSNComp.cpp</a>.</p>
 
 </div>
 </div>
