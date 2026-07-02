@@ -9,6 +9,7 @@
 #pragma once
 
 #include <dpsim-models/MNASimPowerComp.h>
+#include <dpsim-models/Signal/SineWaveGenerator.h>
 #include <dpsim-models/Solver/DAEInterface.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
@@ -28,10 +29,14 @@ class VoltageSource : public MNASimPowerComp<Complex>,
                       public SharedFactory<VoltageSource> {
 private:
   void updateVoltage(Real time);
+  /// Rotates the per-phase envelope at mSrcFreq (offset from the carrier)
+  CPS::Signal::SignalGenerator::Ptr mSrcSig;
 
 public:
   /// Reference voltage phasor, independent per phase (A, B, C)
   const Attribute<MatrixComp>::Ptr mVoltageRef;
+  /// Signal frequency, as an offset from the domain carrier (0 = steady)
+  const Attribute<Real>::Ptr mSrcFreq;
   /// Defines UID, name, component parameters and logging level
   VoltageSource(String uid, String name,
                 Logger::Level loglevel = Logger::Level::off);
@@ -44,8 +49,8 @@ public:
 
   SimPowerComp<Complex>::Ptr clone(String name) override;
 
-  /// Setter for reference voltage, one phasor per phase
-  void setParameters(MatrixComp voltageRef);
+  /// Setter for reference voltage per phase and offset from the carrier
+  void setParameters(MatrixComp voltageRef, Real srcFreq = 0.0);
   // #### General ####
   /// Initializes component from power flow data
   void initializeFromNodesAndTerminals(Real frequency) override;

@@ -4,6 +4,7 @@
 #pragma once
 
 #include <dpsim-models/MNASimPowerComp.h>
+#include <dpsim-models/Signal/SineWaveGenerator.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
@@ -15,9 +16,16 @@ namespace Ph3 {
 /// This involves the stamping of the current to the right side vector.
 class CurrentSource : public MNASimPowerComp<Complex>,
                       public SharedFactory<CurrentSource> {
+private:
+  void updateCurrent(Real time);
+  /// Rotates the per-phase envelope at mSrcFreq (offset from the carrier)
+  CPS::Signal::SignalGenerator::Ptr mSrcSig;
+
 public:
   /// Reference current phasor, independent per phase (A, B, C)
   const Attribute<MatrixComp>::Ptr mCurrentRef;
+  /// Signal frequency, as an offset from the domain carrier (0 = steady)
+  const Attribute<Real>::Ptr mSrcFreq;
   /// Defines UID, name and logging level
   CurrentSource(String uid, String name,
                 Logger::Level logLevel = Logger::Level::off);
@@ -29,8 +37,8 @@ public:
   // #### General ####
   /// Initializes component from power flow data
   void initializeFromNodesAndTerminals(Real frequency) override;
-  /// Setter for reference current, one phasor per phase
-  void setParameters(MatrixComp currentRef);
+  /// Setter for reference current per phase and offset from the carrier
+  void setParameters(MatrixComp currentRef, Real srcFreq = 0.0);
 
   // #### MNA section ####
   /// Initializes internal variables of the component

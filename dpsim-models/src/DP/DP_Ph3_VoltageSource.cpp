@@ -13,7 +13,8 @@ using namespace CPS;
 DP::Ph3::VoltageSource::VoltageSource(String uid, String name,
                                       Logger::Level logLevel)
     : MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
-      mVoltageRef(mAttributes->create<MatrixComp>("V_ref")) {
+      mVoltageRef(mAttributes->create<MatrixComp>("V_ref")),
+      mSrcFreq(mAttributes->createDynamic<Real>("f_src")) {
   mPhaseType = PhaseType::ABC;
   setVirtualNodeNumber(1);
   setTerminalNumber(2);
@@ -24,12 +25,25 @@ DP::Ph3::VoltageSource::VoltageSource(String uid, String name,
 
 SimPowerComp<Complex>::Ptr DP::Ph3::VoltageSource::clone(String name) {
   auto copy = VoltageSource::make(name, mLogLevel);
-  copy->setParameters(**mVoltageRef);
+  copy->setParameters(**mVoltageRef, **mSrcFreq);
   return copy;
 }
 
-void DP::Ph3::VoltageSource::setParameters(MatrixComp voltageRef) {
+void DP::Ph3::VoltageSource::setParameters(MatrixComp voltageRef,
+                                           Real srcFreq) {
+  auto srcSigSine = Signal::SineWaveGenerator::make(**mName + "_sw");
+  srcSigSine->setParameters(Complex(1, 0), srcFreq);
+  mSrcSig = srcSigSine;
+  mSrcFreq->setReference(mSrcSig->mFreq);
+
   **mVoltageRef = voltageRef;
+
+  SPDLOG_LOGGER_INFO(mSLog,
+                     "\nVoltage reference phasor [V]: {:s}"
+                     "\nFrequency [Hz]: {:s}",
+                     Logger::matrixCompToString(voltageRef),
+                     Logger::realToString(srcFreq));
+
   mParametersSet = true;
 }
 
@@ -42,7 +56,7 @@ void DP::Ph3::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 void DP::Ph3::VoltageSource::mnaCompInitialize(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
-  **mIntfVoltage = **mVoltageRef;
+  updateVoltage(0);
 }
 
 void DP::Ph3::VoltageSource::mnaCompApplySystemMatrixStamp(
@@ -107,7 +121,12 @@ void DP::Ph3::VoltageSource::mnaCompApplyRightSideVectorStamp(
 }
 
 void DP::Ph3::VoltageSource::updateVoltage(Real time) {
-  **mIntfVoltage = **mVoltageRef;
+  if (mSrcSig != nullptr) {
+    mSrcSig->step(time);
+    **mIntfVoltage = **mVoltageRef * mSrcSig->getSignal();
+  } else {
+    **mIntfVoltage = **mVoltageRef;
+  }
 }
 
 void DP::Ph3::VoltageSource::mnaCompAddPreStepDependencies(

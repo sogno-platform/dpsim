@@ -8,7 +8,8 @@ using namespace CPS;
 DP::Ph3::CurrentSource::CurrentSource(String uid, String name,
                                       Logger::Level logLevel)
     : MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
-      mCurrentRef(mAttributes->create<MatrixComp>("I_ref")) {
+      mCurrentRef(mAttributes->create<MatrixComp>("I_ref")),
+      mSrcFreq(mAttributes->createDynamic<Real>("f_src")) {
   mPhaseType = PhaseType::ABC;
   setVirtualNodeNumber(0);
   setTerminalNumber(2);
@@ -19,12 +20,25 @@ DP::Ph3::CurrentSource::CurrentSource(String uid, String name,
 
 SimPowerComp<Complex>::Ptr DP::Ph3::CurrentSource::clone(String name) {
   auto copy = CurrentSource::make(name, mLogLevel);
-  copy->setParameters(**mCurrentRef);
+  copy->setParameters(**mCurrentRef, **mSrcFreq);
   return copy;
 }
 
-void DP::Ph3::CurrentSource::setParameters(MatrixComp currentRef) {
+void DP::Ph3::CurrentSource::setParameters(MatrixComp currentRef,
+                                           Real srcFreq) {
+  auto srcSigSine = Signal::SineWaveGenerator::make(**mName + "_sw");
+  srcSigSine->setParameters(Complex(1, 0), srcFreq);
+  mSrcSig = srcSigSine;
+  mSrcFreq->setReference(mSrcSig->mFreq);
+
   **mCurrentRef = currentRef;
+
+  SPDLOG_LOGGER_INFO(mSLog,
+                     "\nCurrent reference phasor [A]: {:s}"
+                     "\nFrequency [Hz]: {:s}",
+                     Logger::matrixCompToString(currentRef),
+                     Logger::realToString(srcFreq));
+
   mParametersSet = true;
 }
 
@@ -39,6 +53,7 @@ void DP::Ph3::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
 void DP::Ph3::CurrentSource::mnaCompInitialize(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
+  updateCurrent(0);
 }
 
 void DP::Ph3::CurrentSource::mnaCompApplyRightSideVectorStamp(
@@ -61,6 +76,15 @@ void DP::Ph3::CurrentSource::mnaCompApplyRightSideVectorStamp(
   }
 }
 
+void DP::Ph3::CurrentSource::updateCurrent(Real time) {
+  if (mSrcSig != nullptr) {
+    mSrcSig->step(time);
+    **mIntfCurrent = **mCurrentRef * mSrcSig->getSignal();
+  } else {
+    **mIntfCurrent = **mCurrentRef;
+  }
+}
+
 void DP::Ph3::CurrentSource::mnaCompAddPreStepDependencies(
     AttributeBase::List &prevStepDependencies,
     AttributeBase::List &attributeDependencies,
@@ -71,7 +95,7 @@ void DP::Ph3::CurrentSource::mnaCompAddPreStepDependencies(
 }
 
 void DP::Ph3::CurrentSource::mnaCompPreStep(Real time, Int timeStepCount) {
-  **mIntfCurrent = **mCurrentRef;
+  updateCurrent(time);
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
