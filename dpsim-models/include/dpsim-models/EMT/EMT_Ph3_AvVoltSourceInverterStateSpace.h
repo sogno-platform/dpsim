@@ -79,13 +79,15 @@ public:
                                  Logger::Level logLevel = Logger::Level::off)
       : AvVoltSourceInverterStateSpace(name, name, logLevel) {}
 
+  std::vector<String> getLocalStateNames() const override final;
+
+  std::vector<SSNComp::LocalAbcStateBlock>
+  getLocalAbcStateBlocks() const override final;
+
   void setParameters(Real lf, Real cf, Real rf, Real rc, Real omegaN,
                      Real kpPLL, Real kiPLL, Real omegaCutoff, Real pRef,
                      Real qRef, Real kpPowerCtrl, Real kiPowerCtrl,
                      Real kpCurrCtrl, Real kiCurrCtrl);
-
-  std::vector<std::array<UInt, 3>>
-  getLocalAbcStateIndexTriples() const override;
 
   void initializeFromNodesAndTerminals(Real frequency) override final;
 };

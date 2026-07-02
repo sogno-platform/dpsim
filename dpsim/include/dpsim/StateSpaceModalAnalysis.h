@@ -5,6 +5,8 @@
 #include <dpsim/Definitions.h>
 #include <dpsim/MNAStateSpaceExtractor.h>
 
+#include <vector>
+
 namespace DPsim {
 
 enum class StateSpaceAnalysisFrame {
@@ -26,7 +28,7 @@ public:
   /// Select the coordinate frame used for modal analysis.
   ///
   /// Native uses the extracted EMT state matrix directly.
-  /// GlobalDQ0 transforms registered abc state triples to a global dq0 frame.
+  /// GlobalDQ0 transforms registered abc state blocks to a global dq0 frame.
   void setAnalysisFrame(StateSpaceAnalysisFrame frame) {
     mAnalysisFrame = frame;
   }
@@ -53,10 +55,45 @@ public:
     return mContinuousEigenvalues;
   }
 
+  /// Right eigenvectors of the selected discrete analysis state matrix.
+  ///
+  /// Columns correspond to modes in the same order as getDiscreteEigenvalues().
+  /// These eigenvectors represent mode shapes in the selected analysis frame.
+  const CPS::MatrixComp &getRightEigenvectors() const {
+    return mRightEigenvectors;
+  }
+
+  /// Left eigenvectors of the selected discrete analysis state matrix.
+  ///
+  /// Rows correspond to modes and are normalized such that
+  /// getLeftEigenvectors() * getRightEigenvectors() = I.
+  const CPS::MatrixComp &getLeftEigenvectors() const {
+    return mLeftEigenvectors;
+  }
+
+  /// Participation factors of the selected discrete analysis state matrix.
+  ///
+  /// P(state, mode) = rightEigenvectors(state, mode)
+  ///                  * leftEigenvectors(mode, state)
+  ///
+  /// Rows correspond to states, columns correspond to modes. Columns follow the
+  /// same mode order as getDiscreteEigenvalues() and getContinuousEigenvalues().
+  const CPS::MatrixComp &getParticipationFactors() const {
+    return mParticipationFactors;
+  }
+
+  /// State names in the selected analysis frame.
+  ///
+  /// In Native frame, registered abc states keep their native abc names.
+  /// In GlobalDQ0 frame, registered abc state blocks are labelled as dq0 states.
+  const std::vector<String> &getStateNames() const { return mStateNames; }
+
 private:
   Matrix buildDiscreteStateMatrixInAnalysisFrame() const;
 
   Matrix buildGlobalDq0Transformation(Real theta) const;
+
+  std::vector<String> buildStateNamesInAnalysisFrame() const;
 
   Complex mapDiscreteToContinuous(const Complex &z) const;
 
@@ -71,6 +108,12 @@ private:
   CPS::VectorComp mDiscreteEigenvalues;
 
   CPS::VectorComp mContinuousEigenvalues;
+
+  CPS::MatrixComp mRightEigenvectors;
+  CPS::MatrixComp mLeftEigenvectors;
+  CPS::MatrixComp mParticipationFactors;
+
+  std::vector<String> mStateNames;
 };
 
 } // namespace DPsim

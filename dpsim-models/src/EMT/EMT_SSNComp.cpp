@@ -18,8 +18,10 @@ UInt EMT::SSNComp::getStateCount() const {
   return static_cast<UInt>(mA.rows());
 }
 
-std::vector<std::array<UInt, 3>>
-EMT::SSNComp::getLocalAbcStateIndexTriples() const {
+std::vector<String> EMT::SSNComp::getLocalStateNames() const { return {}; }
+
+std::vector<EMT::SSNComp::LocalAbcStateBlock>
+EMT::SSNComp::getLocalAbcStateBlocks() const {
   // Default: no abc-frame state metadata. Derived components should override
   // this only for states known to form physical abc triples.
   return {};

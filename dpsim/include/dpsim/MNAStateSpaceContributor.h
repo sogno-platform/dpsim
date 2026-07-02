@@ -12,11 +12,25 @@
 
 namespace DPsim {
 
-struct StateSpaceMetadata {
-  /// Global extracted-state index triples representing native abc-frame states.
+struct StateSpaceAbcStateBlock {
+  /// Global extracted-state indices representing one native abc-frame state block.
+  std::array<UInt, 3> indices;
+
+  /// Base name of this abc-frame state block.
   ///
-  /// Each triple is transformed as one abc -> dq0 block in modal analysis.
-  std::vector<std::array<UInt, 3>> abcStateIndexTriples;
+  /// In the native frame, suffixes _a, _b, _c are used.
+  /// In the GlobalDQ0 frame, suffixes _d, _q, _0 are used.
+  String name;
+};
+
+struct StateSpaceMetadata {
+  /// Names of extracted states in native extracted-state order.
+  std::vector<String> stateNames;
+
+  /// Global extracted-state blocks representing native abc-frame states.
+  ///
+  /// Each block is transformed as one abc -> dq0 block in modal analysis.
+  std::vector<StateSpaceAbcStateBlock> abcStateBlocks;
 };
 
 /// Live adapter that contributes one component's local state-space blocks to
@@ -49,7 +63,7 @@ public:
   /// Contribute metadata for this component's extracted states.
   ///
   /// stateOffset is the first global extracted-state index of this contributor.
-  /// The default implementation contributes no frame metadata.
+  /// The default implementation contributes no metadata.
   virtual void contributeMetadata(StateSpaceMetadata &metadata,
                                   UInt stateOffset) const {}
 };

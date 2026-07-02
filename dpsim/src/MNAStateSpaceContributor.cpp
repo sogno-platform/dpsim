@@ -50,10 +50,24 @@ void stampTwoTerminalCurrentInjectionMapping(const Matrix &K, Matrix &CdMna,
       -K.transpose() * outputMatrix;
 }
 
+void setStateName(StateSpaceMetadata &metadata, UInt stateIndex,
+                  const String &name) {
+  if (stateIndex >= metadata.stateNames.size())
+    throw std::runtime_error(
+        "MNA state-space contributor tried to set a state name outside the "
+        "extracted state vector.");
+
+  metadata.stateNames[stateIndex] = name;
+}
+
 void addThreePhaseAbcStateMetadata(StateSpaceMetadata &metadata,
-                                   UInt stateOffset) {
-  metadata.abcStateIndexTriples.push_back(
-      {stateOffset + 0, stateOffset + 1, stateOffset + 2});
+                                   UInt stateOffset, const String &baseName) {
+  setStateName(metadata, stateOffset + 0, baseName + "_a");
+  setStateName(metadata, stateOffset + 1, baseName + "_b");
+  setStateName(metadata, stateOffset + 2, baseName + "_c");
+
+  metadata.abcStateBlocks.push_back(
+      {{stateOffset + 0, stateOffset + 1, stateOffset + 2}, baseName});
 }
 
 class EMTPh3InductorStateSpaceContributor final
@@ -86,7 +100,7 @@ public:
 
   void contributeMetadata(StateSpaceMetadata &metadata,
                           UInt stateOffset) const override {
-    addThreePhaseAbcStateMetadata(metadata, stateOffset);
+    addThreePhaseAbcStateMetadata(metadata, stateOffset, mComponent->name());
   }
 
 private:
@@ -123,7 +137,7 @@ public:
 
   void contributeMetadata(StateSpaceMetadata &metadata,
                           UInt stateOffset) const override {
-    addThreePhaseAbcStateMetadata(metadata, stateOffset);
+    addThreePhaseAbcStateMetadata(metadata, stateOffset, mComponent->name());
   }
 
 private:
@@ -173,9 +187,29 @@ public:
   void contributeMetadata(StateSpaceMetadata &metadata,
                           UInt stateOffset) const override {
     const UInt localStateCount = getStateCount();
+    const String componentName = mComponent->name();
 
-    for (auto abcBlock : mComponent->getLocalAbcStateIndexTriples()) {
-      for (auto &idx : abcBlock) {
+    const auto localStateNames = mComponent->getLocalStateNames();
+
+    if (!localStateNames.empty() && localStateNames.size() != localStateCount) {
+      throw std::runtime_error(
+          "SSN component returned an invalid number of local state names.");
+    }
+
+    for (UInt idx = 0; idx < localStateCount; ++idx) {
+      if (!localStateNames.empty()) {
+        setStateName(metadata, stateOffset + idx,
+                     componentName + "." + localStateNames[idx]);
+      }
+    }
+
+    for (auto abcBlock : mComponent->getLocalAbcStateBlocks()) {
+      if (abcBlock.name.empty()) {
+        throw std::runtime_error(
+            "SSN component returned an abc state block with an empty name.");
+      }
+
+      for (auto &idx : abcBlock.indices) {
         if (idx >= localStateCount) {
           throw std::runtime_error(
               "SSN component returned an invalid abc state index.");
@@ -184,7 +218,8 @@ public:
         idx += stateOffset;
       }
 
-      metadata.abcStateIndexTriples.push_back(abcBlock);
+      metadata.abcStateBlocks.push_back(
+          {abcBlock.indices, componentName + "." + abcBlock.name});
     }
   }
 

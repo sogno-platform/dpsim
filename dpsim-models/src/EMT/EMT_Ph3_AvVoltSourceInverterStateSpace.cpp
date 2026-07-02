@@ -33,6 +33,25 @@ EMT::Ph3::AvVoltSourceInverterStateSpace::AvVoltSourceInverterStateSpace(
   **mOmegaPLL = 0.0;
 }
 
+std::vector<String>
+EMT::Ph3::AvVoltSourceInverterStateSpace::getLocalStateNames() const {
+  return {
+      "theta_pll", "phi_pll", "p_filtered", "q_filtered", "phi_d",
+      "phi_q",     "gamma_d", "gamma_q",    "vc_a",       "vc_b",
+      "vc_c",      "if_a",    "if_b",       "if_c",
+  };
+}
+
+std::vector<EMT::SSNComp::LocalAbcStateBlock>
+EMT::Ph3::AvVoltSourceInverterStateSpace::getLocalAbcStateBlocks() const {
+  return {
+      {{static_cast<UInt>(VcA), static_cast<UInt>(VcB), static_cast<UInt>(VcC)},
+       "vc"},
+      {{static_cast<UInt>(IfA), static_cast<UInt>(IfB), static_cast<UInt>(IfC)},
+       "if"},
+  };
+}
+
 void EMT::Ph3::AvVoltSourceInverterStateSpace::setParameters(
     Real lf, Real cf, Real rf, Real rc, Real omegaN, Real kpPLL, Real kiPLL,
     Real omegaCutoff, Real pRef, Real qRef, Real kpPowerCtrl, Real kiPowerCtrl,
@@ -99,14 +118,6 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::setParameters(
 
   VTypeVariableSSNComp::setParameters(aMatrix, bMatrix, cMatrix, dMatrix,
                                       eVector, fVector);
-}
-
-std::vector<std::array<UInt, 3>>
-EMT::Ph3::AvVoltSourceInverterStateSpace::getLocalAbcStateIndexTriples() const {
-  return {
-      {static_cast<UInt>(VcA), static_cast<UInt>(VcB), static_cast<UInt>(VcC)},
-      {static_cast<UInt>(IfA), static_cast<UInt>(IfB), static_cast<UInt>(IfC)},
-  };
 }
 
 Matrix EMT::Ph3::AvVoltSourceInverterStateSpace::getParkTransformMatrix(
