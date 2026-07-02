@@ -6,6 +6,10 @@ on:
       - master
   pull_request_target:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   sonarcloud:
     name: Prepare and run Sonar Scan
