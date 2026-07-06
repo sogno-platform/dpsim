@@ -86,13 +86,38 @@ All three reproduce the classical dynamic-phasor stamping of the same circuit,
 and the reconstructed time-domain waveform matches the EMT and EMT-SSN results
 within discretisation error.
 
+# Three-Phase Components
+
+The same real-augmented model extends per phase to `DP::Ph3`. The
+$3 \times 3$ $\mathbf{A}$, $\mathbf{B}$, $\mathbf{C}$, $\mathbf{D}$ matrices
+are general, so off-diagonal entries can couple the phases together:
+
+* `Full_Serial_RLC`, the three-phase series RLC one-port.
+* `GenericTwoTerminalVTypeSSN` and `GenericTwoTerminalITypeSSN`, the
+  three-phase generic V-type and I-type components.
+
+As in the single-phase case, all three reproduce the classical three-phase
+dynamic-phasor stamping exactly, and the reconstructed time-domain waveform
+matches the EMT and EMT-SSN results within discretisation error once
+corrected for the RMS-to-peak scaling that `EMT::Ph3` sources apply and
+`DP::Ph3` sources do not, since the DP envelope already carries the complex
+amplitude directly. The notebooks below only exercise the symmetrical,
+diagonal case; coupling between phases is not covered by existing tests.
+
 # Validation and Examples
 
-Two notebooks accompany the models, both on a single-carrier series RLC one-port.
-`examples/Notebooks/Circuits/DP_generalizedSSN_RLC.ipynb` validates the DP-SSN
-models against the classical dynamic-phasor stamping and the EMT and EMT-SSN
-waveforms. `examples/Notebooks/Circuits/DP_SSN_RLC_accuracy.ipynb` studies the
-time-step and frequency-dependent accuracy against a small-step EMT reference.
+Two notebooks accompany the single-phase models, both on a single-carrier
+series RLC one-port. `examples/Notebooks/Circuits/DP_generalizedSSN_RLC.ipynb`
+validates the DP-SSN models against the classical dynamic-phasor stamping and
+the EMT and EMT-SSN waveforms. `examples/Notebooks/Circuits/DP_SSN_RLC_accuracy.ipynb`
+studies the time-step and frequency-dependent accuracy against a small-step
+EMT reference.
+
+The three-phase analogues,
+`examples/Notebooks/Circuits/DP_Ph3_generalizedSSN_RLC.ipynb` and
+`examples/Notebooks/Circuits/DP_Ph3_SSN_RLC_accuracy.ipynb`, repeat both
+studies on `DP::Ph3` circuits, including a current-driven network with generic
+V-type and I-type components and a three-phase fault transient.
 
 # Further Reading
 
