@@ -119,15 +119,16 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3729eba435fc1a9ae2325bd8916e780f" id="r_a3729eba435fc1a9ae2325bd8916e780f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3729eba435fc1a9ae2325bd8916e780f">VoltageSource</a> (String name, Logger::Level logLevel=Logger::Level::off)</td></tr>
 <tr class="memdesc:a3729eba435fc1a9ae2325bd8916e780f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines UID, name, component parameters and logging level.  <br /></td></tr>
 <tr class="separator:a3729eba435fc1a9ae2325bd8916e780f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a48995524c8ae9b2433a442e6198fd191" id="r_a48995524c8ae9b2433a442e6198fd191"><td class="memItemLeft" align="right" valign="top"><a id="a48995524c8ae9b2433a442e6198fd191" name="a48995524c8ae9b2433a442e6198fd191"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>VoltageSource</b> (String name, Complex voltage, Logger::Level logLevel=Logger::Level::off)</td></tr>
-<tr class="memdesc:a48995524c8ae9b2433a442e6198fd191"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines name, component parameters and logging level. <br /></td></tr>
-<tr class="separator:a48995524c8ae9b2433a442e6198fd191"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab001fdb676f594e41992f00cb3438f88" id="r_ab001fdb676f594e41992f00cb3438f88"><td class="memItemLeft" align="right" valign="top"><a id="ab001fdb676f594e41992f00cb3438f88" name="ab001fdb676f594e41992f00cb3438f88"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>VoltageSource</b> (String name, MatrixComp voltage, Logger::Level logLevel=Logger::Level::off)</td></tr>
+<tr class="memdesc:ab001fdb676f594e41992f00cb3438f88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines name, component parameters and logging level. <br /></td></tr>
+<tr class="separator:ab001fdb676f594e41992f00cb3438f88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d4621129f4fb2036a31f5c1b7d71534" id="r_a5d4621129f4fb2036a31f5c1b7d71534"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; Complex &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5d4621129f4fb2036a31f5c1b7d71534">clone</a> (String name) override</td></tr>
 <tr class="memdesc:a5d4621129f4fb2036a31f5c1b7d71534"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a modified copy of the component with the given suffix added to the name and without.  <br /></td></tr>
 <tr class="separator:a5d4621129f4fb2036a31f5c1b7d71534"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d315af2f16f8b52033c93f89456fd71" id="r_a5d315af2f16f8b52033c93f89456fd71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5d315af2f16f8b52033c93f89456fd71">setParameters</a> (Complex voltageRef)</td></tr>
-<tr class="separator:a5d315af2f16f8b52033c93f89456fd71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55883d0b5f83059f7c54ea9991e060d4" id="r_a55883d0b5f83059f7c54ea9991e060d4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a55883d0b5f83059f7c54ea9991e060d4">setParameters</a> (MatrixComp voltageRef, Real srcFreq=0.0)</td></tr>
+<tr class="memdesc:a55883d0b5f83059f7c54ea9991e060d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setter for reference voltage per phase and offset from the carrier.  <br /></td></tr>
+<tr class="separator:a55883d0b5f83059f7c54ea9991e060d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52452cc289f106c45adc94c00215aaf8" id="r_a52452cc289f106c45adc94c00215aaf8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a52452cc289f106c45adc94c00215aaf8">initializeFromNodesAndTerminals</a> (Real frequency) override</td></tr>
 <tr class="memdesc:a52452cc289f106c45adc94c00215aaf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data.  <br /></td></tr>
 <tr class="separator:a52452cc289f106c45adc94c00215aaf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -392,8 +393,12 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaInitialize
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:af9a4d2aa6a6e4dbf68d3a4e89555ed74" id="r_af9a4d2aa6a6e4dbf68d3a4e89555ed74"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Complex &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af9a4d2aa6a6e4dbf68d3a4e89555ed74">mVoltageRef</a></td></tr>
-<tr class="separator:af9a4d2aa6a6e4dbf68d3a4e89555ed74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf02e085223aeef971ef83a9e39bbcf7" id="r_abf02e085223aeef971ef83a9e39bbcf7"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; MatrixComp &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abf02e085223aeef971ef83a9e39bbcf7">mVoltageRef</a></td></tr>
+<tr class="memdesc:abf02e085223aeef971ef83a9e39bbcf7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference voltage phasor, independent per phase (A, B, C)  <br /></td></tr>
+<tr class="separator:abf02e085223aeef971ef83a9e39bbcf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aface45d738e0780dd7239a9fa157bf88" id="r_aface45d738e0780dd7239a9fa157bf88"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aface45d738e0780dd7239a9fa157bf88">mSrcFreq</a></td></tr>
+<tr class="memdesc:aface45d738e0780dd7239a9fa157bf88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Signal frequency, as an offset from the domain carrier (0 = steady)  <br /></td></tr>
+<tr class="separator:aface45d738e0780dd7239a9fa157bf88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a></td></tr>
 <tr class="memitem:ac70d8c6733b49d5d5565ba21c28b372e inherit pub_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp" id="r_ac70d8c6733b49d5d5565ba21c28b372e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#ac70d8c6733b49d5d5565ba21c28b372e">mRightVector</a></td></tr>
 <tr class="separator:ac70d8c6733b49d5d5565ba21c28b372e inherit pub_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -511,7 +516,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="textblock"><p>Ideal Voltage source model. </p>
 <p>This model uses modified nodal analysis to represent an ideal voltage source. For a voltage source between nodes j and k, a new variable (current across the voltage source) is added to the left side vector as unkown and it is taken into account for the equation of node j as positve and for the equation of node k as negative. Moreover a new equation ej - ek = V is added to the problem. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___voltage_source_8h_source.html#l00026">26</a> of file <a class="el" href="_d_p___ph3___voltage_source_8h_source.html">DP_Ph3_VoltageSource.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___voltage_source_8h_source.html#l00027">27</a> of file <a class="el" href="_d_p___ph3___voltage_source_8h_source.html">DP_Ph3_VoltageSource.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a784bc72dba9b20d793abcfc54c2fc19c" name="a784bc72dba9b20d793abcfc54c2fc19c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a784bc72dba9b20d793abcfc54c2fc19c">&#9670;&#160;</a></span>VoltageSource() <span class="overload">[1/2]</span></h2>
@@ -572,7 +577,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Defines UID, name, component parameters and logging level. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___voltage_source_8h_source.html#l00038">38</a> of file <a class="el" href="_d_p___ph3___voltage_source_8h_source.html">DP_Ph3_VoltageSource.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___voltage_source_8h_source.html#l00044">44</a> of file <a class="el" href="_d_p___ph3___voltage_source_8h_source.html">DP_Ph3_VoltageSource.h</a>.</p>
 
 </div>
 </div>
@@ -604,7 +609,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">CPS::SimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___voltage_source_8cpp_source.html#l00024">24</a> of file <a class="el" href="_d_p___ph3___voltage_source_8cpp_source.html">DP_Ph3_VoltageSource.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___voltage_source_8cpp_source.html#l00026">26</a> of file <a class="el" href="_d_p___ph3___voltage_source_8cpp_source.html">DP_Ph3_VoltageSource.cpp</a>.</p>
 
 </div>
 </div>
@@ -716,7 +721,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a4401f844a3f389e07a37ef1716d84dcd">CPS::SimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___voltage_source_8cpp_source.html#l00035">35</a> of file <a class="el" href="_d_p___ph3___voltage_source_8cpp_source.html">DP_Ph3_VoltageSource.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___voltage_source_8cpp_source.html#l00050">50</a> of file <a class="el" href="_d_p___ph3___voltage_source_8cpp_source.html">DP_Ph3_VoltageSource.cpp</a>.</p>
 
 </div>
 </div>
@@ -830,7 +835,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___voltage_source_8cpp_source.html#l00104">104</a> of file <a class="el" href="_d_p___ph3___voltage_source_8cpp_source.html">DP_Ph3_VoltageSource.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___voltage_source_8cpp_source.html#l00110">110</a> of file <a class="el" href="_d_p___ph3___voltage_source_8cpp_source.html">DP_Ph3_VoltageSource.cpp</a>.</p>
 
 </div>
 </div>
@@ -861,7 +866,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___voltage_source_8cpp_source.html#l00056">56</a> of file <a class="el" href="_d_p___ph3___voltage_source_8cpp_source.html">DP_Ph3_VoltageSource.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___voltage_source_8cpp_source.html#l00062">62</a> of file <a class="el" href="_d_p___ph3___voltage_source_8cpp_source.html">DP_Ph3_VoltageSource.cpp</a>.</p>
 
 </div>
 </div>
@@ -897,7 +902,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___voltage_source_8cpp_source.html#l00040">40</a> of file <a class="el" href="_d_p___ph3___voltage_source_8cpp_source.html">DP_Ph3_VoltageSource.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___voltage_source_8cpp_source.html#l00056">56</a> of file <a class="el" href="_d_p___ph3___voltage_source_8cpp_source.html">DP_Ph3_VoltageSource.cpp</a>.</p>
 
 </div>
 </div>
@@ -1001,8 +1006,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a5d315af2f16f8b52033c93f89456fd71" name="a5d315af2f16f8b52033c93f89456fd71"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5d315af2f16f8b52033c93f89456fd71">&#9670;&#160;</a></span>setParameters()</h2>
+<a id="a55883d0b5f83059f7c54ea9991e060d4" name="a55883d0b5f83059f7c54ea9991e060d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a55883d0b5f83059f7c54ea9991e060d4">&#9670;&#160;</a></span>setParameters()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1010,30 +1015,56 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void DP::Ph3::VoltageSource::setParameters </td>
           <td>(</td>
-          <td class="paramtype">Complex</td>          <td class="paramname"><span class="paramname"><em>voltageRef</em></span></td><td>)</td>
+          <td class="paramtype">MatrixComp</td>          <td class="paramname"><span class="paramname"><em>voltageRef</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>srcFreq</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0.0</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___voltage_source_8cpp_source.html#l00030">30</a> of file <a class="el" href="_d_p___ph3___voltage_source_8cpp_source.html">DP_Ph3_VoltageSource.cpp</a>.</p>
+<p>Setter for reference voltage per phase and offset from the carrier. </p>
+
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___voltage_source_8cpp_source.html#l00032">32</a> of file <a class="el" href="_d_p___ph3___voltage_source_8cpp_source.html">DP_Ph3_VoltageSource.cpp</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="af9a4d2aa6a6e4dbf68d3a4e89555ed74" name="af9a4d2aa6a6e4dbf68d3a4e89555ed74"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af9a4d2aa6a6e4dbf68d3a4e89555ed74">&#9670;&#160;</a></span>mVoltageRef</h2>
+<a id="aface45d738e0780dd7239a9fa157bf88" name="aface45d738e0780dd7239a9fa157bf88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aface45d738e0780dd7239a9fa157bf88">&#9670;&#160;</a></span>mSrcFreq</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;Complex&gt;::Ptr CPS::DP::Ph3::VoltageSource::mVoltageRef</td>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;Real&gt;::Ptr CPS::DP::Ph3::VoltageSource::mSrcFreq</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___voltage_source_8h_source.html#l00033">33</a> of file <a class="el" href="_d_p___ph3___voltage_source_8h_source.html">DP_Ph3_VoltageSource.h</a>.</p>
+<p>Signal frequency, as an offset from the domain carrier (0 = steady) </p>
+
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___voltage_source_8h_source.html#l00039">39</a> of file <a class="el" href="_d_p___ph3___voltage_source_8h_source.html">DP_Ph3_VoltageSource.h</a>.</p>
+
+</div>
+</div>
+<a id="abf02e085223aeef971ef83a9e39bbcf7" name="abf02e085223aeef971ef83a9e39bbcf7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf02e085223aeef971ef83a9e39bbcf7">&#9670;&#160;</a></span>mVoltageRef</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;MatrixComp&gt;::Ptr CPS::DP::Ph3::VoltageSource::mVoltageRef</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Reference voltage phasor, independent per phase (A, B, C) </p>
+
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___voltage_source_8h_source.html#l00037">37</a> of file <a class="el" href="_d_p___ph3___voltage_source_8h_source.html">DP_Ph3_VoltageSource.h</a>.</p>
 
 </div>
 </div>
