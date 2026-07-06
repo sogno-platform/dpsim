@@ -665,11 +665,26 @@ class Reader:
         gen_q = (
             gen_data["Qg"].values[0] * mw_w
         )  # gen ini. reactive power (gen['Qg'] in MVAr)
+        gen_q_max = (
+            gen_data["Qmax"].values[0] * mw_w
+        )  # gen reactive power upper limit (gen['Qmax'] in MVAr)
+        gen_q_min = (
+            gen_data["Qmin"].values[0] * mw_w
+        )  # gen reactive power lower limit (gen['Qmin'] in MVAr)
 
         gen = None
         if self.domain == Domain.PF:
             gen = self.dpsimpy_components.SynchronGenerator(gen_name, self.log_level)
-            gen.set_parameters(gen_baseS, gen_baseV, gen_p, gen_v, bus_type, gen_q)
+            gen.set_parameters(
+                gen_baseS,
+                gen_baseV,
+                gen_p,
+                gen_v,
+                bus_type,
+                gen_q,
+                q_limit_max=gen_q_max,
+                q_limit_min=gen_q_min,
+            )
             gen.set_base_voltage(gen_baseV)
             gen.modify_power_flow_bus_type(bus_type)
         else:
