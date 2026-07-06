@@ -94,6 +94,8 @@ protected:
   CPS::UInt mMaxQLimitSwitchesPerBus = 2;
   /// Relative tolerance for non-authoritative (e.g. Load) base-voltage candidates vs. the zone's rating
   CPS::Real mBaseVoltageLooseTolerance = 0.1;
+  /// Relative tolerance between authoritative base-voltage sources (generator/transformer/network-injection/VSI) within a zone
+  CPS::Real mBaseVoltageStrictTolerance = 0.01;
   /// Base power of per-unit system
   CPS::Real mBaseApparentPower;
   /// Fallback base apparent power if no generator or transformer rating is found
@@ -199,6 +201,11 @@ public:
   /// Raise for grids with legitimate large voltage drop (e.g. untapped feeders)
   void setBaseVoltageLooseTolerance(CPS::Real tolerance) {
     mBaseVoltageLooseTolerance = tolerance;
+  }
+
+  /// Override the tolerance between authoritative base-voltage sources within a zone
+  void setBaseVoltageStrictTolerance(CPS::Real tolerance) {
+    mBaseVoltageStrictTolerance = tolerance;
   }
 
   CPS::Bool getKeepLastSolution() const { return mKeepLastSolution; }

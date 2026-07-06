@@ -235,6 +235,10 @@ PYBIND11_MODULE(dpsimpy, m) {
            &DPsim::Simulation::setPFSolverBaseVoltageLooseTolerance)
       .def("get_pf_solver_base_voltage_loose_tolerance",
            &DPsim::Simulation::getPFSolverBaseVoltageLooseTolerance)
+      .def("set_pf_solver_base_voltage_strict_tolerance",
+           &DPsim::Simulation::setPFSolverBaseVoltageStrictTolerance)
+      .def("get_pf_solver_base_voltage_strict_tolerance",
+           &DPsim::Simulation::getPFSolverBaseVoltageStrictTolerance)
       .def("set_domain", &DPsim::Simulation::setDomain)
       .def("start", &DPsim::Simulation::start)
       .def("next", &DPsim::Simulation::next)
