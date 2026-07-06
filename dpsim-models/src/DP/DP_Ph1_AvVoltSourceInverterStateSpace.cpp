@@ -8,13 +8,6 @@
 
 using namespace CPS;
 
-namespace {
-// Amplitude-invariant Park normalization, folded into a single complex gain
-// (see ssn-prototype/dp_avvsi_statespace_prototype.py doc comment).
-const Real K32 = std::sqrt(1.5);
-const Real K23 = std::sqrt(2.0 / 3.0);
-} // namespace
-
 DP::Ph1::AvVoltSourceInverterStateSpace::AvVoltSourceInverterStateSpace(
     String uid, String name, Logger::Level logLevel)
     : MixedVTypeVariableSSNComp(uid, name, 8, 2, logLevel), mLf(0.0), mCf(0.0),
@@ -103,14 +96,7 @@ void DP::Ph1::AvVoltSourceInverterStateSpace::setParameters(
 void DP::Ph1::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
     const Matrix &x, const Matrix &u, Matrix &A, Matrix &B, Matrix &C,
     Matrix &D, Matrix &E, Matrix &F) const {
-  // -------------------------------------------------------------------------
-  // 1) Unpack the operating point.
-  //
-  // psi := theta0 - thetaN tracks the PLL angle's deviation from the nominal
-  // carrier phase thetaN(t) = omegaN*t (never itself a state, see
-  // ssn-prototype/dp_avvsi_statespace_prototype.py). The 2 filter states are
-  // the packed [Re,Im] of the complex envelopes Vc, If.
-  // -------------------------------------------------------------------------
+  // 1) Unpack the operating point. psi := theta0 - thetaN (never a state itself).
   const Real psi = x(Psi, 0);
   const Real pF = x(PFiltered, 0);
   const Real qF = x(QFiltered, 0);
@@ -129,60 +115,48 @@ void DP::Ph1::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
   const Real cosPsi = std::cos(psi);
   const Real sinPsi = std::sin(psi);
 
-  // -------------------------------------------------------------------------
   // 2) dq measurements: Vc*e^{-j*psi} and Irc*e^{-j*psi}, Irc = (Vc-U)/Rc.
-  // -------------------------------------------------------------------------
-  const Real vcD = K32 * (vcRe * cosPsi + vcIm * sinPsi);
-  const Real vcQ = K32 * (vcIm * cosPsi - vcRe * sinPsi);
+  const Real vcD = vcRe * cosPsi + vcIm * sinPsi;
+  const Real vcQ = vcIm * cosPsi - vcRe * sinPsi;
 
   const Real ircRe = (vcRe - uRe) / mRc;
   const Real ircIm = (vcIm - uIm) / mRc;
-  const Real ircD = K32 * (ircRe * cosPsi + ircIm * sinPsi);
-  const Real ircQ = K32 * (ircIm * cosPsi - ircRe * sinPsi);
+  const Real ircD = ircRe * cosPsi + ircIm * sinPsi;
+  const Real ircQ = ircIm * cosPsi - ircRe * sinPsi;
 
   // Jacobian of vcQ (only vq feeds the PLL rows).
-  const Real dVcQByPsi = K32 * (-vcIm * sinPsi - vcRe * cosPsi);
-  const Real dVcQByVcRe = -K32 * sinPsi;
-  const Real dVcQByVcIm = K32 * cosPsi;
+  const Real dVcQByPsi = -vcIm * sinPsi - vcRe * cosPsi;
+  const Real dVcQByVcRe = -sinPsi;
+  const Real dVcQByVcIm = cosPsi;
 
   // Jacobian of ircD, ircQ.
-  const Real dIrcDByPsi = K32 * (-ircRe * sinPsi + ircIm * cosPsi);
-  const Real dIrcDByVcRe = K32 * cosPsi / mRc;
-  const Real dIrcDByVcIm = K32 * sinPsi / mRc;
-  const Real dIrcDByURe = -K32 * cosPsi / mRc;
-  const Real dIrcDByUIm = -K32 * sinPsi / mRc;
+  const Real dIrcDByPsi = -ircRe * sinPsi + ircIm * cosPsi;
+  const Real dIrcDByVcRe = cosPsi / mRc;
+  const Real dIrcDByVcIm = sinPsi / mRc;
+  const Real dIrcDByURe = -cosPsi / mRc;
+  const Real dIrcDByUIm = -sinPsi / mRc;
 
-  const Real dIrcQByPsi = K32 * (-ircIm * sinPsi - ircRe * cosPsi);
-  const Real dIrcQByVcRe = -K32 * sinPsi / mRc;
-  const Real dIrcQByVcIm = K32 * cosPsi / mRc;
-  const Real dIrcQByURe = K32 * sinPsi / mRc;
-  const Real dIrcQByUIm = -K32 * cosPsi / mRc;
+  const Real dIrcQByPsi = -ircIm * sinPsi - ircRe * cosPsi;
+  const Real dIrcQByVcRe = -sinPsi / mRc;
+  const Real dIrcQByVcIm = cosPsi / mRc;
+  const Real dIrcQByURe = sinPsi / mRc;
+  const Real dIrcQByUIm = -cosPsi / mRc;
 
-  // -------------------------------------------------------------------------
-  // 3) Power measurement and power-filter states.
-  //
-  // P+jQ = (1.5/Rc)*Vc*conj(Vc-U) is an exact identity with zero psi
-  // dependence (verified symbolically in the spike); pInst/qInst below are
-  // evaluated the same way as EMT's updateLogAttributes (vcD*ircD+..., not
-  // the closed form) so the RHS matches the logged attributes bit for bit,
-  // but the two forms are numerically identical.
-  // -------------------------------------------------------------------------
+  // 3) Power: P+jQ = (1/Rc)*Vc*conj(Vc-U), evaluated as the dot product below.
   const Real pInst = vcD * ircD + vcQ * ircQ;
   const Real qInst = -vcD * ircQ + vcQ * ircD;
 
-  const Real dPByVcRe = (3.0 / mRc) * vcRe - (1.5 / mRc) * uRe;
-  const Real dPByVcIm = (3.0 / mRc) * vcIm - (1.5 / mRc) * uIm;
-  const Real dPByURe = -(1.5 / mRc) * vcRe;
-  const Real dPByUIm = -(1.5 / mRc) * vcIm;
+  const Real dPByVcRe = (2.0 / mRc) * vcRe - (1.0 / mRc) * uRe;
+  const Real dPByVcIm = (2.0 / mRc) * vcIm - (1.0 / mRc) * uIm;
+  const Real dPByURe = -(1.0 / mRc) * vcRe;
+  const Real dPByUIm = -(1.0 / mRc) * vcIm;
 
-  const Real dQByVcRe = (1.5 / mRc) * uIm;
-  const Real dQByVcIm = -(1.5 / mRc) * uRe;
-  const Real dQByURe = -(1.5 / mRc) * vcIm;
-  const Real dQByUIm = (1.5 / mRc) * vcRe;
+  const Real dQByVcRe = (1.0 / mRc) * uIm;
+  const Real dQByVcIm = -(1.0 / mRc) * uRe;
+  const Real dQByURe = -(1.0 / mRc) * vcIm;
+  const Real dQByUIm = (1.0 / mRc) * vcRe;
 
-  // -------------------------------------------------------------------------
   // 4) Outer power control and inner current control (dq).
-  // -------------------------------------------------------------------------
   const Real iRefD =
       -mKpPowerCtrl * pF + mKiPowerCtrl * phiD + mKpPowerCtrl * mPRef;
   const Real iRefQ =
@@ -193,8 +167,7 @@ void DP::Ph1::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
   const Real vRefQ =
       -mKpCurrCtrl * ircQ + mKiCurrCtrl * gammaQ + mKpCurrCtrl * iRefQ;
 
-  // d(vRefD)/d{...}, d(vRefQ)/d{...} via the chain rule through ircD/ircQ,
-  // iRefD/iRefQ.
+  // d(vRefD)/d{...}, d(vRefQ)/d{...} via the chain rule through ircD/ircQ, iRefD/iRefQ.
   const Real dVRefDByPsi = -mKpCurrCtrl * dIrcDByPsi;
   const Real dVRefDByVcRe = -mKpCurrCtrl * dIrcDByVcRe;
   const Real dVRefDByVcIm = -mKpCurrCtrl * dIrcDByVcIm;
@@ -213,27 +186,17 @@ void DP::Ph1::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
   const Real dVRefQByPhiQ = mKpCurrCtrl * mKiPowerCtrl;
   const Real dVRefQByGammaQ = mKiCurrCtrl;
 
-  // -------------------------------------------------------------------------
-  // 5) Bridge-voltage reference envelope: VRefEnv = K23*(vRefD+j*vRefQ)*e^{j*psi}.
-  //
-  // psi enters both explicitly (the rotation) and implicitly (through
-  // vRefD/vRefQ via ircD/ircQ), so its partials need the product rule; every
-  // other variable only enters implicitly.
-  // -------------------------------------------------------------------------
-  const Real vRefEnvRe = K23 * (vRefD * cosPsi - vRefQ * sinPsi);
-  const Real vRefEnvIm = K23 * (vRefD * sinPsi + vRefQ * cosPsi);
+  // 5) Bridge-voltage reference: VRefEnv = (vRefD+j*vRefQ)*e^{j*psi}; psi's partial needs the product rule, every other variable only enters implicitly.
+  const Real vRefEnvRe = vRefD * cosPsi - vRefQ * sinPsi;
+  const Real vRefEnvIm = vRefD * sinPsi + vRefQ * cosPsi;
 
-  const Real dVRefEnvReByPsi = K23 * (dVRefDByPsi * cosPsi - vRefD * sinPsi -
-                                      dVRefQByPsi * sinPsi - vRefQ * cosPsi);
-  const Real dVRefEnvImByPsi = K23 * (dVRefDByPsi * sinPsi + vRefD * cosPsi +
-                                      dVRefQByPsi * cosPsi - vRefQ * sinPsi);
+  const Real dVRefEnvReByPsi = dVRefDByPsi * cosPsi - vRefD * sinPsi -
+                               dVRefQByPsi * sinPsi - vRefQ * cosPsi;
+  const Real dVRefEnvImByPsi = dVRefDByPsi * sinPsi + vRefD * cosPsi +
+                               dVRefQByPsi * cosPsi - vRefQ * sinPsi;
 
-  auto dVRefEnvRe = [&](Real dD, Real dQ) {
-    return K23 * (dD * cosPsi - dQ * sinPsi);
-  };
-  auto dVRefEnvIm = [&](Real dD, Real dQ) {
-    return K23 * (dD * sinPsi + dQ * cosPsi);
-  };
+  auto dVRefEnvRe = [&](Real dD, Real dQ) { return dD * cosPsi - dQ * sinPsi; };
+  auto dVRefEnvIm = [&](Real dD, Real dQ) { return dD * sinPsi + dQ * cosPsi; };
 
   const Real dVRefEnvReByPF = dVRefEnvRe(dVRefDByPF, 0.0);
   const Real dVRefEnvReByQF = dVRefEnvRe(0.0, dVRefQByQF);
@@ -257,9 +220,7 @@ void DP::Ph1::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
   const Real dVRefEnvImByURe = dVRefEnvIm(dVRefDByURe, dVRefQByURe);
   const Real dVRefEnvImByUIm = dVRefEnvIm(dVRefDByUIm, dVRefQByUIm);
 
-  // -------------------------------------------------------------------------
   // 6) RHS f(x,u) (x_dot = f(x,u)).
-  // -------------------------------------------------------------------------
   Matrix f = Matrix::Zero(12, 1);
   f(Psi, 0) = mKpPLL * vcQ + mKiPLL * x(PhiPLL, 0);
   f(PhiPLL, 0) = vcQ;
@@ -274,9 +235,7 @@ void DP::Ph1::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
   f(IfRe, 0) = (vRefEnvRe - vcRe - mRf * ifRe) / mLf + mOmegaN * ifIm;
   f(IfIm, 0) = (vRefEnvIm - vcIm - mRf * ifIm) / mLf - mOmegaN * ifRe;
 
-  // -------------------------------------------------------------------------
   // 7) Analytic Jacobian A = df/dx, B = df/du.
-  // -------------------------------------------------------------------------
   A = Matrix::Zero(12, 12);
   B = Matrix::Zero(12, 2);
 
@@ -358,16 +317,10 @@ void DP::Ph1::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
   B(IfIm, 0) = dVRefEnvImByURe / mLf;
   B(IfIm, 1) = dVRefEnvImByUIm / mLf;
 
-  // -------------------------------------------------------------------------
-  // 8) Offset E = f(x,u) - A*x - B*u (exactly zero for the already-linear
-  // rows; the only rows relinearized every step are those touched by the
-  // Park rotation and the power bilinear form above).
-  // -------------------------------------------------------------------------
+  // 8) Offset E = f(x,u) - A*x - B*u.
   E = f - A * x - B * u;
 
-  // -------------------------------------------------------------------------
   // 9) SSN output: y = (u - Vc)/Rc (exact, no relinearization needed).
-  // -------------------------------------------------------------------------
   C = Matrix::Zero(2, 12);
   C(0, VcRe) = -1.0 / mRc;
   C(1, VcIm) = -1.0 / mRc;
@@ -383,10 +336,7 @@ Bool DP::Ph1::AvVoltSourceInverterStateSpace::updateComponentParameters() {
   Matrix E;
   Matrix F;
 
-  // The local linearized SSN model is time-varying because the psi-rotated
-  // dq measurements and the bilinear power terms are coupled to the complex
-  // filter envelope; the stamp is recomputed every step, change-check
-  // intentionally skipped (mirrors EMT).
+  // Relinearized every step (mirrors EMT); change-check intentionally skipped.
   buildStateSpaceModel(**mX, packComplex((**inputAttribute())(0, 0)), mA, mB,
                        mC, mD, E, F);
 
@@ -408,10 +358,10 @@ void DP::Ph1::AvVoltSourceInverterStateSpace::updateLogAttributes(
   const Real ircRe = (vcRe - u(0, 0)) / mRc;
   const Real ircIm = (vcIm - u(1, 0)) / mRc;
 
-  **mVcD = K32 * (vcRe * cosPsi + vcIm * sinPsi);
-  **mVcQ = K32 * (vcIm * cosPsi - vcRe * sinPsi);
-  **mIrcD = K32 * (ircRe * cosPsi + ircIm * sinPsi);
-  **mIrcQ = K32 * (ircIm * cosPsi - ircRe * sinPsi);
+  **mVcD = vcRe * cosPsi + vcIm * sinPsi;
+  **mVcQ = vcIm * cosPsi - vcRe * sinPsi;
+  **mIrcD = ircRe * cosPsi + ircIm * sinPsi;
+  **mIrcQ = ircIm * cosPsi - ircRe * sinPsi;
 
   **mPInst = **mVcD * **mIrcD + **mVcQ * **mIrcQ;
   **mQInst = -**mVcD * **mIrcQ + **mVcQ * **mIrcD;
@@ -425,11 +375,7 @@ void DP::Ph1::AvVoltSourceInverterStateSpace::initializeFromNodesAndTerminals(
     throw std::logic_error("setParameters() must be called before "
                            "initializeFromNodesAndTerminals().");
 
-  // The generic MixedVTypeVariableSSNComp phasor initialization only supports
-  // a purely complex-envelope state (realStateCount() == 0); this component
-  // mixes a complex filter envelope with real dq controller states, so it is
-  // initialized algebraically instead, mirroring
-  // EMT::Ph3::AvVoltSourceInverterStateSpace::initializeFromNodesAndTerminals.
+  // Initialized algebraically (mixed state), mirroring EMT::Ph3::AvVoltSourceInverterStateSpace.
 
   const Real omega = 2.0 * PI * frequency;
   const Complex powerRef(mPRef, mQRef);
@@ -446,7 +392,7 @@ void DP::Ph1::AvVoltSourceInverterStateSpace::initializeFromNodesAndTerminals(
       break;
     }
 
-    const Complex iNext = std::conj(powerRef / (1.5 * vc));
+    const Complex iNext = std::conj(powerRef / vc);
     const Complex vcNext = U + mRc * iNext;
 
     irc = iNext;
@@ -463,16 +409,14 @@ void DP::Ph1::AvVoltSourceInverterStateSpace::initializeFromNodesAndTerminals(
   const Complex ifCurrent = j * omega * mCf * vc + irc;
   const Complex vRef = vc + (mRf + j * omega * mLf) * ifCurrent;
 
-  // thetaN(0) = omegaN*0 = 0 by definition: initialization always runs at the
-  // simulation start, so psi0 = theta0 exactly (see ssn-prototype/
-  // dp_avvsi_statespace_prototype.py init_state()).
+  // thetaN(0) = 0, so psi0 = theta0 exactly.
   const Real psi0 = std::arg(vc);
   const Complex rot0 = std::exp(-j * psi0);
 
-  const Complex vcDQ = K32 * vc * rot0;
+  const Complex vcDQ = vc * rot0;
   const Real vcD = vcDQ.real();
   const Real vcQ = vcDQ.imag();
-  const Complex ircDQ = K32 * irc * rot0;
+  const Complex ircDQ = irc * rot0;
   const Real ircD = ircDQ.real();
   const Real ircQ = ircDQ.imag();
 
@@ -488,7 +432,7 @@ void DP::Ph1::AvVoltSourceInverterStateSpace::initializeFromNodesAndTerminals(
   const Real iRefQ0 =
       mKpPowerCtrl * qInit + mKiPowerCtrl * phiQ0 - mKpPowerCtrl * mQRef;
 
-  const Complex vRefDQ = K32 * vRef * rot0;
+  const Complex vRefDQ = vRef * rot0;
   const Real gammaD0 =
       (vRefDQ.real() + mKpCurrCtrl * (ircD - iRefD0)) / mKiCurrCtrl;
   const Real gammaQ0 =

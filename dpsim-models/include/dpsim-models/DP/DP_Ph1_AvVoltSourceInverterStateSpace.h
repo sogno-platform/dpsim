@@ -9,12 +9,7 @@ namespace CPS {
 namespace DP {
 namespace Ph1 {
 
-/// Averaged grid-following VSI (PLL + power filter + power/current control,
-/// LCL-ish output filter) on MixedVTypeVariableSSNComp: a faithful SSN port of
-/// EMT::Ph3::AvVoltSourceInverterStateSpace. 8 real control states (PLL angle
-/// deviation from the nominal carrier phase, PLL integrator, P/Q filter,
-/// power- and current-control integrators) plus 2 complex envelope states
-/// (Vc, If), each individually shifted by -j*omegaN.
+/// Averaged grid-following VSI SSN port of EMT::Ph3::AvVoltSourceInverterStateSpace: 8 real control states plus 2 complex envelope states (Vc, If).
 class AvVoltSourceInverterStateSpace final
     : public MixedVTypeVariableSSNComp,
       public SharedFactory<AvVoltSourceInverterStateSpace> {
@@ -59,10 +54,7 @@ private:
   const Attribute<Real>::Ptr mQInst;
   const Attribute<Real>::Ptr mOmegaPLL;
 
-  /// Builds the affine real model (A,B,C,D,E,F) around (x,u) by evaluating the
-  /// nonlinear RHS and its analytic Jacobian, then folding the offset as
-  /// E = f(x,u) - A*x - B*u (mirrors ssn-prototype/dp_avvsi_statespace_prototype.py
-  /// build_symbolic_model()/eval_model()).
+  /// Builds the affine real model (A,B,C,D,E,F) around (x,u): RHS + analytic Jacobian, E = f(x,u) - A*x - B*u.
   void buildStateSpaceModel(const Matrix &x, const Matrix &u, Matrix &A,
                             Matrix &B, Matrix &C, Matrix &D, Matrix &E,
                             Matrix &F) const;
