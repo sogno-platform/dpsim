@@ -6,6 +6,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
+#include <algorithm>
+#include <tuple>
+
 #include <dpsim/PFSolverPowerPolar.h>
 
 using namespace DPsim;
@@ -19,6 +22,10 @@ PFSolverPowerPolar::PFSolverPowerPolar(CPS::String name,
 
 void PFSolverPowerPolar::generateInitialSolution(Real time,
                                                  bool keep_last_solution) {
+  // Undo Q-limit PV<->PQ conversions left over from a previous solve.
+  if (mEnforceReactiveLimits)
+    resetToOriginalClassification();
+
   const UInt n = mSystem.mNodes.size();
 
   bool can_keep = keep_last_solution && mHasLastConvergedSolution &&
@@ -286,8 +293,7 @@ void PFSolverPowerPolar::calculateJacobian() {
 void PFSolverPowerPolar::updateSolution() {
   UInt npqpv = mNumPQBuses + mNumPVBuses;
 
-  // Scale the whole Newton step by one factor (=1 near solution) to bound the
-  // max voltage/angle change without altering the search direction.
+  // Scale the whole step by one factor to bound the max change without altering direction.
   const double maxDVpu = 0.1;      // max |dV| per step [pu]
   const double maxDThetaRad = 0.2; // max |dTheta| per step [rad]
 
@@ -511,6 +517,143 @@ void PFSolverPowerPolar::calculateQAtPVBuses() {
     // Store net nodal Q injection, not generator Q
     sol_Q(node_idx) = S.imag();
   }
+}
+
+CPS::Real
+PFSolverPowerPolar::loadReactivePowerPerUnit(CPS::TopologicalNode::Ptr node) {
+  CPS::Real q = 0.0;
+  for (auto comp : mSystem.mComponentsAtNode[node])
+    if (auto load = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp))
+      q += load->attributeTyped<CPS::Real>("Q_pu")->get();
+  return q;
+}
+
+CPS::Real PFSolverPowerPolar::generatorReactivePowerPerUnit(
+    CPS::TopologicalNode::Ptr node) {
+  UInt k = node->matrixNodeIndex();
+  CPS::Complex I(0.0, 0.0);
+  for (UInt j = 0; j < mSystem.mNodes.size(); ++j)
+    I += mY.coeff(k, j) * sol_Vcx(j);
+  // Net nodal injection S = generator - load; add load back for generator Q.
+  CPS::Complex S = sol_Vcx(k) * conj(I);
+  return S.imag() + loadReactivePowerPerUnit(node);
+}
+
+CPS::Bool PFSolverPowerPolar::enforceReactiveLimits() {
+  // Returns false if the bus has no generator or no finite Q limit.
+  auto busLimits = [&](CPS::TopologicalNode::Ptr node, CPS::Real &qMaxPU,
+                       CPS::Real &qMinPU, CPS::Real &vSetPU) -> bool {
+    qMaxPU = 0.0;
+    qMinPU = 0.0;
+    vSetPU = 0.0;
+    bool hasGen = false, anyFinite = false;
+    for (auto comp : mSystem.mComponentsAtNode[node]) {
+      if (auto gen = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(
+              comp)) {
+        CPS::Real gMax = gen->attributeTyped<CPS::Real>("Q_max_pu")->get();
+        CPS::Real gMin = gen->attributeTyped<CPS::Real>("Q_min_pu")->get();
+        qMaxPU += gMax;
+        qMinPU += gMin;
+        vSetPU = gen->attributeTyped<CPS::Real>("V_set_pu")->get();
+        hasGen = true;
+        // isFinite is bit-pattern based, so it's immune to -Ofast/-ffast-math.
+        if (CPS::Math::isFinite(gMax) || CPS::Math::isFinite(gMin))
+          anyFinite = true;
+      }
+    }
+    return hasGen && anyFinite;
+  };
+
+  auto frozen = [&](CPS::TopologicalNode::Ptr node) {
+    auto it = mQLimitSwitchCount.find(node);
+    return it != mQLimitSwitchCount.end() &&
+           it->second >= mMaxQLimitSwitchesPerBus;
+  };
+
+  std::vector<std::tuple<CPS::TopologicalNode::Ptr, bool, CPS::Real>> toPQ;
+  std::vector<CPS::TopologicalNode::Ptr> toPV;
+
+  // PV -> PQ: voltage-controlling generators that hit a reactive limit.
+  for (auto node : mPVBuses) {
+    if (frozen(node))
+      continue;
+    CPS::Real qMaxPU, qMinPU, vSetPU;
+    if (!busLimits(node, qMaxPU, qMinPU, vSetPU))
+      continue;
+    CPS::Real qGen = generatorReactivePowerPerUnit(node);
+    if (CPS::Math::isFinite(qMaxPU) && qGen > qMaxPU)
+      toPQ.emplace_back(node, true, qMaxPU);
+    else if (CPS::Math::isFinite(qMinPU) && qGen < qMinPU)
+      toPQ.emplace_back(node, false, qMinPU);
+  }
+
+  // PQ -> PV: pinned generators whose constraint is no longer binding.
+  for (auto &kv : mQLimitConvertedAtMax) {
+    auto node = kv.first;
+    bool atMax = kv.second;
+    if (frozen(node))
+      continue;
+    CPS::Real qMaxPU, qMinPU, vSetPU;
+    if (!busLimits(node, qMaxPU, qMinPU, vSetPU))
+      continue;
+    CPS::Real v = sol_V(node->matrixNodeIndex());
+    if (atMax && v > vSetPU)
+      toPV.push_back(node);
+    else if (!atMax && v < vSetPU)
+      toPV.push_back(node);
+  }
+
+  // Apply PV -> PQ switches (pin reactive injection at the limit).
+  for (auto &c : toPQ) {
+    auto node = std::get<0>(c);
+    bool atMax = std::get<1>(c);
+    CPS::Real qLimPU = std::get<2>(c);
+    mPVBuses.erase(std::remove(mPVBuses.begin(), mPVBuses.end(), node),
+                   mPVBuses.end());
+    mPQBuses.push_back(node);
+    UInt idx = node->matrixNodeIndex();
+    Qesp(idx) = qLimPU - loadReactivePowerPerUnit(node);
+    sol_Q(idx) = Qesp(idx);
+    // calculateQAtPVBuses() won't touch this generator once it leaves mPVBuses.
+    for (auto comp : mSystem.mComponentsAtNode[node]) {
+      if (auto gen = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(
+              comp)) {
+        gen->attributeTyped<CPS::Real>("Q_set_pu")->set(qLimPU);
+        gen->attributeTyped<CPS::Real>("Q_set")->set(qLimPU *
+                                                     mBaseApparentPower);
+        break;
+      }
+    }
+    mQLimitConvertedAtMax[node] = atMax;
+    if (++mQLimitSwitchCount[node] >= mMaxQLimitSwitchesPerBus)
+      SPDLOG_LOGGER_WARN(
+          mSLog, "Q-limit: bus {} frozen at {} after {} switches", node->name(),
+          atMax ? "Qmax" : "Qmin", mQLimitSwitchCount[node]);
+    else
+      SPDLOG_LOGGER_INFO(mSLog, "Q-limit: PV bus {} -> PQ pinned at {}",
+                         node->name(), atMax ? "Qmax" : "Qmin");
+  }
+
+  // Apply PQ -> PV switches (restore voltage control).
+  for (auto &node : toPV) {
+    mPQBuses.erase(std::remove(mPQBuses.begin(), mPQBuses.end(), node),
+                   mPQBuses.end());
+    mPVBuses.push_back(node);
+    CPS::Real qMaxPU, qMinPU, vSetPU;
+    busLimits(node, qMaxPU, qMinPU, vSetPU);
+    sol_V(node->matrixNodeIndex()) = vSetPU;
+    mQLimitConvertedAtMax.erase(node);
+    ++mQLimitSwitchCount[node];
+    SPDLOG_LOGGER_INFO(mSLog, "Q-limit: PQ bus {} -> PV (constraint relaxed)",
+                       node->name());
+  }
+
+  return !toPQ.empty() || !toPV.empty();
+}
+
+void PFSolverPowerPolar::clearReactiveLimitState() {
+  mQLimitConvertedAtMax.clear();
+  mQLimitSwitchCount.clear();
 }
 
 void PFSolverPowerPolar::calculatePAndQInjectionPQBuses() {

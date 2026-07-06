@@ -39,6 +39,7 @@ Simulation::Simulation(String name, Logger::Level logLevel)
       mPFBaseApparentPowerFallback(CPS::AttributeStatic<Real>::make(100e6)),
       mPFMaxIterations(CPS::AttributeStatic<CPS::UInt>::make(20)),
       mPFSolverUseSparse(CPS::AttributeStatic<Bool>::make(false)),
+      mPFEnforceReactiveLimits(CPS::AttributeStatic<Bool>::make(false)),
       mSplitSubnets(AttributeStatic<Bool>::make(true)),
       mSteadyStateInit(AttributeStatic<Bool>::make(false)),
       mLogLevel(logLevel) {
@@ -54,6 +55,7 @@ Simulation::Simulation(String name, CommandLineArgs &args)
       mPFBaseApparentPowerFallback(CPS::AttributeStatic<Real>::make(100e6)),
       mPFMaxIterations(CPS::AttributeStatic<CPS::UInt>::make(20)),
       mPFSolverUseSparse(CPS::AttributeStatic<Bool>::make(false)),
+      mPFEnforceReactiveLimits(CPS::AttributeStatic<Bool>::make(false)),
       mSplitSubnets(AttributeStatic<Bool>::make(true)),
       mSteadyStateInit(AttributeStatic<Bool>::make(false)),
       mLogLevel(args.logLevel), mDomain(args.solver.domain),
@@ -129,6 +131,7 @@ template <typename VarType> void Simulation::createSolvers() {
     pfSolver->setKeepLastSolution(**mPFKeepLastSolution);
     pfSolver->setBaseApparentPowerFallback(**mPFBaseApparentPowerFallback);
     pfSolver->setMaxIterations(**mPFMaxIterations);
+    pfSolver->setEnforceReactiveLimits(**mPFEnforceReactiveLimits);
 
     solver = pfSolver;
 
@@ -367,6 +370,14 @@ void Simulation::setPFSolverUseSparse(Bool value) {
 }
 
 Bool Simulation::getPFSolverUseSparse() const { return **mPFSolverUseSparse; }
+
+void Simulation::setPFSolverEnforceReactiveLimits(Bool value) {
+  **mPFEnforceReactiveLimits = value;
+}
+
+Bool Simulation::getPFSolverEnforceReactiveLimits() const {
+  return **mPFEnforceReactiveLimits;
+}
 
 void Simulation::start() {
   SPDLOG_LOGGER_INFO(mLog, "Initialize simulation: {}", **mName);

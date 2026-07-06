@@ -227,6 +227,10 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("get_pf_max_iterations", &DPsim::Simulation::getPFMaxIterations)
       .def("set_pf_solver_use_sparse", &DPsim::Simulation::setPFSolverUseSparse)
       .def("get_pf_solver_use_sparse", &DPsim::Simulation::getPFSolverUseSparse)
+      .def("set_pf_solver_enforce_q_limits",
+           &DPsim::Simulation::setPFSolverEnforceReactiveLimits)
+      .def("get_pf_solver_enforce_q_limits",
+           &DPsim::Simulation::getPFSolverEnforceReactiveLimits)
       .def("set_domain", &DPsim::Simulation::setDomain)
       .def("start", &DPsim::Simulation::start)
       .def("next", &DPsim::Simulation::next)
