@@ -43,6 +43,7 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_RC_split_decoupled_node_Ph3.cpp
 	Circuits/DP_Ph1_SSN_Full_Serial_RLC.cpp
 	Circuits/DP_Ph1_General2TerminalSSN.cpp
+	Circuits/DP_Ph3_R3C1L1CS1.cpp
 
 	# EMT examples with PF initialization
 	Circuits/EMT_Slack_PiLine_PQLoad_with_PF_Init.cpp

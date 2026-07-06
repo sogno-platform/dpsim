@@ -185,7 +185,8 @@ void simElements3ph() {
 
   // Components
   auto vs = Ph3::VoltageSource::make("v_1");
-  vs->setParameters(CPS::Math::polar(100000, 0));
+  vs->setParameters(
+      CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)));
 
   // Parametrization of components
   Real resistance = 5;
@@ -254,7 +255,8 @@ void simPiLine3ph() {
 
   // Components
   auto vs = Ph3::VoltageSource::make("v_1");
-  vs->setParameters(CPS::Math::polar(100000, 0));
+  vs->setParameters(
+      CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)));
 
   // Parametrization of components
   Real resistance = 5;
@@ -306,7 +308,8 @@ void simPiLineDiakoptics3ph() {
 
   // Components
   auto vs = Ph3::VoltageSource::make("v_1");
-  vs->setParameters(CPS::Math::polar(100000, 0));
+  vs->setParameters(
+      CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)));
 
   // Parametrization of components
   Real resistance = 5;
