@@ -361,8 +361,8 @@ void PFSolver::propagateAndVerifyBaseVoltage() {
                  rxline->node(1)->matrixNodeIndex());
   }
 
-  // Generator/Transformer ratings are authoritative; everything else (incl. Load's
-  // solved-voltage proxy) is a looser-tolerance fallback.
+  // Generator/Transformer/NetworkInjection/VSI ratings are authoritative;
+  // everything else (incl. Load's solved-voltage proxy) is a looser fallback.
   std::map<UInt, std::vector<std::pair<CPS::Real, CPS::String>>> authoritative;
   std::map<UInt, std::vector<std::pair<CPS::Real, CPS::String>>> fallback;
   std::map<UInt, std::vector<std::shared_ptr<CPS::SP::Ph1::Load>>> zoneLoads;
@@ -377,7 +377,10 @@ void PFSolver::propagateAndVerifyBaseVoltage() {
         continue;
       bool isAuthoritative =
           std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp) ||
-          std::dynamic_pointer_cast<CPS::SP::Ph1::Transformer>(comp);
+          std::dynamic_pointer_cast<CPS::SP::Ph1::Transformer>(comp) ||
+          std::dynamic_pointer_cast<CPS::SP::Ph1::NetworkInjection>(comp) ||
+          std::dynamic_pointer_cast<CPS::SP::Ph1::AvVoltageSourceInverterDQ>(
+              comp);
       auto &bucket = isAuthoritative ? authoritative : fallback;
       bucket[zone].emplace_back(voltage, comp->name());
     }
