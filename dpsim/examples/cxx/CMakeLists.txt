@@ -44,6 +44,10 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_Ph1_SSN_Full_Serial_RLC.cpp
 	Circuits/DP_Ph1_General2TerminalSSN.cpp
 	Circuits/DP_Ph3_R3C1L1CS1.cpp
+	Circuits/DP_Ph3_RLC1VS1_RC_vs_SSN.cpp
+	Circuits/DP_Ph3_R3C1L1CS1_RC_vs_SSN.cpp
+	Circuits/DP_Ph3_R3C1L1CS1_RC_vs_SSN_Fault.cpp
+	Circuits/EMT_Ph3_R3C1L1CS1_RC_vs_SSN_Fault.cpp
 
 	# EMT examples with PF initialization
 	Circuits/EMT_Slack_PiLine_PQLoad_with_PF_Init.cpp
