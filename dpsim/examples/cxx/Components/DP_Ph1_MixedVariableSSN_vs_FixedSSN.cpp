@@ -78,20 +78,24 @@ int main(int argc, char *argv[]) {
   const Real vErr = std::abs(vFixed - vVariable);
   const Real tol = 1e-6;
 
-  std::cout << "Final i_intf: fixed=" << iFixed << " variable=" << iVariable
-            << " |diff|=" << iErr << std::endl;
-  std::cout << "Final v_intf: fixed=" << vFixed << " variable=" << vVariable
-            << " |diff|=" << vErr << std::endl;
+  auto log = DPsim::Logger::get("DP_Ph1_MixedVariableSSN_vs_FixedSSN");
+  SPDLOG_LOGGER_INFO(log, "Final i_intf: fixed={} variable={} |diff|={}",
+                     iFixed, iVariable, iErr);
+  SPDLOG_LOGGER_INFO(log, "Final v_intf: fixed={} variable={} |diff|={}",
+                     vFixed, vVariable, vErr);
 
   if (iErr > tol || vErr > tol) {
-    std::cout << "FAIL: Variable-SSN one-port does not match the fixed-SSN "
-                 "reference within tolerance "
-              << tol << std::endl;
+    SPDLOG_LOGGER_ERROR(log,
+                        "FAIL: Variable-SSN one-port does not match the "
+                        "fixed-SSN reference within tolerance {}",
+                        tol);
     return 1;
   }
 
-  std::cout << "PASS: Variable-SSN one-port matches the fixed-SSN reference "
-               "within tolerance "
-            << tol << std::endl;
+  SPDLOG_LOGGER_INFO(
+      log,
+      "PASS: Variable-SSN one-port matches the fixed-SSN reference within "
+      "tolerance {}",
+      tol);
   return 0;
 }
