@@ -101,8 +101,11 @@ dynamic-phasor stamping exactly, and the reconstructed time-domain waveform
 matches the EMT and EMT-SSN results within discretisation error once
 corrected for the RMS-to-peak scaling that `EMT::Ph3` sources apply and
 `DP::Ph3` sources do not, since the DP envelope already carries the complex
-amplitude directly. The notebooks below only exercise the symmetrical,
-diagonal case; coupling between phases is not covered by existing tests.
+amplitude directly (see the
+[scaling conventions]({{< ref "../Development/guidelines.md" >}}) for the
+exact factors and where they apply). The notebooks below only exercise the
+symmetrical, diagonal case; coupling between phases is not covered by
+existing tests.
 
 # Variable Components
 
