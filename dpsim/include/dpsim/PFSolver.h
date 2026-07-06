@@ -136,8 +136,11 @@ protected:
   void resetToOriginalClassification();
   /// Clear Q-limit bookkeeping; overridden by PFSolverPowerPolar
   virtual void clearReactiveLimitState() {}
-  /// Determine base voltages for each node
-  void determineNodeBaseVoltages();
+  /// Base voltage a single component reports for `node`, or 0 if unknown
+  CPS::Real componentBaseVoltage(CPS::TopologicalPowerComp::Ptr comp,
+                                 CPS::TopologicalNode::Ptr node);
+  /// Determine, verify and propagate each node's base voltage per electrical zone
+  void propagateAndVerifyBaseVoltage();
 
   /// Compose admittance matrix
   void composeAdmittanceMatrix();

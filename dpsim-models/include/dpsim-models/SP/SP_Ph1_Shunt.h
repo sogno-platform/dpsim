@@ -49,6 +49,8 @@ public:
   Real getBaseVoltage() const;
   /// Set base voltage
   void setBaseVoltage(Real baseVoltage);
+  /// Get base voltage
+  Real getBaseVoltage() const;
   /// Initializes component from power flow data
   void calculatePerUnitParameters(Real baseApparentPower, Real baseOmega);
   /// Stamps admittance matrix
