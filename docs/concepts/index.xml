@@ -55,12 +55,34 @@ output) stamping accordingly.&lt;/li>
 &lt;p>All three reproduce the classical dynamic-phasor stamping of the same circuit,
 and the reconstructed time-domain waveform matches the EMT and EMT-SSN results
 within discretisation error.&lt;/p>
+&lt;h1 id="three-phase-components">Three-Phase Components&lt;/h1>
+&lt;p>The same real-augmented model extends per phase to &lt;code>DP::Ph3&lt;/code>. The
+$3 \times 3$ $\mathbf{A}$, $\mathbf{B}$, $\mathbf{C}$, $\mathbf{D}$ matrices
+are general, so off-diagonal entries can couple the phases together:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>Full_Serial_RLC&lt;/code>, the three-phase series RLC one-port.&lt;/li>
+&lt;li>&lt;code>GenericTwoTerminalVTypeSSN&lt;/code> and &lt;code>GenericTwoTerminalITypeSSN&lt;/code>, the
+three-phase generic V-type and I-type components.&lt;/li>
+&lt;/ul>
+&lt;p>As in the single-phase case, all three reproduce the classical three-phase
+dynamic-phasor stamping exactly, and the reconstructed time-domain waveform
+matches the EMT and EMT-SSN results within discretisation error once
+corrected for the RMS-to-peak scaling that &lt;code>EMT::Ph3&lt;/code> sources apply and
+&lt;code>DP::Ph3&lt;/code> sources do not, since the DP envelope already carries the complex
+amplitude directly. The notebooks below only exercise the symmetrical,
+diagonal case; coupling between phases is not covered by existing tests.&lt;/p>
 &lt;h1 id="validation-and-examples">Validation and Examples&lt;/h1>
-&lt;p>Two notebooks accompany the models, both on a single-carrier series RLC one-port.
-&lt;code>examples/Notebooks/Circuits/DP_generalizedSSN_RLC.ipynb&lt;/code> validates the DP-SSN
-models against the classical dynamic-phasor stamping and the EMT and EMT-SSN
-waveforms. &lt;code>examples/Notebooks/Circuits/DP_SSN_RLC_accuracy.ipynb&lt;/code> studies the
-time-step and frequency-dependent accuracy against a small-step EMT reference.&lt;/p>
+&lt;p>Two notebooks accompany the single-phase models, both on a single-carrier
+series RLC one-port. &lt;code>examples/Notebooks/Circuits/DP_generalizedSSN_RLC.ipynb&lt;/code>
+validates the DP-SSN models against the classical dynamic-phasor stamping and
+the EMT and EMT-SSN waveforms. &lt;code>examples/Notebooks/Circuits/DP_SSN_RLC_accuracy.ipynb&lt;/code>
+studies the time-step and frequency-dependent accuracy against a small-step
+EMT reference.&lt;/p>
+&lt;p>The three-phase analogues,
+&lt;code>examples/Notebooks/Circuits/DP_Ph3_generalizedSSN_RLC.ipynb&lt;/code> and
+&lt;code>examples/Notebooks/Circuits/DP_Ph3_SSN_RLC_accuracy.ipynb&lt;/code>, repeat both
+studies on &lt;code>DP::Ph3&lt;/code> circuits, including a current-driven network with generic
+V-type and I-type components and a three-phase fault transient.&lt;/p>
 &lt;h1 id="further-reading">Further Reading&lt;/h1>
 &lt;ul>
 &lt;li>C. Dufour, J. Mahseredjian, and J. Bélanger, &lt;em>A Combined State-Space Nodal Method for the Simulation of Power System Transients&lt;/em>, &lt;em>IEEE Transactions on Power Delivery&lt;/em>, vol. 26, no. 2, pp. 928–935, 2011. &lt;a href="https://doi.org/10.1109/TPWRD.2010.2090364">https://doi.org/10.1109/TPWRD.2010.2090364&lt;/a>&lt;/li>
