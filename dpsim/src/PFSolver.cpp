@@ -304,7 +304,7 @@ CPS::Real PFSolver::componentBaseVoltage(CPS::TopologicalPowerComp::Ptr comp,
   if (auto vsi =
           std::dynamic_pointer_cast<CPS::SP::Ph1::AvVoltageSourceInverterDQ>(
               comp))
-    return vsi->getNomVoltage();
+    return vsi->getBaseVoltage();
   if (auto rxline = std::dynamic_pointer_cast<CPS::SP::Ph1::RXLine>(comp))
     return rxline->getBaseVoltage();
   if (auto line = std::dynamic_pointer_cast<CPS::SP::Ph1::PiLine>(comp))

@@ -132,6 +132,9 @@ public:
   // #### Powerflow section ####
   /// Get nominal voltage
   Real getNomVoltage() const;
+  /// Get the nominal voltage at the network-connected terminal (accounts for
+  /// the connection transformer's ratio, if present)
+  Real getBaseVoltage() const;
 
   // #### MNA section ####
   /// Initializes internal variables of the component
