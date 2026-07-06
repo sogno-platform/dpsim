@@ -40,6 +40,7 @@ Simulation::Simulation(String name, Logger::Level logLevel)
       mPFMaxIterations(CPS::AttributeStatic<CPS::UInt>::make(20)),
       mPFSolverUseSparse(CPS::AttributeStatic<Bool>::make(false)),
       mPFEnforceReactiveLimits(CPS::AttributeStatic<Bool>::make(false)),
+      mPFBaseVoltageLooseTolerance(CPS::AttributeStatic<Real>::make(0.1)),
       mSplitSubnets(AttributeStatic<Bool>::make(true)),
       mSteadyStateInit(AttributeStatic<Bool>::make(false)),
       mLogLevel(logLevel) {
@@ -56,6 +57,7 @@ Simulation::Simulation(String name, CommandLineArgs &args)
       mPFMaxIterations(CPS::AttributeStatic<CPS::UInt>::make(20)),
       mPFSolverUseSparse(CPS::AttributeStatic<Bool>::make(false)),
       mPFEnforceReactiveLimits(CPS::AttributeStatic<Bool>::make(false)),
+      mPFBaseVoltageLooseTolerance(CPS::AttributeStatic<Real>::make(0.1)),
       mSplitSubnets(AttributeStatic<Bool>::make(true)),
       mSteadyStateInit(AttributeStatic<Bool>::make(false)),
       mLogLevel(args.logLevel), mDomain(args.solver.domain),
@@ -132,6 +134,7 @@ template <typename VarType> void Simulation::createSolvers() {
     pfSolver->setBaseApparentPowerFallback(**mPFBaseApparentPowerFallback);
     pfSolver->setMaxIterations(**mPFMaxIterations);
     pfSolver->setEnforceReactiveLimits(**mPFEnforceReactiveLimits);
+    pfSolver->setBaseVoltageLooseTolerance(**mPFBaseVoltageLooseTolerance);
 
     solver = pfSolver;
 
@@ -377,6 +380,14 @@ void Simulation::setPFSolverEnforceReactiveLimits(Bool value) {
 
 Bool Simulation::getPFSolverEnforceReactiveLimits() const {
   return **mPFEnforceReactiveLimits;
+}
+
+void Simulation::setPFSolverBaseVoltageLooseTolerance(Real tolerance) {
+  **mPFBaseVoltageLooseTolerance = tolerance;
+}
+
+Real Simulation::getPFSolverBaseVoltageLooseTolerance() const {
+  return **mPFBaseVoltageLooseTolerance;
 }
 
 void Simulation::start() {

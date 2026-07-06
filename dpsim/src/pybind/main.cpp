@@ -231,6 +231,10 @@ PYBIND11_MODULE(dpsimpy, m) {
            &DPsim::Simulation::setPFSolverEnforceReactiveLimits)
       .def("get_pf_solver_enforce_q_limits",
            &DPsim::Simulation::getPFSolverEnforceReactiveLimits)
+      .def("set_pf_solver_base_voltage_loose_tolerance",
+           &DPsim::Simulation::setPFSolverBaseVoltageLooseTolerance)
+      .def("get_pf_solver_base_voltage_loose_tolerance",
+           &DPsim::Simulation::getPFSolverBaseVoltageLooseTolerance)
       .def("set_domain", &DPsim::Simulation::setDomain)
       .def("start", &DPsim::Simulation::start)
       .def("next", &DPsim::Simulation::next)

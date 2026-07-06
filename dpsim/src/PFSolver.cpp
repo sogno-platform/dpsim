@@ -388,7 +388,6 @@ void PFSolver::propagateAndVerifyBaseVoltage() {
 
   // Disagreement beyond tolerance means two voltage levels are wired together without a transformer.
   static constexpr CPS::Real strictTolerance = 0.01;
-  static constexpr CPS::Real looseTolerance = 0.1;
   auto verify =
       [&](const std::vector<std::pair<CPS::Real, CPS::String>> &candidates,
           CPS::Real reference, const CPS::String &refSource,
@@ -424,7 +423,7 @@ void PFSolver::propagateAndVerifyBaseVoltage() {
     const CPS::String &refSource = hasAuthoritative
                                        ? "the zone's authoritative rating"
                                        : entry.second.front().second;
-    verify(entry.second, reference, refSource, looseTolerance);
+    verify(entry.second, reference, refSource, mBaseVoltageLooseTolerance);
     if (!hasAuthoritative)
       zoneVoltage[entry.first] = reference;
   }
