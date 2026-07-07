@@ -115,6 +115,9 @@ class Reader:
         self.mpc_gen_data["bus"] = self.mpc_gen_data["bus"].astype(int)
         self.mpc_gen_data["status"] = self.mpc_gen_data["status"].astype(int)
 
+        # drop offline generators, they must not inject power
+        self.mpc_gen_data = self.mpc_gen_data[self.mpc_gen_data["status"] == 1]
+
         #### Branches #####
         # extract only first 13 columns since following columns include results
         mpc_branch_raw = self.mpc_raw[self.mpc_name]["branch"][:, :13]
@@ -402,6 +405,22 @@ class Reader:
                 # shunts
                 self.map_shunt(index, bus_index)
 
+                # MatPAT export quirk: generators are sometimes stored on a
+                # bus labeled type 1 (PQ) even though they should be PV/VD.
+                # Map them anyway or that generation silently disappears.
+                if (
+                    self.mpc_bus_data.at[index, "bus_i"]
+                    in self.mpc_gen_data["bus"].values
+                ):
+                    self.map_synchronous_machine(
+                        index,
+                        bus_index,
+                        bus_type=dpsimpy.PowerflowBusType.PQ,
+                        with_pss=with_pss,
+                        with_tg=with_tg,
+                        with_avr=with_avr,
+                    )
+
             # Generators
             elif bus_type == 2:
                 # map SG
@@ -652,6 +671,16 @@ class Reader:
         gen_data = self.mpc_gen_data.loc[
             self.mpc_gen_data["bus"] == self.mpc_bus_data.at[index, "bus_i"]
         ]
+        if len(gen_data) > 1:
+            for col in ("mBase", "Vg", "Qmax", "Qmin"):
+                if gen_data[col].nunique() > 1:
+                    print(
+                        "WARNING: {} generators at bus {} have differing {} "
+                        "({}); using the first generator's value.".format(
+                            len(gen_data), bus_index, col, gen_data[col].tolist()
+                        )
+                    )
+
         gen_baseS = (
             gen_data["mBase"].values[0] * mw_w
         )  # gen base MVA default is mpc.baseMVA
@@ -660,11 +689,11 @@ class Reader:
             gen_data["Vg"].values[0] * gen_baseV
         )  # gen set point voltage (gen['Vg'] in p.u.)
         gen_p = (
-            gen_data["Pg"].values[0] * mw_w
-        )  # gen ini. active power (gen['Pg'] in MVA)
+            gen_data["Pg"].sum() * mw_w
+        )  # gen ini. active power, summed across all gens at this bus (gen['Pg'] in MVA)
         gen_q = (
-            gen_data["Qg"].values[0] * mw_w
-        )  # gen ini. reactive power (gen['Qg'] in MVAr)
+            gen_data["Qg"].sum() * mw_w
+        )  # gen ini. reactive power, summed across all gens at this bus (gen['Qg'] in MVAr)
         gen_q_max = (
             gen_data["Qmax"].values[0] * mw_w
         )  # gen reactive power upper limit (gen['Qmax'] in MVAr)
@@ -686,7 +715,12 @@ class Reader:
                 q_limit_min=gen_q_min,
             )
             gen.set_base_voltage(gen_baseV)
-            gen.modify_power_flow_bus_type(bus_type)
+            # SynchronGenerator::modifyPowerFlowBusType throws for PQ (not a
+            # supported switch target); set_parameters already stored the PQ
+            # bus type above, so the call is redundant here and must be
+            # skipped rather than attempted.
+            if bus_type != dpsimpy.PowerflowBusType.PQ:
+                gen.modify_power_flow_bus_type(bus_type)
         else:
             # get dynamic data of the generator
             gen_dyn_row_idx = self.mpc_dyn_gen_data.index[
