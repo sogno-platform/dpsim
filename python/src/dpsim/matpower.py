@@ -1254,10 +1254,35 @@ class Reader:
                 -complex_power
             )
 
-    def get_pf_results(self, decimals=5):
-        pf_results = pd.DataFrame(
-            columns=["Bus", "Vm [pu]", "Va [°]", "P [MW]", "Q [MVAr]"]
-        )
+    def get_pf_results(self, decimals=5, gen_load_format=False):
+        """
+        @param gen_load_format: if True, report Generation and Load P/Q as
+               separate columns (MultiIndex: Bus/Voltage/Generation/Load),
+               matching the convention used to report DPsim's own solved S
+               per node (net injection attributed entirely to "Generation"
+               at a bus with an online generator, entirely to "Load"
+               otherwise). If False (default), report a single net P/Q
+               column per bus.
+        """
+        if gen_load_format:
+            pf_results = pd.DataFrame(
+                columns=pd.MultiIndex.from_tuples(
+                    [
+                        ("Bus", "#"),
+                        ("Voltage", "Mag(pu)"),
+                        ("Voltage", "Ang(deg)"),
+                        ("Generation", "P (MW)"),
+                        ("Generation", "Q (MVAr)"),
+                        ("Load", "P (MW)"),
+                        ("Load", "Q (MVAr)"),
+                    ]
+                )
+            )
+        else:
+            pf_results = pd.DataFrame(
+                columns=["Bus", "Vm [pu]", "Va [°]", "P [MW]", "Q [MVAr]"]
+            )
+
         for i in range(self.mpc_bus_data.shape[0]):
             node_name = "N" + str(self.mpc_bus_data["bus_i"][i])  # ex. N5
 
@@ -1267,34 +1292,43 @@ class Reader:
             gen_data = self.mpc_gen_data.loc[
                 self.mpc_gen_data["bus"] == self.mpc_bus_data.at[i, "bus_i"]
             ]
-            if gen_data.shape[0] > 0:
+            is_gen_bus = gen_data.shape[0] > 0
+            if is_gen_bus:
                 # sum across all online generators at this bus, not just the first
                 p_gen = gen_data["Pg"].sum()
                 q_gen = gen_data["Qg"].sum()
 
-            pf_results.loc[i] = (
-                [node_name]
-                + [round(self.mpc_bus_data["Vm"][i], decimals)]
-                + [round(self.mpc_bus_data["Va"][i], decimals)]
-                + [
-                    round(
-                        p_gen
-                        - self.mpc_bus_data["Pd"][i]
-                        - self.mpc_bus_data["Gs"][i]
-                        * (self.mpc_bus_data["Vm"][i] ** 2),
-                        decimals,
-                    )
-                ]
-                + [
-                    round(
-                        q_gen
-                        - self.mpc_bus_data["Qd"][i]
-                        + self.mpc_bus_data["Bs"][i]
-                        * (self.mpc_bus_data["Vm"][i] ** 2),
-                        decimals,
-                    )
-                ]
+            net_p = round(
+                p_gen
+                - self.mpc_bus_data["Pd"][i]
+                - self.mpc_bus_data["Gs"][i] * (self.mpc_bus_data["Vm"][i] ** 2),
+                decimals,
             )
+            net_q = round(
+                q_gen
+                - self.mpc_bus_data["Qd"][i]
+                + self.mpc_bus_data["Bs"][i] * (self.mpc_bus_data["Vm"][i] ** 2),
+                decimals,
+            )
+
+            if gen_load_format:
+                pf_results.loc[i] = [
+                    node_name,
+                    round(self.mpc_bus_data["Vm"][i], decimals),
+                    round(self.mpc_bus_data["Va"][i], decimals),
+                    net_p if is_gen_bus else 0.0,
+                    net_q if is_gen_bus else 0.0,
+                    0.0 if is_gen_bus else -net_p,
+                    0.0 if is_gen_bus else -net_q,
+                ]
+            else:
+                pf_results.loc[i] = (
+                    [node_name]
+                    + [round(self.mpc_bus_data["Vm"][i], decimals)]
+                    + [round(self.mpc_bus_data["Va"][i], decimals)]
+                    + [net_p]
+                    + [net_q]
+                )
 
         return pf_results
 
