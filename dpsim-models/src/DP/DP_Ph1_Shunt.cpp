@@ -11,7 +11,7 @@
 using namespace CPS;
 
 DP::Ph1::Shunt::Shunt(String uid, String name, Logger::Level logLevel)
-    : CompositePowerComp<Complex>(uid, name, false, true, logLevel),
+    : CompositePowerComp<Complex>(uid, name, true, true, logLevel),
       mConductance(mAttributes->create<Real>("G")),
       mSusceptance(mAttributes->create<Real>("B")) {
 
@@ -28,7 +28,7 @@ void DP::Ph1::Shunt::setParameters(Real conductance, Real susceptance) {
 }
 
 /// MNA Section
-void DP::Ph1::Shunt::initializeFromNodesAndTerminals(Real frequency) {
+void DP::Ph1::Shunt::initializeParentFromNodesAndTerminals(Real frequency) {
 
   // Static calculation
   Real omega = 2. * PI * frequency;
@@ -44,8 +44,8 @@ void DP::Ph1::Shunt::initializeFromNodesAndTerminals(Real frequency) {
     mSubResistor->setParameters(1. / **mConductance);
     mSubResistor->initialize(mFrequencies);
     mSubResistor->initializeFromNodesAndTerminals(frequency);
-    addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+    addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
   }
 
   if (**mSusceptance > 0) {
@@ -55,7 +55,8 @@ void DP::Ph1::Shunt::initializeFromNodesAndTerminals(Real frequency) {
     mSubCapacitor->connect(SimNode::List{SimNode::GND, mTerminals[0]->node()});
     mSubCapacitor->initialize(mFrequencies);
     mSubCapacitor->initializeFromNodesAndTerminals(frequency);
-    addMNASubComponent(mSubCapacitor, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
+    addMNASubComponent(mSubCapacitor,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
   }
 
@@ -68,6 +69,17 @@ void DP::Ph1::Shunt::initializeFromNodesAndTerminals(Real frequency) {
                      Logger::phasorToString((**mIntfVoltage)(0, 0)),
                      Logger::phasorToString((**mIntfCurrent)(0, 0)),
                      Logger::phasorToString(initialSingleVoltage(0)));
+}
+
+void DP::Ph1::Shunt::mnaParentAddPreStepDependencies(
+    AttributeBase::List &prevStepDependencies,
+    AttributeBase::List &attributeDependencies,
+    AttributeBase::List &modifiedAttributes) {
+  modifiedAttributes.push_back(mRightVector);
+}
+
+void DP::Ph1::Shunt::mnaParentPreStep(Real time, Int timeStepCount) {
+  mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::Shunt::mnaParentAddPostStepDependencies(
