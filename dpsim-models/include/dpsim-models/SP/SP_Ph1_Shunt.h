@@ -45,6 +45,8 @@ public:
   void setParameters(Real conductance, Real susceptance);
 
   // #### Powerflow section ####
+  /// Get base voltage
+  Real getBaseVoltage() const;
   /// Set base voltage
   void setBaseVoltage(Real baseVoltage);
   /// Initializes component from power flow data

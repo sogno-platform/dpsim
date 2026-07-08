@@ -31,6 +31,8 @@ void SP::Ph1::Shunt::setParameters(Real conductance, Real susceptance) {
 }
 
 // #### Powerflow section ####
+Real SP::Ph1::Shunt::getBaseVoltage() const { return mBaseVoltage; }
+
 void SP::Ph1::Shunt::setBaseVoltage(Real baseVoltage) {
   mBaseVoltage = baseVoltage;
 }
