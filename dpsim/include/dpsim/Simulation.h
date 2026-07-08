@@ -43,6 +43,13 @@ public:
 
   const CPS::Attribute<Bool>::Ptr mPFKeepLastSolution;
 
+  /// Fallback base apparent power used by the PF solver when no
+  /// generator or transformer rating is available to derive it from.
+  const CPS::Attribute<Real>::Ptr mPFBaseApparentPowerFallback;
+
+  /// Maximum number of Newton-Raphson iterations for the PF solver.
+  const CPS::Attribute<CPS::UInt>::Ptr mPFMaxIterations;
+
   /// Use the sparse-Jacobian powerflow solver (scales to large grids).
   /// Default false (dense solver); opt in via setPFSolverUseSparse(true).
   /// Ignored (dense solver used) if no sparse linear solver is available.
@@ -241,6 +248,14 @@ public:
   void setPFKeepLastSolution(Bool value);
 
   Bool getPFKeepLastSolution() const;
+
+  void setPFBaseApparentPowerFallback(Real value);
+
+  Real getPFBaseApparentPowerFallback() const;
+
+  void setPFMaxIterations(CPS::UInt value);
+
+  CPS::UInt getPFMaxIterations() const;
 
   void setPFSolverUseSparse(Bool value);
 
