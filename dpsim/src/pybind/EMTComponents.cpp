@@ -298,6 +298,17 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "reactance_in_series"_a = false)
       .def("connect", &CPS::EMT::Ph3::RXLoad::connect);
 
+  py::class_<CPS::EMT::Ph3::Shunt, std::shared_ptr<CPS::EMT::Ph3::Shunt>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "Shunt",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters",
+           static_cast<void (CPS::EMT::Ph3::Shunt::*)(CPS::Real, CPS::Real)>(
+               &CPS::EMT::Ph3::Shunt::setParameters),
+           "G"_a, "B"_a)
+      .def("connect", &CPS::EMT::Ph3::Shunt::connect);
+
   py::class_<CPS::EMT::Ph3::Switch, std::shared_ptr<CPS::EMT::Ph3::Switch>,
              CPS::SimPowerComp<CPS::Real>, CPS::Base::Ph3::Switch>(
       mEMTPh3, "Switch", py::multiple_inheritance())
