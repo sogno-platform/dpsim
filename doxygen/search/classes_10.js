@@ -114,7 +114,7 @@ var searchData=
   ['sharedfactory_3c_20voltagesourceinverter_20_3e_111',['SharedFactory&lt; VoltageSourceInverter &gt;',['../class_shared_factory.html',1,'']]],
   ['sharedfactory_3c_20voltagesourcenorton_20_3e_112',['SharedFactory&lt; VoltageSourceNorton &gt;',['../class_shared_factory.html',1,'']]],
   ['sharedfactory_3c_20voltagesourceramp_20_3e_113',['SharedFactory&lt; VoltageSourceRamp &gt;',['../class_shared_factory.html',1,'']]],
-  ['shunt_114',['Shunt',['../class_c_p_s_1_1_s_p_1_1_ph1_1_1_shunt.html',1,'CPS::SP::Ph1']]],
+  ['shunt_114',['Shunt',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_shunt.html',1,'CPS::DP::Ph1::Shunt'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_shunt.html',1,'CPS::EMT::Ph3::Shunt'],['../class_c_p_s_1_1_s_p_1_1_ph1_1_1_shunt.html',1,'CPS::SP::Ph1::Shunt']]],
   ['signalgenerator_115',['SignalGenerator',['../class_c_p_s_1_1_signal_1_1_signal_generator.html',1,'CPS::Signal']]],
   ['simnode_116',['SimNode',['../class_c_p_s_1_1_sim_node.html',1,'CPS']]],
   ['simnode_3c_20complex_20_3e_117',['SimNode&lt; Complex &gt;',['../class_c_p_s_1_1_sim_node.html',1,'CPS']]],
