@@ -344,6 +344,13 @@ void PFSolver::determineNodeBaseVoltages() {
             mSLog, "Choose base voltage of {}V to convert pu-solution of {}.",
             baseVoltage_, extnet->name(), node->name());
         break;
+      } else if (std::shared_ptr<CPS::SP::Ph1::Shunt> shunt =
+                     std::dynamic_pointer_cast<CPS::SP::Ph1::Shunt>(comp)) {
+        baseVoltage_ = shunt->getBaseVoltage();
+        SPDLOG_LOGGER_INFO(
+            mSLog, "Choose base voltage of {}V to convert pu-solution of {}.",
+            baseVoltage_, shunt->name(), node->name());
+        break;
       } else {
         SPDLOG_LOGGER_WARN(mSLog, "Unable to get base voltage at {}",
                            node->name());
