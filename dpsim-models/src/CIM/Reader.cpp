@@ -349,7 +349,20 @@ Reader::mapEnergyConsumer(CIMPP::EnergyConsumer *consumer) {
     auto load = std::make_shared<SP::Ph1::Load>(consumerRid, consumerName,
                                                 mComponentLogLevel);
 
-    // P and Q values will be set according to SvPowerFlow data
+    // Seed P/Q from SSH when present; this makes SSH win over any
+    // SvPowerFlow data (skip if no SSH file was loaded at all, so the
+    // SV-derived terminal-power fallback still applies).
+    if (consumer->p.initialized || consumer->q.initialized) {
+      Real p = 0;
+      Real q = 0;
+      if (consumer->p.initialized)
+        p = unitValue(consumer->p.value, UnitMultiplier::M);
+      if (consumer->q.initialized)
+        q = unitValue(consumer->q.value, UnitMultiplier::M);
+      Real baseVoltage = determineBaseVoltageAssociatedWithEquipment(consumer);
+      load->setParameters(p, q, baseVoltage);
+    }
+
     load->modifyPowerFlowBusType(
         PowerflowBusType::
             PQ); // for powerflow solver set as PQ component as default
