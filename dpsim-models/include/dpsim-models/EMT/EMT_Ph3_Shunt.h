@@ -9,19 +9,20 @@
 #pragma once
 
 #include <dpsim-models/CompositePowerComp.h>
-#include <dpsim-models/DP/DP_Ph1_Capacitor.h>
-#include <dpsim-models/DP/DP_Ph1_Resistor.h>
+#include <dpsim-models/EMT/EMT_Ph3_Capacitor.h>
+#include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
+#include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
-namespace DP {
-namespace Ph1 {
+namespace EMT {
+namespace Ph3 {
 
-class Shunt : public CompositePowerComp<Complex>, public SharedFactory<Shunt> {
-public:
+class Shunt : public CompositePowerComp<Real>, public SharedFactory<Shunt> {
+private:
   /// Conductance [S]
-  const Attribute<Real>::Ptr mConductance;
+  Matrix mConductance;
   /// Susceptance [S]
-  const Attribute<Real>::Ptr mSusceptance;
+  Matrix mSusceptance;
 
   /// Capacitor between terminal and ground
   std::shared_ptr<Capacitor> mSubCapacitor;
@@ -39,6 +40,7 @@ public:
   // #### General ####
   /// Set shunt specific parameters
   void setParameters(Real conductance, Real susceptance);
+  void setParameters(Matrix conductance, Matrix susceptance);
 
   // #### MNA section ####
   /// Initializes component from power flow data
@@ -57,6 +59,6 @@ public:
                                    AttributeBase::List &modifiedAttributes,
                                    Attribute<Matrix>::Ptr &leftVector) final;
 };
-} // namespace Ph1
-} // namespace DP
+} // namespace Ph3
+} // namespace EMT
 } // namespace CPS

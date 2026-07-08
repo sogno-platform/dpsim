@@ -45,7 +45,7 @@ void DP::Ph1::Shunt::initializeFromNodesAndTerminals(Real frequency) {
     mSubResistor->initialize(mFrequencies);
     mSubResistor->initializeFromNodesAndTerminals(frequency);
     addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
   }
 
   if (**mSusceptance > 0) {
@@ -56,7 +56,7 @@ void DP::Ph1::Shunt::initializeFromNodesAndTerminals(Real frequency) {
     mSubCapacitor->initialize(mFrequencies);
     mSubCapacitor->initializeFromNodesAndTerminals(frequency);
     addMNASubComponent(mSubCapacitor, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
-                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
   }
 
   SPDLOG_LOGGER_INFO(mSLog,
