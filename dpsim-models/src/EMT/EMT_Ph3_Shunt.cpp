@@ -12,7 +12,7 @@ using namespace CPS;
 
 EMT::Ph3::Shunt::Shunt(String uid, String name, Logger::Level logLevel)
     : CompositePowerComp<Real>(uid, name, true, true, logLevel) {
-
+  mPhaseType = PhaseType::ABC;
   mConductance = Matrix::Zero(3, 3);
   mSusceptance = Matrix::Zero(3, 3);
   SPDLOG_LOGGER_INFO(mSLog, "Create {} of type {}", this->type(), name);
