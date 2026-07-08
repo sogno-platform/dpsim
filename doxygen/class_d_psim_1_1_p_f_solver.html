@@ -136,6 +136,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af36f7edebd9a6727acac2d02cc81b9d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a721f540678a262722d12114618860789" id="r_a721f540678a262722d12114618860789"><td class="memItemLeft" align="right" valign="top">CPS::Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a721f540678a262722d12114618860789">getKeepLastSolution</a> () const</td></tr>
 <tr class="separator:a721f540678a262722d12114618860789"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca7d62d54063cde5555e321902808b32" id="r_aca7d62d54063cde5555e321902808b32"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aca7d62d54063cde5555e321902808b32">setBaseApparentPowerFallback</a> (CPS::Real baseApparentPowerFallback)</td></tr>
+<tr class="separator:aca7d62d54063cde5555e321902808b32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab03970889a7afd26177a0a846048c500" id="r_ab03970889a7afd26177a0a846048c500"><td class="memItemLeft" align="right" valign="top">CPS::Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab03970889a7afd26177a0a846048c500">getBaseApparentPowerFallback</a> () const</td></tr>
+<tr class="separator:ab03970889a7afd26177a0a846048c500"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7bf5030d80962ad1c4869b76923bedde" id="r_a7bf5030d80962ad1c4869b76923bedde"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7bf5030d80962ad1c4869b76923bedde">setMaxIterations</a> (CPS::UInt maxIterations)</td></tr>
+<tr class="separator:a7bf5030d80962ad1c4869b76923bedde"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8b72ede8aed862cb6cc25c4a4538c5d" id="r_af8b72ede8aed862cb6cc25c4a4538c5d"><td class="memItemLeft" align="right" valign="top">CPS::UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af8b72ede8aed862cb6cc25c4a4538c5d">getMaxIterations</a> () const</td></tr>
+<tr class="separator:af8b72ede8aed862cb6cc25c4a4538c5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_d_psim_1_1_solver"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_d_psim_1_1_solver')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td></tr>
 <tr class="memitem:a43f3a5b98bf07a364645fa5f8193a5e7 inherit pub_methods_class_d_psim_1_1_solver" id="r_a43f3a5b98bf07a364645fa5f8193a5e7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a43f3a5b98bf07a364645fa5f8193a5e7">Solver</a> (String name, CPS::Logger::Level logLevel)</td></tr>
 <tr class="separator:a43f3a5b98bf07a364645fa5f8193a5e7 inherit pub_methods_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -325,6 +333,9 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a8f97b89d6defe287ca09911c5f38ea19" id="r_a8f97b89d6defe287ca09911c5f38ea19"><td class="memItemLeft" align="right" valign="top">CPS::Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8f97b89d6defe287ca09911c5f38ea19">mBaseApparentPower</a></td></tr>
 <tr class="memdesc:a8f97b89d6defe287ca09911c5f38ea19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base power of per-unit system.  <br /></td></tr>
 <tr class="separator:a8f97b89d6defe287ca09911c5f38ea19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b6cfcd144117f96dfb888869427da05" id="r_a0b6cfcd144117f96dfb888869427da05"><td class="memItemLeft" align="right" valign="top">CPS::Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0b6cfcd144117f96dfb888869427da05">mBaseApparentPowerFallback</a> = 100e6</td></tr>
+<tr class="memdesc:a0b6cfcd144117f96dfb888869427da05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fallback base apparent power if no generator or transformer rating is found.  <br /></td></tr>
+<tr class="separator:a0b6cfcd144117f96dfb888869427da05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae9024454fc6ab26e140ebbf0973664e" id="r_aae9024454fc6ab26e140ebbf0973664e"><td class="memItemLeft" align="right" valign="top">CPS::Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aae9024454fc6ab26e140ebbf0973664e">isConverged</a> = false</td></tr>
 <tr class="memdesc:aae9024454fc6ab26e140ebbf0973664e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convergence flag.  <br /></td></tr>
 <tr class="separator:aae9024454fc6ab26e140ebbf0973664e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -460,7 +471,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00152">152</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00154">154</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -767,6 +778,33 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="ab03970889a7afd26177a0a846048c500" name="ab03970889a7afd26177a0a846048c500"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab03970889a7afd26177a0a846048c500">&#9670;&#160;</a></span>getBaseApparentPowerFallback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">CPS::Real DPsim::PFSolver::getBaseApparentPowerFallback </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00174">174</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+
+</div>
+</div>
 <a id="a721f540678a262722d12114618860789" name="a721f540678a262722d12114618860789"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a721f540678a262722d12114618860789">&#9670;&#160;</a></span>getKeepLastSolution()</h2>
 
@@ -790,7 +828,34 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00166">166</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00168">168</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+
+</div>
+</div>
+<a id="af8b72ede8aed862cb6cc25c4a4538c5d" name="af8b72ede8aed862cb6cc25c4a4538c5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8b72ede8aed862cb6cc25c4a4538c5d">&#9670;&#160;</a></span>getMaxIterations()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">CPS::UInt DPsim::PFSolver::getMaxIterations </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00182">182</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -910,7 +975,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Logging for integer vectors. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00138">138</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00140">140</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -968,6 +1033,33 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="aca7d62d54063cde5555e321902808b32" name="aca7d62d54063cde5555e321902808b32"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca7d62d54063cde5555e321902808b32">&#9670;&#160;</a></span>setBaseApparentPowerFallback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DPsim::PFSolver::setBaseApparentPowerFallback </td>
+          <td>(</td>
+          <td class="paramtype">CPS::Real</td>          <td class="paramname"><span class="paramname"><em>baseApparentPowerFallback</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00170">170</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+
+</div>
+</div>
 <a id="af36f7edebd9a6727acac2d02cc81b9d6" name="af36f7edebd9a6727acac2d02cc81b9d6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af36f7edebd9a6727acac2d02cc81b9d6">&#9670;&#160;</a></span>setKeepLastSolution()</h2>
 
@@ -991,7 +1083,34 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00162">162</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00164">164</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+
+</div>
+</div>
+<a id="a7bf5030d80962ad1c4869b76923bedde" name="a7bf5030d80962ad1c4869b76923bedde"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7bf5030d80962ad1c4869b76923bedde">&#9670;&#160;</a></span>setMaxIterations()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DPsim::PFSolver::setMaxIterations </td>
+          <td>(</td>
+          <td class="paramtype">CPS::UInt</td>          <td class="paramname"><span class="paramname"><em>maxIterations</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00178">178</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -1219,7 +1338,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Convergence flag. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00089">89</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00091">91</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -1272,6 +1391,32 @@ Additional Inherited Members</h2></td></tr>
 <p>Base power of per-unit system. </p>
 
 <p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00087">87</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+
+</div>
+</div>
+<a id="a0b6cfcd144117f96dfb888869427da05" name="a0b6cfcd144117f96dfb888869427da05"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b6cfcd144117f96dfb888869427da05">&#9670;&#160;</a></span>mBaseApparentPowerFallback</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">CPS::Real DPsim::PFSolver::mBaseApparentPowerFallback = 100e6</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Fallback base apparent power if no generator or transformer rating is found. </p>
+
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00089">89</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -1427,7 +1572,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Use last converged solution as initial guess. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00096">96</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00098">98</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -2025,7 +2170,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Flag whether complex solution vectors are initialized. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00093">93</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00095">95</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -2051,7 +2196,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Flag whether solution vectors are initialized. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00091">91</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00093">93</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
