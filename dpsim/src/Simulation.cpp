@@ -36,6 +36,8 @@ Simulation::Simulation(String name, Logger::Level logLevel)
       mFinalTime(AttributeStatic<Real>::make(0.001)),
       mTimeStep(AttributeStatic<Real>::make(0.001)),
       mPFKeepLastSolution(CPS::AttributeStatic<Bool>::make(false)),
+      mPFBaseApparentPowerFallback(CPS::AttributeStatic<Real>::make(100e6)),
+      mPFMaxIterations(CPS::AttributeStatic<CPS::UInt>::make(20)),
       mPFSolverUseSparse(CPS::AttributeStatic<Bool>::make(false)),
       mSplitSubnets(AttributeStatic<Bool>::make(true)),
       mSteadyStateInit(AttributeStatic<Bool>::make(false)),
@@ -49,6 +51,8 @@ Simulation::Simulation(String name, CommandLineArgs &args)
       mFinalTime(AttributeStatic<Real>::make(args.duration)),
       mTimeStep(AttributeStatic<Real>::make(args.timeStep)),
       mPFKeepLastSolution(CPS::AttributeStatic<Bool>::make(false)),
+      mPFBaseApparentPowerFallback(CPS::AttributeStatic<Real>::make(100e6)),
+      mPFMaxIterations(CPS::AttributeStatic<CPS::UInt>::make(20)),
       mPFSolverUseSparse(CPS::AttributeStatic<Bool>::make(false)),
       mSplitSubnets(AttributeStatic<Bool>::make(true)),
       mSteadyStateInit(AttributeStatic<Bool>::make(false)),
@@ -123,6 +127,8 @@ template <typename VarType> void Simulation::createSolvers() {
 #endif
 
     pfSolver->setKeepLastSolution(**mPFKeepLastSolution);
+    pfSolver->setBaseApparentPowerFallback(**mPFBaseApparentPowerFallback);
+    pfSolver->setMaxIterations(**mPFMaxIterations);
 
     solver = pfSolver;
 
@@ -341,6 +347,20 @@ void Simulation::setPFKeepLastSolution(Bool value) {
 }
 
 Bool Simulation::getPFKeepLastSolution() const { return **mPFKeepLastSolution; }
+
+void Simulation::setPFBaseApparentPowerFallback(Real value) {
+  **mPFBaseApparentPowerFallback = value;
+}
+
+Real Simulation::getPFBaseApparentPowerFallback() const {
+  return **mPFBaseApparentPowerFallback;
+}
+
+void Simulation::setPFMaxIterations(CPS::UInt value) {
+  **mPFMaxIterations = value;
+}
+
+CPS::UInt Simulation::getPFMaxIterations() const { return **mPFMaxIterations; }
 
 void Simulation::setPFSolverUseSparse(Bool value) {
   **mPFSolverUseSparse = value;

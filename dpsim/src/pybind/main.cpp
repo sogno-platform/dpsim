@@ -219,6 +219,12 @@ PYBIND11_MODULE(dpsimpy, m) {
            &DPsim::Simulation::setPFKeepLastSolution)
       .def("get_pf_keep_last_solution",
            &DPsim::Simulation::getPFKeepLastSolution)
+      .def("set_pf_base_apparent_power_fallback",
+           &DPsim::Simulation::setPFBaseApparentPowerFallback)
+      .def("get_pf_base_apparent_power_fallback",
+           &DPsim::Simulation::getPFBaseApparentPowerFallback)
+      .def("set_pf_max_iterations", &DPsim::Simulation::setPFMaxIterations)
+      .def("get_pf_max_iterations", &DPsim::Simulation::getPFMaxIterations)
       .def("set_pf_solver_use_sparse", &DPsim::Simulation::setPFSolverUseSparse)
       .def("get_pf_solver_use_sparse", &DPsim::Simulation::getPFSolverUseSparse)
       .def("set_domain", &DPsim::Simulation::setDomain)

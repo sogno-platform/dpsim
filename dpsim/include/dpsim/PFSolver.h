@@ -85,6 +85,8 @@ protected:
   CPS::UInt mIterations;
   /// Base power of per-unit system
   CPS::Real mBaseApparentPower;
+  /// Fallback base apparent power if no generator or transformer rating is found
+  CPS::Real mBaseApparentPowerFallback = 100e6;
   /// Convergence flag
   CPS::Bool isConverged = false;
   /// Flag whether solution vectors are initialized
@@ -164,6 +166,20 @@ public:
   }
 
   CPS::Bool getKeepLastSolution() const { return mKeepLastSolution; }
+
+  void setBaseApparentPowerFallback(CPS::Real baseApparentPowerFallback) {
+    mBaseApparentPowerFallback = baseApparentPowerFallback;
+  }
+
+  CPS::Real getBaseApparentPowerFallback() const {
+    return mBaseApparentPowerFallback;
+  }
+
+  void setMaxIterations(CPS::UInt maxIterations) {
+    mMaxIterations = maxIterations;
+  }
+
+  CPS::UInt getMaxIterations() const { return mMaxIterations; }
 
   class SolveTask : public CPS::Task {
   public:

@@ -146,7 +146,7 @@ void PFSolver::setBaseApparentPower() {
   if (maxPower != 0.)
     mBaseApparentPower = pow(10, 1 + floor(log10(maxPower)));
   else {
-    mBaseApparentPower = 100000000;
+    mBaseApparentPower = mBaseApparentPowerFallback;
     SPDLOG_LOGGER_WARN(mSLog,
                        "No suitable quantity found for setting "
                        "mBaseApparentPower. Using {} VA.",
