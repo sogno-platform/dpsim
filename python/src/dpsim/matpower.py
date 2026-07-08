@@ -43,10 +43,13 @@ class Reader:
             self.mpc_raw_dyn = scipy.io.loadmat(mpc_dyn_file_path, simplify_cells=True)
             self.mpc_dyn_name = mpc_dyn_name
 
-    def process_mpc(self, frequency):
+    def process_mpc(self, frequency, filter_out_of_service=False):
         """
         Process raw mpc data and create corresponding dataframes
         @param frequency: system frequency
+        @param filter_out_of_service: if True, drop out-of-service generators/branches
+                                      (status == 0) and isolated buses (type == 4)
+                                      before building the dataframes used downstream
         """
 
         # System frequency (not included in mpc but needed for setting dpsimpy component parameters i.e inductances, capacitances ..)
@@ -156,6 +159,22 @@ class Reader:
                     self.mpc_raw[self.mpc_name]["bus_assets"],
                 )
             )
+
+        # Out-of-service generators/branches and isolated buses are excluded only
+        # on request (opt-in), so grids relying on the previous always-included
+        # behavior are unaffected. This must run after mpc_bus_names_dict/
+        # mpc_bus_assets_dict are built above, since those zip bus_i positionally
+        # against the raw (unfiltered) bus_names/bus_assets arrays.
+        if filter_out_of_service:
+            self.mpc_bus_data = self.mpc_bus_data[
+                self.mpc_bus_data["type"] != 4
+            ].reset_index(drop=True)
+            self.mpc_gen_data = self.mpc_gen_data[
+                self.mpc_gen_data["status"] == 1
+            ].reset_index(drop=True)
+            self.mpc_branch_data = self.mpc_branch_data[
+                self.mpc_branch_data["status"] == 1
+            ].reset_index(drop=True)
 
         #### TODO Generator costs ####
 
@@ -271,6 +290,7 @@ class Reader:
         with_pss=True,
         with_avr=True,
         with_tg=True,
+        filter_out_of_service=False,
     ):
         """
         Create dpsim objects with the data contained in the mpc files.
@@ -280,12 +300,17 @@ class Reader:
         @param domain: modeling domain to be used in dpsim (PF, SP, EMT or DP)
         @param frequency: system frequency
         @param log_level: log level used by the dpsim objects
+        @param filter_out_of_service: if True, exclude out-of-service
+                                      generators/branches and isolated buses
+                                      instead of instantiating them
         """
         self.log_level = log_level
         self.domain = domain
 
         # process mpc files
-        self.process_mpc(frequency=frequency)
+        self.process_mpc(
+            frequency=frequency, filter_out_of_service=filter_out_of_service
+        )
         if self.dyn_data:
             self.process_mpc_dyn()
 
@@ -439,6 +464,17 @@ class Reader:
             tbus_index = self.mpc_branch_data.at[
                 index, "tbus"
             ]  # matpower index 1 ... N
+
+            # skip branches dangling from a bus removed as isolated (filter_out_of_service)
+            if (
+                self.get_node_name(fbus_index) not in self.dpsimpy_busses_dict
+                or self.get_node_name(tbus_index) not in self.dpsimpy_busses_dict
+            ):
+                print(
+                    "Skipping branch %s-%s: connects to a removed isolated bus"
+                    % (fbus_index, tbus_index)
+                )
+                continue
 
             # get rows of interest
             tmp_fbus = self.mpc_bus_data.loc[self.mpc_bus_data["bus_i"] == fbus_index]
@@ -1070,13 +1106,22 @@ class Reader:
         return topologies
 
     def load_mpc(
-        self, frequency=60, domain=Domain.PF, with_pss=True, with_avr=True, with_tg=True
+        self,
+        frequency=60,
+        domain=Domain.PF,
+        with_pss=True,
+        with_avr=True,
+        with_tg=True,
+        filter_out_of_service=False,
     ):
         """
         Read mpc files and create DPsim topology
 
         @param frequency: system frequency
         @param domain: domain to be used in DPsim
+        @param filter_out_of_service: if True, exclude out-of-service
+                                      generators/branches and isolated buses
+                                      instead of instantiating them
         """
         self.create_dpsim_objects(
             domain=domain,
@@ -1084,6 +1129,7 @@ class Reader:
             with_pss=with_pss,
             with_avr=with_avr,
             with_tg=with_tg,
+            filter_out_of_service=filter_out_of_service,
         )
         self.create_dpsim_topology()
 
