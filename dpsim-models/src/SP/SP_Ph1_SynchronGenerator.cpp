@@ -91,8 +91,7 @@ void SP::Ph1::SynchronGenerator::modifyPowerFlowBusType(
     mPowerflowBusType = powerflowBusType;
     break;
   case CPS::PowerflowBusType::PQ:
-    throw std::invalid_argument(
-        "Setting Synchronous Generator as PQNode is currently not supported.");
+    mPowerflowBusType = powerflowBusType;
     break;
   case CPS::PowerflowBusType::VD:
     mPowerflowBusType = powerflowBusType;

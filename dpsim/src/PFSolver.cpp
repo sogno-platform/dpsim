@@ -181,6 +181,8 @@ void PFSolver::determinePFBusType() {
           connectedPV = true;
         } else if (gen->mPowerflowBusType == CPS::PowerflowBusType::VD) {
           connectedVD = true;
+        } else if (gen->mPowerflowBusType == CPS::PowerflowBusType::PQ) {
+          connectedPQ = true;
         }
       } else if (std::shared_ptr<CPS::SP::Ph1::NetworkInjection> extnet =
                      std::dynamic_pointer_cast<CPS::SP::Ph1::NetworkInjection>(

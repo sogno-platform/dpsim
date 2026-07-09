@@ -854,6 +854,7 @@ Reader::mapSynchronousMachine(CIMPP::SynchronousMachine *machine) {
               Real setPointActivePower = 0;
               Real setPointVoltage = 0;
               Real maximumReactivePower = 1e12;
+              PowerflowBusType busType = PowerflowBusType::PV;
               try {
                 setPointActivePower =
                     unitValue(genUnit->initialP.value, UnitMultiplier::M);
@@ -872,9 +873,12 @@ Reader::mapSynchronousMachine(CIMPP::SynchronousMachine *machine) {
                 SPDLOG_LOGGER_INFO(mSLog, "    setPointVoltage={}",
                                    setPointVoltage);
               } else {
-                std::cerr << "Uninitalized setPointVoltage for GeneratingUnit "
-                          << machineName << ". Using default value of "
-                          << setPointVoltage << std::endl;
+                // No RegulatingControl -> not voltage-regulating; map as PQ instead of guessing a PV voltage.
+                busType = PowerflowBusType::PQ;
+                SPDLOG_LOGGER_INFO(
+                    mSLog,
+                    "    No RegulatingControl for {}, mapping as PQ generator",
+                    machineName);
               }
               try {
                 maximumReactivePower =
@@ -893,7 +897,7 @@ Reader::mapSynchronousMachine(CIMPP::SynchronousMachine *machine) {
               gen->setParameters(
                   unitValue(machine->ratedS.value, UnitMultiplier::M),
                   unitValue(machine->ratedU.value, UnitMultiplier::k),
-                  setPointActivePower, setPointVoltage, PowerflowBusType::PV);
+                  setPointActivePower, setPointVoltage, busType);
               gen->setBaseVoltage(
                   unitValue(machine->ratedU.value, UnitMultiplier::k));
               return gen;
@@ -1069,11 +1073,12 @@ Reader::mapExternalNetworkInjection(CIMPP::ExternalNetworkInjection *extnet) {
 
       try {
         if (extnet->RegulatingControl) {
+          // targetValue is an absolute voltage (own UnitMultiplier), not a per-unit factor to multiply baseVoltage by.
+          Real voltageSetPoint = unitValue(
+              extnet->RegulatingControl->targetValue.value, UnitMultiplier::k);
           SPDLOG_LOGGER_INFO(mSLog, "       Voltage set-point={}",
-                             (float)extnet->RegulatingControl->targetValue);
-          cpsextnet->setParameters(
-              extnet->RegulatingControl->targetValue *
-              baseVoltage); // assumes that value is specified in CIM data in per unit
+                             voltageSetPoint);
+          cpsextnet->setParameters(voltageSetPoint);
         } else {
           SPDLOG_LOGGER_INFO(
               mSLog, "       No voltage set-point defined. Using 1 per unit.");
