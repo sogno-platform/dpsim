@@ -118,6 +118,17 @@ void MNASimPowerComp<VarType>::mnaApplyRightSideVectorStampHarm(
 };
 
 template <typename VarType>
+void MNASimPowerComp<VarType>::mnaUpdateVoltageHarm(const Matrix &leftVector,
+                                                    Int freqIdx) {
+  this->mnaCompUpdateVoltageHarm(leftVector, freqIdx);
+};
+
+template <typename VarType>
+void MNASimPowerComp<VarType>::mnaUpdateCurrentHarm(Int freqIdx) {
+  this->mnaCompUpdateCurrentHarm(freqIdx);
+};
+
+template <typename VarType>
 void MNASimPowerComp<VarType>::mnaCompInitialize(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
   // Empty default implementation. Can be overridden by child classes if desired.
@@ -194,6 +205,17 @@ void MNASimPowerComp<VarType>::mnaCompApplyRightSideVectorStampHarm(
 template <typename VarType>
 void MNASimPowerComp<VarType>::mnaCompApplyRightSideVectorStampHarm(
     Matrix &sourceVector, Int freqIdx) {
+  // Empty default implementation. Can be overridden by child classes if desired.
+}
+
+template <typename VarType>
+void MNASimPowerComp<VarType>::mnaCompUpdateVoltageHarm(
+    const Matrix &leftVector, Int freqIdx) {
+  // Empty default implementation. Can be overridden by child classes if desired.
+}
+
+template <typename VarType>
+void MNASimPowerComp<VarType>::mnaCompUpdateCurrentHarm(Int freqIdx) {
   // Empty default implementation. Can be overridden by child classes if desired.
 }
 
