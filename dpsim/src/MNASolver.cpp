@@ -568,9 +568,7 @@ template <> void MnaSolver<Real>::createEmptyVectors() {
 
 template <> void MnaSolver<Complex>::createEmptyVectors() {
   if (mFrequencyParallel) {
-    // mLeftSideVectorHarm's entries already exist (pushed empty in
-    // initialize()); resize them here rather than push_back'ing new ones,
-    // which would leave the vector holding double the real frequency count.
+    // Entries already exist (pushed empty in initialize()); resize, don't push_back
     for (Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
       mRightSideVectorHarm.push_back(
           Matrix::Zero(2 * (mNumMatrixNodeIndices), 1));

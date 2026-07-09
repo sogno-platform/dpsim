@@ -195,12 +195,9 @@ public:
   };
 
 protected:
-  /// Refreshes each subcomponent's own right-vector contribution, then calls
-  /// mnaParentPreStepHarm (which typically sums them via
-  /// mnaCompApplyRightSideVectorStampHarm, mirroring mnaParentPreStep).
+  /// Refreshes subcomponents' right-vector contributions, then mnaParentPreStepHarm
   void mnaCompPreStepHarm(Real time, Int timeStepCount);
-  /// Drives subcomponents' post-step voltage/current update (respecting
-  /// before/after-parent order), then calls mnaParentPostStepHarm.
+  /// Drives subcomponents' post-step update, then mnaParentPostStepHarm
   void mnaCompPostStepHarm(Real time, Int timeStepCount,
                            std::vector<Attribute<Matrix>::Ptr> &leftVectors);
 };
