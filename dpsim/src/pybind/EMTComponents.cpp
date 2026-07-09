@@ -357,6 +357,45 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "init_active_power"_a, "init_reactive_power"_a,
            "init_terminal_volt"_a, "init_volt_angle"_a, "init_mech_power"_a);
 
+  py::class_<CPS::EMT::Ph3::VSIVoltageControlVCO,
+             std::shared_ptr<CPS::EMT::Ph3::VSIVoltageControlVCO>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "VSIVoltageControlVCO",
+                                           py::multiple_inheritance())
+
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
+           "uid"_a, "name"_a, "log_level"_a = CPS::Logger::Level::off,
+           "with_trafo"_a = false)
+
+      .def("set_parameters",
+           &CPS::EMT::Ph3::VSIVoltageControlVCO::setParameters, "sys_omega"_a,
+           "vd_ref"_a, "vq_ref"_a)
+
+      .def("set_controller_parameters",
+           &CPS::EMT::Ph3::VSIVoltageControlVCO::setControllerParameters,
+           "kp_voltage_ctrl"_a, "ki_voltage_ctrl"_a, "kp_curr_ctrl"_a,
+           "ki_curr_ctrl"_a, "omega_nominal"_a)
+
+      .def("set_transformer_parameters",
+           &CPS::EMT::Ph3::VSIVoltageControlVCO::setTransformerParameters,
+           "nom_voltage_end1"_a, "nom_voltage_end2"_a, "rated_power"_a,
+           "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a,
+           "omega"_a)
+
+      .def("set_filter_parameters",
+           &CPS::EMT::Ph3::VSIVoltageControlVCO::setFilterParameters, "lf"_a,
+           "cf"_a, "rf"_a, "rc"_a)
+
+      .def("set_initial_state_values",
+           &CPS::EMT::Ph3::VSIVoltageControlVCO::setInitialStateValues,
+           "phi_d_init"_a, "phi_q_init"_a, "gamma_d_init"_a, "gamma_q_init"_a)
+
+      .def("with_control", &CPS::EMT::Ph3::VSIVoltageControlVCO::withControl,
+           "control_on"_a)
+
+      .def("connect", &CPS::EMT::Ph3::VSIVoltageControlVCO::connect);
+
   py::class_<CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR,
              std::shared_ptr<CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR>,
              CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>>(

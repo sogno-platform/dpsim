@@ -130,6 +130,7 @@ set(INVERTER_SOURCES
 	Components/DP_Inverter_Grid.cpp
 	Components/DP_Inverter_Grid_Parallel_FreqSplit.cpp
 	Components/DP_Inverter_Grid_Sequential_FreqSplit.cpp
+	Components/EMT_Ph3_GFM_Test.cpp
 )
 
 set(SSN_SOURCES
@@ -221,6 +222,8 @@ if(WITH_CIM)
 		CIM/CIGRE_MV_PowerFlowTest.cpp
 		CIM/CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
 		CIM/IEEE_LV_PowerFlowTest.cpp
+		CIM/CreteValley_CIM_PF.cpp
+
 
 		# WSCC examples
 		CIM/WSCC_9bus_mult_decoupled.cpp

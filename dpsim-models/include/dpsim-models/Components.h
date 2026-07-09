@@ -169,6 +169,7 @@
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorVBR.h>
 #include <dpsim-models/EMT/EMT_Ph3_Transformer.h>
 #include <dpsim-models/EMT/EMT_Ph3_TwoTerminalVTypeVariableSSNComp.h>
+#include <dpsim-models/EMT/EMT_Ph3_VSIVoltageControlVCO.h>
 
 #include <dpsim-models/Signal/CosineFMGenerator.h>
 #include <dpsim-models/Signal/DecouplingIdealTransformer_DP_Ph1.h>
@@ -194,3 +195,5 @@
 #include <dpsim-models/Signal/SteamTurbineGovernor.h>
 #include <dpsim-models/Signal/TurbineGovernor.h>
 #include <dpsim-models/Signal/TurbineGovernorType1.h>
+#include <dpsim-models/Signal/VCO.h>
+#include <dpsim-models/Signal/VoltageControllerVSI.h>
