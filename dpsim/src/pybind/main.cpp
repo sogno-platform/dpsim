@@ -448,6 +448,12 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("__str__", &getAttributeList);
 
 #ifdef WITH_CIM
+  py::enum_<CPS::CIM::Reader::VoltageTargetUnit>(m,
+                                                 "CIMReaderVoltageTargetUnit")
+      .value("Auto", CPS::CIM::Reader::VoltageTargetUnit::Auto)
+      .value("PerUnit", CPS::CIM::Reader::VoltageTargetUnit::PerUnit)
+      .value("Absolute", CPS::CIM::Reader::VoltageTargetUnit::Absolute);
+
   py::class_<CPS::CIM::Reader>(m, "CIMReader")
       .def(py::init<std::string, CPS::Logger::Level, CPS::Logger::Level>(),
            "name"_a, "loglevel"_a = CPS::Logger::Level::info,
@@ -455,7 +461,9 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("loadCIM", (CPS::SystemTopology(CPS::CIM::Reader::*)(
                           CPS::Real, const std::list<CPS::String> &,
                           CPS::Domain, CPS::PhaseType, CPS::GeneratorType)) &
-                          CPS::CIM::Reader::loadCIM);
+                          CPS::CIM::Reader::loadCIM)
+      .def("set_extnet_voltage_target_unit",
+           &CPS::CIM::Reader::setExtnetVoltageTargetUnit, "unit"_a);
 #endif
 
   py::class_<CPS::CSVReader>(m, "CSVReader")

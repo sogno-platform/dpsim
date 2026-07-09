@@ -59,6 +59,10 @@ void Reader::useProtectionSwitches(Bool value) {
   mUseProtectionSwitches = value;
 }
 
+void Reader::setExtnetVoltageTargetUnit(VoltageTargetUnit unit) {
+  mExtnetVoltageTargetUnit = unit;
+}
+
 Real Reader::unitValue(Real value, CIMPP::UnitMultiplier mult) {
   switch (mult) {
   case UnitMultiplier::p:
@@ -1076,9 +1080,24 @@ Reader::mapExternalNetworkInjection(CIMPP::ExternalNetworkInjection *extnet) {
 
       try {
         if (extnet->RegulatingControl) {
-          // targetValue is an absolute voltage (own UnitMultiplier), not a per-unit factor to multiply baseVoltage by.
-          Real voltageSetPoint = unitValue(
-              extnet->RegulatingControl->targetValue.value, UnitMultiplier::k);
+          // targetValueUnitMultiplier is uninitialized if unset, so Auto guesses by magnitude
+          Real rawTarget = extnet->RegulatingControl->targetValue.value;
+          Bool perUnit;
+          switch (mExtnetVoltageTargetUnit) {
+          case VoltageTargetUnit::PerUnit:
+            perUnit = true;
+            break;
+          case VoltageTargetUnit::Absolute:
+            perUnit = false;
+            break;
+          case VoltageTargetUnit::Auto:
+          default:
+            perUnit = std::abs(rawTarget) >= 0.5 && std::abs(rawTarget) <= 1.5;
+            break;
+          }
+          Real voltageSetPoint = perUnit
+                                     ? rawTarget * baseVoltage
+                                     : unitValue(rawTarget, UnitMultiplier::k);
           SPDLOG_LOGGER_INFO(mSLog, "       Voltage set-point={}",
                              voltageSetPoint);
           cpsextnet->setParameters(voltageSetPoint);
