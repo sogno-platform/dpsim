@@ -222,7 +222,6 @@ if(WITH_CIM)
 		CIM/CIGRE_MV_PowerFlowTest.cpp
 		CIM/CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
 		CIM/IEEE_LV_PowerFlowTest.cpp
-		CIM/CreteValley_CIM_PF.cpp
 
 
 		# WSCC examples
