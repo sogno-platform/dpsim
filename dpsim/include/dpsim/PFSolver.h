@@ -110,6 +110,11 @@ protected:
   /// Use last converged solution as initial guess
   CPS::Bool mKeepLastSolution = false;
 
+  /// Max |dV| per Newton step [pu]; caps PFSolverPowerPolar::updateSolution()'s step scaling
+  CPS::Real mMaxDVoltagePerUnitPerStep = 0.1;
+  /// Max |dTheta| per Newton step [rad]; caps PFSolverPowerPolar::updateSolution()'s step scaling
+  CPS::Real mMaxDThetaRadPerStep = 0.2;
+
   /// Generate initial solution for current time step
   virtual void generateInitialSolution(Real time,
                                        bool keep_last_solution = false) = 0;
@@ -223,6 +228,13 @@ public:
   }
 
   CPS::UInt getMaxIterations() const { return mMaxIterations; }
+
+  /// Relax or tighten the per-iteration Newton step clamp (defaults: 0.1 pu / 0.2 rad).
+  void setMaxStepPerIteration(CPS::Real maxDVoltagePerUnit,
+                              CPS::Real maxDThetaRad) {
+    mMaxDVoltagePerUnitPerStep = maxDVoltagePerUnit;
+    mMaxDThetaRadPerStep = maxDThetaRad;
+  }
 
   class SolveTask : public CPS::Task {
   public:
