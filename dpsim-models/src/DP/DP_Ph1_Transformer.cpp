@@ -246,6 +246,29 @@ void DP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(
   }
 }
 
+void DP::Ph1::Transformer::mnaCompApplySystemMatrixStampHarm(
+    SparseMatrixRow &systemMatrix, Int freqIdx) {
+  // Ideal transformer equations, frequency-independent
+  if (terminalNotGrounded(0)) {
+    Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(),
+                           mVirtualNodes[1]->matrixNodeIndex(),
+                           Complex(-1.0, 0));
+    Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(),
+                           mVirtualNodes[0]->matrixNodeIndex(),
+                           Complex(1.0, 0));
+  }
+  if (terminalNotGrounded(1)) {
+    Math::setMatrixElement(systemMatrix, matrixNodeIndex(1),
+                           mVirtualNodes[1]->matrixNodeIndex(), **mRatio);
+    Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(),
+                           matrixNodeIndex(1), -**mRatio);
+  }
+
+  for (auto subcomp : mSubComponents)
+    if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+      mnasubcomp->mnaApplySystemMatrixStampHarm(systemMatrix, freqIdx);
+}
+
 void DP::Ph1::Transformer::mnaParentAddPreStepDependencies(
     AttributeBase::List &prevStepDependencies,
     AttributeBase::List &attributeDependencies,
@@ -257,6 +280,10 @@ void DP::Ph1::Transformer::mnaParentAddPreStepDependencies(
 
 void DP::Ph1::Transformer::mnaParentPreStep(Real time, Int timeStepCount) {
   this->mnaApplyRightSideVectorStamp(**this->mRightVector);
+}
+
+void DP::Ph1::Transformer::mnaParentPreStepHarm(Real time, Int timeStepCount) {
+  this->mnaApplyRightSideVectorStampHarm(**this->mRightVector);
 }
 
 void DP::Ph1::Transformer::mnaParentAddPostStepDependencies(
@@ -275,8 +302,21 @@ void DP::Ph1::Transformer::mnaParentPostStep(
   this->mnaUpdateCurrent(**leftVector);
 }
 
+void DP::Ph1::Transformer::mnaParentPostStepHarm(
+    Real time, Int timeStepCount,
+    std::vector<Attribute<Matrix>::Ptr> &leftVectors) {
+  for (UInt freq = 0; freq < mNumFreqs; freq++)
+    this->mnaUpdateVoltageHarm(**leftVectors[freq], freq);
+  for (UInt freq = 0; freq < mNumFreqs; freq++)
+    this->mnaUpdateCurrentHarm(freq);
+}
+
 void DP::Ph1::Transformer::mnaCompUpdateCurrent(const Matrix &leftVector) {
   (**mIntfCurrent)(0, 0) = mSubInductor->intfCurrent()(0, 0);
+}
+
+void DP::Ph1::Transformer::mnaCompUpdateCurrentHarm(Int freqIdx) {
+  (**mIntfCurrent)(0, freqIdx) = mSubInductor->intfCurrent()(0, freqIdx);
 }
 
 void DP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix &leftVector) {
@@ -289,4 +329,16 @@ void DP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix &leftVector) {
                                leftVector, mVirtualNodes[0]->matrixNodeIndex());
   SPDLOG_LOGGER_DEBUG(mSLog, "Voltage {:s}",
                       Logger::phasorToString((**mIntfVoltage)(0, 0)));
+}
+
+void DP::Ph1::Transformer::mnaCompUpdateVoltageHarm(const Matrix &leftVector,
+                                                    Int freqIdx) {
+  // v1 - v0
+  (**mIntfVoltage)(0, freqIdx) = 0;
+  (**mIntfVoltage)(0, freqIdx) =
+      Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
+  (**mIntfVoltage)(0, freqIdx) =
+      (**mIntfVoltage)(0, freqIdx) -
+      Math::complexFromVectorElement(leftVector,
+                                     mVirtualNodes[0]->matrixNodeIndex());
 }
