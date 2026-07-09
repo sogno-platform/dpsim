@@ -31,6 +31,10 @@ class PiLine : public CompositePowerComp<Complex>,
 private:
   /// base voltage [V]
   Real mBaseVoltage;
+  /// true if mParallelCap was never given a real value in setParameters() and holds the MNA-conditioning fallback instead
+  bool mParallelCapIsFallback = false;
+  /// true if mParallelCond was never given a real value in setParameters() and holds the MNA-conditioning fallback instead
+  bool mParallelCondIsFallback = false;
 
 public:
   // #### Power flow results ####
