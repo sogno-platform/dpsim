@@ -229,9 +229,8 @@ public:
         if (it->getRightVector()->get().size() != 0)
           mAttributeDependencies.push_back(it->getRightVector());
       }
-      for (auto node : solver.mNodes) {
-        mModifiedAttributes.push_back(node->mVoltage);
-      }
+      // Unlike SolveTask, this does not modify node voltages directly;
+      // SimNode::MnaPostStepHarm does that from mLeftSideVectorHarm.
       for (auto leftVec : solver.mLeftSideVectorHarm) {
         mModifiedAttributes.push_back(leftVec);
       }
