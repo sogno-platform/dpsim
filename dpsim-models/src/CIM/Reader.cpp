@@ -115,7 +115,10 @@ TopologicalPowerComp::Ptr Reader::mapComponent(BaseClass *obj) {
   if (CIMPP::EquivalentShunt *shunt =
           dynamic_cast<CIMPP::EquivalentShunt *>(obj))
     return mapEquivalentShunt(shunt);
-
+  if (CIMPP::Disconnector *disc = dynamic_cast<CIMPP::Disconnector *>(obj))
+    return mapDisconnector(disc);
+  if (CIMPP::Breaker *cb = dynamic_cast<CIMPP::Breaker *>(obj))
+    return mapBreaker(cb);
   return nullptr;
 }
 
@@ -1117,6 +1120,145 @@ Reader::mapEquivalentShunt(CIMPP::EquivalentShunt *shunt) {
   cpsShunt->setParameters(shunt->g.value, shunt->b.value);
   cpsShunt->setBaseVoltage(baseVoltage);
   return cpsShunt;
+}
+
+TopologicalPowerComp::Ptr Reader::mapDisconnector(CIMPP::Disconnector *disc) {
+
+  SPDLOG_LOGGER_INFO(mSLog, "Found Disconnector {} with status {}",
+                     cimString(disc->name), (bool)disc->open.value);
+
+  Real openResistance = 1e12;
+  Real closedResistance = 1e-6;
+
+  Bool status = disc->open.value;
+
+  if (mPhase == PhaseType::ABC) {
+    Matrix openResistance3Ph =
+        CPS::Math::singlePhaseParameterToThreePhase(openResistance);
+    Matrix closedResistance3Ph =
+        CPS::Math::singlePhaseParameterToThreePhase(closedResistance);
+
+    if (mDomain == Domain::EMT) {
+      auto cpsSwitch = std::make_shared<EMT::Ph3::Switch>(
+          disc->mRID, disc->name, mComponentLogLevel);
+
+      cpsSwitch->setParameters(openResistance3Ph, closedResistance3Ph);
+
+      if (status == true) {
+        cpsSwitch->openSwitch();
+      } else {
+        cpsSwitch->closeSwitch();
+      }
+
+      return cpsSwitch;
+    } else if (mDomain == Domain::DP) {
+      SPDLOG_LOGGER_INFO(mSLog,
+                         "Mapping of Disconnector for DP::Ph3 not existent!");
+
+      return nullptr;
+    } else {
+      SPDLOG_LOGGER_INFO(mSLog,
+                         "Mapping of Disconnector for SP::Ph3 not existent!");
+      return nullptr;
+    }
+  } else {
+    std::shared_ptr<CPS::TopologicalPowerComp> topoSwitch;
+    std::shared_ptr<CPS::Base::Ph1::Switch> cpsSwitch;
+
+    if (mDomain == Domain::EMT) {
+      auto sw = std::make_shared<EMT::Ph1::Switch>(disc->mRID, disc->name,
+                                                   mComponentLogLevel);
+      cpsSwitch = sw;
+      topoSwitch = sw;
+    } else if (mDomain == Domain::DP) {
+      auto sw = std::make_shared<DP::Ph1::Switch>(disc->mRID, disc->name,
+                                                  mComponentLogLevel);
+      cpsSwitch = sw;
+      topoSwitch = sw;
+    } else {
+      auto sw = std::make_shared<SP::Ph1::Switch>(disc->mRID, disc->name,
+                                                  mComponentLogLevel);
+      cpsSwitch = sw;
+      topoSwitch = sw;
+    }
+
+    cpsSwitch->setParameters(openResistance, closedResistance);
+    if (status) {
+      cpsSwitch->open();
+    } else {
+      cpsSwitch->close();
+    }
+
+    return topoSwitch;
+  }
+}
+
+TopologicalPowerComp::Ptr Reader::mapBreaker(CIMPP::Breaker *cb) {
+  SPDLOG_LOGGER_INFO(mSLog, "Found Breaker {} with status {}",
+                     cimString(cb->name), (bool)cb->open.value);
+
+  Real openResistance = 1e12;
+  Real closedResistance = 1e-6;
+
+  Bool status = cb->open.value;
+
+  if (mPhase == PhaseType::ABC) {
+    Matrix openResistance3Ph =
+        CPS::Math::singlePhaseParameterToThreePhase(openResistance);
+    Matrix closedResistance3Ph =
+        CPS::Math::singlePhaseParameterToThreePhase(closedResistance);
+
+    if (mDomain == Domain::EMT) {
+      auto cpsSwitch = std::make_shared<EMT::Ph3::Switch>(cb->mRID, cb->name,
+                                                          mComponentLogLevel);
+
+      cpsSwitch->setParameters(openResistance3Ph, closedResistance3Ph);
+
+      if (status == true) {
+        cpsSwitch->openSwitch();
+      } else {
+        cpsSwitch->closeSwitch();
+      }
+
+      return cpsSwitch;
+    } else if (mDomain == Domain::DP) {
+      SPDLOG_LOGGER_INFO(mSLog, "Mapping of Breaker for DP::Ph3 not existent!");
+
+      return nullptr;
+    } else {
+      SPDLOG_LOGGER_INFO(mSLog, "Mapping of Breaker for SP::Ph3 not existent!");
+      return nullptr;
+    }
+  } else {
+    std::shared_ptr<CPS::TopologicalPowerComp> topoSwitch;
+    std::shared_ptr<CPS::Base::Ph1::Switch> cpsSwitch;
+
+    if (mDomain == Domain::EMT) {
+      auto sw = std::make_shared<EMT::Ph1::Switch>(cb->mRID, cb->name,
+                                                   mComponentLogLevel);
+      cpsSwitch = sw;
+      topoSwitch = sw;
+    } else if (mDomain == Domain::DP) {
+      auto sw = std::make_shared<DP::Ph1::Switch>(cb->mRID, cb->name,
+                                                  mComponentLogLevel);
+      cpsSwitch = sw;
+      topoSwitch = sw;
+    } else {
+      auto sw = std::make_shared<SP::Ph1::Switch>(cb->mRID, cb->name,
+                                                  mComponentLogLevel);
+      cpsSwitch = sw;
+      topoSwitch = sw;
+    }
+
+    cpsSwitch->setParameters(openResistance, closedResistance);
+    if (status) {
+      cpsSwitch->open();
+    } else {
+      cpsSwitch->close();
+    }
+
+    return topoSwitch;
+  }
 }
 
 Real Reader::determineBaseVoltageAssociatedWithEquipment(

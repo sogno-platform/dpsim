@@ -49,6 +49,8 @@ class PowerTransformer;
 class EquivalentShunt;
 class TopologicalNode;
 class ConductingEquipment;
+class Disconnector;
+class Breaker;
 }; // namespace CIMPP
 #else
 #include <CIMNamespaces.hpp>
@@ -164,6 +166,10 @@ private:
   mapExternalNetworkInjection(CIMPP::ExternalNetworkInjection *extnet);
   /// Returns a shunt
   TopologicalPowerComp::Ptr mapEquivalentShunt(CIMPP::EquivalentShunt *shunt);
+  /// Returns a switch
+  TopologicalPowerComp::Ptr mapDisconnector(CIMPP::Disconnector *disc);
+  /// Returns a switch
+  TopologicalPowerComp::Ptr mapBreaker(CIMPP::Breaker *cb);
 
   // #### Helper Functions ####
   /// Determine base voltage associated with object
