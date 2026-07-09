@@ -4,6 +4,7 @@
 #include <Eigen/Eigenvalues>
 #include <Eigen/LU>
 
+#include <dpsim-models/MathUtils.h>
 #include <dpsim/StateSpaceModalAnalysis.h>
 
 #include <cmath>
@@ -92,15 +93,8 @@ void StateSpaceModalAnalysis::update() {
 
   mLeftEigenvectors = eigenvectorLu.inverse();
 
-  mParticipationFactors.resize(mRightEigenvectors.rows(),
-                               mRightEigenvectors.cols());
-
-  for (Eigen::Index mode = 0; mode < mRightEigenvectors.cols(); ++mode) {
-    for (Eigen::Index state = 0; state < mRightEigenvectors.rows(); ++state) {
-      mParticipationFactors(state, mode) =
-          mRightEigenvectors(state, mode) * mLeftEigenvectors(mode, state);
-    }
-  }
+  mParticipationFactors = CPS::Math::elementwiseProduct(
+      mRightEigenvectors, mLeftEigenvectors.transpose());
 }
 
 Matrix
