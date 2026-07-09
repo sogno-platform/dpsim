@@ -37,8 +37,6 @@ void SP::Ph1::Shunt::setBaseVoltage(Real baseVoltage) {
   mBaseVoltage = baseVoltage;
 }
 
-Real SP::Ph1::Shunt::getBaseVoltage() const { return mBaseVoltage; }
-
 void SP::Ph1::Shunt::calculatePerUnitParameters(Real baseApparentPower,
                                                 Real baseOmega) {
   SPDLOG_LOGGER_INFO(mSLog, "#### Calculate Per Unit Parameters for {}",
