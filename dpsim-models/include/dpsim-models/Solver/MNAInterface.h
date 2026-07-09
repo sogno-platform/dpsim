@@ -64,6 +64,11 @@ public:
   virtual void mnaApplyRightSideVectorStampHarm(Matrix &sourceVector) = 0;
   virtual void mnaApplyRightSideVectorStampHarm(Matrix &sourceVector,
                                                 Int freqIdx) = 0;
+  /// Update interface voltage for a single frequency index (harmonics domain).
+  /// Not pure virtual: only composites need to call this on subcomponents.
+  virtual void mnaUpdateVoltageHarm(const Matrix &leftVector, Int freqIdx) {}
+  /// Update interface current for a single frequency index (harmonics domain).
+  virtual void mnaUpdateCurrentHarm(Int freqIdx) {}
   /// Return list of MNA tasks
   virtual const Task::List &mnaTasks() const = 0;
   // Return right vector attribute
