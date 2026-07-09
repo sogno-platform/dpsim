@@ -50,6 +50,12 @@ public:
   /// Maximum number of Newton-Raphson iterations for the PF solver.
   const CPS::Attribute<CPS::UInt>::Ptr mPFMaxIterations;
 
+  /// Max |dV| per Newton step [pu] for the PF solver; default 0.1
+  const CPS::Attribute<Real>::Ptr mPFMaxDVoltagePerUnitPerStep;
+
+  /// Max |dTheta| per Newton step [rad] for the PF solver; default 0.2
+  const CPS::Attribute<Real>::Ptr mPFMaxDThetaRadPerStep;
+
   /// Use the sparse-Jacobian powerflow solver (scales to large grids).
   /// Default false (dense solver); opt in via setPFSolverUseSparse(true).
   /// Ignored (dense solver used) if no sparse linear solver is available.
@@ -275,6 +281,14 @@ public:
   void setPFMaxIterations(CPS::UInt value);
 
   CPS::UInt getPFMaxIterations() const;
+
+  /// Relax or tighten the PF solver's per-iteration Newton step clamp (defaults: 0.1 pu / 0.2 rad).
+  void setPFSolverMaxStepPerIteration(Real maxDVoltagePerUnit,
+                                      Real maxDThetaRad);
+
+  Real getPFSolverMaxDVoltagePerUnitPerStep() const;
+
+  Real getPFSolverMaxDThetaRadPerStep() const;
 
   void setPFSolverUseSparse(Bool value);
 
