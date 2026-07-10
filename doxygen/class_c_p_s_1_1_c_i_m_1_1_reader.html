@@ -89,12 +89,21 @@ $(function(){ initResizable(false); });
 <div id="doc-content">
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="class_c_p_s_1_1_c_i_m_1_1_reader-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">CPS::CIM::Reader Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:ae147742b28f99b4c06f8115bc79e1229" id="r_ae147742b28f99b4c06f8115bc79e1229"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>VoltageTargetUnit</b> { <b>Auto</b>
+, <b>PerUnit</b>
+, <b>Absolute</b>
+ }</td></tr>
+<tr class="separator:ae147742b28f99b4c06f8115bc79e1229"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a66d6947477702d25bc59902b68007655" id="r_a66d6947477702d25bc59902b68007655"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a66d6947477702d25bc59902b68007655">Reader</a> (String name, Logger::Level logLevel=Logger::Level::info, Logger::Level componentLogLevel=Logger::Level::off)</td></tr>
@@ -116,11 +125,38 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a61ad5bec56b65b1d6234676ef589038c" id="r_a61ad5bec56b65b1d6234676ef589038c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a61ad5bec56b65b1d6234676ef589038c">useProtectionSwitches</a> (Bool value=true)</td></tr>
 <tr class="memdesc:a61ad5bec56b65b1d6234676ef589038c"><td class="mdescLeft">&#160;</td><td class="mdescRight">If set, some components like loads include protection switches.  <br /></td></tr>
 <tr class="separator:a61ad5bec56b65b1d6234676ef589038c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1fb0113581a62b1d65c0c6e6d38052bb" id="r_a1fb0113581a62b1d65c0c6e6d38052bb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1fb0113581a62b1d65c0c6e6d38052bb">setExtnetVoltageTargetUnit</a> (VoltageTargetUnit unit)</td></tr>
+<tr class="separator:a1fb0113581a62b1d65c0c6e6d38052bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
 <p class="definition">Definition at line <a class="el" href="_reader_8h_source.html#l00079">79</a> of file <a class="el" href="_reader_8h_source.html">Reader.h</a>.</p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+</div><h2 class="groupheader">Member Enumeration Documentation</h2>
+<a id="ae147742b28f99b4c06f8115bc79e1229" name="ae147742b28f99b4c06f8115bc79e1229"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae147742b28f99b4c06f8115bc79e1229">&#9670;&#160;</a></span>VoltageTargetUnit</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class CPS::CIM::Reader::VoltageTargetUnit</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_reader_8h_source.html#l00081">81</a> of file <a class="el" href="_reader_8h_source.html">Reader.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a66d6947477702d25bc59902b68007655" name="a66d6947477702d25bc59902b68007655"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a66d6947477702d25bc59902b68007655">&#9670;&#160;</a></span>Reader()</h2>
 
@@ -214,7 +250,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Parses data from CIM files into the CPS data structure. </p>
 
-<p class="definition">Definition at line <a class="el" href="_reader_8cpp_source.html#l00214">214</a> of file <a class="el" href="_reader_8cpp_source.html">Reader.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_reader_8cpp_source.html#l00218">218</a> of file <a class="el" href="_reader_8cpp_source.html">Reader.cpp</a>.</p>
 
 </div>
 </div>
@@ -292,7 +328,26 @@ Public Member Functions</h2></td></tr>
 
 <p>Parses data from CIM files into the CPS data structure. </p>
 
-<p class="definition">Definition at line <a class="el" href="_reader_8cpp_source.html#l00227">227</a> of file <a class="el" href="_reader_8cpp_source.html">Reader.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_reader_8cpp_source.html#l00231">231</a> of file <a class="el" href="_reader_8cpp_source.html">Reader.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a1fb0113581a62b1d65c0c6e6d38052bb" name="a1fb0113581a62b1d65c0c6e6d38052bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1fb0113581a62b1d65c0c6e6d38052bb">&#9670;&#160;</a></span>setExtnetVoltageTargetUnit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Reader::setExtnetVoltageTargetUnit </td>
+          <td>(</td>
+          <td class="paramtype">VoltageTargetUnit</td>          <td class="paramname"><span class="paramname"><em>unit</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_reader_8cpp_source.html#l00062">62</a> of file <a class="el" href="_reader_8cpp_source.html">Reader.cpp</a>.</p>
 
 </div>
 </div>

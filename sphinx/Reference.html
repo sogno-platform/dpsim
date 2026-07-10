@@ -106,6 +106,14 @@
 <li class="toctree-l2"><a class="reference internal" href="#dpsimpy.AttributeStringStat"><code class="docutils literal notranslate"><span class="pre">AttributeStringStat</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dpsimpy.CIMReader"><code class="docutils literal notranslate"><span class="pre">CIMReader</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.CIMReader.loadCIM"><code class="docutils literal notranslate"><span class="pre">CIMReader.loadCIM()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.CIMReader.set_extnet_voltage_target_unit"><code class="docutils literal notranslate"><span class="pre">CIMReader.set_extnet_voltage_target_unit()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.CIMReaderVoltageTargetUnit"><code class="docutils literal notranslate"><span class="pre">CIMReaderVoltageTargetUnit</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.CIMReaderVoltageTargetUnit.Absolute"><code class="docutils literal notranslate"><span class="pre">CIMReaderVoltageTargetUnit.Absolute</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.CIMReaderVoltageTargetUnit.Auto"><code class="docutils literal notranslate"><span class="pre">CIMReaderVoltageTargetUnit.Auto</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.CIMReaderVoltageTargetUnit.PerUnit"><code class="docutils literal notranslate"><span class="pre">CIMReaderVoltageTargetUnit.PerUnit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.CIMReaderVoltageTargetUnit.value"><code class="docutils literal notranslate"><span class="pre">CIMReaderVoltageTargetUnit.value</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#dpsimpy.CSVReader"><code class="docutils literal notranslate"><span class="pre">CSVReader</span></code></a><ul>
@@ -1361,6 +1369,45 @@ and to parameterize all components of the network from Python.</p>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="dpsimpy.CIMReader.loadCIM">
 <span class="sig-name descname"><span class="pre">loadCIM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.CIMReader" title="dpsimpy.CIMReader"><span class="pre">dpsimpy.CIMReader</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.Domain" title="dpsimpy.Domain"><span class="pre">dpsimpy.Domain</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg3</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.PhaseType" title="dpsimpy.PhaseType"><span class="pre">dpsimpy.PhaseType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg4</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.GeneratorType" title="dpsimpy.GeneratorType"><span class="pre">dpsimpy.GeneratorType</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.SystemTopology" title="dpsimpy.SystemTopology"><span class="pre">dpsimpy.SystemTopology</span></a></span></span><a class="headerlink" href="#dpsimpy.CIMReader.loadCIM" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.CIMReader.set_extnet_voltage_target_unit">
+<span class="sig-name descname"><span class="pre">set_extnet_voltage_target_unit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.CIMReader" title="dpsimpy.CIMReader"><span class="pre">dpsimpy.CIMReader</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.CIMReaderVoltageTargetUnit" title="dpsimpy.CIMReaderVoltageTargetUnit"><span class="pre">dpsimpy.CIMReaderVoltageTargetUnit</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.CIMReader.set_extnet_voltage_target_unit" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.CIMReaderVoltageTargetUnit">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">CIMReaderVoltageTargetUnit</span></span><a class="headerlink" href="#dpsimpy.CIMReaderVoltageTargetUnit" title="Link to this definition"></a></dt>
+<dd><p>Members:</p>
+<p>Auto</p>
+<p>PerUnit</p>
+<p>Absolute</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.CIMReaderVoltageTargetUnit.Absolute">
+<span class="sig-name descname"><span class="pre">Absolute</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;CIMReaderVoltageTargetUnit.Absolute:</span> <span class="pre">2&gt;</span></span><a class="headerlink" href="#dpsimpy.CIMReaderVoltageTargetUnit.Absolute" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.CIMReaderVoltageTargetUnit.Auto">
+<span class="sig-name descname"><span class="pre">Auto</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;CIMReaderVoltageTargetUnit.Auto:</span> <span class="pre">0&gt;</span></span><a class="headerlink" href="#dpsimpy.CIMReaderVoltageTargetUnit.Auto" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.CIMReaderVoltageTargetUnit.PerUnit">
+<span class="sig-name descname"><span class="pre">PerUnit</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;CIMReaderVoltageTargetUnit.PerUnit:</span> <span class="pre">1&gt;</span></span><a class="headerlink" href="#dpsimpy.CIMReaderVoltageTargetUnit.PerUnit" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">CIMReaderVoltageTargetUnit.name</span> <span class="pre">-&gt;</span> <span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.CIMReaderVoltageTargetUnit.value">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#dpsimpy.CIMReaderVoltageTargetUnit.value" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
