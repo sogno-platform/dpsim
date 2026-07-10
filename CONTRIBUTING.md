@@ -5,7 +5,7 @@ Thanks for your interest in contributing! Below are the essentials to get a pull
 ## Quick start
 
 1. Fork the repository and clone your fork.
-1. Run `pre-commit install` to activate automated checks (formatting, linear history guard).
+1. Run `pre-commit install` to activate automated checks (formatting, linear history guard, notebook output stripping).
 1. Create a branch with a descriptive prefix (`feature/`, `fix/`, `docs/`).
 1. Make your changes and commit using the conventional commit style (`feat:`, `fix:`, `docs:`, ...) with a sign-off:
 
@@ -30,6 +30,7 @@ Thanks for your interest in contributing! Below are the essentials to get a pull
 - **Formatting**: clang-format 17 for C++, black for Python, markdownlint for Markdown; all enforced by pre-commit.
 - **SPDX headers**: new files must include a license header (see [guidelines](https://dpsim.fein-aachen.org/docs/development/guidelines/)).
 - **No `std::cout` in C++**: use `SPDLOG_LOGGER_*` macros.
+- **No saved notebook outputs**: strip outputs from `.ipynb` files before committing; pre-commit and CI both enforce this.
 - **Contributions in forks only**: do not push feature branches to the main repository.
 
 ## License

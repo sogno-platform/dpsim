@@ -63,6 +63,18 @@ There are no strict formal requirements besides the following:
 
     A `pre-commit` hook enforces this automatically once you have run `pre-commit install`.
 
+1. **No Saved Notebook Outputs**
+
+    Jupyter notebooks must be committed without saved cell outputs (images, plots, printed text).
+    Saved outputs bloat diffs and can break the notebook test collector, which re-executes notebooks and re-extracts their outputs.
+    Strip outputs before committing:
+
+    ```bash
+    jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace <notebook.ipynb>
+    ```
+
+    A `pre-commit` hook does this automatically once you have run `pre-commit install`; CI also rejects any notebook that still has outputs saved.
+
 # Creating New Releases (info for maintainers)
 
 DPsim currently uses to [Semantic Versioning](https://semver.org/). The periodic creation of

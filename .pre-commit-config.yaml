@@ -51,6 +51,13 @@ repos:
 
   - repo: local
     hooks:
+      - id: clear-notebook-outputs
+        name: clear notebook outputs
+        language: python
+        additional_dependencies: ["nbconvert"]
+        entry: python -m nbconvert --ClearOutputPreprocessor.enabled=True --inplace
+        files: \.ipynb$
+
       - id: no-merge-commits
         name: no merge commits (use rebase)
         language: system

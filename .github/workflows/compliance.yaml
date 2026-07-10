@@ -29,3 +29,37 @@ jobs:
             echo "  git push --force-with-lease"
             exit 1
           fi
+
+  clean-notebook-outputs:
+    name: Notebooks have no saved outputs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Fail if a notebook touched by this PR has saved outputs
+        run: |
+          BASE=${{ github.event.pull_request.base.sha }}
+          HEAD=${{ github.event.pull_request.head.sha }}
+          NOTEBOOKS=$(git diff --name-only --diff-filter=d "$BASE" "$HEAD" -- '*.ipynb')
+          if [ -z "$NOTEBOOKS" ]; then
+            exit 0
+          fi
+          pip install nbconvert
+          python -m nbconvert --ClearOutputPreprocessor.enabled=True --inplace $NOTEBOOKS
+          if ! git diff --quiet -- $NOTEBOOKS; then
+            echo "Error: the following notebooks have saved outputs committed:"
+            git diff --name-only -- $NOTEBOOKS
+            echo ""
+            echo "Strip outputs before committing:"
+            echo ""
+            echo "  jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace <notebook.ipynb>"
+            echo ""
+            echo "Or install pre-commit hooks (see CONTRIBUTING.md) to do this automatically."
+            exit 1
+          fi
