@@ -132,6 +132,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:acd0834f9a232d7d9aebda905d379c0a2 inherit pub_methods_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af36f7edebd9a6727acac2d02cc81b9d6 inherit pub_methods_class_d_psim_1_1_p_f_solver" id="r_af36f7edebd9a6727acac2d02cc81b9d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#af36f7edebd9a6727acac2d02cc81b9d6">setKeepLastSolution</a> (CPS::Bool keepLastSolution)</td></tr>
 <tr class="separator:af36f7edebd9a6727acac2d02cc81b9d6 inherit pub_methods_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c98d62e10391074cbe73d3b4393d953 inherit pub_methods_class_d_psim_1_1_p_f_solver" id="r_a8c98d62e10391074cbe73d3b4393d953"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#a8c98d62e10391074cbe73d3b4393d953">setEnforceReactiveLimits</a> (CPS::Bool value)</td></tr>
+<tr class="memdesc:a8c98d62e10391074cbe73d3b4393d953 inherit pub_methods_class_d_psim_1_1_p_f_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable generator reactive-limit enforcement (PV&lt;-&gt;PQ outer loop)  <br /></td></tr>
+<tr class="separator:a8c98d62e10391074cbe73d3b4393d953 inherit pub_methods_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a721f540678a262722d12114618860789 inherit pub_methods_class_d_psim_1_1_p_f_solver" id="r_a721f540678a262722d12114618860789"><td class="memItemLeft" align="right" valign="top">CPS::Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#a721f540678a262722d12114618860789">getKeepLastSolution</a> () const</td></tr>
 <tr class="separator:a721f540678a262722d12114618860789 inherit pub_methods_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca7d62d54063cde5555e321902808b32 inherit pub_methods_class_d_psim_1_1_p_f_solver" id="r_aca7d62d54063cde5555e321902808b32"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#aca7d62d54063cde5555e321902808b32">setBaseApparentPowerFallback</a> (CPS::Real baseApparentPowerFallback)</td></tr>
@@ -223,6 +226,18 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a20f167710c2f86f1bff19ec68d5a908f" id="r_a20f167710c2f86f1bff19ec68d5a908f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a20f167710c2f86f1bff19ec68d5a908f">calculateQAtPVBuses</a> ()</td></tr>
 <tr class="memdesc:a20f167710c2f86f1bff19ec68d5a908f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the reactive power at all PV buses from current solution.  <br /></td></tr>
 <tr class="separator:a20f167710c2f86f1bff19ec68d5a908f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a137ba165d44ac973c776f2aca3587e56" id="r_a137ba165d44ac973c776f2aca3587e56"><td class="memItemLeft" align="right" valign="top">CPS::Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a137ba165d44ac973c776f2aca3587e56">generatorReactivePowerPerUnit</a> (CPS::TopologicalNode::Ptr node)</td></tr>
+<tr class="memdesc:a137ba165d44ac973c776f2aca3587e56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generator reactive-power injection at a bus [pu], used by the Q-limit check.  <br /></td></tr>
+<tr class="separator:a137ba165d44ac973c776f2aca3587e56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37bd222da131eeaa5611285676b413fd" id="r_a37bd222da131eeaa5611285676b413fd"><td class="memItemLeft" align="right" valign="top">CPS::Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a37bd222da131eeaa5611285676b413fd">loadReactivePowerPerUnit</a> (CPS::TopologicalNode::Ptr node)</td></tr>
+<tr class="memdesc:a37bd222da131eeaa5611285676b413fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Total local load reactive power at a bus [pu].  <br /></td></tr>
+<tr class="separator:a37bd222da131eeaa5611285676b413fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93bfacadce9f5d91bf92fc8efdf29179" id="r_a93bfacadce9f5d91bf92fc8efdf29179"><td class="memItemLeft" align="right" valign="top">CPS::Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a93bfacadce9f5d91bf92fc8efdf29179">enforceReactiveLimits</a> () override</td></tr>
+<tr class="memdesc:a93bfacadce9f5d91bf92fc8efdf29179"><td class="mdescLeft">&#160;</td><td class="mdescRight">Q-limit PV&lt;-&gt;PQ switching pass (overrides the base no-op)  <br /></td></tr>
+<tr class="separator:a93bfacadce9f5d91bf92fc8efdf29179"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0dbf35f02045eda7cbe4789690b770df" id="r_a0dbf35f02045eda7cbe4789690b770df"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0dbf35f02045eda7cbe4789690b770df">clearReactiveLimitState</a> () override</td></tr>
+<tr class="memdesc:a0dbf35f02045eda7cbe4789690b770df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear the Q-limit conversion bookkeeping between solves.  <br /></td></tr>
+<tr class="separator:a0dbf35f02045eda7cbe4789690b770df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af210bf2b2e131e7b554f0adec77593de" id="r_af210bf2b2e131e7b554f0adec77593de"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af210bf2b2e131e7b554f0adec77593de">calculatePAndQInjectionPQBuses</a> ()</td></tr>
 <tr class="memdesc:af210bf2b2e131e7b554f0adec77593de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate complex power flowing from this node to the other nodes.  <br /></td></tr>
 <tr class="separator:af210bf2b2e131e7b554f0adec77593de"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -248,6 +263,15 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a04e7df8788a2b2a4dad951b501f20bc4 inherit pro_methods_class_d_psim_1_1_p_f_solver" id="r_a04e7df8788a2b2a4dad951b501f20bc4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#a04e7df8788a2b2a4dad951b501f20bc4">determinePFBusType</a> ()</td></tr>
 <tr class="memdesc:a04e7df8788a2b2a4dad951b501f20bc4 inherit pro_methods_class_d_psim_1_1_p_f_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine bus type for all buses.  <br /></td></tr>
 <tr class="separator:a04e7df8788a2b2a4dad951b501f20bc4 inherit pro_methods_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8767067d7a51730f64757d5fe19e0ff7 inherit pro_methods_class_d_psim_1_1_p_f_solver" id="r_a8767067d7a51730f64757d5fe19e0ff7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#a8767067d7a51730f64757d5fe19e0ff7">rebuildBusIndexAggregates</a> ()</td></tr>
+<tr class="memdesc:a8767067d7a51730f64757d5fe19e0ff7 inherit pro_methods_class_d_psim_1_1_p_f_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rebuild index vectors + counts from the PQ/PV/VD node lists.  <br /></td></tr>
+<tr class="separator:a8767067d7a51730f64757d5fe19e0ff7 inherit pro_methods_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a9b9fc53359cef19c70f9ddf37890ad inherit pro_methods_class_d_psim_1_1_p_f_solver" id="r_a0a9b9fc53359cef19c70f9ddf37890ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#a0a9b9fc53359cef19c70f9ddf37890ad">reclassifyBuses</a> ()</td></tr>
+<tr class="memdesc:a0a9b9fc53359cef19c70f9ddf37890ad inherit pro_methods_class_d_psim_1_1_p_f_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Re-derive index vectors and resize the system after PV&lt;-&gt;PQ switching.  <br /></td></tr>
+<tr class="separator:a0a9b9fc53359cef19c70f9ddf37890ad inherit pro_methods_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11f2767235c9d05e4995f5ef09ed70e2 inherit pro_methods_class_d_psim_1_1_p_f_solver" id="r_a11f2767235c9d05e4995f5ef09ed70e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#a11f2767235c9d05e4995f5ef09ed70e2">resetToOriginalClassification</a> ()</td></tr>
+<tr class="memdesc:a11f2767235c9d05e4995f5ef09ed70e2 inherit pro_methods_class_d_psim_1_1_p_f_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restore the original PV/PQ classification before a fresh solve.  <br /></td></tr>
+<tr class="separator:a11f2767235c9d05e4995f5ef09ed70e2 inherit pro_methods_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca939a2cddd23b4ee6b35089fb9bb2d0 inherit pro_methods_class_d_psim_1_1_p_f_solver" id="r_aca939a2cddd23b4ee6b35089fb9bb2d0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#aca939a2cddd23b4ee6b35089fb9bb2d0">determineNodeBaseVoltages</a> ()</td></tr>
 <tr class="memdesc:aca939a2cddd23b4ee6b35089fb9bb2d0 inherit pro_methods_class_d_psim_1_1_p_f_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine base voltages for each node.  <br /></td></tr>
 <tr class="separator:aca939a2cddd23b4ee6b35089fb9bb2d0 inherit pro_methods_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -263,6 +287,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:aea79ac039c4a306a4031b5d2ced80936 inherit pro_methods_class_d_psim_1_1_p_f_solver" id="r_aea79ac039c4a306a4031b5d2ced80936"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#aea79ac039c4a306a4031b5d2ced80936">solvePowerflow</a> ()</td></tr>
 <tr class="memdesc:aea79ac039c4a306a4031b5d2ced80936 inherit pro_methods_class_d_psim_1_1_p_f_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solves the powerflow problem.  <br /></td></tr>
 <tr class="separator:aea79ac039c4a306a4031b5d2ced80936 inherit pro_methods_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f0ef0c26056453f372e81814574d1f2 inherit pro_methods_class_d_psim_1_1_p_f_solver" id="r_a0f0ef0c26056453f372e81814574d1f2"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#a0f0ef0c26056453f372e81814574d1f2">runNewtonRaphson</a> ()</td></tr>
+<tr class="memdesc:a0f0ef0c26056453f372e81814574d1f2 inherit pro_methods_class_d_psim_1_1_p_f_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run a single Newton-Raphson solve with the current bus classification.  <br /></td></tr>
+<tr class="separator:a0f0ef0c26056453f372e81814574d1f2 inherit pro_methods_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a544e34df9b360d061eda9e86766dd797 inherit pro_methods_class_d_psim_1_1_p_f_solver" id="r_a544e34df9b360d061eda9e86766dd797"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#a544e34df9b360d061eda9e86766dd797">setUpJacobianStorage</a> ()</td></tr>
 <tr class="memdesc:a544e34df9b360d061eda9e86766dd797 inherit pro_methods_class_d_psim_1_1_p_f_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate Jacobian storage; dense by default, sparse subclass overrides.  <br /></td></tr>
 <tr class="separator:a544e34df9b360d061eda9e86766dd797 inherit pro_methods_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -309,6 +336,12 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a90f7077734cb802daf4bf9290e15f5ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a847024d20065c7c02d86acde8b79a1c5" id="r_a847024d20065c7c02d86acde8b79a1c5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a847024d20065c7c02d86acde8b79a1c5">mHasLastConvergedSolution</a> = false</td></tr>
 <tr class="separator:a847024d20065c7c02d86acde8b79a1c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab64e4b2f1475583e856a64c018737b3f" id="r_ab64e4b2f1475583e856a64c018737b3f"><td class="memItemLeft" align="right" valign="top">std::map&lt; CPS::TopologicalNode::Ptr, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab64e4b2f1475583e856a64c018737b3f">mQLimitConvertedAtMax</a></td></tr>
+<tr class="memdesc:ab64e4b2f1475583e856a64c018737b3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Buses switched PV-&gt;PQ by the Q-limit loop -&gt; pinned at Qmax (true) or Qmin (false)  <br /></td></tr>
+<tr class="separator:ab64e4b2f1475583e856a64c018737b3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74987cd94515a7c289381f36daeb1454" id="r_a74987cd94515a7c289381f36daeb1454"><td class="memItemLeft" align="right" valign="top">std::map&lt; CPS::TopologicalNode::Ptr, CPS::UInt &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a74987cd94515a7c289381f36daeb1454">mQLimitSwitchCount</a></td></tr>
+<tr class="memdesc:a74987cd94515a7c289381f36daeb1454"><td class="mdescLeft">&#160;</td><td class="mdescRight">Total PV&lt;-&gt;PQ switches per bus over the solve (anti-oscillation cap)  <br /></td></tr>
+<tr class="separator:a74987cd94515a7c289381f36daeb1454"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_d_psim_1_1_p_f_solver"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_d_psim_1_1_p_f_solver')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_d_psim_1_1_p_f_solver.html">DPsim::PFSolver</a></td></tr>
 <tr class="memitem:a24ee84c06aaf823778b6a2e84c9bcf5c inherit pro_attribs_class_d_psim_1_1_p_f_solver" id="r_a24ee84c06aaf823778b6a2e84c9bcf5c"><td class="memItemLeft" align="right" valign="top">UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#a24ee84c06aaf823778b6a2e84c9bcf5c">mNumPQBuses</a> = 0</td></tr>
 <tr class="memdesc:a24ee84c06aaf823778b6a2e84c9bcf5c inherit pro_attribs_class_d_psim_1_1_p_f_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of PQ nodes.  <br /></td></tr>
@@ -331,6 +364,11 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:af0a3f3011e921cbec5e211ad82c91ffa inherit pro_attribs_class_d_psim_1_1_p_f_solver" id="r_af0a3f3011e921cbec5e211ad82c91ffa"><td class="memItemLeft" align="right" valign="top">CPS::TopologicalNode::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#af0a3f3011e921cbec5e211ad82c91ffa">mVDBuses</a></td></tr>
 <tr class="memdesc:af0a3f3011e921cbec5e211ad82c91ffa inherit pro_attribs_class_d_psim_1_1_p_f_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vector of nodes characterized as VD buses.  <br /></td></tr>
 <tr class="separator:af0a3f3011e921cbec5e211ad82c91ffa inherit pro_attribs_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9f94beba5e4df42f6bbd94d8298514e inherit pro_attribs_class_d_psim_1_1_p_f_solver" id="r_aa9f94beba5e4df42f6bbd94d8298514e"><td class="memItemLeft" align="right" valign="top">CPS::TopologicalNode::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#aa9f94beba5e4df42f6bbd94d8298514e">mPQBusesOrig</a></td></tr>
+<tr class="memdesc:aa9f94beba5e4df42f6bbd94d8298514e inherit pro_attribs_class_d_psim_1_1_p_f_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Original PQ/PV classification (snapshot before Q-limit switching)  <br /></td></tr>
+<tr class="separator:aa9f94beba5e4df42f6bbd94d8298514e inherit pro_attribs_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5850ee33a389a21cc938f6fddddd89a0 inherit pro_attribs_class_d_psim_1_1_p_f_solver" id="r_a5850ee33a389a21cc938f6fddddd89a0"><td class="memItemLeft" align="right" valign="top">CPS::TopologicalNode::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#a5850ee33a389a21cc938f6fddddd89a0">mPVBusesOrig</a></td></tr>
+<tr class="separator:a5850ee33a389a21cc938f6fddddd89a0 inherit pro_attribs_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61dc11e52be4aff8b263918920e14861 inherit pro_attribs_class_d_psim_1_1_p_f_solver" id="r_a61dc11e52be4aff8b263918920e14861"><td class="memItemLeft" align="right" valign="top">std::vector&lt; CPS::UInt &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#a61dc11e52be4aff8b263918920e14861">mPQBusIndices</a></td></tr>
 <tr class="memdesc:a61dc11e52be4aff8b263918920e14861 inherit pro_attribs_class_d_psim_1_1_p_f_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vector with indices of PQ buses.  <br /></td></tr>
 <tr class="separator:a61dc11e52be4aff8b263918920e14861 inherit pro_attribs_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -394,6 +432,15 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:ab90685a20601320d4b54266fc6dd01e0 inherit pro_attribs_class_d_psim_1_1_p_f_solver" id="r_ab90685a20601320d4b54266fc6dd01e0"><td class="memItemLeft" align="right" valign="top">CPS::UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#ab90685a20601320d4b54266fc6dd01e0">mIterations</a></td></tr>
 <tr class="memdesc:ab90685a20601320d4b54266fc6dd01e0 inherit pro_attribs_class_d_psim_1_1_p_f_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Actual number of iterations.  <br /></td></tr>
 <tr class="separator:ab90685a20601320d4b54266fc6dd01e0 inherit pro_attribs_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeadc5912815779eebb191940e5054002 inherit pro_attribs_class_d_psim_1_1_p_f_solver" id="r_aeadc5912815779eebb191940e5054002"><td class="memItemLeft" align="right" valign="top">CPS::Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#aeadc5912815779eebb191940e5054002">mEnforceReactiveLimits</a> = false</td></tr>
+<tr class="memdesc:aeadc5912815779eebb191940e5054002 inherit pro_attribs_class_d_psim_1_1_p_f_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enforce generator reactive-power limits via PV&lt;-&gt;PQ outer-loop switching.  <br /></td></tr>
+<tr class="separator:aeadc5912815779eebb191940e5054002 inherit pro_attribs_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb4be1e5fa0e1a6ae7edb881ac799df8 inherit pro_attribs_class_d_psim_1_1_p_f_solver" id="r_abb4be1e5fa0e1a6ae7edb881ac799df8"><td class="memItemLeft" align="right" valign="top">CPS::UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#abb4be1e5fa0e1a6ae7edb881ac799df8">mMaxOuterIterations</a> = 10</td></tr>
+<tr class="memdesc:abb4be1e5fa0e1a6ae7edb881ac799df8 inherit pro_attribs_class_d_psim_1_1_p_f_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of Q-limit outer iterations.  <br /></td></tr>
+<tr class="separator:abb4be1e5fa0e1a6ae7edb881ac799df8 inherit pro_attribs_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99f9752500d46a17833501f175dd73ef inherit pro_attribs_class_d_psim_1_1_p_f_solver" id="r_a99f9752500d46a17833501f175dd73ef"><td class="memItemLeft" align="right" valign="top">CPS::UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#a99f9752500d46a17833501f175dd73ef">mMaxQLimitSwitchesPerBus</a> = 2</td></tr>
+<tr class="memdesc:a99f9752500d46a17833501f175dd73ef inherit pro_attribs_class_d_psim_1_1_p_f_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of PV&lt;-&gt;PQ switches per bus before it is frozen (anti-oscillation)  <br /></td></tr>
+<tr class="separator:a99f9752500d46a17833501f175dd73ef inherit pro_attribs_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f97b89d6defe287ca09911c5f38ea19 inherit pro_attribs_class_d_psim_1_1_p_f_solver" id="r_a8f97b89d6defe287ca09911c5f38ea19"><td class="memItemLeft" align="right" valign="top">CPS::Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_p_f_solver.html#a8f97b89d6defe287ca09911c5f38ea19">mBaseApparentPower</a></td></tr>
 <tr class="memdesc:a8f97b89d6defe287ca09911c5f38ea19 inherit pro_attribs_class_d_psim_1_1_p_f_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base power of per-unit system.  <br /></td></tr>
 <tr class="separator:a8f97b89d6defe287ca09911c5f38ea19 inherit pro_attribs_class_d_psim_1_1_p_f_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -475,7 +522,7 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Powerflow solver class considering power mismatch and voltages in polar coordinates. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00015">15</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00017">17</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a33db5f8bd66a6e2eb1881c65f2379b0b" name="a33db5f8bd66a6e2eb1881c65f2379b0b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a33db5f8bd66a6e2eb1881c65f2379b0b">&#9670;&#160;</a></span>PFSolverPowerPolar()</h2>
@@ -508,7 +555,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Constructor to be used in simulation examples. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00014">14</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00017">17</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
 
 </div>
 </div>
@@ -535,7 +582,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00082">82</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00096">96</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
 
 </div>
 </div>
@@ -569,7 +616,7 @@ Additional Inherited Members</h2></td></tr>
 <p>I = Y * V</p>
 <p>pf on branch [S_01; S_10] = [V_0 * conj(I_0); V_1 * conj(I_1)]</p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00375">375</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00381">381</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
 
 </div>
 </div>
@@ -602,7 +649,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#ab6d0e02735c8bde13ee08689f9f5451a">DPsim::PFSolverPowerPolarSparse</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00184">184</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00191">191</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
 
 </div>
 </div>
@@ -633,7 +680,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_d_psim_1_1_p_f_solver.html#a9227590cf4be2b8d7da361ea72291b61">DPsim::PFSolver</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00168">168</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00175">175</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
 
 </div>
 </div>
@@ -662,7 +709,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Calculate nodal power injections and store them in first line or transformer (in case no line is connected), so that lower level classes (Node, TopologicalTerminal) can stay untouched. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00398">398</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00404">404</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
 
 </div>
 </div>
@@ -691,7 +738,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Calculate P and Q at slack bus from current solution. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00440">440</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00446">446</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
 
 </div>
 </div>
@@ -720,7 +767,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Calculate complex power flowing from this node to the other nodes. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00516">516</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00649">649</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
 
 </div>
 </div>
@@ -749,7 +796,69 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Calculate the reactive power at all PV buses from current solution. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00481">481</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00487">487</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a0dbf35f02045eda7cbe4789690b770df" name="a0dbf35f02045eda7cbe4789690b770df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0dbf35f02045eda7cbe4789690b770df">&#9670;&#160;</a></span>clearReactiveLimitState()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void PFSolverPowerPolar::clearReactiveLimitState </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel protected">protected</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Clear the Q-limit conversion bookkeeping between solves. </p>
+
+<p>Reimplemented from <a class="el" href="class_d_psim_1_1_p_f_solver.html#af8a4a6c552cbd5f773b6634d978ec802">DPsim::PFSolver</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00644">644</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a93bfacadce9f5d91bf92fc8efdf29179" name="a93bfacadce9f5d91bf92fc8efdf29179"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93bfacadce9f5d91bf92fc8efdf29179">&#9670;&#160;</a></span>enforceReactiveLimits()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">CPS::Bool PFSolverPowerPolar::enforceReactiveLimits </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel protected">protected</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Q-limit PV&lt;-&gt;PQ switching pass (overrides the base no-op) </p>
+
+<p>Reimplemented from <a class="el" href="class_d_psim_1_1_p_f_solver.html#ac23ffe6b4192720dd8d9d7c3c333915b">DPsim::PFSolver</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00542">542</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
 
 </div>
 </div>
@@ -784,7 +893,65 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_d_psim_1_1_p_f_solver.html#ae1861098db7c0eb9ff96385c1b0c16a8">DPsim::PFSolver</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00020">20</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00023">23</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a137ba165d44ac973c776f2aca3587e56" name="a137ba165d44ac973c776f2aca3587e56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a137ba165d44ac973c776f2aca3587e56">&#9670;&#160;</a></span>generatorReactivePowerPerUnit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">CPS::Real PFSolverPowerPolar::generatorReactivePowerPerUnit </td>
+          <td>(</td>
+          <td class="paramtype">CPS::TopologicalNode::Ptr</td>          <td class="paramname"><span class="paramname"><em>node</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Generator reactive-power injection at a bus [pu], used by the Q-limit check. </p>
+
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00531">531</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a37bd222da131eeaa5611285676b413fd" name="a37bd222da131eeaa5611285676b413fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37bd222da131eeaa5611285676b413fd">&#9670;&#160;</a></span>loadReactivePowerPerUnit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">CPS::Real PFSolverPowerPolar::loadReactivePowerPerUnit </td>
+          <td>(</td>
+          <td class="paramtype">CPS::TopologicalNode::Ptr</td>          <td class="paramname"><span class="paramname"><em>node</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Total local load reactive power at a bus [pu]. </p>
+
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00523">523</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
 
 </div>
 </div>
@@ -813,7 +980,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Calculate active power at a bus from current solution. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00422">422</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00428">428</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
 
 </div>
 </div>
@@ -842,7 +1009,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Calculate the reactive power at a bus from current solution. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00431">431</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00437">437</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
 
 </div>
 </div>
@@ -871,7 +1038,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Resize complex solution vector. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00552">552</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00685">685</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
 
 </div>
 </div>
@@ -900,7 +1067,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Resize solution vector. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00541">541</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00674">674</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
 
 </div>
 </div>
@@ -931,7 +1098,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_d_psim_1_1_p_f_solver.html#ad08a34ee8235a0dc9c7ba766eb4d7733">DPsim::PFSolver</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00321">321</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00327">327</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
 
 </div>
 </div>
@@ -960,7 +1127,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Calculate complex voltage from sol_V and sol_D. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00567">567</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00700">700</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
 
 </div>
 </div>
@@ -989,7 +1156,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Calculate imaginary part of voltage from sol_V and sol_D. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00563">563</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00696">696</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
 
 </div>
 </div>
@@ -1018,7 +1185,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Calculate real part of voltage from sol_V and sol_D. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00559">559</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00692">692</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
 
 </div>
 </div>
@@ -1049,7 +1216,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_d_psim_1_1_p_f_solver.html#ae8bcb79d12fa9e493886b8d4ef841e87">DPsim::PFSolver</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00286">286</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8cpp_source.html#l00293">293</a> of file <a class="el" href="_p_f_solver_power_polar_8cpp_source.html">PFSolverPowerPolar.cpp</a>.</p>
 
 </div>
 </div>
@@ -1074,7 +1241,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00036">36</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00038">38</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
 
 </div>
 </div>
@@ -1098,7 +1265,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00035">35</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00037">37</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
 
 </div>
 </div>
@@ -1122,7 +1289,59 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00034">34</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00036">36</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
+
+</div>
+</div>
+<a id="ab64e4b2f1475583e856a64c018737b3f" name="ab64e4b2f1475583e856a64c018737b3f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab64e4b2f1475583e856a64c018737b3f">&#9670;&#160;</a></span>mQLimitConvertedAtMax</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::map&lt;CPS::TopologicalNode::Ptr, bool&gt; DPsim::PFSolverPowerPolar::mQLimitConvertedAtMax</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Buses switched PV-&gt;PQ by the Q-limit loop -&gt; pinned at Qmax (true) or Qmin (false) </p>
+
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00081">81</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
+
+</div>
+</div>
+<a id="a74987cd94515a7c289381f36daeb1454" name="a74987cd94515a7c289381f36daeb1454"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74987cd94515a7c289381f36daeb1454">&#9670;&#160;</a></span>mQLimitSwitchCount</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::map&lt;CPS::TopologicalNode::Ptr, CPS::UInt&gt; DPsim::PFSolverPowerPolar::mQLimitSwitchCount</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Total PV&lt;-&gt;PQ switches per bus over the solve (anti-oscillation cap) </p>
+
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00083">83</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
 
 </div>
 </div>
@@ -1146,7 +1365,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00030">30</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00032">32</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
 
 </div>
 </div>
@@ -1170,7 +1389,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00031">31</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00033">33</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
 
 </div>
 </div>
@@ -1196,7 +1415,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Solution vector of voltage angle. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00024">24</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00026">26</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
 
 </div>
 </div>
@@ -1222,7 +1441,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Solution vector of active power. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00018">18</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00020">20</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
 
 </div>
 </div>
@@ -1248,7 +1467,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Solution vector of reactive power. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00020">20</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00022">22</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
 
 </div>
 </div>
@@ -1274,7 +1493,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Solution vector of representing sol_P and sol_Q as complex quantity. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00028">28</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00030">30</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
 
 </div>
 </div>
@@ -1300,7 +1519,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Solution vector of voltage magnitude. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00022">22</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00024">24</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
 
 </div>
 </div>
@@ -1326,7 +1545,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Solution vector of representing sol_V and sol_D as complex quantity. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00026">26</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_power_polar_8h_source.html#l00028">28</a> of file <a class="el" href="_p_f_solver_power_polar_8h_source.html">PFSolverPowerPolar.h</a>.</p>
 
 </div>
 </div>
