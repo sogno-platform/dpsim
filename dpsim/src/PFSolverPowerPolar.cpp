@@ -614,16 +614,6 @@ CPS::Bool PFSolverPowerPolar::enforceReactiveLimits() {
     UInt idx = node->matrixNodeIndex();
     Qesp(idx) = qLimPU - loadReactivePowerPerUnit(node);
     sol_Q(idx) = Qesp(idx);
-    // calculateQAtPVBuses() won't touch this generator once it leaves mPVBuses.
-    for (auto comp : mSystem.mComponentsAtNode[node]) {
-      if (auto gen = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(
-              comp)) {
-        gen->attributeTyped<CPS::Real>("Q_set_pu")->set(qLimPU);
-        gen->attributeTyped<CPS::Real>("Q_set")->set(qLimPU *
-                                                     mBaseApparentPower);
-        break;
-      }
-    }
     mQLimitConvertedAtMax[node] = atMax;
     if (++mQLimitSwitchCount[node] >= mMaxQLimitSwitchesPerBus)
       SPDLOG_LOGGER_WARN(
