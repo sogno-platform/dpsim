@@ -362,14 +362,9 @@ void MnaSolver<VarType>::initializeSystemWithVariableMatrix() {
 
 template <typename VarType>
 void MnaSolver<VarType>::initializeStateSpaceExtractor() {
-  if (mDomain != CPS::Domain::EMT) {
+  if (mDomain != CPS::Domain::EMT && mDomain != CPS::Domain::DP) {
     throw std::logic_error(
-        "MNA state-space extraction supports EMT domain only.");
-  }
-
-  if (!std::is_same<VarType, Real>::value) {
-    throw std::logic_error(
-        "MNA state-space extraction supports real-valued MNA systems only.");
+        "MNA state-space extraction supports EMT and DP domains only.");
   }
 
   if (mFrequencyParallel) {
