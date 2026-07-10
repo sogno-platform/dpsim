@@ -2,6 +2,12 @@
 // SPDX-License-Identifier: MPL-2.0
 #include <dpsim/MNAStateSpaceContributor.h>
 
+#include <dpsim-models/DP/DP_Ph1_Capacitor.h>
+#include <dpsim-models/DP/DP_Ph1_Inductor.h>
+#include <dpsim-models/DP/DP_Ph1_Resistor.h>
+#include <dpsim-models/DP/DP_Ph1_TwoTerminalVTypeSSNComp.h>
+#include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
+#include <dpsim-models/DP/DP_VTypeSSNComp.h>
 #include <dpsim-models/EMT/EMT_Ph3_Capacitor.h>
 #include <dpsim-models/EMT/EMT_Ph3_Inductor.h>
 #include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
@@ -11,6 +17,7 @@
 #include <dpsim-models/EMT/EMT_VTypeSSNComp.h>
 #include <dpsim-models/SimPowerComp.h>
 #include <stdexcept>
+#include <string>
 #include <utility>
 
 using namespace CPS;
@@ -19,6 +26,7 @@ namespace DPsim {
 namespace {
 
 using SimPowerCompReal = CPS::SimPowerComp<CPS::Real>;
+using SimPowerCompComplex = CPS::SimPowerComp<CPS::Complex>;
 
 /// Builds K for vIntf = K xMNA, with
 /// vIntf = v_terminal1 - v_terminal0.
@@ -39,6 +47,35 @@ Matrix buildTwoTerminalInterfaceVoltageMapping(SimPowerCompReal &component,
   return K;
 }
 
+/// Builds K for [Re(vIntf), Im(vIntf)]^T = K xMNA, with
+/// vIntf = v_terminal1 - v_terminal0.
+Matrix
+buildSinglePhaseComplexInterfaceVoltageMapping(SimPowerCompComplex &component,
+                                               UInt mnaVectorSize) {
+  if (mnaVectorSize % 2 != 0) {
+    throw std::logic_error(
+        "DP MNA state-space extraction requires a real-imaginary stacked "
+        "MNA vector with even size.");
+  }
+
+  const UInt complexOffset = mnaVectorSize / 2;
+  Matrix K = Matrix::Zero(2, mnaVectorSize);
+
+  if (component.terminalNotGrounded(1)) {
+    const UInt nodeIdx = component.matrixNodeIndex(1);
+    K(0, nodeIdx) = 1.0;
+    K(1, nodeIdx + complexOffset) = 1.0;
+  }
+
+  if (component.terminalNotGrounded(0)) {
+    const UInt nodeIdx = component.matrixNodeIndex(0);
+    K(0, nodeIdx) = -1.0;
+    K(1, nodeIdx + complexOffset) = -1.0;
+  }
+
+  return K;
+}
+
 /// Stamps -K^T * outputMatrix into CdMna.
 ///
 /// The sign follows the two-terminal convention vIntf = v1 - v0 and the
@@ -48,6 +85,30 @@ void stampTwoTerminalCurrentInjectionMapping(const Matrix &K, Matrix &CdMna,
                                              const Matrix &outputMatrix) {
   CdMna.block(0, stateOffset, CdMna.rows(), outputMatrix.cols()) +=
       -K.transpose() * outputMatrix;
+}
+
+Matrix realAugment(const MatrixComp &matrix) {
+  const Matrix::Index rows = matrix.rows();
+  const Matrix::Index cols = matrix.cols();
+
+  Matrix result = Matrix::Zero(2 * rows, 2 * cols);
+  result.topLeftCorner(rows, cols) = matrix.real();
+  result.topRightCorner(rows, cols) = -matrix.imag();
+  result.bottomLeftCorner(rows, cols) = matrix.imag();
+  result.bottomRightCorner(rows, cols) = matrix.real();
+
+  return result;
+}
+
+Matrix realAugment(const Complex &value) {
+  Matrix result = Matrix::Zero(2, 2);
+  result << value.real(), -value.imag(), value.imag(), value.real();
+  return result;
+}
+
+Complex calculateDPInductorPreviousCurrentFactor(const Complex &conductance) {
+  const Real omegaDtHalf = -conductance.imag() / conductance.real();
+  return Complex(1.0, -omegaDtHalf) / Complex(1.0, omegaDtHalf);
 }
 
 void setStateName(StateSpaceMetadata &metadata, UInt stateIndex,
@@ -68,6 +129,24 @@ void addThreePhaseAbcStateMetadata(StateSpaceMetadata &metadata,
 
   metadata.abcStateBlocks.push_back(
       {{stateOffset + 0, stateOffset + 1, stateOffset + 2}, baseName});
+}
+
+void addSinglePhaseComplexStateMetadata(StateSpaceMetadata &metadata,
+                                        UInt stateOffset,
+                                        const String &baseName) {
+  setStateName(metadata, stateOffset + 0, baseName + "_re");
+  setStateName(metadata, stateOffset + 1, baseName + "_im");
+}
+
+void addComplexStateMetadata(StateSpaceMetadata &metadata, UInt stateOffset,
+                             UInt complexStateCount,
+                             const String &componentName) {
+  for (UInt idx = 0; idx < complexStateCount; ++idx) {
+    const String stateName = componentName + ".x" + std::to_string(idx);
+    setStateName(metadata, stateOffset + idx, stateName + "_re");
+    setStateName(metadata, stateOffset + complexStateCount + idx,
+                 stateName + "_im");
+  }
 }
 
 class EMTPh3InductorStateSpaceContributor final
@@ -228,6 +307,142 @@ private:
   Bool mIsVariable = false;
 };
 
+class DPPh1InductorStateSpaceContributor final
+    : public MNAStateSpaceContributor {
+public:
+  explicit DPPh1InductorStateSpaceContributor(
+      std::shared_ptr<DP::Ph1::Inductor> component)
+      : mComponent(std::move(component)) {}
+
+  UInt getStateCount() const override { return 2; }
+
+  void stamp(Matrix &AdLocal, Matrix &BdMna, Matrix &CdMna, UInt stateOffset,
+             UInt mnaVectorSize) const override {
+    const Complex conductance = mComponent->getMNAConductance();
+    const Complex prevCurrentFactor =
+        calculateDPInductorPreviousCurrentFactor(conductance);
+
+    const Matrix K = buildSinglePhaseComplexInterfaceVoltageMapping(
+        *mComponent, mnaVectorSize);
+
+    // Complex history state h:
+    //   i[k+1] = Y_L vIntf[k+1] + h[k]
+    //   h[k+1] = alpha h[k] + (1 + alpha) Y_L vIntf[k+1]
+    // Therefore: AdLocal = alpha, BdMna = (1 + alpha) Y_L K,
+    // CdMna = -K^T in real-imaginary augmented form.
+    AdLocal.block(stateOffset, stateOffset, 2, 2) +=
+        realAugment(prevCurrentFactor);
+
+    BdMna.block(stateOffset, 0, 2, mnaVectorSize) +=
+        realAugment((Complex(1.0, 0.0) + prevCurrentFactor) * conductance) * K;
+
+    stampTwoTerminalCurrentInjectionMapping(K, CdMna, stateOffset,
+                                            Matrix::Identity(2, 2));
+  }
+
+  void contributeMetadata(StateSpaceMetadata &metadata,
+                          UInt stateOffset) const override {
+    addSinglePhaseComplexStateMetadata(metadata, stateOffset,
+                                       mComponent->name());
+  }
+
+private:
+  std::shared_ptr<DP::Ph1::Inductor> mComponent;
+};
+
+class DPPh1CapacitorStateSpaceContributor final
+    : public MNAStateSpaceContributor {
+public:
+  explicit DPPh1CapacitorStateSpaceContributor(
+      std::shared_ptr<DP::Ph1::Capacitor> component)
+      : mComponent(std::move(component)) {}
+
+  UInt getStateCount() const override { return 2; }
+
+  void stamp(Matrix &AdLocal, Matrix &BdMna, Matrix &CdMna, UInt stateOffset,
+             UInt mnaVectorSize) const override {
+    const Complex conductance = mComponent->getMNAConductance();
+
+    const Matrix K = buildSinglePhaseComplexInterfaceVoltageMapping(
+        *mComponent, mnaVectorSize);
+
+    // Complex history state h:
+    //   i[k+1] = Y_C vIntf[k+1] + h[k]
+    //   h[k+1] = -h[k] - (Y_C + conj(Y_C)) vIntf[k+1]
+    // Therefore: AdLocal = -1, BdMna = -2 Re(Y_C) K,
+    // CdMna = -K^T in real-imaginary augmented form.
+    AdLocal.block(stateOffset, stateOffset, 2, 2) -= Matrix::Identity(2, 2);
+
+    BdMna.block(stateOffset, 0, 2, mnaVectorSize) -=
+        2.0 * conductance.real() * K;
+
+    stampTwoTerminalCurrentInjectionMapping(K, CdMna, stateOffset,
+                                            Matrix::Identity(2, 2));
+  }
+
+  void contributeMetadata(StateSpaceMetadata &metadata,
+                          UInt stateOffset) const override {
+    addSinglePhaseComplexStateMetadata(metadata, stateOffset,
+                                       mComponent->name());
+  }
+
+private:
+  std::shared_ptr<DP::Ph1::Capacitor> mComponent;
+};
+
+class DPPh1TwoTerminalVTypeSSNStateSpaceContributor final
+    : public MNAStateSpaceContributor {
+public:
+  explicit DPPh1TwoTerminalVTypeSSNStateSpaceContributor(
+      std::shared_ptr<DP::VTypeSSNComp> component)
+      : mComponent(std::move(component)) {}
+
+  UInt getStateCount() const override {
+    return 2 * mComponent->getStateCount();
+  }
+
+  void stamp(Matrix &AdLocal, Matrix &BdMna, Matrix &CdMna, UInt stateOffset,
+             UInt mnaVectorSize) const override {
+    const UInt complexStateCount = mComponent->getStateCount();
+    const UInt realStateCount = getStateCount();
+
+    const MatrixComp &discreteA = mComponent->getDiscreteA();
+    const MatrixComp &discreteB = mComponent->getDiscreteB();
+    const MatrixComp outputC = mComponent->getC().cast<Complex>();
+
+    const Matrix K = buildSinglePhaseComplexInterfaceVoltageMapping(
+        *mComponent, mnaVectorSize);
+
+    // Complex history-coordinate state s = discreteA x + discreteB vIntf:
+    //   s[k+1] = discreteA s[k] + (discreteA + I) discreteB vIntf[k+1]
+    //   yHist[k] = C s[k]
+    // Therefore: AdLocal = discreteA, BdMna = (discreteA + I) discreteB K,
+    // CdMna = -K^T C in real-imaginary augmented form.
+    AdLocal.block(stateOffset, stateOffset, realStateCount, realStateCount) +=
+        realAugment(discreteA);
+
+    const MatrixComp inputUpdate =
+        (discreteA +
+         MatrixComp::Identity(complexStateCount, complexStateCount)) *
+        discreteB;
+
+    BdMna.block(stateOffset, 0, realStateCount, mnaVectorSize) +=
+        realAugment(inputUpdate) * K;
+
+    stampTwoTerminalCurrentInjectionMapping(K, CdMna, stateOffset,
+                                            realAugment(outputC));
+  }
+
+  void contributeMetadata(StateSpaceMetadata &metadata,
+                          UInt stateOffset) const override {
+    addComplexStateMetadata(metadata, stateOffset, mComponent->getStateCount(),
+                            mComponent->name());
+  }
+
+private:
+  std::shared_ptr<DP::VTypeSSNComp> mComponent;
+};
+
 } // namespace
 
 MNAStateSpaceContributor::Ptr
@@ -262,6 +477,26 @@ MNAStateSpaceContributorFactory::create(const MNAInterface::Ptr &component) {
     return nullptr;
 
   if (std::dynamic_pointer_cast<EMT::Ph3::VoltageSource>(component))
+    return nullptr;
+
+  if (auto inductor = std::dynamic_pointer_cast<DP::Ph1::Inductor>(component)) {
+    return std::make_shared<DPPh1InductorStateSpaceContributor>(inductor);
+  }
+
+  if (auto capacitor =
+          std::dynamic_pointer_cast<DP::Ph1::Capacitor>(component)) {
+    return std::make_shared<DPPh1CapacitorStateSpaceContributor>(capacitor);
+  }
+
+  if (auto ssn = std::dynamic_pointer_cast<DP::Ph1::TwoTerminalVTypeSSNComp>(
+          component)) {
+    return std::make_shared<DPPh1TwoTerminalVTypeSSNStateSpaceContributor>(ssn);
+  }
+
+  if (std::dynamic_pointer_cast<DP::Ph1::Resistor>(component))
+    return nullptr;
+
+  if (std::dynamic_pointer_cast<DP::Ph1::VoltageSource>(component))
     return nullptr;
 
   throw std::invalid_argument(
