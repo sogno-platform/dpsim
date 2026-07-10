@@ -13,4 +13,7 @@ jobs:
     - uses: actions/setup-python@v6
       with:
         python-version: '3.x'
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.3'
     - uses: pre-commit/action@v3.0.1
