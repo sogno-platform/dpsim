@@ -538,16 +538,20 @@ Simulation::getStateSpaceExtractor(UInt solverIndex) const {
         "Simulation::getStateSpaceExtractor(): solver index out of range.");
   }
 
-  const auto mnaSolver =
-      std::dynamic_pointer_cast<MnaSolver<Real>>(mSolvers[solverIndex]);
-
-  if (!mnaSolver) {
-    throw std::logic_error(
-        "Simulation::getStateSpaceExtractor(): selected solver is not a "
-        "real-valued MNA solver.");
+  if (const auto realMnaSolver =
+          std::dynamic_pointer_cast<MnaSolver<Real>>(mSolvers[solverIndex])) {
+    return realMnaSolver->getStateSpaceExtractor();
   }
 
-  return mnaSolver->getStateSpaceExtractor();
+  if (const auto complexMnaSolver =
+          std::dynamic_pointer_cast<MnaSolver<Complex>>(
+              mSolvers[solverIndex])) {
+    return complexMnaSolver->getStateSpaceExtractor();
+  }
+
+  throw std::logic_error(
+      "Simulation::getStateSpaceExtractor(): selected solver is not an "
+      "MNA solver.");
 }
 
 CPS::AttributeBase::Ptr Simulation::getIdObjAttribute(const String &comp,

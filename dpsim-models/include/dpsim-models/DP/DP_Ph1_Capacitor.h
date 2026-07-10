@@ -49,6 +49,8 @@ public:
   void initialize(Matrix frequencies) override;
 
   // #### MNA section ####
+  /// Return single-frequency MNA companion conductance.
+  Complex getMNAConductance() const;
   /// Initializes internal variables of the component
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override;

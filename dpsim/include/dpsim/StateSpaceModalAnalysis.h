@@ -17,8 +17,8 @@ enum class StateSpaceAnalysisFrame {
 /// Performs modal analysis of an extracted discrete-time state-space model.
 ///
 /// The analysis uses the state matrix provided by MNAStateSpaceExtractor and
-/// maps discrete-time eigenvalues to continuous-time EMT eigenvalues with the
-/// trapezoidal-rule relation:
+/// maps discrete-time eigenvalues to continuous-time equivalent eigenvalues
+/// with the trapezoidal-rule relation:
 ///
 ///   lambda = 2 / dt * (z - 1) / (z + 1)
 class StateSpaceModalAnalysis {
@@ -27,7 +27,7 @@ public:
 
   /// Select the coordinate frame used for modal analysis.
   ///
-  /// Native uses the extracted EMT state matrix directly.
+  /// Native uses the extracted state matrix directly.
   /// GlobalDQ0 transforms registered abc state blocks to a global dq0 frame.
   void setAnalysisFrame(StateSpaceAnalysisFrame frame) {
     mAnalysisFrame = frame;
@@ -50,7 +50,7 @@ public:
     return mDiscreteEigenvalues;
   }
 
-  /// Continuous-time EMT eigenvalues reconstructed from discrete eigenvalues.
+  /// Continuous-time equivalent eigenvalues reconstructed from discrete eigenvalues.
   const CPS::VectorComp &getContinuousEigenvalues() const {
     return mContinuousEigenvalues;
   }
