@@ -34,6 +34,10 @@ void DP::Ph1::Capacitor::initialize(Matrix frequencies) {
   mPrevVoltCoeff = MatrixComp::Zero(mNumFreqs, 1);
 }
 
+Complex DP::Ph1::Capacitor::getMNAConductance() const {
+  return mEquivCond(0, 0);
+}
+
 void DP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 
   Real omega = 2 * PI * frequency;

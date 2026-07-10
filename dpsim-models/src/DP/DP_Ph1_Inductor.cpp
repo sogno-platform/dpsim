@@ -33,6 +33,10 @@ void DP::Ph1::Inductor::initialize(Matrix frequencies) {
   mPrevCurrFac = MatrixComp::Zero(mNumFreqs, 1);
 }
 
+Complex DP::Ph1::Inductor::getMNAConductance() const {
+  return mEquivCond(0, 0);
+}
+
 void DP::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 
   Real omega = 2. * PI * frequency;

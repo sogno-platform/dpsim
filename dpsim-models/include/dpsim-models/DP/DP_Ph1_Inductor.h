@@ -53,6 +53,8 @@ public:
   void initializeFromNodesAndTerminals(Real frequency) override;
 
   // #### MNA section ####
+  /// Return single-frequency MNA companion conductance.
+  Complex getMNAConductance() const;
   /// Initializes MNA specific variables
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override;
