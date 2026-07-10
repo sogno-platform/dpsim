@@ -130,7 +130,17 @@ class JupyterNotebookExport(pytest.Item):
 
         os.makedirs(c.FilesWriter.build_directory, exist_ok=True)
 
-        (body, resources) = exporter.from_notebook_node(self.nb)
+        # Give each notebook its own cwd: several notebooks write/read
+        # files under the same relative name (e.g. CIGRE-MV_EQ.xml), and
+        # with pytest-xdist running many of them concurrently, sharing the
+        # process cwd lets one notebook's download clobber another's
+        # in-progress read.
+        workdir = os.path.abspath(os.path.join("notebook-workdirs", self.builddir))
+        os.makedirs(workdir, exist_ok=True)
+
+        (body, resources) = exporter.from_notebook_node(
+            self.nb, resources={"metadata": {"path": workdir}}
+        )
 
         writer = FilesWriter(config=c)
         writer.write(body, resources, notebook_name=self.name)
