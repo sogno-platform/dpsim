@@ -141,6 +141,7 @@ Components/EMT_Ph3_2T_I_Type_SSN.cpp
 
 set(STATE_SPACE_SOURCES
 StateSpace/EMT_Ph3_RLC_StateSpaceExtraction.cpp
+StateSpace/DP_Ph1_RLC_StateSpaceExtraction.cpp
 )
 
 # Targets required for tests in the Jupyter Notebooks. This list is only for grouping the (already configured) targets, so every entry
