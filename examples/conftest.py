@@ -138,6 +138,16 @@ class JupyterNotebookExport(pytest.Item):
         workdir = os.path.abspath(os.path.join("notebook-workdirs", self.builddir))
         os.makedirs(workdir, exist_ok=True)
 
+        # Notebooks import a shared utils.py from this directory; set it
+        # explicitly rather than relying on PYTHONPATH surviving the
+        # pytest -> xdist worker -> nbclient -> kernel subprocess chain.
+        notebooks_dir = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "Notebooks")
+        )
+        os.environ["PYTHONPATH"] = os.pathsep.join(
+            [notebooks_dir, os.environ.get("PYTHONPATH", "")]
+        )
+
         (body, resources) = exporter.from_notebook_node(
             self.nb, resources={"metadata": {"path": workdir}}
         )
