@@ -1,31 +1,52 @@
+# SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+# SPDX-License-Identifier: MPL-2.0
+
 name: Compliance checks
 
 on:
   pull_request:
-    branches: [master, main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  no-merge-commits:
-    name: No merge commits
+  clean-notebook-outputs:
+    name: Notebooks changed by this pull request have no saved outputs
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
-      - name: Fail if branch contains merge commits
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+
+      - name: Fail if a notebook changed by this pull request has saved outputs
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-          BASE=${{ github.event.pull_request.base.sha }}
-          HEAD=${{ github.event.pull_request.head.sha }}
-          MERGES=$(git log --merges "$BASE".."$HEAD" --oneline)
-          if [ -n "$MERGES" ]; then
-            echo "Error: merge commits found in this branch:"
-            echo "$MERGES"
+          # NUL-separated, because this repository has paths containing spaces.
+          mapfile -d '' NOTEBOOKS < <(git diff -z --name-only --diff-filter=d "$BASE_SHA" "$HEAD_SHA" -- '*.ipynb')
+          if [ "${#NOTEBOOKS[@]}" -eq 0 ]; then
+            exit 0
+          fi
+          pip install nbconvert
+          python -m nbconvert --ClearOutputPreprocessor.enabled=True --inplace "${NOTEBOOKS[@]}"
+          if ! git diff --quiet -- "${NOTEBOOKS[@]}"; then
+            echo "Error: the following notebooks have saved outputs committed:"
+            git diff --name-only -- "${NOTEBOOKS[@]}"
             echo ""
-            echo "Please rebase your branch instead of merging the target branch:"
+            echo "Strip outputs before committing:"
             echo ""
-            echo "  git fetch upstream"
-            echo "  git rebase upstream/master"
-            echo "  git push --force-with-lease"
+            echo "  jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace <notebook.ipynb>"
+            echo ""
+            echo "Or install the pre-commit hooks, see the Quick start section of CONTRIBUTING.md."
             exit 1
           fi

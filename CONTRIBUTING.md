@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+SPDX-License-Identifier: MPL-2.0
+-->
+
 # Contributing to DPsim
 
 Thanks for your interest in contributing! Below are the essentials to get a pull request merged. For full detail see the [Contributing guide](https://dpsim.fein-aachen.org/docs/contributing/).
@@ -5,7 +10,7 @@ Thanks for your interest in contributing! Below are the essentials to get a pull
 ## Quick start
 
 1. Fork the repository and clone your fork.
-1. Run `pre-commit install` to activate automated checks (formatting, linear history guard).
+1. Run `pre-commit install` to activate automated checks (formatting, notebook output stripping).
 1. Create a branch with a descriptive prefix (`feature/`, `fix/`, `docs/`).
 1. Make your changes and commit using the conventional commit style (`feat:`, `fix:`, `docs:`, ...) with a sign-off:
 
@@ -25,11 +30,12 @@ Thanks for your interest in contributing! Below are the essentials to get a pull
 
 ## Key requirements
 
-- **Linear history**: merge commits in a feature branch are blocked by CI; rebase instead.
+- **Linear history**: never merge the target branch into your feature branch; rebase instead.
 - **Sign-off**: every commit must include `Signed-off-by` via `git commit -s` ([DCO](https://developercertificate.org/)).
 - **Formatting**: clang-format 17 for C++, black for Python, markdownlint for Markdown; all enforced by pre-commit.
 - **SPDX headers**: new files must include a license header (see [the contributing guide](https://dpsim.fein-aachen.org/docs/contributing/)).
 - **No `std::cout` in C++**: use `SPDLOG_LOGGER_*` macros.
+- **No saved notebook outputs**: strip outputs from `.ipynb` files before committing; pre-commit and CI both enforce this.
 - **Contributions in forks only**: do not push feature branches to the main repository.
 
 ## License
