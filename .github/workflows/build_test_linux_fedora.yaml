@@ -119,11 +119,27 @@ jobs:
       shell: bash
       run: pip install pytest pytest-xdist pytest-cov nbformat nbconvert
 
+    - name: Fetch reference data
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      run: |
+        mkdir -p .reference-data
+        for repo in reference-results cim-grid-data example-profile-data; do
+          git clone --depth 1 https://github.com/dpsim-simulator/${repo}.git .reference-data/${repo}
+        done
+        git clone --depth 1 https://github.com/martinmoraga/dpsim_data.git .reference-data/dpsim_data
+
+        # Behind RWTH's own network rules; may not be reachable from here.
+        # Notebooks fall back to a live download of the individual file if so.
+        git clone --depth 1 https://git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim-results.git \
+          .reference-data/dpsim-results-rwth-gitlab || echo "RWTH GitLab unreachable, skipping local cache for it"
+
     - name: Run pytest
       shell: bash
       working-directory: ${{ github.workspace }}
       env:
-        PYTHONPATH: "${{ github.workspace }}/build"
+        PYTHONPATH: "${{ github.workspace }}/build:${{ github.workspace }}/examples/Notebooks"
+        DPSIM_REFERENCE_DATA_DIR: "${{ github.workspace }}/.reference-data"
       run: |
         cp -r python/src/dpsim build/
         pytest -n auto -vv -ra --tb=long --showlocals --durations=20 \
