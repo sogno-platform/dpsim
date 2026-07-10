@@ -92,6 +92,10 @@ protected:
   CPS::UInt mMaxOuterIterations = 10;
   /// Maximum number of PV<->PQ switches per bus before it is frozen (anti-oscillation)
   CPS::UInt mMaxQLimitSwitchesPerBus = 2;
+  /// Relative tolerance for non-authoritative (e.g. Load) base-voltage candidates vs. the zone's rating
+  CPS::Real mBaseVoltageLooseTolerance = 0.1;
+  /// Relative tolerance between authoritative base-voltage sources (generator/transformer/network-injection/VSI) within a zone
+  CPS::Real mBaseVoltageStrictTolerance = 0.01;
   /// Base power of per-unit system
   CPS::Real mBaseApparentPower;
   /// Fallback base apparent power if no generator or transformer rating is found
@@ -136,8 +140,11 @@ protected:
   void resetToOriginalClassification();
   /// Clear Q-limit bookkeeping; overridden by PFSolverPowerPolar
   virtual void clearReactiveLimitState() {}
-  /// Determine base voltages for each node
-  void determineNodeBaseVoltages();
+  /// Base voltage a single component reports for `node`, or 0 if unknown
+  CPS::Real componentBaseVoltage(CPS::TopologicalPowerComp::Ptr comp,
+                                 CPS::TopologicalNode::Ptr node);
+  /// Determine, verify and propagate each node's base voltage per electrical zone
+  void propagateAndVerifyBaseVoltage();
 
   /// Compose admittance matrix
   void composeAdmittanceMatrix();
@@ -189,6 +196,16 @@ public:
   /// Enable generator reactive-limit enforcement (PV<->PQ outer loop)
   void setEnforceReactiveLimits(CPS::Bool value) {
     mEnforceReactiveLimits = value;
+  }
+
+  /// Raise for grids with legitimate large voltage drop (e.g. untapped feeders)
+  void setBaseVoltageLooseTolerance(CPS::Real tolerance) {
+    mBaseVoltageLooseTolerance = tolerance;
+  }
+
+  /// Override the tolerance between authoritative base-voltage sources within a zone
+  void setBaseVoltageStrictTolerance(CPS::Real tolerance) {
+    mBaseVoltageStrictTolerance = tolerance;
   }
 
   CPS::Bool getKeepLastSolution() const { return mKeepLastSolution; }

@@ -296,6 +296,12 @@ void SP::Ph1::AvVoltageSourceInverterDQ::initializeParentFromNodesAndTerminals(
 
 Real SP::Ph1::AvVoltageSourceInverterDQ::getNomVoltage() const { return mVnom; }
 
+Real SP::Ph1::AvVoltageSourceInverterDQ::getBaseVoltage() const {
+  // With a connection transformer, the terminal sits on its grid-side (end 1);
+  // mVnom is the converter-side voltage and does not apply to the network node.
+  return mWithConnectionTransformer ? mTransformerNominalVoltageEnd1 : mVnom;
+}
+
 void SP::Ph1::AvVoltageSourceInverterDQ::mnaParentInitialize(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
   mTimeStep = timeStep;

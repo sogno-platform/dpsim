@@ -59,6 +59,12 @@ public:
   /// switching. Default false; opt in via setPFSolverEnforceReactiveLimits(true).
   const CPS::Attribute<Bool>::Ptr mPFEnforceReactiveLimits;
 
+  /// Loose tolerance for a zone's Load base-voltage vs. its rating; default 0.1
+  const CPS::Attribute<Real>::Ptr mPFBaseVoltageLooseTolerance;
+
+  /// Strict tolerance between authoritative base-voltage sources in a zone; default 0.01
+  const CPS::Attribute<Real>::Ptr mPFBaseVoltageStrictTolerance;
+
   /// Determines if the network should be split
   /// into subnetworks at decoupling lines.
   /// If the system is split, each subsystem is
@@ -268,6 +274,14 @@ public:
   void setPFSolverEnforceReactiveLimits(Bool value);
 
   Bool getPFSolverEnforceReactiveLimits() const;
+
+  void setPFSolverBaseVoltageLooseTolerance(Real tolerance);
+
+  Real getPFSolverBaseVoltageLooseTolerance() const;
+
+  void setPFSolverBaseVoltageStrictTolerance(Real tolerance);
+
+  Real getPFSolverBaseVoltageStrictTolerance() const;
 
   // #### Simulation Control ####
   /// Create solver instances etc.
