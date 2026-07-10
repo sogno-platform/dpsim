@@ -119,18 +119,41 @@ jobs:
       shell: bash
       run: pip install pytest pytest-xdist pytest-cov nbformat nbconvert
 
-    - name: Fetch reference data
+    - name: Fetch reference-results
+      uses: actions/checkout@v6
+      with:
+        repository: dpsim-simulator/reference-results
+        path: .reference-data/reference-results
+        fetch-depth: 1
+
+    - name: Fetch cim-grid-data
+      uses: actions/checkout@v6
+      with:
+        repository: dpsim-simulator/cim-grid-data
+        path: .reference-data/cim-grid-data
+        fetch-depth: 1
+
+    - name: Fetch example-profile-data
+      uses: actions/checkout@v6
+      with:
+        repository: dpsim-simulator/example-profile-data
+        path: .reference-data/example-profile-data
+        fetch-depth: 1
+
+    - name: Fetch dpsim_data
+      uses: actions/checkout@v6
+      with:
+        repository: martinmoraga/dpsim_data
+        path: .reference-data/dpsim_data
+        fetch-depth: 1
+
+    - name: Fetch dpsim-results (RWTH GitLab)
       shell: bash
       working-directory: ${{ github.workspace }}
+      # Not on GitHub, so actions/checkout can't fetch it, and it's behind
+      # RWTH's own network rules; may not be reachable from here at all.
+      # Notebooks fall back to a live download of the individual file if so.
       run: |
-        mkdir -p .reference-data
-        for repo in reference-results cim-grid-data example-profile-data; do
-          git clone --depth 1 https://github.com/dpsim-simulator/${repo}.git .reference-data/${repo}
-        done
-        git clone --depth 1 https://github.com/martinmoraga/dpsim_data.git .reference-data/dpsim_data
-
-        # Behind RWTH's own network rules; may not be reachable from here.
-        # Notebooks fall back to a live download of the individual file if so.
         git clone --depth 1 https://git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim-results.git \
           .reference-data/dpsim-results-rwth-gitlab || echo "RWTH GitLab unreachable, skipping local cache for it"
 

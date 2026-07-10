@@ -3,9 +3,11 @@
 import os
 import re
 import shutil
-import urllib.request
+
+import requests
 
 _CACHE_ROOT = os.environ.get("DPSIM_REFERENCE_DATA_DIR")
+_DOWNLOAD_TIMEOUT_SECONDS = 30
 
 # URL prefix -> local clone dir name under DPSIM_REFERENCE_DATA_DIR
 _MIRRORS = [
@@ -57,5 +59,9 @@ def get_example_file(url, dest=None):
             shutil.copyfile(cached, dest)
             return dest
 
-    urllib.request.urlretrieve(url, dest)
+    response = requests.get(url, stream=True, timeout=_DOWNLOAD_TIMEOUT_SECONDS)
+    response.raise_for_status()
+    with open(dest, "wb") as out_file:
+        for chunk in response.iter_content(chunk_size=1 << 16):
+            out_file.write(chunk)
     return dest
