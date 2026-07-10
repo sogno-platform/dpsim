@@ -137,6 +137,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad92e33413c0410c4e5c2f248fc5bc5c2" id="r_ad92e33413c0410c4e5c2f248fc5bc5c2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad92e33413c0410c4e5c2f248fc5bc5c2">initializeFromNodesAndTerminals</a> (Real frequency) override</td></tr>
 <tr class="memdesc:ad92e33413c0410c4e5c2f248fc5bc5c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes states from power flow data.  <br /></td></tr>
 <tr class="separator:ad92e33413c0410c4e5c2f248fc5bc5c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a996ddc1494d19ed3fc5894173868e195" id="r_a996ddc1494d19ed3fc5894173868e195"><td class="memItemLeft" align="right" valign="top">Complex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a996ddc1494d19ed3fc5894173868e195">getMNAConductance</a> () const</td></tr>
+<tr class="memdesc:a996ddc1494d19ed3fc5894173868e195"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return single-frequency MNA companion conductance.  <br /></td></tr>
+<tr class="separator:a996ddc1494d19ed3fc5894173868e195"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c524d4f3ddf1984216b7fc30105eaaa" id="r_a8c524d4f3ddf1984216b7fc30105eaaa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8c524d4f3ddf1984216b7fc30105eaaa">mnaCompInitialize</a> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector) override</td></tr>
 <tr class="memdesc:a8c524d4f3ddf1984216b7fc30105eaaa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes MNA specific variables.  <br /></td></tr>
 <tr class="separator:a8c524d4f3ddf1984216b7fc30105eaaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -645,6 +648,27 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a996ddc1494d19ed3fc5894173868e195" name="a996ddc1494d19ed3fc5894173868e195"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a996ddc1494d19ed3fc5894173868e195">&#9670;&#160;</a></span>getMNAConductance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Complex DP::Ph1::Inductor::getMNAConductance </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return single-frequency MNA companion conductance. </p>
+
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00036">36</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
+
+</div>
+</div>
 <a id="adf80ae0d562144074815c19b32e86df6" name="adf80ae0d562144074815c19b32e86df6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adf80ae0d562144074815c19b32e86df6">&#9670;&#160;</a></span>initialize()</h2>
 
@@ -703,7 +727,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a4401f844a3f389e07a37ef1716d84dcd">CPS::SimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00036">36</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00040">40</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
 
 </div>
 </div>
@@ -730,7 +754,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00063">63</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00067">67</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
 
 </div>
 </div>
@@ -773,7 +797,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Add MNA post step dependencies. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00186">186</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00190">190</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
 
 </div>
 </div>
@@ -813,7 +837,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00172">172</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00176">176</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
 
 </div>
 </div>
@@ -844,7 +868,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00130">130</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00134">134</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
 
 </div>
 </div>
@@ -873,7 +897,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00156">156</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00160">160</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
 
 </div>
 </div>
@@ -904,7 +928,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00112">112</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00116">116</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
 
 </div>
 </div>
@@ -937,7 +961,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00122">122</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00126">126</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
 
 </div>
 </div>
@@ -975,7 +999,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Initializes MNA specific variables. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00084">84</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00088">88</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1011,7 +1035,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00100">100</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00104">104</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1049,7 +1073,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>MNA post step operations. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00196">196</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00200">200</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1084,7 +1108,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00182">182</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00186">186</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1115,7 +1139,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00246">246</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00250">250</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1134,7 +1158,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00256">256</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00260">260</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1165,7 +1189,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00212">212</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00216">216</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1188,7 +1212,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00230">230</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00234">234</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1217,7 +1241,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00271">271</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00275">275</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1246,7 +1270,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00276">276</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00280">280</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1279,7 +1303,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00267">267</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00271">271</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
 
 </div>
 </div>
@@ -1312,7 +1336,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00283">283</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___inductor_8cpp_source.html#l00287">287</a> of file <a class="el" href="_d_p___ph1___inductor_8cpp_source.html">DP_Ph1_Inductor.cpp</a>.</p>
 
 </div>
 </div>
