@@ -137,6 +137,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8c98d62e10391074cbe73d3b4393d953" id="r_a8c98d62e10391074cbe73d3b4393d953"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8c98d62e10391074cbe73d3b4393d953">setEnforceReactiveLimits</a> (CPS::Bool value)</td></tr>
 <tr class="memdesc:a8c98d62e10391074cbe73d3b4393d953"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable generator reactive-limit enforcement (PV&lt;-&gt;PQ outer loop)  <br /></td></tr>
 <tr class="separator:a8c98d62e10391074cbe73d3b4393d953"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98171a273d3206d9b4b6e9e9f2b4f78c" id="r_a98171a273d3206d9b4b6e9e9f2b4f78c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a98171a273d3206d9b4b6e9e9f2b4f78c">setBaseVoltageLooseTolerance</a> (CPS::Real tolerance)</td></tr>
+<tr class="memdesc:a98171a273d3206d9b4b6e9e9f2b4f78c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raise for grids with legitimate large voltage drop (e.g. untapped feeders)  <br /></td></tr>
+<tr class="separator:a98171a273d3206d9b4b6e9e9f2b4f78c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a328cdee6eb6dd51ba0f70ac5e7ff042a" id="r_a328cdee6eb6dd51ba0f70ac5e7ff042a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a328cdee6eb6dd51ba0f70ac5e7ff042a">setBaseVoltageStrictTolerance</a> (CPS::Real tolerance)</td></tr>
+<tr class="memdesc:a328cdee6eb6dd51ba0f70ac5e7ff042a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Override the tolerance between authoritative base-voltage sources within a zone.  <br /></td></tr>
+<tr class="separator:a328cdee6eb6dd51ba0f70ac5e7ff042a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a721f540678a262722d12114618860789" id="r_a721f540678a262722d12114618860789"><td class="memItemLeft" align="right" valign="top">CPS::Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a721f540678a262722d12114618860789">getKeepLastSolution</a> () const</td></tr>
 <tr class="separator:a721f540678a262722d12114618860789"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca7d62d54063cde5555e321902808b32" id="r_aca7d62d54063cde5555e321902808b32"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aca7d62d54063cde5555e321902808b32">setBaseApparentPowerFallback</a> (CPS::Real baseApparentPowerFallback)</td></tr>
@@ -228,9 +234,12 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:af8a4a6c552cbd5f773b6634d978ec802" id="r_af8a4a6c552cbd5f773b6634d978ec802"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af8a4a6c552cbd5f773b6634d978ec802">clearReactiveLimitState</a> ()</td></tr>
 <tr class="memdesc:af8a4a6c552cbd5f773b6634d978ec802"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear Q-limit bookkeeping; overridden by <a class="el" href="class_d_psim_1_1_p_f_solver_power_polar.html" title="Powerflow solver class considering power mismatch and voltages in polar coordinates.">PFSolverPowerPolar</a>.  <br /></td></tr>
 <tr class="separator:af8a4a6c552cbd5f773b6634d978ec802"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca939a2cddd23b4ee6b35089fb9bb2d0" id="r_aca939a2cddd23b4ee6b35089fb9bb2d0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aca939a2cddd23b4ee6b35089fb9bb2d0">determineNodeBaseVoltages</a> ()</td></tr>
-<tr class="memdesc:aca939a2cddd23b4ee6b35089fb9bb2d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine base voltages for each node.  <br /></td></tr>
-<tr class="separator:aca939a2cddd23b4ee6b35089fb9bb2d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8202a6ee13d4393779f0606b77a251ef" id="r_a8202a6ee13d4393779f0606b77a251ef"><td class="memItemLeft" align="right" valign="top">CPS::Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8202a6ee13d4393779f0606b77a251ef">componentBaseVoltage</a> (CPS::TopologicalPowerComp::Ptr comp, CPS::TopologicalNode::Ptr node)</td></tr>
+<tr class="memdesc:a8202a6ee13d4393779f0606b77a251ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base voltage a single component reports for <code>node</code>, or 0 if unknown.  <br /></td></tr>
+<tr class="separator:a8202a6ee13d4393779f0606b77a251ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5edaa245b9a854d6905cb0936c1df6e7" id="r_a5edaa245b9a854d6905cb0936c1df6e7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5edaa245b9a854d6905cb0936c1df6e7">propagateAndVerifyBaseVoltage</a> ()</td></tr>
+<tr class="memdesc:a5edaa245b9a854d6905cb0936c1df6e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine, verify and propagate each node's base voltage per electrical zone.  <br /></td></tr>
+<tr class="separator:a5edaa245b9a854d6905cb0936c1df6e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa73e83654faba0f760013e362a70d15e" id="r_aa73e83654faba0f760013e362a70d15e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa73e83654faba0f760013e362a70d15e">composeAdmittanceMatrix</a> ()</td></tr>
 <tr class="memdesc:aa73e83654faba0f760013e362a70d15e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compose admittance matrix.  <br /></td></tr>
 <tr class="separator:aa73e83654faba0f760013e362a70d15e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -365,6 +374,12 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a99f9752500d46a17833501f175dd73ef" id="r_a99f9752500d46a17833501f175dd73ef"><td class="memItemLeft" align="right" valign="top">CPS::UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a99f9752500d46a17833501f175dd73ef">mMaxQLimitSwitchesPerBus</a> = 2</td></tr>
 <tr class="memdesc:a99f9752500d46a17833501f175dd73ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of PV&lt;-&gt;PQ switches per bus before it is frozen (anti-oscillation)  <br /></td></tr>
 <tr class="separator:a99f9752500d46a17833501f175dd73ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae17121e0d93185d5367fa062747062c3" id="r_ae17121e0d93185d5367fa062747062c3"><td class="memItemLeft" align="right" valign="top">CPS::Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae17121e0d93185d5367fa062747062c3">mBaseVoltageLooseTolerance</a> = 0.1</td></tr>
+<tr class="memdesc:ae17121e0d93185d5367fa062747062c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Relative tolerance for non-authoritative (e.g. Load) base-voltage candidates vs. the zone's rating.  <br /></td></tr>
+<tr class="separator:ae17121e0d93185d5367fa062747062c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae75dbe33bb6db2ed165985a7588e9ca1" id="r_ae75dbe33bb6db2ed165985a7588e9ca1"><td class="memItemLeft" align="right" valign="top">CPS::Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae75dbe33bb6db2ed165985a7588e9ca1">mBaseVoltageStrictTolerance</a> = 0.01</td></tr>
+<tr class="memdesc:ae75dbe33bb6db2ed165985a7588e9ca1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Relative tolerance between authoritative base-voltage sources (generator/transformer/network-injection/VSI) within a zone.  <br /></td></tr>
+<tr class="separator:ae75dbe33bb6db2ed165985a7588e9ca1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f97b89d6defe287ca09911c5f38ea19" id="r_a8f97b89d6defe287ca09911c5f38ea19"><td class="memItemLeft" align="right" valign="top">CPS::Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8f97b89d6defe287ca09911c5f38ea19">mBaseApparentPower</a></td></tr>
 <tr class="memdesc:a8f97b89d6defe287ca09911c5f38ea19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base power of per-unit system.  <br /></td></tr>
 <tr class="separator:a8f97b89d6defe287ca09911c5f38ea19"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -506,7 +521,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00175">175</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00182">182</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -569,7 +584,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Gets the imaginary part of admittance matrix element. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00504">504</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00561">561</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -656,7 +671,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Check whether below tolerance. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00506">506</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00563">563</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -687,7 +702,40 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_d_psim_1_1_p_f_solver_power_polar.html#a0dbf35f02045eda7cbe4789690b770df">DPsim::PFSolverPowerPolar</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00138">138</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00142">142</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+
+</div>
+</div>
+<a id="a8202a6ee13d4393779f0606b77a251ef" name="a8202a6ee13d4393779f0606b77a251ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8202a6ee13d4393779f0606b77a251ef">&#9670;&#160;</a></span>componentBaseVoltage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">CPS::Real PFSolver::componentBaseVoltage </td>
+          <td>(</td>
+          <td class="paramtype">CPS::TopologicalPowerComp::Ptr</td>          <td class="paramname"><span class="paramname"><em>comp</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">CPS::TopologicalNode::Ptr</td>          <td class="paramname"><span class="paramname"><em>node</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Base voltage a single component reports for <code>node</code>, or 0 if unknown. </p>
+
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00302">302</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -716,36 +764,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Compose admittance matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00477">477</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
-
-</div>
-</div>
-<a id="aca939a2cddd23b4ee6b35089fb9bb2d0" name="aca939a2cddd23b4ee6b35089fb9bb2d0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aca939a2cddd23b4ee6b35089fb9bb2d0">&#9670;&#160;</a></span>determineNodeBaseVoltages()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void PFSolver::determineNodeBaseVoltages </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Determine base voltages for each node. </p>
-
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00302">302</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00534">534</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -805,7 +824,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_d_psim_1_1_p_f_solver_power_polar.html#a93bfacadce9f5d91bf92fc8efdf29179">DPsim::PFSolverPowerPolar</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00153">153</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00160">160</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -838,7 +857,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Gets the real part of admittance matrix element. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00502">502</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00559">559</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -898,7 +917,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00200">200</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00217">217</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -925,7 +944,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00194">194</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00211">211</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -952,7 +971,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00208">208</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00225">225</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -983,7 +1002,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_d_psim_1_1_solver.html#ae02c8cdd80fd1eb66d6cf19035167bca">DPsim::Solver</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00593">593</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00650">650</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -1072,7 +1091,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Logging for integer vectors. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00161">161</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00168">168</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -1097,7 +1116,36 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Allows to modify the powerflow bus type of a specific component. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00434">434</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00491">491</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a5edaa245b9a854d6905cb0936c1df6e7" name="a5edaa245b9a854d6905cb0936c1df6e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5edaa245b9a854d6905cb0936c1df6e7">&#9670;&#160;</a></span>propagateAndVerifyBaseVoltage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void PFSolver::propagateAndVerifyBaseVoltage </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Determine, verify and propagate each node's base voltage per electrical zone. </p>
+
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00333">333</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -1213,7 +1261,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Run a single Newton-Raphson solve with the current bus classification. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00519">519</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00576">576</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -1269,7 +1317,65 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00196">196</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00213">213</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+
+</div>
+</div>
+<a id="a98171a273d3206d9b4b6e9e9f2b4f78c" name="a98171a273d3206d9b4b6e9e9f2b4f78c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98171a273d3206d9b4b6e9e9f2b4f78c">&#9670;&#160;</a></span>setBaseVoltageLooseTolerance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DPsim::PFSolver::setBaseVoltageLooseTolerance </td>
+          <td>(</td>
+          <td class="paramtype">CPS::Real</td>          <td class="paramname"><span class="paramname"><em>tolerance</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Raise for grids with legitimate large voltage drop (e.g. untapped feeders) </p>
+
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00202">202</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+
+</div>
+</div>
+<a id="a328cdee6eb6dd51ba0f70ac5e7ff042a" name="a328cdee6eb6dd51ba0f70ac5e7ff042a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a328cdee6eb6dd51ba0f70ac5e7ff042a">&#9670;&#160;</a></span>setBaseVoltageStrictTolerance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DPsim::PFSolver::setBaseVoltageStrictTolerance </td>
+          <td>(</td>
+          <td class="paramtype">CPS::Real</td>          <td class="paramname"><span class="paramname"><em>tolerance</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Override the tolerance between authoritative base-voltage sources within a zone. </p>
+
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00207">207</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -1298,7 +1404,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Enable generator reactive-limit enforcement (PV&lt;-&gt;PQ outer loop) </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00190">190</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00197">197</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -1325,7 +1431,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00185">185</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00192">192</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -1352,7 +1458,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00204">204</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00221">221</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -1412,7 +1518,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_d_psim_1_1_solver.html#a9acdaabc5d46b35299fd5af1d893b840">DPsim::Solver</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00449">449</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00506">506</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -1464,7 +1570,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Set a node to VD using its name. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00417">417</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00474">474</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -1524,7 +1630,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Solves the powerflow problem. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00556">556</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8cpp_source.html#l00613">613</a> of file <a class="el" href="_p_f_solver_8cpp_source.html">PFSolver.cpp</a>.</p>
 
 </div>
 </div>
@@ -1580,7 +1686,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Convergence flag. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00100">100</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00104">104</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -1632,7 +1738,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Base power of per-unit system. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00096">96</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00100">100</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -1658,7 +1764,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Fallback base apparent power if no generator or transformer rating is found. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00098">98</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00102">102</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -1685,6 +1791,58 @@ Additional Inherited Members</h2></td></tr>
 <p>Map providing determined base voltages for each node. </p>
 
 <p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00081">81</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+
+</div>
+</div>
+<a id="ae17121e0d93185d5367fa062747062c3" name="ae17121e0d93185d5367fa062747062c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae17121e0d93185d5367fa062747062c3">&#9670;&#160;</a></span>mBaseVoltageLooseTolerance</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">CPS::Real DPsim::PFSolver::mBaseVoltageLooseTolerance = 0.1</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Relative tolerance for non-authoritative (e.g. Load) base-voltage candidates vs. the zone's rating. </p>
+
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00096">96</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+
+</div>
+</div>
+<a id="ae75dbe33bb6db2ed165985a7588e9ca1" name="ae75dbe33bb6db2ed165985a7588e9ca1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae75dbe33bb6db2ed165985a7588e9ca1">&#9670;&#160;</a></span>mBaseVoltageStrictTolerance</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">CPS::Real DPsim::PFSolver::mBaseVoltageStrictTolerance = 0.01</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Relative tolerance between authoritative base-voltage sources (generator/transformer/network-injection/VSI) within a zone. </p>
+
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00098">98</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -1840,7 +1998,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Use last converged solution as initial guess. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00107">107</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00111">111</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -2540,7 +2698,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Flag whether complex solution vectors are initialized. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00104">104</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00108">108</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>
@@ -2566,7 +2724,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Flag whether solution vectors are initialized. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00102">102</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_f_solver_8h_source.html#l00106">106</a> of file <a class="el" href="_p_f_solver_8h_source.html">PFSolver.h</a>.</p>
 
 </div>
 </div>

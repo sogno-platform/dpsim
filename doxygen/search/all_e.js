@@ -33,12 +33,13 @@ var searchData=
   ['printmatrixmarket_30',['printMatrixMarket',['../class_d_psim_1_1_k_l_u_adapter.html#aa91539174590b5fa910a8c9f2cf10fb9',1,'DPsim::KLUAdapter']]],
   ['probdim_31',['ProbDim',['../class_d_psim_1_1_o_d_eint_solver.html#a7cb88da0437f01c68d1e2ff5760ff974',1,'DPsim::ODEintSolver']]],
   ['profilevoltagesource_32',['ProfileVoltageSource',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_profile_voltage_source.html',1,'CPS::DP::Ph1::ProfileVoltageSource'],['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_profile_voltage_source.html#a537e258098fc0c46eabab87ce94fbc37',1,'CPS::DP::Ph1::ProfileVoltageSource::ProfileVoltageSource(String uid, String name, std::filesystem::path sourceFile, Logger::Level loglevel=Logger::Level::off)'],['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_profile_voltage_source.html#a457fa806e7af45f95d0696c112115fba',1,'CPS::DP::Ph1::ProfileVoltageSource::ProfileVoltageSource(String name, std::filesystem::path sourceFile, Logger::Level logLevel=Logger::Level::off)']]],
-  ['psm_5fin_33',['Psm_in',['../class_c_p_s_1_1_signal_1_1_turbine_governor.html#a42019ed831becddcebd7fe837378fc22',1,'CPS::Signal::TurbineGovernor']]],
-  ['psr_5fin_34',['Psr_in',['../class_c_p_s_1_1_signal_1_1_turbine_governor.html#af38ae623671ed8b50b2e4f6f5104e389',1,'CPS::Signal::TurbineGovernor']]],
-  ['pss_35',['PSS',['../class_c_p_s_1_1_base_1_1_p_s_s.html',1,'CPS::Base']]],
-  ['pss1a_36',['PSS1A',['../class_c_p_s_1_1_signal_1_1_p_s_s1_a.html',1,'CPS::Signal']]],
-  ['pss1aparameters_37',['PSS1AParameters',['../class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html',1,'CPS::Signal']]],
-  ['pssparameters_38',['PSSParameters',['../class_c_p_s_1_1_base_1_1_p_s_s_parameters.html',1,'CPS::Base']]],
-  ['pvnode_39',['PVNode',['../class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_v_node.html',1,'CPS::SP::Ph1']]],
-  ['pyinterfacevillas_40',['PyInterfaceVillas',['../class_py_interface_villas.html',1,'']]]
+  ['propagateandverifybasevoltage_33',['propagateAndVerifyBaseVoltage',['../class_d_psim_1_1_p_f_solver.html#a5edaa245b9a854d6905cb0936c1df6e7',1,'DPsim::PFSolver']]],
+  ['psm_5fin_34',['Psm_in',['../class_c_p_s_1_1_signal_1_1_turbine_governor.html#a42019ed831becddcebd7fe837378fc22',1,'CPS::Signal::TurbineGovernor']]],
+  ['psr_5fin_35',['Psr_in',['../class_c_p_s_1_1_signal_1_1_turbine_governor.html#af38ae623671ed8b50b2e4f6f5104e389',1,'CPS::Signal::TurbineGovernor']]],
+  ['pss_36',['PSS',['../class_c_p_s_1_1_base_1_1_p_s_s.html',1,'CPS::Base']]],
+  ['pss1a_37',['PSS1A',['../class_c_p_s_1_1_signal_1_1_p_s_s1_a.html',1,'CPS::Signal']]],
+  ['pss1aparameters_38',['PSS1AParameters',['../class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html',1,'CPS::Signal']]],
+  ['pssparameters_39',['PSSParameters',['../class_c_p_s_1_1_base_1_1_p_s_s_parameters.html',1,'CPS::Base']]],
+  ['pvnode_40',['PVNode',['../class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_v_node.html',1,'CPS::SP::Ph1']]],
+  ['pyinterfacevillas_41',['PyInterfaceVillas',['../class_py_interface_villas.html',1,'']]]
 ];

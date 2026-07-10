@@ -146,6 +146,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9be65ba2f29d57e79f7dbe757e0c25c0" id="r_a9be65ba2f29d57e79f7dbe757e0c25c0"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9be65ba2f29d57e79f7dbe757e0c25c0">getNomVoltage</a> () const</td></tr>
 <tr class="memdesc:a9be65ba2f29d57e79f7dbe757e0c25c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get nominal voltage.  <br /></td></tr>
 <tr class="separator:a9be65ba2f29d57e79f7dbe757e0c25c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9ac74e6d471af2a04a07d327783a241" id="r_ac9ac74e6d471af2a04a07d327783a241"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac9ac74e6d471af2a04a07d327783a241">getBaseVoltage</a> () const</td></tr>
+<tr class="separator:ac9ac74e6d471af2a04a07d327783a241"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e5674cccd08afcb8f7133668367b16b" id="r_a6e5674cccd08afcb8f7133668367b16b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6e5674cccd08afcb8f7133668367b16b">mnaParentInitialize</a> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector) override</td></tr>
 <tr class="memdesc:a6e5674cccd08afcb8f7133668367b16b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes internal variables of the component.  <br /></td></tr>
 <tr class="separator:a6e5674cccd08afcb8f7133668367b16b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -780,7 +782,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Add control step dependencies. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html#l00312">312</a> of file <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html">SP_Ph1_AvVoltageSourceInverterDQ.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html#l00318">318</a> of file <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html">SP_Ph1_AvVoltageSourceInverterDQ.cpp</a>.</p>
 
 </div>
 </div>
@@ -810,7 +812,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Add control step dependencies. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html#l00330">330</a> of file <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html">SP_Ph1_AvVoltageSourceInverterDQ.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html#l00336">336</a> of file <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html">SP_Ph1_AvVoltageSourceInverterDQ.cpp</a>.</p>
 
 </div>
 </div>
@@ -835,7 +837,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Control pre step operations. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html#l00323">323</a> of file <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html">SP_Ph1_AvVoltageSourceInverterDQ.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html#l00329">329</a> of file <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html">SP_Ph1_AvVoltageSourceInverterDQ.cpp</a>.</p>
 
 </div>
 </div>
@@ -860,7 +862,27 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Perform step of controller. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html#l00345">345</a> of file <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html">SP_Ph1_AvVoltageSourceInverterDQ.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html#l00351">351</a> of file <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html">SP_Ph1_AvVoltageSourceInverterDQ.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ac9ac74e6d471af2a04a07d327783a241" name="ac9ac74e6d471af2a04a07d327783a241"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9ac74e6d471af2a04a07d327783a241">&#9670;&#160;</a></span>getBaseVoltage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Real SP::Ph1::AvVoltageSourceInverterDQ::getBaseVoltage </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get the nominal voltage at the network-connected terminal (accounts for the connection transformer's ratio, if present) </p>
+
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html#l00299">299</a> of file <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html">SP_Ph1_AvVoltageSourceInverterDQ.cpp</a>.</p>
 
 </div>
 </div>
@@ -943,7 +965,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html#l00417">417</a> of file <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html">SP_Ph1_AvVoltageSourceInverterDQ.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html#l00423">423</a> of file <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html">SP_Ph1_AvVoltageSourceInverterDQ.cpp</a>.</p>
 
 </div>
 </div>
@@ -974,7 +996,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html#l00426">426</a> of file <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html">SP_Ph1_AvVoltageSourceInverterDQ.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html#l00432">432</a> of file <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html">SP_Ph1_AvVoltageSourceInverterDQ.cpp</a>.</p>
 
 </div>
 </div>
@@ -1017,7 +1039,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Add MNA post step dependencies. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html#l00401">401</a> of file <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html">SP_Ph1_AvVoltageSourceInverterDQ.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html#l00407">407</a> of file <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html">SP_Ph1_AvVoltageSourceInverterDQ.cpp</a>.</p>
 
 </div>
 </div>
@@ -1057,7 +1079,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_composite_power_comp.html">CPS::CompositePowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html#l00376">376</a> of file <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html">SP_Ph1_AvVoltageSourceInverterDQ.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html#l00382">382</a> of file <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html">SP_Ph1_AvVoltageSourceInverterDQ.cpp</a>.</p>
 
 </div>
 </div>
@@ -1095,7 +1117,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Initializes internal variables of the component. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html#l00299">299</a> of file <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html">SP_Ph1_AvVoltageSourceInverterDQ.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html#l00305">305</a> of file <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html">SP_Ph1_AvVoltageSourceInverterDQ.cpp</a>.</p>
 
 </div>
 </div>
@@ -1133,7 +1155,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>MNA post step operations. </p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html#l00411">411</a> of file <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html">SP_Ph1_AvVoltageSourceInverterDQ.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html#l00417">417</a> of file <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html">SP_Ph1_AvVoltageSourceInverterDQ.cpp</a>.</p>
 
 </div>
 </div>
@@ -1168,7 +1190,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_composite_power_comp.html">CPS::CompositePowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html#l00389">389</a> of file <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html">SP_Ph1_AvVoltageSourceInverterDQ.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html#l00395">395</a> of file <a class="el" href="_s_p___ph1___av_voltage_source_inverter_d_q_8cpp_source.html">SP_Ph1_AvVoltageSourceInverterDQ.cpp</a>.</p>
 
 </div>
 </div>
