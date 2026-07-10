@@ -34,6 +34,9 @@ protected:
   CPS::TopologicalNode::List mPVBuses;
   /// Vector of nodes characterized as VD buses
   CPS::TopologicalNode::List mVDBuses;
+  /// Original PQ/PV classification (snapshot before Q-limit switching)
+  CPS::TopologicalNode::List mPQBusesOrig;
+  CPS::TopologicalNode::List mPVBusesOrig;
   /// Vector with indices of PQ buses
   std::vector<CPS::UInt> mPQBusIndices;
   /// Vector with indices of PV buses
@@ -83,6 +86,12 @@ protected:
   CPS::UInt mMaxIterations = 20;
   /// Actual number of iterations
   CPS::UInt mIterations;
+  /// Enforce generator reactive-power limits via PV<->PQ outer-loop switching
+  CPS::Bool mEnforceReactiveLimits = false;
+  /// Maximum number of Q-limit outer iterations
+  CPS::UInt mMaxOuterIterations = 10;
+  /// Maximum number of PV<->PQ switches per bus before it is frozen (anti-oscillation)
+  CPS::UInt mMaxQLimitSwitchesPerBus = 2;
   /// Base power of per-unit system
   CPS::Real mBaseApparentPower;
   /// Fallback base apparent power if no generator or transformer rating is found
@@ -119,6 +128,14 @@ protected:
   void setBaseApparentPower();
   /// Determine bus type for all buses
   void determinePFBusType();
+  /// Rebuild index vectors + counts from the PQ/PV/VD node lists
+  void rebuildBusIndexAggregates();
+  /// Re-derive index vectors and resize the system after PV<->PQ switching
+  void reclassifyBuses();
+  /// Restore the original PV/PQ classification before a fresh solve
+  void resetToOriginalClassification();
+  /// Clear Q-limit bookkeeping; overridden by PFSolverPowerPolar
+  virtual void clearReactiveLimitState() {}
   /// Determine base voltages for each node
   void determineNodeBaseVoltages();
 
@@ -130,6 +147,10 @@ protected:
   CPS::Real B(int i, int j);
   /// Solves the powerflow problem
   Bool solvePowerflow();
+  /// Run a single Newton-Raphson solve with the current bus classification
+  Bool runNewtonRaphson();
+  /// Switch generators violating their Q limits between PV/PQ; base impl is a no-op
+  virtual CPS::Bool enforceReactiveLimits() { return false; }
   /// Allocate Jacobian storage; dense by default, sparse subclass overrides
   virtual void setUpJacobianStorage();
   /// Solve the linearized system mJ*mX = mF into mX; sparse subclass overrides
@@ -163,6 +184,11 @@ public:
 
   void setKeepLastSolution(CPS::Bool keepLastSolution) {
     mKeepLastSolution = keepLastSolution;
+  }
+
+  /// Enable generator reactive-limit enforcement (PV<->PQ outer loop)
+  void setEnforceReactiveLimits(CPS::Bool value) {
+    mEnforceReactiveLimits = value;
   }
 
   CPS::Bool getKeepLastSolution() const { return mKeepLastSolution; }

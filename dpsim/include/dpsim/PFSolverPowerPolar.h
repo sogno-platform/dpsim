@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <map>
+
 #include <dpsim/PFSolver.h>
 
 namespace DPsim {
@@ -67,6 +69,18 @@ protected:
   void calculatePAndQAtSlackBus();
   /// Calculate the reactive power at all PV buses from current solution
   void calculateQAtPVBuses();
+  /// Generator reactive-power injection at a bus [pu], used by the Q-limit check
+  CPS::Real generatorReactivePowerPerUnit(CPS::TopologicalNode::Ptr node);
+  /// Total local load reactive power at a bus [pu]
+  CPS::Real loadReactivePowerPerUnit(CPS::TopologicalNode::Ptr node);
+  /// Q-limit PV<->PQ switching pass (overrides the base no-op)
+  CPS::Bool enforceReactiveLimits() override;
+  /// Clear the Q-limit conversion bookkeeping between solves
+  void clearReactiveLimitState() override;
+  /// Buses switched PV->PQ by the Q-limit loop -> pinned at Qmax (true) or Qmin (false)
+  std::map<CPS::TopologicalNode::Ptr, bool> mQLimitConvertedAtMax;
+  /// Total PV<->PQ switches per bus over the solve (anti-oscillation cap)
+  std::map<CPS::TopologicalNode::Ptr, CPS::UInt> mQLimitSwitchCount;
   /// Calculate complex power flowing from this node to the other nodes
   void calculatePAndQInjectionPQBuses();
   /// Calculate branch flows from current solution and store them in line and transformer components
