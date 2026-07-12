@@ -104,6 +104,18 @@ corrected for the RMS-to-peak scaling that `EMT::Ph3` sources apply and
 amplitude directly. The notebooks below only exercise the symmetrical,
 diagonal case; coupling between phases is not covered by existing tests.
 
+# Variable Components
+
+The components above are fixed-parameter LTI systems: $(\mathbf{A}, \mathbf{B},
+\mathbf{C}, \mathbf{D})$ are built once from the component's parameters and never
+change. Some SSN components instead depend on the operating point and are
+relinearized and re-stamped every step (via `MNAVariableCompInterface`), the same
+simultaneous nodal solve but around a Jacobian frozen at the previous step's
+converged state rather than a constant matrix. `DP::Ph1::AvVoltSourceInverterStateSpace`,
+an averaged grid-following inverter, is one such component; see
+[Power Electronics]({{< ref "power-electronics.md" >}}) for its state vector and
+model equations.
+
 # Validation and Examples
 
 Two notebooks accompany the single-phase models, both on a single-carrier
