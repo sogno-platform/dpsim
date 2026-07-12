@@ -114,7 +114,8 @@ jobs:
 
     - name: Install pytest and notebook tooling
       run: |
-        pip install pytest pytest-xdist nbformat nbconvert ipykernel
+        pip install pytest pytest-xdist nbformat nbconvert ipykernel `
+          numpy pandas scipy matplotlib villas-dataprocessing
         python -m ipykernel install --user --name python3
 
     # villas/RT notebooks are expected to fail: dpsimpyvillas and WITH_RT aren't built here.
