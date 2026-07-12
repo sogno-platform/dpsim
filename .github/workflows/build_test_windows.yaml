@@ -66,4 +66,90 @@ jobs:
         git describe --tags --abbrev=0 --match "v*"
         # TODO: Remove '-DCMAKE_POLICY_VERSION_MINIMUM=3.5' once spdlog version has been bumped
         cmake -DWITH_PYBIND=ON -DCMAKE_POLICY_VERSION_MINIMUM="3.5" ..
-        cmake --build . --target dpsimpy --parallel
+        cmake --build . --config Release --parallel
+
+    - name: Archive build directory
+      uses: actions/upload-artifact@v7
+      with:
+        path: ${{ github.workspace }}/build
+        name: build-windows-bindings-cache-${{ github.sha }}
+        retention-days: 1
+
+## Tests ##
+  windows-notebooks:
+    name: Run notebook test suite on Windows
+    runs-on: windows-latest
+    needs: [windows-bindings]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+
+    - name: Restore build archive
+      uses: actions/download-artifact@v8
+      with:
+        name: build-windows-bindings-cache-${{ github.sha }}
+        path: ${{ github.workspace }}/build
+
+    - name: Locate built dpsimpy module
+      shell: pwsh
+      run: |
+        $module = Get-ChildItem -Path ${{ github.workspace }}/build -Recurse -Filter "dpsimpy*.pyd" | Select-Object -First 1
+        if (-not $module) {
+          Write-Error "dpsimpy module not found under build/"
+          exit 1
+        }
+        Write-Host "Found dpsimpy module at $($module.FullName)"
+        echo "DPSIMPY_DIR=$($module.DirectoryName)" >> $env:GITHUB_ENV
+
+    - name: Assemble dpsim package next to compiled module
+      shell: pwsh
+      run: Copy-Item -Recurse -Force python/src/dpsim "$env:DPSIMPY_DIR/dpsim"
+
+    - name: Install pytest and notebook tooling
+      run: pip install pytest pytest-xdist nbformat nbconvert
+
+    # villas/RT notebooks are expected to fail: dpsimpyvillas and WITH_RT aren't built here.
+    - name: Run notebook test suite
+      shell: pwsh
+      env:
+        PYTHONPATH: ${{ env.DPSIMPY_DIR }}
+      run: |
+        pytest -n auto -vv -ra --tb=long --showlocals --durations=20 examples/Notebooks/
+
+    - name: Archive notebook outputs
+      if: always()
+      uses: actions/upload-artifact@v7
+      with:
+        name: pytest-output-windows-${{ github.sha }}
+        path: outputs/
+
+  windows-binaries:
+    name: Execute WSCC 9 bus example on Windows
+    runs-on: windows-latest
+    needs: [windows-bindings]
+    steps:
+    - name: Restore build archive
+      uses: actions/download-artifact@v8
+      with:
+        name: build-windows-bindings-cache-${{ github.sha }}
+        path: ${{ github.workspace }}/build
+
+    - name: Run Binaries 1/4
+      shell: pwsh
+      run: |
+        & (Get-ChildItem -Path ${{ github.workspace }}/build -Recurse -Filter "WSCC_9bus_mult_coupled.exe" | Select-Object -First 1).FullName
+
+    - name: Run Binaries 2/4
+      shell: pwsh
+      run: |
+        & (Get-ChildItem -Path ${{ github.workspace }}/build -Recurse -Filter "WSCC_9bus_mult_decoupled.exe" | Select-Object -First 1).FullName
+
+    - name: Run Binaries 3/4
+      shell: pwsh
+      run: |
+        & (Get-ChildItem -Path ${{ github.workspace }}/build -Recurse -Filter "DP_WSCC_9bus_split_decoupled.exe" | Select-Object -First 1).FullName
+
+    - name: Run Binaries 4/4
+      shell: pwsh
+      run: |
+        & (Get-ChildItem -Path ${{ github.workspace }}/build -Recurse -Filter "EMT_WSCC_9bus_split_decoupled.exe" | Select-Object -First 1).FullName
