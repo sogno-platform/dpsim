@@ -186,23 +186,18 @@ void DP::Ph1::MixedVTypeVariableSSNComp::initializeFromNodesAndTerminals(
                      "\n--- Initialization from nodes and terminals ---");
 
   Bool converged = false;
-  const Real omega = 2.0 * PI * frequency;
+
+  Matrix uColumn = Matrix::Zero(2, 1);
+  uColumn(0, 0) = u.real();
+  uColumn(1, 0) = u.imag();
 
   for (Int iter = 0; iter < mInitializationMaxIterations; ++iter) {
     const Matrix xPrev = **mX;
 
     updateComponentParameters();
 
-    MatrixComp h =
-        Complex(0.0, omega) * MatrixComp::Identity(stateSize(), stateSize()) -
-        mA.cast<Complex>();
-    MatrixComp uColumn = MatrixComp::Zero(2, 1);
-    uColumn(0, 0) = u.real();
-    uColumn(1, 0) = u.imag();
-    MatrixComp xInit =
-        h.inverse() * (mB.cast<Complex>() * uColumn + mE.cast<Complex>());
-
-    **mX = xInit.real();
+    // mA is already carrier-shifted, so steady state is 0 = mA*x + mB*u + mE.
+    **mX = -mA.inverse() * (mB * uColumn + mE);
 
     if ((**mX).isApprox(xPrev, mInitializationTolerance)) {
       converged = true;
