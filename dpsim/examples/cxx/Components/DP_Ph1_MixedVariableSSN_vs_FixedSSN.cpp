@@ -24,10 +24,14 @@ Real systemFreq = 50.0;
 SimNode::Ptr buildAndRun(const String &simName,
                          CPS::SimPowerComp<Complex>::Ptr rlc,
                          Bool systemMatrixRecomputation) {
+  const Complex sourceVoltage =
+      CPS::Math::polar(1.0, CPS::Math::degToRad(-90.0));
+
   auto n1 = SimNode::make("n1");
+  n1->setInitialVoltage(sourceVoltage);
 
   auto vs = Ph1::VoltageSource::make("vs_" + simName);
-  vs->setParameters(CPS::Math::polar(1.0, CPS::Math::degToRad(-90.0)));
+  vs->setParameters(sourceVoltage);
 
   vs->connect(SimNode::List{SimNode::GND, n1});
   rlc->connect(SimNode::List{n1, SimNode::GND});
