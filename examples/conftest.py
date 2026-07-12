@@ -3,11 +3,15 @@ import subprocess
 import pytest
 
 
-def pytest_collect_file(parent, path):
-    if path.ext == ".yml" and path.basename.startswith("test_") and os.name == "posix":
-        return YamlFile.from_parent(parent, fspath=path)
-    if path.ext == ".ipynb":
-        return JupyterNotebook.from_parent(parent, fspath=path)
+def pytest_collect_file(parent, file_path):
+    if (
+        file_path.suffix == ".yml"
+        and file_path.name.startswith("test_")
+        and os.name == "posix"
+    ):
+        return YamlFile.from_parent(parent, path=file_path)
+    if file_path.suffix == ".ipynb":
+        return JupyterNotebook.from_parent(parent, path=file_path)
 
 
 def parse_test_params(item, spec):
@@ -22,7 +26,7 @@ class YamlFile(pytest.File):
         # We need a yaml parser, e.g. PyYAML
         import yaml
 
-        raw = yaml.safe_load(self.fspath.open())
+        raw = yaml.safe_load(self.path.open())
 
         if not raw:
             return
@@ -81,7 +85,7 @@ class YamlItem(pytest.Item):
         return self._repr_failure_py(excinfo, style="short")
 
     def reportinfo(self):
-        return self.fspath, 0, "yaml: %s" % self.name
+        return self.path, 0, "yaml: %s" % self.name
 
 
 class JupyterNotebook(pytest.File):
@@ -91,7 +95,7 @@ class JupyterNotebook(pytest.File):
         """
         import nbformat
 
-        nb = nbformat.read(self.fspath, as_version=nbformat.NO_CONVERT)
+        nb = nbformat.read(self.path, as_version=nbformat.NO_CONVERT)
 
         base = os.path.basename(self.name)
         name = os.path.splitext(base)[0]
@@ -144,4 +148,4 @@ class JupyterNotebookExport(pytest.Item):
         return self._repr_failure_py(excinfo, style="short")
 
     def reportinfo(self):
-        return self.fspath, 0, "nbconvert: %s" % self.name
+        return self.path, 0, "nbconvert: %s" % self.name
