@@ -71,6 +71,16 @@ corrected for the RMS-to-peak scaling that &lt;code>EMT::Ph3&lt;/code> sources a
 &lt;code>DP::Ph3&lt;/code> sources do not, since the DP envelope already carries the complex
 amplitude directly. The notebooks below only exercise the symmetrical,
 diagonal case; coupling between phases is not covered by existing tests.&lt;/p>
+&lt;h1 id="variable-components">Variable Components&lt;/h1>
+&lt;p>The components above are fixed-parameter LTI systems: $(\mathbf{A}, \mathbf{B},
+\mathbf{C}, \mathbf{D})$ are built once from the component&amp;rsquo;s parameters and never
+change. Some SSN components instead depend on the operating point and are
+relinearized and re-stamped every step (via &lt;code>MNAVariableCompInterface&lt;/code>), the same
+simultaneous nodal solve but around a Jacobian frozen at the previous step&amp;rsquo;s
+converged state rather than a constant matrix. &lt;code>DP::Ph1::AvVoltSourceInverterStateSpace&lt;/code>,
+an averaged grid-following inverter, is one such component; see
+&lt;a href="https://sogno-platform.github.io/dpsim/docs/models/power-electronics/">Power Electronics&lt;/a> for its state vector and
+model equations.&lt;/p>
 &lt;h1 id="validation-and-examples">Validation and Examples&lt;/h1>
 &lt;p>Two notebooks accompany the single-phase models, both on a single-carrier
 series RLC one-port. &lt;code>examples/Notebooks/Circuits/DP_generalizedSSN_RLC.ipynb&lt;/code>

@@ -542,6 +542,16 @@ corrected for the RMS-to-peak scaling that &lt;code>EMT::Ph3&lt;/code> sources a
 &lt;code>DP::Ph3&lt;/code> sources do not, since the DP envelope already carries the complex
 amplitude directly. The notebooks below only exercise the symmetrical,
 diagonal case; coupling between phases is not covered by existing tests.&lt;/p>
+&lt;h1 id="variable-components">Variable Components&lt;/h1>
+&lt;p>The components above are fixed-parameter LTI systems: $(\mathbf{A}, \mathbf{B},
+\mathbf{C}, \mathbf{D})$ are built once from the component&amp;rsquo;s parameters and never
+change. Some SSN components instead depend on the operating point and are
+relinearized and re-stamped every step (via &lt;code>MNAVariableCompInterface&lt;/code>), the same
+simultaneous nodal solve but around a Jacobian frozen at the previous step&amp;rsquo;s
+converged state rather than a constant matrix. &lt;code>DP::Ph1::AvVoltSourceInverterStateSpace&lt;/code>,
+an averaged grid-following inverter, is one such component; see
+&lt;a href="https://sogno-platform.github.io/dpsim/docs/models/power-electronics/">Power Electronics&lt;/a> for its state vector and
+model equations.&lt;/p>
 &lt;h1 id="validation-and-examples">Validation and Examples&lt;/h1>
 &lt;p>Two notebooks accompany the single-phase models, both on a single-carrier
 series RLC one-port. &lt;code>examples/Notebooks/Circuits/DP_generalizedSSN_RLC.ipynb&lt;/code>
@@ -1096,6 +1106,101 @@ R_f \mathbf{i}_f
 &lt;li>Source code: &lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/include/dpsim-models/EMT/EMT_Ph3_AvVoltSourceInverterStateSpace.h">header&lt;/a>, &lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/src/EMT/EMT_Ph3_AvVoltSourceInverterStateSpace.cpp">implementation&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim/examples/cxx/Components/EMT_Ph3_AvVoltSourceInverterStateSpace.cpp">C++ example&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/examples/Notebooks/Components/EMT_Ph3_AvVoltSourceInverterStateSpace.ipynb">Python notebook&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h1 id="single-phase-averaged-voltage-source-inverter-with-state-space-nodal-interface-dynamic-phasor">Single-Phase Averaged Voltage Source Inverter with State-Space Nodal Interface (Dynamic Phasor)&lt;/h1>
+&lt;p>The &lt;code>DP::Ph1::AvVoltSourceInverterStateSpace&lt;/code> model ports the same grid-following averaged inverter into the dynamic-phasor (DP) domain, as a single positive-sequence complex envelope rather than three abc waveforms.
+The PLL, power filter, outer power control, and inner current control are baseband and stay real; only the LC filter&amp;rsquo;s two states are genuine carrier-band envelopes and carry the $-j\omega_n$ shift described in &lt;a href="https://sogno-platform.github.io/dpsim/docs/concepts/state-space-nodal/">State-Space Nodal&lt;/a>.&lt;/p>
+&lt;p>The terminal input is the PCC voltage envelope&lt;/p>
+&lt;div class="math">$$u = U ,$$&lt;/div>&lt;p>and the state vector is the mixed real/complex-envelope form&lt;/p>
+&lt;div class="math">$$\mathbf{x} =
+\begin{bmatrix}
+\psi &amp;
+\phi_{\mathrm{PLL}} &amp;
+P &amp;
+Q &amp;
+\phi_d &amp;
+\phi_q &amp;
+\gamma_d &amp;
+\gamma_q &amp;
+\operatorname{Re}\{V_c\} &amp;
+\operatorname{Im}\{V_c\} &amp;
+\operatorname{Re}\{I_f\} &amp;
+\operatorname{Im}\{I_f\}
+\end{bmatrix}^\top ,$$&lt;/div>&lt;p>where $\psi := \theta_{\mathrm{PLL}} - \omega_n t$ is the PLL angle&amp;rsquo;s deviation from the nominal carrier phase, tracked instead of the raw, unboundedly growing $\theta_{\mathrm{PLL}}$ for relinearization accuracy, and $V_c$, $I_f$ are complex envelopes replacing EMT&amp;rsquo;s six abc filter states.&lt;/p>
+&lt;p>The model output is the interface current injected into the MNA system,&lt;/p>
+&lt;div class="math">$$y = \frac{U - V_c}{R_c}.$$&lt;/div>&lt;h2 id="model-equations-1">Model equations&lt;/h2>
+&lt;p>The controller uses the opposite current direction, i.e. positive current denotes inverter injection into the grid,&lt;/p>
+&lt;div class="math">$$I_{rc} = \frac{V_c - U}{R_c}.$$&lt;/div>&lt;p>Because the DP envelope already demodulates the carrier, the dq quantities are obtained by rotating the envelope by $\psi$ alone, not by the full absolute angle $\theta_{\mathrm{PLL}}$,&lt;/p>
+&lt;div class="math">$$V_{c,dq} = V_c\, e^{-j\psi}, \qquad I_{rc,dq} = I_{rc}\, e^{-j\psi},$$&lt;/div>&lt;p>with $v_{c,d} = \operatorname{Re}{V_{c,dq}}$, $v_{c,q} = \operatorname{Im}{V_{c,dq}}$, and likewise for $i_{rc,d}$, $i_{rc,q}$.&lt;/p>
+&lt;p>The instantaneous active and reactive powers are calculated as&lt;/p>
+&lt;div class="math">$$p = v_{c,d} i_{rc,d} + v_{c,q} i_{rc,q},$$&lt;/div>
+&lt;div class="math">$$q = -v_{c,d} i_{rc,q} + v_{c,q} i_{rc,d},$$&lt;/div>&lt;p>identical in form to EMT&amp;rsquo;s; &lt;code>DP::Ph1&lt;/code>&amp;rsquo;s own voltage/current scale already represents total power directly, with no three-phase multiplier.&lt;/p>
+&lt;p>The PLL and power-filter dynamics are&lt;/p>
+&lt;div class="math">$$\dot{\psi}
+=
+K_{p,\mathrm{PLL}} v_{c,q} +
+K_{i,\mathrm{PLL}} \phi_{\mathrm{PLL}},$$&lt;/div>
+&lt;div class="math">$$\dot{\phi}_{\mathrm{PLL}} = v_{c,q},$$&lt;/div>
+&lt;div class="math">$$\dot{P} = \omega_c(p - P),
+\qquad
+\dot{Q} = \omega_c(q - Q).$$&lt;/div>&lt;p>The outer power-control integrators and current references are&lt;/p>
+&lt;div class="math">$$\dot{\phi}_d = P_{\mathrm{ref}} - P,
+\qquad
+\dot{\phi}_q = Q - Q_{\mathrm{ref}},$$&lt;/div>
+&lt;div class="math">$$i_{d,\mathrm{ref}}
+=
+K_{p,P}(P_{\mathrm{ref}} - P) + K_{i,P}\phi_d,$$&lt;/div>
+&lt;div class="math">$$i_{q,\mathrm{ref}}
+=
+K_{p,P}(Q - Q_{\mathrm{ref}}) + K_{i,P}\phi_q.$$&lt;/div>&lt;p>The inner current-control integrators and voltage references are&lt;/p>
+&lt;div class="math">$$\dot{\gamma}_d = i_{d,\mathrm{ref}} - i_{rc,d},
+\qquad
+\dot{\gamma}_q = i_{q,\mathrm{ref}} - i_{rc,q},$$&lt;/div>
+&lt;div class="math">$$v_{d,\mathrm{ref}}
+=
+K_{p,I}(i_{d,\mathrm{ref}} - i_{rc,d}) +
+K_{i,I}\gamma_d,$$&lt;/div>
+&lt;div class="math">$$v_{q,\mathrm{ref}}
+=
+K_{p,I}(i_{q,\mathrm{ref}} - i_{rc,q}) +
+K_{i,I}\gamma_q.$$&lt;/div>&lt;p>The reference voltage is transformed back to a complex envelope, rotating by $\psi$,&lt;/p>
+&lt;div class="math">$$V_{\mathrm{ref}} = (v_{d,\mathrm{ref}} + j v_{q,\mathrm{ref}})\, e^{j\psi}.$$&lt;/div>&lt;p>The LC filter dynamics carry the envelope&amp;rsquo;s carrier shift explicitly,&lt;/p>
+&lt;div class="math">$$\dot{V}_c
+=
+\frac{1}{C_f} I_f
++
+\frac{1}{C_f R_c}(U - V_c)
+- j\omega_n V_c,$$&lt;/div>
+&lt;div class="math">$$\dot{I}_f
+=
+\frac{1}{L_f}
+\left(
+V_{\mathrm{ref}}
+-
+V_c
+-
+R_f I_f
+\right)
+- j\omega_n I_f.$$&lt;/div>&lt;p>At each simulation step, the nonlinear model is locally linearized into the affine state-space form, packing the 8 real states and the real/imaginary parts of the 2 complex states into one real 12-vector,&lt;/p>
+&lt;div class="math">$$\dot{\mathbf{x}}
+\approx
+\mathbf{A}\mathbf{x}
++
+\mathbf{B}\mathbf{u}
++
+\mathbf{E},$$&lt;/div>
+&lt;div class="math">$$\mathbf{y}
+\approx
+\mathbf{C}\mathbf{x}
++
+\mathbf{D}\mathbf{u}
++
+\mathbf{F},$$&lt;/div>&lt;p>which is then discretized and stamped into the DP MNA system.&lt;/p>
+&lt;h2 id="source-code-and-examples-1">Source code and examples&lt;/h2>
+&lt;ul>
+&lt;li>Source code: &lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/include/dpsim-models/DP/DP_Ph1_AvVoltSourceInverterStateSpace.h">header&lt;/a>, &lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/src/DP/DP_Ph1_AvVoltSourceInverterStateSpace.cpp">implementation&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim/examples/cxx/Components/DP_Ph1_AvVoltSourceInverterStateSpace.cpp">C++ example&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/examples/Notebooks/Components/DP_Ph1_AvVoltSourceInverterStateSpace.ipynb">Python notebook&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>Docs: Interfaces</title><link>https://sogno-platform.github.io/dpsim/docs/overview/interfaces/</link><pubDate>Thu, 13 Feb 2025 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/overview/interfaces/</guid><description>
 &lt;p>Interfaces can be used to exchange simulation signals between a DPsim simulation and other soft- or hardware, for example an MQTT-broker or an FPGA.
 Simulation signals in the form of &lt;a href="https://sogno-platform.github.io/dpsim/docs/overview/attributes/">Attributes&lt;/a> can be &lt;strong>imported&lt;/strong> or &lt;strong>exported&lt;/strong> once per simulation time step.
