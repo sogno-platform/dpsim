@@ -38,7 +38,14 @@ jobs:
         git describe --tags --abbrev=0 --match "v*"
         # TODO: Remove '-DCMAKE_POLICY_VERSION_MINIMUM=3.5' once spdlog version has been bumped
         cmake -DWITH_PYBIND=OFF -DCMAKE_POLICY_VERSION_MINIMUM="3.5" ..
-        cmake --build . --target dpsim --target dpsim-models --parallel
+        cmake --build . --config Release --parallel
+
+    - name: Archive build directory
+      uses: actions/upload-artifact@v7
+      with:
+        path: ${{ github.workspace }}/build
+        name: build-windows-cache-${{ github.sha }}
+        retention-days: 1
 
   windows-bindings:
     name: Build on Windows with Pybind
@@ -66,13 +73,7 @@ jobs:
         git describe --tags --abbrev=0 --match "v*"
         # TODO: Remove '-DCMAKE_POLICY_VERSION_MINIMUM=3.5' once spdlog version has been bumped
         cmake -DWITH_PYBIND=ON -DCMAKE_POLICY_VERSION_MINIMUM="3.5" ..
-        cmake --build . --config Release --parallel `
-          --target dpsimpy `
-          --target tests `
-          --target WSCC_9bus_mult_coupled `
-          --target WSCC_9bus_mult_decoupled `
-          --target DP_WSCC_9bus_split_decoupled `
-          --target EMT_WSCC_9bus_split_decoupled
+        cmake --build . --config Release --parallel --target dpsimpy --target tests
 
     - name: Archive build directory
       uses: actions/upload-artifact@v7
@@ -132,12 +133,12 @@ jobs:
   windows-binaries:
     name: Execute WSCC 9 bus example on Windows
     runs-on: windows-latest
-    needs: [windows-bindings]
+    needs: [windows]
     steps:
     - name: Restore build archive
       uses: actions/download-artifact@v8
       with:
-        name: build-windows-bindings-cache-${{ github.sha }}
+        name: build-windows-cache-${{ github.sha }}
         path: ${{ github.workspace }}/build
 
     - name: Run Binaries 1/4

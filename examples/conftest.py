@@ -21,6 +21,14 @@ def parse_test_params(item, spec):
         item.add_marker(pytest.mark.xfail)
 
 
+def uses_bash_magic(nb):
+    for cell in nb.cells:
+        first_lines = cell.get("source", "").splitlines()[:2]
+        if any(line.strip() == "%%bash" for line in first_lines):
+            return True
+    return False
+
+
 class YamlFile(pytest.File):
     def collect(self):
         # We need a yaml parser, e.g. PyYAML
@@ -109,6 +117,11 @@ class JupyterNotebookExport(pytest.Item):
         super().__init__(name, parent)
         self.builddir = os.path.splitext(parent.name)[0]
         self.nb = nb
+
+        if os.name != "posix" and uses_bash_magic(nb):
+            self.add_marker(
+                pytest.mark.skip(reason="uses %%bash cell magic, requires /bin/bash")
+            )
 
         parse_test_params(self, spec)
 
