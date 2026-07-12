@@ -138,6 +138,7 @@ Components/EMT_Ph3_PiecewiseLinearInductor.cpp
 Components/EMT_Ph3_AvVoltSourceInverterStateSpace.cpp
 Components/EMT_Ph3_2T_I_Type_SSN.cpp
 Components/DP_Ph1_MixedVariableSSN_vs_FixedSSN.cpp
+Components/DP_Ph1_AvVoltSourceInverterStateSpace.cpp
 )
 
 set(STATE_SPACE_SOURCES
