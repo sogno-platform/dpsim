@@ -66,7 +66,13 @@ jobs:
         git describe --tags --abbrev=0 --match "v*"
         # TODO: Remove '-DCMAKE_POLICY_VERSION_MINIMUM=3.5' once spdlog version has been bumped
         cmake -DWITH_PYBIND=ON -DCMAKE_POLICY_VERSION_MINIMUM="3.5" ..
-        cmake --build . --config Release --parallel
+        cmake --build . --config Release --parallel `
+          --target dpsimpy `
+          --target tests `
+          --target WSCC_9bus_mult_coupled `
+          --target WSCC_9bus_mult_decoupled `
+          --target DP_WSCC_9bus_split_decoupled `
+          --target EMT_WSCC_9bus_split_decoupled
 
     - name: Archive build directory
       uses: actions/upload-artifact@v7
