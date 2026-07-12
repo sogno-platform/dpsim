@@ -57,10 +57,12 @@
 #include <dpsim-models/DP/DP_Ph1_ProfileVoltageSource.h>
 #endif
 #include <dpsim-models/DP/DP_ITypeSSNComp.h>
+#include <dpsim-models/DP/DP_Ph1_AvVoltSourceInverterStateSpace.h>
 #include <dpsim-models/DP/DP_Ph1_ControlledCurrentSource.h>
 #include <dpsim-models/DP/DP_Ph1_ControlledVoltageSource.h>
 #include <dpsim-models/DP/DP_Ph1_GenericTwoTerminalITypeSSN.h>
 #include <dpsim-models/DP/DP_Ph1_GenericTwoTerminalVTypeSSN.h>
+#include <dpsim-models/DP/DP_Ph1_MixedVTypeVariableSSNComp.h>
 #include <dpsim-models/DP/DP_Ph1_RxLine.h>
 #include <dpsim-models/DP/DP_Ph1_SSN_Full_Serial_RLC.h>
 #include <dpsim-models/DP/DP_Ph1_SVC.h>

@@ -69,6 +69,11 @@ protected:
   virtual void updateState(const Complex &uOld, const Complex &uNew);
   virtual void recomputeDiscreteModel();
 
+  /// Update derived attributes used for logging/inspection; called once per
+  /// step after the state update. Empty by default, override in derived
+  /// components (mirrors EMT::SSNComp::updateLogAttributes).
+  virtual void updateLogAttributes(const Matrix &u) const;
+
   /// Rebuild A/B/C/D/E/F from the current state/input; returns true if the stamp changed.
   virtual Bool updateComponentParameters() = 0;
   void updateStateSpaceModel();

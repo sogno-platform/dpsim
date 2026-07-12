@@ -161,6 +161,9 @@ Bool DP::Ph1::MixedVTypeVariableSSNComp::hasParameterChanged() {
   return mParameterChanged;
 }
 
+void DP::Ph1::MixedVTypeVariableSSNComp::updateLogAttributes(
+    const Matrix &) const {}
+
 void DP::Ph1::MixedVTypeVariableSSNComp::initializeFromNodesAndTerminals(
     Real frequency) {
   if (!mParametersSet)
@@ -315,4 +318,5 @@ void DP::Ph1::MixedVTypeVariableSSNComp::mnaCompPostStep(
   mnaCompUpdateVoltage(**leftVector);
   mnaCompUpdateCurrent(**leftVector);
   updateState(uOld, (**mIntfVoltage)(0, 0));
+  updateLogAttributes(packComplex((**mIntfVoltage)(0, 0)));
 }
