@@ -1,10 +1,5 @@
-/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *********************************************************************************/
+// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+// SPDX-License-Identifier: MPL-2.0
 
 #include <dpsim-models/Signal/VCO.h>
 
@@ -14,7 +9,6 @@ using namespace CPS::Signal;
 VCO::VCO(String name, Logger::Level logLevel)
     : SimSignalComp(name, name, logLevel),
       mInputRef(mAttributes->createDynamic<Real>("input_ref")),
-      /// CHECK: Which of these really need to be attributes?
       mInputPrev(mAttributes->create<Real>("input_prev", 0)),
       mStatePrev(mAttributes->create<Real>("state_prev", 0)),
       mOutputPrev(mAttributes->create<Real>("output_prev", 0)),
@@ -38,7 +32,7 @@ void VCO::setSimulationParameters(Real timestep) {
 }
 
 void VCO::setInitialValues(Real input_init, Real state_init, Real output_init) {
-  **mInputCurr = mOmegaNom;
+  **mInputCurr = input_init;
   **mStateCurr = state_init;
   **mOutputCurr = output_init;
 

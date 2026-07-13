@@ -1,10 +1,5 @@
-/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *********************************************************************************/
+// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+// SPDX-License-Identifier: MPL-2.0
 
 #include <dpsim-models/Signal/VoltageControllerVSI.h>
 
@@ -47,63 +42,6 @@ void VoltageControllerVSI::setParameters(Real VdRef, Real VqRef) {
                      mVdRef, mVqRef);
 }
 
-//setter for controller parameters and setting up of system matrices
-void VoltageControllerVSI::setControllerParameters(
-    Real Kp_voltageCtrl, Real Ki_voltageCtrl, Real Kp_currCtrl,
-    Real Ki_currCtrl, Real Kp_pll, Real Ki_pll, Real Omega_cutoff) {
-
-  //Voltage Loop (First)
-  mKiVoltageCtrld = Ki_voltageCtrl;
-  mKiVoltageCtrlq = Ki_voltageCtrl;
-  mKpVoltageCtrld = Kp_voltageCtrl;
-  mKpVoltageCtrlq = Kp_voltageCtrl;
-
-  //Current Loop (Second)
-  mKiCurrCtrld = Ki_currCtrl;
-  mKiCurrCtrlq = Ki_currCtrl;
-  mKpCurrCtrld = Kp_currCtrl;
-  mKpCurrCtrlq = Kp_currCtrl;
-
-  //Frequency
-  mOmegaCutoff = Omega_cutoff;
-
-  //log loop parameters
-  SPDLOG_LOGGER_INFO(mSLog, "Control Parameters:");
-  SPDLOG_LOGGER_INFO(mSLog, "Voltage Loop: K_i = {}, K_p = {}", Kp_voltageCtrl,
-                     Ki_voltageCtrl);
-  SPDLOG_LOGGER_INFO(mSLog, "Current Loop: K_i = {}, K_p = {}", Kp_currCtrl,
-                     Ki_currCtrl);
-  SPDLOG_LOGGER_INFO(mSLog, "PLL: K_p = {}, K_i = {}", Kp_pll, Ki_pll);
-  SPDLOG_LOGGER_INFO(mSLog, "Cut-Off Frequency = {}", Omega_cutoff);
-
-  // Set state space matrices using controller parameters
-
-  // [x] = [phid, phiq, gammad, gammaq]
-  // [u] = [vdref, vqref, vdc, vqc, idc, idq]
-  // [y] = [vdout, vqout]
-
-  mA << 0, 0, 0, 0, 0, 0, 0, 0, mKiVoltageCtrld, 0, 0, 0, 0, mKiVoltageCtrlq, 0,
-      0;
-
-  mB << 1, 0, -1, 0, 0, 0, 0, 1, 0, -1, 0, 0, mKpVoltageCtrld, 0,
-      -mKpVoltageCtrld, 0, -1, 0, 0, mKpVoltageCtrlq, 0, -mKpVoltageCtrlq, 0,
-      -1;
-
-  mC << mKpCurrCtrld * mKiVoltageCtrld, 0, mKiCurrCtrld, 0, 0,
-      mKpCurrCtrlq * mKiVoltageCtrlq, 0, mKiCurrCtrlq;
-
-  mD << mKpCurrCtrld * mKpVoltageCtrld, 0, -mKpCurrCtrld * mKpVoltageCtrld + 1,
-      0, -mKpCurrCtrld, 0, 0, mKpCurrCtrlq * mKpVoltageCtrlq, 0,
-      -mKpCurrCtrlq * mKpVoltageCtrlq + 1, 0, -mKpCurrCtrlq;
-
-  // Log state-space matrices
-  SPDLOG_LOGGER_INFO(mSLog, "State space matrices:");
-  SPDLOG_LOGGER_INFO(mSLog, "A = \n{}", mA);
-  SPDLOG_LOGGER_INFO(mSLog, "B = \n{}", mB);
-  SPDLOG_LOGGER_INFO(mSLog, "C = \n{}", mC);
-  SPDLOG_LOGGER_INFO(mSLog, "D = \n{}", mD);
-}
-
 //setter for controller parameters and setting up of system matrices with VCO
 void VoltageControllerVSI::setControllerParameters(Real Kp_voltageCtrl,
                                                    Real Ki_voltageCtrl,
@@ -122,9 +60,6 @@ void VoltageControllerVSI::setControllerParameters(Real Kp_voltageCtrl,
   mKiCurrCtrlq = Ki_currCtrl;
   mKpCurrCtrld = Kp_currCtrl;
   mKpCurrCtrlq = Kp_currCtrl;
-
-  //Frequency
-  mOmegaCutoff = Omega_nominal;
 
   //log loop parameters
   SPDLOG_LOGGER_INFO(mSLog, "Control Parameters:");
@@ -184,7 +119,6 @@ void VoltageControllerVSI::initializeStateSpaceModel(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 
   mTimeStep = timeStep;
-  mOmegaCutoff = omega;
 
   // initialization of input --> [u]
   **mInputCurr << mVdRef, mVqRef, **mVc_d, **mVc_q, **mIrc_d, **mIrc_q;
@@ -230,7 +164,6 @@ void VoltageControllerVSI::signalAddStepDependencies(
   modifiedAttributes.push_back(mOutputCurr);
 };
 
-//Calculation happens here
 void VoltageControllerVSI::signalStep(Real time, Int timeStepCount) {
 
   // get current inputs

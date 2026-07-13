@@ -151,7 +151,6 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph3_PiecewiseLinearInductor.cpp
 	EMT/EMT_Ph3_VSIVoltageControlVCO.cpp
 
-
 	SP/SP_Ph1_ControlledCurrentSource.cpp
 	SP/SP_Ph1_VoltageSource.cpp
 	SP/SP_Ph1_ControlledVoltageSource.cpp

@@ -1,10 +1,5 @@
-/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *********************************************************************************/
+// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+// SPDX-License-Identifier: MPL-2.0
 
 #include <dpsim-models/EMT/EMT_Ph3_VSIVoltageControlVCO.h>
 
@@ -22,7 +17,7 @@ EMT::Ph3::VSIVoltageControlVCO::VSIVoltageControlVCO(String uid, String name,
       mIrcd(mAttributes->create<Real>("Irc_d", 0)),
       mIrcq(mAttributes->create<Real>("Irc_q", 0)),
       mElecActivePower(mAttributes->create<Real>("P_elec", 0)),
-      mElecPassivePower(mAttributes->create<Real>("Q_elec", 0)),
+      mElecReactivePower(mAttributes->create<Real>("Q_elec", 0)),
       mVsref(mAttributes->create<Matrix>("Vsref", Matrix::Zero(3, 1))),
       mVs(mAttributes->createDynamic<Matrix>("Vs")),
       mVCOOutput(mAttributes->createDynamic<Real>("VCO_output")),
@@ -115,7 +110,7 @@ void EMT::Ph3::VSIVoltageControlVCO::setParameters(Real sysOmega, Real VdRef,
   mVoltageControllerVSI->setParameters(VdRef, VqRef);
 
   **mOmegaN = sysOmega;
-  **mVdRef = VdRef * sqrt(3 / 2);
+  **mVdRef = VdRef * sqrt(3.0 / 2.0);
   **mVqRef = VqRef;
 }
 
@@ -159,7 +154,6 @@ void EMT::Ph3::VSIVoltageControlVCO::setControllerParameters(
   SPDLOG_LOGGER_INFO(mSLog, "Current Loop: K_p = {}, K_i = {}", Kp_currCtrl,
                      Ki_currCtrl);
 
-  // TODO: add and use Omega_nominal instead of Omega_cutoff
   mVCO->setParameters(Omega_nominal);
   mVoltageControllerVSI->setControllerParameters(
       Kp_voltageCtrl, Ki_voltageCtrl, Kp_currCtrl, Ki_currCtrl, Omega_nominal);
@@ -209,7 +203,6 @@ void EMT::Ph3::VSIVoltageControlVCO::initializeParentFromNodesAndTerminals(
   MatrixComp intfCurrentComplex = Matrix::Zero(3, 1);
   // terminal powers in consumer system -> convert to generator system
   Real activePower = terminal(0)->singlePower().real();
-  ;
   Real reactivePower = terminal(0)->singlePower().imag();
 
   // derive complex threephase initialization from single phase initial values (only valid for balanced systems)
@@ -262,9 +255,9 @@ void EMT::Ph3::VSIVoltageControlVCO::initializeParentFromNodesAndTerminals(
   **mElecActivePower = (3. / 2. * intfVoltageComplex(0, 0) *
                         std::conj(-intfCurrentComplex(0, 0)))
                            .real();
-  **mElecPassivePower = (3. / 2. * intfVoltageComplex(0, 0) *
-                         std::conj(-intfCurrentComplex(0, 0)))
-                            .imag();
+  **mElecReactivePower = (3. / 2. * intfVoltageComplex(0, 0) *
+                          std::conj(-intfCurrentComplex(0, 0)))
+                             .imag();
 
   // Initialize controlled source
   mSubCtrledVoltageSource->setParameters(mVirtualNodes[0]->initialVoltage(),
@@ -291,9 +284,9 @@ void EMT::Ph3::VSIVoltageControlVCO::initializeParentFromNodesAndTerminals(
     // current and voltage inputs to VCO and voltage controller
     Matrix vcdq, ircdq;
     Real theta = std::arg(mVirtualNodes[3]->initialSingleVoltage());
-    vcdq = parkTransformPowerInvariant(theta,
-                                       filterInterfaceInitialVoltage.real());
-    ircdq = parkTransformPowerInvariant(
+    vcdq = Math::parkTransformPowerInvariant(
+        theta, filterInterfaceInitialVoltage.real());
+    ircdq = Math::parkTransformPowerInvariant(
         theta, -1 * filterInterfaceInitialCurrent.real());
 
     **mVcd = vcdq(0, 0);
@@ -308,9 +301,9 @@ void EMT::Ph3::VSIVoltageControlVCO::initializeParentFromNodesAndTerminals(
     // current and voltage inputs to VCO and voltage controller
     Matrix vcdq, ircdq;
     Real theta = std::arg(mVirtualNodes[2]->initialSingleVoltage());
-    vcdq = parkTransformPowerInvariant(theta,
-                                       filterInterfaceInitialVoltage.real());
-    ircdq = parkTransformPowerInvariant(
+    vcdq = Math::parkTransformPowerInvariant(
+        theta, filterInterfaceInitialVoltage.real());
+    ircdq = Math::parkTransformPowerInvariant(
         theta, -1 * filterInterfaceInitialCurrent.real());
 
     **mVcd = vcdq(0, 0);
@@ -391,61 +384,21 @@ void EMT::Ph3::VSIVoltageControlVCO::addControlStepDependencies(
   modifiedAttributes.push_back(mVsref);
 }
 
-Matrix EMT::Ph3::VSIVoltageControlVCO::parkTransformPowerInvariant(
-    Real theta, const Matrix &fabc) {
-  // Calculates fdq = Tdq * fabc
-  // Assumes that d-axis starts aligned with phase a
-  Matrix Tdq = getParkTransformMatrixPowerInvariant(theta);
-  Matrix dqvector = Tdq * fabc;
-  return dqvector;
-}
-
-Matrix EMT::Ph3::VSIVoltageControlVCO::getParkTransformMatrixPowerInvariant(
-    Real theta) {
-  // Return park matrix for theta
-  // Assumes that d-axis starts aligned with phase a
-  Matrix Tdq = Matrix::Zero(2, 3);
-  Real k = sqrt(2. / 3.);
-  Tdq << k * cos(theta), k * cos(theta - 2. * M_PI / 3.),
-      k * cos(theta + 2. * M_PI / 3.), -k * sin(theta),
-      -k * sin(theta - 2. * M_PI / 3.), -k * sin(theta + 2. * M_PI / 3.);
-  return Tdq;
-}
-
-Matrix EMT::Ph3::VSIVoltageControlVCO::inverseParkTransformPowerInvariant(
-    Real theta, const Matrix &fdq) {
-  // Calculates fabc = Tabc * fdq
-  // with d-axis starts aligned with phase a
-  Matrix Tabc = getInverseParkTransformMatrixPowerInvariant(theta);
-  Matrix fabc = Tabc * fdq;
-  return fabc;
-}
-
-Matrix
-EMT::Ph3::VSIVoltageControlVCO::getInverseParkTransformMatrixPowerInvariant(
-    Real theta) {
-  // Return inverse park matrix for theta
-  /// with d-axis starts aligned with phase a
-  Matrix Tabc = Matrix::Zero(3, 2);
-  Real k = sqrt(2. / 3.);
-  Tabc << k * cos(theta), -k * sin(theta), k * cos(theta - 2. * M_PI / 3.),
-      -k * sin(theta - 2. * M_PI / 3.), k * cos(theta + 2. * M_PI / 3.),
-      -k * sin(theta + 2. * M_PI / 3.);
-  return Tabc;
-}
-
 void EMT::Ph3::VSIVoltageControlVCO::controlStep(Real time, Int timeStepCount) {
   // Transformation interface forward
   Matrix vcdq, ircdq;
   Real theta = mVCO->mOutputPrev->get();
-  vcdq = parkTransformPowerInvariant(theta, **mVirtualNodes[2]->mVoltage);
-  ircdq = parkTransformPowerInvariant(theta, -**mSubResistorF->mIntfCurrent);
-  Matrix intfVoltageDQ = parkTransformPowerInvariant(mThetaN, **mIntfVoltage);
-  Matrix intfCurrentDQ = parkTransformPowerInvariant(mThetaN, **mIntfCurrent);
+  vcdq = Math::parkTransformPowerInvariant(theta, **mVirtualNodes[2]->mVoltage);
+  ircdq =
+      Math::parkTransformPowerInvariant(theta, -**mSubResistorF->mIntfCurrent);
+  Matrix intfVoltageDQ =
+      Math::parkTransformPowerInvariant(mThetaN, **mIntfVoltage);
+  Matrix intfCurrentDQ =
+      Math::parkTransformPowerInvariant(mThetaN, **mIntfCurrent);
   **mElecActivePower = -1. * (intfVoltageDQ(0, 0) * intfCurrentDQ(0, 0) +
                               intfVoltageDQ(1, 0) * intfCurrentDQ(1, 0));
-  **mElecPassivePower = -1. * (intfVoltageDQ(1, 0) * intfCurrentDQ(0, 0) -
-                               intfVoltageDQ(0, 0) * intfCurrentDQ(1, 0));
+  **mElecReactivePower = -1. * (intfVoltageDQ(1, 0) * intfCurrentDQ(0, 0) -
+                                intfVoltageDQ(0, 0) * intfCurrentDQ(1, 0));
   //vector of voltages
   **mVcd = vcdq(0, 0);
   **mVcq = vcdq(1, 0);
@@ -459,11 +412,8 @@ void EMT::Ph3::VSIVoltageControlVCO::controlStep(Real time, Int timeStepCount) {
   mVoltageControllerVSI->signalStep(time, timeStepCount);
 
   // Transformation interface backward
-  **mVsref = inverseParkTransformPowerInvariant(
+  **mVsref = Math::inverseParkTransformPowerInvariant(
       mVCO->mOutputPrev->get(), mVoltageControllerVSI->mOutputCurr->get());
-
-  // Update nominal system angle
-  //mThetaN = mThetaN + mTimeStep * **mOmegaN;
   mThetaN = std::fmod(mThetaN + mTimeStep * **mOmegaN, 2 * PI);
 }
 

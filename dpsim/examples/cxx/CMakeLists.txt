@@ -223,7 +223,6 @@ if(WITH_CIM)
 		CIM/CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
 		CIM/IEEE_LV_PowerFlowTest.cpp
 
-
 		# WSCC examples
 		CIM/WSCC_9bus_mult_decoupled.cpp
 		CIM/WSCC_9bus_mult_coupled.cpp

@@ -1,10 +1,5 @@
-/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
-*                     EONERC, RWTH Aachen University
-*
-* This Source Code Form is subject to the terms of the Mozilla Public
-* License, v. 2.0. If a copy of the MPL was not distributed with this
-* file, You can obtain one at https://mozilla.org/MPL/2.0/.
-*********************************************************************************/
+// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+// SPDX-License-Identifier: MPL-2.0
 
 #include "../Examples.h"
 #include <DPsim.h>
@@ -14,7 +9,7 @@ using namespace CPS;
 
 int main(int argc, char *argv[]) {
 
-  CIM::Examples::Grids::SGIB::Yazdani Yazdani;
+  CIM::Examples::Components::GFM::Yazdani Yazdani;
 
   Real finalTime = 1.0;
   Real timeStep = 0.0001;
@@ -153,13 +148,11 @@ int main(int argc, char *argv[]) {
 
   // Logging
   auto loggerEMT = DataLogger::make(simNameEMT);
-  loggerEMT->logAttribute("Spannung_PCC", n1EMT->attribute("v"));
-  loggerEMT->logAttribute("Spannung_Node_2", n2EMT->attribute("v"));
-  loggerEMT->logAttribute("Spannung_Node_3", n3EMT->attribute("v"));
-  loggerEMT->logAttribute("Spannung_Quelle", pv->attribute("Vs"));
-  loggerEMT->logAttribute("Strom_RLC", pv->attribute("i_intf"));
-  //loggerEMT->logAttribute("PLL_Phase", pv->attribute("pll_output"));
-  //loggerEMT->logAttribute("VCO_Phase", pv->attribute("VCO_output"));
+  loggerEMT->logAttribute("Voltage_PCC", n1EMT->attribute("v"));
+  loggerEMT->logAttribute("Voltage_Node_2", n2EMT->attribute("v"));
+  loggerEMT->logAttribute("Voltage_Node_3", n3EMT->attribute("v"));
+  loggerEMT->logAttribute("Voltage_Source", pv->attribute("Vs"));
+  loggerEMT->logAttribute("Current_RLC", pv->attribute("i_intf"));
   loggerEMT->logAttribute("P_elec", pv->attribute("P_elec"));
   loggerEMT->logAttribute("Q_elec", pv->attribute("Q_elec"));
 

@@ -1,10 +1,5 @@
-/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *********************************************************************************/
+// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+// SPDX-License-Identifier: MPL-2.0
 #pragma once
 
 #include <dpsim-models/Base/Base_AvVoltageSourceInverterDQ.h>
@@ -34,7 +29,6 @@ protected:
   Real mVnom;
   /// Simulation step
   Real mTimeStep;
-  /// Active power reference
 
   // ### Control Subcomponents ###
   /// VCO
@@ -89,7 +83,7 @@ public:
   const Attribute<Real>::Ptr mIrcq;
 
   const Attribute<Real>::Ptr mElecActivePower;
-  const Attribute<Real>::Ptr mElecPassivePower;
+  const Attribute<Real>::Ptr mElecReactivePower;
 
   // Control outputs
   /// Voltage as control output after transformation interface
@@ -134,16 +128,6 @@ public:
                              Real gamma_qInit);
 
   void withControl(Bool controlOn) { mWithControl = controlOn; };
-
-  // #### Mathematical Matrix Transforms ####
-  ///
-  Matrix getParkTransformMatrixPowerInvariant(Real theta);
-  ///
-  Matrix parkTransformPowerInvariant(Real theta, const Matrix &fabc);
-  ///
-  Matrix getInverseParkTransformMatrixPowerInvariant(Real theta);
-  ///
-  Matrix inverseParkTransformPowerInvariant(Real theta, const Matrix &fdq);
 
   // #### MNA section ####
   /// Initializes internal variables of the component

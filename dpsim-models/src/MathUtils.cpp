@@ -421,3 +421,38 @@ Complex Math::rotatingFrame2to1(Complex f2, Real theta1, Real theta2) {
   Real f1_imag = f2.real() * sin(delta) + f2.imag() * cos(delta);
   return Complex(f1_real, f1_imag);
 }
+
+Matrix Math::parkTransformPowerInvariant(Real theta, const Matrix &fabc) {
+  return parkTransformMatrixPowerInvariant(theta) * fabc;
+}
+
+Matrix Math::parkTransformMatrixPowerInvariant(Real theta) {
+  Matrix transform = Matrix::Zero(2, 3);
+
+  const Real k = std::sqrt(2.0 / 3.0);
+
+  transform << k * std::cos(theta), k * std::cos(theta - 2.0 * M_PI / 3.0),
+      k * std::cos(theta + 2.0 * M_PI / 3.0), -k * std::sin(theta),
+      -k * std::sin(theta - 2.0 * M_PI / 3.0),
+      -k * std::sin(theta + 2.0 * M_PI / 3.0);
+
+  return transform;
+}
+
+Matrix Math::inverseParkTransformPowerInvariant(Real theta, const Matrix &fdq) {
+  return inverseParkTransformMatrixPowerInvariant(theta) * fdq;
+}
+
+Matrix Math::inverseParkTransformMatrixPowerInvariant(Real theta) {
+  Matrix transform = Matrix::Zero(3, 2);
+
+  const Real k = std::sqrt(2.0 / 3.0);
+
+  transform << k * std::cos(theta), -k * std::sin(theta),
+      k * std::cos(theta - 2.0 * M_PI / 3.0),
+      -k * std::sin(theta - 2.0 * M_PI / 3.0),
+      k * std::cos(theta + 2.0 * M_PI / 3.0),
+      -k * std::sin(theta + 2.0 * M_PI / 3.0);
+
+  return transform;
+}

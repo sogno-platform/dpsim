@@ -1,16 +1,10 @@
-/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *********************************************************************************/
+// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+// SPDX-License-Identifier: MPL-2.0
 
 #pragma once
 
 #include <vector>
 
-#include <dpsim-models/SimPowerComp.h>
 #include <dpsim-models/SimSignalComp.h>
 #include <dpsim-models/Task.h>
 
@@ -25,9 +19,8 @@ protected:
   Real mTimeStep;
 
 public:
-  /// This is never explicitely set to reference anything, so the outside code is responsible for setting up the reference.
+  /// Input reference which comes as measurement from outside of the class
   const Attribute<Real>::Ptr mInputRef;
-
   /// Previous Input
   const Attribute<Real>::Ptr mInputPrev;
   /// Current Input

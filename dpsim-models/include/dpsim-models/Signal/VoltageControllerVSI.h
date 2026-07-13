@@ -1,16 +1,10 @@
-/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *********************************************************************************/
+// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+// SPDX-License-Identifier: MPL-2.0
 
 #pragma once
 
 #include <vector>
 
-#include <dpsim-models/SimPowerComp.h>
 #include <dpsim-models/SimSignalComp.h>
 #include <dpsim-models/Task.h>
 
@@ -28,7 +22,6 @@ protected:
   Real mVqRef = 0;
 
   // Voltage controller
-  Real mOmegaCutoff;
   Real mKiVoltageCtrld;
   Real mKiVoltageCtrlq;
   Real mKpVoltageCtrld;
@@ -58,8 +51,7 @@ protected:
   Matrix mD = Matrix::Zero(2, 6);
 
 public:
-  // attributes of input references
-  ///FIXME: These are never explicitely set to reference anything, so the outside code is responsible for setting up the reference.
+  // voltages and currents from filter in dq-frame
   const Attribute<Real>::Ptr mVc_d;
   const Attribute<Real>::Ptr mVc_q;
   const Attribute<Real>::Ptr mIrc_d;
@@ -86,11 +78,8 @@ public:
 
   /// Setter for general parameters
   void setParameters(Real VampRef, Real OmegaRef);
-  /// Setter for parameters of control loops
-  void setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl,
-                               Real Kp_currCtrl, Real Ki_currCtrl, Real Kp_pll,
-                               Real Ki_pll, Real Omega_cutoff);
-  // Setter VCO Version
+
+  // Setter for VCO class
   void setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl,
                                Real Kp_currCtrl, Real Ki_currCtrl,
                                Real Omega_nominal);
@@ -102,8 +91,6 @@ public:
   /// Initialize vectors of state space model
   void initializeStateSpaceModel(Real omega, Real timeStep,
                                  Attribute<Matrix>::Ptr leftVector);
-  /// Update B matrix due to its dependence on the input
-  void updateBMatrixStateSpaceModel();
 
   /// pre step operations
   void signalPreStep(Real time, Int timeStepCount);
