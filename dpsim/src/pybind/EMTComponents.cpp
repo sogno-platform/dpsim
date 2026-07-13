@@ -365,7 +365,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
       .def(py::init<std::string, CPS::Logger::Level>())
       .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
            "uid"_a, "name"_a, "log_level"_a = CPS::Logger::Level::off,
-           "with_trafo"_a = CPS::Bool{false})
+           py::arg("with_trafo") = false)
       .def("set_parameters",
            &CPS::EMT::Ph3::VSIVoltageControlVCO::setParameters, "sys_omega"_a,
            "vd_ref"_a, "vq_ref"_a)

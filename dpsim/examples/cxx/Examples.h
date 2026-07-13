@@ -227,7 +227,8 @@ struct Yazdani {
   Real gamma_qInit = 0;
 
   // VSI generated values
-  Real Vdref = 400; //work with Amplitude (*sqrt(3/2))
+  Real Vdref =
+      400 * sqrt(2.0 / 3.0); // RMS to peak conversion for three-phase system
   Real Vqref = 0;
   Real systemFrequency = 60;
   Real OmegaNull = 2 * M_PI * 60; //System circular frequency

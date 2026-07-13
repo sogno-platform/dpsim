@@ -23,10 +23,10 @@ EMT::Ph3::VSIVoltageControlVCO::VSIVoltageControlVCO(String uid, String name,
       mVCOOutput(mAttributes->createDynamic<Real>("VCO_output")),
       mVoltagectrlInputs(
           mAttributes->createDynamic<Matrix>("voltagectrl_inputs")),
-      mVoltagectrlOutputs(
-          mAttributes->createDynamic<Matrix>("voltagectrl_outputs")),
       mVoltagectrlStates(
-          mAttributes->createDynamic<Matrix>("voltagectrl_states")) {
+          mAttributes->createDynamic<Matrix>("voltagectrl_states")),
+      mVoltagectrlOutputs(
+          mAttributes->createDynamic<Matrix>("voltagectrl_outputs")) {
 
   mPhaseType = PhaseType::ABC;
 
@@ -107,11 +107,11 @@ void EMT::Ph3::VSIVoltageControlVCO::setParameters(Real sysOmega, Real VdRef,
   SPDLOG_LOGGER_INFO(mSLog, "Nominal Omega={} [1/s]", sysOmega);
   SPDLOG_LOGGER_INFO(mSLog, "VdRef={} [V] VqRef={} [V]", VdRef, VqRef);
 
-  mVoltageControllerVSI->setParameters(VdRef, VqRef);
-
   **mOmegaN = sysOmega;
-  **mVdRef = VdRef * sqrt(3.0 / 2.0);
+  **mVdRef = VdRef;
   **mVqRef = VqRef;
+
+  mVoltageControllerVSI->setParameters(VdRef, VqRef);
 }
 
 //setter for transformer if used
@@ -166,8 +166,8 @@ void EMT::Ph3::VSIVoltageControlVCO::setFilterParameters(Real Lf, Real Cf,
   SPDLOG_LOGGER_INFO(mSLog, "Filter Parameters:");
   SPDLOG_LOGGER_INFO(mSLog, "Inductance Lf={} [H] Capacitance Cf={} [F]", mLf,
                      mCf);
-  SPDLOG_LOGGER_INFO(mSLog, "Resistance Rf={} [H] Resistance Rc={} [F]", mRf,
-                     mRc);
+  SPDLOG_LOGGER_INFO(mSLog, "Resistance Rf={} [Ohm] Resistance Rc={} [Ohm]",
+                     mRf, mRc);
 
   mSubResistorC->setParameters(
       CPS::Math::singlePhaseParameterToThreePhase(mRc));

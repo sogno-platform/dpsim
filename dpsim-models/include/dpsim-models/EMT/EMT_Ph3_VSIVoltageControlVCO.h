@@ -110,8 +110,8 @@ public:
 
   // #### General ####
   /// Initializes component from power flow data
-  void initializeParentFromNodesAndTerminals(Real frequency);
-  /// Setter for gengit eral parameters of inverter
+  void initializeParentFromNodesAndTerminals(Real frequency) override;
+  /// Setter for general parameters of the component
   void setParameters(Real sysOmega, Real VdRef, Real VqRef);
   /// Setter for parameters of control loops
   void setControllerParameters(Real Kp_voltageCtrl, Real Ki_voltageCtrl,
