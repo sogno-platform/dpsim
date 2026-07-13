@@ -12,9 +12,8 @@ int main(int argc, char *argv[]) {
   CIM::Examples::Components::GFM::Yazdani Yazdani;
 
   Real finalTime = 1.0;
-  Real timeStep = 0.0001;
-  String simName =
-      "EMT_Slack_PiLine_VSI_VoltageControlled_LoadStep_with_PF_Init";
+  Real timeStep = 100e-6;
+  String simName = "EMT_VSI_GFM_LoadStep";
   Bool pvWithControl = true;
 
   // ----- POWERFLOW FOR INITIALIZATION -----
