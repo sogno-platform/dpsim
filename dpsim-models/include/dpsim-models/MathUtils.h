@@ -148,5 +148,16 @@ public:
 
   /// To convert single phase power to symmetrical three phase
   static Matrix singlePhasePowerToThreePhase(Real power);
+
+  // #### Reference Frame Transformations ####
+
+  static Matrix parkTransformPowerInvariant(Real theta, const Matrix &fabc);
+
+  static Matrix parkTransformMatrixPowerInvariant(Real theta);
+
+  static Matrix inverseParkTransformPowerInvariant(Real theta,
+                                                   const Matrix &fdq);
+
+  static Matrix inverseParkTransformMatrixPowerInvariant(Real theta);
 };
 } // namespace CPS

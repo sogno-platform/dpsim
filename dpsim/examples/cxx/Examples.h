@@ -205,6 +205,129 @@ struct Parameters {
   Real Tw = 1.0;
 };
 } // namespace HydroTurbine
+
+namespace GFM {
+struct Yazdani {
+  // Parameters for the GFM-VSI model from
+  // "Yazdani, A., & Iravani, R. (2010). Voltage-sourced converters in power systems: modeling, control, and applications. John Wiley & Sons."
+  // Chapter 9.3
+
+  // Initial state values of VSI system matrix
+  Real thetaPLLInit = 0;
+  Real phiPLLInit = 0;
+  Real phi_dInit = 0;
+  Real phi_qInit = 0;
+  Real gamma_dInit = 0;
+  Real gamma_qInit = 0;
+
+  // VSI generated values
+  // choose value * sqrt (3.0 / 2.0) to have phase peak at value
+  // choose value to have RMS value at PCC
+  Real Vdref = 400 * sqrt(3.0 / 2.0);
+  Real Vqref = 0;
+  Real systemFrequency = 60;
+  Real OmegaNull = 2 * M_PI * systemFrequency; //System circular frequency
+
+  // VSI filter parameters
+  Real Lf = 100e-6;
+  Real Cf = 2.5e-3;
+  Real Rf = 2.07e-3;
+  Real tau = 0.5e-3;
+  Real Rc = 10e-6; //connecting resistor to external network
+
+  // VSI controller parameters
+  Real scaling_P = 1;
+  Real scaling_I = 1;
+
+  Real KpVoltageCtrl = 1.6725 * scaling_P;
+  Real KiVoltageCtrl = 374.64 * scaling_I;
+  Real KpCurrCtrl = 0.2 * scaling_P;
+  Real KiCurrCtrl = 4.14 * scaling_I;
+
+  // PLL controller parameters
+  // OmegaCutoff is the cutoff-frequency of the PLL filter
+  // in case of VCO-mode use KpPLL=0, KiPLL=0 and OmegaCutoff = OmegaNull to work as VCO
+  Real KpPLL = 0;
+  Real KiPLL = 0;
+  Real OmegaCutoff = OmegaNull;
+
+  // LINES AND LOAD PARAMETERS
+
+  // Line parameters (R/X = 1)
+  Real length = 5;
+  Real lineResistance = 0.5 * length;
+  Real lineInductance = 0.5 / 314 * length;
+  Real lineCapacitance = 50e-6 / 314 * length;
+
+  //Load Parameters
+  Real Res1 = 83e-3;
+  Real Ind1 = 137e-6;
+  Real Res2 = 50e-3;
+  Real Ind2 = 68e-6;
+  Real Cap2 = 13.55e-3;
+};
+
+struct Derived {
+  // System quantities
+  Real lineToLineVoltageRms = 400.0;
+  Real systemFrequency = 60.0;
+  Real OmegaNull = 2.0 * M_PI * systemFrequency;
+
+  // Power-invariant dq reference:
+  // For a balanced system, Vd equals line-to-line RMS voltage.
+  Real Vdref = lineToLineVoltageRms;
+  Real Vqref = 0.0;
+
+  // Filter
+  Real Lf = 100e-6;
+  Real Cf = 2.5e-3;
+  Real Rf = 2.07e-3;
+  Real Rc = 1e-5;
+  Real tau = 0.5e-3;
+
+  // Controller design specifications
+  Real currentCtrlBandwidth = 2000.0;       // rad/s
+  Real voltageCtrlNaturalFrequency = 387.1; // rad/s
+  Real voltageCtrlDamping = 0.864;
+
+  // Calculated current-controller gains
+  Real KpCurrCtrl = Lf * currentCtrlBandwidth;
+  Real KiCurrCtrl = Rf * currentCtrlBandwidth;
+
+  // Calculated voltage-controller gains
+  Real KpVoltageCtrl =
+      2.0 * voltageCtrlDamping * voltageCtrlNaturalFrequency * Cf;
+
+  Real KiVoltageCtrl =
+      voltageCtrlNaturalFrequency * voltageCtrlNaturalFrequency * Cf;
+
+  // VCO mode --> for PLL change values
+  Real KpPLL = 0.0;
+  Real KiPLL = 0.0;
+  Real OmegaCutoff = OmegaNull;
+
+  // Initial states
+  Real thetaPLLInit = 0.0;
+  Real phiPLLInit = 0.0;
+  Real phi_dInit = 0.0;
+  Real phi_qInit = 0.0;
+  Real gamma_dInit = 0.0;
+  Real gamma_qInit = 0.0;
+
+  // Network
+  Real length = 5.0;
+  Real lineResistance = 0.5 * length;
+  Real lineInductance = 0.5 / 314.0 * length;
+  Real lineCapacitance = 50e-6 / 314.0 * length;
+
+  // Loads
+  Real Res1 = 83e-3;
+  Real Ind1 = 137e-6;
+  Real Res2 = 50e-3;
+  Real Ind2 = 68e-6;
+  Real Cap2 = 13.55e-3;
+};
+} // namespace GFM
 } // namespace Components
 
 namespace Grids {

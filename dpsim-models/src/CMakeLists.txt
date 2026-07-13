@@ -149,6 +149,7 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph3_TwoTerminalVTypeVariableSSNComp.cpp
 	EMT/EMT_Ph3_FourTerminalVTypeSSNComp.cpp
 	EMT/EMT_Ph3_PiecewiseLinearInductor.cpp
+	EMT/EMT_Ph3_VSIVoltageControlVCO.cpp
 
 	SP/SP_Ph1_ControlledCurrentSource.cpp
 	SP/SP_Ph1_VoltageSource.cpp
@@ -211,6 +212,8 @@ list(APPEND MODELS_SOURCES
 	Signal/FrequencyRampGenerator.cpp
 	Signal/CosineFMGenerator.cpp
 	Signal/DCGenerator.cpp
+	Signal/VCO.cpp
+	Signal/VoltageControllerVSI.cpp
 )
 
 if(WITH_CIM)

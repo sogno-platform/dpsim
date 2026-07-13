@@ -130,6 +130,7 @@ set(INVERTER_SOURCES
 	Components/DP_Inverter_Grid.cpp
 	Components/DP_Inverter_Grid_Parallel_FreqSplit.cpp
 	Components/DP_Inverter_Grid_Sequential_FreqSplit.cpp
+	Components/EMT_Ph3_GFM_Test.cpp
 )
 
 set(SSN_SOURCES
