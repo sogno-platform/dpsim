@@ -102,38 +102,38 @@ var sectionId = 'dynsection-0';
 </a>
 </g>
 </g>
-<!-- Node157 -->
-<g id="Node000157" class="node">
-<title>Node157</title>
-<g id="a_Node000157"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html" target="_top" xlink:title=" ">
+<!-- Node158 -->
+<g id="Node000158" class="node">
+<title>Node158</title>
+<g id="a_Node000158"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="336,-792.25 143,-792.25 143,-770 336,-770 336,-792.25"/>
 <text text-anchor="middle" x="239.5" y="-778.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph3::SynchronGeneratorVBR</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node157 -->
-<g id="edge47_Node000001_Node000157" class="edge">
-<title>Node1&#45;&gt;Node157</title>
-<g id="a_edge47_Node000001_Node000157"><a xlink:title=" ">
+<!-- Node1&#45;&gt;Node158 -->
+<g id="edge47_Node000001_Node000158" class="edge">
+<title>Node1&#45;&gt;Node158</title>
+<g id="a_edge47_Node000001_Node000158"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M117.57,-796.2C126.59,-795.08 136.03,-793.9 145.48,-792.72"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="117.37,-792.7 107.88,-797.41 118.23,-799.64 117.37,-792.7"/>
 </a>
 </g>
 </g>
-<!-- Node158 -->
-<g id="Node000158" class="node">
-<title>Node158</title>
-<g id="a_Node000158"><a xlink:href="class_c_p_s_1_1_m_n_a_sim_power_comp.html" target="_top" xlink:title="Base class for all MNA components that are transmitting power.">
+<!-- Node159 -->
+<g id="Node000159" class="node">
+<title>Node159</title>
+<g id="a_Node000159"><a xlink:href="class_c_p_s_1_1_m_n_a_sim_power_comp.html" target="_top" xlink:title="Base class for all MNA components that are transmitting power.">
 <polygon fill="#fff0f0" stroke="red" points="307.5,-846.38 171.5,-846.38 171.5,-809.88 307.5,-809.88 307.5,-846.38"/>
 <text text-anchor="start" x="179.5" y="-832.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::MNASimPowerComp</text>
 <text text-anchor="middle" x="239.5" y="-818.62" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; VarType &gt;</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node158 -->
-<g id="edge48_Node000001_Node000158" class="edge">
-<title>Node1&#45;&gt;Node158</title>
-<g id="a_edge48_Node000001_Node000158"><a xlink:title=" ">
+<!-- Node1&#45;&gt;Node159 -->
+<g id="edge48_Node000001_Node000159" class="edge">
+<title>Node1&#45;&gt;Node159</title>
+<g id="a_edge48_Node000001_Node000159"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M117.51,-812.39C134.81,-814.64 153.62,-817.08 171.14,-819.36"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="118.25,-808.95 107.88,-811.13 117.34,-815.89 118.25,-808.95"/>
 </a>
@@ -852,111 +852,111 @@ var sectionId = 'dynsection-0';
 </a>
 </g>
 </g>
-<!-- Node115 -->
-<g id="Node000115" class="node">
-<title>Node115</title>
-<g id="a_Node000115"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_capacitor.html" target="_top" xlink:title="Capacitor model.">
+<!-- Node116 -->
+<g id="Node000116" class="node">
+<title>Node116</title>
+<g id="a_Node000116"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_capacitor.html" target="_top" xlink:title="Capacitor model.">
 <polygon fill="white" stroke="#666666" points="764.25,-102.25 632,-102.25 632,-80 764.25,-80 764.25,-102.25"/>
 <text text-anchor="middle" x="698.12" y="-88.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph1::Capacitor</text>
 </a>
 </g>
 </g>
-<!-- Node94&#45;&gt;Node115 -->
-<g id="edge42_Node000094_Node000115" class="edge">
-<title>Node94&#45;&gt;Node115</title>
-<g id="a_edge42_Node000094_Node000115"><a xlink:title=" ">
+<!-- Node94&#45;&gt;Node116 -->
+<g id="edge42_Node000094_Node000116" class="edge">
+<title>Node94&#45;&gt;Node116</title>
+<g id="a_edge42_Node000094_Node000116"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M525.79,-166.74C545.54,-148.42 574.13,-124.92 603.5,-111.12 612.38,-106.96 622.13,-103.65 631.9,-101.02"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="523.57,-164.02 518.73,-173.44 528.39,-169.09 523.57,-164.02"/>
-</a>
-</g>
-</g>
-<!-- Node116 -->
-<g id="Node000116" class="node">
-<title>Node116</title>
-<g id="a_Node000116"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_current_source.html" target="_top" xlink:title="Ideal current source model.">
-<polygon fill="white" stroke="#666666" points="776.25,-62.25 620,-62.25 620,-40 776.25,-40 776.25,-62.25"/>
-<text text-anchor="middle" x="698.12" y="-48.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph1::CurrentSource</text>
-</a>
-</g>
-</g>
-<!-- Node94&#45;&gt;Node116 -->
-<g id="edge43_Node000094_Node000116" class="edge">
-<title>Node94&#45;&gt;Node116</title>
-<g id="a_edge43_Node000094_Node000116"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M515.87,-164.78C533.72,-136.52 564.96,-94.1 603.5,-71.12 609.07,-67.81 615.11,-65.03 621.36,-62.72"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="512.95,-162.85 510.7,-173.2 518.91,-166.51 512.95,-162.85"/>
 </a>
 </g>
 </g>
 <!-- Node117 -->
 <g id="Node000117" class="node">
 <title>Node117</title>
-<g id="a_Node000117"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_inductor.html" target="_top" xlink:title="Inductor.">
-<polygon fill="white" stroke="#666666" points="762.75,-22.25 633.5,-22.25 633.5,0 762.75,0 762.75,-22.25"/>
-<text text-anchor="middle" x="698.12" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph1::Inductor</text>
+<g id="a_Node000117"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_current_source.html" target="_top" xlink:title="Ideal current source model.">
+<polygon fill="white" stroke="#666666" points="776.25,-62.25 620,-62.25 620,-40 776.25,-40 776.25,-62.25"/>
+<text text-anchor="middle" x="698.12" y="-48.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph1::CurrentSource</text>
 </a>
 </g>
 </g>
 <!-- Node94&#45;&gt;Node117 -->
-<g id="edge44_Node000094_Node000117" class="edge">
+<g id="edge43_Node000094_Node000117" class="edge">
 <title>Node94&#45;&gt;Node117</title>
-<g id="a_edge44_Node000094_Node000117"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M510.07,-163.8C524.98,-126.83 555.8,-64.13 603.5,-31.12 612.38,-24.98 622.79,-20.66 633.38,-17.65"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="506.87,-162.39 506.5,-172.98 513.39,-164.93 506.87,-162.39"/>
+<g id="a_edge43_Node000094_Node000117"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M515.87,-164.78C533.72,-136.52 564.96,-94.1 603.5,-71.12 609.07,-67.81 615.11,-65.03 621.36,-62.72"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="512.95,-162.85 510.7,-173.2 518.91,-166.51 512.95,-162.85"/>
 </a>
 </g>
 </g>
 <!-- Node118 -->
 <g id="Node000118" class="node">
 <title>Node118</title>
-<g id="a_Node000118"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_resistor.html" target="_top" xlink:title="EMT Resistor.">
-<polygon fill="white" stroke="#666666" points="761.25,-306.25 635,-306.25 635,-284 761.25,-284 761.25,-306.25"/>
-<text text-anchor="middle" x="698.12" y="-292.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph1::Resistor</text>
+<g id="a_Node000118"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_inductor.html" target="_top" xlink:title="Inductor.">
+<polygon fill="white" stroke="#666666" points="762.75,-22.25 633.5,-22.25 633.5,0 762.75,0 762.75,-22.25"/>
+<text text-anchor="middle" x="698.12" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph1::Inductor</text>
 </a>
 </g>
 </g>
 <!-- Node94&#45;&gt;Node118 -->
-<g id="edge45_Node000094_Node000118" class="edge">
+<g id="edge44_Node000094_Node000118" class="edge">
 <title>Node94&#45;&gt;Node118</title>
-<g id="a_edge45_Node000094_Node000118"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M525.79,-219.51C545.54,-237.83 574.13,-261.33 603.5,-275.12 613.28,-279.72 624.13,-283.27 634.87,-286.01"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="528.39,-217.16 518.73,-212.81 523.57,-222.23 528.39,-217.16"/>
+<g id="a_edge44_Node000094_Node000118"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M510.07,-163.8C524.98,-126.83 555.8,-64.13 603.5,-31.12 612.38,-24.98 622.79,-20.66 633.38,-17.65"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="506.87,-162.39 506.5,-172.98 513.39,-164.93 506.87,-162.39"/>
 </a>
 </g>
 </g>
 <!-- Node119 -->
 <g id="Node000119" class="node">
 <title>Node119</title>
-<g id="a_Node000119"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_1_1_full___serial___r_l_c.html" target="_top" xlink:title="Full_Serial_RLC.">
+<g id="a_Node000119"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_resistor.html" target="_top" xlink:title="EMT Resistor.">
+<polygon fill="white" stroke="#666666" points="761.25,-306.25 635,-306.25 635,-284 761.25,-284 761.25,-306.25"/>
+<text text-anchor="middle" x="698.12" y="-292.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph1::Resistor</text>
+</a>
+</g>
+</g>
+<!-- Node94&#45;&gt;Node119 -->
+<g id="edge45_Node000094_Node000119" class="edge">
+<title>Node94&#45;&gt;Node119</title>
+<g id="a_edge45_Node000094_Node000119"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M525.79,-219.51C545.54,-237.83 574.13,-261.33 603.5,-275.12 613.28,-279.72 624.13,-283.27 634.87,-286.01"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="528.39,-217.16 518.73,-212.81 523.57,-222.23 528.39,-217.16"/>
+</a>
+</g>
+</g>
+<!-- Node120 -->
+<g id="Node000120" class="node">
+<title>Node120</title>
+<g id="a_Node000120"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_1_1_full___serial___r_l_c.html" target="_top" xlink:title="Full_Serial_RLC.">
 <polygon fill="white" stroke="#666666" points="751.5,-266.38 644.75,-266.38 644.75,-229.88 751.5,-229.88 751.5,-266.38"/>
 <text text-anchor="start" x="652.75" y="-252.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph1::SSN</text>
 <text text-anchor="middle" x="698.12" y="-238.62" font-family="Helvetica,sans-Serif" font-size="10.00">::Full_Serial_RLC</text>
 </a>
 </g>
 </g>
-<!-- Node94&#45;&gt;Node119 -->
-<g id="edge46_Node000094_Node000119" class="edge">
-<title>Node94&#45;&gt;Node119</title>
-<g id="a_edge46_Node000094_Node000119"><a xlink:title=" ">
+<!-- Node94&#45;&gt;Node120 -->
+<g id="edge46_Node000094_Node000120" class="edge">
+<title>Node94&#45;&gt;Node120</title>
+<g id="a_edge46_Node000094_Node000120"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M577.56,-214.85C600.01,-221.1 623.96,-227.76 644.48,-233.47"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="578.71,-211.54 568.14,-212.23 576.84,-218.28 578.71,-211.54"/>
 </a>
 </g>
 </g>
-<!-- Node158&#45;&gt;Node2 -->
-<g id="edge49_Node000158_Node000002" class="edge">
-<title>Node158&#45;&gt;Node2</title>
-<g id="a_edge49_Node000158_Node000002"><a xlink:title=" ">
+<!-- Node159&#45;&gt;Node2 -->
+<g id="edge49_Node000159_Node000002" class="edge">
+<title>Node159&#45;&gt;Node2</title>
+<g id="a_edge49_Node000159_Node000002"><a xlink:title=" ">
 <path fill="none" stroke="orange" stroke-dasharray="5,2" d="M319.1,-831.25C351.04,-836.09 386.47,-846.44 412.5,-867.88 467.38,-913.06 488.09,-1000.97 494.75,-1039.39"/>
 <polygon fill="orange" stroke="orange" points="319.85,-827.82 309.47,-829.96 318.92,-834.76 319.85,-827.82"/>
 </a>
 </g>
 <text text-anchor="middle" x="383.25" y="-872.62" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &lt; Complex &gt;</text>
 </g>
-<!-- Node158&#45;&gt;Node94 -->
-<g id="edge50_Node000158_Node000094" class="edge">
-<title>Node158&#45;&gt;Node94</title>
-<g id="a_edge50_Node000158_Node000094"><a xlink:title=" ">
+<!-- Node159&#45;&gt;Node94 -->
+<g id="edge50_Node000159_Node000094" class="edge">
+<title>Node159&#45;&gt;Node94</title>
+<g id="a_edge50_Node000159_Node000094"><a xlink:title=" ">
 <path fill="none" stroke="orange" stroke-dasharray="5,2" d="M317.68,-813.77C324.38,-810.39 330.64,-806.24 336,-801.12 425.64,-715.7 483.19,-304.61 495.17,-211.78"/>
 <polygon fill="orange" stroke="orange" points="316.75,-810.36 308.99,-817.57 319.56,-816.77 316.75,-810.36"/>
 </a>

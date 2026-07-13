@@ -1,0 +1,5 @@
+<map id="CPS::Signal::VCO::Step" name="CPS::Signal::VCO::Step">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,83,164,113"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_task.html" title="Tasks to be defined by every component." alt="" coords="45,5,124,35"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,51,87,82,82,82,82,51"/>
+</map>

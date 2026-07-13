@@ -198,6 +198,14 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a037f3b5662cf7658156d87d107523781" id="r_a037f3b5662cf7658156d87d107523781"><td class="memItemLeft" align="right" valign="top">static Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a037f3b5662cf7658156d87d107523781">singlePhasePowerToThreePhase</a> (Real power)</td></tr>
 <tr class="memdesc:a037f3b5662cf7658156d87d107523781"><td class="mdescLeft">&#160;</td><td class="mdescRight">To convert single phase power to symmetrical three phase.  <br /></td></tr>
 <tr class="separator:a037f3b5662cf7658156d87d107523781"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab43109b9657531e2feaba4f3a1460a66" id="r_ab43109b9657531e2feaba4f3a1460a66"><td class="memItemLeft" align="right" valign="top">static Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab43109b9657531e2feaba4f3a1460a66">parkTransformPowerInvariant</a> (Real theta, const Matrix &amp;fabc)</td></tr>
+<tr class="separator:ab43109b9657531e2feaba4f3a1460a66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6c1cd143af60ea23ce2caf90cde21ad" id="r_af6c1cd143af60ea23ce2caf90cde21ad"><td class="memItemLeft" align="right" valign="top">static Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af6c1cd143af60ea23ce2caf90cde21ad">parkTransformMatrixPowerInvariant</a> (Real theta)</td></tr>
+<tr class="separator:af6c1cd143af60ea23ce2caf90cde21ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4d6937696795c8985211532c70f5328" id="r_af4d6937696795c8985211532c70f5328"><td class="memItemLeft" align="right" valign="top">static Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af4d6937696795c8985211532c70f5328">inverseParkTransformPowerInvariant</a> (Real theta, const Matrix &amp;fdq)</td></tr>
+<tr class="separator:af4d6937696795c8985211532c70f5328"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8cc7d0a2235e8225a30cc427ede79021" id="r_a8cc7d0a2235e8225a30cc427ede79021"><td class="memItemLeft" align="right" valign="top">static Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8cc7d0a2235e8225a30cc427ede79021">inverseParkTransformMatrixPowerInvariant</a> (Real theta)</td></tr>
+<tr class="separator:a8cc7d0a2235e8225a30cc427ede79021"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
@@ -833,6 +841,64 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a8cc7d0a2235e8225a30cc427ede79021" name="a8cc7d0a2235e8225a30cc427ede79021"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8cc7d0a2235e8225a30cc427ede79021">&#9670;&#160;</a></span>inverseParkTransformMatrixPowerInvariant()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Matrix Math::inverseParkTransformMatrixPowerInvariant </td>
+          <td>(</td>
+          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>theta</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_math_utils_8cpp_source.html#l00446">446</a> of file <a class="el" href="_math_utils_8cpp_source.html">MathUtils.cpp</a>.</p>
+
+</div>
+</div>
+<a id="af4d6937696795c8985211532c70f5328" name="af4d6937696795c8985211532c70f5328"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4d6937696795c8985211532c70f5328">&#9670;&#160;</a></span>inverseParkTransformPowerInvariant()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Matrix Math::inverseParkTransformPowerInvariant </td>
+          <td>(</td>
+          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>theta</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>fdq</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_math_utils_8cpp_source.html#l00442">442</a> of file <a class="el" href="_math_utils_8cpp_source.html">MathUtils.cpp</a>.</p>
+
+</div>
+</div>
 <a id="aec57285d288acb6921cd3a912a82bc89" name="aec57285d288acb6921cd3a912a82bc89"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aec57285d288acb6921cd3a912a82bc89">&#9670;&#160;</a></span>invertMatrix()</h2>
 
@@ -915,6 +981,64 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="_math_utils_8cpp_source.html#l00061">61</a> of file <a class="el" href="_math_utils_8cpp_source.html">MathUtils.cpp</a>.</p>
+
+</div>
+</div>
+<a id="af6c1cd143af60ea23ce2caf90cde21ad" name="af6c1cd143af60ea23ce2caf90cde21ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af6c1cd143af60ea23ce2caf90cde21ad">&#9670;&#160;</a></span>parkTransformMatrixPowerInvariant()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Matrix Math::parkTransformMatrixPowerInvariant </td>
+          <td>(</td>
+          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>theta</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_math_utils_8cpp_source.html#l00429">429</a> of file <a class="el" href="_math_utils_8cpp_source.html">MathUtils.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ab43109b9657531e2feaba4f3a1460a66" name="ab43109b9657531e2feaba4f3a1460a66"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab43109b9657531e2feaba4f3a1460a66">&#9670;&#160;</a></span>parkTransformPowerInvariant()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Matrix Math::parkTransformPowerInvariant </td>
+          <td>(</td>
+          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>theta</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>fabc</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_math_utils_8cpp_source.html#l00425">425</a> of file <a class="el" href="_math_utils_8cpp_source.html">MathUtils.cpp</a>.</p>
 
 </div>
 </div>

@@ -524,6 +524,41 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>  Real f1_imag = f2.real() * sin(delta) + f2.imag() * cos(delta);</div>
 <div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>  <span class="keywordflow">return</span> Complex(f1_real, f1_imag);</div>
 <div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>}</div>
+<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span> </div>
+<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>Matrix Math::parkTransformPowerInvariant(Real theta, <span class="keyword">const</span> Matrix &amp;fabc) {</div>
+<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>  <span class="keywordflow">return</span> parkTransformMatrixPowerInvariant(theta) * fabc;</div>
+<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>}</div>
+<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span> </div>
+<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>Matrix Math::parkTransformMatrixPowerInvariant(Real theta) {</div>
+<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>  Matrix transform = Matrix::Zero(2, 3);</div>
+<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span> </div>
+<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>  <span class="keyword">const</span> Real k = std::sqrt(2.0 / 3.0);</div>
+<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span> </div>
+<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span>  transform &lt;&lt; k * std::cos(theta), k * std::cos(theta - 2.0 * M_PI / 3.0),</div>
+<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span>      k * std::cos(theta + 2.0 * M_PI / 3.0), -k * std::sin(theta),</div>
+<div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span>      -k * std::sin(theta - 2.0 * M_PI / 3.0),</div>
+<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>      -k * std::sin(theta + 2.0 * M_PI / 3.0);</div>
+<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span> </div>
+<div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span>  <span class="keywordflow">return</span> transform;</div>
+<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>}</div>
+<div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span> </div>
+<div class="line"><a id="l00442" name="l00442"></a><span class="lineno">  442</span>Matrix Math::inverseParkTransformPowerInvariant(Real theta, <span class="keyword">const</span> Matrix &amp;fdq) {</div>
+<div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span>  <span class="keywordflow">return</span> inverseParkTransformMatrixPowerInvariant(theta) * fdq;</div>
+<div class="line"><a id="l00444" name="l00444"></a><span class="lineno">  444</span>}</div>
+<div class="line"><a id="l00445" name="l00445"></a><span class="lineno">  445</span> </div>
+<div class="line"><a id="l00446" name="l00446"></a><span class="lineno">  446</span>Matrix Math::inverseParkTransformMatrixPowerInvariant(Real theta) {</div>
+<div class="line"><a id="l00447" name="l00447"></a><span class="lineno">  447</span>  Matrix transform = Matrix::Zero(3, 2);</div>
+<div class="line"><a id="l00448" name="l00448"></a><span class="lineno">  448</span> </div>
+<div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span>  <span class="keyword">const</span> Real k = std::sqrt(2.0 / 3.0);</div>
+<div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span> </div>
+<div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span>  transform &lt;&lt; k * std::cos(theta), -k * std::sin(theta),</div>
+<div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span>      k * std::cos(theta - 2.0 * M_PI / 3.0),</div>
+<div class="line"><a id="l00453" name="l00453"></a><span class="lineno">  453</span>      -k * std::sin(theta - 2.0 * M_PI / 3.0),</div>
+<div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span>      k * std::cos(theta + 2.0 * M_PI / 3.0),</div>
+<div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span>      -k * std::sin(theta + 2.0 * M_PI / 3.0);</div>
+<div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span> </div>
+<div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span>  <span class="keywordflow">return</span> transform;</div>
+<div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span>}</div>
 <div class="ttc" id="aclass_c_p_s_1_1_math_html_a037f3b5662cf7658156d87d107523781"><div class="ttname"><a href="class_c_p_s_1_1_math.html#a037f3b5662cf7658156d87d107523781">CPS::Math::singlePhasePowerToThreePhase</a></div><div class="ttdeci">static Matrix singlePhasePowerToThreePhase(Real power)</div><div class="ttdoc">To convert single phase power to symmetrical three phase.</div><div class="ttdef"><b>Definition</b> <a href="#l00230">MathUtils.cpp:230</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_math_html_a4d9024f94dbee45b8f0d947a225a6c69"><div class="ttname"><a href="class_c_p_s_1_1_math.html#a4d9024f94dbee45b8f0d947a225a6c69">CPS::Math::calculateStateSpaceTrapezoidalMatrices</a></div><div class="ttdeci">static void calculateStateSpaceTrapezoidalMatrices(const Matrix &amp;A, const Matrix &amp;B, const Matrix &amp;C, const Real &amp;dt, Matrix &amp;Ad, Matrix &amp;Bd, Matrix &amp;Cd)</div><div class="ttdoc">Calculate the discretized state space matrices Ad, Bd, Cd using trapezoidal rule.</div><div class="ttdef"><b>Definition</b> <a href="#l00337">MathUtils.cpp:337</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_math_html_ab4fbe7cafce1d49a7461a40dd0b67f04"><div class="ttname"><a href="class_c_p_s_1_1_math.html#ab4fbe7cafce1d49a7461a40dd0b67f04">CPS::Math::applyStateSpaceTrapezoidalMatrices</a></div><div class="ttdeci">static Matrix applyStateSpaceTrapezoidalMatrices(const Matrix &amp;Ad, const Matrix &amp;Bd, const Matrix &amp;Cd, const Matrix &amp;statesPrevStep, const Matrix &amp;inputCurrStep, const Matrix &amp;inputPrevStep)</div><div class="ttdoc">Apply the trapezoidal based state space matrices Ad, Bd, Cd to get the states at the current time ste...</div><div class="ttdef"><b>Definition</b> <a href="#l00369">MathUtils.cpp:369</a></div></div>
