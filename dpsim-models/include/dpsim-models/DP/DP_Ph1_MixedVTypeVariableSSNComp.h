@@ -79,6 +79,11 @@ protected:
   void updateStateSpaceModel();
 
 public:
+  UInt getStateCount() const;
+  const Matrix &getDiscreteA() const;
+  const Matrix &getDiscreteB() const;
+  const Matrix &getC() const;
+
   Bool hasParameterChanged() override final;
 
   /// Fixed-point steady-state init; valid only when mRealStateCount == 0, override otherwise.

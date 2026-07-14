@@ -4,6 +4,7 @@
 
 #include <dpsim-models/DP/DP_Ph1_Capacitor.h>
 #include <dpsim-models/DP/DP_Ph1_Inductor.h>
+#include <dpsim-models/DP/DP_Ph1_MixedVTypeVariableSSNComp.h>
 #include <dpsim-models/DP/DP_Ph1_Resistor.h>
 #include <dpsim-models/DP/DP_Ph1_TwoTerminalVTypeSSNComp.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
@@ -147,6 +148,13 @@ void addComplexStateMetadata(StateSpaceMetadata &metadata, UInt stateOffset,
     setStateName(metadata, stateOffset + complexStateCount + idx,
                  stateName + "_im");
   }
+}
+
+void addRealStateMetadata(StateSpaceMetadata &metadata, UInt stateOffset,
+                          UInt stateCount, const String &componentName) {
+  for (UInt idx = 0; idx < stateCount; ++idx)
+    setStateName(metadata, stateOffset + idx,
+                 componentName + ".x" + std::to_string(idx));
 }
 
 class EMTPh3InductorStateSpaceContributor final
@@ -443,6 +451,56 @@ private:
   std::shared_ptr<DP::VTypeSSNComp> mComponent;
 };
 
+class DPPh1MixedVTypeVariableSSNStateSpaceContributor final
+    : public MNAStateSpaceContributor {
+public:
+  explicit DPPh1MixedVTypeVariableSSNStateSpaceContributor(
+      std::shared_ptr<DP::Ph1::MixedVTypeVariableSSNComp> component)
+      : mComponent(std::move(component)) {}
+
+  UInt getStateCount() const override { return mComponent->getStateCount(); }
+
+  Bool isVariable() const override { return true; }
+
+  void stamp(Matrix &AdLocal, Matrix &BdMna, Matrix &CdMna, UInt stateOffset,
+             UInt mnaVectorSize) const override {
+    const UInt localStateCount = getStateCount();
+
+    const Matrix &discreteA = mComponent->getDiscreteA();
+    const Matrix &discreteB = mComponent->getDiscreteB();
+    const Matrix &outputC = mComponent->getC();
+
+    const Matrix K = buildSinglePhaseComplexInterfaceVoltageMapping(
+        *mComponent, mnaVectorSize);
+
+    // Real packed history-coordinate state s = discreteA x + discreteB vIntf:
+    //   s[k+1] = discreteA s[k] + (discreteA + I) discreteB vIntf[k+1]
+    //   yHist[k] = C s[k]
+    // Therefore: AdLocal = discreteA, BdMna = (discreteA + I) discreteB K,
+    // CdMna = -K^T C.
+    AdLocal.block(stateOffset, stateOffset, localStateCount, localStateCount) +=
+        discreteA;
+
+    const Matrix inputUpdate =
+        (discreteA + Matrix::Identity(localStateCount, localStateCount)) *
+        discreteB;
+
+    BdMna.block(stateOffset, 0, localStateCount, mnaVectorSize) +=
+        inputUpdate * K;
+
+    stampTwoTerminalCurrentInjectionMapping(K, CdMna, stateOffset, outputC);
+  }
+
+  void contributeMetadata(StateSpaceMetadata &metadata,
+                          UInt stateOffset) const override {
+    addRealStateMetadata(metadata, stateOffset, getStateCount(),
+                         mComponent->name());
+  }
+
+private:
+  std::shared_ptr<DP::Ph1::MixedVTypeVariableSSNComp> mComponent;
+};
+
 } // namespace
 
 MNAStateSpaceContributor::Ptr
@@ -486,6 +544,13 @@ MNAStateSpaceContributorFactory::create(const MNAInterface::Ptr &component) {
   if (auto capacitor =
           std::dynamic_pointer_cast<DP::Ph1::Capacitor>(component)) {
     return std::make_shared<DPPh1CapacitorStateSpaceContributor>(capacitor);
+  }
+
+  if (auto mixedVariableSsn =
+          std::dynamic_pointer_cast<DP::Ph1::MixedVTypeVariableSSNComp>(
+              component)) {
+    return std::make_shared<DPPh1MixedVTypeVariableSSNStateSpaceContributor>(
+        mixedVariableSsn);
   }
 
   if (auto ssn = std::dynamic_pointer_cast<DP::Ph1::TwoTerminalVTypeSSNComp>(
