@@ -101,6 +101,37 @@ Real Reader::unitValue(Real value, CIMPP::UnitMultiplier mult) {
   return value;
 }
 
+Bool Reader::isSupportedConductingEquipment(BaseClass *obj) const {
+  if (!obj)
+    return false;
+
+  if (dynamic_cast<CIMPP::ACLineSegment *>(obj))
+    return true;
+
+  if (dynamic_cast<CIMPP::EnergyConsumer *>(obj))
+    return true;
+
+  if (dynamic_cast<CIMPP::PowerTransformer *>(obj))
+    return true;
+
+  if (dynamic_cast<CIMPP::SynchronousMachine *>(obj))
+    return true;
+
+  if (dynamic_cast<CIMPP::ExternalNetworkInjection *>(obj))
+    return true;
+
+  if (dynamic_cast<CIMPP::EquivalentShunt *>(obj))
+    return true;
+
+  if (dynamic_cast<CIMPP::Disconnector *>(obj))
+    return true;
+
+  if (dynamic_cast<CIMPP::Breaker *>(obj))
+    return true;
+
+  return false;
+}
+
 TopologicalPowerComp::Ptr Reader::mapComponent(BaseClass *obj) {
   if (CIMPP::ACLineSegment *line = dynamic_cast<CIMPP::ACLineSegment *>(obj))
     return mapACLineSegment(line);
@@ -282,17 +313,37 @@ void Reader::processSvVoltage(CIMPP::SvVoltage *volt) {
 }
 
 void Reader::processSvPowerFlow(CIMPP::SvPowerFlow *flow) {
+  if (!flow) {
+    SPDLOG_LOGGER_WARN(mSLog, "Cannot process null SvPowerFlow, ignoring");
+    return;
+  }
+
   CIMPP::Terminal *term = flow->Terminal;
 
-  const auto &terminalRid = cimString(term->mRID);
+  if (!term) {
+    SPDLOG_LOGGER_WARN(mSLog,
+                       "SvPowerFlow references missing Terminal, ignoring");
+    return;
+  }
 
-  mPowerflowTerminals[terminalRid]->setPower(
+  const auto &terminalRid = cimString(term->mRID);
+  auto terminalIt = mPowerflowTerminals.find(terminalRid);
+
+  if (terminalIt == mPowerflowTerminals.end() || !terminalIt->second) {
+    SPDLOG_LOGGER_WARN(mSLog,
+                       "SvPowerFlow references Terminal {} missing from "
+                       "mPowerflowTerminals, ignoring",
+                       terminalRid);
+    return;
+  }
+
+  terminalIt->second->setPower(
       Complex(Reader::unitValue(flow->p.value, UnitMultiplier::M),
               Reader::unitValue(flow->q.value, UnitMultiplier::M)));
 
-  SPDLOG_LOGGER_WARN(mSLog, "Terminal {}: {} W + j {} Var", terminalRid,
-                     mPowerflowTerminals[terminalRid]->singleActivePower(),
-                     mPowerflowTerminals[terminalRid]->singleReactivePower());
+  SPDLOG_LOGGER_INFO(mSLog, "Terminal {}: {} W + j {} Var", terminalRid,
+                     terminalIt->second->singleActivePower(),
+                     terminalIt->second->singleReactivePower());
 }
 
 SystemTopology Reader::systemTopology() {
@@ -1318,6 +1369,33 @@ Real Reader::determineBaseVoltageAssociatedWithEquipment(
 template <typename VarType>
 void Reader::processTopologicalNode(CIMPP::TopologicalNode *topNode) {
   // Add this node to global node list and assign simulation node incrementally.
+
+  if (!topNode) {
+    SPDLOG_LOGGER_WARN(mSLog, "Cannot process null TopologicalNode, ignoring");
+    return;
+  }
+
+  Bool hasSupportedEquipment = false;
+
+  for (auto term : topNode->Terminal) {
+    if (!term || !term->ConductingEquipment)
+      continue;
+
+    if (isSupportedConductingEquipment(term->ConductingEquipment)) {
+      hasSupportedEquipment = true;
+      break;
+    }
+  }
+
+  if (!hasSupportedEquipment) {
+    SPDLOG_LOGGER_WARN(
+        mSLog,
+        "Skipping TopologicalNode {} ({}) because it has no terminals "
+        "connected to supported equipment",
+        cimString(topNode->name), cimString(topNode->mRID));
+    return;
+  }
+
   int matrixNodeIndex = Int(mPowerflowNodes.size());
   const auto &nodeRid = cimString(topNode->mRID);
   mPowerflowNodes[nodeRid] = SimNode<VarType>::make(
@@ -1339,9 +1417,16 @@ void Reader::processTopologicalNode(CIMPP::TopologicalNode *topNode) {
                        nodeRid, cimString(topNode->name),
                        mPowerflowNodes[nodeRid]->matrixNodeIndex());
 
+  // Safety Log
   for (auto term : topNode->Terminal) {
-    // Insert Terminal if it does not exist in the map and add reference to node.
-    // This could be optimized because the Terminal is searched twice.
+    if (!term) {
+      SPDLOG_LOGGER_WARN(
+          mSLog, "TopologicalNode {} contains a null Terminal, ignoring",
+          nodeRid);
+      continue;
+    }
+
+    const auto &termRid = cimString(term->mRID);
     const auto &termRid = cimString(term->mRID);
     auto cpsTerm = SimTerminal<VarType>::make(termRid);
     mPowerflowTerminals.insert(std::make_pair(termRid, cpsTerm));
@@ -1359,34 +1444,44 @@ void Reader::processTopologicalNode(CIMPP::TopologicalNode *topNode) {
     if (!equipment) {
       SPDLOG_LOGGER_WARN(mSLog, "Terminal {} has no Equipment, ignoring!",
                          termRid);
-    } else {
-      // Insert Equipment if it does not exist in the map and add reference to Terminal.
-      // This could be optimized because the Equipment is searched twice.
-      const auto &equipmentRid = cimString(equipment->mRID);
-      if (mPowerflowEquipment.find(equipmentRid) == mPowerflowEquipment.end()) {
-        TopologicalPowerComp::Ptr comp = mapComponent(equipment);
-        if (comp) {
-          mPowerflowEquipment.insert(std::make_pair(equipmentRid, comp));
-        } else {
-          SPDLOG_LOGGER_WARN(mSLog, "Could not map equipment {}", equipmentRid);
-          continue;
-        }
-      }
-
-      auto pfEquipment = mPowerflowEquipment.at(equipmentRid);
-      if (pfEquipment == nullptr) {
-        SPDLOG_LOGGER_ERROR(mSLog, "Equipment {} is null in equipment list",
-                            equipmentRid);
-        throw SystemError("Equipment is null in equipment list.");
-      }
-      std::dynamic_pointer_cast<SimPowerComp<VarType>>(pfEquipment)
-          ->setTerminalAt(std::dynamic_pointer_cast<SimTerminal<VarType>>(
-                              mPowerflowTerminals[termRid]),
-                          term->sequenceNumber - 1);
-
-      SPDLOG_LOGGER_INFO(mSLog, "        Added Terminal {} to Equipment {}",
-                         termRid, equipmentRid);
+      continue;
     }
+
+    // Unsupported Equipment check
+    if (!isSupportedConductingEquipment(equipment)) {
+      SPDLOG_LOGGER_DEBUG(
+          mSLog,
+          "Terminal {} references unsupported ConductingEquipment {}, ignoring",
+          termRid, cimString(equipment->mRID));
+      continue;
+    }
+
+    // Insert Equipment if it does not exist in the map and add reference to Terminal.
+    // This could be optimized because the Equipment is searched twice.
+    const auto &equipmentRid = cimString(equipment->mRID);
+    if (mPowerflowEquipment.find(equipmentRid) == mPowerflowEquipment.end()) {
+      TopologicalPowerComp::Ptr comp = mapComponent(equipment);
+      if (comp) {
+        mPowerflowEquipment.insert(std::make_pair(equipmentRid, comp));
+      } else {
+        SPDLOG_LOGGER_WARN(mSLog, "Could not map equipment {}", equipmentRid);
+        continue;
+      }
+    }
+
+    auto pfEquipment = mPowerflowEquipment.at(equipmentRid);
+    if (pfEquipment == nullptr) {
+      SPDLOG_LOGGER_ERROR(mSLog, "Equipment {} is null in equipment list",
+                          equipmentRid);
+      throw SystemError("Equipment is null in equipment list.");
+    }
+    std::dynamic_pointer_cast<SimPowerComp<VarType>>(pfEquipment)
+        ->setTerminalAt(std::dynamic_pointer_cast<SimTerminal<VarType>>(
+                            mPowerflowTerminals[termRid]),
+                        term->sequenceNumber - 1);
+
+    SPDLOG_LOGGER_INFO(mSLog, "        Added Terminal {} to Equipment {}",
+                       termRid, equipmentRid);
   }
 }
 
