@@ -9,7 +9,7 @@ using namespace CPS;
 
 int main(int argc, char *argv[]) {
 
-  CIM::Examples::Components::GFM::Yazdani Yazdani;
+  CIM::Examples::Components::GFM::Derived Yazdani;
 
   Real finalTime = 1.0;
   Real timeStep = 100e-6;
@@ -26,34 +26,37 @@ int main(int argc, char *argv[]) {
   auto n1PF = SimNode<Complex>::make("n1", PhaseType::Single);
   auto n2PF = SimNode<Complex>::make("n2", PhaseType::Single);
 
-  Complex load1_s =
-      3 * std::pow(400, 2) / (Complex(83e-3, 137e-6 * 2 * M_PI * 60));
+  Complex load1_s = 3 * std::pow(Yazdani.lineToLineVoltageRms, 2) /
+                    (Complex(Yazdani.Res1, Yazdani.Ind1 * 2 * M_PI *
+                                               Yazdani.systemFrequency));
   Real load1_p = load1_s.real();
   Real load1_q = load1_s.imag();
 
   Complex load2_s =
-      3 * std::pow(400, 2) /
-      (Complex(Yazdani.Res2, Yazdani.Ind2 * 2 * M_PI * 60 -
-                                 1 / (2 * M_PI * 60 * Yazdani.Cap2)));
+      3 * std::pow(Yazdani.lineToLineVoltageRms, 2) /
+      (Complex(Yazdani.Res2,
+               Yazdani.Ind2 * 2 * M_PI * Yazdani.systemFrequency -
+                   1 / (2 * M_PI * Yazdani.systemFrequency * Yazdani.Cap2)));
   Real load2_p = load2_s.real();
   Real load2_q = load2_s.imag();
 
   auto extnetPF =
       SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-  extnetPF->setParameters(400);
-  extnetPF->setBaseVoltage(400);
+  extnetPF->setParameters(Yazdani.lineToLineVoltageRms);
+  extnetPF->setBaseVoltage(Yazdani.lineToLineVoltageRms);
   extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
 
   auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
   linePF->setParameters(0.88e-3, 0, 0);
-  linePF->setBaseVoltage(400);
+  linePF->setBaseVoltage(Yazdani.lineToLineVoltageRms);
 
   // Topology
   extnetPF->connect({n1PF});
   linePF->connect({n1PF, n2PF});
 
-  auto systemPF = SystemTopology(60, SystemNodeList{n1PF, n2PF},
-                                 SystemComponentList{linePF, extnetPF});
+  auto systemPF =
+      SystemTopology(Yazdani.systemFrequency, SystemNodeList{n1PF, n2PF},
+                     SystemComponentList{linePF, extnetPF});
 
   // Logging
   auto loggerPF = DataLogger::make(simNamePF);
@@ -86,12 +89,12 @@ int main(int argc, char *argv[]) {
   auto loadEMT1 = EMT::Ph3::RXLoad::make("Load", Logger::Level::debug);
   loadEMT1->setParameters(CPS::Math::singlePhasePowerToThreePhase(load1_p),
                           CPS::Math::singlePhasePowerToThreePhase(load1_q),
-                          400);
+                          Yazdani.lineToLineVoltageRms);
 
   auto loadEMT2 = EMT::Ph3::RXLoad::make("Load", Logger::Level::debug);
   loadEMT2->setParameters(CPS::Math::singlePhasePowerToThreePhase(load2_p),
                           CPS::Math::singlePhasePowerToThreePhase(load2_q),
-                          400);
+                          Yazdani.lineToLineVoltageRms);
 
   auto resOnEMT = EMT::Ph3::Resistor::make("ResOn", Logger::Level::debug);
   resOnEMT->setParameters(CPS::Math::singlePhaseParameterToThreePhase(0.88e-3));
@@ -131,10 +134,10 @@ int main(int argc, char *argv[]) {
   fault2EMT->connect({n3EMT, n4EMT});
   loadEMT2->connect({n4EMT});
 
-  auto systemEMT =
-      SystemTopology(60, SystemNodeList{n1EMT, n2EMT, n3EMT, n4EMT},
-                     SystemComponentList{resOnEMT, fault1EMT, fault2EMT,
-                                         loadEMT1, loadEMT2, pv});
+  auto systemEMT = SystemTopology(
+      Yazdani.systemFrequency, SystemNodeList{n1EMT, n2EMT, n3EMT, n4EMT},
+      SystemComponentList{resOnEMT, fault1EMT, fault2EMT, loadEMT1, loadEMT2,
+                          pv});
 
   // Initialization of dynamic topology
   systemEMT.initWithPowerflow(systemPF, CPS::Domain::EMT);

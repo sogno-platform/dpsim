@@ -269,7 +269,8 @@ struct Yazdani {
 
 struct Derived {
   // System quantities
-  Real lineToLineVoltageRms = 400.0;
+  Real lineToLineVoltageRms =
+      20000.0 * sqrt(3.0 / 2.0); // RMS line-to-line voltage at PCC
   Real systemFrequency = 60.0;
   Real OmegaNull = 2.0 * M_PI * systemFrequency;
 
