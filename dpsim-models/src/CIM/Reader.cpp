@@ -1427,7 +1427,6 @@ void Reader::processTopologicalNode(CIMPP::TopologicalNode *topNode) {
     }
 
     const auto &termRid = cimString(term->mRID);
-    const auto &termRid = cimString(term->mRID);
     auto cpsTerm = SimTerminal<VarType>::make(termRid);
     mPowerflowTerminals.insert(std::make_pair(termRid, cpsTerm));
     cpsTerm->setNode(
