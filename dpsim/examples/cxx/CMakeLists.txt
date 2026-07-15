@@ -144,8 +144,10 @@ Components/DP_Ph1_AvVoltSourceInverterStateSpace.cpp
 
 set(STATE_SPACE_SOURCES
 StateSpace/EMT_Ph3_RLC_StateSpaceExtraction.cpp
+StateSpace/EMT_Ph3_Composite_StateSpaceExtraction.cpp
 StateSpace/DP_Ph1_RLC_StateSpaceExtraction.cpp
 StateSpace/DP_Ph1_Inverter_StateSpaceExtraction.cpp
+StateSpace/DP_Ph1_Composite_StateSpaceExtraction.cpp
 )
 
 # Targets required for tests in the Jupyter Notebooks. This list is only for grouping the (already configured) targets, so every entry
