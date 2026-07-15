@@ -72,14 +72,15 @@ MNA subcomponents:
 Supported composite components are expanded by one level during contributor
 discovery. Their immediate MNA subcomponents provide the state-space
 contributions, while the composite parent remains part of the simulation and
-retains its normal MNA stamping.
+retains its normal MNA stamping. Nested composites are currently unsupported.
 
 Other component types are rejected explicitly when state-space extraction is
 enabled.
 
 # Usage
 
-In C++, state-space extraction can be enabled for an EMT simulation as follows:
+In C++, state-space extraction can be enabled as follows. The example below
+uses EMT Ph3; replace `Domain::EMT` with `Domain::DP` for DP Ph1:
 
 ```cpp
 Simulation sim("Example");
@@ -92,9 +93,8 @@ const auto &extractor = sim.getStateSpaceExtractor();
 const Matrix &Ad = extractor.getDiscreteStateMatrix();
 ```
 
-For a DP Ph1 simulation, use `Domain::DP` instead.
-
-In Python, the corresponding API is:
+In Python, the corresponding API is shown below. Replace
+`dpsimpy.Domain.EMT` with `dpsimpy.Domain.DP` for DP Ph1:
 
 ```python
 sim = dpsimpy.Simulation("Example")
@@ -106,8 +106,6 @@ sim.run()
 extractor = sim.get_state_space_extractor()
 Ad = extractor.get_discrete_state_matrix()
 ```
-
-For a DP Ph1 simulation, use `dpsimpy.Domain.DP` instead.
 
 # Examples
 

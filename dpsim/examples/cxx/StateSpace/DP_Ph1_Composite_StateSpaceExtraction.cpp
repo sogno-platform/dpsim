@@ -205,7 +205,7 @@ private:
   void validateResults(const ExtractionResult &compositeResult,
                        const ExtractionResult &explicitResult) const {
     constexpr UInt expectedStateCount = 8;
-    constexpr Real tolerance = 1e-10;
+    constexpr Real tolerance = DOUBLE_EPSILON;
 
     std::cout
         << "\n============================================================\n"

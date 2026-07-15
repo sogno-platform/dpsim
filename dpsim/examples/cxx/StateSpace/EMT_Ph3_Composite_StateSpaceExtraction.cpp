@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+// SPDX-License-Identifier: MPL-2.0
 #include <DPsim.h>
 
 #include <algorithm>
@@ -213,7 +215,7 @@ private:
   void validateResults(const ExtractionResult &compositeResult,
                        const ExtractionResult &explicitResult) const {
     constexpr UInt expectedStateCount = 12;
-    constexpr Real tolerance = 1e-10;
+    constexpr Real tolerance = DOUBLE_EPSILON;
 
     std::cout
         << "\n============================================================\n"
