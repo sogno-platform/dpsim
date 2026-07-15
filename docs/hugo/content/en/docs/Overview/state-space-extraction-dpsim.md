@@ -19,7 +19,9 @@ The extractor is owned by the MNA solver. Component contributors are created dur
 # Supported scope
 
 State-space extraction is available for EMT Ph3 and DP Ph1 simulations
-using the direct MNA solver.
+using the direct MNA solver. For models containing switches, the extracted matrix represents the currently
+active switch configuration. The matrix is recomputed when the switch status
+changes.
 
 ## EMT Ph3
 
@@ -33,6 +35,7 @@ Supported components with extraction states are:
 Supported algebraic components without extraction states are:
 
 - `EMT::Ph3::Resistor`,
+- `EMT::Ph3::Switch`,
 - `EMT::Ph3::VoltageSource`.
 
 The following composite components are supported through their immediate
@@ -57,6 +60,7 @@ Supported components with extraction states are:
 Supported algebraic components without extraction states are:
 
 - `DP::Ph1::Resistor`,
+- `DP::Ph1::Switch`,
 - `DP::Ph1::VoltageSource`.
 
 The following composite components are supported through their immediate
