@@ -421,8 +421,6 @@ private:
     const Real cosPsi = std::cos(psi);
     const Real sinPsi = std::sin(psi);
 
-    // const Real vcD = vcRe * cosPsi + vcIm * sinPsi;
-    // const Real vcQ = vcIm * cosPsi - vcRe * sinPsi;
     const Real ircRe = (vcRe - uRe) / mRc;
     const Real ircIm = (vcIm - uIm) / mRc;
     const Real ircD = ircRe * cosPsi + ircIm * sinPsi;
