@@ -952,7 +952,9 @@ A future improvement would be to give signal components access to the settled po
 &lt;p>The extractor is owned by the MNA solver. Component contributors are created during solver initialization and are used to stamp the local matrices needed for the MNA-coupled state-space formulation.&lt;/p>
 &lt;h1 id="supported-scope">Supported scope&lt;/h1>
 &lt;p>State-space extraction is available for EMT Ph3 and DP Ph1 simulations
-using the direct MNA solver.&lt;/p>
+using the direct MNA solver. For models containing switches, the extracted matrix represents the currently
+active switch configuration. The matrix is recomputed when the switch status
+changes.&lt;/p>
 &lt;h2 id="emt-ph3">EMT Ph3&lt;/h2>
 &lt;p>Supported components with extraction states are:&lt;/p>
 &lt;ul>
@@ -964,6 +966,7 @@ using the direct MNA solver.&lt;/p>
 &lt;p>Supported algebraic components without extraction states are:&lt;/p>
 &lt;ul>
 &lt;li>&lt;code>EMT::Ph3::Resistor&lt;/code>,&lt;/li>
+&lt;li>&lt;code>EMT::Ph3::Switch&lt;/code>,&lt;/li>
 &lt;li>&lt;code>EMT::Ph3::VoltageSource&lt;/code>.&lt;/li>
 &lt;/ul>
 &lt;p>The following composite components are supported through their immediate
@@ -987,6 +990,7 @@ MNA subcomponents:&lt;/p>
 &lt;p>Supported algebraic components without extraction states are:&lt;/p>
 &lt;ul>
 &lt;li>&lt;code>DP::Ph1::Resistor&lt;/code>,&lt;/li>
+&lt;li>&lt;code>DP::Ph1::Switch&lt;/code>,&lt;/li>
 &lt;li>&lt;code>DP::Ph1::VoltageSource&lt;/code>.&lt;/li>
 &lt;/ul>
 &lt;p>The following composite components are supported through their immediate
