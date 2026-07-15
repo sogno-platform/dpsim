@@ -12,30 +12,75 @@ The implementation is organized around three main parts:
 
 - `MNAStateSpaceExtractor` assembles and stores the extracted discrete-time state matrix.
 - `MNAStateSpaceContributor` represents the state-space contribution of one supported component.
-- `MNAStateSpaceContributorFactory` creates contributors for supported EMT components.
+- `MNAStateSpaceContributorFactory` creates contributors for supported MNA components.
 
 The extractor is owned by the MNA solver. Component contributors are created during solver initialization and are used to stamp the local matrices needed for the MNA-coupled state-space formulation.
 
 # Supported scope
 
-State-space extraction is available for real-valued EMT simulations with the direct MNA solver.
+State-space extraction is available for EMT Ph3 and DP Ph1 simulations
+using the direct MNA solver.
+
+## EMT Ph3
 
 Supported components with extraction states are:
 
-- EMT 3-phase inductors,
-- EMT 3-phase capacitors,
-- EMT 3-phase two-terminal V-type SSN components.
+- `EMT::Ph3::Inductor`,
+- `EMT::Ph3::Capacitor`,
+- `EMT::Ph3::TwoTerminalVTypeSSNComp`,
+- `EMT::Ph3::TwoTerminalVTypeVariableSSNComp`.
 
 Supported algebraic components without extraction states are:
 
-- EMT 3-phase resistors,
-- EMT 3-phase voltage sources.
+- `EMT::Ph3::Resistor`,
+- `EMT::Ph3::VoltageSource`.
 
-Other components are rejected explicitly when state-space extraction is enabled.
+The following composite components are supported through their immediate
+MNA subcomponents:
+
+- `EMT::Ph3::NetworkInjection`,
+- `EMT::Ph3::PiLine`,
+- `EMT::Ph3::RXLoad`,
+- `EMT::Ph3::RxLine`,
+- `EMT::Ph3::Shunt`,
+- `EMT::Ph3::Transformer`.
+
+## DP Ph1
+
+Supported components with extraction states are:
+
+- `DP::Ph1::Inductor`,
+- `DP::Ph1::Capacitor`,
+- `DP::Ph1::TwoTerminalVTypeSSNComp`,
+- `DP::Ph1::MixedVTypeVariableSSNComp`.
+
+Supported algebraic components without extraction states are:
+
+- `DP::Ph1::Resistor`,
+- `DP::Ph1::VoltageSource`.
+
+The following composite components are supported through their immediate
+MNA subcomponents:
+
+- `DP::Ph1::NetworkInjection`,
+- `DP::Ph1::PiLine`,
+- `DP::Ph1::RXLoad`,
+- `DP::Ph1::RxLine`,
+- `DP::Ph1::Shunt`,
+- `DP::Ph1::Transformer`.
+
+Supported composite components are expanded by one level during contributor
+discovery. Their immediate MNA subcomponents provide the state-space
+contributions, while the composite parent remains part of the simulation and
+retains its normal MNA stamping. Nested composites are currently unsupported.
+
+Other component types are rejected explicitly when state-space extraction is
+enabled.
 
 # Usage
 
-In C++, state-space extraction can be enabled on a simulation as follows:
+In C++, state-space extraction can be enabled as follows. The example below
+uses EMT Ph3; replace `Domain::EMT` with `Domain::DP` for DP Ph1:
 
 ```cpp
 Simulation sim("Example");
@@ -48,7 +93,8 @@ const auto &extractor = sim.getStateSpaceExtractor();
 const Matrix &Ad = extractor.getDiscreteStateMatrix();
 ```
 
-In Python, the corresponding API is:
+In Python, the corresponding API is shown below. Replace
+`dpsimpy.Domain.EMT` with `dpsimpy.Domain.DP` for DP Ph1:
 
 ```python
 sim = dpsimpy.Simulation("Example")
@@ -65,7 +111,10 @@ Ad = extractor.get_discrete_state_matrix()
 
 The feature is demonstrated in:
 
-- [C++ example](https://github.com/sogno-platform/dpsim/blob/master/dpsim/examples/cxx/StateSpace/EMT_Ph3_RLC_StateSpaceExtraction.cpp)
-- [Python notebook](https://github.com/sogno-platform/dpsim/blob/master/examples/Notebooks/StateSpace/EMT_Ph3_RLC_StateSpaceExtraction.ipynb)
+- [EMT Ph3 RLC extraction](https://github.com/sogno-platform/dpsim/blob/master/dpsim/examples/cxx/StateSpace/EMT_Ph3_RLC_StateSpaceExtraction.cpp)
+- [EMT Ph3 composite extraction](https://github.com/sogno-platform/dpsim/blob/master/dpsim/examples/cxx/StateSpace/EMT_Ph3_Composite_StateSpaceExtraction.cpp)
+- [DP Ph1 RLC extraction](https://github.com/sogno-platform/dpsim/blob/master/dpsim/examples/cxx/StateSpace/DP_Ph1_RLC_StateSpaceExtraction.cpp)
+- [DP Ph1 composite extraction](https://github.com/sogno-platform/dpsim/blob/master/dpsim/examples/cxx/StateSpace/DP_Ph1_Composite_StateSpaceExtraction.cpp)
 
-The examples compare equivalent EMT 3-phase RLC systems built from native MNA components and generic two-terminal V-type SSN components.
+Equivalent Python notebooks are available in
+[`examples/Notebooks/StateSpace`](https://github.com/sogno-platform/dpsim/tree/master/examples/Notebooks/StateSpace).

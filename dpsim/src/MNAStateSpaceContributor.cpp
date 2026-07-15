@@ -1,17 +1,30 @@
 // SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
 // SPDX-License-Identifier: MPL-2.0
+#include <dpsim-models/CompositePowerComp.h>
 #include <dpsim/MNAStateSpaceContributor.h>
 
 #include <dpsim-models/DP/DP_Ph1_Capacitor.h>
 #include <dpsim-models/DP/DP_Ph1_Inductor.h>
 #include <dpsim-models/DP/DP_Ph1_MixedVTypeVariableSSNComp.h>
+#include <dpsim-models/DP/DP_Ph1_NetworkInjection.h>
+#include <dpsim-models/DP/DP_Ph1_PiLine.h>
+#include <dpsim-models/DP/DP_Ph1_RXLoad.h>
 #include <dpsim-models/DP/DP_Ph1_Resistor.h>
+#include <dpsim-models/DP/DP_Ph1_RxLine.h>
+#include <dpsim-models/DP/DP_Ph1_Shunt.h>
+#include <dpsim-models/DP/DP_Ph1_Transformer.h>
 #include <dpsim-models/DP/DP_Ph1_TwoTerminalVTypeSSNComp.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
 #include <dpsim-models/DP/DP_VTypeSSNComp.h>
 #include <dpsim-models/EMT/EMT_Ph3_Capacitor.h>
 #include <dpsim-models/EMT/EMT_Ph3_Inductor.h>
+#include <dpsim-models/EMT/EMT_Ph3_NetworkInjection.h>
+#include <dpsim-models/EMT/EMT_Ph3_PiLine.h>
+#include <dpsim-models/EMT/EMT_Ph3_RXLoad.h>
 #include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
+#include <dpsim-models/EMT/EMT_Ph3_RxLine.h>
+#include <dpsim-models/EMT/EMT_Ph3_Shunt.h>
+#include <dpsim-models/EMT/EMT_Ph3_Transformer.h>
 #include <dpsim-models/EMT/EMT_Ph3_TwoTerminalVTypeSSNComp.h>
 #include <dpsim-models/EMT/EMT_Ph3_TwoTerminalVTypeVariableSSNComp.h>
 #include <dpsim-models/EMT/EMT_Ph3_VoltageSource.h>
@@ -28,6 +41,64 @@ namespace {
 
 using SimPowerCompReal = CPS::SimPowerComp<CPS::Real>;
 using SimPowerCompComplex = CPS::SimPowerComp<CPS::Complex>;
+
+std::shared_ptr<CompositePowerComp<Real>>
+getSupportedRealComposite(const MNAInterface::Ptr &component) {
+  if (const auto composite =
+          std::dynamic_pointer_cast<EMT::Ph3::NetworkInjection>(component))
+    return composite;
+
+  if (const auto composite =
+          std::dynamic_pointer_cast<EMT::Ph3::PiLine>(component))
+    return composite;
+
+  if (const auto composite =
+          std::dynamic_pointer_cast<EMT::Ph3::RXLoad>(component))
+    return composite;
+
+  if (const auto composite =
+          std::dynamic_pointer_cast<EMT::Ph3::RxLine>(component))
+    return composite;
+
+  if (const auto composite =
+          std::dynamic_pointer_cast<EMT::Ph3::Shunt>(component))
+    return composite;
+
+  if (const auto composite =
+          std::dynamic_pointer_cast<EMT::Ph3::Transformer>(component))
+    return composite;
+
+  return nullptr;
+}
+
+std::shared_ptr<CompositePowerComp<Complex>>
+getSupportedComplexComposite(const MNAInterface::Ptr &component) {
+  if (const auto composite =
+          std::dynamic_pointer_cast<DP::Ph1::NetworkInjection>(component))
+    return composite;
+
+  if (const auto composite =
+          std::dynamic_pointer_cast<DP::Ph1::PiLine>(component))
+    return composite;
+
+  if (const auto composite =
+          std::dynamic_pointer_cast<DP::Ph1::RXLoad>(component))
+    return composite;
+
+  if (const auto composite =
+          std::dynamic_pointer_cast<DP::Ph1::RxLine>(component))
+    return composite;
+
+  if (const auto composite =
+          std::dynamic_pointer_cast<DP::Ph1::Shunt>(component))
+    return composite;
+
+  if (const auto composite =
+          std::dynamic_pointer_cast<DP::Ph1::Transformer>(component))
+    return composite;
+
+  return nullptr;
+}
 
 /// Builds K for vIntf = K xMNA, with
 /// vIntf = v_terminal1 - v_terminal0.
@@ -572,10 +643,32 @@ MNAStateSpaceContributor::List MNAStateSpaceContributorFactory::createList(
     const MNAInterface::List &components) {
   MNAStateSpaceContributor::List contributors;
 
+  const auto appendContributor =
+      [&contributors](const MNAInterface::Ptr &component) {
+        auto contributor = MNAStateSpaceContributorFactory::create(component);
+
+        if (contributor)
+          contributors.push_back(std::move(contributor));
+      };
+
+  const auto appendCompositeContributors =
+      [&appendContributor](const auto &composite) {
+        for (const auto &subcomponent : composite->mnaSubComponents())
+          appendContributor(subcomponent);
+      };
+
   for (const auto &component : components) {
-    auto contributor = create(component);
-    if (contributor)
-      contributors.push_back(contributor);
+    if (const auto composite = getSupportedRealComposite(component)) {
+      appendCompositeContributors(composite);
+      continue;
+    }
+
+    if (const auto composite = getSupportedComplexComposite(component)) {
+      appendCompositeContributors(composite);
+      continue;
+    }
+
+    appendContributor(component);
   }
 
   return contributors;
