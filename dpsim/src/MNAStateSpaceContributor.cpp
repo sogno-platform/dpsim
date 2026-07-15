@@ -12,6 +12,7 @@
 #include <dpsim-models/DP/DP_Ph1_Resistor.h>
 #include <dpsim-models/DP/DP_Ph1_RxLine.h>
 #include <dpsim-models/DP/DP_Ph1_Shunt.h>
+#include <dpsim-models/DP/DP_Ph1_Switch.h>
 #include <dpsim-models/DP/DP_Ph1_Transformer.h>
 #include <dpsim-models/DP/DP_Ph1_TwoTerminalVTypeSSNComp.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
@@ -24,6 +25,7 @@
 #include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
 #include <dpsim-models/EMT/EMT_Ph3_RxLine.h>
 #include <dpsim-models/EMT/EMT_Ph3_Shunt.h>
+#include <dpsim-models/EMT/EMT_Ph3_Switch.h>
 #include <dpsim-models/EMT/EMT_Ph3_Transformer.h>
 #include <dpsim-models/EMT/EMT_Ph3_TwoTerminalVTypeSSNComp.h>
 #include <dpsim-models/EMT/EMT_Ph3_TwoTerminalVTypeVariableSSNComp.h>
@@ -605,6 +607,9 @@ MNAStateSpaceContributorFactory::create(const MNAInterface::Ptr &component) {
   if (std::dynamic_pointer_cast<EMT::Ph3::Resistor>(component))
     return nullptr;
 
+  if (std::dynamic_pointer_cast<EMT::Ph3::Switch>(component))
+    return nullptr;
+
   if (std::dynamic_pointer_cast<EMT::Ph3::VoltageSource>(component))
     return nullptr;
 
@@ -630,6 +635,9 @@ MNAStateSpaceContributorFactory::create(const MNAInterface::Ptr &component) {
   }
 
   if (std::dynamic_pointer_cast<DP::Ph1::Resistor>(component))
+    return nullptr;
+
+  if (std::dynamic_pointer_cast<DP::Ph1::Switch>(component))
     return nullptr;
 
   if (std::dynamic_pointer_cast<DP::Ph1::VoltageSource>(component))
