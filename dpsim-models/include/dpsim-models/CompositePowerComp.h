@@ -50,6 +50,14 @@ public:
   /// Destructor - does not do anything
   virtual ~CompositePowerComp() = default;
 
+  /// Returns the MNA subcomponents owned by this composite component.
+  ///
+  /// The returned list remains owned by the composite and must not be modified
+  /// by callers.
+  const MNAInterface::List &mnaSubComponents() const noexcept {
+    return mSubcomponentsMNA;
+  }
+
   /// Sequences the three init stages: createSubComponents(), then
   /// initializeParentFromNodesAndTerminals(), then recurse into sub-components.
   /// See docs Overview/subcomponents.md.
