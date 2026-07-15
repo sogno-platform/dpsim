@@ -27,6 +27,20 @@ Int DP::Ph1::MixedVTypeVariableSSNComp::stateSize() const {
   return mRealStateCount + 2 * mComplexStateCount;
 }
 
+UInt DP::Ph1::MixedVTypeVariableSSNComp::getStateCount() const {
+  return static_cast<UInt>(stateSize());
+}
+
+const Matrix &DP::Ph1::MixedVTypeVariableSSNComp::getDiscreteA() const {
+  return mdA;
+}
+
+const Matrix &DP::Ph1::MixedVTypeVariableSSNComp::getDiscreteB() const {
+  return mdB;
+}
+
+const Matrix &DP::Ph1::MixedVTypeVariableSSNComp::getC() const { return mC; }
+
 Matrix DP::Ph1::MixedVTypeVariableSSNComp::packComplex(const Complex &c) {
   Matrix v(2, 1);
   v(0, 0) = c.real();
