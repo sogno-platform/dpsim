@@ -71,6 +71,11 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_DP_SP_Trafo.cpp
 	Circuits/EMT_DP_SP_Slack_PiLine_PQLoad_FrequencyRamp_CosineFM.cpp
 
+	# IEEE 9-bus, 4th-order synchronous generators (PF-initialized)
+	Circuits/SP_Ph1_IEEE9_4Order.cpp
+	Circuits/DP_Ph1_IEEE9_4Order.cpp
+	Circuits/EMT_Ph3_IEEE9_4Order.cpp
+
 	#SMIB
 	Circuits/SP_SynGenTrStab_SMIB_SteadyState.cpp
 	Circuits/DP_SynGenTrStab_SMIB_SteadyState.cpp
@@ -156,6 +161,9 @@ StateSpace/DP_Ph1_Switch_StateSpaceExtraction.cpp
 # Targets required for tests in the Jupyter Notebooks. This list is only for grouping the (already configured) targets, so every entry
 # also has to appear in another list in this file.
 list(APPEND TEST_SOURCES
+	Circuits/SP_Ph1_IEEE9_4Order.cpp
+	Circuits/DP_Ph1_IEEE9_4Order.cpp
+	Circuits/EMT_Ph3_IEEE9_4Order.cpp
 	Circuits/SP_ReducedOrderSG_SMIB_Fault.cpp
 	Circuits/DP_ReducedOrderSG_SMIB_Fault.cpp
 	Circuits/EMT_ReducedOrderSG_SMIB_Fault.cpp
