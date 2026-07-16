@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
   // -------------------------------------------------------------------------
   // Simulation configuration
   // -------------------------------------------------------------------------
-  const Real finalTime = 0.50;
+  const Real finalTime = 3;
   const Real timeStep = 100e-6;
   const String simName = "EMT_SSN_GFM_LoadStep";
 
@@ -93,8 +93,8 @@ int main(int argc, char *argv[]) {
   const Real activePowerReference = baseLoadActivePower;
   const Real reactivePowerReference = baseLoadReactivePower;
 
-  const Real loadStepStartTime = 0.15;
-  const Real loadStepEndTime = 0.25;
+  const Real loadStepStartTime = 1.0;
+  const Real loadStepEndTime = 2.0;
 
   // =========================================================================
   // Power-flow initialization
