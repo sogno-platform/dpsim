@@ -150,6 +150,8 @@ private:
   Matrix::Index mapTopologicalNode(String mrid);
   /// Maps CIM components to CPowerSystem components.
   TopologicalPowerComp::Ptr mapComponent(BaseClass *obj);
+  /// Postprocessing of CIM
+  Bool isSupportedConductingEquipment(BaseClass *obj) const;
   /// Returns an RX-Line.
   /// The voltage should be given in kV and the angle in degree.
   /// TODO: Introduce different models such as PI and wave model.
