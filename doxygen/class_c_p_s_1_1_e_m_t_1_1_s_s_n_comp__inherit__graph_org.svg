@@ -443,9 +443,9 @@
 <g id="Node000023" class="node">
 <title>Node23</title>
 <g id="a_Node000023"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="1781.75,-283.5 1631.5,-283.5 1631.5,-247 1781.75,-247 1781.75,-283.5"/>
-<text text-anchor="start" x="1639.5" y="-270" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::AvVoltSource</text>
-<text text-anchor="middle" x="1706.62" y="-255.75" font-family="Helvetica,sans-Serif" font-size="10.00">InverterStateSpace</text>
+<polygon fill="white" stroke="#bfbfbf" points="1781.75,-311.5 1631.5,-311.5 1631.5,-275 1781.75,-275 1781.75,-311.5"/>
+<text text-anchor="start" x="1639.5" y="-298" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::AvVoltSource</text>
+<text text-anchor="middle" x="1706.62" y="-283.75" font-family="Helvetica,sans-Serif" font-size="10.00">InverterStateSpace</text>
 </a>
 </g>
 </g>
@@ -453,8 +453,8 @@
 <g id="edge25_Node000022_Node000023" class="edge">
 <title>Node22&#45;&gt;Node23</title>
 <g id="a_edge25_Node000022_Node000023"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1606.04,-250.62C1614.38,-251.84 1622.79,-253.08 1631.02,-254.29"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1606.66,-247.17 1596.26,-249.18 1605.64,-254.1 1606.66,-247.17"/>
+<path fill="none" stroke="#63b8ff" d="M1595.16,-260.19C1611.01,-264.93 1627.63,-269.9 1643.02,-274.51"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1596.37,-256.9 1585.79,-257.38 1594.37,-263.6 1596.37,-256.9"/>
 </a>
 </g>
 </g>
@@ -462,9 +462,9 @@
 <g id="Node000024" class="node">
 <title>Node24</title>
 <g id="a_Node000024"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_piecewise_linear_inductor.html" target="_top" xlink:title="Three&#45;phase, two&#45;terminal, piecewise&#45;linear flux&#45;state inductor.">
-<polygon fill="white" stroke="#666666" points="1773.12,-228.5 1640.12,-228.5 1640.12,-192 1773.12,-192 1773.12,-228.5"/>
-<text text-anchor="start" x="1648.12" y="-215" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::Piecewise</text>
-<text text-anchor="middle" x="1706.62" y="-200.75" font-family="Helvetica,sans-Serif" font-size="10.00">LinearInductor</text>
+<polygon fill="white" stroke="#666666" points="1773.12,-256.5 1640.12,-256.5 1640.12,-220 1773.12,-220 1773.12,-256.5"/>
+<text text-anchor="start" x="1648.12" y="-243" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::Piecewise</text>
+<text text-anchor="middle" x="1706.62" y="-228.75" font-family="Helvetica,sans-Serif" font-size="10.00">LinearInductor</text>
 </a>
 </g>
 </g>
@@ -472,8 +472,26 @@
 <g id="edge26_Node000022_Node000024" class="edge">
 <title>Node22&#45;&gt;Node24</title>
 <g id="a_edge26_Node000022_Node000024"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1605.99,-225.43C1617.29,-223.71 1628.75,-221.96 1639.68,-220.3"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1605.62,-221.95 1596.26,-226.92 1606.67,-228.87 1605.62,-221.95"/>
+<path fill="none" stroke="#63b8ff" d="M1605.99,-238.25C1617.29,-238.25 1628.75,-238.25 1639.68,-238.25"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1606.28,-234.75 1596.28,-238.25 1606.28,-241.75 1606.28,-234.75"/>
+</a>
+</g>
+</g>
+<!-- Node25 -->
+<g id="Node000025" class="node">
+<title>Node25</title>
+<g id="a_Node000025"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_m.html" target="_top" xlink:title="Three&#45;phase grid&#45;forming inverter represented by a locally linearized affine state&#45;space model.">
+<polygon fill="white" stroke="#666666" points="1773.12,-202.38 1640.12,-202.38 1640.12,-180.12 1773.12,-180.12 1773.12,-202.38"/>
+<text text-anchor="middle" x="1706.62" y="-188.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::SSN_GFM</text>
+</a>
+</g>
+</g>
+<!-- Node22&#45;&gt;Node25 -->
+<g id="edge27_Node000022_Node000025" class="edge">
+<title>Node22&#45;&gt;Node25</title>
+<g id="a_edge27_Node000022_Node000025"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1605.76,-216.79C1624.57,-211.98 1643.83,-207.06 1660.36,-202.83"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1605.05,-213.36 1596.23,-219.23 1606.78,-220.14 1605.05,-213.36"/>
 </a>
 </g>
 </g>
