@@ -669,6 +669,53 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
       .def_property_readonly("omega_pll",
                              createAttributeGetter<CPS::Real>("omega_pll"));
 
+  py::class_<CPS::EMT::Ph3::SSN_GFM, std::shared_ptr<CPS::EMT::Ph3::SSN_GFM>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SSN_GFM",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string, std::string, CPS::Logger::Level>(), "uid"_a,
+           "name"_a, "log_level"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::EMT::Ph3::SSN_GFM::setParameters, "lf"_a,
+           "cf"_a, "rf"_a, "rc"_a, "nominal_voltage"_a, "omega_nominal"_a,
+           "p_ref"_a, "q_ref"_a, "virtual_inertia"_a, "damping_coefficient"_a,
+           "voltage_droop_gain"_a, "reactive_integral_gain"_a, "kp_voltage"_a,
+           "ki_voltage"_a, "kp_current"_a, "ki_current"_a,
+           "active_damping_gain"_a, "power_filter_cutoff"_a,
+           "delay_bandwidth"_a)
+      .def("set_numerical_linearization_parameters",
+           &CPS::EMT::Ph3::SSN_GFM::setNumericalLinearizationParameters,
+           "relative_step"_a = 1e-6, "absolute_step"_a = 1e-8)
+      .def("connect", &CPS::EMT::Ph3::SSN_GFM::connect)
+      .def("get_state_names", &CPS::EMT::Ph3::SSN_GFM::getLocalStateNames)
+      .def("get_state", &CPS::EMT::Ph3::SSN_GFM::getState)
+      .def("get_state_derivative", &CPS::EMT::Ph3::SSN_GFM::getStateDerivative)
+      .def("get_interface_voltage",
+           &CPS::EMT::Ph3::SSN_GFM::getInterfaceVoltage)
+      .def("get_interface_current",
+           &CPS::EMT::Ph3::SSN_GFM::getInterfaceCurrent)
+      .def_property_readonly("p_inst",
+                             createAttributeGetter<CPS::Real>("p_inst"))
+      .def_property_readonly("q_inst",
+                             createAttributeGetter<CPS::Real>("q_inst"))
+      .def_property_readonly("omega_gfm",
+                             createAttributeGetter<CPS::Real>("omega_gfm"))
+      .def_property_readonly("theta_gfm",
+                             createAttributeGetter<CPS::Real>("theta_gfm"))
+      .def_property_readonly(
+          "voltage_magnitude_gfm",
+          createAttributeGetter<CPS::Real>("voltage_magnitude_gfm"))
+      .def_property_readonly("vc_d", createAttributeGetter<CPS::Real>("vc_d"))
+      .def_property_readonly("vc_q", createAttributeGetter<CPS::Real>("vc_q"))
+      .def_property_readonly("i_grid_d",
+                             createAttributeGetter<CPS::Real>("i_grid_d"))
+      .def_property_readonly("i_grid_q",
+                             createAttributeGetter<CPS::Real>("i_grid_q"))
+      .def_property_readonly("if_d", createAttributeGetter<CPS::Real>("if_d"))
+      .def_property_readonly("if_q", createAttributeGetter<CPS::Real>("if_q"))
+      .def_property_readonly("v_ref_d",
+                             createAttributeGetter<CPS::Real>("v_ref_d"))
+      .def_property_readonly("v_ref_q",
+                             createAttributeGetter<CPS::Real>("v_ref_q"));
+
   py::class_<CPS::EMT::Ph3::SSN::Capacitor,
              std::shared_ptr<CPS::EMT::Ph3::SSN::Capacitor>,
              CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SSN_Capacitor",

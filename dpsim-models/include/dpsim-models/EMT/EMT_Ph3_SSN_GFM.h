@@ -159,7 +159,10 @@ public:
       : SSN_GFM(name, name, logLevel) {}
 
   std::vector<String> getLocalStateNames() const override final;
-
+  Matrix getState() const;
+  Matrix getStateDerivative() const;
+  Matrix getInterfaceVoltage() const;
+  Matrix getInterfaceCurrent() const;
   std::vector<SSNComp::LocalAbcStateBlock>
   getLocalAbcStateBlocks() const override final;
 

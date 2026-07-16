@@ -809,3 +809,17 @@ void EMT::Ph3::SSN_GFM::initializeFromNodesAndTerminals(Real frequency) {
       iGridQ0, ifD0, ifQ0, converterVoltageDq0(0, 0),
       converterVoltageDq0(1, 0));
 }
+
+Matrix EMT::Ph3::SSN_GFM::getState() const { return **mX; }
+
+Matrix EMT::Ph3::SSN_GFM::getStateDerivative() const {
+  Matrix stateDerivative = Matrix::Zero(mStateSize, 1);
+
+  evaluateStateDerivative(**mX, **mIntfVoltage, stateDerivative);
+
+  return stateDerivative;
+}
+
+Matrix EMT::Ph3::SSN_GFM::getInterfaceVoltage() const { return **mIntfVoltage; }
+
+Matrix EMT::Ph3::SSN_GFM::getInterfaceCurrent() const { return **mIntfCurrent; }
