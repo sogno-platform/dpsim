@@ -1417,7 +1417,6 @@ void Reader::processTopologicalNode(CIMPP::TopologicalNode *topNode) {
                        nodeRid, cimString(topNode->name),
                        mPowerflowNodes[nodeRid]->matrixNodeIndex());
 
-  // Safety Log
   for (auto term : topNode->Terminal) {
     if (!term) {
       SPDLOG_LOGGER_WARN(
@@ -1448,7 +1447,7 @@ void Reader::processTopologicalNode(CIMPP::TopologicalNode *topNode) {
 
     // Unsupported Equipment check
     if (!isSupportedConductingEquipment(equipment)) {
-      SPDLOG_LOGGER_DEBUG(
+      SPDLOG_LOGGER_WARN(
           mSLog,
           "Terminal {} references unsupported ConductingEquipment {}, ignoring",
           termRid, cimString(equipment->mRID));
