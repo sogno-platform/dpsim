@@ -161,7 +161,7 @@ void MnaSolverDirect<VarType>::extractStateSpace(Real time) {
   if (!mStateSpaceExtractor)
     return;
 
-  if (mSystemMatrixRecomputation) {
+  if (mSystemMatrixRecomputationEnabled) {
     mStateSpaceExtractor->extract(*mDirectLinearSolverVariableSystemMatrix,
                                   mVariableComponentChanged,
                                   mVariableComponentChanged, time);
@@ -176,7 +176,7 @@ template <> void MnaSolverDirect<Real>::createEmptySystemMatrix() {
   if (mSwitches.size() > SWITCH_NUM)
     throw SystemError("Too many Switches.");
 
-  if (mSystemMatrixRecomputation) {
+  if (mSystemMatrixRecomputationEnabled) {
     mBaseSystemMatrix =
         SparseMatrix(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
     mVariableSystemMatrix =
@@ -206,7 +206,7 @@ template <> void MnaSolverDirect<Complex>::createEmptySystemMatrix() {
             createDirectSolverImplementation(mSLog));
       }
     }
-  } else if (mSystemMatrixRecomputation) {
+  } else if (mSystemMatrixRecomputationEnabled) {
     mBaseSystemMatrix =
         SparseMatrix(2 * (mNumMatrixNodeIndices), 2 * (mNumMatrixNodeIndices));
     mVariableSystemMatrix =
@@ -369,7 +369,7 @@ template <typename VarType> void MnaSolverDirect<VarType>::logSystemMatrices() {
                          i, Logger::matrixToString(mRightSideVectorHarm[i]));
     }
 
-  } else if (mSystemMatrixRecomputation) {
+  } else if (mSystemMatrixRecomputationEnabled) {
     SPDLOG_LOGGER_INFO(mSLog, "Summarizing matrices: ");
     SPDLOG_LOGGER_INFO(mSLog, "Base matrix with only static elements: {}",
                        Logger::matrixToString(mBaseSystemMatrix));

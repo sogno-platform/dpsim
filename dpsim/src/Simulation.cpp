@@ -213,7 +213,7 @@ template <typename VarType> void Simulation::createMNASolver() {
       solver->setSystem(subnets[net]);
       solver->setSolverAndComponentBehaviour(mSolverBehaviour);
       solver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
-      solver->doSystemMatrixRecomputation(mSystemMatrixRecomputation);
+      solver->setSystemMatrixRecomputationMode(mSystemMatrixRecomputationMode);
       solver->setDirectLinearSolverConfiguration(
           mDirectLinearSolverConfiguration);
       solver->initialize();

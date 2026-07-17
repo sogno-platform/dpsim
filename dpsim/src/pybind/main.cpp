@@ -55,6 +55,13 @@ PYBIND11_MODULE(dpsimpy, m) {
       .value("Initialization", DPsim::Solver::Behaviour::Initialization)
       .value("Simulation", DPsim::Solver::Behaviour::Simulation);
 
+  py::enum_<DPsim::Solver::SystemMatrixRecomputationMode>(
+      m, "SystemMatrixRecomputationMode")
+      .value("Auto", DPsim::Solver::SystemMatrixRecomputationMode::Auto)
+      .value("Enabled", DPsim::Solver::SystemMatrixRecomputationMode::Enabled)
+      .value("Disabled",
+             DPsim::Solver::SystemMatrixRecomputationMode::Disabled);
+
   py::enum_<CPS::Domain>(m, "Domain")
       .value("SP", CPS::Domain::SP)
       .value("DP", CPS::Domain::DP)
@@ -252,6 +259,8 @@ PYBIND11_MODULE(dpsimpy, m) {
            "attr"_a)
       .def("do_init_from_nodes_and_terminals",
            &DPsim::Simulation::doInitFromNodesAndTerminals)
+      .def("set_system_matrix_recomputation_mode",
+           &DPsim::Simulation::setSystemMatrixRecomputationMode, "mode"_a)
       .def("do_system_matrix_recomputation",
            &DPsim::Simulation::doSystemMatrixRecomputation)
       .def("do_state_space_extraction",

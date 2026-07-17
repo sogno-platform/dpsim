@@ -74,7 +74,7 @@ template <typename VarType> void MnaSolverPlugin<VarType>::initialize() {
   int size = this->mRightSideVector.rows();
   std::vector<SparseMatrix> hMat;
   int nnz = 0;
-  if (this->mSystemMatrixRecomputation) {
+  if (this->mSystemMatrixRecomputationEnabled) {
     SPDLOG_LOGGER_ERROR(this->mSLog,
                         "System matrix recomputation not supported");
     return;

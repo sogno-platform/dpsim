@@ -81,6 +81,7 @@ template <typename VarType> void MnaSolver<VarType>::initialize() {
   // We need to differentiate between power and signal components and
   // ground nodes should be ignored.
   identifyTopologyObjects();
+  resolveSystemMatrixRecomputationMode();
   // Ensure all subcomponents (and their virtual nodes) are registered before
   // collectVirtualNodes() sizes the system matrices. Recurses into nested
   // sub-components so e.g. SST -> Load -> {R, L, C} is fully created.
@@ -276,7 +277,7 @@ template <typename VarType> void MnaSolver<VarType>::initializeSystem() {
 
   if (mFrequencyParallel)
     initializeSystemWithParallelFrequencies();
-  else if (mSystemMatrixRecomputation)
+  else if (mSystemMatrixRecomputationEnabled)
     initializeSystemWithVariableMatrix();
   else
     initializeSystemWithPrecomputedMatrices();
@@ -409,6 +410,58 @@ Bool MnaSolver<VarType>::hasVariableComponentChanged() {
 template <typename VarType> void MnaSolver<VarType>::updateSwitchStatus() {
   for (UInt i = 0; i < mSwitches.size(); ++i) {
     mCurrentSwitchStatus.set(i, mSwitches[i]->mnaIsClosed());
+  }
+}
+
+template <typename VarType>
+void MnaSolver<VarType>::resolveSystemMatrixRecomputationMode() {
+  using Mode = Solver::SystemMatrixRecomputationMode;
+
+  const auto nonSwitchVariableComp = std::find_if(
+      mSystem.mComponents.begin(), mSystem.mComponents.end(),
+      [](const auto &comp) {
+        return std::dynamic_pointer_cast<CPS::MNAVariableCompInterface>(comp) &&
+               !std::dynamic_pointer_cast<CPS::MNASwitchInterface>(comp);
+      });
+
+  const Bool hasNonSwitchVariableComp =
+      nonSwitchVariableComp != mSystem.mComponents.end();
+
+  switch (mSystemMatrixRecomputationMode) {
+  case Mode::Auto:
+    mSystemMatrixRecomputationEnabled = hasNonSwitchVariableComp;
+
+    if (hasNonSwitchVariableComp) {
+      const auto &component = *nonSwitchVariableComp;
+      SPDLOG_LOGGER_INFO(
+          mSLog,
+          "System-matrix recomputation enabled automatically for {:s} '{:s}'.",
+          component->type(), component->name());
+    } else {
+      SPDLOG_LOGGER_INFO(mSLog,
+                         "System-matrix recomputation disabled automatically.");
+    }
+    break;
+
+  case Mode::Enabled:
+    mSystemMatrixRecomputationEnabled = true;
+    SPDLOG_LOGGER_INFO(mSLog, "System-matrix recomputation enabled.");
+    break;
+
+  case Mode::Disabled:
+    mSystemMatrixRecomputationEnabled = false;
+
+    if (hasNonSwitchVariableComp) {
+      const auto &component = *nonSwitchVariableComp;
+      SPDLOG_LOGGER_WARN(
+          mSLog,
+          "System-matrix recomputation disabled, but {:s} '{:s}' may require "
+          "it.",
+          component->type(), component->name());
+    } else {
+      SPDLOG_LOGGER_INFO(mSLog, "System-matrix recomputation disabled.");
+    }
+    break;
   }
 }
 
@@ -721,7 +774,7 @@ template <typename VarType> Task::List MnaSolver<VarType>::getTasks() {
   if (mFrequencyParallel) {
     for (UInt i = 0; i < mSystem.mFrequencies.size(); ++i)
       l.push_back(createSolveTaskHarm(i));
-  } else if (mSystemMatrixRecomputation) {
+  } else if (mSystemMatrixRecomputationEnabled) {
     for (auto comp : this->mMNAIntfVariableComps) {
       for (auto task : comp->mnaTasks())
         l.push_back(task);
