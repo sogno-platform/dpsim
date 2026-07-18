@@ -76,6 +76,7 @@ set(CIRCUIT_SOURCES
 	Circuits/SP_Ph1_IEEE9_4Order.cpp
 	Circuits/DP_Ph1_IEEE9_4Order.cpp
 	Circuits/EMT_Ph3_IEEE9_4Order.cpp
+	Circuits/EMT_Ph3_IEEE9_SSN_InverterMix.cpp
 
 	#SMIB
 	Circuits/SP_SynGenTrStab_SMIB_SteadyState.cpp
