@@ -99,6 +99,19 @@ private:
   Real mPowerFilterCutoff;
   Real mDelayBandwidth;
 
+  // Virtual output impedance (opt-in). Zero recovers the islanded model.
+  Real mVirtualResistance;
+  Real mVirtualReactance;
+
+  // Scale on the grid-current feedforward in the voltage loop (1 = islanded).
+  Real mGridCurrentFeedforward;
+
+  // Proportional Q-V droop (opt-in). Cutoff > 0 selects droop over the integral
+  // excitation. Setpoint is captured at initialization.
+  Real mReactivePowerDroop;
+  Real mReactiveDroopCutoff;
+  Real mVoltageSetpoint;
+
   // Numerical linearization settings
   Real mJacobianRelativeStep;
   Real mJacobianAbsoluteStep;
@@ -183,6 +196,18 @@ public:
   /// \brief Configure finite-difference steps for local linearization.
   void setNumericalLinearizationParameters(Real relativeStep,
                                            Real absoluteStep);
+
+  /// \brief Opt-in virtual output impedance Zv = Rv + jXv, subtracted from the
+  /// EMF reference across the grid current. Zero (default) is the islanded
+  /// model; a finite Rv/Xv damps the power-synchronization loop on a grid.
+  void setVirtualImpedance(Real virtualResistance, Real virtualReactance = 0.0);
+
+  /// \brief Scale on the voltage-loop grid-current feedforward (default 1).
+  void setGridCurrentFeedforward(Real scale);
+
+  /// \brief Opt-in proportional Q-V droop replacing the integral excitation.
+  /// droopGain is Dq [V/var]; cutoff [rad/s] > 0 enables it.
+  void setReactivePowerDroop(Real droopGain, Real cutoff);
 
   void initializeFromNodesAndTerminals(Real frequency) override final;
 };
