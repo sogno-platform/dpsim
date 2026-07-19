@@ -8,8 +8,10 @@
 
 #include <dpsim-models/MathUtils.h>
 
+#include <cmath>
 #include <cstdint>
 #include <cstring>
+#include <stdexcept>
 
 using namespace CPS;
 
@@ -231,6 +233,30 @@ Matrix Math::singlePhasePowerToThreePhase(Real power) {
   Matrix power_3ph = Matrix::Zero(3, 3);
   power_3ph << power / 3., 0., 0., 0., power / 3., 0., 0, 0., power / 3.;
   return power_3ph;
+}
+
+std::pair<Real, Real> Math::pccPowerFromFilterPowerReference(Real pFilterRef,
+                                                             Real qFilterRef,
+                                                             Real rc,
+                                                             Real vGridRmsLL) {
+  const Real vPccPeakPhase = RMS3PH_TO_PEAK1PH * vGridRmsLL;
+  if (std::abs(rc) < 1e-12 || vPccPeakPhase < 1e-9)
+    return {pFilterRef, qFilterRef};
+
+  const Real qPccRef = qFilterRef;
+  const Real a = rc / (1.5 * vPccPeakPhase * vPccPeakPhase);
+  const Real discriminant =
+      1.0 + 4.0 * a * (pFilterRef - a * qPccRef * qPccRef);
+  if (discriminant < 0.0)
+    throw std::runtime_error("No feasible PCC power for the given filter-side "
+                             "power reference, rc, and PCC voltage estimate.");
+
+  const Real sqrtDisc = std::sqrt(discriminant);
+  const Real p1 = (-1.0 + sqrtDisc) / (2.0 * a);
+  const Real p2 = (-1.0 - sqrtDisc) / (2.0 * a);
+  const Real pPccRef =
+      std::abs(p1 - pFilterRef) < std::abs(p2 - pFilterRef) ? p1 : p2;
+  return {pPccRef, qPccRef};
 }
 
 Matrix Math::StateSpaceTrapezoidal(Matrix states, Matrix A, Matrix B, Real dt,
