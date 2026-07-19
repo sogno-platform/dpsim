@@ -52,30 +52,6 @@ struct GfmParams {
   Real reactivePowerDroop = 1.0e-5; // proportional Q-V droop
   Real reactiveDroopCutoff = 100.0;
 };
-
-// Filter-side power reference to PCC-side injection, correcting the rc loss.
-std::pair<Real, Real> pccPowerFromFilterPowerReference(Real pFilterRef,
-                                                       Real qFilterRef, Real rc,
-                                                       Real vGridRmsLL) {
-  const Real vPccPeakPhase = RMS3PH_TO_PEAK1PH * vGridRmsLL;
-  if (std::abs(rc) < 1e-12 || vPccPeakPhase < 1e-9)
-    return {pFilterRef, qFilterRef};
-
-  const Real qPccRef = qFilterRef;
-  const Real a = rc / (1.5 * vPccPeakPhase * vPccPeakPhase);
-  const Real discriminant =
-      1.0 + 4.0 * a * (pFilterRef - a * qPccRef * qPccRef);
-  if (discriminant < 0.0)
-    throw std::runtime_error("No feasible PCC power for the GFL filter-side "
-                             "power reference, rc, and PCC voltage estimate.");
-
-  const Real sqrtDisc = std::sqrt(discriminant);
-  const Real p1 = (-1.0 + sqrtDisc) / (2.0 * a);
-  const Real p2 = (-1.0 - sqrtDisc) / (2.0 * a);
-  const Real pPccRef =
-      std::abs(p1 - pFilterRef) < std::abs(p2 - pFilterRef) ? p1 : p2;
-  return {pPccRef, qPccRef};
-}
 } // namespace
 
 SystemTopology buildTopology(CommandLineArgs &args,
@@ -119,7 +95,7 @@ SystemTopology buildTopology(CommandLineArgs &args,
   // gen3's PF image: a negative PQ load injecting the PCC-side power (the
   // rc-corrected filter reference).
   const GflParams gfl;
-  const auto [gfl3PPcc, gfl3QPcc] = pccPowerFromFilterPowerReference(
+  const auto [gfl3PPcc, gfl3QPcc] = Math::pccPowerFromFilterPowerReference(
       ieee9.gen3.InitialPower, ieee9.gen3.InitialPowerReactive, gfl.rc,
       ieee9.gen3.RatedVoltage);
   auto gfl3PF = SP::Ph1::Load::make(ieee9.gen3.Name, CPS::Logger::Level::off);
@@ -351,7 +327,21 @@ SystemTopology buildTopology(CommandLineArgs &args,
   // gen2 replaced by a grid-forming SSN inverter, keeping the GEN2 identity.
   // nominalVoltage is the peak phase target at the 1.025 pu PV setpoint.
   const Real gfmNominalVoltage = RMS3PH_TO_PEAK1PH * ieee9.gen2.InitialVoltage;
-  const GfmParams gfm;
+  GfmParams gfm;
+  // Optional overrides for studying the grid-forming tuning from a notebook.
+  auto opt = [&](const String &key, Real def) {
+    return args.options.find(key) != args.options.end()
+               ? args.getOptionReal(key)
+               : def;
+  };
+  gfm.dampingCoefficient = opt("gfm_d", gfm.dampingCoefficient);
+  gfm.kpVoltage = opt("gfm_kpv", gfm.kpVoltage);
+  gfm.kiVoltage = opt("gfm_kiv", gfm.kiVoltage);
+  gfm.reactivePowerDroop = opt("gfm_dq", gfm.reactivePowerDroop);
+  gfm.reactiveDroopCutoff = opt("gfm_dqc", gfm.reactiveDroopCutoff);
+  const Real gfmFeedforward = opt("gfm_ff", 0.0);
+  const Real gfmVirtualResistance = opt("gfm_rv", 0.0);
+
   auto gen2EMT = EMT::Ph3::SSN_GFM::make(ieee9.gen2.Name, ieee9.gen2.Name,
                                          CPS::Logger::Level::off);
   gen2EMT->setNumericalLinearizationParameters(1e-6, 1e-8);
@@ -363,7 +353,8 @@ SystemTopology buildTopology(CommandLineArgs &args,
                          gfm.kpCurrent, gfm.kiCurrent, gfm.activeDampingGain,
                          gfm.powerFilterCutoff, gfm.delayBandwidth);
   // Grid-connected control: no grid-current feedforward, proportional Q-V droop.
-  gen2EMT->setGridCurrentFeedforward(0.0);
+  gen2EMT->setGridCurrentFeedforward(gfmFeedforward);
+  gen2EMT->setVirtualImpedance(gfmVirtualResistance, 0.0);
   gen2EMT->setReactivePowerDroop(gfm.reactivePowerDroop,
                                  gfm.reactiveDroopCutoff);
 
@@ -371,10 +362,13 @@ SystemTopology buildTopology(CommandLineArgs &args,
   // identity so the topology wiring is unchanged.
   auto gen3EMT = EMT::Ph3::AvVoltSourceInverterStateSpace::make(
       ieee9.gen3.Name, CPS::Logger::Level::off);
-  gen3EMT->setParameters(gfl.lf, gfl.cf, gfl.rf, gfl.rc, omegaN, gfl.kpPLL,
-                         gfl.kiPLL, omegaN, ieee9.gen3.InitialPower,
-                         ieee9.gen3.InitialPowerReactive, gfl.kpPowerCtrl,
-                         gfl.kiPowerCtrl, gfl.kpCurrCtrl, gfl.kiCurrCtrl);
+  // Optional overrides for studying the grid-following tuning from a notebook.
+  gen3EMT->setParameters(
+      gfl.lf, gfl.cf, gfl.rf, gfl.rc, omegaN, opt("gfl_kppll", gfl.kpPLL),
+      opt("gfl_kipll", gfl.kiPLL), omegaN, ieee9.gen3.InitialPower,
+      ieee9.gen3.InitialPowerReactive, opt("gfl_kpp", gfl.kpPowerCtrl),
+      opt("gfl_kip", gfl.kiPowerCtrl), opt("gfl_kpi", gfl.kpCurrCtrl),
+      opt("gfl_kii", gfl.kiCurrCtrl));
 
   // Loads
   auto load5EMT =
