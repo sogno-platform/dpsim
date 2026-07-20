@@ -75,6 +75,12 @@ protected:
   CPS::Real loadReactivePowerPerUnit(CPS::TopologicalNode::Ptr node);
   /// Q-limit PV<->PQ switching pass (overrides the base no-op)
   CPS::Bool enforceReactiveLimits() override;
+  /// SVC voltage-control pass: nudge each SVC's reactive injection toward its
+  /// voltage setpoint (overrides the base no-op)
+  CPS::Bool enforceSvcVoltageControl() override;
+  /// Previous (Q_pu, V_pu) per SVC bus for the secant sensitivity estimate
+  std::map<CPS::TopologicalNode::Ptr, std::pair<CPS::Real, CPS::Real>>
+      mSvcPrevQV;
   /// Clear the Q-limit conversion bookkeeping between solves
   void clearReactiveLimitState() override;
   /// Buses switched PV->PQ by the Q-limit loop -> pinned at Qmax (true) or Qmin (false)

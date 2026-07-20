@@ -57,7 +57,14 @@ void PFSolverPowerPolar::generateInitialSolution(Real time,
             std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp)) {
       gen->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
     }
+
+    if (auto svc = std::dynamic_pointer_cast<CPS::SP::Ph1::SVC>(comp)) {
+      svc->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
+    }
   }
+
+  // SVC secant history is per-solve; start each solve fresh.
+  mSvcPrevQV.clear();
 
   // PQ buses
   for (auto pq : mPQBuses) {
@@ -90,6 +97,10 @@ void PFSolverPowerPolar::generateInitialSolution(Real time,
                          comp)) {
         sol_P(idx) += gen->attributeTyped<CPS::Real>("P_set_pu")->get();
         sol_Q(idx) += gen->attributeTyped<CPS::Real>("Q_set_pu")->get();
+      } else if (auto svc =
+                     std::dynamic_pointer_cast<CPS::SP::Ph1::SVC>(comp)) {
+        // SVC injects reactive power only; the outer control loop moves Q_set_pu.
+        sol_Q(idx) += svc->attributeTyped<CPS::Real>("Q_set_pu")->get();
       }
     }
 
@@ -641,6 +652,69 @@ CPS::Bool PFSolverPowerPolar::enforceReactiveLimits() {
   }
 
   return !toPQ.empty() || !toPV.empty();
+}
+
+CPS::Bool PFSolverPowerPolar::enforceSvcVoltageControl() {
+  // The SVC component holding the controlled voltage/band at a node, if any.
+  auto svcAtNode = [&](CPS::TopologicalNode::Ptr node)
+      -> std::shared_ptr<CPS::SP::Ph1::SVC> {
+    for (auto comp : mSystem.mComponentsAtNode[node])
+      if (auto svc = std::dynamic_pointer_cast<CPS::SP::Ph1::SVC>(comp))
+        return svc;
+    return nullptr;
+  };
+
+  CPS::Bool anyChanged = false;
+  for (auto node : mPQBuses) {
+    auto svc = svcAtNode(node);
+    if (!svc)
+      continue;
+    UInt idx = node->matrixNodeIndex();
+    CPS::Real vSetPU = svc->attributeTyped<CPS::Real>("V_set_pu")->get();
+    CPS::Real qMaxPU = svc->attributeTyped<CPS::Real>("Q_max_pu")->get();
+    CPS::Real qMinPU = svc->attributeTyped<CPS::Real>("Q_min_pu")->get();
+    CPS::Real qOld = svc->attributeTyped<CPS::Real>("Q_set_pu")->get();
+    CPS::Real v = sol_V(idx);
+    CPS::Real vErr = vSetPU - v;
+
+    if (std::abs(vErr) < mSvcVoltageTolerance)
+      continue; // already on setpoint
+
+    // Reactive-injection sensitivity dQ/dV: seeded from the local diagonal
+    // susceptance |B_kk| (the decoupled Newton sensitivity, self-scaling at
+    // stiff buses) and refined by a secant estimate once a prior iterate exists.
+    CPS::Real dQdV = std::abs(B(idx, idx));
+    auto prev = mSvcPrevQV.find(node);
+    if (prev != mSvcPrevQV.end()) {
+      CPS::Real dV = v - prev->second.second;
+      CPS::Real dQ = qOld - prev->second.first;
+      if (std::abs(dV) > 1e-12 && std::abs(dQ) > 1e-15)
+        dQdV = dQ / dV;
+    }
+    if (!CPS::Math::isFinite(dQdV) || std::abs(dQdV) < 1e-9)
+      dQdV = 1.0; // degenerate sensitivity -> unit fallback
+
+    CPS::Real qNew = qOld + mSvcDamping * dQdV * vErr;
+    if (CPS::Math::isFinite(qMaxPU) && qNew > qMaxPU)
+      qNew = qMaxPU;
+    if (CPS::Math::isFinite(qMinPU) && qNew < qMinPU)
+      qNew = qMinPU;
+
+    CPS::Real dq = qNew - qOld;
+    if (std::abs(dq) < 1e-12)
+      continue; // pinned at a limit or converged -> contributes to settling
+
+    mSvcPrevQV[node] = std::make_pair(qOld, v);
+    Qesp(idx) += dq;
+    sol_Q(idx) += dq;
+    svc->updateReactivePowerInjection(
+        CPS::Complex(0., qNew * mBaseApparentPower));
+    anyChanged = true;
+    SPDLOG_LOGGER_INFO(mSLog,
+                       "SVC {}: V={:.6f} (set {:.6f}), Q {:.6f} -> {:.6f} pu",
+                       svc->name(), v, vSetPU, qOld, qNew);
+  }
+  return anyChanged;
 }
 
 void PFSolverPowerPolar::clearReactiveLimitState() {
