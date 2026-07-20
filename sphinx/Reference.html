@@ -314,6 +314,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.set_solver"><code class="docutils literal notranslate"><span class="pre">Simulation.set_solver()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.set_solver_component_behaviour"><code class="docutils literal notranslate"><span class="pre">Simulation.set_solver_component_behaviour()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.set_system"><code class="docutils literal notranslate"><span class="pre">Simulation.set_system()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.set_system_matrix_recomputation_mode"><code class="docutils literal notranslate"><span class="pre">Simulation.set_system_matrix_recomputation_mode()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.set_tearing_components"><code class="docutils literal notranslate"><span class="pre">Simulation.set_tearing_components()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.set_time_step"><code class="docutils literal notranslate"><span class="pre">Simulation.set_time_step()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.Simulation.start"><code class="docutils literal notranslate"><span class="pre">Simulation.start()</span></code></a></li>
@@ -349,6 +350,13 @@
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.StateSpaceModalAnalysis.set_analysis_frame"><code class="docutils literal notranslate"><span class="pre">StateSpaceModalAnalysis.set_analysis_frame()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.StateSpaceModalAnalysis.set_global_dq0_frame"><code class="docutils literal notranslate"><span class="pre">StateSpaceModalAnalysis.set_global_dq0_frame()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dpsimpy.StateSpaceModalAnalysis.update"><code class="docutils literal notranslate"><span class="pre">StateSpaceModalAnalysis.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dpsimpy.SystemMatrixRecomputationMode"><code class="docutils literal notranslate"><span class="pre">SystemMatrixRecomputationMode</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SystemMatrixRecomputationMode.Auto"><code class="docutils literal notranslate"><span class="pre">SystemMatrixRecomputationMode.Auto</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SystemMatrixRecomputationMode.Disabled"><code class="docutils literal notranslate"><span class="pre">SystemMatrixRecomputationMode.Disabled</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SystemMatrixRecomputationMode.Enabled"><code class="docutils literal notranslate"><span class="pre">SystemMatrixRecomputationMode.Enabled</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.SystemMatrixRecomputationMode.value"><code class="docutils literal notranslate"><span class="pre">SystemMatrixRecomputationMode.value</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#dpsimpy.SystemTopology"><code class="docutils literal notranslate"><span class="pre">SystemTopology</span></code></a><ul>
@@ -2351,6 +2359,11 @@ and to parameterize all components of the network from Python.</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.Simulation.set_system_matrix_recomputation_mode">
+<span class="sig-name descname"><span class="pre">set_system_matrix_recomputation_mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.Simulation" title="dpsimpy.Simulation"><span class="pre">dpsimpy.Simulation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.SystemMatrixRecomputationMode" title="dpsimpy.SystemMatrixRecomputationMode"><span class="pre">dpsimpy.SystemMatrixRecomputationMode</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.Simulation.set_system_matrix_recomputation_mode" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="dpsimpy.Simulation.set_tearing_components">
 <span class="sig-name descname"><span class="pre">set_tearing_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.Simulation" title="dpsimpy.Simulation"><span class="pre">dpsimpy.Simulation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence[CPS::IdentifiedObject]</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.Simulation.set_tearing_components" title="Link to this definition"></a></dt>
 <dd></dd></dl>
@@ -2508,6 +2521,40 @@ and to parameterize all components of the network from Python.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dpsimpy.StateSpaceModalAnalysis.update">
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.StateSpaceModalAnalysis" title="dpsimpy.StateSpaceModalAnalysis"><span class="pre">dpsimpy.StateSpaceModalAnalysis</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.StateSpaceModalAnalysis.update" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.SystemMatrixRecomputationMode">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">dpsimpy.</span></span><span class="sig-name descname"><span class="pre">SystemMatrixRecomputationMode</span></span><a class="headerlink" href="#dpsimpy.SystemMatrixRecomputationMode" title="Link to this definition"></a></dt>
+<dd><p>Members:</p>
+<p>Auto</p>
+<p>Enabled</p>
+<p>Disabled</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.SystemMatrixRecomputationMode.Auto">
+<span class="sig-name descname"><span class="pre">Auto</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;SystemMatrixRecomputationMode.Auto:</span> <span class="pre">0&gt;</span></span><a class="headerlink" href="#dpsimpy.SystemMatrixRecomputationMode.Auto" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.SystemMatrixRecomputationMode.Disabled">
+<span class="sig-name descname"><span class="pre">Disabled</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;SystemMatrixRecomputationMode.Disabled:</span> <span class="pre">2&gt;</span></span><a class="headerlink" href="#dpsimpy.SystemMatrixRecomputationMode.Disabled" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dpsimpy.SystemMatrixRecomputationMode.Enabled">
+<span class="sig-name descname"><span class="pre">Enabled</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;SystemMatrixRecomputationMode.Enabled:</span> <span class="pre">1&gt;</span></span><a class="headerlink" href="#dpsimpy.SystemMatrixRecomputationMode.Enabled" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">SystemMatrixRecomputationMode.name</span> <span class="pre">-&gt;</span> <span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.SystemMatrixRecomputationMode.value">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#dpsimpy.SystemMatrixRecomputationMode.value" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

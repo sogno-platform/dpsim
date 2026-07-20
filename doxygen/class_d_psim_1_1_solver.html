@@ -114,6 +114,12 @@ Public Types</h2></td></tr>
 , <b>Simulation</b>
  }</td></tr>
 <tr class="separator:abf97ba7da8f4320061ac8101ef45cf2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada054cfffa83077943a93e71e1fb8792" id="r_ada054cfffa83077943a93e71e1fb8792"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ada054cfffa83077943a93e71e1fb8792">SystemMatrixRecomputationMode</a> { <a class="el" href="#ada054cfffa83077943a93e71e1fb8792a06b9281e396db002010bde1de57262eb">Auto</a>
+, <a class="el" href="#ada054cfffa83077943a93e71e1fb8792a00d23a76e43b46dae9ec7aa9dcbebb32">Enabled</a>
+, <a class="el" href="#ada054cfffa83077943a93e71e1fb8792ab9f5c797ebbf55adccdd8539a65a0241">Disabled</a>
+ }</td></tr>
+<tr class="memdesc:ada054cfffa83077943a93e71e1fb8792"><td class="mdescLeft">&#160;</td><td class="mdescRight">System-matrix recomputation mode for MNA solvers.  <a href="#ada054cfffa83077943a93e71e1fb8792">More...</a><br /></td></tr>
+<tr class="separator:ada054cfffa83077943a93e71e1fb8792"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc3b0db5925f348e9a41093c1759919e" id="r_abc3b0db5925f348e9a41093c1759919e"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abc3b0db5925f348e9a41093c1759919e">Type</a> { <b>MNA</b>
 , <b>DAE</b>
 , <b>NRP</b>
@@ -134,6 +140,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9680fc1be173642556299eb91e300002"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55d0b0fd08980de35d936ea167bf8a86" id="r_a55d0b0fd08980de35d936ea167bf8a86"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a55d0b0fd08980de35d936ea167bf8a86">setSystem</a> (const <a class="el" href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a> &amp;system)</td></tr>
 <tr class="separator:a55d0b0fd08980de35d936ea167bf8a86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af333a4dee89c17bbf902ef0fb2d68d52" id="r_af333a4dee89c17bbf902ef0fb2d68d52"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af333a4dee89c17bbf902ef0fb2d68d52">setSystemMatrixRecomputationMode</a> (<a class="el" href="#ada054cfffa83077943a93e71e1fb8792">SystemMatrixRecomputationMode</a> mode)</td></tr>
+<tr class="memdesc:af333a4dee89c17bbf902ef0fb2d68d52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the system-matrix recomputation mode.  <br /></td></tr>
+<tr class="separator:af333a4dee89c17bbf902ef0fb2d68d52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acaca0ec55e6c02924c09da8de629912e" id="r_acaca0ec55e6c02924c09da8de629912e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acaca0ec55e6c02924c09da8de629912e">doSystemMatrixRecomputation</a> (Bool value)</td></tr>
 <tr class="separator:acaca0ec55e6c02924c09da8de629912e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ad333c04d5e81c7d15c0a039e74e855" id="r_a9ad333c04d5e81c7d15c0a039e74e855"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9ad333c04d5e81c7d15c0a039e74e855">setLogSolveTimes</a> (Bool value)</td></tr>
@@ -209,9 +218,12 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a4135fe35cf60bb7b97523f2c2dc48c4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66d6160868a4ffe137ec6def456026b1" id="r_a66d6160868a4ffe137ec6def456026b1"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a66d6160868a4ffe137ec6def456026b1">mInitFromNodesAndTerminals</a> = true</td></tr>
 <tr class="separator:a66d6160868a4ffe137ec6def456026b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27917cc7464e85a81151488e8f1ff3a7" id="r_a27917cc7464e85a81151488e8f1ff3a7"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a27917cc7464e85a81151488e8f1ff3a7">mSystemMatrixRecomputation</a> = false</td></tr>
-<tr class="memdesc:a27917cc7464e85a81151488e8f1ff3a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable recomputation of system matrix during simulation.  <br /></td></tr>
-<tr class="separator:a27917cc7464e85a81151488e8f1ff3a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb0d898410bd0427fe38fd7552e15776" id="r_acb0d898410bd0427fe38fd7552e15776"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ada054cfffa83077943a93e71e1fb8792">SystemMatrixRecomputationMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acb0d898410bd0427fe38fd7552e15776">mSystemMatrixRecomputationMode</a></td></tr>
+<tr class="memdesc:acb0d898410bd0427fe38fd7552e15776"><td class="mdescLeft">&#160;</td><td class="mdescRight">Requested system-matrix recomputation mode.  <br /></td></tr>
+<tr class="separator:acb0d898410bd0427fe38fd7552e15776"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19bbb595644cc88dd6cd5cc653138a8b" id="r_a19bbb595644cc88dd6cd5cc653138a8b"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a19bbb595644cc88dd6cd5cc653138a8b">mSystemMatrixRecomputationEnabled</a> = false</td></tr>
+<tr class="memdesc:a19bbb595644cc88dd6cd5cc653138a8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Effective system-matrix recomputation setting used by the solver.  <br /></td></tr>
+<tr class="separator:a19bbb595644cc88dd6cd5cc653138a8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2978a74153340b65c3f3efd0a0617dda" id="r_a2978a74153340b65c3f3efd0a0617dda"><td class="memItemLeft" align="right" valign="top">Behaviour&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2978a74153340b65c3f3efd0a0617dda">mBehaviour</a> = Solver::Behaviour::Simulation</td></tr>
 <tr class="memdesc:a2978a74153340b65c3f3efd0a0617dda"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA.">Solver</a> behaviour initialization or simulation.  <br /></td></tr>
 <tr class="separator:a2978a74153340b65c3f3efd0a0617dda"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -270,6 +282,40 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ada054cfffa83077943a93e71e1fb8792" name="ada054cfffa83077943a93e71e1fb8792"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada054cfffa83077943a93e71e1fb8792">&#9670;&#160;</a></span>SystemMatrixRecomputationMode</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="#ada054cfffa83077943a93e71e1fb8792">DPsim::Solver::SystemMatrixRecomputationMode</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>System-matrix recomputation mode for MNA solvers. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ada054cfffa83077943a93e71e1fb8792a06b9281e396db002010bde1de57262eb" name="ada054cfffa83077943a93e71e1fb8792a06b9281e396db002010bde1de57262eb"></a>Auto&#160;</td><td class="fielddoc"><p>Select the mode automatically based on the system topology. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ada054cfffa83077943a93e71e1fb8792a00d23a76e43b46dae9ec7aa9dcbebb32" name="ada054cfffa83077943a93e71e1fb8792a00d23a76e43b46dae9ec7aa9dcbebb32"></a>Enabled&#160;</td><td class="fielddoc"><p>Always enable system-matrix recomputation. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ada054cfffa83077943a93e71e1fb8792ab9f5c797ebbf55adccdd8539a65a0241" name="ada054cfffa83077943a93e71e1fb8792ab9f5c797ebbf55adccdd8539a65a0241"></a>Disabled&#160;</td><td class="fielddoc"><p>Always disable system-matrix recomputation. </p>
+</td></tr>
+</table>
+
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00038">38</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+
+</div>
+</div>
 <a id="abc3b0db5925f348e9a41093c1759919e" name="abc3b0db5925f348e9a41093c1759919e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abc3b0db5925f348e9a41093c1759919e">&#9670;&#160;</a></span>Type</h2>
 
@@ -291,7 +337,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p><a class="el" href="class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA.">Solver</a> types: Modified Nodal Analysis, Differential Algebraic, Newton Raphson </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00080">80</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00093">93</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -323,7 +369,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00070">70</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00083">83</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -350,7 +396,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00075">75</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00088">88</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -378,7 +424,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00084">84</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00097">97</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -407,7 +453,7 @@ Protected Attributes</h2></td></tr>
 
 <p>activate powerflow initialization </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00108">108</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00128">128</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -436,7 +482,7 @@ Protected Attributes</h2></td></tr>
 
 <p>activate steady state initialization </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00100">100</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00120">120</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -462,8 +508,9 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>DEPRECATED: Enable or disable system-matrix recomputation explicitly. This compatibility method maps true to Enabled and false to Disabled. </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00090">90</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00108">108</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -521,7 +568,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_d_psim_1_1_d_a_e_solver.html#aab741458f52cae64ea769962d0ec5b2b">DPsim::DAESolver</a>, <a class="el" href="class_d_psim_1_1_mna_solver.html#a3b82eee1fafcde090d5beb801d1c6f96">DPsim::MnaSolver&lt; VarType &gt;</a>, <a class="el" href="class_d_psim_1_1_mna_solver_plugin.html#afdb444e4c698ecac4fa68059cbf7624c">DPsim::MnaSolverPlugin&lt; VarType &gt;</a>, <a class="el" href="class_d_psim_1_1_o_d_e_solver.html#a7cd71791cadd3bc396fa5ec2a021b34a">DPsim::ODESolver</a>, and <a class="el" href="class_d_psim_1_1_p_f_solver.html#adf4f01bb9b1795b9bf944d16b720fb0b">DPsim::PFSolver</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00098">98</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00118">118</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -556,7 +603,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_d_psim_1_1_mna_solver.html#a5e1ed4449c74fcbfe4f68e8576aee3d4">DPsim::MnaSolver&lt; VarType &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00123">123</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00143">143</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -587,7 +634,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_d_psim_1_1_mna_solver_direct.html#ac0953629e479d736b912a29a6a4db188">DPsim::MnaSolverDirect&lt; VarType &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00115">115</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00135">135</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -618,7 +665,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_d_psim_1_1_mna_solver_direct.html#a6f08318fa3606f3bdeeb201a8f42c7a9">DPsim::MnaSolverDirect&lt; VarType &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00111">111</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00131">131</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -645,7 +692,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00094">94</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00114">114</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -672,7 +719,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00127">127</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00147">147</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -703,7 +750,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_d_psim_1_1_p_f_solver.html#acd0834f9a232d7d9aebda905d379c0a2">DPsim::PFSolver</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00106">106</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00126">126</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -732,7 +779,7 @@ Protected Attributes</h2></td></tr>
 
 <p>set steady state initialization accuracy limit </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00104">104</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00124">124</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -761,7 +808,7 @@ Protected Attributes</h2></td></tr>
 
 <p>set steady state initialization time limit </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00102">102</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00122">122</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -788,7 +835,36 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00088">88</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00101">101</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+
+</div>
+</div>
+<a id="af333a4dee89c17bbf902ef0fb2d68d52" name="af333a4dee89c17bbf902ef0fb2d68d52"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af333a4dee89c17bbf902ef0fb2d68d52">&#9670;&#160;</a></span>setSystemMatrixRecomputationMode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DPsim::Solver::setSystemMatrixRecomputationMode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#ada054cfffa83077943a93e71e1fb8792">SystemMatrixRecomputationMode</a></td>          <td class="paramname"><span class="paramname"><em>mode</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set the system-matrix recomputation mode. </p>
+
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00103">103</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -815,7 +891,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00082">82</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00095">95</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -842,7 +918,7 @@ Protected Attributes</h2></td></tr>
 
 <p><a class="el" href="class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA.">Solver</a> behaviour initialization or simulation. </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00067">67</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00080">80</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -868,7 +944,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Activates parallelized computation of frequencies. </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00049">49</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00059">59</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -893,7 +969,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Activates powerflow initialization If this is false, all voltages are initialized with zero </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00062">62</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00072">72</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -919,7 +995,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Determines if solver is in initialization phase, which requires different behavior. </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00059">59</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00069">69</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -945,7 +1021,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Logging level. </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00041">41</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00051">51</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -971,7 +1047,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Collect step time for logging. </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00043">43</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00053">53</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -988,7 +1064,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <h3>SynGen <a class="el" href="class_d_psim_1_1_interface.html">Interface</a></h3>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00126">126</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00146">146</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -1014,7 +1090,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Name for logging. </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00039">39</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00049">49</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -1040,7 +1116,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Logger. </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00045">45</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00055">55</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -1066,7 +1142,7 @@ Protected Attributes</h2></td></tr>
 
 <p>steady state initialization accuracy limit </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00055">55</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00065">65</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -1092,7 +1168,7 @@ Protected Attributes</h2></td></tr>
 
 <p>steady state initialization time limit </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00053">53</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00063">63</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -1118,12 +1194,12 @@ Protected Attributes</h2></td></tr>
 
 <p>Activates steady state initialization. </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00057">57</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00067">67</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
-<a id="a27917cc7464e85a81151488e8f1ff3a7" name="a27917cc7464e85a81151488e8f1ff3a7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a27917cc7464e85a81151488e8f1ff3a7">&#9670;&#160;</a></span>mSystemMatrixRecomputation</h2>
+<a id="a19bbb595644cc88dd6cd5cc653138a8b" name="a19bbb595644cc88dd6cd5cc653138a8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19bbb595644cc88dd6cd5cc653138a8b">&#9670;&#160;</a></span>mSystemMatrixRecomputationEnabled</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1132,7 +1208,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Bool DPsim::Solver::mSystemMatrixRecomputation = false</td>
+          <td class="memname">Bool DPsim::Solver::mSystemMatrixRecomputationEnabled = false</td>
         </tr>
       </table>
   </td>
@@ -1142,9 +1218,38 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Enable recomputation of system matrix during simulation. </p>
+<p>Effective system-matrix recomputation setting used by the solver. </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00064">64</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00077">77</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+
+</div>
+</div>
+<a id="acb0d898410bd0427fe38fd7552e15776" name="acb0d898410bd0427fe38fd7552e15776"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb0d898410bd0427fe38fd7552e15776">&#9670;&#160;</a></span>mSystemMatrixRecomputationMode</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#ada054cfffa83077943a93e71e1fb8792">SystemMatrixRecomputationMode</a> DPsim::Solver::mSystemMatrixRecomputationMode</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">      <a class="code hl_enumvalue" href="#ada054cfffa83077943a93e71e1fb8792a06b9281e396db002010bde1de57262eb">SystemMatrixRecomputationMode::Auto</a></div>
+<div class="ttc" id="aclass_d_psim_1_1_solver_html_ada054cfffa83077943a93e71e1fb8792a06b9281e396db002010bde1de57262eb"><div class="ttname"><a href="#ada054cfffa83077943a93e71e1fb8792a06b9281e396db002010bde1de57262eb">DPsim::Solver::SystemMatrixRecomputationMode::Auto</a></div><div class="ttdeci">@ Auto</div><div class="ttdoc">Select the mode automatically based on the system topology.</div><div class="ttdef"><b>Definition</b> <a href="_solver_8h_source.html#l00040">Solver.h:40</a></div></div>
+</div><!-- fragment -->
+<p>Requested system-matrix recomputation mode. </p>
+
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00074">74</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -1170,7 +1275,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Time step for fixed step solvers. </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00047">47</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00057">57</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
