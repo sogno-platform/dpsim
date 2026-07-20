@@ -512,6 +512,27 @@ void addDPPh3Components(py::module_ mDPPh3) {
       .def_property("f_src", createAttributeGetter<CPS::Real>("f_src"),
                     createAttributeSetter<CPS::Real>("f_src"));
 
+  py::class_<CPS::DP::Ph3::NetworkInjection,
+             std::shared_ptr<CPS::DP::Ph3::NetworkInjection>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh3, "NetworkInjection",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::DP::Ph3::NetworkInjection::setParameters,
+           "V_ref"_a, "f_src"_a = 0.0)
+      .def("connect", &CPS::DP::Ph3::NetworkInjection::connect);
+
+  py::class_<CPS::DP::Ph3::PiLine, std::shared_ptr<CPS::DP::Ph3::PiLine>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh3, "PiLine",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::DP::Ph3::PiLine::setParameters,
+           "series_resistance"_a, "series_inductance"_a,
+           "parallel_capacitance"_a = zeroMatrix(3),
+           "parallel_conductance"_a = zeroMatrix(3))
+      .def("connect", &CPS::DP::Ph3::PiLine::connect);
+
   py::class_<CPS::DP::Ph3::CurrentSource,
              std::shared_ptr<CPS::DP::Ph3::CurrentSource>,
              CPS::SimPowerComp<CPS::Complex>>(mDPPh3, "CurrentSource",

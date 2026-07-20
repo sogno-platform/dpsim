@@ -95,6 +95,7 @@
 #include <dpsim-models/DP/DP_Ph3_GenericTwoTerminalVTypeSSN.h>
 #include <dpsim-models/DP/DP_Ph3_Inductor.h>
 #include <dpsim-models/DP/DP_Ph3_MixedVTypeVariableSSNComp.h>
+#include <dpsim-models/DP/DP_Ph3_NetworkInjection.h>
 #include <dpsim-models/DP/DP_Ph3_PiLine.h>
 #include <dpsim-models/DP/DP_Ph3_Resistor.h>
 #include <dpsim-models/DP/DP_Ph3_SSN_Full_Serial_RLC.h>

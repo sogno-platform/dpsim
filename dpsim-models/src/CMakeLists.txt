@@ -70,6 +70,7 @@ list(APPEND MODELS_SOURCES
 	DP/DP_Ph3_Capacitor.cpp
 	DP/DP_Ph3_Inductor.cpp
 	DP/DP_Ph3_Resistor.cpp
+	DP/DP_Ph3_NetworkInjection.cpp
 	DP/DP_Ph3_PiLine.cpp
 	DP/DP_Ph3_SeriesResistor.cpp
 	DP/DP_Ph3_SeriesSwitch.cpp
