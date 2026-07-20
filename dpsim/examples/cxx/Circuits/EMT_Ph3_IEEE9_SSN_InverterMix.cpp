@@ -10,48 +10,9 @@ using namespace DPsim;
 using namespace CPS;
 
 namespace {
-// GFL avg-VSI filter and gains: the 400 V/10 kVA reference design rebased to
-// the BUS3 base (13.8 kV, 100 MVA, 60 Hz), preserving the per-unit values.
-struct GflParams {
-  Real lf = 1.98375e-4; // H
-  Real cf = 7.00133e-5; // F
-  Real rf = 2.38050e-2; // Ohm
-  Real rc = 2.38050e-2; // Ohm
-  Real kpPLL = 7.246377e-3;
-  Real kiPLL = 5.797101e-3;
-  Real kpPowerCtrl = 1.449275e-3;
-  Real kiPowerCtrl = 5.797101e-3;
-  Real kpCurrCtrl = 2.975625e-2;
-  Real kiCurrCtrl = 1.190250e-1;
-};
-
-// GFM SSN filter/VSG rebased from the PR #570 reference (220 V/12 kVA/50 Hz) to
-// the BUS2 base (18 kV, 100 MVA, 60 Hz), with grid-connected control tuning.
-struct GfmParams {
-  Real lf = 6.694215e-4; // H
-  Real cf = 6.224280e-5; // F
-  Real rf = 1.338843e-2; // Ohm
-  Real rc = 1.338843e-2; // Ohm
-
-  Real virtualInertia = 1157.407407;
-  Real dampingCoefficient = 3.0e6; // raised for stiff-grid stability
-
-  // Superseded by the proportional Q-V droop below.
-  Real voltageDroopGain = 1.0 / 15.0;
-  Real reactiveIntegralGain = 1.700559e-3;
-
-  Real kpVoltage = 5.8e-3; // lowered for stiff-grid stability
-  Real kiVoltage = 2.7e-1;
-  Real kpCurrent = 1.126636e0;
-  Real kiCurrent = 2.253273e1;
-
-  Real activeDampingGain = 0.0;
-  Real powerFilterCutoff = 100.0;
-  Real delayBandwidth = 20e3 / 1.5;
-
-  Real reactivePowerDroop = 1.0e-5; // proportional Q-V droop
-  Real reactiveDroopCutoff = 100.0;
-};
+// Controller parameters and their equation-based derivation live in Examples.h.
+using GfmParams = CPS::CIM::Examples::Components::GFM::Ieee9SsnGridForming;
+using GflParams = CPS::CIM::Examples::Components::GFL::Ieee9AvVsi;
 } // namespace
 
 SystemTopology buildTopology(CommandLineArgs &args,
@@ -96,7 +57,7 @@ SystemTopology buildTopology(CommandLineArgs &args,
   // rc-corrected filter reference).
   const GflParams gfl;
   const auto [gfl3PPcc, gfl3QPcc] = Math::pccPowerFromFilterPowerReference(
-      ieee9.gen3.InitialPower, ieee9.gen3.InitialPowerReactive, gfl.rc,
+      ieee9.gen3.InitialPower, ieee9.gen3.InitialPowerReactive, gfl.Rc,
       ieee9.gen3.RatedVoltage);
   auto gfl3PF = SP::Ph1::Load::make(ieee9.gen3.Name, CPS::Logger::Level::off);
   gfl3PF->setParameters(-gfl3PPcc, -gfl3QPcc, ieee9.gen3.RatedVoltage);
@@ -335,22 +296,22 @@ SystemTopology buildTopology(CommandLineArgs &args,
                : def;
   };
   gfm.dampingCoefficient = opt("gfm_d", gfm.dampingCoefficient);
-  gfm.kpVoltage = opt("gfm_kpv", gfm.kpVoltage);
-  gfm.kiVoltage = opt("gfm_kiv", gfm.kiVoltage);
+  gfm.KpVoltage = opt("gfm_kpv", gfm.KpVoltage);
+  gfm.KiVoltage = opt("gfm_kiv", gfm.KiVoltage);
   gfm.reactivePowerDroop = opt("gfm_dq", gfm.reactivePowerDroop);
   gfm.reactiveDroopCutoff = opt("gfm_dqc", gfm.reactiveDroopCutoff);
-  const Real gfmFeedforward = opt("gfm_ff", 0.0);
+  const Real gfmFeedforward = opt("gfm_ff", gfm.gridCurrentFeedforward);
   const Real gfmVirtualResistance = opt("gfm_rv", 0.0);
 
   auto gen2EMT = EMT::Ph3::SSN_GFM::make(ieee9.gen2.Name, ieee9.gen2.Name,
                                          CPS::Logger::Level::off);
   gen2EMT->setNumericalLinearizationParameters(1e-6, 1e-8);
-  gen2EMT->setParameters(gfm.lf, gfm.cf, gfm.rf, gfm.rc, gfmNominalVoltage,
+  gen2EMT->setParameters(gfm.Lf, gfm.Cf, gfm.Rf, gfm.Rc, gfmNominalVoltage,
                          omegaN, ieee9.gen2.InitialPower,
                          ieee9.gen2.InitialPowerReactive, gfm.virtualInertia,
                          gfm.dampingCoefficient, gfm.voltageDroopGain,
-                         gfm.reactiveIntegralGain, gfm.kpVoltage, gfm.kiVoltage,
-                         gfm.kpCurrent, gfm.kiCurrent, gfm.activeDampingGain,
+                         gfm.reactiveIntegralGain, gfm.KpVoltage, gfm.KiVoltage,
+                         gfm.KpCurrent, gfm.KiCurrent, gfm.activeDampingGain,
                          gfm.powerFilterCutoff, gfm.delayBandwidth);
   // Grid-connected control: no grid-current feedforward, proportional Q-V droop.
   gen2EMT->setGridCurrentFeedforward(gfmFeedforward);
@@ -364,11 +325,11 @@ SystemTopology buildTopology(CommandLineArgs &args,
       ieee9.gen3.Name, CPS::Logger::Level::off);
   // Optional overrides for studying the grid-following tuning from a notebook.
   gen3EMT->setParameters(
-      gfl.lf, gfl.cf, gfl.rf, gfl.rc, omegaN, opt("gfl_kppll", gfl.kpPLL),
-      opt("gfl_kipll", gfl.kiPLL), omegaN, ieee9.gen3.InitialPower,
-      ieee9.gen3.InitialPowerReactive, opt("gfl_kpp", gfl.kpPowerCtrl),
-      opt("gfl_kip", gfl.kiPowerCtrl), opt("gfl_kpi", gfl.kpCurrCtrl),
-      opt("gfl_kii", gfl.kiCurrCtrl));
+      gfl.Lf, gfl.Cf, gfl.Rf, gfl.Rc, omegaN, opt("gfl_kppll", gfl.KpPLL),
+      opt("gfl_kipll", gfl.KiPLL), omegaN, ieee9.gen3.InitialPower,
+      ieee9.gen3.InitialPowerReactive, opt("gfl_kpp", gfl.KpPowerCtrl),
+      opt("gfl_kip", gfl.KiPowerCtrl), opt("gfl_kpi", gfl.KpCurrCtrl),
+      opt("gfl_kii", gfl.KiCurrCtrl));
 
   // Loads
   auto load5EMT =
