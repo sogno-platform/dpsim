@@ -20,6 +20,9 @@ simulation has to move with them. If nothing outside is waiting, running in real
 study slower.
 
 This is why [co-simulation]({{< ref "co-simulation.md" >}}) and real-time usually appear together.
+When the coupled processes are launched separately, they also have to be made to begin at the same
+instant, which is covered under
+[starting together]({{< ref "start-synchronization.md" >}}).
 
 ## What it changes
 
