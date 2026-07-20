@@ -34,6 +34,13 @@ public:
   static Complex polar(Real abs, Real phase);
   static Complex polarDeg(Real abs, Real phase);
 
+  /// Elementwise product of two same-shaped Eigen expressions.
+  template <typename DerivedA, typename DerivedB>
+  static auto elementwiseProduct(const Eigen::MatrixBase<DerivedA> &a,
+                                 const Eigen::MatrixBase<DerivedB> &b) {
+    return (a.array() * b.array()).matrix();
+  }
+
   // -Ofast/-ffast-math folds std::isnan/isfinite to false; test the IEEE-754
   // exponent bits directly instead.
   static bool isFinite(Real value);

@@ -386,7 +386,8 @@ void PFSolverPowerPolar::calculateBranchFlow() {
     /// I = Y * V
     VectorComp current = line->Y_element() * v;
     /// pf on branch [S_01; S_10] = [V_0 * conj(I_0); V_1 * conj(I_1)]
-    VectorComp flow_on_branch = v.array() * current.conjugate().array();
+    VectorComp flow_on_branch =
+        Math::elementwiseProduct(v, current.conjugate());
     line->updateBranchFlow(current, flow_on_branch);
   }
   for (auto trafo : mTransformers) {
@@ -396,7 +397,8 @@ void PFSolverPowerPolar::calculateBranchFlow() {
     /// I = Y * V
     VectorComp current = trafo->Y_element() * v;
     /// pf on branch [S_01; S_10] = [V_0 * conj(I_0); V_1 * conj(I_1)]
-    VectorComp flow_on_branch = v.array() * current.conjugate().array();
+    VectorComp flow_on_branch =
+        Math::elementwiseProduct(v, current.conjugate());
     trafo->updateBranchFlow(current, flow_on_branch);
   }
 }
