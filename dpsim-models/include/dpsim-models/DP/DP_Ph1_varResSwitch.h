@@ -85,6 +85,11 @@ public:
                                  AttributeBase::List &modifiedAttributes,
                                  Attribute<Matrix>::Ptr &leftVector);
 
+  /// Returns false because the resistance changes through intermediate values
+  /// during switching, which cannot be represented by the precomputed open and
+  /// closed system matrices.
+  Bool supportsPrecomputedSystemMatrices() const override { return false; }
+
   // #### MNA section for switch ####
   /// Check if switch is closed
   Bool mnaIsClosed();

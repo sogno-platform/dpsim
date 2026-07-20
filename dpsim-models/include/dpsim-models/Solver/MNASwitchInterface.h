@@ -20,6 +20,14 @@ public:
 
   virtual ~MNASwitchInterface() = default;
 
+  /// Whether all system-matrix states of the switch can be represented by
+  /// precomputed switch matrices.
+  /// \note This is expected to be true for implementations of
+  /// MNASwitchInterface. The capability is required because some existing
+  /// switch components also vary matrix parameters continuously between their
+  /// discrete switch states.
+  virtual Bool supportsPrecomputedSystemMatrices() const { return true; }
+
   // #### MNA section ####
   /// Check if switch is closed
   virtual Bool mnaIsClosed() = 0;

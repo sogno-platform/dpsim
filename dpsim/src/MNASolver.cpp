@@ -417,22 +417,24 @@ template <typename VarType>
 void MnaSolver<VarType>::resolveSystemMatrixRecomputationMode() {
   using Mode = Solver::SystemMatrixRecomputationMode;
 
-  const auto nonSwitchVariableComp = std::find_if(
-      mSystem.mComponents.begin(), mSystem.mComponents.end(),
-      [](const auto &comp) {
-        return std::dynamic_pointer_cast<CPS::MNAVariableCompInterface>(comp) &&
-               !std::dynamic_pointer_cast<CPS::MNASwitchInterface>(comp);
+  const auto recomputationComp = std::find_if(
+      mVariableComps.begin(), mVariableComps.end(), [](const auto &comp) {
+        const auto switchComp =
+            std::dynamic_pointer_cast<CPS::MNASwitchInterface>(comp);
+
+        return !switchComp || !switchComp->supportsPrecomputedSystemMatrices();
       });
 
-  const Bool hasNonSwitchVariableComp =
-      nonSwitchVariableComp != mSystem.mComponents.end();
+  const Bool hasRecomputationComp = recomputationComp != mVariableComps.end();
 
   switch (mSystemMatrixRecomputationMode) {
   case Mode::Auto:
-    mSystemMatrixRecomputationEnabled = hasNonSwitchVariableComp;
+    mSystemMatrixRecomputationEnabled = hasRecomputationComp;
 
-    if (hasNonSwitchVariableComp) {
-      const auto &component = *nonSwitchVariableComp;
+    if (hasRecomputationComp) {
+      const auto component =
+          std::dynamic_pointer_cast<CPS::IdentifiedObject>(*recomputationComp);
+
       SPDLOG_LOGGER_INFO(
           mSLog,
           "System-matrix recomputation enabled automatically for {:s} '{:s}'.",
@@ -451,8 +453,10 @@ void MnaSolver<VarType>::resolveSystemMatrixRecomputationMode() {
   case Mode::Disabled:
     mSystemMatrixRecomputationEnabled = false;
 
-    if (hasNonSwitchVariableComp) {
-      const auto &component = *nonSwitchVariableComp;
+    if (hasRecomputationComp) {
+      const auto component =
+          std::dynamic_pointer_cast<CPS::IdentifiedObject>(*recomputationComp);
+
       SPDLOG_LOGGER_WARN(
           mSLog,
           "System-matrix recomputation disabled, but {:s} '{:s}' may require "
