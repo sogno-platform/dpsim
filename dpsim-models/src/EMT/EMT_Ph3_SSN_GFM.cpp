@@ -596,14 +596,17 @@ void EMT::Ph3::SSN_GFM::updateLogAttributes(const Matrix &u) const {
   const Real iGridD = iGridDq(0, 0);
   const Real iGridQ = iGridDq(1, 0);
 
+  const Real ifD = ifDq(0, 0);
+  const Real ifQ = ifDq(1, 0);
+
   **mVcD = vcD;
   **mVcQ = vcQ;
 
   **mIGridD = iGridD;
   **mIGridQ = iGridQ;
 
-  **mIfD = ifDq(0, 0);
-  **mIfQ = ifDq(1, 0);
+  **mIfD = ifD;
+  **mIfQ = ifQ;
 
   **mPInst = 1.5 * (vcD * iGridD + vcQ * iGridQ);
   **mQInst = 1.5 * (vcQ * iGridD - vcD * iGridQ);
@@ -612,8 +615,10 @@ void EMT::Ph3::SSN_GFM::updateLogAttributes(const Matrix &u) const {
   **mThetaGFM = theta;
   **mVoltageMagnitudeGFM = x(VoltageMagnitude, 0);
 
-  **mVoltageReferenceD = x(VoltageMagnitude, 0);
-  **mVoltageReferenceQ = 0.0;
+  // Reference the controller tracks, including the virtual-impedance drop.
+  **mVoltageReferenceD = x(VoltageMagnitude, 0) -
+                         (mVirtualResistance * ifD - mVirtualReactance * ifQ);
+  **mVoltageReferenceQ = -(mVirtualResistance * ifQ + mVirtualReactance * ifD);
 }
 
 void EMT::Ph3::SSN_GFM::initializeFromNodesAndTerminals(Real frequency) {
@@ -724,11 +729,11 @@ void EMT::Ph3::SSN_GFM::initializeFromNodesAndTerminals(Real frequency) {
   x0(Omega, 0) = omegaInitialization;
   x0(Theta, 0) = theta0;
 
-  // EMF carries the virtual-impedance drop so vc stays at the target.
+  // Virtual-impedance drop off filter current if (as at runtime), not iGrid.
   const Real virtualDropD0 =
-      mVirtualResistance * iGridD0 - mVirtualReactance * iGridQ0;
+      mVirtualResistance * ifD0 - mVirtualReactance * ifQ0;
   const Real virtualReferenceQ0 =
-      -(mVirtualResistance * iGridQ0 + mVirtualReactance * iGridD0);
+      -(mVirtualResistance * ifQ0 + mVirtualReactance * ifD0);
   x0(VoltageMagnitude, 0) = voltageMagnitudeInitial + virtualDropD0;
 
   // Proportional-droop setpoint: the operating EMF, so the droop is centered at
