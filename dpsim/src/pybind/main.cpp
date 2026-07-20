@@ -19,6 +19,8 @@
 
 #include <DPsimPy.h>
 
+#include <dpsim/InterfaceCosimSync.h>
+
 PYBIND11_DECLARE_HOLDER_TYPE(T, CPS::AttributePointer<T>);
 
 namespace py = pybind11;
@@ -298,6 +300,44 @@ PYBIND11_MODULE(dpsimpy, m) {
                &DPsim::RealTimeSimulation::run))
       .def("set_solver", &DPsim::RealTimeSimulation::setSolverType)
       .def("set_domain", &DPsim::RealTimeSimulation::setDomain);
+
+  py::class_<DPsim::InterfaceCosimSync,
+             std::shared_ptr<DPsim::InterfaceCosimSync>>(m,
+                                                         "InterfaceCosimSync")
+      .def(py::init([](const std::string &name, const std::string &host,
+                       uint16_t port, const std::string &role) {
+             DPsim::InterfaceCosimSync::Role r =
+                 (role == std::string("leader"))
+                     ? DPsim::InterfaceCosimSync::Role::Leader
+                     : DPsim::InterfaceCosimSync::Role::Follower;
+             return std::make_shared<DPsim::InterfaceCosimSync>(name, host,
+                                                                port, r);
+           }),
+           "name"_a, "host"_a, "port"_a, "role"_a)
+      .def("open", &DPsim::InterfaceCosimSync::open)
+      .def("close", &DPsim::InterfaceCosimSync::close)
+      .def(
+          "publish_config",
+          [](DPsim::InterfaceCosimSync &self, uint64_t start_time_ns,
+             uint64_t dt_ns, uint64_t duration_ns, uint32_t expected_followers,
+             uint64_t timeout_ms) {
+            // Exact int64 ns in, no double rounding, so the start instant is
+            // lossless end to end (pair with time.time_ns() on the caller).
+            auto tp = DPsim::InterfaceCosimSync::toTimePoint(start_time_ns);
+            return self.publishConfig(tp, dt_ns, duration_ns,
+                                      expected_followers, timeout_ms);
+          },
+          "start_time_ns"_a, "time_step_ns"_a, "duration_ns"_a,
+          "expected_followers"_a = 1, "timeout_ms"_a = 0)
+      .def(
+          "wait_for_config",
+          [](DPsim::InterfaceCosimSync &self, uint64_t timeout_ms) {
+            DPsim::InterfaceCosimSync::ConfigNs cfg{};
+            bool ok = self.waitForConfig(cfg, timeout_ms);
+            return py::make_tuple(ok, cfg.start_time_ns, cfg.time_step_ns,
+                                  cfg.duration_ns);
+          },
+          "timeout_ms"_a = 0);
 #endif
 
   py::class_<CPS::SystemTopology, std::shared_ptr<CPS::SystemTopology>>(
