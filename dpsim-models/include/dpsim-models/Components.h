@@ -100,6 +100,7 @@
 #include <dpsim-models/DP/DP_Ph3_SSN_Full_Serial_RLC.h>
 #include <dpsim-models/DP/DP_Ph3_SeriesResistor.h>
 #include <dpsim-models/DP/DP_Ph3_SeriesSwitch.h>
+#include <dpsim-models/DP/DP_Ph3_Switch.h>
 #include <dpsim-models/DP/DP_Ph3_SynchronGeneratorDQTrapez.h>
 #include <dpsim-models/DP/DP_Ph3_TwoTerminalITypeSSNComp.h>
 #include <dpsim-models/DP/DP_Ph3_TwoTerminalVTypeSSNComp.h>

@@ -47,6 +47,7 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_Ph3_RLC1VS1_RC_vs_SSN.cpp
 	Circuits/DP_Ph3_R3C1L1CS1_RC_vs_SSN.cpp
 	Circuits/DP_Ph3_R3C1L1CS1_RC_vs_SSN_Fault.cpp
+	Circuits/DP_Ph3_Switch_vs_SeriesSwitch.cpp
 	Circuits/EMT_Ph3_R3C1L1CS1_RC_vs_SSN_Fault.cpp
 
 	# EMT examples with PF initialization
