@@ -115,6 +115,7 @@ void InterfaceVillasQueueless::createSignals() {
     }
     nodeOutputSignals->push_back(std::make_shared<node::Signal>(
         "", "", stdTypeToNodeType(attr->getType())));
+    idx++;
   }
 
   node::SignalList::Ptr nodeInputSignals = mNode->getInputSignals(true);
@@ -218,20 +219,19 @@ Int InterfaceVillasQueueless::readFromVillas() {
   }
   try {
     sample = node::sample_alloc(&mSamplePool);
-    ret = 0;
-    while (ret == 0) {
-      ret = mNode->read(&sample, 1);
-      if (ret < 0) {
-        SPDLOG_LOGGER_ERROR(mLog,
-                            "Fatal error: failed to read sample from "
-                            "InterfaceVillas. Read returned code {}",
-                            ret);
-        close();
-        std::exit(1);
-      } else if (ret == 0) {
-        SPDLOG_LOGGER_WARN(mLog,
-                           "InterfaceVillas read returned 0. Retrying...");
-      }
+    if (sample == nullptr) {
+      SPDLOG_LOGGER_ERROR(mLog, "InterfaceVillas could not allocate a sample!");
+      return mSequenceToDpsim;
+    }
+
+    ret = mNode->read(&sample, 1);
+    if (ret <= 0) {
+      if (ret < 0)
+        SPDLOG_LOGGER_ERROR(mLog, "InterfaceVillas read failed: {}", ret);
+      else
+        SPDLOG_LOGGER_WARN(mLog, "InterfaceVillas read returned 0.");
+      sample_decref(sample);
+      return mSequenceToDpsim;
     }
 
     if (sample->length != mImportAttrsDpsim.size()) {
@@ -269,6 +269,9 @@ Int InterfaceVillasQueueless::readFromVillas() {
         throw RuntimeError("Unsupported attribute type!");
       }
     }
+
+    if (sample->flags & (int)villas::node::SampleFlags::HAS_SEQUENCE)
+      seqnum = sample->sequence;
 
     sample_decref(sample);
   } catch (const std::exception &) {
@@ -355,7 +358,17 @@ void InterfaceVillasQueueless::writeToVillas() {
 }
 
 void InterfaceVillasQueueless::syncImports() {
-  // Block on read until all attributes with syncOnSimulationStart are read
+  // Only block if some import is marked to sync at simulation start.
+  bool needSync = false;
+  for (const auto &attr : mImportAttrsDpsim) {
+    if (std::get<3>(attr)) {
+      needSync = true;
+      break;
+    }
+  }
+  if (!needSync)
+    return;
+
   mSequenceToDpsim = this->readFromVillas();
 }
 
