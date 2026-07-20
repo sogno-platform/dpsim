@@ -49,52 +49,47 @@ public:
   varResSwitch(String name, Logger::Level logLevel = Logger::Level::off)
       : varResSwitch(name, name, logLevel) {}
 
-  // varResSwitch(String name, Real openRes, Real closedRes ,
-  // 		Logger::Level logLevel = Logger::Level::off);
-
-  SimPowerComp<Complex>::Ptr clone(String name);
+  SimPowerComp<Complex>::Ptr clone(String name) override;
 
   // #### General ####
   /// Initializes states from power flow data
-  void initializeFromNodesAndTerminals(Real frequency);
+  void initializeFromNodesAndTerminals(Real frequency) override;
 
   // #### MNA section ####
   /// Initializes MNA specific variables
   void mnaCompInitialize(Real omega, Real timeStep,
-                         Attribute<Matrix>::Ptr leftVector);
-  //void mnaCompInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors);
+                         Attribute<Matrix>::Ptr leftVector) override;
   /// Stamps system matrix
-  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix);
+  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   /// Stamps right side (source) vector
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector);
+  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
   /// Update interface voltage from MNA system results
-  void mnaCompUpdateVoltage(const Matrix &leftVector);
+  void mnaCompUpdateVoltage(const Matrix &leftVector) override;
   /// Update interface current from MNA system results
-  void mnaCompUpdateCurrent(const Matrix &leftVector);
-  /// MNA pre step operations
-  // void mnaCompPreStep(Real time, Int timeStepCount);
+  void mnaCompUpdateCurrent(const Matrix &leftVector) override;
   /// MNA post step operations
   void mnaCompPostStep(Real time, Int timeStepCount,
-                       Attribute<Matrix>::Ptr &leftVector);
-  /// add MNA pre step dependencies
-  /// void mnaCompAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+                       Attribute<Matrix>::Ptr &leftVector) override;
   /// add MNA post step dependencies
   void
   mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
                                  AttributeBase::List &attributeDependencies,
                                  AttributeBase::List &modifiedAttributes,
-                                 Attribute<Matrix>::Ptr &leftVector);
+                                 Attribute<Matrix>::Ptr &leftVector) override;
 
   // #### MNA section for switch ####
   /// Check if switch is closed
-  Bool mnaIsClosed();
+  Bool mnaIsClosed() override;
   /// Stamps system matrix considering the defined switch position
   void mnaCompApplySwitchSystemMatrixStamp(Bool closed,
                                            SparseMatrixRow &systemMatrix,
-                                           Int freqIdx);
+                                           Int freqIdx) override;
+  /// The variable resistance transition cannot be represented completely by
+  /// precomputed open and closed system matrices.
+  Bool supportsPrecomputedSystemMatrices() const override { return false; }
 
   // #### MNA section for variable component ####
-  Bool hasParameterChanged();
+  Bool hasParameterChanged() override;
 };
 } // namespace Ph1
 } // namespace SP

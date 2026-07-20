@@ -34,6 +34,16 @@ public:
 
   enum Behaviour { Initialization, Simulation };
 
+  /// System-matrix recomputation mode for MNA solvers.
+  enum class SystemMatrixRecomputationMode {
+    /// Select the mode automatically based on the system topology.
+    Auto,
+    /// Always enable system-matrix recomputation.
+    Enabled,
+    /// Always disable system-matrix recomputation.
+    Disabled
+  };
+
 protected:
   /// Name for logging
   String mName;
@@ -60,8 +70,11 @@ protected:
   /// Activates powerflow initialization
   /// If this is false, all voltages are initialized with zero
   Bool mInitFromNodesAndTerminals = true;
-  /// Enable recomputation of system matrix during simulation
-  Bool mSystemMatrixRecomputation = false;
+  /// Requested system-matrix recomputation mode.
+  SystemMatrixRecomputationMode mSystemMatrixRecomputationMode =
+      SystemMatrixRecomputationMode::Auto;
+  /// Effective system-matrix recomputation setting used by the solver.
+  Bool mSystemMatrixRecomputationEnabled = false;
 
   /// Solver behaviour initialization or simulation
   Behaviour mBehaviour = Solver::Behaviour::Simulation;
@@ -86,9 +99,16 @@ public:
   }
   ///
   virtual void setSystem(const CPS::SystemTopology &system) {}
-  ///
+  /// Set the system-matrix recomputation mode.
+  void setSystemMatrixRecomputationMode(SystemMatrixRecomputationMode mode) {
+    mSystemMatrixRecomputationMode = mode;
+  }
+  /// DEPRECATED: Enable or disable system-matrix recomputation explicitly.
+  /// This compatibility method maps true to Enabled and false to Disabled.
   void doSystemMatrixRecomputation(Bool value) {
-    mSystemMatrixRecomputation = value;
+    setSystemMatrixRecomputationMode(
+        value ? SystemMatrixRecomputationMode::Enabled
+              : SystemMatrixRecomputationMode::Disabled);
   }
 
   void setLogSolveTimes(Bool value) { mLogSolveTimes = value; }

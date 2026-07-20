@@ -102,7 +102,7 @@ protected:
   using MnaSolver<VarType>::mLeftSideVectorHarm;
   using MnaSolver<VarType>::mFrequencyParallel;
   using MnaSolver<VarType>::mSLog;
-  using MnaSolver<VarType>::mSystemMatrixRecomputation;
+  using MnaSolver<VarType>::mSystemMatrixRecomputationEnabled;
   using MnaSolver<VarType>::hasVariableComponentChanged;
   using MnaSolver<VarType>::mNumRecomputations;
   using MnaSolver<VarType>::mSyncGen;

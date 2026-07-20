@@ -146,6 +146,8 @@ protected:
   void initializeStateSpaceExtractor();
   /// Identify Nodes and SimPowerComps and SimSignalComps
   void identifyTopologyObjects();
+  /// Resolve the requested system-matrix recomputation mode.
+  void resolveSystemMatrixRecomputationMode();
   /// Assign simulation node index according to index in the vector.
   void assignMatrixNodeIndices();
   /// Collects virtual nodes inside components.
@@ -212,7 +214,7 @@ public:
 
   /// Destructor
   virtual ~MnaSolver() {
-    if (mSystemMatrixRecomputation)
+    if (mSystemMatrixRecomputationEnabled)
       SPDLOG_LOGGER_INFO(mSLog, "Number of system matrix recomputations: {:}",
                          mNumRecomputations);
   };

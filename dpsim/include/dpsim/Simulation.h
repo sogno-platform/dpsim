@@ -116,8 +116,9 @@ protected:
   DirectLinearSolverConfiguration mDirectLinearSolverConfiguration;
   ///
   Bool mInitFromNodesAndTerminals = true;
-  /// Enable recomputation of system matrix during simulation
-  Bool mSystemMatrixRecomputation = false;
+  /// Requested system-matrix recomputation mode.
+  Solver::SystemMatrixRecomputationMode mSystemMatrixRecomputationMode =
+      Solver::SystemMatrixRecomputationMode::Auto;
   /// Enable extraction of the MNA-coupled discrete-time state matrix.
   Bool mStateSpaceExtraction = false;
 
@@ -235,9 +236,17 @@ public:
   }
   /// Compute phasors of different frequencies in parallel
   void doFrequencyParallelization(Bool value) { mFreqParallel = value; }
-  ///
+  /// Set the system-matrix recomputation mode.
+  void
+  setSystemMatrixRecomputationMode(Solver::SystemMatrixRecomputationMode mode) {
+    mSystemMatrixRecomputationMode = mode;
+  }
+  /// DEPRECATED: Enable or disable system-matrix recomputation explicitly.
+  /// This compatibility method maps true to Enabled and false to Disabled.
   void doSystemMatrixRecomputation(Bool value) {
-    mSystemMatrixRecomputation = value;
+    setSystemMatrixRecomputationMode(
+        value ? Solver::SystemMatrixRecomputationMode::Enabled
+              : Solver::SystemMatrixRecomputationMode::Disabled);
   }
   /// Enable extraction of the MNA-coupled discrete-time state matrix.
   void doStateSpaceExtraction(Bool value = true) {
