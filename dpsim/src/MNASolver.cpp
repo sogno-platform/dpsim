@@ -82,6 +82,12 @@ template <typename VarType> void MnaSolver<VarType>::initialize() {
   // ground nodes should be ignored.
   identifyTopologyObjects();
   resolveSystemMatrixRecomputationMode();
+
+  if (mFrequencyParallel && mSystemMatrixRecomputationEnabled) {
+    throw CPS::SystemError("System-matrix recomputation is not supported with "
+                           "frequency-parallel MNA.");
+  }
+
   // Ensure all subcomponents (and their virtual nodes) are registered before
   // collectVirtualNodes() sizes the system matrices. Recurses into nested
   // sub-components so e.g. SST -> Load -> {R, L, C} is fully created.

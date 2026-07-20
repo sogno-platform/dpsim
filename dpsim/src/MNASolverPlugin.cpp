@@ -75,9 +75,8 @@ template <typename VarType> void MnaSolverPlugin<VarType>::initialize() {
   std::vector<SparseMatrix> hMat;
   int nnz = 0;
   if (this->mSystemMatrixRecomputationEnabled) {
-    SPDLOG_LOGGER_ERROR(this->mSLog,
-                        "System matrix recomputation not supported");
-    return;
+    throw CPS::SystemError(
+        "System-matrix recomputation is not supported by MNA solver plugins.");
   } else {
     hMat = this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)];
     nnz = hMat[0].nonZeros();
