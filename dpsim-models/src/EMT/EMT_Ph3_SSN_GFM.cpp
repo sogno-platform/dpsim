@@ -694,7 +694,13 @@ void EMT::Ph3::SSN_GFM::initializeFromNodesAndTerminals(Real frequency) {
   const Matrix iGridAbc0 = iInjectionPhasor.real();
   const Matrix converterVoltageAbc0 = converterVoltagePhasor.real();
 
-  const Real theta0 = std::arg(vcPhasor(0, 0));
+  // Align the dq frame with the internal EMF behind the virtual impedance,
+  // E0 = vc + (Rv + jXv)*if. At the operating point the voltage-loop reference
+  // is E0 in dq, so aligning to it makes both loop errors vanish (true
+  // equilibrium) even for nonzero Zv. Zv = 0 reduces to aligning with vc.
+  const Complex virtualImpedance(mVirtualResistance, mVirtualReactance);
+  const MatrixComp emfPhasor = vcPhasor + virtualImpedance * ifPhasor;
+  const Real theta0 = std::arg(emfPhasor(0, 0));
 
   const Matrix parkTransform = getParkTransformMatrix(theta0);
 
@@ -716,8 +722,6 @@ void EMT::Ph3::SSN_GFM::initializeFromNodesAndTerminals(Real frequency) {
 
   const Real qInitial = 1.5 * (vcQ0 * iGridD0 - vcD0 * iGridQ0);
 
-  const Real voltageMagnitudeInitial = std::sqrt(vcD0 * vcD0 + vcQ0 * vcQ0);
-
   const Real iCapD0 = ifD0 - iGridD0;
   const Real iCapQ0 = ifQ0 - iGridQ0;
 
@@ -729,16 +733,22 @@ void EMT::Ph3::SSN_GFM::initializeFromNodesAndTerminals(Real frequency) {
   x0(Omega, 0) = omegaInitialization;
   x0(Theta, 0) = theta0;
 
-  // Virtual-impedance drop off filter current if (as at runtime), not iGrid.
-  const Real virtualDropD0 =
-      mVirtualResistance * ifD0 - mVirtualReactance * ifQ0;
-  const Real virtualReferenceQ0 =
-      -(mVirtualResistance * ifQ0 + mVirtualReactance * ifD0);
-  x0(VoltageMagnitude, 0) = voltageMagnitudeInitial + virtualDropD0;
+  // Internal EMF magnitude behind the virtual impedance (d-axis aligned).
+  x0(VoltageMagnitude, 0) = std::abs(emfPhasor(0, 0));
 
   // Proportional-droop setpoint: the operating EMF, so the droop is centered at
   // the initial point (E_dot = 0 when Qf = Qref at t = 0).
   mVoltageSetpoint = x0(VoltageMagnitude, 0);
+
+  // Voltage-loop references at the operating point, same form as
+  // evaluateStateDerivative(). With the E0-aligned frame both errors are ~0.
+  const Real voltageReferenceD0 =
+      x0(VoltageMagnitude, 0) -
+      (mVirtualResistance * ifD0 - mVirtualReactance * ifQ0);
+  const Real voltageReferenceQ0 =
+      -(mVirtualResistance * ifQ0 + mVirtualReactance * ifD0);
+  const Real voltageErrorD0 = voltageReferenceD0 - vcD0;
+  const Real voltageErrorQ0 = voltageReferenceQ0 - vcQ0;
 
   // Voltage controller:
   //
@@ -748,10 +758,10 @@ void EMT::Ph3::SSN_GFM::initializeFromNodesAndTerminals(Real frequency) {
   //     + KiV*xiVd
   //
   // Set iRefD = ifD and solve for xiVd.
-  x0(VoltageIntegratorD, 0) = (ifD0 - mGridCurrentFeedforward * iGridD0 +
-                               omegaInitialization * mCf * vcQ0 -
-                               mKpVoltage * (voltageMagnitudeInitial - vcD0)) /
-                              mKiVoltage;
+  x0(VoltageIntegratorD, 0) =
+      (ifD0 - mGridCurrentFeedforward * iGridD0 +
+       omegaInitialization * mCf * vcQ0 - mKpVoltage * voltageErrorD0) /
+      mKiVoltage;
 
   // iRefQ =
   //     iGridQ + omega*Cf*vcD
@@ -759,10 +769,10 @@ void EMT::Ph3::SSN_GFM::initializeFromNodesAndTerminals(Real frequency) {
   //     + KiV*xiVq
   //
   // Set iRefQ = ifQ and solve for xiVq.
-  x0(VoltageIntegratorQ, 0) = (ifQ0 - mGridCurrentFeedforward * iGridQ0 -
-                               omegaInitialization * mCf * vcD0 -
-                               mKpVoltage * (virtualReferenceQ0 - vcQ0)) /
-                              mKiVoltage;
+  x0(VoltageIntegratorQ, 0) =
+      (ifQ0 - mGridCurrentFeedforward * iGridQ0 -
+       omegaInitialization * mCf * vcD0 - mKpVoltage * voltageErrorQ0) /
+      mKiVoltage;
 
   // Current controller steady-state integrators.
   //
