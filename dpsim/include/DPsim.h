@@ -16,6 +16,10 @@
 #include <dpsim/RealTimeSimulation.h>
 #endif
 
+#ifdef WITH_RT
+#include <dpsim/InterfaceCosimSync.h>
+#endif
+
 #include <dpsim-models/Components.h>
 #include <dpsim-models/Logger.h>
 
