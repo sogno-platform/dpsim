@@ -121,6 +121,10 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a008cb55a3259abba4d234d7eeb9cb497"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b14583d157475ffbdba9a701a1104b9" id="r_a1b14583d157475ffbdba9a701a1104b9"><td class="memItemLeft" align="right" valign="top">static Complex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1b14583d157475ffbdba9a701a1104b9">polarDeg</a> (Real abs, Real phase)</td></tr>
 <tr class="separator:a1b14583d157475ffbdba9a701a1104b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7aee9bf67780737a250b591ec9a978c5" id="r_a7aee9bf67780737a250b591ec9a978c5"><td class="memTemplParams" colspan="2">template&lt;typename DerivedA, typename DerivedB&gt; </td></tr>
+<tr class="memitem:a7aee9bf67780737a250b591ec9a978c5"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a7aee9bf67780737a250b591ec9a978c5">elementwiseProduct</a> (const Eigen::MatrixBase&lt; DerivedA &gt; &amp;a, const Eigen::MatrixBase&lt; DerivedB &gt; &amp;b)</td></tr>
+<tr class="memdesc:a7aee9bf67780737a250b591ec9a978c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Elementwise product of two same-shaped Eigen expressions.  <br /></td></tr>
+<tr class="separator:a7aee9bf67780737a250b591ec9a978c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acec5cd79d3c43a7fce3b065a987fba44" id="r_acec5cd79d3c43a7fce3b065a987fba44"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acec5cd79d3c43a7fce3b065a987fba44">isFinite</a> (Real value)</td></tr>
 <tr class="separator:acec5cd79d3c43a7fce3b065a987fba44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5655797beb8514b5a14758ef2f8bc646" id="r_a5655797beb8514b5a14758ef2f8bc646"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5655797beb8514b5a14758ef2f8bc646">isFinite</a> (Complex value)</td></tr>
@@ -811,6 +815,41 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="_math_utils_8cpp_source.html#l00019">19</a> of file <a class="el" href="_math_utils_8cpp_source.html">MathUtils.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a7aee9bf67780737a250b591ec9a978c5" name="a7aee9bf67780737a250b591ec9a978c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7aee9bf67780737a250b591ec9a978c5">&#9670;&#160;</a></span>elementwiseProduct()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DerivedA, typename DerivedB&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static auto CPS::Math::elementwiseProduct </td>
+          <td>(</td>
+          <td class="paramtype">const Eigen::MatrixBase&lt; DerivedA &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Eigen::MatrixBase&lt; DerivedB &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Elementwise product of two same-shaped Eigen expressions. </p>
+
+<p class="definition">Definition at line <a class="el" href="_math_utils_8h_source.html#l00039">39</a> of file <a class="el" href="_math_utils_8h_source.html">MathUtils.h</a>.</p>
 
 </div>
 </div>
