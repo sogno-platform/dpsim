@@ -167,6 +167,7 @@ public:
   Matrix getStateDerivative() const;
   Matrix getInterfaceVoltage() const;
   Matrix getInterfaceCurrent() const;
+  std::vector<String> getStateNames() const { return getLocalStateNames(); }
 };
 
 } // namespace Ph3
