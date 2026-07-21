@@ -198,7 +198,7 @@ public:
                                            Real absoluteStep);
 
   /// \brief Opt-in virtual output impedance Zv = Rv + jXv, subtracted from the
-  /// EMF reference across the grid current. Zero (default) is the islanded
+  /// EMF reference across the filter current. Zero (default) is the islanded
   /// model; a finite Rv/Xv damps the power-synchronization loop on a grid.
   void setVirtualImpedance(Real virtualResistance, Real virtualReactance = 0.0);
 
