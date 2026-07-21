@@ -731,7 +731,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "damper_inductance_q1"_a, "damper_inductance_q2"_a,
            "rotor_inertia"_a, "mechanical_damping"_a, "field_voltage"_a,
            "mechanical_torque"_a, "initial_electrical_angle"_a = 0.0,
-           "auto_initialize_mechanical_torque"_a = true)
+           py::arg("auto_initialize_mechanical_torque") = true)
       .def("set_field_voltage",
            &CPS::EMT::Ph3::SSN_SynchronousGenerator::setFieldVoltage,
            "field_voltage"_a)
