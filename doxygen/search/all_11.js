@@ -234,7 +234,7 @@ var searchData=
   ['state_231',['state',['../class_d_psim_1_1_d_a_e_solver.html#a1bf8f9d55bfaac779b39d141a06e53b6',1,'DPsim::DAESolver']]],
   ['state_5fvector_232',['state_vector',['../class_c_p_s_1_1_o_d_eint_interface.html#ac12528917bb76c888581782459586d21',1,'CPS::ODEintInterface']]],
   ['statenames_233',['stateNames',['../struct_d_psim_1_1_state_space_metadata.html#a3927751c6535b5cdff10339cc0ef7f86',1,'DPsim::StateSpaceMetadata']]],
-  ['statesize_234',['stateSize',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_mixed_v_type_variable_s_s_n_comp.html#a76d46a28a10c00eeda797e6933a71d37',1,'CPS::DP::Ph1::MixedVTypeVariableSSNComp']]],
+  ['statesize_234',['stateSize',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_mixed_v_type_variable_s_s_n_comp.html#a76d46a28a10c00eeda797e6933a71d37',1,'CPS::DP::Ph1::MixedVTypeVariableSSNComp::stateSize()'],['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#a654ba3d75efbc1e1dc721717a0016983',1,'CPS::DP::Ph3::MixedVTypeVariableSSNComp::stateSize()']]],
   ['statespaceabcstateblock_235',['StateSpaceAbcStateBlock',['../struct_d_psim_1_1_state_space_abc_state_block.html',1,'DPsim']]],
   ['statespaceextractiontask_236',['StateSpaceExtractionTask',['../class_d_psim_1_1_mna_solver_direct_1_1_state_space_extraction_task.html',1,'DPsim::MnaSolverDirect']]],
   ['statespacemetadata_237',['StateSpaceMetadata',['../struct_d_psim_1_1_state_space_metadata.html',1,'DPsim']]],
