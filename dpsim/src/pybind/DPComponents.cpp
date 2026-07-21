@@ -612,6 +612,19 @@ void addDPPh3Components(py::module_ mDPPh3) {
       .def("close", &CPS::DP::Ph3::SeriesSwitch::close)
       .def("connect", &CPS::DP::Ph3::SeriesSwitch::connect);
 
+  py::class_<CPS::DP::Ph3::Switch, std::shared_ptr<CPS::DP::Ph3::Switch>,
+             CPS::SimPowerComp<CPS::Complex>, CPS::Base::Ph3::Switch>(
+      mDPPh3, "Switch", py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::DP::Ph3::Switch::setParameters,
+           "open_resistance"_a, "closed_resistance"_a,
+           // cppcheck-suppress assignBoolToPointer
+           "closed"_a = false)
+      .def("open", &CPS::DP::Ph3::Switch::openSwitch)
+      .def("close", &CPS::DP::Ph3::Switch::closeSwitch)
+      .def("connect", &CPS::DP::Ph3::Switch::connect);
+
   py::class_<CPS::DP::Ph3::SSN::Full_Serial_RLC,
              std::shared_ptr<CPS::DP::Ph3::SSN::Full_Serial_RLC>,
              CPS::SimPowerComp<CPS::Complex>>(mDPPh3, "Full_Serial_RLC",
