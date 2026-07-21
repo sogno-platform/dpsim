@@ -47,7 +47,7 @@
   </g>
 </defs>
 <script type="application/ecmascript">
-var viewWidth = 1135;
+var viewWidth = 1316;
 var viewHeight = 178;
 var sectionId = 'dynsection-0';
 </script>
@@ -62,6 +62,25 @@ var sectionId = 'dynsection-0';
 <polygon fill="#999999" stroke="#666666" points="1126.5,-97.5 986.75,-97.5 986.75,-61 1126.5,-61 1126.5,-97.5"/>
 <text text-anchor="start" x="994.75" y="-84" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph3::MixedVType</text>
 <text text-anchor="middle" x="1056.62" y="-69.75" font-family="Helvetica,sans-Serif" font-size="10.00">VariableSSNComp</text>
+</a>
+</g>
+</g>
+<!-- Node11 -->
+<g id="Node000011" class="node">
+<title>Node11</title>
+<g id="a_Node000011"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html" target="_top" xlink:title="Averaged grid&#45;following VSI SSN port of EMT::Ph3::AvVoltSourceInverterStateSpace: 8 real control stat...">
+<polygon fill="white" stroke="#666666" points="1307.75,-97.5 1163.5,-97.5 1163.5,-61 1307.75,-61 1307.75,-97.5"/>
+<text text-anchor="start" x="1171.5" y="-84" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph3::AvVoltSource</text>
+<text text-anchor="middle" x="1235.62" y="-69.75" font-family="Helvetica,sans-Serif" font-size="10.00">InverterStateSpace</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node11 -->
+<g id="edge13_Node000001_Node000011" class="edge">
+<title>Node1&#45;&gt;Node11</title>
+<g id="a_edge13_Node000001_Node000011"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1138.11,-79.25C1146.46,-79.25 1154.91,-79.25 1163.15,-79.25"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1138.33,-75.75 1128.33,-79.25 1138.33,-82.75 1138.33,-75.75"/>
 </a>
 </g>
 </g>

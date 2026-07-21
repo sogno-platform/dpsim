@@ -409,9 +409,8 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:aa81557e2aa4aa80298ea62ee1bc703f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad94e88553df697a8851d203a42c78751" id="r_ad94e88553df697a8851d203a42c78751"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad94e88553df697a8851d203a42c78751">updateLogAttributes</a> (const Matrix &amp;u) const</td></tr>
 <tr class="separator:ad94e88553df697a8851d203a42c78751"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a0f2b754f69d231d620e6b76cc2dce9" id="r_a4a0f2b754f69d231d620e6b76cc2dce9"><td class="memItemLeft" align="right" valign="top"><a id="a4a0f2b754f69d231d620e6b76cc2dce9" name="a4a0f2b754f69d231d620e6b76cc2dce9"></a>
-virtual Bool&#160;</td><td class="memItemRight" valign="bottom"><b>updateComponentParameters</b> ()=0</td></tr>
-<tr class="memdesc:a4a0f2b754f69d231d620e6b76cc2dce9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rebuild A/B/C/D/E/F from the current state/input; returns true if the stamp changed. <br /></td></tr>
+<tr class="memitem:a4a0f2b754f69d231d620e6b76cc2dce9" id="r_a4a0f2b754f69d231d620e6b76cc2dce9"><td class="memItemLeft" align="right" valign="top">virtual Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4a0f2b754f69d231d620e6b76cc2dce9">updateComponentParameters</a> ()=0</td></tr>
+<tr class="memdesc:a4a0f2b754f69d231d620e6b76cc2dce9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rebuild A/B/C/D/E/F from the current state/input; returns true if the stamp changed.  <br /></td></tr>
 <tr class="separator:a4a0f2b754f69d231d620e6b76cc2dce9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abdb55c45e41d1c74fd38fc073f3d762a" id="r_abdb55c45e41d1c74fd38fc073f3d762a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abdb55c45e41d1c74fd38fc073f3d762a">updateStateSpaceModel</a> ()</td></tr>
 <tr class="separator:abdb55c45e41d1c74fd38fc073f3d762a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1529,6 +1528,35 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a4a0f2b754f69d231d620e6b76cc2dce9" name="a4a0f2b754f69d231d620e6b76cc2dce9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a0f2b754f69d231d620e6b76cc2dce9">&#9670;&#160;</a></span>updateComponentParameters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual Bool CPS::DP::Ph3::MixedVTypeVariableSSNComp::updateComponentParameters </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Rebuild A/B/C/D/E/F from the current state/input; returns true if the stamp changed. </p>
+
+<p>Implemented in <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#ad4ea7087af7a80a90399735972b760e6">CPS::DP::Ph3::AvVoltSourceInverterStateSpace</a>.</p>
+
+</div>
+</div>
 <a id="ad94e88553df697a8851d203a42c78751" name="ad94e88553df697a8851d203a42c78751"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad94e88553df697a8851d203a42c78751">&#9670;&#160;</a></span>updateLogAttributes()</h2>
 
@@ -1552,6 +1580,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>Update derived attributes used for logging/inspection; called once per step after the state update. Empty by default, override in derived components (mirrors <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a310a4a96c67380d3a583f21389e03be9" title="Update derived attributes used for logging/inspection.">EMT::SSNComp::updateLogAttributes</a>). </p>
+
+<p>Reimplemented in <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a7589ffb897e6275fa06979f3d90b284e">CPS::DP::Ph3::AvVoltSourceInverterStateSpace</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="_d_p___ph3___mixed_v_type_variable_s_s_n_comp_8cpp_source.html#l00203">203</a> of file <a class="el" href="_d_p___ph3___mixed_v_type_variable_s_s_n_comp_8cpp_source.html">DP_Ph3_MixedVTypeVariableSSNComp.cpp</a>.</p>
 
