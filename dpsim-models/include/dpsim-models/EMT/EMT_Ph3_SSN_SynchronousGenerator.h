@@ -125,7 +125,7 @@ protected:
   Bool updateComponentParameters() override;
 
   std::vector<String> getLocalStateNames() const override;
-  void updateLogAttributes(const Matrix &u) const;
+  void updateLogAttributes(const Matrix &u) const override;
 
 public:
   SSN_SynchronousGenerator(String uid, String name,
