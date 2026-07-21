@@ -13,7 +13,7 @@ using namespace CPS;
 DP::Ph3::VoltageSource::VoltageSource(String uid, String name,
                                       Logger::Level logLevel)
     : MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
-      mVoltageRef(mAttributes->create<MatrixComp>("V_ref")),
+      mVoltageRef(mAttributes->createDynamic<MatrixComp>("V_ref")),
       mSrcFreq(mAttributes->createDynamic<Real>("f_src")) {
   mPhaseType = PhaseType::ABC;
   setVirtualNodeNumber(1);
