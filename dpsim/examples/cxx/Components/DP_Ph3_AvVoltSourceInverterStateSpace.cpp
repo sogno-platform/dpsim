@@ -134,6 +134,8 @@ private:
     logger->logAttribute("i_fault", fault->attribute("i_intf"));
     logger->logAttribute("vc_d", inverter->attribute("vc_d"));
     logger->logAttribute("vc_q", inverter->attribute("vc_q"));
+    logger->logAttribute("irc_n_d", inverter->attribute("irc_n_d"));
+    logger->logAttribute("irc_n_q", inverter->attribute("irc_n_q"));
     logger->logAttribute("p_inst", inverter->attribute("p_inst"));
     logger->logAttribute("q_inst", inverter->attribute("q_inst"));
     logger->logAttribute("omega_pll", inverter->attribute("omega_pll"));

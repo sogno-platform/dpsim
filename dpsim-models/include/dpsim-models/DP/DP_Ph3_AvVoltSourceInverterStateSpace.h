@@ -9,7 +9,7 @@ namespace CPS {
 namespace DP {
 namespace Ph3 {
 
-/// Averaged grid-following VSI SSN port of EMT::Ph3::AvVoltSourceInverterStateSpace: 8 real control states (single PLL, single positive-sequence dq frame) plus 6 complex per-phase envelope states (Vc_a/b/c, If_a/b/c).
+/// Averaged grid-following VSI SSN port of EMT::Ph3::AvVoltSourceInverterStateSpace: 10 real control states (single PLL, positive-sequence dq frame plus a negative-sequence current-control loop, gamma_nd/gamma_nq) plus 6 complex per-phase envelope states (Vc_a/b/c, If_a/b/c).
 class AvVoltSourceInverterStateSpace final
     : public MixedVTypeVariableSSNComp,
       public SharedFactory<AvVoltSourceInverterStateSpace> {
@@ -23,18 +23,20 @@ private:
     PhiQ = 5,
     GammaD = 6,
     GammaQ = 7,
-    VcARe = 8,
-    VcAIm = 9,
-    VcBRe = 10,
-    VcBIm = 11,
-    VcCRe = 12,
-    VcCIm = 13,
-    IfARe = 14,
-    IfAIm = 15,
-    IfBRe = 16,
-    IfBIm = 17,
-    IfCRe = 18,
-    IfCIm = 19
+    GammaND = 8,
+    GammaNQ = 9,
+    VcARe = 10,
+    VcAIm = 11,
+    VcBRe = 12,
+    VcBIm = 13,
+    VcCRe = 14,
+    VcCIm = 15,
+    IfARe = 16,
+    IfAIm = 17,
+    IfBRe = 18,
+    IfBIm = 19,
+    IfCRe = 20,
+    IfCIm = 21
   };
 
   static constexpr Int mVcReCol[3] = {VcARe, VcBRe, VcCRe};
@@ -61,6 +63,11 @@ private:
   Real mKpCurrCtrl;
   Real mKiCurrCtrl;
 
+  /// Negative-sequence d-axis current reference; zero (default) = negative-sequence suppression.
+  Real mIRefNd;
+  /// Negative-sequence q-axis current reference; zero (default) = negative-sequence suppression.
+  Real mIRefNq;
+
   const Attribute<Real>::Ptr mVcD;
   const Attribute<Real>::Ptr mVcQ;
   const Attribute<Real>::Ptr mIrcD;
@@ -68,6 +75,8 @@ private:
   const Attribute<Real>::Ptr mPInst;
   const Attribute<Real>::Ptr mQInst;
   const Attribute<Real>::Ptr mOmegaPLL;
+  const Attribute<Real>::Ptr mIrcNd;
+  const Attribute<Real>::Ptr mIrcNq;
 
   /// Builds the affine real model (A,B,C,D,E,F) around (x,u): RHS + analytic Jacobian, E = f(x,u) - A*x - B*u.
   void buildStateSpaceModel(const Matrix &x, const Matrix &u, Matrix &A,
@@ -90,7 +99,8 @@ public:
   void setParameters(Real lf, Real cf, Real rf, Real rc, Real omegaN,
                      Real kpPLL, Real kiPLL, Real omegaCutoff, Real pRef,
                      Real qRef, Real kpPowerCtrl, Real kiPowerCtrl,
-                     Real kpCurrCtrl, Real kiCurrCtrl);
+                     Real kpCurrCtrl, Real kiCurrCtrl, Real iRefNd = 0.0,
+                     Real iRefNq = 0.0);
 
   void initializeFromNodesAndTerminals(Real frequency) override;
 };
