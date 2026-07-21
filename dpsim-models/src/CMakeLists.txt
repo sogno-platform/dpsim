@@ -81,6 +81,7 @@ list(APPEND MODELS_SOURCES
 
 	DP/DP_Ph3_TwoTerminalVTypeSSNComp.cpp
 	DP/DP_Ph3_MixedVTypeVariableSSNComp.cpp
+	DP/DP_Ph3_AvVoltSourceInverterStateSpace.cpp
 	DP/DP_Ph3_TwoTerminalITypeSSNComp.cpp
 	DP/DP_Ph3_SSN_Full_Serial_RLC.cpp
 	DP/DP_Ph3_GenericTwoTerminalVTypeSSN.cpp

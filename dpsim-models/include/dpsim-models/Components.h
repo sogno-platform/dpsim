@@ -88,6 +88,7 @@
 #include <dpsim-models/DP/DP_SSNComp.h>
 #include <dpsim-models/DP/DP_VTypeSSNComp.h>
 
+#include <dpsim-models/DP/DP_Ph3_AvVoltSourceInverterStateSpace.h>
 #include <dpsim-models/DP/DP_Ph3_Capacitor.h>
 #include <dpsim-models/DP/DP_Ph3_CurrentSource.h>
 #include <dpsim-models/DP/DP_Ph3_GenericTwoTerminalITypeSSN.h>
