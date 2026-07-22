@@ -404,9 +404,9 @@ which is then discretized and stamped into the DP MNA system.
 
 # Three-Phase Averaged Voltage Source Inverter with State-Space Nodal Interface (Dynamic Phasor)
 
-The `DP::Ph3::AvVoltSourceInverterStateSpace` model ports the same grid-following averaged inverter into the three-phase dynamic-phasor (DP) domain.
-It carries an independent complex envelope per phase for the LC filter, $V_{c,a/b/c}$ and $I_{f,a/b/c}$, instead of the single positive-sequence envelope used by `DP::Ph1`, while the controller keeps a single positive-sequence dq frame shared by the PLL, power filter, and outer/inner control.
-As in `DP::Ph1`, the control states are baseband and stay real; only the six per-phase filter envelopes are genuine carrier-band quantities and each carries the $-j\omega_n$ shift described in [State-Space Nodal]({{< ref "state-space-nodal.md" >}}).
+The `DP::Ph3::AvVoltSourceInverterStateSpace` model extends the grid-following averaged inverter of `DP::Ph1` to the three-phase dynamic-phasor (DP) domain.
+Each phase of the LC filter is represented by an independent complex envelope, $V_{c,a/b/c}$ and $I_{f,a/b/c}$, in contrast to the single positive-sequence envelope employed by `DP::Ph1`, whereas the controller retains a single positive-sequence $dq$ frame shared by the PLL, the power filter, and the outer and inner control loops.
+As in `DP::Ph1`, the control states are baseband quantities and remain real-valued; only the six per-phase filter envelopes are carrier-band quantities, and each carries the $-j\omega_n$ frequency shift introduced in [State-Space Nodal]({{< ref "state-space-nodal.md" >}}).
 
 The terminal input is the PCC voltage envelope of the three phases,
 
@@ -414,7 +414,7 @@ The terminal input is the PCC voltage envelope of the three phases,
 u = \begin{bmatrix} U_a & U_b & U_c \end{bmatrix}^\top ,
 ```
 
-and the state vector packs the 8 real control states ahead of the 6 complex per-phase envelopes,
+and the state vector concatenates the 8 real control states ahead of the 6 complex per-phase envelopes,
 
 ```math
 \mathbf{x} =
@@ -436,7 +436,7 @@ I_{f,c}
 \,\big]^\top ,
 ```
 
-where $\psi := \theta_{\mathrm{PLL}} - \omega_n t$ is again the PLL angle's deviation from the nominal carrier phase, tracked for relinearization accuracy, and each per-phase envelope contributes its real and imaginary parts to the packed real vector, giving 20 real states in total.
+where $\psi := \theta_{\mathrm{PLL}} - \omega_n t$ again denotes the deviation of the PLL angle from the nominal carrier phase, retained as a state to preserve relinearization accuracy. Each per-phase envelope contributes its real and imaginary parts to the packed real vector, yielding 20 real states in total.
 
 The model output is the per-phase interface current injected into the MNA system,
 
@@ -446,16 +446,16 @@ y_p = \frac{U_p - V_{c,p}}{R_c}, \qquad p \in \{a, b, c\}.
 
 ## Model equations
 
-The genuinely new algebra relative to `DP::Ph1` is the per-phase projection onto, and redistribution from, the single positive-sequence dq control frame.
-The three capacitor-voltage envelopes are collapsed to one positive-sequence phasor,
+The main extension relative to `DP::Ph1` is the per-phase projection onto, and redistribution from, the single positive-sequence $dq$ control frame.
+The three capacitor-voltage envelopes are projected onto a single positive-sequence phasor,
 
 ```math
 \underline{V}_c = V_{c,a} + a\, V_{c,b} + a^2 V_{c,c},
 \qquad a = e^{\,j 2\pi/3},
 ```
 
-and the PCC input $\underline{U}$ is projected the same way, so the controller's coupling current envelope is $\underline{I}_{rc} = (\underline{V}_c - \underline{U})/R_c$, again with positive current denoting inverter injection into the grid.
-The dq quantities follow by rotating the projected envelopes by $\psi$ alone,
+and the PCC input $\underline{U}$ is projected identically, so that the coupling-current envelope seen by the controller is $\underline{I}_{rc} = (\underline{V}_c - \underline{U})/R_c$, with positive current again denoting injection from the inverter into the grid.
+The $dq$ quantities are obtained by rotating the projected envelopes by $\psi$,
 
 ```math
 V_{c,dq} = \tfrac{1}{2}\sqrt{\tfrac{2}{3}}\, e^{-j\psi}\, \underline{V}_c,
@@ -463,10 +463,10 @@ V_{c,dq} = \tfrac{1}{2}\sqrt{\tfrac{2}{3}}\, e^{-j\psi}\, \underline{V}_c,
 I_{rc,dq} = \tfrac{1}{2}\sqrt{\tfrac{2}{3}}\, e^{-j\psi}\, \underline{I}_{rc},
 ```
 
-with $v_{c,d} = \operatorname{Re}\{V_{c,dq}\}$, $v_{c,q} = \operatorname{Im}\{V_{c,dq}\}$, and likewise for $i_{rc,d}$, $i_{rc,q}$.
-Together, the $1\times 3$ projection, the scalar dq rotation, and the $3\times 1$ redistribution below form a rank-one $3\times 3$ Park map on the envelope triple; under balanced operation it reduces to the `DP::Ph1` single-envelope relation.
+with $v_{c,d} = \operatorname{Re}\{V_{c,dq}\}$, $v_{c,q} = \operatorname{Im}\{V_{c,dq}\}$, and analogously for $i_{rc,d}$ and $i_{rc,q}$.
+Taken together, the $1\times 3$ projection, the scalar $dq$ rotation, and the $3\times 1$ redistribution defined below constitute a rank-one $3\times 3$ Park mapping on the envelope triple, which reduces to the single-envelope relation of `DP::Ph1` under balanced operation.
 
-The instantaneous active and reactive powers are
+The positive-sequence active and reactive power measurements used by the controller are
 
 ```math
 p = v_{c,d} i_{rc,d} + v_{c,q} i_{rc,q},
@@ -474,9 +474,9 @@ p = v_{c,d} i_{rc,d} + v_{c,q} i_{rc,q},
 q = -v_{c,d} i_{rc,q} + v_{c,q} i_{rc,d},
 ```
 
-with the projection scaling chosen so that $p$ and $q$ are the total three-phase active and reactive powers seen by the single-frame controller.
+with the projection scaling chosen so that $p$ and $q$ match the total three-phase active and reactive powers under balanced operation; under unbalanced operation they are the positive-sequence components seen by the single-frame controller.
 
-Everything from the PLL through the inner current control is identical in form to `DP::Ph1`, operating on the single positive-sequence dq pair. The PLL and power-filter dynamics are
+The control chain from the PLL through the inner current loop is identical in form to that of `DP::Ph1` and operates on the single positive-sequence $dq$ pair. The PLL and power-filter dynamics read
 
 ```math
 \dot{\psi}
@@ -531,7 +531,7 @@ K_{p,I}(i_{q,\mathrm{ref}} - i_{rc,q}) +
 K_{i,I}\gamma_q.
 ```
 
-The single dq voltage reference $V_{\mathrm{ref},dq} = v_{d,\mathrm{ref}} + j v_{q,\mathrm{ref}}$ is redistributed back to a per-phase bridge-voltage envelope by the inverse projection,
+The single $dq$ voltage reference $V_{\mathrm{ref},dq} = v_{d,\mathrm{ref}} + j v_{q,\mathrm{ref}}$ is redistributed to the per-phase bridge-voltage envelopes through the inverse projection,
 
 ```math
 V_{\mathrm{ref},p} = \bar{a}_p \sqrt{\tfrac{2}{3}}\, V_{\mathrm{ref},dq}\, e^{j\psi},
@@ -539,9 +539,9 @@ V_{\mathrm{ref},p} = \bar{a}_p \sqrt{\tfrac{2}{3}}\, V_{\mathrm{ref},dq}\, e^{j\
 \bar{a}_{a/b/c} = \{1,\; a^2,\; a\},
 ```
 
-so all three phases are driven from the same positive-sequence command.
+so that all three phases are driven by the same positive-sequence command.
 
-The LC filter dynamics are decoupled per phase in the plant and carry the envelope's carrier shift explicitly,
+The LC-filter dynamics are decoupled per phase within the plant and carry the carrier shift of the envelope explicitly,
 
 ```math
 \dot{V}_{c,p}
@@ -566,9 +566,9 @@ R_f I_{f,p}
 - j\omega_n I_{f,p},
 ```
 
-with the phases coupled only through the shared control chain, via $V_{\mathrm{ref},p}$.
+the phases being coupled only through the shared control chain, that is, through $V_{\mathrm{ref},p}$.
 
-At each simulation step, the nonlinear model is locally linearized into the affine state-space form, packing the 8 real states and the real/imaginary parts of the 6 complex per-phase envelopes into one real 20-vector,
+At each simulation step the nonlinear model is linearized about the current operating point into the affine state-space form, with the 8 real control states and the real and imaginary parts of the 6 complex per-phase envelopes packed into a single real 20-vector,
 
 ```math
 \dot{\mathbf{x}}
@@ -588,9 +588,15 @@ At each simulation step, the nonlinear model is locally linearized into the affi
 \mathbf{F},
 ```
 
-which is then discretized and stamped into the DP MNA system.
+which is subsequently discretized and stamped into the DP MNA system.
 
-Because the controller uses a single positive-sequence dq frame, only the positive-sequence component of an unbalanced terminal is regulated; the negative-sequence response appears in the per-phase filter envelopes but is not itself a control state, and the associated $2\omega_n$ dq ripple it would produce is not represented. A dual-sequence controller with a dedicated negative-sequence frame is future work.
+Because the controller operates in a single positive-sequence $dq$ frame, only the positive-sequence component of an unbalanced terminal is regulated. The negative-sequence response is present in the per-phase filter envelopes but is not itself a control state, and the $2\omega_n$ ripple it would otherwise induce in the $dq$ frame is therefore not represented. A dual-sequence controller with a dedicated negative-sequence frame remains the subject of future work.
+
+## References
+
+- M. Mirz, S. Vogel, G. Reinke, and A. Monti, “DPsim: A dynamic phasor real-time simulator for power systems,” *SoftwareX*, vol. 10, art. 100253, 2019. <https://doi.org/10.1016/j.softx.2019.100253>
+- A. Yazdani and R. Iravani, *Voltage-Sourced Converters in Power Systems: Modeling, Control, and Applications*. Hoboken, NJ: Wiley-IEEE Press, 2010. <https://ieeexplore.ieee.org/book/5237659>
+- X. Gao, D. Zhou, A. Anvari-Moghaddam, and F. Blaabjerg, “Stability Analysis of Grid-Following and Grid-Forming Converters Based on State-Space Model,” in *Proc. 2022 International Power Electronics Conference (IPEC-Himeji 2022, ECCE Asia)*, pp. 422–428. <https://ieeexplore.ieee.org/document/9806927>
 
 ## Source code and examples
 
