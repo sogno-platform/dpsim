@@ -112,8 +112,10 @@ change. Some SSN components instead depend on the operating point and are
 relinearized and re-stamped every step (via `MNAVariableCompInterface`), the same
 simultaneous nodal solve but around a Jacobian frozen at the previous step's
 converged state rather than a constant matrix. `DP::Ph1::AvVoltSourceInverterStateSpace`,
-an averaged grid-following inverter, is one such component; see
-[Power Electronics]({{< ref "power-electronics.md" >}}) for its state vector and
+an averaged grid-following inverter, is one such component, and its three-phase
+analogue `DP::Ph3::AvVoltSourceInverterStateSpace` carries a complex envelope per
+phase while sharing a single positive-sequence dq control frame; see
+[Power Electronics]({{< ref "power-electronics.md" >}}) for their state vectors and
 model equations.
 
 # Validation and Examples

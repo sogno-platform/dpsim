@@ -401,3 +401,205 @@ which is then discretized and stamped into the DP MNA system.
 - Source code: [header](https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/include/dpsim-models/DP/DP_Ph1_AvVoltSourceInverterStateSpace.h), [implementation](https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/src/DP/DP_Ph1_AvVoltSourceInverterStateSpace.cpp)
 - [C++ example](https://github.com/sogno-platform/dpsim/blob/master/dpsim/examples/cxx/Components/DP_Ph1_AvVoltSourceInverterStateSpace.cpp)
 - [Python notebook](https://github.com/sogno-platform/dpsim/blob/master/examples/Notebooks/Components/DP_Ph1_AvVoltSourceInverterStateSpace.ipynb)
+
+# Three-Phase Averaged Voltage Source Inverter with State-Space Nodal Interface (Dynamic Phasor)
+
+The `DP::Ph3::AvVoltSourceInverterStateSpace` model extends the grid-following averaged inverter of `DP::Ph1` to the three-phase dynamic-phasor (DP) domain.
+Each phase of the LC filter is represented by an independent complex envelope, $V_{c,a/b/c}$ and $I_{f,a/b/c}$, in contrast to the single positive-sequence envelope employed by `DP::Ph1`, whereas the controller retains a single positive-sequence $dq$ frame shared by the PLL, the power filter, and the outer and inner control loops.
+As in `DP::Ph1`, the control states are baseband quantities and remain real-valued; only the six per-phase filter envelopes are carrier-band quantities, and each carries the $-j\omega_n$ frequency shift introduced in [State-Space Nodal]({{< ref "state-space-nodal.md" >}}).
+
+The terminal input is the PCC voltage envelope of the three phases,
+
+```math
+u = \begin{bmatrix} U_a & U_b & U_c \end{bmatrix}^\top ,
+```
+
+and the state vector concatenates the 8 real control states ahead of the 6 complex per-phase envelopes,
+
+```math
+\mathbf{x} =
+\big[\,
+\psi \;\;
+\phi_{\mathrm{PLL}} \;\;
+P \;\;
+Q \;\;
+\phi_d \;\;
+\phi_q \;\;
+\gamma_d \;\;
+\gamma_q \;\;
+V_{c,a} \;\;
+V_{c,b} \;\;
+V_{c,c} \;\;
+I_{f,a} \;\;
+I_{f,b} \;\;
+I_{f,c}
+\,\big]^\top ,
+```
+
+where $\psi := \theta_{\mathrm{PLL}} - \omega_n t$ again denotes the deviation of the PLL angle from the nominal carrier phase, retained as a state to preserve relinearization accuracy. Each per-phase envelope contributes its real and imaginary parts to the packed real vector, yielding 20 real states in total.
+
+The model output is the per-phase interface current injected into the MNA system,
+
+```math
+y_p = \frac{U_p - V_{c,p}}{R_c}, \qquad p \in \{a, b, c\}.
+```
+
+## Model equations
+
+The main extension relative to `DP::Ph1` is the per-phase projection onto, and redistribution from, the single positive-sequence $dq$ control frame.
+The three capacitor-voltage envelopes are projected onto a single positive-sequence phasor,
+
+```math
+\underline{V}_c = V_{c,a} + a\, V_{c,b} + a^2 V_{c,c},
+\qquad a = e^{\,j 2\pi/3},
+```
+
+and the PCC input $\underline{U}$ is projected identically, so that the coupling-current envelope seen by the controller is $\underline{I}_{rc} = (\underline{V}_c - \underline{U})/R_c$, with positive current again denoting injection from the inverter into the grid.
+The $dq$ quantities are obtained by rotating the projected envelopes by $\psi$,
+
+```math
+V_{c,dq} = \tfrac{1}{2}\sqrt{\tfrac{2}{3}}\, e^{-j\psi}\, \underline{V}_c,
+\qquad
+I_{rc,dq} = \tfrac{1}{2}\sqrt{\tfrac{2}{3}}\, e^{-j\psi}\, \underline{I}_{rc},
+```
+
+with $v_{c,d} = \operatorname{Re}\{V_{c,dq}\}$, $v_{c,q} = \operatorname{Im}\{V_{c,dq}\}$, and analogously for $i_{rc,d}$ and $i_{rc,q}$.
+Taken together, the $1\times 3$ projection, the scalar $dq$ rotation, and the $3\times 1$ redistribution defined below constitute a rank-one $3\times 3$ Park mapping on the envelope triple, which reduces to the single-envelope relation of `DP::Ph1` under balanced operation.
+
+The positive-sequence active and reactive power measurements used by the controller are
+
+```math
+p = v_{c,d} i_{rc,d} + v_{c,q} i_{rc,q},
+\qquad
+q = -v_{c,d} i_{rc,q} + v_{c,q} i_{rc,d},
+```
+
+with the projection scaling chosen so that $p$ and $q$ match the total three-phase active and reactive powers under balanced operation; under unbalanced operation they are the positive-sequence components seen by the single-frame controller.
+
+The control chain from the PLL through the inner current loop is identical in form to that of `DP::Ph1` and operates on the single positive-sequence $dq$ pair. The PLL and power-filter dynamics read
+
+```math
+\dot{\psi}
+=
+K_{p,\mathrm{PLL}} v_{c,q} +
+K_{i,\mathrm{PLL}} \phi_{\mathrm{PLL}},
+\qquad
+\dot{\phi}_{\mathrm{PLL}} = v_{c,q},
+```
+
+```math
+\dot{P} = \omega_c(p - P),
+\qquad
+\dot{Q} = \omega_c(q - Q).
+```
+
+The outer power-control integrators and current references are
+
+```math
+\dot{\phi}_d = P_{\mathrm{ref}} - P,
+\qquad
+\dot{\phi}_q = Q - Q_{\mathrm{ref}},
+```
+
+```math
+i_{d,\mathrm{ref}}
+=
+K_{p,P}(P_{\mathrm{ref}} - P) + K_{i,P}\phi_d,
+\qquad
+i_{q,\mathrm{ref}}
+=
+K_{p,P}(Q - Q_{\mathrm{ref}}) + K_{i,P}\phi_q,
+```
+
+and the inner current-control integrators and voltage references are
+
+```math
+\dot{\gamma}_d = i_{d,\mathrm{ref}} - i_{rc,d},
+\qquad
+\dot{\gamma}_q = i_{q,\mathrm{ref}} - i_{rc,q},
+```
+
+```math
+v_{d,\mathrm{ref}}
+=
+K_{p,I}(i_{d,\mathrm{ref}} - i_{rc,d}) +
+K_{i,I}\gamma_d,
+\qquad
+v_{q,\mathrm{ref}}
+=
+K_{p,I}(i_{q,\mathrm{ref}} - i_{rc,q}) +
+K_{i,I}\gamma_q.
+```
+
+The single $dq$ voltage reference $V_{\mathrm{ref},dq} = v_{d,\mathrm{ref}} + j v_{q,\mathrm{ref}}$ is redistributed to the per-phase bridge-voltage envelopes through the inverse projection,
+
+```math
+V_{\mathrm{ref},p} = \bar{a}_p \sqrt{\tfrac{2}{3}}\, V_{\mathrm{ref},dq}\, e^{j\psi},
+\qquad
+\bar{a}_{a/b/c} = \{1,\; a^2,\; a\},
+```
+
+so that all three phases are driven by the same positive-sequence command.
+
+The LC-filter dynamics are decoupled per phase within the plant and carry the carrier shift of the envelope explicitly,
+
+```math
+\dot{V}_{c,p}
+=
+\frac{1}{C_f} I_{f,p}
++
+\frac{1}{C_f R_c}(U_p - V_{c,p})
+- j\omega_n V_{c,p},
+```
+
+```math
+\dot{I}_{f,p}
+=
+\frac{1}{L_f}
+\left(
+V_{\mathrm{ref},p}
+-
+V_{c,p}
+-
+R_f I_{f,p}
+\right)
+- j\omega_n I_{f,p},
+```
+
+the phases being coupled only through the shared control chain, that is, through $V_{\mathrm{ref},p}$.
+
+At each simulation step the nonlinear model is linearized about the current operating point into the affine state-space form, with the 8 real control states and the real and imaginary parts of the 6 complex per-phase envelopes packed into a single real 20-vector,
+
+```math
+\dot{\mathbf{x}}
+\approx
+\mathbf{A}\mathbf{x}
++
+\mathbf{B}\mathbf{u}
++
+\mathbf{E},
+\qquad
+\mathbf{y}
+\approx
+\mathbf{C}\mathbf{x}
++
+\mathbf{D}\mathbf{u}
++
+\mathbf{F},
+```
+
+which is subsequently discretized and stamped into the DP MNA system.
+
+Because the controller operates in a single positive-sequence $dq$ frame, only the positive-sequence component of an unbalanced terminal is regulated. The negative-sequence response is present in the per-phase filter envelopes but is not itself a control state, and the $2\omega_n$ ripple it would otherwise induce in the $dq$ frame is therefore not represented. A dual-sequence controller with a dedicated negative-sequence frame remains the subject of future work.
+
+## References
+
+- M. Mirz, S. Vogel, G. Reinke, and A. Monti, “DPsim: A dynamic phasor real-time simulator for power systems,” *SoftwareX*, vol. 10, art. 100253, 2019. <https://doi.org/10.1016/j.softx.2019.100253>
+- A. Yazdani and R. Iravani, *Voltage-Sourced Converters in Power Systems: Modeling, Control, and Applications*. Hoboken, NJ: Wiley-IEEE Press, 2010. <https://ieeexplore.ieee.org/book/5237659>
+- X. Gao, D. Zhou, A. Anvari-Moghaddam, and F. Blaabjerg, “Stability Analysis of Grid-Following and Grid-Forming Converters Based on State-Space Model,” in *Proc. 2022 International Power Electronics Conference (IPEC-Himeji 2022, ECCE Asia)*, pp. 422–428. <https://ieeexplore.ieee.org/document/9806927>
+
+## Source code and examples
+
+- Source code: [header](https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/include/dpsim-models/DP/DP_Ph3_AvVoltSourceInverterStateSpace.h), [implementation](https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/src/DP/DP_Ph3_AvVoltSourceInverterStateSpace.cpp)
+- [C++ example](https://github.com/sogno-platform/dpsim/blob/master/dpsim/examples/cxx/Components/DP_Ph3_AvVoltSourceInverterStateSpace.cpp)
+- [Python notebook](https://github.com/sogno-platform/dpsim/blob/master/examples/Notebooks/Components/DP_Ph3_AvVoltSourceInverterStateSpace.ipynb)
