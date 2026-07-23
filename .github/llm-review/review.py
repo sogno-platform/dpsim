@@ -5,9 +5,9 @@
 Multi-stage LLM PR reviewer for DPsim, driven by an OpenAI-compatible endpoint
 (KI:connect / RWTHgpt). Pure stdlib, no pip installs needed on the runner.
 
-Flow: read the base..head diff, run each stage in prompts.STAGES against the
-model, run a synthesis pass, then post one non-blocking COMMENT PR review with
-inline comments anchored only to lines present in the diff.
+Flow: diff + full source of changed files -> STAGES (finders) -> dedup ->
+per-file verification against the real code -> synthesis -> one non-blocking
+COMMENT review with inline suggestions.
 
 Env:
   LLM_BASE_URL   e.g. https://chat.kiconnect.nrw/api/v1   (trailing / ok)
@@ -27,13 +27,49 @@ import subprocess
 import sys
 import urllib.request
 import urllib.error
+import urllib.parse
 
 # Make `import prompts` work no matter the current working directory.
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import prompts  # noqa: E402
 
 SEV_RANK = {"critical": 0, "high": 1, "medium": 2, "low": 3}
-CONF_RANK = {"high": 0, "medium": 1, "low": 2}
+
+# Applyable ```suggestion blocks are emitted only for high-confidence, confirmed
+# findings, so a one-click "Commit suggestion" cannot apply a shaky guess; a
+# lower-confidence finding still gets its prose fix. Inline comments are capped so
+# a bad run cannot carpet a PR.
+SUGGESTION_MIN_CONF = 80
+MAX_INLINE = 8
+
+
+def confidence_display(f):
+    """What to show for a finding's confidence: "85%" when the model supplied a
+    number, the word when a stage returned one instead, or None. We never invent
+    a number from a categorical word; if there is no real value, show nothing."""
+    c = f.get("confidence")
+    if isinstance(c, (int, float)):
+        return f"{int(round(c))}%"
+    if isinstance(c, str) and c.strip():
+        return c.strip()
+    return None
+
+
+def confidence_sort_key(f):
+    """Ordering only (never shown): higher confidence first. A word maps to a
+    rough rank so mixed number/word outputs still sort sensibly."""
+    c = f.get("confidence")
+    if isinstance(c, (int, float)):
+        return -c
+    return {"high": -90, "medium": -60, "low": -30}.get(str(c).lower(), 0.0)
+
+
+def is_low_confidence(f):
+    """Whether a finding reads as tentative, from a number (<50) or the word."""
+    c = f.get("confidence")
+    if isinstance(c, (int, float)):
+        return c < 50
+    return isinstance(c, str) and c.strip().lower() == "low"
 
 
 def env(name, default=None, required=False):
@@ -163,8 +199,9 @@ def strip_reasoning(text):
     return t
 
 
-def parse_findings(text):
-    """Tolerant JSON extraction: strip reasoning + fences, grab outermost object."""
+def extract_object(text):
+    """Tolerant JSON-object extraction: strip reasoning + fences, grab the
+    outermost {...}. Returns the parsed dict, or None if nothing parseable."""
     t = strip_reasoning(text).strip()
     if t.startswith("```"):
         t = t.split("```", 2)[1]
@@ -172,19 +209,143 @@ def parse_findings(text):
             t = t.lstrip()[4:]
     start, end = t.find("{"), t.rfind("}")
     if start == -1 or end == -1:
-        return []
+        return None
     try:
         obj = json.loads(t[start : end + 1])
     except json.JSONDecodeError:
-        return []
+        return None
+    return obj if isinstance(obj, dict) else None
+
+
+def extract_findings(text):
+    """Findings list on a successful parse (possibly empty, i.e. the model
+    deliberately returned none), or None when the output could not be parsed.
+
+    Callers that must tell "nothing found" apart from "parse failed" (e.g. the
+    verifier) rely on this distinction; parse_findings() collapses both to an
+    empty list for the stage path.
+    """
+    obj = extract_object(text)
+    if obj is None:
+        return None
     findings = obj.get("findings", [])
-    return findings if isinstance(findings, list) else []
+    return findings if isinstance(findings, list) else None
 
 
-def run_stages(diff):
+def parse_findings(text):
+    """Findings list, empty on either no-findings or parse failure."""
+    return extract_findings(text) or []
+
+
+def gh_get_json(url, token):
+    """GET a GitHub API endpoint as JSON."""
+    req = urllib.request.Request(
+        url,
+        headers={
+            "Authorization": "Bearer " + token,
+            "Accept": "application/vnd.github+json",
+        },
+    )
+    with urllib.request.urlopen(req, timeout=60) as resp:
+        return json.load(resp)
+
+
+def pr_context(pr_number, base_sha, head_sha):
+    """PR title, description and commit messages, so the review can understand
+    the author's intent and check that what the PR claims matches the code.
+
+    API in the fork path (USE_API_DIFF), git log locally. Best-effort: returns ""
+    on any failure. Read-only, data only.
+    """
+    lines = []
+    if os.environ.get("USE_API_DIFF"):
+        repo = os.environ.get("GITHUB_REPOSITORY")
+        token = os.environ.get("GITHUB_TOKEN")
+        if repo and token:
+            try:
+                pr = gh_get_json(
+                    f"https://api.github.com/repos/{repo}/pulls/{pr_number}", token
+                )
+                lines.append(f"PR #{pr_number}: {pr.get('title', '')}".strip())
+                body = (pr.get("body") or "").strip()
+                if body:
+                    lines.append(body)
+            except (urllib.error.URLError, ValueError, KeyError) as e:
+                print(f"pr_context: PR fetch failed: {e}", file=sys.stderr)
+            try:
+                commits = gh_get_json(
+                    f"https://api.github.com/repos/{repo}/pulls/{pr_number}"
+                    "/commits?per_page=100",
+                    token,
+                )
+                for c in commits or []:
+                    msg = (c.get("commit", {}).get("message") or "").strip()
+                    if msg:
+                        lines.append("commit: " + msg)
+            except (urllib.error.URLError, ValueError, KeyError) as e:
+                print(f"pr_context: commits fetch failed: {e}", file=sys.stderr)
+    else:
+        r = subprocess.run(
+            ["git", "log", f"{base_sha}..{head_sha}", "--format=%B%x00"],
+            capture_output=True,
+            text=True,
+        )
+        if r.returncode == 0:
+            for msg in r.stdout.split("\x00"):
+                msg = msg.strip()
+                if msg:
+                    lines.append("commit: " + msg)
+    if not lines:
+        return ""
+    text = "\n\n".join(lines)
+    if len(text) > MAX_PR_CONTEXT_CHARS:
+        text = text[:MAX_PR_CONTEXT_CHARS] + "\n[truncated]"
+    return (
+        "\n\n=== PR INTENT (title, description, commit messages) ===\n"
+        "Use this to understand the change and to check the code does what the PR "
+        "claims; it is context, NOT a spec that excuses a real bug.\n" + text
+    )
+
+
+def changed_sources_block(diff, head_sha):
+    """Numbered full source of the changed files, as context for every stage.
+
+    Lets the finders see beyond the diff window (a present override, a base
+    method) so they stop raising "missing X". Unfetchable/oversized are omitted.
+    """
+    files = sorted(changed_files(diff))
+    cache, blocks, total, dropped = {}, [], 0, 0
+    for path in files:
+        if len(blocks) >= MAX_STAGE_SOURCE_FILES or total >= MAX_STAGE_SOURCE_CHARS:
+            dropped += 1
+            continue
+        content = fetch_file(path, head_sha)
+        if content is None:
+            continue
+        cache[path] = content
+        blocks.append(f"\n--- {path} ---\n{number_lines(content)}\n")
+        total += len(content)
+    if dropped:
+        print(
+            f"stage context: {dropped} changed file(s) omitted past the cap",
+            file=sys.stderr,
+        )
+    if not blocks:
+        return ""
+    return (
+        "\n\n=== FULL SOURCE OF CHANGED FILES (context to judge the changed "
+        "lines; do NOT raise findings about unchanged code) ===\n" + "".join(blocks)
+    )
+
+
+def run_stages(diff, head_sha, pr_ctx=""):
+    context = changed_sources_block(diff, head_sha)
     all_findings = []
     for stage in prompts.STAGES:
-        user = f"{stage['prompt']}\n\n=== PR DIFF (base..head) ===\n{diff}"
+        user = (
+            f"{stage['prompt']}\n\n=== PR DIFF (base..head) ===\n"
+            f"{diff}{context}{pr_ctx}"
+        )
         try:
             raw = llm(prompts.SYSTEM, user)
         except (urllib.error.URLError, KeyError, ValueError) as e:
@@ -199,81 +360,580 @@ def run_stages(diff):
     return all_findings
 
 
-def synthesize(findings):
+# Verification fetches+checks at most this many files (one LLM call each); the
+# rest, and unfetchable files, stay unconfirmed rather than trusted or dropped.
+MAX_VERIFY_FILES = 12
+MAX_VERIFY_FILE_CHARS = 90000
+UNCONFIRMED_CONF_CAP = 35
+# Base-class/interface headers given to the verifier, followed up the #include
+# chain (3 hops: .cpp -> .h -> base -> base's base). Bounded, cached per run.
+MAX_CONTEXT_HEADERS = 12
+MAX_CONTEXT_CHARS = 80000
+CONTEXT_HOPS = 3
+# Full source of the changed files given to the finder stages (context beyond
+# the diff, to cut "missing X" false positives). Bounded.
+MAX_STAGE_SOURCE_FILES = 15
+MAX_STAGE_SOURCE_CHARS = 160000
+# PR title/description/commit messages given as intent context. Bounded.
+MAX_PR_CONTEXT_CHARS = 8000
+
+
+def fetch_file(path, ref):
+    """Full source of `path` at `ref`, or None (read-only, never runs PR code).
+
+    Contents API in the fork path (USE_API_DIFF), git locally. Oversized -> None.
+    """
+    if os.environ.get("USE_API_DIFF"):
+        repo = env("GITHUB_REPOSITORY", required=True)
+        token = env("GITHUB_TOKEN", required=True)
+        url = (
+            f"https://api.github.com/repos/{repo}/contents/"
+            f"{urllib.parse.quote(path)}?ref={urllib.parse.quote(ref)}"
+        )
+        req = urllib.request.Request(
+            url,
+            headers={
+                "Authorization": "Bearer " + token,
+                "Accept": "application/vnd.github.raw+json",
+            },
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                content = resp.read().decode(errors="replace")
+        except urllib.error.URLError as e:
+            print(f"fetch {path} failed: {e}", file=sys.stderr)
+            return None
+    else:
+        r = subprocess.run(
+            ["git", "show", f"{ref}:{path}"], capture_output=True, text=True
+        )
+        if r.returncode != 0:
+            return None
+        content = r.stdout
+    if len(content) > MAX_VERIFY_FILE_CHARS:
+        return None
+    return content
+
+
+def number_lines(content):
+    """Prefix each line with its 1-based number for the verifier to cite."""
+    return "\n".join(
+        f"{i:5d}| {ln}" for i, ln in enumerate(content.splitlines(), start=1)
+    )
+
+
+def file_hunk(diff, path):
+    """The section of the unified diff that belongs to `path` (for scope)."""
+    out, capture = [], False
+    for ln in diff.splitlines(keepends=True):
+        if ln.startswith("diff --git "):
+            capture = f" a/{path} " in ln or ln.rstrip().endswith(f" b/{path}")
+        if capture:
+            out.append(ln)
+    return "".join(out)
+
+
+def added_lines(diff, path):
+    """New-file line numbers the diff adds/changes for `path` (its scope)."""
+    added, new_ln = set(), 0
+    for ln in file_hunk(diff, path).splitlines():
+        if ln.startswith("@@"):
+            m = re.search(r"\+(\d+)", ln)
+            new_ln = int(m.group(1)) if m else 0
+        elif ln.startswith(("+++", "---")):
+            continue
+        elif ln.startswith("+"):
+            added.add(new_ln)
+            new_ln += 1
+        elif ln.startswith("-"):
+            continue
+        else:
+            new_ln += 1
+    return added
+
+
+def to_ranges(nums):
+    """Compact "1-4, 9, 20-22" rendering of a set of line numbers."""
+    nums = sorted(nums)
+    if not nums:
+        return "(none)"
+    out, start, prev = [], nums[0], nums[0]
+    for n in nums[1:]:
+        if n == prev + 1:
+            prev = n
+            continue
+        out.append(f"{start}-{prev}" if start != prev else f"{start}")
+        start = prev = n
+    out.append(f"{start}-{prev}" if start != prev else f"{start}")
+    return ", ".join(out)
+
+
+INCLUDE_RE = re.compile(r'#\s*include\s*[<"]((?:dpsim-models|dpsim)/[^">]+\.h)[>"]')
+
+
+def resolve_include(inc):
+    """DPsim #include target -> repo path, or None for externals.
+    e.g. dpsim-models/X.h -> dpsim-models/include/dpsim-models/X.h"""
+    for pkg in ("dpsim-models/", "dpsim/"):
+        if inc.startswith(pkg):
+            return pkg + "include/" + inc
+    return None
+
+
+def dpsim_includes(code):
+    """Repo paths of the DPsim (non-external) headers a source #includes."""
+    out = []
+    for m in INCLUDE_RE.finditer(code):
+        p = resolve_include(m.group(1))
+        if p:
+            out.append(p)
+    return out
+
+
+def gather_context(code, ref, cache):
+    """Base-class/interface headers this file depends on, following its #include
+    chain up to CONTEXT_HOPS hops. Bounded, cached across the run. These carry the
+    parent hook declarations that override/signature claims must be judged against."""
+    ctx, total = {}, 0
+    frontier = dpsim_includes(code)
+    for _hop in range(CONTEXT_HOPS):
+        nxt = []
+        for p in frontier:
+            if len(ctx) >= MAX_CONTEXT_HEADERS or total >= MAX_CONTEXT_CHARS:
+                break
+            if p in ctx:
+                continue
+            if p not in cache:
+                cache[p] = fetch_file(p, ref)
+            content = cache[p]
+            if content is None:
+                continue
+            ctx[p] = content
+            total += len(content)
+            nxt.extend(dpsim_includes(content))
+        frontier = nxt
+    return ctx
+
+
+def dedup_findings(findings):
+    """Collapse exact-duplicate findings (same file, line, normalized title)
+    before verification. Keeps the copy with a code_suggestion, else the first.
+    Semantic merging is synthesis's job."""
+    seen = {}
+    for f in findings:
+        key = (
+            f.get("file"),
+            f.get("line"),
+            " ".join(str(f.get("title", "")).lower().split()),
+        )
+        cur = seen.get(key)
+        if cur is None:
+            seen[key] = f
+        elif not cur.get("code_suggestion") and f.get("code_suggestion"):
+            seen[key] = f
+    return list(seen.values())
+
+
+def verify(findings, diff, head_sha):
+    """Adjudicate findings per file against the real source (code as truth):
+    confirmed -> kept, refuted -> dropped, unconfirmed -> kept tentative with
+    confidence capped. Nothing drops without a refutation; unreachable code or an
+    omitted verdict defaults to unconfirmed. Non-blocking on per-file failure.
+    Returns (kept, stats) where stats carries the raw/kept/refuted counts and a
+    sample of refuted findings with reasons, for the methodology footer."""
     if not findings:
-        return []
+        return [], {}
+    # Finders sometimes cite a wrong path (src/ vs include/). Remap to the real
+    # changed file by basename so verification fetches the true source instead of
+    # failing and defaulting everything to unconfirmed.
+    real_paths = changed_files(diff)
+    by_base = {}
+    for p in real_paths:
+        by_base.setdefault(p.rsplit("/", 1)[-1], p)
+    for f in findings:
+        fp = f.get("file")
+        if fp and fp not in real_paths:
+            real = by_base.get(fp.rsplit("/", 1)[-1])
+            if real:
+                f["file"] = real
+    before = len(findings)
+    findings = dedup_findings(findings)
+    if len(findings) < before:
+        print(
+            f"verification: deduped {before} -> {len(findings)} findings",
+            file=sys.stderr,
+        )
+    for i, f in enumerate(findings):
+        f["_id"] = i
+
+    by_file = {}
+    for f in findings:
+        by_file.setdefault(f.get("file"), []).append(f)
+
+    # Most-findings files first (the cap spends where it matters); file-less
+    # (process) findings pass through unchanged.
+    files = [p for p in by_file if p]
+    files.sort(key=lambda p: len(by_file[p]), reverse=True)
+    if len(files) > MAX_VERIFY_FILES:
+        print(
+            f"verification: {len(files)} files with findings, checking the top "
+            f"{MAX_VERIFY_FILES}; the rest are kept as unconfirmed",
+            file=sys.stderr,
+        )
+    to_check = set(files[:MAX_VERIFY_FILES])
+
+    verdicts = {}  # id -> verdict dict from the model
+    checked_ids = set()  # ids that went through a code-grounded check
+    header_cache = {}  # (path -> content|None) shared across files this run
+    for path in to_check:
+        code = fetch_file(path, head_sha)
+        if code is None:
+            print(
+                f"verification: no source for {path}, keeping unconfirmed",
+                file=sys.stderr,
+            )
+            continue
+        group = by_file[path]
+        payload = [
+            {k: f.get(k) for k in ("_id", "severity", "title", "detail", "line")}
+            for f in group
+        ]
+        # Base-class/interface headers, so override/hook/signature claims are
+        # judged against the real parent, not left unconfirmed.
+        context = gather_context(code, head_sha, header_cache)
+        related = "".join(f"\n--- {p} ---\n{c}\n" for p, c in context.items())
+        user = f"FILE: {path}\n\n=== FINDINGS (JSON) ===\n" + json.dumps(
+            {"findings": payload}, indent=2
+        ) + f"\n\n=== FULL CURRENT SOURCE OF {path} (ground truth) ===\n" + number_lines(
+            code
+        ) + (
+            "\n\n=== RELATED SOURCES (base classes / interfaces it inherits, "
+            "ground truth) ===\n" + related
+            if related
+            else ""
+        ) + f"\n\n=== CHANGED LINES in {path} (new-file line numbers, the " f"in-scope lines) ===\n" + to_ranges(
+            added_lines(diff, path)
+        ) + f"\n\n=== DIFF HUNK FOR {path} (what changed) ===\n" + file_hunk(
+            diff, path
+        )
+        if context:
+            print(
+                f"verification: {path} + {len(context)} base/interface header(s)",
+                file=sys.stderr,
+            )
+        for f in group:
+            checked_ids.add(f["_id"])
+        try:
+            raw = llm(prompts.VERIFICATION, user)
+        except (urllib.error.URLError, KeyError, ValueError) as e:
+            print(
+                f"verification of {path} failed, keeping unconfirmed: {e}",
+                file=sys.stderr,
+            )
+            continue
+        obj = extract_object(raw)
+        for v in (obj or {}).get("verdicts", []) if isinstance(obj, dict) else []:
+            if isinstance(v, dict) and isinstance(v.get("id"), int):
+                verdicts[v["id"]] = v
+
+    kept, drops, unconf, refuted_list = [], 0, 0, []
+    for f in findings:
+        v = verdicts.get(f["_id"]) or {}
+        verdict = v.get("verdict")
+        note = v.get("note") if isinstance(v.get("note"), str) else None
+        if verdict == "refuted":
+            drops += 1
+            if len(refuted_list) < 15:
+                refuted_list.append(
+                    {
+                        "title": f.get("title", ""),
+                        "file": f.get("file"),
+                        "note": note or "not supported by the code",
+                    }
+                )
+            continue
+        if verdict == "confirmed":
+            if isinstance(v.get("confidence"), (int, float)):
+                f["confidence"] = v["confidence"]
+            if isinstance(v.get("line"), int):
+                f["line"] = v["line"]
+        else:
+            # unconfirmed / omitted / unchecked: keep tentative, cap confidence.
+            f["unconfirmed"] = True
+            unconf += 1
+            base = (
+                v.get("confidence")
+                if isinstance(v.get("confidence"), (int, float))
+                else f.get("confidence")
+            )
+            f["confidence"] = (
+                min(base, UNCONFIRMED_CONF_CAP)
+                if isinstance(base, (int, float))
+                else UNCONFIRMED_CONF_CAP
+            )
+            if isinstance(v.get("line"), int):
+                f["line"] = v["line"]
+        if note:
+            f["verify_note"] = note
+        f.pop("_id", None)
+        kept.append(f)
+
+    for f in findings:
+        f.pop("_id", None)
+    print(
+        f"verification: {len(kept)} kept ({unconf} unconfirmed), {drops} refuted "
+        f"of {len(findings)}",
+        file=sys.stderr,
+    )
+    stats = {
+        "raw": before,
+        "checked": len(findings),
+        "kept": len(kept),
+        "unconfirmed": unconf,
+        "refuted": drops,
+        "refuted_list": refuted_list,
+    }
+    return kept, stats
+
+
+def synthesize(findings, pr_ctx=""):
+    """Merge/prioritize findings and produce a short overview.
+
+    Returns (overview_text, findings). On any failure fall back to the raw
+    union with an empty overview so the review still posts.
+    """
+    if not findings:
+        return "", []
     try:
-        raw = llm(prompts.SYNTHESIS, json.dumps({"findings": findings}, indent=2))
+        raw = llm(
+            prompts.SYNTHESIS,
+            json.dumps({"findings": findings}, indent=2) + pr_ctx,
+        )
     except (urllib.error.URLError, KeyError, ValueError) as e:
         print(f"synthesis failed, using raw union: {e}", file=sys.stderr)
-        return findings
-    merged = parse_findings(raw)
-    return merged or findings  # fall back to raw union if synthesis misbehaves
+        return "", findings
+    obj = extract_object(raw)
+    if obj is None:
+        return "", findings  # synthesis misbehaved; keep the raw union
+    merged = obj.get("findings")
+    if not isinstance(merged, list) or not merged:
+        merged = findings
+    overview = obj.get("summary")
+    overview = overview.strip() if isinstance(overview, str) else ""
+    return overview, merged
+
+
+def claim_check(diff, pr_ctx):
+    """Compare what the PR claims (pr_ctx) with what the diff does. Returns
+    {claimed, done, difference} or None (no intent given, or the call failed)."""
+    if not pr_ctx:
+        return None
+    user = f"{pr_ctx}\n\n=== PR DIFF (base..head) ===\n{diff}"
+    try:
+        raw = llm(prompts.CLAIM_CHECK, user)
+    except (urllib.error.URLError, KeyError, ValueError) as e:
+        print(f"claim check failed: {e}", file=sys.stderr)
+        return None
+    obj = extract_object(raw)
+    return obj if isinstance(obj, dict) else None
 
 
 def render_body(f):
-    sev = f.get("severity", "low").upper()
-    body = f"**[{sev}] {f.get('title', '')}**\n\n{f.get('detail', '')}"
+    """Inline comment body. The tag carries the severity category and the
+    model's own confidence number (a percentage), shown only when it exists."""
+    parts = [f"severity: {f.get('severity', 'low')}"]
+    cd = confidence_display(f)
+    if cd:
+        parts.append(f"confidence: {cd}")
+    tag = " · ".join(parts)
+    body = f"**{f.get('title', '')}**  \n`{tag}`\n\n{f.get('detail', '')}"
     if f.get("suggestion"):
         body += f"\n\n_Suggested fix:_ {f['suggestion']}"
-    body += (
-        f"\n\n<sub>stage: {f.get('stage', '?')} · "
-        f"confidence: {f.get('confidence', '?')}</sub>"
+    # ```suggestion renders as a one-click change; only offer it for a confirmed,
+    # high-confidence finding so an applied guess cannot be wrong code. The prose
+    # fix above stays either way.
+    code = f.get("code_suggestion")
+    conf = f.get("confidence")
+    conf_ok = (isinstance(conf, (int, float)) and conf >= SUGGESTION_MIN_CONF) or (
+        isinstance(conf, str) and conf.strip().lower() == "high"
     )
+    if isinstance(code, str) and code.strip() and conf_ok and not f.get("unconfirmed"):
+        body += "\n\n```suggestion\n" + code.rstrip("\n") + "\n```"
+    if f.get("verify_note"):
+        body += f"\n\n_Checked against the source: {f['verify_note']}_"
+    body += f"\n\n<sub>stage: {f.get('stage', '?')}</sub>"
     return body
 
 
-def build_review(findings, head_sha, valid_files):
-    """Assemble the GitHub review payload (summary body + inline comments)."""
+# Severity buckets for the summary body, in display order. Critical/high always
+# land in the top bucket regardless of confidence; among the rest, a low-
+# confidence finding is a tentative "worth a glance" rather than an action item.
+SECTIONS = [
+    ("critical", "\U0001f534 Critical & high"),
+    ("suggestion", "\U0001f7e1 Suggestions"),
+    ("optional", "\U0001f535 Optional / low-confidence"),
+]
+
+
+def bucket(f):
+    # Unconfirmed findings stay tentative, never Critical.
+    if f.get("unconfirmed"):
+        return "optional"
+    if f.get("severity") in ("critical", "high"):
+        return "critical"
+    if is_low_confidence(f):
+        return "optional"
+    return "suggestion"
+
+
+def summary_line(f, anchored, compact=False):
+    """One grouped-summary line: title, severity+confidence tag, and location.
+
+    Anchored findings point at their inline comment for the detail. Compact mode
+    (used for the collapsed low-confidence bucket) shows only that one line;
+    otherwise an unanchored finding carries its detail and fix here.
+    """
+    sev = f.get("severity", "low")
+    cd = confidence_display(f)
+    tag = sev if not cd else f"{sev} · {cd} confidence"
+    if f.get("unconfirmed"):
+        tag += " · unconfirmed"
+    where = f.get("file") or "general"
+    if isinstance(f.get("line"), int):
+        where = f"{where}:{f['line']}"
+    line = f"- **{f.get('title', '')}** `[{tag}]` in `{where}`"
+    if anchored:
+        return line + " _(details inline)_"
+    if compact:
+        return line
+    detail = " ".join((f.get("detail", "") or "").split())
+    if detail:
+        line += f"  \n  {detail}"
+    if f.get("suggestion"):
+        line += f"  \n  _Fix:_ {' '.join(f['suggestion'].split())}"
+    return line
+
+
+def methodology_block(stats, claim=None):
+    """A collapsible note on how the review was produced, with a sample of the
+    findings verification refuted (and why), so a reader can trust the culling."""
+    if not stats or not stats.get("raw"):
+        return []
+    out = []
+    if claim and (claim.get("claimed") or claim.get("done")):
+        out += [
+            "",
+            "<details><summary>Claim vs. implementation</summary>",
+            "",
+            f"- Claimed: {claim.get('claimed', '(not stated)')}",
+            f"- Done: {claim.get('done', '(unclear)')}",
+            f"- Difference: {claim.get('difference', 'none')}",
+            "</details>",
+        ]
+    out += [
+        "",
+        "<details><summary>How this review was produced</summary>",
+        "",
+        f"{len(prompts.STAGES)} specialized passes raised {stats.get('raw', 0)} "
+        "findings over the diff and the full changed sources. After "
+        f"de-duplication, {stats.get('checked', 0)} were re-checked against the "
+        "current file and the base-class / interface headers it inherits (code as "
+        f"truth): {stats.get('refuted', 0)} refuted as unsupported, "
+        f"{stats.get('kept', 0)} kept ({stats.get('unconfirmed', 0)} tentative).",
+    ]
+    refuted = stats.get("refuted_list") or []
+    if refuted:
+        out += ["", "Refuted by verification:"]
+        for r in refuted:
+            loc = f" ({r['file']})" if r.get("file") else ""
+            out.append(f"- {r.get('title', '')}{loc}: {r.get('note', '')}")
+    out.append("</details>")
+    return out
+
+
+def build_review(findings, head_sha, valid_files, overview="", stats=None, claim=None):
+    """Assemble the GitHub review payload (summary body + inline comments).
+
+    Body: a one-line TL;DR, a claim-vs-code note, a severity tally, findings
+    grouped into buckets, and a collapsible methodology note. Findings that
+    anchor to a diff line are also emitted as inline comments with the detail.
+    """
     findings.sort(
-        key=lambda f: (
-            SEV_RANK.get(f.get("severity"), 9),
-            CONF_RANK.get(f.get("confidence"), 9),
-        )
+        key=lambda f: (SEV_RANK.get(f.get("severity"), 9), confidence_sort_key(f))
     )
 
-    inline, general = [], []
+    inline = []
     for f in findings:
-        body = render_body(f)
-        # Only attach inline comments to files+lines actually in the diff,
-        # otherwise the GitHub review API rejects the whole submission.
-        if f.get("file") in valid_files and isinstance(f.get("line"), int):
+        # Inline only on diff lines (API rejects otherwise); unconfirmed stay
+        # summary-only; and stop once the inline cap is reached so a bad run
+        # cannot flood the PR. Findings past the cap keep their detail in the
+        # summary (they are not marked anchored).
+        anchorable = (
+            not f.get("unconfirmed")
+            and f.get("file") in valid_files
+            and isinstance(f.get("line"), int)
+        )
+        f["_anchored"] = anchorable and len(inline) < MAX_INLINE
+        if f["_anchored"]:
             inline.append(
-                {"path": f["file"], "line": f["line"], "side": "RIGHT", "body": body}
+                {
+                    "path": f["file"],
+                    "line": f["line"],
+                    "side": "RIGHT",
+                    "body": render_body(f),
+                }
             )
-        else:
-            loc = f.get("file", "general")
-            line0 = body.splitlines()[0]
-            general.append(f"- {line0}  ({loc})")
 
-    counts = {}
-    for f in findings:
-        s = f.get("severity", "low")
-        counts[s] = counts.get(s, 0) + 1
-    summary = "### DPsim LLM review\n"
-    if findings:
-        summary += (
-            "Found: "
-            + ", ".join(
-                f"{n} {s}"
-                for s, n in sorted(counts.items(), key=lambda x: SEV_RANK.get(x[0], 9))
-            )
-            + ".\n"
-        )
+    lines = ["### DPsim LLM review", ""]
+    if claim:
+        diff_note = (claim.get("difference") or "").strip()
+        if diff_note and diff_note.lower() != "none":
+            lines += [f"**Claim vs. code:** {diff_note}", ""]
+        else:
+            lines += ["**Claim vs. code:** matches the description.", ""]
+    if not findings:
+        lines.append("No issues surfaced by the automated passes.")
     else:
-        summary += "No issues surfaced by the automated passes.\n"
-    if general:
-        summary += "\n**Findings without a diff line:**\n" + "\n".join(general)
+        if overview:
+            lines += [f"**TL;DR:** {overview}", ""]
+        counts = {}
+        for f in findings:
+            sev = f.get("severity", "low")
+            counts[sev] = counts.get(sev, 0) + 1
+        tally = ", ".join(
+            f"{n} {s}"
+            for s, n in sorted(counts.items(), key=lambda x: SEV_RANK.get(x[0], 9))
+        )
+        lines.append(f"Found {tally} ({len(inline)} anchored to lines below).")
+        for key, header in SECTIONS:
+            items = [f for f in findings if bucket(f) == key]
+            if not items:
+                continue
+            # Collapse the tentative bucket into a compact, foldable block so it
+            # does not crowd the actionable findings.
+            if key == "optional":
+                lines += [
+                    "",
+                    f"<details><summary>{header} ({len(items)})</summary>",
+                    "",
+                ]
+                lines += [summary_line(f, f["_anchored"], compact=True) for f in items]
+                lines += ["", "</details>"]
+            else:
+                lines += ["", f"#### {header}"]
+                lines += [summary_line(f, f["_anchored"]) for f in items]
+
+    lines += methodology_block(stats, claim)
     model = os.environ.get("LLM_MODEL", "LLM")
-    summary += (
-        "\n\n<sub>Automated, non-blocking review. May be wrong. "
-        f"Model: {model}.</sub>"
-    )
+    lines += [
+        "",
+        f"<sub>Automated, non-blocking review. May be wrong. Model: {model}.</sub>",
+    ]
 
     payload = {
         "commit_id": head_sha,
         "event": "COMMENT",
-        "body": summary,
+        "body": "\n".join(lines),
         "comments": inline,
     }
     return payload
@@ -331,8 +991,11 @@ def main():
         print("empty diff, nothing to review", file=sys.stderr)
         return
     valid_files = changed_files(diff)
-    findings = synthesize(run_stages(diff))
-    payload = build_review(findings, head_sha, valid_files)
+    pr_ctx = pr_context(pr_number, base_sha, head_sha)
+    claim = claim_check(diff, pr_ctx)
+    verified, vstats = verify(run_stages(diff, head_sha, pr_ctx), diff, head_sha)
+    overview, findings = synthesize(verified, pr_ctx)
+    payload = build_review(findings, head_sha, valid_files, overview, vstats, claim)
 
     if dry_run:
         print("=== DRY RUN: review body ===\n")

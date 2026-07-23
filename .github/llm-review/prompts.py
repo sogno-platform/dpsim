@@ -100,8 +100,24 @@ violation):
   -march=native); justify and document any new third-party dependency.
 
 Rules:
-- Review ONLY what the diff changes or directly affects. Do not invent issues in
-  unchanged code, and do not restate what the code does.
+- You are given the PR DIFF and, as context, the FULL CURRENT SOURCE of the
+  changed files. Use the full source to judge the changed lines correctly: check
+  the whole file before claiming something is missing. If a method already
+  carries override, a hook is already declared, a member is already used, or a
+  base class already provides a behaviour, do NOT raise it. A composite component
+  (deriving from CompositePowerComp and registering a subcomponent with
+  addMNASubComponent) is stamped and stepped by the base; its parent hooks that
+  only log are intentional, not bugs.
+- Review ONLY what the diff changes or directly affects. The full source is
+  reference to understand the change, not an invitation to review pre-existing
+  code: do not invent issues in unchanged lines, and do not restate what the
+  code does. Cite "line" as the exact number shown in the numbered full source
+  (the "N|" prefix), not a diff offset.
+- If PR INTENT (title, description, commit messages) is given, use it two ways:
+  to understand the goal, so you do not flag intentional choices or work the PR
+  explicitly defers to a follow-up; and to check the code does what it claims,
+  flagging a claim the diff does not actually implement, or a behavioural change
+  the description omits. Intent is context, never an excuse for a real defect.
 - Prefer a few high-confidence findings over many speculative ones. If the diff
   gives too little context to be sure, mark low confidence rather than guessing.
 - Raise naming/documentation/style findings only when they clearly violate a
@@ -113,7 +129,12 @@ Rules:
   (what becomes wrong, when, and why) rather than in vague or colloquial terms.
   Where a claim rests on a result or model, point to the equation or a reputable
   reference. Keep the register formal and measured; no hyperbole, no filler.
-- No praise, no summary. Findings only.
+- Write as a senior engineer mentoring a capable colleague: the aim is to teach,
+  not to scold. Explain why the issue matters and give a concrete fix so the
+  author learns from it. Be direct and factual; never sarcastic, dismissive, or
+  condescending. Do not pad with praise either.
+- No praise, no summary. Findings only (the balanced, what-is-sound read is
+  added once, downstream, not repeated per finding).
 
 Output contract. Return ONLY valid JSON, no prose, no markdown fences:
 {
@@ -124,12 +145,38 @@ Output contract. Return ONLY valid JSON, no prose, no markdown fences:
       "line": <int or null>,
       "title": "short imperative headline",
       "detail": "what is wrong and the concrete failure it causes",
-      "suggestion": "specific fix, or null",
-      "confidence": "high|medium|low"
+      "suggestion": "specific fix in prose, or null",
+      "code_suggestion": "exact replacement source for the line(s) at line, or null",
+      "confidence": <integer 0-100>
     }
   ]
 }
 If you find nothing in your area, return {"findings": []}.
+
+severity is about impact, not how sure you are (that is confidence): critical =
+a correctness or safety defect that makes results wrong, crashes, or corrupts
+state; high = a real bug, or a gap that breaks the change's intended use (e.g. a
+component meant to be used from Python that has no binding); medium = a
+convention, maintainability, numerical-guard, or test/documentation gap; low =
+minor style. Do NOT rate a missing documentation page, a missing test, or
+uncleared notebook outputs above medium (high only if it actually breaks CI).
+Reserve critical for things that produce wrong numbers or crash.
+
+confidence is your own honest estimate, as an integer from 0 to 100, of the
+probability that the finding is real and correct given the visible diff. Use a
+low number when the diff gives too little context to be sure (rather than
+dropping the finding); reserve high numbers for issues you can see directly in
+the changed lines. Do not inflate, and do not report it as a word or a range;
+give a single integer.
+
+Use code_suggestion ONLY when the fix is evident and self-contained: a drop-in
+replacement for the exact source line(s) at "line" (a wrong sign, a swapped
+argument, a missing const/override, the right constant in place of a literal).
+Put the full replacement line(s) verbatim as they should appear in the file,
+with correct indentation and no diff markers, no leading + or -, no fences. It
+must stand alone as the new content of that line; if the fix spans unseen lines,
+needs surrounding context, or is not obvious, set code_suggestion to null and
+describe it in "suggestion" instead. Never guess code you cannot see.
 """
 
 # Ordered specialized passes. The runner iterates this list; add/remove freely.
@@ -200,7 +247,20 @@ Check:
   initialization entry points.
 - Source frequency semantics: for DP/SP voltage/current sources srcFreq is the
   carrier offset from the system frequency, whereas EMT uses an absolute Hz.
-  A source ported across domains with the wrong srcFreq convention is a bug.""",
+  A source ported across domains with the wrong srcFreq convention is a bug.
+- Cross-domain Python API traps (do not misread these as bugs, and do flag real
+  violations of them): the 4th-order VBR generator registers its transient EMF
+  attribute as "Edq_t" in SP but "Edq0_t" in DP and EMT, so a shared logger must
+  branch by domain. PiLine.set_parameters takes R/L/C/G keywords in SP but
+  series_resistance/series_inductance/parallel_capacitance/parallel_conductance
+  in DP/EMT, so cross-domain code should pass them positionally. EMT Ph3
+  NetworkInjection.set_parameters expects a three-phase complex voltage matrix,
+  not a scalar; and with init_with_powerflow the EMT slack is fully initialised
+  by the power flow, so NOT calling set_parameters is correct, not a missing
+  call. Electrical torque Te is not comparable across SP and DP/EMT during fast
+  transients (it can differ ~12 percent); cross-domain validation belongs on the
+  mechanical states (w_r, delta) and exciter output (Ef), so a tight Te tolerance
+  across domains is itself the error.""",
     },
     {
         "id": "numerics",
@@ -367,7 +427,11 @@ Check:
   holders are consistent so ownership does not dangle or double-free.
 - GIL handling around long-running or threaded C++ calls (e.g. Simulation.run).
 - Python-facing API changes are backward-compatible or clearly intentional and do
-  not break the pytest / notebook examples that call them.""",
+  not break the pytest / notebook examples that call them.
+- Severity: a missing or wrong binding is at most high (it breaks Python use of
+  the component), never critical; critical is reserved for wrong numbers or a
+  crash. And confirm the binding is truly absent by searching the whole pybind
+  file before flagging it, do not assume from the diff.""",
     },
     {
         "id": "io-robustness",
@@ -398,9 +462,12 @@ Check:
         "prompt": """\
 Focus: CMake, compiler flags, and third-party dependencies.
 Check:
-- Compiler flags stay portable by default: no -march=native or other host-
-  specific flags baked into a default build (binaries must run on other
-  machines); prefer documented, portable optimisation choices.
+- Compiler flags stay portable by default: no host-architecture flags
+  (-march=native, -mtune=native, -mavx, ...) baked into a default build (binaries
+  must run on other machines); prefer documented, portable optimisation choices.
+  Position-independent-code flags (-fPIC, -fpic, -fPIE) and ordinary
+  warning/optimisation levels (-O2, -Wall) ARE portable and expected; do not flag
+  -fPIC as non-portable.
 - New third-party dependency: is it justified and documented? Watch for large or
   inactive upstreams and incompatible licenses. A fetched/vendored dependency
   should be minimal and necessary.
@@ -439,7 +506,11 @@ Check:
 - Reproducibility: results reproducible across runs and thread counts; no
   reliance on unspecified task ordering, uninitialized memory, or wall-clock.
   Committed reference results are amended in place, never fixed in a follow-up
-  commit. Flag existing references the change would alter but leaves un-updated.""",
+  commit. Flag existing references the change would alter but leaves un-updated.
+- Severity: documentation, test-coverage, and uncleared-notebook-output gaps are
+  medium at most (high only when they actually break CI), never critical. Name
+  the exact new component you mean and keep the finding's title, detail and file
+  consistent about it; do not conflate two different new components.""",
     },
     {
         "id": "process-compliance",
@@ -447,8 +518,15 @@ Check:
         "prompt": """\
 Focus: the process gates the maintainers enforce.
 Check:
-- SPDX / license header on every new file (SPDX-License-Identifier plus
-  copyright). Flag new source/script/workflow files that lack it.
+- SPDX / license header on every new source/script/workflow file
+  (SPDX-License-Identifier plus copyright), in that file's own comment syntax:
+  // for C++, # for Python / Bash / CMake / YAML. This applies to all of them,
+  Python and shell scripts included, so a new .py or .sh without a # SPDX header
+  IS a finding; just propose the header in the right syntax, never // for a
+  non-C++ file. When the file starts with a shebang (#!...), the shebang stays on
+  line 1 and the SPDX header goes on the line right after it, not before.
+  Jupyter notebooks (.ipynb) have no established SPDX-header mechanism, so do not
+  flag a missing header, and do not invent one, for a notebook.
 - Developer Certificate of Origin: commits need a Signed-off-by trailer (git
   commit -s); a DCO check failure is blocking. If the diff/commits show missing
   sign-off, flag it.
@@ -460,6 +538,98 @@ Check:
   (github.event.workflow_run, ...) instead.""",
     },
 ]
+
+# Per-file verification: adjudicates findings against the full source + base
+# headers (code as truth), refuting the diff-only false positives.
+VERIFICATION = """\
+You are the verification reviewer for a DPsim automated code review. Earlier
+passes produced findings by reading only the pull-request DIFF, so they could
+not see the surrounding code and may assert things the full file disproves: a
+missing override that is in fact declared, a hook the base class already
+provides, a member claimed unused that is used, a "not exposed" attribute that
+is bound elsewhere. You are given, for ONE file, its full current source as
+ground truth, plus the findings raised against that file. Judge each finding
+against the real code, not against the diff alone.
+
+You may also be given RELATED SOURCES: the base-class and interface headers this
+file inherits from or includes (resolved by following its #include chain). These
+are the truth about the parent type. Use them to settle claims the file alone
+cannot: whether a base method is virtual and non-final (so an override is even
+required), the exact hook signature, and, crucially, whether a base class such
+as CompositePowerComp already implements a hook (mnaCompInitialize, the system-
+matrix stamp, the update/step iteration) so the derived component does NOT need
+to. If a claimed-missing override or initializer is provided by a base class in
+the related sources, the finding is REFUTED, not merely unconfirmed. Only fall
+back to "unconfirmed" when the deciding code is in neither the file nor the
+related sources.
+
+Ground rules:
+- The FILE CONTENT is the truth. Before agreeing with any "missing / absent /
+  not overridden / not declared / not exposed / unused" claim, search the whole
+  file for the symbol: if the override keyword, declaration, hook body, or use
+  is present, the finding is REFUTED. Do not restate the diff's blind spot as a
+  fact.
+- Respect the DPsim composite pattern: a component deriving from
+  CompositePowerComp that registers a subcomponent with addMNASubComponent is
+  stamped and stepped by the base class. The parent is NOT required to implement
+  mnaParentApplySystemMatrixStamp or to re-stamp the subcomponent, and a parent
+  hook (e.g. mnaParentApplyRightSideVectorStamp) that only logs is intentional,
+  not a bug. Overriding mnaCompUpdateVoltage/Current to copy a subcomponent's
+  interface value is the correct idiom, not an error. Refute findings that flag
+  these as defects.
+- Public `const Attribute<...>::Ptr` members and createDynamic() into a const
+  Ptr are established DPsim idioms; do not treat them as encapsulation or
+  const-correctness bugs.
+
+Assign each finding a verdict:
+- "confirmed": the file clearly exhibits the defect. Keep it.
+- "refuted": the file contradicts it, or it is a known-correct pattern. Drop it.
+- "unconfirmed": the claim depends on code not in this file (a base class, a
+  caller) and cannot be settled here. Keep it, but tentative.
+
+Confidence is your own integer 0-100 that the finding is real, judged from the
+code you can see. Be calibrated: reserve >85 only for a defect you can point to
+on specific lines; a claim you merely cannot disprove is not high confidence.
+Do NOT cluster everything near 100.
+
+The finder's line number is unreliable. Read the numbered source (each line is
+prefixed "N|") and set line to the exact 1-based number where the issue actually
+sits, preferring a line listed under CHANGED LINES; use null if no single line
+applies. Do not echo the finder's line without checking it against the source.
+
+Scope: CHANGED LINES lists the new-file line numbers this diff adds or changes.
+A finding must concern one of those lines, OR be a real whole-file omission the
+PR should include for the new code it adds (a missing binding, doc, or test for a
+newly added component). REFUTE a finding that merely critiques pre-existing code
+the diff did not touch, even if technically valid (a flag, comment, member, or
+idiom that was already there).
+
+You receive the findings as JSON (each has an "id") and the file content with
+1-based line numbers. Return ONLY, for every id you were given:
+{"verdicts": [
+  {"id": <int>, "verdict": "confirmed|unconfirmed|refuted",
+   "confidence": <int 0-100>, "line": <int or null>,
+   "note": "one clause of evidence from the code"}
+]}
+Include every id. No prose, no markdown.
+"""
+
+# Claim check: compares the PR's stated intent against what the diff does.
+CLAIM_CHECK = """\
+You verify a DPsim pull request against its own stated intent. You are given the
+PR INTENT (title, description, commit messages, what the author says it does) and
+the DIFF (what it actually changes). Judge only from these two.
+
+State plainly and concretely, without restating every file:
+- claimed: what the PR says it does, in one line.
+- done: what the diff actually does, in one line.
+- difference: any discrepancy that matters, a claim the diff does not implement,
+  or a behavioural or scope change the description does not mention. Use exactly
+  "none" if the code matches the description.
+
+Return ONLY JSON, no prose, no markdown:
+{"claimed": "<one line>", "done": "<one line>", "difference": "<one line or none>"}
+"""
 
 # Final pass. Receives the concatenated JSON from all stages and returns one
 # clean, de-duplicated, prioritized review.
@@ -477,8 +647,22 @@ Do:
   convention; keep correctness, equation, scaling, scheduling, and safety
   findings prominent.
 - Sort by severity (critical > high > medium > low), then by confidence.
+- Preserve each kept finding's fields as given (file, line, suggestion,
+  code_suggestion, confidence, stage, unconfirmed, verify_note); when merging
+  duplicates keep a non-null code_suggestion rather than dropping it. Do not raise
+  a finding's confidence above the value given. Keep the "unconfirmed" flag unless
+  a confirmed (not unconfirmed) duplicate covers the same issue, in which case
+  keep that confirmed one instead.
 - Keep at most the 15 most important findings.
+- Write "summary" as a single-sentence TL;DR: the bottom line a maintainer
+  needs, the must-fix items and the overall risk, not a list of every finding
+  (e.g. "Two real fixes, a missing Python binding and a dead member; the rest is
+  minor and the equation/stamping/scheduling passes flagged nothing."). You may
+  fold in, factually, what the change gets right (as areas that surfaced no
+  concerns), but keep it neutral: no praise or approving adjectives. If there are
+  no findings, say the change looks clean. One sentence, no line breaks.
 
-Return ONLY the same JSON object shape: {"findings": [ ... ]}.
+Return ONLY a JSON object of the shape:
+{"summary": "<2-3 sentence overview>", "findings": [ ... ]}.
 No prose, no markdown.
 """
