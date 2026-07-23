@@ -712,7 +712,10 @@ class Reader:
         # each keeping its own rating; the PF solver already aggregates P/Q
         # and Q-limits across every component at a node (PFSolverPowerPolar.cpp),
         # so no aggregation is needed here.
-        gen_baseS = gen_row["mBase"] * mw_w  # gen base MVA default is mpc.baseMVA
+        # MATPOWER: a gen mBase of 0 means "use the system baseMVA".
+        gen_baseS = (
+            gen_row["mBase"] * mw_w if gen_row["mBase"] > 0 else self.mpc_base_power_MVA
+        )
         gen_baseV = self.mpc_bus_data.at[index, "baseKV"] * kv_v  # gen base kV
         gen_v = gen_row["Vg"] * gen_baseV  # gen set point voltage (gen['Vg'] in p.u.)
         gen_p = gen_row["Pg"] * mw_w  # gen ini. active power (gen['Pg'] in MVA)
