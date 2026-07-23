@@ -237,4 +237,99 @@ new versions can help to mark significant changes and to analyze new portions of
 &lt;p>Only Linux packages are currently available, other platforms will be supported in the future.&lt;/p>
 &lt;h2 id="container-images">Container Images&lt;/h2>
 &lt;p>To release an updated Docker image, the container workflow needs to be triggered manually.&lt;/p>
-&lt;p>If a Pull Request changes a container image, this is not updated automatically in the container image register.&lt;/p></description></item></channel></rss>
+&lt;p>If a Pull Request changes a container image, this is not updated automatically in the container image register.&lt;/p></description></item><item><title>Docs: LLM Pull Request Review</title><link>https://sogno-platform.github.io/dpsim/docs/development/llm-pr-review/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/development/llm-pr-review/</guid><description>
+&lt;h1 id="overview">Overview&lt;/h1>
+&lt;p>DPsim ships an optional, non-blocking pull-request reviewer that runs a series of
+specialised passes over the diff of a pull request using a large language model
+and posts a single review comment. It is intended as an assistive first pass: it
+never requests changes and cannot block a merge, so a human review remains
+authoritative.&lt;/p>
+&lt;p>The reviewer lives under &lt;code>.github/llm-review/&lt;/code> (the prompts in &lt;code>prompts.py&lt;/code> and a
+pure-standard-library runner in &lt;code>review.py&lt;/code>) and is driven by two workflows:
+&lt;code>llm-review-collect.yml&lt;/code>, which runs on the pull request itself, and
+&lt;code>llm-review.yml&lt;/code>, which performs the review. The split is what makes reviewing
+pull requests from forks safe (see &lt;a href="#fork-pull-requests">Fork pull requests&lt;/a>). It
+communicates with any OpenAI-compatible chat endpoint, configured through the
+environment variables described below.&lt;/p>
+&lt;h1 id="how-it-works">How it works&lt;/h1>
+&lt;p>For each pull request the runner reads the &lt;code>base..head&lt;/code> diff and sends it, in
+turn, to a set of focused review stages, each with its own prompt. The stages
+cover model equations and their derivation, MNA stamping and domain modeling,
+numerical correctness, task scheduling and attribute usage, real-time safety,
+C++ class design and reuse, naming and in-code documentation, logging discipline,
+the Python bindings, input parsing, the build system and dependencies, testing
+and component coverage, and licensing and pull-request hygiene. Each stage returns
+a strict JSON list of findings. A final synthesis pass deduplicates and
+prioritises them, and the runner posts them as one review, anchoring inline
+comments only to lines present in the diff.&lt;/p>
+&lt;p>The prompts encode DPsim&amp;rsquo;s documented conventions (see
+&lt;a href="https://sogno-platform.github.io/dpsim/docs/development/guidelines/">Guidelines&lt;/a>) and the recurring points raised in
+past reviews, so the feedback stays specific to this project rather than generic.&lt;/p>
+&lt;h1 id="configuration">Configuration&lt;/h1>
+&lt;p>The workflow requires one repository secret:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>RWTH_LLM_TOKEN&lt;/code>: the bearer API key for the chat endpoint.&lt;/li>
+&lt;/ul>
+&lt;p>The following repository Actions variables are optional and override the
+defaults baked into the workflow:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>LLM_BASE_URL&lt;/code>: the OpenAI-compatible base URL.&lt;/li>
+&lt;li>&lt;code>LLM_MODEL&lt;/code>: the model identifier.&lt;/li>
+&lt;li>&lt;code>LLM_CHAT_PATH&lt;/code>: the chat path appended to the base URL (default
+&lt;code>/chat/completions&lt;/code>).&lt;/li>
+&lt;li>&lt;code>LLM_REVIEW_RUNNER&lt;/code>: the runner label (default &lt;code>ubuntu-latest&lt;/code>; see
+&lt;a href="#runner-selection">Runner selection&lt;/a>).&lt;/li>
+&lt;/ul>
+&lt;p>The workflow&amp;rsquo;s baked-in defaults target an OpenAI-compatible deployment; override
+&lt;code>LLM_BASE_URL&lt;/code> and &lt;code>LLM_MODEL&lt;/code> to point at a different endpoint or model.&lt;/p>
+&lt;h1 id="obtaining-an-api-key">Obtaining an API key&lt;/h1>
+&lt;p>Obtain a bearer API key from the chosen OpenAI-compatible provider and store it as
+the &lt;code>RWTH_LLM_TOKEN&lt;/code> repository secret. The key is only exposed to workflow runs on
+pull requests from the repository itself, never from forks.&lt;/p>
+&lt;p>Before storing the secret, a single request confirms that the key reaches the
+model:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>curl -sS -X POST &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#000">$LLM_BASE_URL&lt;/span>&lt;span style="color:#4e9a06">/chat/completions&amp;#34;&lt;/span> &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06">&lt;/span> -H &lt;span style="color:#4e9a06">&amp;#34;Authorization: Bearer &lt;/span>&lt;span style="color:#000">$RWTH_LLM_TOKEN&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span> &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06">&lt;/span> -H &lt;span style="color:#4e9a06">&amp;#34;Content-Type: application/json&amp;#34;&lt;/span> &lt;span style="color:#4e9a06">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4e9a06">&lt;/span> -d &lt;span style="color:#4e9a06">&amp;#34;{\&amp;#34;model\&amp;#34;:\&amp;#34;&lt;/span>&lt;span style="color:#000">$LLM_MODEL&lt;/span>&lt;span style="color:#4e9a06">\&amp;#34;,\&amp;#34;messages\&amp;#34;:[{\&amp;#34;role\&amp;#34;:\&amp;#34;user\&amp;#34;,\&amp;#34;content\&amp;#34;:\&amp;#34;ok\&amp;#34;}]}&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="running-locally">Running locally&lt;/h1>
+&lt;p>The runner has a dry-run mode that executes the full pipeline and prints the
+assembled review instead of posting it. It needs no GitHub token and no Actions
+runner, only network access to the endpoint:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> .github/llm-review
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">LLM_BASE_URL&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;&amp;lt;openai-compatible-base-url&amp;gt;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">LLM_MODEL&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;&amp;lt;model-identifier&amp;gt;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">LLM_CHAT_PATH&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;/chat/completions&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">LLM_API_KEY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#000">$RWTH_LLM_TOKEN&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">BASE_SHA&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>git rev-parse origin/main&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> &lt;span style="color:#000">HEAD_SHA&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>git rev-parse HEAD&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> &lt;span style="color:#000">PR_NUMBER&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>python3 review.py --dry-run
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="runner-selection">Runner selection&lt;/h1>
+&lt;p>The workflow defaults to a GitHub-hosted &lt;code>ubuntu-latest&lt;/code> runner. If the chosen
+endpoint is only reachable from within a particular network, set the
+&lt;code>LLM_REVIEW_RUNNER&lt;/code> variable to a self-hosted runner label registered inside that
+network; no change to the workflow is required.&lt;/p>
+&lt;h1 id="fork-pull-requests">Fork pull requests&lt;/h1>
+&lt;p>Reviewing pull requests from forks requires care, because a fork&amp;rsquo;s code is
+untrusted and must never gain access to the secret. The reviewer uses the
+&lt;code>workflow_run&lt;/code> pattern for this, rather than &lt;code>pull_request_target&lt;/code>, and splits the
+work into two workflows:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>llm-review-collect.yml&lt;/code> runs on the &lt;code>pull_request&lt;/code> event, including from
+forks. GitHub withholds secrets from fork &lt;code>pull_request&lt;/code> runs, so this job has
+no key. It checks out nothing and runs no code from the pull request; it only
+records the PR number and commit SHAs, taken from trusted GitHub context, into
+an artifact.&lt;/li>
+&lt;li>&lt;code>llm-review.yml&lt;/code> runs on &lt;code>workflow_run&lt;/code>, after the collect job completes, in
+the base repository context where the secret is available. It checks out the
+base repository&amp;rsquo;s own code, never the pull request&amp;rsquo;s, and reads the diff as
+data through the GitHub API. It never builds or executes anything from the pull
+request.&lt;/li>
+&lt;/ul>
+&lt;p>Two properties keep the key safe. First, the key is only ever sent as an
+&lt;code>Authorization&lt;/code> header to the configured LLM endpoint, and is never placed in the
+model prompt, so a prompt-injection payload in the diff cannot reveal it. Second,
+the privileged job runs only trusted base-repository code, so untrusted pull
+request code never executes with the secret in scope. The PR metadata read from
+the collect artifact is validated (numeric PR number, hexadecimal SHAs) before
+use. For this to operate, both the workflows and the secret must reside on the
+repository the pull requests target.&lt;/p></description></item></channel></rss>
