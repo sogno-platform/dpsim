@@ -22,17 +22,21 @@ Env:
   LLM_MODEL_2    optional second finder model, for cross-model recall
   LLM_VERIFY_MODEL  optional mid-tier verifier (falls back to LLM_MODEL)
   LLM_FINAL_MODEL   optional strongest tier; re-checks only survivors
+  LLM_FINDER_CONCURRENCY  parallel finder calls, default 4 (finders are unlimited)
   GITHUB_TOKEN   provided by Actions
   GITHUB_REPOSITORY  provided by Actions (owner/repo)
   PR_NUMBER, BASE_SHA, HEAD_SHA  passed by the workflow; if absent they are read
                  from GITHUB_EVENT_PATH (pull_request event payload)
   MAX_DIFF_CHARS optional cap on diff sent to the model (default 60000)
 """
+import concurrent.futures
 import json
 import os
+import random
 import re
 import subprocess
 import sys
+import time
 import urllib.request
 import urllib.error
 import urllib.parse
@@ -49,6 +53,17 @@ SEV_RANK = {"critical": 0, "high": 1, "medium": 2, "low": 3}
 # a bad run cannot carpet a PR.
 SUGGESTION_MIN_CONF = 80
 MAX_INLINE = 8
+
+# Finder calls run serially by default: the gateway caps concurrent requests per
+# key (429 too_many_concurrent_requests), so parallelism isn't reliably available.
+# Raise LLM_FINDER_CONCURRENCY if your gateway allows it; 429s back off and retry.
+FINDER_CONCURRENCY = int(os.environ.get("LLM_FINDER_CONCURRENCY", "1"))
+# Per-call retry budget for transient throttling (429) and 5xx, with backoff.
+MAX_LLM_ATTEMPTS = 6
+
+# Models that 400 on a `temperature` field (GPT-5.x lock it); filled on first
+# rejection so later calls skip the param.
+_NO_TEMPERATURE = set()
 
 
 def confidence_display(f):
@@ -174,28 +189,73 @@ def llm(system, user, model=None):
     # /chat/completions. Override LLM_CHAT_PATH if the gateway differs.
     path = env("LLM_CHAT_PATH", "/chat/completions")
     url = base + path
-    body = json.dumps(
-        {
-            "model": model or env("LLM_MODEL", required=True),
-            "temperature": 0.1,
-            "messages": [
-                {"role": "system", "content": system},
-                {"role": "user", "content": user},
-            ],
-        }
-    ).encode()
-    req = urllib.request.Request(
-        url,
-        data=body,
-        method="POST",
-        headers={
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + env("LLM_API_KEY", required=True),
-        },
+    model = model or env("LLM_MODEL", required=True)
+    payload = {
+        "model": model,
+        "messages": [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user},
+        ],
+    }
+    if model not in _NO_TEMPERATURE:
+        payload["temperature"] = 0.1
+
+    def post(p):
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(p).encode(),
+            method="POST",
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + env("LLM_API_KEY", required=True),
+            },
+        )
+        with urllib.request.urlopen(req, timeout=300) as resp:
+            return json.load(resp)
+
+    last_detail = ""
+    for attempt in range(MAX_LLM_ATTEMPTS):
+        try:
+            data = post(payload)
+            return data["choices"][0]["message"]["content"]
+        except urllib.error.HTTPError as e:
+            detail = ""
+            try:
+                detail = e.read().decode(errors="replace")[:600]
+            except Exception:
+                pass
+            last_detail = detail or last_detail
+            # GPT-5.x reject a temperature field with 400; drop it and retry.
+            if e.code == 400 and "temperature" in payload:
+                payload.pop("temperature", None)
+                _NO_TEMPERATURE.add(model)
+                print(
+                    f"[{model}] rejected temperature; retrying without it",
+                    file=sys.stderr,
+                )
+                continue
+            # Concurrency cap / transient upstream errors: back off and retry.
+            if e.code in (429, 500, 502, 503) and attempt < MAX_LLM_ATTEMPTS - 1:
+                delay = random.uniform(0.5, min(30.0, 1.5 ** (attempt + 1)))
+                print(
+                    f"[{model}] HTTP {e.code}; backing off {delay:.1f}s "
+                    f"(attempt {attempt + 1}/{MAX_LLM_ATTEMPTS})",
+                    file=sys.stderr,
+                )
+                time.sleep(delay)
+                continue
+            raise urllib.error.URLError(
+                f"HTTP {e.code} from model {model}: {detail}"
+            ) from e
+        except urllib.error.URLError:
+            # Network hiccup (not an HTTPError): a few backoff retries.
+            if attempt < MAX_LLM_ATTEMPTS - 1:
+                time.sleep(random.uniform(0.5, 1.5 ** (attempt + 1)))
+                continue
+            raise
+    raise urllib.error.URLError(
+        f"exhausted {MAX_LLM_ATTEMPTS} attempts for model {model}: {last_detail}"
     )
-    with urllib.request.urlopen(req, timeout=300) as resp:
-        data = json.load(resp)
-    return data["choices"][0]["message"]["content"]
 
 
 def strip_reasoning(text):
@@ -350,11 +410,14 @@ def changed_sources_block(diff, head_sha):
     )
 
 
-def run_stages(diff, head_sha, pr_ctx="", model=None):
+def run_stages(diff, head_sha, pr_ctx="", models=None):
+    # Every (finder model, stage) is an independent call; the finder models are
+    # unlimited, so fan them out over a small thread pool (I/O-bound HTTP).
+    models = models or [None]
     context = changed_sources_block(diff, head_sha)
-    all_findings = []
-    label = model or "primary"
-    for stage in prompts.STAGES:
+
+    def one(model, stage):
+        label = model or env("LLM_MODEL", required=True)
         user = (
             f"{stage['prompt']}\n\n=== PR DIFF (base..head) ===\n"
             f"{diff}{context}{pr_ctx}"
@@ -364,23 +427,28 @@ def run_stages(diff, head_sha, pr_ctx="", model=None):
         except (urllib.error.URLError, KeyError, ValueError) as e:
             # Non-blocking: one failed stage must not sink the whole review.
             print(f"[{label}/{stage['id']}] stage failed: {e}", file=sys.stderr)
-            continue
+            return []
         found = parse_findings(raw)
         for f in found:
             f["stage"] = stage["id"]
             f["finder"] = label
         print(f"[{label}/{stage['id']}] {len(found)} finding(s)", file=sys.stderr)
-        all_findings.extend(found)
+        return found
+
+    tasks = [(m, stage) for m in models for stage in prompts.STAGES]
+    workers = max(1, min(FINDER_CONCURRENCY, len(tasks)))
+    all_findings = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as ex:
+        for found in ex.map(lambda t: one(*t), tasks):
+            all_findings.extend(found)
     return all_findings
 
 
 # Verification fetches+checks at most this many files (one LLM call each); the
-# rest, and unfetchable files, stay unconfirmed rather than trusted or dropped.
-MAX_VERIFY_FILES = 12
-# The final tier (a stronger, rate-limited model) only re-checks the survivors,
-# which cluster in far fewer files; cap it tighter to stay inside a small daily
-# quota. See main()'s tiered flow.
-MAX_FINAL_FILES = 8
+# The mid tier verifies every file with findings (per-file, focused) -- it does
+# the real culling and must not miss a file. The final tier is a single batched
+# call over the survivors, bounded by context size instead of file count.
+MAX_FINAL_SOURCE_CHARS = 200000
 MAX_VERIFY_FILE_CHARS = 90000
 UNCONFIRMED_CONF_CAP = 35
 # Base-class/interface headers given to the verifier, followed up the #include
@@ -390,8 +458,8 @@ MAX_CONTEXT_CHARS = 80000
 CONTEXT_HOPS = 3
 # Full source of the changed files given to the finder stages (context beyond
 # the diff, to cut "missing X" false positives). Bounded.
-MAX_STAGE_SOURCE_FILES = 15
-MAX_STAGE_SOURCE_CHARS = 160000
+MAX_STAGE_SOURCE_FILES = 20
+MAX_STAGE_SOURCE_CHARS = 300000
 # PR title/description/commit messages given as intent context. Bounded.
 MAX_PR_CONTEXT_CHARS = 8000
 
@@ -562,7 +630,7 @@ def dedup_findings(findings):
     return list(seen.values())
 
 
-def verify(findings, diff, head_sha, model=None, max_files=MAX_VERIFY_FILES):
+def verify(findings, diff, head_sha, model=None, max_files=None, single_call=False):
     """Adjudicate findings per file against the real source (code as truth):
     confirmed -> kept, refuted -> dropped, unconfirmed -> kept tentative with
     confidence capped. Nothing drops without a refutation; unreachable code or an
@@ -571,6 +639,7 @@ def verify(findings, diff, head_sha, model=None, max_files=MAX_VERIFY_FILES):
     sample of refuted findings with reasons, for the methodology footer."""
     if not findings:
         return [], {}
+    vlabel = model or env("LLM_MODEL", required=True)
     # Finders sometimes cite a wrong path (src/ vs include/). Remap to the real
     # changed file by basename so verification fetches the true source instead of
     # failing and defaulting everything to unconfirmed.
@@ -598,21 +667,64 @@ def verify(findings, diff, head_sha, model=None, max_files=MAX_VERIFY_FILES):
     for f in findings:
         by_file.setdefault(f.get("file"), []).append(f)
 
-    # Most-findings files first (the cap spends where it matters); file-less
-    # (process) findings pass through unchanged.
+    # Most-findings files first; file-less (process) findings pass through
+    # unchanged. max_files=None means no cap (check every file with findings) --
+    # used by the mid tier, which does the real culling and must not miss a file.
     files = [p for p in by_file if p]
     files.sort(key=lambda p: len(by_file[p]), reverse=True)
-    if len(files) > max_files:
+    if max_files and len(files) > max_files:
         print(
             f"verification: {len(files)} files with findings, checking the top "
             f"{max_files}; the rest are kept as unconfirmed",
             file=sys.stderr,
         )
-    to_check = set(files[:max_files])
+        files = files[:max_files]
+    to_check = set(files)
 
     verdicts = {}  # id -> verdict dict from the model
-    checked_ids = set()  # ids that went through a code-grounded check
     header_cache = {}  # (path -> content|None) shared across files this run
+
+    def source_block(path, code):
+        # Full file plus the base-class/interface headers it inherits, so
+        # override/hook/signature claims are judged against the real parent.
+        context = gather_context(code, head_sha, header_cache)
+        related = "".join(f"\n--- {p} ---\n{c}\n" for p, c in context.items())
+        if context:
+            print(
+                f"verification: {path} + {len(context)} base/interface header(s)",
+                file=sys.stderr,
+            )
+        return (
+            f"\n\n=== FULL CURRENT SOURCE OF {path} (ground truth) ===\n"
+            + number_lines(code)
+            + (
+                f"\n\n=== RELATED SOURCES for {path} (base classes / interfaces, "
+                "ground truth) ===\n" + related
+                if related
+                else ""
+            )
+            + f"\n\n=== CHANGED LINES in {path} (in-scope lines) ===\n"
+            + to_ranges(added_lines(diff, path))
+            + f"\n\n=== DIFF HUNK FOR {path} ===\n"
+            + file_hunk(diff, path)
+        )
+
+    def collect(raw):
+        obj = extract_object(raw)
+        for v in (obj or {}).get("verdicts", []) if isinstance(obj, dict) else []:
+            if isinstance(v, dict) and isinstance(v.get("id"), int):
+                verdicts[v["id"]] = v
+
+    def payload_for(fs):
+        return [
+            {
+                k: f.get(k)
+                for k in ("_id", "file", "severity", "title", "detail", "line")
+            }
+            for f in fs
+        ]
+
+    sources = {}
     for path in to_check:
         code = fetch_file(path, head_sha)
         if code is None:
@@ -621,48 +733,57 @@ def verify(findings, diff, head_sha, model=None, max_files=MAX_VERIFY_FILES):
                 file=sys.stderr,
             )
             continue
-        group = by_file[path]
-        payload = [
-            {k: f.get(k) for k in ("_id", "severity", "title", "detail", "line")}
-            for f in group
-        ]
-        # Base-class/interface headers, so override/hook/signature claims are
-        # judged against the real parent, not left unconfirmed.
-        context = gather_context(code, head_sha, header_cache)
-        related = "".join(f"\n--- {p} ---\n{c}\n" for p, c in context.items())
-        user = f"FILE: {path}\n\n=== FINDINGS (JSON) ===\n" + json.dumps(
-            {"findings": payload}, indent=2
-        ) + f"\n\n=== FULL CURRENT SOURCE OF {path} (ground truth) ===\n" + number_lines(
-            code
-        ) + (
-            "\n\n=== RELATED SOURCES (base classes / interfaces it inherits, "
-            "ground truth) ===\n" + related
-            if related
-            else ""
-        ) + f"\n\n=== CHANGED LINES in {path} (new-file line numbers, the " f"in-scope lines) ===\n" + to_ranges(
-            added_lines(diff, path)
-        ) + f"\n\n=== DIFF HUNK FOR {path} (what changed) ===\n" + file_hunk(
-            diff, path
-        )
-        if context:
+        sources[path] = code
+
+    if single_call:
+        # One request over all files at once; the final tier's model is the most
+        # rate-limited, so a single batched call is cheapest on quota. Include as
+        # many survivor files as fit the context budget (most-flagged first); any
+        # that don't fit stay unconfirmed.
+        blocks, included, total = [], [], 0
+        for path in sorted(sources, key=lambda p: len(by_file[p]), reverse=True):
+            block = source_block(path, sources[path])
+            if included and total + len(block) > MAX_FINAL_SOURCE_CHARS:
+                continue
+            blocks.append(block)
+            included.append(path)
+            total += len(block)
+        dropped = len(sources) - len(included)
+        if dropped:
             print(
-                f"verification: {path} + {len(context)} base/interface header(s)",
+                f"final tier: {dropped} file(s) beyond the context budget kept "
+                "unconfirmed",
                 file=sys.stderr,
             )
-        for f in group:
-            checked_ids.add(f["_id"])
-        try:
-            raw = llm(prompts.VERIFICATION, user, model=model)
-        except (urllib.error.URLError, KeyError, ValueError) as e:
-            print(
-                f"verification of {path} failed, keeping unconfirmed: {e}",
-                file=sys.stderr,
+        fs = [f for p in included for f in by_file[p]]
+        if fs:
+            user = (
+                "You are given SEVERAL files. Judge each finding against the file "
+                'named in its "file" field.\n\n=== FINDINGS (JSON) ===\n'
+                + json.dumps({"findings": payload_for(fs)}, indent=2)
+                + "".join(blocks)
             )
-            continue
-        obj = extract_object(raw)
-        for v in (obj or {}).get("verdicts", []) if isinstance(obj, dict) else []:
-            if isinstance(v, dict) and isinstance(v.get("id"), int):
-                verdicts[v["id"]] = v
+            try:
+                collect(llm(prompts.VERIFICATION, user, model=model))
+            except (urllib.error.URLError, KeyError, ValueError) as e:
+                print(
+                    f"final-tier verification failed, keeping unconfirmed: {e}",
+                    file=sys.stderr,
+                )
+    else:
+        for path, code in sources.items():
+            user = (
+                f"FILE: {path}\n\n=== FINDINGS (JSON) ===\n"
+                + json.dumps({"findings": payload_for(by_file[path])}, indent=2)
+                + source_block(path, code)
+            )
+            try:
+                collect(llm(prompts.VERIFICATION, user, model=model))
+            except (urllib.error.URLError, KeyError, ValueError) as e:
+                print(
+                    f"verification of {path} failed, keeping unconfirmed: {e}",
+                    file=sys.stderr,
+                )
 
     kept, drops, unconf, refuted_list = [], 0, 0, []
     for f in findings:
@@ -712,8 +833,8 @@ def verify(findings, diff, head_sha, model=None, max_files=MAX_VERIFY_FILES):
     for f in findings:
         f.pop("_id", None)
     print(
-        f"verification: {len(kept)} kept ({unconf} unconfirmed), {drops} refuted "
-        f"of {len(findings)}",
+        f"verification [{vlabel}]: {len(kept)} kept ({unconf} unconfirmed), "
+        f"{drops} refuted of {len(findings)}",
         file=sys.stderr,
     )
     stats = {
@@ -749,6 +870,15 @@ def synthesize(findings, pr_ctx="", model=None):
         return "", findings  # synthesis misbehaved; keep the raw union
     merged = obj.get("findings")
     if not isinstance(merged, list) or not merged:
+        merged = findings
+    elif any(not str(m.get("title", "")).strip() for m in merged):
+        # Some models return the findings list with title/detail dropped; that
+        # would render as empty headers. Keep the verified findings intact and
+        # take only the overview from synthesis.
+        print(
+            "synthesis returned findings with empty titles; keeping verified set",
+            file=sys.stderr,
+        )
         merged = findings
     overview = obj.get("summary")
     overview = overview.strip() if isinstance(overview, str) else ""
@@ -961,10 +1091,20 @@ def build_review(findings, head_sha, valid_files, overview="", stats=None, claim
                 lines += [summary_line(f, f["_anchored"]) for f in items]
 
     lines += methodology_block(stats, claim)
-    model = os.environ.get("LLM_MODEL", "LLM")
+    finders = [os.environ.get("LLM_MODEL", "LLM")]
+    if os.environ.get("LLM_MODEL_2"):
+        finders.append(os.environ["LLM_MODEL_2"])
+    stack = [
+        f"find {', '.join(finders)}",
+        f"verify {os.environ.get('LLM_VERIFY_MODEL') or finders[0]}",
+    ]
+    if os.environ.get("LLM_FINAL_MODEL"):
+        stack.append(f"final {os.environ['LLM_FINAL_MODEL']}")
     lines += [
         "",
-        f"<sub>Automated, non-blocking review. May be wrong. Model: {model}.</sub>",
+        "<sub>Automated, non-blocking review. May be wrong. Models: "
+        + " → ".join(stack)
+        + ".</sub>",
     ]
 
     payload = {
@@ -1063,9 +1203,8 @@ def main():
     pr_ctx = pr_context(pr_number, base_sha, head_sha)
     claim = claim_check(diff, pr_ctx, model=verify_model)
 
-    raw_findings = run_stages(diff, head_sha, pr_ctx)
-    if finder2:
-        raw_findings += run_stages(diff, head_sha, pr_ctx, model=finder2)
+    finder_models = [None] + ([finder2] if finder2 else [])
+    raw_findings = run_stages(diff, head_sha, pr_ctx, models=finder_models)
 
     verified, vstats = verify(raw_findings, diff, head_sha, model=verify_model)
     if final_model:
@@ -1074,7 +1213,7 @@ def main():
             file=sys.stderr,
         )
         verified, vstats2 = verify(
-            verified, diff, head_sha, model=final_model, max_files=MAX_FINAL_FILES
+            verified, diff, head_sha, model=final_model, single_call=True
         )
         vstats = merge_vstats(vstats, vstats2)
 
