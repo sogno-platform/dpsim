@@ -31,15 +31,6 @@ DP::Ph3::AvVoltSourceInverterStateSpace::AvVoltSourceInverterStateSpace(
       mOmegaPLL(mAttributes->create<Real>("omega_pll")),
       mIrcNd(mAttributes->create<Real>("irc_n_d")),
       mIrcNq(mAttributes->create<Real>("irc_n_q")) {
-  // Envelope states follow the control block, whose length (8 or 10) is set by
-  // the negative-sequence option, so their indices are computed here.
-  for (Int p = 0; p < 3; ++p) {
-    mVcReCol[p] = mRealStateCount + 2 * p;
-    mVcImCol[p] = mRealStateCount + 2 * p + 1;
-    mIfReCol[p] = mRealStateCount + 6 + 2 * p;
-    mIfImCol[p] = mRealStateCount + 6 + 2 * p + 1;
-  }
-
   **mVcD = 0.0;
   **mVcQ = 0.0;
   **mIrcD = 0.0;
