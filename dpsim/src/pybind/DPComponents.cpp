@@ -660,10 +660,12 @@ void addDPPh3Components(py::module_ mDPPh3) {
              std::shared_ptr<CPS::DP::Ph3::AvVoltSourceInverterStateSpace>,
              CPS::SimPowerComp<CPS::Complex>>(
       mDPPh3, "AvVoltSourceInverterStateSpace", py::multiple_inheritance())
-      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
-      .def(py::init<std::string, std::string, CPS::Logger::Level>(), "uid"_a,
-           "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+      .def(py::init<std::string, CPS::Logger::Level, CPS::Bool>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off,
+           "enable_neg_seq_control"_a = false)
+      .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
+           "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
+           "enable_neg_seq_control"_a = false)
       .def("set_parameters",
            &CPS::DP::Ph3::AvVoltSourceInverterStateSpace::setParameters, "Lf"_a,
            "Cf"_a, "Rf"_a, "Rc"_a, "omega_n"_a, "Kp_pll"_a, "Ki_pll"_a,

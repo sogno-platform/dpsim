@@ -9,12 +9,13 @@ namespace CPS {
 namespace DP {
 namespace Ph3 {
 
-/// Averaged grid-following VSI SSN port of EMT::Ph3::AvVoltSourceInverterStateSpace: 10 real control states (single PLL, positive-sequence dq frame plus a negative-sequence current-control loop, gamma_nd/gamma_nq) plus 6 complex per-phase envelope states (Vc_a/b/c, If_a/b/c).
+/// @brief Averaged grid-following VSI (SSN), optional dual-sequence current control.
 class AvVoltSourceInverterStateSpace final
     : public MixedVTypeVariableSSNComp,
       public SharedFactory<AvVoltSourceInverterStateSpace> {
 private:
-  enum StateIndex : Int {
+  /// Real control-state indices; GammaND/GammaNQ used only when the negative-sequence loop is enabled.
+  enum ControlStateIndex : Int {
     Psi = 0,
     PhiPLL = 1,
     PFiltered = 2,
@@ -24,25 +25,17 @@ private:
     GammaD = 6,
     GammaQ = 7,
     GammaND = 8,
-    GammaNQ = 9,
-    VcARe = 10,
-    VcAIm = 11,
-    VcBRe = 12,
-    VcBIm = 13,
-    VcCRe = 14,
-    VcCIm = 15,
-    IfARe = 16,
-    IfAIm = 17,
-    IfBRe = 18,
-    IfBIm = 19,
-    IfCRe = 20,
-    IfCIm = 21
+    GammaNQ = 9
   };
 
-  static constexpr Int mVcReCol[3] = {VcARe, VcBRe, VcCRe};
-  static constexpr Int mVcImCol[3] = {VcAIm, VcBIm, VcCIm};
-  static constexpr Int mIfReCol[3] = {IfARe, IfBRe, IfCRe};
-  static constexpr Int mIfImCol[3] = {IfAIm, IfBIm, IfCIm};
+  /// Enables the baseband negative-sequence current-control loop (+2 states).
+  const Bool mEnableNegSeqControl;
+
+  /// Per-phase envelope column indices, set in the constructor.
+  Int mVcReCol[3];
+  Int mVcImCol[3];
+  Int mIfReCol[3];
+  Int mIfImCol[3];
   static constexpr Int mUReCol[3] = {0, 2, 4};
   static constexpr Int mUImCol[3] = {1, 3, 5};
 
@@ -90,11 +83,15 @@ protected:
 public:
   using SharedFactory<AvVoltSourceInverterStateSpace>::make;
 
+  /// @param enableNegSeqControl adds the baseband negative-sequence current-control loop (+2 states); positive-sequence-only when false.
   AvVoltSourceInverterStateSpace(String uid, String name,
-                                 Logger::Level logLevel = Logger::Level::off);
+                                 Logger::Level logLevel = Logger::Level::off,
+                                 Bool enableNegSeqControl = false);
   AvVoltSourceInverterStateSpace(String name,
-                                 Logger::Level logLevel = Logger::Level::off)
-      : AvVoltSourceInverterStateSpace(name, name, logLevel) {}
+                                 Logger::Level logLevel = Logger::Level::off,
+                                 Bool enableNegSeqControl = false)
+      : AvVoltSourceInverterStateSpace(name, name, logLevel,
+                                       enableNegSeqControl) {}
 
   void setParameters(Real lf, Real cf, Real rf, Real rc, Real omegaN,
                      Real kpPLL, Real kiPLL, Real omegaCutoff, Real pRef,
