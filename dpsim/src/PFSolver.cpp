@@ -446,6 +446,17 @@ void PFSolver::propagateAndVerifyBaseVoltage() {
     }
   }
 
+  // An SVC is a compensator, not a voltage source: derive its base voltage
+  // from the node's resolved zone value so its per-unit setpoint stays consistent.
+  for (auto node : mSystem.mNodes) {
+    CPS::Real vBase = mBaseVoltageAtNode[node];
+    if (std::abs(vBase) < 1e-6)
+      continue;
+    for (auto comp : mSystem.mComponentsAtNode[node])
+      if (auto svc = std::dynamic_pointer_cast<CPS::SP::Ph1::SVC>(comp))
+        svc->setBaseVoltage(vBase);
+  }
+
   UInt numMissing = 0;
   UInt numZero = 0;
 
