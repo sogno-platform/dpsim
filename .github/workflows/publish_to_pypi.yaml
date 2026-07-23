@@ -15,7 +15,7 @@ concurrency:
 jobs:
   build-sdist:
     name: Build DPsim source distribution
-    runs-on: ubuntu-24.04
+    runs-on: sogno-platform-dpsim-runner
     container: sogno/dpsim:dev
     steps:
     - name: Checkout
@@ -35,7 +35,7 @@ jobs:
 
   build-wheels:
     name: Build DPsim Python wheel
-    runs-on: ubuntu-24.04
+    runs-on: sogno-platform-dpsim-runner
     strategy:
       matrix:
         platform: [manylinux_x86_64]
@@ -62,7 +62,7 @@ jobs:
 
   publish-testpypi:
     name: Publish wheels and source distribution to Test PyPI
-    runs-on: ubuntu-24.04
+    runs-on: sogno-platform-dpsim-runner
     if: github.event_name == 'push'
     permissions:
       id-token: write
@@ -86,7 +86,7 @@ jobs:
 
   publish-pypi:
     name: Publish wheels and source distribution to PyPI
-    runs-on: ubuntu-24.04
+    runs-on: sogno-platform-dpsim-runner
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags') && !contains(github.ref, '-rc')
     permissions:
       id-token: write

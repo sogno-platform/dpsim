@@ -15,7 +15,7 @@ concurrency:
 jobs:
   linux-rocky:
     name: Build on Rocky Linux
-    runs-on: ubuntu-latest
+    runs-on: sogno-platform-dpsim-runner
     container: sogno/dpsim:dev-rocky
     steps:
     - name: Checkout
@@ -44,7 +44,7 @@ jobs:
 
   linux-rocky-clang:
     name: Build on Rocky Linux using Clang
-    runs-on: ubuntu-latest
+    runs-on: sogno-platform-dpsim-runner
     container: sogno/dpsim:dev-rocky
     steps:
     - name: Checkout
