@@ -10,6 +10,7 @@
 
 #include <cmath>
 #include <iterator>
+#include <stdexcept>
 
 #include "dpsim-models/Components.h"
 #include "dpsim-models/SystemTopology.h"
@@ -109,6 +110,11 @@ protected:
 
   /// Use last converged solution as initial guess
   CPS::Bool mKeepLastSolution = false;
+
+  /// Max |dV| per Newton step [pu]; caps PFSolverPowerPolar::updateSolution()'s step scaling
+  CPS::Real mMaxDVoltagePerUnitPerStep = 0.1;
+  /// Max |dTheta| per Newton step [rad]; caps PFSolverPowerPolar::updateSolution()'s step scaling
+  CPS::Real mMaxDThetaRadPerStep = 0.2;
 
   /// Generate initial solution for current time step
   virtual void generateInitialSolution(Real time,
@@ -223,6 +229,19 @@ public:
   }
 
   CPS::UInt getMaxIterations() const { return mMaxIterations; }
+
+  /// Relax or tighten the per-iteration Newton step clamp (defaults: 0.1 pu / 0.2 rad).
+  /// Both limits must be positive: a zero clamp nulls the Newton step (the solve
+  /// stalls) and a negative one reverses it (the solve diverges).
+  void setMaxStepPerIteration(CPS::Real maxDVoltagePerUnit,
+                              CPS::Real maxDThetaRad) {
+    if (maxDVoltagePerUnit <= 0 || maxDThetaRad <= 0)
+      throw std::invalid_argument(
+          "PFSolver: Newton step clamp limits must be positive "
+          "(maxDVoltagePerUnit [pu] and maxDThetaRad [rad]).");
+    mMaxDVoltagePerUnitPerStep = maxDVoltagePerUnit;
+    mMaxDThetaRadPerStep = maxDThetaRad;
+  }
 
   class SolveTask : public CPS::Task {
   public:
