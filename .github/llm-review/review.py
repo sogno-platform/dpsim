@@ -132,6 +132,10 @@ def api_pr_diff(pr_number):
 
     Used in the workflow_run (fork-PR) context, where the PR head is not checked
     out. Reads the diff as data only; it never executes PR code.
+
+    GitHub returns HTTP 406 for the .diff media type once a PR's diff is too
+    large (very many files / lines). In that case fall back to reconstructing a
+    unified diff from the paginated files endpoint, which never 406s.
     """
     repo = env("GITHUB_REPOSITORY", required=True)
     token = env("GITHUB_TOKEN", required=True)
@@ -143,8 +147,61 @@ def api_pr_diff(pr_number):
             "Accept": "application/vnd.github.v3.diff",
         },
     )
-    with urllib.request.urlopen(req, timeout=60) as resp:
-        return resp.read().decode(errors="replace")
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            return resp.read().decode(errors="replace")
+    except urllib.error.HTTPError as e:
+        if e.code != 406:
+            raise
+        print(
+            "diff too large for the .diff endpoint (HTTP 406); "
+            "reconstructing from the files API",
+            file=sys.stderr,
+        )
+        return _diff_from_files(pr_number, repo, token)
+
+
+def _diff_from_files(pr_number, repo, token):
+    """Rebuild a unified diff from GitHub's per-file `patch` fields.
+
+    Emits the `diff --git` / `---` / `+++` headers the rest of the pipeline keys
+    off (changed_files, file_hunk, added_lines) followed by each file's patch
+    hunks. Files GitHub omits a patch for (binary, or individually too large) are
+    skipped and counted; they simply carry no inline comments.
+    """
+    parts, skipped, page = [], 0, 1
+    while True:
+        url = (
+            f"https://api.github.com/repos/{repo}/pulls/{pr_number}"
+            f"/files?per_page=100&page={page}"
+        )
+        files = gh_get_json(url, token)
+        if not files:
+            break
+        for f in files:
+            new = f.get("filename", "")
+            status = f.get("status", "")
+            old = f.get("previous_filename", new)
+            patch = f.get("patch")
+            if not patch:
+                skipped += 1
+                continue
+            old_h = "/dev/null" if status == "added" else f"a/{old}"
+            new_h = "/dev/null" if status == "removed" else f"b/{new}"
+            parts.append(f"diff --git a/{old} b/{new}\n")
+            parts.append(f"--- {old_h}\n")
+            parts.append(f"+++ {new_h}\n")
+            parts.append(patch if patch.endswith("\n") else patch + "\n")
+        if len(files) < 100:
+            break
+        page += 1
+    if skipped:
+        print(
+            f"files API: {skipped} file(s) had no patch (binary/oversized), "
+            "skipped for inline review",
+            file=sys.stderr,
+        )
+    return "".join(parts)
 
 
 def get_diff(pr_number, base_sha, head_sha):
@@ -1018,7 +1075,9 @@ def methodology_block(stats, claim=None):
     return out
 
 
-def build_review(findings, head_sha, valid_files, overview="", stats=None, claim=None):
+def build_review(
+    findings, head_sha, valid_files, overview="", stats=None, claim=None, diff=""
+):
     """Assemble the GitHub review payload (summary body + inline comments).
 
     Body: a one-line TL;DR, a claim-vs-code note, a severity tally, findings
@@ -1028,6 +1087,18 @@ def build_review(findings, head_sha, valid_files, overview="", stats=None, claim
     findings.sort(
         key=lambda f: (SEV_RANK.get(f.get("severity"), 9), confidence_sort_key(f))
     )
+
+    # GitHub rejects the whole review (HTTP 422 "Line could not be resolved") if
+    # any inline comment anchors to a line that is not on the diff's RIGHT side,
+    # so only anchor to lines the diff actually adds. Cache per file.
+    _added_cache = {}
+
+    def _is_added_line(path, line):
+        if path not in _added_cache:
+            _added_cache[path] = added_lines(diff, path) if diff else None
+        added = _added_cache[path]
+        # No diff available (e.g. legacy callers): fall back to prior behavior.
+        return True if added is None else line in added
 
     inline = []
     for f in findings:
@@ -1039,6 +1110,7 @@ def build_review(findings, head_sha, valid_files, overview="", stats=None, claim
             not f.get("unconfirmed")
             and f.get("file") in valid_files
             and isinstance(f.get("line"), int)
+            and _is_added_line(f.get("file"), f.get("line"))
         )
         f["_anchored"] = anchorable and len(inline) < MAX_INLINE
         if f["_anchored"]:
@@ -1121,30 +1193,11 @@ def gh_post_review(pr_number, payload):
     token = env("GITHUB_TOKEN", required=True)
     summary = payload["body"]
     url = f"https://api.github.com/repos/{repo}/pulls/{pr_number}/reviews"
-    req = urllib.request.Request(
-        url,
-        data=json.dumps(payload).encode(),
-        method="POST",
-        headers={
-            "Authorization": "Bearer " + token,
-            "Accept": "application/vnd.github+json",
-            "Content-Type": "application/json",
-        },
-    )
-    try:
-        with urllib.request.urlopen(req, timeout=60) as resp:
-            print(f"posted review, HTTP {resp.status}", file=sys.stderr)
-    except urllib.error.HTTPError as e:
-        # Fall back to a plain issue comment if inline anchoring is rejected.
-        print(
-            f"review POST failed HTTP {e.code}: "
-            f"{e.read().decode(errors='replace')[:300]}",
-            file=sys.stderr,
-        )
-        icu = f"https://api.github.com/repos/{repo}/issues/{pr_number}/comments"
-        ireq = urllib.request.Request(
-            icu,
-            data=json.dumps({"body": summary}).encode(),
+
+    def _post(url, body):
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(body).encode(),
             method="POST",
             headers={
                 "Authorization": "Bearer " + token,
@@ -1152,8 +1205,41 @@ def gh_post_review(pr_number, payload):
                 "Content-Type": "application/json",
             },
         )
-        with urllib.request.urlopen(ireq, timeout=60) as resp:
-            print(f"posted fallback issue comment, HTTP {resp.status}", file=sys.stderr)
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            return resp.status
+
+    try:
+        print(f"posted review, HTTP {_post(url, payload)}", file=sys.stderr)
+        return
+    except urllib.error.HTTPError as e:
+        detail = e.read().decode(errors="replace")[:300]
+        print(f"review POST failed HTTP {e.code}: {detail}", file=sys.stderr)
+
+    # A single unresolvable inline line 422s the whole review. Retry without the
+    # inline comments so the finding still lands as a proper review (visible in
+    # the PR's review thread), not a detached issue comment.
+    if payload.get("comments"):
+        summary_only = {**payload, "comments": []}
+        try:
+            print(
+                f"posted review without inline comments, HTTP "
+                f"{_post(url, summary_only)}",
+                file=sys.stderr,
+            )
+            return
+        except urllib.error.HTTPError as e:
+            print(
+                f"summary-only review POST failed HTTP {e.code}: "
+                f"{e.read().decode(errors='replace')[:300]}",
+                file=sys.stderr,
+            )
+
+    # Last resort: a plain issue comment.
+    icu = f"https://api.github.com/repos/{repo}/issues/{pr_number}/comments"
+    print(
+        f"posted fallback issue comment, HTTP {_post(icu, {'body': summary})}",
+        file=sys.stderr,
+    )
 
 
 def merge_vstats(first, second):
@@ -1218,7 +1304,9 @@ def main():
         vstats = merge_vstats(vstats, vstats2)
 
     overview, findings = synthesize(verified, pr_ctx, model=verify_model)
-    payload = build_review(findings, head_sha, valid_files, overview, vstats, claim)
+    payload = build_review(
+        findings, head_sha, valid_files, overview, vstats, claim, diff=diff
+    )
 
     if dry_run:
         print("=== DRY RUN: review body ===\n")
