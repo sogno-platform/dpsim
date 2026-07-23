@@ -25,10 +25,10 @@ class SVC : public SimPowerComp<Complex>,
             public SharedFactory<SVC>,
             public PFSolverInterfaceBus {
 private:
-  /// Base voltage [V]
-  Real mBaseVoltage;
+  /// Base voltage [V], set via setBaseVoltage() before power-flow init
+  Real mBaseVoltage = 0;
   /// Base apparent power [VA]
-  Real mBaseApparentPower;
+  Real mBaseApparentPower = 0;
 
 public:
   /// Voltage set point [V]
