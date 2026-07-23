@@ -14,8 +14,9 @@ class AvVoltSourceInverterStateSpace final
     : public MixedVTypeVariableSSNComp,
       public SharedFactory<AvVoltSourceInverterStateSpace> {
 private:
-  /// Real control-state indices; GammaND/GammaNQ used only when the negative-sequence loop is enabled.
-  enum ControlStateIndex : Int {
+  /// Packed state indices. GammaND/GammaNQ are appended last so the envelope
+  /// block stays fixed and only exist when the negative-sequence loop is enabled.
+  enum StateIndex : Int {
     Psi = 0,
     PhiPLL = 1,
     PFiltered = 2,
@@ -24,18 +25,29 @@ private:
     PhiQ = 5,
     GammaD = 6,
     GammaQ = 7,
-    GammaND = 8,
-    GammaNQ = 9
+    VcARe = 8,
+    VcAIm = 9,
+    VcBRe = 10,
+    VcBIm = 11,
+    VcCRe = 12,
+    VcCIm = 13,
+    IfARe = 14,
+    IfAIm = 15,
+    IfBRe = 16,
+    IfBIm = 17,
+    IfCRe = 18,
+    IfCIm = 19,
+    GammaND = 20,
+    GammaNQ = 21
   };
 
   /// Enables the baseband negative-sequence current-control loop (+2 states).
   const Bool mEnableNegSeqControl;
 
-  /// Per-phase envelope column indices, set in the constructor.
-  Int mVcReCol[3];
-  Int mVcImCol[3];
-  Int mIfReCol[3];
-  Int mIfImCol[3];
+  static constexpr Int mVcReCol[3] = {VcARe, VcBRe, VcCRe};
+  static constexpr Int mVcImCol[3] = {VcAIm, VcBIm, VcCIm};
+  static constexpr Int mIfReCol[3] = {IfARe, IfBRe, IfCRe};
+  static constexpr Int mIfImCol[3] = {IfAIm, IfBIm, IfCIm};
   static constexpr Int mUReCol[3] = {0, 2, 4};
   static constexpr Int mUImCol[3] = {1, 3, 5};
 
