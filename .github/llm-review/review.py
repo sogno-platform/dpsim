@@ -5,15 +5,23 @@
 Multi-stage LLM PR reviewer for DPsim, driven by an OpenAI-compatible endpoint
 (KI:connect / RWTHgpt). Pure stdlib, no pip installs needed on the runner.
 
-Flow: diff + full source of changed files -> STAGES (finders) -> dedup ->
-per-file verification against the real code -> synthesis -> one non-blocking
-COMMENT review with inline suggestions.
+Flow: diff + full source of changed files -> STAGES (finders, on one or two
+cheap/unlimited models) -> dedup -> per-file verification against the real code
+(mid tier) -> optional final re-check of the survivors (strongest tier) ->
+synthesis -> one non-blocking COMMENT review with inline suggestions.
+
+The finder models are meant to over-generate; precision is bought by grounding
+every candidate against the real source in the verify tiers, escalating only the
+survivors to the strongest (and most rate-limited) model. See main().
 
 Env:
   LLM_BASE_URL   e.g. https://chat.kiconnect.nrw/api/v1   (trailing / ok)
   LLM_CHAT_PATH  chat path appended to the base, default /chat/completions
   LLM_API_KEY    Bearer API key
-  LLM_MODEL      e.g. mistral-small-4-119b-2603
+  LLM_MODEL      finder model, cheap/unlimited (e.g. mistral-small-4-119b-2603)
+  LLM_MODEL_2    optional second finder model, for cross-model recall
+  LLM_VERIFY_MODEL  optional mid-tier verifier (falls back to LLM_MODEL)
+  LLM_FINAL_MODEL   optional strongest tier; re-checks only survivors
   GITHUB_TOKEN   provided by Actions
   GITHUB_REPOSITORY  provided by Actions (owner/repo)
   PR_NUMBER, BASE_SHA, HEAD_SHA  passed by the workflow; if absent they are read
@@ -155,8 +163,12 @@ def changed_files(diff):
     return files
 
 
-def llm(system, user):
-    """One OpenAI-compatible chat completion. Returns the assistant text."""
+def llm(system, user, model=None):
+    """One OpenAI-compatible chat completion. Returns the assistant text.
+
+    model selects the endpoint model for this call; None falls back to LLM_MODEL.
+    This is how the pipeline runs cheap unlimited models for the finder passes and
+    escalates verification to a stronger, rate-limited one (see main)."""
     base = env("LLM_BASE_URL", required=True).rstrip("/")
     # <base> already ends in /api/v1 for KI:connect, so the chat path is just
     # /chat/completions. Override LLM_CHAT_PATH if the gateway differs.
@@ -164,7 +176,7 @@ def llm(system, user):
     url = base + path
     body = json.dumps(
         {
-            "model": env("LLM_MODEL", required=True),
+            "model": model or env("LLM_MODEL", required=True),
             "temperature": 0.1,
             "messages": [
                 {"role": "system", "content": system},
@@ -338,24 +350,26 @@ def changed_sources_block(diff, head_sha):
     )
 
 
-def run_stages(diff, head_sha, pr_ctx=""):
+def run_stages(diff, head_sha, pr_ctx="", model=None):
     context = changed_sources_block(diff, head_sha)
     all_findings = []
+    label = model or "primary"
     for stage in prompts.STAGES:
         user = (
             f"{stage['prompt']}\n\n=== PR DIFF (base..head) ===\n"
             f"{diff}{context}{pr_ctx}"
         )
         try:
-            raw = llm(prompts.SYSTEM, user)
+            raw = llm(prompts.SYSTEM, user, model=model)
         except (urllib.error.URLError, KeyError, ValueError) as e:
             # Non-blocking: one failed stage must not sink the whole review.
-            print(f"[{stage['id']}] stage failed: {e}", file=sys.stderr)
+            print(f"[{label}/{stage['id']}] stage failed: {e}", file=sys.stderr)
             continue
         found = parse_findings(raw)
         for f in found:
             f["stage"] = stage["id"]
-        print(f"[{stage['id']}] {len(found)} finding(s)", file=sys.stderr)
+            f["finder"] = label
+        print(f"[{label}/{stage['id']}] {len(found)} finding(s)", file=sys.stderr)
         all_findings.extend(found)
     return all_findings
 
@@ -363,6 +377,10 @@ def run_stages(diff, head_sha, pr_ctx=""):
 # Verification fetches+checks at most this many files (one LLM call each); the
 # rest, and unfetchable files, stay unconfirmed rather than trusted or dropped.
 MAX_VERIFY_FILES = 12
+# The final tier (a stronger, rate-limited model) only re-checks the survivors,
+# which cluster in far fewer files; cap it tighter to stay inside a small daily
+# quota. See main()'s tiered flow.
+MAX_FINAL_FILES = 8
 MAX_VERIFY_FILE_CHARS = 90000
 UNCONFIRMED_CONF_CAP = 35
 # Base-class/interface headers given to the verifier, followed up the #include
@@ -528,13 +546,23 @@ def dedup_findings(findings):
         )
         cur = seen.get(key)
         if cur is None:
+            f["finders"] = sorted({f.get("finder")} - {None})
             seen[key] = f
-        elif not cur.get("code_suggestion") and f.get("code_suggestion"):
-            seen[key] = f
+        else:
+            # Same finding from another finder model: record the agreement, and
+            # prefer the copy carrying a code_suggestion.
+            agreed = set(cur.get("finders", [])) | ({f.get("finder")} - {None})
+            keep = (
+                f
+                if (not cur.get("code_suggestion") and f.get("code_suggestion"))
+                else cur
+            )
+            keep["finders"] = sorted(agreed)
+            seen[key] = keep
     return list(seen.values())
 
 
-def verify(findings, diff, head_sha):
+def verify(findings, diff, head_sha, model=None, max_files=MAX_VERIFY_FILES):
     """Adjudicate findings per file against the real source (code as truth):
     confirmed -> kept, refuted -> dropped, unconfirmed -> kept tentative with
     confidence capped. Nothing drops without a refutation; unreachable code or an
@@ -574,13 +602,13 @@ def verify(findings, diff, head_sha):
     # (process) findings pass through unchanged.
     files = [p for p in by_file if p]
     files.sort(key=lambda p: len(by_file[p]), reverse=True)
-    if len(files) > MAX_VERIFY_FILES:
+    if len(files) > max_files:
         print(
             f"verification: {len(files)} files with findings, checking the top "
-            f"{MAX_VERIFY_FILES}; the rest are kept as unconfirmed",
+            f"{max_files}; the rest are kept as unconfirmed",
             file=sys.stderr,
         )
-    to_check = set(files[:MAX_VERIFY_FILES])
+    to_check = set(files[:max_files])
 
     verdicts = {}  # id -> verdict dict from the model
     checked_ids = set()  # ids that went through a code-grounded check
@@ -624,7 +652,7 @@ def verify(findings, diff, head_sha):
         for f in group:
             checked_ids.add(f["_id"])
         try:
-            raw = llm(prompts.VERIFICATION, user)
+            raw = llm(prompts.VERIFICATION, user, model=model)
         except (urllib.error.URLError, KeyError, ValueError) as e:
             print(
                 f"verification of {path} failed, keeping unconfirmed: {e}",
@@ -653,6 +681,9 @@ def verify(findings, diff, head_sha):
                 )
             continue
         if verdict == "confirmed":
+            # A stronger tier may confirm what an earlier tier left tentative;
+            # shed the unconfirmed flag/cap so it can anchor and score normally.
+            f.pop("unconfirmed", None)
             if isinstance(v.get("confidence"), (int, float)):
                 f["confidence"] = v["confidence"]
             if isinstance(v.get("line"), int):
@@ -696,7 +727,7 @@ def verify(findings, diff, head_sha):
     return kept, stats
 
 
-def synthesize(findings, pr_ctx=""):
+def synthesize(findings, pr_ctx="", model=None):
     """Merge/prioritize findings and produce a short overview.
 
     Returns (overview_text, findings). On any failure fall back to the raw
@@ -708,6 +739,7 @@ def synthesize(findings, pr_ctx=""):
         raw = llm(
             prompts.SYNTHESIS,
             json.dumps({"findings": findings}, indent=2) + pr_ctx,
+            model=model,
         )
     except (urllib.error.URLError, KeyError, ValueError) as e:
         print(f"synthesis failed, using raw union: {e}", file=sys.stderr)
@@ -723,14 +755,14 @@ def synthesize(findings, pr_ctx=""):
     return overview, merged
 
 
-def claim_check(diff, pr_ctx):
+def claim_check(diff, pr_ctx, model=None):
     """Compare what the PR claims (pr_ctx) with what the diff does. Returns
     {claimed, done, difference} or None (no intent given, or the call failed)."""
     if not pr_ctx:
         return None
     user = f"{pr_ctx}\n\n=== PR DIFF (base..head) ===\n{diff}"
     try:
-        raw = llm(prompts.CLAIM_CHECK, user)
+        raw = llm(prompts.CLAIM_CHECK, user, model=model)
     except (urllib.error.URLError, KeyError, ValueError) as e:
         print(f"claim check failed: {e}", file=sys.stderr)
         return None
@@ -834,12 +866,17 @@ def methodology_block(stats, claim=None):
         "",
         "<details><summary>How this review was produced</summary>",
         "",
-        f"{len(prompts.STAGES)} specialized passes raised {stats.get('raw', 0)} "
-        "findings over the diff and the full changed sources. After "
-        f"de-duplication, {stats.get('checked', 0)} were re-checked against the "
-        "current file and the base-class / interface headers it inherits (code as "
-        f"truth): {stats.get('refuted', 0)} refuted as unsupported, "
-        f"{stats.get('kept', 0)} kept ({stats.get('unconfirmed', 0)} tentative).",
+        f"{len(prompts.STAGES)} specialized finder passes raised "
+        f"{stats.get('raw', 0)} findings over the diff and the full changed "
+        "sources. After de-duplication, {} were re-checked against the current "
+        "file and the base-class / interface headers it inherits (code as truth), "
+        "escalating survivors to a stronger model: {} refuted as unsupported, {} "
+        "kept ({} tentative).".format(
+            stats.get("checked", 0),
+            stats.get("refuted", 0),
+            stats.get("kept", 0),
+            stats.get("unconfirmed", 0),
+        ),
     ]
     refuted = stats.get("refuted_list") or []
     if refuted:
@@ -979,11 +1016,43 @@ def gh_post_review(pr_number, payload):
             print(f"posted fallback issue comment, HTTP {resp.status}", file=sys.stderr)
 
 
+def merge_vstats(first, second):
+    """Combine verification stats across two tiers for the methodology footer:
+    keep the first tier's raw/checked counts, take the survivor count from the
+    second, and sum what each tier refuted (with a bounded, combined sample)."""
+    if not second:
+        return first
+    if not first:
+        return second
+    refuted_list = (first.get("refuted_list") or []) + (
+        second.get("refuted_list") or []
+    )
+    return {
+        "raw": first.get("raw", 0),
+        "checked": first.get("checked", 0),
+        "kept": second.get("kept", 0),
+        "unconfirmed": second.get("unconfirmed", 0),
+        "refuted": first.get("refuted", 0) + second.get("refuted", 0),
+        "refuted_list": refuted_list[:15],
+    }
+
+
 def main():
     # DRY_RUN (or --dry-run) runs the full pipeline against the endpoint but
     # prints the assembled review instead of posting it, and needs no
     # GITHUB_TOKEN. Handy for local testing without any Actions runner.
     dry_run = os.environ.get("DRY_RUN") or "--dry-run" in sys.argv
+
+    # Tiered models (all optional; unset -> everything runs on LLM_MODEL, i.e.
+    # the original single-model behavior):
+    #   LLM_MODEL         cheap/unlimited finder pass (over-generates candidates)
+    #   LLM_MODEL_2       a second cheap/unlimited finder, for cross-model recall
+    #   LLM_VERIFY_MODEL  mid-tier that grounds every candidate against the code
+    #   LLM_FINAL_MODEL   strongest tier; re-checks only the survivors
+    # The finders are noisy on purpose; precision comes from the verify tiers.
+    finder2 = env("LLM_MODEL_2")
+    verify_model = env("LLM_VERIFY_MODEL")
+    final_model = env("LLM_FINAL_MODEL")
 
     pr_number, base_sha, head_sha = get_pr()
     diff = get_diff(pr_number, base_sha, head_sha)
@@ -992,9 +1061,24 @@ def main():
         return
     valid_files = changed_files(diff)
     pr_ctx = pr_context(pr_number, base_sha, head_sha)
-    claim = claim_check(diff, pr_ctx)
-    verified, vstats = verify(run_stages(diff, head_sha, pr_ctx), diff, head_sha)
-    overview, findings = synthesize(verified, pr_ctx)
+    claim = claim_check(diff, pr_ctx, model=verify_model)
+
+    raw_findings = run_stages(diff, head_sha, pr_ctx)
+    if finder2:
+        raw_findings += run_stages(diff, head_sha, pr_ctx, model=finder2)
+
+    verified, vstats = verify(raw_findings, diff, head_sha, model=verify_model)
+    if final_model:
+        print(
+            f"final tier ({final_model}): re-checking {len(verified)} survivor(s)",
+            file=sys.stderr,
+        )
+        verified, vstats2 = verify(
+            verified, diff, head_sha, model=final_model, max_files=MAX_FINAL_FILES
+        )
+        vstats = merge_vstats(vstats, vstats2)
+
+    overview, findings = synthesize(verified, pr_ctx, model=verify_model)
     payload = build_review(findings, head_sha, valid_files, overview, vstats, claim)
 
     if dry_run:

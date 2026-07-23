@@ -76,7 +76,14 @@ jobs:
         env:
           USE_API_DIFF: "1" # fetch the diff via the API; PR head is not checked out
           LLM_BASE_URL: ${{ vars.LLM_BASE_URL || 'https://chat.kiconnect.nrw/api/v1' }}
+          # Tiered models: cheap/unlimited finders over-generate; the verify tiers
+          # ground every candidate against the real code and escalate only the
+          # survivors to the strongest (rate-limited) model. Any of the extra
+          # three may be left unset, which collapses to single-model behavior.
           LLM_MODEL: ${{ vars.LLM_MODEL || 'mistral-small-4-119b-2603' }}
+          LLM_MODEL_2: ${{ vars.LLM_MODEL_2 || 'gpt-oss-120b' }}
+          LLM_VERIFY_MODEL: ${{ vars.LLM_VERIFY_MODEL || 'gpt-5.4-mini' }}
+          LLM_FINAL_MODEL: ${{ vars.LLM_FINAL_MODEL || 'gpt-5.5' }}
           LLM_CHAT_PATH: ${{ vars.LLM_CHAT_PATH || '/chat/completions' }}
           LLM_API_KEY: ${{ secrets.RWTH_LLM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
