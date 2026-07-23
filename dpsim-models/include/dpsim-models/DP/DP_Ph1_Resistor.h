@@ -54,7 +54,7 @@ public:
   /// All frequencies at once, used by this component's own MnaPostStepHarm task
   void mnaCompUpdateCurrentHarm();
   /// Single frequency index, overrides the generic MNASimPowerComp hook
-  void mnaCompUpdateCurrentHarm(Int freqIdx);
+  void mnaCompUpdateCurrentHarm(Int freqIdx) override;
   /// MNA pre and post step operations
   void mnaCompPostStep(Real time, Int timeStepCount,
                        Attribute<Matrix>::Ptr &leftVector);
