@@ -70,10 +70,13 @@ public:
   void mnaCompApplyRightSideVectorStampHarm(Matrix &rightVector) override;
   /// Update interface voltage from MNA system results
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
-  void mnaCompUpdateVoltageHarm(const Matrix &leftVector, Int freqIdx);
+  void mnaCompUpdateVoltageHarm(const Matrix &leftVector, Int freqIdx) override;
   /// Update interface current from MNA system results
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;
+  /// All frequencies at once, used by this component's own MnaPostStepHarm task
   void mnaCompUpdateCurrentHarm();
+  /// Single frequency index, overrides the generic MNASimPowerComp hook
+  void mnaCompUpdateCurrentHarm(Int freqIdx) override;
   /// MNA pre step operations
   void mnaCompPreStep(Real time, Int timeStepCount) override;
   /// MNA post step operations

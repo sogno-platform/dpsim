@@ -144,6 +144,80 @@ void CompositePowerComp<VarType>::mnaCompAddPostStepDependencies(
                                    modifiedAttributes, leftVector);
 }
 
+template <typename VarType>
+void CompositePowerComp<VarType>::mnaCompInitializeHarm(
+    Real omega, Real timeStep,
+    std::vector<Attribute<Matrix>::Ptr> leftVectors) {
+  SimPowerComp<VarType>::updateMatrixNodeIndices();
+
+  for (auto subComp : mSubcomponentsMNA) {
+    subComp->mnaInitializeHarm(omega, timeStep, leftVectors);
+  }
+
+  **this->mRightVector =
+      Matrix::Zero(leftVectors[0]->get().rows(), this->mNumFreqs);
+
+  this->mMnaTasks.push_back(
+      std::make_shared<typename CompositePowerComp<VarType>::MnaPreStepHarm>(
+          *this));
+  this->mMnaTasks.push_back(
+      std::make_shared<typename CompositePowerComp<VarType>::MnaPostStepHarm>(
+          *this, leftVectors));
+
+  mnaParentInitializeHarm(omega, timeStep, leftVectors);
+}
+
+template <typename VarType>
+void CompositePowerComp<VarType>::mnaCompApplySystemMatrixStampHarm(
+    SparseMatrixRow &systemMatrix, Int freqIdx) {
+  for (auto subComp : mSubcomponentsMNA) {
+    subComp->mnaApplySystemMatrixStampHarm(systemMatrix, freqIdx);
+  }
+  mnaParentApplySystemMatrixStampHarm(systemMatrix, freqIdx);
+}
+
+template <typename VarType>
+void CompositePowerComp<VarType>::mnaCompApplyRightSideVectorStampHarm(
+    Matrix &sourceVector) {
+  sourceVector.setZero();
+  for (auto stamp : mRightVectorStamps) {
+    if ((**stamp).size() != 0) {
+      sourceVector += **stamp;
+    }
+  }
+  mnaParentApplyRightSideVectorStampHarm(sourceVector);
+}
+
+template <typename VarType>
+void CompositePowerComp<VarType>::mnaCompPreStepHarm(Real time,
+                                                     Int timeStepCount) {
+  for (auto subComp : mSubcomponentsMNA) {
+    Matrix &rightVec = **subComp->getRightVector();
+    if (rightVec.size() != 0)
+      subComp->mnaApplyRightSideVectorStampHarm(rightVec);
+  }
+  mnaParentPreStepHarm(time, timeStepCount);
+}
+
+template <typename VarType>
+void CompositePowerComp<VarType>::mnaCompPostStepHarm(
+    Real time, Int timeStepCount,
+    std::vector<Attribute<Matrix>::Ptr> &leftVectors) {
+  for (auto subComp : mSubcomponentsPostStepBeforeParent) {
+    for (UInt freq = 0; freq < this->mNumFreqs; freq++)
+      subComp->mnaUpdateVoltageHarm(**leftVectors[freq], freq);
+    for (UInt freq = 0; freq < this->mNumFreqs; freq++)
+      subComp->mnaUpdateCurrentHarm(freq);
+  }
+  mnaParentPostStepHarm(time, timeStepCount, leftVectors);
+  for (auto subComp : mSubcomponentsPostStepAfterParent) {
+    for (UInt freq = 0; freq < this->mNumFreqs; freq++)
+      subComp->mnaUpdateVoltageHarm(**leftVectors[freq], freq);
+    for (UInt freq = 0; freq < this->mNumFreqs; freq++)
+      subComp->mnaUpdateCurrentHarm(freq);
+  }
+}
+
 // Declare specializations to move definitions to .cpp
 template class CPS::CompositePowerComp<Real>;
 template class CPS::CompositePowerComp<Complex>;

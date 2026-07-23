@@ -568,11 +568,12 @@ template <> void MnaSolver<Real>::createEmptyVectors() {
 
 template <> void MnaSolver<Complex>::createEmptyVectors() {
   if (mFrequencyParallel) {
+    // Entries already exist (pushed empty in initialize()); resize, don't push_back
     for (Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
       mRightSideVectorHarm.push_back(
           Matrix::Zero(2 * (mNumMatrixNodeIndices), 1));
-      mLeftSideVectorHarm.push_back(AttributeStatic<Matrix>::make(
-          Matrix::Zero(2 * (mNumMatrixNodeIndices), 1)));
+      **mLeftSideVectorHarm[freq] =
+          Matrix::Zero(2 * (mNumMatrixNodeIndices), 1);
     }
   } else {
     mRightSideVector = Matrix::Zero(
