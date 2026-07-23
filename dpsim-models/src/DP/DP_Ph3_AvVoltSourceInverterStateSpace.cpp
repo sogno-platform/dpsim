@@ -15,18 +15,22 @@ const Real K32 = std::sqrt(1.5);
 } // namespace
 
 DP::Ph3::AvVoltSourceInverterStateSpace::AvVoltSourceInverterStateSpace(
-    String uid, String name, Logger::Level logLevel)
-    : MixedVTypeVariableSSNComp(uid, name, 8, 6, logLevel), mLf(0.0), mCf(0.0),
-      mRf(0.0), mRc(0.0), mOmegaN(0.0), mKpPLL(0.0), mKiPLL(0.0),
-      mOmegaCutoff(0.0), mPRef(0.0), mQRef(0.0), mKpPowerCtrl(0.0),
-      mKiPowerCtrl(0.0), mKpCurrCtrl(0.0), mKiCurrCtrl(0.0),
+    String uid, String name, Logger::Level logLevel, Bool enableNegSeqControl)
+    : MixedVTypeVariableSSNComp(uid, name, enableNegSeqControl ? 10 : 8, 6,
+                                logLevel),
+      mEnableNegSeqControl(enableNegSeqControl), mLf(0.0), mCf(0.0), mRf(0.0),
+      mRc(0.0), mOmegaN(0.0), mKpPLL(0.0), mKiPLL(0.0), mOmegaCutoff(0.0),
+      mPRef(0.0), mQRef(0.0), mKpPowerCtrl(0.0), mKiPowerCtrl(0.0),
+      mKpCurrCtrl(0.0), mKiCurrCtrl(0.0), mIRefNd(0.0), mIRefNq(0.0),
       mVcD(mAttributes->create<Real>("vc_d")),
       mVcQ(mAttributes->create<Real>("vc_q")),
       mIrcD(mAttributes->create<Real>("irc_d")),
       mIrcQ(mAttributes->create<Real>("irc_q")),
       mPInst(mAttributes->create<Real>("p_inst")),
       mQInst(mAttributes->create<Real>("q_inst")),
-      mOmegaPLL(mAttributes->create<Real>("omega_pll")) {
+      mOmegaPLL(mAttributes->create<Real>("omega_pll")),
+      mIrcNd(mAttributes->create<Real>("irc_n_d")),
+      mIrcNq(mAttributes->create<Real>("irc_n_q")) {
   **mVcD = 0.0;
   **mVcQ = 0.0;
   **mIrcD = 0.0;
@@ -34,12 +38,14 @@ DP::Ph3::AvVoltSourceInverterStateSpace::AvVoltSourceInverterStateSpace(
   **mPInst = 0.0;
   **mQInst = 0.0;
   **mOmegaPLL = 0.0;
+  **mIrcNd = 0.0;
+  **mIrcNq = 0.0;
 }
 
 void DP::Ph3::AvVoltSourceInverterStateSpace::setParameters(
     Real lf, Real cf, Real rf, Real rc, Real omegaN, Real kpPLL, Real kiPLL,
     Real omegaCutoff, Real pRef, Real qRef, Real kpPowerCtrl, Real kiPowerCtrl,
-    Real kpCurrCtrl, Real kiCurrCtrl) {
+    Real kpCurrCtrl, Real kiCurrCtrl, Real iRefNd, Real iRefNq) {
   if (lf <= 0.0)
     throw std::invalid_argument("Filter inductance lf must be positive.");
 
@@ -87,6 +93,8 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::setParameters(
   mKiPowerCtrl = kiPowerCtrl;
   mKpCurrCtrl = kpCurrCtrl;
   mKiCurrCtrl = kiCurrCtrl;
+  mIRefNd = iRefNd;
+  mIRefNq = iRefNq;
 
   const Matrix x0 = Matrix::Zero(stateSize(), 1);
   const Matrix u0 = Matrix::Zero(6, 1);
@@ -111,15 +119,17 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
   const Real phiQ = x(PhiQ, 0);
   const Real gammaD = x(GammaD, 0);
   const Real gammaQ = x(GammaQ, 0);
+  // GammaND/GammaNQ share indices 8/9 with envelope states when disabled, so read only when enabled.
+  const Real gammaND = mEnableNegSeqControl ? x(GammaND, 0) : 0.0;
+  const Real gammaNQ = mEnableNegSeqControl ? x(GammaNQ, 0) : 0.0;
 
   const Complex j(0.0, 1.0);
 
-  const Complex vc[3] = {Complex(x(VcARe, 0), x(VcAIm, 0)),
-                         Complex(x(VcBRe, 0), x(VcBIm, 0)),
-                         Complex(x(VcCRe, 0), x(VcCIm, 0))};
-  const Complex iF[3] = {Complex(x(IfARe, 0), x(IfAIm, 0)),
-                         Complex(x(IfBRe, 0), x(IfBIm, 0)),
-                         Complex(x(IfCRe, 0), x(IfCIm, 0))};
+  Complex vc[3], iF[3];
+  for (Int p = 0; p < 3; ++p) {
+    vc[p] = Complex(x(mVcReCol[p], 0), x(mVcImCol[p], 0));
+    iF[p] = Complex(x(mIfReCol[p], 0), x(mIfImCol[p], 0));
+  }
   const Complex uEnv[3] = {Complex(u(0, 0), u(1, 0)), Complex(u(2, 0), u(3, 0)),
                            Complex(u(4, 0), u(5, 0))};
 
@@ -172,11 +182,39 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
   const Complex vRefDQ =
       -mKpCurrCtrl * ircDQ + mKiCurrCtrl * gammaDQ + mKpCurrCtrl * iRefDQ;
 
-  // Bridge-voltage reference, distributed via the inverse Park.
+  // Positive-sequence bridge-voltage reference, distributed via the inverse Park.
   const Complex vRefEnv0 = K23 * vRefDQ * expJPsi;
+
+  // Negative-sequence measurement + PI control (baseband +j*psi loop); zeros stay
+  // inert when disabled so the positive-only path keeps 20 states. hIrcN is the
+  // conj(vc_p) coefficient of ircNDQ (the conj flips imaginary-part signs vs the positive loop).
+  Complex ircNDQ(0.0, 0.0), vRefNDQ(0.0, 0.0), vRefNEnv0(0.0, 0.0);
+  Real ircND = 0.0, ircNQ = 0.0;
+  Complex hIrcN[3] = {Complex(0.0, 0.0), Complex(0.0, 0.0), Complex(0.0, 0.0)};
+  if (mEnableNegSeqControl) {
+    Complex nV(0.0, 0.0), nU(0.0, 0.0);
+    for (Int p = 0; p < 3; ++p) {
+      nV += redistFactor[p] * vc[p];
+      nU += redistFactor[p] * uEnv[p];
+    }
+    const Complex nI = (nV - nU) / mRc;
+    ircNDQ = 0.5 * K23 * expJPsi * std::conj(nI);
+    ircND = ircNDQ.real();
+    ircNQ = ircNDQ.imag();
+    for (Int p = 0; p < 3; ++p)
+      hIrcN[p] = 0.5 * K23 * expJPsi * projCoeff[p] / mRc;
+    const Real vRefNd =
+        -mKpCurrCtrl * ircND + mKiCurrCtrl * gammaND + mKpCurrCtrl * mIRefNd;
+    const Real vRefNq =
+        -mKpCurrCtrl * ircNQ + mKiCurrCtrl * gammaNQ + mKpCurrCtrl * mIRefNq;
+    vRefNDQ = Complex(vRefNd, vRefNq);
+    vRefNEnv0 = K23 * std::conj(vRefNDQ) * expJPsi;
+  }
+
+  // Total reference: positive (redistFactor) + sequence-orthogonal negative (projCoeff) injection (zero if disabled).
   Complex vRef[3];
   for (Int p = 0; p < 3; ++p)
-    vRef[p] = redistFactor[p] * vRefEnv0;
+    vRef[p] = redistFactor[p] * vRefEnv0 + projCoeff[p] * vRefNEnv0;
 
   // RHS f(x,u) (x_dot = f(x,u)).
   Complex vcDot[3], ifDot[3];
@@ -186,7 +224,7 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
     ifDot[p] = (vRef[p] - vc[p] - mRf * iF[p]) / mLf - j * mOmegaN * iF[p];
   }
 
-  Matrix f = Matrix::Zero(20, 1);
+  Matrix f = Matrix::Zero(stateSize(), 1);
   f(Psi, 0) = mKpPLL * vcQ + mKiPLL * phiPLL;
   f(PhiPLL, 0) = vcQ;
   f(PFiltered, 0) = mOmegaCutoff * (pInst - pF);
@@ -195,22 +233,20 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
   f(PhiQ, 0) = qF - mQRef;
   f(GammaD, 0) = iRefD - ircD;
   f(GammaQ, 0) = iRefQ - ircQ;
-  f(VcARe, 0) = vcDot[0].real();
-  f(VcAIm, 0) = vcDot[0].imag();
-  f(VcBRe, 0) = vcDot[1].real();
-  f(VcBIm, 0) = vcDot[1].imag();
-  f(VcCRe, 0) = vcDot[2].real();
-  f(VcCIm, 0) = vcDot[2].imag();
-  f(IfARe, 0) = ifDot[0].real();
-  f(IfAIm, 0) = ifDot[0].imag();
-  f(IfBRe, 0) = ifDot[1].real();
-  f(IfBIm, 0) = ifDot[1].imag();
-  f(IfCRe, 0) = ifDot[2].real();
-  f(IfCIm, 0) = ifDot[2].imag();
+  if (mEnableNegSeqControl) {
+    f(GammaND, 0) = mIRefNd - ircND;
+    f(GammaNQ, 0) = mIRefNq - ircNQ;
+  }
+  for (Int p = 0; p < 3; ++p) {
+    f(mVcReCol[p], 0) = vcDot[p].real();
+    f(mVcImCol[p], 0) = vcDot[p].imag();
+    f(mIfReCol[p], 0) = ifDot[p].real();
+    f(mIfImCol[p], 0) = ifDot[p].imag();
+  }
 
   // Analytic Jacobian A = df/dx, B = df/du.
-  A = Matrix::Zero(20, 20);
-  B = Matrix::Zero(20, 6);
+  A = Matrix::Zero(stateSize(), stateSize());
+  B = Matrix::Zero(stateSize(), 6);
 
   // PLL rows: only vcQ feeds them; d(vcQ)/dpsi = -vcD (d(vcDQ)/dpsi = -j*vcDQ).
   A(Psi, Psi) = mKpPLL * (-vcD);
@@ -276,6 +312,23 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
     B(GammaQ, mUImCol[p]) = -dIrcQdUIm;
   }
 
+  // Negative-sequence current integrators: gammaND_dot = iRefNd - ircND, etc.
+  // psi enters via rotN = e^{+j*psi}: d(ircND)/dpsi = -ircNQ, d(ircNQ)/dpsi = ircND.
+  if (mEnableNegSeqControl) {
+    A(GammaND, Psi) = ircNQ;
+    A(GammaNQ, Psi) = -ircND;
+    for (Int p = 0; p < 3; ++p) {
+      A(GammaND, mVcReCol[p]) = -hIrcN[p].real();
+      A(GammaND, mVcImCol[p]) = -hIrcN[p].imag();
+      A(GammaNQ, mVcReCol[p]) = -hIrcN[p].imag();
+      A(GammaNQ, mVcImCol[p]) = hIrcN[p].real();
+      B(GammaND, mUReCol[p]) = hIrcN[p].real();
+      B(GammaND, mUImCol[p]) = hIrcN[p].imag();
+      B(GammaNQ, mUReCol[p]) = hIrcN[p].imag();
+      B(GammaNQ, mUImCol[p]) = -hIrcN[p].real();
+    }
+  }
+
   // Filter capacitor rows (Vc_dot), fully decoupled per phase.
   for (Int p = 0; p < 3; ++p) {
     const Int reRow = mVcReCol[p];
@@ -318,6 +371,27 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
     dVRefEnv0UIm[p] = K23 * expJPsi * (-mKpCurrCtrl * j * gIrcU[p]);
   }
 
+  // Negative injection vRefNEnv0 = K23*conj(vRefNDQ)*expJPsi: derivatives wrt psi,
+  // the two negative-loop states, and vc_p/u_p (via conj(vRefNDQ)'s -kpCurrCtrl*ircN
+  // term). All zero and unused when the negative loop is disabled.
+  Complex dVRefNEnv0DPsi(0.0, 0.0), dVRefNEnv0DGammaND(0.0, 0.0),
+      dVRefNEnv0DGammaNQ(0.0, 0.0);
+  Complex dVRefNEnv0VcRe[3] = {}, dVRefNEnv0VcIm[3] = {}, dVRefNEnv0URe[3] = {},
+          dVRefNEnv0UIm[3] = {};
+  if (mEnableNegSeqControl) {
+    dVRefNEnv0DPsi = j * K23 * expJPsi *
+                     (mKpCurrCtrl * std::conj(ircNDQ) + std::conj(vRefNDQ));
+    dVRefNEnv0DGammaND = K23 * expJPsi * mKiCurrCtrl;
+    dVRefNEnv0DGammaNQ = -j * K23 * expJPsi * mKiCurrCtrl;
+    for (Int p = 0; p < 3; ++p) {
+      const Complex base = mKpCurrCtrl * std::conj(hIrcN[p]) * K23 * expJPsi;
+      dVRefNEnv0VcRe[p] = -base;
+      dVRefNEnv0VcIm[p] = -j * base;
+      dVRefNEnv0URe[p] = base;
+      dVRefNEnv0UIm[p] = j * base;
+    }
+  }
+
   for (Int pOut = 0; pOut < 3; ++pOut) {
     const Int reRow = mIfReCol[pOut];
     const Int imRow = mIfImCol[pOut];
@@ -351,13 +425,41 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
       B(reRow, mUImCol[pSrc]) += dVRefUIm.real() / mLf;
       B(imRow, mUImCol[pSrc]) += dVRefUIm.imag() / mLf;
     }
+
+    // Negative-sequence injection coupling: vRef_p += projCoeff[pOut]*vRefNEnv0.
+    if (mEnableNegSeqControl) {
+      const Complex dNPsi = projCoeff[pOut] * dVRefNEnv0DPsi;
+      A(reRow, Psi) += dNPsi.real() / mLf;
+      A(imRow, Psi) += dNPsi.imag() / mLf;
+      const Complex dNGammaND = projCoeff[pOut] * dVRefNEnv0DGammaND;
+      A(reRow, GammaND) += dNGammaND.real() / mLf;
+      A(imRow, GammaND) += dNGammaND.imag() / mLf;
+      const Complex dNGammaNQ = projCoeff[pOut] * dVRefNEnv0DGammaNQ;
+      A(reRow, GammaNQ) += dNGammaNQ.real() / mLf;
+      A(imRow, GammaNQ) += dNGammaNQ.imag() / mLf;
+      for (Int pSrc = 0; pSrc < 3; ++pSrc) {
+        const Complex dNVcRe = projCoeff[pOut] * dVRefNEnv0VcRe[pSrc];
+        const Complex dNVcIm = projCoeff[pOut] * dVRefNEnv0VcIm[pSrc];
+        A(reRow, mVcReCol[pSrc]) += dNVcRe.real() / mLf;
+        A(imRow, mVcReCol[pSrc]) += dNVcRe.imag() / mLf;
+        A(reRow, mVcImCol[pSrc]) += dNVcIm.real() / mLf;
+        A(imRow, mVcImCol[pSrc]) += dNVcIm.imag() / mLf;
+
+        const Complex dNURe = projCoeff[pOut] * dVRefNEnv0URe[pSrc];
+        const Complex dNUIm = projCoeff[pOut] * dVRefNEnv0UIm[pSrc];
+        B(reRow, mUReCol[pSrc]) += dNURe.real() / mLf;
+        B(imRow, mUReCol[pSrc]) += dNURe.imag() / mLf;
+        B(reRow, mUImCol[pSrc]) += dNUIm.real() / mLf;
+        B(imRow, mUImCol[pSrc]) += dNUIm.imag() / mLf;
+      }
+    }
   }
 
   // Offset E = f(x,u) - A*x - B*u.
   E = f - A * x - B * u;
 
   // SSN output: y_p = (u_p - vc_p)/Rc (exact, no relinearization needed).
-  C = Matrix::Zero(6, 20);
+  C = Matrix::Zero(6, stateSize());
   for (Int p = 0; p < 3; ++p) {
     C(2 * p, mVcReCol[p]) = -1.0 / mRc;
     C(2 * p + 1, mVcImCol[p]) = -1.0 / mRc;
@@ -392,15 +494,18 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::updateLogAttributes(
 
   const Real psi = x(Psi, 0);
   const Complex rot = std::exp(Complex(0.0, -psi));
+  const Complex expJPsi = std::conj(rot);
   const Complex projCoeff[3] = {Complex(1.0, 0.0), SHIFT_TO_PHASE_C,
                                 SHIFT_TO_PHASE_B};
 
-  Complex pV(0.0, 0.0), pU(0.0, 0.0);
+  Complex pV(0.0, 0.0), pU(0.0, 0.0), nV(0.0, 0.0), nU(0.0, 0.0);
   for (Int p = 0; p < 3; ++p) {
     const Complex vc(x(mVcReCol[p], 0), x(mVcImCol[p], 0));
     const Complex uEnv(u(mUReCol[p], 0), u(mUImCol[p], 0));
     pV += projCoeff[p] * vc;
     pU += projCoeff[p] * uEnv;
+    nV += std::conj(projCoeff[p]) * vc;
+    nU += std::conj(projCoeff[p]) * uEnv;
   }
   const Complex pI = (pV - pU) / mRc;
 
@@ -411,6 +516,12 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::updateLogAttributes(
   **mVcQ = vcDQ.imag();
   **mIrcD = ircDQ.real();
   **mIrcQ = ircDQ.imag();
+  if (mEnableNegSeqControl) {
+    const Complex nI = (nV - nU) / mRc;
+    const Complex ircNDQ = 0.5 * K23 * expJPsi * std::conj(nI);
+    **mIrcNd = ircNDQ.real();
+    **mIrcNq = ircNDQ.imag();
+  }
 
   **mPInst = **mVcD * **mIrcD + **mVcQ * **mIrcQ;
   **mQInst = -**mVcD * **mIrcQ + **mVcQ * **mIrcD;
@@ -498,6 +609,7 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::initializeFromNodesAndTerminals(
   x0(PhiQ, 0) = phiQ0;
   x0(GammaD, 0) = gammaD0;
   x0(GammaQ, 0) = gammaQ0;
+  // Balanced start: negative-loop integrators seed at zero (Zero() already, indices exist only when enabled).
 
   for (Int p = 0; p < 3; ++p) {
     x0(mVcReCol[p], 0) = vcAbc(p, 0).real();
