@@ -51,7 +51,9 @@ void PFSolver::initialize() {
                  std::dynamic_pointer_cast<
                      CPS::SP::Ph1::AvVoltageSourceInverterDQ>(comp)) {
       mAverageVoltageSourceInverters.push_back(vsi);
-    }
+    } else if (std::shared_ptr<CPS::SP::Ph1::SVC> svc =
+                   std::dynamic_pointer_cast<CPS::SP::Ph1::SVC>(comp))
+      mSVCs.push_back(svc);
   }
 
   setBaseApparentPower();
@@ -129,6 +131,9 @@ void PFSolver::initializeComponents() {
   }
   for (auto sst : mSolidStateTransformers) {
     sst->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
+  }
+  for (auto svc : mSVCs) {
+    svc->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
   }
 }
 
@@ -326,6 +331,8 @@ CPS::Real PFSolver::componentBaseVoltage(CPS::TopologicalPowerComp::Ptr comp,
     return extnet->getBaseVoltage();
   if (auto shunt = std::dynamic_pointer_cast<CPS::SP::Ph1::Shunt>(comp))
     return shunt->getBaseVoltage();
+  if (auto svc = std::dynamic_pointer_cast<CPS::SP::Ph1::SVC>(comp))
+    return svc->getBaseVoltage();
   SPDLOG_LOGGER_WARN(mSLog, "Unable to get base voltage at {}", node->name());
   return 0;
 }
@@ -444,6 +451,17 @@ void PFSolver::propagateAndVerifyBaseVoltage() {
                             load->attributeTyped<CPS::Real>("Q")->get(),
                             entry.second);
     }
+  }
+
+  // An SVC is a compensator, not a voltage source: derive its base voltage
+  // from the node's resolved zone value so its per-unit setpoint stays consistent.
+  for (auto node : mSystem.mNodes) {
+    CPS::Real vBase = mBaseVoltageAtNode[node];
+    if (std::abs(vBase) < 1e-6)
+      continue;
+    for (auto comp : mSystem.mComponentsAtNode[node])
+      if (auto svc = std::dynamic_pointer_cast<CPS::SP::Ph1::SVC>(comp))
+        svc->setBaseVoltage(vBase);
   }
 
   UInt numMissing = 0;
@@ -613,26 +631,30 @@ Bool PFSolver::runNewtonRaphson() {
 Bool PFSolver::solvePowerflow() {
   Bool converged = runNewtonRaphson();
 
-  if (!mEnforceReactiveLimits)
+  if (!mEnforceReactiveLimits && !mEnforceSvcControl)
     return converged;
 
-  // Outer loop: switch PV<->PQ on Q-limit violations, re-solve until no bus switches.
+  // Outer loop: apply Q-limit PV<->PQ switching and/or SVC voltage control, then
+  // re-solve, until neither pass changes anything (both settled).
   Bool settled = false;
   for (CPS::UInt outer = 0; converged && outer < mMaxOuterIterations; ++outer) {
-    if (!enforceReactiveLimits()) {
+    Bool qLimitChanged = mEnforceReactiveLimits && enforceReactiveLimits();
+    Bool svcChanged = mEnforceSvcControl && enforceSvcVoltageControl();
+    if (!qLimitChanged && !svcChanged) {
       settled = true;
-      break; // all generators within their reactive limits
+      break; // all generators within limits and all SVCs on setpoint
     }
-    reclassifyBuses();
+    if (qLimitChanged)
+      reclassifyBuses();
     converged = runNewtonRaphson();
   }
 
   if (converged && !settled) {
-    // Unsettled PV/PQ classification must not look converged to setSolution().
+    // Unsettled classification/SVC control must not look converged to setSolution().
     SPDLOG_LOGGER_WARN(
         mSLog,
-        "Q-limit outer loop did not settle within {} iterations; "
-        "PV/PQ classification may still be oscillating",
+        "PF outer loop did not settle within {} iterations; Q-limit "
+        "classification or SVC control may still be oscillating",
         mMaxOuterIterations);
     isConverged = false;
     converged = false;

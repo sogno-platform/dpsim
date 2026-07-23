@@ -163,6 +163,22 @@ void addSPPh1Components(py::module_ mSPPh1) {
       .def("get_apparent_power",
            &CPS::SP::Ph1::SynchronGenerator::getApparentPower);
 
+  py::class_<CPS::SP::Ph1::SVC, std::shared_ptr<CPS::SP::Ph1::SVC>,
+             CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "SVC",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::SP::Ph1::SVC::setParameters,
+           "rated_apparent_power"_a, "rated_voltage"_a, "set_point_voltage"_a,
+           "q_limit_max"_a = std::numeric_limits<double>::infinity(),
+           "q_limit_min"_a = -std::numeric_limits<double>::infinity())
+      .def("set_base_voltage", &CPS::SP::Ph1::SVC::setBaseVoltage,
+           "base_voltage"_a)
+      .def("connect", &CPS::SP::Ph1::SVC::connect)
+      .def("modify_power_flow_bus_type",
+           &CPS::SP::Ph1::SVC::modifyPowerFlowBusType, "bus_type"_a)
+      .def("get_apparent_power", &CPS::SP::Ph1::SVC::getApparentPower);
+
   py::class_<CPS::SP::Ph1::varResSwitch,
              std::shared_ptr<CPS::SP::Ph1::varResSwitch>,
              CPS::SimPowerComp<CPS::Complex>, CPS::Base::Ph1::Switch>(

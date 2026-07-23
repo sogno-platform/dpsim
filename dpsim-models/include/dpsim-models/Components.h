@@ -20,6 +20,7 @@
 #include <dpsim-models/SP/SP_Ph1_PiLine.h>
 #include <dpsim-models/SP/SP_Ph1_RXLine.h>
 #include <dpsim-models/SP/SP_Ph1_ReducedOrderSynchronGeneratorVBR.h>
+#include <dpsim-models/SP/SP_Ph1_SVC.h>
 #include <dpsim-models/SP/SP_Ph1_Shunt.h>
 #include <dpsim-models/SP/SP_Ph1_SolidStateTransformer.h>
 #include <dpsim-models/SP/SP_Ph1_Switch.h>
