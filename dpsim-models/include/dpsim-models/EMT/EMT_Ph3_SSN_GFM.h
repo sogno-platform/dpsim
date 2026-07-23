@@ -181,9 +181,10 @@ public:
 
   /// \brief Configure the GFM model.
   ///
-  /// nominalVoltage is the nominal line-to-line RMS voltage. With the
-  /// power-invariant Park transformation used here, a balanced system's
-  /// dq voltage magnitude equals the line-to-line RMS voltage.
+  /// nominalVoltage is the nominal peak phase voltage. With the
+  /// amplitude-invariant (2/3) Park transformation used here, a balanced
+  /// system's dq voltage magnitude equals the peak phase voltage; pass
+  /// RMS3PH_TO_PEAK1PH * (line-to-line RMS voltage), as the example does.
   ///
   /// omegaN is the nominal angular frequency in rad/s.
   void setParameters(Real lf, Real cf, Real rf, Real rc, Real nominalVoltage,

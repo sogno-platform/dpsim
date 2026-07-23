@@ -208,6 +208,8 @@ void EMT::Ph3::SSN_GFM::setGridCurrentFeedforward(Real scale) {
 }
 
 void EMT::Ph3::SSN_GFM::setReactivePowerDroop(Real droopGain, Real cutoff) {
+  if (droopGain < 0.0)
+    throw std::invalid_argument("Reactive-droop gain must be non-negative.");
   if (cutoff < 0.0)
     throw std::invalid_argument("Reactive-droop cutoff must be non-negative.");
 
