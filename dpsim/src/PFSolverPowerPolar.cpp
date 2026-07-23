@@ -664,6 +664,11 @@ CPS::Bool PFSolverPowerPolar::enforceSvcVoltageControl() {
     return nullptr;
   };
 
+  // Per-unit floors for the secant sensitivity estimate (heuristic).
+  constexpr CPS::Real svcSecantDQFloor = 1e-15; // dQ below this is noise
+  constexpr CPS::Real svcMinSensitivity =
+      1e-9; // |dQ/dV| below this is degenerate
+
   CPS::Bool anyChanged = false;
   for (auto node : mPQBuses) {
     auto svc = svcAtNode(node);
@@ -688,10 +693,10 @@ CPS::Bool PFSolverPowerPolar::enforceSvcVoltageControl() {
     if (prev != mSvcPrevQV.end()) {
       CPS::Real dV = v - prev->second.second;
       CPS::Real dQ = qOld - prev->second.first;
-      if (std::abs(dV) > 1e-12 && std::abs(dQ) > 1e-15)
+      if (std::abs(dV) > DOUBLE_EPSILON && std::abs(dQ) > svcSecantDQFloor)
         dQdV = dQ / dV;
     }
-    if (!CPS::Math::isFinite(dQdV) || std::abs(dQdV) < 1e-9)
+    if (!CPS::Math::isFinite(dQdV) || std::abs(dQdV) < svcMinSensitivity)
       dQdV = 1.0; // degenerate sensitivity -> unit fallback
 
     CPS::Real qNew = qOld + mSvcDamping * dQdV * vErr;
@@ -701,7 +706,7 @@ CPS::Bool PFSolverPowerPolar::enforceSvcVoltageControl() {
       qNew = qMinPU;
 
     CPS::Real dq = qNew - qOld;
-    if (std::abs(dq) < 1e-12)
+    if (std::abs(dq) < DOUBLE_EPSILON)
       continue; // pinned at a limit or converged -> contributes to settling
 
     mSvcPrevQV[node] = std::make_pair(qOld, v);
