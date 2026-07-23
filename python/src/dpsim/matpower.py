@@ -115,6 +115,9 @@ class Reader:
         self.mpc_gen_data["bus"] = self.mpc_gen_data["bus"].astype(int)
         self.mpc_gen_data["status"] = self.mpc_gen_data["status"].astype(int)
 
+        # drop offline generators, they must not inject power
+        self.mpc_gen_data = self.mpc_gen_data[self.mpc_gen_data["status"] == 1]
+
         #### Branches #####
         # extract only first 13 columns since following columns include results
         mpc_branch_raw = self.mpc_raw[self.mpc_name]["branch"][:, :13]
@@ -291,6 +294,7 @@ class Reader:
         with_avr=True,
         with_tg=True,
         filter_out_of_service=False,
+        map_pq_bus_generators=True,
     ):
         """
         Create dpsim objects with the data contained in the mpc files.
@@ -303,9 +307,14 @@ class Reader:
         @param filter_out_of_service: if True, exclude out-of-service
                                       generators/branches and isolated buses
                                       instead of instantiating them
+        @param map_pq_bus_generators: whether generators sitting on a
+               PQ-labeled bus (MatPAT export quirk) are mapped at all. Set to
+               False to reproduce the original (pre-fix) behavior, where that
+               generation is silently missing, for before/after comparison.
         """
         self.log_level = log_level
         self.domain = domain
+        self.map_pq_bus_generators = map_pq_bus_generators
 
         # process mpc files
         self.process_mpc(
@@ -402,12 +411,26 @@ class Reader:
                 # shunts
                 self.map_shunt(index, bus_index)
 
+                # MatPAT export quirk: generators are sometimes stored on a
+                # bus labeled type 1 (PQ) even though they should be PV/VD.
+                # Map them anyway or that generation silently disappears.
+                if self.map_pq_bus_generators:
+                    self.map_generators_at_bus(
+                        index,
+                        bus_index,
+                        bus_type=dpsimpy.PowerflowBusType.PQ,
+                        with_pss=with_pss,
+                        with_tg=with_tg,
+                        with_avr=with_avr,
+                    )
+
             # Generators
             elif bus_type == 2:
-                # map SG
-                self.map_synchronous_machine(
+                # map SG(s); a bus may have more than one physical generator
+                self.map_generators_at_bus(
                     index,
                     bus_index,
+                    bus_type=dpsimpy.PowerflowBusType.PV,
                     with_pss=with_pss,
                     with_tg=with_tg,
                     with_avr=with_avr,
@@ -636,40 +659,72 @@ class Reader:
 
         return bus_name
 
+    def map_generators_at_bus(
+        self,
+        index,
+        bus_index,
+        bus_type,
+        with_pss=True,
+        with_tg=True,
+        with_avr=True,
+    ):
+        # A bus may carry more than one physical MATPOWER generator (e.g.
+        # buses 921, 41826, 42002, 2065, 123499, 123520 in
+        # Netzmodell_120_2037B_951). Map each as its own dpsim
+        # SynchronGenerator component rather than aggregating them into one;
+        # the PF solver already sums P/Q and Q-limits across every component
+        # at a node (PFSolverPowerPolar.cpp), so this keeps each generator's
+        # own rating and lets the solver do the aggregation.
+        gen_rows = self.mpc_gen_data.loc[
+            self.mpc_gen_data["bus"] == self.mpc_bus_data.at[index, "bus_i"]
+        ]
+        for i, (_, gen_row) in enumerate(gen_rows.iterrows()):
+            gen_name = (
+                "Gen_N" + str(bus_index)
+                if i == 0
+                else "Gen_N" + str(bus_index) + "_" + str(i)
+            )
+            self.map_synchronous_machine(
+                index,
+                bus_index,
+                gen_row,
+                gen_name,
+                bus_type=bus_type,
+                with_pss=with_pss,
+                with_tg=with_tg,
+                with_avr=with_avr,
+            )
+
     def map_synchronous_machine(
         self,
         index,
         bus_index,
+        gen_row,
+        gen_name,
         bus_type=dpsimpy.PowerflowBusType.PV,
         with_pss=True,
         with_tg=True,
         with_avr=True,
     ):
-        #
-        gen_name = "Gen_N" + str(bus_index)
-
-        # relevant data from self.mpc_gen_data. Identification with bus number available in mpc_bus_data and mpc_gen_data
-        gen_data = self.mpc_gen_data.loc[
-            self.mpc_gen_data["bus"] == self.mpc_bus_data.at[index, "bus_i"]
-        ]
+        # gen_row is a single row of self.mpc_gen_data (one physical MATPOWER
+        # generator). Multiple generators at the same bus are mapped as
+        # separate dpsim SynchronGenerator components (see create_dpsim_objects),
+        # each keeping its own rating; the PF solver already aggregates P/Q
+        # and Q-limits across every component at a node (PFSolverPowerPolar.cpp),
+        # so no aggregation is needed here.
+        # MATPOWER: a gen mBase of 0 means "use the system baseMVA".
         gen_baseS = (
-            gen_data["mBase"].values[0] * mw_w
-        )  # gen base MVA default is mpc.baseMVA
+            gen_row["mBase"] * mw_w if gen_row["mBase"] > 0 else self.mpc_base_power_MVA
+        )
         gen_baseV = self.mpc_bus_data.at[index, "baseKV"] * kv_v  # gen base kV
-        gen_v = (
-            gen_data["Vg"].values[0] * gen_baseV
-        )  # gen set point voltage (gen['Vg'] in p.u.)
-        gen_p = (
-            gen_data["Pg"].values[0] * mw_w
-        )  # gen ini. active power (gen['Pg'] in MVA)
-        gen_q = (
-            gen_data["Qg"].values[0] * mw_w
-        )  # gen ini. reactive power (gen['Qg'] in MVAr)
+        gen_v = gen_row["Vg"] * gen_baseV  # gen set point voltage (gen['Vg'] in p.u.)
+        gen_p = gen_row["Pg"] * mw_w  # gen ini. active power (gen['Pg'] in MVA)
+        gen_q = gen_row["Qg"] * mw_w  # gen ini. reactive power (gen['Qg'] in MVAr)
         gen_q_max = (
-            gen_data["Qmax"].values[0] * mw_w
+            gen_row["Qmax"] * mw_w
         )  # gen reactive power upper limit (gen['Qmax'] in MVAr)
         gen_q_min = (
-            gen_data["Qmin"].values[0] * mw_w
+            gen_row["Qmin"] * mw_w
         )  # gen reactive power lower limit (gen['Qmin'] in MVAr)
 
         gen = None
@@ -686,7 +741,12 @@ class Reader:
                 q_limit_min=gen_q_min,
             )
             gen.set_base_voltage(gen_baseV)
-            gen.modify_power_flow_bus_type(bus_type)
+            # SynchronGenerator::modifyPowerFlowBusType throws for PQ (not a
+            # supported switch target); set_parameters already stored the PQ
+            # bus type above, so the call is redundant here and must be
+            # skipped rather than attempted.
+            if bus_type != dpsimpy.PowerflowBusType.PQ:
+                gen.modify_power_flow_bus_type(bus_type)
         else:
             # get dynamic data of the generator
             gen_dyn_row_idx = self.mpc_dyn_gen_data.index[
@@ -1128,6 +1188,7 @@ class Reader:
         with_avr=True,
         with_tg=True,
         filter_out_of_service=False,
+        map_pq_bus_generators=True,
     ):
         """
         Read mpc files and create DPsim topology
@@ -1137,6 +1198,7 @@ class Reader:
         @param filter_out_of_service: if True, exclude out-of-service
                                       generators/branches and isolated buses
                                       instead of instantiating them
+        @param map_pq_bus_generators: see create_dpsim_objects
         """
         self.create_dpsim_objects(
             domain=domain,
@@ -1145,6 +1207,7 @@ class Reader:
             with_avr=with_avr,
             with_tg=with_tg,
             filter_out_of_service=filter_out_of_service,
+            map_pq_bus_generators=map_pq_bus_generators,
         )
         self.create_dpsim_topology()
 
@@ -1194,10 +1257,35 @@ class Reader:
                 -complex_power
             )
 
-    def get_pf_results(self, decimals=5):
-        pf_results = pd.DataFrame(
-            columns=["Bus", "Vm [pu]", "Va [°]", "P [MW]", "Q [MVAr]"]
-        )
+    def get_pf_results(self, decimals=5, gen_load_format=False):
+        """
+        @param gen_load_format: if True, report Generation and Load P/Q as
+               separate columns (MultiIndex: Bus/Voltage/Generation/Load),
+               matching the convention used to report DPsim's own solved S
+               per node (net injection attributed entirely to "Generation"
+               at a bus with an online generator, entirely to "Load"
+               otherwise). If False (default), report a single net P/Q
+               column per bus.
+        """
+        if gen_load_format:
+            pf_results = pd.DataFrame(
+                columns=pd.MultiIndex.from_tuples(
+                    [
+                        ("Bus", "#"),
+                        ("Voltage", "Mag(pu)"),
+                        ("Voltage", "Ang(deg)"),
+                        ("Generation", "P (MW)"),
+                        ("Generation", "Q (MVAr)"),
+                        ("Load", "P (MW)"),
+                        ("Load", "Q (MVAr)"),
+                    ]
+                )
+            )
+        else:
+            pf_results = pd.DataFrame(
+                columns=["Bus", "Vm [pu]", "Va [°]", "P [MW]", "Q [MVAr]"]
+            )
+
         for i in range(self.mpc_bus_data.shape[0]):
             node_name = "N" + str(self.mpc_bus_data["bus_i"][i])  # ex. N5
 
@@ -1207,33 +1295,43 @@ class Reader:
             gen_data = self.mpc_gen_data.loc[
                 self.mpc_gen_data["bus"] == self.mpc_bus_data.at[i, "bus_i"]
             ]
-            if gen_data.shape[0] > 0:
-                p_gen = gen_data["Pg"].values[0]
-                q_gen = gen_data["Qg"].values[0]
+            is_gen_bus = gen_data.shape[0] > 0
+            if is_gen_bus:
+                # sum across all online generators at this bus, not just the first
+                p_gen = gen_data["Pg"].sum()
+                q_gen = gen_data["Qg"].sum()
 
-            pf_results.loc[i] = (
-                [node_name]
-                + [round(self.mpc_bus_data["Vm"][i], decimals)]
-                + [round(self.mpc_bus_data["Va"][i], decimals)]
-                + [
-                    round(
-                        p_gen
-                        - self.mpc_bus_data["Pd"][i]
-                        - self.mpc_bus_data["Gs"][i]
-                        * (self.mpc_bus_data["Vm"][i] ** 2),
-                        decimals,
-                    )
-                ]
-                + [
-                    round(
-                        q_gen
-                        - self.mpc_bus_data["Qd"][i]
-                        + self.mpc_bus_data["Bs"][i]
-                        * (self.mpc_bus_data["Vm"][i] ** 2),
-                        decimals,
-                    )
-                ]
+            net_p = round(
+                p_gen
+                - self.mpc_bus_data["Pd"][i]
+                - self.mpc_bus_data["Gs"][i] * (self.mpc_bus_data["Vm"][i] ** 2),
+                decimals,
             )
+            net_q = round(
+                q_gen
+                - self.mpc_bus_data["Qd"][i]
+                + self.mpc_bus_data["Bs"][i] * (self.mpc_bus_data["Vm"][i] ** 2),
+                decimals,
+            )
+
+            if gen_load_format:
+                pf_results.loc[i] = [
+                    node_name,
+                    round(self.mpc_bus_data["Vm"][i], decimals),
+                    round(self.mpc_bus_data["Va"][i], decimals),
+                    net_p if is_gen_bus else 0.0,
+                    net_q if is_gen_bus else 0.0,
+                    0.0 if is_gen_bus else -net_p,
+                    0.0 if is_gen_bus else -net_q,
+                ]
+            else:
+                pf_results.loc[i] = (
+                    [node_name]
+                    + [round(self.mpc_bus_data["Vm"][i], decimals)]
+                    + [round(self.mpc_bus_data["Va"][i], decimals)]
+                    + [net_p]
+                    + [net_q]
+                )
 
         return pf_results
 
