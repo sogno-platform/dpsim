@@ -1,0 +1,84 @@
+# SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+# SPDX-License-Identifier: MPL-2.0
+#
+# Multi-stage LLM pull-request reviewer (trusted stage).
+#
+# This job is triggered by workflow_run, after the untrusted "LLM Review
+# (collect)" workflow finishes on a pull request. It runs in the BASE repository
+# context with access to the secret, and reviews fork PRs safely:
+#
+#   - It checks out the base repository's own code (this workflow + review.py),
+#     never the pull request's code, so no untrusted code runs with the secret.
+#   - It reads the PR diff as DATA through the GitHub API; it never builds or
+#     executes anything from the pull request.
+#   - The API key is only ever sent as an Authorization header to the configured
+#     LLM endpoint, never placed in the model prompt, so a prompt-injection
+#     payload in the diff cannot exfiltrate it.
+#   - PR metadata comes from the untrusted collect artifact and is validated
+#     (numeric PR number, hex SHAs) before use.
+#
+# The review is a non-blocking COMMENT and cannot block a merge.
+
+name: LLM Review
+
+on:
+  workflow_run:
+    workflows: ["LLM Review (collect)"]
+    types: [completed]
+
+permissions:
+  pull-requests: write
+  contents: read
+  actions: read # to download the artifact from the triggering run
+
+concurrency:
+  group: llm-review-${{ github.event.workflow_run.id }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    # Only for pull_request collect runs that succeeded.
+    if: >-
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ${{ vars.LLM_REVIEW_RUNNER || 'ubuntu-latest' }}
+    steps:
+      - name: Checkout base repository (trusted code only)
+        uses: actions/checkout@v4
+        # Default checkout: the base repo's default branch. The pull request's
+        # head is deliberately NOT checked out.
+
+      - name: Download PR metadata from the collect run
+        uses: actions/download-artifact@v4
+        with:
+          name: llm-review-pr-meta
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: pr-meta
+
+      - name: Validate PR metadata (untrusted artifact)
+        run: |
+          python3 - <<'PY'
+          import json, os, re, sys
+          d = json.load(open("pr-meta/meta.json"))
+          num, base, head = (str(d.get(k, "")) for k in ("pr_number", "base_sha", "head_sha"))
+          if not re.fullmatch(r"[0-9]+", num):
+              sys.exit("invalid pr_number in artifact")
+          if not re.fullmatch(r"[0-9a-fA-F]{7,40}", base):
+              sys.exit("invalid base_sha in artifact")
+          if not re.fullmatch(r"[0-9a-fA-F]{7,40}", head):
+              sys.exit("invalid head_sha in artifact")
+          with open(os.environ["GITHUB_ENV"], "a") as f:
+              f.write(f"PR_NUMBER={num}\nBASE_SHA={base}\nHEAD_SHA={head}\n")
+          PY
+
+      - name: Run multi-stage LLM review
+        env:
+          USE_API_DIFF: "1" # fetch the diff via the API; PR head is not checked out
+          LLM_BASE_URL: ${{ vars.LLM_BASE_URL || 'https://chat.kiconnect.nrw/api/v1' }}
+          LLM_MODEL: ${{ vars.LLM_MODEL || 'mistral-small-4-119b-2603' }}
+          LLM_CHAT_PATH: ${{ vars.LLM_CHAT_PATH || '/chat/completions' }}
+          LLM_API_KEY: ${{ secrets.RWTH_LLM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: python3 .github/llm-review/review.py
