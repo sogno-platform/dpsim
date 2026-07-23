@@ -60,6 +60,14 @@ void SP::Ph1::SVC::calculatePerUnitParameters(Real baseApparentPower,
   SPDLOG_LOGGER_INFO(mSLog, "Base Power={} [VA]  Base Omega={} [1/s]",
                      mBaseApparentPower, baseOmega);
 
+  // Reject unset/zero divisors before the per-unit conversion below.
+  if (mBaseVoltage <= 0)
+    throw std::invalid_argument(
+        "SVC: base voltage not set (call setBaseVoltage() before power-flow "
+        "initialization).");
+  if (mBaseApparentPower <= 0)
+    throw std::invalid_argument("SVC: base apparent power must be positive.");
+
   **mSetPointVoltagePerUnit = **mSetPointVoltage / mBaseVoltage;
   **mSetPointReactivePowerPerUnit =
       **mSetPointReactivePower / mBaseApparentPower;
