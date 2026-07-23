@@ -171,6 +171,7 @@ list(APPEND MODELS_SOURCES
 	SP/SP_Ph1_Transformer.cpp
 	SP/SP_Ph1_SolidStateTransformer.cpp
 	SP/SP_Ph1_Shunt.cpp
+	SP/SP_Ph1_SVC.cpp
 	SP/SP_Ph1_SynchronGenerator.cpp
 	SP/SP_Ph1_ReducedOrderSynchronGeneratorVBR.cpp
 	SP/SP_Ph1_SynchronGenerator3OrderVBR.cpp
