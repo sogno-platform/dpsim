@@ -52,14 +52,20 @@ jobs:
             core.setOutput('head_sha', run.head_sha);
             core.setOutput('branch_name', run.head_branch);
             if (run.event === 'pull_request') {
-              const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+              // Fork PR head commits live in the fork, so an associated-commit
+              // lookup on the base repo returns []. Match the open PR by head owner:branch.
+              const owner = run.head_repository.owner.login;
+              const { data: prs } = await github.rest.pulls.list({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                commit_sha: run.head_sha,
+                state: 'open',
+                head: `${owner}:${run.head_branch}`,
               });
-              const pr = prs.find(p => p.state === 'open') || prs[0];
+              const pr = prs[0];
               if (!pr) {
-                core.setFailed(`No pull request found for commit ${run.head_sha}`);
+                // Build finished after its PR was merged/closed: nothing to decorate.
+                core.notice(`No open PR for ${owner}:${run.head_branch}; skipping PR analysis`);
+                core.setOutput('skip', 'true');
                 return;
               }
               core.setOutput('pr_number', pr.number);
@@ -85,7 +91,7 @@ jobs:
             sonar-cache-
 
       - name: Run sonar-scanner (pull request)
-        if: steps.meta.outputs.event_name == 'pull_request'
+        if: steps.meta.outputs.event_name == 'pull_request' && steps.meta.outputs.skip != 'true'
         uses: SonarSource/sonarqube-scan-action@v8.1.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
