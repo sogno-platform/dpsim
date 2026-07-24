@@ -154,6 +154,12 @@ TopologicalPowerComp::Ptr Reader::mapComponent(BaseClass *obj) {
     return mapDisconnector(disc);
   if (CIMPP::Breaker *cb = dynamic_cast<CIMPP::Breaker *>(obj))
     return mapBreaker(cb);
+  if (CIMPP::LinearShuntCompensator *shunt =
+          dynamic_cast<CIMPP::LinearShuntCompensator *>(obj))
+    return mapLinearShuntCompensator(shunt);
+  if (CIMPP::StaticVarCompensator *svc =
+          dynamic_cast<CIMPP::StaticVarCompensator *>(obj))
+    return mapStaticVarCompensator(svc);
   return nullptr;
 }
 
@@ -1329,6 +1335,39 @@ TopologicalPowerComp::Ptr Reader::mapBreaker(CIMPP::Breaker *cb) {
 
     return topoSwitch;
   }
+}
+
+TopologicalPowerComp::Ptr
+Reader::mapLinearShuntCompensator(CIMPP::LinearShuntCompensator *shunt) {
+  SPDLOG_LOGGER_INFO(mSLog, "Found shunt {}", cimString(shunt->name));
+
+  Real baseVoltage = determineBaseVoltageAssociatedWithEquipment(shunt);
+
+  auto cpsShunt = std::make_shared<SP::Ph1::Shunt>(shunt->mRID, shunt->name,
+                                                   mComponentLogLevel);
+  cpsShunt->setParameters(
+      shunt->gPerSection.value * shunt->normalSections.value,
+      shunt->bPerSection.value * shunt->normalSections.value);
+  cpsShunt->setBaseVoltage(baseVoltage);
+  return cpsShunt;
+}
+
+TopologicalPowerComp::Ptr
+Reader::mapStaticVarCompensator(CIMPP::StaticVarCompensator *svc) {
+  SPDLOG_LOGGER_INFO(mSLog, "Found static var compensator {}",
+                     cimString(svc->name));
+
+  Real baseVoltage = determineBaseVoltageAssociatedWithEquipment(svc);
+
+  auto cpsShunt = std::make_shared<SP::Ph1::Shunt>(svc->mRID, svc->name,
+                                                   mComponentLogLevel);
+
+  Real gShunt = 0;
+  Real bShunt =
+      -unitValue(svc->q, UnitMultiplier::M) / std::pow(baseVoltage, 2);
+  cpsShunt->setParameters(gShunt, bShunt);
+  cpsShunt->setBaseVoltage(baseVoltage);
+  return cpsShunt;
 }
 
 Real Reader::determineBaseVoltageAssociatedWithEquipment(
