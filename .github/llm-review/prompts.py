@@ -580,6 +580,12 @@ Ground rules:
 - Public `const Attribute<...>::Ptr` members and createDynamic() into a const
   Ptr are established DPsim idioms; do not treat them as encapsulation or
   const-correctness bugs.
+- A new source, script, or workflow file that lacks an SPDX header
+  (SPDX-License-Identifier plus copyright) is a CONFIRMED defect, not "external
+  policy": the SPDX header on every new file is a documented, enforced DPsim
+  convention and its absence is verifiable directly from the file. Do not refute a
+  missing-SPDX finding on a newly added file as unverifiable or out of scope.
+  Jupyter .ipynb files are exempt.
 
 Assign each finding a verdict:
 - "confirmed": the file clearly exhibits the defect. Keep it.
