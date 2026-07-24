@@ -684,6 +684,14 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
       .def("set_numerical_linearization_parameters",
            &CPS::EMT::Ph3::SSN_GFM::setNumericalLinearizationParameters,
            "relative_step"_a = 1e-6, "absolute_step"_a = 1e-8)
+      .def("set_virtual_impedance",
+           &CPS::EMT::Ph3::SSN_GFM::setVirtualImpedance, "virtual_resistance"_a,
+           "virtual_reactance"_a = 0.0)
+      .def("set_grid_current_feedforward",
+           &CPS::EMT::Ph3::SSN_GFM::setGridCurrentFeedforward, "scale"_a)
+      .def("set_reactive_power_droop",
+           &CPS::EMT::Ph3::SSN_GFM::setReactivePowerDroop, "droop_gain"_a,
+           "cutoff"_a)
       .def("connect", &CPS::EMT::Ph3::SSN_GFM::connect)
       .def("get_state_names", &CPS::EMT::Ph3::SSN_GFM::getLocalStateNames)
       .def("get_state", &CPS::EMT::Ph3::SSN_GFM::getState)
