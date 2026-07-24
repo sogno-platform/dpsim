@@ -63,6 +63,7 @@ set(CIRCUIT_SOURCES
 	Circuits/SP_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
 	Circuits/SP_Slack_PiLine_PQLoad_with_PF_Init.cpp
 	Circuits/SP_RC_split_decoupled_node.cpp
+	Circuits/SP_Ph1_General2TerminalSSN.cpp
 
 	# Combined EMT/DP/SP examples
 	Circuits/EMT_DP_SP_Slack.cpp
@@ -190,6 +191,7 @@ list(APPEND TEST_SOURCES
 	Circuits/EMT_Ph3_RLC1VS1_RC_vs_SSN.cpp
 	Circuits/EMT_Ph1_General2TerminalSSN.cpp
 	Circuits/SP_ITM_withPiLine_Ph1.cpp
+	Circuits/SP_Ph1_General2TerminalSSN.cpp
 )
 
 if(WITH_SUNDIALS)
