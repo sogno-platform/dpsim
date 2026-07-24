@@ -340,6 +340,128 @@ R_f I_{f,p}
 &lt;li>Source code: &lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/include/dpsim-models/DP/DP_Ph3_AvVoltSourceInverterStateSpace.h">header&lt;/a>, &lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/src/DP/DP_Ph3_AvVoltSourceInverterStateSpace.cpp">implementation&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim/examples/cxx/Components/DP_Ph3_AvVoltSourceInverterStateSpace.cpp">C++ example&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/examples/Notebooks/Components/DP_Ph3_AvVoltSourceInverterStateSpace.ipynb">Python notebook&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h1 id="three-phase-averaged-grid-forming-inverter-with-state-space-nodal-interface">Three-Phase Averaged Grid-Forming Inverter with State-Space Nodal Interface&lt;/h1>
+&lt;p>The &lt;code>EMT::Ph3::SSN_GFM&lt;/code> model represents a grid-forming averaged voltage source inverter in the EMT domain.
+The control structure follows the state-space grid-forming converter of &lt;a href="https://ieeexplore.ieee.org/document/9806927">Gao2022&lt;/a> (VSG algorithm loop, voltage loop, current loop with active damping), whose grid-following counterpart in the same paper is the basis for the averaged inverter above; the inner voltage/current control and LC filter modeling follow &lt;a href="https://ieeexplore.ieee.org/book/5237659">Yazdani2010&lt;/a>.
+Like the grid-following inverter above it is a variable state-space nodal component stamped directly into the MNA system, but instead of a PLL that locks to the grid it carries its own virtual synchronous machine (VSG): the internal angle and voltage magnitude are states driven by active- and reactive-power balance, so the inverter imposes a voltage and can run islanded.
+The model includes the VSG swing dynamics, a reactive-power/voltage excitation loop, filtered active/reactive power measurement, a cascaded voltage and current controller, a first-order converter/digital-delay approximation, and an LC filter with coupling resistance to the grid node.&lt;/p>
+&lt;p>The terminal input is the PCC voltage vector&lt;/p>
+&lt;div class="math">$$\mathbf{u} =
+\begin{bmatrix}
+u_a &amp; u_b &amp; u_c
+\end{bmatrix}^\top ,$$&lt;/div>&lt;p>and the 17-element state vector is&lt;/p>
+&lt;div class="math">$$\mathbf{x} =
+\begin{bmatrix}
+P &amp; Q &amp; \omega &amp; \theta &amp; E &amp;
+\xi_{v,d} &amp; \xi_{v,q} &amp;
+\xi_{i,d} &amp; \xi_{i,q} &amp;
+v_{\mathrm{del},d} &amp; v_{\mathrm{del},q} &amp;
+v_{c,a} &amp; v_{c,b} &amp; v_{c,c} &amp;
+i_{f,a} &amp; i_{f,b} &amp; i_{f,c}
+\end{bmatrix}^\top ,$$&lt;/div>&lt;p>where $\theta$ is the VSG angle (there is no PLL), $E$ is the excitation-controlled voltage magnitude, $\xi_{v}$, $\xi_{i}$ are the voltage- and current-loop integrators, and $v_{\mathrm{del}}$ are the two delay states.&lt;/p>
+&lt;p>The model output is the interface current injected into the MNA system,&lt;/p>
+&lt;div class="math">$$\mathbf{y} =
+\frac{\mathbf{u} - \mathbf{v}_c}{R_c}.$$&lt;/div>&lt;h2 id="control-structure">Control structure&lt;/h2>
+&lt;div class="mermaid">
+graph LR
+U["PCC voltage u"] --> FILT["LC filter&lt;br/>vc, if"]
+FILT --> MEAS["Power measurement&lt;br/>p, q"]
+MEAS --> PF["Measurement filters&lt;br/>P, Q"]
+PF -->|P| SWING["VSG swing&lt;br/>omega, theta"]
+PF -->|Q| EXC["Excitation /&lt;br/>Q-V droop -> E"]
+EXC --> VZ["Virtual impedance&lt;br/>E - Zv*if"]
+VZ --> VCTRL["Voltage controller&lt;br/>-> i_ref"]
+VCTRL --> ICTRL["Current controller&lt;br/>-> v_conv"]
+ICTRL --> DELAY["Converter delay"]
+DELAY --> FILT
+SWING -->|theta| VCTRL
+FILT --> Y["Interface current y"]
+&lt;/div>
+&lt;p>The virtual synchronous machine sets the internal angle from the active-power balance and the internal magnitude from the reactive-power/voltage loop; the cascaded voltage and current controllers then track that internal reference through the LC filter. The dashed grid-connected extensions (virtual impedance, feed-forward scaling, Q-V droop) are described below.&lt;/p>
+&lt;h2 id="model-equations-3">Model equations&lt;/h2>
+&lt;p>The physical grid current, positive for injection into the grid, is&lt;/p>
+&lt;div class="math">$$\mathbf{i}_g = \frac{\mathbf{v}_c - \mathbf{u}}{R_c}.$$&lt;/div>&lt;p>All dq quantities use the VSG angle $\theta$ (amplitude-invariant Park transform $\mathbf{T}(\theta)$),&lt;/p>
+&lt;div class="math">$$\mathbf{v}_{c,dq} = \mathbf{T}(\theta)\mathbf{v}_c, \qquad
+\mathbf{i}_{f,dq} = \mathbf{T}(\theta)\mathbf{i}_f, \qquad
+\mathbf{i}_{g,dq} = \mathbf{T}(\theta)\mathbf{i}_g,$$&lt;/div>&lt;p>and the capacitor current is $\mathbf{i}&lt;em>{\mathrm{cap},dq} = \mathbf{i}&lt;/em>{f,dq} - \mathbf{i}_{g,dq}$.
+Because the Park transform is amplitude invariant, three-phase instantaneous power carries the factor $3/2$,&lt;/p>
+&lt;div class="math">$$p = \tfrac{3}{2}\,(v_{c,d} i_{g,d} + v_{c,q} i_{g,q}),
+\qquad
+q = \tfrac{3}{2}\,(v_{c,q} i_{g,d} - v_{c,d} i_{g,q}),$$&lt;/div>&lt;p>and the PCC voltage magnitude is $U_{\mathrm{pcc}} = \sqrt{v_{c,d}^2 + v_{c,q}^2}$.&lt;/p>
+&lt;p>The measurement filters are first-order lags,&lt;/p>
+&lt;div class="math">$$\dot{P} = \omega_c(p - P),
+\qquad
+\dot{Q} = \omega_c(q - Q).$$&lt;/div>&lt;p>The VSG swing equation sets the angle from the active-power balance,&lt;/p>
+&lt;div class="math">$$J\dot{\omega} = \frac{P_{\mathrm{ref}} - P}{\omega} - D(\omega - \omega_n),
+\qquad
+\dot{\theta} = \omega,$$&lt;/div>&lt;p>with virtual inertia $J$ and damping $D$.
+The reactive-power/voltage excitation controller sets the internal magnitude,&lt;/p>
+&lt;div class="math">$$\dot{E} = K_q(Q_{\mathrm{ref}} - Q) + K_u(U_n - U_{\mathrm{pcc}}),$$&lt;/div>&lt;p>an integral law on the reactive error with a voltage-droop term.
+The excitation defines the dq voltage reference; in the islanded model it is aligned with the d-axis,&lt;/p>
+&lt;div class="math">$$v_{d,\mathrm{ref}} = E, \qquad v_{q,\mathrm{ref}} = 0 .$$&lt;/div>&lt;p>The voltage controller integrates the voltage error and forms the current reference with the capacitor-current feed-forward and dq decoupling,&lt;/p>
+&lt;div class="math">$$\dot{\xi}_{v,d} = v_{d,\mathrm{ref}} - v_{c,d},
+\qquad
+\dot{\xi}_{v,q} = v_{q,\mathrm{ref}} - v_{c,q},$$&lt;/div>
+&lt;div class="math">$$i_{d,\mathrm{ref}} = i_{g,d} - \omega C_f v_{c,q}
++ K_{p,V}(v_{d,\mathrm{ref}} - v_{c,d}) + K_{i,V}\xi_{v,d},$$&lt;/div>
+&lt;div class="math">$$i_{q,\mathrm{ref}} = i_{g,q} + \omega C_f v_{c,d}
++ K_{p,V}(v_{q,\mathrm{ref}} - v_{c,q}) + K_{i,V}\xi_{v,q}.$$&lt;/div>&lt;p>The current controller integrates the current error and forms the converter voltage reference, with inductor decoupling and optional active damping on the capacitor current,&lt;/p>
+&lt;div class="math">$$\dot{\xi}_{i,d} = i_{d,\mathrm{ref}} - i_{f,d},
+\qquad
+\dot{\xi}_{i,q} = i_{q,\mathrm{ref}} - i_{f,q},$$&lt;/div>
+&lt;div class="math">$$v_{d,\mathrm{conv}} = v_{c,d} - \omega L_f i_{f,q}
++ K_{p,I}(i_{d,\mathrm{ref}} - i_{f,d}) + K_{i,I}\xi_{i,d} - K_{ad} i_{\mathrm{cap},d},$$&lt;/div>
+&lt;div class="math">$$v_{q,\mathrm{conv}} = v_{c,q} + \omega L_f i_{f,d}
++ K_{p,I}(i_{q,\mathrm{ref}} - i_{f,q}) + K_{i,I}\xi_{i,q} - K_{ad} i_{\mathrm{cap},q}.$$&lt;/div>&lt;p>A first-order lag approximates the converter/digital delay,&lt;/p>
+&lt;div class="math">$$\dot{v}_{\mathrm{del},d} = \omega_d(v_{d,\mathrm{conv}} - v_{\mathrm{del},d}),
+\qquad
+\dot{v}_{\mathrm{del},q} = \omega_d(v_{q,\mathrm{conv}} - v_{\mathrm{del},q}),$$&lt;/div>&lt;p>and its output, transformed back to abc as $\mathbf{v}&lt;em>{\mathrm{inv}} = \mathbf{T}^{-1}(\theta),[v&lt;/em>{\mathrm{del},d}\ v_{\mathrm{del},q}]^\top$, drives the LC filter,&lt;/p>
+&lt;div class="math">$$\dot{\mathbf{v}}_c = \frac{1}{C_f}\left(\mathbf{i}_f + \frac{\mathbf{u} - \mathbf{v}_c}{R_c}\right),
+\qquad
+\dot{\mathbf{i}}_f = \frac{1}{L_f}\left(\mathbf{v}_{\mathrm{inv}} - \mathbf{v}_c - R_f\mathbf{i}_f\right).$$&lt;/div>&lt;h2 id="grid-connected-control-extensions">Grid-connected control extensions&lt;/h2>
+&lt;p>The equations above describe the islanded inverter. Three opt-in extensions adapt it to a stiff grid; each defaults to the value that recovers the islanded model exactly, so the eigenstructure is unchanged unless a setter is called.&lt;/p>
+&lt;p>&lt;strong>Virtual output impedance.&lt;/strong> A virtual impedance $Z_v = R_v + jX_v$ is subtracted from the excitation to form the voltage reference, using the filter current $\mathbf{i}_{f,dq}$,&lt;/p>
+&lt;div class="math">$$v_{d,\mathrm{ref}} + j v_{q,\mathrm{ref}}
+= E - Z_v\,(i_{f,d} + j i_{f,q}),$$&lt;/div>&lt;p>i.e.&lt;/p>
+&lt;div class="math">$$v_{d,\mathrm{ref}} = E - (R_v i_{f,d} - X_v i_{f,q}),
+\qquad
+v_{q,\mathrm{ref}} = -(R_v i_{f,q} + X_v i_{f,d}).$$&lt;/div>&lt;p>$Z_v = 0$ recovers $v_{d,\mathrm{ref}} = E,\ v_{q,\mathrm{ref}} = 0$.
+A finite $R_v$ adds a current-proportional term opposing motion, damping the power-synchronization loop on a stiff grid at the electrical timescale, an alternative to raising the mechanical damping $D$.
+The drop is taken off the filter-current &lt;em>state&lt;/em> $\mathbf{i}_f$ rather than the algebraically reconstructed grid current $\mathbf{i}_g = (\mathbf{v}_c-\mathbf{u})/R_c$; the latter would multiply the reference by a factor $\propto 1/R_c$, amplifying state and linearization error.&lt;/p>
+&lt;p>&lt;strong>Grid-current feed-forward scale.&lt;/strong> A scalar $\kappa$ scales the grid-current feed-forward in the current reference,&lt;/p>
+&lt;div class="math">$$i_{d,\mathrm{ref}} = \kappa\, i_{g,d} - \omega C_f v_{c,q} + \dots,
+\qquad
+i_{q,\mathrm{ref}} = \kappa\, i_{g,q} + \omega C_f v_{c,d} + \dots,$$&lt;/div>&lt;p>with $\kappa = 1$ the default full feed-forward.&lt;/p>
+&lt;p>&lt;strong>Proportional reactive-power droop.&lt;/strong> When a cutoff $\omega_q &amp;gt; 0$ is set, the integral excitation is replaced by a proportional Q-V droop,&lt;/p>
+&lt;div class="math">$$\dot{E} = \omega_q\big(E_{\mathrm{set}} + D_q(Q_{\mathrm{ref}} - Q) - E\big),$$&lt;/div>&lt;p>a first-order lag with a stable fixed point $E^* = E_{\mathrm{set}} + D_q(Q_{\mathrm{ref}} - Q)$ and pole at $-\omega_q$.
+On a stiff grid the network fixes $U_{\mathrm{pcc}}$, so the reactive error $Q_{\mathrm{ref}} - Q$ cannot be driven to zero and the integral law $\dot E = K_q(Q_{\mathrm{ref}} - Q) + K_u(U_n - U_{\mathrm{pcc}})$ has no reachable equilibrium (reactive windup); the proportional droop always has one.
+The setpoint $E_{\mathrm{set}}$ is captured at initialization as the operating magnitude, so $\dot{E} = 0$ when $Q = Q_{\mathrm{ref}}$ at $t = 0$.&lt;/p>
+&lt;h2 id="linearization-and-stamping">Linearization and stamping&lt;/h2>
+&lt;p>The model is nonlinear (Park transforms with the moving angle $\theta$, the $1/\omega$ swing term, the power products). It is not linearized by hand; at each simulation step the state and output Jacobians are computed by central finite differences of the nonlinear functions $\mathbf{f}(\mathbf{x},\mathbf{u}) = \dot{\mathbf{x}}$ and $\mathbf{g}(\mathbf{x},\mathbf{u}) = \mathbf{y}$,&lt;/p>
+&lt;div class="math">$$\mathbf{A} = \frac{\partial \mathbf{f}}{\partial \mathbf{x}},\quad
+\mathbf{B} = \frac{\partial \mathbf{f}}{\partial \mathbf{u}},\quad
+\mathbf{C} = \frac{\partial \mathbf{g}}{\partial \mathbf{x}},\quad
+\mathbf{D} = \frac{\partial \mathbf{g}}{\partial \mathbf{u}},$$&lt;/div>&lt;p>each column $j$ evaluated as $[\mathbf{f}(\mathbf{x}+\delta_j\mathbf{e}_j,\mathbf{u}) - \mathbf{f}(\mathbf{x}-\delta_j\mathbf{e}_j,\mathbf{u})]/(2\delta_j)$ with a mixed relative/absolute step $\delta_j$.
+Because the grid-connected extensions above all enter through $\mathbf{f}$, they are captured in $\mathbf{A}$, $\mathbf{B}$, $\mathbf{C}$, $\mathbf{D}$ automatically, with no separate matrix code.
+The affine offsets fix the model to the current operating point,&lt;/p>
+&lt;div class="math">$$\mathbf{E} = \mathbf{f}(\mathbf{x}_0,\mathbf{u}_0) - \mathbf{A}\mathbf{x}_0 - \mathbf{B}\mathbf{u}_0,
+\qquad
+\mathbf{F} = \mathbf{g}(\mathbf{x}_0,\mathbf{u}_0) - \mathbf{C}\mathbf{x}_0 - \mathbf{D}\mathbf{u}_0,$$&lt;/div>&lt;p>giving the affine state-space form&lt;/p>
+&lt;div class="math">$$\dot{\mathbf{x}} \approx \mathbf{A}\mathbf{x} + \mathbf{B}\mathbf{u} + \mathbf{E},
+\qquad
+\mathbf{y} \approx \mathbf{C}\mathbf{x} + \mathbf{D}\mathbf{u} + \mathbf{F},$$&lt;/div>&lt;p>which is discretized and stamped into the EMT MNA system.
+The dq/abc transformations and the nonlinear controls make the local model time varying, so the SSN equivalent is recomputed every simulation step.&lt;/p>
+&lt;h2 id="source-code-and-examples-3">Source code and examples&lt;/h2>
+&lt;ul>
+&lt;li>Source code: &lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/include/dpsim-models/EMT/EMT_Ph3_SSN_GFM.h">header&lt;/a>, &lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/src/EMT/EMT_Ph3_SSN_GFM.cpp">implementation&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim/examples/cxx/Circuits/EMT_Ph3_IEEE9_SSN_InverterMix.cpp">C++ example (IEEE 9-bus mixed SG/GFM/GFL)&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/examples/Notebooks/Circuits/EMT_Ph3_IEEE9_SSN_InverterMix.ipynb">Python notebook&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="references-1">References&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a name="Gao2022">&lt;/a>[Gao2022] X. Gao, D. Zhou, A. Anvari-Moghaddam, and F. Blaabjerg, &amp;ldquo;Stability Analysis of Grid-Following and Grid-Forming Converters Based on State-Space Model,&amp;rdquo; in &lt;em>2022 International Power Electronics Conference (IPEC-Himeji 2022 - ECCE Asia)&lt;/em>, 2022, pp. 422-428. Source of both the grid-following and grid-forming state-space control structures. Its eigenvalue analysis finds grid-following control better suited to a stiff grid and grid-forming control to a weak grid; the grid-connected extensions above (virtual impedance, Q-V droop) are what let the grid-forming model stay stable when connected to a stiff grid.&lt;/li>
+&lt;li>&lt;a name="Yazdani2010">&lt;/a>[Yazdani2010] A. Yazdani and R. Iravani, &lt;em>Voltage-Sourced Converters in Power Systems: Modeling, Control, and Applications&lt;/em>. Hoboken, NJ: Wiley-IEEE Press, 2010. Basis for the inner voltage/current control and LC-filter modeling of both inverters.&lt;/li>
 &lt;/ul></description></item><item><title>Docs: Synchronous Generator Regulators</title><link>https://sogno-platform.github.io/dpsim/docs/models/synchronous-generator-regulators/</link><pubDate>Mon, 23 Jan 2023 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/models/synchronous-generator-regulators/</guid><description>
 &lt;p>In DPSim, synchronous generator control systems are solved separately from the electric network. The outputs of the electric network (active and reactive power, node voltages, branch currents and rotor speed of synchronous generators) at time $k- \Delta t$ are used as the input of the controllers to calculate their states at time $k$. Because of the relatively slow response of the controllers, the error in the network solution due to the time delay $\Delta t$ introduced by this approach is negligible.&lt;/p>
 &lt;h1 id="exciter">Exciter&lt;/h1>

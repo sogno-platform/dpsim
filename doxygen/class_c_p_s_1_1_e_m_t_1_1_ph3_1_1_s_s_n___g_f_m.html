@@ -135,6 +135,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2f345958e18a01042b0b2cd398ecc58e" id="r_a2f345958e18a01042b0b2cd398ecc58e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2f345958e18a01042b0b2cd398ecc58e">setNumericalLinearizationParameters</a> (Real relativeStep, Real absoluteStep)</td></tr>
 <tr class="memdesc:a2f345958e18a01042b0b2cd398ecc58e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure finite-difference steps for local linearization.  <br /></td></tr>
 <tr class="separator:a2f345958e18a01042b0b2cd398ecc58e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3e3b81c4da84ec112ba2e9c72cd975b" id="r_af3e3b81c4da84ec112ba2e9c72cd975b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af3e3b81c4da84ec112ba2e9c72cd975b">setVirtualImpedance</a> (Real virtualResistance, Real virtualReactance=0.0)</td></tr>
+<tr class="memdesc:af3e3b81c4da84ec112ba2e9c72cd975b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Opt-in virtual output impedance Zv = Rv + jXv, subtracted from the EMF reference across the filter current. Zero (default) is the islanded model; a finite Rv/Xv damps the power-synchronization loop on a grid.  <br /></td></tr>
+<tr class="separator:af3e3b81c4da84ec112ba2e9c72cd975b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af25b6557cfd136d9134115d4d85a63c2" id="r_af25b6557cfd136d9134115d4d85a63c2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af25b6557cfd136d9134115d4d85a63c2">setGridCurrentFeedforward</a> (Real scale)</td></tr>
+<tr class="memdesc:af25b6557cfd136d9134115d4d85a63c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scale on the voltage-loop grid-current feedforward (default 1).  <br /></td></tr>
+<tr class="separator:af25b6557cfd136d9134115d4d85a63c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7761f25291ec78a66a9b43f1873d3701" id="r_a7761f25291ec78a66a9b43f1873d3701"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7761f25291ec78a66a9b43f1873d3701">setReactivePowerDroop</a> (Real droopGain, Real cutoff)</td></tr>
+<tr class="memdesc:a7761f25291ec78a66a9b43f1873d3701"><td class="mdescLeft">&#160;</td><td class="mdescRight">Opt-in proportional Q-V droop replacing the integral excitation. droopGain is Dq [V/var]; cutoff [rad/s] &gt; 0 enables it.  <br /></td></tr>
+<tr class="separator:a7761f25291ec78a66a9b43f1873d3701"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5eea341dcaf029b435e2cc2e2e143d4" id="r_af5eea341dcaf029b435e2cc2e2e143d4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af5eea341dcaf029b435e2cc2e2e143d4">initializeFromNodesAndTerminals</a> (Real frequency) override final</td></tr>
 <tr class="memdesc:af5eea341dcaf029b435e2cc2e2e143d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes Component variables according to power flow data stored in Nodes.  <br /></td></tr>
 <tr class="separator:af5eea341dcaf029b435e2cc2e2e143d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -671,7 +680,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8h_source.html#l00158">158</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8h_source.html">EMT_Ph3_SSN_GFM.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8h_source.html#l00171">171</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8h_source.html">EMT_Ph3_SSN_GFM.h</a>.</p>
 
 </div>
 </div>
@@ -691,7 +700,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00825">825</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00887">887</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
 
 </div>
 </div>
@@ -710,7 +719,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00823">823</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00885">885</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
 
 </div>
 </div>
@@ -741,7 +750,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#abb142067488f8644db36725e9aed3e6f">CPS::EMT::SSNComp</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00083">83</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00086">86</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
 
 </div>
 </div>
@@ -773,7 +782,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a2bad652e725bb37fbc6472f333da9aa6">CPS::EMT::SSNComp</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00055">55</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00058">58</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
 
 </div>
 </div>
@@ -792,7 +801,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00813">813</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00875">875</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
 
 </div>
 </div>
@@ -811,7 +820,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00815">815</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00877">877</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
 
 </div>
 </div>
@@ -842,7 +851,28 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a4401f844a3f389e07a37ef1716d84dcd">CPS::SimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00581">581</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00626">626</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
+
+</div>
+</div>
+<a id="af25b6557cfd136d9134115d4d85a63c2" name="af25b6557cfd136d9134115d4d85a63c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af25b6557cfd136d9134115d4d85a63c2">&#9670;&#160;</a></span>setGridCurrentFeedforward()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void EMT::Ph3::SSN_GFM::setGridCurrentFeedforward </td>
+          <td>(</td>
+          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>scale</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Scale on the voltage-loop grid-current feedforward (default 1). </p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00206">206</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
 
 </div>
 </div>
@@ -867,7 +897,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Configure finite-difference steps for local linearization. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00179">179</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00182">182</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
 
 </div>
 </div>
@@ -976,10 +1006,60 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Configure the GFM model. </p>
-<p>nominalVoltage is the nominal line-to-line RMS voltage. With the power-invariant Park transformation used here, a balanced system's dq voltage magnitude equals the line-to-line RMS voltage.</p>
+<p>nominalVoltage is the nominal peak phase voltage. With the amplitude-invariant (2/3) Park transformation used here, a balanced system's dq voltage magnitude equals the peak phase voltage; pass RMS3PH_TO_PEAK1PH * (line-to-line RMS voltage), as the example does.</p>
 <p>omegaN is the nominal angular frequency in rad/s. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00093">93</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00096">96</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a7761f25291ec78a66a9b43f1873d3701" name="a7761f25291ec78a66a9b43f1873d3701"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7761f25291ec78a66a9b43f1873d3701">&#9670;&#160;</a></span>setReactivePowerDroop()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void EMT::Ph3::SSN_GFM::setReactivePowerDroop </td>
+          <td>(</td>
+          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>droopGain</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>cutoff</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Opt-in proportional Q-V droop replacing the integral excitation. droopGain is Dq [V/var]; cutoff [rad/s] &gt; 0 enables it. </p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00210">210</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
+
+</div>
+</div>
+<a id="af3e3b81c4da84ec112ba2e9c72cd975b" name="af3e3b81c4da84ec112ba2e9c72cd975b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3e3b81c4da84ec112ba2e9c72cd975b">&#9670;&#160;</a></span>setVirtualImpedance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void EMT::Ph3::SSN_GFM::setVirtualImpedance </td>
+          <td>(</td>
+          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>virtualResistance</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>virtualReactance</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0.0</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Opt-in virtual output impedance Zv = Rv + jXv, subtracted from the EMF reference across the filter current. Zero (default) is the islanded model; a finite Rv/Xv damps the power-synchronization loop on a grid. </p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00197">197</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
 
 </div>
 </div>
@@ -1009,7 +1089,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html#a4cdab5c112f74f00125febd04692d113">CPS::EMT::VTypeVariableSSNComp</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00523">523</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00563">563</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
 
 </div>
 </div>
@@ -1040,7 +1120,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a310a4a96c67380d3a583f21389e03be9">CPS::EMT::SSNComp</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00538">538</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html#l00578">578</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_m_8cpp_source.html">EMT_Ph3_SSN_GFM.cpp</a>.</p>
 
 </div>
 </div>
