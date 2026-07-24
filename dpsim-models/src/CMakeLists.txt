@@ -184,6 +184,8 @@ list(APPEND MODELS_SOURCES
 	SP/SP_Ph1_NetworkInjection.cpp
 	SP/SP_Ph1_SynchronGeneratorTrStab.cpp
 	SP/SP_Ph1_varResSwitch.cpp
+	SP/SP_Ph1_SSNTypeI2T.cpp
+	SP/SP_Ph1_SSNTypeV2T.cpp
 
 	SP/SP_Ph3_Capacitor.cpp
 	SP/SP_Ph3_Inductor.cpp
