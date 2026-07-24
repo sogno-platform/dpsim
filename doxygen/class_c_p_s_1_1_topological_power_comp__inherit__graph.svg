@@ -83,39 +83,39 @@ var sectionId = 'dynsection-0';
 </a>
 </g>
 </g>
-<!-- Node107 -->
-<g id="Node000107" class="node">
-<title>Node107</title>
-<g id="a_Node000107"><a xlink:href="class_c_p_s_1_1_sim_power_comp.html" target="_top" xlink:title=" ">
+<!-- Node109 -->
+<g id="Node000109" class="node">
+<title>Node109</title>
+<g id="a_Node000109"><a xlink:href="class_c_p_s_1_1_sim_power_comp.html" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="676.88,-677.38 558.12,-677.38 558.12,-640.88 676.88,-640.88 676.88,-677.38"/>
 <text text-anchor="start" x="566.12" y="-663.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SimPowerComp&lt;</text>
 <text text-anchor="middle" x="617.5" y="-649.62" font-family="Helvetica,sans-Serif" font-size="10.00"> Real &gt;</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node107 -->
-<g id="edge45_Node000001_Node000107" class="edge">
-<title>Node1&#45;&gt;Node107</title>
-<g id="a_edge45_Node000001_Node000107"><a xlink:title=" ">
+<!-- Node1&#45;&gt;Node109 -->
+<g id="edge45_Node000001_Node000109" class="edge">
+<title>Node1&#45;&gt;Node109</title>
+<g id="a_edge45_Node000001_Node000109"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M279.87,-706.68C297.7,-702.2 317.74,-697.55 336.25,-694.12 412.19,-680.08 500.77,-670.07 557.69,-664.45"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="279.09,-703.27 270.27,-709.13 280.82,-710.05 279.09,-703.27"/>
 </a>
 </g>
 </g>
-<!-- Node173 -->
-<g id="Node000173" class="node">
-<title>Node173</title>
-<g id="a_Node000173"><a xlink:href="class_c_p_s_1_1_sim_power_comp.html" target="_top" xlink:title="Base class for all components that are transmitting power.">
+<!-- Node175 -->
+<g id="Node000175" class="node">
+<title>Node175</title>
+<g id="a_Node000175"><a xlink:href="class_c_p_s_1_1_sim_power_comp.html" target="_top" xlink:title="Base class for all components that are transmitting power.">
 <polygon fill="white" stroke="#666666" points="455,-739.38 336.25,-739.38 336.25,-702.88 455,-702.88 455,-739.38"/>
 <text text-anchor="start" x="344.25" y="-725.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SimPowerComp&lt;</text>
 <text text-anchor="middle" x="395.62" y="-711.62" font-family="Helvetica,sans-Serif" font-size="10.00"> VarType &gt;</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node173 -->
-<g id="edge47_Node000001_Node000173" class="edge">
-<title>Node1&#45;&gt;Node173</title>
-<g id="a_edge47_Node000001_Node000173"><a xlink:title=" ">
+<!-- Node1&#45;&gt;Node175 -->
+<g id="edge47_Node000001_Node000175" class="edge">
+<title>Node1&#45;&gt;Node175</title>
+<g id="a_edge47_Node000001_Node000175"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M310.58,-721.12C319.16,-721.12 327.74,-721.12 335.96,-721.12"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="310.85,-717.63 300.85,-721.13 310.85,-724.63 310.85,-717.63"/>
 </a>
@@ -158,128 +158,128 @@ var sectionId = 'dynsection-0';
 </a>
 </g>
 </g>
-<!-- Node100 -->
-<g id="Node000100" class="node">
-<title>Node100</title>
-<g id="a_Node000100"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html" target="_top" xlink:title=" ">
+<!-- Node102 -->
+<g id="Node000102" class="node">
+<title>Node102</title>
+<g id="a_Node000102"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="973,-892.25 780,-892.25 780,-870 973,-870 973,-892.25"/>
 <text text-anchor="middle" x="876.5" y="-878.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph3::SynchronGeneratorVBR</text>
 </a>
 </g>
 </g>
-<!-- Node3&#45;&gt;Node100 -->
-<g id="edge38_Node000003_Node000100" class="edge">
-<title>Node3&#45;&gt;Node100</title>
-<g id="a_edge38_Node000003_Node000100"><a xlink:title=" ">
+<!-- Node3&#45;&gt;Node102 -->
+<g id="edge38_Node000003_Node000102" class="edge">
+<title>Node3&#45;&gt;Node102</title>
+<g id="a_edge38_Node000003_Node000102"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M687.81,-840.16C693.11,-841.53 698.39,-842.87 703.5,-844.12 741.31,-853.44 784.13,-862.65 817.58,-869.56"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="688.96,-836.84 678.4,-837.7 687.19,-843.61 688.96,-836.84"/>
-</a>
-</g>
-</g>
-<!-- Node101 -->
-<g id="Node000101" class="node">
-<title>Node101</title>
-<g id="a_Node000101"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="936.25,-852.25 816.75,-852.25 816.75,-830 936.25,-830 936.25,-852.25"/>
-<text text-anchor="middle" x="876.5" y="-838.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::PQNode</text>
-</a>
-</g>
-</g>
-<!-- Node3&#45;&gt;Node101 -->
-<g id="edge39_Node000003_Node000101" class="edge">
-<title>Node3&#45;&gt;Node101</title>
-<g id="a_edge39_Node000003_Node000101"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M688.46,-826.57C728.64,-829.7 778.52,-833.58 816.67,-836.55"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="688.89,-823.09 678.65,-825.81 688.35,-830.07 688.89,-823.09"/>
-</a>
-</g>
-</g>
-<!-- Node102 -->
-<g id="Node000102" class="node">
-<title>Node102</title>
-<g id="a_Node000102"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_v_node.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="935.5,-812.25 817.5,-812.25 817.5,-790 935.5,-790 935.5,-812.25"/>
-<text text-anchor="middle" x="876.5" y="-798.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::PVNode</text>
-</a>
-</g>
-</g>
-<!-- Node3&#45;&gt;Node102 -->
-<g id="edge40_Node000003_Node000102" class="edge">
-<title>Node3&#45;&gt;Node102</title>
-<g id="a_edge40_Node000003_Node000102"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M688.5,-815.68C728.83,-812.54 778.92,-808.64 817.11,-805.67"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="688.35,-812.18 678.65,-816.44 688.89,-819.16 688.35,-812.18"/>
 </a>
 </g>
 </g>
 <!-- Node103 -->
 <g id="Node000103" class="node">
 <title>Node103</title>
-<g id="a_Node000103"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_shunt.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="930.25,-772.25 822.75,-772.25 822.75,-750 930.25,-750 930.25,-772.25"/>
-<text text-anchor="middle" x="876.5" y="-758.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::Shunt</text>
+<g id="a_Node000103"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#bfbfbf" points="936.25,-852.25 816.75,-852.25 816.75,-830 936.25,-830 936.25,-852.25"/>
+<text text-anchor="middle" x="876.5" y="-838.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::PQNode</text>
 </a>
 </g>
 </g>
 <!-- Node3&#45;&gt;Node103 -->
-<g id="edge41_Node000003_Node000103" class="edge">
+<g id="edge39_Node000003_Node000103" class="edge">
 <title>Node3&#45;&gt;Node103</title>
-<g id="a_edge41_Node000003_Node000103"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M688.11,-803.3C716.55,-796.17 749.8,-788.03 780,-781.12 793.71,-777.99 808.56,-774.79 822.39,-771.89"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="687.37,-799.87 678.53,-805.71 689.08,-806.66 687.37,-799.87"/>
+<g id="a_edge39_Node000003_Node000103"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M688.46,-826.57C728.64,-829.7 778.52,-833.58 816.67,-836.55"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="688.89,-823.09 678.65,-825.81 688.35,-830.07 688.89,-823.09"/>
 </a>
 </g>
 </g>
 <!-- Node104 -->
 <g id="Node000104" class="node">
 <title>Node104</title>
-<g id="a_Node000104"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="962.5,-1026.25 790.5,-1026.25 790.5,-1004 962.5,-1004 962.5,-1026.25"/>
-<text text-anchor="middle" x="876.5" y="-1012.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::SynchronGenerator</text>
+<g id="a_Node000104"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_v_node.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#bfbfbf" points="935.5,-812.25 817.5,-812.25 817.5,-790 935.5,-790 935.5,-812.25"/>
+<text text-anchor="middle" x="876.5" y="-798.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::PVNode</text>
 </a>
 </g>
 </g>
 <!-- Node3&#45;&gt;Node104 -->
-<g id="edge42_Node000003_Node000104" class="edge">
+<g id="edge40_Node000003_Node000104" class="edge">
 <title>Node3&#45;&gt;Node104</title>
-<g id="a_edge42_Node000003_Node000104"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M634.77,-849.52C650.34,-875.23 675.55,-913.22 703.5,-941.12 732.95,-970.53 741.84,-978.51 780,-995.12 787.61,-998.44 795.81,-1001.22 804.08,-1003.54"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="637.79,-847.76 629.67,-840.96 631.78,-851.34 637.79,-847.76"/>
+<g id="a_edge40_Node000003_Node000104"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M688.5,-815.68C728.83,-812.54 778.92,-808.64 817.11,-805.67"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="688.35,-812.18 678.65,-816.44 688.89,-819.16 688.35,-812.18"/>
 </a>
 </g>
 </g>
 <!-- Node105 -->
 <g id="Node000105" class="node">
 <title>Node105</title>
-<g id="a_Node000105"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_v_d_node.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="936.25,-986.25 816.75,-986.25 816.75,-964 936.25,-964 936.25,-986.25"/>
-<text text-anchor="middle" x="876.5" y="-972.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::VDNode</text>
+<g id="a_Node000105"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_shunt.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#bfbfbf" points="930.25,-772.25 822.75,-772.25 822.75,-750 930.25,-750 930.25,-772.25"/>
+<text text-anchor="middle" x="876.5" y="-758.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::Shunt</text>
 </a>
 </g>
 </g>
 <!-- Node3&#45;&gt;Node105 -->
-<g id="edge43_Node000003_Node000105" class="edge">
+<g id="edge41_Node000003_Node000105" class="edge">
 <title>Node3&#45;&gt;Node105</title>
-<g id="a_edge43_Node000003_Node000105"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M642.35,-848.05C671.54,-879.16 724.04,-929.35 780,-955.12 791.31,-960.33 804,-964.2 816.34,-967.07"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="645.13,-845.91 635.78,-840.93 639.99,-850.66 645.13,-845.91"/>
+<g id="a_edge41_Node000003_Node000105"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M688.11,-803.3C716.55,-796.17 749.8,-788.03 780,-781.12 793.71,-777.99 808.56,-774.79 822.39,-771.89"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="687.37,-799.87 678.53,-805.71 689.08,-806.66 687.37,-799.87"/>
 </a>
 </g>
 </g>
 <!-- Node106 -->
 <g id="Node000106" class="node">
 <title>Node106</title>
-<g id="a_Node000106"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source_inverter.html" target="_top" xlink:title=" ">
+<g id="a_Node000106"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#bfbfbf" points="962.5,-1026.25 790.5,-1026.25 790.5,-1004 962.5,-1004 962.5,-1026.25"/>
+<text text-anchor="middle" x="876.5" y="-1012.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::SynchronGenerator</text>
+</a>
+</g>
+</g>
+<!-- Node3&#45;&gt;Node106 -->
+<g id="edge42_Node000003_Node000106" class="edge">
+<title>Node3&#45;&gt;Node106</title>
+<g id="a_edge42_Node000003_Node000106"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M634.77,-849.52C650.34,-875.23 675.55,-913.22 703.5,-941.12 732.95,-970.53 741.84,-978.51 780,-995.12 787.61,-998.44 795.81,-1001.22 804.08,-1003.54"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="637.79,-847.76 629.67,-840.96 631.78,-851.34 637.79,-847.76"/>
+</a>
+</g>
+</g>
+<!-- Node107 -->
+<g id="Node000107" class="node">
+<title>Node107</title>
+<g id="a_Node000107"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_v_d_node.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#bfbfbf" points="936.25,-986.25 816.75,-986.25 816.75,-964 936.25,-964 936.25,-986.25"/>
+<text text-anchor="middle" x="876.5" y="-972.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::VDNode</text>
+</a>
+</g>
+</g>
+<!-- Node3&#45;&gt;Node107 -->
+<g id="edge43_Node000003_Node000107" class="edge">
+<title>Node3&#45;&gt;Node107</title>
+<g id="a_edge43_Node000003_Node000107"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M642.35,-848.05C671.54,-879.16 724.04,-929.35 780,-955.12 791.31,-960.33 804,-964.2 816.34,-967.07"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="645.13,-845.91 635.78,-840.93 639.99,-850.66 645.13,-845.91"/>
+</a>
+</g>
+</g>
+<!-- Node108 -->
+<g id="Node000108" class="node">
+<title>Node108</title>
+<g id="a_Node000108"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source_inverter.html" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#bfbfbf" points="950.12,-946.38 802.88,-946.38 802.88,-909.88 950.12,-909.88 950.12,-946.38"/>
 <text text-anchor="start" x="810.88" y="-932.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::VoltageSource</text>
 <text text-anchor="middle" x="876.5" y="-918.62" font-family="Helvetica,sans-Serif" font-size="10.00">Inverter</text>
 </a>
 </g>
 </g>
-<!-- Node3&#45;&gt;Node106 -->
-<g id="edge44_Node000003_Node000106" class="edge">
-<title>Node3&#45;&gt;Node106</title>
-<g id="a_edge44_Node000003_Node000106"><a xlink:title=" ">
+<!-- Node3&#45;&gt;Node108 -->
+<g id="edge44_Node000003_Node000108" class="edge">
+<title>Node3&#45;&gt;Node108</title>
+<g id="a_edge44_Node000003_Node000108"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M660.91,-845.13C692.88,-862.47 738.21,-885.51 780,-901.12 787.83,-904.05 796.12,-906.84 804.41,-909.43"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="662.8,-842.17 652.35,-840.44 659.44,-848.31 662.8,-842.17"/>
 </a>
@@ -874,9 +874,9 @@ var sectionId = 'dynsection-0';
 <!-- Node93 -->
 <g id="Node000093" class="node">
 <title>Node93</title>
-<g id="a_Node000093"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_switch.html" target="_top" xlink:title="Dynamic phasor switch.">
-<polygon fill="white" stroke="#666666" points="1159.5,-62.25 1049.75,-62.25 1049.75,-40 1159.5,-40 1159.5,-62.25"/>
-<text text-anchor="middle" x="1104.62" y="-48.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::Switch</text>
+<g id="a_Node000093"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_s_s_n_type_i2_t.html" target="_top" xlink:title="SSNTypeI2T Model for a one phase, two terminal I&#45;type SSN component which can be represented using a ...">
+<polygon fill="white" stroke="#666666" points="1172.62,-62.25 1036.62,-62.25 1036.62,-40 1172.62,-40 1172.62,-62.25"/>
+<text text-anchor="middle" x="1104.62" y="-48.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::SSNTypeI2T</text>
 </a>
 </g>
 </g>
@@ -884,7 +884,7 @@ var sectionId = 'dynsection-0';
 <g id="edge36_Node000004_Node000093" class="edge">
 <title>Node4&#45;&gt;Node93</title>
 <g id="a_edge36_Node000004_Node000093"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M954.77,-698.89C961.79,-694.79 968.09,-689.63 973,-683.12 989.97,-660.62 987.98,-204.15 991,-176.12 996.08,-128.97 977,-105.18 1010,-71.12 1020.41,-60.38 1035.07,-54.72 1049.71,-51.9"/>
+<path fill="none" stroke="#63b8ff" d="M954.77,-698.89C961.79,-694.79 968.09,-689.63 973,-683.12 989.97,-660.62 987.98,-204.15 991,-176.12 996.08,-128.97 977,-105.18 1010,-71.12 1017.17,-63.72 1026.36,-58.74 1036.17,-55.42"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="953.57,-695.58 946.17,-703.16 956.69,-701.85 953.57,-695.58"/>
 </a>
 </g>
@@ -892,9 +892,9 @@ var sectionId = 'dynsection-0';
 <!-- Node94 -->
 <g id="Node000094" class="node">
 <title>Node94</title>
-<g id="a_Node000094"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source.html" target="_top" xlink:title="Ideal Voltage source model.">
-<polygon fill="white" stroke="#666666" points="1178.25,-22.25 1031,-22.25 1031,0 1178.25,0 1178.25,-22.25"/>
-<text text-anchor="middle" x="1104.62" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::VoltageSource</text>
+<g id="a_Node000094"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_s_s_n_type_v2_t.html" target="_top" xlink:title="SSNTypeV2T Model for a one phase, two terminal V&#45;type SSN component which can be represented using a ...">
+<polygon fill="white" stroke="#666666" points="1173.75,-22.25 1035.5,-22.25 1035.5,0 1173.75,0 1173.75,-22.25"/>
+<text text-anchor="middle" x="1104.62" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::SSNTypeV2T</text>
 </a>
 </g>
 </g>
@@ -902,83 +902,83 @@ var sectionId = 'dynsection-0';
 <g id="edge37_Node000004_Node000094" class="edge">
 <title>Node4&#45;&gt;Node94</title>
 <g id="a_edge37_Node000004_Node000094"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M954.8,-698.91C961.82,-694.81 968.11,-689.64 973,-683.12 992.52,-657.12 986.03,-130.26 991,-98.12 995.73,-67.54 987.4,-52.28 1010,-31.12 1015.95,-25.56 1023.04,-21.39 1030.64,-18.29"/>
+<path fill="none" stroke="#63b8ff" d="M954.8,-698.91C961.82,-694.81 968.11,-689.64 973,-683.12 992.52,-657.12 986.03,-130.26 991,-98.12 995.73,-67.54 987.4,-52.28 1010,-31.12 1017.16,-24.42 1025.99,-19.75 1035.34,-16.52"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="953.6,-695.6 946.21,-703.19 956.72,-701.87 953.6,-695.6"/>
 </a>
 </g>
 </g>
-<!-- Node108 -->
-<g id="Node000108" class="node">
-<title>Node108</title>
-<g id="a_Node000108"><a xlink:href="class_c_p_s_1_1_m_n_a_sim_power_comp.html" target="_top" xlink:title=" ">
+<!-- Node110 -->
+<g id="Node000110" class="node">
+<title>Node110</title>
+<g id="a_Node000110"><a xlink:href="class_c_p_s_1_1_m_n_a_sim_power_comp.html" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="orangered" points="944.5,-674.38 808.5,-674.38 808.5,-637.88 944.5,-637.88 944.5,-674.38"/>
 <text text-anchor="start" x="816.5" y="-660.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::MNASimPowerComp</text>
 <text text-anchor="middle" x="876.5" y="-646.62" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Real &gt;</text>
 </a>
 </g>
 </g>
-<!-- Node107&#45;&gt;Node108 -->
-<g id="edge46_Node000107_Node000108" class="edge">
-<title>Node107&#45;&gt;Node108</title>
-<g id="a_edge46_Node000107_Node000108"><a xlink:title=" ">
+<!-- Node109&#45;&gt;Node110 -->
+<g id="edge46_Node000109_Node000110" class="edge">
+<title>Node109&#45;&gt;Node110</title>
+<g id="a_edge46_Node000109_Node000110"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M688.4,-658.31C725.62,-657.87 771.19,-657.34 808.03,-656.91"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="688.61,-654.81 678.65,-658.42 688.69,-661.81 688.61,-654.81"/>
 </a>
 </g>
 </g>
-<!-- Node173&#45;&gt;Node3 -->
-<g id="edge51_Node000173_Node000003" class="edge">
-<title>Node173&#45;&gt;Node3</title>
-<g id="a_edge51_Node000173_Node000003"><a xlink:title=" ">
+<!-- Node175&#45;&gt;Node3 -->
+<g id="edge51_Node000175_Node000003" class="edge">
+<title>Node175&#45;&gt;Node3</title>
+<g id="a_edge51_Node000175_Node000003"><a xlink:title=" ">
 <path fill="none" stroke="orange" stroke-dasharray="5,2" d="M465.88,-741.78C487.32,-749.06 510.75,-757.94 531.5,-767.88 552.07,-777.73 573.85,-791.44 590.21,-802.48"/>
 <polygon fill="orange" stroke="orange" points="467.23,-738.54 456.64,-738.71 465.02,-745.19 467.23,-738.54"/>
 </a>
 </g>
 <text text-anchor="middle" x="502.25" y="-772.62" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &lt; Complex &gt;</text>
 </g>
-<!-- Node173&#45;&gt;Node107 -->
-<g id="edge52_Node000173_Node000107" class="edge">
-<title>Node173&#45;&gt;Node107</title>
-<g id="a_edge52_Node000173_Node000107"><a xlink:title=" ">
+<!-- Node175&#45;&gt;Node109 -->
+<g id="edge52_Node000175_Node000109" class="edge">
+<title>Node175&#45;&gt;Node109</title>
+<g id="a_edge52_Node000175_Node000109"><a xlink:title=" ">
 <path fill="none" stroke="orange" stroke-dasharray="5,2" d="M466.28,-701.48C495.68,-693.19 529.53,-683.65 557.65,-675.72"/>
 <polygon fill="orange" stroke="orange" points="465.39,-698.1 456.72,-704.18 467.29,-704.84 465.39,-698.1"/>
 </a>
 </g>
 <text text-anchor="middle" x="502.25" y="-704.05" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &lt; Real &gt;</text>
 </g>
-<!-- Node174 -->
-<g id="Node000174" class="node">
-<title>Node174</title>
-<g id="a_Node000174"><a xlink:href="class_c_p_s_1_1_m_n_a_sim_power_comp.html" target="_top" xlink:title="Base class for all MNA components that are transmitting power.">
+<!-- Node176 -->
+<g id="Node000176" class="node">
+<title>Node176</title>
+<g id="a_Node000176"><a xlink:href="class_c_p_s_1_1_m_n_a_sim_power_comp.html" target="_top" xlink:title="Base class for all MNA components that are transmitting power.">
 <polygon fill="#fff0f0" stroke="red" points="685.5,-736.38 549.5,-736.38 549.5,-699.88 685.5,-699.88 685.5,-736.38"/>
 <text text-anchor="start" x="557.5" y="-722.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::MNASimPowerComp</text>
 <text text-anchor="middle" x="617.5" y="-708.62" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; VarType &gt;</text>
 </a>
 </g>
 </g>
-<!-- Node173&#45;&gt;Node174 -->
-<g id="edge48_Node000173_Node000174" class="edge">
-<title>Node173&#45;&gt;Node174</title>
-<g id="a_edge48_Node000173_Node000174"><a xlink:title=" ">
+<!-- Node175&#45;&gt;Node176 -->
+<g id="edge48_Node000175_Node000176" class="edge">
+<title>Node175&#45;&gt;Node176</title>
+<g id="a_edge48_Node000175_Node000176"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M466.71,-720.17C493.07,-719.81 522.97,-719.4 549.08,-719.04"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="466.72,-716.67 456.77,-720.3 466.82,-723.67 466.72,-716.67"/>
 </a>
 </g>
 </g>
-<!-- Node174&#45;&gt;Node4 -->
-<g id="edge49_Node000174_Node000004" class="edge">
-<title>Node174&#45;&gt;Node4</title>
-<g id="a_edge49_Node000174_Node000004"><a xlink:title=" ">
+<!-- Node176&#45;&gt;Node4 -->
+<g id="edge49_Node000176_Node000004" class="edge">
+<title>Node176&#45;&gt;Node4</title>
+<g id="a_edge49_Node000176_Node000004"><a xlink:title=" ">
 <path fill="none" stroke="orange" stroke-dasharray="5,2" d="M697,-716.9C732.56,-716.35 774.16,-715.7 808.26,-715.17"/>
 <polygon fill="orange" stroke="orange" points="697.15,-713.4 687.2,-717.06 697.25,-720.4 697.15,-713.4"/>
 </a>
 </g>
 <text text-anchor="middle" x="732.75" y="-721.47" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &lt; Complex &gt;</text>
 </g>
-<!-- Node174&#45;&gt;Node108 -->
-<g id="edge50_Node000174_Node000108" class="edge">
-<title>Node174&#45;&gt;Node108</title>
-<g id="a_edge50_Node000174_Node000108"><a xlink:title=" ">
+<!-- Node176&#45;&gt;Node110 -->
+<g id="edge50_Node000176_Node000110" class="edge">
+<title>Node176&#45;&gt;Node110</title>
+<g id="a_edge50_Node000176_Node000110"><a xlink:title=" ">
 <path fill="none" stroke="orange" stroke-dasharray="5,2" d="M696.54,-699.3C732.2,-690.7 774.02,-680.61 808.26,-672.35"/>
 <polygon fill="orange" stroke="orange" points="696.06,-695.81 687.16,-701.56 697.7,-702.62 696.06,-695.81"/>
 </a>
