@@ -38,6 +38,7 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_Ph3_R3C1L1CS1_RC_vs_SSN.cpp
 	Circuits/EMT_Ph3_RLC1VS1_RC_vs_SSN.cpp
 	Circuits/EMT_Ph1_General2TerminalSSN.cpp
+	Circuits/EMT_DC_SSN_Validation.cpp
 	Circuits/EMT_RC_split_decoupled_node_DC.cpp
 	Circuits/EMT_RC_split_decoupled_node.cpp
 	Circuits/EMT_RC_split_decoupled_node_Ph3.cpp

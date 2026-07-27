@@ -198,12 +198,19 @@ void SimPowerComp<VarType>::setTerminalAt(
 template <typename VarType>
 void SimPowerComp<VarType>::updateMatrixNodeIndices() {
   for (UInt nodeIdx = 0; nodeIdx < mNumTerminals; nodeIdx++) {
-    mMatrixNodeIndices[3 * nodeIdx] =
-        node(nodeIdx)->matrixNodeIndex(PhaseType::A);
-    mMatrixNodeIndices[3 * nodeIdx + 1] =
-        node(nodeIdx)->matrixNodeIndex(PhaseType::B);
-    mMatrixNodeIndices[3 * nodeIdx + 2] =
-        node(nodeIdx)->matrixNodeIndex(PhaseType::C);
+    if (node(nodeIdx)->phaseType() == PhaseType::DC) {
+      mMatrixNodeIndices[3 * nodeIdx] =
+          node(nodeIdx)->matrixNodeIndex(PhaseType::DC);
+      mMatrixNodeIndices[3 * nodeIdx + 1] = 0;
+      mMatrixNodeIndices[3 * nodeIdx + 2] = 0;
+    } else {
+      mMatrixNodeIndices[3 * nodeIdx] =
+          node(nodeIdx)->matrixNodeIndex(PhaseType::A);
+      mMatrixNodeIndices[3 * nodeIdx + 1] =
+          node(nodeIdx)->matrixNodeIndex(PhaseType::B);
+      mMatrixNodeIndices[3 * nodeIdx + 2] =
+          node(nodeIdx)->matrixNodeIndex(PhaseType::C);
+    }
     mMatrixNodeIndexIsGround[nodeIdx] = node(nodeIdx)->isGround();
   }
 }

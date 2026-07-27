@@ -72,7 +72,8 @@ PYBIND11_MODULE(dpsimpy, m) {
       .value("B", CPS::PhaseType::B)
       .value("C", CPS::PhaseType::C)
       .value("ABC", CPS::PhaseType::ABC)
-      .value("Single", CPS::PhaseType::Single);
+      .value("Single", CPS::PhaseType::Single)
+      .value("DC", CPS::PhaseType::DC);
 
   py::enum_<CPS::PowerflowBusType>(m, "PowerflowBusType")
       .value("PV", CPS::PowerflowBusType::PV)
