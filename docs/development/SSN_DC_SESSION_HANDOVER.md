@@ -85,12 +85,12 @@ Target/executable: `EMT_DC_SSN_Validation`; command: `./build/dpsim/examples/cxx
 
 ## 9. Known problems and risks
 
-1. The entire implementation is uncommitted, many product files are untracked, and no complete diff review has yet been recorded; accidental omission is the highest integration risk.
-2. The validation is an example executable, not a registered automated unit/CTest test; regression coverage will not run automatically.
-3. The RC/RL nominal-time values exhibit a half-step startup alignment (`1.84e-3 V` and `9.20e-4 A` nominal error). This is documented and tightly matches the half-step analytical value, but the initialization/first-step convention still requires architectural acceptance.
-4. Mixed `Ph3` AC/DC multiport metadata and base APIs remain unresolved; do not start converter work by assigning a single component-wide `PhaseType::DC`.
-5. Pi-line is a composite of SSN primitives rather than one coupled state-space stamp. Its topology and task ordering pass current tests but need full diff/API review.
-6. No compile errors, failing validations, NaN/Inf, or observed divergence remain in the focused target. Broader test-suite compatibility has not been established.
+- The entire implementation is uncommitted, many product files are untracked, and no complete diff review has yet been recorded; accidental omission is the highest integration risk.
+- The validation is an example executable, not a registered automated unit/CTest test; regression coverage will not run automatically.
+- The RC/RL nominal-time values exhibit a half-step startup alignment (`1.84e-3 V` and `9.20e-4 A` nominal error). This is documented and tightly matches the half-step analytical value, but the initialization/first-step convention still requires architectural acceptance.
+- Mixed `Ph3` AC/DC multiport metadata and base APIs remain unresolved; do not start converter work by assigning a single component-wide `PhaseType::DC`.
+- Pi-line is a composite of SSN primitives rather than one coupled state-space stamp. Its topology and task ordering pass current tests but need full diff/API review.
+- No compile errors, failing validations, NaN/Inf, or observed divergence remain in the focused target. Broader test-suite compatibility has not been established.
 
 ## 10. Exact next task
 

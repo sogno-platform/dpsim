@@ -16,15 +16,13 @@ void EMT::DC::TwoTerminalVTypeSSNComp::validateDCTerminals() const {
   for (UInt terminalIdx = 0; terminalIdx < 2; ++terminalIdx) {
     const auto terminalNode =
         const_cast<TwoTerminalVTypeSSNComp *>(this)->node(terminalIdx);
-    if (!terminalNode->isGround() &&
-        terminalNode->phaseType() != PhaseType::DC)
+    if (!terminalNode->isGround() && terminalNode->phaseType() != PhaseType::DC)
       throw std::invalid_argument(
           "DC SSN components require DC nodes or ground at both terminals.");
   }
 }
 
-MatrixComp
-EMT::DC::TwoTerminalVTypeSSNComp::buildInitialInputFromNodes(Real) {
+MatrixComp EMT::DC::TwoTerminalVTypeSSNComp::buildInitialInputFromNodes(Real) {
   validateDCTerminals();
   const Complex voltage = initialSingleVoltage(1) - initialSingleVoltage(0);
   if (!Math::isFinite(voltage) ||
@@ -40,9 +38,9 @@ EMT::DC::TwoTerminalVTypeSSNComp::buildInitialInputFromNodes(Real) {
 void EMT::DC::TwoTerminalVTypeSSNComp::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
   validateDCTerminals();
-  MNAStampUtils::stampConductance(
-      mW(0, 0), systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),
-      terminalNotGrounded(0), terminalNotGrounded(1), mSLog);
+  MNAStampUtils::stampConductance(mW(0, 0), systemMatrix, matrixNodeIndex(0),
+                                  matrixNodeIndex(1), terminalNotGrounded(0),
+                                  terminalNotGrounded(1), mSLog);
 }
 
 void EMT::DC::TwoTerminalVTypeSSNComp::mnaCompApplyRightSideVectorStamp(

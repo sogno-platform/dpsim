@@ -5,8 +5,7 @@
 
 using namespace CPS;
 
-EMT::DC::SSN::PiLine::PiLine(String uid, String name,
-                             Logger::Level logLevel)
+EMT::DC::SSN::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
     : CompositePowerComp<Real>(uid, name, true, true, logLevel),
       Base::DC::PiLine(mAttributes) {
   mPhaseType = PhaseType::DC;
@@ -24,9 +23,11 @@ SimPowerComp<Real>::Ptr EMT::DC::SSN::PiLine::clone(String name) {
   return copy;
 }
 
-void EMT::DC::SSN::PiLine::setParameters(
-    Real seriesResistance, Real seriesInductance, Real parallelCapacitance,
-    Real parallelConductance, Real initialCurrent) {
+void EMT::DC::SSN::PiLine::setParameters(Real seriesResistance,
+                                         Real seriesInductance,
+                                         Real parallelCapacitance,
+                                         Real parallelConductance,
+                                         Real initialCurrent) {
   const Real epsilon = std::numeric_limits<Real>::epsilon();
   if (!Math::isFinite(seriesResistance) || seriesResistance <= epsilon)
     throw std::invalid_argument(
@@ -35,8 +36,7 @@ void EMT::DC::SSN::PiLine::setParameters(
     throw std::invalid_argument(
         "DC pi-line series inductance must be finite and positive.");
   if (!Math::isFinite(parallelCapacitance) || parallelCapacitance < 0.0 ||
-      (parallelCapacitance > 0.0 &&
-       parallelCapacitance / 2.0 <= epsilon))
+      (parallelCapacitance > 0.0 && parallelCapacitance / 2.0 <= epsilon))
     throw std::invalid_argument(
         "DC pi-line shunt capacitance must be zero or safely positive.");
   if (!Math::isFinite(parallelConductance) || parallelConductance < 0.0 ||
@@ -57,8 +57,7 @@ void EMT::DC::SSN::PiLine::setParameters(
 void EMT::DC::SSN::PiLine::validateDCTerminals() const {
   for (UInt terminalIdx = 0; terminalIdx < 2; ++terminalIdx) {
     const auto terminalNode = const_cast<PiLine *>(this)->node(terminalIdx);
-    if (!terminalNode->isGround() &&
-        terminalNode->phaseType() != PhaseType::DC)
+    if (!terminalNode->isGround() && terminalNode->phaseType() != PhaseType::DC)
       throw std::invalid_argument(
           "DC pi-line requires DC nodes or ground at both terminals.");
   }
@@ -90,8 +89,7 @@ void EMT::DC::SSN::PiLine::createSubComponents() {
   if (**mParallelConductance > 0.0) {
     const Real halfShuntResistance = 2.0 / **mParallelConductance;
     if (!Math::isFinite(halfShuntResistance))
-      throw std::invalid_argument(
-          "DC pi-line shunt resistance is non-finite.");
+      throw std::invalid_argument("DC pi-line shunt resistance is non-finite.");
 
     mShuntResistor0 = Resistor::make(**mName + "_shunt_R0", mLogLevel);
     mShuntResistor0->setParameters(halfShuntResistance);

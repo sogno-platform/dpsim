@@ -31,8 +31,7 @@ void requireNear(Real actual, Real expected, Real tolerance,
                  const String &name) {
   const Real error = std::abs(actual - expected);
   std::cout << name << ": actual=" << actual << ", expected=" << expected
-            << ", abs_error=" << error << ", tolerance=" << tolerance
-            << '\n';
+            << ", abs_error=" << error << ", tolerance=" << tolerance << '\n';
   if (error > tolerance)
     throw std::runtime_error(name + " exceeded its error tolerance.");
 }
@@ -64,9 +63,8 @@ void validateInvalidParameters() {
                           "Zero DC inductance");
 
   auto line = EMT::DC::SSN::PiLine::make("invalid_pi_line");
-  requireInvalidParameter(
-      [&] { line->setParameters(1.0, 1.0, epsilon, 0.0); },
-      "Near-zero DC pi-line shunt capacitance");
+  requireInvalidParameter([&] { line->setParameters(1.0, 1.0, epsilon, 0.0); },
+                          "Near-zero DC pi-line shunt capacitance");
 
   auto source = EMT::DC::VoltageSource::make("invalid_source");
   requireInvalidParameter(
@@ -74,8 +72,8 @@ void validateInvalidParameters() {
       "Non-finite DC source voltage");
 }
 
-Sample runRC(Real targetTime, Real timeStep, Real sourceVoltage, Real resistance,
-             Real capacitance, const String &suffix) {
+Sample runRC(Real targetTime, Real timeStep, Real sourceVoltage,
+             Real resistance, Real capacitance, const String &suffix) {
   auto supply = EMT::SimNode::make("supply_" + suffix, PhaseType::DC);
   auto capacitorNode =
       EMT::SimNode::make("capacitor_node_" + suffix, PhaseType::DC);
@@ -94,9 +92,8 @@ Sample runRC(Real targetTime, Real timeStep, Real sourceVoltage, Real resistance
   capacitor->setParameters(capacitance);
   capacitor->connect({EMT::SimNode::GND, capacitorNode});
 
-  SystemTopology system(
-      0.0, SystemNodeList{supply, capacitorNode},
-      SystemComponentList{source, resistor, capacitor});
+  SystemTopology system(0.0, SystemNodeList{supply, capacitorNode},
+                        SystemComponentList{source, resistor, capacitor});
 
   Simulation simulation("EMT_DC_RC_" + suffix, Logger::Level::off);
   simulation.setSystem(system);
@@ -114,8 +111,8 @@ Sample runRC(Real targetTime, Real timeStep, Real sourceVoltage, Real resistance
           0.5 * capacitance * voltage * voltage};
 }
 
-Sample runRL(Real targetTime, Real timeStep, Real sourceVoltage, Real resistance,
-             Real inductance, const String &suffix) {
+Sample runRL(Real targetTime, Real timeStep, Real sourceVoltage,
+             Real resistance, Real inductance, const String &suffix) {
   auto supply = EMT::SimNode::make("supply_" + suffix, PhaseType::DC);
   auto inductorNode =
       EMT::SimNode::make("inductor_node_" + suffix, PhaseType::DC);
@@ -134,9 +131,8 @@ Sample runRL(Real targetTime, Real timeStep, Real sourceVoltage, Real resistance
   inductor->setParameters(inductance, 0.0);
   inductor->connect({EMT::SimNode::GND, inductorNode});
 
-  SystemTopology system(
-      0.0, SystemNodeList{supply, inductorNode},
-      SystemComponentList{source, resistor, inductor});
+  SystemTopology system(0.0, SystemNodeList{supply, inductorNode},
+                        SystemComponentList{source, resistor, inductor});
 
   Simulation simulation("EMT_DC_RL_" + suffix, Logger::Level::off);
   simulation.setSystem(system);
@@ -183,8 +179,8 @@ void validateResistorAndSources() {
               "DC resistor steady-state current");
   requireNear(voltageSource->intfCurrent()(0, 0), -current, 1e-12,
               "DC voltage-source/load equal-opposite current");
-  const Real sourcePower = voltageSource->intfVoltage()(0, 0) *
-                           voltageSource->intfCurrent()(0, 0);
+  const Real sourcePower =
+      voltageSource->intfVoltage()(0, 0) * voltageSource->intfCurrent()(0, 0);
   const Real loadPower =
       resistor->intfVoltage()(0, 0) * resistor->intfCurrent()(0, 0);
   requireNear(sourcePower + loadPower, 0.0, 1e-12,
@@ -199,8 +195,7 @@ void validateResistorAndSources() {
       EMT::DC::VoltageSource::make("reversed_resistor_source");
   reversedSource->setParameters(-voltage);
   reversedSource->connect({EMT::SimNode::GND, reversedNode});
-  auto reversedResistor =
-      EMT::DC::SSN::Resistor::make("reversed_resistor");
+  auto reversedResistor = EMT::DC::SSN::Resistor::make("reversed_resistor");
   reversedResistor->setParameters(resistance);
   reversedResistor->connect({EMT::SimNode::GND, reversedNode});
 
@@ -220,11 +215,9 @@ void validateResistorAndSources() {
               -reversedResistor->intfCurrent()(0, 0), 1e-12,
               "Reversed DC source/load equal-opposite current");
   const Real reversedSourcePower =
-      reversedSource->intfVoltage()(0, 0) *
-      reversedSource->intfCurrent()(0, 0);
-  const Real reversedLoadPower =
-      reversedResistor->intfVoltage()(0, 0) *
-      reversedResistor->intfCurrent()(0, 0);
+      reversedSource->intfVoltage()(0, 0) * reversedSource->intfCurrent()(0, 0);
+  const Real reversedLoadPower = reversedResistor->intfVoltage()(0, 0) *
+                                 reversedResistor->intfCurrent()(0, 0);
   requireNear(reversedSourcePower + reversedLoadPower, 0.0, 1e-12,
               "Reversed DC source/load PSC power balance");
   if (reversedSourcePower >= 0.0 || reversedLoadPower <= 0.0)
@@ -239,9 +232,8 @@ void validateResistorAndSources() {
   currentLoad->setParameters(10.0);
   currentLoad->connect({EMT::SimNode::GND, currentNode});
 
-  SystemTopology currentSystem(
-      0.0, SystemNodeList{currentNode},
-      SystemComponentList{currentSource, currentLoad});
+  SystemTopology currentSystem(0.0, SystemNodeList{currentNode},
+                               SystemComponentList{currentSource, currentLoad});
   Simulation currentSimulation("EMT_DC_I_SOURCE", Logger::Level::off);
   currentSimulation.setSystem(currentSystem);
   currentSimulation.setDomain(Domain::EMT);
@@ -254,11 +246,9 @@ void validateResistorAndSources() {
               currentLoad->intfCurrent()(0, 0), 1e-12,
               "DC current-source/load equal-opposite branch injection");
   const Real currentSourcePower =
-      currentSource->intfVoltage()(0, 0) *
-      currentSource->intfCurrent()(0, 0);
+      currentSource->intfVoltage()(0, 0) * currentSource->intfCurrent()(0, 0);
   const Real currentLoadPower =
-      currentLoad->intfVoltage()(0, 0) *
-      currentLoad->intfCurrent()(0, 0);
+      currentLoad->intfVoltage()(0, 0) * currentLoad->intfCurrent()(0, 0);
   requireNear(currentSourcePower + currentLoadPower, 0.0, 1e-12,
               "DC current-source/load PSC power balance");
   if (currentSourcePower >= 0.0 || currentLoadPower <= 0.0)
@@ -285,25 +275,22 @@ void validateRC() {
   requireNear(atTau.voltage, sourceVoltage * (1.0 - std::exp(-1.0)),
               nominalTolerance,
               "RC capacitor voltage at nominal one time constant");
-  requireNear(
-      atTau.voltage,
-      sourceVoltage *
-          (1.0 - std::exp(-(tau - 0.5 * timeStep) / tau)),
-      integrationTolerance,
-      "RC capacitor voltage with half-step startup alignment");
+  requireNear(atTau.voltage,
+              sourceVoltage * (1.0 - std::exp(-(tau - 0.5 * timeStep) / tau)),
+              integrationTolerance,
+              "RC capacitor voltage with half-step startup alignment");
   if (atTau.power < -1e-12 || atTau.energy < 0.0)
-    throw std::runtime_error("RC capacitor energy or PSC power has wrong sign.");
+    throw std::runtime_error(
+        "RC capacitor energy or PSC power has wrong sign.");
   std::cout << "RC PSC power=" << atTau.power
             << ", stored_energy=" << atTau.energy << '\n';
 
   const Real finalTime = 10.0 * tau;
-  const Sample final =
-      runRC(finalTime, timeStep, sourceVoltage, resistance, capacitance, "final");
+  const Sample final = runRC(finalTime, timeStep, sourceVoltage, resistance,
+                             capacitance, "final");
   requireFinite(final, "RC final sample");
-  requireNear(final.voltage,
-              sourceVoltage * (1.0 - std::exp(-finalTime / tau)),
-              finalTolerance,
-              "RC final capacitor voltage");
+  requireNear(final.voltage, sourceVoltage * (1.0 - std::exp(-finalTime / tau)),
+              finalTolerance, "RC final capacitor voltage");
 }
 
 void validateRL() {
@@ -323,25 +310,21 @@ void validateRL() {
   requireNear(atTau.current, finalCurrent * (1.0 - std::exp(-1.0)),
               nominalTolerance,
               "RL inductor current at nominal one time constant");
-  requireNear(
-      atTau.current,
-      finalCurrent *
-          (1.0 - std::exp(-(tau - 0.5 * timeStep) / tau)),
-      integrationTolerance,
-      "RL inductor current with half-step startup alignment");
+  requireNear(atTau.current,
+              finalCurrent * (1.0 - std::exp(-(tau - 0.5 * timeStep) / tau)),
+              integrationTolerance,
+              "RL inductor current with half-step startup alignment");
   if (atTau.power < -1e-12 || atTau.energy < 0.0)
     throw std::runtime_error("RL inductor energy or PSC power has wrong sign.");
   std::cout << "RL PSC power=" << atTau.power
             << ", stored_energy=" << atTau.energy << '\n';
 
   const Real finalTime = 10.0 * tau;
-  const Sample final =
-      runRL(finalTime, timeStep, sourceVoltage, resistance, inductance, "final");
+  const Sample final = runRL(finalTime, timeStep, sourceVoltage, resistance,
+                             inductance, "final");
   requireFinite(final, "RL final sample");
-  requireNear(final.current,
-              finalCurrent * (1.0 - std::exp(-finalTime / tau)),
-              finalTolerance,
-              "RL final inductor current");
+  requireNear(final.current, finalCurrent * (1.0 - std::exp(-finalTime / tau)),
+              finalTolerance, "RL final inductor current");
 }
 
 void validatePiLineSteadyState() {
@@ -356,16 +339,15 @@ void validatePiLineSteadyState() {
   auto supply = EMT::SimNode::make("pi_supply", PhaseType::DC);
   auto loadNode = EMT::SimNode::make("pi_load_node", PhaseType::DC);
   supply->setInitialVoltage(Complex(sourceVoltage, 0.0));
-  loadNode->setInitialVoltage(
-      Complex(loadResistance * expectedCurrent, 0.0));
+  loadNode->setInitialVoltage(Complex(loadResistance * expectedCurrent, 0.0));
 
   auto source = EMT::DC::VoltageSource::make("pi_source");
   source->setParameters(sourceVoltage);
   source->connect({EMT::SimNode::GND, supply});
 
   auto line = EMT::DC::SSN::PiLine::make("pi_line");
-  line->setParameters(seriesResistance, seriesInductance,
-                      parallelCapacitance, 0.0, expectedCurrent);
+  line->setParameters(seriesResistance, seriesInductance, parallelCapacitance,
+                      0.0, expectedCurrent);
   line->connect({loadNode, supply});
 
   auto load = EMT::DC::SSN::Resistor::make("pi_load");
@@ -381,10 +363,8 @@ void validatePiLineSteadyState() {
   simulation.setFinalTime(0.2);
   simulation.run();
 
-  const Sample lineSample{line->intfVoltage()(0, 0),
-                          line->intfCurrent()(0, 0),
-                          line->intfVoltage()(0, 0) *
-                              line->intfCurrent()(0, 0),
+  const Sample lineSample{line->intfVoltage()(0, 0), line->intfCurrent()(0, 0),
+                          line->intfVoltage()(0, 0) * line->intfCurrent()(0, 0),
                           0.0};
   requireFinite(lineSample, "DC pi-line steady-state test");
   if (lineSample.voltage < 0.0 || lineSample.current < 0.0)
@@ -392,8 +372,8 @@ void validatePiLineSteadyState() {
         "DC pi-line voltage or series-current orientation is inconsistent.");
   requireNear(lineSample.current, expectedCurrent, 1e-6,
               "DC pi-line analytical steady-state series current");
-  requireNear(load->intfVoltage()(0, 0), loadResistance * expectedCurrent,
-              1e-6, "DC pi-line analytical steady-state load voltage");
+  requireNear(load->intfVoltage()(0, 0), loadResistance * expectedCurrent, 1e-6,
+              "DC pi-line analytical steady-state load voltage");
   requireNear(lineSample.voltage, seriesResistance * expectedCurrent, 1e-6,
               "DC pi-line analytical steady-state line drop");
   requireNear(source->intfCurrent()(0, 0), -expectedCurrent, 1e-6,
@@ -401,8 +381,7 @@ void validatePiLineSteadyState() {
 
   const Real powerBalance =
       source->intfVoltage()(0, 0) * source->intfCurrent()(0, 0) +
-      lineSample.power +
-      load->intfVoltage()(0, 0) * load->intfCurrent()(0, 0);
+      lineSample.power + load->intfVoltage()(0, 0) * load->intfCurrent()(0, 0);
   requireNear(powerBalance, 0.0, 2e-5,
               "DC pi-line steady-state PSC power balance");
 }
@@ -420,8 +399,7 @@ void validatePiLineTransient() {
 
   auto sourceNode = EMT::SimNode::make("pi_step_source", PhaseType::DC);
   auto sendingNode = EMT::SimNode::make("pi_step_sending", PhaseType::DC);
-  auto receivingNode =
-      EMT::SimNode::make("pi_step_receiving", PhaseType::DC);
+  auto receivingNode = EMT::SimNode::make("pi_step_receiving", PhaseType::DC);
 
   auto source = EMT::DC::VoltageSource::make("pi_step_voltage_source");
   source->setParameters(0.0);
@@ -432,17 +410,17 @@ void validatePiLineTransient() {
   feeder->connect({sendingNode, sourceNode});
 
   auto line = EMT::DC::SSN::PiLine::make("pi_step_line");
-  line->setParameters(seriesResistance, seriesInductance,
-                      parallelCapacitance, 0.0, 0.0);
+  line->setParameters(seriesResistance, seriesInductance, parallelCapacitance,
+                      0.0, 0.0);
   line->connect({receivingNode, sendingNode});
 
   auto load = EMT::DC::SSN::Resistor::make("pi_step_load");
   load->setParameters(loadResistance);
   load->connect({EMT::SimNode::GND, receivingNode});
 
-  SystemTopology system(
-      0.0, SystemNodeList{sourceNode, sendingNode, receivingNode},
-      SystemComponentList{source, feeder, line, load});
+  SystemTopology system(0.0,
+                        SystemNodeList{sourceNode, sendingNode, receivingNode},
+                        SystemComponentList{source, feeder, line, load});
   Simulation simulation("EMT_DC_PI_STEP", Logger::Level::off);
   simulation.setSystem(system);
   simulation.setDomain(Domain::EMT);
@@ -497,8 +475,7 @@ void validatePiLineTransient() {
   simulation.stop();
 
   constexpr Real expectedCurrent =
-      sourceVoltage /
-      (feederResistance + seriesResistance + loadResistance);
+      sourceVoltage / (feederResistance + seriesResistance + loadResistance);
   constexpr Real expectedSendingVoltage =
       sourceVoltage - feederResistance * expectedCurrent;
   constexpr Real expectedReceivingVoltage = loadResistance * expectedCurrent;

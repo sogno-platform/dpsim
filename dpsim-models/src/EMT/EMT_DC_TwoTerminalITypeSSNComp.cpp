@@ -16,8 +16,7 @@ void EMT::DC::TwoTerminalITypeSSNComp::validateDCTerminals() const {
   for (UInt terminalIdx = 0; terminalIdx < 2; ++terminalIdx) {
     const auto terminalNode =
         const_cast<TwoTerminalITypeSSNComp *>(this)->node(terminalIdx);
-    if (!terminalNode->isGround() &&
-        terminalNode->phaseType() != PhaseType::DC)
+    if (!terminalNode->isGround() && terminalNode->phaseType() != PhaseType::DC)
       throw std::invalid_argument(
           "DC SSN components require DC nodes or ground at both terminals.");
   }
@@ -35,8 +34,7 @@ Real EMT::DC::TwoTerminalITypeSSNComp::companionConductance() const {
   return conductance;
 }
 
-MatrixComp
-EMT::DC::TwoTerminalITypeSSNComp::buildInitialInputFromNodes(Real) {
+MatrixComp EMT::DC::TwoTerminalITypeSSNComp::buildInitialInputFromNodes(Real) {
   validateDCTerminals();
   return MatrixComp::Zero(1, 1);
 }
@@ -44,9 +42,10 @@ EMT::DC::TwoTerminalITypeSSNComp::buildInitialInputFromNodes(Real) {
 void EMT::DC::TwoTerminalITypeSSNComp::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
   validateDCTerminals();
-  MNAStampUtils::stampConductance(
-      companionConductance(), systemMatrix, matrixNodeIndex(0),
-      matrixNodeIndex(1), terminalNotGrounded(0), terminalNotGrounded(1), mSLog);
+  MNAStampUtils::stampConductance(companionConductance(), systemMatrix,
+                                  matrixNodeIndex(0), matrixNodeIndex(1),
+                                  terminalNotGrounded(0),
+                                  terminalNotGrounded(1), mSLog);
 }
 
 void EMT::DC::TwoTerminalITypeSSNComp::mnaCompApplyRightSideVectorStamp(
@@ -60,8 +59,7 @@ void EMT::DC::TwoTerminalITypeSSNComp::mnaCompApplyRightSideVectorStamp(
 
 void EMT::DC::TwoTerminalITypeSSNComp::mnaCompUpdateCurrent(const Matrix &) {
   (**mIntfCurrent)(0, 0) =
-      companionConductance() *
-      ((**mIntfVoltage)(0, 0) - mYHist(0, 0));
+      companionConductance() * ((**mIntfVoltage)(0, 0) - mYHist(0, 0));
   if (!Math::isFinite((**mIntfCurrent)(0, 0)))
     throw std::runtime_error(
         "DC SSN current update produced a non-finite value.");

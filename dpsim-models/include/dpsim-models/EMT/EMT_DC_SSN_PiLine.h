@@ -25,16 +25,14 @@ class PiLine final : public CompositePowerComp<Real>,
 public:
   using SharedFactory<PiLine>::make;
 
-  PiLine(String uid, String name,
-         Logger::Level logLevel = Logger::Level::off);
+  PiLine(String uid, String name, Logger::Level logLevel = Logger::Level::off);
   PiLine(String name, Logger::Level logLevel = Logger::Level::off)
       : PiLine(name, name, logLevel) {}
 
   SimPowerComp<Real>::Ptr clone(String name) override final;
   void setParameters(Real seriesResistance, Real seriesInductance,
                      Real parallelCapacitance = 0.0,
-                     Real parallelConductance = 0.0,
-                     Real initialCurrent = 0.0);
+                     Real parallelConductance = 0.0, Real initialCurrent = 0.0);
 
   void createSubComponents() override final;
   void initializeParentFromNodesAndTerminals(Real frequency) override final;

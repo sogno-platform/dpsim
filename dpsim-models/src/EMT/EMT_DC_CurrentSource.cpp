@@ -31,9 +31,9 @@ void EMT::DC::CurrentSource::setParameters(Real current) {
 
 void EMT::DC::CurrentSource::validateDCTerminals() const {
   for (UInt terminalIdx = 0; terminalIdx < 2; ++terminalIdx) {
-    const auto terminalNode = const_cast<CurrentSource *>(this)->node(terminalIdx);
-    if (!terminalNode->isGround() &&
-        terminalNode->phaseType() != PhaseType::DC)
+    const auto terminalNode =
+        const_cast<CurrentSource *>(this)->node(terminalIdx);
+    if (!terminalNode->isGround() && terminalNode->phaseType() != PhaseType::DC)
       throw std::invalid_argument(
           "DC current source requires DC nodes or ground at both terminals.");
   }
@@ -53,8 +53,8 @@ void EMT::DC::CurrentSource::initializeFromNodesAndTerminals(Real) {
   (**mIntfVoltage)(0, 0) = voltage.real();
 }
 
-void EMT::DC::CurrentSource::mnaCompInitialize(
-    Real, Real, Attribute<Matrix>::Ptr) {
+void EMT::DC::CurrentSource::mnaCompInitialize(Real, Real,
+                                               Attribute<Matrix>::Ptr) {
   if (!mParametersSet)
     throw std::logic_error(
         "setParameters() must be called before source initialization.");

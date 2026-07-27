@@ -32,9 +32,9 @@ void EMT::DC::VoltageSource::setParameters(Real voltage) {
 
 void EMT::DC::VoltageSource::validateDCTerminals() const {
   for (UInt terminalIdx = 0; terminalIdx < 2; ++terminalIdx) {
-    const auto terminalNode = const_cast<VoltageSource *>(this)->node(terminalIdx);
-    if (!terminalNode->isGround() &&
-        terminalNode->phaseType() != PhaseType::DC)
+    const auto terminalNode =
+        const_cast<VoltageSource *>(this)->node(terminalIdx);
+    if (!terminalNode->isGround() && terminalNode->phaseType() != PhaseType::DC)
       throw std::invalid_argument(
           "DC voltage source requires DC nodes or ground at both terminals.");
   }
@@ -49,8 +49,8 @@ void EMT::DC::VoltageSource::initializeFromNodesAndTerminals(Real) {
   (**mIntfCurrent)(0, 0) = 0.0;
 }
 
-void EMT::DC::VoltageSource::mnaCompInitialize(
-    Real, Real, Attribute<Matrix>::Ptr) {
+void EMT::DC::VoltageSource::mnaCompInitialize(Real, Real,
+                                               Attribute<Matrix>::Ptr) {
   if (!mParametersSet)
     throw std::logic_error(
         "setParameters() must be called before source initialization.");
@@ -74,9 +74,9 @@ void EMT::DC::VoltageSource::mnaCompApplySystemMatrixStamp(
 
 void EMT::DC::VoltageSource::mnaCompApplyRightSideVectorStamp(
     Matrix &rightVector) {
-  Math::setVectorElement(
-      rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::DC),
-      (**mIntfVoltage)(0, 0));
+  Math::setVectorElement(rightVector,
+                         mVirtualNodes[0]->matrixNodeIndex(PhaseType::DC),
+                         (**mIntfVoltage)(0, 0));
 }
 
 void EMT::DC::VoltageSource::mnaCompUpdateCurrent(const Matrix &leftVector) {
