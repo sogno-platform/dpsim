@@ -22,6 +22,115 @@ using json = nlohmann::json;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
+void addEMTDCComponents(py::module_ mEMTDC) {
+  py::class_<CPS::EMT::DC::VoltageSource,
+             std::shared_ptr<CPS::EMT::DC::VoltageSource>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTDC, "VoltageSource",
+                                           py::multiple_inheritance())
+      .def(py::init([](const std::string &name) {
+             return CPS::EMT::DC::VoltageSource::make(name);
+           }),
+           "name"_a)
+      .def(
+          "set_parameters",
+          [](CPS::EMT::DC::VoltageSource &self, CPS::Real voltage) {
+            self.setParameters(voltage);
+          },
+          "voltage"_a)
+      .def("connect", &CPS::EMT::DC::VoltageSource::connect);
+
+  py::class_<CPS::EMT::DC::CurrentSource,
+             std::shared_ptr<CPS::EMT::DC::CurrentSource>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTDC, "CurrentSource",
+                                           py::multiple_inheritance())
+      .def(py::init([](const std::string &name) {
+             return CPS::EMT::DC::CurrentSource::make(name);
+           }),
+           "name"_a)
+      .def(
+          "set_parameters",
+          [](CPS::EMT::DC::CurrentSource &self, CPS::Real current) {
+            self.setParameters(current);
+          },
+          "current"_a)
+      .def("connect", &CPS::EMT::DC::CurrentSource::connect);
+
+  py::module_ mEMTDCSSN =
+      mEMTDC.def_submodule("ssn", "scalar DC State-Space Nodal models");
+
+  py::class_<CPS::EMT::DC::SSN::Resistor,
+             std::shared_ptr<CPS::EMT::DC::SSN::Resistor>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTDCSSN, "Resistor",
+                                           py::multiple_inheritance())
+      .def(py::init([](const std::string &name) {
+             return CPS::EMT::DC::SSN::Resistor::make(name);
+           }),
+           "name"_a)
+      .def(
+          "set_parameters",
+          [](CPS::EMT::DC::SSN::Resistor &self, CPS::Real resistance) {
+            self.setParameters(resistance);
+          },
+          "resistance"_a)
+      .def("connect", &CPS::EMT::DC::SSN::Resistor::connect);
+
+  py::class_<CPS::EMT::DC::SSN::Capacitor,
+             std::shared_ptr<CPS::EMT::DC::SSN::Capacitor>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTDCSSN, "Capacitor",
+                                           py::multiple_inheritance())
+      .def(py::init([](const std::string &name) {
+             return CPS::EMT::DC::SSN::Capacitor::make(name);
+           }),
+           "name"_a)
+      .def(
+          "set_parameters",
+          [](CPS::EMT::DC::SSN::Capacitor &self, CPS::Real capacitance) {
+            self.setParameters(capacitance);
+          },
+          "capacitance"_a)
+      .def("connect", &CPS::EMT::DC::SSN::Capacitor::connect);
+
+  py::class_<CPS::EMT::DC::SSN::Inductor,
+             std::shared_ptr<CPS::EMT::DC::SSN::Inductor>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTDCSSN, "Inductor",
+                                           py::multiple_inheritance())
+      .def(py::init([](const std::string &name) {
+             return CPS::EMT::DC::SSN::Inductor::make(name);
+           }),
+           "name"_a)
+      .def(
+          "set_parameters",
+          [](CPS::EMT::DC::SSN::Inductor &self, CPS::Real inductance,
+             CPS::Real initial_current) {
+            self.setParameters(inductance, initial_current);
+          },
+          "inductance"_a, "initial_current"_a = 0.0)
+      .def("connect", &CPS::EMT::DC::SSN::Inductor::connect);
+
+  py::class_<CPS::EMT::DC::SSN::PiLine,
+             std::shared_ptr<CPS::EMT::DC::SSN::PiLine>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTDCSSN, "PiLine",
+                                           py::multiple_inheritance())
+      .def(py::init([](const std::string &name) {
+             return CPS::EMT::DC::SSN::PiLine::make(name);
+           }),
+           "name"_a)
+      .def(
+          "set_parameters",
+          [](CPS::EMT::DC::SSN::PiLine &self, CPS::Real series_resistance,
+             CPS::Real series_inductance, CPS::Real total_shunt_capacitance,
+             CPS::Real total_shunt_conductance,
+             CPS::Real initial_series_current) {
+            self.setParameters(series_resistance, series_inductance,
+                               total_shunt_capacitance, total_shunt_conductance,
+                               initial_series_current);
+          },
+          "series_resistance"_a, "series_inductance"_a,
+          "total_shunt_capacitance"_a, "total_shunt_conductance"_a = 0.0,
+          "initial_series_current"_a = 0.0)
+      .def("connect", &CPS::EMT::DC::SSN::PiLine::connect);
+}
+
 void addEMTComponents(py::module_ mEMT) {
   py::class_<CPS::EMT::SimNode, std::shared_ptr<CPS::EMT::SimNode>,
              CPS::TopologicalNode>(mEMT, "SimNode", py::module_local())
@@ -46,6 +155,10 @@ void addEMTComponents(py::module_ mEMT) {
   py::module mEMTPh3 =
       mEMT.def_submodule("ph3", "three phase electromagnetic-transient models");
   addEMTPh3Components(mEMTPh3);
+
+  py::module_ mEMTDC =
+      mEMT.def_submodule("dc", "scalar direct-current EMT models");
+  addEMTDCComponents(mEMTDC);
 }
 
 void addEMTPh1Components(py::module_ mEMTPh1) {
