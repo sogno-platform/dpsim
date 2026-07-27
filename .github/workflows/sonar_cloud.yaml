@@ -1,18 +1,23 @@
-name: Sonar Cloud Analysis
+name: Sonar Cloud Build
+
+# Untrusted stage: runs in the PR/fork context with NO secrets and a read-only
+# token. It only builds the code and uploads the build-wrapper output. The
+# privileged scan (which holds SONAR_TOKEN) happens in sonar_cloud_scan.yaml,
+# triggered by this workflow's completion, and never executes PR code.
 
 on:
   push:
     branches:
       - master
-  pull_request_target:
+  pull_request:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
-  sonarcloud:
-    name: Prepare and run Sonar Scan
+  build:
+    name: Build for Sonar Scan
     runs-on: ubuntu-latest
     container: sogno/dpsim:dev
     env:
@@ -23,12 +28,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
-
-      - name: Setup Node 24
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
 
       - name: Install sonar-scanner and build-wrapper
         uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v8.1.0
@@ -42,14 +42,6 @@ jobs:
           path: ${{ github.workspace }}/build
           key: wrapper-dir-cache-${{ github.ref }}
 
-      - name: Setup sonar cache
-        uses: actions/cache@v5
-        with:
-          path: |
-            .scannerwork
-            sonar-cache
-          key: sonar-cache-${{ github.ref }}
-
       - name: Configure CMake
         shell: bash
         working-directory: ${{ github.workspace }}/build
@@ -58,12 +50,17 @@ jobs:
       - name: Run build-wrapper
         run: build-wrapper-linux-x86-64 --out-dir "${{ env.BUILD_WRAPPER_OUT_DIR }}" cmake --build build/ -j "$(nproc)"
 
-      - name: Run sonar-scanner
-        uses: SonarSource/sonarqube-scan-action@v8.1.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: https://sonarcloud.io
+      # Exclude scanner state so a fork cannot smuggle it into the privileged scan.
+      - name: Package workspace for scan
+        run: >
+          tar czf /tmp/sonar-workspace.tgz
+          --exclude=./.scannerwork
+          --exclude=./sonar-cache
+          -C "$GITHUB_WORKSPACE" .
+
+      - name: Upload workspace artifact
+        uses: actions/upload-artifact@v4
         with:
-          args: >
-            --define sonar.cfamily.compile-commands=${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json
+          name: sonar-workspace
+          path: /tmp/sonar-workspace.tgz
+          retention-days: 1

@@ -49,6 +49,7 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_Ph3_RLC1VS1_RC_vs_SSN.cpp
 	Circuits/DP_Ph3_R3C1L1CS1_RC_vs_SSN.cpp
 	Circuits/DP_Ph3_R3C1L1CS1_RC_vs_SSN_Fault.cpp
+	Circuits/DP_Ph3_Switch_vs_SeriesSwitch.cpp
 	Circuits/EMT_Ph3_R3C1L1CS1_RC_vs_SSN_Fault.cpp
 
 	# EMT examples with PF initialization
@@ -64,6 +65,7 @@ set(CIRCUIT_SOURCES
 	Circuits/SP_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
 	Circuits/SP_Slack_PiLine_PQLoad_with_PF_Init.cpp
 	Circuits/SP_RC_split_decoupled_node.cpp
+	Circuits/SP_Ph1_General2TerminalSSN.cpp
 
 	# Combined EMT/DP/SP examples
 	Circuits/EMT_DP_SP_Slack.cpp
@@ -77,6 +79,7 @@ set(CIRCUIT_SOURCES
 	Circuits/SP_Ph1_IEEE9_4Order.cpp
 	Circuits/DP_Ph1_IEEE9_4Order.cpp
 	Circuits/EMT_Ph3_IEEE9_4Order.cpp
+	Circuits/EMT_Ph3_IEEE9_SSN_InverterMix.cpp
 
 	#SMIB
 	Circuits/SP_SynGenTrStab_SMIB_SteadyState.cpp
@@ -147,6 +150,7 @@ Components/EMT_Ph3_AvVoltSourceInverterStateSpace.cpp
 Components/EMT_Ph3_2T_I_Type_SSN.cpp
 Components/DP_Ph1_MixedVariableSSN_vs_FixedSSN.cpp
 Components/DP_Ph1_AvVoltSourceInverterStateSpace.cpp
+Components/DP_Ph3_AvVoltSourceInverterStateSpace.cpp
 Components/EMT_SSN_GFM_Test.cpp
 Components/EMT_SSN_SynchronousGenerator_Test.cpp
 )
@@ -167,6 +171,7 @@ list(APPEND TEST_SOURCES
 	Circuits/SP_Ph1_IEEE9_4Order.cpp
 	Circuits/DP_Ph1_IEEE9_4Order.cpp
 	Circuits/EMT_Ph3_IEEE9_4Order.cpp
+	Circuits/EMT_Ph3_IEEE9_SSN_InverterMix.cpp
 	Circuits/SP_ReducedOrderSG_SMIB_Fault.cpp
 	Circuits/DP_ReducedOrderSG_SMIB_Fault.cpp
 	Circuits/EMT_ReducedOrderSG_SMIB_Fault.cpp
@@ -189,6 +194,7 @@ list(APPEND TEST_SOURCES
 	Circuits/EMT_Ph3_RLC1VS1_RC_vs_SSN.cpp
 	Circuits/EMT_Ph1_General2TerminalSSN.cpp
 	Circuits/SP_ITM_withPiLine_Ph1.cpp
+	Circuits/SP_Ph1_General2TerminalSSN.cpp
 )
 
 if(WITH_SUNDIALS)

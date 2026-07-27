@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <utility>
+
 #include <dpsim-models/Definitions.h>
 
 namespace CPS {
@@ -155,6 +157,12 @@ public:
 
   /// To convert single phase power to symmetrical three phase
   static Matrix singlePhasePowerToThreePhase(Real power);
+
+  /// PCC-side injected power from an averaged-VSI filter-side power reference,
+  /// correcting the loss across the coupling resistance rc (S = 1.5*Vpeak*I*).
+  static std::pair<Real, Real>
+  pccPowerFromFilterPowerReference(Real pFilterRef, Real qFilterRef, Real rc,
+                                   Real vGridRmsLL);
 
   // #### Reference Frame Transformations ####
 

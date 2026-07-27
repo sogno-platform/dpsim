@@ -16,6 +16,9 @@ EMT::Ph3::SSN_GFM::SSN_GFM(String uid, String name, Logger::Level logLevel)
       mVoltageDroopGain(0.0), mReactiveIntegralGain(0.0), mKpVoltage(0.0),
       mKiVoltage(0.0), mKpCurrent(0.0), mKiCurrent(0.0),
       mActiveDampingGain(0.0), mPowerFilterCutoff(0.0), mDelayBandwidth(0.0),
+      mVirtualResistance(0.0), mVirtualReactance(0.0),
+      mGridCurrentFeedforward(1.0), mReactivePowerDroop(0.0),
+      mReactiveDroopCutoff(0.0), mVoltageSetpoint(0.0),
       mJacobianRelativeStep(1e-6), mJacobianAbsoluteStep(1e-8),
       mPInst(mAttributes->create<Real>("p_inst")),
       mQInst(mAttributes->create<Real>("q_inst")),
@@ -191,6 +194,29 @@ void EMT::Ph3::SSN_GFM::setNumericalLinearizationParameters(Real relativeStep,
   mJacobianAbsoluteStep = absoluteStep;
 }
 
+void EMT::Ph3::SSN_GFM::setVirtualImpedance(Real virtualResistance,
+                                            Real virtualReactance) {
+  if (virtualResistance < 0.0)
+    throw std::invalid_argument("Virtual resistance must be non-negative.");
+
+  mVirtualResistance = virtualResistance;
+  mVirtualReactance = virtualReactance;
+}
+
+void EMT::Ph3::SSN_GFM::setGridCurrentFeedforward(Real scale) {
+  mGridCurrentFeedforward = scale;
+}
+
+void EMT::Ph3::SSN_GFM::setReactivePowerDroop(Real droopGain, Real cutoff) {
+  if (droopGain < 0.0)
+    throw std::invalid_argument("Reactive-droop gain must be non-negative.");
+  if (cutoff < 0.0)
+    throw std::invalid_argument("Reactive-droop cutoff must be non-negative.");
+
+  mReactivePowerDroop = droopGain;
+  mReactiveDroopCutoff = cutoff;
+}
+
 Matrix EMT::Ph3::SSN_GFM::getParkTransformMatrix(Real theta) const {
 
   theta = std::remainder(theta, 2.0 * PI);
@@ -329,12 +355,26 @@ void EMT::Ph3::SSN_GFM::evaluateStateDerivative(const Matrix &x,
   //     + Ku * (U_n - U_pcc)
   // ----------------------------------------------------------------------
 
-  stateDerivative(VoltageMagnitude, 0) =
-      mReactiveIntegralGain * (mQRef - qFiltered) +
-      mVoltageDroopGain * (mNominalVoltage - pccVoltageMagnitude);
+  if (mReactiveDroopCutoff > 0.0) {
+    // Proportional Q-V droop (opt-in, grid-connected): E lags a droop target
+    // E_set + Dq*(Qref-Qf). No integral, so no reactive windup on a stiff grid.
+    const Real droopTarget =
+        mVoltageSetpoint + mReactivePowerDroop * (mQRef - qFiltered);
+    stateDerivative(VoltageMagnitude, 0) =
+        mReactiveDroopCutoff * (droopTarget - voltageMagnitude);
+  } else {
+    // Integral excitation (default, islanded).
+    stateDerivative(VoltageMagnitude, 0) =
+        mReactiveIntegralGain * (mQRef - qFiltered) +
+        mVoltageDroopGain * (mNominalVoltage - pccVoltageMagnitude);
+  }
 
-  const Real voltageReferenceD = voltageMagnitude;
-  constexpr Real voltageReferenceQ = 0.0;
+  // EMF minus virtual-impedance drop Zv * if (Zv = Rv + jXv; zero = islanded).
+  // if (a filter-current state) avoids the 1/Rc sensitivity of iGrid.
+  const Real voltageReferenceD =
+      voltageMagnitude - (mVirtualResistance * ifD - mVirtualReactance * ifQ);
+  const Real voltageReferenceQ =
+      -(mVirtualResistance * ifQ + mVirtualReactance * ifD);
 
   const Real voltageErrorD = voltageReferenceD - vcD;
   const Real voltageErrorQ = voltageReferenceQ - vcQ;
@@ -351,13 +391,13 @@ void EMT::Ph3::SSN_GFM::evaluateStateDerivative(const Matrix &x,
   // Cf * dv_q/dt = if_q - ig_q - omega * Cf * v_d
   // ----------------------------------------------------------------------
 
-  const Real currentReferenceD = iGridD - omega * mCf * vcQ +
-                                 mKpVoltage * voltageErrorD +
-                                 mKiVoltage * voltageIntegratorD;
+  const Real currentReferenceD =
+      mGridCurrentFeedforward * iGridD - omega * mCf * vcQ +
+      mKpVoltage * voltageErrorD + mKiVoltage * voltageIntegratorD;
 
-  const Real currentReferenceQ = iGridQ + omega * mCf * vcD +
-                                 mKpVoltage * voltageErrorQ +
-                                 mKiVoltage * voltageIntegratorQ;
+  const Real currentReferenceQ =
+      mGridCurrentFeedforward * iGridQ + omega * mCf * vcD +
+      mKpVoltage * voltageErrorQ + mKiVoltage * voltageIntegratorQ;
 
   const Real currentErrorD = currentReferenceD - ifD;
   const Real currentErrorQ = currentReferenceQ - ifQ;
@@ -558,14 +598,17 @@ void EMT::Ph3::SSN_GFM::updateLogAttributes(const Matrix &u) const {
   const Real iGridD = iGridDq(0, 0);
   const Real iGridQ = iGridDq(1, 0);
 
+  const Real ifD = ifDq(0, 0);
+  const Real ifQ = ifDq(1, 0);
+
   **mVcD = vcD;
   **mVcQ = vcQ;
 
   **mIGridD = iGridD;
   **mIGridQ = iGridQ;
 
-  **mIfD = ifDq(0, 0);
-  **mIfQ = ifDq(1, 0);
+  **mIfD = ifD;
+  **mIfQ = ifQ;
 
   **mPInst = 1.5 * (vcD * iGridD + vcQ * iGridQ);
   **mQInst = 1.5 * (vcQ * iGridD - vcD * iGridQ);
@@ -574,8 +617,10 @@ void EMT::Ph3::SSN_GFM::updateLogAttributes(const Matrix &u) const {
   **mThetaGFM = theta;
   **mVoltageMagnitudeGFM = x(VoltageMagnitude, 0);
 
-  **mVoltageReferenceD = x(VoltageMagnitude, 0);
-  **mVoltageReferenceQ = 0.0;
+  // Reference the controller tracks, including the virtual-impedance drop.
+  **mVoltageReferenceD = x(VoltageMagnitude, 0) -
+                         (mVirtualResistance * ifD - mVirtualReactance * ifQ);
+  **mVoltageReferenceQ = -(mVirtualResistance * ifQ + mVirtualReactance * ifD);
 }
 
 void EMT::Ph3::SSN_GFM::initializeFromNodesAndTerminals(Real frequency) {
@@ -651,7 +696,13 @@ void EMT::Ph3::SSN_GFM::initializeFromNodesAndTerminals(Real frequency) {
   const Matrix iGridAbc0 = iInjectionPhasor.real();
   const Matrix converterVoltageAbc0 = converterVoltagePhasor.real();
 
-  const Real theta0 = std::arg(vcPhasor(0, 0));
+  // Align the dq frame with the internal EMF behind the virtual impedance,
+  // E0 = vc + (Rv + jXv)*if. At the operating point the voltage-loop reference
+  // is E0 in dq, so aligning to it makes both loop errors vanish (true
+  // equilibrium) even for nonzero Zv. Zv = 0 reduces to aligning with vc.
+  const Complex virtualImpedance(mVirtualResistance, mVirtualReactance);
+  const MatrixComp emfPhasor = vcPhasor + virtualImpedance * ifPhasor;
+  const Real theta0 = std::arg(emfPhasor(0, 0));
 
   const Matrix parkTransform = getParkTransformMatrix(theta0);
 
@@ -673,8 +724,6 @@ void EMT::Ph3::SSN_GFM::initializeFromNodesAndTerminals(Real frequency) {
 
   const Real qInitial = 1.5 * (vcQ0 * iGridD0 - vcD0 * iGridQ0);
 
-  const Real voltageMagnitudeInitial = std::sqrt(vcD0 * vcD0 + vcQ0 * vcQ0);
-
   const Real iCapD0 = ifD0 - iGridD0;
   const Real iCapQ0 = ifQ0 - iGridQ0;
 
@@ -686,9 +735,22 @@ void EMT::Ph3::SSN_GFM::initializeFromNodesAndTerminals(Real frequency) {
   x0(Omega, 0) = omegaInitialization;
   x0(Theta, 0) = theta0;
 
-  // At a balanced steady operating point, the d-axis reference is the
-  // capacitor-voltage magnitude.
-  x0(VoltageMagnitude, 0) = voltageMagnitudeInitial;
+  // Internal EMF magnitude behind the virtual impedance (d-axis aligned).
+  x0(VoltageMagnitude, 0) = std::abs(emfPhasor(0, 0));
+
+  // Proportional-droop setpoint: the operating EMF, so the droop is centered at
+  // the initial point (E_dot = 0 when Qf = Qref at t = 0).
+  mVoltageSetpoint = x0(VoltageMagnitude, 0);
+
+  // Voltage-loop references at the operating point, same form as
+  // evaluateStateDerivative(). With the E0-aligned frame both errors are ~0.
+  const Real voltageReferenceD0 =
+      x0(VoltageMagnitude, 0) -
+      (mVirtualResistance * ifD0 - mVirtualReactance * ifQ0);
+  const Real voltageReferenceQ0 =
+      -(mVirtualResistance * ifQ0 + mVirtualReactance * ifD0);
+  const Real voltageErrorD0 = voltageReferenceD0 - vcD0;
+  const Real voltageErrorQ0 = voltageReferenceQ0 - vcQ0;
 
   // Voltage controller:
   //
@@ -699,8 +761,8 @@ void EMT::Ph3::SSN_GFM::initializeFromNodesAndTerminals(Real frequency) {
   //
   // Set iRefD = ifD and solve for xiVd.
   x0(VoltageIntegratorD, 0) =
-      (ifD0 - iGridD0 + omegaInitialization * mCf * vcQ0 -
-       mKpVoltage * (voltageMagnitudeInitial - vcD0)) /
+      (ifD0 - mGridCurrentFeedforward * iGridD0 +
+       omegaInitialization * mCf * vcQ0 - mKpVoltage * voltageErrorD0) /
       mKiVoltage;
 
   // iRefQ =
@@ -710,8 +772,8 @@ void EMT::Ph3::SSN_GFM::initializeFromNodesAndTerminals(Real frequency) {
   //
   // Set iRefQ = ifQ and solve for xiVq.
   x0(VoltageIntegratorQ, 0) =
-      (ifQ0 - iGridQ0 - omegaInitialization * mCf * vcD0 -
-       mKpVoltage * (0.0 - vcQ0)) /
+      (ifQ0 - mGridCurrentFeedforward * iGridQ0 -
+       omegaInitialization * mCf * vcD0 - mKpVoltage * voltageErrorQ0) /
       mKiVoltage;
 
   // Current controller steady-state integrators.

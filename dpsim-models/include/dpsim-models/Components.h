@@ -20,6 +20,8 @@
 #include <dpsim-models/SP/SP_Ph1_PiLine.h>
 #include <dpsim-models/SP/SP_Ph1_RXLine.h>
 #include <dpsim-models/SP/SP_Ph1_ReducedOrderSynchronGeneratorVBR.h>
+#include <dpsim-models/SP/SP_Ph1_SSNTypeI2T.h>
+#include <dpsim-models/SP/SP_Ph1_SSNTypeV2T.h>
 #include <dpsim-models/SP/SP_Ph1_Shunt.h>
 #include <dpsim-models/SP/SP_Ph1_SolidStateTransformer.h>
 #include <dpsim-models/SP/SP_Ph1_Switch.h>
@@ -88,16 +90,20 @@
 #include <dpsim-models/DP/DP_SSNComp.h>
 #include <dpsim-models/DP/DP_VTypeSSNComp.h>
 
+#include <dpsim-models/DP/DP_Ph3_AvVoltSourceInverterStateSpace.h>
 #include <dpsim-models/DP/DP_Ph3_Capacitor.h>
 #include <dpsim-models/DP/DP_Ph3_CurrentSource.h>
 #include <dpsim-models/DP/DP_Ph3_GenericTwoTerminalITypeSSN.h>
 #include <dpsim-models/DP/DP_Ph3_GenericTwoTerminalVTypeSSN.h>
 #include <dpsim-models/DP/DP_Ph3_Inductor.h>
+#include <dpsim-models/DP/DP_Ph3_MixedVTypeVariableSSNComp.h>
+#include <dpsim-models/DP/DP_Ph3_NetworkInjection.h>
 #include <dpsim-models/DP/DP_Ph3_PiLine.h>
 #include <dpsim-models/DP/DP_Ph3_Resistor.h>
 #include <dpsim-models/DP/DP_Ph3_SSN_Full_Serial_RLC.h>
 #include <dpsim-models/DP/DP_Ph3_SeriesResistor.h>
 #include <dpsim-models/DP/DP_Ph3_SeriesSwitch.h>
+#include <dpsim-models/DP/DP_Ph3_Switch.h>
 #include <dpsim-models/DP/DP_Ph3_SynchronGeneratorDQTrapez.h>
 #include <dpsim-models/DP/DP_Ph3_TwoTerminalITypeSSNComp.h>
 #include <dpsim-models/DP/DP_Ph3_TwoTerminalVTypeSSNComp.h>

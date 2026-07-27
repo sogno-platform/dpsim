@@ -328,7 +328,100 @@ struct Derived {
   Real Ind2 = 68e-6;
   Real Cap2 = 13.55e-3;
 };
+
+struct Ieee9SsnGridForming {
+  // Parameters for the EMT::Ph3::SSN_GFM grid-forming inverter at BUS2 of the
+  // IEEE 9-bus mixed-inverter example. Control structure (VSG loop + cascaded
+  // voltage/current control + active damping) follows
+  //   X. Gao, D. Zhou, A. Anvari-Moghaddam, F. Blaabjerg, "Stability Analysis
+  //   of Grid-Following and Grid-Forming Converters Based on State-Space
+  //   Model", IPEC-Himeji 2022 (ECCE Asia), pp. 422-428.
+  // The LC filter is the PR-#570 reference design (220 V / 12 kVA / 50 Hz)
+  // rebased to the BUS2 base, per-unit preserved. The cascaded-loop gains are
+  // computed from design bandwidths, not hand-set.
+
+  // BUS2 base
+  Real ratedVoltage = 18e3;    // V line-to-line RMS
+  Real ratedPower = 100e6;     // VA
+  Real systemFrequency = 60.0; // Hz
+  Real OmegaNull = 2.0 * M_PI * systemFrequency;
+
+  // LC filter and coupling resistance (BUS2 base)
+  Real Lf = 6.694215e-4; // H
+  Real Cf = 6.224280e-5; // F
+  Real Rf = 1.338843e-2; // Ohm
+  Real Rc = 1.338843e-2; // Ohm
+
+  // Inner current loop: PI cancels the filter pole, so the closed loop is a
+  // first-order lag of bandwidth currentCtrlBandwidth (Kp = Lf*w, Ki = Rf*w).
+  Real currentCtrlBandwidth = 1683.03;        // rad/s
+  Real KpCurrent = Lf * currentCtrlBandwidth; // = 1.126636
+  Real KiCurrent = Rf * currentCtrlBandwidth; // = 22.53273
+
+  // Outer voltage loop: second-order shaping on Cf. The natural frequency is
+  // kept low for stiff-grid stability (Kp = 2*zeta*wn*Cf, Ki = wn^2*Cf).
+  Real voltageCtrlNaturalFrequency = 65.865; // rad/s
+  Real voltageCtrlDamping = 1.0 / sqrt(2.0);
+  Real KpVoltage =
+      2.0 * voltageCtrlDamping * voltageCtrlNaturalFrequency * Cf; // = 5.8e-3
+  Real KiVoltage =
+      voltageCtrlNaturalFrequency * voltageCtrlNaturalFrequency * Cf; // = 0.27
+
+  // VSG swing: virtual inertia J and damping D. D is raised well above the
+  // islanded value for stiff-grid stability.
+  Real virtualInertia = 1157.407407;
+  Real dampingCoefficient = 3.0e6;
+
+  // Integral excitation (superseded by the proportional Q-V droop below, but
+  // still passed to setParameters for the islanded fallback).
+  Real voltageDroopGain = 1.0 / 15.0;
+  Real reactiveIntegralGain = 1.700559e-3;
+
+  // Active damping off (the converter delay makes its sign uncertain here),
+  // power-measurement filter cutoff, and switching/delay bandwidth.
+  Real activeDampingGain = 0.0;
+  Real powerFilterCutoff = 100.0; // rad/s
+  Real switchingFrequency = 20e3; // Hz
+  Real delayBandwidth = switchingFrequency / 1.5;
+
+  // Grid-connected control extensions (opt-in on the model). Feedforward is
+  // turned off and the integral excitation replaced by a proportional Q-V
+  // droop, both for stiff-grid stability.
+  Real gridCurrentFeedforward = 0.0; // 1 = full islanded feedforward
+  Real reactivePowerDroop = 1.0e-5;  // Dq [V/var]
+  Real reactiveDroopCutoff = 100.0;  // rad/s
+};
 } // namespace GFM
+
+namespace GFL {
+struct Ieee9AvVsi {
+  // Parameters for the EMT::Ph3::AvVoltSourceInverterStateSpace grid-following
+  // inverter at BUS3. The 400 V / 10 kVA reference design is rebased to the
+  // BUS3 base (13.8 kV, 100 MVA, 60 Hz): PLL and power-loop gains scale by the
+  // inverse voltage ratio, current-loop gains by the impedance ratio, so the
+  // per-unit control is preserved.
+  Real ratedVoltage = 13.8e3; // V line-to-line RMS
+  Real ratedPower = 100e6;    // VA
+  Real systemFrequency = 60.0;
+  Real OmegaNull = 2.0 * M_PI * systemFrequency;
+
+  // LC filter and coupling resistance (BUS3 base)
+  Real Lf = 1.98375e-4; // H
+  Real Cf = 7.00133e-5; // F
+  Real Rf = 2.38050e-2; // Ohm
+  Real Rc = 2.38050e-2; // Ohm
+
+  // PLL and power loop (rebased by 1/voltageRatio, voltageRatio = 13.8kV/400V)
+  Real KpPLL = 7.246377e-3;
+  Real KiPLL = 5.797101e-3;
+  Real KpPowerCtrl = 1.449275e-3;
+  Real KiPowerCtrl = 5.797101e-3;
+
+  // Current loop (rebased by the impedance ratio)
+  Real KpCurrCtrl = 2.975625e-2;
+  Real KiCurrCtrl = 1.190250e-1;
+};
+} // namespace GFL
 } // namespace Components
 
 namespace Grids {

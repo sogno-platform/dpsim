@@ -1,0 +1,42 @@
+# SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+# SPDX-License-Identifier: MPL-2.0
+#
+# Multi-stage LLM pull-request reviewer (untrusted collect stage).
+#
+# This workflow runs on pull_request, including from forks, and therefore has NO
+# access to secrets (GitHub withholds them from fork pull_request runs). It only
+# records the PR number and SHAs, from trusted GitHub context, into an artifact.
+# It checks out nothing and runs no code from the pull request, so there is
+# nothing for a malicious PR to exfiltrate here. The trusted "LLM Review"
+# workflow then consumes this artifact via workflow_run and does the actual,
+# secret-bearing review.
+
+name: LLM Review (collect)
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions: {}
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Record PR metadata
+        env:
+          # Trusted GitHub context: a numeric id and two commit SHAs.
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          mkdir -p pr-meta
+          printf '{"pr_number":"%s","base_sha":"%s","head_sha":"%s"}\n' \
+            "$PR_NUMBER" "$BASE_SHA" "$HEAD_SHA" > pr-meta/meta.json
+
+      - name: Upload PR metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: llm-review-pr-meta
+          path: pr-meta/meta.json
+          retention-days: 1

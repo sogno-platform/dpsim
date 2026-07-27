@@ -70,9 +70,11 @@ list(APPEND MODELS_SOURCES
 	DP/DP_Ph3_Capacitor.cpp
 	DP/DP_Ph3_Inductor.cpp
 	DP/DP_Ph3_Resistor.cpp
+	DP/DP_Ph3_NetworkInjection.cpp
 	DP/DP_Ph3_PiLine.cpp
 	DP/DP_Ph3_SeriesResistor.cpp
 	DP/DP_Ph3_SeriesSwitch.cpp
+	DP/DP_Ph3_Switch.cpp
 	DP/DP_Ph3_SynchronGeneratorDQ.cpp
 	DP/DP_Ph3_SynchronGeneratorDQTrapez.cpp
 	# DP/DP_Ph3_SynchronGeneratorDQSmpl.cpp
@@ -80,6 +82,8 @@ list(APPEND MODELS_SOURCES
 	# DP/DP_Ph3_SynchronGeneratorVBRStandalone.cpp
 
 	DP/DP_Ph3_TwoTerminalVTypeSSNComp.cpp
+	DP/DP_Ph3_MixedVTypeVariableSSNComp.cpp
+	DP/DP_Ph3_AvVoltSourceInverterStateSpace.cpp
 	DP/DP_Ph3_TwoTerminalITypeSSNComp.cpp
 	DP/DP_Ph3_SSN_Full_Serial_RLC.cpp
 	DP/DP_Ph3_GenericTwoTerminalVTypeSSN.cpp
@@ -189,6 +193,8 @@ list(APPEND MODELS_SOURCES
 	SP/SP_Ph1_NetworkInjection.cpp
 	SP/SP_Ph1_SynchronGeneratorTrStab.cpp
 	SP/SP_Ph1_varResSwitch.cpp
+	SP/SP_Ph1_SSNTypeI2T.cpp
+	SP/SP_Ph1_SSNTypeV2T.cpp
 
 	SP/SP_Ph3_Capacitor.cpp
 	SP/SP_Ph3_Inductor.cpp
