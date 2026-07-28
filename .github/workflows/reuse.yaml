@@ -1,0 +1,33 @@
+# SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+# SPDX-License-Identifier: MPL-2.0
+#
+# Full-tree REUSE check; the pre-commit hook only sees the files a commit touches.
+
+name: REUSE compliance
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  reuse:
+    name: reuse lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+
+      # Same version as the pre-commit hook.
+      - name: Run reuse lint
+        run: |
+          pip install reuse==6.2.0
+          reuse lint

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2024-2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+# SPDX-License-Identifier: MPL-2.0
+
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 
@@ -8,9 +11,11 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
+      # LICENSES/ is kept as SPDX publishes it, trailing space in MPL-2.0 included.
       - id: trailing-whitespace
+        exclude: ^LICENSES/
       - id: end-of-file-fixer
-        exclude: \.svg$
+        exclude: \.svg$|^LICENSES/
       - id: check-ast
       - id: check-xml
       - id: check-yaml
@@ -76,3 +81,10 @@ repos:
         additional_dependencies: ["nbconvert==7.17.1"]
         entry: python -m nbconvert --ClearOutputPreprocessor.enabled=True --inplace
         files: \.ipynb$
+
+  # Same version as the reuse workflow. Needs pre-commit on Python 3.10+.
+  - repo: https://github.com/fsfe/reuse-tool
+    rev: "v6.2.0"
+    hooks:
+      # Only the files a commit touches; the reuse workflow lints the full tree.
+      - id: reuse-lint-file

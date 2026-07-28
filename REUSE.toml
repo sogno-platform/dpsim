@@ -1,0 +1,34 @@
+version = 1
+SPDX-PackageName = "DPsim"
+SPDX-PackageSupplier = "The DPsim Authors <post_acs@eonerc.rwth-aachen.de>"
+SPDX-PackageDownloadLocation = "https://github.com/sogno-platform/dpsim"
+
+# Only for files that cannot carry a comment header. Everything else uses its own SPDX header.
+
+# A header cell would be executed and shown, and nbconvert rewrites the file anyway.
+[[annotations]]
+path = "**/*.ipynb"
+SPDX-FileCopyrightText = "2017-2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University"
+SPDX-License-Identifier = "MPL-2.0"
+
+[[annotations]]
+path = "**/*.png"
+SPDX-FileCopyrightText = "2016-2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University"
+SPDX-License-Identifier = "MPL-2.0"
+
+[[annotations]]
+path = "**/*.jpg"
+SPDX-FileCopyrightText = "2022-2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University"
+SPDX-License-Identifier = "MPL-2.0"
+
+# Exported from drawio / doxygen, so a comment would not survive the next export.
+[[annotations]]
+path = "**/*.svg"
+SPDX-FileCopyrightText = "2017-2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University"
+SPDX-License-Identifier = "MPL-2.0"
+
+# JSON has no comment syntax.
+[[annotations]]
+path = "**/*.json"
+SPDX-FileCopyrightText = "2021-2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University"
+SPDX-License-Identifier = "MPL-2.0"

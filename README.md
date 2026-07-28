@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: 2016-2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+SPDX-License-Identifier: MPL-2.0
+-->
+
 # <img src="docs/images/dpsim.png" width=40 /> DPsim
 
 [![CI](https://github.com/sogno-platform/dpsim/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/sogno-platform/dpsim/actions/workflows/ci.yaml)
