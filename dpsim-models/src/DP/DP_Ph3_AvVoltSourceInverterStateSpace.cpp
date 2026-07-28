@@ -119,7 +119,7 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
   const Real phiQ = x(PhiQ, 0);
   const Real gammaD = x(GammaD, 0);
   const Real gammaQ = x(GammaQ, 0);
-  // GammaND/GammaNQ share indices 8/9 with envelope states when disabled, so read only when enabled.
+  // GammaND/GammaNQ are past the end of the positive-only state vector.
   const Real gammaND = mEnableNegSeqControl ? x(GammaND, 0) : 0.0;
   const Real gammaNQ = mEnableNegSeqControl ? x(GammaNQ, 0) : 0.0;
 
@@ -185,9 +185,8 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
   // Positive-sequence bridge-voltage reference, distributed via the inverse Park.
   const Complex vRefEnv0 = K23 * vRefDQ * expJPsi;
 
-  // Negative-sequence measurement + PI control (baseband +j*psi loop); zeros stay
-  // inert when disabled so the positive-only path keeps 20 states. hIrcN is the
-  // conj(vc_p) coefficient of ircNDQ (the conj flips imaginary-part signs vs the positive loop).
+  // Negative-sequence measurement + PI control (baseband +j*psi loop).
+  // hIrcN[p] is the conj(vc_p) coefficient of ircNDQ.
   Complex ircNDQ(0.0, 0.0), vRefNDQ(0.0, 0.0), vRefNEnv0(0.0, 0.0);
   Real ircND = 0.0, ircNQ = 0.0;
   Complex hIrcN[3] = {Complex(0.0, 0.0), Complex(0.0, 0.0), Complex(0.0, 0.0)};
@@ -211,7 +210,7 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
     vRefNEnv0 = K23 * std::conj(vRefNDQ) * expJPsi;
   }
 
-  // Total reference: positive (redistFactor) + sequence-orthogonal negative (projCoeff) injection (zero if disabled).
+  // Total reference: positive (redistFactor) + negative (projCoeff) injection.
   Complex vRef[3];
   for (Int p = 0; p < 3; ++p)
     vRef[p] = redistFactor[p] * vRefEnv0 + projCoeff[p] * vRefNEnv0;
@@ -371,9 +370,8 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
     dVRefEnv0UIm[p] = K23 * expJPsi * (-mKpCurrCtrl * j * gIrcU[p]);
   }
 
-  // Negative injection vRefNEnv0 = K23*conj(vRefNDQ)*expJPsi: derivatives wrt psi,
-  // the two negative-loop states, and vc_p/u_p (via conj(vRefNDQ)'s -kpCurrCtrl*ircN
-  // term). All zero and unused when the negative loop is disabled.
+  // Derivatives of vRefNEnv0 = K23*conj(vRefNDQ)*expJPsi wrt psi, the negative-loop
+  // states and vc_p/u_p.
   Complex dVRefNEnv0DPsi(0.0, 0.0), dVRefNEnv0DGammaND(0.0, 0.0),
       dVRefNEnv0DGammaNQ(0.0, 0.0);
   Complex dVRefNEnv0VcRe[3] = {}, dVRefNEnv0VcIm[3] = {}, dVRefNEnv0URe[3] = {},
@@ -609,7 +607,7 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::initializeFromNodesAndTerminals(
   x0(PhiQ, 0) = phiQ0;
   x0(GammaD, 0) = gammaD0;
   x0(GammaQ, 0) = gammaQ0;
-  // Balanced start: negative-loop integrators seed at zero (Zero() already, indices exist only when enabled).
+  // Balanced start: the negative-loop integrators stay at their Zero() seed.
 
   for (Int p = 0; p < 3; ++p) {
     x0(mVcReCol[p], 0) = vcAbc(p, 0).real();

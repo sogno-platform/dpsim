@@ -14,29 +14,29 @@ class AvVoltSourceInverterStateSpace final
     : public MixedVTypeVariableSSNComp,
       public SharedFactory<AvVoltSourceInverterStateSpace> {
 private:
-  /// Packed state indices. GammaND/GammaNQ are appended last so the envelope
-  /// block stays fixed and only exist when the negative-sequence loop is enabled.
+  /// Packed state indices: envelope block, then the contiguous control block.
+  /// GammaND/GammaNQ exist only when the negative-sequence loop is enabled.
   enum StateIndex : Int {
-    Psi = 0,
-    PhiPLL = 1,
-    PFiltered = 2,
-    QFiltered = 3,
-    PhiD = 4,
-    PhiQ = 5,
-    GammaD = 6,
-    GammaQ = 7,
-    VcARe = 8,
-    VcAIm = 9,
-    VcBRe = 10,
-    VcBIm = 11,
-    VcCRe = 12,
-    VcCIm = 13,
-    IfARe = 14,
-    IfAIm = 15,
-    IfBRe = 16,
-    IfBIm = 17,
-    IfCRe = 18,
-    IfCIm = 19,
+    VcARe = 0,
+    VcAIm = 1,
+    VcBRe = 2,
+    VcBIm = 3,
+    VcCRe = 4,
+    VcCIm = 5,
+    IfARe = 6,
+    IfAIm = 7,
+    IfBRe = 8,
+    IfBIm = 9,
+    IfCRe = 10,
+    IfCIm = 11,
+    Psi = 12,
+    PhiPLL = 13,
+    PFiltered = 14,
+    QFiltered = 15,
+    PhiD = 16,
+    PhiQ = 17,
+    GammaD = 18,
+    GammaQ = 19,
     GammaND = 20,
     GammaNQ = 21
   };

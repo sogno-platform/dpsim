@@ -414,11 +414,17 @@ The terminal input is the PCC voltage envelope of the three phases,
 u = \begin{bmatrix} U_a & U_b & U_c \end{bmatrix}^\top ,
 ```
 
-and the state vector concatenates the 8 real control states ahead of the 6 complex per-phase envelopes,
+and the state vector concatenates the 6 complex per-phase envelopes ahead of the 8 real control states, keeping the carrier-band and baseband blocks separate,
 
 ```math
 \mathbf{x} =
 \big[\,
+V_{c,a} \;\;
+V_{c,b} \;\;
+V_{c,c} \;\;
+I_{f,a} \;\;
+I_{f,b} \;\;
+I_{f,c} \;\;
 \psi \;\;
 \phi_{\mathrm{PLL}} \;\;
 P \;\;
@@ -426,13 +432,7 @@ Q \;\;
 \phi_d \;\;
 \phi_q \;\;
 \gamma_d \;\;
-\gamma_q \;\;
-V_{c,a} \;\;
-V_{c,b} \;\;
-V_{c,c} \;\;
-I_{f,a} \;\;
-I_{f,b} \;\;
-I_{f,c}
+\gamma_q
 \,\big]^\top ,
 ```
 

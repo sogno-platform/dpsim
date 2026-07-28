@@ -23,8 +23,7 @@ public:
     const String simNameBase = "DP_Ph3_AvVoltSourceInverterStateSpace";
 
     const auto systemPF = runPowerFlow(simNameBase + "_PF");
-    // Same SLG scenario run positive-sequence-only (20 states) and dual-sequence
-    // (22 states), so the two responses can be compared directly.
+    // Same SLG scenario, positive-sequence-only vs dual-sequence control.
     runDPSimulation(simNameBase + "_DP_posSeq", systemPF, false);
     runDPSimulation(simNameBase + "_DP_dualSeq", systemPF, true);
   }
