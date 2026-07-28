@@ -670,9 +670,11 @@ void addDPPh3Components(py::module_ mDPPh3) {
       mDPPh3, "AvVoltSourceInverterStateSpace", py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level, CPS::Bool>(), "name"_a,
            "loglevel"_a = CPS::Logger::Level::off,
+           // cppcheck-suppress assignBoolToPointer
            "enable_neg_seq_control"_a = false)
       .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
            "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
+           // cppcheck-suppress assignBoolToPointer
            "enable_neg_seq_control"_a = false)
       .def("set_parameters",
            &CPS::DP::Ph3::AvVoltSourceInverterStateSpace::setParameters, "Lf"_a,
