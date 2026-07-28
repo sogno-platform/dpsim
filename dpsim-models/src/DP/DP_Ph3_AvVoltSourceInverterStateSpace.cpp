@@ -18,10 +18,7 @@ DP::Ph3::AvVoltSourceInverterStateSpace::AvVoltSourceInverterStateSpace(
     String uid, String name, Logger::Level logLevel, Bool enableNegSeqControl)
     : MixedVTypeVariableSSNComp(uid, name, enableNegSeqControl ? 10 : 8, 6,
                                 logLevel),
-      mEnableNegSeqControl(enableNegSeqControl), mLf(0.0), mCf(0.0), mRf(0.0),
-      mRc(0.0), mOmegaN(0.0), mKpPLL(0.0), mKiPLL(0.0), mOmegaCutoff(0.0),
-      mPRef(0.0), mQRef(0.0), mKpPowerCtrl(0.0), mKiPowerCtrl(0.0),
-      mKpCurrCtrl(0.0), mKiCurrCtrl(0.0), mIRefNd(0.0), mIRefNq(0.0),
+      mEnableNegSeqControl(enableNegSeqControl),
       mVcD(mAttributes->create<Real>("vc_d")),
       mVcQ(mAttributes->create<Real>("vc_q")),
       mIrcD(mAttributes->create<Real>("irc_d")),
@@ -107,6 +104,38 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::setParameters(
                                            eVector, fVector);
 }
 
+DP::Ph3::AvVoltSourceInverterStateSpace::NegSeqTerms
+DP::Ph3::AvVoltSourceInverterStateSpace::computeNegSeqTerms(
+    const Matrix &x, const Complex3 &vc, const Complex3 &uEnv,
+    const Complex3 &redistFactor, const Complex3 &projCoeff,
+    const Complex &expJPsi) const {
+  NegSeqTerms terms;
+
+  // Negative-sequence measurement from nV = vc_a + a^2*vc_b + a*vc_c.
+  Complex nV(0.0, 0.0);
+  Complex nU(0.0, 0.0);
+  for (Int p = 0; p < 3; ++p) {
+    nV += redistFactor[p] * vc[p];
+    nU += redistFactor[p] * uEnv[p];
+  }
+
+  const Complex nI = (nV - nU) / mRc;
+  terms.ircNDQ = 0.5 * K23 * expJPsi * std::conj(nI);
+
+  // hIrcN[p] is the conj(vc_p) coefficient of ircNDQ.
+  for (Int p = 0; p < 3; ++p)
+    terms.hIrcN[p] = 0.5 * K23 * expJPsi * projCoeff[p] / mRc;
+
+  const Real vRefNd = -mKpCurrCtrl * terms.ircNDQ.real() +
+                      mKiCurrCtrl * x(GammaND, 0) + mKpCurrCtrl * mIRefNd;
+  const Real vRefNq = -mKpCurrCtrl * terms.ircNDQ.imag() +
+                      mKiCurrCtrl * x(GammaNQ, 0) + mKpCurrCtrl * mIRefNq;
+  terms.vRefNDQ = Complex(vRefNd, vRefNq);
+  terms.vRefNEnv0 = K23 * std::conj(terms.vRefNDQ) * expJPsi;
+
+  return terms;
+}
+
 void DP::Ph3::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
     const Matrix &x, const Matrix &u, Matrix &A, Matrix &B, Matrix &C,
     Matrix &D, Matrix &E, Matrix &F) const {
@@ -119,32 +148,31 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
   const Real phiQ = x(PhiQ, 0);
   const Real gammaD = x(GammaD, 0);
   const Real gammaQ = x(GammaQ, 0);
-  // GammaND/GammaNQ are past the end of the positive-only state vector.
-  const Real gammaND = mEnableNegSeqControl ? x(GammaND, 0) : 0.0;
-  const Real gammaNQ = mEnableNegSeqControl ? x(GammaNQ, 0) : 0.0;
 
   const Complex j(0.0, 1.0);
 
-  Complex vc[3], iF[3];
+  Complex3 vc;
+  Complex3 iF;
   for (Int p = 0; p < 3; ++p) {
     vc[p] = Complex(x(mVcReCol[p], 0), x(mVcImCol[p], 0));
     iF[p] = Complex(x(mIfReCol[p], 0), x(mIfImCol[p], 0));
   }
-  const Complex uEnv[3] = {Complex(u(0, 0), u(1, 0)), Complex(u(2, 0), u(3, 0)),
-                           Complex(u(4, 0), u(5, 0))};
+  const Complex3 uEnv = {Complex(u(0, 0), u(1, 0)), Complex(u(2, 0), u(3, 0)),
+                         Complex(u(4, 0), u(5, 0))};
 
   // Positive-sequence projection coefficients and inverse-Park redistribution factors.
-  const Complex projCoeff[3] = {Complex(1.0, 0.0), SHIFT_TO_PHASE_C,
-                                SHIFT_TO_PHASE_B};
-  const Complex redistFactor[3] = {std::conj(projCoeff[0]),
-                                   std::conj(projCoeff[1]),
-                                   std::conj(projCoeff[2])};
+  const Complex3 projCoeff = {Complex(1.0, 0.0), SHIFT_TO_PHASE_C,
+                              SHIFT_TO_PHASE_B};
+  const Complex3 redistFactor = {std::conj(projCoeff[0]),
+                                 std::conj(projCoeff[1]),
+                                 std::conj(projCoeff[2])};
 
   const Complex rot = std::exp(-j * psi);
   const Complex expJPsi = std::conj(rot);
 
   // Positive-sequence dq measurements from pV = vc_a + a*vc_b + a^2*vc_c.
-  Complex pV(0.0, 0.0), pU(0.0, 0.0);
+  Complex pV(0.0, 0.0);
+  Complex pU(0.0, 0.0);
   for (Int p = 0; p < 3; ++p) {
     pV += projCoeff[p] * vc[p];
     pU += projCoeff[p] * uEnv[p];
@@ -159,7 +187,9 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
   const Real ircQ = ircDQ.imag();
 
   // gVc[p] = d(vcDQ)/d(vc_p); gIrcVc/gIrcU = d(ircDQ)/d(vc_p), d(ircDQ)/d(u_p).
-  Complex gVc[3], gIrcVc[3], gIrcU[3];
+  Complex3 gVc;
+  Complex3 gIrcVc;
+  Complex3 gIrcU;
   for (Int p = 0; p < 3; ++p) {
     gVc[p] = 0.5 * K23 * rot * projCoeff[p];
     gIrcVc[p] = gVc[p] / mRc;
@@ -185,38 +215,23 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
   // Positive-sequence bridge-voltage reference, distributed via the inverse Park.
   const Complex vRefEnv0 = K23 * vRefDQ * expJPsi;
 
-  // Negative-sequence measurement + PI control (baseband +j*psi loop).
-  // hIrcN[p] is the conj(vc_p) coefficient of ircNDQ.
-  Complex ircNDQ(0.0, 0.0), vRefNDQ(0.0, 0.0), vRefNEnv0(0.0, 0.0);
-  Real ircND = 0.0, ircNQ = 0.0;
-  Complex hIrcN[3] = {Complex(0.0, 0.0), Complex(0.0, 0.0), Complex(0.0, 0.0)};
-  if (mEnableNegSeqControl) {
-    Complex nV(0.0, 0.0), nU(0.0, 0.0);
-    for (Int p = 0; p < 3; ++p) {
-      nV += redistFactor[p] * vc[p];
-      nU += redistFactor[p] * uEnv[p];
-    }
-    const Complex nI = (nV - nU) / mRc;
-    ircNDQ = 0.5 * K23 * expJPsi * std::conj(nI);
-    ircND = ircNDQ.real();
-    ircNQ = ircNDQ.imag();
-    for (Int p = 0; p < 3; ++p)
-      hIrcN[p] = 0.5 * K23 * expJPsi * projCoeff[p] / mRc;
-    const Real vRefNd =
-        -mKpCurrCtrl * ircND + mKiCurrCtrl * gammaND + mKpCurrCtrl * mIRefNd;
-    const Real vRefNq =
-        -mKpCurrCtrl * ircNQ + mKiCurrCtrl * gammaNQ + mKpCurrCtrl * mIRefNq;
-    vRefNDQ = Complex(vRefNd, vRefNq);
-    vRefNEnv0 = K23 * std::conj(vRefNDQ) * expJPsi;
-  }
+  // Negative-sequence measurement + PI control (baseband +j*psi loop). Left at
+  // its zero default when the loop is off, which drops it out of everything below.
+  NegSeqTerms neg;
+  if (mEnableNegSeqControl)
+    neg = computeNegSeqTerms(x, vc, uEnv, redistFactor, projCoeff, expJPsi);
+
+  const Real ircND = neg.ircNDQ.real();
+  const Real ircNQ = neg.ircNDQ.imag();
 
   // Total reference: positive (redistFactor) + negative (projCoeff) injection.
-  Complex vRef[3];
+  Complex3 vRef;
   for (Int p = 0; p < 3; ++p)
-    vRef[p] = redistFactor[p] * vRefEnv0 + projCoeff[p] * vRefNEnv0;
+    vRef[p] = redistFactor[p] * vRefEnv0 + projCoeff[p] * neg.vRefNEnv0;
 
   // RHS f(x,u) (x_dot = f(x,u)).
-  Complex vcDot[3], ifDot[3];
+  Complex3 vcDot;
+  Complex3 ifDot;
   for (Int p = 0; p < 3; ++p) {
     vcDot[p] =
         iF[p] / mCf + (uEnv[p] - vc[p]) / (mCf * mRc) - j * mOmegaN * vc[p];
@@ -317,14 +332,14 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
     A(GammaND, Psi) = ircNQ;
     A(GammaNQ, Psi) = -ircND;
     for (Int p = 0; p < 3; ++p) {
-      A(GammaND, mVcReCol[p]) = -hIrcN[p].real();
-      A(GammaND, mVcImCol[p]) = -hIrcN[p].imag();
-      A(GammaNQ, mVcReCol[p]) = -hIrcN[p].imag();
-      A(GammaNQ, mVcImCol[p]) = hIrcN[p].real();
-      B(GammaND, mUReCol[p]) = hIrcN[p].real();
-      B(GammaND, mUImCol[p]) = hIrcN[p].imag();
-      B(GammaNQ, mUReCol[p]) = hIrcN[p].imag();
-      B(GammaNQ, mUImCol[p]) = -hIrcN[p].real();
+      A(GammaND, mVcReCol[p]) = -neg.hIrcN[p].real();
+      A(GammaND, mVcImCol[p]) = -neg.hIrcN[p].imag();
+      A(GammaNQ, mVcReCol[p]) = -neg.hIrcN[p].imag();
+      A(GammaNQ, mVcImCol[p]) = neg.hIrcN[p].real();
+      B(GammaND, mUReCol[p]) = neg.hIrcN[p].real();
+      B(GammaND, mUImCol[p]) = neg.hIrcN[p].imag();
+      B(GammaNQ, mUReCol[p]) = neg.hIrcN[p].imag();
+      B(GammaNQ, mUImCol[p]) = -neg.hIrcN[p].real();
     }
   }
 
@@ -343,6 +358,8 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
   }
 
   // Filter inductor rows (If_dot): the per-phase coupling via vRef_p = redistFactor[p]*vRefEnv0.
+  RefSensitivities sens;
+
   const Complex dVRefEnv0DPsi =
       j * K23 * expJPsi * (mKpCurrCtrl * ircDQ + vRefDQ);
 
@@ -355,103 +372,37 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
   const Complex dVRefEnv0DGammaD = K23 * expJPsi * mKiCurrCtrl;
   const Complex dVRefEnv0DGammaQ = K23 * expJPsi * j * mKiCurrCtrl;
 
-  const Int ownCols[7] = {Psi,  PFiltered, QFiltered, PhiD,
-                          PhiQ, GammaD,    GammaQ};
-  const Complex dVRefEnv0Own[7] = {
-      dVRefEnv0DPsi,  dVRefEnv0DpF,     dVRefEnv0DqF,    dVRefEnv0DPhiD,
-      dVRefEnv0DPhiQ, dVRefEnv0DGammaD, dVRefEnv0DGammaQ};
+  sens.posOwn = {dVRefEnv0DPsi,   dVRefEnv0DpF,   dVRefEnv0DqF,
+                 dVRefEnv0DPhiD,  dVRefEnv0DPhiQ, dVRefEnv0DGammaD,
+                 dVRefEnv0DGammaQ};
 
   // d(vRefDQ)/d(vc_p), d(vRefDQ)/d(u_p) via vRefDQ's -kpCurrCtrl*ircDQ term.
-  Complex dVRefEnv0VcRe[3], dVRefEnv0VcIm[3], dVRefEnv0URe[3], dVRefEnv0UIm[3];
   for (Int p = 0; p < 3; ++p) {
-    dVRefEnv0VcRe[p] = K23 * expJPsi * (-mKpCurrCtrl * gIrcVc[p]);
-    dVRefEnv0VcIm[p] = K23 * expJPsi * (-mKpCurrCtrl * j * gIrcVc[p]);
-    dVRefEnv0URe[p] = K23 * expJPsi * (-mKpCurrCtrl * gIrcU[p]);
-    dVRefEnv0UIm[p] = K23 * expJPsi * (-mKpCurrCtrl * j * gIrcU[p]);
+    sens.posVcRe[p] = K23 * expJPsi * (-mKpCurrCtrl * gIrcVc[p]);
+    sens.posVcIm[p] = K23 * expJPsi * (-mKpCurrCtrl * j * gIrcVc[p]);
+    sens.posURe[p] = K23 * expJPsi * (-mKpCurrCtrl * gIrcU[p]);
+    sens.posUIm[p] = K23 * expJPsi * (-mKpCurrCtrl * j * gIrcU[p]);
   }
 
   // Derivatives of vRefNEnv0 = K23*conj(vRefNDQ)*expJPsi wrt psi, the negative-loop
   // states and vc_p/u_p.
-  Complex dVRefNEnv0DPsi(0.0, 0.0), dVRefNEnv0DGammaND(0.0, 0.0),
-      dVRefNEnv0DGammaNQ(0.0, 0.0);
-  Complex dVRefNEnv0VcRe[3] = {}, dVRefNEnv0VcIm[3] = {}, dVRefNEnv0URe[3] = {},
-          dVRefNEnv0UIm[3] = {};
   if (mEnableNegSeqControl) {
-    dVRefNEnv0DPsi = j * K23 * expJPsi *
-                     (mKpCurrCtrl * std::conj(ircNDQ) + std::conj(vRefNDQ));
-    dVRefNEnv0DGammaND = K23 * expJPsi * mKiCurrCtrl;
-    dVRefNEnv0DGammaNQ = -j * K23 * expJPsi * mKiCurrCtrl;
+    sens.negPsi =
+        j * K23 * expJPsi *
+        (mKpCurrCtrl * std::conj(neg.ircNDQ) + std::conj(neg.vRefNDQ));
+    sens.negGammaND = K23 * expJPsi * mKiCurrCtrl;
+    sens.negGammaNQ = -j * K23 * expJPsi * mKiCurrCtrl;
     for (Int p = 0; p < 3; ++p) {
-      const Complex base = mKpCurrCtrl * std::conj(hIrcN[p]) * K23 * expJPsi;
-      dVRefNEnv0VcRe[p] = -base;
-      dVRefNEnv0VcIm[p] = -j * base;
-      dVRefNEnv0URe[p] = base;
-      dVRefNEnv0UIm[p] = j * base;
+      const Complex base =
+          mKpCurrCtrl * std::conj(neg.hIrcN[p]) * K23 * expJPsi;
+      sens.negVcRe[p] = -base;
+      sens.negVcIm[p] = -j * base;
+      sens.negURe[p] = base;
+      sens.negUIm[p] = j * base;
     }
   }
 
-  for (Int pOut = 0; pOut < 3; ++pOut) {
-    const Int reRow = mIfReCol[pOut];
-    const Int imRow = mIfImCol[pOut];
-
-    // Own-phase direct terms: -(vc_p + Rf*iF_p)/Lf - j*omegaN*iF_p.
-    A(reRow, mVcReCol[pOut]) = -1.0 / mLf;
-    A(imRow, mVcImCol[pOut]) = -1.0 / mLf;
-    A(reRow, reRow) = -mRf / mLf;
-    A(imRow, imRow) = -mRf / mLf;
-    A(reRow, imRow) = mOmegaN;
-    A(imRow, reRow) = -mOmegaN;
-
-    // vRef_p coupling through the shared single-dq-frame control chain.
-    for (Int k = 0; k < 7; ++k) {
-      const Complex dVRef = redistFactor[pOut] * dVRefEnv0Own[k];
-      A(reRow, ownCols[k]) += dVRef.real() / mLf;
-      A(imRow, ownCols[k]) += dVRef.imag() / mLf;
-    }
-    for (Int pSrc = 0; pSrc < 3; ++pSrc) {
-      const Complex dVRefVcRe = redistFactor[pOut] * dVRefEnv0VcRe[pSrc];
-      const Complex dVRefVcIm = redistFactor[pOut] * dVRefEnv0VcIm[pSrc];
-      A(reRow, mVcReCol[pSrc]) += dVRefVcRe.real() / mLf;
-      A(imRow, mVcReCol[pSrc]) += dVRefVcRe.imag() / mLf;
-      A(reRow, mVcImCol[pSrc]) += dVRefVcIm.real() / mLf;
-      A(imRow, mVcImCol[pSrc]) += dVRefVcIm.imag() / mLf;
-
-      const Complex dVRefURe = redistFactor[pOut] * dVRefEnv0URe[pSrc];
-      const Complex dVRefUIm = redistFactor[pOut] * dVRefEnv0UIm[pSrc];
-      B(reRow, mUReCol[pSrc]) += dVRefURe.real() / mLf;
-      B(imRow, mUReCol[pSrc]) += dVRefURe.imag() / mLf;
-      B(reRow, mUImCol[pSrc]) += dVRefUIm.real() / mLf;
-      B(imRow, mUImCol[pSrc]) += dVRefUIm.imag() / mLf;
-    }
-
-    // Negative-sequence injection coupling: vRef_p += projCoeff[pOut]*vRefNEnv0.
-    if (mEnableNegSeqControl) {
-      const Complex dNPsi = projCoeff[pOut] * dVRefNEnv0DPsi;
-      A(reRow, Psi) += dNPsi.real() / mLf;
-      A(imRow, Psi) += dNPsi.imag() / mLf;
-      const Complex dNGammaND = projCoeff[pOut] * dVRefNEnv0DGammaND;
-      A(reRow, GammaND) += dNGammaND.real() / mLf;
-      A(imRow, GammaND) += dNGammaND.imag() / mLf;
-      const Complex dNGammaNQ = projCoeff[pOut] * dVRefNEnv0DGammaNQ;
-      A(reRow, GammaNQ) += dNGammaNQ.real() / mLf;
-      A(imRow, GammaNQ) += dNGammaNQ.imag() / mLf;
-      for (Int pSrc = 0; pSrc < 3; ++pSrc) {
-        const Complex dNVcRe = projCoeff[pOut] * dVRefNEnv0VcRe[pSrc];
-        const Complex dNVcIm = projCoeff[pOut] * dVRefNEnv0VcIm[pSrc];
-        A(reRow, mVcReCol[pSrc]) += dNVcRe.real() / mLf;
-        A(imRow, mVcReCol[pSrc]) += dNVcRe.imag() / mLf;
-        A(reRow, mVcImCol[pSrc]) += dNVcIm.real() / mLf;
-        A(imRow, mVcImCol[pSrc]) += dNVcIm.imag() / mLf;
-
-        const Complex dNURe = projCoeff[pOut] * dVRefNEnv0URe[pSrc];
-        const Complex dNUIm = projCoeff[pOut] * dVRefNEnv0UIm[pSrc];
-        B(reRow, mUReCol[pSrc]) += dNURe.real() / mLf;
-        B(imRow, mUReCol[pSrc]) += dNURe.imag() / mLf;
-        B(reRow, mUImCol[pSrc]) += dNUIm.real() / mLf;
-        B(imRow, mUImCol[pSrc]) += dNUIm.imag() / mLf;
-      }
-    }
-  }
+  buildInductorRows(redistFactor, projCoeff, sens, A, B);
 
   // Offset E = f(x,u) - A*x - B*u.
   E = f - A * x - B * u;
@@ -470,6 +421,74 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
   }
 
   F = Matrix::Zero(6, 1);
+}
+
+void DP::Ph3::AvVoltSourceInverterStateSpace::buildInductorRows(
+    const Complex3 &redistFactor, const Complex3 &projCoeff,
+    const RefSensitivities &sens, Matrix &A, Matrix &B) const {
+  for (Int pOut = 0; pOut < 3; ++pOut) {
+    const Int reRow = mIfReCol[pOut];
+    const Int imRow = mIfImCol[pOut];
+
+    // Own-phase direct terms: -(vc_p + Rf*iF_p)/Lf - j*omegaN*iF_p.
+    A(reRow, mVcReCol[pOut]) = -1.0 / mLf;
+    A(imRow, mVcImCol[pOut]) = -1.0 / mLf;
+    A(reRow, reRow) = -mRf / mLf;
+    A(imRow, imRow) = -mRf / mLf;
+    A(reRow, imRow) = mOmegaN;
+    A(imRow, reRow) = -mOmegaN;
+
+    // vRef_p coupling through the shared single-dq-frame control chain.
+    for (Int k = 0; k < 7; ++k) {
+      const Complex dVRef = redistFactor[pOut] * sens.posOwn[k];
+      A(reRow, mOwnCol[k]) += dVRef.real() / mLf;
+      A(imRow, mOwnCol[k]) += dVRef.imag() / mLf;
+    }
+    for (Int pSrc = 0; pSrc < 3; ++pSrc) {
+      const Complex dVRefVcRe = redistFactor[pOut] * sens.posVcRe[pSrc];
+      const Complex dVRefVcIm = redistFactor[pOut] * sens.posVcIm[pSrc];
+      A(reRow, mVcReCol[pSrc]) += dVRefVcRe.real() / mLf;
+      A(imRow, mVcReCol[pSrc]) += dVRefVcRe.imag() / mLf;
+      A(reRow, mVcImCol[pSrc]) += dVRefVcIm.real() / mLf;
+      A(imRow, mVcImCol[pSrc]) += dVRefVcIm.imag() / mLf;
+
+      const Complex dVRefURe = redistFactor[pOut] * sens.posURe[pSrc];
+      const Complex dVRefUIm = redistFactor[pOut] * sens.posUIm[pSrc];
+      B(reRow, mUReCol[pSrc]) += dVRefURe.real() / mLf;
+      B(imRow, mUReCol[pSrc]) += dVRefURe.imag() / mLf;
+      B(reRow, mUImCol[pSrc]) += dVRefUIm.real() / mLf;
+      B(imRow, mUImCol[pSrc]) += dVRefUIm.imag() / mLf;
+    }
+
+    // Negative-sequence injection coupling: vRef_p += projCoeff[pOut]*vRefNEnv0.
+    // The sensitivities stay zero when the loop is off, so this is a no-op then.
+    const Complex dNPsi = projCoeff[pOut] * sens.negPsi;
+    A(reRow, Psi) += dNPsi.real() / mLf;
+    A(imRow, Psi) += dNPsi.imag() / mLf;
+    if (mEnableNegSeqControl) {
+      const Complex dNGammaND = projCoeff[pOut] * sens.negGammaND;
+      A(reRow, GammaND) += dNGammaND.real() / mLf;
+      A(imRow, GammaND) += dNGammaND.imag() / mLf;
+      const Complex dNGammaNQ = projCoeff[pOut] * sens.negGammaNQ;
+      A(reRow, GammaNQ) += dNGammaNQ.real() / mLf;
+      A(imRow, GammaNQ) += dNGammaNQ.imag() / mLf;
+    }
+    for (Int pSrc = 0; pSrc < 3; ++pSrc) {
+      const Complex dNVcRe = projCoeff[pOut] * sens.negVcRe[pSrc];
+      const Complex dNVcIm = projCoeff[pOut] * sens.negVcIm[pSrc];
+      A(reRow, mVcReCol[pSrc]) += dNVcRe.real() / mLf;
+      A(imRow, mVcReCol[pSrc]) += dNVcRe.imag() / mLf;
+      A(reRow, mVcImCol[pSrc]) += dNVcIm.real() / mLf;
+      A(imRow, mVcImCol[pSrc]) += dNVcIm.imag() / mLf;
+
+      const Complex dNURe = projCoeff[pOut] * sens.negURe[pSrc];
+      const Complex dNUIm = projCoeff[pOut] * sens.negUIm[pSrc];
+      B(reRow, mUReCol[pSrc]) += dNURe.real() / mLf;
+      B(imRow, mUReCol[pSrc]) += dNURe.imag() / mLf;
+      B(reRow, mUImCol[pSrc]) += dNUIm.real() / mLf;
+      B(imRow, mUImCol[pSrc]) += dNUIm.imag() / mLf;
+    }
+  }
 }
 
 Bool DP::Ph3::AvVoltSourceInverterStateSpace::updateComponentParameters() {
@@ -493,10 +512,13 @@ void DP::Ph3::AvVoltSourceInverterStateSpace::updateLogAttributes(
   const Real psi = x(Psi, 0);
   const Complex rot = std::exp(Complex(0.0, -psi));
   const Complex expJPsi = std::conj(rot);
-  const Complex projCoeff[3] = {Complex(1.0, 0.0), SHIFT_TO_PHASE_C,
-                                SHIFT_TO_PHASE_B};
+  const Complex3 projCoeff = {Complex(1.0, 0.0), SHIFT_TO_PHASE_C,
+                              SHIFT_TO_PHASE_B};
 
-  Complex pV(0.0, 0.0), pU(0.0, 0.0), nV(0.0, 0.0), nU(0.0, 0.0);
+  Complex pV(0.0, 0.0);
+  Complex pU(0.0, 0.0);
+  Complex nV(0.0, 0.0);
+  Complex nU(0.0, 0.0);
   for (Int p = 0; p < 3; ++p) {
     const Complex vc(x(mVcReCol[p], 0), x(mVcImCol[p], 0));
     const Complex uEnv(u(mUReCol[p], 0), u(mUImCol[p], 0));
