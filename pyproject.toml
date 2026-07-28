@@ -2,7 +2,8 @@
 # SPDX-License-Identifier: MPL-2.0
 
 [build-system]
-requires = ["setuptools>=42", "wheel", "pybind11>=2.10.3", "pybind11-stubgen>=2.5", "numpy>=2.0.0"]
+# setuptools 77 is the first release that reads PEP 639 license/license-files.
+requires = ["setuptools>=77", "wheel", "pybind11>=2.10.3", "pybind11-stubgen>=2.5", "numpy>=2.0.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
