@@ -5,6 +5,13 @@
 
 using namespace CPS;
 
+namespace {
+void requireFinite(const Matrix &matrix, const char *name) {
+  if (!matrix.allFinite())
+    throw std::invalid_argument(String(name) + " must contain finite values.");
+}
+} // namespace
+
 EMT::SSNComp::SSNComp(String uid, String name, Int inputSize, Int outputSize,
                       Logger::Level logLevel)
     : MNASimPowerComp<Real>(uid, name, true, true, logLevel), mTimeStep(0.0),
@@ -49,6 +56,11 @@ void EMT::SSNComp::setParameters(const Matrix &A, const Matrix &B,
   if (D.rows() != mOutputSize || D.cols() != mInputSize)
     throw std::invalid_argument("D has invalid dimensions.");
 
+  requireFinite(A, "A");
+  requireFinite(B, "B");
+  requireFinite(C, "C");
+  requireFinite(D, "D");
+
   mA = A;
   mB = B;
   mC = C;
@@ -72,6 +84,9 @@ Matrix EMT::SSNComp::calculateHistoryVector() const {
 MatrixComp
 EMT::SSNComp::calculateSteadyStateStateFromInput(const MatrixComp &u,
                                                  Real frequency) const {
+  if (mA.rows() == 0)
+    return MatrixComp::Zero(0, 1);
+
   const Real omega = 2.0 * PI * frequency;
   MatrixComp h =
       Complex(0.0, omega) * MatrixComp::Identity(mA.rows(), mA.cols()) -
@@ -88,6 +103,8 @@ EMT::SSNComp::calculateSteadyStateOutputFromInput(const MatrixComp &x,
 
 void EMT::SSNComp::updateState(const Matrix &uOld, const Matrix &uNew) {
   **mX = mdA * (**mX) + mdB * (uNew + uOld);
+  if (!(**mX).allFinite())
+    throw std::runtime_error("SSN state update produced a non-finite value.");
 }
 
 void EMT::SSNComp::updateLogAttributes(const Matrix &) const {
@@ -97,6 +114,9 @@ void EMT::SSNComp::updateLogAttributes(const Matrix &) const {
 void EMT::SSNComp::recomputeDiscreteModel() {
   Math::calculateStateSpaceTrapezoidalMatrices(mA, mB, mTimeStep, mdA, mdB);
   mW = mC * mdB + mD;
+  if (!mdA.allFinite() || !mdB.allFinite() || !mW.allFinite())
+    throw std::runtime_error(
+        "SSN trapezoidal discretization produced a non-finite value.");
 }
 
 void EMT::SSNComp::updateStateSpaceModel() {
@@ -109,11 +129,17 @@ void EMT::SSNComp::mnaCompInitialize(Real, Real timeStep,
     throw std::logic_error(
         "setParameters() must be called before initialization.");
 
+  if (!Math::isFinite(timeStep) || timeStep <= 0.0)
+    throw std::invalid_argument("SSN time step must be finite and positive.");
+
   mTimeStep = timeStep;
   updateMatrixNodeIndices();
 
   recomputeDiscreteModel();
   mYHist = calculateHistoryVector();
+  if (!mYHist.allFinite())
+    throw std::runtime_error(
+        "SSN initialization produced a non-finite history vector.");
 }
 
 void EMT::SSNComp::mnaCompAddPreStepDependencies(
@@ -128,6 +154,8 @@ void EMT::SSNComp::mnaCompAddPreStepDependencies(
 void EMT::SSNComp::mnaCompPreStep(Real time, Int timeStepCount) {
   updateStateSpaceModel();
   mYHist = calculateHistoryVector();
+  if (!mYHist.allFinite())
+    throw std::runtime_error("SSN history vector contains a non-finite value.");
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 

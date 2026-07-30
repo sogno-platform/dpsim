@@ -93,6 +93,14 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_VTypeSSNComp.cpp
 	EMT/EMT_VTypeVariableSSNComp.cpp
 	EMT/EMT_ITypeSSNComp.cpp
+	EMT/EMT_DC_TwoTerminalVTypeSSNComp.cpp
+	EMT/EMT_DC_TwoTerminalITypeSSNComp.cpp
+	EMT/EMT_DC_SSN_Resistor.cpp
+	EMT/EMT_DC_SSN_Capacitor.cpp
+	EMT/EMT_DC_SSN_Inductor.cpp
+	EMT/EMT_DC_SSN_PiLine.cpp
+	EMT/EMT_DC_VoltageSource.cpp
+	EMT/EMT_DC_CurrentSource.cpp
 
 
 	EMT/EMT_Ph1_Capacitor.cpp
@@ -146,6 +154,7 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph3_SSN_Inductor.cpp
 	EMT/EMT_Ph3_SSN_Full_Serial_RLC.cpp
 	EMT/EMT_Ph3_SSN_GFM.cpp
+	EMT/EMT_Ph3_SSN_SynchronousGenerator.cpp
 	EMT/EMT_Ph3_GenericTwoTerminalVTypeSSN.cpp
 	EMT/EMT_Ph3_GenericTwoTerminalITypeSSN.cpp
 	EMT/EMT_Ph3_GenericFourTerminalVTypeSSN.cpp

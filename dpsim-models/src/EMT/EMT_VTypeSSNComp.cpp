@@ -47,6 +47,8 @@ void EMT::VTypeSSNComp::initializeFromNodesAndTerminals(Real frequency) {
 
 void EMT::VTypeSSNComp::mnaCompUpdateCurrent(const Matrix &) {
   **mIntfCurrent = mW * (**mIntfVoltage) + mYHist;
+  if (!(**mIntfCurrent).allFinite())
+    throw std::runtime_error("SSN current update produced a non-finite value.");
 }
 
 void EMT::VTypeSSNComp::mnaCompPostStep(Real, Int,

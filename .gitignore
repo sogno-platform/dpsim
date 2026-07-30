@@ -49,6 +49,7 @@ cmake-build-debug/
 .vs/
 compile_commands.json
 .vscode/
+.codex/
 
 # CMake
 CMakeFiles/
@@ -64,6 +65,7 @@ __MACOSX
 Thumbs.db
 
 # Docs
+docs/development/
 docs/sphinx/_build/
 docs/doxygen/html/
 docs/doxygen/xml/

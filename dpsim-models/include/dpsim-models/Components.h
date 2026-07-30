@@ -117,6 +117,15 @@
 #include <dpsim-models/EMT/EMT_VTypeSSNComp.h>
 #include <dpsim-models/EMT/EMT_VTypeVariableSSNComp.h>
 
+#include <dpsim-models/EMT/EMT_DC_CurrentSource.h>
+#include <dpsim-models/EMT/EMT_DC_SSN_Capacitor.h>
+#include <dpsim-models/EMT/EMT_DC_SSN_Inductor.h>
+#include <dpsim-models/EMT/EMT_DC_SSN_PiLine.h>
+#include <dpsim-models/EMT/EMT_DC_SSN_Resistor.h>
+#include <dpsim-models/EMT/EMT_DC_TwoTerminalITypeSSNComp.h>
+#include <dpsim-models/EMT/EMT_DC_TwoTerminalVTypeSSNComp.h>
+#include <dpsim-models/EMT/EMT_DC_VoltageSource.h>
+
 #include <dpsim-models/EMT/EMT_Ph1_Capacitor.h>
 #include <dpsim-models/EMT/EMT_Ph1_CurrentSource.h>
 #include <dpsim-models/EMT/EMT_Ph1_Inductor.h>
@@ -147,6 +156,7 @@
 #include <dpsim-models/EMT/EMT_Ph3_SSN_Full_Serial_RLC.h>
 #include <dpsim-models/EMT/EMT_Ph3_SSN_GFM.h>
 #include <dpsim-models/EMT/EMT_Ph3_SSN_Inductor.h>
+#include <dpsim-models/EMT/EMT_Ph3_SSN_SynchronousGenerator.h>
 #include <dpsim-models/EMT/EMT_Ph3_SeriesResistor.h>
 #include <dpsim-models/EMT/EMT_Ph3_SeriesSwitch.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator3OrderVBR.h>

@@ -41,6 +41,8 @@ SimNode<VarType>::SimNode(PhaseType phaseType)
 template <> void SimNode<Real>::initialize() {
   if (phaseType() == PhaseType::Single)
     (**mVoltage)(0, 0) = (RMS3PH_TO_PEAK1PH * (**mInitialVoltage)(0, 0)).real();
+  else if (phaseType() == PhaseType::DC)
+    (**mVoltage)(0, 0) = (**mInitialVoltage)(0, 0).real();
   else
     **mVoltage = (RMS3PH_TO_PEAK1PH * **mInitialVoltage).real();
 }
@@ -80,6 +82,9 @@ VarType SimNode<VarType>::singleVoltage(PhaseType phaseType) {
 
 template <typename VarType>
 UInt SimNode<VarType>::matrixNodeIndex(PhaseType phaseType) {
+  if (phaseType == PhaseType::DC && mPhaseType == PhaseType::DC)
+    return mMatrixNodeIndex[0];
+
   if ((phaseType == PhaseType::A || phaseType == PhaseType::Single) &&
       (mPhaseType == PhaseType::Single || mPhaseType == PhaseType::A ||
        mPhaseType == PhaseType::ABC))
@@ -102,7 +107,7 @@ std::vector<UInt> SimNode<VarType>::matrixNodeIndices() {
     return {mMatrixNodeIndex[2]};
   else if (mPhaseType == PhaseType::ABC)
     return mMatrixNodeIndex;
-  else // phaseType == PhaseType::Single || mPhaseType == PhaseType::A
+  else // PhaseType::Single, PhaseType::DC, or PhaseType::A
     return {mMatrixNodeIndex[0]};
 }
 
