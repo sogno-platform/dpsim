@@ -10,7 +10,7 @@ Thanks for your interest in contributing! Below are the essentials to get a pull
 ## Quick start
 
 1. Fork the repository and clone your fork.
-1. Run `pre-commit install` to activate automated checks (formatting, notebook output stripping).
+1. Run `pre-commit install` to activate automated checks (formatting, commit message style, notebook output stripping).
 1. Create a branch with a descriptive prefix (`feature/`, `fix/`, `docs/`).
 1. Make your changes and commit using the conventional commit style (`feat:`, `fix:`, `docs:`, ...) with a sign-off:
 
@@ -26,10 +26,11 @@ Thanks for your interest in contributing! Below are the essentials to get a pull
    git push --force-with-lease
    ```
 
-1. Open a pull request against `sogno-platform/dpsim:master`.
+1. Open a pull request against `sogno-platform/dpsim:master`, giving it a conventional commit title.
 
 ## Key requirements
 
+- **Conventional commits**: every commit message and every pull request title must follow [Conventional Commits](https://www.conventionalcommits.org/); both are checked by CI and by a `commit-msg` hook. The release version and the changelog are derived from them, so a message that does not parse is left out of both. The pull request title matters because it becomes the merge commit subject on `master`.
 - **Linear history**: never merge the target branch into your feature branch; rebase instead.
 - **Sign-off**: every commit must include `Signed-off-by` via `git commit -s` ([DCO](https://developercertificate.org/)).
 - **Formatting**: clang-format 17 for C++, black for Python, markdownlint for Markdown; all enforced by pre-commit.
