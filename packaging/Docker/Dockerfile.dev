@@ -72,19 +72,29 @@ RUN pip3 install --no-cache-dir --upgrade wheel build setuptools packaging && \
 	rm /tmp/requirements.txt && \
 	pip3 cache purge
 
-# Install libcimpp from prebuilt RPMs
+# Install libcimpp from prebuilt RPMs (x86_64 only) or build from source
 RUN set -eux; \
 	case "${CIM_VERSION}" in \
 		CGMES_2.4.15_16FEB2016|CGMES_2.4.15_27JAN2020|CGMES_2.4.13_18DEC2013) \
-			libcimpp_pkg="libcimpp_${CIM_VERSION}-${LIBCIMPP_VERSION}-Linux.rpm" ;; \
+			libcimpp_pkg="libcimpp_${CIM_VERSION}-${LIBCIMPP_VERSION}-Linux.rpm" \
+			libcimpp_url="https://github.com/sogno-platform/libcimpp/releases/download/release%2Fv${LIBCIMPP_VERSION}/${libcimpp_pkg}" ;; \
 		*) \
-			echo "Unsupported CIM_VERSION '${CIM_VERSION}' for prebuilt libcimpp package" >&2; \
+			echo "Unsupported CIM_VERSION '${CIM_VERSION}' for libcimpp package" >&2; \
 			exit 1 ;; \
 	esac; \
-	libcimpp_url="https://github.com/sogno-platform/libcimpp/releases/download/release%2Fv${LIBCIMPP_VERSION}/${libcimpp_pkg}"; \
-	curl -sSL "${libcimpp_url}" -o /tmp/libcimpp.rpm; \
-	dnf -y install /tmp/libcimpp.rpm; \
-	rm -f /tmp/libcimpp.rpm; \
+	if [ "$(uname -m)" = "x86_64" ]; then \
+		curl -sSL -L --max-time 300 --retry 3 --retry-delay 5 "${libcimpp_url}" -o /tmp/libcimpp.rpm || (echo "Failed to download ${libcimpp_url}" >&2; exit 1); \
+		dnf -y install /tmp/libcimpp.rpm; \
+		rm -f /tmp/libcimpp.rpm; \
+	else \
+		echo "Building libcimpp from source for $(uname -m)"; \
+		dnf -y install graphviz-devel libxml2-devel; \
+		cd /tmp && git clone --branch "v${LIBCIMPP_VERSION}" --recurse-submodules --depth 1 https://github.com/sogno-platform/libcimpp.git && \
+		mkdir -p libcimpp/build && cd libcimpp/build && \
+		cmake ${CMAKE_OPTS} .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 && \
+		make ${MAKE_OPTS} install && \
+		rm -rf /tmp/libcimpp; \
+	fi; \
 	ldconfig; \
 	dnf clean all; \
 	rm -rf /var/cache/dnf /var/cache/yum
