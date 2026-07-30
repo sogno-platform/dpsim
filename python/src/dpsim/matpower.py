@@ -703,10 +703,6 @@ class Reader:
             gen.set_base_voltage(gen_baseV)
             gen.modify_power_flow_bus_type(bus_type)
         else:
-            # normalize explicit generator model argument to enum
-            if gen_model is not None and not isinstance(gen_model, GenModel):
-                gen_model = GenModel(int(gen_model))
-
             # get dynamic data of the generator
             gen_dyn_row_idx = self.mpc_dyn_gen_data.index[
                 self.mpc_dyn_gen_data["bus"] == int(bus_index)
@@ -715,13 +711,36 @@ class Reader:
             # --> two gens associated to one node...
 
             gen_model_data = self.mpc_dyn_gen_data["model"][gen_dyn_row_idx]
-            if gen_model is None:
-                gen_model = GenModel(int(gen_model_data))
+
+            try:
+                if gen_model is not None and not isinstance(gen_model, GenModel):
+                    gen_model = GenModel(int(gen_model))
+
+                if gen_model is None:
+                    gen_model = GenModel(int(gen_model_data))
+            except ValueError:
+                raise Exception(
+                    "Unrecognized generator model {} in dynamic data for bus {}."
+                    " Supported models are: {}".format(
+                        gen_model if gen_model is not None else int(gen_model_data),
+                        bus_index,
+                        [e.name + ": " + str(e.value) for e in GenModel],
+                    )
+                )
 
             if gen_model == GenModel.IDEAL_VOLTAGE_SOURCE:
-                gen = self.dpsimpy_components.SynchronGeneratorIdeal(
-                    gen_name, self.log_level
-                )
+                if self.domain == Domain.EMT or self.domain == Domain.DP:
+                    gen = self.dpsimpy_components.SynchronGeneratorIdeal(
+                        gen_name, self.log_level
+                    )
+                elif self.domain == Domain.SP:
+                    raise Exception(
+                        "Matpower reader does not support the generator model {} in the SP domain.".format(
+                            gen_model.value
+                            if isinstance(gen_model, GenModel)
+                            else gen_model
+                        )
+                    )
             else:
                 gen_baseS = self.mpc_dyn_gen_data["BaseS"][gen_dyn_row_idx] * mw_w
                 H = self.mpc_dyn_gen_data["H"][gen_dyn_row_idx]
@@ -813,14 +832,6 @@ class Reader:
                         Td0_s=Td0_s,
                         Tq0_s=Tq0_s,
                         Taa=0,
-                    )
-                else:
-                    raise Exception(
-                        'Matpower reader does not support the generator model {}. Supported models are: "3", "4", "5", "6".'.format(
-                            gen_model.value
-                            if isinstance(gen_model, GenModel)
-                            else gen_model
-                        )
                     )
 
         #### SG controllers ####
