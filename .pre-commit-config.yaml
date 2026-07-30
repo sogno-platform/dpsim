@@ -51,8 +51,9 @@ repos:
     rev: "v0.13.0"
     hooks:
       - id: markdownlint
+        # Release Please writes `*` bullets (MD004) where this file uses `-`, plus MD012.
+        exclude: ^(CHANGELOG\.md$|docs/hugo/content/)
         args: [-r, "~MD013,~MD033,~MD024"]
-        exclude: ^docs/hugo/content/
       # Hugo emits the <h1> from the page front matter, so a top level header in the
       # body would render a second one. MD002 is therefore dropped for content pages only.
       - id: markdownlint

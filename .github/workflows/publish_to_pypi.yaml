@@ -9,6 +9,8 @@ on:
       - master
     tags:
       - '*'
+  # Release Please dispatches this at the new tag; a tag it pushes starts no run by itself.
+  workflow_dispatch:
 
 permissions:
   contents: read
