@@ -37,6 +37,8 @@ power systems", *SoftwareX*, vol. 10, 100253, 2019.
 
 To make a result reproducible, cite the version you ran alongside the paper:
 
+<!-- x-release-please-start-version -->
+
 ```bibtex
 @software{dpsim,
   title  = {DPsim},
@@ -45,6 +47,8 @@ To make a result reproducible, cite the version you ran alongside the paper:
   note   = {Version 1.3.0}
 }
 ```
+
+<!-- x-release-please-end -->
 
 The repository also carries a `CITATION.cff` file, so GitHub offers a ready-made citation
 through the "Cite this repository" link on the project page.

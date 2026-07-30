@@ -1,0 +1,69 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "release-type": "simple",
+  "changelog-sections": [
+    {
+      "type": "feat",
+      "section": "Added"
+    },
+    {
+      "type": "perf",
+      "section": "Changed"
+    },
+    {
+      "type": "refactor",
+      "section": "Changed"
+    },
+    {
+      "type": "build",
+      "section": "Changed"
+    },
+    {
+      "type": "ci",
+      "section": "Changed"
+    },
+    {
+      "type": "chore",
+      "section": "Changed"
+    },
+    {
+      "type": "style",
+      "section": "Changed"
+    },
+    {
+      "type": "test",
+      "section": "Changed"
+    },
+    {
+      "type": "docs",
+      "section": "Changed"
+    },
+    {
+      "type": "revert",
+      "section": "Changed"
+    },
+    {
+      "type": "fix",
+      "section": "Fixed"
+    },
+    {
+      "type": "security",
+      "section": "Security"
+    }
+  ],
+  "packages": {
+    ".": {
+      "extra-files": [
+        "CMakeLists.txt",
+        "CITATION.cff",
+        "sonar-project.properties",
+        "docs/hugo/content/en/docs/Citation.md",
+        {
+          "type": "toml",
+          "path": "pyproject.toml",
+          "jsonpath": "$.project.version"
+        }
+      ]
+    }
+  }
+}
