@@ -322,6 +322,14 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
       .def("close", &CPS::EMT::Ph3::Switch::closeSwitch)
       .def("connect", &CPS::EMT::Ph3::Switch::connect);
 
+  py::class_<CPS::EMT::Ph3::SynchronGeneratorIdeal,
+             std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorIdeal>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SynchronGeneratorIdeal",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("connect", &CPS::EMT::Ph3::SynchronGeneratorIdeal::connect);
+
   py::class_<CPS::EMT::Ph3::SynchronGeneratorDQTrapez,
              std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQTrapez>,
              CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SynchronGeneratorDQTrapez",

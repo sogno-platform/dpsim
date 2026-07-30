@@ -252,6 +252,14 @@ void addDPPh1Components(py::module_ mDPPh1) {
       .def("connect", &CPS::DP::Ph1::GenericTwoTerminalITypeSSN::connect)
       .def_property_readonly("x", createAttributeGetter<CPS::MatrixComp>("x"));
 
+  py::class_<CPS::DP::Ph1::SynchronGeneratorIdeal,
+             std::shared_ptr<CPS::DP::Ph1::SynchronGeneratorIdeal>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "SynchronGeneratorIdeal",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("connect", &CPS::DP::Ph1::SynchronGeneratorIdeal::connect);
+
   py::class_<CPS::DP::Ph1::SynchronGeneratorTrStab,
              std::shared_ptr<CPS::DP::Ph1::SynchronGeneratorTrStab>,
              CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "SynchronGeneratorTrStab",

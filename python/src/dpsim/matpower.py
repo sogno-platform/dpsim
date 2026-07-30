@@ -14,6 +14,14 @@ class Domain(Enum):
     EMT = 4
 
 
+class GenModel(Enum):
+    IDEAL_VOLTAGE_SOURCE = 1
+    SG_3ORDER_VBR = 3
+    SG_4ORDER_VBR = 4
+    SG_5ORDER_VBR = 5
+    SG_6BORDER_VBR = 6
+
+
 # default multiplier for matpower data
 w_mw = 1e-6
 mw_w = 1e6
@@ -291,6 +299,7 @@ class Reader:
         with_avr=True,
         with_tg=True,
         filter_out_of_service=False,
+        generator_model=None,
     ):
         """
         Create dpsim objects with the data contained in the mpc files.
@@ -303,6 +312,9 @@ class Reader:
         @param filter_out_of_service: if True, exclude out-of-service
                                       generators/branches and isolated buses
                                       instead of instantiating them
+        @param generator_model: explicit generator model to use for dynamic
+                                simulations. Use `GenModel` values or raw integer
+                                values 1, 3, 4, 5, 6.
         """
         self.log_level = log_level
         self.domain = domain
@@ -411,6 +423,7 @@ class Reader:
                     with_pss=with_pss,
                     with_tg=with_tg,
                     with_avr=with_avr,
+                    gen_model=generator_model,
                 )
 
                 # check if there is a load connected to PV bus (and create it)
@@ -588,24 +601,25 @@ class Reader:
 
                 # create dpsim component
                 trafo = self.dpsimpy_components.Transformer(transf_name, log_level)
+
+                # If rated_power=0, we get NaN snubber admittances. Use the branch's own MVA
+                # rating (rateA) so the snubber tracks the device; matpower uses rateA=0
+                # for "unrated", so fall back to the system base only in that case.
+                branch_rateA = self.mpc_branch_data.at[index, "rateA"] * mw_w
+                rated_power = (
+                    branch_rateA if branch_rateA > 0 else self.mpc_base_power_MVA
+                )
                 if self.domain == Domain.EMT:
                     trafo.set_parameters(
                         fbus_baseV,
                         tbus_baseV,
+                        rated_power,
                         np.abs(transf_ratioAbs),
                         np.angle(transf_ratioAbs),
                         dpsimpy.Math.single_phase_parameter_to_three_phase(transf_r),
                         dpsimpy.Math.single_phase_parameter_to_three_phase(transf_l),
                     )
                 else:
-                    # The transformer snubbers are sized as a fraction of rated power, so
-                    # mRatedPower=0 yields NaN snubber admittances. Use the branch's own MVA
-                    # rating (rateA) so the snubber tracks the device; matpower uses rateA=0
-                    # for "unrated", so fall back to the system base only in that case.
-                    branch_rateA = self.mpc_branch_data.at[index, "rateA"] * mw_w
-                    rated_power = (
-                        branch_rateA if branch_rateA > 0 else self.mpc_base_power_MVA
-                    )
                     trafo.set_parameters(
                         fbus_baseV,
                         tbus_baseV,
@@ -644,6 +658,7 @@ class Reader:
         with_pss=True,
         with_tg=True,
         with_avr=True,
+        gen_model=None,
     ):
         #
         gen_name = "Gen_N" + str(bus_index)
@@ -695,109 +710,132 @@ class Reader:
             # TODO: throw error if len(self.mpc_dyn_gen_data.index[self.mpc_dyn_gen_data['bus'] == int(bus_index)].tolist() > 1) ??
             # --> two gens associated to one node...
 
-            gen_model = self.mpc_dyn_gen_data["model"][gen_dyn_row_idx]
-            gen_model = 4
-            gen_baseS = self.mpc_dyn_gen_data["BaseS"][gen_dyn_row_idx] * mw_w
-            H = self.mpc_dyn_gen_data["H"][gen_dyn_row_idx]
-            Ra = self.mpc_dyn_gen_data["Ra"][gen_dyn_row_idx]
-            # Ll = self.mpc_dyn_gen_data['Xl'][gen_dyn_row_idx]
-            Ll = 0.1
-            Td0_t = self.mpc_dyn_gen_data["Td0_t"][gen_dyn_row_idx]
-            Td0_s = self.mpc_dyn_gen_data["Td0_s"][gen_dyn_row_idx]
-            Tq0_t = self.mpc_dyn_gen_data["Tq0_t"][gen_dyn_row_idx]
-            Tq0_s = self.mpc_dyn_gen_data["Tq0_s"][gen_dyn_row_idx]
-            Ld = self.mpc_dyn_gen_data["Xd"][gen_dyn_row_idx]
-            Ld_t = self.mpc_dyn_gen_data["Xd_t"][gen_dyn_row_idx]
-            Ld_s = self.mpc_dyn_gen_data["Xd_s"][gen_dyn_row_idx]
-            Lq = self.mpc_dyn_gen_data["Xq"][gen_dyn_row_idx]
-            Lq_t = self.mpc_dyn_gen_data["Xq_t"][gen_dyn_row_idx]
-            Lq_s = self.mpc_dyn_gen_data["Xq_s"][gen_dyn_row_idx]
+            gen_model_data = self.mpc_dyn_gen_data["model"][gen_dyn_row_idx]
 
-            if gen_model == 3:
-                gen = self.dpsimpy_components.SynchronGenerator3OrderVBR(
-                    gen_name, self.log_level
-                )
-                gen.set_operational_parameters_per_unit(
-                    nom_power=gen_baseS,
-                    nom_voltage=gen_baseV,
-                    nom_frequency=self.mpc_freq,
-                    H=H,
-                    Ld=Ld,
-                    Lq=Lq,
-                    L0=Ll,
-                    Ld_t=Ld_t,
-                    Td0_t=Td0_t,
-                )
-            elif gen_model == 4:
-                gen = self.dpsimpy_components.SynchronGenerator4OrderVBR(
-                    gen_name, self.log_level
-                )
-                gen.set_operational_parameters_per_unit(
-                    nom_power=gen_baseS,
-                    nom_voltage=gen_baseV,
-                    nom_frequency=self.mpc_freq,
-                    H=H,
-                    Ld=Ld,
-                    Lq=Lq,
-                    L0=Ll,
-                    Ld_t=Ld_t,
-                    Lq_t=Lq_t,
-                    Td0_t=Td0_t,
-                    Tq0_t=Tq0_t,
-                )
-            elif gen_model == 5:
-                gen = self.dpsimpy_components.SynchronGenerator5OrderVBR(
-                    gen_name, self.log_level
-                )
-                gen.set_operational_parameters_per_unit(
-                    nom_power=gen_baseS,
-                    nom_voltage=gen_baseV,
-                    nom_frequency=self.mpc_freq,
-                    H=H,
-                    Ld=Ld,
-                    Lq=Lq,
-                    L0=Ll,
-                    Ld_t=Ld_t,
-                    Lq_t=Lq_t,
-                    Td0_t=Td0_t,
-                    Tq0_t=Tq0_t,
-                    Ld_s=Ld_s,
-                    Lq_s=Lq_s,
-                    Td0_s=Td0_s,
-                    Tq0_s=Tq0_s,
-                    Taa=0,
-                )
-            elif gen_model == 6:
-                gen = self.dpsimpy_components.SynchronGenerator6bOrderVBR(
-                    gen_name, self.log_level
-                )
-                gen.set_operational_parameters_per_unit(
-                    nom_power=gen_baseS,
-                    nom_voltage=gen_baseV,
-                    nom_frequency=self.mpc_freq,
-                    H=H,
-                    Ld=Ld,
-                    Lq=Lq,
-                    L0=Ll,
-                    Ld_t=Ld_t,
-                    Lq_t=Lq_t,
-                    Td0_t=Td0_t,
-                    Tq0_t=Tq0_t,
-                    Ld_s=Ld_s,
-                    Lq_s=Lq_s,
-                    Td0_s=Td0_s,
-                    Tq0_s=Tq0_s,
-                    Taa=0,
-                )
-            else:
+            try:
+                if gen_model is not None and not isinstance(gen_model, GenModel):
+                    gen_model = GenModel(int(gen_model))
+
+                if gen_model is None:
+                    gen_model = GenModel(int(gen_model_data))
+            except ValueError:
                 raise Exception(
-                    'Matpower reader does not support the generator model {}. Supported models are: "3", "4", "5", "6".'.format(
-                        gen_model
+                    "Unrecognized generator model {} in dynamic data for bus {}."
+                    " Supported models are: {}".format(
+                        gen_model if gen_model is not None else int(gen_model_data),
+                        bus_index,
+                        [e.name + ": " + str(e.value) for e in GenModel],
                     )
                 )
 
+            if gen_model == GenModel.IDEAL_VOLTAGE_SOURCE:
+                if self.domain == Domain.EMT or self.domain == Domain.DP:
+                    gen = self.dpsimpy_components.SynchronGeneratorIdeal(
+                        gen_name, self.log_level
+                    )
+                elif self.domain == Domain.SP:
+                    raise Exception(
+                        "Matpower reader does not support the generator model {} in the SP domain.".format(
+                            gen_model.value
+                            if isinstance(gen_model, GenModel)
+                            else gen_model
+                        )
+                    )
+            else:
+                gen_baseS = self.mpc_dyn_gen_data["BaseS"][gen_dyn_row_idx] * mw_w
+                H = self.mpc_dyn_gen_data["H"][gen_dyn_row_idx]
+                Ra = self.mpc_dyn_gen_data["Ra"][gen_dyn_row_idx]
+                # Ll = self.mpc_dyn_gen_data['Xl'][gen_dyn_row_idx]
+                Ll = 0.1
+                Td0_t = self.mpc_dyn_gen_data["Td0_t"][gen_dyn_row_idx]
+                Td0_s = self.mpc_dyn_gen_data["Td0_s"][gen_dyn_row_idx]
+                Tq0_t = self.mpc_dyn_gen_data["Tq0_t"][gen_dyn_row_idx]
+                Tq0_s = self.mpc_dyn_gen_data["Tq0_s"][gen_dyn_row_idx]
+                Ld = self.mpc_dyn_gen_data["Xd"][gen_dyn_row_idx]
+                Ld_t = self.mpc_dyn_gen_data["Xd_t"][gen_dyn_row_idx]
+                Ld_s = self.mpc_dyn_gen_data["Xd_s"][gen_dyn_row_idx]
+                Lq = self.mpc_dyn_gen_data["Xq"][gen_dyn_row_idx]
+                Lq_t = self.mpc_dyn_gen_data["Xq_t"][gen_dyn_row_idx]
+                Lq_s = self.mpc_dyn_gen_data["Xq_s"][gen_dyn_row_idx]
+                if gen_model == GenModel.SG_3ORDER_VBR:
+                    gen = self.dpsimpy_components.SynchronGenerator3OrderVBR(
+                        gen_name, self.log_level
+                    )
+                    gen.set_operational_parameters_per_unit(
+                        nom_power=gen_baseS,
+                        nom_voltage=gen_baseV,
+                        nom_frequency=self.mpc_freq,
+                        H=H,
+                        Ld=Ld,
+                        Lq=Lq,
+                        L0=Ll,
+                        Ld_t=Ld_t,
+                        Td0_t=Td0_t,
+                    )
+                elif gen_model == GenModel.SG_4ORDER_VBR:
+                    gen = self.dpsimpy_components.SynchronGenerator4OrderVBR(
+                        gen_name, self.log_level
+                    )
+                    gen.set_operational_parameters_per_unit(
+                        nom_power=gen_baseS,
+                        nom_voltage=gen_baseV,
+                        nom_frequency=self.mpc_freq,
+                        H=H,
+                        Ld=Ld,
+                        Lq=Lq,
+                        L0=Ll,
+                        Ld_t=Ld_t,
+                        Lq_t=Lq_t,
+                        Td0_t=Td0_t,
+                        Tq0_t=Tq0_t,
+                    )
+                elif gen_model == GenModel.SG_5ORDER_VBR:
+                    gen = self.dpsimpy_components.SynchronGenerator5OrderVBR(
+                        gen_name, self.log_level
+                    )
+                    gen.set_operational_parameters_per_unit(
+                        nom_power=gen_baseS,
+                        nom_voltage=gen_baseV,
+                        nom_frequency=self.mpc_freq,
+                        H=H,
+                        Ld=Ld,
+                        Lq=Lq,
+                        L0=Ll,
+                        Ld_t=Ld_t,
+                        Lq_t=Lq_t,
+                        Td0_t=Td0_t,
+                        Tq0_t=Tq0_t,
+                        Ld_s=Ld_s,
+                        Lq_s=Lq_s,
+                        Td0_s=Td0_s,
+                        Tq0_s=Tq0_s,
+                        Taa=0,
+                    )
+                elif gen_model == GenModel.SG_6BORDER_VBR:
+                    gen = self.dpsimpy_components.SynchronGenerator6bOrderVBR(
+                        gen_name, self.log_level
+                    )
+                    gen.set_operational_parameters_per_unit(
+                        nom_power=gen_baseS,
+                        nom_voltage=gen_baseV,
+                        nom_frequency=self.mpc_freq,
+                        H=H,
+                        Ld=Ld,
+                        Lq=Lq,
+                        L0=Ll,
+                        Ld_t=Ld_t,
+                        Lq_t=Lq_t,
+                        Td0_t=Td0_t,
+                        Tq0_t=Tq0_t,
+                        Ld_s=Ld_s,
+                        Lq_s=Lq_s,
+                        Td0_s=Td0_s,
+                        Tq0_s=Tq0_s,
+                        Taa=0,
+                    )
+
         #### SG controllers ####
-        if self.domain != Domain.PF:
+        if self.domain != Domain.PF and gen_model != GenModel.IDEAL_VOLTAGE_SOURCE:
             # search for avr
             if with_avr:
                 if (
