@@ -146,6 +146,7 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph3_SSN_Inductor.cpp
 	EMT/EMT_Ph3_SSN_Full_Serial_RLC.cpp
 	EMT/EMT_Ph3_SSN_GFM.cpp
+	EMT/EMT_Ph3_SSN_SynchronousGenerator.cpp
 	EMT/EMT_Ph3_GenericTwoTerminalVTypeSSN.cpp
 	EMT/EMT_Ph3_GenericTwoTerminalITypeSSN.cpp
 	EMT/EMT_Ph3_GenericFourTerminalVTypeSSN.cpp
