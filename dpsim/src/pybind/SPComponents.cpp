@@ -108,6 +108,77 @@ void addSPPh1Components(py::module_ mSPPh1) {
            "base_voltage"_a)
       .def("connect", &CPS::SP::Ph1::PiLine::connect);
 
+  py::class_<CPS::SP::Ph1::RXLine, std::shared_ptr<CPS::SP::Ph1::RXLine>,
+             CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "RXLine",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def(py::init<std::string, std::string, CPS::Real, CPS::Real, CPS::Real,
+                    CPS::Logger::Level>(),
+           "uid"_a, "name"_a, "base_voltage"_a, "resistance"_a, "inductance"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::SP::Ph1::RXLine::setParameters,
+           "series_resistance"_a, "series_inductance"_a,
+           "parallel_capacitance"_a = 0, "parallel_conductance"_a = 0)
+      .def("set_per_unit_system", &CPS::SP::Ph1::RXLine::setPerUnitSystem,
+           "base_apparent_power"_a, "base_omega"_a)
+      .def("get_base_voltage", &CPS::SP::Ph1::RXLine::getBaseVoltage)
+      .def("connect", &CPS::SP::Ph1::RXLine::connect);
+
+  py::class_<CPS::SP::Ph1::ControlledCurrentSource,
+             std::shared_ptr<CPS::SP::Ph1::ControlledCurrentSource>,
+             CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "ControlledCurrentSource",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def(py::init<std::string, CPS::Complex, CPS::Logger::Level>(), "name"_a,
+           "current"_a, "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters",
+           &CPS::SP::Ph1::ControlledCurrentSource::setParameters,
+           "current_ref"_a)
+      .def("connect", &CPS::SP::Ph1::ControlledCurrentSource::connect);
+
+  py::class_<CPS::SP::Ph1::ControlledVoltageSource,
+             std::shared_ptr<CPS::SP::Ph1::ControlledVoltageSource>,
+             CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "ControlledVoltageSource",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters",
+           &CPS::SP::Ph1::ControlledVoltageSource::setParameters,
+           "voltage_ref"_a)
+      .def("connect", &CPS::SP::Ph1::ControlledVoltageSource::connect);
+
+  py::class_<CPS::SP::Ph1::SolidStateTransformer,
+             std::shared_ptr<CPS::SP::Ph1::SolidStateTransformer>,
+             CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "SolidStateTransformer",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters",
+           &CPS::SP::Ph1::SolidStateTransformer::setParameters, "nom_v1"_a,
+           "nom_v2"_a, "p_ref"_a, "q1_ref"_a, "q2_ref"_a)
+      .def("connect", &CPS::SP::Ph1::SolidStateTransformer::connect);
+
+  py::class_<CPS::SP::Ph1::VoltageSourceInverter,
+             std::shared_ptr<CPS::SP::Ph1::VoltageSourceInverter>,
+             CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "VoltageSourceInverter",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, std::string, CPS::PowerflowBusType,
+                    CPS::Logger::Level>(),
+           "uid"_a, "name"_a,
+           "powerflow_bus_type"_a = CPS::PowerflowBusType::PQ,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def(py::init<std::string, std::string, CPS::Real, CPS::Real,
+                    CPS::PowerflowBusType, CPS::Logger::Level>(),
+           "uid"_a, "name"_a, "power"_a, "reactive_power"_a,
+           "powerflow_bus_type"_a = CPS::PowerflowBusType::PQ,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("modify_power_flow_bus_type",
+           &CPS::SP::Ph1::VoltageSourceInverter::modifyPowerFlowBusType,
+           "bus_type"_a)
+      .def("connect", &CPS::SP::Ph1::VoltageSourceInverter::connect);
+
   py::class_<CPS::SP::Ph1::Shunt, std::shared_ptr<CPS::SP::Ph1::Shunt>,
              CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "Shunt",
                                               py::multiple_inheritance())

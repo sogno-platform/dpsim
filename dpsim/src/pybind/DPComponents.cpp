@@ -13,6 +13,7 @@
 #include <dpsim/Simulation.h>
 #include <dpsim/pybind/DPComponents.h>
 #include <dpsim/pybind/Utils.h>
+#include <pybind11/stl/filesystem.h>
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -146,6 +147,113 @@ void addDPPh1Components(py::module_ mDPPh1) {
            "parallel_capacitance"_a = 0, "parallel_conductance"_a = 0)
       .def("connect", &CPS::DP::Ph1::PiLine::connect);
 
+  py::class_<CPS::DP::Ph1::RxLine, std::shared_ptr<CPS::DP::Ph1::RxLine>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "RxLine",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::DP::Ph1::RxLine::setParameters,
+           "series_resistance"_a, "series_inductance"_a,
+           "parallel_capacitance"_a = 0, "parallel_conductance"_a = 0)
+      .def("connect", &CPS::DP::Ph1::RxLine::connect);
+
+  py::class_<CPS::DP::Ph1::ControlledCurrentSource,
+             std::shared_ptr<CPS::DP::Ph1::ControlledCurrentSource>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "ControlledCurrentSource",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters",
+           &CPS::DP::Ph1::ControlledCurrentSource::setParameters,
+           "current_ref"_a)
+      .def("connect", &CPS::DP::Ph1::ControlledCurrentSource::connect);
+
+  py::class_<CPS::DP::Ph1::ControlledVoltageSource,
+             std::shared_ptr<CPS::DP::Ph1::ControlledVoltageSource>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "ControlledVoltageSource",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters",
+           &CPS::DP::Ph1::ControlledVoltageSource::setParameters,
+           "voltage_ref"_a)
+      .def("connect", &CPS::DP::Ph1::ControlledVoltageSource::connect);
+
+  py::class_<CPS::DP::Ph1::VoltageSourceRamp,
+             std::shared_ptr<CPS::DP::Ph1::VoltageSourceRamp>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "VoltageSourceRamp",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::DP::Ph1::VoltageSourceRamp::setParameters,
+           "voltage"_a, "add_voltage"_a, "src_freq"_a, "add_src_freq"_a,
+           "switch_time"_a, "ramp_time"_a)
+      .def("connect", &CPS::DP::Ph1::VoltageSourceRamp::connect);
+
+#ifdef WITH_VILLAS
+  // Reads a VILLASnode protobuf sample file, not CSV
+  py::class_<CPS::DP::Ph1::ProfileVoltageSource,
+             std::shared_ptr<CPS::DP::Ph1::ProfileVoltageSource>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "ProfileVoltageSource",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, std::filesystem::path, CPS::Logger::Level>(),
+           "name"_a, "source_file"_a, "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_source_file",
+           &CPS::DP::Ph1::ProfileVoltageSource::setSourceFile, "file"_a,
+           "index"_a = 0)
+      .def("connect", &CPS::DP::Ph1::ProfileVoltageSource::connect);
+#endif
+
+  py::class_<CPS::DP::Ph1::PQLoadCS, std::shared_ptr<CPS::DP::Ph1::PQLoadCS>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "PQLoadCS",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def(py::init<std::string, CPS::Real, CPS::Real, CPS::Real,
+                    CPS::Logger::Level>(),
+           "name"_a, "active_power"_a, "reactive_power"_a, "volt"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::DP::Ph1::PQLoadCS::setParameters,
+           "active_power"_a, "reactive_power"_a, "nom_volt"_a)
+      .def("connect", &CPS::DP::Ph1::PQLoadCS::connect);
+
+  py::class_<CPS::DP::Ph1::RXLoadSwitch,
+             std::shared_ptr<CPS::DP::Ph1::RXLoadSwitch>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "RXLoadSwitch",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::DP::Ph1::RXLoadSwitch::setParameters,
+           "active_power"_a, "reactive_power"_a, "nom_volt"_a,
+           "open_resistance"_a, "closed_resistance"_a,
+           // cppcheck-suppress assignBoolToPointer
+           "closed"_a = false)
+      .def("set_switch_parameters",
+           &CPS::DP::Ph1::RXLoadSwitch::setSwitchParameters,
+           "open_resistance"_a, "closed_resistance"_a,
+           // cppcheck-suppress assignBoolToPointer
+           "closed"_a = false)
+      .def("connect", &CPS::DP::Ph1::RXLoadSwitch::connect);
+
+  py::class_<CPS::DP::Ph1::SynchronGeneratorIdeal,
+             std::shared_ptr<CPS::DP::Ph1::SynchronGeneratorIdeal>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "SynchronGeneratorIdeal",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("connect", &CPS::DP::Ph1::SynchronGeneratorIdeal::connect);
+
+  py::class_<CPS::DP::Ph1::SSN::Variable_Serial_RLC,
+             std::shared_ptr<CPS::DP::Ph1::SSN::Variable_Serial_RLC>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "Variable_Serial_RLC",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters",
+           &CPS::DP::Ph1::SSN::Variable_Serial_RLC::setParameters, "R"_a, "L"_a,
+           "C"_a, "omega_n"_a)
+      .def("connect", &CPS::DP::Ph1::SSN::Variable_Serial_RLC::connect);
+
   py::class_<CPS::DP::Ph1::RXLoad, std::shared_ptr<CPS::DP::Ph1::RXLoad>,
              CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "RXLoad",
                                               py::multiple_inheritance())
@@ -251,14 +359,6 @@ void addDPPh1Components(py::module_ mDPPh1) {
            "B"_a, "C"_a, "D"_a)
       .def("connect", &CPS::DP::Ph1::GenericTwoTerminalITypeSSN::connect)
       .def_property_readonly("x", createAttributeGetter<CPS::MatrixComp>("x"));
-
-  py::class_<CPS::DP::Ph1::SynchronGeneratorIdeal,
-             std::shared_ptr<CPS::DP::Ph1::SynchronGeneratorIdeal>,
-             CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "SynchronGeneratorIdeal",
-                                              py::multiple_inheritance())
-      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
-      .def("connect", &CPS::DP::Ph1::SynchronGeneratorIdeal::connect);
 
   py::class_<CPS::DP::Ph1::SynchronGeneratorTrStab,
              std::shared_ptr<CPS::DP::Ph1::SynchronGeneratorTrStab>,
