@@ -240,7 +240,7 @@ cmake ..
 make docs
 ```
 
-The resulting documentation will be generated in `Documentation/html/`.
+The resulting documentation will be generated in `build/docs/sphinx/html/`.
 
 ## C++
 
@@ -254,4 +254,4 @@ cmake ..
 make docs_cxx
 ```
 
-The resulting documentation will be generated in `Documentation/html/Cxx`.
+The resulting documentation will be generated in `build/docs/doxygen/html/`.
