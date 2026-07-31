@@ -70,6 +70,12 @@ release = "@DPSIM_VERSION@-@DPSIM_RELEASE@"
 # This patterns also effect to html_static_path and html_extra_path
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
+# dpsimpyvillas only exists when VILLASnode was found, so drop its page otherwise.
+if "@WITH_VILLAS@" != "ON":
+    exclude_patterns.append("reference/cosimulation.rst")
+    # The Reference toctree still lists the page it just dropped, which is intended here.
+    suppress_warnings = ["toc.excluded"]
+
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = "sphinx"
 

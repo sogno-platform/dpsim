@@ -13,3 +13,4 @@ phasor (``sp``), each split into single phase (``ph1``) and three phase (``ph3``
    reference/emt
    reference/sp
    reference/signal
+   reference/cosimulation
