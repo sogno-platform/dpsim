@@ -40,6 +40,8 @@ EMT::Ph3::SynchronGeneratorTrStab::SynchronGeneratorTrStab(
       mDelta_p(mAttributes->create<Real>("delta_r")),
       mRefOmega(mAttributes->createDynamic<Real>("w_ref")),
       mRefDelta(mAttributes->createDynamic<Real>("delta_ref")) {
+  // Must precede setVirtualNodeNumber, which sizes the virtual nodes from it
+  mPhaseType = PhaseType::ABC;
   setVirtualNodeNumber(2);
   setTerminalNumber(1);
   **mIntfVoltage = Matrix::Zero(3, 1);
