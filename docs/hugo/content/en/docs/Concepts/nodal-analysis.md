@@ -4,9 +4,6 @@ linkTitle: "Nodal Analysis"
 date: 2020-03-18
 ---
 
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
 A circuit with $b$ branches has $2b$ unknowns since there are $b$ voltages and $b$ currents.
 Hence, $2b$ linear independent equations are required to solve the circuit.
 If the circuit has $n$ nodes and $b$ branches, it has

@@ -1,4 +1,4 @@
-baseURL = "https://sogno-platform.github.io/dpsim/"
+baseURL = "https://sogno.energy/dpsim/"
 title = "DPsim"
 
 # Language settings
@@ -107,7 +107,7 @@ version = "0.0"
 
 # A link to latest version of the docs. Used in the "version-banner" partial to
 # point people to the main doc site.
-url_latest_version = "https://sogno-platform.github.io/dpsim/"
+url_latest_version = "https://sogno.energy/dpsim/"
 
 # Repository configuration (URLs for in-page links to opening issues and suggesting changes)
 github_repo = "https://github.com/sogno-platform/dpsim"
@@ -115,7 +115,7 @@ github_repo = "https://github.com/sogno-platform/dpsim"
 github_project_repo = "https://github.com/sogno-platform/dpsim"
 
 # Specify a value here if your content directory is not in your repo's root directory
-# github_subdir = "docs/hugo"
+github_subdir = "docs/hugo"
 
 # Uncomment this if your GitHub repo does not have "main" as the default branch,
 # or specify a new value if you want to reference another branch in your GitHub links
@@ -155,8 +155,8 @@ sidebar_search_disable = false
 [params.ui.feedback]
 enable = true
 # The responses that the user sees after clicking "yes" (the page was helpful) or "no" (the page was not helpful).
-yes = 'Glad to hear it! Please <a href="https://github.com/USERNAME/REPOSITORY/issues/new">tell us how we can improve</a>.'
-no = 'Sorry to hear that. Please <a href="https://github.com/USERNAME/REPOSITORY/issues/new">tell us how we can improve</a>.'
+yes = 'Glad to hear it! Please <a href="https://github.com/sogno-platform/dpsim/issues/new">tell us how we can improve</a>.'
+no = 'Sorry to hear that. Please <a href="https://github.com/sogno-platform/dpsim/issues/new">tell us how we can improve</a>.'
 
 # Adds a reading time to the top of each doc.
 # If you want this feature, but occasionally need to remove the Reading time from a single page,
