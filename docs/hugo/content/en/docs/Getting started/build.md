@@ -1,56 +1,62 @@
 ---
 title: "Build"
 linkTitle: "Build"
-date: 2023-05-03
+date: 2026-07-31
 ---
 
-# Docker based
-
-Clone the repository
-
-```shell
-git clone git@github.com:sogno-platform/dpsim.git
-```
-
-or using https if you do not have an account
+All builds start from a checkout of the repository. To build and read the code, cloning over
+HTTPS needs no account:
 
 ```shell
 git clone https://github.com/sogno-platform/dpsim.git
+cd dpsim
 ```
 
-In the repository, there is a Docker file with all required dependencies
+If you intend to contribute, clone your own fork over SSH instead, since contributions are
+accepted from forks only and pushing needs an authenticated remote:
 
 ```shell
+git clone git@github.com:<your-user>/dpsim.git
 cd dpsim
+git remote add upstream https://github.com/sogno-platform/dpsim.git
+```
+
+The container route below is the most reproducible, because the image already carries every
+dependency at the version CI uses. The native routes need those dependencies installed by hand.
+
+## Container based
+
+The commands below use `docker`, but the images are ordinary OCI images, so `podman` works as a
+drop-in replacement throughout. On Fedora and Rocky, `podman` is usually the one already
+installed. Substitute `podman` for `docker` in every command if you prefer it.
+
+The repository ships a development image with all required dependencies:
+
+```shell
 docker build -t sogno/dpsim:dev -f packaging/Docker/Dockerfile.dev .
 ```
 
-Alternatively, the image can be pulled from DockerHub like so
+Alternatively, pull the prebuilt image instead of building it:
 
 ```shell
 docker pull sogno/dpsim:dev
 ```
 
-For OS specific instructions on how to install requirements, see the sections below.
-
-Next, run a Docker container
+Then start an interactive session with the working copy mounted into the container:
 
 ```shell
-cd dpsim
 docker run -it -p 8888:8888 -v $(pwd):/dpsim --privileged sogno/dpsim:dev bash
 ```
 
-The option `-p` maps the port 8888 of the container to the docker host. This is required to access the jupyter lab instance inside the container. The option `--privileged` is required for debug builds.
-
-For Windows, you might need to specify the current directory with curly brackets
+The `-p` option maps port 8888 so a JupyterLab instance inside the container is reachable from
+the host. The `--privileged` option is required for debug builds. On Windows, the current
+directory is spelled differently:
 
 ```shell
 docker run -it -p 8888:8888 -v ${pwd}:/dpsim --privileged sogno/dpsim:dev bash
 ```
 
-Now, you should be in an interactive session inside the docker container.
-
-The DPsim C++ and Python library without C++ examples or documentation can be built as follows
+Inside the container, the C++ and Python libraries build as follows:
 
 ```shell
 cd /dpsim
@@ -59,180 +65,207 @@ cmake ..
 cmake --build . --target dpsimpy
 ```
 
-If you need other libraries that are not built by default, you need to target them specifically, for example if you need `dpsimpy´ and ´dpsimpyvillas´:
+Targets that are not built by default have to be named explicitly, for example:
 
 ```shell
 cmake --build . --target dpsimpy dpsimpyvillas
 ```
 
-To build everything run
+To build everything:
 
 ```shell
 cmake --build .
 ```
 
-To use other libraries that are installed, use the relevant option defined in the CMakeList.txt files, for example for GSL below, and then build as usual:
+Optional features are enabled through the CMake options defined in the CMakeLists.txt files,
+for example:
 
 ```shell
 cmake .. -DWITH_GSL=ON
 ```
 
-If you would like to use the Python package, it has to be added to the path.
-The following command adds the dpsimpy C++/Python package as well as the dpsim pure Python package.
+To use the freshly built Python package without installing it, put both the compiled extension
+and the pure Python package on the path:
 
 ```shell
 cd /dpsim/build
-export PYTHONPATH=$(pwd):$(pwd)/../python/src/
+export PYTHONPATH=$(pwd):$(pwd)/../python/src
 ```
 
-If you are using `conda` or other ways to develop with environments, please keep in mind that this will become specific for your setup. For this case, from within the environment already active:
+This is the setup most contributors work with, since it picks up a rebuild immediately without
+any reinstall step.
+
+Do not use `pip install -e .` for this. An editable install only links the pure Python sources;
+`dpsimpy` is a compiled extension, so edits to the C++ are not picked up and you keep running
+whatever binary was built at install time. The failure is silent, since the import still
+succeeds and simply gives you stale behaviour. Either rebuild and rely on `PYTHONPATH` as above,
+or reinstall the package after every C++ change.
+
+To summarise the three ways to get DPsim, in increasing order of involvement: `pip install dpsim`
+for a released Linux wheel, a native build plus `PYTHONPATH` for development, and `make install`
+to place a build system wide.
+
+If you develop inside a conda environment, the equivalent is to register the same two
+directories from within the active environment. This needs `conda-build` installed:
 
 ```shell
 cd /dpsim/build
-conda develop $(pwd) && conda develop $(pwd)/Source/Python && conda develop $(pwd)/../Source/Python
+conda develop $(pwd) && conda develop $(pwd)/../python/src
 ```
 
-To run JupyterLab
+Note that this writes into the environment, so it becomes specific to your setup.
+
+To run JupyterLab against it:
 
 ```shell
 cd /dpsim
 jupyter lab --ip="0.0.0.0" --allow-root --no-browser
 ```
 
-To install DPsim run
+To install DPsim system wide instead:
 
 ```shell
 cd /dpsim/build
 sudo make install
 ```
 
-# CMake for Linux
+## CMake for Linux
 
-The most recent list of requirements can be found in the Dockerfiles.
+The authoritative dependency list is whatever the Dockerfiles install, since that is what CI
+builds against. See `packaging/Docker/Dockerfile.dev` for the Fedora set, and
+[install-fedora-deps.sh](https://github.com/sogno-platform/dpsim/blob/master/packaging/Shell/install-fedora-deps.sh)
+or [install-ubuntu-deps.sh](https://github.com/sogno-platform/dpsim/blob/master/packaging/Shell/install-ubuntu-deps.sh)
+for scripts that install them.
 
-Make sure that the required dependencies are installed.
-The [fedora installation script](https://github.com/sogno-platform/dpsim/blob/c40e283338574e0ba7cd9861c70f1e41aa3399ba/packaging/Shell/install-fedora-deps.sh) in the DPsim repository is a good place to start from.
+Both `libcimpp` and `villas-node` are optional. Neither needs to be built from source, though
+the images do not yet take the same route for both.
 
-**Note:** There are currently no Debian packages for `villas-node` and `libcimpp16v29a`.
-If you want to use these optional feature, you have to build them manually.
-
-Install Sundials
+libcimpp publishes prebuilt `.deb` and `.rpm` packages per CIM version as release assets. The
+Fedora and Debian images install those directly, while the Rocky image still builds it from
+source:
 
 ```shell
-git clone --branch v3.1.1 https://github.com/LLNL/sundials.git
-mkdir sundials/build
-pushd sundials/build
-cmake .. \
-    -DBUILD_SHARED_LIBS=ON \
-    -DBUILD_STATIC_LIBS=OFF \
-    -DEXAMPLES_ENABLE_C=OFF
-make -j$(nproc) install
-popd
+# Pick the package matching your distribution and the CIM version you need.
+wget https://github.com/sogno-platform/libcimpp/releases/download/release%2Fv2.2.0/libcimpp_CGMES_2.4.15_16FEB2016-2.2.0-Linux.deb
+sudo apt-get install -y ./libcimpp_CGMES_2.4.15_16FEB2016-2.2.0-Linux.deb
+sudo ldconfig
 ```
 
-The following steps to clone, build and install are the same as for the Docker setup.
+VILLASnode is served from the package repositories at <https://packages.fein-aachen.org>, which
+carry both `debian/` and `redhat/`. Note that the images currently still build it from source,
+pinned to a specific commit, so the packaged version is the more convenient route for a local
+build but is not what CI exercises.
 
-# CMake for Windows
+Building either from source remains supported, and the deps scripts above do that, which is what
+you want when you need a specific commit rather than a release.
 
-Make sure that the required dependecies are installed:
+Sundials is only needed for the DAE solver. If your distribution does not package it, the
+version CI uses is:
 
-- Visual Studio 2017 with C++ Desktop development package
-- [CMake](https://cmake.org/) for Windows
-- [Git for Windows](https://git-scm.com/download/win)
-- For Python support, install Python3, for example, Anaconda, and add Python to your PATH.
+```shell
+git clone --branch v3.2.1 --recurse-submodules --depth 1 https://github.com/LLNL/sundials.git
+mkdir -p sundials/build && cd sundials/build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make -j$(nproc) install
+```
 
-Clone the project as explained for Docker.
+Cloning, building and installing then work exactly as in the container section above.
 
-Open a windows command prompt and navigate into the new DPsim folder.
-Generate a Visual Studio project with CMake and use it to build the project
+## CMake for Windows
+
+Windows is built in CI on `windows-latest`, so the recipe below mirrors what
+`.github/workflows/build_test_windows.yaml` runs. You need Visual Studio with the C++ desktop
+development workload, [CMake](https://cmake.org/) and
+[Git for Windows](https://git-scm.com/download/win). For Python support, install Python 3 and
+add it to your PATH. Let CMake pick the default generator rather than naming a Visual Studio
+version, so the build follows whichever Visual Studio you have.
+
+For the C++ libraries only:
 
 ```shell
 mkdir build
 cd build
-cmake -G "Visual Studio 15 2017 Win64" ..
+cmake -DWITH_PYBIND=OFF ..
+cmake --build . --target dpsim --target dpsim-models --parallel
 ```
 
-Open Visual Studio and load the Visual Studio project from the build directory within the DPsim folder.
-
-You can either build the project from within Visual Studio or from the command line by running the following command in the windows command prompt
+For the Python bindings, install pybind11 first:
 
 ```shell
-cmake --build .
-```
-
-To install the Python package use Visual Studio and the Release configuration to build the DPsim Python module and then build the INSTALL project.
-
-# CMake for macOS
-
-Make sure that the required dependencies are installed
-
-```shell
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-brew install gcc9 git cmake graphviz python3 gsl eigen spdlog
-sudo pip3 install numpy
-```
-
-Clone the source as explained for the Docker setup.
-
-Compile
-
-```shell
+pip install pybind11[global]
 mkdir build
-cmake ..
-make -j$(sysctl -n hw.ncpu)
+cd build
+cmake -DWITH_PYBIND=ON ..
+cmake --build . --target dpsimpy --parallel
 ```
 
-To install the generated Python module to your system
+If CMake rejects the spdlog dependency because of its minimum policy version, add
+`-DCMAKE_POLICY_VERSION_MINIMUM=3.5`, which is what CI currently does as a workaround.
+
+The `dpsim-villas` library is not available on Windows, since it requires VILLASnode, which does
+not build there. `WITH_VILLAS` therefore stays off and the `dpsimpyvillas` target does not exist,
+so co-simulation examples cannot be built on Windows. The CIM reader is likewise not part of the
+CI Windows build, as libcimpp is not installed there.
+
+## CMake for macOS
+
+macOS is not covered by CI, so treat this as a starting point rather than a supported path.
+Install the dependencies with Homebrew:
 
 ```shell
-sudo make install
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew install gcc git cmake graphviz python3 gsl eigen spdlog
 ```
 
-# Python Package for pypi
+Then build as in the container section. Building on Apple Silicon is known to fail while building
+libcimpp, see [issue #609](https://github.com/sogno-platform/dpsim/issues/609). Configure with
+`-DWITH_CIM=OFF` if you do not need the CIM reader.
 
-Follow the previous steps to set up the Docker container.
+## Python package
 
-To build the Python package run
+Wheels are produced by cibuildwheel in the `publish_to_pypi` workflow, currently for
+manylinux x86_64 and CPython 3.9 through 3.13. To build a source distribution locally:
 
 ```shell
-python3 setup.py bdist_wheel
+python3 -m build --sdist
 ```
 
-## Nix
+### Nix
 
-DPsim can be fully build using [Nix](https://nixos.org/), a declarative package manager for building software reproducible.
+DPsim can be built using [Nix](https://nixos.org/), a declarative package manager for
+reproducible builds. The following steps require a working single-user or multi-user
+installation of Nix, but not necessarily NixOS.
 
-The following steps require a working single-user or multi-user installation of Nix, but not necessarily NixOS.
-
-DPsim uses Nix's experimental Flake feature which needs to be activated:
+DPsim uses the Flakes feature, which has to be enabled:
 
 ```shell
 echo "experimental-features=nix-command flakes" > ~/.config/nix/nix.conf
 ```
 
-Building DPsim, including all its dependencies can be done by running:
+Building DPsim, including all its dependencies:
 
 ```shell
 nix build github:sogno-platform/dpsim
 ```
 
-The build result will be available within the `result` folder of your current directory.
-
-For development purposes, a local development environment can be setup by you running:
+The result is placed in the `result` folder of the current directory. For development, a local
+environment can be set up with:
 
 ```shell
 nix develop github:sogno-platform/dpsim
 ```
 
-Please note, that the Flake reference above (`github:sogno-platform/dpsim`) can be substituted by a local path (`.`), in case you have locally checked out the DPsim repo.
+The Flake reference above can be replaced by a local path such as `.` when the repository is
+already checked out.
 
-# Documentation
+## Documentation
 
-## Python
+The Python and C++ references are generated by separate CMake targets. Both are also built and
+published by the `documentation` workflow on every push to master.
 
-Install [Sphinx](https://www.sphinx-doc.org/en/master/) or use the Docker image.
+### Python
 
-Generate the Python documentation by running Sphinx via CMake:
+Install [Sphinx](https://www.sphinx-doc.org/en/master/) or use the Docker image, then:
 
 ```shell
 mkdir -p build && cd build
@@ -240,13 +273,12 @@ cmake ..
 make docs
 ```
 
-The resulting documentation will be generated in `Documentation/html/`.
+The result is generated in `build/docs/sphinx/html/`. Note that this target requires the Python
+bindings, so it is only available when configured with `-DWITH_PYBIND=ON`.
 
-## C++
+### C++
 
-Install [Doxygen](http://www.doxygen.nl/) or use the Docker image.
-
-Generate the C++ documentation by running Doxygen via CMake:
+Install [Doxygen](https://www.doxygen.nl/) or use the Docker image, then:
 
 ```shell
 mkdir -p build && cd build
@@ -254,4 +286,15 @@ cmake ..
 make docs_cxx
 ```
 
-The resulting documentation will be generated in `Documentation/html/Cxx`.
+The result is generated in `build/docs/doxygen/html/`.
+
+### Website
+
+The surrounding website is a Hugo site under `docs/hugo`. It needs the Hugo version pinned in
+the documentation workflow, since the theme does not build with arbitrary versions:
+
+```shell
+cd docs/hugo
+npm ci
+hugo --minify
+```
