@@ -1,14 +1,14 @@
 ---
 title: "Create New Simulation"
 linkTitle: "Create New Simulation"
-date: 2020-03-25
+date: 2026-07-31
 description: >
   Using DPsim for a new simulation scenario.
 ---
 
 Here, we will show the implementation of a new simulation scenario defined in C++, which is using DPsim as a library.
 
-# Directory Structure
+## Directory Structure
 
 In the end, your directory structure should look like as follows:
 
@@ -20,12 +20,12 @@ my-project
   |- dpsim (as submodule)
 ```
 
-# CMake File
+## CMake File
 
 Your `CMakeLists.txt` could look like this:
 
 ```cmake
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.14)
 project(my-project CXX)
 
 add_subdirectory(dpsim)
@@ -34,7 +34,7 @@ add_executable(my-scenario source/my-scenario.cpp)
 target_link_libraries(my-scenario dpsim)
 ```
 
-# Build the Project
+## Build the Project
 
 The build process is similar to the one of DPsim:
 

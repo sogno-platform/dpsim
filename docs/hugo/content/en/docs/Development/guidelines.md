@@ -46,10 +46,13 @@ There are no strict formal requirements besides the following:
 
     ```cpp
     /* Author: John Smith <John.Smith@example.com>
-    * SPDX-FileCopyrightText: 2025 Example.com
-    * SPDX-License-Identifier: MPL-2.0
-    */
+     * SPDX-FileCopyrightText: 2025 Example.com
+     * SPDX-License-Identifier: MPL-2.0
+     */
     ```
+
+    Keep the SPDX tags on adjacent lines with no blank line between them, as the tooling
+    reads them as a block.
 
 # Creating New Releases (info for maintainers)
 
@@ -58,11 +61,11 @@ new versions can help to mark significant changes and to analyze new portions of
 
 A new version of DPsim has to be indicated as follows:
 
-- Update setup.cfg
-- Update CMakeLists.txt
-- Update sonar-project.properties
-- Update CHANGELOG.md and include all the unreleaed changes in the list
-- Create a new tag with an increased version number (can be done during the Release in GitHub)
+- Update `version` in `pyproject.toml`
+- Update `VERSION` in the top level `CMakeLists.txt`
+- Update `sonar.projectVersion` in `sonar-project.properties`
+- Update `CHANGELOG.md` and include all the unreleased changes in the list
+- Create a new tag with an increased version number, which can be done during the release in GitHub
 
 ## Python Packages
 

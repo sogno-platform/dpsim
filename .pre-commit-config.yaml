@@ -48,3 +48,11 @@ repos:
     hooks:
       - id: markdownlint
         args: [-r, "~MD013,~MD033,~MD024"]
+        exclude: ^docs/hugo/content/
+      # Hugo emits the <h1> from the page front matter, so a top level header in the
+      # body would render a second one. MD002 is therefore dropped for content pages only.
+      - id: markdownlint
+        name: Markdownlint (Hugo content)
+        args: [-r, "~MD013,~MD033,~MD024,~MD002"]
+        files: ^docs/hugo/content/.*\.md$
+        types: [markdown]
