@@ -265,6 +265,13 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeParentFromNodesAndTerminals(
   else
     mSubResistorC->connect({mVirtualNodes[2], mTerminals[0]->node()});
 
+  // The control measures the filter interface. With a connection transformer
+  // that is virtual node 3; without one the filter interface IS the component
+  // terminal, and virtual node 3 does not exist -- setVirtualNodeNumber(3)
+  // above leaves only indices 0..2, so naming it is out-of-range access.
+  mControlNode = mWithConnectionTransformer ? mVirtualNodes[3]
+                                            : mTerminals[0]->node();
+
   // Initialize electrical subcomponents
   for (auto subcomp : mSubComponents) {
     subcomp->initialize(mFrequencies);
@@ -274,7 +281,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeParentFromNodesAndTerminals(
   // Initialize control subcomponents
   // current and voltage inputs to PLL and power controller
   Matrix vcdq, ircdq;
-  Real theta = std::arg(mVirtualNodes[3]->initialSingleVoltage());
+  Real theta = std::arg(mControlNode->initialSingleVoltage());
   vcdq =
       parkTransformPowerInvariant(theta, filterInterfaceInitialVoltage.real());
   ircdq = parkTransformPowerInvariant(
@@ -288,8 +295,8 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeParentFromNodesAndTerminals(
   // angle input
   Matrix matrixStateInit = Matrix::Zero(2, 1);
   Matrix matrixOutputInit = Matrix::Zero(2, 1);
-  matrixStateInit(0, 0) = std::arg(mVirtualNodes[3]->initialSingleVoltage());
-  matrixOutputInit(0, 0) = std::arg(mVirtualNodes[3]->initialSingleVoltage());
+  matrixStateInit(0, 0) = theta;
+  matrixOutputInit(0, 0) = theta;
   mPLL->setInitialValues(**mVcq, matrixStateInit, matrixOutputInit);
 
   SPDLOG_LOGGER_INFO(
@@ -410,7 +417,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::controlStep(Real time,
   // Transformation interface forward
   Matrix vcdq, ircdq;
   Real theta = mPLL->mOutputPrev->get()(0, 0);
-  vcdq = parkTransformPowerInvariant(theta, **mVirtualNodes[3]->mVoltage);
+  vcdq = parkTransformPowerInvariant(theta, **mControlNode->mVoltage);
   ircdq = parkTransformPowerInvariant(theta, -**mSubResistorC->mIntfCurrent);
 
   **mVcd = vcdq(0, 0);
@@ -470,10 +477,20 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::mnaParentPostStep(
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::mnaCompUpdateCurrent(
     const Matrix &leftvector) {
-  if (mWithConnectionTransformer)
+  if (mWithConnectionTransformer) {
+    // Transformer is connected {terminal 0, virtual node 3}, so its interface
+    // current already flows towards the terminal.
     **mIntfCurrent = mConnectionTransformer->mIntfCurrent->get();
-  else
-    **mIntfCurrent = mSubResistorC->mIntfCurrent->get();
+  } else {
+    // Rc is connected the other way round, {virtual node 2, terminal 0}, so its
+    // interface current points into the component and has to be negated to mean
+    // the same thing as the transformer branch. Without this the component
+    // reports an inverter at a +4 kW setpoint as ABSORBING 4 kW, while the
+    // network solution is identical -- only the published current is wrong.
+    // controlStep() already applies exactly this negation when it feeds
+    // mSubResistorC->mIntfCurrent to the Park transform.
+    **mIntfCurrent = -mSubResistorC->mIntfCurrent->get();
+  }
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::mnaCompUpdateVoltage(
