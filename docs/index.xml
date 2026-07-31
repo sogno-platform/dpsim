@@ -1259,9 +1259,15 @@ R_f I_f
 Each phase of the LC filter is represented by an independent complex envelope, $V_{c,a/b/c}$ and $I_{f,a/b/c}$, in contrast to the single positive-sequence envelope employed by &lt;code>DP::Ph1&lt;/code>, whereas the controller retains a single positive-sequence $dq$ frame shared by the PLL, the power filter, and the outer and inner control loops.
 As in &lt;code>DP::Ph1&lt;/code>, the control states are baseband quantities and remain real-valued; only the six per-phase filter envelopes are carrier-band quantities, and each carries the $-j\omega_n$ frequency shift introduced in &lt;a href="https://sogno-platform.github.io/dpsim/docs/concepts/state-space-nodal/">State-Space Nodal&lt;/a>.&lt;/p>
 &lt;p>The terminal input is the PCC voltage envelope of the three phases,&lt;/p>
-&lt;div class="math">$$u = \begin{bmatrix} U_a &amp; U_b &amp; U_c \end{bmatrix}^\top ,$$&lt;/div>&lt;p>and the state vector concatenates the 8 real control states ahead of the 6 complex per-phase envelopes,&lt;/p>
+&lt;div class="math">$$u = \begin{bmatrix} U_a &amp; U_b &amp; U_c \end{bmatrix}^\top ,$$&lt;/div>&lt;p>and the state vector concatenates the 6 complex per-phase envelopes ahead of the 8 real control states, keeping the carrier-band and baseband blocks separate,&lt;/p>
 &lt;div class="math">$$\mathbf{x} =
 \big[\,
+V_{c,a} \;\;
+V_{c,b} \;\;
+V_{c,c} \;\;
+I_{f,a} \;\;
+I_{f,b} \;\;
+I_{f,c} \;\;
 \psi \;\;
 \phi_{\mathrm{PLL}} \;\;
 P \;\;
@@ -1269,14 +1275,8 @@ Q \;\;
 \phi_d \;\;
 \phi_q \;\;
 \gamma_d \;\;
-\gamma_q \;\;
-V_{c,a} \;\;
-V_{c,b} \;\;
-V_{c,c} \;\;
-I_{f,a} \;\;
-I_{f,b} \;\;
-I_{f,c}
-\,\big]^\top ,$$&lt;/div>&lt;p>where $\psi := \theta_{\mathrm{PLL}} - \omega_n t$ again denotes the deviation of the PLL angle from the nominal carrier phase, retained as a state to preserve relinearization accuracy. Each per-phase envelope contributes its real and imaginary parts to the packed real vector, yielding 20 real states in total.&lt;/p>
+\gamma_q
+\,\big]^\top ,$$&lt;/div>&lt;p>where $\psi := \theta_{\mathrm{PLL}} - \omega_n t$ again denotes the deviation of the PLL angle from the nominal carrier phase, retained as a state to preserve relinearization accuracy. Each per-phase envelope contributes its real and imaginary parts to the packed real vector, yielding 20 real states in total, or 22 with the optional negative-sequence loop described below.&lt;/p>
 &lt;p>The model output is the per-phase interface current injected into the MNA system,&lt;/p>
 &lt;div class="math">$$y_p = \frac{U_p - V_{c,p}}{R_c}, \qquad p \in \{a, b, c\}.$$&lt;/div>&lt;h2 id="model-equations-2">Model equations&lt;/h2>
 &lt;p>The main extension relative to &lt;code>DP::Ph1&lt;/code> is the per-phase projection onto, and redistribution from, the single positive-sequence $dq$ control frame.
@@ -1345,7 +1345,7 @@ V_{c,p}
 R_f I_{f,p}
 \right)
 - j\omega_n I_{f,p},$$&lt;/div>&lt;p>the phases being coupled only through the shared control chain, that is, through $V_{\mathrm{ref},p}$.&lt;/p>
-&lt;p>At each simulation step the nonlinear model is linearized about the current operating point into the affine state-space form, with the 8 real control states and the real and imaginary parts of the 6 complex per-phase envelopes packed into a single real 20-vector,&lt;/p>
+&lt;p>At each simulation step the nonlinear model is linearized about the current operating point into the affine state-space form, with the real and imaginary parts of the 6 complex per-phase envelopes and the 8 real control states packed into a single real 20-vector,&lt;/p>
 &lt;div class="math">$$\dot{\mathbf{x}}
 \approx
 \mathbf{A}\mathbf{x}
@@ -1361,7 +1361,34 @@ R_f I_{f,p}
 \mathbf{D}\mathbf{u}
 +
 \mathbf{F},$$&lt;/div>&lt;p>which is subsequently discretized and stamped into the DP MNA system.&lt;/p>
-&lt;p>Because the controller operates in a single positive-sequence $dq$ frame, only the positive-sequence component of an unbalanced terminal is regulated. The negative-sequence response is present in the per-phase filter envelopes but is not itself a control state, and the $2\omega_n$ ripple it would otherwise induce in the $dq$ frame is therefore not represented. A dual-sequence controller with a dedicated negative-sequence frame remains the subject of future work.&lt;/p>
+&lt;p>In this default configuration the controller operates in a single positive-sequence $dq$ frame, so only the positive-sequence component of an unbalanced terminal is regulated. The negative-sequence response is present in the per-phase filter envelopes but is not itself a control state, and the $2\omega_n$ ripple it would otherwise induce in the $dq$ frame is therefore not represented.&lt;/p>
+&lt;h2 id="optional-negative-sequence-current-control">Optional negative-sequence current control&lt;/h2>
+&lt;p>The component accepts an &lt;code>enableNegSeqControl&lt;/code> constructor flag, &lt;code>false&lt;/code> by default. Setting it adds a second, negative-sequence current-control loop alongside the positive-sequence one, giving the dual-sequence structure of Yazdani and Iravani, chapter 8. The flag exists because the two configurations answer different questions: with the loop off the model has the same 20 states and the same eigenvalue count as its &lt;code>EMT::Ph3&lt;/code> counterpart and is the right object for a cross-domain comparison, while with it on the model gains 2 states and can regulate an unbalanced terminal.&lt;/p>
+&lt;p>The negative-sequence quantities are obtained by projecting the same three envelopes onto the conjugate sequence set,&lt;/p>
+&lt;div class="math">$$\underline{V}_c^- = V_{c,a} + a^2 V_{c,b} + a\, V_{c,c},
+\qquad
+\underline{I}_{rc}^- = \frac{\underline{V}_c^- - \underline{U}^-}{R_c}.$$&lt;/div>&lt;p>A negative-sequence component rotates backwards relative to the PLL frame, so in envelope terms its $dq$ image follows from conjugating the projected phasor and rotating by $+\psi$ rather than $-\psi$,&lt;/p>
+&lt;div class="math">$$I_{rc,dq}^- = \tfrac{1}{2}\sqrt{\tfrac{2}{3}}\, e^{\,j\psi}\, \overline{\underline{I}_{rc}^-} .$$&lt;/div>&lt;p>Both sequence images are therefore baseband quantities, and the negative-sequence loop costs only the two real integrator states $\gamma_{nd}$, $\gamma_{nq}$, with no second carrier and no $2\omega_n$ term anywhere in the model. The loop itself is the same PI structure as the positive-sequence inner loop,&lt;/p>
+&lt;div class="math">$$\dot{\gamma}_{nd} = i_{nd,\mathrm{ref}} - i_{rc,nd},
+\qquad
+\dot{\gamma}_{nq} = i_{nq,\mathrm{ref}} - i_{rc,nq},$$&lt;/div>
+&lt;div class="math">$$v_{nd,\mathrm{ref}}
+=
+K_{p,I}(i_{nd,\mathrm{ref}} - i_{rc,nd}) +
+K_{i,I}\gamma_{nd},
+\qquad
+v_{nq,\mathrm{ref}}
+=
+K_{p,I}(i_{nq,\mathrm{ref}} - i_{rc,nq}) +
+K_{i,I}\gamma_{nq},$$&lt;/div>&lt;p>reusing the inner-loop gains $K_{p,I}$ and $K_{i,I}$. Its output is redistributed to the per-phase bridge voltages through the sequence-orthogonal set, and adds to the positive-sequence command of the previous section,&lt;/p>
+&lt;div class="math">$$V_{\mathrm{ref},p}
+=
+\bar{a}_p \sqrt{\tfrac{2}{3}}\, V_{\mathrm{ref},dq}\, e^{j\psi}
++
+a_p \sqrt{\tfrac{2}{3}}\, \overline{V_{\mathrm{ref},dq}^-}\, e^{j\psi},
+\qquad
+a_{a/b/c} = \{1,\; a,\; a^2\}.$$&lt;/div>&lt;p>The two references $i_{nd,\mathrm{ref}}$ and $i_{nq,\mathrm{ref}}$ are the last two arguments of &lt;code>setParameters&lt;/code> and default to zero, which makes the loop a negative-sequence suppressor; a non-zero pair commands a deliberate negative-sequence injection instead, as required by some unbalanced fault ride-through grid codes. The measured $i_{rc,nd}$ and $i_{rc,nq}$ are exposed as the &lt;code>irc_n_d&lt;/code> and &lt;code>irc_n_q&lt;/code> attributes and stay at zero when the loop is disabled.&lt;/p>
+&lt;p>The state vector grows to 22 by appending the two integrators after the control block, so that the envelope and positive-sequence control indices are unaffected by the flag. Under the single-line-to-ground fault of the accompanying notebook, enabling the loop suppresses the negative-sequence component of the injected current by about 40 percent while moving the positive-sequence component by less than 0.1 percent.&lt;/p>
 &lt;h2 id="references">References&lt;/h2>
 &lt;ul>
 &lt;li>M. Mirz, S. Vogel, G. Reinke, and A. Monti, “DPsim: A dynamic phasor real-time simulator for power systems,” &lt;em>SoftwareX&lt;/em>, vol. 10, art. 100253, 2019. &lt;a href="https://doi.org/10.1016/j.softx.2019.100253">https://doi.org/10.1016/j.softx.2019.100253&lt;/a>&lt;/li>

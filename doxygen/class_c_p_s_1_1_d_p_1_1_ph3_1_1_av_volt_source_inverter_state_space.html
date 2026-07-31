@@ -96,7 +96,7 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 
-<p>Averaged grid-following VSI SSN port of <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html">EMT::Ph3::AvVoltSourceInverterStateSpace</a>: 8 real control states (single PLL, single positive-sequence dq frame) plus 6 complex per-phase envelope states (Vc_a/b/c, If_a/b/c).  
+<p>Averaged grid-following VSI (SSN), optional dual-sequence current control.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8h_source.html">DP_Ph3_AvVoltSourceInverterStateSpace.h</a>&gt;</code></p>
@@ -113,12 +113,12 @@ Collaboration diagram for CPS::DP::Ph3::AvVoltSourceInverterStateSpace:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad2819f426dd3fa20fdf2cfc6e08f9c16" id="r_ad2819f426dd3fa20fdf2cfc6e08f9c16"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad2819f426dd3fa20fdf2cfc6e08f9c16">AvVoltSourceInverterStateSpace</a> (String <a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, String name, Logger::Level logLevel=Logger::Level::off)</td></tr>
-<tr class="separator:ad2819f426dd3fa20fdf2cfc6e08f9c16"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d56b027c8737e275b18db9e58d807ca" id="r_a1d56b027c8737e275b18db9e58d807ca"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1d56b027c8737e275b18db9e58d807ca">AvVoltSourceInverterStateSpace</a> (String name, Logger::Level logLevel=Logger::Level::off)</td></tr>
-<tr class="separator:a1d56b027c8737e275b18db9e58d807ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3548d7881b3f94f4a8b6228ffe8c2cc4" id="r_a3548d7881b3f94f4a8b6228ffe8c2cc4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3548d7881b3f94f4a8b6228ffe8c2cc4">setParameters</a> (Real lf, Real cf, Real rf, Real rc, Real omegaN, Real kpPLL, Real kiPLL, Real omegaCutoff, Real pRef, Real qRef, Real kpPowerCtrl, Real kiPowerCtrl, Real kpCurrCtrl, Real kiCurrCtrl)</td></tr>
-<tr class="separator:a3548d7881b3f94f4a8b6228ffe8c2cc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86da3c17bf092c7c64242b0a86b3075a" id="r_a86da3c17bf092c7c64242b0a86b3075a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a86da3c17bf092c7c64242b0a86b3075a">AvVoltSourceInverterStateSpace</a> (String <a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, String name, Logger::Level logLevel=Logger::Level::off, Bool enableNegSeqControl=false)</td></tr>
+<tr class="separator:a86da3c17bf092c7c64242b0a86b3075a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9aae69e55d196bf0acd60b98310bb497" id="r_a9aae69e55d196bf0acd60b98310bb497"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9aae69e55d196bf0acd60b98310bb497">AvVoltSourceInverterStateSpace</a> (String name, Logger::Level logLevel=Logger::Level::off, Bool enableNegSeqControl=false)</td></tr>
+<tr class="separator:a9aae69e55d196bf0acd60b98310bb497"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a284c273802908393f20bfbf0b7db2a01" id="r_a284c273802908393f20bfbf0b7db2a01"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a284c273802908393f20bfbf0b7db2a01">setParameters</a> (Real lf, Real cf, Real rf, Real rc, Real omegaN, Real kpPLL, Real kiPLL, Real omegaCutoff, Real pRef, Real qRef, Real kpPowerCtrl, Real kiPowerCtrl, Real kpCurrCtrl, Real kiCurrCtrl, Real iRefNd=0.0, Real iRefNq=0.0)</td></tr>
+<tr class="separator:a284c273802908393f20bfbf0b7db2a01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ba060c70b4b4d73010033780da62c7d" id="r_a5ba060c70b4b4d73010033780da62c7d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5ba060c70b4b4d73010033780da62c7d">initializeFromNodesAndTerminals</a> (Real frequency) override</td></tr>
 <tr class="memdesc:a5ba060c70b4b4d73010033780da62c7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes Component variables according to power flow data stored in Nodes.  <br /></td></tr>
 <tr class="separator:a5ba060c70b4b4d73010033780da62c7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -536,7 +536,6 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:abb996e6dc3a62044a4fcfcaac1516e61 inherit pro_attribs_class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp" id="r_abb996e6dc3a62044a4fcfcaac1516e61"><td class="memItemLeft" align="right" valign="top">MatrixComp&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#abb996e6dc3a62044a4fcfcaac1516e61">mYHist</a></td></tr>
 <tr class="separator:abb996e6dc3a62044a4fcfcaac1516e61 inherit pro_attribs_class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a7efaac3246dbdefc86dd281beb2baa inherit pro_attribs_class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp" id="r_a1a7efaac3246dbdefc86dd281beb2baa"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#a1a7efaac3246dbdefc86dd281beb2baa">mX</a></td></tr>
-<tr class="memdesc:a1a7efaac3246dbdefc86dd281beb2baa inherit pro_attribs_class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Packed real state: [realStates..., Re(cplxState0), Im(cplxState0), ...].  <br /></td></tr>
 <tr class="separator:a1a7efaac3246dbdefc86dd281beb2baa inherit pro_attribs_class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt; Complex &gt;</a></td></tr>
 <tr class="memitem:a16fef50583bd2c58806acbf6185698cb inherit pro_attribs_class_c_p_s_1_1_sim_power_comp" id="r_a16fef50583bd2c58806acbf6185698cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_terminal.html">SimTerminal</a>&lt; Complex &gt;::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a16fef50583bd2c58806acbf6185698cb">mTerminals</a></td></tr>
@@ -593,12 +592,12 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:ac19b16f3b15922bc78f95ee39f1df76e inherit pro_static_attribs_class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Averaged grid-following VSI SSN port of <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html">EMT::Ph3::AvVoltSourceInverterStateSpace</a>: 8 real control states (single PLL, single positive-sequence dq frame) plus 6 complex per-phase envelope states (Vc_a/b/c, If_a/b/c). </p>
+<div class="textblock"><p>Averaged grid-following VSI (SSN), optional dual-sequence current control. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8h_source.html#l00013">13</a> of file <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8h_source.html">DP_Ph3_AvVoltSourceInverterStateSpace.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8h_source.html#l00015">15</a> of file <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8h_source.html">DP_Ph3_AvVoltSourceInverterStateSpace.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ad2819f426dd3fa20fdf2cfc6e08f9c16" name="ad2819f426dd3fa20fdf2cfc6e08f9c16"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad2819f426dd3fa20fdf2cfc6e08f9c16">&#9670;&#160;</a></span>AvVoltSourceInverterStateSpace() <span class="overload">[1/2]</span></h2>
+<a id="a86da3c17bf092c7c64242b0a86b3075a" name="a86da3c17bf092c7c64242b0a86b3075a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86da3c17bf092c7c64242b0a86b3075a">&#9670;&#160;</a></span>AvVoltSourceInverterStateSpace() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -616,17 +615,28 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Logger::Level</td>          <td class="paramname"><span class="paramname"><em>logLevel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Logger::Level::off</span>&#160;)</td>
+          <td class="paramtype">Logger::Level</td>          <td class="paramname"><span class="paramname"><em>logLevel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Logger::Level::off</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Bool</td>          <td class="paramname"><span class="paramname"><em>enableNegSeqControl</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">enableNegSeqControl</td><td>adds the baseband negative-sequence current-control loop (+2 states); positive-sequence-only when false. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00017">17</a> of file <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8cpp_source.html">DP_Ph3_AvVoltSourceInverterStateSpace.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a1d56b027c8737e275b18db9e58d807ca" name="a1d56b027c8737e275b18db9e58d807ca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1d56b027c8737e275b18db9e58d807ca">&#9670;&#160;</a></span>AvVoltSourceInverterStateSpace() <span class="overload">[2/2]</span></h2>
+<a id="a9aae69e55d196bf0acd60b98310bb497" name="a9aae69e55d196bf0acd60b98310bb497"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9aae69e55d196bf0acd60b98310bb497">&#9670;&#160;</a></span>AvVoltSourceInverterStateSpace() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -642,7 +652,12 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Logger::Level</td>          <td class="paramname"><span class="paramname"><em>logLevel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Logger::Level::off</span>&#160;)</td>
+          <td class="paramtype">Logger::Level</td>          <td class="paramname"><span class="paramname"><em>logLevel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Logger::Level::off</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Bool</td>          <td class="paramname"><span class="paramname"><em>enableNegSeqControl</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -652,7 +667,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8h_source.html#l00086">86</a> of file <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8h_source.html">DP_Ph3_AvVoltSourceInverterStateSpace.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8h_source.html#l00149">149</a> of file <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8h_source.html">DP_Ph3_AvVoltSourceInverterStateSpace.h</a>.</p>
 
 </div>
 </div>
@@ -684,12 +699,12 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a4401f844a3f389e07a37ef1716d84dcd">CPS::SimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00421">421</a> of file <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8cpp_source.html">DP_Ph3_AvVoltSourceInverterStateSpace.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00552">552</a> of file <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8cpp_source.html">DP_Ph3_AvVoltSourceInverterStateSpace.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a3548d7881b3f94f4a8b6228ffe8c2cc4" name="a3548d7881b3f94f4a8b6228ffe8c2cc4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3548d7881b3f94f4a8b6228ffe8c2cc4">&#9670;&#160;</a></span>setParameters()</h2>
+<a id="a284c273802908393f20bfbf0b7db2a01" name="a284c273802908393f20bfbf0b7db2a01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a284c273802908393f20bfbf0b7db2a01">&#9670;&#160;</a></span>setParameters()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -762,12 +777,22 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>kiCurrCtrl</em></span>&#160;)</td>
+          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>kiCurrCtrl</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>iRefNd</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0.0</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>iRefNq</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0.0</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00039">39</a> of file <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8cpp_source.html">DP_Ph3_AvVoltSourceInverterStateSpace.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00042">42</a> of file <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8cpp_source.html">DP_Ph3_AvVoltSourceInverterStateSpace.cpp</a>.</p>
 
 </div>
 </div>
@@ -798,7 +823,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#a4a0f2b754f69d231d620e6b76cc2dce9">CPS::DP::Ph3::MixedVTypeVariableSSNComp</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00375">375</a> of file <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8cpp_source.html">DP_Ph3_AvVoltSourceInverterStateSpace.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00494">494</a> of file <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8cpp_source.html">DP_Ph3_AvVoltSourceInverterStateSpace.cpp</a>.</p>
 
 </div>
 </div>
@@ -828,7 +853,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#ad94e88553df697a8851d203a42c78751">CPS::DP::Ph3::MixedVTypeVariableSSNComp</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00389">389</a> of file <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8cpp_source.html">DP_Ph3_AvVoltSourceInverterStateSpace.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00508">508</a> of file <a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8cpp_source.html">DP_Ph3_AvVoltSourceInverterStateSpace.cpp</a>.</p>
 
 </div>
 </div>

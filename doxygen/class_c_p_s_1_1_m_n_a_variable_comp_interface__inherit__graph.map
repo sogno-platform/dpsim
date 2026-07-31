@@ -50,7 +50,7 @@
 <area shape="poly" id="edge9_Node000006_Node000010" title=" " alt="" coords="529,346,620,369,619,374,527,351"/>
 <area shape="rect" id="Node000011" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6b_order_v_b_r.html" title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 6th order synchronous generator model Anderson &#45; Fou..." alt="" coords="597,445,845,494"/>
 <area shape="poly" id="edge10_Node000006_Node000011" title=" " alt="" coords="529,343,547,354,564,373,572,393,579,412,595,430,615,442,612,447,591,434,574,415,567,395,559,376,543,358,526,348"/>
-<area shape="rect" id="Node000016" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html" title="Averaged grid&#45;following VSI SSN port of EMT::Ph3::AvVoltSourceInverterStateSpace: 8 real control stat..." alt="" coords="625,524,817,573"/>
+<area shape="rect" id="Node000016" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html" title="Averaged grid&#45;following VSI (SSN), optional dual&#45;sequence current control." alt="" coords="625,524,817,573"/>
 <area shape="poly" id="edge15_Node000015_Node000016" title=" " alt="" coords="521,548,625,547,625,552,521,554"/>
 <area shape="rect" id="Node000021" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator3_order_v_b_r.html" title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 3rd order synchronous generator model." alt="" coords="597,597,845,646"/>
 <area shape="poly" id="edge20_Node000020_Node000021" title=" " alt="" coords="529,756,543,746,560,725,567,703,573,680,591,657,611,644,614,649,595,661,578,682,572,705,565,728,547,750,532,760"/>

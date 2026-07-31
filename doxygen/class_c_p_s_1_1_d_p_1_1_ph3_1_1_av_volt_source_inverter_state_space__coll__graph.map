@@ -1,5 +1,5 @@
 <map id="CPS::DP::Ph3::AvVoltSourceInverterStateSpace" name="CPS::DP::Ph3::AvVoltSourceInverterStateSpace">
-<area shape="rect" id="Node000001" title="Averaged grid&#45;following VSI SSN port of EMT::Ph3::AvVoltSourceInverterStateSpace: 8 real control stat..." alt="" coords="3489,409,3682,458"/>
+<area shape="rect" id="Node000001" title="Averaged grid&#45;following VSI (SSN), optional dual&#45;sequence current control." alt="" coords="3489,409,3682,458"/>
 <area shape="rect" id="Node000002" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html" title=" " alt="" coords="3254,873,3440,922"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="3365,858,3569,457,3574,459,3370,860"/>
 <area shape="rect" id="Node000003" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="3000,785,3182,834"/>

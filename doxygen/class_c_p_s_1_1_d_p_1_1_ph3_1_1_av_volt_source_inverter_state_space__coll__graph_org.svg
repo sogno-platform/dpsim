@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Averaged grid&#45;following VSI SSN port of EMT::Ph3::AvVoltSourceInverterStateSpace: 8 real control stat...">
+<g id="a_Node000001"><a xlink:title="Averaged grid&#45;following VSI (SSN), optional dual&#45;sequence current control.">
 <polygon fill="#999999" stroke="#666666" points="2757.25,-438.38 2613,-438.38 2613,-401.88 2757.25,-401.88 2757.25,-438.38"/>
 <text text-anchor="start" x="2621" y="-424.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph3::AvVoltSource</text>
 <text text-anchor="middle" x="2685.12" y="-410.62" font-family="Helvetica,sans-Serif" font-size="10.00">InverterStateSpace</text>
