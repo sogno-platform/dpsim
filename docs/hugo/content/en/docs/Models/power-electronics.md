@@ -414,11 +414,17 @@ The terminal input is the PCC voltage envelope of the three phases,
 u = \begin{bmatrix} U_a & U_b & U_c \end{bmatrix}^\top ,
 ```
 
-and the state vector concatenates the 8 real control states ahead of the 6 complex per-phase envelopes,
+and the state vector concatenates the 6 complex per-phase envelopes ahead of the 8 real control states, keeping the carrier-band and baseband blocks separate,
 
 ```math
 \mathbf{x} =
 \big[\,
+V_{c,a} \;\;
+V_{c,b} \;\;
+V_{c,c} \;\;
+I_{f,a} \;\;
+I_{f,b} \;\;
+I_{f,c} \;\;
 \psi \;\;
 \phi_{\mathrm{PLL}} \;\;
 P \;\;
@@ -426,17 +432,11 @@ Q \;\;
 \phi_d \;\;
 \phi_q \;\;
 \gamma_d \;\;
-\gamma_q \;\;
-V_{c,a} \;\;
-V_{c,b} \;\;
-V_{c,c} \;\;
-I_{f,a} \;\;
-I_{f,b} \;\;
-I_{f,c}
+\gamma_q
 \,\big]^\top ,
 ```
 
-where $\psi := \theta_{\mathrm{PLL}} - \omega_n t$ again denotes the deviation of the PLL angle from the nominal carrier phase, retained as a state to preserve relinearization accuracy. Each per-phase envelope contributes its real and imaginary parts to the packed real vector, yielding 20 real states in total.
+where $\psi := \theta_{\mathrm{PLL}} - \omega_n t$ again denotes the deviation of the PLL angle from the nominal carrier phase, retained as a state to preserve relinearization accuracy. Each per-phase envelope contributes its real and imaginary parts to the packed real vector, yielding 20 real states in total, or 22 with the optional negative-sequence loop described below.
 
 The model output is the per-phase interface current injected into the MNA system,
 
@@ -568,7 +568,7 @@ R_f I_{f,p}
 
 the phases being coupled only through the shared control chain, that is, through $V_{\mathrm{ref},p}$.
 
-At each simulation step the nonlinear model is linearized about the current operating point into the affine state-space form, with the 8 real control states and the real and imaginary parts of the 6 complex per-phase envelopes packed into a single real 20-vector,
+At each simulation step the nonlinear model is linearized about the current operating point into the affine state-space form, with the real and imaginary parts of the 6 complex per-phase envelopes and the 8 real control states packed into a single real 20-vector,
 
 ```math
 \dot{\mathbf{x}}
@@ -590,7 +590,61 @@ At each simulation step the nonlinear model is linearized about the current oper
 
 which is subsequently discretized and stamped into the DP MNA system.
 
-Because the controller operates in a single positive-sequence $dq$ frame, only the positive-sequence component of an unbalanced terminal is regulated. The negative-sequence response is present in the per-phase filter envelopes but is not itself a control state, and the $2\omega_n$ ripple it would otherwise induce in the $dq$ frame is therefore not represented. A dual-sequence controller with a dedicated negative-sequence frame remains the subject of future work.
+In this default configuration the controller operates in a single positive-sequence $dq$ frame, so only the positive-sequence component of an unbalanced terminal is regulated. The negative-sequence response is present in the per-phase filter envelopes but is not itself a control state, and the $2\omega_n$ ripple it would otherwise induce in the $dq$ frame is therefore not represented.
+
+## Optional negative-sequence current control
+
+The component accepts an `enableNegSeqControl` constructor flag, `false` by default. Setting it adds a second, negative-sequence current-control loop alongside the positive-sequence one, giving the dual-sequence structure of Yazdani and Iravani, chapter 8. The flag exists because the two configurations answer different questions: with the loop off the model has the same 20 states and the same eigenvalue count as its `EMT::Ph3` counterpart and is the right object for a cross-domain comparison, while with it on the model gains 2 states and can regulate an unbalanced terminal.
+
+The negative-sequence quantities are obtained by projecting the same three envelopes onto the conjugate sequence set,
+
+```math
+\underline{V}_c^- = V_{c,a} + a^2 V_{c,b} + a\, V_{c,c},
+\qquad
+\underline{I}_{rc}^- = \frac{\underline{V}_c^- - \underline{U}^-}{R_c}.
+```
+
+A negative-sequence component rotates backwards relative to the PLL frame, so in envelope terms its $dq$ image follows from conjugating the projected phasor and rotating by $+\psi$ rather than $-\psi$,
+
+```math
+I_{rc,dq}^- = \tfrac{1}{2}\sqrt{\tfrac{2}{3}}\, e^{\,j\psi}\, \overline{\underline{I}_{rc}^-} .
+```
+
+Both sequence images are therefore baseband quantities, and the negative-sequence loop costs only the two real integrator states $\gamma_{nd}$, $\gamma_{nq}$, with no second carrier and no $2\omega_n$ term anywhere in the model. The loop itself is the same PI structure as the positive-sequence inner loop,
+
+```math
+\dot{\gamma}_{nd} = i_{nd,\mathrm{ref}} - i_{rc,nd},
+\qquad
+\dot{\gamma}_{nq} = i_{nq,\mathrm{ref}} - i_{rc,nq},
+```
+
+```math
+v_{nd,\mathrm{ref}}
+=
+K_{p,I}(i_{nd,\mathrm{ref}} - i_{rc,nd}) +
+K_{i,I}\gamma_{nd},
+\qquad
+v_{nq,\mathrm{ref}}
+=
+K_{p,I}(i_{nq,\mathrm{ref}} - i_{rc,nq}) +
+K_{i,I}\gamma_{nq},
+```
+
+reusing the inner-loop gains $K_{p,I}$ and $K_{i,I}$. Its output is redistributed to the per-phase bridge voltages through the sequence-orthogonal set, and adds to the positive-sequence command of the previous section,
+
+```math
+V_{\mathrm{ref},p}
+=
+\bar{a}_p \sqrt{\tfrac{2}{3}}\, V_{\mathrm{ref},dq}\, e^{j\psi}
++
+a_p \sqrt{\tfrac{2}{3}}\, \overline{V_{\mathrm{ref},dq}^-}\, e^{j\psi},
+\qquad
+a_{a/b/c} = \{1,\; a,\; a^2\}.
+```
+
+The two references $i_{nd,\mathrm{ref}}$ and $i_{nq,\mathrm{ref}}$ are the last two arguments of `setParameters` and default to zero, which makes the loop a negative-sequence suppressor; a non-zero pair commands a deliberate negative-sequence injection instead, as required by some unbalanced fault ride-through grid codes. The measured $i_{rc,nd}$ and $i_{rc,nq}$ are exposed as the `irc_n_d` and `irc_n_q` attributes and stay at zero when the loop is disabled.
+
+The state vector grows to 22 by appending the two integrators after the control block, so that the envelope and positive-sequence control indices are unaffected by the flag. Under the single-line-to-ground fault of the accompanying notebook, enabling the loop suppresses the negative-sequence component of the injected current by about 40 percent while moving the positive-sequence component by less than 0.1 percent.
 
 ## References
 

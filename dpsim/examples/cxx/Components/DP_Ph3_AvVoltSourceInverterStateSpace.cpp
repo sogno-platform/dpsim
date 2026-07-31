@@ -23,7 +23,9 @@ public:
     const String simNameBase = "DP_Ph3_AvVoltSourceInverterStateSpace";
 
     const auto systemPF = runPowerFlow(simNameBase + "_PF");
-    runDPSimulation(simNameBase + "_DP", systemPF);
+    // Same SLG scenario, positive-sequence-only vs dual-sequence control.
+    runDPSimulation(simNameBase + "_DP_posSeq", systemPF, false);
+    runDPSimulation(simNameBase + "_DP_dualSeq", systemPF, true);
   }
 
 private:
@@ -86,8 +88,8 @@ private:
     return system;
   }
 
-  void runDPSimulation(const String &simName,
-                       const SystemTopology &systemPF) const {
+  void runDPSimulation(const String &simName, const SystemTopology &systemPF,
+                       Bool enableNegSeqControl) const {
     Logger::setLogDir("logs/" + simName);
 
     auto nGrid = SimNode<Complex>::make("nGrid", PhaseType::ABC);
@@ -103,7 +105,7 @@ private:
         Math::singlePhaseParameterToThreePhase(mLineConductance));
 
     auto inverter = DP::Ph3::AvVoltSourceInverterStateSpace::make(
-        "INV_SSN_PLL", Logger::Level::info);
+        "INV_SSN_PLL", Logger::Level::info, enableNegSeqControl);
     inverter->setParameters(mLf, mCf, mRf, mRc, mSystemOmega, mKpPLL, mKiPLL,
                             mOmegaCutoff, mPref, mQref, mKpPowerCtrl,
                             mKiPowerCtrl, mKpCurrCtrl, mKiCurrCtrl);
@@ -134,6 +136,8 @@ private:
     logger->logAttribute("i_fault", fault->attribute("i_intf"));
     logger->logAttribute("vc_d", inverter->attribute("vc_d"));
     logger->logAttribute("vc_q", inverter->attribute("vc_q"));
+    logger->logAttribute("irc_n_d", inverter->attribute("irc_n_d"));
+    logger->logAttribute("irc_n_q", inverter->attribute("irc_n_q"));
     logger->logAttribute("p_inst", inverter->attribute("p_inst"));
     logger->logAttribute("q_inst", inverter->attribute("q_inst"));
     logger->logAttribute("omega_pll", inverter->attribute("omega_pll"));

@@ -48,7 +48,8 @@ protected:
   MatrixComp mW;
   MatrixComp mYHist;
 
-  /// Packed real state: [realStates..., Re(cplxState0), Im(cplxState0), ...].
+  /// Packed real state of size stateSize(), each envelope taking a [Re,Im]
+  /// pair. Never sliced here: the derived component chooses the ordering.
   const Attribute<Matrix>::Ptr mX;
 
   MixedVTypeVariableSSNComp(String uid, String name, Int realStateCount,
