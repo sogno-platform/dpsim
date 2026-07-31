@@ -24,7 +24,7 @@ class RXLine : public CompositePowerComp<Complex>,
                public Base::Ph1::PiLine {
 private:
   ///base voltage [V]
-  Real mBaseVoltage;
+  Real mBaseVoltage = 0;
 
 protected:
   /// CHECK: Which of these really need to be member variables?
