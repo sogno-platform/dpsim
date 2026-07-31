@@ -22,10 +22,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-python@v6
-        with:
-          python-version: '3.x'
-
       - name: Fail if a notebook changed by this pull request has saved outputs
         shell: bash
         env:
@@ -37,16 +33,31 @@ jobs:
           if [ "${#NOTEBOOKS[@]}" -eq 0 ]; then
             exit 0
           fi
-          pip install nbconvert
-          python -m nbconvert --ClearOutputPreprocessor.enabled=True --inplace "${NOTEBOOKS[@]}"
-          if ! git diff --quiet -- "${NOTEBOOKS[@]}"; then
-            echo "Error: the following notebooks have saved outputs committed:"
-            git diff --name-only -- "${NOTEBOOKS[@]}"
-            echo ""
-            echo "Strip outputs before committing:"
-            echo ""
-            echo "  jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace <notebook.ipynb>"
-            echo ""
-            echo "Or install the pre-commit hooks, see the Quick start section of CONTRIBUTING.md."
-            exit 1
-          fi
+          # Assert the rule instead of stripping and diffing, so that key order does not read as an output.
+          python3 - "${NOTEBOOKS[@]}" <<'PY'
+          import json
+          import sys
+
+          offenders = []
+          for path in sys.argv[1:]:
+              with open(path, encoding="utf-8") as notebook:
+                  cells = json.load(notebook).get("cells", [])
+              for cell in cells:
+                  if cell.get("cell_type") != "code":
+                      continue
+                  if cell.get("outputs") or cell.get("execution_count") is not None:
+                      offenders.append(path)
+                      break
+
+          if offenders:
+              print("Error: the following notebooks have saved outputs committed:")
+              for path in offenders:
+                  print(f"  {path}")
+              print("")
+              print("Strip outputs before committing:")
+              print("")
+              print("  jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace <notebook.ipynb>")
+              print("")
+              print("Or install the pre-commit hooks, see the Quick start section of CONTRIBUTING.md.")
+              sys.exit(1)
+          PY

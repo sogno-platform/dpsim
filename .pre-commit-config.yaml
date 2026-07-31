@@ -62,6 +62,6 @@ repos:
       - id: clear-notebook-outputs
         name: clear notebook outputs
         language: python
-        additional_dependencies: ["nbconvert"]
+        additional_dependencies: ["nbconvert==7.17.1"]
         entry: python -m nbconvert --ClearOutputPreprocessor.enabled=True --inplace
         files: \.ipynb$
