@@ -10,7 +10,7 @@ DPsim is a real-time capable power system simulator that supports dynamic phasor
 
 The documentation here is automatically generated from the Python module.
 
-The `main documentation <http://dpsim.fein-aachen.org/>`__ has build / installation instructions, links to examples and explains the concepts implemented in DPsim as well as its architecture.
+The `main documentation <https://sogno.energy/dpsim/>`__ has build / installation instructions, links to examples and explains the concepts implemented in DPsim as well as its architecture.
 
 
 .. toctree::
