@@ -151,6 +151,8 @@ public:
   /// @param name name of the component
   void removeComponent(const String &name);
 
+  /// @brief Remove node and all components connected to it
+  /// @param name name of the node
   void removeNode(const String &name);
 
   ///
@@ -170,5 +172,8 @@ public:
 
 private:
   template <typename VarType> void multiplyPowerComps(Int numberCopies);
+  /// Removes all components connected to the given node from the
+  /// component list and from the per-node component map
+  void removeComponentsConnectedTo(const TopologicalNode::Ptr &node);
 };
 } // namespace CPS

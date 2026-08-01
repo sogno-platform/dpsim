@@ -374,7 +374,8 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("init_with_powerflow", &DPsim::SystemTopology::initWithPowerflow,
            "systemPF"_a, "domain"_a)
       .def("add_components", &DPsim::SystemTopology::addComponents)
-      .def("remove_component", &DPsim::SystemTopology::removeComponent);
+      .def("remove_component", &DPsim::SystemTopology::removeComponent)
+      .def("remove_node", &DPsim::SystemTopology::removeNode);
 
   py::class_<DPsim::Interface, std::shared_ptr<DPsim::Interface>>(m,
                                                                   "Interface");

@@ -259,10 +259,50 @@ void SystemTopology::removeComponent(const String &name) {
   }
 }
 
+/// Returns true if the component has a terminal that is connected
+/// to the given node
+static bool isConnectedTo(const IdentifiedObject::Ptr &comp,
+                          const TopologicalNode::Ptr &node) {
+  auto powerComp = std::dynamic_pointer_cast<TopologicalPowerComp>(comp);
+  if (!powerComp)
+    return false;
+
+  for (auto terminal : powerComp->topologicalTerminals()) {
+    // Terminals may not be connected yet
+    if (terminal && terminal->topologicalNodes() == node)
+      return true;
+  }
+  return false;
+}
+
+void SystemTopology::removeComponentsConnectedTo(
+    const TopologicalNode::Ptr &node) {
+  IdentifiedObject::List removedComponents;
+
+  for (auto it = mComponents.begin(); it != mComponents.end();) {
+    if (isConnectedTo(*it, node)) {
+      removedComponents.push_back(*it);
+      it = mComponents.erase(it);
+    } else {
+      ++it;
+    }
+  }
+
+  // A removed component may also be connected to other nodes,
+  // so drop it from the remaining per-node component lists as well
+  for (auto &[topoNode, comps] : mComponentsAtNode) {
+    for (const auto &removed : removedComponents) {
+      comps.erase(std::remove(comps.begin(), comps.end(), removed),
+                  comps.end());
+    }
+  }
+}
+
 void SystemTopology::removeNode(const String &name) {
-  // TODO: Check if any components are connected to the node and remove them as well
   for (auto it = mNodes.begin(); it != mNodes.end();) {
     if ((*it)->name() == name) {
+      removeComponentsConnectedTo(*it);
+      mComponentsAtNode.erase(*it);
       it = mNodes.erase(it);
     } else {
       ++it;
