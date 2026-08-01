@@ -311,6 +311,43 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("add_component", &DPsim::SystemTopology::addComponent)
       .def("add_component", &DPsim::SystemTopology::addComponents)
       .def("add_node", &DPsim::SystemTopology::addNode)
+      // Deprecated alias for add_component/add_node, kept so that scripts
+      // written before the rename keep working
+      .def(
+          "add",
+          [](DPsim::SystemTopology &sys, const py::object &obj) {
+            if (PyErr_WarnEx(PyExc_DeprecationWarning,
+                             "SystemTopology.add is deprecated; use "
+                             "add_component for components and add_node "
+                             "for nodes instead.",
+                             1) == -1)
+              throw py::error_already_set();
+
+            auto addSingle = [&sys](const py::handle &item) {
+              try {
+                sys.addNode(item.cast<CPS::TopologicalNode::Ptr>());
+                return;
+              } catch (const py::cast_error &) {
+              }
+              try {
+                sys.addComponent(item.cast<CPS::IdentifiedObject::Ptr>());
+                return;
+              } catch (const py::cast_error &) {
+              }
+              throw py::type_error(
+                  "SystemTopology.add expects a node, a component, or a "
+                  "list of nodes and components");
+            };
+
+            if (py::isinstance<py::list>(obj) ||
+                py::isinstance<py::tuple>(obj)) {
+              for (const py::handle &item : obj)
+                addSingle(item);
+            } else {
+              addSingle(obj);
+            }
+          },
+          "Deprecated alias for add_component and add_node.")
       .def("node", py::overload_cast<std::string_view>(
                        &DPsim::SystemTopology::node<CPS::TopologicalNode>))
       .def("node", py::overload_cast<CPS::UInt>(
@@ -338,7 +375,6 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("list_idobjects", &DPsim::SystemTopology::listIdObjects)
       .def("init_with_powerflow", &DPsim::SystemTopology::initWithPowerflow,
            "systemPF"_a, "domain"_a)
-      .def("add_component", &DPsim::SystemTopology::addComponent)
       .def("add_components", &DPsim::SystemTopology::addComponents)
       .def("remove_component", &DPsim::SystemTopology::removeComponent);
 
