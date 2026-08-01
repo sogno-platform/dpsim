@@ -37,7 +37,7 @@ pip install dpsim
 
 ## Documentation
 
-The [documentation](https://dpsim.fein-aachen.org/) has build / installation instructions, links to examples and explains the concepts implemented in DPsim as well as its architecture.
+The [documentation](https://sogno.energy/dpsim/) has build / installation instructions, links to examples and explains the concepts implemented in DPsim as well as its architecture.
 
 ## License
 
@@ -55,7 +55,7 @@ If you want to get more involved with DPsim, we welcome contributions of all kin
 
 Please open a Pull Request or issue on [GitHub](https://github.com/sogno-platform/dpsim), or start a discussion there to propose ideas and get feedback from the community.
 
-Have you developed something new and want to contribute it? Check the [documentation](https://dpsim.fein-aachen.org/) for details on the preferred way to organize your code contributions.
+Have you developed something new and want to contribute it? Check the [documentation](https://sogno.energy/dpsim/) for details on the preferred way to organize your code contributions.
 
 ## Contributors
 

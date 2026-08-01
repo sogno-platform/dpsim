@@ -2,11 +2,20 @@
 title: "Concepts"
 linkTitle: "Concepts"
 weight: 4
+menu:
+  main:
+    weight: 24
+description: >
+  The mathematics behind the solvers and the component models.
+aliases: ["/docs/concepts/"]
 ---
 
-The book introduces the reader to the general concepts implemented in DPsim, a dynamic phasor (DP) real-time simulator, as well as the physical models of the power system components that are used in simulations.
-The first chapters give an overview of dynamic phasors and nodal analysis which are the two pillars of the main solver implemented in DPsim.
-The second part describes in detail what are the physical equations for each model and how they are transformed and implemented for dynamic phasor simulations and other domains that are also supported by DPsim.
+The methods DPsim implements, described independently of the code. Nodal analysis and dynamic
+phasors underpin the main solver and have a page each. The [model]({{< ref "Models" >}}) pages
+give the physical equations for a component and how they are transformed for each supported
+domain.
 
-In order to be able to run a dynamic simulation, DPsim also includes a loadflow solver to compute the initial state of the network if it is not included in the network data.
-Besides DP simulations, DPsim also comes with EMT models for some components which are used as reference for testing the DP models.
+DPsim also includes a load flow solver, used on its own or to compute the initial state of a
+network when that state is not part of the network data. Electromagnetic transient models exist
+alongside the dynamic phasor ones, serving both as a simulation domain and as the reference the
+dynamic phasor models are tested against.
