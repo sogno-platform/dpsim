@@ -542,9 +542,8 @@ int main(int argc, char *argv[]) {
     logger =
         RealTimeDataLogger::make(logFilename, args.duration, args.timeStep);
 #else
-    // RealTimeDataLogger is only built with WITH_RT, which is Linux-only
-    CPS::Logger::get(args.name)->warn(
-        "Built without WITH_RT, ignoring the log option");
+    // RealTimeDataLogger needs WITH_RT, which is Linux-only
+    logger = DataLogger::make(args.name);
 #endif
   }
 
