@@ -65,6 +65,12 @@ jobs:
         path: ${{ github.workspace }}/build
         key: build-windows-bindings-cache-${{ github.ref }}
 
+    # The module is built for one interpreter, so the test job has to pin the same one
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.12'
+
     - name: Build DPsim
       run: |
         pip install pybind11[global]
@@ -72,7 +78,7 @@ jobs:
         cd build
         git describe --tags --abbrev=0 --match "v*"
         # TODO: Remove '-DCMAKE_POLICY_VERSION_MINIMUM=3.5' once spdlog version has been bumped
-        cmake -DWITH_PYBIND=ON -DCMAKE_POLICY_VERSION_MINIMUM="3.5" ..
+        cmake -DWITH_PYBIND=ON -DCMAKE_POLICY_VERSION_MINIMUM="3.5" -DPython3_EXECUTABLE="$((Get-Command python).Source)" ..
         cmake --build . --config Release --parallel --target dpsimpy --target tests
 
     - name: Archive build directory
@@ -97,6 +103,11 @@ jobs:
         name: build-windows-bindings-cache-${{ github.sha }}
         path: ${{ github.workspace }}/build
 
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.12'
+
     - name: Locate built dpsimpy module
       shell: pwsh
       run: |
@@ -111,6 +122,12 @@ jobs:
     - name: Assemble dpsim package next to compiled module
       shell: pwsh
       run: Copy-Item -Recurse -Force python/src/dpsim "$env:DPSIMPY_DIR/dpsim"
+
+    - name: Check that the built module imports
+      shell: pwsh
+      env:
+        PYTHONPATH: ${{ env.DPSIMPY_DIR }}
+      run: python -c "import dpsimpy; print(dpsimpy.__file__)"
 
     - name: Install pytest and notebook tooling
       run: |
