@@ -64,6 +64,9 @@ void PFSolver::initialize() {
   initializeComponents();
   determinePFBusType();
   propagateAndVerifyBaseVoltage();
+  // An SVC gets its base voltage from the propagation above, so convert it after
+  for (auto svc : mSVCs)
+    svc->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
   composeAdmittanceMatrix();
 
   setUpJacobianStorage();
@@ -134,9 +137,6 @@ void PFSolver::initializeComponents() {
   }
   for (auto sst : mSolidStateTransformers) {
     sst->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
-  }
-  for (auto svc : mSVCs) {
-    svc->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
   }
 }
 
