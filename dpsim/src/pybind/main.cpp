@@ -24,6 +24,19 @@ PYBIND11_DECLARE_HOLDER_TYPE(T, CPS::AttributePointer<T>);
 namespace py = pybind11;
 using namespace pybind11::literals;
 
+/// Dispatches a single argument of the deprecated SystemTopology.add
+/// alias to add_node or add_component depending on its type
+static void systemTopologyAddSingle(DPsim::SystemTopology &sys,
+                                    const py::handle &item) {
+  if (py::isinstance<CPS::TopologicalNode>(item))
+    sys.addNode(item.cast<CPS::TopologicalNode::Ptr>());
+  else if (py::isinstance<CPS::IdentifiedObject>(item))
+    sys.addComponent(item.cast<CPS::IdentifiedObject::Ptr>());
+  else
+    throw py::type_error("SystemTopology.add expects a node, a component, "
+                         "or a list of nodes and components");
+}
+
 PYBIND11_MODULE(dpsimpy, m) {
   m.doc() = R"pbdoc(
   DPsim Python bindings
@@ -323,28 +336,12 @@ PYBIND11_MODULE(dpsimpy, m) {
                              1) == -1)
               throw py::error_already_set();
 
-            auto addSingle = [&sys](const py::handle &item) {
-              try {
-                sys.addNode(item.cast<CPS::TopologicalNode::Ptr>());
-                return;
-              } catch (const py::cast_error &) {
-              }
-              try {
-                sys.addComponent(item.cast<CPS::IdentifiedObject::Ptr>());
-                return;
-              } catch (const py::cast_error &) {
-              }
-              throw py::type_error(
-                  "SystemTopology.add expects a node, a component, or a "
-                  "list of nodes and components");
-            };
-
             if (py::isinstance<py::list>(obj) ||
                 py::isinstance<py::tuple>(obj)) {
               for (const py::handle &item : obj)
-                addSingle(item);
+                systemTopologyAddSingle(sys, item);
             } else {
-              addSingle(obj);
+              systemTopologyAddSingle(sys, obj);
             }
           },
           "Deprecated alias for add_component and add_node.")
