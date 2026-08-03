@@ -267,12 +267,12 @@ static bool isConnectedTo(const IdentifiedObject::Ptr &comp,
   if (!powerComp)
     return false;
 
-  for (auto terminal : powerComp->topologicalTerminals()) {
-    // Terminals may not be connected yet
-    if (terminal && terminal->topologicalNodes() == node)
-      return true;
-  }
-  return false;
+  // Terminals may not be connected yet
+  const auto terminals = powerComp->topologicalTerminals();
+  return std::any_of(terminals.begin(), terminals.end(),
+                     [&node](const TopologicalTerminal::Ptr &terminal) {
+                       return terminal && terminal->topologicalNodes() == node;
+                     });
 }
 
 void SystemTopology::removeComponentsConnectedTo(
