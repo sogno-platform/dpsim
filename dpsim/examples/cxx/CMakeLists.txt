@@ -195,6 +195,7 @@ list(APPEND TEST_SOURCES
 	Circuits/EMT_Ph1_General2TerminalSSN.cpp
 	Circuits/SP_ITM_withPiLine_Ph1.cpp
 	Circuits/SP_Ph1_General2TerminalSSN.cpp
+	Circuits/EMT_DC_PiLine_SourceStep.cpp
 )
 
 if(WITH_SUNDIALS)

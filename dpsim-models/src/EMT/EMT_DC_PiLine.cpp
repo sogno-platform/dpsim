@@ -33,18 +33,19 @@ void EMT::DC::PiLine::setParameters(Real seriesResistance,
                                     Real parallelConductance,
                                     Real initialCurrent) {
   const Real epsilon = std::numeric_limits<Real>::epsilon();
-  if (!Math::isFinite(seriesResistance) || seriesResistance <= epsilon)
+  if (!Math::isFinite(seriesResistance) || seriesResistance <= DOUBLE_EPSILON)
     throw std::invalid_argument(
         "DC pi-line series resistance must be finite and positive.");
-  if (!Math::isFinite(seriesInductance) || seriesInductance <= epsilon)
+  if (!Math::isFinite(seriesInductance) || seriesInductance <= DOUBLE_EPSILON)
     throw std::invalid_argument(
         "DC pi-line series inductance must be finite and positive.");
   if (!Math::isFinite(parallelCapacitance) || parallelCapacitance < 0.0 ||
-      (parallelCapacitance > 0.0 && parallelCapacitance / 2.0 <= epsilon))
+      (parallelCapacitance > 0.0 &&
+       parallelCapacitance / 2.0 <= DOUBLE_EPSILON))
     throw std::invalid_argument(
         "DC pi-line shunt capacitance must be zero or safely positive.");
   if (!Math::isFinite(parallelConductance) || parallelConductance < 0.0 ||
-      (parallelConductance > 0.0 && parallelConductance <= epsilon))
+      (parallelConductance > 0.0 && parallelConductance <= DOUBLE_EPSILON))
     throw std::invalid_argument(
         "DC pi-line shunt conductance must be zero or safely positive.");
   if (!Math::isFinite(initialCurrent))

@@ -9,11 +9,8 @@ namespace CPS {
 namespace EMT {
 namespace DC {
 
-/// Ideal scalar DC current source.
-///
-/// Positive current flows from terminal 1 to terminal 0. The interface voltage
-/// is v = v_terminal1 - v_terminal0, so p = v * i follows the passive sign
-/// convention.
+/// This terminal convention intentionally differs from EMT::Ph1::CurrentSource
+/// and matches the passive sign convention used by the scalar DC components.
 class CurrentSource final : public MNASimPowerComp<Real>,
                             public SharedFactory<CurrentSource> {
 public:

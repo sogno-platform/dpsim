@@ -24,7 +24,7 @@ void EMT::DC::TwoTerminalITypeSSNComp::validateDCTerminals() const {
 
 Real EMT::DC::TwoTerminalITypeSSNComp::companionConductance() const {
   if (mW.rows() != 1 || mW.cols() != 1 || !Math::isFinite(mW(0, 0)) ||
-      std::abs(mW(0, 0)) <= std::numeric_limits<Real>::epsilon())
+      std::abs(mW(0, 0)) <= DOUBLE_EPSILON)
     throw std::runtime_error(
         "DC I-type SSN component has a singular companion impedance.");
   const Real conductance = 1.0 / mW(0, 0);
