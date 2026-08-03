@@ -60,12 +60,13 @@ void SP::Ph1::SVC::calculatePerUnitParameters(Real baseApparentPower,
                      mBaseApparentPower, baseOmega);
 
   // Reject unset/zero divisors before the per-unit conversion below.
-  if (mBaseVoltage <= 0)
+  if (!Math::isFinite(mBaseVoltage) || mBaseVoltage <= 0)
     throw std::invalid_argument(
         "SVC: base voltage not set (call setBaseVoltage() before power-flow "
         "initialization).");
-  if (mBaseApparentPower <= 0)
-    throw std::invalid_argument("SVC: base apparent power must be positive.");
+  if (!Math::isFinite(mBaseApparentPower) || mBaseApparentPower <= 0)
+    throw std::invalid_argument(
+        "SVC: base apparent power must be finite and positive.");
 
   **mSetPointVoltagePerUnit = **mSetPointVoltage / mBaseVoltage;
   **mSetPointReactivePowerPerUnit =
@@ -89,17 +90,20 @@ void SP::Ph1::SVC::modifyPowerFlowBusType(PowerflowBusType powerflowBusType) {
   case CPS::PowerflowBusType::VD:
     throw std::invalid_argument("SVC: only PQ is a valid power flow bus type.");
   default:
-    throw std::invalid_argument(" Invalid power flow bus type ");
+    throw std::invalid_argument("Invalid power flow bus type");
     break;
   }
 }
 
 // Called by the SVC outer control loop
 void SP::Ph1::SVC::updateReactivePowerInjection(Complex powerInj) {
-  if (mBaseApparentPower <= 0)
+  if (!Math::isFinite(mBaseApparentPower) || mBaseApparentPower <= 0)
     throw std::invalid_argument(
-        "SVC: base apparent power must be positive (call "
+        "SVC: base apparent power must be finite and positive (call "
         "calculatePerUnitParameters() before updating the injection).");
+  if (!Math::isFinite(powerInj.imag()))
+    throw std::invalid_argument(
+        "SVC: reactive power injection must be finite.");
 
   **mSetPointReactivePower = powerInj.imag();
   **mSetPointReactivePowerPerUnit =
