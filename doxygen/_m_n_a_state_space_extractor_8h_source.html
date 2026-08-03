@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_m_n_a_state_space_extractor_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">MNAStateSpaceExtractor.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University</span></div>
+<a href="_m_n_a_state_space_extractor_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#pragma once</span></div>
@@ -99,44 +107,44 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;dpsim/Definitions.h&gt;</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;dpsim/MNAStateSpaceContributor.h&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;<a class="code" href="dpsim_2include_2dpsim_2_definitions_8h.html">dpsim/Definitions.h</a>&gt;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;<a class="code" href="_m_n_a_state_space_contributor_8h.html">dpsim/MNAStateSpaceContributor.h</a>&gt;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_d_psim.html">DPsim</a> {</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">class </span><a class="code hl_class" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a>;</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span></div>
 <div class="foldopen" id="foldopen00028" data-start="{" data-end="};">
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">   28</a></span><span class="keyword">class </span>MNAStateSpaceExtractor {</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">   28</a></span><span class="keyword">class </span><a class="code hl_function" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#a63257dacd76bf8952ad4b9923b4e49e8">MNAStateSpaceExtractor</a> {</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <span class="keyword">using </span>Ptr = std::shared_ptr&lt;MNAStateSpaceExtractor&gt;;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#a62deee047d569150dba037bcb5fc6f2e">   30</a></span>  <span class="keyword">using </span><a class="code hl_typedef" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#a62deee047d569150dba037bcb5fc6f2e">Ptr</a> = std::shared_ptr&lt;MNAStateSpaceExtractor&gt;;</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  MNAStateSpaceExtractor() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#a63257dacd76bf8952ad4b9923b4e49e8">   32</a></span>  <a class="code hl_function" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#a63257dacd76bf8952ad4b9923b4e49e8">MNAStateSpaceExtractor</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keywordtype">void</span> initialize(<span class="keyword">const</span> CPS::MNAInterface::List &amp;components, UInt mnaVectorSize,</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>                  Real timeStep);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#a5b5403a66a2733ed09252550a6a5c398">initialize</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="class_c_p_s_1_1_m_n_a_interface.html#a99daa13babcb894a6f878fc889faa0a7">CPS::MNAInterface::List</a> &amp;components, <a class="code hl_typedef" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> mnaVectorSize,</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>                  <a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> timeStep);</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="keywordtype">void</span> extract(<a class="code hl_class" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a> &amp;linearSolver, Bool variableModelChanged,</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>               Bool systemMatrixChanged, Real time);</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#a83dba1f2a8468df523b878c05b9ff437">extract</a>(<a class="code hl_class" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a> &amp;linearSolver, <a class="code hl_typedef" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> variableModelChanged,</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>               <a class="code hl_typedef" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> systemMatrixChanged, <a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> time);</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  Bool isInitialized()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> mInitialized; }</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#ac026aa9d179ce92b58b77862855b0185">   40</a></span>  <a class="code hl_typedef" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> <a class="code hl_function" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#ac026aa9d179ce92b58b77862855b0185">isInitialized</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> mInitialized; }</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  UInt getStateCount()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> mStateCount; }</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#ac6e404146e77cb5b4d46149c8b6eae8f">   42</a></span>  <a class="code hl_typedef" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> <a class="code hl_function" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#ac6e404146e77cb5b4d46149c8b6eae8f">getStateCount</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> mStateCount; }</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  Real getTimeStep()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> mTimeStep; }</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#aa40eed08aa7f69c3143c4b0a580475c6">   44</a></span>  <a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> <a class="code hl_function" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#aa40eed08aa7f69c3143c4b0a580475c6">getTimeStep</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> mTimeStep; }</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keyword">const</span> Matrix &amp;getDiscreteStateMatrix()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> mAd; }</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#a6668f307d935de225c541be2301bdcf2">   46</a></span>  <span class="keyword">const</span> <a class="code hl_typedef" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;<a class="code hl_function" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#a6668f307d935de225c541be2301bdcf2">getDiscreteStateMatrix</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> mAd; }</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <span class="keyword">const</span> <a class="code hl_struct" href="struct_d_psim_1_1_state_space_metadata.html">StateSpaceMetadata</a> &amp;getMetadata()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> mMetadata; }</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#adcd2db840a547bb380233556fc2c40fe">   48</a></span>  <span class="keyword">const</span> <a class="code hl_struct" href="struct_d_psim_1_1_state_space_metadata.html">StateSpaceMetadata</a> &amp;<a class="code hl_function" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#adcd2db840a547bb380233556fc2c40fe">getMetadata</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> mMetadata; }</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  Bool hasExtractionTime()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> mHasExtractionTime; }</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#aa80a8a93659987276b056edfca528e76">   50</a></span>  <a class="code hl_typedef" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> <a class="code hl_function" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#aa80a8a93659987276b056edfca528e76">hasExtractionTime</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> mHasExtractionTime; }</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  Real getLastExtractionTime()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> mLastExtractionTime; }</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#a01e50ec6162fa83b5cbf4f32d51223cd">   52</a></span>  <a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> <a class="code hl_function" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#a01e50ec6162fa83b5cbf4f32d51223cd">getLastExtractionTime</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> mLastExtractionTime; }</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="keyword">private</span>:</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  <span class="keyword">struct </span>ContributorEntry {</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    MNAStateSpaceContributor::Ptr contributor;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    UInt stateOffset = 0;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <a class="code hl_typedef" href="class_d_psim_1_1_m_n_a_state_space_contributor.html#a387b5377f961a3410683cbf32bbcc6f7">MNAStateSpaceContributor::Ptr</a> contributor;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <a class="code hl_typedef" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> stateOffset = 0;</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  };</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  <span class="keywordtype">void</span> reset();</div>
@@ -151,53 +159,75 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  <span class="keywordtype">void</span> rebuildCombinedMatrices();</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  <span class="keywordtype">void</span> computeStateMatrix(<a class="code hl_class" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a> &amp;linearSolver);</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  <span class="keywordtype">void</span> computeStateMatrix(DirectLinearSolver &amp;linearSolver);</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  Bool mInitialized = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  <a class="code hl_typedef" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> mInitialized = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  UInt mMnaVectorSize = 0;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  <a class="code hl_typedef" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> mMnaVectorSize = 0;</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  UInt mStateCount = 0;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  <a class="code hl_typedef" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> mStateCount = 0;</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  Real mTimeStep = 0.0;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> mTimeStep = 0.0;</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  Bool mHasVariableContributors = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  <a class="code hl_typedef" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> mHasVariableContributors = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  Bool mStateMatrixValid = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  <a class="code hl_typedef" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> mStateMatrixValid = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  <a class="code hl_struct" href="struct_d_psim_1_1_state_space_metadata.html">StateSpaceMetadata</a> mMetadata;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  StateSpaceMetadata mMetadata;</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  Real mLastExtractionTime = 0.0;</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> mLastExtractionTime = 0.0;</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  Bool mHasExtractionTime = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  <a class="code hl_typedef" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> mHasExtractionTime = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  std::vector&lt;ContributorEntry&gt; mContributorEntries;</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  Matrix mAdLocalStatic;</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  Matrix mBdMnaStatic;</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  Matrix mCdMnaStatic;</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> mAdLocalStatic;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> mBdMnaStatic;</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> mCdMnaStatic;</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  Matrix mAdLocalVariable;</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  Matrix mBdMnaVariable;</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>  Matrix mCdMnaVariable;</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> mAdLocalVariable;</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> mBdMnaVariable;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> mCdMnaVariable;</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  Matrix mAdLocal;</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>  Matrix mBdMna;</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  Matrix mCdMna;</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> mAdLocal;</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> mBdMna;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> mCdMna;</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  Matrix mAd;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> mAd;</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>};</div>
 </div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>} <span class="comment">// namespace DPsim</span></div>
+<div class="ttc" id="a_m_n_a_state_space_contributor_8h_html"><div class="ttname"><a href="_m_n_a_state_space_contributor_8h.html">MNAStateSpaceContributor.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_m_n_a_interface_html_a99daa13babcb894a6f878fc889faa0a7"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_interface.html#a99daa13babcb894a6f878fc889faa0a7">CPS::MNAInterface::List</a></div><div class="ttdeci">std::vector&lt; Ptr &gt; List</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_interface_8h_source.html#l00021">MNAInterface.h:21</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_html"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver.html">DPsim::DirectLinearSolver</a></div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_8h_source.html#l00023">DirectLinearSolver.h:23</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_m_n_a_state_space_contributor_html_a387b5377f961a3410683cbf32bbcc6f7"><div class="ttname"><a href="class_d_psim_1_1_m_n_a_state_space_contributor.html#a387b5377f961a3410683cbf32bbcc6f7">DPsim::MNAStateSpaceContributor::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; MNAStateSpaceContributor &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_state_space_contributor_8h_source.html#l00048">MNAStateSpaceContributor.h:48</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_m_n_a_state_space_extractor_html_a01e50ec6162fa83b5cbf4f32d51223cd"><div class="ttname"><a href="class_d_psim_1_1_m_n_a_state_space_extractor.html#a01e50ec6162fa83b5cbf4f32d51223cd">DPsim::MNAStateSpaceExtractor::getLastExtractionTime</a></div><div class="ttdeci">Real getLastExtractionTime() const</div><div class="ttdef"><b>Definition</b> <a href="#l00052">MNAStateSpaceExtractor.h:52</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_m_n_a_state_space_extractor_html_a5b5403a66a2733ed09252550a6a5c398"><div class="ttname"><a href="class_d_psim_1_1_m_n_a_state_space_extractor.html#a5b5403a66a2733ed09252550a6a5c398">DPsim::MNAStateSpaceExtractor::initialize</a></div><div class="ttdeci">void initialize(const CPS::MNAInterface::List &amp;components, UInt mnaVectorSize, Real timeStep)</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_state_space_extractor_8cpp_source.html#l00012">MNAStateSpaceExtractor.cpp:12</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_m_n_a_state_space_extractor_html_a62deee047d569150dba037bcb5fc6f2e"><div class="ttname"><a href="class_d_psim_1_1_m_n_a_state_space_extractor.html#a62deee047d569150dba037bcb5fc6f2e">DPsim::MNAStateSpaceExtractor::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; MNAStateSpaceExtractor &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="#l00030">MNAStateSpaceExtractor.h:30</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_m_n_a_state_space_extractor_html_a63257dacd76bf8952ad4b9923b4e49e8"><div class="ttname"><a href="class_d_psim_1_1_m_n_a_state_space_extractor.html#a63257dacd76bf8952ad4b9923b4e49e8">DPsim::MNAStateSpaceExtractor::MNAStateSpaceExtractor</a></div><div class="ttdeci">MNAStateSpaceExtractor()=default</div></div>
+<div class="ttc" id="aclass_d_psim_1_1_m_n_a_state_space_extractor_html_a6668f307d935de225c541be2301bdcf2"><div class="ttname"><a href="class_d_psim_1_1_m_n_a_state_space_extractor.html#a6668f307d935de225c541be2301bdcf2">DPsim::MNAStateSpaceExtractor::getDiscreteStateMatrix</a></div><div class="ttdeci">const Matrix &amp; getDiscreteStateMatrix() const</div><div class="ttdef"><b>Definition</b> <a href="#l00046">MNAStateSpaceExtractor.h:46</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_m_n_a_state_space_extractor_html_a83dba1f2a8468df523b878c05b9ff437"><div class="ttname"><a href="class_d_psim_1_1_m_n_a_state_space_extractor.html#a83dba1f2a8468df523b878c05b9ff437">DPsim::MNAStateSpaceExtractor::extract</a></div><div class="ttdeci">void extract(DirectLinearSolver &amp;linearSolver, Bool variableModelChanged, Bool systemMatrixChanged, Real time)</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_state_space_extractor_8cpp_source.html#l00086">MNAStateSpaceExtractor.cpp:86</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_m_n_a_state_space_extractor_html_aa40eed08aa7f69c3143c4b0a580475c6"><div class="ttname"><a href="class_d_psim_1_1_m_n_a_state_space_extractor.html#aa40eed08aa7f69c3143c4b0a580475c6">DPsim::MNAStateSpaceExtractor::getTimeStep</a></div><div class="ttdeci">Real getTimeStep() const</div><div class="ttdef"><b>Definition</b> <a href="#l00044">MNAStateSpaceExtractor.h:44</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_m_n_a_state_space_extractor_html_aa80a8a93659987276b056edfca528e76"><div class="ttname"><a href="class_d_psim_1_1_m_n_a_state_space_extractor.html#aa80a8a93659987276b056edfca528e76">DPsim::MNAStateSpaceExtractor::hasExtractionTime</a></div><div class="ttdeci">Bool hasExtractionTime() const</div><div class="ttdef"><b>Definition</b> <a href="#l00050">MNAStateSpaceExtractor.h:50</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_m_n_a_state_space_extractor_html_ac026aa9d179ce92b58b77862855b0185"><div class="ttname"><a href="class_d_psim_1_1_m_n_a_state_space_extractor.html#ac026aa9d179ce92b58b77862855b0185">DPsim::MNAStateSpaceExtractor::isInitialized</a></div><div class="ttdeci">Bool isInitialized() const</div><div class="ttdef"><b>Definition</b> <a href="#l00040">MNAStateSpaceExtractor.h:40</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_m_n_a_state_space_extractor_html_ac6e404146e77cb5b4d46149c8b6eae8f"><div class="ttname"><a href="class_d_psim_1_1_m_n_a_state_space_extractor.html#ac6e404146e77cb5b4d46149c8b6eae8f">DPsim::MNAStateSpaceExtractor::getStateCount</a></div><div class="ttdeci">UInt getStateCount() const</div><div class="ttdef"><b>Definition</b> <a href="#l00042">MNAStateSpaceExtractor.h:42</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_m_n_a_state_space_extractor_html_adcd2db840a547bb380233556fc2c40fe"><div class="ttname"><a href="class_d_psim_1_1_m_n_a_state_space_extractor.html#adcd2db840a547bb380233556fc2c40fe">DPsim::MNAStateSpaceExtractor::getMetadata</a></div><div class="ttdeci">const StateSpaceMetadata &amp; getMetadata() const</div><div class="ttdef"><b>Definition</b> <a href="#l00048">MNAStateSpaceExtractor.h:48</a></div></div>
+<div class="ttc" id="adpsim_2include_2dpsim_2_definitions_8h_html"><div class="ttname"><a href="dpsim_2include_2dpsim_2_definitions_8h.html">Definitions.h</a></div></div>
 <div class="ttc" id="anamespace_d_psim_html"><div class="ttname"><a href="namespace_d_psim.html">DPsim</a></div><div class="ttdef"><b>Definition</b> <a href="_dense_l_u_adapter_8cpp_source.html#l00013">DenseLUAdapter.cpp:13</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a52dcbc3a0896b912333104eb61a7b29b"><div class="ttname"><a href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">DPsim::Real</a></div><div class="ttdeci">CPS::Real Real</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00018">Definitions.h:18</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a7920162dfc7e843a4f1a1248fe9ccb0e"><div class="ttname"><a href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">DPsim::Matrix</a></div><div class="ttdeci">CPS::Matrix Matrix</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00024">Definitions.h:24</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_aa7f17909fba1876614c5f455ad2a453d"><div class="ttname"><a href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">DPsim::Bool</a></div><div class="ttdeci">CPS::Bool Bool</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00021">Definitions.h:21</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_aca275dbce4c75f8e270755c373b13d5d"><div class="ttname"><a href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">DPsim::UInt</a></div><div class="ttdeci">CPS::UInt UInt</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00023">Definitions.h:23</a></div></div>
 <div class="ttc" id="astruct_d_psim_1_1_state_space_metadata_html"><div class="ttname"><a href="struct_d_psim_1_1_state_space_metadata.html">DPsim::StateSpaceMetadata</a></div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_state_space_contributor_8h_source.html#l00026">MNAStateSpaceContributor.h:26</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li><li class="navelem"><a class="el" href="_m_n_a_state_space_extractor_8h.html">MNAStateSpaceExtractor.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

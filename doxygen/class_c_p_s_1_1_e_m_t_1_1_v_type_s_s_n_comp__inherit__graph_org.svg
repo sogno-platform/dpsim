@@ -21,7 +21,7 @@
 <g id="Node000011" class="node">
 <title>Node11</title>
 <g id="a_Node000011"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_four_terminal_v_type_s_s_n_comp.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="1397.5,-275.38 1247.25,-275.38 1247.25,-238.88 1397.5,-238.88 1397.5,-275.38"/>
+<polygon fill="white" stroke="#666666" points="1397.5,-275.38 1247.25,-275.38 1247.25,-238.88 1397.5,-238.88 1397.5,-275.38"/>
 <text text-anchor="start" x="1255.25" y="-261.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::FourTerminal</text>
 <text text-anchor="middle" x="1322.38" y="-247.62" font-family="Helvetica,sans-Serif" font-size="10.00">VTypeSSNComp</text>
 </a>
@@ -273,7 +273,7 @@
 <g id="Node000012" class="node">
 <title>Node12</title>
 <g id="a_Node000012"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_generic_four_terminal_v_type_s_s_n.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="1594.5,-296.38 1447.25,-296.38 1447.25,-259.88 1594.5,-259.88 1594.5,-296.38"/>
+<polygon fill="white" stroke="#666666" points="1594.5,-296.38 1447.25,-296.38 1447.25,-259.88 1594.5,-259.88 1594.5,-296.38"/>
 <text text-anchor="start" x="1455.25" y="-282.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::GenericFour</text>
 <text text-anchor="middle" x="1520.88" y="-268.62" font-family="Helvetica,sans-Serif" font-size="10.00">TerminalVTypeSSN</text>
 </a>
@@ -368,7 +368,7 @@
 <g id="Node000019" class="node">
 <title>Node19</title>
 <g id="a_Node000019"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="1781.75,-131.38 1631.5,-131.38 1631.5,-94.88 1781.75,-94.88 1781.75,-131.38"/>
+<polygon fill="white" stroke="#666666" points="1781.75,-131.38 1631.5,-131.38 1631.5,-94.88 1781.75,-94.88 1781.75,-131.38"/>
 <text text-anchor="start" x="1639.5" y="-117.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::AvVoltSource</text>
 <text text-anchor="middle" x="1706.62" y="-103.62" font-family="Helvetica,sans-Serif" font-size="10.00">InverterStateSpace</text>
 </a>

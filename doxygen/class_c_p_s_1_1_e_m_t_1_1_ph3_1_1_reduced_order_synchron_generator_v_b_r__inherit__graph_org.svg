@@ -117,7 +117,7 @@
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="1171.25,-181.5 992.5,-181.5 992.5,-145 1171.25,-145 1171.25,-181.5"/>
+<polygon fill="white" stroke="#666666" points="1171.25,-181.5 992.5,-181.5 992.5,-145 1171.25,-145 1171.25,-181.5"/>
 <text text-anchor="start" x="1000.5" y="-168" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Base::ReducedOrderSynchron</text>
 <text text-anchor="middle" x="1081.88" y="-153.75" font-family="Helvetica,sans-Serif" font-size="10.00">Generator&lt; Real &gt;</text>
 </a>
@@ -342,7 +342,7 @@
 <g id="Node000011" class="node">
 <title>Node11</title>
 <g id="a_Node000011"><a xlink:href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="918.25,-150.5 739.5,-150.5 739.5,-114 918.25,-114 918.25,-150.5"/>
+<polygon fill="white" stroke="#666666" points="918.25,-150.5 739.5,-150.5 739.5,-114 918.25,-114 918.25,-150.5"/>
 <text text-anchor="start" x="747.5" y="-137" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Base::ReducedOrderSynchron</text>
 <text text-anchor="middle" x="828.88" y="-122.75" font-family="Helvetica,sans-Serif" font-size="10.00">Generator&lt; VarType &gt;</text>
 </a>

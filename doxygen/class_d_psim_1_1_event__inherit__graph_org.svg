@@ -21,7 +21,7 @@
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="class_d_psim_1_1_attribute_event.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="142,-22.25 0,-22.25 0,0 142,0 142,-22.25"/>
+<polygon fill="white" stroke="#666666" points="142,-22.25 0,-22.25 0,0 142,0 142,-22.25"/>
 <text text-anchor="middle" x="71" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::AttributeEvent&lt; T &gt;</text>
 </a>
 </g>
@@ -39,7 +39,7 @@
 <g id="Node000003" class="node">
 <title>Node3</title>
 <g id="a_Node000003"><a xlink:href="class_d_psim_1_1_switch_event.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="266.38,-22.25 159.62,-22.25 159.62,0 266.38,0 266.38,-22.25"/>
+<polygon fill="white" stroke="#666666" points="266.38,-22.25 159.62,-22.25 159.62,0 266.38,0 266.38,-22.25"/>
 <text text-anchor="middle" x="213" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::SwitchEvent</text>
 </a>
 </g>
@@ -57,7 +57,7 @@
 <g id="Node000004" class="node">
 <title>Node4</title>
 <g id="a_Node000004"><a xlink:href="class_d_psim_1_1_switch_event3_ph.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="409.38,-22.25 284.62,-22.25 284.62,0 409.38,0 409.38,-22.25"/>
+<polygon fill="white" stroke="#666666" points="409.38,-22.25 284.62,-22.25 284.62,0 409.38,0 409.38,-22.25"/>
 <text text-anchor="middle" x="347" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::SwitchEvent3Ph</text>
 </a>
 </g>

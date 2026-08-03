@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,19 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
 </div><!-- top -->
-<div id="doc-content">
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('functions_func_u.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -84,17 +96,19 @@ $(function(){ initResizable(false); });
 </div>
 
 <div class="contents">
-<div class="textblock">Here is a list of all documented functions with links to the class documentation for each member:</div>
+<div class="textblock">Here is a list of all functions with links to the classes they belong to:</div>
 
 <h3><a id="index_u" name="index_u"></a>- u -</h3><ul>
 <li>uid()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">CPS::IdentifiedObject</a></li>
-<li>unpackComplex()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#a3660f8a41e763e7720aca661e3dfbfde">CPS::DP::Ph3::MixedVTypeVariableSSNComp</a></li>
+<li>unpackComplex()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_mixed_v_type_variable_s_s_n_comp.html#a665638d1628a817036ce8c1e9ec0bde3">CPS::DP::Ph1::MixedVTypeVariableSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#a3660f8a41e763e7720aca661e3dfbfde">CPS::DP::Ph3::MixedVTypeVariableSSNComp</a></li>
 <li>update()&#160;:&#160;<a class="el" href="class_d_psim_1_1_state_space_modal_analysis.html#a540ac62a141517589f583409afbbf354">DPsim::StateSpaceModalAnalysis</a></li>
 <li>updateBMatrixStateSpaceModel()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html#a7dfd0d9b6e8641af66a4a33840007b7f">CPS::Signal::PowerControllerVSI</a></li>
 <li>updateBranchFlow()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_pi_line.html#a66138c8109ae510a21bb4523f1d47d98">CPS::SP::Ph1::PiLine</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#aaa4b816fd276872b527708c7535ffc0e">CPS::SP::Ph1::RXLine</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html#a33bf40e69515a8e9517de1565ce51629">CPS::SP::Ph1::Transformer</a></li>
 <li>updateComponentParameters()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_volt_source_inverter_state_space.html#a15bfbe195810557dcf84fe5c88fc8e59">CPS::DP::Ph1::AvVoltSourceInverterStateSpace</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_mixed_v_type_variable_s_s_n_comp.html#a74c1897ff55a8c13503fb6959c769a57">CPS::DP::Ph1::MixedVTypeVariableSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_s_s_n_1_1_variable___serial___r_l_c.html#a526e233c9fdb89360d063b822f2fbe87">CPS::DP::Ph1::SSN::Variable_Serial_RLC</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#ad4ea7087af7a80a90399735972b760e6">CPS::DP::Ph3::AvVoltSourceInverterStateSpace</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#a4a0f2b754f69d231d620e6b76cc2dce9">CPS::DP::Ph3::MixedVTypeVariableSSNComp</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#ae29f72b0aade1ccb625b000ef8837cc9">CPS::EMT::Ph3::AvVoltSourceInverterStateSpace</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_piecewise_linear_inductor.html#ad42b1d8472daf96a5cfff96ff5b5b907">CPS::EMT::Ph3::PiecewiseLinearInductor</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_m.html#a4a93249a7b1f08d10e1f1ff2e893eded">CPS::EMT::Ph3::SSN_GFM</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html#a4cdab5c112f74f00125febd04692d113">CPS::EMT::VTypeVariableSSNComp</a></li>
+<li>updateCurrent()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_controlled_current_source.html#a21ffc9e7d11a60e539fd5b6370f6d668">CPS::DP::Ph1::ControlledCurrentSource</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_controlled_current_source.html#a227ca202d000f958c3395788571e0184">CPS::EMT::Ph3::ControlledCurrentSource</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html#a9e7953bb04554975591c4b4a47980a9d">CPS::EMT::Ph3::CurrentSource</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_controlled_current_source.html#a70d4e0f527d93b249b4576b085cec88a">CPS::SP::Ph1::ControlledCurrentSource</a></li>
 <li>updateDPToDQTransform()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#a55b706a28dec748577b9a603b53b7800">CPS::DP::Ph1::DPDQInterface</a></li>
 <li>updateDQToDPTransform()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#a367d24e4223f879c74014900a268942c">CPS::DP::Ph1::DPDQInterface</a></li>
+<li>updateIntfValues()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#ae4fe47f96f76af74ea7832679804a2f3">CPS::DP::Ph1::PQLoadCS</a></li>
 <li>updateLogAttributes()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_volt_source_inverter_state_space.html#a0f8d91179393efc2760bbf480500c72c">CPS::DP::Ph1::AvVoltSourceInverterStateSpace</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_mixed_v_type_variable_s_s_n_comp.html#a82ae22cb5ca73c63df9a3fdcbc7e681b">CPS::DP::Ph1::MixedVTypeVariableSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a7589ffb897e6275fa06979f3d90b284e">CPS::DP::Ph3::AvVoltSourceInverterStateSpace</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#ad94e88553df697a8851d203a42c78751">CPS::DP::Ph3::MixedVTypeVariableSSNComp</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#af95f151c6adbd7f0bdba10c963b342b9">CPS::EMT::Ph3::AvVoltSourceInverterStateSpace</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_m.html#a6867a7662b61ffb54484361fe25b8423">CPS::EMT::Ph3::SSN_GFM</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a310a4a96c67380d3a583f21389e03be9">CPS::EMT::SSNComp</a></li>
 <li>updateMatrixNodeIndices()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aeae7b46840d1405f8794fc41ee594dee">CPS::SimPowerComp&lt; VarType &gt;</a></li>
 <li>updateMeasurement()&#160;:&#160;<a class="el" href="class_d_psim_1_1_scheduler.html#aa72e1565c8bad5bf3b5079a2c0525f18">DPsim::Scheduler</a></li>
@@ -103,17 +117,21 @@ $(function(){ initResizable(false); });
 <li>updateReactivePowerInjection()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator.html#ab8024e3d12b3b12bc4b318c718ecce16">CPS::SP::Ph1::SynchronGenerator</a></li>
 <li>updateSetPoint()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#a9a6d97b55b157d88d516ccc366f9426e">CPS::DP::Ph1::PQLoadCS</a></li>
 <li>updateSolution()&#160;:&#160;<a class="el" href="class_d_psim_1_1_p_f_solver.html#ae8bcb79d12fa9e493886b8d4ef841e87">DPsim::PFSolver</a>, <a class="el" href="class_d_psim_1_1_p_f_solver_power_polar.html#ac443d87ef708bccf073326dff7b0b4e6">DPsim::PFSolverPowerPolar</a></li>
-<li>updateState()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_norton.html#a853afcfa060aa338ab314587adb4388d">CPS::DP::Ph1::VoltageSourceNorton</a></li>
-<li>updateStateSpaceModel()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_s_s_n_comp.html#a078dffc21ec6e73af3a6e4bf32804409">CPS::DP::SSNComp</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a9724afa03c40d7f38b47990a81aa1805">CPS::EMT::SSNComp</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html#af8ddecfcac77d9c4659afabf53da35ae">CPS::EMT::VTypeVariableSSNComp</a></li>
+<li>updateState()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_mixed_v_type_variable_s_s_n_comp.html#a694d4cc2b6c723c77a44e38b507d85a6">CPS::DP::Ph1::MixedVTypeVariableSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_norton.html#a853afcfa060aa338ab314587adb4388d">CPS::DP::Ph1::VoltageSourceNorton</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp.html#a71351d5f09623103cb5368d6bb024100">CPS::DP::Ph1::VoltageSourceRamp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#a89ba567b29e8bc54f2c601a3fd376869">CPS::DP::Ph3::MixedVTypeVariableSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_s_s_n_comp.html#a3ac8fb22dadb19342288f7279132b21b">CPS::DP::SSNComp</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_current_source.html#a0bcca889761c1b6bf3eb7f26b596619d">CPS::EMT::Ph1::CurrentSource</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_norton.html#aad8cff759a3109efa1b604ed1334d703">CPS::EMT::Ph1::VoltageSourceNorton</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_ramp.html#a9c4363125a5e63812a5808b9f71882f6">CPS::EMT::Ph1::VoltageSourceRamp</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source_norton.html#a625209e7bea81646f848136718f3284a">CPS::EMT::Ph3::VoltageSourceNorton</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a84b484ddc9b8d65f49e27aafdd7befb4">CPS::EMT::SSNComp</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html#adee05c027ab8cb84a16df8d820d895db">CPS::EMT::VTypeVariableSSNComp</a></li>
+<li>updateStateSpaceModel()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_mixed_v_type_variable_s_s_n_comp.html#ad629435d1fb5bf6aadb25b3e651b23fd">CPS::DP::Ph1::MixedVTypeVariableSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#abdb55c45e41d1c74fd38fc073f3d762a">CPS::DP::Ph3::MixedVTypeVariableSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_s_s_n_comp.html#a078dffc21ec6e73af3a6e4bf32804409">CPS::DP::SSNComp</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a9724afa03c40d7f38b47990a81aa1805">CPS::EMT::SSNComp</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html#af8ddecfcac77d9c4659afabf53da35ae">CPS::EMT::VTypeVariableSSNComp</a></li>
+<li>updateSusceptance()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_s_v_c.html#a05ba0779a20346ae86db722b1e773d22">CPS::DP::Ph1::SVC</a></li>
 <li>updateSwitchState()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load_switch.html#a2a87ce25e36fba00e9637764a447b968">CPS::DP::Ph1::RXLoadSwitch</a></li>
 <li>updateSwitchStatus()&#160;:&#160;<a class="el" href="class_d_psim_1_1_mna_solver.html#a7bf9fb141c483f932de2073ca8f64547">DPsim::MnaSolver&lt; VarType &gt;</a></li>
+<li>updateVoltage()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_voltage_source.html#a7feb6034d06ca49480a2e4d6552d51d3">CPS::Base::Ph3::VoltageSource</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_controlled_voltage_source.html#ae8b6f6eedaffb3f172571419175d3d1c">CPS::DP::Ph1::ControlledVoltageSource</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_p_c_m.html#ad332c82ff4b1282671d4a20b92b90139">CPS::DP::Ph1::SynchronGenerator4OrderPCM</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_t_p_m.html#a1bd5242c44eaaae8a20bc8a5377aff07">CPS::DP::Ph1::SynchronGenerator4OrderTPM</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6_order_p_c_m.html#ae472378af5a537e89b05bb0714d5a668">CPS::DP::Ph1::SynchronGenerator6OrderPCM</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_iter.html#a0020dc345015e91f9ac38a718588d5c4">CPS::DP::Ph1::SynchronGeneratorIter</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source.html#ad5ad9bbbe072e97b9260e82f9ce9bc26">CPS::EMT::Ph1::VoltageSource</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_controlled_voltage_source.html#a49d9bf258d1febbe9951e96072704f4d">CPS::EMT::Ph3::ControlledVoltageSource</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html#a3729144032e3fe5e6fccf772da546a2f">CPS::EMT::Ph3::SynchronGenerator4OrderPCM</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source.html#a3a70a4f9bc9a26122f7f9c828b2aa4a6">CPS::EMT::Ph3::VoltageSource</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#af8018a5f5cfb7dd4c252316d785903e9">CPS::MNASyncGenInterface</a></li>
 <li>useProtectionSwitches()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_c_i_m_1_1_reader.html#a61ad5bec56b65b1d6234676ef589038c">CPS::CIM::Reader</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">dpsim Directory Reference</div></div>
 </div><!--header-->
@@ -94,7 +102,7 @@ $(function(){ initResizable(false); });
 <div class="dynheader">
 Directory dependency graph for dpsim:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31_dep.svg" width="391" height="135"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31_dep.svg" width="422" height="212"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="subdirs" name="subdirs"></a>
@@ -108,96 +116,99 @@ Directories</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="files" name="files"></a>
 Files</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_d_a_e_solver_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>DAESolver.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_d_a_e_solver_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_a_e_solver_8h.html">DAESolver.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_data_logger_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>DataLogger.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_data_logger_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_data_logger_8h.html">DataLogger.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_data_logger_interface_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>DataLoggerInterface.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_data_logger_interface_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_data_logger_interface_8h.html">DataLoggerInterface.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="dpsim_2include_2dpsim_2_definitions_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>Definitions.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="dpsim_2include_2dpsim_2_definitions_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dpsim_2include_2dpsim_2_definitions_8h.html">Definitions.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_dense_l_u_adapter_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>DenseLUAdapter.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_dense_l_u_adapter_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_dense_l_u_adapter_8h.html">DenseLUAdapter.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_diakoptics_solver_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>DiakopticsSolver.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_diakoptics_solver_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_diakoptics_solver_8h.html">DiakopticsSolver.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_direct_linear_solver_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>DirectLinearSolver.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_direct_linear_solver_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_direct_linear_solver_8h.html">DirectLinearSolver.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_direct_linear_solver_configuration_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>DirectLinearSolverConfiguration.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_direct_linear_solver_configuration_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_direct_linear_solver_configuration_8h.html">DirectLinearSolverConfiguration.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_event_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>Event.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_event_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_event_8h.html">Event.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_gpu_dense_adapter_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>GpuDenseAdapter.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_gpu_dense_adapter_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_gpu_dense_adapter_8h.html">GpuDenseAdapter.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_gpu_magma_adapter_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>GpuMagmaAdapter.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_gpu_magma_adapter_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_gpu_magma_adapter_8h.html">GpuMagmaAdapter.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_gpu_sparse_adapter_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>GpuSparseAdapter.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_gpu_sparse_adapter_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_gpu_sparse_adapter_8h.html">GpuSparseAdapter.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_interface_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>Interface.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_interface_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_interface_8h.html">Interface.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_interface_queued_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>InterfaceQueued.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_interface_queued_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_interface_queued_8h.html">InterfaceQueued.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_interface_worker_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>InterfaceWorker.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_interface_worker_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_interface_worker_8h.html">InterfaceWorker.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_k_l_u_adapter_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>KLUAdapter.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_k_l_u_adapter_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_k_l_u_adapter_8h.html">KLUAdapter.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_m_n_a_solver_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>MNASolver.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_m_n_a_solver_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_m_n_a_solver_8h.html">MNASolver.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_m_n_a_solver_direct_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>MNASolverDirect.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_m_n_a_solver_direct_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_m_n_a_solver_direct_8h.html">MNASolverDirect.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_m_n_a_solver_dyn_interface_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>MNASolverDynInterface.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_m_n_a_solver_dyn_interface_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_m_n_a_solver_dyn_interface_8h.html">MNASolverDynInterface.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_m_n_a_solver_factory_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>MNASolverFactory.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_m_n_a_solver_factory_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_m_n_a_solver_factory_8h.html">MNASolverFactory.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_m_n_a_solver_plugin_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>MNASolverPlugin.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_m_n_a_solver_plugin_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_m_n_a_solver_plugin_8h.html">MNASolverPlugin.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_m_n_a_state_space_contributor_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>MNAStateSpaceContributor.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_m_n_a_state_space_contributor_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_m_n_a_state_space_contributor_8h.html">MNAStateSpaceContributor.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_m_n_a_state_space_extractor_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>MNAStateSpaceExtractor.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_m_n_a_state_space_extractor_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_m_n_a_state_space_extractor_8h.html">MNAStateSpaceExtractor.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_o_d_eint_solver_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>ODEintSolver.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_o_d_eint_solver_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_o_d_eint_solver_8h.html">ODEintSolver.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_o_d_e_solver_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>ODESolver.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_o_d_e_solver_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_o_d_e_solver_8h.html">ODESolver.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_open_m_p_level_scheduler_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>OpenMPLevelScheduler.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_open_m_p_level_scheduler_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_open_m_p_level_scheduler_8h.html">OpenMPLevelScheduler.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_p_f_solver_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>PFSolver.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_p_f_solver_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_p_f_solver_8h.html">PFSolver.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_p_f_solver_power_polar_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>PFSolverPowerPolar.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_p_f_solver_power_polar_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_p_f_solver_power_polar_8h.html">PFSolverPowerPolar.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_p_f_solver_power_polar_sparse_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>PFSolverPowerPolarSparse.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_p_f_solver_power_polar_sparse_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_p_f_solver_power_polar_sparse_8h.html">PFSolverPowerPolarSparse.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_real_time_data_logger_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>RealTimeDataLogger.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_real_time_data_logger_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_real_time_data_logger_8h.html">RealTimeDataLogger.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_real_time_simulation_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>RealTimeSimulation.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_real_time_simulation_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_real_time_simulation_8h.html">RealTimeSimulation.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_scheduler_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>Scheduler.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_scheduler_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_scheduler_8h.html">Scheduler.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_sequential_scheduler_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>SequentialScheduler.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_sequential_scheduler_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_sequential_scheduler_8h.html">SequentialScheduler.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_simulation_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>Simulation.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_simulation_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_simulation_8h.html">Simulation.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_solver_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>Solver.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_solver_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_solver_8h.html">Solver.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_sparse_l_u_adapter_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>SparseLUAdapter.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_sparse_l_u_adapter_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_sparse_l_u_adapter_8h.html">SparseLUAdapter.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_state_space_modal_analysis_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>StateSpaceModalAnalysis.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_state_space_modal_analysis_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_state_space_modal_analysis_8h.html">StateSpaceModalAnalysis.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_thread_level_scheduler_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>ThreadLevelScheduler.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_thread_level_scheduler_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_thread_level_scheduler_8h.html">ThreadLevelScheduler.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_thread_list_scheduler_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>ThreadListScheduler.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_thread_list_scheduler_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_thread_list_scheduler_8h.html">ThreadListScheduler.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_thread_scheduler_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>ThreadScheduler.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_thread_scheduler_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_thread_scheduler_8h.html">ThreadScheduler.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_timer_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>Timer.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="_timer_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_timer_8h.html">Timer.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="dpsim_2include_2dpsim_2_utils_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><b>Utils.h</b></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><a href="dpsim_2include_2dpsim_2_utils_8h_source.html"><span class="icondoc"></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dpsim_2include_2dpsim_2_utils_8h.html">Utils.h</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

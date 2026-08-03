@@ -1,4 +1,16 @@
 <map id="/__w/dpsim/dpsim/dpsim&#45;models/include/dpsim&#45;models/Signal" name="/__w/dpsim/dpsim/dpsim&#45;models/include/dpsim&#45;models/Signal">
-<area shape="rect" id="node1" href="dir_9ee3725555df841850f10a3655158b62.html" title="Signal" alt="" coords="41,56,98,86"/>
-<area shape="rect" id="clust1" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html" title="dpsim&#45;models" alt="" coords="16,16,123,97"/>
+<area shape="rect" id="node1" href="dir_0ab18182ec9e12ca28df221a97888cf8.html" title="EMT" alt="" coords="27,134,74,164"/>
+<area shape="rect" id="node2" href="dir_7aeedf4198247b218c530e3581ac7557.html" title="Base" alt="" coords="98,134,150,164"/>
+<area shape="rect" id="node3" href="dir_88adc964ffa02c1923288cb07a48abab.html" title="DP" alt="" coords="174,134,213,164"/>
+<area shape="rect" id="node4" href="dir_f1aa5ad90a32925ab029214aac6a40f0.html" title="SP" alt="" coords="237,134,275,164"/>
+<area shape="rect" id="node5" href="dir_9ee3725555df841850f10a3655158b62.html" title="Signal" alt="" coords="130,56,187,86"/>
+<area shape="poly" id="edge1" href="dir_000025_000016.html" alt="" coords="140,89,85,127,82,123,137,84"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000025_000016.html" title="10" alt="" coords="83,121,99,140"/>
+<area shape="poly" id="edge2" href="dir_000025_000000.html" alt="" coords="155,88,139,121,134,119,150,85"/>
+<area shape="rect" id="edge2-headlabel" href="dir_000025_000000.html" title="9" alt="" coords="142,111,150,130"/>
+<area shape="poly" id="edge3" href="dir_000025_000008.html" alt="" coords="168,85,183,119,178,121,163,88"/>
+<area shape="rect" id="edge3-headlabel" href="dir_000025_000008.html" title="5" alt="" coords="183,104,191,123"/>
+<area shape="poly" id="edge4" href="dir_000025_000029.html" alt="" coords="179,84,227,122,224,126,175,89"/>
+<area shape="rect" id="edge4-headlabel" href="dir_000025_000029.html" title="3" alt="" coords="225,106,233,125"/>
+<area shape="rect" id="clust1" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html" title="dpsim&#45;models" alt="" coords="16,16,285,174"/>
 </map>

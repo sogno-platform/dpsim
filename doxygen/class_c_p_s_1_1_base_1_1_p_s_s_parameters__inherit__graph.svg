@@ -32,7 +32,7 @@
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="155.5,-22.25 0,-22.25 0,0 155.5,0 155.5,-22.25"/>
+<polygon fill="white" stroke="#666666" points="155.5,-22.25 0,-22.25 0,0 155.5,0 155.5,-22.25"/>
 <text text-anchor="middle" x="77.75" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::PSS1AParameters</text>
 </a>
 </g>

@@ -196,7 +196,7 @@ var sectionId = 'dynsection-1';
 <g id="Node000007" class="node">
 <title>Node7</title>
 <g id="a_Node000007"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="267,-232.56 152,-232.56 152,-181.81 267,-181.81 267,-232.56"/>
+<polygon fill="white" stroke="#666666" points="267,-232.56 152,-232.56 152,-181.81 267,-181.81 267,-232.56"/>
 <text text-anchor="start" x="160" y="-219.06" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="160" y="-204.81" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="209.5" y="-190.56" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; String &gt; &gt;</text>
@@ -236,7 +236,7 @@ var sectionId = 'dynsection-1';
 <g id="Node000009" class="node">
 <title>Node9</title>
 <g id="a_Node000009"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="115,-106.56 0,-106.56 0,-55.81 115,-55.81 115,-106.56"/>
+<polygon fill="white" stroke="#666666" points="115,-106.56 0,-106.56 0,-55.81 115,-55.81 115,-106.56"/>
 <text text-anchor="start" x="8" y="-93.06" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="8" y="-78.81" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="57.5" y="-64.56" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; T &gt; &gt;</text>
@@ -305,7 +305,7 @@ var sectionId = 'dynsection-1';
 <g id="Node000013" class="node">
 <title>Node13</title>
 <g id="a_Node000013"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="267,-82.56 152,-82.56 152,-31.81 267,-31.81 267,-82.56"/>
+<polygon fill="white" stroke="#666666" points="267,-82.56 152,-82.56 152,-31.81 267,-31.81 267,-82.56"/>
 <text text-anchor="start" x="160" y="-69.06" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="160" y="-54.81" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="209.5" y="-40.56" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Real &gt; &gt;</text>

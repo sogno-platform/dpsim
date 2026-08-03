@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t___ph3.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>CPS</b></li><li class="navelem"><b>Signal</b></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t___ph3.html">DecouplingLineEMT_Ph3</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
@@ -99,16 +107,18 @@ $(function(){ initResizable(false); });
   <div class="headertitle"><div class="title">CPS::Signal::DecouplingLineEMT_Ph3 Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="_decoupling_line_e_m_t___ph3_8h_source.html">DecouplingLineEMT_Ph3.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for CPS::Signal::DecouplingLineEMT_Ph3:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t___ph3__inherit__graph.svg" width="436" height="352"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for CPS::Signal::DecouplingLineEMT_Ph3:</div>
 <div class="dyncontent">
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t___ph3__coll__graph.svg" width="100%" height="542"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -122,120 +132,128 @@ Public Types</h2></td></tr>
 <tr class="memitem:a2589d34f3d5ce4b60b99c4963a4cbcf4" id="r_a2589d34f3d5ce4b60b99c4963a4cbcf4"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t___ph3.html">DecouplingLineEMT_Ph3</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2589d34f3d5ce4b60b99c4963a4cbcf4">Ptr</a></td></tr>
 <tr class="separator:a2589d34f3d5ce4b60b99c4963a4cbcf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_types_class_c_p_s_1_1_sim_signal_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_class_c_p_s_1_1_sim_signal_comp')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="class_c_p_s_1_1_sim_signal_comp.html">CPS::SimSignalComp</a></td></tr>
-<tr class="memitem:a854e17a6d4e3e9decaaceac82b61b9fe inherit pub_types_class_c_p_s_1_1_sim_signal_comp" id="r_a854e17a6d4e3e9decaaceac82b61b9fe"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><b>Behaviour</b> { <b>Initialization</b>
-, <b>Simulation</b>
+<tr class="memitem:a854e17a6d4e3e9decaaceac82b61b9fe inherit pub_types_class_c_p_s_1_1_sim_signal_comp" id="r_a854e17a6d4e3e9decaaceac82b61b9fe"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a854e17a6d4e3e9decaaceac82b61b9fe">Behaviour</a> { <a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a854e17a6d4e3e9decaaceac82b61b9fea578e10b71842ac5e11b9d14041df47f3">Initialization</a>
+, <a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a854e17a6d4e3e9decaaceac82b61b9fea7303849245d0b30cb7adee8a9910738c">Simulation</a>
  }</td></tr>
 <tr class="separator:a854e17a6d4e3e9decaaceac82b61b9fe inherit pub_types_class_c_p_s_1_1_sim_signal_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0e7daab9cffc2059b8432cbeb4aa2e5 inherit pub_types_class_c_p_s_1_1_sim_signal_comp" id="r_ac0e7daab9cffc2059b8432cbeb4aa2e5"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_sim_signal_comp.html">SimSignalComp</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#ac0e7daab9cffc2059b8432cbeb4aa2e5">Ptr</a></td></tr>
 <tr class="separator:ac0e7daab9cffc2059b8432cbeb4aa2e5 inherit pub_types_class_c_p_s_1_1_sim_signal_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a90c96524f4d727d98dd92d0f123606a1 inherit pub_types_class_c_p_s_1_1_sim_signal_comp" id="r_a90c96524f4d727d98dd92d0f123606a1"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; Ptr &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a90c96524f4d727d98dd92d0f123606a1">List</a></td></tr>
+<tr class="memitem:a90c96524f4d727d98dd92d0f123606a1 inherit pub_types_class_c_p_s_1_1_sim_signal_comp" id="r_a90c96524f4d727d98dd92d0f123606a1"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#ac0e7daab9cffc2059b8432cbeb4aa2e5">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a90c96524f4d727d98dd92d0f123606a1">List</a></td></tr>
 <tr class="separator:a90c96524f4d727d98dd92d0f123606a1 inherit pub_types_class_c_p_s_1_1_sim_signal_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_types_class_c_p_s_1_1_topological_signal_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_class_c_p_s_1_1_topological_signal_comp')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="class_c_p_s_1_1_topological_signal_comp.html">CPS::TopologicalSignalComp</a></td></tr>
 <tr class="memitem:a6b59eedccabbaef56eaf1c032cfd88e5 inherit pub_types_class_c_p_s_1_1_topological_signal_comp" id="r_a6b59eedccabbaef56eaf1c032cfd88e5"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_topological_signal_comp.html">TopologicalSignalComp</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_signal_comp.html#a6b59eedccabbaef56eaf1c032cfd88e5">Ptr</a></td></tr>
 <tr class="separator:a6b59eedccabbaef56eaf1c032cfd88e5 inherit pub_types_class_c_p_s_1_1_topological_signal_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af67a88cdc55bae6c936850b733d196fe inherit pub_types_class_c_p_s_1_1_topological_signal_comp" id="r_af67a88cdc55bae6c936850b733d196fe"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; Ptr &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_signal_comp.html#af67a88cdc55bae6c936850b733d196fe">List</a></td></tr>
+<tr class="memitem:af67a88cdc55bae6c936850b733d196fe inherit pub_types_class_c_p_s_1_1_topological_signal_comp" id="r_af67a88cdc55bae6c936850b733d196fe"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="class_c_p_s_1_1_topological_signal_comp.html#a6b59eedccabbaef56eaf1c032cfd88e5">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_signal_comp.html#af67a88cdc55bae6c936850b733d196fe">List</a></td></tr>
 <tr class="separator:af67a88cdc55bae6c936850b733d196fe inherit pub_types_class_c_p_s_1_1_topological_signal_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_types_class_c_p_s_1_1_identified_object"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_class_c_p_s_1_1_identified_object')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="class_c_p_s_1_1_identified_object.html">CPS::IdentifiedObject</a></td></tr>
 <tr class="memitem:a45edcbbe8a23ba53d17473f08d7adf95 inherit pub_types_class_c_p_s_1_1_identified_object" id="r_a45edcbbe8a23ba53d17473f08d7adf95"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_identified_object.html">IdentifiedObject</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a45edcbbe8a23ba53d17473f08d7adf95">Ptr</a></td></tr>
 <tr class="separator:a45edcbbe8a23ba53d17473f08d7adf95 inherit pub_types_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a981a607f5a619bbc40c916fcf7048a24 inherit pub_types_class_c_p_s_1_1_identified_object" id="r_a981a607f5a619bbc40c916fcf7048a24"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; Ptr &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a981a607f5a619bbc40c916fcf7048a24">List</a></td></tr>
+<tr class="memitem:a981a607f5a619bbc40c916fcf7048a24 inherit pub_types_class_c_p_s_1_1_identified_object" id="r_a981a607f5a619bbc40c916fcf7048a24"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="class_c_p_s_1_1_identified_object.html#a45edcbbe8a23ba53d17473f08d7adf95">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a981a607f5a619bbc40c916fcf7048a24">List</a></td></tr>
 <tr class="separator:a981a607f5a619bbc40c916fcf7048a24 inherit pub_types_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad6e7435a3090ab2d86e58b20ffe0eb6e" id="r_ad6e7435a3090ab2d86e58b20ffe0eb6e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad6e7435a3090ab2d86e58b20ffe0eb6e">DecouplingLineEMT_Ph3</a> (String name, Logger::Level logLevel=Logger::Level::info)</td></tr>
+<tr class="memitem:ad6e7435a3090ab2d86e58b20ffe0eb6e" id="r_ad6e7435a3090ab2d86e58b20ffe0eb6e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad6e7435a3090ab2d86e58b20ffe0eb6e">DecouplingLineEMT_Ph3</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel=Logger::Level::info)</td></tr>
 <tr class="separator:ad6e7435a3090ab2d86e58b20ffe0eb6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25c58b8363d68a9fb6b10ba4e7045341" id="r_a25c58b8363d68a9fb6b10ba4e7045341"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a25c58b8363d68a9fb6b10ba4e7045341">setParameters</a> (<a class="el" href="class_c_p_s_1_1_sim_node.html">SimNode</a>&lt; Real &gt;::Ptr node1, <a class="el" href="class_c_p_s_1_1_sim_node.html">SimNode</a>&lt; Real &gt;::Ptr node2, Matrix resistance, Matrix inductance, Matrix capacitance)</td></tr>
+<tr class="memitem:a25c58b8363d68a9fb6b10ba4e7045341" id="r_a25c58b8363d68a9fb6b10ba4e7045341"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a25c58b8363d68a9fb6b10ba4e7045341">setParameters</a> (<a class="el" href="class_c_p_s_1_1_sim_node.html">SimNode</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt;<a class="el" href="#a2589d34f3d5ce4b60b99c4963a4cbcf4">::Ptr</a> node1, <a class="el" href="class_c_p_s_1_1_sim_node.html">SimNode</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt;<a class="el" href="#a2589d34f3d5ce4b60b99c4963a4cbcf4">::Ptr</a> node2, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> resistance, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> inductance, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> capacitance)</td></tr>
 <tr class="separator:a25c58b8363d68a9fb6b10ba4e7045341"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5729a9db9ec903b0729644c277a1fa8f" id="r_a5729a9db9ec903b0729644c277a1fa8f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5729a9db9ec903b0729644c277a1fa8f">initialize</a> (Real omega, Real timeStep)</td></tr>
+<tr class="memitem:a5729a9db9ec903b0729644c277a1fa8f" id="r_a5729a9db9ec903b0729644c277a1fa8f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5729a9db9ec903b0729644c277a1fa8f">initialize</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> omega, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> timeStep)</td></tr>
 <tr class="separator:a5729a9db9ec903b0729644c277a1fa8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57f3fe697efd342bd08049a3d22d50be" id="r_a57f3fe697efd342bd08049a3d22d50be"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a57f3fe697efd342bd08049a3d22d50be">step</a> (Real time, Int timeStepCount)</td></tr>
+<tr class="memitem:a57f3fe697efd342bd08049a3d22d50be" id="r_a57f3fe697efd342bd08049a3d22d50be"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a57f3fe697efd342bd08049a3d22d50be">step</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> time, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> timeStepCount)</td></tr>
 <tr class="separator:a57f3fe697efd342bd08049a3d22d50be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acbe610f3bb937b428feafb0069fa23e3" id="r_acbe610f3bb937b428feafb0069fa23e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acbe610f3bb937b428feafb0069fa23e3">postStep</a> ()</td></tr>
 <tr class="separator:acbe610f3bb937b428feafb0069fa23e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af96de91ae3479dedc07f6e1a5e33f07f" id="r_af96de91ae3479dedc07f6e1a5e33f07f"><td class="memItemLeft" align="right" valign="top">Task::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af96de91ae3479dedc07f6e1a5e33f07f">getTasks</a> ()</td></tr>
+<tr class="memitem:af96de91ae3479dedc07f6e1a5e33f07f" id="r_af96de91ae3479dedc07f6e1a5e33f07f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_task.html#ad081ca27190e0b2e1887a8d6cb612a66">Task::List</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af96de91ae3479dedc07f6e1a5e33f07f">getTasks</a> ()</td></tr>
 <tr class="separator:af96de91ae3479dedc07f6e1a5e33f07f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47ff6b37a079e8e112ff1adc19a7033b" id="r_a47ff6b37a079e8e112ff1adc19a7033b"><td class="memItemLeft" align="right" valign="top">IdentifiedObject::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a47ff6b37a079e8e112ff1adc19a7033b">getLineComponents</a> ()</td></tr>
+<tr class="memitem:a47ff6b37a079e8e112ff1adc19a7033b" id="r_a47ff6b37a079e8e112ff1adc19a7033b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_identified_object.html#a981a607f5a619bbc40c916fcf7048a24">IdentifiedObject::List</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a47ff6b37a079e8e112ff1adc19a7033b">getLineComponents</a> ()</td></tr>
 <tr class="separator:a47ff6b37a079e8e112ff1adc19a7033b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_c_p_s_1_1_sim_signal_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_c_p_s_1_1_sim_signal_comp')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_c_p_s_1_1_sim_signal_comp.html">CPS::SimSignalComp</a></td></tr>
-<tr class="memitem:ac0a5edec1e98621bf94aaee8f20e1040 inherit pub_methods_class_c_p_s_1_1_sim_signal_comp" id="r_ac0a5edec1e98621bf94aaee8f20e1040"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#ac0a5edec1e98621bf94aaee8f20e1040">SimSignalComp</a> (String <a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, String name, Logger::Level logLevel=Logger::Level::off)</td></tr>
+<tr class="memitem:ac0a5edec1e98621bf94aaee8f20e1040 inherit pub_methods_class_c_p_s_1_1_sim_signal_comp" id="r_ac0a5edec1e98621bf94aaee8f20e1040"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#ac0a5edec1e98621bf94aaee8f20e1040">SimSignalComp</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel=Logger::Level::off)</td></tr>
 <tr class="separator:ac0a5edec1e98621bf94aaee8f20e1040 inherit pub_methods_class_c_p_s_1_1_sim_signal_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8648de6f1a8ba743bbf1c6de096bad3d inherit pub_methods_class_c_p_s_1_1_sim_signal_comp" id="r_a8648de6f1a8ba743bbf1c6de096bad3d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a8648de6f1a8ba743bbf1c6de096bad3d">SimSignalComp</a> (String name, Logger::Level logLevel=Logger::Level::off)</td></tr>
+<tr class="memitem:a8648de6f1a8ba743bbf1c6de096bad3d inherit pub_methods_class_c_p_s_1_1_sim_signal_comp" id="r_a8648de6f1a8ba743bbf1c6de096bad3d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a8648de6f1a8ba743bbf1c6de096bad3d">SimSignalComp</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel=Logger::Level::off)</td></tr>
 <tr class="separator:a8648de6f1a8ba743bbf1c6de096bad3d inherit pub_methods_class_c_p_s_1_1_sim_signal_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a921a46b50d7bf90c149266f938aaca9d inherit pub_methods_class_c_p_s_1_1_sim_signal_comp" id="r_a921a46b50d7bf90c149266f938aaca9d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a921a46b50d7bf90c149266f938aaca9d">initialize</a> (Real timeStep)</td></tr>
+<tr class="memitem:ae6b531c51b210913387055601047f9d0 inherit pub_methods_class_c_p_s_1_1_sim_signal_comp" id="r_ae6b531c51b210913387055601047f9d0"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#ae6b531c51b210913387055601047f9d0">~SimSignalComp</a> ()</td></tr>
+<tr class="separator:ae6b531c51b210913387055601047f9d0 inherit pub_methods_class_c_p_s_1_1_sim_signal_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a921a46b50d7bf90c149266f938aaca9d inherit pub_methods_class_c_p_s_1_1_sim_signal_comp" id="r_a921a46b50d7bf90c149266f938aaca9d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a921a46b50d7bf90c149266f938aaca9d">initialize</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> timeStep)</td></tr>
 <tr class="separator:a921a46b50d7bf90c149266f938aaca9d inherit pub_methods_class_c_p_s_1_1_sim_signal_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a36683fa7c374d9010a7c24bbb7f83d88 inherit pub_methods_class_c_p_s_1_1_sim_signal_comp" id="r_a36683fa7c374d9010a7c24bbb7f83d88"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a36683fa7c374d9010a7c24bbb7f83d88">setBehaviour</a> (Behaviour behaviour)</td></tr>
+<tr class="memitem:a36683fa7c374d9010a7c24bbb7f83d88 inherit pub_methods_class_c_p_s_1_1_sim_signal_comp" id="r_a36683fa7c374d9010a7c24bbb7f83d88"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a36683fa7c374d9010a7c24bbb7f83d88">setBehaviour</a> (<a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a854e17a6d4e3e9decaaceac82b61b9fe">Behaviour</a> behaviour)</td></tr>
 <tr class="memdesc:a36683fa7c374d9010a7c24bbb7f83d88 inherit pub_methods_class_c_p_s_1_1_sim_signal_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set behavior of component, e.g. initialization.  <br /></td></tr>
 <tr class="separator:a36683fa7c374d9010a7c24bbb7f83d88 inherit pub_methods_class_c_p_s_1_1_sim_signal_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_c_p_s_1_1_topological_signal_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_c_p_s_1_1_topological_signal_comp')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_c_p_s_1_1_topological_signal_comp.html">CPS::TopologicalSignalComp</a></td></tr>
-<tr class="memitem:a120c61d193554754fbb2b783cc8c48d3 inherit pub_methods_class_c_p_s_1_1_topological_signal_comp" id="r_a120c61d193554754fbb2b783cc8c48d3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_signal_comp.html#a120c61d193554754fbb2b783cc8c48d3">TopologicalSignalComp</a> (String <a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, String name, Logger::Level logLevel=Logger::Level::off)</td></tr>
+<tr class="memitem:a120c61d193554754fbb2b783cc8c48d3 inherit pub_methods_class_c_p_s_1_1_topological_signal_comp" id="r_a120c61d193554754fbb2b783cc8c48d3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_signal_comp.html#a120c61d193554754fbb2b783cc8c48d3">TopologicalSignalComp</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel=Logger::Level::off)</td></tr>
 <tr class="memdesc:a120c61d193554754fbb2b783cc8c48d3 inherit pub_methods_class_c_p_s_1_1_topological_signal_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Basic constructor that takes UID, name and log level.  <br /></td></tr>
 <tr class="separator:a120c61d193554754fbb2b783cc8c48d3 inherit pub_methods_class_c_p_s_1_1_topological_signal_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4cb3a67484fe7104b4f9e9ab4ac9e865 inherit pub_methods_class_c_p_s_1_1_topological_signal_comp" id="r_a4cb3a67484fe7104b4f9e9ab4ac9e865"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_signal_comp.html#a4cb3a67484fe7104b4f9e9ab4ac9e865">TopologicalSignalComp</a> (String name, Logger::Level logLevel=Logger::Level::off)</td></tr>
+<tr class="memitem:a4cb3a67484fe7104b4f9e9ab4ac9e865 inherit pub_methods_class_c_p_s_1_1_topological_signal_comp" id="r_a4cb3a67484fe7104b4f9e9ab4ac9e865"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_signal_comp.html#a4cb3a67484fe7104b4f9e9ab4ac9e865">TopologicalSignalComp</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel=Logger::Level::off)</td></tr>
 <tr class="memdesc:a4cb3a67484fe7104b4f9e9ab4ac9e865 inherit pub_methods_class_c_p_s_1_1_topological_signal_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Basic constructor that takes name and log level and sets the UID to name as well.  <br /></td></tr>
 <tr class="separator:a4cb3a67484fe7104b4f9e9ab4ac9e865 inherit pub_methods_class_c_p_s_1_1_topological_signal_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6b7afeb785a45bf3a30efd4f70e1bb7 inherit pub_methods_class_c_p_s_1_1_topological_signal_comp" id="r_aa6b7afeb785a45bf3a30efd4f70e1bb7"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_signal_comp.html#aa6b7afeb785a45bf3a30efd4f70e1bb7">~TopologicalSignalComp</a> ()</td></tr>
+<tr class="separator:aa6b7afeb785a45bf3a30efd4f70e1bb7 inherit pub_methods_class_c_p_s_1_1_topological_signal_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_c_p_s_1_1_identified_object"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_c_p_s_1_1_identified_object')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_c_p_s_1_1_identified_object.html">CPS::IdentifiedObject</a></td></tr>
-<tr class="memitem:a48494cd9857a6df115d6ae5aa0073d5d inherit pub_methods_class_c_p_s_1_1_identified_object" id="r_a48494cd9857a6df115d6ae5aa0073d5d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a48494cd9857a6df115d6ae5aa0073d5d">IdentifiedObject</a> (const String &amp;<a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, const String &amp;name)</td></tr>
+<tr class="memitem:af266e0a6fb154503432cf5361d70584e inherit pub_methods_class_c_p_s_1_1_identified_object" id="r_af266e0a6fb154503432cf5361d70584e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#af266e0a6fb154503432cf5361d70584e">IdentifiedObject</a> ()</td></tr>
+<tr class="separator:af266e0a6fb154503432cf5361d70584e inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48494cd9857a6df115d6ae5aa0073d5d inherit pub_methods_class_c_p_s_1_1_identified_object" id="r_a48494cd9857a6df115d6ae5aa0073d5d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a48494cd9857a6df115d6ae5aa0073d5d">IdentifiedObject</a> (const <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;<a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, const <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;<a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>)</td></tr>
 <tr class="separator:a48494cd9857a6df115d6ae5aa0073d5d inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae27a37f7381c0923d50fd2d73382dea6 inherit pub_methods_class_c_p_s_1_1_identified_object" id="r_ae27a37f7381c0923d50fd2d73382dea6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#ae27a37f7381c0923d50fd2d73382dea6">IdentifiedObject</a> (const String &amp;name)</td></tr>
+<tr class="memitem:ae27a37f7381c0923d50fd2d73382dea6 inherit pub_methods_class_c_p_s_1_1_identified_object" id="r_ae27a37f7381c0923d50fd2d73382dea6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#ae27a37f7381c0923d50fd2d73382dea6">IdentifiedObject</a> (const <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;<a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>)</td></tr>
 <tr class="separator:ae27a37f7381c0923d50fd2d73382dea6 inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd676ba54ba38172e56e1b492bfe54ad inherit pub_methods_class_c_p_s_1_1_identified_object" id="r_acd676ba54ba38172e56e1b492bfe54ad"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributeBase::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#acd676ba54ba38172e56e1b492bfe54ad">attribute</a> (const String &amp;name) const</td></tr>
+<tr class="memitem:a4aa0b3df2d317b36e7627ac1deefe395 inherit pub_methods_class_c_p_s_1_1_identified_object" id="r_a4aa0b3df2d317b36e7627ac1deefe395"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a4aa0b3df2d317b36e7627ac1deefe395">~IdentifiedObject</a> ()=default</td></tr>
+<tr class="separator:a4aa0b3df2d317b36e7627ac1deefe395 inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd676ba54ba38172e56e1b492bfe54ad inherit pub_methods_class_c_p_s_1_1_identified_object" id="r_acd676ba54ba38172e56e1b492bfe54ad"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">AttributeBase::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#acd676ba54ba38172e56e1b492bfe54ad">attribute</a> (const <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;<a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>) const</td></tr>
 <tr class="memdesc:acd676ba54ba38172e56e1b492bfe54ad inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return pointer to an attribute.  <br /></td></tr>
 <tr class="separator:acd676ba54ba38172e56e1b492bfe54ad inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e10f199c595e0699725ad2cd4391c2c inherit pub_methods_class_c_p_s_1_1_identified_object" id="r_a3e10f199c595e0699725ad2cd4391c2c"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
-<tr class="memitem:a3e10f199c595e0699725ad2cd4391c2c inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; T &gt;::Ptr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a3e10f199c595e0699725ad2cd4391c2c">attributeTyped</a> (const String &amp;name) const</td></tr>
+<tr class="memitem:a3e10f199c595e0699725ad2cd4391c2c inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; T &gt;<a class="el" href="class_c_p_s_1_1_identified_object.html#a45edcbbe8a23ba53d17473f08d7adf95">::Ptr</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a3e10f199c595e0699725ad2cd4391c2c">attributeTyped</a> (const <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;<a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>) const</td></tr>
 <tr class="memdesc:a3e10f199c595e0699725ad2cd4391c2c inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return pointer to an attribute.  <br /></td></tr>
 <tr class="separator:a3e10f199c595e0699725ad2cd4391c2c inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23d3f8e780f080b4049b9e5be0662957 inherit pub_methods_class_c_p_s_1_1_identified_object" id="r_a23d3f8e780f080b4049b9e5be0662957"><td class="memItemLeft" align="right" valign="top">const AttributeBase::Map &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a23d3f8e780f080b4049b9e5be0662957">attributes</a> () const</td></tr>
+<tr class="memitem:a23d3f8e780f080b4049b9e5be0662957 inherit pub_methods_class_c_p_s_1_1_identified_object" id="r_a23d3f8e780f080b4049b9e5be0662957"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute_base.html#afe3836eb4d78517b454cd0a1d1aabd1e">AttributeBase::Map</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a23d3f8e780f080b4049b9e5be0662957">attributes</a> () const</td></tr>
 <tr class="separator:a23d3f8e780f080b4049b9e5be0662957 inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38b8318459b1651160029263eff6ca47 inherit pub_methods_class_c_p_s_1_1_identified_object" id="r_a38b8318459b1651160029263eff6ca47"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a> ()</td></tr>
+<tr class="memitem:a38b8318459b1651160029263eff6ca47 inherit pub_methods_class_c_p_s_1_1_identified_object" id="r_a38b8318459b1651160029263eff6ca47"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a> ()</td></tr>
 <tr class="separator:a38b8318459b1651160029263eff6ca47 inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a66b765f33341283bc9b916c74047c749 inherit pub_methods_class_c_p_s_1_1_identified_object" id="r_a66b765f33341283bc9b916c74047c749"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a> ()</td></tr>
+<tr class="memitem:a66b765f33341283bc9b916c74047c749 inherit pub_methods_class_c_p_s_1_1_identified_object" id="r_a66b765f33341283bc9b916c74047c749"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a> ()</td></tr>
 <tr class="memdesc:a66b765f33341283bc9b916c74047c749 inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns unique id.  <br /></td></tr>
 <tr class="separator:a66b765f33341283bc9b916c74047c749 inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a95f413fe2dd50b6e2a0369bda063e6 inherit pub_methods_class_c_p_s_1_1_identified_object" id="r_a9a95f413fe2dd50b6e2a0369bda063e6"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a9a95f413fe2dd50b6e2a0369bda063e6">type</a> ()</td></tr>
+<tr class="memitem:a9a95f413fe2dd50b6e2a0369bda063e6 inherit pub_methods_class_c_p_s_1_1_identified_object" id="r_a9a95f413fe2dd50b6e2a0369bda063e6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a9a95f413fe2dd50b6e2a0369bda063e6">type</a> ()</td></tr>
 <tr class="memdesc:a9a95f413fe2dd50b6e2a0369bda063e6 inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get component type (cross-platform)  <br /></td></tr>
 <tr class="separator:a9a95f413fe2dd50b6e2a0369bda063e6 inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae08800e327db6af9a7249cabefe4ba2f inherit pub_methods_class_c_p_s_1_1_identified_object" id="r_ae08800e327db6af9a7249cabefe4ba2f"><td class="memItemLeft" align="right" valign="top">virtual String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#ae08800e327db6af9a7249cabefe4ba2f">description</a> ()</td></tr>
+<tr class="memitem:ae08800e327db6af9a7249cabefe4ba2f inherit pub_methods_class_c_p_s_1_1_identified_object" id="r_ae08800e327db6af9a7249cabefe4ba2f"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#ae08800e327db6af9a7249cabefe4ba2f">description</a> ()</td></tr>
 <tr class="separator:ae08800e327db6af9a7249cabefe4ba2f inherit pub_methods_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:aee8371af9a7f738db8e6880740b1008f" id="r_aee8371af9a7f738db8e6880740b1008f"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aee8371af9a7f738db8e6880740b1008f">mSrcCur1Ref</a></td></tr>
+<tr class="memitem:aee8371af9a7f738db8e6880740b1008f" id="r_aee8371af9a7f738db8e6880740b1008f"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="#a2589d34f3d5ce4b60b99c4963a4cbcf4">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aee8371af9a7f738db8e6880740b1008f">mSrcCur1Ref</a></td></tr>
 <tr class="separator:aee8371af9a7f738db8e6880740b1008f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7985d19746fb7c8e876bd007497ef236" id="r_a7985d19746fb7c8e876bd007497ef236"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7985d19746fb7c8e876bd007497ef236">mSrcCur2Ref</a></td></tr>
+<tr class="memitem:a7985d19746fb7c8e876bd007497ef236" id="r_a7985d19746fb7c8e876bd007497ef236"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="#a2589d34f3d5ce4b60b99c4963a4cbcf4">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7985d19746fb7c8e876bd007497ef236">mSrcCur2Ref</a></td></tr>
 <tr class="separator:a7985d19746fb7c8e876bd007497ef236"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc3efed73b7b8292c21c703687cccea6" id="r_afc3efed73b7b8292c21c703687cccea6"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afc3efed73b7b8292c21c703687cccea6">mStates</a></td></tr>
+<tr class="memitem:afc3efed73b7b8292c21c703687cccea6" id="r_afc3efed73b7b8292c21c703687cccea6"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="#a2589d34f3d5ce4b60b99c4963a4cbcf4">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afc3efed73b7b8292c21c703687cccea6">mStates</a></td></tr>
 <tr class="memdesc:afc3efed73b7b8292c21c703687cccea6"><td class="mdescLeft">&#160;</td><td class="mdescRight">FIXME: workaround for dependency analysis as long as the states aren't attributes.  <br /></td></tr>
 <tr class="separator:afc3efed73b7b8292c21c703687cccea6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_class_c_p_s_1_1_identified_object"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_attribs_class_c_p_s_1_1_identified_object')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="class_c_p_s_1_1_identified_object.html">CPS::IdentifiedObject</a></td></tr>
-<tr class="memitem:a13661eab6b670e4a5a3aa5777f8fd5d0 inherit pub_attribs_class_c_p_s_1_1_identified_object" id="r_a13661eab6b670e4a5a3aa5777f8fd5d0"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; String &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a13661eab6b670e4a5a3aa5777f8fd5d0">mName</a></td></tr>
+<tr class="memitem:a13661eab6b670e4a5a3aa5777f8fd5d0 inherit pub_attribs_class_c_p_s_1_1_identified_object" id="r_a13661eab6b670e4a5a3aa5777f8fd5d0"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &gt;<a class="el" href="class_c_p_s_1_1_identified_object.html#a45edcbbe8a23ba53d17473f08d7adf95">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a13661eab6b670e4a5a3aa5777f8fd5d0">mName</a></td></tr>
 <tr class="memdesc:a13661eab6b670e4a5a3aa5777f8fd5d0 inherit pub_attribs_class_c_p_s_1_1_identified_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Human readable name.  <br /></td></tr>
 <tr class="separator:a13661eab6b670e4a5a3aa5777f8fd5d0 inherit pub_attribs_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad143c517fdb9d0deca573f15169e97e8 inherit pub_attribs_class_c_p_s_1_1_identified_object" id="r_ad143c517fdb9d0deca573f15169e97e8"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; String &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#ad143c517fdb9d0deca573f15169e97e8">mUID</a></td></tr>
+<tr class="memitem:ad143c517fdb9d0deca573f15169e97e8 inherit pub_attribs_class_c_p_s_1_1_identified_object" id="r_ad143c517fdb9d0deca573f15169e97e8"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &gt;<a class="el" href="class_c_p_s_1_1_identified_object.html#a45edcbbe8a23ba53d17473f08d7adf95">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#ad143c517fdb9d0deca573f15169e97e8">mUID</a></td></tr>
 <tr class="memdesc:ad143c517fdb9d0deca573f15169e97e8 inherit pub_attribs_class_c_p_s_1_1_identified_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unique identifier.  <br /></td></tr>
 <tr class="separator:ad143c517fdb9d0deca573f15169e97e8 inherit pub_attribs_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:ac42d26d78d86199e6f6d66a2faf0f1ff" id="r_ac42d26d78d86199e6f6d66a2faf0f1ff"><td class="memItemLeft" align="right" valign="top">Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac42d26d78d86199e6f6d66a2faf0f1ff">interpolate</a> (Matrix &amp;data)</td></tr>
+<tr class="memitem:ac42d26d78d86199e6f6d66a2faf0f1ff" id="r_ac42d26d78d86199e6f6d66a2faf0f1ff"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac42d26d78d86199e6f6d66a2faf0f1ff">interpolate</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;<a class="el" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>)</td></tr>
 <tr class="separator:ac42d26d78d86199e6f6d66a2faf0f1ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a765bda9f7acc918a7cd7f4fa31ca4556" id="r_a765bda9f7acc918a7cd7f4fa31ca4556"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a765bda9f7acc918a7cd7f4fa31ca4556">mDelay</a></td></tr>
+<tr class="memitem:a765bda9f7acc918a7cd7f4fa31ca4556" id="r_a765bda9f7acc918a7cd7f4fa31ca4556"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a765bda9f7acc918a7cd7f4fa31ca4556">mDelay</a></td></tr>
 <tr class="separator:a765bda9f7acc918a7cd7f4fa31ca4556"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acea76f957ff8aa2428835566bbea1481" id="r_acea76f957ff8aa2428835566bbea1481"><td class="memItemLeft" align="right" valign="top">Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acea76f957ff8aa2428835566bbea1481">mResistance</a> = Matrix::Zero(3, 3)</td></tr>
+<tr class="memitem:acea76f957ff8aa2428835566bbea1481" id="r_acea76f957ff8aa2428835566bbea1481"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acea76f957ff8aa2428835566bbea1481">mResistance</a> = Matrix::Zero(3, 3)</td></tr>
 <tr class="separator:acea76f957ff8aa2428835566bbea1481"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4cb0be8d14ecebae633410ee33b6157a" id="r_a4cb0be8d14ecebae633410ee33b6157a"><td class="memItemLeft" align="right" valign="top">Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4cb0be8d14ecebae633410ee33b6157a">mInductance</a> = Matrix::Zero(3, 3)</td></tr>
+<tr class="memitem:a4cb0be8d14ecebae633410ee33b6157a" id="r_a4cb0be8d14ecebae633410ee33b6157a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4cb0be8d14ecebae633410ee33b6157a">mInductance</a> = Matrix::Zero(3, 3)</td></tr>
 <tr class="separator:a4cb0be8d14ecebae633410ee33b6157a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1dc050290ddd1e94e6992edcc7dfdd55" id="r_a1dc050290ddd1e94e6992edcc7dfdd55"><td class="memItemLeft" align="right" valign="top">Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1dc050290ddd1e94e6992edcc7dfdd55">mCapacitance</a> = Matrix::Zero(3, 3)</td></tr>
+<tr class="memitem:a1dc050290ddd1e94e6992edcc7dfdd55" id="r_a1dc050290ddd1e94e6992edcc7dfdd55"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1dc050290ddd1e94e6992edcc7dfdd55">mCapacitance</a> = Matrix::Zero(3, 3)</td></tr>
 <tr class="separator:a1dc050290ddd1e94e6992edcc7dfdd55"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a55d05213492a97cb843b96073ac95118" id="r_a55d05213492a97cb843b96073ac95118"><td class="memItemLeft" align="right" valign="top">Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a55d05213492a97cb843b96073ac95118">mSurgeImpedance</a></td></tr>
+<tr class="memitem:a55d05213492a97cb843b96073ac95118" id="r_a55d05213492a97cb843b96073ac95118"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a55d05213492a97cb843b96073ac95118">mSurgeImpedance</a></td></tr>
 <tr class="separator:a55d05213492a97cb843b96073ac95118"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a90d5584b486b375d64f770c8f75c5c6d" id="r_a90d5584b486b375d64f770c8f75c5c6d"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_sim_node.html">EMT::SimNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a90d5584b486b375d64f770c8f75c5c6d">mNode1</a></td></tr>
+<tr class="memitem:a90d5584b486b375d64f770c8f75c5c6d" id="r_a90d5584b486b375d64f770c8f75c5c6d"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="namespace_c_p_s_1_1_e_m_t.html#ac323528d571e036f9a7a1b21a181cd73">EMT::SimNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a90d5584b486b375d64f770c8f75c5c6d">mNode1</a></td></tr>
 <tr class="separator:a90d5584b486b375d64f770c8f75c5c6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7fa3fa7fb76bd5a180bf42488542acc0" id="r_a7fa3fa7fb76bd5a180bf42488542acc0"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_sim_node.html">EMT::SimNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7fa3fa7fb76bd5a180bf42488542acc0">mNode2</a></td></tr>
+<tr class="memitem:a7fa3fa7fb76bd5a180bf42488542acc0" id="r_a7fa3fa7fb76bd5a180bf42488542acc0"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="namespace_c_p_s_1_1_e_m_t.html#ac323528d571e036f9a7a1b21a181cd73">EMT::SimNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7fa3fa7fb76bd5a180bf42488542acc0">mNode2</a></td></tr>
 <tr class="separator:a7fa3fa7fb76bd5a180bf42488542acc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e6e4dc26ecb8d881e667d554787d72c" id="r_a5e6e4dc26ecb8d881e667d554787d72c"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_resistor.html">EMT::Ph3::Resistor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5e6e4dc26ecb8d881e667d554787d72c">mRes1</a></td></tr>
 <tr class="separator:a5e6e4dc26ecb8d881e667d554787d72c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -245,37 +263,37 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a6e779ecfdbf0aa59fbc2d73695a9cc29"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b64202e9f26e69ac5b5fb338f8b4c87" id="r_a0b64202e9f26e69ac5b5fb338f8b4c87"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_controlled_current_source.html">EMT::Ph3::ControlledCurrentSource</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0b64202e9f26e69ac5b5fb338f8b4c87">mSrc2</a></td></tr>
 <tr class="separator:a0b64202e9f26e69ac5b5fb338f8b4c87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d054fe62e58bc95bd3e8acbd3f9810c" id="r_a2d054fe62e58bc95bd3e8acbd3f9810c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2d054fe62e58bc95bd3e8acbd3f9810c">mSrcCur1</a></td></tr>
+<tr class="memitem:a2d054fe62e58bc95bd3e8acbd3f9810c" id="r_a2d054fe62e58bc95bd3e8acbd3f9810c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="#a2589d34f3d5ce4b60b99c4963a4cbcf4">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2d054fe62e58bc95bd3e8acbd3f9810c">mSrcCur1</a></td></tr>
 <tr class="separator:a2d054fe62e58bc95bd3e8acbd3f9810c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c0b07c8061933ad5c9e50a7fd8e75c4" id="r_a0c0b07c8061933ad5c9e50a7fd8e75c4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0c0b07c8061933ad5c9e50a7fd8e75c4">mSrcCur2</a></td></tr>
+<tr class="memitem:a0c0b07c8061933ad5c9e50a7fd8e75c4" id="r_a0c0b07c8061933ad5c9e50a7fd8e75c4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="#a2589d34f3d5ce4b60b99c4963a4cbcf4">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0c0b07c8061933ad5c9e50a7fd8e75c4">mSrcCur2</a></td></tr>
 <tr class="separator:a0c0b07c8061933ad5c9e50a7fd8e75c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa087aaf869b6fc580e490135386e1c29" id="r_aa087aaf869b6fc580e490135386e1c29"><td class="memItemLeft" align="right" valign="top">Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa087aaf869b6fc580e490135386e1c29">mVolt1</a></td></tr>
+<tr class="memitem:aa087aaf869b6fc580e490135386e1c29" id="r_aa087aaf869b6fc580e490135386e1c29"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa087aaf869b6fc580e490135386e1c29">mVolt1</a></td></tr>
 <tr class="separator:aa087aaf869b6fc580e490135386e1c29"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afd710e5e65e3b33517eba3f610089d67" id="r_afd710e5e65e3b33517eba3f610089d67"><td class="memItemLeft" align="right" valign="top">Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afd710e5e65e3b33517eba3f610089d67">mVolt2</a></td></tr>
+<tr class="memitem:afd710e5e65e3b33517eba3f610089d67" id="r_afd710e5e65e3b33517eba3f610089d67"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afd710e5e65e3b33517eba3f610089d67">mVolt2</a></td></tr>
 <tr class="separator:afd710e5e65e3b33517eba3f610089d67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad84d5c674427358e80d1827a71c98c94" id="r_ad84d5c674427358e80d1827a71c98c94"><td class="memItemLeft" align="right" valign="top">Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad84d5c674427358e80d1827a71c98c94">mCur1</a></td></tr>
+<tr class="memitem:ad84d5c674427358e80d1827a71c98c94" id="r_ad84d5c674427358e80d1827a71c98c94"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad84d5c674427358e80d1827a71c98c94">mCur1</a></td></tr>
 <tr class="separator:ad84d5c674427358e80d1827a71c98c94"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7dcd908eac917aafccbfe3b53ee795cd" id="r_a7dcd908eac917aafccbfe3b53ee795cd"><td class="memItemLeft" align="right" valign="top">Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7dcd908eac917aafccbfe3b53ee795cd">mCur2</a></td></tr>
+<tr class="memitem:a7dcd908eac917aafccbfe3b53ee795cd" id="r_a7dcd908eac917aafccbfe3b53ee795cd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7dcd908eac917aafccbfe3b53ee795cd">mCur2</a></td></tr>
 <tr class="separator:a7dcd908eac917aafccbfe3b53ee795cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a55469adb25b74f857cbdf40496c0ae93" id="r_a55469adb25b74f857cbdf40496c0ae93"><td class="memItemLeft" align="right" valign="top">UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a55469adb25b74f857cbdf40496c0ae93">mBufIdx</a> = 0</td></tr>
+<tr class="memitem:a55469adb25b74f857cbdf40496c0ae93" id="r_a55469adb25b74f857cbdf40496c0ae93"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a55469adb25b74f857cbdf40496c0ae93">mBufIdx</a> = 0</td></tr>
 <tr class="separator:a55469adb25b74f857cbdf40496c0ae93"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aebffd90ebb24f61d7b5fe21c92d24929" id="r_aebffd90ebb24f61d7b5fe21c92d24929"><td class="memItemLeft" align="right" valign="top">UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aebffd90ebb24f61d7b5fe21c92d24929">mBufSize</a></td></tr>
+<tr class="memitem:aebffd90ebb24f61d7b5fe21c92d24929" id="r_aebffd90ebb24f61d7b5fe21c92d24929"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aebffd90ebb24f61d7b5fe21c92d24929">mBufSize</a></td></tr>
 <tr class="separator:aebffd90ebb24f61d7b5fe21c92d24929"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ae075a34f15ed545208032a6d3014b7" id="r_a2ae075a34f15ed545208032a6d3014b7"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2ae075a34f15ed545208032a6d3014b7">mAlpha</a></td></tr>
+<tr class="memitem:a2ae075a34f15ed545208032a6d3014b7" id="r_a2ae075a34f15ed545208032a6d3014b7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2ae075a34f15ed545208032a6d3014b7">mAlpha</a></td></tr>
 <tr class="separator:a2ae075a34f15ed545208032a6d3014b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_sim_signal_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_sim_signal_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_sim_signal_comp.html">CPS::SimSignalComp</a></td></tr>
-<tr class="memitem:a80f942eb4781bf009cc6a2ce72c7ff53 inherit pro_attribs_class_c_p_s_1_1_sim_signal_comp" id="r_a80f942eb4781bf009cc6a2ce72c7ff53"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a80f942eb4781bf009cc6a2ce72c7ff53">mBehaviour</a> = Behaviour::Simulation</td></tr>
+<tr class="memitem:a80f942eb4781bf009cc6a2ce72c7ff53 inherit pro_attribs_class_c_p_s_1_1_sim_signal_comp" id="r_a80f942eb4781bf009cc6a2ce72c7ff53"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a80f942eb4781bf009cc6a2ce72c7ff53">mBehaviour</a> = <a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a854e17a6d4e3e9decaaceac82b61b9fea7303849245d0b30cb7adee8a9910738c">Behaviour::Simulation</a></td></tr>
 <tr class="separator:a80f942eb4781bf009cc6a2ce72c7ff53 inherit pro_attribs_class_c_p_s_1_1_sim_signal_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_topological_signal_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_topological_signal_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_topological_signal_comp.html">CPS::TopologicalSignalComp</a></td></tr>
-<tr class="memitem:af317515bcc0e823009d2cb9a816d7dfa inherit pro_attribs_class_c_p_s_1_1_topological_signal_comp" id="r_af317515bcc0e823009d2cb9a816d7dfa"><td class="memItemLeft" align="right" valign="top">Logger::Log&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_signal_comp.html#af317515bcc0e823009d2cb9a816d7dfa">mSLog</a></td></tr>
+<tr class="memitem:af317515bcc0e823009d2cb9a816d7dfa inherit pro_attribs_class_c_p_s_1_1_topological_signal_comp" id="r_af317515bcc0e823009d2cb9a816d7dfa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">Logger::Log</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_signal_comp.html#af317515bcc0e823009d2cb9a816d7dfa">mSLog</a></td></tr>
 <tr class="memdesc:af317515bcc0e823009d2cb9a816d7dfa inherit pro_attribs_class_c_p_s_1_1_topological_signal_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Component logger.  <br /></td></tr>
 <tr class="separator:af317515bcc0e823009d2cb9a816d7dfa inherit pro_attribs_class_c_p_s_1_1_topological_signal_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1bca2c638523cf737ac16a92dcdc699 inherit pro_attribs_class_c_p_s_1_1_topological_signal_comp" id="r_aa1bca2c638523cf737ac16a92dcdc699"><td class="memItemLeft" align="right" valign="top">Logger::Level&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_signal_comp.html#aa1bca2c638523cf737ac16a92dcdc699">mLogLevel</a></td></tr>
+<tr class="memitem:aa1bca2c638523cf737ac16a92dcdc699 inherit pro_attribs_class_c_p_s_1_1_topological_signal_comp" id="r_aa1bca2c638523cf737ac16a92dcdc699"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_signal_comp.html#aa1bca2c638523cf737ac16a92dcdc699">mLogLevel</a></td></tr>
 <tr class="memdesc:aa1bca2c638523cf737ac16a92dcdc699 inherit pro_attribs_class_c_p_s_1_1_topological_signal_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Component logger control for internal variables.  <br /></td></tr>
 <tr class="separator:aa1bca2c638523cf737ac16a92dcdc699 inherit pro_attribs_class_c_p_s_1_1_topological_signal_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_identified_object"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_identified_object')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_identified_object.html">CPS::IdentifiedObject</a></td></tr>
-<tr class="memitem:af7497f9b94a45040b1601ac58f5e3d97 inherit pro_attribs_class_c_p_s_1_1_identified_object" id="r_af7497f9b94a45040b1601ac58f5e3d97"><td class="memItemLeft" align="right" valign="top">AttributeList::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#af7497f9b94a45040b1601ac58f5e3d97">mAttributes</a> = AttributeList::make()</td></tr>
-<tr class="memdesc:af7497f9b94a45040b1601ac58f5e3d97 inherit pro_attribs_class_c_p_s_1_1_identified_object"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a> List.  <br /></td></tr>
+<tr class="memitem:af7497f9b94a45040b1601ac58f5e3d97 inherit pro_attribs_class_c_p_s_1_1_identified_object" id="r_af7497f9b94a45040b1601ac58f5e3d97"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute_list.html#a49ff97075315610f2b8c923084bcd7d2">AttributeList::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#af7497f9b94a45040b1601ac58f5e3d97">mAttributes</a> = <a class="el" href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">AttributeList::make</a>()</td></tr>
+<tr class="memdesc:af7497f9b94a45040b1601ac58f5e3d97 inherit pro_attribs_class_c_p_s_1_1_identified_object"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a981a607f5a619bbc40c916fcf7048a24">List</a>.  <br /></td></tr>
 <tr class="separator:af7497f9b94a45040b1601ac58f5e3d97 inherit pro_attribs_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
@@ -295,7 +313,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::shared_ptr&lt;<a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t___ph3.html">DecouplingLineEMT_Ph3</a>&gt; CPS::Signal::DecouplingLineEMT_Ph3::Ptr</td>
+          <td class="memname">typedef std::shared_ptr&lt;<a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t___ph3.html">DecouplingLineEMT_Ph3</a>&gt; <a class="el" href="#a2589d34f3d5ce4b60b99c4963a4cbcf4">CPS::Signal::DecouplingLineEMT_Ph3::Ptr</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -314,12 +332,12 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">DecouplingLineEMT_Ph3::DecouplingLineEMT_Ph3 </td>
           <td>(</td>
-          <td class="paramtype">String</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Logger::Level</td>          <td class="paramname"><span class="paramname"><em>logLevel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Logger::Level::info</span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a></td>          <td class="paramname"><span class="paramname"><em>logLevel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Logger::Level::info</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -336,7 +354,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">IdentifiedObject::List DecouplingLineEMT_Ph3::getLineComponents </td>
+          <td class="memname"><a class="el" href="class_c_p_s_1_1_identified_object.html#a981a607f5a619bbc40c916fcf7048a24">IdentifiedObject::List</a> DecouplingLineEMT_Ph3::getLineComponents </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -358,7 +376,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Task::List DecouplingLineEMT_Ph3::getTasks </td>
+          <td class="memname"><a class="el" href="class_c_p_s_1_1_task.html#ad081ca27190e0b2e1887a8d6cb612a66">Task::List</a> DecouplingLineEMT_Ph3::getTasks </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -371,7 +389,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_signal_comp.html">CPS::SimSignalComp</a>.</p>
+<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a39aa9f7a81ecaccbb8933fbdf8c09041">CPS::SimSignalComp</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="_decoupling_line_e_m_t___ph3_8cpp_source.html#l00153">153</a> of file <a class="el" href="_decoupling_line_e_m_t___ph3_8cpp_source.html">DecouplingLineEMT_Ph3.cpp</a>.</p>
 
@@ -389,12 +407,12 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void DecouplingLineEMT_Ph3::initialize </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>omega</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>omega</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>timeStep</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>timeStep</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -404,7 +422,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_signal_comp.html">CPS::SimSignalComp</a>.</p>
+<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a4d407713350acb4eaa93049ca4960672">CPS::SimSignalComp</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="_decoupling_line_e_m_t___ph3_8cpp_source.html#l00063">63</a> of file <a class="el" href="_decoupling_line_e_m_t___ph3_8cpp_source.html">DecouplingLineEMT_Ph3.cpp</a>.</p>
 
@@ -420,9 +438,9 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix DecouplingLineEMT_Ph3::interpolate </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> DecouplingLineEMT_Ph3::interpolate </td>
           <td>(</td>
-          <td class="paramtype">Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -465,27 +483,27 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void DecouplingLineEMT_Ph3::setParameters </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_sim_node.html">SimNode</a>&lt; Real &gt;::Ptr</td>          <td class="paramname"><span class="paramname"><em>node1</em></span>, </td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_sim_node.html">SimNode</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt;<a class="el" href="#a2589d34f3d5ce4b60b99c4963a4cbcf4">::Ptr</a></td>          <td class="paramname"><span class="paramname"><em>node1</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_sim_node.html">SimNode</a>&lt; Real &gt;::Ptr</td>          <td class="paramname"><span class="paramname"><em>node2</em></span>, </td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_sim_node.html">SimNode</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt;<a class="el" href="#a2589d34f3d5ce4b60b99c4963a4cbcf4">::Ptr</a></td>          <td class="paramname"><span class="paramname"><em>node2</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>resistance</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>resistance</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>inductance</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>inductance</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>capacitance</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>capacitance</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -503,12 +521,12 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void DecouplingLineEMT_Ph3::step </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>time</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>time</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Int</td>          <td class="paramname"><span class="paramname"><em>timeStepCount</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a></td>          <td class="paramname"><span class="paramname"><em>timeStepCount</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -528,7 +546,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real CPS::Signal::DecouplingLineEMT_Ph3::mAlpha</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> CPS::Signal::DecouplingLineEMT_Ph3::mAlpha</td>
         </tr>
       </table>
   </td>
@@ -552,7 +570,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">UInt CPS::Signal::DecouplingLineEMT_Ph3::mBufIdx = 0</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> CPS::Signal::DecouplingLineEMT_Ph3::mBufIdx = 0</td>
         </tr>
       </table>
   </td>
@@ -576,7 +594,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">UInt CPS::Signal::DecouplingLineEMT_Ph3::mBufSize</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> CPS::Signal::DecouplingLineEMT_Ph3::mBufSize</td>
         </tr>
       </table>
   </td>
@@ -600,7 +618,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix CPS::Signal::DecouplingLineEMT_Ph3::mCapacitance = Matrix::Zero(3, 3)</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::Signal::DecouplingLineEMT_Ph3::mCapacitance = Matrix::Zero(3, 3)</td>
         </tr>
       </table>
   </td>
@@ -624,7 +642,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix CPS::Signal::DecouplingLineEMT_Ph3::mCur1</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::Signal::DecouplingLineEMT_Ph3::mCur1</td>
         </tr>
       </table>
   </td>
@@ -648,7 +666,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix CPS::Signal::DecouplingLineEMT_Ph3::mCur2</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::Signal::DecouplingLineEMT_Ph3::mCur2</td>
         </tr>
       </table>
   </td>
@@ -672,7 +690,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real CPS::Signal::DecouplingLineEMT_Ph3::mDelay</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> CPS::Signal::DecouplingLineEMT_Ph3::mDelay</td>
         </tr>
       </table>
   </td>
@@ -696,7 +714,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix CPS::Signal::DecouplingLineEMT_Ph3::mInductance = Matrix::Zero(3, 3)</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::Signal::DecouplingLineEMT_Ph3::mInductance = Matrix::Zero(3, 3)</td>
         </tr>
       </table>
   </td>
@@ -720,7 +738,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt;<a class="el" href="class_c_p_s_1_1_sim_node.html">EMT::SimNode</a>&gt; CPS::Signal::DecouplingLineEMT_Ph3::mNode1</td>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="namespace_c_p_s_1_1_e_m_t.html#ac323528d571e036f9a7a1b21a181cd73">EMT::SimNode</a>&gt; CPS::Signal::DecouplingLineEMT_Ph3::mNode1</td>
         </tr>
       </table>
   </td>
@@ -744,7 +762,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt;<a class="el" href="class_c_p_s_1_1_sim_node.html">EMT::SimNode</a>&gt; CPS::Signal::DecouplingLineEMT_Ph3::mNode2</td>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="namespace_c_p_s_1_1_e_m_t.html#ac323528d571e036f9a7a1b21a181cd73">EMT::SimNode</a>&gt; CPS::Signal::DecouplingLineEMT_Ph3::mNode2</td>
         </tr>
       </table>
   </td>
@@ -816,7 +834,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix CPS::Signal::DecouplingLineEMT_Ph3::mResistance = Matrix::Zero(3, 3)</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::Signal::DecouplingLineEMT_Ph3::mResistance = Matrix::Zero(3, 3)</td>
         </tr>
       </table>
   </td>
@@ -888,7 +906,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;Matrix&gt;::Ptr CPS::Signal::DecouplingLineEMT_Ph3::mSrcCur1</td>
+          <td class="memname"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&gt;<a class="el" href="#a2589d34f3d5ce4b60b99c4963a4cbcf4">::Ptr</a> CPS::Signal::DecouplingLineEMT_Ph3::mSrcCur1</td>
         </tr>
       </table>
   </td>
@@ -909,7 +927,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;Matrix&gt;::Ptr CPS::Signal::DecouplingLineEMT_Ph3::mSrcCur1Ref</td>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&gt;<a class="el" href="#a2589d34f3d5ce4b60b99c4963a4cbcf4">::Ptr</a> CPS::Signal::DecouplingLineEMT_Ph3::mSrcCur1Ref</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -928,7 +946,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;Matrix&gt;::Ptr CPS::Signal::DecouplingLineEMT_Ph3::mSrcCur2</td>
+          <td class="memname"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&gt;<a class="el" href="#a2589d34f3d5ce4b60b99c4963a4cbcf4">::Ptr</a> CPS::Signal::DecouplingLineEMT_Ph3::mSrcCur2</td>
         </tr>
       </table>
   </td>
@@ -949,7 +967,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;Matrix&gt;::Ptr CPS::Signal::DecouplingLineEMT_Ph3::mSrcCur2Ref</td>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&gt;<a class="el" href="#a2589d34f3d5ce4b60b99c4963a4cbcf4">::Ptr</a> CPS::Signal::DecouplingLineEMT_Ph3::mSrcCur2Ref</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -965,7 +983,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;Matrix&gt;::Ptr CPS::Signal::DecouplingLineEMT_Ph3::mStates</td>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&gt;<a class="el" href="#a2589d34f3d5ce4b60b99c4963a4cbcf4">::Ptr</a> CPS::Signal::DecouplingLineEMT_Ph3::mStates</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -986,7 +1004,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix CPS::Signal::DecouplingLineEMT_Ph3::mSurgeImpedance</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::Signal::DecouplingLineEMT_Ph3::mSurgeImpedance</td>
         </tr>
       </table>
   </td>
@@ -1010,7 +1028,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix CPS::Signal::DecouplingLineEMT_Ph3::mVolt1</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::Signal::DecouplingLineEMT_Ph3::mVolt1</td>
         </tr>
       </table>
   </td>
@@ -1034,7 +1052,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix CPS::Signal::DecouplingLineEMT_Ph3::mVolt2</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::Signal::DecouplingLineEMT_Ph3::mVolt2</td>
         </tr>
       </table>
   </td>
@@ -1053,10 +1071,13 @@ Additional Inherited Members</h2></td></tr>
 <li>/__w/dpsim/dpsim/dpsim-models/src/Signal/<a class="el" href="_decoupling_line_e_m_t___ph3_8cpp_source.html">DecouplingLineEMT_Ph3.cpp</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_c_p_s.html">CPS</a></li><li class="navelem"><a class="el" href="namespace_c_p_s_1_1_signal.html">Signal</a></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t___ph3.html">DecouplingLineEMT_Ph3</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

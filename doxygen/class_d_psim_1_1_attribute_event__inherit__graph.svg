@@ -32,7 +32,7 @@
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="class_d_psim_1_1_event.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="97.75,-88.62 20.25,-88.62 20.25,-66.38 97.75,-66.38 97.75,-88.62"/>
+<polygon fill="white" stroke="#666666" points="97.75,-88.62 20.25,-88.62 20.25,-66.38 97.75,-66.38 97.75,-88.62"/>
 <text text-anchor="middle" x="59" y="-75.12" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::Event</text>
 </a>
 </g>

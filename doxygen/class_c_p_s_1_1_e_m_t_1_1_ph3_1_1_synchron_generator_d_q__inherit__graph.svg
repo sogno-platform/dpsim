@@ -68,7 +68,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000011" class="node">
 <title>Node11</title>
 <g id="a_Node000011"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_d_q_o_d_e.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="1348.25,-125.5 1168,-125.5 1168,-89 1348.25,-89 1348.25,-125.5"/>
+<polygon fill="white" stroke="#666666" points="1348.25,-125.5 1168,-125.5 1168,-89 1348.25,-89 1348.25,-125.5"/>
 <text text-anchor="start" x="1176" y="-112" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::SynchronGenerator</text>
 <text text-anchor="middle" x="1258.12" y="-97.75" font-family="Helvetica,sans-Serif" font-size="10.00">DQODE</text>
 </a>
@@ -87,7 +87,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000012" class="node">
 <title>Node12</title>
 <g id="a_Node000012"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_d_q_trapez.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="1348.25,-70.5 1168,-70.5 1168,-34 1348.25,-34 1348.25,-70.5"/>
+<polygon fill="white" stroke="#666666" points="1348.25,-70.5 1168,-70.5 1168,-34 1348.25,-34 1348.25,-70.5"/>
 <text text-anchor="start" x="1176" y="-57" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::SynchronGenerator</text>
 <text text-anchor="middle" x="1258.12" y="-42.75" font-family="Helvetica,sans-Serif" font-size="10.00">DQTrapez</text>
 </a>

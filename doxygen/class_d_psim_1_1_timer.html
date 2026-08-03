@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_d_psim_1_1_timer.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_timer.html">Timer</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
@@ -98,6 +106,8 @@ $(function(){ initResizable(false); });
   <div class="headertitle"><div class="title">DPsim::Timer Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="_timer_8h_source.html">Timer.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -106,7 +116,7 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a97e10c256ca2f698a71f2819eed87e23" id="r_a97e10c256ca2f698a71f2819eed87e23"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><b>Flags</b> : int { <b>fail_on_overrun</b> = 1
+<tr class="memitem:a97e10c256ca2f698a71f2819eed87e23" id="r_a97e10c256ca2f698a71f2819eed87e23"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a97e10c256ca2f698a71f2819eed87e23">Flags</a> : int { <a class="el" href="#a97e10c256ca2f698a71f2819eed87e23a6dddeb9a07ad9089d17fe3c234ef993b">fail_on_overrun</a> = 1
  }</td></tr>
 <tr class="separator:a97e10c256ca2f698a71f2819eed87e23"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51282a457a14063c54f5fde0a1fba8ef" id="r_a51282a457a14063c54f5fde0a1fba8ef"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a51282a457a14063c54f5fde0a1fba8ef">Ticks</a> = std::chrono::nanoseconds</td></tr>
@@ -115,17 +125,18 @@ Public Types</h2></td></tr>
 <tr class="separator:a7e4e8feed1cc690ca744741f7517d876"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa349603c2f3425edc762fc576060aeb1" id="r_aa349603c2f3425edc762fc576060aeb1"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa349603c2f3425edc762fc576060aeb1">IntervalClock</a> = std::chrono::steady_clock</td></tr>
 <tr class="separator:aa349603c2f3425edc762fc576060aeb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62df96a4a039625248210a73dcfd5f38" id="r_a62df96a4a039625248210a73dcfd5f38"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a62df96a4a039625248210a73dcfd5f38">StartTimePoint</a> = std::chrono::time_point&lt;StartClock, Ticks&gt;</td></tr>
+<tr class="memitem:a62df96a4a039625248210a73dcfd5f38" id="r_a62df96a4a039625248210a73dcfd5f38"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a62df96a4a039625248210a73dcfd5f38">StartTimePoint</a> = std::chrono::time_point&lt;<a class="el" href="#a7e4e8feed1cc690ca744741f7517d876">StartClock</a>, <a class="el" href="#a51282a457a14063c54f5fde0a1fba8ef">Ticks</a>&gt;</td></tr>
 <tr class="separator:a62df96a4a039625248210a73dcfd5f38"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab0495f695a8e3398f77c4c2cb25c9c00" id="r_ab0495f695a8e3398f77c4c2cb25c9c00"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab0495f695a8e3398f77c4c2cb25c9c00">IntervalTimePoint</a> = std::chrono::time_point&lt;IntervalClock, Ticks&gt;</td></tr>
+<tr class="memitem:ab0495f695a8e3398f77c4c2cb25c9c00" id="r_ab0495f695a8e3398f77c4c2cb25c9c00"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab0495f695a8e3398f77c4c2cb25c9c00">IntervalTimePoint</a> = std::chrono::time_point&lt;<a class="el" href="#aa349603c2f3425edc762fc576060aeb1">IntervalClock</a>, <a class="el" href="#a51282a457a14063c54f5fde0a1fba8ef">Ticks</a>&gt;</td></tr>
 <tr class="separator:ab0495f695a8e3398f77c4c2cb25c9c00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aaa800d2559bd632a9b4de80c02aa62a7" id="r_aaa800d2559bd632a9b4de80c02aa62a7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaa800d2559bd632a9b4de80c02aa62a7">Timer</a> (int flags=0, CPS::Logger::Level logLevel=CPS::Logger::Level::debug)</td></tr>
+<tr class="memitem:aaa800d2559bd632a9b4de80c02aa62a7" id="r_aaa800d2559bd632a9b4de80c02aa62a7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaa800d2559bd632a9b4de80c02aa62a7">Timer</a> (int flags=0, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a> logLevel=CPS::Logger::Level::debug)</td></tr>
 <tr class="separator:aaa800d2559bd632a9b4de80c02aa62a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a422242325ba0404d40e49726ef9e3b22" id="r_a422242325ba0404d40e49726ef9e3b22"><td class="memItemLeft" align="right" valign="top"><a id="a422242325ba0404d40e49726ef9e3b22" name="a422242325ba0404d40e49726ef9e3b22"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>start</b> (const StartTimePoint &amp;startAt)</td></tr>
+<tr class="memitem:a14fa469c4c295c5fa6e66a4ad1092146" id="r_a14fa469c4c295c5fa6e66a4ad1092146"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a14fa469c4c295c5fa6e66a4ad1092146">~Timer</a> ()</td></tr>
+<tr class="separator:a14fa469c4c295c5fa6e66a4ad1092146"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a422242325ba0404d40e49726ef9e3b22" id="r_a422242325ba0404d40e49726ef9e3b22"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a422242325ba0404d40e49726ef9e3b22">start</a> (const <a class="el" href="#a62df96a4a039625248210a73dcfd5f38">StartTimePoint</a> &amp;startAt)</td></tr>
 <tr class="separator:a422242325ba0404d40e49726ef9e3b22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a8b5272198d029779dc9302a54305a8" id="r_a3a8b5272198d029779dc9302a54305a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3a8b5272198d029779dc9302a54305a8">start</a> ()</td></tr>
 <tr class="memdesc:a3a8b5272198d029779dc9302a54305a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start real-time timer.  <br /></td></tr>
@@ -140,32 +151,31 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>start</b> (const Star
 <tr class="separator:a4bee78857036f3602a974db78265a339"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59c1b0d327b5b03833dc5c294453ebee" id="r_a59c1b0d327b5b03833dc5c294453ebee"><td class="memItemLeft" align="right" valign="top">long long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a59c1b0d327b5b03833dc5c294453ebee">ticks</a> ()</td></tr>
 <tr class="separator:a59c1b0d327b5b03833dc5c294453ebee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e0e026a9e37410208a2496575f8258a" id="r_a7e0e026a9e37410208a2496575f8258a"><td class="memItemLeft" align="right" valign="top">Ticks&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e0e026a9e37410208a2496575f8258a">interval</a> ()</td></tr>
+<tr class="memitem:a7e0e026a9e37410208a2496575f8258a" id="r_a7e0e026a9e37410208a2496575f8258a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a51282a457a14063c54f5fde0a1fba8ef">Ticks</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e0e026a9e37410208a2496575f8258a">interval</a> ()</td></tr>
 <tr class="separator:a7e0e026a9e37410208a2496575f8258a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c6b604ac3a492fd2263aeb1b461def8" id="r_a0c6b604ac3a492fd2263aeb1b461def8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0c6b604ac3a492fd2263aeb1b461def8">setStartTime</a> (const StartTimePoint &amp;start)</td></tr>
+<tr class="memitem:a0c6b604ac3a492fd2263aeb1b461def8" id="r_a0c6b604ac3a492fd2263aeb1b461def8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0c6b604ac3a492fd2263aeb1b461def8">setStartTime</a> (const <a class="el" href="#a62df96a4a039625248210a73dcfd5f38">StartTimePoint</a> &amp;<a class="el" href="#a422242325ba0404d40e49726ef9e3b22">start</a>)</td></tr>
 <tr class="separator:a0c6b604ac3a492fd2263aeb1b461def8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a760741d99d8c193113be08da895e5fac" id="r_a760741d99d8c193113be08da895e5fac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a760741d99d8c193113be08da895e5fac">setInterval</a> (const Ticks &amp;intv)</td></tr>
+<tr class="memitem:a760741d99d8c193113be08da895e5fac" id="r_a760741d99d8c193113be08da895e5fac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a760741d99d8c193113be08da895e5fac">setInterval</a> (const <a class="el" href="#a51282a457a14063c54f5fde0a1fba8ef">Ticks</a> &amp;intv)</td></tr>
 <tr class="separator:a760741d99d8c193113be08da895e5fac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46242e74452fb1d62904762d7d2733bc" id="r_a46242e74452fb1d62904762d7d2733bc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a46242e74452fb1d62904762d7d2733bc">setInterval</a> (double dt)</td></tr>
 <tr class="separator:a46242e74452fb1d62904762d7d2733bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-types" name="pro-types"></a>
 Protected Types</h2></td></tr>
-<tr class="memitem:a9fef844c9b066326a4d4bd201bd3494a" id="r_a9fef844c9b066326a4d4bd201bd3494a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><b>State</b> { <b>running</b>
-, <b>stopped</b>
+<tr class="memitem:a9fef844c9b066326a4d4bd201bd3494a" id="r_a9fef844c9b066326a4d4bd201bd3494a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9fef844c9b066326a4d4bd201bd3494a">State</a> { <a class="el" href="#a9fef844c9b066326a4d4bd201bd3494aaf2630e5c741a4627d11c5b03a9c2d213">running</a>
+, <a class="el" href="#a9fef844c9b066326a4d4bd201bd3494aa1586dd2f1501ea2d92546bd6cfffcdb0">stopped</a>
  }</td></tr>
 <tr class="separator:a9fef844c9b066326a4d4bd201bd3494a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a172c5302c85aa11577be5f283d0c1b0a" id="r_a172c5302c85aa11577be5f283d0c1b0a"><td class="memItemLeft" align="right" valign="top"><a id="a172c5302c85aa11577be5f283d0c1b0a" name="a172c5302c85aa11577be5f283d0c1b0a"></a>
-enum DPsim::Timer::State&#160;</td><td class="memItemRight" valign="bottom"><b>mState</b></td></tr>
+<tr class="memitem:a172c5302c85aa11577be5f283d0c1b0a" id="r_a172c5302c85aa11577be5f283d0c1b0a"><td class="memItemLeft" align="right" valign="top">enum <a class="el" href="#a9fef844c9b066326a4d4bd201bd3494a">DPsim::Timer::State</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a172c5302c85aa11577be5f283d0c1b0a">mState</a></td></tr>
 <tr class="separator:a172c5302c85aa11577be5f283d0c1b0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2fd143c993eded1b8edce41d1d420cca" id="r_a2fd143c993eded1b8edce41d1d420cca"><td class="memItemLeft" align="right" valign="top">StartTimePoint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2fd143c993eded1b8edce41d1d420cca">mStartAt</a></td></tr>
+<tr class="memitem:a2fd143c993eded1b8edce41d1d420cca" id="r_a2fd143c993eded1b8edce41d1d420cca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a62df96a4a039625248210a73dcfd5f38">StartTimePoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2fd143c993eded1b8edce41d1d420cca">mStartAt</a></td></tr>
 <tr class="separator:a2fd143c993eded1b8edce41d1d420cca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00a94c6044de72223a23123cd9d61ab0" id="r_a00a94c6044de72223a23123cd9d61ab0"><td class="memItemLeft" align="right" valign="top">IntervalTimePoint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a00a94c6044de72223a23123cd9d61ab0">mNextTick</a></td></tr>
+<tr class="memitem:a00a94c6044de72223a23123cd9d61ab0" id="r_a00a94c6044de72223a23123cd9d61ab0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ab0495f695a8e3398f77c4c2cb25c9c00">IntervalTimePoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a00a94c6044de72223a23123cd9d61ab0">mNextTick</a></td></tr>
 <tr class="separator:a00a94c6044de72223a23123cd9d61ab0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf8a27ee4ec8e591a197c0246edccbe8" id="r_acf8a27ee4ec8e591a197c0246edccbe8"><td class="memItemLeft" align="right" valign="top">Ticks&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acf8a27ee4ec8e591a197c0246edccbe8">mTickInterval</a></td></tr>
+<tr class="memitem:acf8a27ee4ec8e591a197c0246edccbe8" id="r_acf8a27ee4ec8e591a197c0246edccbe8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a51282a457a14063c54f5fde0a1fba8ef">Ticks</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acf8a27ee4ec8e591a197c0246edccbe8">mTickInterval</a></td></tr>
 <tr class="separator:acf8a27ee4ec8e591a197c0246edccbe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6ed8670cd022ec76ef5282d2bb76f04" id="r_af6ed8670cd022ec76ef5282d2bb76f04"><td class="memItemLeft" align="right" valign="top">long long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af6ed8670cd022ec76ef5282d2bb76f04">mOverruns</a></td></tr>
 <tr class="separator:af6ed8670cd022ec76ef5282d2bb76f04"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -173,11 +183,11 @@ enum DPsim::Timer::State&#160;</td><td class="memItemRight" valign="bottom"><b>m
 <tr class="separator:a3dfb4e1515ca6edc2fee7ba7748d654c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add579c54fa87f37ae989b29e23ff0b25" id="r_add579c54fa87f37ae989b29e23ff0b25"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#add579c54fa87f37ae989b29e23ff0b25">mFlags</a></td></tr>
 <tr class="separator:add579c54fa87f37ae989b29e23ff0b25"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac6280774a367f1d1f3e12479c1ba1e5b" id="r_ac6280774a367f1d1f3e12479c1ba1e5b"><td class="memItemLeft" align="right" valign="top">CPS::Logger::Level&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac6280774a367f1d1f3e12479c1ba1e5b">mLogLevel</a></td></tr>
+<tr class="memitem:ac6280774a367f1d1f3e12479c1ba1e5b" id="r_ac6280774a367f1d1f3e12479c1ba1e5b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac6280774a367f1d1f3e12479c1ba1e5b">mLogLevel</a></td></tr>
 <tr class="memdesc:ac6280774a367f1d1f3e12479c1ba1e5b"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_d_psim_1_1_timer.html">Timer</a> log level.  <br /></td></tr>
 <tr class="separator:ac6280774a367f1d1f3e12479c1ba1e5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b1efe49ffb2a5a9633a5650a8a4f04c" id="r_a6b1efe49ffb2a5a9633a5650a8a4f04c"><td class="memItemLeft" align="right" valign="top">CPS::Logger::Log&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b1efe49ffb2a5a9633a5650a8a4f04c">mSLog</a></td></tr>
-<tr class="memdesc:a6b1efe49ffb2a5a9633a5650a8a4f04c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logger.  <br /></td></tr>
+<tr class="memitem:a6b1efe49ffb2a5a9633a5650a8a4f04c" id="r_a6b1efe49ffb2a5a9633a5650a8a4f04c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b1efe49ffb2a5a9633a5650a8a4f04c">mSLog</a></td></tr>
+<tr class="memdesc:a6b1efe49ffb2a5a9633a5650a8a4f04c"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="namespace_d_psim.html#a0c1ad9f4200f1770537b7f206a6dc1fc">Logger</a>.  <br /></td></tr>
 <tr class="separator:a6b1efe49ffb2a5a9633a5650a8a4f04c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -191,7 +201,7 @@ enum DPsim::Timer::State&#160;</td><td class="memItemRight" valign="bottom"><b>m
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using DPsim::Timer::IntervalClock = std::chrono::steady_clock</td>
+          <td class="memname">using <a class="el" href="#aa349603c2f3425edc762fc576060aeb1">DPsim::Timer::IntervalClock</a> = std::chrono::steady_clock</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -207,7 +217,7 @@ enum DPsim::Timer::State&#160;</td><td class="memItemRight" valign="bottom"><b>m
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using DPsim::Timer::IntervalTimePoint = std::chrono::time_point&lt;IntervalClock, Ticks&gt;</td>
+          <td class="memname">using <a class="el" href="#ab0495f695a8e3398f77c4c2cb25c9c00">DPsim::Timer::IntervalTimePoint</a> = std::chrono::time_point&lt;<a class="el" href="#aa349603c2f3425edc762fc576060aeb1">IntervalClock</a>, <a class="el" href="#a51282a457a14063c54f5fde0a1fba8ef">Ticks</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -223,7 +233,7 @@ enum DPsim::Timer::State&#160;</td><td class="memItemRight" valign="bottom"><b>m
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using DPsim::Timer::StartClock = std::chrono::system_clock</td>
+          <td class="memname">using <a class="el" href="#a7e4e8feed1cc690ca744741f7517d876">DPsim::Timer::StartClock</a> = std::chrono::system_clock</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -239,7 +249,7 @@ enum DPsim::Timer::State&#160;</td><td class="memItemRight" valign="bottom"><b>m
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using DPsim::Timer::StartTimePoint = std::chrono::time_point&lt;StartClock, Ticks&gt;</td>
+          <td class="memname">using <a class="el" href="#a62df96a4a039625248210a73dcfd5f38">DPsim::Timer::StartTimePoint</a> = std::chrono::time_point&lt;<a class="el" href="#a7e4e8feed1cc690ca744741f7517d876">StartClock</a>, <a class="el" href="#a51282a457a14063c54f5fde0a1fba8ef">Ticks</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -255,7 +265,7 @@ enum DPsim::Timer::State&#160;</td><td class="memItemRight" valign="bottom"><b>m
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using DPsim::Timer::Ticks = std::chrono::nanoseconds</td>
+          <td class="memname">using <a class="el" href="#a51282a457a14063c54f5fde0a1fba8ef">DPsim::Timer::Ticks</a> = std::chrono::nanoseconds</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -272,10 +282,13 @@ enum DPsim::Timer::State&#160;</td><td class="memItemRight" valign="bottom"><b>m
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum DPsim::Timer::Flags : int</td>
+          <td class="memname">enum <a class="el" href="#a97e10c256ca2f698a71f2819eed87e23">DPsim::Timer::Flags</a> : int</td>
         </tr>
       </table>
 </div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a97e10c256ca2f698a71f2819eed87e23a6dddeb9a07ad9089d17fe3c234ef993b" name="a97e10c256ca2f698a71f2819eed87e23a6dddeb9a07ad9089d17fe3c234ef993b"></a>fail_on_overrun&#160;</td><td class="fielddoc"></td></tr>
+</table>
 
 <p class="definition">Definition at line <a class="el" href="_timer_8h_source.html#l00052">52</a> of file <a class="el" href="_timer_8h_source.html">Timer.h</a>.</p>
 
@@ -291,7 +304,7 @@ enum DPsim::Timer::State&#160;</td><td class="memItemRight" valign="bottom"><b>m
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum DPsim::Timer::State</td>
+          <td class="memname">enum <a class="el" href="#a9fef844c9b066326a4d4bd201bd3494a">DPsim::Timer::State</a></td>
         </tr>
       </table>
   </td>
@@ -300,6 +313,10 @@ enum DPsim::Timer::State&#160;</td><td class="memItemRight" valign="bottom"><b>m
   </tr>
 </table>
 </div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a9fef844c9b066326a4d4bd201bd3494aaf2630e5c741a4627d11c5b03a9c2d213" name="a9fef844c9b066326a4d4bd201bd3494aaf2630e5c741a4627d11c5b03a9c2d213"></a>running&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a9fef844c9b066326a4d4bd201bd3494aa1586dd2f1501ea2d92546bd6cfffcdb0" name="a9fef844c9b066326a4d4bd201bd3494aa1586dd2f1501ea2d92546bd6cfffcdb0"></a>stopped&#160;</td><td class="fielddoc"></td></tr>
+</table>
 
 <p class="definition">Definition at line <a class="el" href="_timer_8h_source.html#l00033">33</a> of file <a class="el" href="_timer_8h_source.html">Timer.h</a>.</p>
 
@@ -320,7 +337,7 @@ enum DPsim::Timer::State&#160;</td><td class="memItemRight" valign="bottom"><b>m
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">CPS::Logger::Level</td>          <td class="paramname"><span class="paramname"><em>logLevel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">CPS::Logger::Level::debug</span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a></td>          <td class="paramname"><span class="paramname"><em>logLevel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">CPS::Logger::Level::debug</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -359,7 +376,7 @@ enum DPsim::Timer::State&#160;</td><td class="memItemRight" valign="bottom"><b>m
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Ticks DPsim::Timer::interval </td>
+          <td class="memname"><a class="el" href="#a51282a457a14063c54f5fde0a1fba8ef">Ticks</a> DPsim::Timer::interval </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -415,7 +432,7 @@ enum DPsim::Timer::State&#160;</td><td class="memItemRight" valign="bottom"><b>m
         <tr>
           <td class="memname">void DPsim::Timer::setInterval </td>
           <td>(</td>
-          <td class="paramtype">const Ticks &amp;</td>          <td class="paramname"><span class="paramname"><em>intv</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="#a51282a457a14063c54f5fde0a1fba8ef">Ticks</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>intv</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -469,7 +486,7 @@ enum DPsim::Timer::State&#160;</td><td class="memItemRight" valign="bottom"><b>m
         <tr>
           <td class="memname">void DPsim::Timer::setStartTime </td>
           <td>(</td>
-          <td class="paramtype">const StartTimePoint &amp;</td>          <td class="paramname"><span class="paramname"><em>start</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="#a62df96a4a039625248210a73dcfd5f38">StartTimePoint</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>start</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -506,7 +523,7 @@ enum DPsim::Timer::State&#160;</td><td class="memItemRight" valign="bottom"><b>m
 </div>
 </div>
 <a id="a3a8b5272198d029779dc9302a54305a8" name="a3a8b5272198d029779dc9302a54305a8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3a8b5272198d029779dc9302a54305a8">&#9670;&#160;</a></span>start()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a8b5272198d029779dc9302a54305a8">&#9670;&#160;</a></span>start() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -523,6 +540,23 @@ enum DPsim::Timer::State&#160;</td><td class="memItemRight" valign="bottom"><b>m
 <p>Start real-time timer. </p>
 
 <p class="definition">Definition at line <a class="el" href="_timer_8cpp_source.html#l00092">92</a> of file <a class="el" href="_timer_8cpp_source.html">Timer.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a422242325ba0404d40e49726ef9e3b22" name="a422242325ba0404d40e49726ef9e3b22"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a422242325ba0404d40e49726ef9e3b22">&#9670;&#160;</a></span>start() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DPsim::Timer::start </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="#a62df96a4a039625248210a73dcfd5f38">StartTimePoint</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>startAt</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -609,7 +643,7 @@ enum DPsim::Timer::State&#160;</td><td class="memItemRight" valign="bottom"><b>m
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">CPS::Logger::Level DPsim::Timer::mLogLevel</td>
+          <td class="memname"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a> DPsim::Timer::mLogLevel</td>
         </tr>
       </table>
   </td>
@@ -635,7 +669,7 @@ enum DPsim::Timer::State&#160;</td><td class="memItemRight" valign="bottom"><b>m
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">IntervalTimePoint DPsim::Timer::mNextTick</td>
+          <td class="memname"><a class="el" href="#ab0495f695a8e3398f77c4c2cb25c9c00">IntervalTimePoint</a> DPsim::Timer::mNextTick</td>
         </tr>
       </table>
   </td>
@@ -683,7 +717,7 @@ enum DPsim::Timer::State&#160;</td><td class="memItemRight" valign="bottom"><b>m
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">CPS::Logger::Log DPsim::Timer::mSLog</td>
+          <td class="memname"><a class="el" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a> DPsim::Timer::mSLog</td>
         </tr>
       </table>
   </td>
@@ -693,7 +727,7 @@ enum DPsim::Timer::State&#160;</td><td class="memItemRight" valign="bottom"><b>m
 </table>
 </div><div class="memdoc">
 
-<p>Logger. </p>
+<p><a class="el" href="namespace_d_psim.html#a0c1ad9f4200f1770537b7f206a6dc1fc">Logger</a>. </p>
 
 <p class="definition">Definition at line <a class="el" href="_timer_8h_source.html#l00049">49</a> of file <a class="el" href="_timer_8h_source.html">Timer.h</a>.</p>
 
@@ -709,7 +743,7 @@ enum DPsim::Timer::State&#160;</td><td class="memItemRight" valign="bottom"><b>m
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">StartTimePoint DPsim::Timer::mStartAt</td>
+          <td class="memname"><a class="el" href="#a62df96a4a039625248210a73dcfd5f38">StartTimePoint</a> DPsim::Timer::mStartAt</td>
         </tr>
       </table>
   </td>
@@ -723,6 +757,28 @@ enum DPsim::Timer::State&#160;</td><td class="memItemRight" valign="bottom"><b>m
 
 </div>
 </div>
+<a id="a172c5302c85aa11577be5f283d0c1b0a" name="a172c5302c85aa11577be5f283d0c1b0a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a172c5302c85aa11577be5f283d0c1b0a">&#9670;&#160;</a></span>mState</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="#a9fef844c9b066326a4d4bd201bd3494a">DPsim::Timer::State</a> DPsim::Timer::mState</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="acf8a27ee4ec8e591a197c0246edccbe8" name="acf8a27ee4ec8e591a197c0246edccbe8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acf8a27ee4ec8e591a197c0246edccbe8">&#9670;&#160;</a></span>mTickInterval</h2>
 
@@ -733,7 +789,7 @@ enum DPsim::Timer::State&#160;</td><td class="memItemRight" valign="bottom"><b>m
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Ticks DPsim::Timer::mTickInterval</td>
+          <td class="memname"><a class="el" href="#a51282a457a14063c54f5fde0a1fba8ef">Ticks</a> DPsim::Timer::mTickInterval</td>
         </tr>
       </table>
   </td>
@@ -776,10 +832,13 @@ enum DPsim::Timer::State&#160;</td><td class="memItemRight" valign="bottom"><b>m
 <li>/__w/dpsim/dpsim/dpsim/src/<a class="el" href="_timer_8cpp_source.html">Timer.cpp</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_timer.html">Timer</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

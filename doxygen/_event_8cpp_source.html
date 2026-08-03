@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_event_8cpp_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_af103632340511860a5310da360a5028.html">src</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">Event.cpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_event_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -99,18 +107,19 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * file, You can obtain one at https://mozilla.org/MPL/2.0/.</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> *********************************************************************************/</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;dpsim/Event.h&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;<a class="code" href="_event_8h.html">dpsim/Event.h</a>&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespace_d_psim.html">DPsim</a>;</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">using namespace </span>CPS;</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespace_c_p_s.html">CPS</a>;</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keywordtype">void</span> EventQueue::addEvent(Event::Ptr e) { mEvents.push(e); }</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_event_queue.html#ad86256bd6b5e95c71c239df57fb57c00">   14</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_event_queue.html#ad86256bd6b5e95c71c239df57fb57c00">EventQueue::addEvent</a>(<a class="code hl_typedef" href="class_d_psim_1_1_event.html#a7792e265bd546c9690ec7335ef152cbf">Event::Ptr</a> e) { <a class="code hl_variable" href="class_d_psim_1_1_event_queue.html#ab833bed99b3bc4c4fbd5085c25f8b65f">mEvents</a>.push(e); }</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keywordtype">void</span> EventQueue::handleEvents(Real currentTime) {</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>  Event::Ptr e;</div>
+<div class="foldopen" id="foldopen00016" data-start="{" data-end="}">
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_event_queue.html#a7574a5fcb5f284759f382ea5787f0ffc">   16</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_event_queue.html#a7574a5fcb5f284759f382ea5787f0ffc">EventQueue::handleEvents</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> currentTime) {</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>  <a class="code hl_typedef" href="class_d_psim_1_1_event.html#a7792e265bd546c9690ec7335ef152cbf">Event::Ptr</a> e;</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  <span class="keywordflow">while</span> (!mEvents.empty()) {</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    e = mEvents.top();</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  <span class="keywordflow">while</span> (!<a class="code hl_variable" href="class_d_psim_1_1_event_queue.html#ab833bed99b3bc4c4fbd5085c25f8b65f">mEvents</a>.empty()) {</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    e = <a class="code hl_variable" href="class_d_psim_1_1_event_queue.html#ab833bed99b3bc4c4fbd5085c25f8b65f">mEvents</a>.top();</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="comment">// if current time larger or equal to event time, execute event</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keywordflow">if</span> (currentTime &gt; e-&gt;mTime || (e-&gt;mTime - currentTime) &lt; 100e-9) {</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>      e-&gt;execute();</div>
@@ -118,18 +127,29 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>                &lt;&lt; std::endl;</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>      <span class="comment">//std::cout &lt;&lt; std::scientific &lt;&lt; e-&gt;mTime &lt;&lt; &quot;: Original event time&quot; &lt;&lt; std::endl;</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>      <span class="comment">//std::cout &lt;&lt; std::scientific &lt;&lt; (e-&gt;mTime - currentTime)*1e9 &lt;&lt; &quot;: Difference to specified event time in ns&quot; &lt;&lt; std::endl;</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>      mEvents.pop();</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>      <a class="code hl_variable" href="class_d_psim_1_1_event_queue.html#ab833bed99b3bc4c4fbd5085c25f8b65f">mEvents</a>.pop();</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>      <span class="keywordflow">break</span>;</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    }</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  }</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>}</div>
+</div>
+<div class="ttc" id="a_event_8h_html"><div class="ttname"><a href="_event_8h.html">Event.h</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_event_html_a7792e265bd546c9690ec7335ef152cbf"><div class="ttname"><a href="class_d_psim_1_1_event.html#a7792e265bd546c9690ec7335ef152cbf">DPsim::Event::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; Event &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_event_8h_source.html#l00036">Event.h:36</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_event_queue_html_a7574a5fcb5f284759f382ea5787f0ffc"><div class="ttname"><a href="class_d_psim_1_1_event_queue.html#a7574a5fcb5f284759f382ea5787f0ffc">DPsim::EventQueue::handleEvents</a></div><div class="ttdeci">void handleEvents(CPS::Real currentTime)</div><div class="ttdef"><b>Definition</b> <a href="#l00016">Event.cpp:16</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_event_queue_html_ab833bed99b3bc4c4fbd5085c25f8b65f"><div class="ttname"><a href="class_d_psim_1_1_event_queue.html#ab833bed99b3bc4c4fbd5085c25f8b65f">DPsim::EventQueue::mEvents</a></div><div class="ttdeci">std::priority_queue&lt; Event::Ptr, std::deque&lt; Event::Ptr &gt;, EventComparator &gt; mEvents</div><div class="ttdef"><b>Definition</b> <a href="_event_8h_source.html#l00111">Event.h:111</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_event_queue_html_ad86256bd6b5e95c71c239df57fb57c00"><div class="ttname"><a href="class_d_psim_1_1_event_queue.html#ad86256bd6b5e95c71c239df57fb57c00">DPsim::EventQueue::addEvent</a></div><div class="ttdeci">void addEvent(Event::Ptr e)</div><div class="ttdef"><b>Definition</b> <a href="#l00014">Event.cpp:14</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html"><div class="ttname"><a href="namespace_c_p_s.html">CPS</a></div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00017">Attribute.h:17</a></div></div>
 <div class="ttc" id="anamespace_d_psim_html"><div class="ttname"><a href="namespace_d_psim.html">DPsim</a></div><div class="ttdef"><b>Definition</b> <a href="_dense_l_u_adapter_8cpp_source.html#l00013">DenseLUAdapter.cpp:13</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a52dcbc3a0896b912333104eb61a7b29b"><div class="ttname"><a href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">DPsim::Real</a></div><div class="ttdeci">CPS::Real Real</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00018">Definitions.h:18</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_af103632340511860a5310da360a5028.html">src</a></li><li class="navelem"><a class="el" href="_event_8cpp.html">Event.cpp</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

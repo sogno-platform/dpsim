@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,19 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
 </div><!-- top -->
-<div id="doc-content">
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('functions_l.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -84,32 +96,50 @@ $(function(){ initResizable(false); });
 </div>
 
 <div class="contents">
-<div class="textblock">Here is a list of all documented class members with links to the class documentation for each member:</div>
+<div class="textblock">Here is a list of all class members with links to the classes they belong to:</div>
 
 <h3><a id="index_l" name="index_l"></a>- l -</h3><ul>
 <li>L_EQ&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#aecbe5773a1db7014f43a2301d88a74c3">CPS::DP::Ph3::SynchronGeneratorVBR</a></li>
 <li>LD0&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a455fbb1ee12b3326d3fe0a49c921d7be">CPS::DP::Ph3::SynchronGeneratorVBR</a></li>
+<li>leftSideVector()&#160;:&#160;<a class="el" href="class_d_psim_1_1_mna_solver.html#a3057d0fa75dd3f3ca41c54281842c478">DPsim::MnaSolver&lt; VarType &gt;</a></li>
+<li>Level&#160;:&#160;<a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger</a></li>
 <li>levelSchedule()&#160;:&#160;<a class="el" href="class_d_psim_1_1_scheduler.html#a304b12334e137a6f5bb79156c28ce0f5">DPsim::Scheduler</a></li>
+<li>List&#160;:&#160;<a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">CPS::AttributeBase</a>, <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a0f2211c6a8794f294b5b50ade0e277a2">CPS::CompositePowerComp&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_d_a_e_interface.html#a344f948d58bf550093e722922a3fa168">CPS::DAEInterface</a>, <a class="el" href="class_c_p_s_1_1_identified_object.html#a981a607f5a619bbc40c916fcf7048a24">CPS::IdentifiedObject</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a99daa13babcb894a6f878fc889faa0a7">CPS::MNAInterface</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a3b2ef98b8377d258d5cc02bdee5dec9e">CPS::MNASimPowerComp&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a9bbee0656cd4d4e76d5e0ea3bb0646b2">CPS::MNASwitchInterface</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a0690973e34c6f1baa8d27de3a57c902f">CPS::MNASyncGenInterface</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_variable_comp_interface.html#ab0656efd4ef9e2add757244a76f50989">CPS::MNAVariableCompInterface</a>, <a class="el" href="class_c_p_s_1_1_p_f_solver_interface_bus.html#ab39ada57136add7f53da5b22bb42062e">CPS::PFSolverInterfaceBus</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_signal_generator.html#a32a296ab9014c6c1a51ac812d8abfc48">CPS::Signal::SignalGenerator</a>, <a class="el" href="class_c_p_s_1_1_sim_node.html#ad4160295aad4b504e06b203d72ba8baa">CPS::SimNode&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a820b19d65a66e64d40ac2b1b94831b1c">CPS::SimPowerComp&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a90c96524f4d727d98dd92d0f123606a1">CPS::SimSignalComp</a>, <a class="el" href="class_c_p_s_1_1_sim_terminal.html#a7926e8db3d15b3472970ee326ac68ee6">CPS::SimTerminal&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_task.html#ad081ca27190e0b2e1887a8d6cb612a66">CPS::Task</a>, <a class="el" href="class_c_p_s_1_1_topological_node.html#a0cbcf37d0706078e9d2fa5fab180faea">CPS::TopologicalNode</a>, <a class="el" href="class_c_p_s_1_1_topological_power_comp.html#a5d64157d6fda3ae34c8eb88585f8c343">CPS::TopologicalPowerComp</a>, <a class="el" href="class_c_p_s_1_1_topological_signal_comp.html#af67a88cdc55bae6c936850b733d196fe">CPS::TopologicalSignalComp</a>, <a class="el" href="class_c_p_s_1_1_topological_terminal.html#ad2bb37a96931c1238fa5262aff415b0a">CPS::TopologicalTerminal</a>, <a class="el" href="class_d_psim_1_1_data_logger_interface.html#a214bf11836ef4716f134d5302386026c">DPsim::DataLoggerInterface</a>, <a class="el" href="class_d_psim_1_1_m_n_a_state_space_contributor.html#a3f40edaf81f811a71d0eca14a9a0fb1c">DPsim::MNAStateSpaceContributor</a>, <a class="el" href="class_d_psim_1_1_solver.html#a1b7b853ce69c4c12f8e41994b1944b0c">DPsim::Solver</a></li>
+<li>listIdObjects()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_system_topology.html#a576000d02276b7b57e149364b42dfacc">CPS::SystemTopology</a></li>
 <li>Load()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_load.html#a8dbe6b86c60890d155e2706ab49cd74a">CPS::SP::Ph1::Load</a></li>
 <li>loadCIM()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_c_i_m_1_1_reader.html#a450d6c419d1fc7845d5b402ab2094ce7">CPS::CIM::Reader</a></li>
 <li>loadReactivePowerPerUnit()&#160;:&#160;<a class="el" href="class_d_psim_1_1_p_f_solver_power_polar.html#a37bd222da131eeaa5611285676b413fd">DPsim::PFSolverPowerPolar</a></li>
-<li>log()&#160;:&#160;<a class="el" href="class_d_psim_1_1_mna_solver.html#a5e1ed4449c74fcbfe4f68e8576aee3d4">DPsim::MnaSolver&lt; VarType &gt;</a>, <a class="el" href="class_d_psim_1_1_solver.html#ab809bab8e470b23d3fbedb056197eeb6">DPsim::Solver</a></li>
-<li>logAttribute()&#160;:&#160;<a class="el" href="class_d_psim_1_1_data_logger_interface.html#a85226b2b4bed1ef60f79344d3c6e1d47">DPsim::DataLoggerInterface</a>, <a class="el" href="class_d_psim_1_1_simulation.html#ae7a8557fb6ee1592daa74bec519536e1">DPsim::Simulation</a></li>
+<li>Log&#160;:&#160;<a class="el" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger</a></li>
+<li>log()&#160;:&#160;<a class="el" href="class_d_psim_1_1_data_logger.html#a11b2b8c011c9529a9ba14ae07cdcfcea">DPsim::DataLogger</a>, <a class="el" href="class_d_psim_1_1_data_logger_interface.html#a9626e79431ae5d9aae1591fca37f6efb">DPsim::DataLoggerInterface</a>, <a class="el" href="class_d_psim_1_1_mna_solver.html#a5e1ed4449c74fcbfe4f68e8576aee3d4">DPsim::MnaSolver&lt; VarType &gt;</a>, <a class="el" href="class_d_psim_1_1_real_time_data_logger.html#a66b300427bc8da91e785bd071d805643">DPsim::RealTimeDataLogger</a>, <a class="el" href="class_d_psim_1_1_solver.html#ab809bab8e470b23d3fbedb056197eeb6">DPsim::Solver</a>, <a class="el" href="structdpsim__mna__plugin.html#a7c3a71b50072fdd34bbd09faaafffb7f">dpsim_mna_plugin</a></li>
+<li>logAttribute()&#160;:&#160;<a class="el" href="class_d_psim_1_1_data_logger_interface.html#a36dcf22d169fd43255d309a39f94e4f8">DPsim::DataLoggerInterface</a>, <a class="el" href="class_d_psim_1_1_simulation.html#ae7a8557fb6ee1592daa74bec519536e1">DPsim::Simulation</a></li>
+<li>logDataLine()&#160;:&#160;<a class="el" href="class_d_psim_1_1_data_logger.html#a39d1329c940e3f4313b8888c5d82589c">DPsim::DataLogger</a></li>
+<li>logDir()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_logger.html#a8dc6819e3cd81b48f9f39d77baed149b">CPS::Logger</a></li>
+<li>logEMTNodeValues()&#160;:&#160;<a class="el" href="class_d_psim_1_1_data_logger.html#a1a93a3773fc3ef2cf76b19769ec0e6c8">DPsim::DataLogger</a></li>
 <li>logFactorizationTime()&#160;:&#160;<a class="el" href="class_d_psim_1_1_mna_solver_direct.html#a33a440c5af421a55105ccc50fabdb28a">DPsim::MnaSolverDirect&lt; VarType &gt;</a></li>
+<li>Logger()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_logger.html#ad48006d77515e7013e8565a9760cbf82">CPS::Logger</a></li>
 <li>logger&#160;:&#160;<a class="el" href="struct_d_psim_1_1_simulation_1_1_logger_mapping.html#aac3698cd8fdb6f71515bb151dd23ba4b">DPsim::Simulation::LoggerMapping</a></li>
+<li>loggers()&#160;:&#160;<a class="el" href="class_d_psim_1_1_simulation.html#ad3bb79d7fea63b679d4f18cf510f773c">DPsim::Simulation</a></li>
+<li>logIdObjAttribute()&#160;:&#160;<a class="el" href="class_d_psim_1_1_simulation.html#a0723e34bb0bb422863f0e693158d7add">DPsim::Simulation</a></li>
+<li>logLevel&#160;:&#160;<a class="el" href="class_d_psim_1_1_command_line_args.html#aff3d45fe224711297937cad8db73a418">DPsim::CommandLineArgs</a></li>
 <li>logLUTimes()&#160;:&#160;<a class="el" href="class_d_psim_1_1_mna_solver_direct.html#ac0953629e479d736b912a29a6a4db188">DPsim::MnaSolverDirect&lt; VarType &gt;</a>, <a class="el" href="class_d_psim_1_1_simulation.html#a1416f058f5df8fc25bdc8d628033c1f4">DPsim::Simulation</a>, <a class="el" href="class_d_psim_1_1_solver.html#a9067693a5c1240839d825ff3adbdd50d">DPsim::Solver</a></li>
+<li>logPhasorNodeValues()&#160;:&#160;<a class="el" href="class_d_psim_1_1_data_logger.html#a21a93fda9c23de59dc326d57c8161ef9">DPsim::DataLogger</a></li>
 <li>logRecomputationTime()&#160;:&#160;<a class="el" href="class_d_psim_1_1_mna_solver_direct.html#a4970129dc7964cbf2f195b429416866f">DPsim::MnaSolverDirect&lt; VarType &gt;</a></li>
 <li>logSolveTime()&#160;:&#160;<a class="el" href="class_d_psim_1_1_mna_solver_direct.html#a25b12ac5846298dcede361487d3a48fb">DPsim::MnaSolverDirect&lt; VarType &gt;</a></li>
 <li>logStepTimes()&#160;:&#160;<a class="el" href="class_d_psim_1_1_simulation.html#a5e329000de74b24b9f24562c76932e93">DPsim::Simulation</a></li>
 <li>logSystemMatrices()&#160;:&#160;<a class="el" href="class_d_psim_1_1_mna_solver.html#a3f3289675b396ccbe3a4f72437631377">DPsim::MnaSolver&lt; VarType &gt;</a>, <a class="el" href="class_d_psim_1_1_mna_solver_direct.html#a9c7a8060c3e470ed25e480df2ffecaaf">DPsim::MnaSolverDirect&lt; VarType &gt;</a></li>
+<li>LogTask()&#160;:&#160;<a class="el" href="class_d_psim_1_1_diakoptics_solver_1_1_log_task.html#a30f8707b705110839e36e02f9c0318a6">DPsim::DiakopticsSolver&lt; VarType &gt;::LogTask</a>, <a class="el" href="class_d_psim_1_1_mna_solver_direct_1_1_log_task.html#ae1c5f89e8dc74ff4e201c8610841c681">DPsim::MnaSolverDirect&lt; VarType &gt;::LogTask</a>, <a class="el" href="class_d_psim_1_1_mna_solver_plugin_1_1_log_task.html#a126d4f0df8625386a51f5b903a3fc88e">DPsim::MnaSolverPlugin&lt; VarType &gt;::LogTask</a></li>
 <li>logVector()&#160;:&#160;<a class="el" href="class_d_psim_1_1_p_f_solver.html#a46991dff2a64421a692242c1befbefc2">DPsim::PFSolver</a></li>
 <li>LS&#160;:&#160;<a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a292a6da4dc96988fceb6c57c960e11a3">DPsim::DAESolver</a>, <a class="el" href="class_d_psim_1_1_o_d_e_solver.html#a6ad990146018b3f5891b2d43bf421349">DPsim::ODESolver</a></li>
+<li>lu_decomp&#160;:&#160;<a class="el" href="structdpsim__mna__plugin.html#adc003f2e1b7b391d2885fa7a7076e64a">dpsim_mna_plugin</a></li>
+<li>LUfactorization()&#160;:&#160;<a class="el" href="class_d_psim_1_1_gpu_dense_adapter.html#ab5ea93c70a554428647ec89084508af2">DPsim::GpuDenseAdapter</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_c_p_s_1_1_task.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>CPS</b></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_task.html">Task</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
@@ -109,21 +117,24 @@ $(function(){ initResizable(false); });
 Public Types</h2></td></tr>
 <tr class="memitem:aad353cc3de2bb176874999876318a3f4" id="r_aad353cc3de2bb176874999876318a3f4"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_task.html">Task</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aad353cc3de2bb176874999876318a3f4">Ptr</a></td></tr>
 <tr class="separator:aad353cc3de2bb176874999876318a3f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad081ca27190e0b2e1887a8d6cb612a66" id="r_ad081ca27190e0b2e1887a8d6cb612a66"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; Ptr &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad081ca27190e0b2e1887a8d6cb612a66">List</a></td></tr>
+<tr class="memitem:ad081ca27190e0b2e1887a8d6cb612a66" id="r_ad081ca27190e0b2e1887a8d6cb612a66"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="#aad353cc3de2bb176874999876318a3f4">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad081ca27190e0b2e1887a8d6cb612a66">List</a></td></tr>
 <tr class="separator:ad081ca27190e0b2e1887a8d6cb612a66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6a5bc77010e802a4f42b969e581e06cc" id="r_a6a5bc77010e802a4f42b969e581e06cc"><td class="memItemLeft" align="right" valign="top"><a id="a6a5bc77010e802a4f42b969e581e06cc" name="a6a5bc77010e802a4f42b969e581e06cc"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>execute</b> (Real time, Int timeStepCount)=0</td></tr>
+<tr class="memitem:a6e4219251f24641dc33eeeebaa3820c9" id="r_a6e4219251f24641dc33eeeebaa3820c9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6e4219251f24641dc33eeeebaa3820c9">Task</a> ()</td></tr>
+<tr class="separator:a6e4219251f24641dc33eeeebaa3820c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6516808c4a8f315d5f8a8263ec7053bc" id="r_a6516808c4a8f315d5f8a8263ec7053bc"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6516808c4a8f315d5f8a8263ec7053bc">~Task</a> ()</td></tr>
+<tr class="separator:a6516808c4a8f315d5f8a8263ec7053bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a5bc77010e802a4f42b969e581e06cc" id="r_a6a5bc77010e802a4f42b969e581e06cc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6a5bc77010e802a4f42b969e581e06cc">execute</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> time, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> timeStepCount)=0</td></tr>
 <tr class="separator:a6a5bc77010e802a4f42b969e581e06cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3bc881406ad0c2d6d43b9c23d029722a" id="r_a3bc881406ad0c2d6d43b9c23d029722a"><td class="memItemLeft" align="right" valign="top">virtual String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3bc881406ad0c2d6d43b9c23d029722a">toString</a> () const</td></tr>
+<tr class="memitem:a3bc881406ad0c2d6d43b9c23d029722a" id="r_a3bc881406ad0c2d6d43b9c23d029722a"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3bc881406ad0c2d6d43b9c23d029722a">toString</a> () const</td></tr>
 <tr class="separator:a3bc881406ad0c2d6d43b9c23d029722a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2b4fd3477f6c08c886ce275a1c7d3a9" id="r_ae2b4fd3477f6c08c886ce275a1c7d3a9"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributeBase::Ptr</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae2b4fd3477f6c08c886ce275a1c7d3a9">getAttributeDependencies</a> ()</td></tr>
+<tr class="memitem:ae2b4fd3477f6c08c886ce275a1c7d3a9" id="r_ae2b4fd3477f6c08c886ce275a1c7d3a9"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">AttributeBase::Ptr</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae2b4fd3477f6c08c886ce275a1c7d3a9">getAttributeDependencies</a> ()</td></tr>
 <tr class="separator:ae2b4fd3477f6c08c886ce275a1c7d3a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7da5c3f58d811bc580d01cc09c50950c" id="r_a7da5c3f58d811bc580d01cc09c50950c"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributeBase::Ptr</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7da5c3f58d811bc580d01cc09c50950c">getModifiedAttributes</a> ()</td></tr>
+<tr class="memitem:a7da5c3f58d811bc580d01cc09c50950c" id="r_a7da5c3f58d811bc580d01cc09c50950c"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">AttributeBase::Ptr</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7da5c3f58d811bc580d01cc09c50950c">getModifiedAttributes</a> ()</td></tr>
 <tr class="separator:a7da5c3f58d811bc580d01cc09c50950c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60632b29670c8737fca2cb6cb7a51702" id="r_a60632b29670c8737fca2cb6cb7a51702"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributeBase::Ptr</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a60632b29670c8737fca2cb6cb7a51702">getPrevStepDependencies</a> ()</td></tr>
+<tr class="memitem:a60632b29670c8737fca2cb6cb7a51702" id="r_a60632b29670c8737fca2cb6cb7a51702"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">AttributeBase::Ptr</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a60632b29670c8737fca2cb6cb7a51702">getPrevStepDependencies</a> ()</td></tr>
 <tr class="separator:a60632b29670c8737fca2cb6cb7a51702"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
@@ -135,11 +146,11 @@ Protected Member Functions</h2></td></tr>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:ae589f114c8eb3a20274f1b37fdf103d8" id="r_ae589f114c8eb3a20274f1b37fdf103d8"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae589f114c8eb3a20274f1b37fdf103d8">mName</a></td></tr>
 <tr class="separator:ae589f114c8eb3a20274f1b37fdf103d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6cdd03154b1e421d494b6e81bbce57a2" id="r_a6cdd03154b1e421d494b6e81bbce57a2"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributeBase::Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6cdd03154b1e421d494b6e81bbce57a2">mAttributeDependencies</a></td></tr>
+<tr class="memitem:a6cdd03154b1e421d494b6e81bbce57a2" id="r_a6cdd03154b1e421d494b6e81bbce57a2"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">AttributeBase::Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6cdd03154b1e421d494b6e81bbce57a2">mAttributeDependencies</a></td></tr>
 <tr class="separator:a6cdd03154b1e421d494b6e81bbce57a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a516624749680c3cc812f229bb6caef4c" id="r_a516624749680c3cc812f229bb6caef4c"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributeBase::Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a516624749680c3cc812f229bb6caef4c">mModifiedAttributes</a></td></tr>
+<tr class="memitem:a516624749680c3cc812f229bb6caef4c" id="r_a516624749680c3cc812f229bb6caef4c"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">AttributeBase::Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a516624749680c3cc812f229bb6caef4c">mModifiedAttributes</a></td></tr>
 <tr class="separator:a516624749680c3cc812f229bb6caef4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69c9b0c4bb5687003fdb72e646a33923" id="r_a69c9b0c4bb5687003fdb72e646a33923"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributeBase::Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a69c9b0c4bb5687003fdb72e646a33923">mPrevStepDependencies</a></td></tr>
+<tr class="memitem:a69c9b0c4bb5687003fdb72e646a33923" id="r_a69c9b0c4bb5687003fdb72e646a33923"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">AttributeBase::Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a69c9b0c4bb5687003fdb72e646a33923">mPrevStepDependencies</a></td></tr>
 <tr class="separator:a69c9b0c4bb5687003fdb72e646a33923"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -155,7 +166,7 @@ Protected Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::vector&lt;Ptr&gt; CPS::Task::List</td>
+          <td class="memname">typedef std::vector&lt;<a class="el" href="#aad353cc3de2bb176874999876318a3f4">Ptr</a>&gt; <a class="el" href="#ad081ca27190e0b2e1887a8d6cb612a66">CPS::Task::List</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -171,7 +182,7 @@ Protected Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::shared_ptr&lt;<a class="el" href="class_c_p_s_1_1_task.html">Task</a>&gt; CPS::Task::Ptr</td>
+          <td class="memname">typedef std::shared_ptr&lt;<a class="el" href="class_c_p_s_1_1_task.html">Task</a>&gt; <a class="el" href="#aad353cc3de2bb176874999876318a3f4">CPS::Task::Ptr</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -263,6 +274,37 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a6a5bc77010e802a4f42b969e581e06cc" name="a6a5bc77010e802a4f42b969e581e06cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a5bc77010e802a4f42b969e581e06cc">&#9670;&#160;</a></span>execute()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void CPS::Task::execute </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>time</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a></td>          <td class="paramname"><span class="paramname"><em>timeStepCount</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q_1_1_control_pre_step.html#ad100d700007b0a4e59cc6bf91c90462b">CPS::DP::Ph1::AvVoltageSourceInverterDQ::ControlPreStep</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q_1_1_control_step.html#a1a7cce669d85bc5cb5c2bdec88210566">CPS::DP::Ph1::AvVoltageSourceInverterDQ::ControlStep</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_capacitor_1_1_mna_post_step_harm.html#ad8608ef0c086f1a8586e1fc24f0588f7">CPS::DP::Ph1::Capacitor::MnaPostStepHarm</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_capacitor_1_1_mna_pre_step_harm.html#a2fee119b76fe5c7f1f2f3db37d7e0fa1">CPS::DP::Ph1::Capacitor::MnaPreStepHarm</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor_1_1_mna_post_step_harm.html#aa6c54db9d38077cb196f4fac505b4a16">CPS::DP::Ph1::Inductor::MnaPostStepHarm</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor_1_1_mna_pre_step_harm.html#a89e6c9d40dd7a3218f0ee8e369b93625">CPS::DP::Ph1::Inductor::MnaPreStepHarm</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter_1_1_mna_post_step_harm.html#af485daa5667d5f8d82dcae748d7333ff">CPS::DP::Ph1::Inverter::MnaPostStepHarm</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter_1_1_mna_pre_step_harm.html#af24a8fc285616d752d94ecf95b87e4b7">CPS::DP::Ph1::Inverter::MnaPreStepHarm</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_profile_voltage_source_1_1_mna_post_step_harm.html#a32a7f1d11574d5a64c711ad56a0d7764">CPS::DP::Ph1::ProfileVoltageSource::MnaPostStepHarm</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_profile_voltage_source_1_1_mna_pre_step_harm.html#a4b06d2ad51f30580a846a50fe73f4232">CPS::DP::Ph1::ProfileVoltageSource::MnaPreStepHarm</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_resistor_1_1_mna_post_step_harm.html#aae02fc9627ceb24c987dd82b7f10bcf5">CPS::DP::Ph1::Resistor::MnaPostStepHarm</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab_1_1_add_b_step.html#a398da5408f0d6eba1e7e80a198db61d0">CPS::DP::Ph1::SynchronGeneratorTrStab::AddBStep</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_1_1_mna_post_step_harm.html#a94907b3e046846cd2a9e68e58e00e36c">CPS::DP::Ph1::VoltageSource::MnaPostStepHarm</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_1_1_mna_pre_step_harm.html#a5efa6f075478d20f520382211c8a4dac">CPS::DP::Ph1::VoltageSource::MnaPreStepHarm</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q_o_d_e_1_1_o_d_e_pre_step.html#a7726ab88daede9489019a80597441ee8">CPS::DP::Ph3::SynchronGeneratorDQODE::ODEPreStep</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q_1_1_control_pre_step.html#afbaf8bda8e889af8b319802b0c86289c">CPS::EMT::Ph3::AvVoltageSourceInverterDQ::ControlPreStep</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q_1_1_control_step.html#abf07874672f1445193eacbc68a6c71c9">CPS::EMT::Ph3::AvVoltageSourceInverterDQ::ControlStep</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_d_q_o_d_e_1_1_o_d_e_pre_step.html#a8623871771d74b8fa44f923c3e29e6ca">CPS::EMT::Ph3::SynchronGeneratorDQODE::ODEPreStep</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_tr_stab_1_1_add_b_step.html#a7a30176c882006a739b2f414250cf2c1">CPS::EMT::Ph3::SynchronGeneratorTrStab::AddBStep</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_v_s_i_voltage_control_v_c_o_1_1_control_pre_step.html#ae6bbac4ba56396fe9037b99d95a7b131">CPS::EMT::Ph3::VSIVoltageControlVCO::ControlPreStep</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_v_s_i_voltage_control_v_c_o_1_1_control_step.html#a3219c4df7d42b66c6e61f7d0ac0380c9">CPS::EMT::Ph3::VSIVoltageControlVCO::ControlStep</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp_1_1_mna_post_step.html#af8d2d2c546b86c7af4f65e091dfd23d8">CPS::MNASimPowerComp&lt; VarType &gt;::MnaPostStep</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp_1_1_mna_pre_step.html#a1ac842e4bfd3c49b58459faecfd8328a">CPS::MNASimPowerComp&lt; VarType &gt;::MnaPreStep</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___d_p___ph1_1_1_post_step.html#aa79999ce531f704c665b01e976eb19cf">CPS::Signal::DecouplingIdealTransformer_DP_Ph1::PostStep</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___d_p___ph1_1_1_pre_step.html#ae9207f7a5914aaf0390077802085b9f9">CPS::Signal::DecouplingIdealTransformer_DP_Ph1::PreStep</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___e_m_t___ph1_1_1_post_step.html#a60b556e5ad0a2ee1521214383081c219">CPS::Signal::DecouplingIdealTransformer_EMT_Ph1::PostStep</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___e_m_t___ph1_1_1_pre_step.html#a5364287ad5a08b3e5495f200341200c9">CPS::Signal::DecouplingIdealTransformer_EMT_Ph1::PreStep</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___e_m_t___ph3_1_1_post_step.html#a0f1a4e389cba2da480f32c3633e84898">CPS::Signal::DecouplingIdealTransformer_EMT_Ph3::PostStep</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___e_m_t___ph3_1_1_pre_step.html#a794c1038e00082d3302ca81e2564d049">CPS::Signal::DecouplingIdealTransformer_EMT_Ph3::PreStep</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___s_p___ph1_1_1_post_step.html#a44c9e418cc1c5fc57ff43efe649ebd0c">CPS::Signal::DecouplingIdealTransformer_SP_Ph1::PostStep</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___s_p___ph1_1_1_pre_step.html#ace65aed0905a7a6e5da78ab914d93446">CPS::Signal::DecouplingIdealTransformer_SP_Ph1::PreStep</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_line_1_1_post_step.html#a2c378a38868c18a530e32dcb580ad17b">CPS::Signal::DecouplingLine::PostStep</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_line_1_1_pre_step.html#aeabf9d9f6f8ca62340681d28c5ae7742">CPS::Signal::DecouplingLine::PreStep</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_1_1_post_step.html#aef9b415548562b278e6459197a6a0756">CPS::Signal::DecouplingLineEMT::PostStep</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t_1_1_pre_step.html#a855f1db2e176db40b11f0b76d060595b">CPS::Signal::DecouplingLineEMT::PreStep</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t___ph3_1_1_post_step.html#a189d563722763591ac0061b40353cafb">CPS::Signal::DecouplingLineEMT_Ph3::PostStep</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t___ph3_1_1_pre_step.html#a15ac634b531544e169cd1d79cf952ee3">CPS::Signal::DecouplingLineEMT_Ph3::PreStep</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_f_i_r_filter_1_1_step.html#aa3a68d030e2921fc44f5baae80e88bd4">CPS::Signal::FIRFilter::Step</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_integrator_1_1_pre_step.html#a05dea386e6a28052b9f64cbe542eba82">CPS::Signal::Integrator::PreStep</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_integrator_1_1_step.html#a67c9a4f04e15e8fe659065519300160a">CPS::Signal::Integrator::Step</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_p_l_l_1_1_pre_step.html#a7b740286758e62dfe98e41eb43c34d31">CPS::Signal::PLL::PreStep</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_p_l_l_1_1_step.html#a715bf6c43ef89e7646cd02c14c6d9fe0">CPS::Signal::PLL::Step</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_power_controller_v_s_i_1_1_pre_step.html#ad8d0b34db931b63cbe8d9e79fd8044c0">CPS::Signal::PowerControllerVSI::PreStep</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_power_controller_v_s_i_1_1_step.html#afd153552538dd56a27ac1ab0c11ce8ed">CPS::Signal::PowerControllerVSI::Step</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_v_c_o_1_1_pre_step.html#af5a9329af2d16f1951d62a4d910544da">CPS::Signal::VCO::PreStep</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_v_c_o_1_1_step.html#aa1ee7c831b35c8a59e9e1fc30ba19743">CPS::Signal::VCO::Step</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_voltage_controller_v_s_i_1_1_pre_step.html#a312d7ff091e1ba85faa832c1f62a4daf">CPS::Signal::VoltageControllerVSI::PreStep</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_voltage_controller_v_s_i_1_1_step.html#a3c076e0766a7ce6546313a366d52e43f">CPS::Signal::VoltageControllerVSI::Step</a>, <a class="el" href="class_c_p_s_1_1_sim_node_1_1_mna_post_step_harm.html#a6bf4b1a19ffb1d62876e2c896072cf2d">CPS::SimNode&lt; VarType &gt;::MnaPostStepHarm</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q_1_1_control_pre_step.html#aac6d4ce7f770ab95d5f3dfc7985ab310">CPS::SP::Ph1::AvVoltageSourceInverterDQ::ControlPreStep</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q_1_1_control_step.html#a695ed8c8fdc19f0cce4318725b92217f">CPS::SP::Ph1::AvVoltageSourceInverterDQ::ControlStep</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator_tr_stab_1_1_add_b_step.html#ad4b9955f5df25447b6e42a5968d6b8cb">CPS::SP::Ph1::SynchronGeneratorTrStab::AddBStep</a>, <a class="el" href="class_d_psim_1_1_barrier_task.html#af03d1637e6338a6656219cd69cc47fa6">DPsim::BarrierTask</a>, <a class="el" href="class_d_psim_1_1_data_logger_1_1_step.html#a0cda3005d2eec2bbc7cd2cedf7c4b477">DPsim::DataLogger::Step</a>, <a class="el" href="class_d_psim_1_1_diakoptics_solver_1_1_log_task.html#a08538e49995e3ef54b84c539c4fb73d5">DPsim::DiakopticsSolver&lt; VarType &gt;::LogTask</a>, <a class="el" href="class_d_psim_1_1_diakoptics_solver_1_1_post_solve_task.html#a33def7cddccdbb17404dbafbb8a111ae">DPsim::DiakopticsSolver&lt; VarType &gt;::PostSolveTask</a>, <a class="el" href="class_d_psim_1_1_diakoptics_solver_1_1_post_solve_task.html#a55d57421c21b2c649b9d044520599dc7">DPsim::DiakopticsSolver&lt; VarType &gt;::PostSolveTask</a>, <a class="el" href="class_d_psim_1_1_diakoptics_solver_1_1_post_solve_task.html#a97579b408605448cd9f0682dd34812f8">DPsim::DiakopticsSolver&lt; VarType &gt;::PostSolveTask</a>, <a class="el" href="class_d_psim_1_1_diakoptics_solver_1_1_pre_solve_task.html#a6c57acb218b53f986310554f46af3a0e">DPsim::DiakopticsSolver&lt; VarType &gt;::PreSolveTask</a>, <a class="el" href="class_d_psim_1_1_diakoptics_solver_1_1_solve_task.html#aee0337b0f5f379bef1924dd2bee3ad9a">DPsim::DiakopticsSolver&lt; VarType &gt;::SolveTask</a>, <a class="el" href="class_d_psim_1_1_diakoptics_solver_1_1_subnet_solve_task.html#a332bac6a9cd6adc7f4ea1e4db68dab48">DPsim::DiakopticsSolver&lt; VarType &gt;::SubnetSolveTask</a>, <a class="el" href="class_d_psim_1_1_interface_queued_1_1_post_step.html#ad2c12d86e08c32fec6898623f7fbd728">DPsim::InterfaceQueued::PostStep</a>, <a class="el" href="class_d_psim_1_1_interface_queued_1_1_pre_step.html#a1441e46df7b2223834defcd07164d2b5">DPsim::InterfaceQueued::PreStep</a>, <a class="el" href="class_d_psim_1_1_interface_villas_queueless_1_1_post_step.html#af315384ed2ed99abc6a2203b11ec3f3d">DPsim::InterfaceVillasQueueless::PostStep</a>, <a class="el" href="class_d_psim_1_1_interface_villas_queueless_1_1_pre_step.html#ac0cf06e223cac60acefe930c8ec6f5e3">DPsim::InterfaceVillasQueueless::PreStep</a>, <a class="el" href="class_d_psim_1_1_mna_solver_direct_1_1_log_task.html#a33313d18edf3ac16fbd5086a7363c095">DPsim::MnaSolverDirect&lt; VarType &gt;::LogTask</a>, <a class="el" href="class_d_psim_1_1_mna_solver_direct_1_1_solve_task.html#a080814a1fd686f2db5fed524984906f5">DPsim::MnaSolverDirect&lt; VarType &gt;::SolveTask</a>, <a class="el" href="class_d_psim_1_1_mna_solver_direct_1_1_solve_task_harm.html#a2d6275bae0e4ebd3ddf8dfbfa982fafe">DPsim::MnaSolverDirect&lt; VarType &gt;::SolveTaskHarm</a>, <a class="el" href="class_d_psim_1_1_mna_solver_direct_1_1_solve_task_recomp.html#aecaa8cc0f822b35436753f76f91a89dd">DPsim::MnaSolverDirect&lt; VarType &gt;::SolveTaskRecomp</a>, <a class="el" href="class_d_psim_1_1_mna_solver_direct_1_1_state_space_extraction_task.html#a7e28c6831d3c4908965841d53027abd4">DPsim::MnaSolverDirect&lt; VarType &gt;::StateSpaceExtractionTask</a>, <a class="el" href="class_d_psim_1_1_mna_solver_plugin_1_1_log_task.html#a86bc1f770467c967223d0c57a87dfab7">DPsim::MnaSolverPlugin&lt; VarType &gt;::LogTask</a>, <a class="el" href="class_d_psim_1_1_mna_solver_plugin_1_1_solve_task.html#a5d3aa660ccdef1ac2f97d58c22e8c3e9">DPsim::MnaSolverPlugin&lt; VarType &gt;::SolveTask</a>, <a class="el" href="class_d_psim_1_1_o_d_e_solver_1_1_solve_task.html#ac5cc233d5ee48e5d6841630ba0be4ac6">DPsim::ODESolver::SolveTask</a>, <a class="el" href="class_d_psim_1_1_p_f_solver_1_1_solve_task.html#a86929992769105e9d6b5171e340be9a5">DPsim::PFSolver::SolveTask</a>, <a class="el" href="class_d_psim_1_1_real_time_data_logger_1_1_step.html#ab4926c0eda6ed8a619b5f3f06ee4fba1">DPsim::RealTimeDataLogger::Step</a>, and <a class="el" href="class_d_psim_1_1_scheduler_1_1_root.html#a52601c0c60065ac12f7bec7e0748e73a">DPsim::Scheduler::Root</a>.</p>
+
+</div>
+</div>
 <a id="ae2b4fd3477f6c08c886ce275a1c7d3a9" name="ae2b4fd3477f6c08c886ce275a1c7d3a9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae2b4fd3477f6c08c886ce275a1c7d3a9">&#9670;&#160;</a></span>getAttributeDependencies()</h2>
 
@@ -273,7 +315,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributeBase::Ptr</a> &gt; &amp; CPS::Task::getAttributeDependencies </td>
+          <td class="memname">const std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">AttributeBase::Ptr</a> &gt; &amp; CPS::Task::getAttributeDependencies </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -300,7 +342,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributeBase::Ptr</a> &gt; &amp; CPS::Task::getModifiedAttributes </td>
+          <td class="memname">const std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">AttributeBase::Ptr</a> &gt; &amp; CPS::Task::getModifiedAttributes </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -327,7 +369,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributeBase::Ptr</a> &gt; &amp; CPS::Task::getPrevStepDependencies </td>
+          <td class="memname">const std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">AttributeBase::Ptr</a> &gt; &amp; CPS::Task::getPrevStepDependencies </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -354,7 +396,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual String CPS::Task::toString </td>
+          <td class="memname">virtual <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> CPS::Task::toString </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -382,7 +424,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;<a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributeBase::Ptr</a>&gt; CPS::Task::mAttributeDependencies</td>
+          <td class="memname">std::vector&lt;<a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">AttributeBase::Ptr</a>&gt; CPS::Task::mAttributeDependencies</td>
         </tr>
       </table>
   </td>
@@ -406,7 +448,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;<a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributeBase::Ptr</a>&gt; CPS::Task::mModifiedAttributes</td>
+          <td class="memname">std::vector&lt;<a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">AttributeBase::Ptr</a>&gt; CPS::Task::mModifiedAttributes</td>
         </tr>
       </table>
   </td>
@@ -454,7 +496,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;<a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributeBase::Ptr</a>&gt; CPS::Task::mPrevStepDependencies</td>
+          <td class="memname">std::vector&lt;<a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">AttributeBase::Ptr</a>&gt; CPS::Task::mPrevStepDependencies</td>
         </tr>
       </table>
   </td>
@@ -472,10 +514,13 @@ Protected Attributes</h2></td></tr>
 <li>/__w/dpsim/dpsim/dpsim-models/include/dpsim-models/<a class="el" href="_task_8h_source.html">Task.h</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_c_p_s.html">CPS</a></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_task.html">Task</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

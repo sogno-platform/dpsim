@@ -32,7 +32,7 @@
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_resistor.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="288.5,-210.25 168.25,-210.25 168.25,-188 288.5,-188 288.5,-210.25"/>
+<polygon fill="white" stroke="#666666" points="288.5,-210.25 168.25,-210.25 168.25,-188 288.5,-188 288.5,-210.25"/>
 <text text-anchor="middle" x="228.38" y="-196.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph3::Resistor</text>
 </a>
 </g>
@@ -106,7 +106,7 @@
 <g id="Node000006" class="node">
 <title>Node6</title>
 <g id="a_Node000006"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_resistor.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="287.38,-22.25 169.38,-22.25 169.38,0 287.38,0 287.38,-22.25"/>
+<polygon fill="white" stroke="#666666" points="287.38,-22.25 169.38,-22.25 169.38,0 287.38,0 287.38,-22.25"/>
 <text text-anchor="middle" x="228.38" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph3::Resistor</text>
 </a>
 </g>

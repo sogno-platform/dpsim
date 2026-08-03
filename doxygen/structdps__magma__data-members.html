@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('structdps__magma__data.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,8 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">dps_magma_data Member List</div></div>
 </div><!--header-->
@@ -90,23 +102,25 @@ $(function(){ initResizable(false); });
 
 <p>This is the complete list of members for <a class="el" href="structdps__magma__data.html">dps_magma_data</a>, including all inherited members.</p>
 <table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mDevLhsVec</b> (defined in <a class="el" href="structdps__magma__data.html">dps_magma_data</a>)</td><td class="entry"><a class="el" href="structdps__magma__data.html">dps_magma_data</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mDevRhsVec</b> (defined in <a class="el" href="structdps__magma__data.html">dps_magma_data</a>)</td><td class="entry"><a class="el" href="structdps__magma__data.html">dps_magma_data</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mDevSysMat</b> (defined in <a class="el" href="structdps__magma__data.html">dps_magma_data</a>)</td><td class="entry"><a class="el" href="structdps__magma__data.html">dps_magma_data</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="structdps__magma__data.html#a6d989b2edda8fd201585e0c902635e24">mDevLhsVec</a></td><td class="entry"><a class="el" href="structdps__magma__data.html">dps_magma_data</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="structdps__magma__data.html#ad1d5f6a6211700a25ee3f05cca81da67">mDevRhsVec</a></td><td class="entry"><a class="el" href="structdps__magma__data.html">dps_magma_data</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="structdps__magma__data.html#a892f01e2c8b8204c07fb9ef9942fa96a">mDevSysMat</a></td><td class="entry"><a class="el" href="structdps__magma__data.html">dps_magma_data</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="structdps__magma__data.html#a598eaab4eb1411a51d59356af4b9ea32">mHostLhsVec</a></td><td class="entry"><a class="el" href="structdps__magma__data.html">dps_magma_data</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="structdps__magma__data.html#aa89d2853f2435488661fbde59dc7498b">mHostRhsVec</a></td><td class="entry"><a class="el" href="structdps__magma__data.html">dps_magma_data</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="structdps__magma__data.html#adc0c4b8293e518ac6b03b45baa5d9470">mHostSysMat</a></td><td class="entry"><a class="el" href="structdps__magma__data.html">dps_magma_data</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="structdps__magma__data.html#a6aa877ee162c866f9d2b02b7dcbf13fa">mMagmaOpts</a></td><td class="entry"><a class="el" href="structdps__magma__data.html">dps_magma_data</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mMagmaQueue</b> (defined in <a class="el" href="structdps__magma__data.html">dps_magma_data</a>)</td><td class="entry"><a class="el" href="structdps__magma__data.html">dps_magma_data</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>nnz</b> (defined in <a class="el" href="structdps__magma__data.html">dps_magma_data</a>)</td><td class="entry"><a class="el" href="structdps__magma__data.html">dps_magma_data</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>perm_map</b> (defined in <a class="el" href="structdps__magma__data.html">dps_magma_data</a>)</td><td class="entry"><a class="el" href="structdps__magma__data.html">dps_magma_data</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>rhs_buffer</b> (defined in <a class="el" href="structdps__magma__data.html">dps_magma_data</a>)</td><td class="entry"><a class="el" href="structdps__magma__data.html">dps_magma_data</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>size</b> (defined in <a class="el" href="structdps__magma__data.html">dps_magma_data</a>)</td><td class="entry"><a class="el" href="structdps__magma__data.html">dps_magma_data</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="structdps__magma__data.html#ae05622c40a4743269a734988e942e188">mMagmaQueue</a></td><td class="entry"><a class="el" href="structdps__magma__data.html">dps_magma_data</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="structdps__magma__data.html#ad2ca75e7d829f9b88d690755cb102458">nnz</a></td><td class="entry"><a class="el" href="structdps__magma__data.html">dps_magma_data</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="structdps__magma__data.html#af02209ebc418b6e2b1346ef31eff0d90">perm_map</a></td><td class="entry"><a class="el" href="structdps__magma__data.html">dps_magma_data</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="structdps__magma__data.html#aad414273ee6c89cd18d549fdf713563c">rhs_buffer</a></td><td class="entry"><a class="el" href="structdps__magma__data.html">dps_magma_data</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="structdps__magma__data.html#a237b3d6ad72f9f82f104c45f7aa3c244">size</a></td><td class="entry"><a class="el" href="structdps__magma__data.html">dps_magma_data</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

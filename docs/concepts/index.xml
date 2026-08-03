@@ -1,153 +1,4 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DPsim – Concepts</title><link>https://sogno-platform.github.io/dpsim/docs/concepts/</link><description>Recent content in Concepts on DPsim</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://sogno-platform.github.io/dpsim/docs/concepts/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: State-Space Nodal</title><link>https://sogno-platform.github.io/dpsim/docs/concepts/state-space-nodal/</link><pubDate>Tue, 23 Jun 2026 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/concepts/state-space-nodal/</guid><description>
-&lt;p>The state-space nodal (SSN) method represents a component by its own continuous
-state-space model and couples it to the network through the nodal admittance
-matrix. A component is described by&lt;/p>
-&lt;div class="math">$$\frac{d\mathbf{x}}{dt} = \mathbf{A}\mathbf{x} + \mathbf{B}\mathbf{u},
-\qquad
-\mathbf{y} = \mathbf{C}\mathbf{x} + \mathbf{D}\mathbf{u},$$&lt;/div>&lt;p>where $\mathbf{x}$ is the internal state, and the input $\mathbf{u}$ and output
-$\mathbf{y}$ are the terminal quantities exchanged with the network (a voltage and
-the corresponding current). Trapezoidal discretisation of $(\mathbf{A}, \mathbf{B})$
-yields a discrete model $(\mathbf{A}_d, \mathbf{B}_d)$ and a Norton equivalent: a
-constant conductance $\mathbf{W}$ stamped into the system matrix plus a history
-current source recomputed each step from the previous state and input. Because the
-component is solved simultaneously with the network in the same nodal system, SSN
-is numerically robust without the parasitic snubbers that delayed
-current-injection schemes require.&lt;/p>
-&lt;p>This builds directly on &lt;a href="https://sogno-platform.github.io/dpsim/docs/concepts/nodal-analysis/">Nodal Analysis&lt;/a> and is
-the companion of
-&lt;a href="https://sogno-platform.github.io/dpsim/docs/concepts/state-space-extraction-theory/">State-Space Extraction&lt;/a>, which
-recovers a state-space model from an MNA simulation rather than starting from one.&lt;/p>
-&lt;h1 id="shift-to-the-dynamic-phasor-envelope">Shift to the Dynamic-Phasor Envelope&lt;/h1>
-&lt;p>In the &lt;a href="https://sogno-platform.github.io/dpsim/docs/concepts/dyn-phasors/">Dynamic Phasors&lt;/a> (shifted-frequency)
-domain a physical quantity is written as a slowly varying complex envelope on a
-carrier $\omega_s$,&lt;/p>
-&lt;div class="math">$$x(t) = \operatorname{Re}\{\, X(t)\, e^{j \omega_s t} \,\},$$&lt;/div>&lt;p>so that differentiation maps to
-$\frac{dx}{dt} \rightarrow \frac{dX}{dt} + j \omega_s X$. The physical
-state-space model therefore becomes, for the envelope,&lt;/p>
-&lt;div class="math">$$\frac{d\mathbf{X}}{dt} = (\mathbf{A} - j \omega_s \mathbf{I})\,\mathbf{X}
-+ \mathbf{B}\,\mathbf{U}.$$&lt;/div>&lt;p>DPsim does not solve the dynamic-phasor system as a complex matrix: every
-complex admittance $g = g_r + j g_i$ is stamped as a real $2 \times 2$ block
-$\left[\begin{smallmatrix} g_r &amp;amp; -g_i \ g_i &amp;amp; g_r \end{smallmatrix}\right]$, with the real
-and imaginary node parts living in separate halves of a real-valued system. The
-DP-SSN model matches this by carrying the envelope in real/imaginary-split form
-$[\mathbf{X}_r; \mathbf{X}_i]$ and writing the carrier shift explicitly as a real
-augmented model,&lt;/p>
-&lt;div class="math">$$\mathbf{A}_\text{aug} =
-\begin{bmatrix} \mathbf{A} &amp; \omega_s \mathbf{I} \\ -\omega_s \mathbf{I} &amp; \mathbf{A} \end{bmatrix},
-\qquad
-\mathbf{B}_\text{aug} = \begin{bmatrix} \mathbf{B} &amp; \mathbf{0} \\ \mathbf{0} &amp; \mathbf{B} \end{bmatrix}.$$&lt;/div>&lt;p>The same real trapezoidal discretisation used by the EMT SSN models then applies
-unchanged, the Norton conductance comes out as a real block that stamps directly
-into the augmented network, and the interface reads and writes the real and
-imaginary node halves directly with no complex assembly. The $\pm \omega_s$
-coupling block is algebraically exact; placing a rotating-frame term inside the
-real state matrix follows the established SSN practice for rotating-machine
-models.&lt;/p>
-&lt;h1 id="components">Components&lt;/h1>
-&lt;p>The single-phase dynamic-phasor SSN models are:&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>Full_Serial_RLC&lt;/code>, a series resistor-inductor-capacitor one-port with a
-hand-derived state-space model, used as the reference component.&lt;/li>
-&lt;li>&lt;code>GenericTwoTerminalVTypeSSN&lt;/code> and &lt;code>GenericTwoTerminalITypeSSN&lt;/code>, which accept a
-user-supplied $(\mathbf{A}, \mathbf{B}, \mathbf{C}, \mathbf{D})$ and build the
-V-type (voltage input, current output) or I-type (current input, voltage
-output) stamping accordingly.&lt;/li>
-&lt;/ul>
-&lt;p>All three reproduce the classical dynamic-phasor stamping of the same circuit,
-and the reconstructed time-domain waveform matches the EMT and EMT-SSN results
-within discretisation error.&lt;/p>
-&lt;h1 id="three-phase-components">Three-Phase Components&lt;/h1>
-&lt;p>The same real-augmented model extends per phase to &lt;code>DP::Ph3&lt;/code>. The
-$3 \times 3$ $\mathbf{A}$, $\mathbf{B}$, $\mathbf{C}$, $\mathbf{D}$ matrices
-are general, so off-diagonal entries can couple the phases together:&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>Full_Serial_RLC&lt;/code>, the three-phase series RLC one-port.&lt;/li>
-&lt;li>&lt;code>GenericTwoTerminalVTypeSSN&lt;/code> and &lt;code>GenericTwoTerminalITypeSSN&lt;/code>, the
-three-phase generic V-type and I-type components.&lt;/li>
-&lt;/ul>
-&lt;p>As in the single-phase case, all three reproduce the classical three-phase
-dynamic-phasor stamping exactly, and the reconstructed time-domain waveform
-matches the EMT and EMT-SSN results within discretisation error once
-corrected for the RMS-to-peak scaling that &lt;code>EMT::Ph3&lt;/code> sources apply and
-&lt;code>DP::Ph3&lt;/code> sources do not, since the DP envelope already carries the complex
-amplitude directly. The notebooks below only exercise the symmetrical,
-diagonal case; coupling between phases is not covered by existing tests.&lt;/p>
-&lt;h1 id="variable-components">Variable Components&lt;/h1>
-&lt;p>The components above are fixed-parameter LTI systems: $(\mathbf{A}, \mathbf{B},
-\mathbf{C}, \mathbf{D})$ are built once from the component&amp;rsquo;s parameters and never
-change. Some SSN components instead depend on the operating point and are
-relinearized and re-stamped every step (via &lt;code>MNAVariableCompInterface&lt;/code>), the same
-simultaneous nodal solve but around a Jacobian frozen at the previous step&amp;rsquo;s
-converged state rather than a constant matrix. &lt;code>DP::Ph1::AvVoltSourceInverterStateSpace&lt;/code>,
-an averaged grid-following inverter, is one such component, and its three-phase
-analogue &lt;code>DP::Ph3::AvVoltSourceInverterStateSpace&lt;/code> carries a complex envelope per
-phase while sharing a single positive-sequence dq control frame; see
-&lt;a href="https://sogno-platform.github.io/dpsim/docs/models/power-electronics/">Power Electronics&lt;/a> for their state vectors and
-model equations.&lt;/p>
-&lt;h1 id="validation-and-examples">Validation and Examples&lt;/h1>
-&lt;p>Two notebooks accompany the single-phase models, both on a single-carrier
-series RLC one-port. &lt;code>examples/Notebooks/Circuits/DP_generalizedSSN_RLC.ipynb&lt;/code>
-validates the DP-SSN models against the classical dynamic-phasor stamping and
-the EMT and EMT-SSN waveforms. &lt;code>examples/Notebooks/Circuits/DP_SSN_RLC_accuracy.ipynb&lt;/code>
-studies the time-step and frequency-dependent accuracy against a small-step
-EMT reference.&lt;/p>
-&lt;p>The three-phase analogues,
-&lt;code>examples/Notebooks/Circuits/DP_Ph3_generalizedSSN_RLC.ipynb&lt;/code> and
-&lt;code>examples/Notebooks/Circuits/DP_Ph3_SSN_RLC_accuracy.ipynb&lt;/code>, repeat both
-studies on &lt;code>DP::Ph3&lt;/code> circuits, including a current-driven network with generic
-V-type and I-type components and a three-phase fault transient.&lt;/p>
-&lt;h1 id="further-reading">Further Reading&lt;/h1>
-&lt;ul>
-&lt;li>C. Dufour, J. Mahseredjian, and J. Bélanger, &lt;em>A Combined State-Space Nodal Method for the Simulation of Power System Transients&lt;/em>, &lt;em>IEEE Transactions on Power Delivery&lt;/em>, vol. 26, no. 2, pp. 928–935, 2011. &lt;a href="https://doi.org/10.1109/TPWRD.2010.2090364">https://doi.org/10.1109/TPWRD.2010.2090364&lt;/a>&lt;/li>
-&lt;li>C. Dufour and D. S. Nasrallah, &lt;em>State-space-nodal rotating machine models with improved numerical stability&lt;/em>, &lt;em>IECON 2016 – 42nd Annual Conference of the IEEE Industrial Electronics Society&lt;/em>, 2016. &lt;a href="https://doi.org/10.1109/IECON.2016.7793690">https://doi.org/10.1109/IECON.2016.7793690&lt;/a>&lt;/li>
-&lt;li>A. A. Kida, A. C. S. Lima, F. A. Moreira, J. R. Martí, and J. Tarazona, &lt;em>Inaccuracies due to the frequency warping in simulation of electrical systems using combined state–space nodal analysis&lt;/em>, &lt;em>Electric Power Systems Research&lt;/em>, vol. 223, art. 109657, 2023. &lt;a href="https://doi.org/10.1016/j.epsr.2023.109657">https://doi.org/10.1016/j.epsr.2023.109657&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>Docs: State-Space Extraction</title><link>https://sogno-platform.github.io/dpsim/docs/concepts/state-space-extraction-theory/</link><pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/concepts/state-space-extraction-theory/</guid><description>
-&lt;p>Discrete-time state-space model is extracted from the EMT MNA simulation model. The extracted model is assembled in the form:&lt;/p>
-&lt;div class="math">$$\mathbf{x}[k+1]
-=
-\mathbf{A}_{d,\mathrm{local}} \mathbf{x}[k]
-+
-\mathbf{B}_{d,\mathrm{MNA}} \mathbf{x}_{\mathrm{MNA}}[k+1]$$&lt;/div>
-&lt;div class="math">$$\mathbf{Y} \mathbf{x}_{\mathrm{MNA}}[k+1]
-=
-\mathbf{C}_{d,\mathrm{MNA}} \mathbf{x}[k]$$&lt;/div>&lt;p>where:&lt;/p>
-&lt;ul>
-&lt;li>$\mathbf{x}$ is the extraction-state vector,&lt;/li>
-&lt;li>$\mathbf{x}_{\mathrm{MNA}}$ is the full MNA unknown vector,&lt;/li>
-&lt;li>$\mathbf{Y}$ is the active MNA system matrix,&lt;/li>
-&lt;li>$\mathbf{A}_{d,\mathrm{local}}$ contains local component state-transition contributions,&lt;/li>
-&lt;li>$\mathbf{B}_{d,\mathrm{MNA}}$ maps MNA unknowns to the state update,&lt;/li>
-&lt;li>$\mathbf{C}_{d,\mathrm{MNA}}$ maps extraction states to MNA current injections.&lt;/li>
-&lt;/ul>
-&lt;p>Eliminating the MNA unknown vector gives the global discrete-time state matrix&lt;/p>
-&lt;div class="math">$$\mathbf{A}_{d}
-=
-\mathbf{A}_{d,\mathrm{local}}
-+
-\mathbf{B}_{d,\mathrm{MNA}}
-\operatorname{solve}
-\left(
-\mathbf{Y},
-\mathbf{C}_{d,\mathrm{MNA}}
-\right)$$&lt;/div>&lt;p>The resulting matrix $\mathbf{A}_{d}$ describes the homogeneous discrete-time dynamics of the EMT MNA simulation model at the current operating point and system-matrix configuration.&lt;/p>
-&lt;h1 id="references">References&lt;/h1>
-&lt;ul>
-&lt;li>J. A. Hollman and J. R. Marti, &lt;em>Step-by-step eigenvalue analysis with EMTP discrete-time solutions&lt;/em>, &lt;em>IEEE Transactions on Power Systems&lt;/em>, 2010. &lt;a href="https://doi.org/10.1109/TPWRS.2009.2039810">https://doi.org/10.1109/TPWRS.2009.2039810&lt;/a>&lt;/li>
-&lt;li>Y. Han, H. Sun, B. Huang, S. Qin, M. Mu, and Y. Yu, “Discrete-Time State-Space Construction Method for SSO Analysis of Renewable Power Generation Integrated AC/DC Hybrid System,” &lt;em>IEEE Transactions on Power Systems&lt;/em>, 2022. &lt;a href="https://doi.org/10.1109/TPWRS.2021.3115248">https://doi.org/10.1109/TPWRS.2021.3115248&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>Docs: Dynamic Phasors</title><link>https://sogno-platform.github.io/dpsim/docs/concepts/dyn-phasors/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/concepts/dyn-phasors/</guid><description>
-&lt;p>In the power systems community, dynamic phasors were initially introduced for power electronics analysis &lt;a href="https://ieeexplore.ieee.org/document/76811">Sanders1991&lt;/a> as a more general approach than state-space averaging.
-They were used to construct efficient models for the dynamics of switching gate phenomena with a high level of detail as shown in &lt;a href="https://ieeexplore.ieee.org/abstract/document/744524">Mattavelli1999&lt;/a>.
-A few years later, dynamic phasors were also employed for power system simulation as described in &lt;a href="https://www.research-collection.ethz.ch/handle/20.500.11850/123490">Demiray2008&lt;/a>.
-In &lt;a href="https://ieeexplore.ieee.org/document/4026700">Strunz2006&lt;/a> the authors combine the dynamic phasor approach with the Electromagnetic Transients Program (EMTP) simulator concept which includes Modified Nodal Analysis (MNA).
-Further research topics include fault and stability analysis under unbalanced conditions as presented in &lt;a href="https://ieeexplore.ieee.org/document/871734">Stankovic2000&lt;/a> and also rotating machine models have been developed in dynamic phasors &lt;a href="https://ieeexplore.ieee.org/document/4282063">Zhang 2007&lt;/a>.&lt;/p>
-&lt;h1 id="bandpass-signals-and-baseband-representation">Bandpass Signals and Baseband Representation&lt;/h1>
-&lt;p>Although here, dynamic phasors are presented as a power system modelling tool, it should be noted that the concept is also known in other domains, for example, microwave and communications engineering &lt;a href="https://ieeexplore.ieee.org/document/9100822">Maas2003&lt;/a>, &lt;a href="https://ieeexplore.ieee.org/book/5236646">Suarez2009&lt;/a>, &lt;a href="https://isbnsearch.org/isbn/9780471697909">Haykin2009&lt;/a>, &lt;a href="https://isbnsearch.org/isbn/0131589326">Proakis2001&lt;/a>.
-In these domains, the approach is often denoted as base band representation or complex envelope.
-Another common term coming from power electrical engineering is shifted frequency analysis (SFA).
-In the following, the general approach of dynamic phasors for power system simulation is explained starting from the idea of bandpass signals.
-This is because the 50 Hz or 60 Hz fundamental and small deviations from it can be seen as such a bandpass signal.
-Futhermore, higher frequencies, for example, generated by power electronics can be modelled in a similar way.&lt;/p></description></item><item><title>Docs: Nodal Analysis</title><link>https://sogno-platform.github.io/dpsim/docs/concepts/nodal-analysis/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/concepts/nodal-analysis/</guid><description>
-&lt;script src="https://polyfill.io/v3/polyfill.min.js?features=es6">&lt;/script>
-&lt;script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">&lt;/script>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DPsim – Concepts</title><link>https://sogno.energy/dpsim/docs/concepts/</link><description>Recent content in Concepts on DPsim</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://sogno.energy/dpsim/docs/concepts/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Nodal Analysis</title><link>https://sogno.energy/dpsim/docs/concepts/nodal-analysis/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/nodal-analysis/</guid><description>
 &lt;p>A circuit with $b$ branches has $2b$ unknowns since there are $b$ voltages and $b$ currents.
 Hence, $2b$ linear independent equations are required to solve the circuit.
 If the circuit has $n$ nodes and $b$ branches, it has&lt;/p>
@@ -168,11 +19,176 @@ A circuit can be solved using Nodal Analysis as follows&lt;/p>
 &lt;li>Write $n-1$ KCL based equations in terms of node voltage variable.&lt;/li>
 &lt;/ul>
 &lt;p>The resulting equations can be written in matrix form and have to be solved for $v$.&lt;/p>
-&lt;div class="math">$$\boldsymbol{Y} \boldsymbol{v} = \boldsymbol{i}$$&lt;/div></description></item><item><title>Docs: Powerflow</title><link>https://sogno-platform.github.io/dpsim/docs/concepts/powerflow/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno-platform.github.io/dpsim/docs/concepts/powerflow/</guid><description>
+&lt;div class="math">$$\boldsymbol{Y} \boldsymbol{v} = \boldsymbol{i}$$&lt;/div>&lt;h2 id="assembling-the-system-by-stamping">Assembling the System by Stamping&lt;/h2>
+&lt;p>The matrix $\boldsymbol{Y}$ and the right hand side $\boldsymbol{i}$ are never written out by
+inspecting the whole circuit at once. Each element contributes its own fixed pattern of entries,
+and the system is formed by adding those contributions together. A conductance $G$ between nodes
+$k$ and $l$ adds $G$ to the diagonal entries $Y_{kk}$ and $Y_{ll}$ and subtracts it from the
+off-diagonal entries $Y_{kl}$ and $Y_{lk}$; if one terminal is the reference node, only the
+single diagonal entry appears. A current source injecting $I$ into node $k$ from node $l$ adds
+$I$ to $i_k$ and subtracts it from $i_l$.&lt;/p>
+&lt;p>This additive assembly is what makes the method practical. An element needs to know only the
+indices of the nodes it is attached to, never anything about the rest of the network, and the
+same element contributes the same pattern regardless of what it is connected to. It also
+explains the structure of the result: each row corresponds to one node and holds a non-zero
+entry only for nodes reachable through a single element, so $\boldsymbol{Y}$ is symmetric for
+networks of passive elements and sparse for any network of realistic size.&lt;/p>
+&lt;h2 id="dynamic-elements-and-the-companion-model">Dynamic Elements and the Companion Model&lt;/h2>
+&lt;p>The formulation above assumes every branch current can be written as a function of node voltages
+alone. Inductors and capacitors do not satisfy this, since their currents depend on derivatives.
+They are brought into the same form by discretising the differential relation over one time step.
+Applying the trapezoidal rule to a capacitor between the instants $t - \Delta t$ and $t$ gives&lt;/p>
+&lt;div class="math">$$i(t) = \frac{2C}{\Delta t} v(t) - \left( \frac{2C}{\Delta t} v(t - \Delta t) + i(t - \Delta t) \right),$$&lt;/div>&lt;p>and the same treatment of an inductor gives&lt;/p>
+&lt;div class="math">$$i(t) = \frac{\Delta t}{2L} v(t) + \left( \frac{\Delta t}{2L} v(t - \Delta t) + i(t - \Delta t) \right).$$&lt;/div>&lt;p>Both have the form of a conductance in parallel with a current source. The conductance depends
+only on the element value and the time step, so it is a constant contribution to
+$\boldsymbol{Y}$; the current source depends only on quantities from the previous step, which are
+known when the current step begins, so it is a contribution to $\boldsymbol{i}$. This pair is
+called the companion model of the element, and the current source term is called its history
+term. Once every dynamic element has been replaced by its companion model, the network at each
+instant is a purely resistive one and the nodal formulation applies unchanged.&lt;/p>
+&lt;h2 id="extending-the-formulation-for-voltage-sources">Extending the Formulation for Voltage Sources&lt;/h2>
+&lt;p>An ideal voltage source cannot be stamped as a conductance, because its current is not determined
+by the voltage across it. The formulation is extended by admitting the source current as an
+additional unknown and adding the equation that constrains its terminal voltage. The system
+becomes&lt;/p>
+&lt;div class="math">$$\begin{bmatrix} \boldsymbol{Y} &amp; \boldsymbol{A} \\ \boldsymbol{A}^{\mathsf{T}} &amp; \boldsymbol{0} \end{bmatrix}
+\begin{bmatrix} \boldsymbol{v} \\ \boldsymbol{j} \end{bmatrix}
+=
+\begin{bmatrix} \boldsymbol{i} \\ \boldsymbol{u} \end{bmatrix},$$&lt;/div>&lt;p>where $\boldsymbol{j}$ collects the unknown source currents, $\boldsymbol{u}$ the prescribed
+source voltages, and $\boldsymbol{A}$ has a single $+1$ and $-1$ per source marking its terminals.
+This extension is known as modified nodal analysis, and it is the form actually solved. The
+augmented matrix is no longer positive definite and carries zeros on part of its diagonal, which
+is why the solver has to be one that tolerates that rather than one specialised to the passive
+case.&lt;/p>
+&lt;h2 id="solving-over-time">Solving Over Time&lt;/h2>
+&lt;p>Within a simulation the same system is solved once per time step. The left hand side depends only
+on the element values, the topology and the time step, none of which change from one step to the
+next in the ordinary case, so the matrix is factorised once and each step reuses that
+factorisation with a new right hand side. The cost of a step is then a forward and backward
+substitution rather than a full solve, which is what makes the method viable for large networks
+and for real time.&lt;/p>
+&lt;p>Two situations invalidate the factorisation. A switching event changes the topology and therefore
+the matrix, so the affected configuration has to be factorised again; simulations that switch
+frequently often pre-compute a factorisation for each configuration instead. A non-linear element
+makes the entries themselves depend on the solution, which requires iterating within the step
+until the node voltages and the element operating points agree.&lt;/p></description></item><item><title>Docs: Dynamic Phasors</title><link>https://sogno.energy/dpsim/docs/concepts/dyn-phasors/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/dyn-phasors/</guid><description>
+&lt;p>In the power systems community, dynamic phasors were initially introduced for power electronics analysis &lt;a href="https://ieeexplore.ieee.org/document/76811">Sanders1991&lt;/a> as a more general approach than state-space averaging.
+They were used to construct efficient models for the dynamics of switching gate phenomena with a high level of detail as shown in &lt;a href="https://ieeexplore.ieee.org/abstract/document/744524">Mattavelli1999&lt;/a>.
+A few years later, dynamic phasors were also employed for power system simulation as described in &lt;a href="https://www.research-collection.ethz.ch/handle/20.500.11850/123490">Demiray2008&lt;/a>.
+In &lt;a href="https://ieeexplore.ieee.org/document/4026700">Strunz2006&lt;/a> the authors combine the dynamic phasor approach with the Electromagnetic Transients Program (EMTP) simulator concept which includes Modified Nodal Analysis (MNA).
+Further research topics include fault and stability analysis under unbalanced conditions as presented in &lt;a href="https://ieeexplore.ieee.org/document/871734">Stankovic2000&lt;/a> and also rotating machine models have been developed in dynamic phasors &lt;a href="https://ieeexplore.ieee.org/document/4282063">Zhang 2007&lt;/a>.&lt;/p>
+&lt;h2 id="bandpass-signals-and-baseband-representation">Bandpass Signals and Baseband Representation&lt;/h2>
+&lt;p>Although here, dynamic phasors are presented as a power system modelling tool, it should be noted that the concept is also known in other domains, for example, microwave and communications engineering &lt;a href="https://ieeexplore.ieee.org/document/9100822">Maas2003&lt;/a>, &lt;a href="https://ieeexplore.ieee.org/book/5236646">Suarez2009&lt;/a>, &lt;a href="https://isbnsearch.org/isbn/9780471697909">Haykin2009&lt;/a>, &lt;a href="https://isbnsearch.org/isbn/0131589326">Proakis2001&lt;/a>.
+In these domains, the approach is often denoted as base band representation or complex envelope.
+Another common term coming from power electrical engineering is shifted frequency analysis (SFA).
+In the following, the general approach of dynamic phasors for power system simulation is explained starting from the idea of bandpass signals.
+This is because the 50 Hz or 60 Hz fundamental and small deviations from it can be seen as such a bandpass signal.
+Futhermore, higher frequencies, for example, generated by power electronics can be modelled in a similar way.&lt;/p>
+&lt;h2 id="two-derivations-of-the-same-transform">Two Derivations of the Same Transform&lt;/h2>
+&lt;p>The literature reaches the envelope description along two different routes. One
+starts from the analytic signal and shifts the spectrum; the other averages a
+sliding Fourier series. They are usually presented independently, under
+different names, and it is not always stated that they arrive at the same
+differential operator. The two routes are set out below so that the equivalence
+is visible.&lt;/p>
+&lt;h3 id="route-a-shifting-the-spectrum">Route A: shifting the spectrum&lt;/h3>
+&lt;p>A bandpass signal is one whose spectrum is concentrated in a band around some
+carrier frequency $\omega_s$, narrow compared with $\omega_s$ itself. The
+network voltages and currents of a power system are of this kind: energy sits
+around the 50 Hz or 60 Hz fundamental and spreads only a little either side of
+it during a transient.&lt;/p>
+&lt;p>Such a signal can be written exactly as&lt;/p>
+&lt;div class="math">$$x(t) = \operatorname{Re}\{\, X(t)\, e^{j \omega_s t} \,\},$$&lt;/div>&lt;p>where the complex quantity $X(t)$ is the envelope. It is obtained from the
+analytic signal $x_a(t) = x(t) + j,\mathcal{H}{x}(t)$, with
+$\mathcal{H}$ the Hilbert transform, by&lt;/p>
+&lt;div class="math">$$X(t) = x_a(t)\, e^{-j \omega_s t}.$$&lt;/div>&lt;p>Multiplication by $e^{-j\omega_s t}$ translates the spectrum down by
+$\omega_s$, so the band that sat around the carrier now sits around zero. That
+translation is what the name shifted frequency analysis refers to. No
+information is lost, and nothing is approximated: the operation is invertible
+and $x(t)$ can be recovered from $X(t)$ at any instant.&lt;/p>
+&lt;p>The consequence that matters for simulation is what happens to the derivative.
+Differentiating the expression above gives&lt;/p>
+&lt;div class="math">$$\frac{dx}{dt} = \operatorname{Re}\left\{ \left( \frac{dX}{dt} + j \omega_s X \right) e^{j \omega_s t} \right\},$$&lt;/div>&lt;p>so in envelope coordinates the time derivative becomes&lt;/p>
+&lt;div class="math">$$\frac{d}{dt} \;\longrightarrow\; \frac{d}{dt} + j \omega_s .$$&lt;/div>&lt;p>An inductor $v = L,\frac{di}{dt}$ therefore satisfies
+$V = L,\frac{dI}{dt} + j \omega_s L, I$. Two limiting cases are worth
+noting. When the envelope is constant, the first term vanishes and what remains
+is $V = j\omega_s L, I$, the classical steady-state phasor relation. When
+$\omega_s = 0$, the second term vanishes and the envelope is the instantaneous
+signal itself, which is the electromagnetic transient description. Both the
+phasor and the instantaneous representation are special cases of the same
+expression.&lt;/p>
+&lt;h3 id="route-b-averaging-a-fourier-series">Route B: averaging a Fourier series&lt;/h3>
+&lt;p>The dynamic phasor derivation starts elsewhere. Over a window of length
+$T = 2\pi/\omega_s$ ending at time $t$, the waveform is expanded in a Fourier
+series&lt;/p>
+&lt;div class="math">$$x(t + s) = \sum_{k} X_k(t)\, e^{j k \omega_s s}, \qquad s \in (-T, 0],$$&lt;/div>&lt;p>whose coefficients are themselves functions of time,&lt;/p>
+&lt;div class="math">$$X_k(t) = \frac{1}{T} \int_{t-T}^{t} x(\tau)\, e^{-j k \omega_s \tau} \, d\tau .$$&lt;/div>&lt;p>These sliding-window coefficients are the dynamic phasors. Each one is constant
+whenever the waveform is periodic and varies only as the waveform&amp;rsquo;s shape
+changes, which is why they are also called generalized averages. Integrating by
+parts gives the property the method is built on,&lt;/p>
+&lt;div class="math">$$\frac{dX_k}{dt} = \left\langle \frac{dx}{dt} \right\rangle_k - j k \omega_s X_k ,$$&lt;/div>&lt;p>that is, the same shift as Route A, applied to the $k$-th coefficient.&lt;/p>
+&lt;h3 id="where-the-routes-meet">Where the routes meet&lt;/h3>
+&lt;p>Retaining only $k = 1$ makes Route B&amp;rsquo;s relation identical to Route A&amp;rsquo;s: the
+first coefficient obeys $\frac{d}{dt} + j\omega_s$ and the network equations
+that follow are the same. The two derivations produce one model.&lt;/p>
+&lt;p>The difference is emphasis rather than substance. Route A treats a single
+carrier and is exact for any signal, so the accuracy question is only whether
+the signal is genuinely bandpass around the carrier that was chosen. Route B
+offers a whole family of coefficients, so it can carry a DC component in
+$X_0$, the fundamental in $X_1$ and switching harmonics in higher $X_k$
+simultaneously, at the cost of one complex state per coefficient retained.
+Truncating that series is where the approximation enters: energy at frequencies
+that were not given a coefficient is discarded, and the sliding window acts as a
+low-pass filter on what remains, so envelope components varying as fast as
+$\omega_s$ itself are attenuated.&lt;/p>
+&lt;p>This explains the split in usage. Work concerned with converter switching,
+harmonic interaction or unbalanced and fault conditions keeps several
+coefficients and speaks of dynamic phasors. Work concerned with transient
+simulation of the fundamental keeps one and speaks of shifted frequency
+analysis, emphasising the enlarged time step rather than the series. The
+communications and microwave literature calls the same object the complex
+envelope or the lowpass equivalent. The three names describe one transform, and
+the choice between them says more about a paper&amp;rsquo;s lineage than about its
+mathematics.&lt;/p>
+&lt;h2 id="relationship-to-electromagnetic-transient-models">Relationship to Electromagnetic Transient Models&lt;/h2>
+&lt;p>An electromagnetic transient (EMT) model solves for the instantaneous
+quantities directly. Because the waveform it integrates oscillates at the
+carrier, the step size has to resolve that oscillation, and the accuracy of the
+result is bounded by how finely the fundamental period is sampled. A shifted
+frequency model integrates the envelope instead. In sinusoidal steady state the
+envelope is constant, so the step size is dictated by the bandwidth of the
+transient rather than by the carrier, and it can be substantially larger for
+the same accuracy. This is the reason the approach is attractive for transient
+stability studies and for real-time simulation of large networks.&lt;/p>
+&lt;p>The saving is not free, and it is worth being precise about where it comes
+from. It is not that the envelope model is a coarser description of the same
+system; for a single carrier the transform is exact. It is that the carrier
+oscillation has been removed from the quantity being integrated and folded into
+the coefficient $j\omega_s$, which the model handles analytically rather than
+numerically. What the envelope model cannot represent is content the retained
+coefficients do not cover, which for a single-coefficient model means anything
+outside the band around $\omega_s$.&lt;/p>
+&lt;p>Because $x(t) = \operatorname{Re}{X(t) e^{j\omega_s t}}$ holds at every
+instant, converting between the two descriptions is an algebraic operation at a
+given point in time, not a filtering or a fitting problem. That is what makes
+mixed-domain and co-simulation setups possible: part of a network can be solved
+in envelope form and part in instantaneous form, with the interface performing
+the multiplication in one direction and the extraction of the envelope in the
+other. Two conditions have to be respected at such an interface. The envelope
+is defined relative to a chosen $\omega_s$ and a chosen time origin, so both
+sides must agree on the carrier frequency and share a phase reference; and the
+extraction direction needs the analytic signal, which for a general
+instantaneous waveform cannot be formed from a single sample. Any delay
+introduced between the two sides appears as a phase error on the carrier, and
+that error grows with $\omega_s$ rather than with the envelope&amp;rsquo;s own rate of
+change.&lt;/p>
+&lt;p>The state-space form of the shift, and how the resulting complex system is
+solved as a real one, are covered in
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/state-space-nodal/">State-Space Nodal&lt;/a>.&lt;/p></description></item><item><title>Docs: Powerflow</title><link>https://sogno.energy/dpsim/docs/concepts/powerflow/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/powerflow/</guid><description>
 &lt;p>The power flow problem is about the calculation of voltage magnitudes and angles for one set of buses.
 The solution is obtained from a given set of voltage magnitudes and power levels for a specific model of the network configuration.
 The power flow solution exhibits the voltages and angles at all buses and real and reactive flows can be deduced from the same.&lt;/p>
-&lt;h1 id="power-system-model">Power System Model&lt;/h1>
+&lt;h2 id="power-system-model">Power System Model&lt;/h2>
 &lt;p>Power systems are modeled as a network of buses (nodes) and branches (lines).
 To a network bus, components such a generator, load, and transmission substation can be connected.
 Each bus in the network is fully described by the following four electrical quantities:&lt;/p>
@@ -210,7 +226,7 @@ Depending on the type of the bus, two of the four electrical quantities are spec
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
-&lt;h1 id="single-phase-power-flow-problem">Single Phase Power Flow Problem&lt;/h1>
+&lt;h2 id="single-phase-power-flow-problem">Single Phase Power Flow Problem&lt;/h2>
 &lt;p>The power flow problem can be expressed by the goal to bring a mismatch function $\vec{f}$ to zero.
 The value of the mismatch function depends on a solution vector $\vec{x}$:&lt;/p>
 &lt;div class="math">$$\vec{f}(\vec{x}) = 0$$&lt;/div>&lt;p>As $\vec{f}(\vec{x})$ will be nonlinear, the equation system will be solved with Newton-Raphson:&lt;/p>
@@ -233,8 +249,8 @@ Futhermore, the solution vector $\vec{x}$ will represent $\vec{V}$ either by pol
 coordinates&lt;/strong>, detailed below. It is the formulation used by both the dense
 (&lt;code>PFSolverPowerPolar&lt;/code>) and sparse (&lt;code>PFSolverPowerPolarSparse&lt;/code>) solvers; the other three
 are not implemented.&lt;/p>
-&lt;h2 id="powerflow-problem-with-power-mismatch-function-and-polar-coordinates">Powerflow Problem with Power Mismatch Function and Polar Coordinates&lt;/h2>
-&lt;h3 id="formulation-of-mismatch-function">Formulation of Mismatch Function&lt;/h3>
+&lt;h3 id="powerflow-problem-with-power-mismatch-function-and-polar-coordinates">Powerflow Problem with Power Mismatch Function and Polar Coordinates&lt;/h3>
+&lt;h4 id="formulation-of-mismatch-function">Formulation of Mismatch Function&lt;/h4>
 &lt;p>The injected power at a node $k$ is given by:&lt;/p>
 &lt;div class="math">$$S_{k} = V_{k} I _{k}^{*}$$&lt;/div>&lt;p>The current injection into any bus $k$ may be expressed as:&lt;/p>
 &lt;div class="math">$$I_{k} = \sum_{j=1}^{N} Y_{kj} V_{j}$$&lt;/div>&lt;p>Substitution yields:&lt;/p>
@@ -274,7 +290,7 @@ Q_{k} = Q_{k} (\vec{x}) \Rightarrow Q_{k} (\vec{x}) - Q_{k} &amp;= 0 \quad \quad
 = \vec{0}
 \end{align}$$&lt;/div>&lt;p>That is a system of nonlinear equations.
 This nonlinearity comes from the fact that $P_{k}$ and $Q_{k}$ have terms containing products of some of the unknowns and also terms containing trigonometric functions of some the unknowns.&lt;/p>
-&lt;h3 id="formulation-of-jacobian">Formulation of Jacobian&lt;/h3>
+&lt;h4 id="formulation-of-jacobian">Formulation of Jacobian&lt;/h4>
 &lt;p>As discussed in the previous section, the power flow problem will be solved using the Newton-Raphson method. Here, the Jacobian matrix is obtained by taking all first-order partial derivates of the power mismatch functions with respect to the voltage angles $\theta_{k}$ and magnitudes $\vert V_{k} \vert$ as:&lt;/p>
 &lt;div class="math">$$\begin{align}
 J_{jk}^{P \theta} &amp;= \frac{\partial P_{j} (\vec{x} ) } {\partial \theta_{k}} = \vert V_{j} \vert \vert V_{k} \vert \left ( G_{jk} sin(\theta_{j} - \theta_{k}) - B_{jk} cos(\theta_{j} - \theta_{k} ) \right ) \\
@@ -307,7 +323,7 @@ so the solution is identical; only the scaling of the voltage columns differs.&l
 \end{array} \right ]
 \left [ \begin{array}{c} \Delta \theta_{2} \\ \vdots \\ \Delta \theta_{N} \\ \Delta \vert V_{N_{G+1}} \vert \\ \vdots \\ \Delta \vert V_{N} \vert \end{array} \right ]
 = \left [ \begin{array}{c} \Delta P_{2} \\ \vdots \\ \Delta P_{N} \\ \Delta Q_{N_{G+1}} \\ \vdots \\ \Delta Q_{N} \end{array} \right ]
-\end{align}$$&lt;/div>&lt;h2 id="solution-of-the-problem">Solution of the Problem&lt;/h2>
+\end{align}$$&lt;/div>&lt;h3 id="solution-of-the-problem">Solution of the Problem&lt;/h3>
 &lt;p>The solution update formula is given by:&lt;/p>
 &lt;div class="math">$$\begin{align}
 \vec{x}^{(i+1)} = \vec{x}^{(i)} + \Delta \vec{x}^{(i)} = \vec{x}^{(i)} - \textbf{J}^{-1} \vec{f} (\vec{x}^{(i)})
@@ -327,7 +343,7 @@ so the solution is identical; only the scaling of the voltage columns differs.&l
 &lt;li>Compute the update solution vector $\vec{x}^{(i+1)}$. Return to step 3.&lt;/li>
 &lt;li>Stop.&lt;/li>
 &lt;/ol>
-&lt;h2 id="convergence-and-step-control">Convergence and Step Control&lt;/h2>
+&lt;h3 id="convergence-and-step-control">Convergence and Step Control&lt;/h3>
 &lt;p>The iteration is governed by two parameters:&lt;/p>
 &lt;ul>
 &lt;li>&lt;strong>Tolerance&lt;/strong> (default $10^{-8}$): the run is converged once every entry of the
@@ -345,66 +361,354 @@ $\alpha = 1$ near the solution and quadratic convergence is retained; $\alpha &a
 bounds large early steps. Voltage magnitudes are updated multiplicatively
 ($V_k \leftarrow V_k (1 + \alpha, \Delta V_k / V_k)$), consistent with the relative
 voltage increment used in the Jacobian.&lt;/p>
-&lt;h1 id="solver-implementations">Solver Implementations&lt;/h1>
-&lt;p>DPsim ships two implementations of the Newton-Raphson power flow solver with power
-mismatch and polar coordinates. Both produce identical results (to round-off); they
-differ only in how the Jacobian is stored and factorized:&lt;/p>
+&lt;p>The formulation above is independent of DPsim. For the solvers it actually ships, their
+convergence controls and the reactive power limit handling, see
+&lt;a href="https://sogno.energy/dpsim/docs/developer-guide/solvers/powerflow-solvers/">power flow solvers&lt;/a>.&lt;/p></description></item><item><title>Docs: State-Space Nodal</title><link>https://sogno.energy/dpsim/docs/concepts/state-space-nodal/</link><pubDate>Tue, 23 Jun 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/state-space-nodal/</guid><description>
+&lt;p>The state-space nodal (SSN) method represents a component by its own continuous
+state-space model and couples it to the network through the nodal admittance
+matrix. A component is described by&lt;/p>
+&lt;div class="math">$$\frac{d\mathbf{x}}{dt} = \mathbf{A}\mathbf{x} + \mathbf{B}\mathbf{u},
+\qquad
+\mathbf{y} = \mathbf{C}\mathbf{x} + \mathbf{D}\mathbf{u},$$&lt;/div>&lt;p>where $\mathbf{x}$ is the internal state, and the input $\mathbf{u}$ and output
+$\mathbf{y}$ are the terminal quantities exchanged with the network (a voltage and
+the corresponding current). Trapezoidal discretisation of $(\mathbf{A}, \mathbf{B})$
+yields a discrete model $(\mathbf{A}_d, \mathbf{B}_d)$ and a Norton equivalent: a
+constant conductance $\mathbf{W}$ stamped into the system matrix plus a history
+current source recomputed each step from the previous state and input. Because the
+component is solved simultaneously with the network in the same nodal system, SSN
+is numerically robust without the parasitic snubbers that delayed
+current-injection schemes require.&lt;/p>
+&lt;p>This builds directly on &lt;a href="https://sogno.energy/dpsim/docs/concepts/nodal-analysis/">Nodal Analysis&lt;/a> and is
+the companion of
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/state-space-extraction-theory/">State-Space Extraction&lt;/a>, which
+recovers a state-space model from an MNA simulation rather than starting from one.&lt;/p>
+&lt;h2 id="shift-to-the-dynamic-phasor-envelope">Shift to the Dynamic-Phasor Envelope&lt;/h2>
+&lt;p>The same component model is discretised differently in an envelope domain: the operator becomes
+$\frac{d}{dt} + j\omega_s$, so what is discretised is $\mathbf{A} - j\omega_s\mathbf{I}$ rather than
+$\mathbf{A}$, and splitting the envelope into real and imaginary parts turns that into a real system
+of twice the size. This is derived in full under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/ssn-domain-formulation/">SSN across domains&lt;/a>, together with why the equivalent
+admittance is complex in an envelope domain and real in an instantaneous one.&lt;/p>
+&lt;p>The real-augmented form matches how the rest of the dynamic phasor system is already assembled: a
+complex admittance $g = g_r + j g_i$ is stamped as the real block
+$\left[\begin{smallmatrix} g_r &amp;amp; -g_i \ g_i &amp;amp; g_r \end{smallmatrix}\right]$, with real and
+imaginary node parts in separate halves of a real-valued system. The SSN component therefore needs
+no complex assembly of its own, and the trapezoidal discretisation used by the instantaneous models
+applies unchanged.&lt;/p>
+&lt;h2 id="components">Components&lt;/h2>
+&lt;p>The single-phase dynamic-phasor SSN models are:&lt;/p>
 &lt;ul>
-&lt;li>&lt;code>PFSolverPowerPolar&lt;/code> (dense): assembles a dense Jacobian and computes a fresh
-factorization every Newton iteration. This is the default.&lt;/li>
-&lt;li>&lt;code>PFSolverPowerPolarSparse&lt;/code> (sparse): assembles the Jacobian into a sparse matrix
-whose sparsity pattern is fixed (derived once from the network admittance matrix).
-The symbolic factorization (ordering) is analyzed once and reused; only the numeric
-values are recomputed each Newton iteration. The first iteration of every power flow
-solve does a full factorization with pivoting, and subsequent iterations refactorize
-while reusing that ordering (via KLU when available). This scales better on large,
-sparse grids.&lt;/li>
+&lt;li>&lt;code>Full_Serial_RLC&lt;/code>, a series resistor-inductor-capacitor one-port with a
+hand-derived state-space model, used as the reference component.&lt;/li>
+&lt;li>&lt;code>GenericTwoTerminalVTypeSSN&lt;/code> and &lt;code>GenericTwoTerminalITypeSSN&lt;/code>, which accept a
+user-supplied $(\mathbf{A}, \mathbf{B}, \mathbf{C}, \mathbf{D})$ and build the
+V-type (voltage input, current output) or I-type (current input, voltage
+output) stamping accordingly.&lt;/li>
 &lt;/ul>
-&lt;p>The dense solver is used by default. To opt in to the sparse solver:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">set_pf_solver_use_sparse&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">True&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The flag is ignored and the dense solver is used if DPsim was built without a sparse
-linear solver. The benchmark notebook
-&lt;code>examples/Notebooks/Grids/PF_Sparse_vs_Dense.ipynb&lt;/code> runs a range of network sizes both
-ways, verifies the converged voltages match, and compares run time.&lt;/p>
-&lt;h1 id="generator-reactive-power-limits">Generator Reactive Power Limits&lt;/h1>
-&lt;p>A PV bus assumes its generator can produce whatever reactive power the Newton-Raphson
-solution asks for, holding $\vert V_k \vert$ at its setpoint. Real generators cannot: Q
-is bounded by $Q_{min}$ and $Q_{max}$. DPsim can enforce these bounds with a
-bidirectional PV↔PQ outer loop:&lt;/p>
-&lt;ol>
-&lt;li>Run the inner Newton-Raphson solve to convergence (as described above).&lt;/li>
-&lt;li>For every PV bus, compute the generator&amp;rsquo;s actual reactive output. If it exceeds
-$Q_{max}$ or falls below $Q_{min}$, pin the injection at the violated limit and
-convert the bus to PQ.&lt;/li>
-&lt;li>For every bus pinned this way in an earlier pass, check whether the constraint has
-relaxed: if $\vert V_k \vert$ has moved past its original setpoint in the releasing
-direction, restore voltage control and convert the bus back to PV.&lt;/li>
-&lt;li>Repeat from step 1 until no bus switches, an outer-iteration cap is hit, or a
-per-bus switch counter trips (an anti-oscillation guard, since a bus can otherwise
-toggle PV↔PQ indefinitely near the boundary).&lt;/li>
-&lt;/ol>
-&lt;p>Enforcement is opt-in and defaults off, so a system with no limits configured behaves
-exactly as before:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">set_pf_solver_enforce_q_limits&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">True&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>$Q_{min}$/$Q_{max}$ are set per generator via &lt;code>SynchronGenerator.set_parameters(..., q_limit_max=..., q_limit_min=...)&lt;/code>; the defaults are $\pm\infty$ (unlimited).
-Generators sharing a bus have their limits summed. The two limits are enforced
-independently, with no assumption about sign or relative magnitude: asymmetric bounds
-(e.g. $Q_{max}=150$ MVAr, $Q_{min}=-30$ MVAr) and same-sign bounds (e.g. a generator
-restricted to $Q \in [20, 150]$ MVAr, always producing, or $Q \in [-150, -20]$ MVAr,
-always absorbing) are both enforced correctly.&lt;/p>
-&lt;p>&lt;strong>Limitation: no P-dependent capability curve.&lt;/strong> $Q_{min}$ and $Q_{max}$ are constants
-set once per generator, not a function of active power output $P$. A real synchronous
-generator&amp;rsquo;s reactive capability is a &amp;ldquo;D-curve&amp;rdquo; bounded by three physically distinct
-mechanisms: the stator (armature) current limit $\sqrt{P^2+Q^2} \le S_{rated}$, the
-rotor (field) current / heating limit on the over-excited (Q-providing) side, and the
-under-excitation limiter (UEL) / steady-state stability limit on the under-excited
-(Q-absorbing) side. All three tighten as $P$ approaches rated output, and the over- and
-under-excited bounds come from unrelated physical limits, so the true feasible region is
-neither symmetric in $Q$ nor independent of $P$. DPsim does not model this curve; a
-generator&amp;rsquo;s $Q$ headroom is the same regardless of how much $P$ it is producing at the
-time. Flat per-generator limits are a common baseline in power-flow tools generally, so
-this is not a regression, but a P-dependent capability curve is not currently
-implemented.&lt;/p>
-&lt;p>The notebook &lt;code>examples/Notebooks/Grids/PF_Generator_Qlimits.ipynb&lt;/code> validates the
-switching behavior on a small hand-wired case (binding and non-binding limits, dense vs.
-sparse agreement).&lt;/p></description></item></channel></rss>
+&lt;p>All three reproduce the classical dynamic-phasor stamping of the same circuit,
+and the reconstructed time-domain waveform matches the EMT and EMT-SSN results
+within discretisation error.&lt;/p>
+&lt;h2 id="three-phase-components">Three-Phase Components&lt;/h2>
+&lt;p>The same real-augmented model extends per phase to &lt;code>DP::Ph3&lt;/code>. The
+$3 \times 3$ $\mathbf{A}$, $\mathbf{B}$, $\mathbf{C}$, $\mathbf{D}$ matrices
+are general, so off-diagonal entries can couple the phases together:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>Full_Serial_RLC&lt;/code>, the three-phase series RLC one-port.&lt;/li>
+&lt;li>&lt;code>GenericTwoTerminalVTypeSSN&lt;/code> and &lt;code>GenericTwoTerminalITypeSSN&lt;/code>, the
+three-phase generic V-type and I-type components.&lt;/li>
+&lt;/ul>
+&lt;p>As in the single-phase case, all three reproduce the classical three-phase
+dynamic-phasor stamping exactly, and the reconstructed time-domain waveform
+matches the EMT and EMT-SSN results within discretisation error once
+corrected for the RMS-to-peak scaling that &lt;code>EMT::Ph3&lt;/code> sources apply and
+&lt;code>DP::Ph3&lt;/code> sources do not, since the DP envelope already carries the complex
+amplitude directly. The notebooks below only exercise the symmetrical,
+diagonal case; coupling between phases is not covered by existing tests.&lt;/p>
+&lt;h2 id="variable-components">Variable Components&lt;/h2>
+&lt;p>The components above are fixed-parameter LTI systems: $(\mathbf{A}, \mathbf{B},
+\mathbf{C}, \mathbf{D})$ are built once from the component&amp;rsquo;s parameters and never
+change. Some SSN components instead depend on the operating point and are
+relinearized and re-stamped every step: the same simultaneous nodal solve, but around
+a Jacobian frozen at the previous step&amp;rsquo;s converged state rather than a constant
+matrix. The averaged grid-following inverter is one such component, and its
+three-phase analogue carries a complex envelope per phase while sharing a single
+positive-sequence dq control frame; see
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/power-electronics/">Power Electronics&lt;/a> for their state vectors and
+model equations.&lt;/p>
+&lt;h2 id="validation-and-examples">Validation and Examples&lt;/h2>
+&lt;p>Two notebooks accompany the single-phase models, both on a single-carrier
+series RLC one-port. &lt;code>examples/Notebooks/Circuits/DP_generalizedSSN_RLC.ipynb&lt;/code>
+validates the DP-SSN models against the classical dynamic-phasor stamping and
+the EMT and EMT-SSN waveforms. &lt;code>examples/Notebooks/Circuits/DP_SSN_RLC_accuracy.ipynb&lt;/code>
+studies the time-step and frequency-dependent accuracy against a small-step
+EMT reference.&lt;/p>
+&lt;p>The three-phase analogues,
+&lt;code>examples/Notebooks/Circuits/DP_Ph3_generalizedSSN_RLC.ipynb&lt;/code> and
+&lt;code>examples/Notebooks/Circuits/DP_Ph3_SSN_RLC_accuracy.ipynb&lt;/code>, repeat both
+studies on &lt;code>DP::Ph3&lt;/code> circuits, including a current-driven network with generic
+V-type and I-type components and a three-phase fault transient.&lt;/p>
+&lt;h2 id="further-reading">Further Reading&lt;/h2>
+&lt;ul>
+&lt;li>C. Dufour, J. Mahseredjian, and J. Bélanger, &lt;em>A Combined State-Space Nodal Method for the Simulation of Power System Transients&lt;/em>, &lt;em>IEEE Transactions on Power Delivery&lt;/em>, vol. 26, no. 2, pp. 928–935, 2011. &lt;a href="https://doi.org/10.1109/TPWRD.2010.2090364">https://doi.org/10.1109/TPWRD.2010.2090364&lt;/a>&lt;/li>
+&lt;li>C. Dufour and D. S. Nasrallah, &lt;em>State-space-nodal rotating machine models with improved numerical stability&lt;/em>, &lt;em>IECON 2016 – 42nd Annual Conference of the IEEE Industrial Electronics Society&lt;/em>, 2016. &lt;a href="https://doi.org/10.1109/IECON.2016.7793690">https://doi.org/10.1109/IECON.2016.7793690&lt;/a>&lt;/li>
+&lt;li>A. A. Kida, A. C. S. Lima, F. A. Moreira, J. R. Martí, and J. Tarazona, &lt;em>Inaccuracies due to the frequency warping in simulation of electrical systems using combined state–space nodal analysis&lt;/em>, &lt;em>Electric Power Systems Research&lt;/em>, vol. 223, art. 109657, 2023. &lt;a href="https://doi.org/10.1016/j.epsr.2023.109657">https://doi.org/10.1016/j.epsr.2023.109657&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Docs: State-Space Nodal Across Domains</title><link>https://sogno.energy/dpsim/docs/concepts/ssn-domain-formulation/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/ssn-domain-formulation/</guid><description>
+&lt;p>A component&amp;rsquo;s state-space model does not change between simulation domains. The same
+$\boldsymbol{A}$, $\boldsymbol{B}$, $\boldsymbol{C}$ and $\boldsymbol{D}$ describe the same physics
+whichever domain solves them. What changes is the operator that is discretised, and that difference
+propagates all the way to whether the resulting nodal stamp is real or complex.&lt;/p>
+&lt;p>The construction of the stamp itself is unchanged and is derived under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/ssn-components/">state-space nodal components&lt;/a>.&lt;/p>
+&lt;h2 id="the-instantaneous-case">The instantaneous case&lt;/h2>
+&lt;p>Here the state equation is integrated as written,&lt;/p>
+&lt;div class="math">$$\dot{\boldsymbol{x}} = \boldsymbol{A}\boldsymbol{x} + \boldsymbol{B}\boldsymbol{u},$$&lt;/div>&lt;p>the trapezoidal rule gives a real discrete pair, and the equivalent admittance
+$\boldsymbol{W} = \boldsymbol{C}\boldsymbol{B}_d + \boldsymbol{D}$ is real.&lt;/p>
+&lt;h2 id="the-envelope-case">The envelope case&lt;/h2>
+&lt;p>In an envelope domain the state is a complex envelope $\tilde{\boldsymbol{x}}$ carrying an implicit
+$e^{j\omega_s t}$. Differentiating that product contributes the carrier term derived under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/dyn-phasors/">dynamic phasors&lt;/a>, so the operator seen by the envelope is&lt;/p>
+&lt;div class="math">$$\frac{d}{dt} \; \longrightarrow \; \frac{d}{dt} + j\omega_s ,$$&lt;/div>&lt;p>and the system that must be discretised is not $\boldsymbol{A}$ but
+$\boldsymbol{A} - j\omega_s \boldsymbol{I}$.&lt;/p>
+&lt;h2 id="the-real-augmented-form">The real-augmented form&lt;/h2>
+&lt;p>Rather than integrate a complex system, split the envelope into real and imaginary parts. The
+shifted operator becomes a real system of twice the size,&lt;/p>
+&lt;div class="math">$$\begin{bmatrix} \dot{\boldsymbol{x}}_{re} \\ \dot{\boldsymbol{x}}_{im} \end{bmatrix}
+=
+\begin{bmatrix} \boldsymbol{A} &amp; \omega_s \boldsymbol{I} \\
+-\omega_s \boldsymbol{I} &amp; \boldsymbol{A} \end{bmatrix}
+\begin{bmatrix} \boldsymbol{x}_{re} \\ \boldsymbol{x}_{im} \end{bmatrix}
++
+\begin{bmatrix} \boldsymbol{B} &amp; \boldsymbol{0} \\ \boldsymbol{0} &amp; \boldsymbol{B} \end{bmatrix}
+\begin{bmatrix} \boldsymbol{u}_{re} \\ \boldsymbol{u}_{im} \end{bmatrix}.$$&lt;/div>&lt;p>The off-diagonal $\pm\omega_s \boldsymbol{I}$ blocks are the carrier rotation, and the block
+structure $\begin{bmatrix} P &amp;amp; -Q \ Q &amp;amp; P \end{bmatrix}$ is the real representation of the complex
+number $P + jQ$. Discretising this real system with the same trapezoidal rule and recombining the
+blocks recovers the complex discrete pair, from which the equivalent admittance and the history term
+follow exactly as in the instantaneous case.&lt;/p>
+&lt;p>Two things follow. The equivalent admittance is complex in an envelope domain and real in an
+instantaneous one, so the same component stamps differently. And setting $\omega_s = 0$ collapses
+the augmented system back to the instantaneous one, which is the general statement about the
+envelope transform applied here: the instantaneous formulation is the zero-carrier special case, not
+a separate method.&lt;/p>
+&lt;h2 id="why-this-matters-for-accuracy">Why this matters for accuracy&lt;/h2>
+&lt;p>The carrier rotation is handled analytically, inside $\boldsymbol{A}$, rather than numerically by
+resolving the oscillation with small steps. For a component whose envelope varies slowly against a
+fast carrier, the step size is then set by the envelope&amp;rsquo;s own bandwidth rather than by the carrier
+frequency. That is the entire accuracy argument for using an envelope domain here, and it fails for
+exactly the reason it succeeds: content outside the retained band around $\omega_s$ has no
+representation at all.&lt;/p></description></item><item><title>Docs: State-Space Extraction</title><link>https://sogno.energy/dpsim/docs/concepts/state-space-extraction-theory/</link><pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/state-space-extraction-theory/</guid><description>
+&lt;p>A nodal simulation computes a trajectory: given a set of sources and initial conditions it
+produces the node voltages step by step. It does not, by itself, say anything about the system&amp;rsquo;s
+modes, its damping, or how close it is to instability. Those questions are answered by the
+state-space description, which the extraction recovers from the discretised network that the
+simulation is already solving. The result is the discrete-time model of exactly what is being
+simulated, including the effect of the discretisation itself, rather than of an idealised
+continuous system that the simulation approximates.&lt;/p>
+&lt;h2 id="where-the-discrete-model-comes-from">Where the Discrete Model Comes From&lt;/h2>
+&lt;p>The starting point is the companion form described under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/nodal-analysis/">nodal analysis&lt;/a>. Each dynamic element has already been turned
+into a conductance in parallel with a history current source, and its history term is a
+difference equation in the element&amp;rsquo;s own quantity: the current for an inductor, the voltage for a
+capacitor. Those quantities are the states. The network solve then supplies the terminal voltages
+that drive them.&lt;/p>
+&lt;p>This gives a system in two parts rather than one. The states advance using their own local
+recurrence together with the network solution at the new instant, and the network solution at
+that instant is itself driven by the states carried over from the previous one.&lt;/p>
+&lt;h2 id="assembled-form">Assembled Form&lt;/h2>
+&lt;p>The extracted model is assembled in the form:&lt;/p>
+&lt;div class="math">$$\mathbf{x}[k+1]
+=
+\mathbf{A}_{d,\mathrm{local}} \mathbf{x}[k]
++
+\mathbf{B}_{d,\mathrm{MNA}} \mathbf{x}_{\mathrm{MNA}}[k+1]$$&lt;/div>
+&lt;div class="math">$$\mathbf{Y} \mathbf{x}_{\mathrm{MNA}}[k+1]
+=
+\mathbf{C}_{d,\mathrm{MNA}} \mathbf{x}[k]$$&lt;/div>&lt;p>where:&lt;/p>
+&lt;ul>
+&lt;li>$\mathbf{x}$ is the extraction-state vector,&lt;/li>
+&lt;li>$\mathbf{x}_{\mathrm{MNA}}$ is the full MNA unknown vector,&lt;/li>
+&lt;li>$\mathbf{Y}$ is the active MNA system matrix,&lt;/li>
+&lt;li>$\mathbf{A}_{d,\mathrm{local}}$ contains local component state-transition contributions,&lt;/li>
+&lt;li>$\mathbf{B}_{d,\mathrm{MNA}}$ maps MNA unknowns to the state update,&lt;/li>
+&lt;li>$\mathbf{C}_{d,\mathrm{MNA}}$ maps extraction states to MNA current injections.&lt;/li>
+&lt;/ul>
+&lt;p>Eliminating the MNA unknown vector gives the global discrete-time state matrix&lt;/p>
+&lt;div class="math">$$\mathbf{A}_{d}
+=
+\mathbf{A}_{d,\mathrm{local}}
++
+\mathbf{B}_{d,\mathrm{MNA}}
+\operatorname{solve}
+\left(
+\mathbf{Y},
+\mathbf{C}_{d,\mathrm{MNA}}
+\right)$$&lt;/div>&lt;p>The resulting matrix $\mathbf{A}_{d}$ describes the homogeneous discrete-time dynamics of the EMT MNA simulation model at the current operating point and system-matrix configuration.&lt;/p>
+&lt;p>The elimination is written as a solve rather than as an inverse for a reason. $\mathbf{Y}$ is
+sparse and already factorised for the time stepping, so the term is obtained by one forward and
+backward substitution per column of $\mathbf{C}_{d,\mathrm{MNA}}$, that is, one per extracted
+state. Forming $\mathbf{Y}^{-1}$ explicitly would discard the sparsity and cost far more than the
+extraction itself.&lt;/p>
+&lt;h2 id="interpreting-the-result">Interpreting the Result&lt;/h2>
+&lt;p>The eigenvalues of $\mathbf{A}_{d}$ are discrete-time modes, so they are read against the unit
+circle rather than against the imaginary axis. A mode is stable when $|\lambda_d| &amp;lt; 1$, and the
+closer it sits to the unit circle the more lightly damped it is. A corresponding continuous-time
+eigenvalue follows from&lt;/p>
+&lt;div class="math">$$\lambda_c = \frac{\ln \lambda_d}{\Delta t},$$&lt;/div>&lt;p>whose real part gives the damping and whose imaginary part gives the oscillation frequency, up to
+the ambiguity that any frequency above the Nyquist rate of the time step is indistinguishable
+from one below it.&lt;/p>
+&lt;p>It is worth being clear about what this eigenvalue belongs to. It is a mode of the discretised
+system, not of the underlying continuous one. The two differ by the distortion the integration
+rule introduces, and for the trapezoidal rule that distortion grows with frequency, so the fastest
+modes are the least faithful. Reducing the time step reduces the discrepancy; comparing extraction
+results across two time steps is a practical way to see which modes are trustworthy.&lt;/p>
+&lt;h2 id="validity">Validity&lt;/h2>
+&lt;p>The extracted model is linear and time invariant, and it describes the system only for the
+configuration it was taken from. Any event that changes $\mathbf{Y}$, a switch opening or closing
+above all, produces a different $\mathbf{A}_{d}$, so a switching study means one extraction per
+configuration rather than one for the simulation. The same holds for non-linear elements, whose
+contributions are those at the operating point reached when the extraction was performed; moving
+the operating point requires extracting again.&lt;/p>
+&lt;h2 id="references">References&lt;/h2>
+&lt;ul>
+&lt;li>J. A. Hollman and J. R. Marti, &lt;em>Step-by-step eigenvalue analysis with EMTP discrete-time solutions&lt;/em>, &lt;em>IEEE Transactions on Power Systems&lt;/em>, 2010. &lt;a href="https://doi.org/10.1109/TPWRS.2009.2039810">https://doi.org/10.1109/TPWRS.2009.2039810&lt;/a>&lt;/li>
+&lt;li>Y. Han, H. Sun, B. Huang, S. Qin, M. Mu, and Y. Yu, “Discrete-Time State-Space Construction Method for SSO Analysis of Renewable Power Generation Integrated AC/DC Hybrid System,” &lt;em>IEEE Transactions on Power Systems&lt;/em>, 2022. &lt;a href="https://doi.org/10.1109/TPWRS.2021.3115248">https://doi.org/10.1109/TPWRS.2021.3115248&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Docs: Modal Analysis</title><link>https://sogno.energy/dpsim/docs/concepts/modal-analysis/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/modal-analysis/</guid><description>
+&lt;p>Extracting a state-space model, as described under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/state-space-extraction-theory/">state-space extraction&lt;/a>, produces a discrete state
+matrix. Its eigenvalues describe how the system behaves without simulating it: which oscillations
+exist, how fast each decays, and which states are involved in each one.&lt;/p>
+&lt;h2 id="from-discrete-to-continuous-eigenvalues">From discrete to continuous eigenvalues&lt;/h2>
+&lt;p>The extracted model is discrete, so its eigenvalues $z$ live in the complex plane where stability
+means $|z| &amp;lt; 1$. That is awkward to read, because the quantities of interest are a frequency in
+hertz and a damping ratio, both of which are natural in the continuous plane.&lt;/p>
+&lt;p>Because the model was discretised with the trapezoidal rule, the mapping back is its inverse, the
+bilinear transform&lt;/p>
+&lt;div class="math">$$\lambda = \frac{2}{\Delta t} \, \frac{z - 1}{z + 1}.$$&lt;/div>&lt;p>This maps the interior of the unit disc onto the left half plane exactly, so a mode that is stable
+in one description is stable in the other, with no threshold effects at the boundary. From
+$\lambda = \sigma + j\omega$ the damped frequency is $\omega / 2\pi$ and the damping ratio is
+$-\sigma / |\lambda|$.&lt;/p>
+&lt;p>The mapping is exact for the discretisation used, not an approximation of it. What it cannot undo is
+the frequency warping the trapezoidal rule introduced in the first place: a continuous mode at a
+frequency approaching the Nyquist rate is represented at a shifted frequency in the discrete model,
+and mapping back returns the shifted value rather than the original. Modes well below Nyquist are
+unaffected; modes near it should not be read literally.&lt;/p>
+&lt;h2 id="what-the-eigenvectors-say">What the eigenvectors say&lt;/h2>
+&lt;p>The eigenvalues say which modes exist but not which parts of the system take part in them. The right
+eigenvectors describe how each mode appears in the states, the left eigenvectors describe how
+strongly each state excites each mode, and the product of the two, element by element,&lt;/p>
+&lt;div class="math">$$p_{ki} = \phi_{ki} \, \psi_{ik},$$&lt;/div>&lt;p>is the participation factor of state $k$ in mode $i$.&lt;/p>
+&lt;p>Participation factors are the useful output. A poorly damped oscillation is a number; knowing that
+two particular machine rotor states dominate it is actionable. They are also dimensionless and
+normalised in a way that makes them comparable across states with different units, which raw
+eigenvector entries are not.&lt;/p>
+&lt;p>The computation requires the eigenvector matrix to be invertible. It is not, when the state matrix
+is defective, meaning it has a repeated eigenvalue without a full set of independent eigenvectors.
+This is not a numerical failure but a property of the system, and it is the one case where
+participation factors are not defined at all.&lt;/p>
+&lt;h2 id="choice-of-frame">Choice of frame&lt;/h2>
+&lt;p>The states of the extracted model are in whatever frame each component works in, which for a network
+containing machines means several rotating frames turning at different speeds plus the network&amp;rsquo;s own.
+Eigenvalues of that system are still correct, but the modes mix frames, and a mode&amp;rsquo;s frequency is
+then relative to whichever frame its dominant states live in.&lt;/p>
+&lt;p>Transforming everything into one common frame before the analysis removes that ambiguity, at the
+price of choosing the frame and its initial angle. The two choices are therefore: analyse in the
+native frames and read each mode relative to its own states, or transform to a single frame and read
+every frequency against the same reference. The second is what makes modes from different machines
+directly comparable.&lt;/p>
+&lt;h2 id="limits">Limits&lt;/h2>
+&lt;p>The analysis is linear and local. It describes the system as it is at the operating point where the
+model was extracted, and says nothing about behaviour after a large disturbance moves it elsewhere.
+A system can be comfortably damped at its nominal point and not at another, so a single modal
+analysis is evidence about one condition rather than about the system.&lt;/p></description></item><item><title>Docs: Alternative Solution Methods</title><link>https://sogno.energy/dpsim/docs/concepts/alternative-solvers/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/alternative-solvers/</guid><description>
+&lt;p>&lt;a href="https://sogno.energy/dpsim/docs/concepts/nodal-analysis/">Nodal analysis&lt;/a> is not the only way to advance a network in time.
+Three other formulations exist, each answering a different objection to it.&lt;/p>
+&lt;h2 id="differential-algebraic-formulation">Differential-algebraic formulation&lt;/h2>
+&lt;p>Nodal analysis discretises each dynamic element separately, replacing it with a companion model, and
+then solves an algebraic system. The step size is chosen in advance and applies to everything.&lt;/p>
+&lt;p>A differential-algebraic formulation instead writes the whole system as it stands,&lt;/p>
+&lt;div class="math">$$\boldsymbol{F}\!\left(t, \boldsymbol{x}, \dot{\boldsymbol{x}}\right) = \boldsymbol{0},$$&lt;/div>&lt;p>mixing the differential equations of the dynamic elements with the algebraic constraints of the
+network, and hands it to an integrator that chooses its own order and step size to meet a requested
+error tolerance. Each component contributes its residual, the part of $\boldsymbol{F}$ it is
+responsible for, rather than a companion model.&lt;/p>
+&lt;p>What this buys is error control. The user asks for an accuracy rather than a step size, and the
+integrator takes small steps through fast transients and long ones through quiet intervals. What it
+costs is determinism: the number of steps and the work per step are not known in advance, which
+rules the method out for real-time execution and makes run times hard to predict. It is a method for
+producing reference results, not for meeting a deadline.&lt;/p>
+&lt;p>The formulation also admits systems that nodal analysis handles awkwardly, because a constraint does
+not have to be rewritten as an admittance to participate.&lt;/p>
+&lt;h2 id="ordinary-differential-formulation-for-a-component">Ordinary differential formulation for a component&lt;/h2>
+&lt;p>A weaker version of the same idea applies to one component rather than the whole network. The
+network is still solved by nodal analysis at a fixed step, but a single component whose internal
+dynamics are stiff or awkward is integrated by a dedicated solver between network steps.&lt;/p>
+&lt;p>The component exposes its state derivative, the solver advances it over the network step, and the
+result re-enters the network as an ordinary companion contribution. This keeps the deterministic
+outer loop while allowing one component to be integrated more carefully than the rest. The
+limitation is the same one as any staggered coupling: the component sees the network&amp;rsquo;s terminal
+conditions from the beginning of the step, so the exchange is only first-order accurate however
+carefully the inner integration is done.&lt;/p>
+&lt;h2 id="tearing-a-network">Tearing a network&lt;/h2>
+&lt;p>The third objection is about size rather than accuracy. Factorising the system matrix costs
+super-linearly in the number of nodes, so one large network is more expensive than the sum of its
+parts.&lt;/p>
+&lt;p>Diakoptics exploits this. A small set of branches is removed, chosen so that what remains falls into
+independent subnetworks. Each subnetwork is factorised on its own, which is cheap, and the removed
+branches are restored by solving a small dense system in the currents through them,&lt;/p>
+&lt;div class="math">$$\boldsymbol{v} = \boldsymbol{Y}^{-1}\boldsymbol{i}
+- \boldsymbol{Y}^{-1}\boldsymbol{K}
+\left( \boldsymbol{Z}_{tear} + \boldsymbol{K}^{\mathsf{T}}\boldsymbol{Y}^{-1}\boldsymbol{K} \right)^{-1}
+\boldsymbol{K}^{\mathsf{T}}\boldsymbol{Y}^{-1}\boldsymbol{i},$$&lt;/div>&lt;p>where $\boldsymbol{K}$ records which nodes each removed branch connected and
+$\boldsymbol{Z}_{tear}$ holds their impedances. The bracketed matrix has the dimension of the number
+of torn branches, so the method pays off exactly when a network can be split by cutting few
+branches.&lt;/p>
+&lt;p>The result is not an approximation. Unlike the delay-based decoupling described under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/branches/">branches&lt;/a>, which introduces a travel time and therefore an error,
+tearing reproduces the solution of the intact network to within round-off, because the removed
+branches are restored within the same step. The trade is that the subnetworks cannot be advanced
+independently: the small system couples them, so they must be solved together each step.&lt;/p>
+&lt;p>Choosing where to tear is the part with no general answer. Too few cuts leave the subnetworks large,
+too many make the dense system dominate, and a cut through a strongly coupled part of the network
+produces subnetworks whose solutions are dominated by the correction.&lt;/p></description></item><item><title>Docs: Models</title><link>https://sogno.energy/dpsim/docs/concepts/models/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/models/</guid><description>
+&lt;p>Each page in this section derives one component family: what it represents, the equations that
+describe it, and what those equations assume. None of them names a class or a file. How a model is
+arranged in code is in the &lt;a href="https://sogno.energy/dpsim/docs/developer-guide/">Developer Guide&lt;/a>, and which domains
+implement which model is in
+&lt;a href="https://sogno.energy/dpsim/docs/reference/model-availability/">model availability&lt;/a>, which is generated from
+the source and is therefore the authoritative answer to that question.&lt;/p>
+&lt;h2 id="the-domains">The domains&lt;/h2>
+&lt;p>A model is written per simulation domain and per phase count, so the same component may exist as a
+single-phase dynamic phasor model, a three-phase electromagnetic transient model, or both.&lt;/p>
+&lt;p>&lt;code>EMT&lt;/code> carries instantaneous waveforms, &lt;code>DP&lt;/code> carries complex envelopes of those waveforms around a
+carrier frequency, and &lt;code>SP&lt;/code> carries steady-state phasors. &lt;code>Ph1&lt;/code> is single phase, usually a positive
+sequence representation, and &lt;code>Ph3&lt;/code> is three phase. The three domains are not separate methods but
+cases of one envelope description, which is the subject of
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/dyn-phasors/">dynamic phasors&lt;/a>.&lt;/p>
+&lt;p>The practical consequence is that the domain determines what a model can represent, not only how
+fast it runs. An envelope domain cannot represent content outside the band it retains, whatever step
+size is used.&lt;/p>
+&lt;h2 id="how-the-models-group">How the models group&lt;/h2>
+&lt;p>&lt;strong>Passive elements and branches.&lt;/strong> &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/rlc-elements/">RLC elements&lt;/a> covers the elements
+every other model is built from. &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/branches/">Branches&lt;/a> covers the lines connecting
+two nodes, including the travelling-wave line. &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/transformer/">Transformer&lt;/a> covers the
+two-winding transformer and the ideal transformer within it.&lt;/p>
+&lt;p>&lt;strong>Sources, switches and loads.&lt;/strong> &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/sources/">Sources&lt;/a> explains why a current source
+costs nothing while a voltage source extends the system matrix.
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/switches/">Switches&lt;/a> and &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/loads/">loads&lt;/a> cover the two-resistance
+switch and the impedance and current representations of demand. These three share one theme: a
+choice that looks physical is usually a numerical trade-off.&lt;/p>
+&lt;p>&lt;strong>Machines.&lt;/strong> &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/synchronous-generator/">Synchronous generator&lt;/a> covers the full-order and
+transient-stability machines, and
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/synchronous-generator/reduced-order/">reduced order&lt;/a> the voltage-behind-reactance
+family from third to sixth order. The
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/synchronous-generator-regulators/">regulators&lt;/a> that drive them, exciters, turbines and
+governors, sit alongside.&lt;/p>
+&lt;p>&lt;strong>Converters.&lt;/strong> &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/power-electronics/">Power electronics&lt;/a> covers the averaged inverter
+models, and &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/converter-control/">converter control&lt;/a> the phase-locked loop, the
+oscillator and the cascaded control that distinguish grid-following from grid-forming behaviour.&lt;/p>
+&lt;p>&lt;strong>Interfaces and compensation.&lt;/strong> &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/ssn-components/">SSN components&lt;/a> covers components
+solved simultaneously with the network, the
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/ideal-transformer-model/">ideal transformer model&lt;/a> the general way of splitting a
+network, and &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/network-injection-and-compensation/">network injection and compensation&lt;/a>
+the representation of the grid beyond the boundary.&lt;/p>
+&lt;p>&lt;strong>Signal blocks.&lt;/strong> &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/signal-processing/">Signal processing&lt;/a> covers the integrators,
+filters and generators the other models are assembled from. These carry no current and connect to no
+node.&lt;/p></description></item></channel></rss>

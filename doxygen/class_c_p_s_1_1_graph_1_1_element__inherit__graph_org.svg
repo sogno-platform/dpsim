@@ -21,7 +21,7 @@
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="class_c_p_s_1_1_graph_1_1_edge.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="97,-22.25 0,-22.25 0,0 97,0 97,-22.25"/>
+<polygon fill="white" stroke="#666666" points="97,-22.25 0,-22.25 0,0 97,0 97,-22.25"/>
 <text text-anchor="middle" x="48.5" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Graph::Edge</text>
 </a>
 </g>
@@ -39,7 +39,7 @@
 <g id="Node000003" class="node">
 <title>Node3</title>
 <g id="a_Node000003"><a xlink:href="class_c_p_s_1_1_graph_1_1_graph.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="217.62,-22.25 115.38,-22.25 115.38,0 217.62,0 217.62,-22.25"/>
+<polygon fill="white" stroke="#666666" points="217.62,-22.25 115.38,-22.25 115.38,0 217.62,0 217.62,-22.25"/>
 <text text-anchor="middle" x="166.5" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Graph::Graph</text>
 </a>
 </g>
@@ -57,7 +57,7 @@
 <g id="Node000004" class="node">
 <title>Node4</title>
 <g id="a_Node000004"><a xlink:href="class_c_p_s_1_1_graph_1_1_node.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="335.12,-22.25 235.88,-22.25 235.88,0 335.12,0 335.12,-22.25"/>
+<polygon fill="white" stroke="#666666" points="335.12,-22.25 235.88,-22.25 235.88,0 335.12,0 335.12,-22.25"/>
 <text text-anchor="middle" x="285.5" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Graph::Node</text>
 </a>
 </g>

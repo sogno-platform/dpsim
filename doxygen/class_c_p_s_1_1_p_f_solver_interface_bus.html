@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_c_p_s_1_1_p_f_solver_interface_bus.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>CPS</b></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_p_f_solver_interface_bus.html">PFSolverInterfaceBus</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
@@ -106,22 +114,24 @@ $(function(){ initResizable(false); });
 Inheritance diagram for CPS::PFSolverInterfaceBus:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_p_f_solver_interface_bus__inherit__graph.svg" width="476" height="219"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:af6945d9c894ccfadcde7d71b0526f26f" id="r_af6945d9c894ccfadcde7d71b0526f26f"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_p_f_solver_interface_bus.html">PFSolverInterfaceBus</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af6945d9c894ccfadcde7d71b0526f26f">Ptr</a></td></tr>
 <tr class="separator:af6945d9c894ccfadcde7d71b0526f26f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab39ada57136add7f53da5b22bb42062e" id="r_ab39ada57136add7f53da5b22bb42062e"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; Ptr &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab39ada57136add7f53da5b22bb42062e">List</a></td></tr>
+<tr class="memitem:ab39ada57136add7f53da5b22bb42062e" id="r_ab39ada57136add7f53da5b22bb42062e"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="#af6945d9c894ccfadcde7d71b0526f26f">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab39ada57136add7f53da5b22bb42062e">List</a></td></tr>
 <tr class="separator:ab39ada57136add7f53da5b22bb42062e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa73bb31fafb6b2916c059df3a5706022" id="r_aa73bb31fafb6b2916c059df3a5706022"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa73bb31fafb6b2916c059df3a5706022">modifyPowerFlowBusType</a> (PowerflowBusType powerflowBusType)=0</td></tr>
+<tr class="memitem:a54cbcdec6987c8d3072fc234ba50af12" id="r_a54cbcdec6987c8d3072fc234ba50af12"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a54cbcdec6987c8d3072fc234ba50af12">PFSolverInterfaceBus</a> ()=default</td></tr>
+<tr class="separator:a54cbcdec6987c8d3072fc234ba50af12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa73bb31fafb6b2916c059df3a5706022" id="r_aa73bb31fafb6b2916c059df3a5706022"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa73bb31fafb6b2916c059df3a5706022">modifyPowerFlowBusType</a> (<a class="el" href="namespace_c_p_s.html#a04a0a86fce7b8a74447274655a5fcfab">PowerflowBusType</a> powerflowBusType)=0</td></tr>
 <tr class="separator:aa73bb31fafb6b2916c059df3a5706022"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb4e799f1f72e3140aab2855432cfd32" id="r_adb4e799f1f72e3140aab2855432cfd32"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adb4e799f1f72e3140aab2855432cfd32">pfBusInitialize</a> ()</td></tr>
 <tr class="separator:adb4e799f1f72e3140aab2855432cfd32"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a967d7d906c9116a66e08839ec042784a" id="r_a967d7d906c9116a66e08839ec042784a"><td class="memItemLeft" align="right" valign="top">const Task::List &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a967d7d906c9116a66e08839ec042784a">pfTasks</a> ()</td></tr>
+<tr class="memitem:a967d7d906c9116a66e08839ec042784a" id="r_a967d7d906c9116a66e08839ec042784a"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_task.html#ad081ca27190e0b2e1887a8d6cb612a66">Task::List</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a967d7d906c9116a66e08839ec042784a">pfTasks</a> ()</td></tr>
 <tr class="separator:a967d7d906c9116a66e08839ec042784a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -132,13 +142,13 @@ Public Attributes</h2></td></tr>
 <tr class="separator:af341ff1eaa8577360bd5d5fa9ae8eebf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e0c3661a0a9650fa751ac392d2e7ac8" id="r_a9e0c3661a0a9650fa751ac392d2e7ac8"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_v_d_node.html">CPS::SP::Ph1::VDNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9e0c3661a0a9650fa751ac392d2e7ac8">mVD</a></td></tr>
 <tr class="separator:a9e0c3661a0a9650fa751ac392d2e7ac8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef144795b49a0f6ed2b29d8e94856753" id="r_aef144795b49a0f6ed2b29d8e94856753"><td class="memItemLeft" align="right" valign="top">PowerflowBusType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef144795b49a0f6ed2b29d8e94856753">mPowerflowBusType</a></td></tr>
+<tr class="memitem:aef144795b49a0f6ed2b29d8e94856753" id="r_aef144795b49a0f6ed2b29d8e94856753"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a04a0a86fce7b8a74447274655a5fcfab">PowerflowBusType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef144795b49a0f6ed2b29d8e94856753">mPowerflowBusType</a></td></tr>
 <tr class="memdesc:aef144795b49a0f6ed2b29d8e94856753"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define the type of bus the component is modelled by.  <br /></td></tr>
 <tr class="separator:aef144795b49a0f6ed2b29d8e94856753"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a6bea9cfb231f5408b2b3d50d4e75dfa0" id="r_a6bea9cfb231f5408b2b3d50d4e75dfa0"><td class="memItemLeft" align="right" valign="top">Task::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6bea9cfb231f5408b2b3d50d4e75dfa0">mPFTasks</a></td></tr>
+<tr class="memitem:a6bea9cfb231f5408b2b3d50d4e75dfa0" id="r_a6bea9cfb231f5408b2b3d50d4e75dfa0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_task.html#ad081ca27190e0b2e1887a8d6cb612a66">Task::List</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6bea9cfb231f5408b2b3d50d4e75dfa0">mPFTasks</a></td></tr>
 <tr class="separator:a6bea9cfb231f5408b2b3d50d4e75dfa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -153,7 +163,7 @@ Protected Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::vector&lt;Ptr&gt; CPS::PFSolverInterfaceBus::List</td>
+          <td class="memname">typedef std::vector&lt;<a class="el" href="#af6945d9c894ccfadcde7d71b0526f26f">Ptr</a>&gt; <a class="el" href="#ab39ada57136add7f53da5b22bb42062e">CPS::PFSolverInterfaceBus::List</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -169,12 +179,38 @@ Protected Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::shared_ptr&lt;<a class="el" href="class_c_p_s_1_1_p_f_solver_interface_bus.html">PFSolverInterfaceBus</a>&gt; CPS::PFSolverInterfaceBus::Ptr</td>
+          <td class="memname">typedef std::shared_ptr&lt;<a class="el" href="class_c_p_s_1_1_p_f_solver_interface_bus.html">PFSolverInterfaceBus</a>&gt; <a class="el" href="#af6945d9c894ccfadcde7d71b0526f26f">CPS::PFSolverInterfaceBus::Ptr</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="_p_f_solver_interface_bus_8h_source.html#l00031">31</a> of file <a class="el" href="_p_f_solver_interface_bus_8h_source.html">PFSolverInterfaceBus.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a54cbcdec6987c8d3072fc234ba50af12" name="a54cbcdec6987c8d3072fc234ba50af12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a54cbcdec6987c8d3072fc234ba50af12">&#9670;&#160;</a></span>PFSolverInterfaceBus()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">CPS::PFSolverInterfaceBus::PFSolverInterfaceBus </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -191,7 +227,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">virtual void CPS::PFSolverInterfaceBus::modifyPowerFlowBusType </td>
           <td>(</td>
-          <td class="paramtype">PowerflowBusType</td>          <td class="paramname"><span class="paramname"><em>powerflowBusType</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a04a0a86fce7b8a74447274655a5fcfab">PowerflowBusType</a></td>          <td class="paramname"><span class="paramname"><em>powerflowBusType</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -243,7 +279,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const Task::List &amp; CPS::PFSolverInterfaceBus::pfTasks </td>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_task.html#ad081ca27190e0b2e1887a8d6cb612a66">Task::List</a> &amp; CPS::PFSolverInterfaceBus::pfTasks </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -271,7 +307,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Task::List CPS::PFSolverInterfaceBus::mPFTasks</td>
+          <td class="memname"><a class="el" href="class_c_p_s_1_1_task.html#ad081ca27190e0b2e1887a8d6cb612a66">Task::List</a> CPS::PFSolverInterfaceBus::mPFTasks</td>
         </tr>
       </table>
   </td>
@@ -292,7 +328,7 @@ Protected Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">PowerflowBusType CPS::PFSolverInterfaceBus::mPowerflowBusType</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a04a0a86fce7b8a74447274655a5fcfab">PowerflowBusType</a> CPS::PFSolverInterfaceBus::mPowerflowBusType</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -355,10 +391,13 @@ Protected Attributes</h2></td></tr>
 <li>/__w/dpsim/dpsim/dpsim-models/include/dpsim-models/Solver/<a class="el" href="_p_f_solver_interface_bus_8h_source.html">PFSolverInterfaceBus.h</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_c_p_s.html">CPS</a></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_p_f_solver_interface_bus.html">PFSolverInterfaceBus</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_d_psim_1_1_mna_solver_factory.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_mna_solver_factory.html">MnaSolverFactory</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
@@ -94,14 +102,16 @@ $(function(){ initResizable(false); });
   <div class="headertitle"><div class="title">DPsim::MnaSolverFactory Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="_m_n_a_solver_factory_8h_source.html">MNASolverFactory.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a741ed51b3205be29b6518bb081f255a0" id="r_a741ed51b3205be29b6518bb081f255a0"><td class="memItemLeft" align="right" valign="top">static const std::vector&lt; DirectLinearSolverImpl &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a741ed51b3205be29b6518bb081f255a0">mSupportedSolverImpls</a> (void)</td></tr>
+<tr class="memitem:a741ed51b3205be29b6518bb081f255a0" id="r_a741ed51b3205be29b6518bb081f255a0"><td class="memItemLeft" align="right" valign="top">static const std::vector&lt; <a class="el" href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457">DirectLinearSolverImpl</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a741ed51b3205be29b6518bb081f255a0">mSupportedSolverImpls</a> (void)</td></tr>
 <tr class="memdesc:a741ed51b3205be29b6518bb081f255a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">MNA implementations supported by this compilation.  <br /></td></tr>
 <tr class="separator:a741ed51b3205be29b6518bb081f255a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae88beaeae6b1b30a4380f804f7ab2ab7" id="r_ae88beaeae6b1b30a4380f804f7ab2ab7"><td class="memTemplParams" colspan="2">template&lt;typename VarType&gt; </td></tr>
-<tr class="memitem:ae88beaeae6b1b30a4380f804f7ab2ab7"><td class="memTemplItemLeft" align="right" valign="top">static std::shared_ptr&lt; <a class="el" href="class_d_psim_1_1_mna_solver.html">MnaSolver</a>&lt; VarType &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ae88beaeae6b1b30a4380f804f7ab2ab7">factory</a> (String name, CPS::Domain domain=CPS::Domain::DP, CPS::Logger::Level logLevel=CPS::Logger::Level::info, DirectLinearSolverImpl implementation=<a class="el" href="#a741ed51b3205be29b6518bb081f255a0">mSupportedSolverImpls</a>().back(), String pluginName=&quot;plugin.so&quot;)</td></tr>
+<tr class="memitem:ae88beaeae6b1b30a4380f804f7ab2ab7"><td class="memTemplItemLeft" align="right" valign="top">static std::shared_ptr&lt; <a class="el" href="class_d_psim_1_1_mna_solver.html">MnaSolver</a>&lt; VarType &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ae88beaeae6b1b30a4380f804f7ab2ab7">factory</a> (<a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> name, <a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9">CPS::Domain</a> domain=<a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9ae2fca8135c2fadca093abd79a6b1c0d2">CPS::Domain::DP</a>, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a> logLevel=CPS::Logger::Level::info, <a class="el" href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457">DirectLinearSolverImpl</a> implementation=<a class="el" href="#a741ed51b3205be29b6518bb081f255a0">mSupportedSolverImpls</a>().back(), <a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> pluginName=&quot;plugin.so&quot;)</td></tr>
 <tr class="memdesc:ae88beaeae6b1b30a4380f804f7ab2ab7"><td class="mdescLeft">&#160;</td><td class="mdescRight">sovlerImpl: choose the most advanced solver implementation available by default  <br /></td></tr>
 <tr class="separator:ae88beaeae6b1b30a4380f804f7ab2ab7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -123,27 +133,27 @@ template&lt;typename VarType&gt; </div>
         <tr>
           <td class="memname">static std::shared_ptr&lt; <a class="el" href="class_d_psim_1_1_mna_solver.html">MnaSolver</a>&lt; VarType &gt; &gt; DPsim::MnaSolverFactory::factory </td>
           <td>(</td>
-          <td class="paramtype">String</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">CPS::Domain</td>          <td class="paramname"><span class="paramname"><em>domain</em></span><span class="paramdefsep"> = </span><span class="paramdefval">CPS::Domain::DP</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9">CPS::Domain</a></td>          <td class="paramname"><span class="paramname"><em>domain</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9ae2fca8135c2fadca093abd79a6b1c0d2">CPS::Domain::DP</a></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">CPS::Logger::Level</td>          <td class="paramname"><span class="paramname"><em>logLevel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">CPS::Logger::Level::info</span>, </td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a></td>          <td class="paramname"><span class="paramname"><em>logLevel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">CPS::Logger::Level::info</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">DirectLinearSolverImpl</td>          <td class="paramname"><span class="paramname"><em>implementation</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="#a741ed51b3205be29b6518bb081f255a0">mSupportedSolverImpls</a>().back()</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457">DirectLinearSolverImpl</a></td>          <td class="paramname"><span class="paramname"><em>implementation</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="#a741ed51b3205be29b6518bb081f255a0">mSupportedSolverImpls</a>().back()</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">String</td>          <td class="paramname"><span class="paramname"><em>pluginName</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;plugin.so&quot;</span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a></td>          <td class="paramname"><span class="paramname"><em>pluginName</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;plugin.so&quot;</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -169,7 +179,7 @@ template&lt;typename VarType&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static const std::vector&lt; DirectLinearSolverImpl &gt; DPsim::MnaSolverFactory::mSupportedSolverImpls </td>
+          <td class="memname">static const std::vector&lt; <a class="el" href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457">DirectLinearSolverImpl</a> &gt; DPsim::MnaSolverFactory::mSupportedSolverImpls </td>
           <td>(</td>
           <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -192,10 +202,13 @@ template&lt;typename VarType&gt; </div>
 <li>/__w/dpsim/dpsim/dpsim/include/dpsim/<a class="el" href="_m_n_a_solver_factory_8h_source.html">MNASolverFactory.h</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_mna_solver_factory.html">MnaSolverFactory</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

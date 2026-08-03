@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,19 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
 </div><!-- top -->
-<div id="doc-content">
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('functions_func_b.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -84,23 +96,26 @@ $(function(){ initResizable(false); });
 </div>
 
 <div class="contents">
-<div class="textblock">Here is a list of all documented functions with links to the class documentation for each member:</div>
+<div class="textblock">Here is a list of all functions with links to the classes they belong to:</div>
 
 <h3><a id="index_b" name="index_b"></a>- b -</h3><ul>
 <li>B()&#160;:&#160;<a class="el" href="class_d_psim_1_1_p_f_solver.html#aa2f560fc537fd6618edc67eef2a66014">DPsim::PFSolver</a></li>
 <li>Barrier()&#160;:&#160;<a class="el" href="class_d_psim_1_1_barrier.html#a790d2f16f23a55628d88dfd18a3c3b66">DPsim::Barrier</a></li>
+<li>begin()&#160;:&#160;<a class="el" href="class_d_psim_1_1cuda_1_1_vector.html#a2e013e23c686a82e4f7f80401a585acf">DPsim::cuda::Vector&lt; T &gt;</a></li>
 <li>besselFirstKind_n()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html#a68e99ab543670bf65deadf3c57a1dae0">CPS::DP::Ph1::Inverter</a></li>
 <li>besselFirstKind_n_opt()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html#a72ee00e1957d8947e2ecb0f8a5c712fd">CPS::DP::Ph1::Inverter</a></li>
 <li>buildAugmentedA()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_s_s_n_comp.html#a51e1d7f4b0fa8ecf3d5685c0cfd22f0b">CPS::DP::SSNComp</a></li>
 <li>buildAugmentedB()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_s_s_n_comp.html#abd05e1224e0689de1ca91686a3654d7f">CPS::DP::SSNComp</a></li>
-<li>buildInitialInputFromNodes()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_i_type_s_s_n_comp.html#af9f906a23ba53a06961ee21dc8517abd">CPS::DP::ITypeSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_mixed_v_type_variable_s_s_n_comp.html#a27f2eff3785eed6454fc4846faef20f1">CPS::DP::Ph1::MixedVTypeVariableSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#a4c4e6e5e3db90c0cf0f55fe0f1a82c8a">CPS::DP::Ph1::TwoTerminalITypeSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_v_type_s_s_n_comp.html#a0d29c5f270d523e912ab1cb76b884454">CPS::DP::Ph1::TwoTerminalVTypeSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#a98016ad3166b5ce5ca1826d0888d9f70">CPS::DP::Ph3::MixedVTypeVariableSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_two_terminal_i_type_s_s_n_comp.html#a39fc6048e1b09666bac2bd8e38f91a6c">CPS::DP::Ph3::TwoTerminalITypeSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html#a68b6e552d6d0ffc3073e2eb64d3a793c">CPS::DP::Ph3::TwoTerminalVTypeSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_v_type_s_s_n_comp.html#a47ce5efb2117a44d07557a1d28a3457b">CPS::DP::VTypeSSNComp</a></li>
+<li>buildInitialInputFromNodes()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_i_type_s_s_n_comp.html#af9f906a23ba53a06961ee21dc8517abd">CPS::DP::ITypeSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_mixed_v_type_variable_s_s_n_comp.html#a27f2eff3785eed6454fc4846faef20f1">CPS::DP::Ph1::MixedVTypeVariableSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#a4c4e6e5e3db90c0cf0f55fe0f1a82c8a">CPS::DP::Ph1::TwoTerminalITypeSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_v_type_s_s_n_comp.html#a0d29c5f270d523e912ab1cb76b884454">CPS::DP::Ph1::TwoTerminalVTypeSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#a98016ad3166b5ce5ca1826d0888d9f70">CPS::DP::Ph3::MixedVTypeVariableSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_two_terminal_i_type_s_s_n_comp.html#a39fc6048e1b09666bac2bd8e38f91a6c">CPS::DP::Ph3::TwoTerminalITypeSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html#a68b6e552d6d0ffc3073e2eb64d3a793c">CPS::DP::Ph3::TwoTerminalVTypeSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_v_type_s_s_n_comp.html#a47ce5efb2117a44d07557a1d28a3457b">CPS::DP::VTypeSSNComp</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html#a13441bba746bdab6d784660a0f6ee4ec">CPS::EMT::ITypeSSNComp</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_four_terminal_v_type_s_s_n_comp.html#aa9f24078b04bac7aacd35aa294cff5ce">CPS::EMT::Ph3::FourTerminalVTypeSSNComp</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_capacitor.html#a2001d5ff72ee15362835e6658aca7bb9">CPS::EMT::Ph3::SSN::Capacitor</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_i_type_s_s_n_comp.html#a70f650cdc221dfb44916033a552827e5">CPS::EMT::Ph3::TwoTerminalITypeSSNComp</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html#ae910e99c9704bcd15e8233d9f1a76c3e">CPS::EMT::Ph3::TwoTerminalVTypeSSNComp</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_variable_s_s_n_comp.html#a8c3fbce7017af4edac57a3c4bca9df58">CPS::EMT::Ph3::TwoTerminalVTypeVariableSSNComp</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html#a235cf61eeb51ae6be19264aa5b237d05">CPS::EMT::VTypeSSNComp</a></li>
 <li>buildJacobianPattern()&#160;:&#160;<a class="el" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#afb045522cac6b3fbd334ada701a8a5bc">DPsim::PFSolverPowerPolarSparse</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

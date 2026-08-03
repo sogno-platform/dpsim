@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_d_psim_1_1_interface.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_interface.html">Interface</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
@@ -97,16 +105,18 @@ $(function(){ initResizable(false); });
   <div class="headertitle"><div class="title">DPsim::Interface Class Reference<span class="mlabels"><span class="mlabel abstract">abstract</span></span></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="_interface_8h_source.html">Interface.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for DPsim::Interface:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="class_d_psim_1_1_interface__inherit__graph.svg" width="432" height="454"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for DPsim::Interface:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="class_d_psim_1_1_interface__coll__graph.svg" width="202" height="216"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -115,50 +125,48 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af7ff184a7ead2918ca54d461d7087bb1" id="r_af7ff184a7ead2918ca54d461d7087bb1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af7ff184a7ead2918ca54d461d7087bb1">Interface</a> (const String &amp;name=&quot;&quot;, spdlog::level::level_enum logLevel=spdlog::level::level_enum::info)</td></tr>
+<tr class="memitem:af7ff184a7ead2918ca54d461d7087bb1" id="r_af7ff184a7ead2918ca54d461d7087bb1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af7ff184a7ead2918ca54d461d7087bb1">Interface</a> (const <a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> &amp;name=&quot;&quot;, spdlog::level::level_enum logLevel=spdlog::level::level_enum::info)</td></tr>
 <tr class="separator:af7ff184a7ead2918ca54d461d7087bb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1abfbf3041ad0216706049969b1f469d" id="r_a1abfbf3041ad0216706049969b1f469d"><td class="memItemLeft" align="right" valign="top"><a id="a1abfbf3041ad0216706049969b1f469d" name="a1abfbf3041ad0216706049969b1f469d"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>open</b> ()=0</td></tr>
+<tr class="memitem:aa4df0761a44b8224328004fff6b2ec9e" id="r_aa4df0761a44b8224328004fff6b2ec9e"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa4df0761a44b8224328004fff6b2ec9e">~Interface</a> ()=default</td></tr>
+<tr class="separator:aa4df0761a44b8224328004fff6b2ec9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1abfbf3041ad0216706049969b1f469d" id="r_a1abfbf3041ad0216706049969b1f469d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1abfbf3041ad0216706049969b1f469d">open</a> ()=0</td></tr>
 <tr class="separator:a1abfbf3041ad0216706049969b1f469d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c1f8e9e588cac5322b12203338ad7da" id="r_a1c1f8e9e588cac5322b12203338ad7da"><td class="memItemLeft" align="right" valign="top"><a id="a1c1f8e9e588cac5322b12203338ad7da" name="a1c1f8e9e588cac5322b12203338ad7da"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>close</b> ()=0</td></tr>
+<tr class="memitem:a1c1f8e9e588cac5322b12203338ad7da" id="r_a1c1f8e9e588cac5322b12203338ad7da"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1c1f8e9e588cac5322b12203338ad7da">close</a> ()=0</td></tr>
 <tr class="separator:a1c1f8e9e588cac5322b12203338ad7da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa472b392a5d172437ba75d788bdd0d39" id="r_aa472b392a5d172437ba75d788bdd0d39"><td class="memItemLeft" align="right" valign="top"><a id="aa472b392a5d172437ba75d788bdd0d39" name="aa472b392a5d172437ba75d788bdd0d39"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>syncExports</b> ()=0</td></tr>
+<tr class="memitem:aa472b392a5d172437ba75d788bdd0d39" id="r_aa472b392a5d172437ba75d788bdd0d39"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa472b392a5d172437ba75d788bdd0d39">syncExports</a> ()=0</td></tr>
 <tr class="separator:aa472b392a5d172437ba75d788bdd0d39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b4b1bc175d633d5ef379b416e1fc833" id="r_a7b4b1bc175d633d5ef379b416e1fc833"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7b4b1bc175d633d5ef379b416e1fc833">syncImports</a> ()=0</td></tr>
 <tr class="memdesc:a7b4b1bc175d633d5ef379b416e1fc833"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function called by the <a class="el" href="class_d_psim_1_1_simulation.html" title="The Simulation holds a SystemTopology and a Solver.">Simulation</a> to perform interface synchronization.  <br /></td></tr>
 <tr class="separator:a7b4b1bc175d633d5ef379b416e1fc833"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af59ef83a2129ca0e459bf54d4cd563f2" id="r_af59ef83a2129ca0e459bf54d4cd563f2"><td class="memItemLeft" align="right" valign="top"><a id="af59ef83a2129ca0e459bf54d4cd563f2" name="af59ef83a2129ca0e459bf54d4cd563f2"></a>
-virtual CPS::Task::List&#160;</td><td class="memItemRight" valign="bottom"><b>getTasks</b> ()=0</td></tr>
+<tr class="memitem:af59ef83a2129ca0e459bf54d4cd563f2" id="r_af59ef83a2129ca0e459bf54d4cd563f2"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_c_p_s_1_1_task.html#ad081ca27190e0b2e1887a8d6cb612a66">CPS::Task::List</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af59ef83a2129ca0e459bf54d4cd563f2">getTasks</a> ()=0</td></tr>
 <tr class="separator:af59ef83a2129ca0e459bf54d4cd563f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84d521b290775ce69bc442e7ce4175eb" id="r_a84d521b290775ce69bc442e7ce4175eb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a84d521b290775ce69bc442e7ce4175eb">setLogger</a> (CPS::Logger::Log log)</td></tr>
+<tr class="memitem:a84d521b290775ce69bc442e7ce4175eb" id="r_a84d521b290775ce69bc442e7ce4175eb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a84d521b290775ce69bc442e7ce4175eb">setLogger</a> (<a class="el" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a> log)</td></tr>
 <tr class="separator:a84d521b290775ce69bc442e7ce4175eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a999d2998d8f639c3044b72133c19b19b" id="r_a999d2998d8f639c3044b72133c19b19b"><td class="memItemLeft" align="right" valign="top">virtual String &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a999d2998d8f639c3044b72133c19b19b">getName</a> ()</td></tr>
+<tr class="memitem:a999d2998d8f639c3044b72133c19b19b" id="r_a999d2998d8f639c3044b72133c19b19b"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a999d2998d8f639c3044b72133c19b19b">getName</a> ()</td></tr>
 <tr class="separator:a999d2998d8f639c3044b72133c19b19b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b00acb09b792e3352ff76ae817f696d" id="r_a6b00acb09b792e3352ff76ae817f696d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b00acb09b792e3352ff76ae817f696d">addImport</a> (<a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a> attr, bool blockOnRead=false, bool syncOnSimulationStart=true)</td></tr>
+<tr class="memitem:a6b00acb09b792e3352ff76ae817f696d" id="r_a6b00acb09b792e3352ff76ae817f696d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b00acb09b792e3352ff76ae817f696d">addImport</a> (<a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">CPS::AttributeBase::Ptr</a> attr, bool blockOnRead=false, bool syncOnSimulationStart=true)</td></tr>
 <tr class="separator:a6b00acb09b792e3352ff76ae817f696d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7799cc7e87df1920e55288a84063497" id="r_ab7799cc7e87df1920e55288a84063497"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab7799cc7e87df1920e55288a84063497">addExport</a> (<a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a> attr)</td></tr>
+<tr class="memitem:ab7799cc7e87df1920e55288a84063497" id="r_ab7799cc7e87df1920e55288a84063497"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab7799cc7e87df1920e55288a84063497">addExport</a> (<a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">CPS::AttributeBase::Ptr</a> attr)</td></tr>
 <tr class="separator:ab7799cc7e87df1920e55288a84063497"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a33a81c7c3de33abb899eedfff741acd2" id="r_a33a81c7c3de33abb899eedfff741acd2"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::tuple&lt; <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>, UInt, bool, bool &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a33a81c7c3de33abb899eedfff741acd2">mImportAttrsDpsim</a></td></tr>
+<tr class="memitem:a33a81c7c3de33abb899eedfff741acd2" id="r_a33a81c7c3de33abb899eedfff741acd2"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::tuple&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">CPS::AttributeBase::Ptr</a>, <a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a>, bool, bool &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a33a81c7c3de33abb899eedfff741acd2">mImportAttrsDpsim</a></td></tr>
 <tr class="separator:a33a81c7c3de33abb899eedfff741acd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0bc158390ed482f079bb79798860eb3" id="r_af0bc158390ed482f079bb79798860eb3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::tuple&lt; <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>, UInt &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af0bc158390ed482f079bb79798860eb3">mExportAttrsDpsim</a></td></tr>
+<tr class="memitem:af0bc158390ed482f079bb79798860eb3" id="r_af0bc158390ed482f079bb79798860eb3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::tuple&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">CPS::AttributeBase::Ptr</a>, <a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af0bc158390ed482f079bb79798860eb3">mExportAttrsDpsim</a></td></tr>
 <tr class="separator:af0bc158390ed482f079bb79798860eb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:ac147df20daebd31b0ae90182f0191a5c" id="r_ac147df20daebd31b0ae90182f0191a5c"><td class="memItemLeft" align="right" valign="top">CPS::Logger::Log&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac147df20daebd31b0ae90182f0191a5c">mLog</a></td></tr>
+<tr class="memitem:ac147df20daebd31b0ae90182f0191a5c" id="r_ac147df20daebd31b0ae90182f0191a5c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac147df20daebd31b0ae90182f0191a5c">mLog</a></td></tr>
 <tr class="separator:ac147df20daebd31b0ae90182f0191a5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a9bcf319b311804a05b63ef3e358e2e" id="r_a2a9bcf319b311804a05b63ef3e358e2e"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2a9bcf319b311804a05b63ef3e358e2e">mName</a></td></tr>
+<tr class="memitem:a2a9bcf319b311804a05b63ef3e358e2e" id="r_a2a9bcf319b311804a05b63ef3e358e2e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2a9bcf319b311804a05b63ef3e358e2e">mName</a></td></tr>
 <tr class="separator:a2a9bcf319b311804a05b63ef3e358e2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a304a9ae30f34fad55dcfe3588e759726" id="r_a304a9ae30f34fad55dcfe3588e759726"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a304a9ae30f34fad55dcfe3588e759726">mSyncOnSimulationStart</a></td></tr>
 <tr class="separator:a304a9ae30f34fad55dcfe3588e759726"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a1cca8d5dcd44a3d1be753be4881829" id="r_a4a1cca8d5dcd44a3d1be753be4881829"><td class="memItemLeft" align="right" valign="top">UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4a1cca8d5dcd44a3d1be753be4881829">mCurrentSequenceDpsimToInterface</a> = 1</td></tr>
+<tr class="memitem:a4a1cca8d5dcd44a3d1be753be4881829" id="r_a4a1cca8d5dcd44a3d1be753be4881829"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4a1cca8d5dcd44a3d1be753be4881829">mCurrentSequenceDpsimToInterface</a> = 1</td></tr>
 <tr class="separator:a4a1cca8d5dcd44a3d1be753be4881829"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a35f39d4546ff58e41152b5c66a78cf14" id="r_a35f39d4546ff58e41152b5c66a78cf14"><td class="memItemLeft" align="right" valign="top">UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a35f39d4546ff58e41152b5c66a78cf14">mNextSequenceInterfaceToDpsim</a> = 1</td></tr>
+<tr class="memitem:a35f39d4546ff58e41152b5c66a78cf14" id="r_a35f39d4546ff58e41152b5c66a78cf14"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a35f39d4546ff58e41152b5c66a78cf14">mNextSequenceInterfaceToDpsim</a> = 1</td></tr>
 <tr class="separator:a35f39d4546ff58e41152b5c66a78cf14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46f7fd95003532d77c6a965280c2c3a0" id="r_a46f7fd95003532d77c6a965280c2c3a0"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a46f7fd95003532d77c6a965280c2c3a0">mOpened</a></td></tr>
 <tr class="separator:a46f7fd95003532d77c6a965280c2c3a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -180,7 +188,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::shared_ptr&lt;<a class="el" href="class_d_psim_1_1_interface.html">Interface</a>&gt; DPsim::Interface::Ptr</td>
+          <td class="memname">typedef std::shared_ptr&lt;<a class="el" href="class_d_psim_1_1_interface.html">Interface</a>&gt; <a class="el" href="#ace8b0d4b3ba7141eddac4ffd2e3f9ade">DPsim::Interface::Ptr</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -202,7 +210,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">DPsim::Interface::Interface </td>
           <td>(</td>
-          <td class="paramtype">const String &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;&quot;</span>, </td>
+          <td class="paramtype">const <a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;&quot;</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -221,6 +229,31 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="aa4df0761a44b8224328004fff6b2ec9e" name="aa4df0761a44b8224328004fff6b2ec9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4df0761a44b8224328004fff6b2ec9e">&#9670;&#160;</a></span>~Interface()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual DPsim::Interface::~Interface </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel virtual">virtual</span><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="ab7799cc7e87df1920e55288a84063497" name="ab7799cc7e87df1920e55288a84063497"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab7799cc7e87df1920e55288a84063497">&#9670;&#160;</a></span>addExport()</h2>
@@ -234,7 +267,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void DPsim::Interface::addExport </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a></td>          <td class="paramname"><span class="paramname"><em>attr</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">CPS::AttributeBase::Ptr</a></td>          <td class="paramname"><span class="paramname"><em>attr</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -261,7 +294,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void DPsim::Interface::addImport </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a></td>          <td class="paramname"><span class="paramname"><em>attr</em></span>, </td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">CPS::AttributeBase::Ptr</a></td>          <td class="paramname"><span class="paramname"><em>attr</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -285,6 +318,33 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a1c1f8e9e588cac5322b12203338ad7da" name="a1c1f8e9e588cac5322b12203338ad7da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c1f8e9e588cac5322b12203338ad7da">&#9670;&#160;</a></span>close()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void DPsim::Interface::close </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="class_d_psim_1_1_interface_queued.html#a9c63fd57af0c1a9d587e2802b8468271">DPsim::InterfaceQueued</a>, and <a class="el" href="class_d_psim_1_1_interface_villas_queueless.html#aa38e99db6bac2f5cdba09ebd44962896">DPsim::InterfaceVillasQueueless</a>.</p>
+
+</div>
+</div>
 <a id="a999d2998d8f639c3044b72133c19b19b" name="a999d2998d8f639c3044b72133c19b19b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a999d2998d8f639c3044b72133c19b19b">&#9670;&#160;</a></span>getName()</h2>
 
@@ -295,7 +355,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual String &amp; DPsim::Interface::getName </td>
+          <td class="memname">virtual <a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> &amp; DPsim::Interface::getName </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -312,6 +372,60 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="af59ef83a2129ca0e459bf54d4cd563f2" name="af59ef83a2129ca0e459bf54d4cd563f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af59ef83a2129ca0e459bf54d4cd563f2">&#9670;&#160;</a></span>getTasks()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="class_c_p_s_1_1_task.html#ad081ca27190e0b2e1887a8d6cb612a66">CPS::Task::List</a> DPsim::Interface::getTasks </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="class_d_psim_1_1_interface_queued.html#aa69d78384580c67c3e6ca2e7a3f40ea2">DPsim::InterfaceQueued</a>, and <a class="el" href="class_d_psim_1_1_interface_villas_queueless.html#a1e1535b1b77a2fd4d73657bb1249eaba">DPsim::InterfaceVillasQueueless</a>.</p>
+
+</div>
+</div>
+<a id="a1abfbf3041ad0216706049969b1f469d" name="a1abfbf3041ad0216706049969b1f469d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1abfbf3041ad0216706049969b1f469d">&#9670;&#160;</a></span>open()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void DPsim::Interface::open </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="class_d_psim_1_1_interface_queued.html#a17eb21ddc93232e01c04893d93b2b4cd">DPsim::InterfaceQueued</a>, and <a class="el" href="class_d_psim_1_1_interface_villas_queueless.html#a6005db299c748dd4275dd632e773b2fd">DPsim::InterfaceVillasQueueless</a>.</p>
+
+</div>
+</div>
 <a id="a84d521b290775ce69bc442e7ce4175eb" name="a84d521b290775ce69bc442e7ce4175eb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a84d521b290775ce69bc442e7ce4175eb">&#9670;&#160;</a></span>setLogger()</h2>
 
@@ -324,7 +438,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void DPsim::Interface::setLogger </td>
           <td>(</td>
-          <td class="paramtype">CPS::Logger::Log</td>          <td class="paramname"><span class="paramname"><em>log</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a></td>          <td class="paramname"><span class="paramname"><em>log</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -335,7 +449,36 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Reimplemented in <a class="el" href="class_d_psim_1_1_interface_queued.html#a22ac575eff84392077aa44622e130577">DPsim::InterfaceQueued</a>.</p>
+
 <p class="definition">Definition at line <a class="el" href="_interface_8cpp_source.html#l00030">30</a> of file <a class="el" href="_interface_8cpp_source.html">Interface.cpp</a>.</p>
+
+</div>
+</div>
+<a id="aa472b392a5d172437ba75d788bdd0d39" name="aa472b392a5d172437ba75d788bdd0d39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa472b392a5d172437ba75d788bdd0d39">&#9670;&#160;</a></span>syncExports()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void DPsim::Interface::syncExports </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="class_d_psim_1_1_interface_queued.html#a0da7cfd7e90f80bec88693c1e73a509a">DPsim::InterfaceQueued</a>, and <a class="el" href="class_d_psim_1_1_interface_villas_queueless.html#af4b8baa80b02e1236e2a5bedd258a53f">DPsim::InterfaceVillasQueueless</a>.</p>
 
 </div>
 </div>
@@ -379,7 +522,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">UInt DPsim::Interface::mCurrentSequenceDpsimToInterface = 1</td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> DPsim::Interface::mCurrentSequenceDpsimToInterface = 1</td>
         </tr>
       </table>
   </td>
@@ -400,7 +543,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;std::tuple&lt;<a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>, UInt&gt; &gt; DPsim::Interface::mExportAttrsDpsim</td>
+          <td class="memname">std::vector&lt;std::tuple&lt;<a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">CPS::AttributeBase::Ptr</a>, <a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a>&gt; &gt; DPsim::Interface::mExportAttrsDpsim</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -416,7 +559,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;std::tuple&lt;<a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>, UInt, bool, bool&gt; &gt; DPsim::Interface::mImportAttrsDpsim</td>
+          <td class="memname">std::vector&lt;std::tuple&lt;<a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">CPS::AttributeBase::Ptr</a>, <a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a>, bool, bool&gt; &gt; DPsim::Interface::mImportAttrsDpsim</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -435,7 +578,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">CPS::Logger::Log DPsim::Interface::mLog</td>
+          <td class="memname"><a class="el" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a> DPsim::Interface::mLog</td>
         </tr>
       </table>
   </td>
@@ -459,7 +602,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">String DPsim::Interface::mName</td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> DPsim::Interface::mName</td>
         </tr>
       </table>
   </td>
@@ -483,7 +626,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">UInt DPsim::Interface::mNextSequenceInterfaceToDpsim = 1</td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> DPsim::Interface::mNextSequenceInterfaceToDpsim = 1</td>
         </tr>
       </table>
   </td>
@@ -550,10 +693,13 @@ Additional Inherited Members</h2></td></tr>
 <li>/__w/dpsim/dpsim/dpsim/src/<a class="el" href="_interface_8cpp_source.html">Interface.cpp</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_interface.html">Interface</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

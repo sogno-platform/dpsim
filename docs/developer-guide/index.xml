@@ -1,0 +1,28 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DPsim – Developer Guide</title><link>https://sogno.energy/dpsim/docs/developer-guide/</link><description>Recent content in Developer Guide on DPsim</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://sogno.energy/dpsim/docs/developer-guide/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Architecture and Conventions</title><link>https://sogno.energy/dpsim/docs/developer-guide/architecture-and-conventions/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/architecture-and-conventions/</guid><description>
+&lt;p>Start here. These pages describe the shape of the library, the modules it divides into and the
+class hierarchy underneath them, together with the conventions any change is expected to follow.&lt;/p></description></item><item><title>Docs: Attributes and Scheduling</title><link>https://sogno.energy/dpsim/docs/developer-guide/attributes-and-scheduling/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/attributes-and-scheduling/</guid><description>
+&lt;p>Attributes are the unit of state in DPsim, and they are not only a way to expose a value: the
+scheduler builds the execution order from the dependencies that components declare over them. The
+two subjects are one subject, which is why they sit together.&lt;/p>
+&lt;p>This is also what &lt;a href="https://sogno.energy/dpsim/docs/user-guide/logging/">logging&lt;/a> and the co-simulation
+interfaces operate on, so a quantity that is not an attribute cannot be recorded or exchanged.&lt;/p></description></item><item><title>Docs: Writing a Model</title><link>https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/</guid><description>
+&lt;p>The path from an empty file to a working component: what to declare, which hooks the solver calls
+and in what order, how a component built from other components is assembled, and how to debug one
+that runs but produces the wrong answer.&lt;/p>
+&lt;p>For the equations a model should implement, see &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/">Concepts&lt;/a>.
+For worked examples of finished models, see
+&lt;a href="https://sogno.energy/dpsim/docs/developer-guide/model-implementations/">model implementations&lt;/a>.&lt;/p></description></item><item><title>Docs: Solvers</title><link>https://sogno.energy/dpsim/docs/developer-guide/solvers/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/solvers/</guid><description>
+&lt;p>The &lt;a href="https://sogno.energy/dpsim/docs/developer-guide/solvers/mna-solver/">MNA solver&lt;/a> is the default and the one almost every simulation
+uses; a component&amp;rsquo;s side of it is under
+&lt;a href="https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/mnainterface/">interfacing with the MNA solver&lt;/a>.
+The remaining pages cover the powerflow solver, the alternatives to nodal analysis, the linear
+algebra backends, and the state-space model that can be recovered from a running simulation.&lt;/p>
+&lt;p>The methods themselves are derived under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/alternative-solvers/">alternative solution methods&lt;/a>.&lt;/p></description></item><item><title>Docs: Model Implementations</title><link>https://sogno.energy/dpsim/docs/developer-guide/model-implementations/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/model-implementations/</guid><description>
+&lt;p>One page per model family, covering the class hierarchy, how the component interfaces with the
+solver, its attributes and state layout, and the traps in configuring it. The equations behind each
+are under &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/">Concepts&lt;/a>, which names no class; these pages name
+nothing else.&lt;/p>
+&lt;p>Which domains implement which model is in
+&lt;a href="https://sogno.energy/dpsim/docs/reference/model-availability/">model availability&lt;/a>, generated from the
+headers.&lt;/p></description></item></channel></rss>

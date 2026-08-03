@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_event_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">Event.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_event_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -104,12 +112,12 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;deque&gt;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;queue&gt;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;dpsim-models/Attribute.h&gt;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;dpsim-models/Base/Base_Ph1_Switch.h&gt;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;dpsim-models/Base/Base_Ph3_Switch.h&gt;</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;dpsim-models/Definitions.h&gt;</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;dpsim-models/Logger.h&gt;</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;dpsim-models/PtrFactory.h&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;<a class="code" href="_attribute_8h.html">dpsim-models/Attribute.h</a>&gt;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;<a class="code" href="_base___ph1___switch_8h.html">dpsim-models/Base/Base_Ph1_Switch.h</a>&gt;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;<a class="code" href="_base___ph3___switch_8h.html">dpsim-models/Base/Base_Ph3_Switch.h</a>&gt;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;<a class="code" href="dpsim-models_2include_2dpsim-models_2_definitions_8h.html">dpsim-models/Definitions.h</a>&gt;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;<a class="code" href="_logger_8h.html">dpsim-models/Logger.h</a>&gt;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;<a class="code" href="_ptr_factory_8h.html">dpsim-models/PtrFactory.h</a>&gt;</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;dpsim/Config.h&gt;</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_d_psim.html">DPsim</a> {</div>
@@ -118,92 +126,104 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">class </span><a class="code hl_class" href="class_d_psim_1_1_event_queue.html">EventQueue</a>;</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
 <div class="foldopen" id="foldopen00027" data-start="{" data-end="};">
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_event.html">   27</a></span><span class="keyword">class </span>Event {</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_event.html">   27</a></span><span class="keyword">class </span><a class="code hl_function" href="class_d_psim_1_1_event.html#aa9f7792fa40b053e5b453e6d5df230ff">Event</a> {</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  <span class="keyword">friend</span> <span class="keyword">class </span>EventComparator;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <span class="keyword">friend</span> <span class="keyword">class </span>EventQueue;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_event.html#a1e1c82857c4ab015b832ecb0078fdb4a">   29</a></span>  <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_friend" href="class_d_psim_1_1_event.html#a1e1c82857c4ab015b832ecb0078fdb4a">EventComparator</a>;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_event.html#a3b1787a64e5e97ce075c05a58303d58c">   30</a></span>  <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_friend" href="class_d_psim_1_1_event.html#a3b1787a64e5e97ce075c05a58303d58c">EventQueue</a>;</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  CPS::Real mTime;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_event.html#ae8b1c7c9eedd0ad8ae81caaad8daff67">   33</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> <a class="code hl_variable" href="class_d_psim_1_1_event.html#ae8b1c7c9eedd0ad8ae81caaad8daff67">mTime</a>;</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keyword">using </span>Ptr = std::shared_ptr&lt;Event&gt;;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_event.html#a7792e265bd546c9690ec7335ef152cbf">   36</a></span>  <span class="keyword">using </span><a class="code hl_typedef" href="class_d_psim_1_1_event.html#a7792e265bd546c9690ec7335ef152cbf">Ptr</a> = std::shared_ptr&lt;Event&gt;;</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> execute() = 0;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_event.html#aa053e7ccb5e0947d33ee21baa51e03d3">   38</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_event.html#aa053e7ccb5e0947d33ee21baa51e03d3">execute</a>() = 0;</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  Event(CPS::Real t) : mTime(t) {}</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_event.html#aa9f7792fa40b053e5b453e6d5df230ff">   40</a></span>  <a class="code hl_function" href="class_d_psim_1_1_event.html#aa9f7792fa40b053e5b453e6d5df230ff">Event</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> t) : <a class="code hl_variable" href="class_d_psim_1_1_event.html#ae8b1c7c9eedd0ad8ae81caaad8daff67">mTime</a>(t) {}</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keyword">virtual</span> ~Event() {}</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_event.html#a71e55b4c88cc6231cbbf1727ffb36774">   42</a></span>  <span class="keyword">virtual</span> <a class="code hl_function" href="class_d_psim_1_1_event.html#a71e55b4c88cc6231cbbf1727ffb36774">~Event</a>() {}</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>};</div>
 </div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
 <div class="foldopen" id="foldopen00045" data-start="{" data-end="};">
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_event_comparator.html">   45</a></span><span class="keyword">class </span><a class="code hl_class" href="class_d_psim_1_1_event_comparator.html">EventComparator</a> {</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keywordtype">bool</span> operator()(<span class="keyword">const</span> Event::Ptr &amp;l, <span class="keyword">const</span> Event::Ptr &amp;r) {</div>
+<div class="foldopen" id="foldopen00047" data-start="{" data-end="}">
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_event_comparator.html#aae80b30a92bc68e31d7d591cbfa4b2b8">   47</a></span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="class_d_psim_1_1_event_comparator.html#aae80b30a92bc68e31d7d591cbfa4b2b8">operator()</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="class_d_psim_1_1_event.html#a7792e265bd546c9690ec7335ef152cbf">Event::Ptr</a> &amp;l, <span class="keyword">const</span> <a class="code hl_typedef" href="class_d_psim_1_1_event.html#a7792e265bd546c9690ec7335ef152cbf">Event::Ptr</a> &amp;r) {</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keywordflow">return</span> l-&gt;mTime &gt; r-&gt;mTime;</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  }</div>
+</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>};</div>
 </div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="foldopen" id="foldopen00053" data-start="{" data-end="};">
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_attribute_event.html">   53</a></span><span class="keyword">class </span>AttributeEvent : <span class="keyword">public</span> Event, <span class="keyword">public</span> <a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;AttributeEvent&lt;T&gt;&gt; {</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_attribute_event.html">   53</a></span><span class="keyword">class </span><a class="code hl_function" href="class_d_psim_1_1_attribute_event.html#abb8938ff5c0ad511fe578bf5004ddac5">AttributeEvent</a> : <span class="keyword">public</span> <a class="code hl_function" href="class_d_psim_1_1_event.html#aa9f7792fa40b053e5b453e6d5df230ff">Event</a>, <span class="keyword">public</span> <a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;AttributeEvent&lt;T&gt;&gt; {</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  <span class="keyword">typename</span> CPS::Attribute&lt;T&gt;::Ptr mAttribute;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  T mNewValue;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_attribute_event.html#a006990f3eda534bf7ffc57045459edfe">   55</a></span>  <span class="keyword">typename</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">CPS::Attribute&lt;T&gt;::Ptr</a> <a class="code hl_variable" href="class_d_psim_1_1_attribute_event.html#a006990f3eda534bf7ffc57045459edfe">mAttribute</a>;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_attribute_event.html#af99675fbc729eff997ee2e4e75301c19">   56</a></span>  T <a class="code hl_variable" href="class_d_psim_1_1_attribute_event.html#af99675fbc729eff997ee2e4e75301c19">mNewValue</a>;</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  AttributeEvent(CPS::Real t, <span class="keyword">typename</span> CPS::Attribute&lt;T&gt;::Ptr attr, T val)</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>      : Event(t), mAttribute(attr), mNewValue(val) {}</div>
+<div class="foldopen" id="foldopen00059" data-start="{" data-end="}">
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_attribute_event.html#abb8938ff5c0ad511fe578bf5004ddac5">   59</a></span>  <a class="code hl_function" href="class_d_psim_1_1_attribute_event.html#abb8938ff5c0ad511fe578bf5004ddac5">AttributeEvent</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> t, <span class="keyword">typename</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">CPS::Attribute&lt;T&gt;::Ptr</a> attr, T val)</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>      : <a class="code hl_function" href="class_d_psim_1_1_event.html#aa9f7792fa40b053e5b453e6d5df230ff">Event</a>(t), <a class="code hl_variable" href="class_d_psim_1_1_attribute_event.html#a006990f3eda534bf7ffc57045459edfe">mAttribute</a>(attr), <a class="code hl_variable" href="class_d_psim_1_1_attribute_event.html#af99675fbc729eff997ee2e4e75301c19">mNewValue</a>(val) {}</div>
+</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  <span class="keywordtype">void</span> execute() { mAttribute-&gt;set(mNewValue); }</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_attribute_event.html#a770530dee3ece295c5ecd1098fa39f30">   62</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_attribute_event.html#a770530dee3ece295c5ecd1098fa39f30">execute</a>() { <a class="code hl_variable" href="class_d_psim_1_1_attribute_event.html#a006990f3eda534bf7ffc57045459edfe">mAttribute</a>-&gt;set(<a class="code hl_variable" href="class_d_psim_1_1_attribute_event.html#af99675fbc729eff997ee2e4e75301c19">mNewValue</a>); }</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>};</div>
 </div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
 <div class="foldopen" id="foldopen00065" data-start="{" data-end="};">
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_switch_event.html">   65</a></span><span class="keyword">class </span>SwitchEvent : <span class="keyword">public</span> Event, <span class="keyword">public</span> <a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;SwitchEvent&gt; {</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_switch_event.html">   65</a></span><span class="keyword">class </span><a class="code hl_function" href="class_d_psim_1_1_switch_event.html#aa6664a9737698cf91c3492e906ff1409">SwitchEvent</a> : <span class="keyword">public</span> <a class="code hl_function" href="class_d_psim_1_1_event.html#aa9f7792fa40b053e5b453e6d5df230ff">Event</a>, <span class="keyword">public</span> <a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;SwitchEvent&gt; {</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  std::shared_ptr&lt;CPS::Base::Ph1::Switch&gt; mSwitch;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  CPS::Bool mNewState;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_switch_event.html#ad6d2622f8f1dfeab9d62cc15da7722cb">   68</a></span>  std::shared_ptr&lt;CPS::Base::Ph1::Switch&gt; <a class="code hl_variable" href="class_d_psim_1_1_switch_event.html#ad6d2622f8f1dfeab9d62cc15da7722cb">mSwitch</a>;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_switch_event.html#a1a17b22192f1208935b291639deefbfe">   69</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">CPS::Bool</a> <a class="code hl_variable" href="class_d_psim_1_1_switch_event.html#a1a17b22192f1208935b291639deefbfe">mNewState</a>;</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  <span class="keyword">using </span><a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;SwitchEvent&gt;::make;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  <span class="keyword">using </span><a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;<a class="code hl_function" href="class_d_psim_1_1_switch_event.html#aa6664a9737698cf91c3492e906ff1409">SwitchEvent</a>&gt;<a class="code hl_function" href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">::make</a>;</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  SwitchEvent(CPS::Real t, <span class="keyword">const</span> std::shared_ptr&lt;CPS::Base::Ph1::Switch&gt; &amp;sw,</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>              CPS::Bool state)</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>      : Event(t), mSwitch(sw), mNewState(state) {}</div>
+<div class="foldopen" id="foldopen00074" data-start="{" data-end="}">
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_switch_event.html#aa6664a9737698cf91c3492e906ff1409">   74</a></span>  <a class="code hl_function" href="class_d_psim_1_1_switch_event.html#aa6664a9737698cf91c3492e906ff1409">SwitchEvent</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> t, <span class="keyword">const</span> std::shared_ptr&lt;CPS::Base::Ph1::Switch&gt; &amp;sw,</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>              <a class="code hl_typedef" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">CPS::Bool</a> state)</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>      : <a class="code hl_function" href="class_d_psim_1_1_event.html#aa9f7792fa40b053e5b453e6d5df230ff">Event</a>(t), <a class="code hl_variable" href="class_d_psim_1_1_switch_event.html#ad6d2622f8f1dfeab9d62cc15da7722cb">mSwitch</a>(sw), <a class="code hl_variable" href="class_d_psim_1_1_switch_event.html#a1a17b22192f1208935b291639deefbfe">mNewState</a>(state) {}</div>
+</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  <span class="keywordtype">void</span> execute() {</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="keywordflow">if</span> (mNewState)</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>      mSwitch-&gt;close();</div>
+<div class="foldopen" id="foldopen00078" data-start="{" data-end="}">
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_switch_event.html#a031edbf24c478f0c7f5cf6d937366d02">   78</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_switch_event.html#a031edbf24c478f0c7f5cf6d937366d02">execute</a>() {</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="class_d_psim_1_1_switch_event.html#a1a17b22192f1208935b291639deefbfe">mNewState</a>)</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>      <a class="code hl_variable" href="class_d_psim_1_1_switch_event.html#ad6d2622f8f1dfeab9d62cc15da7722cb">mSwitch</a>-&gt;close();</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>      mSwitch-&gt;open();</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>      <a class="code hl_variable" href="class_d_psim_1_1_switch_event.html#ad6d2622f8f1dfeab9d62cc15da7722cb">mSwitch</a>-&gt;open();</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  }</div>
+</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>};</div>
 </div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
 <div class="foldopen" id="foldopen00086" data-start="{" data-end="};">
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_switch_event3_ph.html">   86</a></span><span class="keyword">class </span>SwitchEvent3Ph : <span class="keyword">public</span> Event, <span class="keyword">public</span> <a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;SwitchEvent3Ph&gt; {</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_switch_event3_ph.html">   86</a></span><span class="keyword">class </span><a class="code hl_function" href="class_d_psim_1_1_switch_event3_ph.html#aea8d05c379ca072b5048bd4f9e327a09">SwitchEvent3Ph</a> : <span class="keyword">public</span> <a class="code hl_function" href="class_d_psim_1_1_event.html#aa9f7792fa40b053e5b453e6d5df230ff">Event</a>, <span class="keyword">public</span> <a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;SwitchEvent3Ph&gt; {</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  std::shared_ptr&lt;CPS::Base::Ph3::Switch&gt; mSwitch;</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  CPS::Bool mNewState;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_switch_event3_ph.html#ad2e66c8f2a6cb092c6b546a1b8879b50">   89</a></span>  std::shared_ptr&lt;CPS::Base::Ph3::Switch&gt; <a class="code hl_variable" href="class_d_psim_1_1_switch_event3_ph.html#ad2e66c8f2a6cb092c6b546a1b8879b50">mSwitch</a>;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_switch_event3_ph.html#a8bc8fd63e3e247337f1d95353bdb289a">   90</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">CPS::Bool</a> <a class="code hl_variable" href="class_d_psim_1_1_switch_event3_ph.html#a8bc8fd63e3e247337f1d95353bdb289a">mNewState</a>;</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  <span class="keyword">using </span><a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;SwitchEvent3Ph&gt;::make;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  <span class="keyword">using </span><a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;<a class="code hl_function" href="class_d_psim_1_1_switch_event3_ph.html#aea8d05c379ca072b5048bd4f9e327a09">SwitchEvent3Ph</a>&gt;<a class="code hl_function" href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">::make</a>;</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  SwitchEvent3Ph(CPS::Real t, <span class="keyword">const</span> std::shared_ptr&lt;CPS::Base::Ph3::Switch&gt; &amp;sw,</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                 CPS::Bool state)</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>      : Event(t), mSwitch(sw), mNewState(state) {}</div>
+<div class="foldopen" id="foldopen00095" data-start="{" data-end="}">
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_switch_event3_ph.html#aea8d05c379ca072b5048bd4f9e327a09">   95</a></span>  <a class="code hl_function" href="class_d_psim_1_1_switch_event3_ph.html#aea8d05c379ca072b5048bd4f9e327a09">SwitchEvent3Ph</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> t, <span class="keyword">const</span> std::shared_ptr&lt;CPS::Base::Ph3::Switch&gt; &amp;sw,</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                 <a class="code hl_typedef" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">CPS::Bool</a> state)</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>      : <a class="code hl_function" href="class_d_psim_1_1_event.html#aa9f7792fa40b053e5b453e6d5df230ff">Event</a>(t), <a class="code hl_variable" href="class_d_psim_1_1_switch_event3_ph.html#ad2e66c8f2a6cb092c6b546a1b8879b50">mSwitch</a>(sw), <a class="code hl_variable" href="class_d_psim_1_1_switch_event3_ph.html#a8bc8fd63e3e247337f1d95353bdb289a">mNewState</a>(state) {}</div>
+</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  <span class="keywordtype">void</span> execute() {</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <span class="keywordflow">if</span> (mNewState)</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>      mSwitch-&gt;closeSwitch();</div>
+<div class="foldopen" id="foldopen00099" data-start="{" data-end="}">
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_switch_event3_ph.html#a4f961d8f71e51ca27082b208a107c1be">   99</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_switch_event3_ph.html#a4f961d8f71e51ca27082b208a107c1be">execute</a>() {</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="class_d_psim_1_1_switch_event3_ph.html#a8bc8fd63e3e247337f1d95353bdb289a">mNewState</a>)</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>      <a class="code hl_variable" href="class_d_psim_1_1_switch_event3_ph.html#ad2e66c8f2a6cb092c6b546a1b8879b50">mSwitch</a>-&gt;closeSwitch();</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>      mSwitch-&gt;openSwitch();</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>      <a class="code hl_variable" href="class_d_psim_1_1_switch_event3_ph.html#ad2e66c8f2a6cb092c6b546a1b8879b50">mSwitch</a>-&gt;openSwitch();</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  }</div>
+</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>};</div>
 </div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
@@ -212,23 +232,59 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="keyword">protected</span>:</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>  std::priority_queue&lt;Event::Ptr, std::deque&lt;Event::Ptr&gt;, <a class="code hl_class" href="class_d_psim_1_1_event_comparator.html">EventComparator</a>&gt;</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>      mEvents;</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_event_queue.html#ab833bed99b3bc4c4fbd5085c25f8b65f">  111</a></span>      <a class="code hl_variable" href="class_d_psim_1_1_event_queue.html#ab833bed99b3bc4c4fbd5085c25f8b65f">mEvents</a>;</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>  <span class="keywordtype">void</span> addEvent(Event::Ptr e);</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  <span class="keywordtype">void</span> handleEvents(CPS::Real currentTime);</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_event_queue.html#ad86256bd6b5e95c71c239df57fb57c00">addEvent</a>(<a class="code hl_typedef" href="class_d_psim_1_1_event.html#a7792e265bd546c9690ec7335ef152cbf">Event::Ptr</a> e);</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_event_queue.html#a7574a5fcb5f284759f382ea5787f0ffc">handleEvents</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> currentTime);</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>};</div>
 </div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>} <span class="comment">// namespace DPsim</span></div>
+<div class="ttc" id="a_attribute_8h_html"><div class="ttname"><a href="_attribute_8h.html">Attribute.h</a></div></div>
+<div class="ttc" id="a_base___ph1___switch_8h_html"><div class="ttname"><a href="_base___ph1___switch_8h.html">Base_Ph1_Switch.h</a></div></div>
+<div class="ttc" id="a_base___ph3___switch_8h_html"><div class="ttname"><a href="_base___ph3___switch_8h.html">Base_Ph3_Switch.h</a></div></div>
+<div class="ttc" id="a_logger_8h_html"><div class="ttname"><a href="_logger_8h.html">Logger.h</a></div></div>
+<div class="ttc" id="a_ptr_factory_8h_html"><div class="ttname"><a href="_ptr_factory_8h.html">PtrFactory.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_ad552c848f780007d59f489540fa7e4d6"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">CPS::Attribute::Ptr</a></div><div class="ttdeci">AttributePointer&lt; Attribute&lt; T &gt; &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00250">Attribute.h:250</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_attribute_event_html_a006990f3eda534bf7ffc57045459edfe"><div class="ttname"><a href="class_d_psim_1_1_attribute_event.html#a006990f3eda534bf7ffc57045459edfe">DPsim::AttributeEvent::mAttribute</a></div><div class="ttdeci">CPS::Attribute&lt; T &gt;::Ptr mAttribute</div><div class="ttdef"><b>Definition</b> <a href="#l00055">Event.h:55</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_attribute_event_html_a770530dee3ece295c5ecd1098fa39f30"><div class="ttname"><a href="class_d_psim_1_1_attribute_event.html#a770530dee3ece295c5ecd1098fa39f30">DPsim::AttributeEvent::execute</a></div><div class="ttdeci">void execute()</div><div class="ttdef"><b>Definition</b> <a href="#l00062">Event.h:62</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_attribute_event_html_abb8938ff5c0ad511fe578bf5004ddac5"><div class="ttname"><a href="class_d_psim_1_1_attribute_event.html#abb8938ff5c0ad511fe578bf5004ddac5">DPsim::AttributeEvent::AttributeEvent</a></div><div class="ttdeci">AttributeEvent(CPS::Real t, typename CPS::Attribute&lt; T &gt;::Ptr attr, T val)</div><div class="ttdef"><b>Definition</b> <a href="#l00059">Event.h:59</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_attribute_event_html_af99675fbc729eff997ee2e4e75301c19"><div class="ttname"><a href="class_d_psim_1_1_attribute_event.html#af99675fbc729eff997ee2e4e75301c19">DPsim::AttributeEvent::mNewValue</a></div><div class="ttdeci">T mNewValue</div><div class="ttdef"><b>Definition</b> <a href="#l00056">Event.h:56</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_event_comparator_html"><div class="ttname"><a href="class_d_psim_1_1_event_comparator.html">DPsim::EventComparator</a></div><div class="ttdef"><b>Definition</b> <a href="#l00045">Event.h:45</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_event_comparator_html_aae80b30a92bc68e31d7d591cbfa4b2b8"><div class="ttname"><a href="class_d_psim_1_1_event_comparator.html#aae80b30a92bc68e31d7d591cbfa4b2b8">DPsim::EventComparator::operator()</a></div><div class="ttdeci">bool operator()(const Event::Ptr &amp;l, const Event::Ptr &amp;r)</div><div class="ttdef"><b>Definition</b> <a href="#l00047">Event.h:47</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_event_html_a1e1c82857c4ab015b832ecb0078fdb4a"><div class="ttname"><a href="class_d_psim_1_1_event.html#a1e1c82857c4ab015b832ecb0078fdb4a">DPsim::Event::EventComparator</a></div><div class="ttdeci">friend class EventComparator</div><div class="ttdef"><b>Definition</b> <a href="#l00029">Event.h:29</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_event_html_a3b1787a64e5e97ce075c05a58303d58c"><div class="ttname"><a href="class_d_psim_1_1_event.html#a3b1787a64e5e97ce075c05a58303d58c">DPsim::Event::EventQueue</a></div><div class="ttdeci">friend class EventQueue</div><div class="ttdef"><b>Definition</b> <a href="#l00030">Event.h:30</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_event_html_a71e55b4c88cc6231cbbf1727ffb36774"><div class="ttname"><a href="class_d_psim_1_1_event.html#a71e55b4c88cc6231cbbf1727ffb36774">DPsim::Event::~Event</a></div><div class="ttdeci">virtual ~Event()</div><div class="ttdef"><b>Definition</b> <a href="#l00042">Event.h:42</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_event_html_a7792e265bd546c9690ec7335ef152cbf"><div class="ttname"><a href="class_d_psim_1_1_event.html#a7792e265bd546c9690ec7335ef152cbf">DPsim::Event::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; Event &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="#l00036">Event.h:36</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_event_html_aa053e7ccb5e0947d33ee21baa51e03d3"><div class="ttname"><a href="class_d_psim_1_1_event.html#aa053e7ccb5e0947d33ee21baa51e03d3">DPsim::Event::execute</a></div><div class="ttdeci">virtual void execute()=0</div></div>
+<div class="ttc" id="aclass_d_psim_1_1_event_html_aa9f7792fa40b053e5b453e6d5df230ff"><div class="ttname"><a href="class_d_psim_1_1_event.html#aa9f7792fa40b053e5b453e6d5df230ff">DPsim::Event::Event</a></div><div class="ttdeci">Event(CPS::Real t)</div><div class="ttdef"><b>Definition</b> <a href="#l00040">Event.h:40</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_event_html_ae8b1c7c9eedd0ad8ae81caaad8daff67"><div class="ttname"><a href="class_d_psim_1_1_event.html#ae8b1c7c9eedd0ad8ae81caaad8daff67">DPsim::Event::mTime</a></div><div class="ttdeci">CPS::Real mTime</div><div class="ttdef"><b>Definition</b> <a href="#l00033">Event.h:33</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_event_queue_html"><div class="ttname"><a href="class_d_psim_1_1_event_queue.html">DPsim::EventQueue</a></div><div class="ttdef"><b>Definition</b> <a href="#l00107">Event.h:107</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_event_queue_html_a7574a5fcb5f284759f382ea5787f0ffc"><div class="ttname"><a href="class_d_psim_1_1_event_queue.html#a7574a5fcb5f284759f382ea5787f0ffc">DPsim::EventQueue::handleEvents</a></div><div class="ttdeci">void handleEvents(CPS::Real currentTime)</div><div class="ttdef"><b>Definition</b> <a href="_event_8cpp_source.html#l00016">Event.cpp:16</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_event_queue_html_ab833bed99b3bc4c4fbd5085c25f8b65f"><div class="ttname"><a href="class_d_psim_1_1_event_queue.html#ab833bed99b3bc4c4fbd5085c25f8b65f">DPsim::EventQueue::mEvents</a></div><div class="ttdeci">std::priority_queue&lt; Event::Ptr, std::deque&lt; Event::Ptr &gt;, EventComparator &gt; mEvents</div><div class="ttdef"><b>Definition</b> <a href="#l00111">Event.h:111</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_event_queue_html_ad86256bd6b5e95c71c239df57fb57c00"><div class="ttname"><a href="class_d_psim_1_1_event_queue.html#ad86256bd6b5e95c71c239df57fb57c00">DPsim::EventQueue::addEvent</a></div><div class="ttdeci">void addEvent(Event::Ptr e)</div><div class="ttdef"><b>Definition</b> <a href="_event_8cpp_source.html#l00014">Event.cpp:14</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_switch_event3_ph_html_a4f961d8f71e51ca27082b208a107c1be"><div class="ttname"><a href="class_d_psim_1_1_switch_event3_ph.html#a4f961d8f71e51ca27082b208a107c1be">DPsim::SwitchEvent3Ph::execute</a></div><div class="ttdeci">void execute()</div><div class="ttdef"><b>Definition</b> <a href="#l00099">Event.h:99</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_switch_event3_ph_html_a8bc8fd63e3e247337f1d95353bdb289a"><div class="ttname"><a href="class_d_psim_1_1_switch_event3_ph.html#a8bc8fd63e3e247337f1d95353bdb289a">DPsim::SwitchEvent3Ph::mNewState</a></div><div class="ttdeci">CPS::Bool mNewState</div><div class="ttdef"><b>Definition</b> <a href="#l00090">Event.h:90</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_switch_event3_ph_html_ad2e66c8f2a6cb092c6b546a1b8879b50"><div class="ttname"><a href="class_d_psim_1_1_switch_event3_ph.html#ad2e66c8f2a6cb092c6b546a1b8879b50">DPsim::SwitchEvent3Ph::mSwitch</a></div><div class="ttdeci">std::shared_ptr&lt; CPS::Base::Ph3::Switch &gt; mSwitch</div><div class="ttdef"><b>Definition</b> <a href="#l00089">Event.h:89</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_switch_event3_ph_html_aea8d05c379ca072b5048bd4f9e327a09"><div class="ttname"><a href="class_d_psim_1_1_switch_event3_ph.html#aea8d05c379ca072b5048bd4f9e327a09">DPsim::SwitchEvent3Ph::SwitchEvent3Ph</a></div><div class="ttdeci">SwitchEvent3Ph(CPS::Real t, const std::shared_ptr&lt; CPS::Base::Ph3::Switch &gt; &amp;sw, CPS::Bool state)</div><div class="ttdef"><b>Definition</b> <a href="#l00095">Event.h:95</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_switch_event_html_a031edbf24c478f0c7f5cf6d937366d02"><div class="ttname"><a href="class_d_psim_1_1_switch_event.html#a031edbf24c478f0c7f5cf6d937366d02">DPsim::SwitchEvent::execute</a></div><div class="ttdeci">void execute()</div><div class="ttdef"><b>Definition</b> <a href="#l00078">Event.h:78</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_switch_event_html_a1a17b22192f1208935b291639deefbfe"><div class="ttname"><a href="class_d_psim_1_1_switch_event.html#a1a17b22192f1208935b291639deefbfe">DPsim::SwitchEvent::mNewState</a></div><div class="ttdeci">CPS::Bool mNewState</div><div class="ttdef"><b>Definition</b> <a href="#l00069">Event.h:69</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_switch_event_html_aa6664a9737698cf91c3492e906ff1409"><div class="ttname"><a href="class_d_psim_1_1_switch_event.html#aa6664a9737698cf91c3492e906ff1409">DPsim::SwitchEvent::SwitchEvent</a></div><div class="ttdeci">SwitchEvent(CPS::Real t, const std::shared_ptr&lt; CPS::Base::Ph1::Switch &gt; &amp;sw, CPS::Bool state)</div><div class="ttdef"><b>Definition</b> <a href="#l00074">Event.h:74</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_switch_event_html_ad6d2622f8f1dfeab9d62cc15da7722cb"><div class="ttname"><a href="class_d_psim_1_1_switch_event.html#ad6d2622f8f1dfeab9d62cc15da7722cb">DPsim::SwitchEvent::mSwitch</a></div><div class="ttdeci">std::shared_ptr&lt; CPS::Base::Ph1::Switch &gt; mSwitch</div><div class="ttdef"><b>Definition</b> <a href="#l00068">Event.h:68</a></div></div>
 <div class="ttc" id="aclass_shared_factory_html"><div class="ttname"><a href="class_shared_factory.html">SharedFactory</a></div><div class="ttdef"><b>Definition</b> <a href="_ptr_factory_8h_source.html#l00016">PtrFactory.h:16</a></div></div>
+<div class="ttc" id="aclass_shared_factory_html_a2ffdfd3b547bb9cb777f33e1bf6ec7ef"><div class="ttname"><a href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">SharedFactory&lt; SwitchEvent &gt;::make</a></div><div class="ttdeci">static std::shared_ptr&lt; SwitchEvent &gt; make(Args &amp;&amp;...args)</div><div class="ttdef"><b>Definition</b> <a href="_ptr_factory_8h_source.html#l00019">PtrFactory.h:19</a></div></div>
+<div class="ttc" id="adpsim-models_2include_2dpsim-models_2_definitions_8h_html"><div class="ttname"><a href="dpsim-models_2include_2dpsim-models_2_definitions_8h.html">Definitions.h</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a603c4b77d70922bc0423adc57725df50"><div class="ttname"><a href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a></div><div class="ttdeci">double Real</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00062">Definitions.h:62</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_ace0e6b9548abd863a1c8637775434218"><div class="ttname"><a href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">CPS::Bool</a></div><div class="ttdeci">bool Bool</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00064">Definitions.h:64</a></div></div>
 <div class="ttc" id="anamespace_d_psim_html"><div class="ttname"><a href="namespace_d_psim.html">DPsim</a></div><div class="ttdef"><b>Definition</b> <a href="_dense_l_u_adapter_8cpp_source.html#l00013">DenseLUAdapter.cpp:13</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li><li class="navelem"><a class="el" href="_event_8h.html">Event.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_interface_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,91 +95,121 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">Interface.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// SPDX-License-Identifier: Apache-2.0</span></div>
+<a href="_interface_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// SPDX-License-Identifier: Apache-2.0</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;thread&gt;</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;dpsim-models/Attribute.h&gt;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;dpsim-models/Logger.h&gt;</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;dpsim-models/Task.h&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;<a class="code" href="_attribute_8h.html">dpsim-models/Attribute.h</a>&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;<a class="code" href="_logger_8h.html">dpsim-models/Logger.h</a>&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;<a class="code" href="_task_8h.html">dpsim-models/Task.h</a>&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;dpsim/Config.h&gt;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;dpsim/Definitions.h&gt;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;dpsim/Interface.h&gt;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;dpsim/Scheduler.h&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;<a class="code" href="dpsim_2include_2dpsim_2_definitions_8h.html">dpsim/Definitions.h</a>&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;<a class="code" href="_interface_8h.html">dpsim/Interface.h</a>&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;<a class="code" href="_scheduler_8h.html">dpsim/Scheduler.h</a>&gt;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_d_psim.html">DPsim</a> {</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">class </span><a class="code hl_class" href="class_d_psim_1_1_interface_worker.html">InterfaceWorker</a>;</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
 <div class="foldopen" id="foldopen00019" data-start="{" data-end="};">
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface.html">   19</a></span><span class="keyword">class </span>Interface : <span class="keyword">public</span> <a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;Interface&gt; {</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface.html">   19</a></span><span class="keyword">class </span><a class="code hl_function" href="class_d_psim_1_1_interface.html#af7ff184a7ead2918ca54d461d7087bb1">Interface</a> : <span class="keyword">public</span> <a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;Interface&gt; {</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  <span class="keyword">typedef</span> std::shared_ptr&lt;Interface&gt; Ptr;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface.html#ace8b0d4b3ba7141eddac4ffd2e3f9ade">   22</a></span>  <span class="keyword">typedef</span> std::shared_ptr&lt;Interface&gt; <a class="code hl_typedef" href="class_d_psim_1_1_interface.html#ace8b0d4b3ba7141eddac4ffd2e3f9ade">Ptr</a>;</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  Interface(<span class="keyword">const</span> String &amp;name = <span class="stringliteral">&quot;&quot;</span>, spdlog::level::level_enum logLevel =</div>
+<div class="foldopen" id="foldopen00024" data-start="{" data-end="}">
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface.html#af7ff184a7ead2918ca54d461d7087bb1">   24</a></span>  <a class="code hl_function" href="class_d_psim_1_1_interface.html#af7ff184a7ead2918ca54d461d7087bb1">Interface</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> &amp;name = <span class="stringliteral">&quot;&quot;</span>, spdlog::level::level_enum logLevel =</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>                                         spdlog::level::level_enum::info)</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>      : mName(name), mOpened(<span class="keyword">false</span>) {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    mLog = CPS::Logger::get(<span class="stringliteral">&quot;Interface&quot;</span>, logLevel);</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>      : <a class="code hl_variable" href="class_d_psim_1_1_interface.html#a2a9bcf319b311804a05b63ef3e358e2e">mName</a>(name), <a class="code hl_variable" href="class_d_psim_1_1_interface.html#a46f7fd95003532d77c6a965280c2c3a0">mOpened</a>(false) {</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <a class="code hl_variable" href="class_d_psim_1_1_interface.html#ac147df20daebd31b0ae90182f0191a5c">mLog</a> = <a class="code hl_function" href="class_c_p_s_1_1_logger.html#a94218a27352b9fbb7d0adccb9d32002b">CPS::Logger::get</a>(<span class="stringliteral">&quot;Interface&quot;</span>, logLevel);</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  };</div>
+</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <span class="keyword">virtual</span> ~Interface() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface.html#aa4df0761a44b8224328004fff6b2ec9e">   30</a></span>  <span class="keyword">virtual</span> <a class="code hl_function" href="class_d_psim_1_1_interface.html#aa4df0761a44b8224328004fff6b2ec9e">~Interface</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> open() = 0;</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> close() = 0;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface.html#a1abfbf3041ad0216706049969b1f469d">   32</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_interface.html#a1abfbf3041ad0216706049969b1f469d">open</a>() = 0;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface.html#a1c1f8e9e588cac5322b12203338ad7da">   33</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_interface.html#a1c1f8e9e588cac5322b12203338ad7da">close</a>() = 0;</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <span class="comment">// Function called by the Simulation to perform interface synchronization</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> syncExports() = 0;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface.html#aa472b392a5d172437ba75d788bdd0d39">   36</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_interface.html#aa472b392a5d172437ba75d788bdd0d39">syncExports</a>() = 0;</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface.html#a7b4b1bc175d633d5ef379b416e1fc833">   38</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_interface.html#a7b4b1bc175d633d5ef379b416e1fc833">syncImports</a>() = 0;</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <span class="keyword">virtual</span> CPS::Task::List getTasks() = 0;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface.html#af59ef83a2129ca0e459bf54d4cd563f2">   40</a></span>  <span class="keyword">virtual</span> <a class="code hl_typedef" href="class_c_p_s_1_1_task.html#ad081ca27190e0b2e1887a8d6cb612a66">CPS::Task::List</a> <a class="code hl_function" href="class_d_psim_1_1_interface.html#af59ef83a2129ca0e459bf54d4cd563f2">getTasks</a>() = 0;</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> setLogger(CPS::Logger::Log log);</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_interface.html#a84d521b290775ce69bc442e7ce4175eb">setLogger</a>(<a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a> log);</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keyword">virtual</span> String &amp;getName() { <span class="keywordflow">return</span> mName; }</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface.html#a999d2998d8f639c3044b72133c19b19b">   44</a></span>  <span class="keyword">virtual</span> <a class="code hl_typedef" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> &amp;<a class="code hl_function" href="class_d_psim_1_1_interface.html#a999d2998d8f639c3044b72133c19b19b">getName</a>() { <span class="keywordflow">return</span> <a class="code hl_variable" href="class_d_psim_1_1_interface.html#a2a9bcf319b311804a05b63ef3e358e2e">mName</a>; }</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="comment">// Attributes used in the DPsim simulation. Should only be accessed by the dpsim-thread</span></div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="comment">// Tuple attributes: Attribute to be imported, Current sequenceID, blockOnRead, syncOnSimulationStart</span></div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  std::vector&lt;std::tuple&lt;CPS::AttributeBase::Ptr, UInt, bool, bool&gt;&gt;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>      mImportAttrsDpsim;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface.html#a33a81c7c3de33abb899eedfff741acd2">   49</a></span>      <a class="code hl_variable" href="class_d_psim_1_1_interface.html#a33a81c7c3de33abb899eedfff741acd2">mImportAttrsDpsim</a>;</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="comment">// Tuple attributes: Attribute to be exported, Current Sequence ID</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  std::vector&lt;std::tuple&lt;CPS::AttributeBase::Ptr, UInt&gt;&gt; mExportAttrsDpsim;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface.html#af0bc158390ed482f079bb79798860eb3">   51</a></span>  std::vector&lt;std::tuple&lt;CPS::AttributeBase::Ptr, UInt&gt;&gt; <a class="code hl_variable" href="class_d_psim_1_1_interface.html#af0bc158390ed482f079bb79798860eb3">mExportAttrsDpsim</a>;</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> addImport(CPS::AttributeBase::Ptr attr, <span class="keywordtype">bool</span> blockOnRead = <span class="keyword">false</span>,</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_interface.html#a6b00acb09b792e3352ff76ae817f696d">addImport</a>(<a class="code hl_typedef" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">CPS::AttributeBase::Ptr</a> attr, <span class="keywordtype">bool</span> blockOnRead = <span class="keyword">false</span>,</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>                         <span class="keywordtype">bool</span> syncOnSimulationStart = <span class="keyword">true</span>);</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> addExport(CPS::AttributeBase::Ptr attr);</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_interface.html#ab7799cc7e87df1920e55288a84063497">addExport</a>(<a class="code hl_typedef" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">CPS::AttributeBase::Ptr</a> attr);</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  CPS::Logger::Log mLog;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  String mName;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  <span class="keywordtype">bool</span> mSyncOnSimulationStart;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  UInt mCurrentSequenceDpsimToInterface = 1;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  UInt mNextSequenceInterfaceToDpsim = 1;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  std::atomic&lt;bool&gt; mOpened;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface.html#ac147df20daebd31b0ae90182f0191a5c">   58</a></span>  <a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a> <a class="code hl_variable" href="class_d_psim_1_1_interface.html#ac147df20daebd31b0ae90182f0191a5c">mLog</a>;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface.html#a2a9bcf319b311804a05b63ef3e358e2e">   59</a></span>  <a class="code hl_typedef" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> <a class="code hl_variable" href="class_d_psim_1_1_interface.html#a2a9bcf319b311804a05b63ef3e358e2e">mName</a>;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface.html#a304a9ae30f34fad55dcfe3588e759726">   60</a></span>  <span class="keywordtype">bool</span> <a class="code hl_variable" href="class_d_psim_1_1_interface.html#a304a9ae30f34fad55dcfe3588e759726">mSyncOnSimulationStart</a>;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface.html#a4a1cca8d5dcd44a3d1be753be4881829">   61</a></span>  <a class="code hl_typedef" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> <a class="code hl_variable" href="class_d_psim_1_1_interface.html#a4a1cca8d5dcd44a3d1be753be4881829">mCurrentSequenceDpsimToInterface</a> = 1;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface.html#a35f39d4546ff58e41152b5c66a78cf14">   62</a></span>  <a class="code hl_typedef" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> <a class="code hl_variable" href="class_d_psim_1_1_interface.html#a35f39d4546ff58e41152b5c66a78cf14">mNextSequenceInterfaceToDpsim</a> = 1;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface.html#a46f7fd95003532d77c6a965280c2c3a0">   63</a></span>  std::atomic&lt;bool&gt; <a class="code hl_variable" href="class_d_psim_1_1_interface.html#a46f7fd95003532d77c6a965280c2c3a0">mOpened</a>;</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>};</div>
 </div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>} <span class="comment">// namespace DPsim</span></div>
+<div class="ttc" id="a_attribute_8h_html"><div class="ttname"><a href="_attribute_8h.html">Attribute.h</a></div></div>
+<div class="ttc" id="a_interface_8h_html"><div class="ttname"><a href="_interface_8h.html">Interface.h</a></div></div>
+<div class="ttc" id="a_logger_8h_html"><div class="ttname"><a href="_logger_8h.html">Logger.h</a></div></div>
+<div class="ttc" id="a_scheduler_8h_html"><div class="ttname"><a href="_scheduler_8h.html">Scheduler.h</a></div></div>
+<div class="ttc" id="a_task_8h_html"><div class="ttname"><a href="_task_8h.html">Task.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_base_html_af06cf61c74c46ce667c58f124d69a679"><div class="ttname"><a href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">CPS::AttributeBase::Ptr</a></div><div class="ttdeci">AttributePointer&lt; AttributeBase &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00122">Attribute.h:122</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_logger_html_a1dd42a2424f56886f0eec500a7851423"><div class="ttname"><a href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a></div><div class="ttdeci">std::shared_ptr&lt; spdlog::logger &gt; Log</div><div class="ttdef"><b>Definition</b> <a href="_logger_8h_source.html#l00034">Logger.h:34</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_logger_html_a94218a27352b9fbb7d0adccb9d32002b"><div class="ttname"><a href="class_c_p_s_1_1_logger.html#a94218a27352b9fbb7d0adccb9d32002b">CPS::Logger::get</a></div><div class="ttdeci">static Log get(const std::string &amp;name, Level filelevel=Level::info, Level clilevel=Level::off)</div><div class="ttdef"><b>Definition</b> <a href="_logger_8cpp_source.html#l00139">Logger.cpp:139</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_task_html_ad081ca27190e0b2e1887a8d6cb612a66"><div class="ttname"><a href="class_c_p_s_1_1_task.html#ad081ca27190e0b2e1887a8d6cb612a66">CPS::Task::List</a></div><div class="ttdeci">std::vector&lt; Ptr &gt; List</div><div class="ttdef"><b>Definition</b> <a href="_task_8h_source.html#l00028">Task.h:28</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_html_a1abfbf3041ad0216706049969b1f469d"><div class="ttname"><a href="class_d_psim_1_1_interface.html#a1abfbf3041ad0216706049969b1f469d">DPsim::Interface::open</a></div><div class="ttdeci">virtual void open()=0</div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_html_a1c1f8e9e588cac5322b12203338ad7da"><div class="ttname"><a href="class_d_psim_1_1_interface.html#a1c1f8e9e588cac5322b12203338ad7da">DPsim::Interface::close</a></div><div class="ttdeci">virtual void close()=0</div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_html_a2a9bcf319b311804a05b63ef3e358e2e"><div class="ttname"><a href="class_d_psim_1_1_interface.html#a2a9bcf319b311804a05b63ef3e358e2e">DPsim::Interface::mName</a></div><div class="ttdeci">String mName</div><div class="ttdef"><b>Definition</b> <a href="#l00059">Interface.h:59</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_html_a304a9ae30f34fad55dcfe3588e759726"><div class="ttname"><a href="class_d_psim_1_1_interface.html#a304a9ae30f34fad55dcfe3588e759726">DPsim::Interface::mSyncOnSimulationStart</a></div><div class="ttdeci">bool mSyncOnSimulationStart</div><div class="ttdef"><b>Definition</b> <a href="#l00060">Interface.h:60</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_html_a33a81c7c3de33abb899eedfff741acd2"><div class="ttname"><a href="class_d_psim_1_1_interface.html#a33a81c7c3de33abb899eedfff741acd2">DPsim::Interface::mImportAttrsDpsim</a></div><div class="ttdeci">std::vector&lt; std::tuple&lt; CPS::AttributeBase::Ptr, UInt, bool, bool &gt; &gt; mImportAttrsDpsim</div><div class="ttdef"><b>Definition</b> <a href="#l00049">Interface.h:49</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_html_a35f39d4546ff58e41152b5c66a78cf14"><div class="ttname"><a href="class_d_psim_1_1_interface.html#a35f39d4546ff58e41152b5c66a78cf14">DPsim::Interface::mNextSequenceInterfaceToDpsim</a></div><div class="ttdeci">UInt mNextSequenceInterfaceToDpsim</div><div class="ttdef"><b>Definition</b> <a href="#l00062">Interface.h:62</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_html_a46f7fd95003532d77c6a965280c2c3a0"><div class="ttname"><a href="class_d_psim_1_1_interface.html#a46f7fd95003532d77c6a965280c2c3a0">DPsim::Interface::mOpened</a></div><div class="ttdeci">std::atomic&lt; bool &gt; mOpened</div><div class="ttdef"><b>Definition</b> <a href="#l00063">Interface.h:63</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_html_a4a1cca8d5dcd44a3d1be753be4881829"><div class="ttname"><a href="class_d_psim_1_1_interface.html#a4a1cca8d5dcd44a3d1be753be4881829">DPsim::Interface::mCurrentSequenceDpsimToInterface</a></div><div class="ttdeci">UInt mCurrentSequenceDpsimToInterface</div><div class="ttdef"><b>Definition</b> <a href="#l00061">Interface.h:61</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_html_a6b00acb09b792e3352ff76ae817f696d"><div class="ttname"><a href="class_d_psim_1_1_interface.html#a6b00acb09b792e3352ff76ae817f696d">DPsim::Interface::addImport</a></div><div class="ttdeci">virtual void addImport(CPS::AttributeBase::Ptr attr, bool blockOnRead=false, bool syncOnSimulationStart=true)</div><div class="ttdef"><b>Definition</b> <a href="_interface_8cpp_source.html#l00009">Interface.cpp:9</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_interface_html_a7b4b1bc175d633d5ef379b416e1fc833"><div class="ttname"><a href="class_d_psim_1_1_interface.html#a7b4b1bc175d633d5ef379b416e1fc833">DPsim::Interface::syncImports</a></div><div class="ttdeci">virtual void syncImports()=0</div><div class="ttdoc">Function called by the Simulation to perform interface synchronization.</div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_html_a84d521b290775ce69bc442e7ce4175eb"><div class="ttname"><a href="class_d_psim_1_1_interface.html#a84d521b290775ce69bc442e7ce4175eb">DPsim::Interface::setLogger</a></div><div class="ttdeci">virtual void setLogger(CPS::Logger::Log log)</div><div class="ttdef"><b>Definition</b> <a href="_interface_8cpp_source.html#l00030">Interface.cpp:30</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_html_a999d2998d8f639c3044b72133c19b19b"><div class="ttname"><a href="class_d_psim_1_1_interface.html#a999d2998d8f639c3044b72133c19b19b">DPsim::Interface::getName</a></div><div class="ttdeci">virtual String &amp; getName()</div><div class="ttdef"><b>Definition</b> <a href="#l00044">Interface.h:44</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_html_aa472b392a5d172437ba75d788bdd0d39"><div class="ttname"><a href="class_d_psim_1_1_interface.html#aa472b392a5d172437ba75d788bdd0d39">DPsim::Interface::syncExports</a></div><div class="ttdeci">virtual void syncExports()=0</div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_html_aa4df0761a44b8224328004fff6b2ec9e"><div class="ttname"><a href="class_d_psim_1_1_interface.html#aa4df0761a44b8224328004fff6b2ec9e">DPsim::Interface::~Interface</a></div><div class="ttdeci">virtual ~Interface()=default</div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_html_ab7799cc7e87df1920e55288a84063497"><div class="ttname"><a href="class_d_psim_1_1_interface.html#ab7799cc7e87df1920e55288a84063497">DPsim::Interface::addExport</a></div><div class="ttdeci">virtual void addExport(CPS::AttributeBase::Ptr attr)</div><div class="ttdef"><b>Definition</b> <a href="_interface_8cpp_source.html#l00020">Interface.cpp:20</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_html_ac147df20daebd31b0ae90182f0191a5c"><div class="ttname"><a href="class_d_psim_1_1_interface.html#ac147df20daebd31b0ae90182f0191a5c">DPsim::Interface::mLog</a></div><div class="ttdeci">CPS::Logger::Log mLog</div><div class="ttdef"><b>Definition</b> <a href="#l00058">Interface.h:58</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_html_ace8b0d4b3ba7141eddac4ffd2e3f9ade"><div class="ttname"><a href="class_d_psim_1_1_interface.html#ace8b0d4b3ba7141eddac4ffd2e3f9ade">DPsim::Interface::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; Interface &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="#l00022">Interface.h:22</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_html_af0bc158390ed482f079bb79798860eb3"><div class="ttname"><a href="class_d_psim_1_1_interface.html#af0bc158390ed482f079bb79798860eb3">DPsim::Interface::mExportAttrsDpsim</a></div><div class="ttdeci">std::vector&lt; std::tuple&lt; CPS::AttributeBase::Ptr, UInt &gt; &gt; mExportAttrsDpsim</div><div class="ttdef"><b>Definition</b> <a href="#l00051">Interface.h:51</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_html_af59ef83a2129ca0e459bf54d4cd563f2"><div class="ttname"><a href="class_d_psim_1_1_interface.html#af59ef83a2129ca0e459bf54d4cd563f2">DPsim::Interface::getTasks</a></div><div class="ttdeci">virtual CPS::Task::List getTasks()=0</div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_html_af7ff184a7ead2918ca54d461d7087bb1"><div class="ttname"><a href="class_d_psim_1_1_interface.html#af7ff184a7ead2918ca54d461d7087bb1">DPsim::Interface::Interface</a></div><div class="ttdeci">Interface(const String &amp;name=&quot;&quot;, spdlog::level::level_enum logLevel=spdlog::level::level_enum::info)</div><div class="ttdef"><b>Definition</b> <a href="#l00024">Interface.h:24</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_interface_worker_html"><div class="ttname"><a href="class_d_psim_1_1_interface_worker.html">DPsim::InterfaceWorker</a></div><div class="ttdef"><b>Definition</b> <a href="_interface_worker_8h_source.html#l00018">InterfaceWorker.h:18</a></div></div>
 <div class="ttc" id="aclass_shared_factory_html"><div class="ttname"><a href="class_shared_factory.html">SharedFactory</a></div><div class="ttdef"><b>Definition</b> <a href="_ptr_factory_8h_source.html#l00016">PtrFactory.h:16</a></div></div>
+<div class="ttc" id="adpsim_2include_2dpsim_2_definitions_8h_html"><div class="ttname"><a href="dpsim_2include_2dpsim_2_definitions_8h.html">Definitions.h</a></div></div>
 <div class="ttc" id="anamespace_d_psim_html"><div class="ttname"><a href="namespace_d_psim.html">DPsim</a></div><div class="ttdef"><b>Definition</b> <a href="_dense_l_u_adapter_8cpp_source.html#l00013">DenseLUAdapter.cpp:13</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a66e48a625a26fd3c1d2198148f9d59e9"><div class="ttname"><a href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">DPsim::String</a></div><div class="ttdeci">CPS::String String</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00020">Definitions.h:20</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_aca275dbce4c75f8e270755c373b13d5d"><div class="ttname"><a href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">DPsim::UInt</a></div><div class="ttdeci">CPS::UInt UInt</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00023">Definitions.h:23</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li><li class="navelem"><a class="el" href="_interface_8h.html">Interface.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

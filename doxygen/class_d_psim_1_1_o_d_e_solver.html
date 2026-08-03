@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_d_psim_1_1_o_d_e_solver.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_o_d_e_solver.html">ODESolver</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
@@ -107,12 +115,12 @@ $(function(){ initResizable(false); });
 Inheritance diagram for DPsim::ODESolver:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="class_d_psim_1_1_o_d_e_solver__inherit__graph.svg" width="146" height="119"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for DPsim::ODESolver:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="class_d_psim_1_1_o_d_e_solver__coll__graph.svg" width="146" height="119"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -121,50 +129,52 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a249642cf69a1e9713a7b8d2d6e3d286a" id="r_a249642cf69a1e9713a7b8d2d6e3d286a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a249642cf69a1e9713a7b8d2d6e3d286a">ODESolver</a> (String name, const CPS::ODEInterface::Ptr &amp;comp, bool implicit_integration, Real timestep)</td></tr>
+<tr class="memitem:a249642cf69a1e9713a7b8d2d6e3d286a" id="r_a249642cf69a1e9713a7b8d2d6e3d286a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a249642cf69a1e9713a7b8d2d6e3d286a">ODESolver</a> (<a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> name, const <a class="el" href="class_c_p_s_1_1_o_d_e_interface.html#af539ef288692900c8cd723b8619fdb85">CPS::ODEInterface::Ptr</a> &amp;comp, bool implicit_integration, <a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> timestep)</td></tr>
 <tr class="memdesc:a249642cf69a1e9713a7b8d2d6e3d286a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create solve object with corresponding component and information on the integration type.  <br /></td></tr>
 <tr class="separator:a249642cf69a1e9713a7b8d2d6e3d286a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e750ff70b2b4500883796633ae2ad3d" id="r_a9e750ff70b2b4500883796633ae2ad3d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9e750ff70b2b4500883796633ae2ad3d">~ODESolver</a> ()</td></tr>
 <tr class="memdesc:a9e750ff70b2b4500883796633ae2ad3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deallocate all memory.  <br /></td></tr>
 <tr class="separator:a9e750ff70b2b4500883796633ae2ad3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a259d88c55036477e6bedc1bcfd905c00" id="r_a259d88c55036477e6bedc1bcfd905c00"><td class="memItemLeft" align="right" valign="top">virtual CPS::Task::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a259d88c55036477e6bedc1bcfd905c00">getTasks</a> ()</td></tr>
+<tr class="memitem:a259d88c55036477e6bedc1bcfd905c00" id="r_a259d88c55036477e6bedc1bcfd905c00"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_c_p_s_1_1_task.html#ad081ca27190e0b2e1887a8d6cb612a66">CPS::Task::List</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a259d88c55036477e6bedc1bcfd905c00">getTasks</a> ()</td></tr>
 <tr class="memdesc:a259d88c55036477e6bedc1bcfd905c00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get tasks for scheduler.  <br /></td></tr>
 <tr class="separator:a259d88c55036477e6bedc1bcfd905c00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7cd71791cadd3bc396fa5ec2a021b34a" id="r_a7cd71791cadd3bc396fa5ec2a021b34a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7cd71791cadd3bc396fa5ec2a021b34a">initialize</a> ()</td></tr>
 <tr class="memdesc:a7cd71791cadd3bc396fa5ec2a021b34a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize ARKode-solve_environment.  <br /></td></tr>
 <tr class="separator:a7cd71791cadd3bc396fa5ec2a021b34a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4496640d054270c85d15e001a758a2f6" id="r_a4496640d054270c85d15e001a758a2f6"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4496640d054270c85d15e001a758a2f6">step</a> (Real initial_time)</td></tr>
+<tr class="memitem:a4496640d054270c85d15e001a758a2f6" id="r_a4496640d054270c85d15e001a758a2f6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4496640d054270c85d15e001a758a2f6">step</a> (<a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> initial_time)</td></tr>
 <tr class="memdesc:a4496640d054270c85d15e001a758a2f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve system for the current time.  <br /></td></tr>
 <tr class="separator:a4496640d054270c85d15e001a758a2f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_d_psim_1_1_solver"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_d_psim_1_1_solver')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td></tr>
-<tr class="memitem:a43f3a5b98bf07a364645fa5f8193a5e7 inherit pub_methods_class_d_psim_1_1_solver" id="r_a43f3a5b98bf07a364645fa5f8193a5e7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a43f3a5b98bf07a364645fa5f8193a5e7">Solver</a> (String name, CPS::Logger::Level logLevel)</td></tr>
+<tr class="memitem:a43f3a5b98bf07a364645fa5f8193a5e7 inherit pub_methods_class_d_psim_1_1_solver" id="r_a43f3a5b98bf07a364645fa5f8193a5e7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a43f3a5b98bf07a364645fa5f8193a5e7">Solver</a> (<a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> name, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a> logLevel)</td></tr>
 <tr class="separator:a43f3a5b98bf07a364645fa5f8193a5e7 inherit pub_methods_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ec0c84fef733b967c37fad1835e2b6f inherit pub_methods_class_d_psim_1_1_solver" id="r_a6ec0c84fef733b967c37fad1835e2b6f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a6ec0c84fef733b967c37fad1835e2b6f">setTimeStep</a> (Real timeStep)</td></tr>
+<tr class="memitem:ae4f0e215033efa8e18e567c148488836 inherit pub_methods_class_d_psim_1_1_solver" id="r_ae4f0e215033efa8e18e567c148488836"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#ae4f0e215033efa8e18e567c148488836">~Solver</a> ()</td></tr>
+<tr class="separator:ae4f0e215033efa8e18e567c148488836 inherit pub_methods_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ec0c84fef733b967c37fad1835e2b6f inherit pub_methods_class_d_psim_1_1_solver" id="r_a6ec0c84fef733b967c37fad1835e2b6f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a6ec0c84fef733b967c37fad1835e2b6f">setTimeStep</a> (<a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> timeStep)</td></tr>
 <tr class="separator:a6ec0c84fef733b967c37fad1835e2b6f inherit pub_methods_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9680fc1be173642556299eb91e300002 inherit pub_methods_class_d_psim_1_1_solver" id="r_a9680fc1be173642556299eb91e300002"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a9680fc1be173642556299eb91e300002">doFrequencyParallelization</a> (Bool freqParallel)</td></tr>
+<tr class="memitem:a9680fc1be173642556299eb91e300002 inherit pub_methods_class_d_psim_1_1_solver" id="r_a9680fc1be173642556299eb91e300002"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a9680fc1be173642556299eb91e300002">doFrequencyParallelization</a> (<a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> freqParallel)</td></tr>
 <tr class="separator:a9680fc1be173642556299eb91e300002 inherit pub_methods_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55d0b0fd08980de35d936ea167bf8a86 inherit pub_methods_class_d_psim_1_1_solver" id="r_a55d0b0fd08980de35d936ea167bf8a86"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a55d0b0fd08980de35d936ea167bf8a86">setSystem</a> (const <a class="el" href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a> &amp;system)</td></tr>
 <tr class="separator:a55d0b0fd08980de35d936ea167bf8a86 inherit pub_methods_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af333a4dee89c17bbf902ef0fb2d68d52 inherit pub_methods_class_d_psim_1_1_solver" id="r_af333a4dee89c17bbf902ef0fb2d68d52"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#af333a4dee89c17bbf902ef0fb2d68d52">setSystemMatrixRecomputationMode</a> (<a class="el" href="class_d_psim_1_1_solver.html#ada054cfffa83077943a93e71e1fb8792">SystemMatrixRecomputationMode</a> mode)</td></tr>
 <tr class="memdesc:af333a4dee89c17bbf902ef0fb2d68d52 inherit pub_methods_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the system-matrix recomputation mode.  <br /></td></tr>
 <tr class="separator:af333a4dee89c17bbf902ef0fb2d68d52 inherit pub_methods_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acaca0ec55e6c02924c09da8de629912e inherit pub_methods_class_d_psim_1_1_solver" id="r_acaca0ec55e6c02924c09da8de629912e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#acaca0ec55e6c02924c09da8de629912e">doSystemMatrixRecomputation</a> (Bool value)</td></tr>
+<tr class="memitem:acaca0ec55e6c02924c09da8de629912e inherit pub_methods_class_d_psim_1_1_solver" id="r_acaca0ec55e6c02924c09da8de629912e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#acaca0ec55e6c02924c09da8de629912e">doSystemMatrixRecomputation</a> (<a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> value)</td></tr>
 <tr class="separator:acaca0ec55e6c02924c09da8de629912e inherit pub_methods_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ad333c04d5e81c7d15c0a039e74e855 inherit pub_methods_class_d_psim_1_1_solver" id="r_a9ad333c04d5e81c7d15c0a039e74e855"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a9ad333c04d5e81c7d15c0a039e74e855">setLogSolveTimes</a> (Bool value)</td></tr>
+<tr class="memitem:a9ad333c04d5e81c7d15c0a039e74e855 inherit pub_methods_class_d_psim_1_1_solver" id="r_a9ad333c04d5e81c7d15c0a039e74e855"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a9ad333c04d5e81c7d15c0a039e74e855">setLogSolveTimes</a> (<a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> value)</td></tr>
 <tr class="separator:a9ad333c04d5e81c7d15c0a039e74e855 inherit pub_methods_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67ae1b76aa257df267fd660c8c542813 inherit pub_methods_class_d_psim_1_1_solver" id="r_a67ae1b76aa257df267fd660c8c542813"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a67ae1b76aa257df267fd660c8c542813">doSteadyStateInit</a> (Bool f)</td></tr>
+<tr class="memitem:a67ae1b76aa257df267fd660c8c542813 inherit pub_methods_class_d_psim_1_1_solver" id="r_a67ae1b76aa257df267fd660c8c542813"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a67ae1b76aa257df267fd660c8c542813">doSteadyStateInit</a> (<a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> f)</td></tr>
 <tr class="memdesc:a67ae1b76aa257df267fd660c8c542813 inherit pub_methods_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">activate steady state initialization  <br /></td></tr>
 <tr class="separator:a67ae1b76aa257df267fd660c8c542813 inherit pub_methods_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad228b7c049f634a7935e437010bacc1b inherit pub_methods_class_d_psim_1_1_solver" id="r_ad228b7c049f634a7935e437010bacc1b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#ad228b7c049f634a7935e437010bacc1b">setSteadStIniTimeLimit</a> (Real v)</td></tr>
+<tr class="memitem:ad228b7c049f634a7935e437010bacc1b inherit pub_methods_class_d_psim_1_1_solver" id="r_ad228b7c049f634a7935e437010bacc1b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#ad228b7c049f634a7935e437010bacc1b">setSteadStIniTimeLimit</a> (<a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> v)</td></tr>
 <tr class="memdesc:ad228b7c049f634a7935e437010bacc1b inherit pub_methods_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">set steady state initialization time limit  <br /></td></tr>
 <tr class="separator:ad228b7c049f634a7935e437010bacc1b inherit pub_methods_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b43ecdd64e83a3e4d5762355647b3ea inherit pub_methods_class_d_psim_1_1_solver" id="r_a1b43ecdd64e83a3e4d5762355647b3ea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a1b43ecdd64e83a3e4d5762355647b3ea">setSteadStIniAccLimit</a> (Real v)</td></tr>
+<tr class="memitem:a1b43ecdd64e83a3e4d5762355647b3ea inherit pub_methods_class_d_psim_1_1_solver" id="r_a1b43ecdd64e83a3e4d5762355647b3ea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a1b43ecdd64e83a3e4d5762355647b3ea">setSteadStIniAccLimit</a> (<a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> v)</td></tr>
 <tr class="memdesc:a1b43ecdd64e83a3e4d5762355647b3ea inherit pub_methods_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">set steady state initialization accuracy limit  <br /></td></tr>
 <tr class="separator:a1b43ecdd64e83a3e4d5762355647b3ea inherit pub_methods_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9acdaabc5d46b35299fd5af1d893b840 inherit pub_methods_class_d_psim_1_1_solver" id="r_a9acdaabc5d46b35299fd5af1d893b840"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a9acdaabc5d46b35299fd5af1d893b840">setSolverAndComponentBehaviour</a> (Solver::Behaviour behaviour)</td></tr>
+<tr class="memitem:a9acdaabc5d46b35299fd5af1d893b840 inherit pub_methods_class_d_psim_1_1_solver" id="r_a9acdaabc5d46b35299fd5af1d893b840"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a9acdaabc5d46b35299fd5af1d893b840">setSolverAndComponentBehaviour</a> (<a class="el" href="class_d_psim_1_1_solver.html#abf97ba7da8f4320061ac8101ef45cf2f">Solver::Behaviour</a> behaviour)</td></tr>
 <tr class="memdesc:a9acdaabc5d46b35299fd5af1d893b840 inherit pub_methods_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">set solver and component to initialization or simulation behaviour  <br /></td></tr>
 <tr class="separator:a9acdaabc5d46b35299fd5af1d893b840 inherit pub_methods_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0d672f76696567eeffb57b333d62be3 inherit pub_methods_class_d_psim_1_1_solver" id="r_af0d672f76696567eeffb57b333d62be3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#af0d672f76696567eeffb57b333d62be3">doInitFromNodesAndTerminals</a> (Bool f)</td></tr>
+<tr class="memitem:af0d672f76696567eeffb57b333d62be3 inherit pub_methods_class_d_psim_1_1_solver" id="r_af0d672f76696567eeffb57b333d62be3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#af0d672f76696567eeffb57b333d62be3">doInitFromNodesAndTerminals</a> (<a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> f)</td></tr>
 <tr class="memdesc:af0d672f76696567eeffb57b333d62be3 inherit pub_methods_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">activate powerflow initialization  <br /></td></tr>
 <tr class="separator:af0d672f76696567eeffb57b333d62be3 inherit pub_methods_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ebf8f186a5707b10619c4393eae9c7f inherit pub_methods_class_d_psim_1_1_solver" id="r_a8ebf8f186a5707b10619c4393eae9c7f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a8ebf8f186a5707b10619c4393eae9c7f">setDirectLinearSolverConfiguration</a> (<a class="el" href="class_d_psim_1_1_direct_linear_solver_configuration.html">DirectLinearSolverConfiguration</a> &amp;)</td></tr>
@@ -173,7 +183,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9067693a5c1240839d825ff3adbdd50d inherit pub_methods_class_d_psim_1_1_solver" id="r_a9067693a5c1240839d825ff3adbdd50d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a9067693a5c1240839d825ff3adbdd50d">logLUTimes</a> ()</td></tr>
 <tr class="memdesc:a9067693a5c1240839d825ff3adbdd50d inherit pub_methods_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">log LU decomposition times, if applicable  <br /></td></tr>
 <tr class="separator:a9067693a5c1240839d825ff3adbdd50d inherit pub_methods_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab809bab8e470b23d3fbedb056197eeb6 inherit pub_methods_class_d_psim_1_1_solver" id="r_ab809bab8e470b23d3fbedb056197eeb6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#ab809bab8e470b23d3fbedb056197eeb6">log</a> (Real time, Int timeStepCount)</td></tr>
+<tr class="memitem:ab809bab8e470b23d3fbedb056197eeb6 inherit pub_methods_class_d_psim_1_1_solver" id="r_ab809bab8e470b23d3fbedb056197eeb6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#ab809bab8e470b23d3fbedb056197eeb6">log</a> (<a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> time, <a class="el" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> timeStepCount)</td></tr>
 <tr class="memdesc:ab809bab8e470b23d3fbedb056197eeb6 inherit pub_methods_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Log results.  <br /></td></tr>
 <tr class="separator:ab809bab8e470b23d3fbedb056197eeb6 inherit pub_methods_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88df10e32f8f761edff25a6f5bdbc548 inherit pub_methods_class_d_psim_1_1_solver" id="r_a88df10e32f8f761edff25a6f5bdbc548"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a88df10e32f8f761edff25a6f5bdbc548">setMaxNumberOfIterations</a> (int maxIterations)</td></tr>
@@ -199,10 +209,10 @@ Static Protected Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a2e605a09beeaee4c38f5548daa1ed051" id="r_a2e605a09beeaee4c38f5548daa1ed051"><td class="memItemLeft" align="right" valign="top">CPS::ODEInterface::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2e605a09beeaee4c38f5548daa1ed051">mComponent</a></td></tr>
+<tr class="memitem:a2e605a09beeaee4c38f5548daa1ed051" id="r_a2e605a09beeaee4c38f5548daa1ed051"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_o_d_e_interface.html#af539ef288692900c8cd723b8619fdb85">CPS::ODEInterface::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2e605a09beeaee4c38f5548daa1ed051">mComponent</a></td></tr>
 <tr class="memdesc:a2e605a09beeaee4c38f5548daa1ed051"><td class="mdescLeft">&#160;</td><td class="mdescRight">Component to simulate, possible specialized component needed.  <br /></td></tr>
 <tr class="separator:a2e605a09beeaee4c38f5548daa1ed051"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd5af55919b067e3e04fa74536f55c83" id="r_acd5af55919b067e3e04fa74536f55c83"><td class="memItemLeft" align="right" valign="top">Int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acd5af55919b067e3e04fa74536f55c83">mProbDim</a></td></tr>
+<tr class="memitem:acd5af55919b067e3e04fa74536f55c83" id="r_acd5af55919b067e3e04fa74536f55c83"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acd5af55919b067e3e04fa74536f55c83">mProbDim</a></td></tr>
 <tr class="memdesc:acd5af55919b067e3e04fa74536f55c83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of differential Variables (states)  <br /></td></tr>
 <tr class="separator:acd5af55919b067e3e04fa74536f55c83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4d4b3167a7e6d258b99422b9130a2e66" id="r_a4d4b3167a7e6d258b99422b9130a2e66"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d4b3167a7e6d258b99422b9130a2e66">mArkode_mem</a> {nullptr}</td></tr>
@@ -215,12 +225,12 @@ Protected Attributes</h2></td></tr>
 <tr class="memdesc:a851ff90ac5c4b48a33c2a186698d109c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the ODE shall be solved using an implicit scheme.  <br /></td></tr>
 <tr class="separator:a851ff90ac5c4b48a33c2a186698d109c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abdc48c4fd1a4ea96eaa71a24c3fc7420" id="r_abdc48c4fd1a4ea96eaa71a24c3fc7420"><td class="memItemLeft" align="right" valign="top">SUNMatrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abdc48c4fd1a4ea96eaa71a24c3fc7420">A</a> {nullptr}</td></tr>
-<tr class="memdesc:abdc48c4fd1a4ea96eaa71a24c3fc7420"><td class="mdescLeft">&#160;</td><td class="mdescRight">Empty matrix for linear solve in each Newton step while solving the Jacobian Matrix.  <br /></td></tr>
+<tr class="memdesc:abdc48c4fd1a4ea96eaa71a24c3fc7420"><td class="mdescLeft">&#160;</td><td class="mdescRight">Empty matrix for linear solve in each Newton step while solving the Jacobian <a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a>.  <br /></td></tr>
 <tr class="separator:abdc48c4fd1a4ea96eaa71a24c3fc7420"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ad990146018b3f5891b2d43bf421349" id="r_a6ad990146018b3f5891b2d43bf421349"><td class="memItemLeft" align="right" valign="top">SUNLinearSolver&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6ad990146018b3f5891b2d43bf421349">LS</a> {nullptr}</td></tr>
 <tr class="memdesc:a6ad990146018b3f5891b2d43bf421349"><td class="mdescLeft">&#160;</td><td class="mdescRight">Empty linear solver object.  <br /></td></tr>
 <tr class="separator:a6ad990146018b3f5891b2d43bf421349"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa983f2cd66e1e91f9af46cfa113fddac" id="r_aa983f2cd66e1e91f9af46cfa113fddac"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa983f2cd66e1e91f9af46cfa113fddac">mTimestep</a></td></tr>
+<tr class="memitem:aa983f2cd66e1e91f9af46cfa113fddac" id="r_aa983f2cd66e1e91f9af46cfa113fddac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa983f2cd66e1e91f9af46cfa113fddac">mTimestep</a></td></tr>
 <tr class="memdesc:aa983f2cd66e1e91f9af46cfa113fddac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constant time step.  <br /></td></tr>
 <tr class="separator:aa983f2cd66e1e91f9af46cfa113fddac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb557bbc3bcc190c1f95d15fe7054582" id="r_adb557bbc3bcc190c1f95d15fe7054582"><td class="memItemLeft" align="right" valign="top">realtype&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adb557bbc3bcc190c1f95d15fe7054582">reltol</a> = RCONST(1.0e-6)</td></tr>
@@ -234,56 +244,56 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a4ff1d6c3c06b2d0e897a80093b13e633"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1a5f75826768c51e487a90631d8c166" id="r_af1a5f75826768c51e487a90631d8c166"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_o_d_e_interface.html#a83205176110d836e157f4175fbb6df6e">CPS::ODEInterface::StSpFn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af1a5f75826768c51e487a90631d8c166">mStSpFunction</a></td></tr>
 <tr class="separator:af1a5f75826768c51e487a90631d8c166"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a579f50a5cee84fc1d06e7156342339" id="r_a6a579f50a5cee84fc1d06e7156342339"><td class="memItemLeft" align="right" valign="top">CPS::ODEInterface::JacFn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6a579f50a5cee84fc1d06e7156342339">mJacFunction</a></td></tr>
+<tr class="memitem:a6a579f50a5cee84fc1d06e7156342339" id="r_a6a579f50a5cee84fc1d06e7156342339"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_o_d_e_interface.html#a86f97f3d136a80593d433afaa926bc46">CPS::ODEInterface::JacFn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6a579f50a5cee84fc1d06e7156342339">mJacFunction</a></td></tr>
 <tr class="separator:a6a579f50a5cee84fc1d06e7156342339"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_d_psim_1_1_solver"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_d_psim_1_1_solver')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td></tr>
-<tr class="memitem:a0be0551d1bafd32da01b1edf46006a22 inherit pro_attribs_class_d_psim_1_1_solver" id="r_a0be0551d1bafd32da01b1edf46006a22"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a0be0551d1bafd32da01b1edf46006a22">mName</a></td></tr>
+<tr class="memitem:a0be0551d1bafd32da01b1edf46006a22 inherit pro_attribs_class_d_psim_1_1_solver" id="r_a0be0551d1bafd32da01b1edf46006a22"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a0be0551d1bafd32da01b1edf46006a22">mName</a></td></tr>
 <tr class="memdesc:a0be0551d1bafd32da01b1edf46006a22 inherit pro_attribs_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Name for logging.  <br /></td></tr>
 <tr class="separator:a0be0551d1bafd32da01b1edf46006a22 inherit pro_attribs_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3cd22426d44ab58559001c19870b8fbe inherit pro_attribs_class_d_psim_1_1_solver" id="r_a3cd22426d44ab58559001c19870b8fbe"><td class="memItemLeft" align="right" valign="top">CPS::Logger::Level&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a3cd22426d44ab58559001c19870b8fbe">mLogLevel</a></td></tr>
+<tr class="memitem:a3cd22426d44ab58559001c19870b8fbe inherit pro_attribs_class_d_psim_1_1_solver" id="r_a3cd22426d44ab58559001c19870b8fbe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a3cd22426d44ab58559001c19870b8fbe">mLogLevel</a></td></tr>
 <tr class="memdesc:a3cd22426d44ab58559001c19870b8fbe inherit pro_attribs_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logging level.  <br /></td></tr>
 <tr class="separator:a3cd22426d44ab58559001c19870b8fbe inherit pro_attribs_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ba5e40911c7cc15e83148f273c2f798 inherit pro_attribs_class_d_psim_1_1_solver" id="r_a6ba5e40911c7cc15e83148f273c2f798"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a6ba5e40911c7cc15e83148f273c2f798">mLogSolveTimes</a> = true</td></tr>
+<tr class="memitem:a6ba5e40911c7cc15e83148f273c2f798 inherit pro_attribs_class_d_psim_1_1_solver" id="r_a6ba5e40911c7cc15e83148f273c2f798"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a6ba5e40911c7cc15e83148f273c2f798">mLogSolveTimes</a> = true</td></tr>
 <tr class="memdesc:a6ba5e40911c7cc15e83148f273c2f798 inherit pro_attribs_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collect step time for logging.  <br /></td></tr>
 <tr class="separator:a6ba5e40911c7cc15e83148f273c2f798 inherit pro_attribs_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2de9056c6c0ed70185170bdb111478a8 inherit pro_attribs_class_d_psim_1_1_solver" id="r_a2de9056c6c0ed70185170bdb111478a8"><td class="memItemLeft" align="right" valign="top">CPS::Logger::Log&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a></td></tr>
-<tr class="memdesc:a2de9056c6c0ed70185170bdb111478a8 inherit pro_attribs_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logger.  <br /></td></tr>
+<tr class="memitem:a2de9056c6c0ed70185170bdb111478a8 inherit pro_attribs_class_d_psim_1_1_solver" id="r_a2de9056c6c0ed70185170bdb111478a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a></td></tr>
+<tr class="memdesc:a2de9056c6c0ed70185170bdb111478a8 inherit pro_attribs_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="namespace_d_psim.html#a0c1ad9f4200f1770537b7f206a6dc1fc">Logger</a>.  <br /></td></tr>
 <tr class="separator:a2de9056c6c0ed70185170bdb111478a8 inherit pro_attribs_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2679d6c4e6b94ecf2b11b0bd7c2a5cf2 inherit pro_attribs_class_d_psim_1_1_solver" id="r_a2679d6c4e6b94ecf2b11b0bd7c2a5cf2"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a2679d6c4e6b94ecf2b11b0bd7c2a5cf2">mTimeStep</a></td></tr>
+<tr class="memitem:a2679d6c4e6b94ecf2b11b0bd7c2a5cf2 inherit pro_attribs_class_d_psim_1_1_solver" id="r_a2679d6c4e6b94ecf2b11b0bd7c2a5cf2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a2679d6c4e6b94ecf2b11b0bd7c2a5cf2">mTimeStep</a></td></tr>
 <tr class="memdesc:a2679d6c4e6b94ecf2b11b0bd7c2a5cf2 inherit pro_attribs_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time step for fixed step solvers.  <br /></td></tr>
 <tr class="separator:a2679d6c4e6b94ecf2b11b0bd7c2a5cf2 inherit pro_attribs_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7af67b5b35f20665e0c2050433d69e45 inherit pro_attribs_class_d_psim_1_1_solver" id="r_a7af67b5b35f20665e0c2050433d69e45"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a7af67b5b35f20665e0c2050433d69e45">mFrequencyParallel</a> = false</td></tr>
+<tr class="memitem:a7af67b5b35f20665e0c2050433d69e45 inherit pro_attribs_class_d_psim_1_1_solver" id="r_a7af67b5b35f20665e0c2050433d69e45"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a7af67b5b35f20665e0c2050433d69e45">mFrequencyParallel</a> = false</td></tr>
 <tr class="memdesc:a7af67b5b35f20665e0c2050433d69e45 inherit pro_attribs_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Activates parallelized computation of frequencies.  <br /></td></tr>
 <tr class="separator:a7af67b5b35f20665e0c2050433d69e45 inherit pro_attribs_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e82b47444f296c2aa4b84eeea7515e0 inherit pro_attribs_class_d_psim_1_1_solver" id="r_a4e82b47444f296c2aa4b84eeea7515e0"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a4e82b47444f296c2aa4b84eeea7515e0">mSteadStIniTimeLimit</a> = 10</td></tr>
+<tr class="memitem:a4e82b47444f296c2aa4b84eeea7515e0 inherit pro_attribs_class_d_psim_1_1_solver" id="r_a4e82b47444f296c2aa4b84eeea7515e0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a4e82b47444f296c2aa4b84eeea7515e0">mSteadStIniTimeLimit</a> = 10</td></tr>
 <tr class="memdesc:a4e82b47444f296c2aa4b84eeea7515e0 inherit pro_attribs_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">steady state initialization time limit  <br /></td></tr>
 <tr class="separator:a4e82b47444f296c2aa4b84eeea7515e0 inherit pro_attribs_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19567cb788c079090ad68cc8b1c2f348 inherit pro_attribs_class_d_psim_1_1_solver" id="r_a19567cb788c079090ad68cc8b1c2f348"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a19567cb788c079090ad68cc8b1c2f348">mSteadStIniAccLimit</a> = 0.0001</td></tr>
+<tr class="memitem:a19567cb788c079090ad68cc8b1c2f348 inherit pro_attribs_class_d_psim_1_1_solver" id="r_a19567cb788c079090ad68cc8b1c2f348"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a19567cb788c079090ad68cc8b1c2f348">mSteadStIniAccLimit</a> = 0.0001</td></tr>
 <tr class="memdesc:a19567cb788c079090ad68cc8b1c2f348 inherit pro_attribs_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">steady state initialization accuracy limit  <br /></td></tr>
 <tr class="separator:a19567cb788c079090ad68cc8b1c2f348 inherit pro_attribs_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac1052010e7821d5c2e07e3e1a64187e7 inherit pro_attribs_class_d_psim_1_1_solver" id="r_ac1052010e7821d5c2e07e3e1a64187e7"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#ac1052010e7821d5c2e07e3e1a64187e7">mSteadyStateInit</a> = false</td></tr>
+<tr class="memitem:ac1052010e7821d5c2e07e3e1a64187e7 inherit pro_attribs_class_d_psim_1_1_solver" id="r_ac1052010e7821d5c2e07e3e1a64187e7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#ac1052010e7821d5c2e07e3e1a64187e7">mSteadyStateInit</a> = false</td></tr>
 <tr class="memdesc:ac1052010e7821d5c2e07e3e1a64187e7 inherit pro_attribs_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Activates steady state initialization.  <br /></td></tr>
 <tr class="separator:ac1052010e7821d5c2e07e3e1a64187e7 inherit pro_attribs_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4135fe35cf60bb7b97523f2c2dc48c4f inherit pro_attribs_class_d_psim_1_1_solver" id="r_a4135fe35cf60bb7b97523f2c2dc48c4f"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a4135fe35cf60bb7b97523f2c2dc48c4f">mIsInInitialization</a> = false</td></tr>
+<tr class="memitem:a4135fe35cf60bb7b97523f2c2dc48c4f inherit pro_attribs_class_d_psim_1_1_solver" id="r_a4135fe35cf60bb7b97523f2c2dc48c4f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a4135fe35cf60bb7b97523f2c2dc48c4f">mIsInInitialization</a> = false</td></tr>
 <tr class="memdesc:a4135fe35cf60bb7b97523f2c2dc48c4f inherit pro_attribs_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if solver is in initialization phase, which requires different behavior.  <br /></td></tr>
 <tr class="separator:a4135fe35cf60bb7b97523f2c2dc48c4f inherit pro_attribs_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a66d6160868a4ffe137ec6def456026b1 inherit pro_attribs_class_d_psim_1_1_solver" id="r_a66d6160868a4ffe137ec6def456026b1"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a66d6160868a4ffe137ec6def456026b1">mInitFromNodesAndTerminals</a> = true</td></tr>
+<tr class="memitem:a66d6160868a4ffe137ec6def456026b1 inherit pro_attribs_class_d_psim_1_1_solver" id="r_a66d6160868a4ffe137ec6def456026b1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a66d6160868a4ffe137ec6def456026b1">mInitFromNodesAndTerminals</a> = true</td></tr>
 <tr class="separator:a66d6160868a4ffe137ec6def456026b1 inherit pro_attribs_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb0d898410bd0427fe38fd7552e15776 inherit pro_attribs_class_d_psim_1_1_solver" id="r_acb0d898410bd0427fe38fd7552e15776"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_d_psim_1_1_solver.html#ada054cfffa83077943a93e71e1fb8792">SystemMatrixRecomputationMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#acb0d898410bd0427fe38fd7552e15776">mSystemMatrixRecomputationMode</a></td></tr>
 <tr class="memdesc:acb0d898410bd0427fe38fd7552e15776 inherit pro_attribs_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Requested system-matrix recomputation mode.  <br /></td></tr>
 <tr class="separator:acb0d898410bd0427fe38fd7552e15776 inherit pro_attribs_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19bbb595644cc88dd6cd5cc653138a8b inherit pro_attribs_class_d_psim_1_1_solver" id="r_a19bbb595644cc88dd6cd5cc653138a8b"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a19bbb595644cc88dd6cd5cc653138a8b">mSystemMatrixRecomputationEnabled</a> = false</td></tr>
+<tr class="memitem:a19bbb595644cc88dd6cd5cc653138a8b inherit pro_attribs_class_d_psim_1_1_solver" id="r_a19bbb595644cc88dd6cd5cc653138a8b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a19bbb595644cc88dd6cd5cc653138a8b">mSystemMatrixRecomputationEnabled</a> = false</td></tr>
 <tr class="memdesc:a19bbb595644cc88dd6cd5cc653138a8b inherit pro_attribs_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Effective system-matrix recomputation setting used by the solver.  <br /></td></tr>
 <tr class="separator:a19bbb595644cc88dd6cd5cc653138a8b inherit pro_attribs_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2978a74153340b65c3f3efd0a0617dda inherit pro_attribs_class_d_psim_1_1_solver" id="r_a2978a74153340b65c3f3efd0a0617dda"><td class="memItemLeft" align="right" valign="top">Behaviour&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a2978a74153340b65c3f3efd0a0617dda">mBehaviour</a> = Solver::Behaviour::Simulation</td></tr>
+<tr class="memitem:a2978a74153340b65c3f3efd0a0617dda inherit pro_attribs_class_d_psim_1_1_solver" id="r_a2978a74153340b65c3f3efd0a0617dda"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_d_psim_1_1_solver.html#abf97ba7da8f4320061ac8101ef45cf2f">Behaviour</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a2978a74153340b65c3f3efd0a0617dda">mBehaviour</a> = <a class="el" href="class_d_psim_1_1_solver.html#abf97ba7da8f4320061ac8101ef45cf2fa0280f4fd824860a5c40d033b0395522d">Solver::Behaviour::Simulation</a></td></tr>
 <tr class="memdesc:a2978a74153340b65c3f3efd0a0617dda inherit pro_attribs_class_d_psim_1_1_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA.">Solver</a> behaviour initialization or simulation.  <br /></td></tr>
 <tr class="separator:a2978a74153340b65c3f3efd0a0617dda inherit pro_attribs_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_types_class_d_psim_1_1_solver"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_class_d_psim_1_1_solver')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td></tr>
-<tr class="memitem:abf97ba7da8f4320061ac8101ef45cf2f inherit pub_types_class_d_psim_1_1_solver" id="r_abf97ba7da8f4320061ac8101ef45cf2f"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><b>Behaviour</b> { <b>Initialization</b>
-, <b>Simulation</b>
+<tr class="memitem:abf97ba7da8f4320061ac8101ef45cf2f inherit pub_types_class_d_psim_1_1_solver" id="r_abf97ba7da8f4320061ac8101ef45cf2f"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#abf97ba7da8f4320061ac8101ef45cf2f">Behaviour</a> { <a class="el" href="class_d_psim_1_1_solver.html#abf97ba7da8f4320061ac8101ef45cf2faf599f4b013b69e30e84451f3de0c4069">Initialization</a>
+, <a class="el" href="class_d_psim_1_1_solver.html#abf97ba7da8f4320061ac8101ef45cf2fa0280f4fd824860a5c40d033b0395522d">Simulation</a>
  }</td></tr>
 <tr class="separator:abf97ba7da8f4320061ac8101ef45cf2f inherit pub_types_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada054cfffa83077943a93e71e1fb8792 inherit pub_types_class_d_psim_1_1_solver" id="r_ada054cfffa83077943a93e71e1fb8792"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#ada054cfffa83077943a93e71e1fb8792">SystemMatrixRecomputationMode</a> { <a class="el" href="class_d_psim_1_1_solver.html#ada054cfffa83077943a93e71e1fb8792a06b9281e396db002010bde1de57262eb">Auto</a>
@@ -292,14 +302,14 @@ Additional Inherited Members</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:ada054cfffa83077943a93e71e1fb8792"><td class="mdescLeft">&#160;</td><td class="mdescRight">System-matrix recomputation mode for MNA solvers.  <a href="class_d_psim_1_1_solver.html#ada054cfffa83077943a93e71e1fb8792">More...</a><br /></td></tr>
 <tr class="separator:ada054cfffa83077943a93e71e1fb8792 inherit pub_types_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc3b0db5925f348e9a41093c1759919e inherit pub_types_class_d_psim_1_1_solver" id="r_abc3b0db5925f348e9a41093c1759919e"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919e">Type</a> { <b>MNA</b>
-, <b>DAE</b>
-, <b>NRP</b>
+<tr class="memitem:abc3b0db5925f348e9a41093c1759919e inherit pub_types_class_d_psim_1_1_solver" id="r_abc3b0db5925f348e9a41093c1759919e"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919e">Type</a> { <a class="el" href="class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919eaf125e1a54049f4b74b5cbe6e6d7abac6">MNA</a>
+, <a class="el" href="class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919ea2b25dd65bb2cc89a2a6b151c9a3221b4">DAE</a>
+, <a class="el" href="class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919eacc4ebb23bd3d777fd82cb86283c1de28">NRP</a>
  }</td></tr>
 <tr class="separator:abc3b0db5925f348e9a41093c1759919e inherit pub_types_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7806d21e027fcba76a9ab2be5b5f28ba inherit pub_types_class_d_psim_1_1_solver" id="r_a7806d21e027fcba76a9ab2be5b5f28ba"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="class_d_psim_1_1_solver.html">Solver</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a7806d21e027fcba76a9ab2be5b5f28ba">Ptr</a></td></tr>
 <tr class="separator:a7806d21e027fcba76a9ab2be5b5f28ba inherit pub_types_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b7b853ce69c4c12f8e41994b1944b0c inherit pub_types_class_d_psim_1_1_solver" id="r_a1b7b853ce69c4c12f8e41994b1944b0c"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; Ptr &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a1b7b853ce69c4c12f8e41994b1944b0c">List</a></td></tr>
+<tr class="memitem:a1b7b853ce69c4c12f8e41994b1944b0c inherit pub_types_class_d_psim_1_1_solver" id="r_a1b7b853ce69c4c12f8e41994b1944b0c"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="class_d_psim_1_1_solver.html#a7806d21e027fcba76a9ab2be5b5f28ba">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#a1b7b853ce69c4c12f8e41994b1944b0c">List</a></td></tr>
 <tr class="separator:a1b7b853ce69c4c12f8e41994b1944b0c inherit pub_types_class_d_psim_1_1_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_class_d_psim_1_1_solver"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_attribs_class_d_psim_1_1_solver')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td></tr>
 <tr class="memitem:acfd79ab0e7a593bcc28f0f51736b4e12 inherit pub_attribs_class_d_psim_1_1_solver" id="r_acfd79ab0e7a593bcc28f0f51736b4e12"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html#acfd79ab0e7a593bcc28f0f51736b4e12">mMaxIterations</a> = 10</td></tr>
@@ -319,12 +329,12 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">ODESolver::ODESolver </td>
           <td>(</td>
-          <td class="paramtype">String</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const CPS::ODEInterface::Ptr &amp;</td>          <td class="paramname"><span class="paramname"><em>comp</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="class_c_p_s_1_1_o_d_e_interface.html#af539ef288692900c8cd723b8619fdb85">CPS::ODEInterface::Ptr</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>comp</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -334,7 +344,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>timestep</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a></td>          <td class="paramname"><span class="paramname"><em>timestep</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -415,7 +425,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual CPS::Task::List DPsim::ODESolver::getTasks </td>
+          <td class="memname">virtual <a class="el" href="class_c_p_s_1_1_task.html#ad081ca27190e0b2e1887a8d6cb612a66">CPS::Task::List</a> DPsim::ODESolver::getTasks </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -461,7 +471,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Initialize ARKode-solve_environment. </p>
 
-<p>Reimplemented from <a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a>.</p>
+<p>Reimplemented from <a class="el" href="class_d_psim_1_1_solver.html#a8e851429fec0ddfaf3b20be40ab4cad3">DPsim::Solver</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="_o_d_e_solver_8cpp_source.html#l00022">22</a> of file <a class="el" href="_o_d_e_solver_8cpp_source.html">ODESolver.cpp</a>.</p>
 
@@ -670,9 +680,9 @@ Additional Inherited Members</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Real ODESolver::step </td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> ODESolver::step </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>initial_time</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a></td>          <td class="paramname"><span class="paramname"><em>initial_time</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -707,7 +717,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Empty matrix for linear solve in each Newton step while solving the Jacobian Matrix. </p>
+<p>Empty matrix for linear solve in each Newton step while solving the Jacobian <a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a>. </p>
 
 <p class="definition">Definition at line <a class="el" href="_o_d_e_solver_8h_source.html#l00043">43</a> of file <a class="el" href="_o_d_e_solver_8h_source.html">ODESolver.h</a>.</p>
 
@@ -801,7 +811,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">CPS::ODEInterface::Ptr DPsim::ODESolver::mComponent</td>
+          <td class="memname"><a class="el" href="class_c_p_s_1_1_o_d_e_interface.html#af539ef288692900c8cd723b8619fdb85">CPS::ODEInterface::Ptr</a> DPsim::ODESolver::mComponent</td>
         </tr>
       </table>
   </td>
@@ -879,7 +889,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">CPS::ODEInterface::JacFn DPsim::ODESolver::mJacFunction</td>
+          <td class="memname"><a class="el" href="class_c_p_s_1_1_o_d_e_interface.html#a86f97f3d136a80593d433afaa926bc46">CPS::ODEInterface::JacFn</a> DPsim::ODESolver::mJacFunction</td>
         </tr>
       </table>
   </td>
@@ -903,7 +913,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Int DPsim::ODESolver::mProbDim</td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> DPsim::ODESolver::mProbDim</td>
         </tr>
       </table>
   </td>
@@ -979,7 +989,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real DPsim::ODESolver::mTimestep</td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> DPsim::ODESolver::mTimestep</td>
         </tr>
       </table>
   </td>
@@ -1026,10 +1036,13 @@ Additional Inherited Members</h2></td></tr>
 <li>/__w/dpsim/dpsim/dpsim/src/<a class="el" href="_o_d_e_solver_8cpp_source.html">ODESolver.cpp</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_o_d_e_solver.html">ODESolver</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

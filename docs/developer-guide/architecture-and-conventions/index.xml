@@ -1,0 +1,222 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DPsim – Architecture and Conventions</title><link>https://sogno.energy/dpsim/docs/developer-guide/architecture-and-conventions/</link><description>Recent content in Architecture and Conventions on DPsim</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://sogno.energy/dpsim/docs/developer-guide/architecture-and-conventions/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Architecture</title><link>https://sogno.energy/dpsim/docs/developer-guide/architecture-and-conventions/architecture/</link><pubDate>Wed, 25 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/architecture-and-conventions/architecture/</guid><description>
+&lt;h2 id="modules-and-dependencies">Modules and Dependencies&lt;/h2>
+&lt;p>The figure below shows the main components of the DPsim library and their dependencies on other software projects.
+All functionality is implemented in the C++ core, which can be used standalone or together with the Python interface.
+The Python interface is a thin wrapper of the C++ core.
+Jupyter notebooks can either use the DPsim Python interface to run simulations or call executables implemented in C++.
+The data analysis and plotting is always done in Python using common libraries like Matplotlib.
+To collect the simulation results from within Python, one can use the villas-dataprocessing Python package.&lt;/p>
+&lt;p>&lt;img src="dpsim_modules.svg" alt="image">&lt;/p>
+&lt;p>Another approach to get data in or out of DPsim is the VILLASnode interface, which does not depend on Python at all.
+The main purpose of the VILLASnode interface is to exchange data during the simulation runtime, for example, in real-time simulation experiments.
+The data could be send to other simulators, hardware or other software components like databases.
+Storing the data in databases can be another way of managing (also offline) simulation results if the Python CSV method is not desireable.&lt;/p>
+&lt;p>The CIM reader is based on the CIM++ library and provides a comfortable alternative to defining the grid manually in C++ or Python.
+In principle, it calls the same functions to create elements, which are also used in the C++ defined example scenarios, but automatically.
+DPsim also provides a way to visualize the defined networks before simulation.&lt;/p>
+&lt;p>The main solver of DPsim is currently the MNA solver because it enables a rather deterministic computation time per simulation time step, which is necessary for real-time simulation.
+Apart from that, it is also well established in offline circuit simulation.
+The only dependency of the MNA solver is the linear algebra library Eigen.
+For some component models, it is possible to use the Sundials ODE solver in combination with the MNA solver. In that case, the component is solved by the ODE solver whereas the network is still handled by the MNA solver.
+A DAE solver is currently under development.
+Its main purpose will be offline simulation, for example, to provide reference results where simulation runtime and real-time execution are not relevant.&lt;/p>
+&lt;p>The component models depend mostly on the Eigen library.
+Even if components are used in combination with Sundials ODE / DAE solvers, we try to keep the specific functions required by these solvers independent of the Sundials package.&lt;/p>
+&lt;h2 id="class-hierarchy">Class Hierarchy&lt;/h2>
+&lt;p>The &lt;code>Simulation&lt;/code> class holds references to instances of &lt;code>Interface&lt;/code>, &lt;code>Solver&lt;/code>, &lt;code>Logger&lt;/code> and &lt;code>SystemTopology&lt;/code>.
+For a simulation scenario, the minimum description would include a &lt;code>SystemTopology&lt;/code> and a solver type.
+The &lt;code>Solver&lt;/code> instance is then created by the &lt;code>Simulation&lt;/code>.&lt;/p>
+&lt;p>&lt;img src="dpsim_classes_simulation.svg" alt="image">&lt;/p>
+&lt;p>An important function of the &lt;code>Simulation&lt;/code> is to collect all tasks, which have to be executed during the simulation.
+These tasks include computation steps of the individual power system component models as well as read and write tasks of the interfaces and logging variables etc.
+Before the scheduling is done, &lt;code>Simulation&lt;/code> calls &lt;code>getTasks()&lt;/code> to retrieve the tasks from three of these classes: &lt;code>Solver&lt;/code>, &lt;code>Interface&lt;/code> and &lt;code>Logger&lt;/code>.
+The power system component and signal-model tasks are collected by the &lt;code>Solver&lt;/code> instances and relayed to the &lt;code>Simulation&lt;/code>, while interfaces and loggers contribute their own tasks directly.&lt;/p>
+&lt;p>All power system element classes inherit from the &lt;code>IdentifiedObject&lt;/code> class.
+This class corresponds with the &lt;code>IdentifiedObject&lt;/code> of the IEC61970 CIM and has a &lt;code>uid&lt;/code> and &lt;code>name&lt;/code> attribute as well.&lt;/p>
+&lt;p>&lt;img src="dpsim_classes_identifiedobject.svg" alt="image">&lt;/p>
+&lt;p>The next layer of specialization includes information on the topological connection between network elements.
+An electrical bus and network nodes in general are represented by the &lt;code>TopologiclaNode&lt;/code> class.
+The connection of electrical components, &lt;code>TopologicalPowerComp&lt;/code>, is managed via terminals of type &lt;code>TopologicalTerminal&lt;/code>.
+These three types describe the &lt;em>electrical&lt;/em> connections of the network, which are bidirectional and include voltages and currents.
+The signal type elements, &lt;code>TopologicalSignalComp&lt;/code>, can only have unidirectional components, which are not expressed using node and terminals.
+Instead, the attribute system is used to define signal type connections.&lt;/p></description></item><item><title>Docs: Build</title><link>https://sogno.energy/dpsim/docs/developer-guide/architecture-and-conventions/build/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/architecture-and-conventions/build/</guid><description>
+&lt;p>All builds start from a checkout of the repository. To build and read the code, cloning over
+HTTPS needs no account:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>git clone https://github.com/sogno-platform/dpsim.git
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> dpsim
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If you intend to contribute, clone your own fork over SSH instead, since contributions are
+accepted from forks only and pushing needs an authenticated remote:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>git clone git@github.com:&amp;lt;your-user&amp;gt;/dpsim.git
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> dpsim
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git remote add upstream https://github.com/sogno-platform/dpsim.git
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The container route below is the most reproducible, because the image already carries every
+dependency at the version CI uses. The native routes need those dependencies installed by hand.&lt;/p>
+&lt;h2 id="container-based">Container based&lt;/h2>
+&lt;p>The commands below use &lt;code>docker&lt;/code>, but the images are ordinary OCI images, so &lt;code>podman&lt;/code> works as a
+drop-in replacement throughout. On Fedora and Rocky, &lt;code>podman&lt;/code> is usually the one already
+installed. Substitute &lt;code>podman&lt;/code> for &lt;code>docker&lt;/code> in every command if you prefer it.&lt;/p>
+&lt;p>The repository ships a development image with all required dependencies:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>docker build -t sogno/dpsim:dev -f packaging/Docker/Dockerfile.dev .
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Alternatively, pull the prebuilt image instead of building it:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>docker pull sogno/dpsim:dev
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then start an interactive session with the working copy mounted into the container:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>docker run -it -p 8888:8888 -v &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>&lt;span style="color:#204a87">pwd&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>:/dpsim --privileged sogno/dpsim:dev bash
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>-p&lt;/code> option maps port 8888 so a JupyterLab instance inside the container is reachable from
+the host. The &lt;code>--privileged&lt;/code> option is required for debug builds. On Windows, the current
+directory is spelled differently:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>docker run -it -p 8888:8888 -v &lt;span style="color:#4e9a06">${&lt;/span>&lt;span style="color:#000">pwd&lt;/span>&lt;span style="color:#4e9a06">}&lt;/span>:/dpsim --privileged sogno/dpsim:dev bash
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Inside the container, the C++ and Python libraries build as follows:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> /dpsim
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mkdir build &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake ..
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake --build . --target dpsimpy
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Targets that are not built by default have to be named explicitly, for example:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cmake --build . --target dpsimpy dpsimpyvillas
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To build everything:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cmake --build .
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Optional features are enabled through the CMake options defined in the CMakeLists.txt files,
+for example:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cmake .. -DWITH_GSL&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>ON
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To use the freshly built Python package without installing it, put both the compiled extension
+and the pure Python package on the path:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> /dpsim/build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">export&lt;/span> &lt;span style="color:#000">PYTHONPATH&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>&lt;span style="color:#204a87">pwd&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>:&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>&lt;span style="color:#204a87">pwd&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>/../python/src
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This is the setup most contributors work with, since it picks up a rebuild immediately without
+any reinstall step.&lt;/p>
+&lt;p>Do not use &lt;code>pip install -e .&lt;/code> for this. An editable install only links the pure Python sources;
+&lt;code>dpsimpy&lt;/code> is a compiled extension, so edits to the C++ are not picked up and you keep running
+whatever binary was built at install time. The failure is silent, since the import still
+succeeds and simply gives you stale behaviour. Either rebuild and rely on &lt;code>PYTHONPATH&lt;/code> as above,
+or reinstall the package after every C++ change.&lt;/p>
+&lt;p>To summarise the three ways to get DPsim, in increasing order of involvement: &lt;code>pip install dpsim&lt;/code>
+for a released Linux wheel, a native build plus &lt;code>PYTHONPATH&lt;/code> for development, and &lt;code>make install&lt;/code>
+to place a build system wide.&lt;/p>
+&lt;p>If you develop inside a conda environment, the equivalent is to register the same two
+directories from within the active environment. This needs &lt;code>conda-build&lt;/code> installed:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> /dpsim/build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>conda develop &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>&lt;span style="color:#204a87">pwd&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> conda develop &lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>&lt;span style="color:#204a87">pwd&lt;/span>&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>/../python/src
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Note that this writes into the environment, so it becomes specific to your setup.&lt;/p>
+&lt;p>To run JupyterLab against it:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> /dpsim
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>jupyter lab --ip&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;0.0.0.0&amp;#34;&lt;/span> --allow-root --no-browser
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To install DPsim system wide instead:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> /dpsim/build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo make install
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="cmake-for-linux">CMake for Linux&lt;/h2>
+&lt;p>The authoritative dependency list is whatever the Dockerfiles install, since that is what CI
+builds against. See &lt;code>packaging/Docker/Dockerfile.dev&lt;/code> for the Fedora set, and
+&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/packaging/Shell/install-fedora-deps.sh">install-fedora-deps.sh&lt;/a>
+or &lt;a href="https://github.com/sogno-platform/dpsim/blob/master/packaging/Shell/install-ubuntu-deps.sh">install-ubuntu-deps.sh&lt;/a>
+for scripts that install them.&lt;/p>
+&lt;p>Both &lt;code>libcimpp&lt;/code> and &lt;code>villas-node&lt;/code> are optional. Neither needs to be built from source, though
+the images do not yet take the same route for both.&lt;/p>
+&lt;p>libcimpp publishes prebuilt &lt;code>.deb&lt;/code> and &lt;code>.rpm&lt;/code> packages per CIM version as release assets. The
+Fedora and Debian images install those directly, while the Rocky image still builds it from
+source:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Pick the package matching your distribution and the CIM version you need.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>wget https://github.com/sogno-platform/libcimpp/releases/download/release%2Fv2.2.0/libcimpp_CGMES_2.4.15_16FEB2016-2.2.0-Linux.deb
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt-get install -y ./libcimpp_CGMES_2.4.15_16FEB2016-2.2.0-Linux.deb
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo ldconfig
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>VILLASnode is served from the package repositories at &lt;a href="https://packages.fein-aachen.org">https://packages.fein-aachen.org&lt;/a>, which
+carry both &lt;code>debian/&lt;/code> and &lt;code>redhat/&lt;/code>. Note that the images currently still build it from source,
+pinned to a specific commit, so the packaged version is the more convenient route for a local
+build but is not what CI exercises.&lt;/p>
+&lt;p>Building either from source remains supported, and the deps scripts above do that, which is what
+you want when you need a specific commit rather than a release.&lt;/p>
+&lt;p>Sundials is only needed for the DAE solver. If your distribution does not package it, the
+version CI uses is:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>git clone --branch v3.2.1 --recurse-submodules --depth &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> https://github.com/LLNL/sundials.git
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mkdir -p sundials/build &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> sundials/build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake .. -DCMAKE_BUILD_TYPE&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>Release
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make -j&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>nproc&lt;span style="color:#204a87;font-weight:bold">)&lt;/span> install
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Cloning, building and installing then work exactly as in the container section above.&lt;/p>
+&lt;h2 id="cmake-for-windows">CMake for Windows&lt;/h2>
+&lt;p>Windows is built in CI on &lt;code>windows-latest&lt;/code>, so the recipe below mirrors what
+&lt;code>.github/workflows/build_test_windows.yaml&lt;/code> runs. You need Visual Studio with the C++ desktop
+development workload, &lt;a href="https://cmake.org/">CMake&lt;/a> and
+&lt;a href="https://git-scm.com/download/win">Git for Windows&lt;/a>. For Python support, install Python 3 and
+add it to your PATH. Let CMake pick the default generator rather than naming a Visual Studio
+version, so the build follows whichever Visual Studio you have.&lt;/p>
+&lt;p>For the C++ libraries only:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>mkdir build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake -DWITH_PYBIND&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>OFF ..
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake --build . --target dpsim --target dpsim-models --parallel
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>For the Python bindings, install pybind11 first:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>pip install pybind11&lt;span style="color:#ce5c00;font-weight:bold">[&lt;/span>global&lt;span style="color:#ce5c00;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mkdir build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake -DWITH_PYBIND&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>ON ..
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake --build . --target dpsimpy --parallel
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If CMake rejects the spdlog dependency because of its minimum policy version, add
+&lt;code>-DCMAKE_POLICY_VERSION_MINIMUM=3.5&lt;/code>, which is what CI currently does as a workaround.&lt;/p>
+&lt;p>The &lt;code>dpsim-villas&lt;/code> library is not available on Windows, since it requires VILLASnode, which does
+not build there. &lt;code>WITH_VILLAS&lt;/code> therefore stays off and the &lt;code>dpsimpyvillas&lt;/code> target does not exist,
+so co-simulation examples cannot be built on Windows. The CIM reader is likewise not part of the
+CI Windows build, as libcimpp is not installed there.&lt;/p>
+&lt;h2 id="cmake-for-macos">CMake for macOS&lt;/h2>
+&lt;p>macOS is not covered by CI, so treat this as a starting point rather than a supported path.
+Install the dependencies with Homebrew:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>/bin/bash -c &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>brew install gcc git cmake graphviz python3 gsl eigen spdlog
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then build as in the container section. Building on Apple Silicon is known to fail while building
+libcimpp, see &lt;a href="https://github.com/sogno-platform/dpsim/issues/609">issue #609&lt;/a>. Configure with
+&lt;code>-DWITH_CIM=OFF&lt;/code> if you do not need the CIM reader.&lt;/p>
+&lt;h2 id="python-package">Python package&lt;/h2>
+&lt;p>Wheels are produced by cibuildwheel in the &lt;code>publish_to_pypi&lt;/code> workflow, currently for
+manylinux x86_64 and CPython 3.9 through 3.13. To build a source distribution locally:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>python3 -m build --sdist
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="nix">Nix&lt;/h3>
+&lt;p>DPsim can be built using &lt;a href="https://nixos.org/">Nix&lt;/a>, a declarative package manager for
+reproducible builds. The following steps require a working single-user or multi-user
+installation of Nix, but not necessarily NixOS.&lt;/p>
+&lt;p>DPsim uses the Flakes feature, which has to be enabled:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;experimental-features=nix-command flakes&amp;#34;&lt;/span> &amp;gt; ~/.config/nix/nix.conf
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Building DPsim, including all its dependencies:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>nix build github:sogno-platform/dpsim
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The result is placed in the &lt;code>result&lt;/code> folder of the current directory. For development, a local
+environment can be set up with:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>nix develop github:sogno-platform/dpsim
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The Flake reference above can be replaced by a local path such as &lt;code>.&lt;/code> when the repository is
+already checked out.&lt;/p>
+&lt;h2 id="documentation">Documentation&lt;/h2>
+&lt;p>The Python and C++ references are generated by separate CMake targets. Both are also built and
+published by the &lt;code>documentation&lt;/code> workflow on every push to master.&lt;/p>
+&lt;h3 id="python">Python&lt;/h3>
+&lt;p>Install &lt;a href="https://www.sphinx-doc.org/en/master/">Sphinx&lt;/a> or use the Docker image, then:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>mkdir -p build &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake ..
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make docs
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The result is generated in &lt;code>build/docs/sphinx/html/&lt;/code>. Note that this target requires the Python
+bindings, so it is only available when configured with &lt;code>-DWITH_PYBIND=ON&lt;/code>.&lt;/p>
+&lt;h3 id="c">C++&lt;/h3>
+&lt;p>Install &lt;a href="https://www.doxygen.nl/">Doxygen&lt;/a> or use the Docker image, then:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>mkdir -p build &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake ..
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make docs_cxx
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The result is generated in &lt;code>build/docs/doxygen/html/&lt;/code>.&lt;/p>
+&lt;h3 id="website">Website&lt;/h3>
+&lt;p>The surrounding website is a Hugo site under &lt;code>docs/hugo&lt;/code>. It needs the Hugo version pinned in
+the documentation workflow, since the theme does not build with arbitrary versions:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> docs/hugo
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>npm ci
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hugo --minify
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: Coding Conventions</title><link>https://sogno.energy/dpsim/docs/developer-guide/architecture-and-conventions/conventions/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/architecture-and-conventions/conventions/</guid><description>
+&lt;p>Conventions that apply across the codebase. For the process of getting a change merged, see
+&lt;a href="https://sogno.energy/dpsim/docs/contributing/">contributing&lt;/a>.&lt;/p>
+&lt;p>This is a summary of general guidelines for the development of DPsim.&lt;/p>
+&lt;h2 id="scaling-of-voltages-and-currents">Scaling of Voltages and Currents&lt;/h2>
+&lt;p>Voltage quantities are expressed either as phase-to-phase RMS values (denominated as &lt;code>RMS3PH&lt;/code>) or as phase-to-ground peak values (denominated as &lt;code>PEAK1PH&lt;/code>):&lt;/p>
+&lt;ul>
+&lt;li>Initialisation quantities (e.g. &lt;code>initialSingleVoltage&lt;/code> of &lt;code>SimPowerComp&lt;/code>) as &lt;code>RMS3PH&lt;/code> values&lt;/li>
+&lt;li>Simulation quantities in both &lt;code>SP&lt;/code> and &lt;code>DP&lt;/code> domain (e.g. &lt;code>mIntfVoltage&lt;/code> of &lt;code>DP::Ph1::PiLine&lt;/code>) as &lt;code>RMS3PH values&lt;/code>&lt;/li>
+&lt;li>Simulation quantities in the &lt;code>EMT&lt;/code> domain (e.g. &lt;code>mIntfVoltage&lt;/code> of &lt;code>EMT::Ph3::Transformer&lt;/code>) as &lt;code>PEAK1PH&lt;/code> values&lt;/li>
+&lt;/ul>
+&lt;p>Current quantities are expressed either as &lt;code>RMS&lt;/code> or as &lt;code>PEAK&lt;/code> values:&lt;/p>
+&lt;ul>
+&lt;li>Simulation quantities in both &lt;code>SP&lt;/code> and &lt;code>DP&lt;/code> domain (e.g. &lt;code>mIntfCurrent&lt;/code> of &lt;code>DP::Ph1::PiLine&lt;/code>) as &lt;code>RMS&lt;/code> values&lt;/li>
+&lt;li>Simulation quantities in the &lt;code>EMT&lt;/code> domain (e.g. &lt;code>mIntfCurrent&lt;/code> of &lt;code>EMT::Ph3::Transformer&lt;/code>) as &lt;code>PEAK&lt;/code> values&lt;/li>
+&lt;/ul>
+&lt;h2 id="logging">Logging&lt;/h2>
+&lt;p>Debug or trace should be the default log level for information that might be nice to have but not necessary for every simulation case.&lt;/p>
+&lt;p>Calls to the logger that might occur during simulation must use spdlog macros, like &lt;code>SPDLOG_LOGGER_INFO&lt;/code>.&lt;/p></description></item></channel></rss>

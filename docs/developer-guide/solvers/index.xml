@@ -1,0 +1,284 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DPsim – Solvers</title><link>https://sogno.energy/dpsim/docs/developer-guide/solvers/</link><description>Recent content in Solvers on DPsim</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://sogno.energy/dpsim/docs/developer-guide/solvers/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: The MNA Solver</title><link>https://sogno.energy/dpsim/docs/developer-guide/solvers/mna-solver/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/solvers/mna-solver/</guid><description>
+&lt;p>&lt;code>MnaSolver&amp;lt;VarType&amp;gt;&lt;/code> is the solver almost every simulation uses. The method it implements is derived
+under &lt;a href="https://sogno.energy/dpsim/docs/concepts/nodal-analysis/">nodal analysis&lt;/a>; what a component must
+provide to take part is under
+&lt;a href="https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/mnainterface/">interfacing with the MNA solver&lt;/a>. This page is
+the solver itself.&lt;/p>
+&lt;p>Note the spelling: the class is &lt;code>MnaSolver&lt;/code> even though the file is &lt;code>MNASolver.h&lt;/code>.&lt;/p>
+&lt;h2 id="setting-up">Setting up&lt;/h2>
+&lt;p>&lt;code>initialize&lt;/code> runs the sequence described under
+&lt;a href="https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/initialization/">component and solver initialization&lt;/a>:
+identify the topology objects, create sub-components, collect virtual nodes,
+&lt;code>assignMatrixNodeIndices&lt;/code>, size the matrices, initialize the components, then assemble.&lt;/p>
+&lt;p>Which assembly function runs depends on the network:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>initializeSystemWithPrecomputedMatrices&lt;/code> when the switch combinations are few enough to
+enumerate. Every combination gets its own factorised matrix up front, so a switching event
+becomes a lookup rather than a refactorisation.&lt;/li>
+&lt;li>&lt;code>initializeSystemWithVariableMatrix&lt;/code> when a component changes its own stamp continuously and
+enumeration is impossible.&lt;/li>
+&lt;li>&lt;code>initializeSystemWithParallelFrequencies&lt;/code> for a harmonic study, where several frequencies are
+solved side by side.&lt;/li>
+&lt;/ul>
+&lt;p>&lt;code>resolveSystemMatrixRecomputationMode&lt;/code> chooses between them when the mode is &lt;code>Auto&lt;/code>;
+&lt;code>SystemMatrixRecomputationMode::Enabled&lt;/code> and &lt;code>Disabled&lt;/code> force it either way.&lt;/p>
+&lt;h2 id="stepping">Stepping&lt;/h2>
+&lt;p>&lt;code>solve&lt;/code> does the same four things every step.&lt;/p>
+&lt;p>It zeroes the right-hand side and sums the stamps the components&amp;rsquo; pre-step tasks produced, which is
+why a component that fails to declare its dependencies can find its contribution missing rather
+than wrong. It calls &lt;code>updateSwitchStatus&lt;/code>, which produces an index into the precomputed matrices.
+It solves through the linear solver for that index. Then it hands the solution to the components'
+post-step tasks.&lt;/p>
+&lt;p>The switch index is the point of the precomputed strategy: with the factorisations already built,
+a switching event costs a different lookup rather than new numerical work. That is what makes a
+network with frequent switching affordable, and it is why the number of switches is bounded in
+practice, since the enumeration grows as two to the power of that number.&lt;/p>
+&lt;p>&lt;code>solveWithSystemMatrixRecomputation&lt;/code> is the other path. It asks &lt;code>hasVariableComponentChanged&lt;/code> each
+step and rebuilds and refactorises only when something reports a change, which is the expensive but
+general case used by variable components such as the SSN models.&lt;/p>
+&lt;h2 id="iterative-components">Iterative components&lt;/h2>
+&lt;p>After the solve, the solver checks whether any synchronous generator reports &lt;code>requiresIteration&lt;/code>.
+If so it repeats the solve step until none does, which is how the predictor-corrector and two-stage
+machine models reach the implicit solution rather than its explicit approximation. Models that do
+not request iteration cost nothing here.&lt;/p>
+&lt;p>This loop is the reason a machine model can be iterative without the whole solver being iterative.&lt;/p>
+&lt;h2 id="linear-backends">Linear backends&lt;/h2>
+&lt;p>The solver does not implement its own factorisation; it selects an adapter through
+&lt;code>MnaSolverFactory&lt;/code>. The choices and their tuning are described under
+&lt;a href="https://sogno.energy/dpsim/docs/developer-guide/solvers/alternative-solvers/">alternative solvers&lt;/a>, which also covers the ordering and
+partial-refactorisation options that matter most when the matrix changes every step.&lt;/p>
+&lt;h2 id="instrumentation">Instrumentation&lt;/h2>
+&lt;p>&lt;code>Solver::mLogSolveTimes&lt;/code> records the wall-clock duration of each solve into &lt;code>mSolveTimes&lt;/code>, which is
+the measurement to use when comparing backends or step sizes rather than timing the whole run.&lt;/p>
+&lt;h2 id="source">Source&lt;/h2>
+&lt;p>&lt;code>dpsim/src/MNASolver.cpp&lt;/code>, &lt;code>dpsim/src/MNASolverDirect.cpp&lt;/code>, and
+&lt;code>dpsim/include/dpsim/MNASolverFactory.h&lt;/code>.&lt;/p></description></item><item><title>Docs: Power Flow Solvers</title><link>https://sogno.energy/dpsim/docs/developer-guide/solvers/powerflow-solvers/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/solvers/powerflow-solvers/</guid><description>
+&lt;p>What DPsim implements. For the underlying formulation, the mismatch function and the Jacobian,
+see &lt;a href="https://sogno.energy/dpsim/docs/concepts/powerflow/">power flow&lt;/a>.&lt;/p>
+&lt;h2 id="solver-implementations">Solver Implementations&lt;/h2>
+&lt;p>DPsim ships two implementations of the Newton-Raphson power flow solver with power
+mismatch and polar coordinates. Both produce identical results (to round-off); they
+differ only in how the Jacobian is stored and factorized:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>PFSolverPowerPolar&lt;/code> (dense): assembles a dense Jacobian and computes a fresh
+factorization every Newton iteration. This is the default.&lt;/li>
+&lt;li>&lt;code>PFSolverPowerPolarSparse&lt;/code> (sparse): assembles the Jacobian into a sparse matrix
+whose sparsity pattern is fixed (derived once from the network admittance matrix).
+The symbolic factorization (ordering) is analyzed once and reused; only the numeric
+values are recomputed each Newton iteration. The first iteration of every power flow
+solve does a full factorization with pivoting, and subsequent iterations refactorize
+while reusing that ordering (via KLU when available). This scales better on large,
+sparse grids.&lt;/li>
+&lt;/ul>
+&lt;p>The dense solver is used by default. To opt in to the sparse solver:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">set_pf_solver_use_sparse&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">True&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The flag is ignored and the dense solver is used if DPsim was built without a sparse
+linear solver. The benchmark notebook
+&lt;code>examples/Notebooks/Grids/PF_Sparse_vs_Dense.ipynb&lt;/code> runs a range of network sizes both
+ways, verifies the converged voltages match, and compares run time.&lt;/p>
+&lt;h2 id="generator-reactive-power-limits">Generator Reactive Power Limits&lt;/h2>
+&lt;p>A PV bus assumes its generator can produce whatever reactive power the Newton-Raphson
+solution asks for, holding $\vert V_k \vert$ at its setpoint. Real generators cannot: Q
+is bounded by $Q_{min}$ and $Q_{max}$. DPsim can enforce these bounds with a
+bidirectional PV↔PQ outer loop:&lt;/p>
+&lt;ol>
+&lt;li>Run the inner Newton-Raphson solve to convergence (as described above).&lt;/li>
+&lt;li>For every PV bus, compute the generator&amp;rsquo;s actual reactive output. If it exceeds
+$Q_{max}$ or falls below $Q_{min}$, pin the injection at the violated limit and
+convert the bus to PQ.&lt;/li>
+&lt;li>For every bus pinned this way in an earlier pass, check whether the constraint has
+relaxed: if $\vert V_k \vert$ has moved past its original setpoint in the releasing
+direction, restore voltage control and convert the bus back to PV.&lt;/li>
+&lt;li>Repeat from step 1 until no bus switches, an outer-iteration cap is hit, or a
+per-bus switch counter trips (an anti-oscillation guard, since a bus can otherwise
+toggle PV↔PQ indefinitely near the boundary).&lt;/li>
+&lt;/ol>
+&lt;p>Enforcement is opt-in and defaults off, so a system with no limits configured behaves
+exactly as before:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">set_pf_solver_enforce_q_limits&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">True&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>$Q_{min}$/$Q_{max}$ are set per generator via &lt;code>SynchronGenerator.set_parameters(..., q_limit_max=..., q_limit_min=...)&lt;/code>; the defaults are $\pm\infty$ (unlimited).
+Generators sharing a bus have their limits summed. The two limits are enforced
+independently, with no assumption about sign or relative magnitude: asymmetric bounds
+(e.g. $Q_{max}=150$ MVAr, $Q_{min}=-30$ MVAr) and same-sign bounds (e.g. a generator
+restricted to $Q \in [20, 150]$ MVAr, always producing, or $Q \in [-150, -20]$ MVAr,
+always absorbing) are both enforced correctly.&lt;/p>
+&lt;p>&lt;strong>Limitation: no P-dependent capability curve.&lt;/strong> $Q_{min}$ and $Q_{max}$ are constants
+set once per generator, not a function of active power output $P$. A real synchronous
+generator&amp;rsquo;s reactive capability is a &amp;ldquo;D-curve&amp;rdquo; bounded by three physically distinct
+mechanisms: the stator (armature) current limit $\sqrt{P^2+Q^2} \le S_{rated}$, the
+rotor (field) current / heating limit on the over-excited (Q-providing) side, and the
+under-excitation limiter (UEL) / steady-state stability limit on the under-excited
+(Q-absorbing) side. All three tighten as $P$ approaches rated output, and the over- and
+under-excited bounds come from unrelated physical limits, so the true feasible region is
+neither symmetric in $Q$ nor independent of $P$. DPsim does not model this curve; a
+generator&amp;rsquo;s $Q$ headroom is the same regardless of how much $P$ it is producing at the
+time. Flat per-generator limits are a common baseline in power-flow tools generally, so
+this is not a regression, but a P-dependent capability curve is not currently
+implemented.&lt;/p>
+&lt;p>The notebook &lt;code>examples/Notebooks/Grids/PF_Generator_Qlimits.ipynb&lt;/code> validates the
+switching behavior on a small hand-wired case (binding and non-binding limits, dense vs.
+sparse agreement).&lt;/p></description></item><item><title>Docs: Alternative Solver Implementation</title><link>https://sogno.energy/dpsim/docs/developer-guide/solvers/alternative-solvers/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/solvers/alternative-solvers/</guid><description>
+&lt;p>The methods are derived under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/alternative-solvers/">alternative solution methods&lt;/a>. This page
+covers the code and the configuration.&lt;/p>
+&lt;h2 id="daesolver">&lt;code>DAESolver&lt;/code>&lt;/h2>
+&lt;p>Wraps the IDA integrator from Sundials. &lt;code>initialize&lt;/code> builds the state and derivative vectors,
+registers each component&amp;rsquo;s residual function, then creates the solver with &lt;code>IDACreate&lt;/code>, passes the
+solver instance as user data so the residual callbacks can reach it, and sets scalar relative and
+absolute tolerances with &lt;code>IDASStolerances&lt;/code>.&lt;/p>
+&lt;p>Components take part by implementing &lt;code>DAEInterface&lt;/code> and contributing their residual. The offset
+vector recorded at the top of the file defines how each component&amp;rsquo;s block is laid out within the
+global residual.&lt;/p>
+&lt;p>Two practical notes. The solver chooses its own steps, so a run&amp;rsquo;s cost is not predictable and it
+cannot be used under a real-time timer. And several &lt;code>std::cout&lt;/code> calls remain in the initialization
+path, so it prints to standard output independently of the logger.&lt;/p>
+&lt;h2 id="odesolver-and-odeintsolver">&lt;code>ODESolver&lt;/code> and &lt;code>ODEintSolver&lt;/code>&lt;/h2>
+&lt;p>&lt;code>ODESolver&lt;/code> wraps CVODE from Sundials for a single component, sizing the problem from
+&lt;code>mOdePreState&lt;/code> and attaching a dense linear solver. &lt;code>ODEintSolver&lt;/code> does the same job with boost&amp;rsquo;s
+odeint, calling &lt;code>comp-&amp;gt;odeint(y, ydot, t)&lt;/code>.&lt;/p>
+&lt;p>Both integrate one component across a network step while the network itself stays on its fixed step,
+so the coupling is staggered and first-order accurate regardless of the inner integrator&amp;rsquo;s order.&lt;/p>
+&lt;h2 id="diakopticssolver">&lt;code>DiakopticsSolver&lt;/code>&lt;/h2>
+&lt;p>Constructed with the system and an explicit list of components to tear, which must implement
+&lt;code>MNATearInterface&lt;/code>. &lt;code>system.splitSubnets&lt;/code> performs the partition, &lt;code>initSubnets&lt;/code> builds the
+per-subnetwork node and component lists, and &lt;code>mNodeSubnetMap&lt;/code> records which subnetwork owns each
+node.&lt;/p>
+&lt;p>&lt;code>createTearMatrices&lt;/code> is specialised per value type, and the sizes differ in a way worth noting: the
+&lt;code>Real&lt;/code> specialisation allocates &lt;code>tearComponents * phaseMultiplier&lt;/code>, while the &lt;code>Complex&lt;/code> one
+allocates &lt;strong>twice&lt;/strong> that, because a complex quantity is carried as a real-augmented pair. The phase
+multiplier is 3 when the subnetwork phase type is &lt;code>ABC&lt;/code> and 1 otherwise, taken from the first node
+of the system.&lt;/p>
+&lt;p>The removed-branch system is dense and small. A comment in the source notes that the reduction could
+still be sped up by exploiting the block diagonal structure of the inverse, so the present
+implementation is correct rather than optimal.&lt;/p>
+&lt;h2 id="linear-backends-under-mna">Linear backends under MNA&lt;/h2>
+&lt;div class="alert alert-info" role="alert">
+&lt;h4 class="alert-heading">Requires the matching build options&lt;/h4>
+The nodal solver does not implement its factorisation. &lt;code>MNASolverFactory&lt;/code> selects an adapter, and
+&lt;code>mSupportedSolverImpls&lt;/code> is compiled conditionally, so which of the implementations below exist
+depends entirely on how DPsim was configured. The GPU adapters need a CUDA build.
+&lt;/div>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Implementation&lt;/th>
+&lt;th>Adapter&lt;/th>
+&lt;th>Notes&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>KLU&lt;/code>&lt;/td>
+&lt;td>&lt;code>KLUAdapter&lt;/code>&lt;/td>
+&lt;td>Default, and the fallback when the choice is &lt;code>Undef&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>SparseLU&lt;/code>&lt;/td>
+&lt;td>&lt;code>SparseLUAdapter&lt;/code>&lt;/td>
+&lt;td>Eigen&amp;rsquo;s sparse LU&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>DenseLU&lt;/code>&lt;/td>
+&lt;td>&lt;code>DenseLUAdapter&lt;/code>&lt;/td>
+&lt;td>Dense, for small systems&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>CUDADense&lt;/code>&lt;/td>
+&lt;td>&lt;code>GpuDenseAdapter&lt;/code>&lt;/td>
+&lt;td>Requires a CUDA build&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>CUDASparse&lt;/code>&lt;/td>
+&lt;td>&lt;code>GpuSparseAdapter&lt;/code>&lt;/td>
+&lt;td>Requires a CUDA build&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>CUDAMagma&lt;/code>&lt;/td>
+&lt;td>&lt;code>GpuMagmaAdapter&lt;/code>&lt;/td>
+&lt;td>Requires a CUDA build with Magma&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>Plugin&lt;/code>&lt;/td>
+&lt;td>loaded at runtime&lt;/td>
+&lt;td>For a solver outside the tree&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>&lt;code>DirectLinearSolverConfiguration&lt;/code> tunes the chosen backend, and not every option applies to every
+one:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>SCALING_METHOD&lt;/code>: none, sum or max&lt;/li>
+&lt;li>&lt;code>FILL_IN_REDUCTION_METHOD&lt;/code>: &lt;code>AMD&lt;/code>, &lt;code>AMD_NV&lt;/code>, &lt;code>AMD_RA&lt;/code> or &lt;code>COLAMD&lt;/code>. The &lt;code>NV&lt;/code> and &lt;code>RA&lt;/code> variants take
+the set of time-varying entries into account when ordering, which is what makes partial
+refactorization effective for a network with switching elements.&lt;/li>
+&lt;li>&lt;code>PARTIAL_REFACTORIZATION_METHOD&lt;/code>: none, factorization path, or refactorization restart. This is the
+lever that matters when a switch or a variable component changes the matrix every step.&lt;/li>
+&lt;li>&lt;code>USE_BTF&lt;/code>: block triangular form on or off&lt;/li>
+&lt;/ul>
+&lt;p>The defaults are chosen for a general network. The combination of an ordering that knows about
+varying entries with partial refactorization is what makes repeated switching affordable, and it is
+inert if the matrix never changes.&lt;/p>
+&lt;h2 id="source">Source&lt;/h2>
+&lt;p>Under &lt;code>dpsim/src/&lt;/code>: &lt;code>DAESolver.cpp&lt;/code>, &lt;code>ODESolver.cpp&lt;/code>, &lt;code>ODEintSolver.cpp&lt;/code>, &lt;code>DiakopticsSolver.cpp&lt;/code>,
+and the six &lt;code>*Adapter.cpp&lt;/code> files.&lt;/p></description></item><item><title>Docs: State-Space Extraction</title><link>https://sogno.energy/dpsim/docs/developer-guide/solvers/state-space-extraction/</link><pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/solvers/state-space-extraction/</guid><description>
+&lt;p>The method itself, what the extracted model means and where it is valid, is derived under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/state-space-extraction-theory/">state-space extraction&lt;/a>.
+This page covers enabling it and reading the result.&lt;/p>
+&lt;p>State-space extraction is optional and can be enabled through the &lt;code>Simulation&lt;/code> API. During simulation setup, the MNA solver creates an &lt;code>MNAStateSpaceExtractor&lt;/code>. During the solver task flow, a state-space extraction task uses the active direct linear solver to update the extracted discrete-time state matrix.&lt;/p>
+&lt;h2 id="main-classes">Main classes&lt;/h2>
+&lt;p>The implementation is organized around three main parts:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>MNAStateSpaceExtractor&lt;/code> assembles and stores the extracted discrete-time state matrix.&lt;/li>
+&lt;li>&lt;code>MNAStateSpaceContributor&lt;/code> represents the state-space contribution of one supported component.&lt;/li>
+&lt;li>&lt;code>MNAStateSpaceContributorFactory&lt;/code> creates contributors for supported MNA components.&lt;/li>
+&lt;/ul>
+&lt;p>The extractor is owned by the MNA solver. Component contributors are created during solver initialization and are used to stamp the local matrices needed for the MNA-coupled state-space formulation.&lt;/p>
+&lt;p>For the components that support extraction in each domain, see
+&lt;a href="https://sogno.energy/dpsim/docs/reference/state-space-extraction-support/">state-space extraction support&lt;/a>.&lt;/p>
+&lt;h2 id="usage">Usage&lt;/h2>
+&lt;p>In C++, state-space extraction can be enabled as follows. The example below
+uses EMT Ph3; replace &lt;code>Domain::EMT&lt;/code> with &lt;code>Domain::DP&lt;/code> for DP Ph1:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">Simulation&lt;/span> &lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;Example&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">setDomain&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Domain&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">EMT&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">setSolverType&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Solver&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Type&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">MNA&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">doStateSpaceExtraction&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87">true&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">run&lt;/span>&lt;span style="color:#000;font-weight:bold">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">const&lt;/span> &lt;span style="color:#204a87;font-weight:bold">auto&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">extractor&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">getStateSpaceExtractor&lt;/span>&lt;span style="color:#000;font-weight:bold">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">const&lt;/span> &lt;span style="color:#000">Matrix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">Ad&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">extractor&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">getDiscreteStateMatrix&lt;/span>&lt;span style="color:#000;font-weight:bold">();&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In Python, the corresponding API is shown below. Replace
+&lt;code>dpsimpy.Domain.EMT&lt;/code> with &lt;code>dpsimpy.Domain.DP&lt;/code> for DP Ph1:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">dpsimpy&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Simulation&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;Example&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">set_domain&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">dpsimpy&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Domain&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">EMT&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">set_solver&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">dpsimpy&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Solver&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">MNA&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">do_state_space_extraction&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">True&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">run&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">extractor&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">get_state_space_extractor&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">Ad&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">extractor&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">get_discrete_state_matrix&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="modal-analysis-of-the-extracted-model">Modal analysis of the extracted model&lt;/h2>
+&lt;p>&lt;code>StateSpaceModalAnalysis&lt;/code> is constructed from an &lt;code>MNAStateSpaceExtractor&lt;/code> and computes the modes of
+whatever the extractor last produced. The method is described under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/modal-analysis/">modal analysis&lt;/a>.&lt;/p>
+&lt;p>&lt;code>update()&lt;/code> runs &lt;code>Eigen::EigenSolver&lt;/code> on the discrete state matrix and throws if it does not converge.
+It then maps each discrete eigenvalue to the continuous plane with &lt;code>2 / dt * (z - 1) / (z + 1)&lt;/code> and
+keeps both sets, retrievable through &lt;code>getDiscreteEigenvalues&lt;/code> and &lt;code>getContinuousEigenvalues&lt;/code>.&lt;/p>
+&lt;p>Participation factors are the elementwise product of the right eigenvectors with the transpose of the
+left ones. They require inverting the right eigenvector matrix, so &lt;code>update()&lt;/code> throws with an explicit
+message when that matrix is singular. That happens for a defective state matrix, which is a property
+of the system rather than a numerical problem; the eigenvalues are still valid in that case, only the
+participation factors are unavailable.&lt;/p>
+&lt;p>&lt;code>setAnalysisFrame&lt;/code> selects between &lt;code>StateSpaceAnalysisFrame::Native&lt;/code>, which analyses the states as the
+components hold them, and &lt;code>GlobalDQ0&lt;/code>, which transforms into one common frame first. The second needs
+&lt;code>setGlobalDq0Frame(omega, theta0)&lt;/code>. &lt;code>getStateNames&lt;/code> returns names matching the frame in use, so a
+participation factor can be attributed to a named state rather than to an index.&lt;/p>
+&lt;h2 id="examples">Examples&lt;/h2>
+&lt;p>The feature is demonstrated in:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim/examples/cxx/StateSpace/EMT_Ph3_RLC_StateSpaceExtraction.cpp">EMT Ph3 RLC extraction&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim/examples/cxx/StateSpace/EMT_Ph3_Composite_StateSpaceExtraction.cpp">EMT Ph3 composite extraction&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim/examples/cxx/StateSpace/DP_Ph1_RLC_StateSpaceExtraction.cpp">DP Ph1 RLC extraction&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim/examples/cxx/StateSpace/DP_Ph1_Composite_StateSpaceExtraction.cpp">DP Ph1 composite extraction&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>Equivalent Python notebooks are available in
+&lt;a href="https://github.com/sogno-platform/dpsim/tree/master/examples/Notebooks/StateSpace">&lt;code>examples/Notebooks/StateSpace&lt;/code>&lt;/a>.&lt;/p></description></item></channel></rss>

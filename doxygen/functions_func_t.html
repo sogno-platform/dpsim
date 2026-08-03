@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,19 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
 </div><!-- top -->
-<div id="doc-content">
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('functions_func_t.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -84,32 +96,52 @@ $(function(){ initResizable(false); });
 </div>
 
 <div class="contents">
-<div class="textblock">Here is a list of all documented functions with links to the class documentation for each member:</div>
+<div class="textblock">Here is a list of all functions with links to the classes they belong to:</div>
 
 <h3><a id="index_t" name="index_t"></a>- t -</h3><ul>
+<li>Task()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_task.html#a6e4219251f24641dc33eeeebaa3820c9">CPS::Task</a></li>
 <li>terminal()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a6b82b23bfd1af87d260af378361169e7">CPS::SimPowerComp&lt; VarType &gt;</a></li>
+<li>terminalIncidenceMatrix()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_four_terminal_v_type_s_s_n_comp.html#aacfeb8d69f6a6841607b08e60aed03a9">CPS::EMT::Ph3::FourTerminalVTypeSSNComp</a></li>
+<li>terminalNotGrounded()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_sim_power_comp.html#ad09b2e404137cd4597ed7da88acf47f6">CPS::SimPowerComp&lt; VarType &gt;</a></li>
 <li>terminalNumber()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a286f0e8f00f8328a87d37e2c67b16f5b">CPS::SimPowerComp&lt; VarType &gt;</a></li>
 <li>terminalNumberConnected()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aa48fdb4215ddc2bff6b7160b6a63bbbb">CPS::SimPowerComp&lt; VarType &gt;</a></li>
 <li>terminals()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a6d0e8081369f8e514ea8c8bacf6b3316">CPS::SimPowerComp&lt; VarType &gt;</a></li>
+<li>ThreadLevelScheduler()&#160;:&#160;<a class="el" href="class_d_psim_1_1_thread_level_scheduler.html#a9f71f967c6edb006ff93b97d49407319">DPsim::ThreadLevelScheduler</a></li>
+<li>ThreadListScheduler()&#160;:&#160;<a class="el" href="class_d_psim_1_1_thread_list_scheduler.html#ae5fd182afbdf55e2340108a6bda66ccf">DPsim::ThreadListScheduler</a></li>
+<li>ThreadScheduler()&#160;:&#160;<a class="el" href="class_d_psim_1_1_thread_scheduler.html#ae3196d210ffcb000e9b644ca8b1f1913">DPsim::ThreadScheduler</a></li>
+<li>ticks()&#160;:&#160;<a class="el" href="class_d_psim_1_1_timer.html#a59c1b0d327b5b03833dc5c294453ebee">DPsim::Timer</a></li>
+<li>time()&#160;:&#160;<a class="el" href="class_d_psim_1_1_simulation.html#afa5e53478838f54d6729cdc419371dd5">DPsim::Simulation</a></li>
 <li>time_format_convert()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#af6eca102a05b639d2c39c829f3fac506">CPS::CSVReader</a></li>
-<li>TopologicalNode()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_topological_node.html#adad33144c5fb4fe2758bb5587513b256">CPS::TopologicalNode</a></li>
+<li>Timer()&#160;:&#160;<a class="el" href="class_d_psim_1_1_timer.html#aaa800d2559bd632a9b4de80c02aa62a7">DPsim::Timer</a></li>
+<li>timeStep()&#160;:&#160;<a class="el" href="class_d_psim_1_1_simulation.html#acc96470c2ae45007abb05ffe3fed2f23">DPsim::Simulation</a></li>
+<li>timeStepCount()&#160;:&#160;<a class="el" href="class_d_psim_1_1_simulation.html#a31617132812f79061e7a87a2dd56252a">DPsim::Simulation</a></li>
+<li>TopologicalNode()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_topological_node.html#ae487bf5e8464d6b52d2c6945d9323523">CPS::TopologicalNode</a></li>
 <li>topologicalNodes()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aa123ac0d96d207324d51881e868e62c8">CPS::SimPowerComp&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_sim_terminal.html#adb2c4764dbf8560b86c2072a16ba60d7">CPS::SimTerminal&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_topological_power_comp.html#ad4bab9363339096b12832d6795d07c65">CPS::TopologicalPowerComp</a>, <a class="el" href="class_c_p_s_1_1_topological_terminal.html#a025cf634f597ceaf0c55312e3f8a03dd">CPS::TopologicalTerminal</a></li>
 <li>TopologicalPowerComp()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_topological_power_comp.html#ad738f90256252a9bd5e06415916c1adf">CPS::TopologicalPowerComp</a></li>
 <li>TopologicalSignalComp()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_topological_signal_comp.html#a120c61d193554754fbb2b783cc8c48d3">CPS::TopologicalSignalComp</a></li>
 <li>topologicalSort()&#160;:&#160;<a class="el" href="class_d_psim_1_1_scheduler.html#a2c00afdc1af0b39557ddd852a42a7215">DPsim::Scheduler</a></li>
+<li>TopologicalTerminal()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_topological_terminal.html#a6a097181bb234849a87ccf952c902fa2">CPS::TopologicalTerminal</a></li>
 <li>topologicalTerminals()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_sim_power_comp.html#af77ab6c0757630004f8c8ceccb641d9c">CPS::SimPowerComp&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_topological_power_comp.html#aad6687353406aa180af09c968d87d6c6">CPS::TopologicalPowerComp</a></li>
-<li>toString()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_attribute.html#a839fdbf14db973e9388bef208d39c833">CPS::Attribute&lt; T &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute_base.html#abd7c914705ff7bcf8f371c8ac622304e">CPS::AttributeBase</a></li>
-<li>Transformer()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html#a5b4fdfa87b379b567b0f0d180bc04c25">CPS::DP::Ph1::Transformer</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html#a20ddffc619d11df97e57ce759bc2fb01">CPS::EMT::Ph3::Transformer</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html#a0a6969b5bf4383427194c41639cfbc71">CPS::SP::Ph1::Transformer</a></li>
+<li>toString()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_attribute.html#a839fdbf14db973e9388bef208d39c833">CPS::Attribute&lt; T &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute_base.html#abd7c914705ff7bcf8f371c8ac622304e">CPS::AttributeBase</a>, <a class="el" href="class_c_p_s_1_1_task.html#a3bc881406ad0c2d6d43b9c23d029722a">CPS::Task</a></li>
+<li>Transformer()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_transformer.html#a50fb13526b1aed18e905865013488270">CPS::Base::Ph1::Transformer</a>, <a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_transformer.html#affd6d9a5edad484e0dbd7296de876290">CPS::Base::Ph3::Transformer</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html#a5b4fdfa87b379b567b0f0d180bc04c25">CPS::DP::Ph1::Transformer</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html#a20ddffc619d11df97e57ce759bc2fb01">CPS::EMT::Ph3::Transformer</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html#a0a6969b5bf4383427194c41639cfbc71">CPS::SP::Ph1::Transformer</a></li>
 <li>transformParametersToPerUnitSystem()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#a3c08b6edde029a78300577700c4a733f">CPS::SP::Ph1::RXLine</a></li>
+<li>trapezoidalCurrentStates()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q.html#ab1c7e2d3bf955e67db4dc7267beddebc">CPS::DP::Ph3::SynchronGeneratorDQ</a></li>
 <li>trapezoidalFluxStates()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q.html#a682339bdc0780fcbe11a5dfeca88773c">CPS::DP::Ph3::SynchronGeneratorDQ</a></li>
-<li>TurbineGovernor()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_signal_1_1_turbine_governor.html#a4101b45912b0542b2536c1dea0b65770">CPS::Signal::TurbineGovernor</a></li>
+<li>TurbineGovernor()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_signal_1_1_turbine_governor.html#aa79e096078f47ffdddb39e74357a323e">CPS::Signal::TurbineGovernor</a></li>
+<li>TurbineGovernorType1()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_signal_1_1_turbine_governor_type1.html#a74c55654f4dab435d32deb9c86abaeb5">CPS::Signal::TurbineGovernorType1</a></li>
+<li>TurbineParameters()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_base_1_1_turbine_parameters.html#acc7863fcd0072b9427685dd5e1be0a30">CPS::Base::TurbineParameters</a></li>
+<li>TwoTerminalITypeSSNComp()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#a1542408ba14fc15251b495e904ad68bf">CPS::DP::Ph1::TwoTerminalITypeSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_two_terminal_i_type_s_s_n_comp.html#abe25e0bff6f07fbd3df0e48e2ae127f4">CPS::DP::Ph3::TwoTerminalITypeSSNComp</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_i_type_s_s_n_comp.html#a54b3405b391b3de0de43d41f0babfdaf">CPS::EMT::Ph3::TwoTerminalITypeSSNComp</a></li>
+<li>TwoTerminalVTypeSSNComp()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_v_type_s_s_n_comp.html#af64145c3f18c8f6cadd70d8ef3731238">CPS::DP::Ph1::TwoTerminalVTypeSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html#a3c2de62a2183b984ad08e2ea4e774cd8">CPS::DP::Ph3::TwoTerminalVTypeSSNComp</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html#a9021c38720407a105858076df12e5df5">CPS::EMT::Ph3::TwoTerminalVTypeSSNComp</a></li>
+<li>TwoTerminalVTypeVariableSSNComp()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_variable_s_s_n_comp.html#a2f00daa6a0cae5d0b38709238c40b06e">CPS::EMT::Ph3::TwoTerminalVTypeVariableSSNComp</a></li>
 <li>type()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_identified_object.html#a9a95f413fe2dd50b6e2a0369bda063e6">CPS::IdentifiedObject</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

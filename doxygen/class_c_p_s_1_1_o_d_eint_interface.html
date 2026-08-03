@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_c_p_s_1_1_o_d_eint_interface.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>CPS</b></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_o_d_eint_interface.html">ODEintInterface</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
@@ -95,6 +103,8 @@ $(function(){ initResizable(false); });
   <div class="headertitle"><div class="title">CPS::ODEintInterface Class Reference<span class="mlabels"><span class="mlabel abstract">abstract</span></span></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="_o_d_eint_interface_8h_source.html">ODEintInterface.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -105,29 +115,23 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a3a84fb4843481e296c946298c574649a" id="r_a3a84fb4843481e296c946298c574649a"><td class="memItemLeft" align="right" valign="top"><a id="a3a84fb4843481e296c946298c574649a" name="a3a84fb4843481e296c946298c574649a"></a>
-virtual int&#160;</td><td class="memItemRight" valign="bottom"><b>num_states</b> () const =0</td></tr>
-<tr class="memdesc:a3a84fb4843481e296c946298c574649a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns number of differential variables. <br /></td></tr>
+<tr class="memitem:a3a84fb4843481e296c946298c574649a" id="r_a3a84fb4843481e296c946298c574649a"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3a84fb4843481e296c946298c574649a">num_states</a> () const =0</td></tr>
+<tr class="memdesc:a3a84fb4843481e296c946298c574649a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns number of differential variables.  <br /></td></tr>
 <tr class="separator:a3a84fb4843481e296c946298c574649a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc0033d32c48e83f325fd63f31ec7787" id="r_afc0033d32c48e83f325fd63f31ec7787"><td class="memItemLeft" align="right" valign="top"><a id="afc0033d32c48e83f325fd63f31ec7787" name="afc0033d32c48e83f325fd63f31ec7787"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>odeint</b> (const double y[], double ydot[], double t)=0</td></tr>
-<tr class="memdesc:afc0033d32c48e83f325fd63f31ec7787"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets up ODE system in ydot. <br /></td></tr>
+<tr class="memitem:afc0033d32c48e83f325fd63f31ec7787" id="r_afc0033d32c48e83f325fd63f31ec7787"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afc0033d32c48e83f325fd63f31ec7787">odeint</a> (const double y[], double ydot[], double t)=0</td></tr>
+<tr class="memdesc:afc0033d32c48e83f325fd63f31ec7787"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets up ODE system in ydot.  <br /></td></tr>
 <tr class="separator:afc0033d32c48e83f325fd63f31ec7787"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad00f499dbcc04ab9bc9f7999a0a09098" id="r_ad00f499dbcc04ab9bc9f7999a0a09098"><td class="memItemLeft" align="right" valign="top"><a id="ad00f499dbcc04ab9bc9f7999a0a09098" name="ad00f499dbcc04ab9bc9f7999a0a09098"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>pre_step</b> ()=0</td></tr>
-<tr class="memdesc:ad00f499dbcc04ab9bc9f7999a0a09098"><td class="mdescLeft">&#160;</td><td class="mdescRight">Needed for computations which have to be carried out before the numerical approximation step. <br /></td></tr>
+<tr class="memitem:ad00f499dbcc04ab9bc9f7999a0a09098" id="r_ad00f499dbcc04ab9bc9f7999a0a09098"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad00f499dbcc04ab9bc9f7999a0a09098">pre_step</a> ()=0</td></tr>
+<tr class="memdesc:ad00f499dbcc04ab9bc9f7999a0a09098"><td class="mdescLeft">&#160;</td><td class="mdescRight">Needed for computations which have to be carried out before the numerical approximation step.  <br /></td></tr>
 <tr class="separator:ad00f499dbcc04ab9bc9f7999a0a09098"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aae92cedc84d44f4f85d5553e965df0b4" id="r_aae92cedc84d44f4f85d5553e965df0b4"><td class="memItemLeft" align="right" valign="top"><a id="aae92cedc84d44f4f85d5553e965df0b4" name="aae92cedc84d44f4f85d5553e965df0b4"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>post_step</b> ()=0</td></tr>
-<tr class="memdesc:aae92cedc84d44f4f85d5553e965df0b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes the values from the constructed state vector back into the original fields. <br /></td></tr>
+<tr class="memitem:aae92cedc84d44f4f85d5553e965df0b4" id="r_aae92cedc84d44f4f85d5553e965df0b4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aae92cedc84d44f4f85d5553e965df0b4">post_step</a> ()=0</td></tr>
+<tr class="memdesc:aae92cedc84d44f4f85d5553e965df0b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes the values from the constructed state vector back into the original fields.  <br /></td></tr>
 <tr class="separator:aae92cedc84d44f4f85d5553e965df0b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac12528917bb76c888581782459586d21" id="r_ac12528917bb76c888581782459586d21"><td class="memItemLeft" align="right" valign="top"><a id="ac12528917bb76c888581782459586d21" name="ac12528917bb76c888581782459586d21"></a>
-virtual double *&#160;</td><td class="memItemRight" valign="bottom"><b>state_vector</b> ()=0</td></tr>
-<tr class="memdesc:ac12528917bb76c888581782459586d21"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns Pointer to state Vector of the componente. <br /></td></tr>
+<tr class="memitem:ac12528917bb76c888581782459586d21" id="r_ac12528917bb76c888581782459586d21"><td class="memItemLeft" align="right" valign="top">virtual double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac12528917bb76c888581782459586d21">state_vector</a> ()=0</td></tr>
+<tr class="memdesc:ac12528917bb76c888581782459586d21"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns Pointer to state <a class="el" href="namespace_c_p_s.html#a9767e910042a2c25adc4fb48e8535031" title="Dense vector for real numbers.">Vector</a> of the componente.  <br /></td></tr>
 <tr class="separator:ac12528917bb76c888581782459586d21"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef76ce7cf5ab5f43c4f9a3df74dc4665" id="r_aef76ce7cf5ab5f43c4f9a3df74dc4665"><td class="memItemLeft" align="right" valign="top"><a id="aef76ce7cf5ab5f43c4f9a3df74dc4665" name="aef76ce7cf5ab5f43c4f9a3df74dc4665"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>set_state_vector</b> (std::vector&lt; double &gt; y)=0</td></tr>
-<tr class="memdesc:aef76ce7cf5ab5f43c4f9a3df74dc4665"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes the computed solution to the component. <br /></td></tr>
+<tr class="memitem:aef76ce7cf5ab5f43c4f9a3df74dc4665" id="r_aef76ce7cf5ab5f43c4f9a3df74dc4665"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef76ce7cf5ab5f43c4f9a3df74dc4665">set_state_vector</a> (std::vector&lt; double &gt; y)=0</td></tr>
+<tr class="memdesc:aef76ce7cf5ab5f43c4f9a3df74dc4665"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes the computed solution to the component.  <br /></td></tr>
 <tr class="separator:aef76ce7cf5ab5f43c4f9a3df74dc4665"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -141,7 +145,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>set_state_vec
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::shared_ptr&lt;<a class="el" href="class_c_p_s_1_1_o_d_eint_interface.html">ODEintInterface</a>&gt; CPS::ODEintInterface::Ptr</td>
+          <td class="memname">typedef std::shared_ptr&lt;<a class="el" href="class_c_p_s_1_1_o_d_eint_interface.html">ODEintInterface</a>&gt; <a class="el" href="#a7789f247c51b7d3301f590b57cf7bc8a">CPS::ODEintInterface::Ptr</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -157,7 +161,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>set_state_vec
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using CPS::ODEintInterface::stateFnc = std::function&lt;void(const double *, double *, const double)&gt;</td>
+          <td class="memname">using <a class="el" href="#a0ee26a9627289d051ce069892768146f">CPS::ODEintInterface::stateFnc</a> = std::function&lt;void(const double *, double *, const double)&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -166,14 +170,189 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>set_state_vec
 
 </div>
 </div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a3a84fb4843481e296c946298c574649a" name="a3a84fb4843481e296c946298c574649a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a84fb4843481e296c946298c574649a">&#9670;&#160;</a></span>num_states()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int CPS::ODEintInterface::num_states </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns number of differential variables. </p>
+
+</div>
+</div>
+<a id="afc0033d32c48e83f325fd63f31ec7787" name="afc0033d32c48e83f325fd63f31ec7787"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc0033d32c48e83f325fd63f31ec7787">&#9670;&#160;</a></span>odeint()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void CPS::ODEintInterface::odeint </td>
+          <td>(</td>
+          <td class="paramtype">const double</td>          <td class="paramname"><span class="paramname"><em>y</em></span>[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>ydot</em></span>[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>t</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets up ODE system in ydot. </p>
+
+</div>
+</div>
+<a id="aae92cedc84d44f4f85d5553e965df0b4" name="aae92cedc84d44f4f85d5553e965df0b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae92cedc84d44f4f85d5553e965df0b4">&#9670;&#160;</a></span>post_step()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void CPS::ODEintInterface::post_step </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Writes the values from the constructed state vector back into the original fields. </p>
+
+</div>
+</div>
+<a id="ad00f499dbcc04ab9bc9f7999a0a09098" name="ad00f499dbcc04ab9bc9f7999a0a09098"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad00f499dbcc04ab9bc9f7999a0a09098">&#9670;&#160;</a></span>pre_step()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void CPS::ODEintInterface::pre_step </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Needed for computations which have to be carried out before the numerical approximation step. </p>
+
+</div>
+</div>
+<a id="aef76ce7cf5ab5f43c4f9a3df74dc4665" name="aef76ce7cf5ab5f43c4f9a3df74dc4665"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef76ce7cf5ab5f43c4f9a3df74dc4665">&#9670;&#160;</a></span>set_state_vector()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void CPS::ODEintInterface::set_state_vector </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; double &gt;</td>          <td class="paramname"><span class="paramname"><em>y</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Writes the computed solution to the component. </p>
+
+</div>
+</div>
+<a id="ac12528917bb76c888581782459586d21" name="ac12528917bb76c888581782459586d21"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac12528917bb76c888581782459586d21">&#9670;&#160;</a></span>state_vector()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual double * CPS::ODEintInterface::state_vector </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns Pointer to state <a class="el" href="namespace_c_p_s.html#a9767e910042a2c25adc4fb48e8535031" title="Dense vector for real numbers.">Vector</a> of the componente. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>/__w/dpsim/dpsim/dpsim-models/include/dpsim-models/Solver/<a class="el" href="_o_d_eint_interface_8h_source.html">ODEintInterface.h</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_c_p_s.html">CPS</a></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_o_d_eint_interface.html">ODEintInterface</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_d_psim_1_1_m_n_a_state_space_contributor.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_contributor.html">MNAStateSpaceContributor</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
@@ -102,23 +110,23 @@ $(function(){ initResizable(false); });
 Public Types</h2></td></tr>
 <tr class="memitem:a387b5377f961a3410683cbf32bbcc6f7" id="r_a387b5377f961a3410683cbf32bbcc6f7"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a387b5377f961a3410683cbf32bbcc6f7">Ptr</a> = std::shared_ptr&lt;<a class="el" href="class_d_psim_1_1_m_n_a_state_space_contributor.html">MNAStateSpaceContributor</a>&gt;</td></tr>
 <tr class="separator:a387b5377f961a3410683cbf32bbcc6f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f40edaf81f811a71d0eca14a9a0fb1c" id="r_a3f40edaf81f811a71d0eca14a9a0fb1c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3f40edaf81f811a71d0eca14a9a0fb1c">List</a> = std::vector&lt;Ptr&gt;</td></tr>
+<tr class="memitem:a3f40edaf81f811a71d0eca14a9a0fb1c" id="r_a3f40edaf81f811a71d0eca14a9a0fb1c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3f40edaf81f811a71d0eca14a9a0fb1c">List</a> = std::vector&lt;<a class="el" href="#a387b5377f961a3410683cbf32bbcc6f7">Ptr</a>&gt;</td></tr>
 <tr class="separator:a3f40edaf81f811a71d0eca14a9a0fb1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a62351e94364d2808cecf4eab7f4cf2c3" id="r_a62351e94364d2808cecf4eab7f4cf2c3"><td class="memItemLeft" align="right" valign="top"><a id="a62351e94364d2808cecf4eab7f4cf2c3" name="a62351e94364d2808cecf4eab7f4cf2c3"></a>
-virtual UInt&#160;</td><td class="memItemRight" valign="bottom"><b>getStateCount</b> () const =0</td></tr>
-<tr class="memdesc:a62351e94364d2808cecf4eab7f4cf2c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of local extraction states contributed by this component. <br /></td></tr>
+<tr class="memitem:ae8ec80af43b1fe281d970e1648237f70" id="r_ae8ec80af43b1fe281d970e1648237f70"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae8ec80af43b1fe281d970e1648237f70">~MNAStateSpaceContributor</a> ()=default</td></tr>
+<tr class="separator:ae8ec80af43b1fe281d970e1648237f70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62351e94364d2808cecf4eab7f4cf2c3" id="r_a62351e94364d2808cecf4eab7f4cf2c3"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a62351e94364d2808cecf4eab7f4cf2c3">getStateCount</a> () const =0</td></tr>
+<tr class="memdesc:a62351e94364d2808cecf4eab7f4cf2c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of local extraction states contributed by this component.  <br /></td></tr>
 <tr class="separator:a62351e94364d2808cecf4eab7f4cf2c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a344ac3a6fdacbdf041fda92835cf49c3" id="r_a344ac3a6fdacbdf041fda92835cf49c3"><td class="memItemLeft" align="right" valign="top">virtual Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a344ac3a6fdacbdf041fda92835cf49c3">isVariable</a> () const</td></tr>
+<tr class="memitem:a344ac3a6fdacbdf041fda92835cf49c3" id="r_a344ac3a6fdacbdf041fda92835cf49c3"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a344ac3a6fdacbdf041fda92835cf49c3">isVariable</a> () const</td></tr>
 <tr class="memdesc:a344ac3a6fdacbdf041fda92835cf49c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the local matrices may change during simulation.  <br /></td></tr>
 <tr class="separator:a344ac3a6fdacbdf041fda92835cf49c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7b8a1b895d35affdc1559fcbdc870c6a" id="r_a7b8a1b895d35affdc1559fcbdc870c6a"><td class="memItemLeft" align="right" valign="top"><a id="a7b8a1b895d35affdc1559fcbdc870c6a" name="a7b8a1b895d35affdc1559fcbdc870c6a"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>stamp</b> (Matrix &amp;AdLocal, Matrix &amp;BdMna, Matrix &amp;CdMna, UInt stateOffset, UInt mnaVectorSize) const =0</td></tr>
-<tr class="memdesc:a7b8a1b895d35affdc1559fcbdc870c6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamp this component's current local state-space contribution. <br /></td></tr>
+<tr class="memitem:a7b8a1b895d35affdc1559fcbdc870c6a" id="r_a7b8a1b895d35affdc1559fcbdc870c6a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7b8a1b895d35affdc1559fcbdc870c6a">stamp</a> (<a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;AdLocal, <a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;BdMna, <a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;CdMna, <a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> stateOffset, <a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> mnaVectorSize) const =0</td></tr>
+<tr class="memdesc:a7b8a1b895d35affdc1559fcbdc870c6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamp this component's current local state-space contribution.  <br /></td></tr>
 <tr class="separator:a7b8a1b895d35affdc1559fcbdc870c6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d2b8e23bc8da2b5f9e8c1b4c1174630" id="r_a9d2b8e23bc8da2b5f9e8c1b4c1174630"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9d2b8e23bc8da2b5f9e8c1b4c1174630">contributeMetadata</a> (<a class="el" href="struct_d_psim_1_1_state_space_metadata.html">StateSpaceMetadata</a> &amp;metadata, UInt stateOffset) const</td></tr>
+<tr class="memitem:a9d2b8e23bc8da2b5f9e8c1b4c1174630" id="r_a9d2b8e23bc8da2b5f9e8c1b4c1174630"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9d2b8e23bc8da2b5f9e8c1b4c1174630">contributeMetadata</a> (<a class="el" href="struct_d_psim_1_1_state_space_metadata.html">StateSpaceMetadata</a> &amp;metadata, <a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> stateOffset) const</td></tr>
 <tr class="separator:a9d2b8e23bc8da2b5f9e8c1b4c1174630"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -136,7 +144,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>stamp</b> (Ma
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using DPsim::MNAStateSpaceContributor::List = std::vector&lt;Ptr&gt;</td>
+          <td class="memname">using <a class="el" href="#a3f40edaf81f811a71d0eca14a9a0fb1c">DPsim::MNAStateSpaceContributor::List</a> = std::vector&lt;<a class="el" href="#a387b5377f961a3410683cbf32bbcc6f7">Ptr</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -152,12 +160,38 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>stamp</b> (Ma
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using DPsim::MNAStateSpaceContributor::Ptr = std::shared_ptr&lt;<a class="el" href="class_d_psim_1_1_m_n_a_state_space_contributor.html">MNAStateSpaceContributor</a>&gt;</td>
+          <td class="memname">using <a class="el" href="#a387b5377f961a3410683cbf32bbcc6f7">DPsim::MNAStateSpaceContributor::Ptr</a> = std::shared_ptr&lt;<a class="el" href="class_d_psim_1_1_m_n_a_state_space_contributor.html">MNAStateSpaceContributor</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_contributor_8h_source.html#l00048">48</a> of file <a class="el" href="_m_n_a_state_space_contributor_8h_source.html">MNAStateSpaceContributor.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ae8ec80af43b1fe281d970e1648237f70" name="ae8ec80af43b1fe281d970e1648237f70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae8ec80af43b1fe281d970e1648237f70">&#9670;&#160;</a></span>~MNAStateSpaceContributor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual DPsim::MNAStateSpaceContributor::~MNAStateSpaceContributor </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel virtual">virtual</span><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -179,7 +213,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>stamp</b> (Ma
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">UInt</td>          <td class="paramname"><span class="paramname"><em>stateOffset</em></span>&#160;) const</td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a></td>          <td class="paramname"><span class="paramname"><em>stateOffset</em></span>&#160;) const</td>
         </tr>
       </table>
   </td>
@@ -195,6 +229,33 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>stamp</b> (Ma
 
 </div>
 </div>
+<a id="a62351e94364d2808cecf4eab7f4cf2c3" name="a62351e94364d2808cecf4eab7f4cf2c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62351e94364d2808cecf4eab7f4cf2c3">&#9670;&#160;</a></span>getStateCount()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> DPsim::MNAStateSpaceContributor::getStateCount </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Number of local extraction states contributed by this component. </p>
+
+</div>
+</div>
 <a id="a344ac3a6fdacbdf041fda92835cf49c3" name="a344ac3a6fdacbdf041fda92835cf49c3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a344ac3a6fdacbdf041fda92835cf49c3">&#9670;&#160;</a></span>isVariable()</h2>
 
@@ -205,7 +266,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>stamp</b> (Ma
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual Bool DPsim::MNAStateSpaceContributor::isVariable </td>
+          <td class="memname">virtual <a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> DPsim::MNAStateSpaceContributor::isVariable </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -224,14 +285,63 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>stamp</b> (Ma
 
 </div>
 </div>
+<a id="a7b8a1b895d35affdc1559fcbdc870c6a" name="a7b8a1b895d35affdc1559fcbdc870c6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b8a1b895d35affdc1559fcbdc870c6a">&#9670;&#160;</a></span>stamp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void DPsim::MNAStateSpaceContributor::stamp </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>AdLocal</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>BdMna</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>CdMna</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a></td>          <td class="paramname"><span class="paramname"><em>stateOffset</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a></td>          <td class="paramname"><span class="paramname"><em>mnaVectorSize</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Stamp this component's current local state-space contribution. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>/__w/dpsim/dpsim/dpsim/include/dpsim/<a class="el" href="_m_n_a_state_space_contributor_8h_source.html">MNAStateSpaceContributor.h</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_contributor.html">MNAStateSpaceContributor</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

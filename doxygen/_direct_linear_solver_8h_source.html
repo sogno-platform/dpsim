@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_direct_linear_solver_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">DirectLinearSolver.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_direct_linear_solver_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">*                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">*</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">* This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -107,10 +115,10 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;unordered_map&gt;</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;dpsim-models/Logger.h&gt;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;<a class="code" href="_logger_8h.html">dpsim-models/Logger.h</a>&gt;</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;dpsim/Config.h&gt;</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;dpsim/Definitions.h&gt;</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;dpsim/DirectLinearSolverConfiguration.h&gt;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;<a class="code" href="dpsim_2include_2dpsim_2_definitions_8h.html">dpsim/Definitions.h</a>&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;<a class="code" href="_direct_linear_solver_configuration_8h.html">dpsim/DirectLinearSolverConfiguration.h</a>&gt;</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_d_psim.html">DPsim</a> {</div>
 <div class="foldopen" id="foldopen00023" data-start="{" data-end="};">
@@ -129,44 +137,51 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_direct_linear_solver.html#ab4fe3b4fa4ab765fe70a921e3f3ac676">   41</a></span>  <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver.html#a2b121961736a57b6aa1622d373fe6019">DirectLinearSolver</a> &amp;<a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver.html#ab4fe3b4fa4ab765fe70a921e3f3ac676">operator=</a>(<a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver.html#a2b121961736a57b6aa1622d373fe6019">DirectLinearSolver</a> &amp;&amp;) = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span></div>
 <div class="foldopen" id="foldopen00044" data-start="{" data-end="}">
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_direct_linear_solver.html#a3623a79b73370d72cbb67d2825b32f91">   44</a></span>  <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver.html#a3623a79b73370d72cbb67d2825b32f91">DirectLinearSolver</a>(CPS::Logger::Log log) : <a class="code hl_variable" href="class_d_psim_1_1_direct_linear_solver.html#aafeb18cf0ebae9f0255e62dc74d938c9">mSLog</a>(log) {</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_direct_linear_solver.html#a3623a79b73370d72cbb67d2825b32f91">   44</a></span>  <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver.html#a3623a79b73370d72cbb67d2825b32f91">DirectLinearSolver</a>(<a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a> log) : <a class="code hl_variable" href="class_d_psim_1_1_direct_linear_solver.html#aafeb18cf0ebae9f0255e62dc74d938c9">mSLog</a>(log) {</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="comment">// no further default configuration of DirectLinearSolver or logger</span></div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  }</div>
 </div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span></div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_direct_linear_solver.html#aea32b9142bf57d4b0ac557f3921402bd">   49</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver.html#aea32b9142bf57d4b0ac557f3921402bd">preprocessing</a>(</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>      SparseMatrix &amp;systemMatrix,</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>      <a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix,</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>      std::vector&lt;std::pair&lt;UInt, UInt&gt;&gt; &amp;listVariableSystemMatrixEntries) = 0;</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_direct_linear_solver.html#abaeed2ec1e0a01066de92bd326a977d3">   54</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver.html#abaeed2ec1e0a01066de92bd326a977d3">factorize</a>(SparseMatrix &amp;systemMatrix) = 0;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_direct_linear_solver.html#abaeed2ec1e0a01066de92bd326a977d3">   54</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver.html#abaeed2ec1e0a01066de92bd326a977d3">factorize</a>(<a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix) = 0;</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_direct_linear_solver.html#a038b2194287e5838fcfd16a365fa2e9c">   57</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver.html#a038b2194287e5838fcfd16a365fa2e9c">refactorize</a>(SparseMatrix &amp;systemMatrix) = 0;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_direct_linear_solver.html#a038b2194287e5838fcfd16a365fa2e9c">   57</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver.html#a038b2194287e5838fcfd16a365fa2e9c">refactorize</a>(<a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix) = 0;</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span></div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_direct_linear_solver.html#a4e4a9d4cb4e45d8e93795e2c0c0ea6bb">   60</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver.html#a4e4a9d4cb4e45d8e93795e2c0c0ea6bb">partialRefactorize</a>(</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>      SparseMatrix &amp;systemMatrix,</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>      <a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix,</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>      std::vector&lt;std::pair&lt;UInt, UInt&gt;&gt; &amp;listVariableSystemMatrixEntries) = 0;</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_direct_linear_solver.html#ac353d50f9d36dd934a75ae751ee03184">   65</a></span>  <span class="keyword">virtual</span> Matrix <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver.html#ac353d50f9d36dd934a75ae751ee03184">solve</a>(Matrix &amp;rightSideVector) = 0;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_direct_linear_solver.html#ac353d50f9d36dd934a75ae751ee03184">   65</a></span>  <span class="keyword">virtual</span> <a class="code hl_typedef" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver.html#ac353d50f9d36dd934a75ae751ee03184">solve</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;rightSideVector) = 0;</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  setConfiguration(<a class="code hl_class" href="class_d_psim_1_1_direct_linear_solver_configuration.html">DirectLinearSolverConfiguration</a> &amp;configuration) {</div>
+<div class="foldopen" id="foldopen00068" data-start="{" data-end="}">
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_direct_linear_solver.html#aba1fd03692134eef001154b5043e8760">   68</a></span>  <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver.html#aba1fd03692134eef001154b5043e8760">setConfiguration</a>(<a class="code hl_class" href="class_d_psim_1_1_direct_linear_solver_configuration.html">DirectLinearSolverConfiguration</a> &amp;configuration) {</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <a class="code hl_variable" href="class_d_psim_1_1_direct_linear_solver.html#a9f0386f35ad2c6219ba3fafefe40e541">mConfiguration</a> = configuration;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    this-&gt;applyConfiguration();</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    this-&gt;<a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver.html#a9c464c753c4460154f10cab2e09d7cea">applyConfiguration</a>();</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  }</div>
+</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_direct_linear_solver.html#aafeb18cf0ebae9f0255e62dc74d938c9">   75</a></span>  CPS::Logger::Log <a class="code hl_variable" href="class_d_psim_1_1_direct_linear_solver.html#aafeb18cf0ebae9f0255e62dc74d938c9">mSLog</a>;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_direct_linear_solver.html#aafeb18cf0ebae9f0255e62dc74d938c9">   75</a></span>  <a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a> <a class="code hl_variable" href="class_d_psim_1_1_direct_linear_solver.html#aafeb18cf0ebae9f0255e62dc74d938c9">mSLog</a>;</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span></div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_direct_linear_solver.html#a9f0386f35ad2c6219ba3fafefe40e541">   78</a></span>  <a class="code hl_class" href="class_d_psim_1_1_direct_linear_solver_configuration.html">DirectLinearSolverConfiguration</a> <a class="code hl_variable" href="class_d_psim_1_1_direct_linear_solver.html#a9f0386f35ad2c6219ba3fafefe40e541">mConfiguration</a>;</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> applyConfiguration() {</div>
+<div class="foldopen" id="foldopen00080" data-start="{" data-end="}">
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_direct_linear_solver.html#a9c464c753c4460154f10cab2e09d7cea">   80</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver.html#a9c464c753c4460154f10cab2e09d7cea">applyConfiguration</a>() {</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="comment">// no default application, configuration options vary for each solver</span></div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="comment">// warn user that no configuration setting is used</span></div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    SPDLOG_LOGGER_WARN(<a class="code hl_variable" href="class_d_psim_1_1_direct_linear_solver.html#aafeb18cf0ebae9f0255e62dc74d938c9">mSLog</a>, <span class="stringliteral">&quot;Linear solver configuration is not used!&quot;</span>);</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  }</div>
+</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>};</div>
 </div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>} <span class="comment">// namespace DPsim</span></div>
+<div class="ttc" id="a_direct_linear_solver_configuration_8h_html"><div class="ttname"><a href="_direct_linear_solver_configuration_8h.html">DirectLinearSolverConfiguration.h</a></div></div>
+<div class="ttc" id="a_logger_8h_html"><div class="ttname"><a href="_logger_8h.html">Logger.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_logger_html_a1dd42a2424f56886f0eec500a7851423"><div class="ttname"><a href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a></div><div class="ttdeci">std::shared_ptr&lt; spdlog::logger &gt; Log</div><div class="ttdef"><b>Definition</b> <a href="_logger_8h_source.html#l00034">Logger.h:34</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_configuration_html"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver_configuration.html">DPsim::DirectLinearSolverConfiguration</a></div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8h_source.html#l00036">DirectLinearSolverConfiguration.h:36</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_html_a038b2194287e5838fcfd16a365fa2e9c"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver.html#a038b2194287e5838fcfd16a365fa2e9c">DPsim::DirectLinearSolver::refactorize</a></div><div class="ttdeci">virtual void refactorize(SparseMatrix &amp;systemMatrix)=0</div><div class="ttdoc">refactorization without partial pivoting</div></div>
 <div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_html_a0471fec62a1b9853f46334d71863e9c3"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver.html#a0471fec62a1b9853f46334d71863e9c3">DPsim::DirectLinearSolver::DirectLinearSolver</a></div><div class="ttdeci">DirectLinearSolver(const DirectLinearSolver &amp;)=default</div><div class="ttdoc">Copy Constructor.</div></div>
@@ -174,20 +189,28 @@ $(function(){ initResizable(false); });
 <div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_html_a3623a79b73370d72cbb67d2825b32f91"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver.html#a3623a79b73370d72cbb67d2825b32f91">DPsim::DirectLinearSolver::DirectLinearSolver</a></div><div class="ttdeci">DirectLinearSolver(CPS::Logger::Log log)</div><div class="ttdoc">Constructor with Logger.</div><div class="ttdef"><b>Definition</b> <a href="#l00044">DirectLinearSolver.h:44</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_html_a36c002c86dbdb16ce32f90d480ee1ae9"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver.html#a36c002c86dbdb16ce32f90d480ee1ae9">DPsim::DirectLinearSolver::DirectLinearSolver</a></div><div class="ttdeci">DirectLinearSolver(DirectLinearSolver &amp;&amp;)=default</div><div class="ttdoc">Move Constructor.</div></div>
 <div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_html_a4e4a9d4cb4e45d8e93795e2c0c0ea6bb"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver.html#a4e4a9d4cb4e45d8e93795e2c0c0ea6bb">DPsim::DirectLinearSolver::partialRefactorize</a></div><div class="ttdeci">virtual void partialRefactorize(SparseMatrix &amp;systemMatrix, std::vector&lt; std::pair&lt; UInt, UInt &gt; &gt; &amp;listVariableSystemMatrixEntries)=0</div><div class="ttdoc">partial refactorization withouth partial pivoting</div></div>
+<div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_html_a9c464c753c4460154f10cab2e09d7cea"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver.html#a9c464c753c4460154f10cab2e09d7cea">DPsim::DirectLinearSolver::applyConfiguration</a></div><div class="ttdeci">virtual void applyConfiguration()</div><div class="ttdef"><b>Definition</b> <a href="#l00080">DirectLinearSolver.h:80</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_html_a9f0386f35ad2c6219ba3fafefe40e541"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver.html#a9f0386f35ad2c6219ba3fafefe40e541">DPsim::DirectLinearSolver::mConfiguration</a></div><div class="ttdeci">DirectLinearSolverConfiguration mConfiguration</div><div class="ttdoc">Object that carries configuration options.</div><div class="ttdef"><b>Definition</b> <a href="#l00078">DirectLinearSolver.h:78</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_html_aafeb18cf0ebae9f0255e62dc74d938c9"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver.html#aafeb18cf0ebae9f0255e62dc74d938c9">DPsim::DirectLinearSolver::mSLog</a></div><div class="ttdeci">CPS::Logger::Log mSLog</div><div class="ttdoc">Stores logger of solver class.</div><div class="ttdef"><b>Definition</b> <a href="#l00075">DirectLinearSolver.h:75</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_html_ab4fe3b4fa4ab765fe70a921e3f3ac676"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver.html#ab4fe3b4fa4ab765fe70a921e3f3ac676">DPsim::DirectLinearSolver::operator=</a></div><div class="ttdeci">DirectLinearSolver &amp; operator=(DirectLinearSolver &amp;&amp;)=default</div><div class="ttdoc">Move Assignment Operator.</div></div>
+<div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_html_aba1fd03692134eef001154b5043e8760"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver.html#aba1fd03692134eef001154b5043e8760">DPsim::DirectLinearSolver::setConfiguration</a></div><div class="ttdeci">virtual void setConfiguration(DirectLinearSolverConfiguration &amp;configuration)</div><div class="ttdef"><b>Definition</b> <a href="#l00068">DirectLinearSolver.h:68</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_html_abaeed2ec1e0a01066de92bd326a977d3"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver.html#abaeed2ec1e0a01066de92bd326a977d3">DPsim::DirectLinearSolver::factorize</a></div><div class="ttdeci">virtual void factorize(SparseMatrix &amp;systemMatrix)=0</div><div class="ttdoc">factorization function with partial pivoting</div></div>
 <div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_html_ac353d50f9d36dd934a75ae751ee03184"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver.html#ac353d50f9d36dd934a75ae751ee03184">DPsim::DirectLinearSolver::solve</a></div><div class="ttdeci">virtual Matrix solve(Matrix &amp;rightSideVector)=0</div><div class="ttdoc">solution function for a right hand side</div></div>
 <div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_html_ad43db3ea0b37056f1d10251037ef0286"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver.html#ad43db3ea0b37056f1d10251037ef0286">DPsim::DirectLinearSolver::operator=</a></div><div class="ttdeci">DirectLinearSolver &amp; operator=(const DirectLinearSolver &amp;)=default</div><div class="ttdoc">Copy Assignment Operator.</div></div>
 <div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_html_add6f353643024c32915f2ccb4da076b0"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver.html#add6f353643024c32915f2ccb4da076b0">DPsim::DirectLinearSolver::~DirectLinearSolver</a></div><div class="ttdeci">virtual ~DirectLinearSolver()=default</div><div class="ttdoc">Destructor.</div></div>
 <div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_html_aea32b9142bf57d4b0ac557f3921402bd"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver.html#aea32b9142bf57d4b0ac557f3921402bd">DPsim::DirectLinearSolver::preprocessing</a></div><div class="ttdeci">virtual void preprocessing(SparseMatrix &amp;systemMatrix, std::vector&lt; std::pair&lt; UInt, UInt &gt; &gt; &amp;listVariableSystemMatrixEntries)=0</div><div class="ttdoc">preprocessing function pre-ordering and scaling the matrix</div></div>
+<div class="ttc" id="adpsim_2include_2dpsim_2_definitions_8h_html"><div class="ttname"><a href="dpsim_2include_2dpsim_2_definitions_8h.html">Definitions.h</a></div></div>
 <div class="ttc" id="anamespace_d_psim_html"><div class="ttname"><a href="namespace_d_psim.html">DPsim</a></div><div class="ttdef"><b>Definition</b> <a href="_dense_l_u_adapter_8cpp_source.html#l00013">DenseLUAdapter.cpp:13</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a7920162dfc7e843a4f1a1248fe9ccb0e"><div class="ttname"><a href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">DPsim::Matrix</a></div><div class="ttdeci">CPS::Matrix Matrix</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00024">Definitions.h:24</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_ab6afa34bab94cdc2ff33e09d4a1d2c9c"><div class="ttname"><a href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">DPsim::SparseMatrix</a></div><div class="ttdeci">CPS::SparseMatrixRow SparseMatrix</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00026">Definitions.h:26</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li><li class="navelem"><a class="el" href="_direct_linear_solver_8h.html">DirectLinearSolver.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

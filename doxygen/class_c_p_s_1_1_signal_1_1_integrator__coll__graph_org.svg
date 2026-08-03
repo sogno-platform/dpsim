@@ -149,7 +149,7 @@
 <g id="Node000007" class="node">
 <title>Node7</title>
 <g id="a_Node000007"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="267,-234.81 152,-234.81 152,-184.06 267,-184.06 267,-234.81"/>
+<polygon fill="white" stroke="#666666" points="267,-234.81 152,-234.81 152,-184.06 267,-184.06 267,-234.81"/>
 <text text-anchor="start" x="160" y="-221.31" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="160" y="-207.06" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="209.5" y="-192.81" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; String &gt; &gt;</text>
@@ -189,7 +189,7 @@
 <g id="Node000009" class="node">
 <title>Node9</title>
 <g id="a_Node000009"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="115,-108.81 0,-108.81 0,-58.06 115,-58.06 115,-108.81"/>
+<polygon fill="white" stroke="#666666" points="115,-108.81 0,-108.81 0,-58.06 115,-58.06 115,-108.81"/>
 <text text-anchor="start" x="8" y="-95.31" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="8" y="-81.06" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="57.5" y="-66.81" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; T &gt; &gt;</text>
@@ -262,7 +262,7 @@
 <g id="Node000013" class="node">
 <title>Node13</title>
 <g id="a_Node000013"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="267,-84.81 152,-84.81 152,-34.06 267,-34.06 267,-84.81"/>
+<polygon fill="white" stroke="#666666" points="267,-84.81 152,-84.81 152,-34.06 267,-34.06 267,-84.81"/>
 <text text-anchor="start" x="160" y="-71.31" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="160" y="-57.06" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="209.5" y="-42.81" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Real &gt; &gt;</text>

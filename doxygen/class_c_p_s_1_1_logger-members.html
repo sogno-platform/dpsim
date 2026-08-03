@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_c_p_s_1_1_logger.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>CPS</b></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_logger.html">Logger</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">CPS::Logger Member List</div></div>
 </div><!--header-->
@@ -94,33 +102,35 @@ $(function(){ initResizable(false); });
 
 <p>This is the complete list of members for <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a>, including all inherited members.</p>
 <table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>complexToString</b>(const Complex &amp;num) (defined in <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>get</b>(const std::string &amp;name, Level filelevel=Level::info, Level clilevel=Level::off) (defined in <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>getCSVColumnNames</b>(std::vector&lt; String &gt; names) (defined in <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>getCSVLineFromData</b>(Real time, Real data) (defined in <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>getCSVLineFromData</b>(Real time, const Matrix &amp;data) (defined in <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>getCSVLineFromData</b>(Real time, const MatrixComp &amp;data) (defined in <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Level</b> typedef (defined in <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>Log</b> typedef (defined in <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>logDir</b>() (defined in <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>Logger</b>() (defined in <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>matrixCompToString</b>(const MatrixComp &amp;mat) (defined in <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>matrixToString</b>(const Matrix &amp;mat) (defined in <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>phasorMatrixToString</b>(const MatrixComp &amp;mat) (defined in <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>phasorToString</b>(const Complex &amp;num) (defined in <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>prefix</b>() (defined in <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>realToString</b>(const Real &amp;num) (defined in <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html#aab3ba2f62077919d4d2f89fa77f31116">complexToString</a>(const Complex &amp;num)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html#a94218a27352b9fbb7d0adccb9d32002b">get</a>(const std::string &amp;name, Level filelevel=Level::info, Level clilevel=Level::off)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html#ad84d9130022e141f8c13948511c07c43">getCSVColumnNames</a>(std::vector&lt; String &gt; names)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html#ad1cf729ba5ed7694b4920f7737c952d0">getCSVLineFromData</a>(Real time, Real data)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html#aac5e976263aeab2d66e89dff98bca926">getCSVLineFromData</a>(Real time, const Matrix &amp;data)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html#ada8b8284ef8791b006571b1f907a4a9e">getCSVLineFromData</a>(Real time, const MatrixComp &amp;data)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Level</a> typedef</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">Log</a> typedef</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html#a8dc6819e3cd81b48f9f39d77baed149b">logDir</a>()</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html#ad48006d77515e7013e8565a9760cbf82">Logger</a>()</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html#a233ec7565f7f63557ea3668bd44eaf06">matrixCompToString</a>(const MatrixComp &amp;mat)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html#aab568cd946e6d6386d6e64c500de0b53">matrixToString</a>(const Matrix &amp;mat)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html#a63f9b63dbd15a351ec81420a01b03226">phasorMatrixToString</a>(const MatrixComp &amp;mat)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html#aed82282e4ff9a3266735e3501d66d634">phasorToString</a>(const Complex &amp;num)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html#a1b630d4c934f79fa45217c5824921444">prefix</a>()</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html#aca598e00b3d611fcf84c6c67c5e38b99">realToString</a>(const Real &amp;num)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html#a889b39f1266c4084542c57705d3147eb">setLogDir</a>(String path)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>setLogLevel</b>(std::shared_ptr&lt; spdlog::logger &gt; logger, Logger::Level level) (defined in <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>setLogPattern</b>(std::shared_ptr&lt; spdlog::logger &gt; logger, std::string pattern) (defined in <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>sparseMatrixCompToString</b>(const SparseMatrixComp &amp;mat) (defined in <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>sparseMatrixToString</b>(const SparseMatrix &amp;mat) (defined in <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>~Logger</b>() (defined in <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html#abebb70b32212cd6438a9cbd8ef85d928">setLogLevel</a>(std::shared_ptr&lt; spdlog::logger &gt; logger, Logger::Level level)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html#a93965d71efa5e47da9cb88719b9f8dcd">setLogPattern</a>(std::shared_ptr&lt; spdlog::logger &gt; logger, std::string pattern)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html#adac3aae4028224381d203ed406635873">sparseMatrixCompToString</a>(const SparseMatrixComp &amp;mat)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html#a7f9eb43d5019a44f23648544901c9a66">sparseMatrixToString</a>(const SparseMatrix &amp;mat)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html#a137318b06b148593ccbb94dff140d500">~Logger</a>()</td><td class="entry"><a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_factory.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,8 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">Factory&lt; BaseClass &gt; Member List</div></div>
 </div><!--header-->
@@ -90,15 +102,17 @@ $(function(){ initResizable(false); });
 
 <p>This is the complete list of members for <a class="el" href="class_factory.html">Factory&lt; BaseClass &gt;</a>, including all inherited members.</p>
 <table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>create</b>(std::string type, const std::string &amp;name, CPS::Logger::Level logLevel=CPS::Logger::Level::debug) (defined in <a class="el" href="class_factory.html">Factory&lt; BaseClass &gt;</a>)</td><td class="entry"><a class="el" href="class_factory.html">Factory&lt; BaseClass &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>get</b>() (defined in <a class="el" href="class_factory.html">Factory&lt; BaseClass &gt;</a>)</td><td class="entry"><a class="el" href="class_factory.html">Factory&lt; BaseClass &gt;</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">static</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>getItems</b>() (defined in <a class="el" href="class_factory.html">Factory&lt; BaseClass &gt;</a>)</td><td class="entry"><a class="el" href="class_factory.html">Factory&lt; BaseClass &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>registerExciter</b>(const std::string &amp;type, Creator&lt; BaseClass &gt; *Fn) (defined in <a class="el" href="class_factory.html">Factory&lt; BaseClass &gt;</a>)</td><td class="entry"><a class="el" href="class_factory.html">Factory&lt; BaseClass &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_factory.html#affe88a6b313f1e59e4396a4190ba9f7b">create</a>(std::string type, const std::string &amp;name, CPS::Logger::Level logLevel=CPS::Logger::Level::debug)</td><td class="entry"><a class="el" href="class_factory.html">Factory&lt; BaseClass &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_factory.html#a011daaa692e7c71ea3ccf02ef619e852">get</a>()</td><td class="entry"><a class="el" href="class_factory.html">Factory&lt; BaseClass &gt;</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_factory.html#ac5fa9df473fa7517a09bede2e981d19e">getItems</a>()</td><td class="entry"><a class="el" href="class_factory.html">Factory&lt; BaseClass &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_factory.html#a0ac4a78e00dd2f0439b93a57801bbe0c">registerExciter</a>(const std::string &amp;type, Creator&lt; BaseClass &gt; *Fn)</td><td class="entry"><a class="el" href="class_factory.html">Factory&lt; BaseClass &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
 </table></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

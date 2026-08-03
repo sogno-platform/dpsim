@@ -32,7 +32,7 @@
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="class_d_psim_1_1_direct_linear_solver.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="137.5,-101.88 0,-101.88 0,-79.62 137.5,-79.62 137.5,-101.88"/>
+<polygon fill="white" stroke="#666666" points="137.5,-101.88 0,-101.88 0,-79.62 137.5,-79.62 137.5,-101.88"/>
 <text text-anchor="middle" x="68.75" y="-88.38" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::DirectLinearSolver</text>
 </a>
 </g>
@@ -50,7 +50,7 @@
 <g id="Node000003" class="node">
 <title>Node3</title>
 <g id="a_Node000003"><a xlink:href="class_d_psim_1_1_direct_linear_solver_configuration.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="137.5,-195.75 0,-195.75 0,-159.25 137.5,-159.25 137.5,-195.75"/>
+<polygon fill="white" stroke="#666666" points="137.5,-195.75 0,-195.75 0,-159.25 137.5,-159.25 137.5,-195.75"/>
 <text text-anchor="start" x="8" y="-182.25" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::DirectLinearSolver</text>
 <text text-anchor="middle" x="68.75" y="-168" font-family="Helvetica,sans-Serif" font-size="10.00">Configuration</text>
 </a>

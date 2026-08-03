@@ -76,7 +76,7 @@
 <g id="Node000005" class="node">
 <title>Node5</title>
 <g id="a_Node000005"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_capacitor.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="299.38,-22.25 175.38,-22.25 175.38,0 299.38,0 299.38,-22.25"/>
+<polygon fill="white" stroke="#666666" points="299.38,-22.25 175.38,-22.25 175.38,0 299.38,0 299.38,-22.25"/>
 <text text-anchor="middle" x="237.38" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::Capacitor</text>
 </a>
 </g>

@@ -187,7 +187,7 @@
 <g id="Node000007" class="node">
 <title>Node7</title>
 <g id="a_Node000007"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="352.62,-461.75 237.62,-461.75 237.62,-411 352.62,-411 352.62,-461.75"/>
+<polygon fill="white" stroke="#666666" points="352.62,-461.75 237.62,-461.75 237.62,-411 352.62,-411 352.62,-461.75"/>
 <text text-anchor="start" x="245.62" y="-448.25" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="245.62" y="-434" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="295.12" y="-419.75" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; String &gt; &gt;</text>
@@ -247,7 +247,7 @@
 <g id="Node000009" class="node">
 <title>Node9</title>
 <g id="a_Node000009"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="115,-433.75 0,-433.75 0,-383 115,-383 115,-433.75"/>
+<polygon fill="white" stroke="#666666" points="115,-433.75 0,-433.75 0,-383 115,-383 115,-433.75"/>
 <text text-anchor="start" x="8" y="-420.25" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="8" y="-406" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="57.5" y="-391.75" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; T &gt; &gt;</text>
@@ -281,7 +281,7 @@
 <g id="Node000011" class="node">
 <title>Node11</title>
 <g id="a_Node000011"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="352.62,-355.75 237.62,-355.75 237.62,-305 352.62,-305 352.62,-355.75"/>
+<polygon fill="white" stroke="#666666" points="352.62,-355.75 237.62,-355.75 237.62,-305 352.62,-305 352.62,-355.75"/>
 <text text-anchor="start" x="245.62" y="-342.25" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="245.62" y="-328" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="295.12" y="-313.75" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Real &gt; &gt;</text>
@@ -315,7 +315,7 @@
 <g id="Node000013" class="node">
 <title>Node13</title>
 <g id="a_Node000013"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="352.62,-156.75 237.62,-156.75 237.62,-106 352.62,-106 352.62,-156.75"/>
+<polygon fill="white" stroke="#666666" points="352.62,-156.75 237.62,-156.75 237.62,-106 352.62,-106 352.62,-156.75"/>
 <text text-anchor="start" x="245.62" y="-143.25" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="245.62" y="-129" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="295.12" y="-114.75" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Bool &gt; &gt;</text>
@@ -345,7 +345,7 @@
 <g id="Node000015" class="node">
 <title>Node15</title>
 <g id="a_Node000015"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="352.62,-50.75 237.62,-50.75 237.62,0 352.62,0 352.62,-50.75"/>
+<polygon fill="white" stroke="#666666" points="352.62,-50.75 237.62,-50.75 237.62,0 352.62,0 352.62,-50.75"/>
 <text text-anchor="start" x="245.62" y="-37.25" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="245.62" y="-23" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="295.12" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; CPS::UInt &gt; &gt;</text>
@@ -365,7 +365,7 @@
 <g id="Node000016" class="node">
 <title>Node16</title>
 <g id="a_Node000016"><a xlink:href="class_d_psim_1_1_event_queue.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="584.25,-122.5 475.25,-122.5 475.25,-100.25 584.25,-100.25 584.25,-122.5"/>
+<polygon fill="white" stroke="#666666" points="584.25,-122.5 475.25,-122.5 475.25,-100.25 584.25,-100.25 584.25,-122.5"/>
 <text text-anchor="middle" x="529.75" y="-109" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::EventQueue</text>
 </a>
 </g>
@@ -384,7 +384,7 @@
 <g id="Node000017" class="node">
 <title>Node17</title>
 <g id="a_Node000017"><a xlink:href="class_c_p_s_1_1_system_topology.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="587.25,-82.5 472.25,-82.5 472.25,-60.25 587.25,-60.25 587.25,-82.5"/>
+<polygon fill="white" stroke="#666666" points="587.25,-82.5 472.25,-82.5 472.25,-60.25 587.25,-60.25 587.25,-82.5"/>
 <text text-anchor="middle" x="529.75" y="-69" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SystemTopology</text>
 </a>
 </g>
@@ -403,7 +403,7 @@
 <g id="Node000018" class="node">
 <title>Node18</title>
 <g id="a_Node000018"><a xlink:href="class_d_psim_1_1_direct_linear_solver_configuration.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="598.5,-42.62 461,-42.62 461,-6.12 598.5,-6.12 598.5,-42.62"/>
+<polygon fill="white" stroke="#666666" points="598.5,-42.62 461,-42.62 461,-6.12 598.5,-6.12 598.5,-42.62"/>
 <text text-anchor="start" x="469" y="-29.12" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::DirectLinearSolver</text>
 <text text-anchor="middle" x="529.75" y="-14.88" font-family="Helvetica,sans-Serif" font-size="10.00">Configuration</text>
 </a>

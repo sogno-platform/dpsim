@@ -176,7 +176,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000008" class="node">
 <title>Node8</title>
 <g id="a_Node000008"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_resistor.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="293.38,-462.25 173.12,-462.25 173.12,-440 293.38,-440 293.38,-462.25"/>
+<polygon fill="white" stroke="#666666" points="293.38,-462.25 173.12,-462.25 173.12,-440 293.38,-440 293.38,-462.25"/>
 <text text-anchor="middle" x="233.25" y="-448.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph3::Resistor</text>
 </a>
 </g>
@@ -374,7 +374,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000019" class="node">
 <title>Node19</title>
 <g id="a_Node000019"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_resistor.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="292.25,-22.25 174.25,-22.25 174.25,0 292.25,0 292.25,-22.25"/>
+<polygon fill="white" stroke="#666666" points="292.25,-22.25 174.25,-22.25 174.25,0 292.25,0 292.25,-22.25"/>
 <text text-anchor="middle" x="233.25" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph3::Resistor</text>
 </a>
 </g>

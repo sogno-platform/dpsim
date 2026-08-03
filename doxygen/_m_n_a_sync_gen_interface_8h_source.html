@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_m_n_a_sync_gen_interface_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_c606c461256b0aa853babb18ff6844c9.html">Solver</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">MNASyncGenInterface.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_m_n_a_sync_gen_interface_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -101,44 +109,64 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;dpsim-models/AttributeList.h&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;<a class="code" href="_attribute_list_8h.html">dpsim-models/AttributeList.h</a>&gt;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;dpsim-models/Config.h&gt;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;dpsim-models/Definitions.h&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;<a class="code" href="dpsim-models_2include_2dpsim-models_2_definitions_8h.html">dpsim-models/Definitions.h</a>&gt;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span>CPS {</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s.html">CPS</a> {</div>
 <div class="foldopen" id="foldopen00017" data-start="{" data-end="};">
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html">   17</a></span><span class="keyword">class </span><a class="code hl_function" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a1f43c0e7fdfc81ef05c41e3cb2573c5e">MNASyncGenInterface</a> {</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  Attribute&lt;Int&gt;::Ptr mNumIter;</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  Int mMaxIter = 25;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  Real mTolerance = 1e-6;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a7439d4b542ed0c1a8fb2142c2c93c117">   20</a></span>  <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;Int&gt;::Ptr</a> <a class="code hl_variable" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a7439d4b542ed0c1a8fb2142c2c93c117">mNumIter</a>;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a37c1d746b81a309609b6229161b8b90a">   22</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> <a class="code hl_variable" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a37c1d746b81a309609b6229161b8b90a">mMaxIter</a> = 25;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a6107112713051af9aa7ce043258e6268">   24</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="code hl_variable" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a6107112713051af9aa7ce043258e6268">mTolerance</a> = 1e-6;</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="keyword">typedef</span> std::shared_ptr&lt;MNASyncGenInterface&gt; Ptr;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="keyword">typedef</span> std::vector&lt;Ptr&gt; List;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a0eae826b2242049de1e259da488b08da">   27</a></span>  <span class="keyword">typedef</span> std::shared_ptr&lt;MNASyncGenInterface&gt; <a class="code hl_typedef" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a0eae826b2242049de1e259da488b08da">Ptr</a>;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a0690973e34c6f1baa8d27de3a57c902f">   28</a></span>  <span class="keyword">typedef</span> std::vector&lt;Ptr&gt; <a class="code hl_typedef" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a0690973e34c6f1baa8d27de3a57c902f">List</a>;</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <span class="keyword">virtual</span> <a class="code hl_function" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a1f43c0e7fdfc81ef05c41e3cb2573c5e">~MNASyncGenInterface</a>(){};</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#af2c2a7365b1ad1609a637cdb1c3f695c">   30</a></span>  <span class="keyword">virtual</span> <a class="code hl_function" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#af2c2a7365b1ad1609a637cdb1c3f695c">~MNASyncGenInterface</a>(){};</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <span class="comment">// Solver functions</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> correctorStep() = 0;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> updateVoltage(<span class="keyword">const</span> Matrix &amp;leftVector) = 0;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <span class="keyword">virtual</span> <span class="keywordtype">bool</span> requiresIteration() { <span class="keywordflow">return</span> <span class="keyword">false</span>; }</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a2c68ba119680d791d76178222113520a">   34</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a2c68ba119680d791d76178222113520a">correctorStep</a>() = 0;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#af8018a5f5cfb7dd4c252316d785903e9">   36</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#af8018a5f5cfb7dd4c252316d785903e9">updateVoltage</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;leftVector) = 0;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a58ebbb3b9ca1c39ea6024300b85f44c2">   38</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a58ebbb3b9ca1c39ea6024300b85f44c2">requiresIteration</a>() { <span class="keywordflow">return</span> <span class="keyword">false</span>; }</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#ac309e80826a824dda6dcfdd1bc051024">   42</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#ac309e80826a824dda6dcfdd1bc051024">setMaxIterations</a>(Int maxIterations) { mMaxIter = maxIterations; }</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keywordtype">void</span> setTolerance(Real Tolerance) { mTolerance = Tolerance; }</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#ac309e80826a824dda6dcfdd1bc051024">   42</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#ac309e80826a824dda6dcfdd1bc051024">setMaxIterations</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> maxIterations) { <a class="code hl_variable" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a37c1d746b81a309609b6229161b8b90a">mMaxIter</a> = maxIterations; }</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a90eeb488471f94dafec2a319549acadd">   44</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a90eeb488471f94dafec2a319549acadd">setTolerance</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> Tolerance) { <a class="code hl_variable" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a6107112713051af9aa7ce043258e6268">mTolerance</a> = Tolerance; }</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="keyword">protected</span>:</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a1f43c0e7fdfc81ef05c41e3cb2573c5e">   48</a></span>  <a class="code hl_function" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a1f43c0e7fdfc81ef05c41e3cb2573c5e">MNASyncGenInterface</a>() {}</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>};</div>
 </div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>} <span class="comment">// namespace CPS</span></div>
+<div class="ttc" id="a_attribute_list_8h_html"><div class="ttname"><a href="_attribute_list_8h.html">AttributeList.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_ad552c848f780007d59f489540fa7e4d6"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">CPS::Attribute::Ptr</a></div><div class="ttdeci">AttributePointer&lt; Attribute&lt; T &gt; &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00250">Attribute.h:250</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_m_n_a_sync_gen_interface_html_a0690973e34c6f1baa8d27de3a57c902f"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a0690973e34c6f1baa8d27de3a57c902f">CPS::MNASyncGenInterface::List</a></div><div class="ttdeci">std::vector&lt; Ptr &gt; List</div><div class="ttdef"><b>Definition</b> <a href="#l00028">MNASyncGenInterface.h:28</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_m_n_a_sync_gen_interface_html_a0eae826b2242049de1e259da488b08da"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a0eae826b2242049de1e259da488b08da">CPS::MNASyncGenInterface::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; MNASyncGenInterface &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="#l00027">MNASyncGenInterface.h:27</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_m_n_a_sync_gen_interface_html_a1f43c0e7fdfc81ef05c41e3cb2573c5e"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a1f43c0e7fdfc81ef05c41e3cb2573c5e">CPS::MNASyncGenInterface::MNASyncGenInterface</a></div><div class="ttdeci">MNASyncGenInterface()</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition</b> <a href="#l00048">MNASyncGenInterface.h:48</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_m_n_a_sync_gen_interface_html_a2c68ba119680d791d76178222113520a"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a2c68ba119680d791d76178222113520a">CPS::MNASyncGenInterface::correctorStep</a></div><div class="ttdeci">virtual void correctorStep()=0</div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_m_n_a_sync_gen_interface_html_a37c1d746b81a309609b6229161b8b90a"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a37c1d746b81a309609b6229161b8b90a">CPS::MNASyncGenInterface::mMaxIter</a></div><div class="ttdeci">Int mMaxIter</div><div class="ttdef"><b>Definition</b> <a href="#l00022">MNASyncGenInterface.h:22</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_m_n_a_sync_gen_interface_html_a58ebbb3b9ca1c39ea6024300b85f44c2"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a58ebbb3b9ca1c39ea6024300b85f44c2">CPS::MNASyncGenInterface::requiresIteration</a></div><div class="ttdeci">virtual bool requiresIteration()</div><div class="ttdef"><b>Definition</b> <a href="#l00038">MNASyncGenInterface.h:38</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_m_n_a_sync_gen_interface_html_a6107112713051af9aa7ce043258e6268"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a6107112713051af9aa7ce043258e6268">CPS::MNASyncGenInterface::mTolerance</a></div><div class="ttdeci">Real mTolerance</div><div class="ttdef"><b>Definition</b> <a href="#l00024">MNASyncGenInterface.h:24</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_m_n_a_sync_gen_interface_html_a7439d4b542ed0c1a8fb2142c2c93c117"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a7439d4b542ed0c1a8fb2142c2c93c117">CPS::MNASyncGenInterface::mNumIter</a></div><div class="ttdeci">Attribute&lt; Int &gt;::Ptr mNumIter</div><div class="ttdef"><b>Definition</b> <a href="#l00020">MNASyncGenInterface.h:20</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_m_n_a_sync_gen_interface_html_a90eeb488471f94dafec2a319549acadd"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a90eeb488471f94dafec2a319549acadd">CPS::MNASyncGenInterface::setTolerance</a></div><div class="ttdeci">void setTolerance(Real Tolerance)</div><div class="ttdef"><b>Definition</b> <a href="#l00044">MNASyncGenInterface.h:44</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_m_n_a_sync_gen_interface_html_ac309e80826a824dda6dcfdd1bc051024"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#ac309e80826a824dda6dcfdd1bc051024">CPS::MNASyncGenInterface::setMaxIterations</a></div><div class="ttdeci">void setMaxIterations(Int maxIterations)</div><div class="ttdef"><b>Definition</b> <a href="#l00042">MNASyncGenInterface.h:42</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_m_n_a_sync_gen_interface_html_af2c2a7365b1ad1609a637cdb1c3f695c"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#af2c2a7365b1ad1609a637cdb1c3f695c">CPS::MNASyncGenInterface::~MNASyncGenInterface</a></div><div class="ttdeci">virtual ~MNASyncGenInterface()</div><div class="ttdef"><b>Definition</b> <a href="#l00030">MNASyncGenInterface.h:30</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_m_n_a_sync_gen_interface_html_af8018a5f5cfb7dd4c252316d785903e9"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#af8018a5f5cfb7dd4c252316d785903e9">CPS::MNASyncGenInterface::updateVoltage</a></div><div class="ttdeci">virtual void updateVoltage(const Matrix &amp;leftVector)=0</div></div>
+<div class="ttc" id="adpsim-models_2include_2dpsim-models_2_definitions_8h_html"><div class="ttname"><a href="dpsim-models_2include_2dpsim-models_2_definitions_8h.html">Definitions.h</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html"><div class="ttname"><a href="namespace_c_p_s.html">CPS</a></div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00017">Attribute.h:17</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a081464dfe063130c6fca7929ce291b15"><div class="ttname"><a href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">CPS::Matrix</a></div><div class="ttdeci">Eigen::Matrix&lt; Real, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor &gt; Matrix</div><div class="ttdoc">Dense matrix for real numbers.</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00081">Definitions.h:81</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a603c4b77d70922bc0423adc57725df50"><div class="ttname"><a href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a></div><div class="ttdeci">double Real</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00062">Definitions.h:62</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_aabddb6241134e6ad9d61ae357bc104fa"><div class="ttname"><a href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">CPS::Int</a></div><div class="ttdeci">int Int</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00061">Definitions.h:61</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_c606c461256b0aa853babb18ff6844c9.html">Solver</a></li><li class="navelem"><a class="el" href="_m_n_a_sync_gen_interface_8h.html">MNASyncGenInterface.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

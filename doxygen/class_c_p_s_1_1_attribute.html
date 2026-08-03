@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_c_p_s_1_1_attribute.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>CPS</b></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
@@ -102,12 +110,12 @@ $(function(){ initResizable(false); });
 Inheritance diagram for CPS::Attribute&lt; T &gt;:</div>
 <div class="dyncontent">
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_attribute__inherit__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for CPS::Attribute&lt; T &gt;:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_attribute__coll__graph.svg" width="328" height="156"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -118,11 +126,11 @@ Public Types</h2></td></tr>
 <tr class="inherit_header pub_types_class_c_p_s_1_1_attribute_base"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_class_c_p_s_1_1_attribute_base')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="class_c_p_s_1_1_attribute_base.html">CPS::AttributeBase</a></td></tr>
 <tr class="memitem:af06cf61c74c46ce667c58f124d69a679 inherit pub_types_class_c_p_s_1_1_attribute_base" id="r_af06cf61c74c46ce667c58f124d69a679"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html">AttributeBase</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">Ptr</a></td></tr>
 <tr class="separator:af06cf61c74c46ce667c58f124d69a679 inherit pub_types_class_c_p_s_1_1_attribute_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af43dac6e42f93597b33862000dc563be inherit pub_types_class_c_p_s_1_1_attribute_base" id="r_af43dac6e42f93597b33862000dc563be"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">List</a></td></tr>
+<tr class="memitem:af43dac6e42f93597b33862000dc563be inherit pub_types_class_c_p_s_1_1_attribute_base" id="r_af43dac6e42f93597b33862000dc563be"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">List</a></td></tr>
 <tr class="separator:af43dac6e42f93597b33862000dc563be inherit pub_types_class_c_p_s_1_1_attribute_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa17d63b4a338a173e15abb1e9841944 inherit pub_types_class_c_p_s_1_1_attribute_base" id="r_afa17d63b4a338a173e15abb1e9841944"><td class="memItemLeft" align="right" valign="top">typedef std::set&lt; <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">Ptr</a>, <a class="el" href="struct_c_p_s_1_1_attribute_cmp.html">AttributeCmp</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html">AttributeBase</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_base.html#afa17d63b4a338a173e15abb1e9841944">Set</a></td></tr>
+<tr class="memitem:afa17d63b4a338a173e15abb1e9841944 inherit pub_types_class_c_p_s_1_1_attribute_base" id="r_afa17d63b4a338a173e15abb1e9841944"><td class="memItemLeft" align="right" valign="top">typedef std::set&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">Ptr</a>, <a class="el" href="struct_c_p_s_1_1_attribute_cmp.html">AttributeCmp</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html">AttributeBase</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_base.html#afa17d63b4a338a173e15abb1e9841944">Set</a></td></tr>
 <tr class="separator:afa17d63b4a338a173e15abb1e9841944 inherit pub_types_class_c_p_s_1_1_attribute_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe3836eb4d78517b454cd0a1d1aabd1e inherit pub_types_class_c_p_s_1_1_attribute_base" id="r_afe3836eb4d78517b454cd0a1d1aabd1e"><td class="memItemLeft" align="right" valign="top">typedef std::map&lt; String, <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_base.html#afe3836eb4d78517b454cd0a1d1aabd1e">Map</a></td></tr>
+<tr class="memitem:afe3836eb4d78517b454cd0a1d1aabd1e inherit pub_types_class_c_p_s_1_1_attribute_base" id="r_afe3836eb4d78517b454cd0a1d1aabd1e"><td class="memItemLeft" align="right" valign="top">typedef std::map&lt; <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>, <a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_base.html#afe3836eb4d78517b454cd0a1d1aabd1e">Map</a></td></tr>
 <tr class="separator:afe3836eb4d78517b454cd0a1d1aabd1e inherit pub_types_class_c_p_s_1_1_attribute_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -133,12 +141,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a838e3d8f79bc73a91e6dd44c6d83c97e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98da5df203d168850e101521ea6c3147" id="r_a98da5df203d168850e101521ea6c3147"><td class="memItemLeft" align="right" valign="top">virtual T &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a98da5df203d168850e101521ea6c3147">get</a> ()=0</td></tr>
 <tr class="separator:a98da5df203d168850e101521ea6c3147"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a710a833d4a1ad10f73da67105850efb0" id="r_a710a833d4a1ad10f73da67105850efb0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a710a833d4a1ad10f73da67105850efb0">setReference</a> (<a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; T &gt;::Ptr reference)=0</td></tr>
+<tr class="memitem:a710a833d4a1ad10f73da67105850efb0" id="r_a710a833d4a1ad10f73da67105850efb0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a710a833d4a1ad10f73da67105850efb0">setReference</a> (<a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; T &gt;<a class="el" href="#ad552c848f780007d59f489540fa7e4d6">::Ptr</a> reference)=0</td></tr>
 <tr class="separator:a710a833d4a1ad10f73da67105850efb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b33beb625bf79a8a868e6d0019e63e1" id="r_a5b33beb625bf79a8a868e6d0019e63e1"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b33beb625bf79a8a868e6d0019e63e1">asRawPointer</a> ()=0</td></tr>
 <tr class="separator:a5b33beb625bf79a8a868e6d0019e63e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a839fdbf14db973e9388bef208d39c833" id="r_a839fdbf14db973e9388bef208d39c833"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a839fdbf14db973e9388bef208d39c833">toString</a> () override</td></tr>
-<tr class="memdesc:a839fdbf14db973e9388bef208d39c833"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fallback method for all attribute types not covered by the specifications in <a class="el" href="_attribute_8cpp_source.html">Attribute.cpp</a>.  <br /></td></tr>
+<tr class="memitem:a839fdbf14db973e9388bef208d39c833" id="r_a839fdbf14db973e9388bef208d39c833"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a839fdbf14db973e9388bef208d39c833">toString</a> () override</td></tr>
+<tr class="memdesc:a839fdbf14db973e9388bef208d39c833"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fallback method for all attribute types not covered by the specifications in <a class="el" href="_attribute_8cpp.html">Attribute.cpp</a>.  <br /></td></tr>
 <tr class="separator:a839fdbf14db973e9388bef208d39c833"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54f5609f916a9dc53321193ed3c723f9" id="r_a54f5609f916a9dc53321193ed3c723f9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a54f5609f916a9dc53321193ed3c723f9">operator const T &amp;</a> ()</td></tr>
 <tr class="memdesc:a54f5609f916a9dc53321193ed3c723f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">User-defined cast operator.  <br /></td></tr>
@@ -146,48 +154,50 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a08003986ee8ed2e5cd5250fffaad0481" id="r_a08003986ee8ed2e5cd5250fffaad0481"><td class="memItemLeft" align="right" valign="top">T &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a08003986ee8ed2e5cd5250fffaad0481">operator*</a> ()</td></tr>
 <tr class="memdesc:a08003986ee8ed2e5cd5250fffaad0481"><td class="mdescLeft">&#160;</td><td class="mdescRight">User-defined dereference operator.  <br /></td></tr>
 <tr class="separator:a08003986ee8ed2e5cd5250fffaad0481"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abd47af2d0f12236a7f5686e7ac5ad561" id="r_abd47af2d0f12236a7f5686e7ac5ad561"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abd47af2d0f12236a7f5686e7ac5ad561">copyValue</a> (<a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributeBase::Ptr</a> copyFrom) override</td></tr>
+<tr class="memitem:abd47af2d0f12236a7f5686e7ac5ad561" id="r_abd47af2d0f12236a7f5686e7ac5ad561"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abd47af2d0f12236a7f5686e7ac5ad561">copyValue</a> (<a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">AttributeBase::Ptr</a> copyFrom) override</td></tr>
 <tr class="memdesc:abd47af2d0f12236a7f5686e7ac5ad561"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the attribute value of <code>copyFrom</code> onto this attribute.  <br /></td></tr>
 <tr class="separator:abd47af2d0f12236a7f5686e7ac5ad561"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a074fc48709480cda0300963a2a5e48d2" id="r_a074fc48709480cda0300963a2a5e48d2"><td class="memItemLeft" align="right" valign="top">const std::type_info &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a074fc48709480cda0300963a2a5e48d2">getType</a> () override</td></tr>
 <tr class="memdesc:a074fc48709480cda0300963a2a5e48d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the type of this attribute.  <br /></td></tr>
 <tr class="separator:a074fc48709480cda0300963a2a5e48d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9700bdb5f0798aa0e2dd3a3e374b5251" id="r_a9700bdb5f0798aa0e2dd3a3e374b5251"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributeBase::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9700bdb5f0798aa0e2dd3a3e374b5251">cloneValueOntoNewAttribute</a> () override</td></tr>
+<tr class="memitem:a9700bdb5f0798aa0e2dd3a3e374b5251" id="r_a9700bdb5f0798aa0e2dd3a3e374b5251"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">AttributeBase::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9700bdb5f0798aa0e2dd3a3e374b5251">cloneValueOntoNewAttribute</a> () override</td></tr>
 <tr class="memdesc:a9700bdb5f0798aa0e2dd3a3e374b5251"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a new attribute of the same type and copies the current value in the heap. Does not copy any dependency relations!  <br /></td></tr>
 <tr class="separator:a9700bdb5f0798aa0e2dd3a3e374b5251"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6997f5d2f73c3149b113414b9b4708b" id="r_af6997f5d2f73c3149b113414b9b4708b"><td class="memTemplParams" colspan="2">template&lt;class U&gt; </td></tr>
-<tr class="memitem:af6997f5d2f73c3149b113414b9b4708b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; U &gt;::Ptr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#af6997f5d2f73c3149b113414b9b4708b">derive</a> (typename <a class="el" href="class_c_p_s_1_1_attribute_update_task.html">AttributeUpdateTask</a>&lt; U, T &gt;::Actor getter=typename <a class="el" href="class_c_p_s_1_1_attribute_update_task.html">AttributeUpdateTask</a>&lt; U, T &gt;::Actor(), typename <a class="el" href="class_c_p_s_1_1_attribute_update_task.html">AttributeUpdateTask</a>&lt; U, T &gt;::Actor setter=typename <a class="el" href="class_c_p_s_1_1_attribute_update_task.html">AttributeUpdateTask</a>&lt; U, T &gt;::Actor())</td></tr>
+<tr class="memitem:af6997f5d2f73c3149b113414b9b4708b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; U &gt;<a class="el" href="#ad552c848f780007d59f489540fa7e4d6">::Ptr</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#af6997f5d2f73c3149b113414b9b4708b">derive</a> (typename <a class="el" href="class_c_p_s_1_1_attribute_update_task.html">AttributeUpdateTask</a>&lt; U, T &gt;::Actor getter=typename <a class="el" href="class_c_p_s_1_1_attribute_update_task.html">AttributeUpdateTask</a>&lt; U, T &gt;::Actor(), typename <a class="el" href="class_c_p_s_1_1_attribute_update_task.html">AttributeUpdateTask</a>&lt; U, T &gt;::Actor setter=typename <a class="el" href="class_c_p_s_1_1_attribute_update_task.html">AttributeUpdateTask</a>&lt; U, T &gt;::Actor())</td></tr>
 <tr class="separator:af6997f5d2f73c3149b113414b9b4708b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5efea9b781de8c9eb6e0bd0f95aaf4f6" id="r_a5efea9b781de8c9eb6e0bd0f95aaf4f6"><td class="memTemplParams" colspan="2">template&lt;typename U = T, std::enable_if_t&lt; std::is_same_v&lt; Complex, U &gt;, bool &gt; = true&gt; </td></tr>
-<tr class="memitem:a5efea9b781de8c9eb6e0bd0f95aaf4f6"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a5efea9b781de8c9eb6e0bd0f95aaf4f6">deriveReal</a> ()</td></tr>
+<tr class="memitem:a5efea9b781de8c9eb6e0bd0f95aaf4f6" id="r_a5efea9b781de8c9eb6e0bd0f95aaf4f6"><td class="memTemplParams" colspan="2">template&lt;typename U = T, std::enable_if_t&lt; std::is_same_v&lt; <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a>, U &gt;, bool &gt; = true&gt; </td></tr>
+<tr class="memitem:a5efea9b781de8c9eb6e0bd0f95aaf4f6"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a5efea9b781de8c9eb6e0bd0f95aaf4f6">deriveReal</a> ()</td></tr>
 <tr class="separator:a5efea9b781de8c9eb6e0bd0f95aaf4f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a300d11c09db31b1723df9036d95ae50c" id="r_a300d11c09db31b1723df9036d95ae50c"><td class="memTemplParams" colspan="2">template&lt;typename U = T, std::enable_if_t&lt; std::is_same_v&lt; Complex, U &gt;, bool &gt; = true&gt; </td></tr>
-<tr class="memitem:a300d11c09db31b1723df9036d95ae50c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a300d11c09db31b1723df9036d95ae50c">deriveImag</a> ()</td></tr>
+<tr class="memitem:a300d11c09db31b1723df9036d95ae50c" id="r_a300d11c09db31b1723df9036d95ae50c"><td class="memTemplParams" colspan="2">template&lt;typename U = T, std::enable_if_t&lt; std::is_same_v&lt; <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a>, U &gt;, bool &gt; = true&gt; </td></tr>
+<tr class="memitem:a300d11c09db31b1723df9036d95ae50c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a300d11c09db31b1723df9036d95ae50c">deriveImag</a> ()</td></tr>
 <tr class="separator:a300d11c09db31b1723df9036d95ae50c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab87051d8f3e73284f7a3d23f686e7a4e" id="r_ab87051d8f3e73284f7a3d23f686e7a4e"><td class="memTemplParams" colspan="2">template&lt;typename U = T, std::enable_if_t&lt; std::is_same_v&lt; Complex, U &gt;, bool &gt; = true&gt; </td></tr>
-<tr class="memitem:ab87051d8f3e73284f7a3d23f686e7a4e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ab87051d8f3e73284f7a3d23f686e7a4e">deriveMag</a> ()</td></tr>
+<tr class="memitem:ab87051d8f3e73284f7a3d23f686e7a4e" id="r_ab87051d8f3e73284f7a3d23f686e7a4e"><td class="memTemplParams" colspan="2">template&lt;typename U = T, std::enable_if_t&lt; std::is_same_v&lt; <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a>, U &gt;, bool &gt; = true&gt; </td></tr>
+<tr class="memitem:ab87051d8f3e73284f7a3d23f686e7a4e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ab87051d8f3e73284f7a3d23f686e7a4e">deriveMag</a> ()</td></tr>
 <tr class="separator:ab87051d8f3e73284f7a3d23f686e7a4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a421bf7428537cc353addb39d3c72da0e" id="r_a421bf7428537cc353addb39d3c72da0e"><td class="memTemplParams" colspan="2">template&lt;typename U = T, std::enable_if_t&lt; std::is_same_v&lt; Complex, U &gt;, bool &gt; = true&gt; </td></tr>
-<tr class="memitem:a421bf7428537cc353addb39d3c72da0e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a421bf7428537cc353addb39d3c72da0e">derivePhase</a> ()</td></tr>
+<tr class="memitem:a421bf7428537cc353addb39d3c72da0e" id="r_a421bf7428537cc353addb39d3c72da0e"><td class="memTemplParams" colspan="2">template&lt;typename U = T, std::enable_if_t&lt; std::is_same_v&lt; <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a>, U &gt;, bool &gt; = true&gt; </td></tr>
+<tr class="memitem:a421bf7428537cc353addb39d3c72da0e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a421bf7428537cc353addb39d3c72da0e">derivePhase</a> ()</td></tr>
 <tr class="separator:a421bf7428537cc353addb39d3c72da0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b315aa92740b84440e34b394f9d4a77" id="r_a1b315aa92740b84440e34b394f9d4a77"><td class="memTemplParams" colspan="2">template&lt;typename U = T, std::enable_if_t&lt; std::is_same_v&lt; Real, U &gt;||std::is_same_v&lt; Complex, U &gt;, bool &gt; = true&gt; </td></tr>
+<tr class="memitem:a1b315aa92740b84440e34b394f9d4a77" id="r_a1b315aa92740b84440e34b394f9d4a77"><td class="memTemplParams" colspan="2">template&lt;typename U = T, std::enable_if_t&lt; std::is_same_v&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>, U &gt;||std::is_same_v&lt; <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a>, U &gt;, bool &gt; = true&gt; </td></tr>
 <tr class="memitem:a1b315aa92740b84440e34b394f9d4a77"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a1b315aa92740b84440e34b394f9d4a77">deriveScaled</a> (T scale)</td></tr>
 <tr class="separator:a1b315aa92740b84440e34b394f9d4a77"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a506d9cb00168e494fdb855978ca9a3e4" id="r_a506d9cb00168e494fdb855978ca9a3e4"><td class="memTemplParams" colspan="2">template&lt;class U, class V = T, std::enable_if_t&lt; std::is_same_v&lt; CPS::MatrixVar&lt; U &gt;, V &gt;, bool &gt; = true&gt; </td></tr>
-<tr class="memitem:a506d9cb00168e494fdb855978ca9a3e4"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; U &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a506d9cb00168e494fdb855978ca9a3e4">deriveCoeff</a> (typename CPS::MatrixVar&lt; U &gt;::Index row, typename CPS::MatrixVar&lt; U &gt;::Index column)</td></tr>
+<tr class="memitem:a506d9cb00168e494fdb855978ca9a3e4" id="r_a506d9cb00168e494fdb855978ca9a3e4"><td class="memTemplParams" colspan="2">template&lt;class U, class V = T, std::enable_if_t&lt; std::is_same_v&lt; <a class="el" href="namespace_c_p_s.html#aac8786917470ab4cc7b3c610e2eb3ab1">CPS::MatrixVar</a>&lt; U &gt;, V &gt;, bool &gt; = true&gt; </td></tr>
+<tr class="memitem:a506d9cb00168e494fdb855978ca9a3e4"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; U &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a506d9cb00168e494fdb855978ca9a3e4">deriveCoeff</a> (typename <a class="el" href="namespace_c_p_s.html#aac8786917470ab4cc7b3c610e2eb3ab1">CPS::MatrixVar</a>&lt; U &gt;::Index row, typename <a class="el" href="namespace_c_p_s.html#aac8786917470ab4cc7b3c610e2eb3ab1">CPS::MatrixVar</a>&lt; U &gt;::Index column)</td></tr>
 <tr class="separator:a506d9cb00168e494fdb855978ca9a3e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6c1d45fe21dc8cabee918586149820bd" id="r_a6c1d45fe21dc8cabee918586149820bd"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6c1d45fe21dc8cabee918586149820bd">toString</a> ()</td></tr>
+<tr class="memitem:a6c1d45fe21dc8cabee918586149820bd" id="r_a6c1d45fe21dc8cabee918586149820bd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6c1d45fe21dc8cabee918586149820bd">toString</a> ()</td></tr>
 <tr class="separator:a6c1d45fe21dc8cabee918586149820bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a771a34f4aa3995ac0e3f2ffbb29850a8" id="r_a771a34f4aa3995ac0e3f2ffbb29850a8"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a771a34f4aa3995ac0e3f2ffbb29850a8">toString</a> ()</td></tr>
+<tr class="memitem:a771a34f4aa3995ac0e3f2ffbb29850a8" id="r_a771a34f4aa3995ac0e3f2ffbb29850a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a771a34f4aa3995ac0e3f2ffbb29850a8">toString</a> ()</td></tr>
 <tr class="separator:a771a34f4aa3995ac0e3f2ffbb29850a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec20e1601092fb2480ae5c8b805f72d6" id="r_aec20e1601092fb2480ae5c8b805f72d6"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aec20e1601092fb2480ae5c8b805f72d6">toString</a> ()</td></tr>
+<tr class="memitem:aec20e1601092fb2480ae5c8b805f72d6" id="r_aec20e1601092fb2480ae5c8b805f72d6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aec20e1601092fb2480ae5c8b805f72d6">toString</a> ()</td></tr>
 <tr class="separator:aec20e1601092fb2480ae5c8b805f72d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_c_p_s_1_1_attribute_base"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_c_p_s_1_1_attribute_base')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_c_p_s_1_1_attribute_base.html">CPS::AttributeBase</a></td></tr>
 <tr class="memitem:a3f9c6108086afcc87b26520c6fffa5c4 inherit pub_methods_class_c_p_s_1_1_attribute_base" id="r_a3f9c6108086afcc87b26520c6fffa5c4"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_base.html#a3f9c6108086afcc87b26520c6fffa5c4">isStatic</a> () const =0</td></tr>
 <tr class="separator:a3f9c6108086afcc87b26520c6fffa5c4 inherit pub_methods_class_c_p_s_1_1_attribute_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad239e5eb700b2f6a13f0cf0a417e3d23 inherit pub_methods_class_c_p_s_1_1_attribute_base" id="r_ad239e5eb700b2f6a13f0cf0a417e3d23"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_base.html#ad239e5eb700b2f6a13f0cf0a417e3d23">appendDependencies</a> (AttributeBase::Set *deps)=0</td></tr>
+<tr class="memitem:a787ce564b1031f0fe41406cffc2f257f inherit pub_methods_class_c_p_s_1_1_attribute_base" id="r_a787ce564b1031f0fe41406cffc2f257f"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_base.html#a787ce564b1031f0fe41406cffc2f257f">~AttributeBase</a> ()=default</td></tr>
+<tr class="separator:a787ce564b1031f0fe41406cffc2f257f inherit pub_methods_class_c_p_s_1_1_attribute_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad239e5eb700b2f6a13f0cf0a417e3d23 inherit pub_methods_class_c_p_s_1_1_attribute_base" id="r_ad239e5eb700b2f6a13f0cf0a417e3d23"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_base.html#ad239e5eb700b2f6a13f0cf0a417e3d23">appendDependencies</a> (<a class="el" href="class_c_p_s_1_1_attribute_base.html#afa17d63b4a338a173e15abb1e9841944">AttributeBase::Set</a> *deps)=0</td></tr>
 <tr class="separator:ad239e5eb700b2f6a13f0cf0a417e3d23 inherit pub_methods_class_c_p_s_1_1_attribute_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abda122ccbefeb889b8d28b11354859e4 inherit pub_methods_class_c_p_s_1_1_attribute_base" id="r_abda122ccbefeb889b8d28b11354859e4"><td class="memItemLeft" align="right" valign="top">virtual AttributeBase::Set&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_base.html#abda122ccbefeb889b8d28b11354859e4">getDependencies</a> () final</td></tr>
+<tr class="memitem:abda122ccbefeb889b8d28b11354859e4 inherit pub_methods_class_c_p_s_1_1_attribute_base" id="r_abda122ccbefeb889b8d28b11354859e4"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_c_p_s_1_1_attribute_base.html#afa17d63b4a338a173e15abb1e9841944">AttributeBase::Set</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_base.html#abda122ccbefeb889b8d28b11354859e4">getDependencies</a> () final</td></tr>
 <tr class="separator:abda122ccbefeb889b8d28b11354859e4 inherit pub_methods_class_c_p_s_1_1_attribute_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
@@ -315,7 +325,7 @@ template&lt;class T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributeBase::Ptr</a> <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; T &gt;::cloneValueOntoNewAttribute </td>
+          <td class="memname"><a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">AttributeBase::Ptr</a> <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; T &gt;::cloneValueOntoNewAttribute </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -351,7 +361,7 @@ template&lt;class T&gt; </div>
         <tr>
           <td class="memname">bool <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; T &gt;::copyValue </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributeBase::Ptr</a></td>          <td class="paramname"><span class="paramname"><em>copyFrom</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">AttributeBase::Ptr</a></td>          <td class="paramname"><span class="paramname"><em>copyFrom</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -385,7 +395,7 @@ template&lt;class U&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; U &gt;::Ptr <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; T &gt;::derive </td>
+          <td class="memname"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; U &gt;<a class="el" href="#ad552c848f780007d59f489540fa7e4d6">::Ptr</a> <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; T &gt;::derive </td>
           <td>(</td>
           <td class="paramtype">typename <a class="el" href="class_c_p_s_1_1_attribute_update_task.html">AttributeUpdateTask</a>&lt; U, T &gt;::Actor</td>          <td class="paramname"><span class="paramname"><em>getter</em></span><span class="paramdefsep"> = </span><span class="paramdefval">typename&#160;<a class="el" href="class_c_p_s_1_1_attribute_update_task.html">AttributeUpdateTask</a>&lt;U,&#160;T&gt;::Actor()</span>, </td>
         </tr>
@@ -423,7 +433,7 @@ template&lt;class U&gt; </div>
 <div class="memtemplate">
 template&lt;class T&gt; </div>
 <div class="memtemplate">
-template&lt;class U, class V = T, std::enable_if_t&lt; std::is_same_v&lt; CPS::MatrixVar&lt; U &gt;, V &gt;, bool &gt; = true&gt; </div>
+template&lt;class U, class V = T, std::enable_if_t&lt; std::is_same_v&lt; <a class="el" href="namespace_c_p_s.html#aac8786917470ab4cc7b3c610e2eb3ab1">CPS::MatrixVar</a>&lt; U &gt;, V &gt;, bool &gt; = true&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -431,12 +441,12 @@ template&lt;class U, class V = T, std::enable_if_t&lt; std::is_same_v&lt; CPS::M
         <tr>
           <td class="memname"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; U &gt; &gt; <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; T &gt;::deriveCoeff </td>
           <td>(</td>
-          <td class="paramtype">typename CPS::MatrixVar&lt; U &gt;::Index</td>          <td class="paramname"><span class="paramname"><em>row</em></span>, </td>
+          <td class="paramtype">typename <a class="el" href="namespace_c_p_s.html#aac8786917470ab4cc7b3c610e2eb3ab1">CPS::MatrixVar</a>&lt; U &gt;::Index</td>          <td class="paramname"><span class="paramname"><em>row</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">typename CPS::MatrixVar&lt; U &gt;::Index</td>          <td class="paramname"><span class="paramname"><em>column</em></span>&#160;)</td>
+          <td class="paramtype">typename <a class="el" href="namespace_c_p_s.html#aac8786917470ab4cc7b3c610e2eb3ab1">CPS::MatrixVar</a>&lt; U &gt;::Index</td>          <td class="paramname"><span class="paramname"><em>column</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -447,7 +457,7 @@ template&lt;class U, class V = T, std::enable_if_t&lt; std::is_same_v&lt; CPS::M
 </div><div class="memdoc">
 <p>Convenience method for deriving an attribute which covers one coefficient of this matrix </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">U</td><td>The type of the coefficient (usally Real or Complex) </td></tr>
+    <tr><td class="paramname">U</td><td>The type of the coefficient (usally <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> or <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a>) </td></tr>
     <tr><td class="paramname">row</td><td>The coefficients row coordinate </td></tr>
     <tr><td class="paramname">column</td><td>The coefficients column coordinate </td></tr>
   </table>
@@ -467,13 +477,13 @@ template&lt;class U, class V = T, std::enable_if_t&lt; std::is_same_v&lt; CPS::M
 <div class="memtemplate">
 template&lt;class T&gt; </div>
 <div class="memtemplate">
-template&lt;typename U = T, std::enable_if_t&lt; std::is_same_v&lt; Complex, U &gt;, bool &gt; = true&gt; </div>
+template&lt;typename U = T, std::enable_if_t&lt; std::is_same_v&lt; <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a>, U &gt;, bool &gt; = true&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt; &gt; <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; T &gt;::deriveImag </td>
+          <td class="memname"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt; &gt; <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; T &gt;::deriveImag </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -499,13 +509,13 @@ template&lt;typename U = T, std::enable_if_t&lt; std::is_same_v&lt; Complex, U &
 <div class="memtemplate">
 template&lt;class T&gt; </div>
 <div class="memtemplate">
-template&lt;typename U = T, std::enable_if_t&lt; std::is_same_v&lt; Complex, U &gt;, bool &gt; = true&gt; </div>
+template&lt;typename U = T, std::enable_if_t&lt; std::is_same_v&lt; <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a>, U &gt;, bool &gt; = true&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt; &gt; <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; T &gt;::deriveMag </td>
+          <td class="memname"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt; &gt; <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; T &gt;::deriveMag </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -531,13 +541,13 @@ template&lt;typename U = T, std::enable_if_t&lt; std::is_same_v&lt; Complex, U &
 <div class="memtemplate">
 template&lt;class T&gt; </div>
 <div class="memtemplate">
-template&lt;typename U = T, std::enable_if_t&lt; std::is_same_v&lt; Complex, U &gt;, bool &gt; = true&gt; </div>
+template&lt;typename U = T, std::enable_if_t&lt; std::is_same_v&lt; <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a>, U &gt;, bool &gt; = true&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt; &gt; <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; T &gt;::derivePhase </td>
+          <td class="memname"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt; &gt; <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; T &gt;::derivePhase </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -563,13 +573,13 @@ template&lt;typename U = T, std::enable_if_t&lt; std::is_same_v&lt; Complex, U &
 <div class="memtemplate">
 template&lt;class T&gt; </div>
 <div class="memtemplate">
-template&lt;typename U = T, std::enable_if_t&lt; std::is_same_v&lt; Complex, U &gt;, bool &gt; = true&gt; </div>
+template&lt;typename U = T, std::enable_if_t&lt; std::is_same_v&lt; <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a>, U &gt;, bool &gt; = true&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Real &gt; &gt; <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; T &gt;::deriveReal </td>
+          <td class="memname"><a class="el" href="class_c_p_s_1_1_attribute_pointer.html">AttributePointer</a>&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt; &gt; <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; T &gt;::deriveReal </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -595,7 +605,7 @@ template&lt;typename U = T, std::enable_if_t&lt; std::is_same_v&lt; Complex, U &
 <div class="memtemplate">
 template&lt;class T&gt; </div>
 <div class="memtemplate">
-template&lt;typename U = T, std::enable_if_t&lt; std::is_same_v&lt; Real, U &gt;||std::is_same_v&lt; Complex, U &gt;, bool &gt; = true&gt; </div>
+template&lt;typename U = T, std::enable_if_t&lt; std::is_same_v&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>, U &gt;||std::is_same_v&lt; <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a>, U &gt;, bool &gt; = true&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -716,8 +726,8 @@ template&lt;class T&gt; </div>
 
 <p>User-defined cast operator. </p>
 <p>Allows attributes to be casted to their value type:</p>
-<p>Real v = 1.2; auto a = Attribute&lt;Real&gt;(&amp;v);</p>
-<p>Real x = v; </p>
+<p><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> v = 1.2; auto a = Attribute&lt;Real&gt;(&amp;v);</p>
+<p><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> x = v; </p>
 
 <p class="definition">Definition at line <a class="el" href="_attribute_8h_source.html#l00301">301</a> of file <a class="el" href="_attribute_8h_source.html">Attribute.h</a>.</p>
 
@@ -799,7 +809,7 @@ template&lt;class T&gt; </div>
         <tr>
           <td class="memname">virtual void <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; T &gt;::setReference </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; T &gt;::Ptr</td>          <td class="paramname"><span class="paramname"><em>reference</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; T &gt;<a class="el" href="#ad552c848f780007d59f489540fa7e4d6">::Ptr</a></td>          <td class="paramname"><span class="paramname"><em>reference</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -830,7 +840,7 @@ template&lt;class T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">String <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; Real &gt;::toString </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt;::toString </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -858,7 +868,7 @@ template&lt;class T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">String <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; Complex &gt;::toString </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> &gt;::toString </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -886,7 +896,7 @@ template&lt;class T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">String <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; String &gt;::toString </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &gt;::toString </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -916,7 +926,7 @@ template&lt;class T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">String <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; T &gt;::toString </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; T &gt;::toString </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -929,7 +939,7 @@ template&lt;class T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Fallback method for all attribute types not covered by the specifications in <a class="el" href="_attribute_8cpp_source.html">Attribute.cpp</a>. </p>
+<p>Fallback method for all attribute types not covered by the specifications in <a class="el" href="_attribute_8cpp.html">Attribute.cpp</a>. </p>
 
 <p>Implements <a class="el" href="class_c_p_s_1_1_attribute_base.html#abd7c914705ff7bcf8f371c8ac622304e">CPS::AttributeBase</a>.</p>
 
@@ -968,10 +978,13 @@ template&lt;class T&gt; </div>
 <li>/__w/dpsim/dpsim/dpsim-models/include/dpsim-models/<a class="el" href="_attribute_8h_source.html">Attribute.h</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_c_p_s.html">CPS</a></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

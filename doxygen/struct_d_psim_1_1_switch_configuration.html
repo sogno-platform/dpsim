@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('struct_d_psim_1_1_switch_configuration.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="struct_d_psim_1_1_switch_configuration.html">SwitchConfiguration</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-attribs">Public Attributes</a> &#124;
@@ -102,9 +110,9 @@ $(function(){ initResizable(false); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:ac676c80cb6ae76db56afde36c1d84320" id="r_ac676c80cb6ae76db56afde36c1d84320"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac676c80cb6ae76db56afde36c1d84320">switchTime</a></td></tr>
+<tr class="memitem:ac676c80cb6ae76db56afde36c1d84320" id="r_ac676c80cb6ae76db56afde36c1d84320"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac676c80cb6ae76db56afde36c1d84320">switchTime</a></td></tr>
 <tr class="separator:ac676c80cb6ae76db56afde36c1d84320"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4cb351414537c1bdbe9f546b1aeada0b" id="r_a4cb351414537c1bdbe9f546b1aeada0b"><td class="memItemLeft" align="right" valign="top">UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4cb351414537c1bdbe9f546b1aeada0b">systemIndex</a></td></tr>
+<tr class="memitem:a4cb351414537c1bdbe9f546b1aeada0b" id="r_a4cb351414537c1bdbe9f546b1aeada0b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4cb351414537c1bdbe9f546b1aeada0b">systemIndex</a></td></tr>
 <tr class="separator:a4cb351414537c1bdbe9f546b1aeada0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -119,7 +127,7 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Real DPsim::SwitchConfiguration::switchTime</td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> DPsim::SwitchConfiguration::switchTime</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -135,7 +143,7 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">UInt DPsim::SwitchConfiguration::systemIndex</td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> DPsim::SwitchConfiguration::systemIndex</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -148,10 +156,13 @@ Public Attributes</h2></td></tr>
 <li>/__w/dpsim/dpsim/dpsim/include/dpsim/<a class="el" href="_solver_8h_source.html">Solver.h</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="struct_d_psim_1_1_switch_configuration.html">SwitchConfiguration</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

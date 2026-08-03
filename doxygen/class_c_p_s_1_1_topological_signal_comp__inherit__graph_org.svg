@@ -57,7 +57,7 @@
 <g id="Node000004" class="node">
 <title>Node4</title>
 <g id="a_Node000004"><a xlink:href="class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___d_p___ph1.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="635.5,-1097.38 487.5,-1097.38 487.5,-1060.88 635.5,-1060.88 635.5,-1097.38"/>
+<polygon fill="white" stroke="#666666" points="635.5,-1097.38 487.5,-1097.38 487.5,-1060.88 635.5,-1060.88 635.5,-1097.38"/>
 <text text-anchor="start" x="495.5" y="-1083.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::DecouplingIdeal</text>
 <text text-anchor="middle" x="561.5" y="-1069.62" font-family="Helvetica,sans-Serif" font-size="10.00">Transformer_DP_Ph1</text>
 </a>
@@ -76,7 +76,7 @@
 <g id="Node000005" class="node">
 <title>Node5</title>
 <g id="a_Node000005"><a xlink:href="class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___e_m_t___ph1.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="635.5,-1042.38 487.5,-1042.38 487.5,-1005.88 635.5,-1005.88 635.5,-1042.38"/>
+<polygon fill="white" stroke="#666666" points="635.5,-1042.38 487.5,-1042.38 487.5,-1005.88 635.5,-1005.88 635.5,-1042.38"/>
 <text text-anchor="start" x="495.5" y="-1028.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::DecouplingIdeal</text>
 <text text-anchor="middle" x="561.5" y="-1014.62" font-family="Helvetica,sans-Serif" font-size="10.00">Transformer_EMT_Ph1</text>
 </a>
@@ -95,7 +95,7 @@
 <g id="Node000006" class="node">
 <title>Node6</title>
 <g id="a_Node000006"><a xlink:href="class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___e_m_t___ph3.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="635.5,-987.38 487.5,-987.38 487.5,-950.88 635.5,-950.88 635.5,-987.38"/>
+<polygon fill="white" stroke="#666666" points="635.5,-987.38 487.5,-987.38 487.5,-950.88 635.5,-950.88 635.5,-987.38"/>
 <text text-anchor="start" x="495.5" y="-973.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::DecouplingIdeal</text>
 <text text-anchor="middle" x="561.5" y="-959.62" font-family="Helvetica,sans-Serif" font-size="10.00">Transformer_EMT_Ph3</text>
 </a>
@@ -114,7 +114,7 @@
 <g id="Node000007" class="node">
 <title>Node7</title>
 <g id="a_Node000007"><a xlink:href="class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___s_p___ph1.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="635.5,-932.38 487.5,-932.38 487.5,-895.88 635.5,-895.88 635.5,-932.38"/>
+<polygon fill="white" stroke="#666666" points="635.5,-932.38 487.5,-932.38 487.5,-895.88 635.5,-895.88 635.5,-932.38"/>
 <text text-anchor="start" x="495.5" y="-918.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::DecouplingIdeal</text>
 <text text-anchor="middle" x="561.5" y="-904.62" font-family="Helvetica,sans-Serif" font-size="10.00">Transformer_SP_Ph1</text>
 </a>
@@ -133,7 +133,7 @@
 <g id="Node000008" class="node">
 <title>Node8</title>
 <g id="a_Node000008"><a xlink:href="class_c_p_s_1_1_signal_1_1_decoupling_line.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="633.62,-878.25 489.38,-878.25 489.38,-856 633.62,-856 633.62,-878.25"/>
+<polygon fill="white" stroke="#666666" points="633.62,-878.25 489.38,-878.25 489.38,-856 633.62,-856 633.62,-878.25"/>
 <text text-anchor="middle" x="561.5" y="-864.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::DecouplingLine</text>
 </a>
 </g>
@@ -151,7 +151,7 @@
 <g id="Node000009" class="node">
 <title>Node9</title>
 <g id="a_Node000009"><a xlink:href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="643.38,-838.25 479.62,-838.25 479.62,-816 643.38,-816 643.38,-838.25"/>
+<polygon fill="white" stroke="#666666" points="643.38,-838.25 479.62,-838.25 479.62,-816 643.38,-816 643.38,-838.25"/>
 <text text-anchor="middle" x="561.5" y="-824.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::DecouplingLineEMT</text>
 </a>
 </g>
@@ -169,7 +169,7 @@
 <g id="Node000010" class="node">
 <title>Node10</title>
 <g id="a_Node000010"><a xlink:href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t___ph3.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="633.62,-798.38 489.38,-798.38 489.38,-761.88 633.62,-761.88 633.62,-798.38"/>
+<polygon fill="white" stroke="#666666" points="633.62,-798.38 489.38,-798.38 489.38,-761.88 633.62,-761.88 633.62,-798.38"/>
 <text text-anchor="start" x="497.38" y="-784.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::DecouplingLine</text>
 <text text-anchor="middle" x="561.5" y="-770.62" font-family="Helvetica,sans-Serif" font-size="10.00">EMT_Ph3</text>
 </a>
@@ -260,7 +260,7 @@
 <g id="Node000015" class="node">
 <title>Node15</title>
 <g id="a_Node000015"><a xlink:href="class_c_p_s_1_1_signal_1_1_f_i_r_filter.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="617.12,-584.25 505.88,-584.25 505.88,-562 617.12,-562 617.12,-584.25"/>
+<polygon fill="white" stroke="#666666" points="617.12,-584.25 505.88,-584.25 505.88,-562 617.12,-562 617.12,-584.25"/>
 <text text-anchor="middle" x="561.5" y="-570.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::FIRFilter</text>
 </a>
 </g>
@@ -315,7 +315,7 @@
 <g id="Node000018" class="node">
 <title>Node18</title>
 <g id="a_Node000018"><a xlink:href="class_c_p_s_1_1_signal_1_1_integrator.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="622,-450.25 501,-450.25 501,-428 622,-428 622,-450.25"/>
+<polygon fill="white" stroke="#666666" points="622,-450.25 501,-450.25 501,-428 622,-428 622,-450.25"/>
 <text text-anchor="middle" x="561.5" y="-436.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::Integrator</text>
 </a>
 </g>
@@ -333,7 +333,7 @@
 <g id="Node000019" class="node">
 <title>Node19</title>
 <g id="a_Node000019"><a xlink:href="class_c_p_s_1_1_signal_1_1_p_l_l.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="605.88,-410.25 517.12,-410.25 517.12,-388 605.88,-388 605.88,-410.25"/>
+<polygon fill="white" stroke="#666666" points="605.88,-410.25 517.12,-410.25 517.12,-388 605.88,-388 605.88,-410.25"/>
 <text text-anchor="middle" x="561.5" y="-396.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::PLL</text>
 </a>
 </g>
@@ -369,7 +369,7 @@
 <g id="Node000021" class="node">
 <title>Node21</title>
 <g id="a_Node000021"><a xlink:href="class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="643.38,-330.25 479.62,-330.25 479.62,-308 643.38,-308 643.38,-330.25"/>
+<polygon fill="white" stroke="#666666" points="643.38,-330.25 479.62,-330.25 479.62,-308 643.38,-308 643.38,-330.25"/>
 <text text-anchor="middle" x="561.5" y="-316.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::PowerControllerVSI</text>
 </a>
 </g>
@@ -479,7 +479,7 @@
 <g id="Node000031" class="node">
 <title>Node31</title>
 <g id="a_Node000031"><a xlink:href="class_c_p_s_1_1_signal_1_1_v_c_o.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="607.38,-62.25 515.62,-62.25 515.62,-40 607.38,-40 607.38,-62.25"/>
+<polygon fill="white" stroke="#666666" points="607.38,-62.25 515.62,-62.25 515.62,-40 607.38,-40 607.38,-62.25"/>
 <text text-anchor="middle" x="561.5" y="-48.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::VCO</text>
 </a>
 </g>
@@ -497,7 +497,7 @@
 <g id="Node000032" class="node">
 <title>Node32</title>
 <g id="a_Node000032"><a xlink:href="class_c_p_s_1_1_signal_1_1_voltage_controller_v_s_i.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="646,-22.25 477,-22.25 477,0 646,0 646,-22.25"/>
+<polygon fill="white" stroke="#666666" points="646,-22.25 477,-22.25 477,0 646,0 646,-22.25"/>
 <text text-anchor="middle" x="561.5" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::VoltageControllerVSI</text>
 </a>
 </g>

@@ -1,0 +1,817 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DPsim – Writing a Model</title><link>https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/</link><description>Recent content in Writing a Model on DPsim</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Component and Solver Initialization</title><link>https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/initialization/</link><pubDate>Thu, 18 Jun 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/initialization/</guid><description>
+&lt;p>Initialization is the phase between constructing the system topology and running the first timestep.
+Its job is to size the system matrices, derive initial state from power-flow results, register MNA tasks, and stamp static conductances.
+Two constraints drive its structure:&lt;/p>
+&lt;ul>
+&lt;li>The system matrix size depends on the total number of simulation nodes, including &lt;strong>virtual nodes&lt;/strong> declared by composite components and their sub-components. All virtual nodes must therefore be known &lt;em>before&lt;/em> the matrices are allocated.&lt;/li>
+&lt;li>Component parameter values (impedances, initial phasors) depend on terminal voltages and powers, which are only available &lt;em>after&lt;/em> a power-flow solve.&lt;/li>
+&lt;/ul>
+&lt;p>These two constraints impose an ordering that is captured in the solver&amp;rsquo;s initialization sequence.&lt;/p>
+&lt;hr>
+&lt;h2 id="mna-solver-initialization-sequence">MNA Solver Initialization Sequence&lt;/h2>
+&lt;p>&lt;code>MnaSolver::initialize()&lt;/code> executes the following steps in order.&lt;/p>
+&lt;div class="mermaid">
+flowchart TD
+start([Simulation::run]) --> init[MnaSolver::initialize]
+init --> s1["S1: identifyTopologyObjects()\nSort into mMNAComponents,\nmSimSignalComps, ..."]
+s1 --> s2["S2: createSubComponents() pre-pass\nRecursively instantiate sub-components\nso all virtual nodes exist"]
+s2 --> s3["S3: collectVirtualNodes()\nassignMatrixNodeIndices()\nMatrix size is now fixed"]
+s3 --> s4["S4: createEmptyVectors()\ncreateEmptySystemMatrix()"]
+s4 --> s5a["S5a: initializeFromNodesAndTerminals(freq)\nfor each SimPowerComp"]
+s5a --> s5b["S5b: initialize(omega, dt)\nfor each SimSignalComp"]
+s5b --> s5c["S5c: mnaInitialize(omega, dt, v)\nfor each MNAInterface component"]
+s5c --> cond{mSteadyStateInit?}
+cond -- yes --> s6["S6: steadyStateInitialization()\nIterate MNA until phasors converge"]
+s6 --> s7
+cond -- no --> s7["S7: setBehaviour(MNASimulation)\non all components"]
+s7 --> s8["S8: initializeSystem()\nStamp static elements,\ncompute LU factorizations"]
+s8 --> done([Ready for timesteps])
+&lt;/div>
+&lt;h3 id="step-1--identify-topology-objects">Step 1 — Identify topology objects&lt;/h3>
+&lt;p>&lt;code>identifyTopologyObjects()&lt;/code> iterates over &lt;code>SystemTopology::mComponents&lt;/code> and sorts each component into one of four lists:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>List&lt;/th>
+&lt;th>Contents&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>mMNAComponents&lt;/code>&lt;/td>
+&lt;td>Static MNA power components&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>mMNAIntfVariableComps&lt;/code>&lt;/td>
+&lt;td>Variable-stamp MNA components (e.g. under &lt;code>MNAVariableCompInterface&lt;/code>)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>mMNAIntfSwitches&lt;/code>&lt;/td>
+&lt;td>Components with a switch interface&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>mSimSignalComps&lt;/code>&lt;/td>
+&lt;td>Signal components (&lt;code>SimSignalComp&lt;/code>)&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>Ground nodes are excluded here.&lt;/p>
+&lt;h3 id="step-2--create-sub-components-pre-pass">Step 2 — Create sub-components (pre-pass)&lt;/h3>
+&lt;p>Before the matrix can be sized, every composite component&amp;rsquo;s sub-component tree must be fully instantiated so that all virtual nodes are visible.
+The solver calls &lt;code>createSubComponents()&lt;/code> recursively on every MNA component:&lt;/p>
+&lt;ul>
+&lt;li>Only sub-components &lt;em>newly registered&lt;/em> by this call are recursed into, because eagerly-constructed sub-components (created in the constructor before &lt;code>connect()&lt;/code> has run) are not yet safe to recurse into.&lt;/li>
+&lt;li>This step is a pre-pass only — it must not set parameter values derived from terminal data or frequency.&lt;/li>
+&lt;/ul>
+&lt;p>For details on the three-stage composite lifecycle (&lt;code>createSubComponents&lt;/code>, &lt;code>initializeParentFromNodesAndTerminals&lt;/code>, &lt;code>mnaCompInitialize&lt;/code>), see &lt;a href="https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/subcomponents/">Subcomponent Handling&lt;/a>.&lt;/p>
+&lt;h3 id="step-3--collect-virtual-nodes-and-assign-indices">Step 3 — Collect virtual nodes and assign indices&lt;/h3>
+&lt;p>&lt;code>collectVirtualNodes()&lt;/code> visits every component and calls &lt;code>virtualNodes()&lt;/code> to collect all virtual &lt;code>SimNode&lt;/code> objects, then appends them to the solver&amp;rsquo;s node list.
+&lt;code>assignMatrixNodeIndices()&lt;/code> then assigns a contiguous integer index to every simulation node (real and virtual), which determines the row/column layout of the system matrices.&lt;/p>
+&lt;p>After this step the matrix size is fixed.&lt;/p>
+&lt;h3 id="step-4--allocate-empty-matrices">Step 4 — Allocate empty matrices&lt;/h3>
+&lt;p>&lt;code>createEmptyVectors()&lt;/code> and &lt;code>createEmptySystemMatrix()&lt;/code> allocate the left-side vector, right-side vector, system matrix (dense or sparse depending on the solver variant), and switch-variant copies.
+For sparse solvers, &lt;code>mBaseSystemMatrix&lt;/code> and &lt;code>mLuFactorizations&lt;/code> are also allocated here, with one variant per switch combination.&lt;/p>
+&lt;h3 id="step-5--initialize-components-initializecomponents">Step 5 — Initialize components (&lt;code>initializeComponents&lt;/code>)&lt;/h3>
+&lt;p>This step has three sub-passes over the component lists.&lt;/p>
+&lt;h4 id="5a--power-components-initializefromnodesandterminals">5a — Power components: &lt;code>initializeFromNodesAndTerminals&lt;/code>&lt;/h4>
+&lt;p>For every &lt;code>SimPowerComp&amp;lt;VarType&amp;gt;&lt;/code> in &lt;code>mMNAComponents&lt;/code> and &lt;code>mMNAIntfVariableComps&lt;/code>:&lt;/p>
+&lt;ol>
+&lt;li>&lt;code>checkForUnconnectedTerminals()&lt;/code> validates connectivity.&lt;/li>
+&lt;li>If &lt;code>mInitFromNodesAndTerminals&lt;/code> is set (the default), &lt;code>initializeFromNodesAndTerminals(mSystem.mSystemFrequency)&lt;/code> is called.&lt;/li>
+&lt;/ol>
+&lt;p>This is where components read their terminal voltages and powers and derive physical parameters (impedances, initial phasor values, per-unit quantities).
+For composite components &lt;code>initializeFromNodesAndTerminals()&lt;/code> is &lt;code>final&lt;/code> in &lt;code>CompositePowerComp&lt;/code> and sequences the three lifecycle stages automatically; non-composite power components override it directly.&lt;/p>
+&lt;h4 id="5b--signal-components-initializeomega-timestep">5b — Signal components: &lt;code>initialize(omega, timeStep)&lt;/code>&lt;/h4>
+&lt;p>Each &lt;code>SimSignalComp&lt;/code> in &lt;code>mSimSignalComps&lt;/code> receives &lt;code>initialize(mSystem.mSystemOmega, mTimeStep)&lt;/code>.
+This is the hook for signal-domain components (regulators, governors, PSS blocks) to allocate their state buffers, set initial values, and wire up attribute connections.&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">Watch out: do not name a hook initialize(Real)&lt;/h4>
+Do not use &lt;code>initialize(Real)&lt;/code> or &lt;code>initialize(Real, Real)&lt;/code> as a user-facing initialization hook
+for power components. Those signatures match the solver&amp;rsquo;s signal-component hook, so the solver
+calls them rather than the component author&amp;rsquo;s intent. Use &lt;code>initializeFromNodesAndTerminals()&lt;/code>
+or a named method such as &lt;code>initializeStates()&lt;/code> instead.
+&lt;/div>
+&lt;h4 id="5c--mna-components-mnainitialize">5c — MNA components: &lt;code>mnaInitialize&lt;/code>&lt;/h4>
+&lt;p>Each MNA component (including switches) receives &lt;code>mnaInitialize(omega, timeStep, leftVector)&lt;/code>.
+In &lt;code>MNASimPowerComp&lt;/code> this method:&lt;/p>
+&lt;ol>
+&lt;li>Clears and re-registers &lt;code>MNAPreStep&lt;/code> / &lt;code>MNAPostStep&lt;/code> tasks according to the &lt;code>hasPreStep&lt;/code> / &lt;code>hasPostStep&lt;/code> flags.&lt;/li>
+&lt;li>Initializes &lt;code>mRightVector&lt;/code> to zero with the correct size.&lt;/li>
+&lt;li>Calls &lt;code>mnaCompInitialize(omega, timeStep, leftVector)&lt;/code> on the component.&lt;/li>
+&lt;/ol>
+&lt;p>In &lt;code>mnaCompInitialize&lt;/code>, component classes call &lt;code>updateMatrixNodeIndices()&lt;/code> and perform any one-time MNA setup that requires the final node layout (e.g. allocating per-component history vectors sized to the system).&lt;/p>
+&lt;p>Nodes are initialized last via &lt;code>SimNode::initialize()&lt;/code>, which zeros the node voltage.&lt;/p>
+&lt;h3 id="step-6--optional-steady-state-initialization">Step 6 — Optional steady-state initialization&lt;/h3>
+&lt;p>If &lt;code>mSteadyStateInit&lt;/code> is set, &lt;code>steadyStateInitialization()&lt;/code> iterates the MNA solve until the phasor solution converges.
+The flag &lt;code>mIsInInitialization&lt;/code> is set to &lt;code>true&lt;/code> for this sub-phase so that components can distinguish initialization solves from simulation solves via &lt;code>mBehaviour&lt;/code> (see below).&lt;/p>
+&lt;h3 id="step-7--set-simulation-behaviour">Step 7 — Set simulation behaviour&lt;/h3>
+&lt;p>After initialization solves are complete, the solver calls &lt;code>setBehaviour(TopologicalPowerComp::Behaviour::MNASimulation)&lt;/code> on every &lt;code>TopologicalPowerComp&lt;/code> and &lt;code>setBehaviour(SimSignalComp::Behaviour::Simulation)&lt;/code> on every &lt;code>SimSignalComp&lt;/code>.&lt;/p>
+&lt;p>The &lt;code>Behaviour&lt;/code> enum (defined in &lt;code>TopologicalPowerComp&lt;/code>) has three values:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Value&lt;/th>
+&lt;th>When active&lt;/th>
+&lt;th>Typical use&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>Behaviour::Initialization&lt;/code>&lt;/td>
+&lt;td>During PF steady-state init pass&lt;/td>
+&lt;td>Components may disable transient update equations&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>Behaviour::PFSimulation&lt;/code>&lt;/td>
+&lt;td>During PFSolver run&lt;/td>
+&lt;td>Activates power-flow-specific stamping&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>Behaviour::MNASimulation&lt;/code>&lt;/td>
+&lt;td>After &lt;code>initialize()&lt;/code> completes&lt;/td>
+&lt;td>Normal simulation; components should be in their run-time mode&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>Components that need different behaviour between initialization and simulation check &lt;code>mBehaviour&lt;/code> in their pre/post-step methods or in &lt;code>mnaCompPreStep&lt;/code>.&lt;/p>
+&lt;h3 id="step-8--initialize-system-matrices-initializesystem">Step 8 — Initialize system matrices (&lt;code>initializeSystem&lt;/code>)&lt;/h3>
+&lt;p>&lt;code>initializeSystem()&lt;/code> selects one of three paths:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Parallel frequencies&lt;/strong> (&lt;code>initializeSystemWithParallelFrequencies&lt;/code>): stamps each frequency into a separate thread.&lt;/li>
+&lt;li>&lt;strong>Variable matrix&lt;/strong> (&lt;code>initializeSystemWithVariableMatrix&lt;/code>): used by &lt;code>MnaSolverSysRecomp&lt;/code>; saves static switch matrices as base matrices and adds variable elements on top.&lt;/li>
+&lt;li>&lt;strong>Precomputed matrices&lt;/strong> (&lt;code>initializeSystemWithPrecomputedMatrices&lt;/code>): the common path. Calls &lt;code>switchedMatrixStamp()&lt;/code> for each switch combination, which iterates over all static MNA components and calls &lt;code>mnaApplySystemMatrixStamp()&lt;/code> and &lt;code>mnaApplyRightSideVectorStamp()&lt;/code>. LU factorizations are computed for each variant.&lt;/li>
+&lt;/ul>
+&lt;p>After this step the solver is ready to execute timesteps.&lt;/p>
+&lt;hr>
+&lt;h2 id="component-class-hierarchy-and-init-hooks">Component Class Hierarchy and Init Hooks&lt;/h2>
+&lt;p>The following diagram shows which initialization methods live in which class, and the override points for component authors.&lt;/p>
+&lt;div class="mermaid">
+classDiagram
+class TopologicalPowerComp {
++Behaviour mBehaviour
++setBehaviour(b)
+}
+class SimPowerComp~T~ {
++initialize(Matrix frequencies)
++initializeFromNodesAndTerminals(Real freq)
++virtualNodes()
+}
+class MNASimPowerComp~T~ {
++mnaInitialize(omega, dt, v) final
++mnaCompInitialize(omega, dt, v)*
++mnaCompApplySystemMatrixStamp()*
++mnaCompPreStep()*
++mnaCompPostStep()*
+}
+class CompositePowerComp~T~ {
++createSubComponents()*
++initializeFromNodesAndTerminals(freq) final
++initializeParentFromNodesAndTerminals(freq)*
++mnaParentInitialize(omega, dt, v)*
++mnaParentPreStep()*
++mnaParentPostStep()*
+}
+class SimSignalComp {
++initialize(Real omega, Real dt)*
+}
+TopologicalPowerComp &lt;|-- SimPowerComp
+SimPowerComp &lt;|-- MNASimPowerComp
+MNASimPowerComp &lt;|-- CompositePowerComp
+&lt;/div>
+&lt;p>Methods marked &lt;code>*&lt;/code> are the virtual override points for component authors.
+Methods marked &lt;code>final&lt;/code> must not be overridden; the base class sequences them correctly.&lt;/p>
+&lt;hr>
+&lt;h2 id="component-method-contracts">Component Method Contracts&lt;/h2>
+&lt;p>The table below summarizes which initialization method has which responsibilities. A tick means the operation &lt;em>belongs&lt;/em> in that method; a cross means it must not appear there.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Responsibility&lt;/th>
+&lt;th style="text-align:center">Constructor / &lt;code>setParameters&lt;/code>&lt;/th>
+&lt;th style="text-align:center">&lt;code>createSubComponents&lt;/code>&lt;/th>
+&lt;th style="text-align:center">&lt;code>initializeFromNodesAndTerminals&lt;/code>&lt;/th>
+&lt;th style="text-align:center">&lt;code>mnaCompInitialize&lt;/code>&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Declare virtual node count&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Allocate sub-component objects&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>connect()&lt;/code> sub-components to virtual nodes&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>addMNASubComponent()&lt;/code> registration&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Read terminal voltage / power&lt;/td>
+&lt;td style="text-align:center">✗&lt;/td>
+&lt;td style="text-align:center">✗&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Read system frequency&lt;/td>
+&lt;td style="text-align:center">✗&lt;/td>
+&lt;td style="text-align:center">✗&lt;/td>
+&lt;td style="text-align:center">✓ (via argument)&lt;/td>
+&lt;td style="text-align:center">✓ (via &lt;code>omega&lt;/code>)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Compute impedance / admittance&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">✗&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Call &lt;code>setParameters()&lt;/code> on sub-components&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Call &lt;code>updateMatrixNodeIndices()&lt;/code>&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Allocate per-step vectors (history, right vector)&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Register MNA tasks (handled by base class)&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">—&lt;/td>
+&lt;td style="text-align:center">✓ (via &lt;code>mnaCompInitialize&lt;/code>)&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="common-pitfalls">Common pitfalls&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Accessing terminals in the constructor or &lt;code>createSubComponents&lt;/code>&lt;/strong>: terminal data (initial voltage, connected power) is not yet populated. The topology is set up but power-flow has not run.&lt;/li>
+&lt;li>&lt;strong>Accessing &lt;code>mFrequencies(0,0)&lt;/code> in &lt;code>createSubComponents&lt;/code>&lt;/strong>: the system frequency matrix is set on &lt;code>SimPowerComp&lt;/code> via &lt;code>initialize(Matrix)&lt;/code> which only runs later. Use the &lt;code>frequency&lt;/code> argument passed to &lt;code>initializeParentFromNodesAndTerminals&lt;/code> or the &lt;code>omega&lt;/code> argument in &lt;code>mnaCompInitialize&lt;/code>.&lt;/li>
+&lt;li>&lt;strong>Zero-valued shunt branches&lt;/strong>: a capacitor or reactor with zero admittance injects a zero row/column into the system matrix, which makes the LU factorization singular. Guard with a strict &lt;code>&amp;gt; 0&lt;/code> check and omit the branch rather than inserting a zero stamp.&lt;/li>
+&lt;/ul>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">Watch out: virtual nodes must exist before the solver collects them&lt;/h4>
+A virtual node created for the first time &lt;em>after&lt;/em> &lt;code>collectVirtualNodes()&lt;/code> (step 3) never gets a
+matrix index, and the solver then crashes or silently produces wrong results. Declare every virtual
+node in the constructor or in &lt;code>setParameters()&lt;/code>.
+&lt;/div>
+&lt;hr>
+&lt;h2 id="composite-component-initialization-sequence">Composite Component Initialization Sequence&lt;/h2>
+&lt;p>The following diagram shows how the solver and a composite component interact during initialization. For further details see &lt;a href="https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/subcomponents/">Subcomponent Handling&lt;/a>.&lt;/p>
+&lt;div class="mermaid">
+sequenceDiagram
+participant MNA as MnaSolver
+participant CC as CompositePowerComp
+participant SC as SubComponent
+Note over MNA,SC: Step 2 - pre-pass (topology only)
+MNA->>CC: createSubComponents()
+CC->>SC: make_shared + connect() + addMNASubComponent()
+Note over MNA,SC: Step 3 - matrix sizing
+MNA->>CC: collectVirtualNodes()
+MNA->>MNA: assignMatrixNodeIndices()
+Note over MNA,SC: Step 5a - parameterization
+MNA->>CC: initializeFromNodesAndTerminals(freq)
+CC->>CC: createSubComponents() idempotent guard
+CC->>CC: initializeParentFromNodesAndTerminals(freq)
+CC->>SC: initialize(frequencies)
+CC->>SC: initializeFromNodesAndTerminals(freq)
+Note over MNA,SC: Step 5c - MNA setup
+MNA->>CC: mnaInitialize(omega, dt, v)
+CC->>SC: mnaInitialize(omega, dt, v)
+CC->>CC: mnaParentInitialize(omega, dt, v)
+&lt;/div>
+&lt;hr>
+&lt;h2 id="pfsolver-initialization">PFSolver Initialization&lt;/h2>
+&lt;p>&lt;code>PFSolver::initialize()&lt;/code> follows a simpler sequence because it operates only on single-phase SP components with no sub-component tree and does not need a &lt;code>createSubComponents&lt;/code> pre-pass.&lt;/p>
+&lt;div class="mermaid">
+flowchart TD
+pf[PFSolver::initialize] --> p1[Classify components\ninto generator/load/line/... lists]
+p1 --> p2[setBaseApparentPower\nCompute per-unit base]
+p2 --> p3[assignMatrixNodeIndices]
+p3 --> p4[initializeComponents\ninitializeFromNodesAndTerminals\ncalculatePerUnitParameters]
+p4 --> p5[determinePFBusType\nPQ / PV / VD]
+p5 --> p6[determineNodeBaseVoltages]
+p6 --> p7[composeAdmittanceMatrix\nBuild Y-bus]
+p7 --> done([Ready to solve power flow])
+&lt;/div>
+&lt;p>&lt;code>PFSolver::setSolverAndComponentBehaviour()&lt;/code> is the equivalent of Step 7 for the MNA solver: it calls &lt;code>setBehaviour(Behaviour::PFSimulation)&lt;/code> or &lt;code>setBehaviour(Behaviour::Initialization)&lt;/code> on all components to allow them to switch stamping modes.&lt;/p>
+&lt;hr>
+&lt;h2 id="known-design-issues-issue-59">Known Design Issues (issue #59)&lt;/h2>
+&lt;p>The following areas were identified in &lt;a href="https://github.com/sogno-platform/dpsim/issues/59">GitHub issue #59&lt;/a> as needing improvement.&lt;/p>
+&lt;h3 id="simpowercompinitializematrix-frequencies-naming-clash">&lt;code>SimPowerComp::initialize(Matrix frequencies)&lt;/code> naming clash&lt;/h3>
+&lt;p>&lt;code>SimPowerComp&amp;lt;T&amp;gt;::initialize(Matrix frequencies)&lt;/code> is called by the solver to propagate frequency information down the component tree.
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">Watch out: overriding this hook makes you responsible for the base call&lt;/h4>
+It is &lt;em>not&lt;/em> a hook for component authors — a component that overrides it takes over responsibility for calling the base class version, which is easy to forget.
+&lt;/div>
+The recommended path is:&lt;/p>
+&lt;ul>
+&lt;li>For power components, use &lt;code>initializeFromNodesAndTerminals()&lt;/code> or &lt;code>initializeParentFromNodesAndTerminals()&lt;/code>.&lt;/li>
+&lt;li>For signal components, use the &lt;code>initialize(Real omega, Real timeStep)&lt;/code> hook provided by &lt;code>SimSignalComp&lt;/code>.&lt;/li>
+&lt;li>For anything else (e.g. setting up state-space matrices), add a named helper called from one of the above.&lt;/li>
+&lt;/ul>
+&lt;p>The base implementation of &lt;code>SimPowerComp::initialize(Matrix)&lt;/code> should be renamed to something that cannot be accidentally overridden (e.g. &lt;code>propagateFrequencies()&lt;/code>), and an &lt;code>override&lt;/code> guard should be added to catch accidental overrides.&lt;/p>
+&lt;h3 id="sub-component-construction-in-constructors">Sub-component construction in constructors&lt;/h3>
+&lt;p>Some components create and register sub-components eagerly in their constructor before &lt;code>connect()&lt;/code> has been called on those sub-components.
+This works today because the solver&amp;rsquo;s &lt;code>createSubComponents&lt;/code> pre-pass skips already-registered sub-components, but it couples topology creation to object construction and makes components harder to reason about.
+The long-term goal is to migrate all sub-component construction to &lt;code>createSubComponents()&lt;/code>, giving a clear rule: the constructor only allocates and the topology stage wires.&lt;/p>
+&lt;h3 id="signal-component-initialize-not-sequenced-with-power-flow">Signal component &lt;code>initialize&lt;/code> not sequenced with power flow&lt;/h3>
+&lt;p>Signal components receive &lt;code>initialize(omega, timeStep)&lt;/code> &lt;em>after&lt;/em> &lt;code>initializeFromNodesAndTerminals&lt;/code> on power components but &lt;em>before&lt;/em> the MNA tasks are registered.
+If a signal component&amp;rsquo;s initial state depends on the power-flow solution (e.g. an exciter initializing to match the generator terminal voltage), it must read the relevant attribute values directly — there is no formal mechanism today to express this dependency in the initialization sequence.
+A future improvement would be to give signal components access to the settled power-flow solution before their &lt;code>initialize&lt;/code> is called.&lt;/p></description></item><item><title>Docs: Real-Time Execution</title><link>https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/real-time/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/real-time/</guid><description>
+&lt;p>Why you would run in real time, and how to start such a run, is under
+&lt;a href="https://sogno.energy/dpsim/docs/user-guide/real-time/">real-time simulation&lt;/a>. This page is what has to be
+true of the host and of the models for a deadline to be met.&lt;/p>
+&lt;p>DPsim runs in real time on any system, but without tuning the smallest reliable step is nowhere near
+microseconds, because operating system noise and other processes interfere. With the tuning below,
+steps as low as 5 us synchronised to an FPGA through VILLASnode have been achieved.&lt;/p>
+&lt;h2 id="operating-system-and-kernel">Operating System and Kernel&lt;/h2>
+&lt;p>A kernel built with &lt;code>PREEMPT_RT&lt;/code> improves latency when issuing system calls and enables the FIFO
+scheduler that avoids preemption during the run.&lt;/p>
+&lt;p>This used to mean tracking down an out-of-tree patch set. It no longer does: &lt;code>PREEMPT_RT&lt;/code> was merged
+into the mainline Linux kernel in 6.12, so a recent kernel can be built with it directly and a
+growing number of distributions ship or package one. Check what you already have before installing
+anything:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>uname -v &lt;span style="color:#000;font-weight:bold">|&lt;/span> grep -q PREEMPT_RT &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;already real-time&amp;#34;&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">||&lt;/span> &lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;not a PREEMPT_RT kernel&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If you need one, most distributions still offer a binary package. On Rocky Linux:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo dnf --enablerepo&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>rt install kernel-rt kernel-rt-devel
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>More aggressive tuning can involve isolating a set of cores for exclusive use by the real-time simulation.
+This way, the kernel will not schedule any processes on these cores.
+Add the kernel parameters &lt;code>isolcpus&lt;/code> and &lt;code>nohz_full&lt;/code> using, for example, &lt;code>grubby&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo grubby --update-kernel&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>ALL --args&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;isolcpus=9,11,13,15 nohz_full=9,11,13,15&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Something similar, but less invasive and non-permanent can be achieved using &lt;code>tuna&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo tuna isolate -c 9,11,13,15
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To avoid real-time throttling to cause overruns disable this feature:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo bash -c &lt;span style="color:#4e9a06">&amp;#34;echo -1 &amp;gt; /proc/sys/kernel/sched_rt_runtime_us&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Note that this is not persistent when rebooting.&lt;/p>
+&lt;h2 id="simulation-model-tuning">Simulation Model Tuning&lt;/h2>
+&lt;p>Real time capable models cannot issue any system calls during simulation as the context switch to the kernel introduces unacceptable latencies.
+This means models cannot allocate memory, use mutexes or other interrupt-driven synchronization primitives, read or write data from files.
+You should turn off logging, when time steps in the low milliseconds are desired.
+There is a &lt;code>RealTimeDataLogger&lt;/code> that can be used to output simulation results in these cases.
+Note however, that this logger pre-allocated the memory required for all of the logging required during simulations.
+Your machine may run out of memory, when the simulation is long or you log too many signals.&lt;/p>
+&lt;p>You can increase the performance of your simulation by adding the &lt;code>-flto&lt;/code> and &lt;code>-march=native&lt;/code> compiler flags:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-diff" data-lang="diff">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000080;font-weight:bold">diff --git a/CMakeLists.txt b/CMakeLists.txt
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000080;font-weight:bold">index 8801cbe8d..4a2843269 100644
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000080;font-weight:bold">&lt;/span>&lt;span style="color:#a40000">--- a/CMakeLists.txt
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+++ b/CMakeLists.txt
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a000">&lt;/span>&lt;span style="color:#800080;font-weight:bold">@@ -79,7 +79,7 @@ include(CheckSymbolExists)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> check_symbol_exists(timerfd_create sys/timerfd.h HAVE_TIMERFD)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> check_symbol_exists(getopt_long getopt.h HAVE_GETOPT)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> if(CMAKE_BUILD_TYPE STREQUAL &amp;#34;Release&amp;#34; OR CMAKE_BUILD_TYPE STREQUAL &amp;#34;RelWithDebInfo&amp;#34;)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">- add_compile_options(-Ofast)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#00a000">+ add_compile_options(-Ofast -flto -march=native)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a000">&lt;/span> endif()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> # Get version info and buildid from Git
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="where-the-time-step-comes-from">Where the time step comes from&lt;/h2>
+&lt;p>By default the simulation paces itself against the host clock, which is enough for almost everything.
+Synchronising the step to an external source instead is only necessary when the accuracy of the step
+itself matters at the nanosecond level, which in practice means hardware in the loop against
+equipment with its own clock.&lt;/p>
+&lt;p>That distinction is worth making before reaching for it: locking to an external source constrains the
+whole run and is not a general improvement, only the answer to a specific requirement.&lt;/p>
+&lt;h2 id="writing-a-model-that-can-hold-a-deadline">Writing a model that can hold a deadline&lt;/h2>
+&lt;p>A real-time capable model must issue no system calls during simulation: the context switch into the
+kernel costs more than the deadline allows.&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">Watch out: a single allocation can miss a deadline&lt;/h4>
+No allocating memory, no mutexes or other interrupt-driven synchronisation, and no reading or
+writing files inside the step. Any one of these can block for longer than the step, and the failure
+appears as an occasional overrun rather than as an error, so it is easy to miss in a short test run.
+&lt;/div>
+&lt;p>Turn logging off when the step is in the low milliseconds. &lt;code>RealTimeDataLogger&lt;/code> exists for the cases
+that still need results: it buffers in memory and writes at the end rather than touching the disk
+inside the step.&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">Watch out: the real-time logger preallocates everything&lt;/h4>
+&lt;code>RealTimeDataLogger&lt;/code> allocates the memory for the entire run up front, which is what keeps it off the
+critical path. A long run, or too many logged attributes, can therefore exhaust memory before the
+simulation starts. See &lt;a href="https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/loggers/">loggers&lt;/a>.
+&lt;/div></description></item><item><title>Docs: Interfacing with the MNA Solver</title><link>https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/mnainterface/</link><pubDate>Mon, 19 Dec 2022 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/mnainterface/</guid><description>
+&lt;p>The various solver classes based on &lt;code>MNASolver&lt;/code> are used to perform &lt;a href="https://sogno.energy/dpsim/docs/concepts/nodal-analysis/">Nodal Analysis&lt;/a> during a DPsim simulation. For components to be able to influence the input variables of the MNA, they have to implement certain methods defined in the &lt;code>MNAInterface&lt;/code> interface class. While it is possible to individually implement &lt;code>MNAInterface&lt;/code> for every
+component, the behavior of many components can be unified in a common base class. This base class is called &lt;code>MNASimPowerComp&amp;lt;T&amp;gt;&lt;/code>.
+Currently, it is the only class which directly implements &lt;code>MNAInterface&lt;/code> and in turn all MNA components inherit from this class.
+Much like the &lt;code>CompositePowerComp&lt;/code> class for &lt;a href="https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/subcomponents/">Composite Components&lt;/a>, the &lt;code>MNASimPowerComp&lt;/code> class
+provides some common behavior for all MNA components, e.g. the creation and registration of the &lt;code>MNAPreStep&lt;/code> and &lt;code>MNAPostStep&lt;/code> tasks.
+Additionally, &lt;code>MNASimPowerComp&lt;/code> provides a set of virtual methods prefixed &lt;code>mnaComp...&lt;/code> which can be implemented by the child component classes to provide their own MNA behavior. These methods are:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">virtual&lt;/span> &lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">mnaCompInitialize&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Real&lt;/span> &lt;span style="color:#000">omega&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">Real&lt;/span> &lt;span style="color:#000">timeStep&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">Attribute&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">Matrix&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;gt;::&lt;/span>&lt;span style="color:#000">Ptr&lt;/span> &lt;span style="color:#000">leftVector&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">virtual&lt;/span> &lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">mnaCompApplySystemMatrixStamp&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">SparseMatrixRow&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span> &lt;span style="color:#000">systemMatrix&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">virtual&lt;/span> &lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">mnaCompApplyRightSideVectorStamp&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Matrix&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span> &lt;span style="color:#000">rightVector&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">virtual&lt;/span> &lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">mnaCompUpdateVoltage&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">const&lt;/span> &lt;span style="color:#000">Matrix&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span> &lt;span style="color:#000">leftVector&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">virtual&lt;/span> &lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">mnaCompUpdateCurrent&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">const&lt;/span> &lt;span style="color:#000">Matrix&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span> &lt;span style="color:#000">leftVector&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">virtual&lt;/span> &lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">mnaCompPreStep&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Real&lt;/span> &lt;span style="color:#000">time&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">Int&lt;/span> &lt;span style="color:#000">timeStepCount&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">virtual&lt;/span> &lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">mnaCompPostStep&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Real&lt;/span> &lt;span style="color:#000">time&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">Int&lt;/span> &lt;span style="color:#000">timeStepCount&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">Attribute&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">Matrix&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;gt;::&lt;/span>&lt;span style="color:#000">Ptr&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">leftVector&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">virtual&lt;/span> &lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">mnaCompAddPreStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">prevStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">attributeDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">modifiedAttributes&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">virtual&lt;/span> &lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">mnaCompAddPostStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">prevStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">attributeDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">modifiedAttributes&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">Attribute&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">Matrix&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;gt;::&lt;/span>&lt;span style="color:#000">Ptr&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">leftVector&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">virtual&lt;/span> &lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">mnaCompInitializeHarm&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Real&lt;/span> &lt;span style="color:#000">omega&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">Real&lt;/span> &lt;span style="color:#000">timeStep&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">std&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">vector&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">Attribute&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">Matrix&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;gt;::&lt;/span>&lt;span style="color:#000">Ptr&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;gt;&lt;/span> &lt;span style="color:#000">leftVector&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">virtual&lt;/span> &lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">mnaCompApplySystemMatrixStampHarm&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">SparseMatrixRow&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span> &lt;span style="color:#000">systemMatrix&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">Int&lt;/span> &lt;span style="color:#000">freqIdx&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">virtual&lt;/span> &lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">mnaCompApplyRightSideVectorStampHarm&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Matrix&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span> &lt;span style="color:#000">sourceVector&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">virtual&lt;/span> &lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">mnaCompApplyRightSideVectorStampHarm&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Matrix&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span> &lt;span style="color:#000">sourceVector&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">Int&lt;/span> &lt;span style="color:#000">freqIdx&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>MNASimPowerComp&lt;/code> provides empty default implementations for all of these methods, so component classes are not forced to implement any of them.&lt;/p>
+&lt;h2 id="controlling-common-base-class-behavior">Controlling Common Base Class Behavior&lt;/h2>
+&lt;p>Child component classes can control the behavior of the base class through the constructor arguments of &lt;code>MNASimPowerComp&lt;/code>.
+The two boolean variables &lt;code>hasPreStep&lt;/code> and &lt;code>hasPostStep&lt;/code> can be used to control whether the &lt;code>MNAPreStep&lt;/code> and &lt;code>MNAPostStep&lt;/code> tasks will be created and registered.
+If these tasks are created, the &lt;code>mnaCompPreStep&lt;/code> / &lt;code>mnaCompPostStep&lt;/code> and &lt;code>mnaCompAddPreStepDependencies&lt;/code> / &lt;code>mnaCompAddPostStepDependencies&lt;/code> methods will be called during the component&amp;rsquo;s lifecycle.
+If the tasks are not created, these methods are superfluous and should not be implemented in the child class.&lt;/p>
+&lt;p>Currently, the &lt;code>MNASimPowerComp&lt;/code> base class only exhibits additional behavior over the &lt;code>mnaComp...&lt;/code> methods in the &lt;code>mnaInitialize&lt;/code> method. In this method, the list of MNA tasks is cleared, and the new tasks are added according to the &lt;code>hasPreStep&lt;/code> and &lt;code>hasPostStep&lt;/code> parameters. Additionally, the right vector attribute &lt;code>mRightVector&lt;/code> required by &lt;code>MNAInterface&lt;/code> is set to a zero-vector with its length equal to that of the system &lt;code>leftVector&lt;/code>.
+If this behavior is not desired, e.g. for resistors which have no influence on the system right vector, the right vector can be re-set to have zero size in the &lt;code>mnaCompInitialize&lt;/code> method:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">DP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Ph1&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Resistor&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">mnaCompInitialize&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Real&lt;/span> &lt;span style="color:#000">omega&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">Real&lt;/span> &lt;span style="color:#000">timeStep&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">Attribute&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">Matrix&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;gt;::&lt;/span>&lt;span style="color:#000">Ptr&lt;/span> &lt;span style="color:#000">leftVector&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">updateMatrixNodeIndices&lt;/span>&lt;span style="color:#000;font-weight:bold">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ce5c00;font-weight:bold">**&lt;/span>&lt;span style="color:#000">mRightVector&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">Matrix&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Zero&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic">//...
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>For all other MNA methods, the &lt;code>MNASimPowerComp&lt;/code> base class will just call the associated &lt;code>mnaComp...&lt;/code> method. For more details, take a look at the implementations in &lt;code>MNASimPowerComp.cpp&lt;/code>.&lt;/p></description></item><item><title>Docs: Subcomponent Handling</title><link>https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/subcomponents/</link><pubDate>Wed, 14 Dec 2022 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/subcomponents/</guid><description>
+&lt;p>In DPsim, there are many components which can be broken down into individual subcomponents. Examples are the &lt;code>PiLine&lt;/code>, consisting of an inductor, three resistors, and two capacitors, or the &lt;code>NetworkInjection&lt;/code> which contains a voltage source.
+On the C++ class level, these subcomponents are represented by member variables within the larger component class. In this guide, all components which have subcomponents are called &lt;strong>composite components&lt;/strong>.&lt;/p>
+&lt;h2 id="creating-composite-components">Creating Composite Components&lt;/h2>
+&lt;p>While normal components are usually subclasses of &lt;code>SimPowerComp&amp;lt;T&amp;gt;&lt;/code> or &lt;code>MNASimPowerComp&amp;lt;T&amp;gt;&lt;/code>, there exists a special base class for composite
+components called &lt;code>CompositePowerComp&amp;lt;T&amp;gt;&lt;/code>. This class provides multiple methods and parameters for configuring how the subcomponents should be
+handled with respect to the &lt;code>MNAPreStep&lt;/code> and &lt;code>MNAPostStep&lt;/code> tasks.
+The main idea here is that the subcomponents do not register their own MNA tasks, but instead their MNA methods like &lt;code>mnaPreStep&lt;/code> and &lt;code>mnaPostStep&lt;/code> are called explicitly in the tasks of the composite component.
+In the constructor of &lt;code>CompositePowerComp&amp;lt;T&amp;gt;&lt;/code>, the parameters &lt;code>hasPreStep&lt;/code> and &lt;code>hasPostStep&lt;/code> can
+be set to automatically create and register a &lt;code>MNAPreStep&lt;/code> or &lt;code>MNAPostStep&lt;/code> task that will call the &lt;code>mnaCompPreStep&lt;/code> or &lt;code>mnaCompPostStep&lt;/code> method on execution.
+Additionally, all subcomponents should be registered as soon as they are created using the &lt;code>addMNASubComponent&lt;/code>-method. This method takes
+multiple parameters defining how and in what order the subcomponent&amp;rsquo;s pre- and post- steps should be called, as well as if the subcomponent
+should be stamped into the system &lt;code>rightVector&lt;/code>.&lt;/p>
+&lt;h3 id="initialization-lifecycle">Initialization lifecycle&lt;/h3>
+&lt;p>Composite components are initialized in three stages, each with a defined role. (These are distinct from the electrical phases A/B/C of a three-phase component.)&lt;/p>
+&lt;ol>
+&lt;li>&lt;strong>Topology stage&lt;/strong> (&lt;code>createSubComponents()&lt;/code>). Decides &lt;em>which&lt;/em> sub-components exist and &lt;em>how&lt;/em> they are wired: &lt;code>make_shared&lt;/code>, &lt;code>connect()&lt;/code> to network/virtual nodes, and &lt;code>addMNASubComponent()&lt;/code>. This runs in a pre-pass before the MNA system matrix is sized, so any virtual nodes owned by sub-components are visible to &lt;code>collectVirtualNodes()&lt;/code>. Because it runs before power-flow results or the simulation frequency are guaranteed to be available, &lt;code>createSubComponents()&lt;/code> must not read terminal data (&lt;code>initialSingleVoltage()&lt;/code>, &lt;code>singleActivePower()&lt;/code>, &amp;hellip;), system frequency (&lt;code>mFrequencies(0,0)&lt;/code>), or compute any power-/impedance-derived value. It must be idempotent — guard the body with &lt;code>mSubCompCreated&lt;/code> (a protected field inherited from &lt;code>CompositePowerComp&lt;/code>).&lt;/li>
+&lt;li>&lt;strong>Parameterization stage&lt;/strong> (&lt;code>initializeParentFromNodesAndTerminals(Real frequency)&lt;/code>). Sets the values the sub-components created in stage 1 will use. This is where terminal reads, frequency-dependent impedance/admittance calculations, and &lt;code>setParameters()&lt;/code> calls on sub-components belong. The simulation frequency is passed in as a direct argument, so there is no need to access &lt;code>mFrequencies(0,0)&lt;/code>. This is the hook concrete composites must implement — do &lt;em>not&lt;/em> override &lt;code>initializeFromNodesAndTerminals()&lt;/code> directly; the base class owns that method and calls this hook at the right time.&lt;/li>
+&lt;li>&lt;strong>MNA-init stage&lt;/strong> (&lt;code>mnaCompInitialize()&lt;/code>). Unchanged; already recurses into sub-components.&lt;/li>
+&lt;/ol>
+&lt;p>&lt;code>CompositePowerComp&amp;lt;VarType&amp;gt;::initializeFromNodesAndTerminals()&lt;/code> is &lt;code>final&lt;/code> and sequences these stages:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">initializeFromNodesAndTerminals&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Real&lt;/span> &lt;span style="color:#000">frequency&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#204a87;font-weight:bold">final&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">createSubComponents&lt;/span>&lt;span style="color:#000;font-weight:bold">();&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// idempotent safety net for paths
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// that reach this composite without
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// the solver&amp;#39;s pre-pass having run
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">initializeParentFromNodesAndTerminals&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">frequency&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// parent derives values,
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// setParameters() on subs
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">auto&lt;/span> &lt;span style="color:#f57900">subComp&lt;/span> &lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000">mSubComponents&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">subComp&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">-&amp;gt;&lt;/span>&lt;span style="color:#000">initialize&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mFrequencies&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// propagate frequencies down
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">subComp&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">-&amp;gt;&lt;/span>&lt;span style="color:#000">initializeFromNodesAndTerminals&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">frequency&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The loop re-enters this same &lt;code>final&lt;/code> wrapper for any sub-component that is itself a composite, so the whole tree initializes correctly without each level manually calling &lt;code>initialize()&lt;/code>/&lt;code>initializeFromNodesAndTerminals()&lt;/code> on its children.&lt;/p>
+&lt;p>A sub-component whose very existence (not just its value) depends on a parameterization-stage value — e.g. picking an inductor vs. a capacitor based on the sign of computed reactive power — cannot be registered in &lt;code>createSubComponents()&lt;/code>. Create &lt;em>and&lt;/em> register it directly inside &lt;code>initializeParentFromNodesAndTerminals()&lt;/code> instead. This is safe because the MNA-registered sub-component list is not consumed until &lt;code>MnaSolver::initialize()&lt;/code> finishes the parameterization stage for all components. The one constraint: the late-registered sub-component must not introduce new virtual nodes — those must be declared in the constructor or &lt;code>setParameters()&lt;/code>, before &lt;code>collectVirtualNodes()&lt;/code> runs.&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">Watch out: a degenerate parameter injects NaN across the whole matrix&lt;/h4>
+Value derivation in the parameterization stage must be numerically safe at degenerate inputs. Sub-component values come from terminal power, voltage, and frequency, so a zero rated power, zero reactance, or zero capacitance can produce a division by zero and inject &lt;code>NaN&lt;/code>/&lt;code>inf&lt;/code> into the system matrix or source vector, which then persists for the rest of the simulation. Guard such expressions: use admittance form (&lt;code>Y = jwC&lt;/code>, branch current &lt;code>V * Y&lt;/code>) rather than impedance form (&lt;code>V / Z&lt;/code>), and create optional shunt branches only when their value is strictly positive — a zero-valued shunt is just an open circuit. A degenerate value that slips through will produce a wrong but non-crashing topology, so an explicit check with a log message is better than assuming the value is nonzero.
+&lt;/div>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">// DP_Ph1_PiLine.cpp
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#000">DP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Ph1&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">PiLine&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">PiLine&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">String&lt;/span> &lt;span style="color:#000">uid&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">String&lt;/span> &lt;span style="color:#000">name&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">Logger&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Level&lt;/span> &lt;span style="color:#000">logLevel&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ce5c00;font-weight:bold">:&lt;/span> &lt;span style="color:#000">Base&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Ph1&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">PiLine&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mAttributes&lt;/span>&lt;span style="color:#000;font-weight:bold">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic">// Call the constructor of CompositePowerComp and enable automatic pre- and post-step creation
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">CompositePowerComp&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">Complex&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;gt;&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">uid&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">name&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87">true&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87">true&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">logLevel&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic">//...
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">DP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Ph1&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">PiLine&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">createSubComponents&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">if&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mSubCompCreated&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">return&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">mSubCompCreated&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">true&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic">// Create series sub components
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">mSubSeriesResistor&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">std&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">make_shared&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">DP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Ph1&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Resistor&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;gt;&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">**&lt;/span>&lt;span style="color:#000">mName&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">+&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;_res&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">mLogLevel&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic">// Setup mSubSeriesResistor... (only from values already known from this
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// component&amp;#39;s own setParameters()/constructor/Attributes - no terminal or
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// frequency reads here)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic">// Register the resistor as a subcomponent. The resistor&amp;#39;s pre- and post-step will be called before the pre- and post-step of the parent,
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// and the resistor does not contribute to the `rightVector`.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">addMNASubComponent&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mSubSeriesResistor&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">MNA_SUBCOMP_TASK_ORDER&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">TASK_BEFORE_PARENT&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">MNA_SUBCOMP_TASK_ORDER&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">TASK_BEFORE_PARENT&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87">false&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">mSubSeriesInductor&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">std&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">make_shared&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">DP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Ph1&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Inductor&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;gt;&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">**&lt;/span>&lt;span style="color:#000">mName&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">+&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;_ind&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">mLogLevel&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic">// Setup mSubSeriesInductor...
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic">// Register the inductor as a subcomponent. The inductor&amp;#39;s pre- and post-step will be called before the pre- and post-step of the parent,
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// and the inductor does contribute to the `rightVector`.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">addMNASubComponent&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mSubSeriesInductor&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">MNA_SUBCOMP_TASK_ORDER&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">TASK_BEFORE_PARENT&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">MNA_SUBCOMP_TASK_ORDER&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">TASK_BEFORE_PARENT&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#204a87">true&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic">//...
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">DP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Ph1&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">PiLine&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">initializeParentFromNodesAndTerminals&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Real&lt;/span> &lt;span style="color:#000">frequency&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic">//...
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// Frequency-dependent values go here, not in createSubComponents().
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">Real&lt;/span> &lt;span style="color:#000">omega&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">2.&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span> &lt;span style="color:#000">PI&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span> &lt;span style="color:#000">frequency&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">Complex&lt;/span> &lt;span style="color:#000">impedance&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">**&lt;/span>&lt;span style="color:#000">mSeriesRes&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">omega&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">**&lt;/span>&lt;span style="color:#000">mSeriesInd&lt;/span>&lt;span style="color:#000;font-weight:bold">};&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic">//...
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="orchestrating-mna-method-calls">Orchestrating MNA Method Calls&lt;/h2>
+&lt;p>By choosing which methods to override in the composite component class, subcomponent handling can either be offloaded to the &lt;code>CompositePowerComp&lt;/code> base class or manually implemented in the new component class. By default, &lt;code>CompositePowerComp&lt;/code> provides all
+methods demanded by &lt;code>MNAInterface&lt;/code> in such a way that the subcomponents&amp;rsquo; MNA-methods are properly called. To also allow for the composite
+component class to perform further actions in these MNA-methods, there exist multiple methods prefixed with &lt;code>mnaParent&lt;/code>, e.g. &lt;code>mnaParentPreStep&lt;/code> or &lt;code>mnaParentAddPostStepDependencies&lt;/code>.
+These parent methods will usually be called after the respective method has been called on the subcomponents. For the &lt;code>mnaPreStep&lt;/code> and
+&lt;code>mnaPostStep&lt;/code> methods, this behavior can be set explicitly in the &lt;code>addMNASubComponent&lt;/code> method.&lt;/p>
+&lt;p>If a composite component requires a completely custom implementation of some MNA-method, e.g. for skipping certain subcomponents or for
+calling the subcomponent&amp;rsquo;s methods in a different order, the composite component class can still override the original MNA-method with the &lt;code>mnaComp&lt;/code> prefix instead of the
+&lt;code>mnaParent&lt;/code> prefix. This will prevent the &lt;code>CompositePowerComp&lt;/code> base class from doing any subcomponent handling in this specific MNA-method,
+so the subcomponent method calls have to be performed explicitly if desired. Given this, the following two implementations of the &lt;code>mnaAddPreStepDependencies&lt;/code> method are equivalent:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">DP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Ph1&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">PiLine&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">mnaParentAddPreStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">prevStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">attributeDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">modifiedAttributes&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic">// Only add the dependencies of the composite component, the subcomponent&amp;#39;s dependencies are handled by the base class
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">prevStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">push_back&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mIntfCurrent&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">prevStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">push_back&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mIntfVoltage&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">modifiedAttributes&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">push_back&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mRightVector&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">void&lt;/span> &lt;span style="color:#000">DP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Ph1&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">PiLine&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">mnaCompAddPreStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">prevStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">attributeDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">AttributeBase&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">List&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">modifiedAttributes&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic">// Manually add pre-step dependencies of subcomponents
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#204a87;font-weight:bold">for&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#204a87;font-weight:bold">auto&lt;/span> &lt;span style="color:#f57900">subComp&lt;/span> &lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000">mSubcomponentsMNA&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">subComp&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">-&amp;gt;&lt;/span>&lt;span style="color:#000">mnaAddPreStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">prevStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">attributeDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">modifiedAttributes&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic">// Add pre-step dependencies of component itself
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span> &lt;span style="color:#000">prevStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">push_back&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mIntfCurrent&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">prevStepDependencies&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">push_back&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mIntfVoltage&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">modifiedAttributes&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">push_back&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mRightVector&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: Add New Model</title><link>https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/add-model/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/add-model/</guid><description>
+&lt;p>This page walks through adding a component model, using a three phase dynamic phasor inductor as
+the example.&lt;/p>
+&lt;h2 id="where-the-code-lives">Where the code lives&lt;/h2>
+&lt;p>Component models live in the &lt;code>dpsim-models&lt;/code> subproject, which builds the &lt;code>CPS&lt;/code> library. Headers
+and sources are separate trees, both organised by domain:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>dpsim-models
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |- include
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> | \ dpsim-models
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> | |- Base shared base classes, one per component family
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> | |- DP dynamic phasor
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> | |- EMT electromagnetic transient
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> | |- SP static phasor
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> | \ Signal domain independent control and signal models
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> \- src
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |- Base
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |- DP
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |- EMT
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |- SP
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> \ Signal
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Namespaces follow the same shape, with the phase count nested inside the domain:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">CPS&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#000">DP&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>&lt;span style="color:#000">EMT&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>&lt;span style="color:#000">SP&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#000">Ph1&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>&lt;span style="color:#000">Ph3&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#000">Name&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">CPS&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Signal&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#000">Name&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>File names encode the same information, so the example model needs two files:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>dpsim-models/include/dpsim-models/DP/DP_Ph3_Inductor.h&lt;/code>&lt;/li>
+&lt;li>&lt;code>dpsim-models/src/DP/DP_Ph3_Inductor.cpp&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>declaring the class &lt;code>CPS::DP::Ph3::Inductor&lt;/code>.&lt;/p>
+&lt;h2 id="choosing-a-base-class">Choosing a base class&lt;/h2>
+&lt;p>DPsim supports several solvers, and each requires certain member functions on the component.
+Which ones you implement is determined by the interfaces you inherit rather than by the solver
+itself.&lt;/p>
+&lt;p>For an MNA component, derive from &lt;code>MNASimPowerComp&amp;lt;VarType&amp;gt;&lt;/code>, with &lt;code>Complex&lt;/code> as the variable
+type in the &lt;code>DP&lt;/code> and &lt;code>SP&lt;/code> domains and &lt;code>Real&lt;/code> in &lt;code>EMT&lt;/code>. The MNA hooks are declared on
+&lt;code>MNAInterface&lt;/code>, which &lt;code>MNASimPowerComp&lt;/code> implements, so that is where to look for the full set.&lt;/p>
+&lt;p>If the model is naturally expressed as several existing components wired together rather than as
+a single stamp, derive from &lt;code>CompositePowerComp&lt;/code> and add subcomponents instead. The pi-line is a
+worked example. See &lt;a href="https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/subcomponents/">subcomponents&lt;/a>.&lt;/p>
+&lt;p>If the component is better described by its own state-space model coupled to the network, see
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/state-space-nodal/">state-space nodal&lt;/a> for that alternative.&lt;/p>
+&lt;h2 id="attributes">Attributes&lt;/h2>
+&lt;p>Every component exposes its parameters and state through attributes, declared in the class and
+registered in the constructor. Attributes are what make a value visible to the logger, to the
+Python bindings and to the task scheduler.&lt;/p>
+&lt;p>How to declare, read and derive attributes is described under
+&lt;a href="https://sogno.energy/dpsim/docs/developer-guide/attributes-and-scheduling/attributes/">attributes&lt;/a> and
+&lt;a href="https://sogno.energy/dpsim/docs/developer-guide/attributes-and-scheduling/attribute-usage/">attribute usage&lt;/a>.&lt;/p>
+&lt;h2 id="tasks-and-step-functions">Tasks and step functions&lt;/h2>
+&lt;p>Pre-step and post-step functions are registered as tasks, and the scheduler derives the order in
+which they may run from the attributes each task reads and writes. Declaring those dependencies
+correctly matters: a task that modifies an attribute without declaring it can be scheduled in
+the wrong order, or in parallel with a reader.&lt;/p>
+&lt;p>How tasks are built and how the dependency graph is derived is described under
+&lt;a href="https://sogno.energy/dpsim/docs/developer-guide/attributes-and-scheduling/scheduling/">scheduling&lt;/a>.&lt;/p>
+&lt;h2 id="registering-the-new-component">Registering the new component&lt;/h2>
+&lt;p>A new component is not picked up automatically. Three places have to be updated:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>dpsim-models/src/CMakeLists.txt&lt;/code>, adding the new source file to the list, for example
+&lt;code>DP/DP_Ph3_Inductor.cpp&lt;/code>&lt;/li>
+&lt;li>&lt;code>dpsim-models/include/dpsim-models/Components.h&lt;/code>, adding the header so that including that one
+file gives access to every component&lt;/li>
+&lt;li>&lt;code>dpsim/src/pybind/DPComponents.cpp&lt;/code>, or the matching &lt;code>EMTComponents.cpp&lt;/code>, &lt;code>SPComponents.cpp&lt;/code>
+or &lt;code>SignalComponents.cpp&lt;/code>, to expose the class to Python&lt;/li>
+&lt;/ul>
+&lt;p>The Python binding follows the existing pattern in those files:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">py&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">class_&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">CPS&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">DP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Ph1&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Resistor&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">std&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">shared_ptr&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">CPS&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">DP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Ph1&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Resistor&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;gt;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">CPS&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">SimPowerComp&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">CPS&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Complex&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;gt;&amp;gt;&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mDPPh1&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Resistor&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">py&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">multiple_inheritance&lt;/span>&lt;span style="color:#000;font-weight:bold">())&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">def&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;set_parameters&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&lt;/span>&lt;span style="color:#000">CPS&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">DP&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Ph1&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Resistor&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">setParameters&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;R&amp;#34;&lt;/span>&lt;span style="color:#000">_a&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Name the arguments using the &lt;code>&amp;quot;R&amp;quot;_a&lt;/code> form shown above. Without it the Python signature and the
+generated reference fall back to positional placeholders such as &lt;code>arg0&lt;/code>, and callers cannot use
+keyword arguments.&lt;/p>
+&lt;h2 id="initialization">Initialization&lt;/h2>
+&lt;p>Components are initialized either from power flow results or from explicitly set initial values,
+and the solver calls into the component in a defined order. Do not add an &lt;code>initialize(Real)&lt;/code>
+overload of your own for user-facing initialization; use the documented hooks instead.&lt;/p>
+&lt;p>See &lt;a href="https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/initialization/">initialization&lt;/a> for the full sequence, and
+note the scaling conventions in &lt;a href="https://sogno.energy/dpsim/docs/developer-guide/architecture-and-conventions/conventions/">guidelines&lt;/a>,
+since initialization quantities are RMS3PH while EMT simulation quantities are PEAK1PH.&lt;/p></description></item><item><title>Docs: Create New Simulation</title><link>https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/create-simulation/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/create-simulation/</guid><description>
+&lt;p>Here, we will show the implementation of a new simulation scenario defined in C++, which is using DPsim as a library.&lt;/p>
+&lt;h2 id="directory-structure">Directory Structure&lt;/h2>
+&lt;p>In the end, your directory structure should look like as follows:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>my-project
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |- CMakeLists.txt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |- source
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |- my-scenario.cpp
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> |- dpsim (as submodule)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="cmake-file">CMake File&lt;/h2>
+&lt;p>Your &lt;code>CMakeLists.txt&lt;/code> could look like this:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cmake" data-lang="cmake">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cmake_minimum_required&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">VERSION&lt;/span> &lt;span style="color:#4e9a06">3.14&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>&lt;span style="color:#a40000">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#204a87">project&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">my-project&lt;/span> &lt;span style="color:#4e9a06">CXX&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>&lt;span style="color:#a40000">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#204a87">add_subdirectory&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">dpsim&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>&lt;span style="color:#a40000">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#204a87">add_executable&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">my-scenario&lt;/span> &lt;span style="color:#4e9a06">source/my-scenario.cpp&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>&lt;span style="color:#a40000">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#204a87">target_link_libraries&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">my-scenario&lt;/span> &lt;span style="color:#4e9a06">dpsim&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>&lt;span style="color:#a40000">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="build-the-project">Build the Project&lt;/h2>
+&lt;p>The build process is similar to the one of DPsim:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> my-project
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mkdir build &lt;span style="color:#ce5c00;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#204a87">cd&lt;/span> build
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake ..
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make my-scenario
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: Debugging</title><link>https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/debugging/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/debugging/</guid><description>
+&lt;h2 id="mixed-python-c-debugging">Mixed Python C++ Debugging&lt;/h2>
+&lt;h3 id="prerequisites">Prerequisites&lt;/h3>
+&lt;p>Your vscode launch.json should have two configurations, one to launch the python process and one to attach gdb:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;version&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;0.2.0&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;configurations&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;name&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Python: Current File&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;type&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;python&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;request&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;launch&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;program&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;${file}&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;console&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;integratedTerminal&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;stopOnEntry&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#204a87;font-weight:bold">true&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;env&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#204a87;font-weight:bold">&amp;#34;PYTHONPATH&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;${workspaceFolder}/build${pathSeparator}${env:PYTHONPATH}&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;name&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;(gdb) Attach&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;type&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;cppdbg&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;request&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;attach&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;program&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;/usr/bin/python&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;processId&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;${command:pickProcess}&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;MIMode&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;gdb&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;setupCommands&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;description&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Enable pretty-printing for gdb&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;text&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;-enable-pretty-printing&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;ignoreFailures&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#204a87;font-weight:bold">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The python debugger will stop on entry (&amp;ldquo;stopOnEntry&amp;rdquo;: true).
+Make sure to adapt your PYTHONPATH variable if necessary.&lt;/p>
+&lt;p>The C++ code has to be build in debug mode&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cmake .. -DCMAKE_BUILD_TYPE&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>Debug
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="attaching-c-debugger">Attaching C++ Debugger&lt;/h3>
+&lt;ul>
+&lt;li>open the python example to be debugged&lt;/li>
+&lt;li>go to the debug menu and select / run the &amp;ldquo;Python: Current File&amp;rdquo; configuration&lt;/li>
+&lt;li>the python debugger should stop at entry&lt;/li>
+&lt;li>set C++ breakpoints&lt;/li>
+&lt;li>go to the debug menu and run the &amp;ldquo;(gdb) Attach&amp;rdquo; configuration&lt;/li>
+&lt;li>select a process… choose the python process with the “—adapter-access-token” part&lt;/li>
+&lt;li>you can view the whole description when you hover over the process with the mouse&lt;/li>
+&lt;li>press play to continue Python debugging… the c++ debugger will stop at the next breakpoint&lt;/li>
+&lt;/ul>
+&lt;p>You can automate this by using the vscode extension “Python C++ Debugger” and by adding this configuration to the launch.json above:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;name&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Python C++ Debugger&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;type&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;pythoncpp&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;request&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;launch&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;pythonConfig&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;custom&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;pythonLaunchName&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Python: Current File&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;cppConfig&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;default (gdb) Attach&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This will automatically run both debuggers and select the current process.&lt;/p>
+&lt;p>It can take a while before the debugger hits the C++ breakpoints.&lt;/p>
+&lt;h2 id="c-debugging">C++ Debugging&lt;/h2>
+&lt;p>Use the following launch.json for vscode and set the program path:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;version&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;0.2.0&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;configurations&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;name&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;(gdb) Launch&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;type&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;cppdbg&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;request&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;launch&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;program&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;${workspaceFolder}/dpsim/build/Examples/Cxx/example&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;args&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">[],&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;stopAtEntry&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#204a87;font-weight:bold">true&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;cwd&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;${workspaceFolder}&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;environment&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">[],&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;externalConsole&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#204a87;font-weight:bold">false&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;MIMode&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;gdb&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;setupCommands&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;description&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Enable pretty-printing for gdb&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;text&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;-enable-pretty-printing&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;ignoreFailures&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#204a87;font-weight:bold">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: Logger Implementation</title><link>https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/loggers/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/loggers/</guid><description>
+&lt;p>Using the loggers is covered under &lt;a href="https://sogno.energy/dpsim/docs/user-guide/logging/">logging results&lt;/a>.
+This page covers the classes.&lt;/p>
+&lt;h2 id="distinct-things-share-the-name">Distinct things share the name&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Class&lt;/th>
+&lt;th>Purpose&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>DPsim::DataLogger&lt;/code>&lt;/td>
+&lt;td>Numerical results to CSV, one row per step&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>DPsim::RealTimeDataLogger&lt;/code>&lt;/td>
+&lt;td>The same results, buffered in memory for real-time runs&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>DPsim::DataLoggerInterface&lt;/code>&lt;/td>
+&lt;td>The seam both implement, and the one to implement for a new sink&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>CPS::Logger&lt;/code>&lt;/td>
+&lt;td>The diagnostic text log, controlled by &lt;code>LogLevel&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>Only the data loggers have anything to do with results. &lt;code>CPS::Logger&lt;/code> is a different subsystem that
+happens to share the word, and conflating the two is the most common confusion here. A component
+constructed with &lt;code>Logger::Level::debug&lt;/code> writes prose about its own initialization and contributes
+nothing to any CSV.&lt;/p>
+&lt;h2 id="datalogger">&lt;code>DataLogger&lt;/code>&lt;/h2>
+&lt;p>Holds a map from column name to attribute and appends a row per step. &lt;code>log(Real time, Int timeStepCount)&lt;/code> returns early when the logger is disabled or when
+&lt;code>timeStepCount % mDownsampling != 0&lt;/code>, so down-sampling is a modulo on the step counter rather than a
+time comparison, and it is exact regardless of step size.&lt;/p>
+&lt;p>The header is written lazily on the first row, by testing &lt;code>mLogFile.tellp() == 0&lt;/code>. That means the
+column set is fixed by whatever was registered before the first log call; registering an attribute
+afterwards would produce rows that no longer match the header.&lt;/p>
+&lt;p>Values are written with &lt;code>std::scientific&lt;/code> in fixed-width columns, which is what makes the output
+readable as a table and also what makes it larger than a minimal CSV would be.&lt;/p>
+&lt;p>The constructor takes &lt;code>(name, enabled, downsampling)&lt;/code>. The Python binding exposes only the name, so
+&lt;code>enabled&lt;/code> and &lt;code>downsampling&lt;/code> are unreachable from Python. A binding that took all three would make
+down-sampling available to notebook users, who currently have only the time step.&lt;/p>
+&lt;h2 id="realtimedatalogger">&lt;code>RealTimeDataLogger&lt;/code>&lt;/h2>
+&lt;p>Exists because writing to disk inside a real-time step is not acceptable: the file system offers no
+bound on how long a write takes, and one slow write overruns the step. It preallocates
+&lt;code>mAttributeData&lt;/code> from either the final time and step size or an explicit row count, fills it during
+the run, and writes at the end.&lt;/p>
+&lt;p>The preallocation is the point, and it is also the constraint: the row count must be known before
+the run, so a real-time simulation of indefinite length needs a different arrangement.&lt;/p>
+&lt;h2 id="dataloggerinterface">&lt;code>DataLoggerInterface&lt;/code>&lt;/h2>
+&lt;p>The abstract seam. Implement it to send results somewhere other than a file, which is what the
+co-simulation interfaces do rather than logging and re-reading. &lt;code>Simulation::addLogger&lt;/code> accepts
+anything implementing it.&lt;/p>
+&lt;h2 id="scheduling">Scheduling&lt;/h2>
+&lt;p>A logger contributes a task like any other component, so the scheduler places it by its declared
+attribute dependencies. A logged attribute therefore keeps alive the task that produces it, which
+has a consequence worth knowing: logging an attribute can change which tasks the scheduler considers
+reachable. A model whose results change when a logger is added is exhibiting a missing dependency
+declaration elsewhere, not a logging bug. See
+&lt;a href="https://sogno.energy/dpsim/docs/developer-guide/attributes-and-scheduling/adding-tasks/">adding tasks to a component&lt;/a>.&lt;/p>
+&lt;h2 id="source">Source&lt;/h2>
+&lt;p>&lt;code>dpsim/src/DataLogger.cpp&lt;/code>, &lt;code>dpsim/src/RealTimeDataLogger.cpp&lt;/code>,
+&lt;code>dpsim/include/dpsim/DataLoggerInterface.h&lt;/code>, and &lt;code>dpsim-models/include/dpsim-models/Logger.h&lt;/code> for
+the unrelated diagnostic logger.&lt;/p></description></item></channel></rss>

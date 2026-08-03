@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_d_psim_1_1_thread_list_scheduler.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_thread_list_scheduler.html">ThreadListScheduler</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">DPsim::ThreadListScheduler Member List</div></div>
 </div><!--header-->
@@ -96,35 +104,37 @@ $(function(){ initResizable(false); });
 <table class="directory">
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_thread_list_scheduler.html#a47a379d964e79b7768ef9ff07de1a418">createSchedule</a>(const CPS::Task::List &amp;tasks, const Edges &amp;inEdges, const Edges &amp;outEdges)</td><td class="entry"><a class="el" href="class_d_psim_1_1_thread_list_scheduler.html">DPsim::ThreadListScheduler</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html#a9b7e679e940b7ef3c991ad4bfd9f1a4b">Edges</a> typedef</td><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>external</b> (defined in <a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>finishSchedule</b>(const Edges &amp;inEdges) (defined in <a class="el" href="class_d_psim_1_1_thread_scheduler.html">DPsim::ThreadScheduler</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_thread_scheduler.html">DPsim::ThreadScheduler</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>getAveragedMeasurement</b>(CPS::Task::Ptr task) (defined in <a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>getAveragedMeasurement</b>(CPS::Task *task) (defined in <a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>initMeasurements</b>(const CPS::Task::List &amp;tasks) (defined in <a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html#a5369e74df20f3b2e96a5442ff36bd62c">external</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_thread_scheduler.html#afc5d44209335b896c4c2908665153bb0">finishSchedule</a>(const Edges &amp;inEdges)</td><td class="entry"><a class="el" href="class_d_psim_1_1_thread_scheduler.html">DPsim::ThreadScheduler</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html#a79436bef9a9880c770165196c0a0efbd">getAveragedMeasurement</a>(CPS::Task::Ptr task)</td><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html#a0d33076495137e898986000973c5ed93">getAveragedMeasurement</a>(CPS::Task *task)</td><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html#a8032bab1715b60110386383f1bc50994">initMeasurements</a>(const CPS::Task::List &amp;tasks)</td><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html#a304b12334e137a6f5bb79156c28ce0f5">levelSchedule</a>(const CPS::Task::List &amp;tasks, const Edges &amp;inEdges, const Edges &amp;outEdges, std::vector&lt; CPS::Task::List &gt; &amp;levels)</td><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a></td><td class="entry"><span class="mlabel">protected</span><span class="mlabel">static</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html#a3968cdb1c5ece39b1af776c8381f78d5">mLogLevel</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mNumThreads</b> (defined in <a class="el" href="class_d_psim_1_1_thread_scheduler.html">DPsim::ThreadScheduler</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_thread_scheduler.html">DPsim::ThreadScheduler</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mRoot</b> (defined in <a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_thread_scheduler.html#a5f602d78379423d3635a2874c1b2381a">mNumThreads</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_thread_scheduler.html">DPsim::ThreadScheduler</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html#a67cd6f66e0d123889247b3937810467d">mRoot</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html#aec136000046ae3cdaeac752aa470aeae">mSLog</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html#a51cc3480e6e15a64e9b750ac430f40de">readMeasurements</a>(CPS::String filename, std::unordered_map&lt; CPS::String, TaskTime::rep &gt; &amp;measurements)</td><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html#a0d839869a3f6ab4025773c3b5da9e347">resolveDeps</a>(CPS::Task::List &amp;tasks, Edges &amp;inEdges, Edges &amp;outEdges)</td><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Scheduler</b>(CPS::Logger::Level logLevel=CPS::Logger::Level::off) (defined in <a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>scheduleTask</b>(int thread, CPS::Task::Ptr task) (defined in <a class="el" href="class_d_psim_1_1_thread_scheduler.html">DPsim::ThreadScheduler</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_thread_scheduler.html">DPsim::ThreadScheduler</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html#a29bf76034436267e58b854d510cfa024">Scheduler</a>(CPS::Logger::Level logLevel=CPS::Logger::Level::off)</td><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_thread_scheduler.html#af5b06c6c6174da9d1830c3599d6960a3">scheduleTask</a>(int thread, CPS::Task::Ptr task)</td><td class="entry"><a class="el" href="class_d_psim_1_1_thread_scheduler.html">DPsim::ThreadScheduler</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_thread_scheduler.html#a693ab28de772055eedc74c2274f50795">step</a>(Real time, Int timeStepCount)</td><td class="entry"><a class="el" href="class_d_psim_1_1_thread_scheduler.html">DPsim::ThreadScheduler</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_thread_scheduler.html#a466a51656b39092eda1376c5aa18bb0d">stop</a>()</td><td class="entry"><a class="el" href="class_d_psim_1_1_thread_scheduler.html">DPsim::ThreadScheduler</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html#ac704fccfba4117720ba75fb50e47cd39">TaskTime</a> typedef</td><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>ThreadListScheduler</b>(Int threads=1, String outMeasurementFile=String(), String inMeasurementFile=String(), Bool useConditionVariables=false) (defined in <a class="el" href="class_d_psim_1_1_thread_list_scheduler.html">DPsim::ThreadListScheduler</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_thread_list_scheduler.html">DPsim::ThreadListScheduler</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>ThreadScheduler</b>(Int threads, String outMeasurementFile, Bool useConditionVariable) (defined in <a class="el" href="class_d_psim_1_1_thread_scheduler.html">DPsim::ThreadScheduler</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_thread_scheduler.html">DPsim::ThreadScheduler</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_thread_list_scheduler.html#ae5fd182afbdf55e2340108a6bda66ccf">ThreadListScheduler</a>(Int threads=1, String outMeasurementFile=String(), String inMeasurementFile=String(), Bool useConditionVariables=false)</td><td class="entry"><a class="el" href="class_d_psim_1_1_thread_list_scheduler.html">DPsim::ThreadListScheduler</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_thread_scheduler.html#ae3196d210ffcb000e9b644ca8b1f1913">ThreadScheduler</a>(Int threads, String outMeasurementFile, Bool useConditionVariable)</td><td class="entry"><a class="el" href="class_d_psim_1_1_thread_scheduler.html">DPsim::ThreadScheduler</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html#a2c00afdc1af0b39557ddd852a42a7215">topologicalSort</a>(const CPS::Task::List &amp;tasks, const Edges &amp;inEdges, const Edges &amp;outEdges, CPS::Task::List &amp;sortedTasks)</td><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html#aa72e1565c8bad5bf3b5079a2c0525f18">updateMeasurement</a>(CPS::Task *task, TaskTime time)</td><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html#a115454f5c25bd50c0295af51e217dec5">writeMeasurements</a>(CPS::String filename)</td><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~Scheduler</b>() (defined in <a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>~ThreadScheduler</b>() (defined in <a class="el" href="class_d_psim_1_1_thread_scheduler.html">DPsim::ThreadScheduler</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_thread_scheduler.html">DPsim::ThreadScheduler</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html#a737a90e17408f07bdbbdf76eb8666031">~Scheduler</a>()</td><td class="entry"><a class="el" href="class_d_psim_1_1_scheduler.html">DPsim::Scheduler</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_thread_scheduler.html#ab0b3faf5db91ff546ad2666b32c6a3ae">~ThreadScheduler</a>()</td><td class="entry"><a class="el" href="class_d_psim_1_1_thread_scheduler.html">DPsim::ThreadScheduler</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
 </table></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

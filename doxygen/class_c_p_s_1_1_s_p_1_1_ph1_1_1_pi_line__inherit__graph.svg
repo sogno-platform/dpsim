@@ -322,7 +322,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000013" class="node">
 <title>Node13</title>
 <g id="a_Node000013"><a xlink:href="class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="1157.75,-142.25 1038.25,-142.25 1038.25,-120 1157.75,-120 1157.75,-142.25"/>
+<polygon fill="white" stroke="#666666" points="1157.75,-142.25 1038.25,-142.25 1038.25,-120 1157.75,-120 1157.75,-142.25"/>
 <text text-anchor="middle" x="1098" y="-128.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Base::Ph1::PiLine</text>
 </a>
 </g>
@@ -340,7 +340,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000014" class="node">
 <title>Node14</title>
 <g id="a_Node000014"><a xlink:href="class_c_p_s_1_1_m_n_a_tear_interface.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="1160.75,-102.25 1035.25,-102.25 1035.25,-80 1160.75,-80 1160.75,-102.25"/>
+<polygon fill="white" stroke="#666666" points="1160.75,-102.25 1035.25,-102.25 1035.25,-80 1160.75,-80 1160.75,-102.25"/>
 <text text-anchor="middle" x="1098" y="-88.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::MNATearInterface</text>
 </a>
 </g>

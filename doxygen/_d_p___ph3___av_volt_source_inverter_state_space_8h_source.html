@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_d_p___ph3___av_volt_source_inverter_state_space_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,35 +95,30 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_88adc964ffa02c1923288cb07a48abab.html">DP</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">DP_Ph3_AvVoltSourceInverterStateSpace.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University</span></div>
+<a href="_d_p___ph3___av_volt_source_inverter_state_space_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;array&gt;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;dpsim-models/DP/DP_Ph3_MixedVTypeVariableSSNComp.h&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;<a class="code" href="_d_p___ph3___mixed_v_type_variable_s_s_n_comp_8h.html">dpsim-models/DP/DP_Ph3_MixedVTypeVariableSSNComp.h</a>&gt;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">namespace </span>CPS {</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">namespace </span>DP {</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">namespace </span>Ph3 {</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s.html">CPS</a> {</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s_1_1_d_p.html">DP</a> {</div>
+<div class="foldopen" id="foldopen00012" data-start="{" data-end="}">
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="namespace_c_p_s_1_1_d_p_1_1_ph3.html">   12</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s_1_1_d_p_1_1_ph3.html">Ph3</a> {</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span></div>
 <div class="foldopen" id="foldopen00015" data-start="{" data-end="};">
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html">   15</a></span><span class="keyword">class </span><a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a86da3c17bf092c7c64242b0a86b3075a">AvVoltSourceInverterStateSpace</a> final</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    : <span class="keyword">public</span> MixedVTypeVariableSSNComp,</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    : <span class="keyword">public</span> <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#ae9725811fac14e811c13f1fcbb8e612e">MixedVTypeVariableSSNComp</a>,</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>      <span class="keyword">public</span> <a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;AvVoltSourceInverterStateSpace&gt; {</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  <span class="keyword">enum</span> StateIndex : Int {</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  <span class="keyword">enum</span> StateIndex : <a class="code hl_typedef" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> {</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    VcARe = 0,</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    VcAIm = 1,</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    VcBRe = 2,</div>
@@ -136,7 +145,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span></div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keyword">using </span>Complex3 = std::array&lt;Complex, 3&gt;;</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keyword">const</span> Bool mEnableNegSeqControl;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> mEnableNegSeqControl;</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> std::array&lt;Int, 3&gt; mVcReCol = {VcARe, VcBRe, VcCRe};</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> std::array&lt;Int, 3&gt; mVcImCol = {VcAIm, VcBIm, VcCIm};</div>
@@ -148,40 +157,40 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> std::array&lt;Int, 7&gt; mOwnCol = {</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>      Psi, PFiltered, QFiltered, PhiD, PhiQ, GammaD, GammaQ};</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  Real mLf = 0.0;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  Real mCf = 0.0;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  Real mRf = 0.0;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  Real mRc = 0.0;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mLf = 0.0;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mCf = 0.0;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mRf = 0.0;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mRc = 0.0;</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  Real mOmegaN = 0.0;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  Real mKpPLL = 0.0;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  Real mKiPLL = 0.0;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mOmegaN = 0.0;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mKpPLL = 0.0;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mKiPLL = 0.0;</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  Real mOmegaCutoff = 0.0;</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  Real mPRef = 0.0;</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  Real mQRef = 0.0;</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  Real mKpPowerCtrl = 0.0;</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  Real mKiPowerCtrl = 0.0;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  Real mKpCurrCtrl = 0.0;</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  Real mKiCurrCtrl = 0.0;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mOmegaCutoff = 0.0;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mPRef = 0.0;</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mQRef = 0.0;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mKpPowerCtrl = 0.0;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mKiPowerCtrl = 0.0;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mKpCurrCtrl = 0.0;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mKiCurrCtrl = 0.0;</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span></div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  Real mIRefNd = 0.0;</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  Real mIRefNq = 0.0;</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mIRefNd = 0.0;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mIRefNq = 0.0;</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  <span class="keyword">const</span> Attribute&lt;Real&gt;::Ptr mVcD;</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  <span class="keyword">const</span> Attribute&lt;Real&gt;::Ptr mVcQ;</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  <span class="keyword">const</span> Attribute&lt;Real&gt;::Ptr mIrcD;</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  <span class="keyword">const</span> Attribute&lt;Real&gt;::Ptr mIrcQ;</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  <span class="keyword">const</span> Attribute&lt;Real&gt;::Ptr mPInst;</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  <span class="keyword">const</span> Attribute&lt;Real&gt;::Ptr mQInst;</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  <span class="keyword">const</span> Attribute&lt;Real&gt;::Ptr mOmegaPLL;</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  <span class="keyword">const</span> Attribute&lt;Real&gt;::Ptr mIrcNd;</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  <span class="keyword">const</span> Attribute&lt;Real&gt;::Ptr mIrcNq;</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;Real&gt;::Ptr</a> mVcD;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;Real&gt;::Ptr</a> mVcQ;</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;Real&gt;::Ptr</a> mIrcD;</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;Real&gt;::Ptr</a> mIrcQ;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;Real&gt;::Ptr</a> mPInst;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;Real&gt;::Ptr</a> mQInst;</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;Real&gt;::Ptr</a> mOmegaPLL;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;Real&gt;::Ptr</a> mIrcNd;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;Real&gt;::Ptr</a> mIrcNq;</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span></div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  <span class="keyword">struct </span>NegSeqTerms {</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    Complex ircNDQ{0.0, 0.0};</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    Complex vRefNDQ{0.0, 0.0};</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    Complex vRefNEnv0{0.0, 0.0};</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <a class="code hl_typedef" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> ircNDQ{0.0, 0.0};</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <a class="code hl_typedef" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> vRefNDQ{0.0, 0.0};</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    <a class="code hl_typedef" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> vRefNEnv0{0.0, 0.0};</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    Complex3 hIrcN{};</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  };</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span></div>
@@ -191,70 +200,96 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    Complex3 posVcIm{};</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    Complex3 posURe{};</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    Complex3 posUIm{};</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    Complex negPsi{0.0, 0.0};</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    Complex negGammaND{0.0, 0.0};</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    Complex negGammaNQ{0.0, 0.0};</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <a class="code hl_typedef" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> negPsi{0.0, 0.0};</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <a class="code hl_typedef" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> negGammaND{0.0, 0.0};</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <a class="code hl_typedef" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> negGammaNQ{0.0, 0.0};</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    Complex3 negVcRe{};</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    Complex3 negVcIm{};</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    Complex3 negURe{};</div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    Complex3 negUIm{};</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>  };</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span></div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  <span class="keywordtype">void</span> buildStateSpaceModel(<span class="keyword">const</span> Matrix &amp;x, <span class="keyword">const</span> Matrix &amp;u, Matrix &amp;A,</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>                            Matrix &amp;B, Matrix &amp;C, Matrix &amp;D, Matrix &amp;E,</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>                            Matrix &amp;F) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  <span class="keywordtype">void</span> buildStateSpaceModel(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;x, <span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;u, <a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;<a class="code hl_enumvalue" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca7fc56270e7a70fa81a5935b72eacbe29">A</a>,</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>                            <a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;<a class="code hl_enumvalue" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca9d5ed678fe57bcca610140957afab571">B</a>, <a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;<a class="code hl_enumvalue" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca0d61f8370cad1d412f80b84d143e1257">C</a>, <a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;D, <a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;E,</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>                            <a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;F) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span></div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>  NegSeqTerms computeNegSeqTerms(<span class="keyword">const</span> Matrix &amp;x, <span class="keyword">const</span> Complex3 &amp;vc,</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>  NegSeqTerms computeNegSeqTerms(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;x, <span class="keyword">const</span> Complex3 &amp;vc,</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>                                 <span class="keyword">const</span> Complex3 &amp;uEnv,</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                                 <span class="keyword">const</span> Complex3 &amp;redistFactor,</div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>                                 <span class="keyword">const</span> Complex3 &amp;projCoeff,</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>                                 <span class="keyword">const</span> Complex &amp;expJPsi) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>                                 <span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> &amp;expJPsi) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span></div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>  <span class="keywordtype">void</span> buildInductorRows(<span class="keyword">const</span> Complex3 &amp;redistFactor,</div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>                         <span class="keyword">const</span> Complex3 &amp;projCoeff,</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>                         <span class="keyword">const</span> RefSensitivities &amp;sens, Matrix &amp;A,</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>                         Matrix &amp;B) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>                         <span class="keyword">const</span> RefSensitivities &amp;sens, <a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;<a class="code hl_enumvalue" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca7fc56270e7a70fa81a5935b72eacbe29">A</a>,</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>                         <a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;<a class="code hl_enumvalue" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca9d5ed678fe57bcca610140957afab571">B</a>) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
 <div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>  Bool <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#ad4ea7087af7a80a90399735972b760e6">updateComponentParameters</a>() <span class="keyword">override</span> <span class="keyword">final</span>;</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a7589ffb897e6275fa06979f3d90b284e">updateLogAttributes</a>(<span class="keyword">const</span> Matrix &amp;u) <span class="keyword">const</span> <span class="keyword">override</span> <span class="keyword">final</span>;</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#ad4ea7087af7a80a90399735972b760e6">updateComponentParameters</a>() <span class="keyword">override</span> <span class="keyword">final</span>;</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a7589ffb897e6275fa06979f3d90b284e">updateLogAttributes</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;u) <span class="keyword">const</span> <span class="keyword">override</span> <span class="keyword">final</span>;</div>
 <div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span> </div>
 <div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>  <span class="keyword">using </span><a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;<a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a86da3c17bf092c7c64242b0a86b3075a">AvVoltSourceInverterStateSpace</a>&gt;::make;</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>  <span class="keyword">using </span><a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;<a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a86da3c17bf092c7c64242b0a86b3075a">AvVoltSourceInverterStateSpace</a>&gt;<a class="code hl_function" href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">::make</a>;</div>
 <div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span></div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>  <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a86da3c17bf092c7c64242b0a86b3075a">AvVoltSourceInverterStateSpace</a>(String <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, String name,</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>                                 Logger::Level logLevel = Logger::Level::off,</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>                                 Bool enableNegSeqControl = <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>  <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a86da3c17bf092c7c64242b0a86b3075a">AvVoltSourceInverterStateSpace</a>(String name,</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>                                 Logger::Level logLevel = Logger::Level::off,</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>                                 Bool enableNegSeqControl = <span class="keyword">false</span>)</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>      : <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a86da3c17bf092c7c64242b0a86b3075a">AvVoltSourceInverterStateSpace</a>(name, name, logLevel,</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>  <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a86da3c17bf092c7c64242b0a86b3075a">AvVoltSourceInverterStateSpace</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>,</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>                                 <a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel = Logger::Level::off,</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>                                 <a class="code hl_typedef" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> enableNegSeqControl = <span class="keyword">false</span>);</div>
+<div class="foldopen" id="foldopen00149" data-start="{" data-end="}">
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a9aae69e55d196bf0acd60b98310bb497">  149</a></span>  <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a9aae69e55d196bf0acd60b98310bb497">AvVoltSourceInverterStateSpace</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>,</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>                                 <a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel = Logger::Level::off,</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>                                 <a class="code hl_typedef" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> enableNegSeqControl = <span class="keyword">false</span>)</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>      : <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a86da3c17bf092c7c64242b0a86b3075a">AvVoltSourceInverterStateSpace</a>(<a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, logLevel,</div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>                                       enableNegSeqControl) {}</div>
+</div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span> </div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>  <span class="keywordtype">void</span> setParameters(Real lf, Real cf, Real rf, Real rc, Real omegaN,</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>                     Real kpPLL, Real kiPLL, Real omegaCutoff, Real pRef,</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>                     Real qRef, Real kpPowerCtrl, Real kiPowerCtrl,</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>                     Real kpCurrCtrl, Real kiCurrCtrl, Real iRefNd = 0.0,</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>                     Real iRefNq = 0.0);</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a284c273802908393f20bfbf0b7db2a01">setParameters</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> lf, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> cf, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> rf, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> rc, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> omegaN,</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>                     <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> kpPLL, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> kiPLL, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> omegaCutoff, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> pRef,</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>                     <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> qRef, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> kpPowerCtrl, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> kiPowerCtrl,</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>                     <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> kpCurrCtrl, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> kiCurrCtrl, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> iRefNd = 0.0,</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>                     <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> iRefNq = 0.0);</div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a5ba060c70b4b4d73010033780da62c7d">initializeFromNodesAndTerminals</a>(Real frequency) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a5ba060c70b4b4d73010033780da62c7d">initializeFromNodesAndTerminals</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> frequency) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>};</div>
 </div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>} <span class="comment">// namespace Ph3</span></div>
+</div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>} <span class="comment">// namespace DP</span></div>
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>} <span class="comment">// namespace CPS</span></div>
+<div class="ttc" id="a_d_p___ph3___mixed_v_type_variable_s_s_n_comp_8h_html"><div class="ttname"><a href="_d_p___ph3___mixed_v_type_variable_s_s_n_comp_8h.html">DP_Ph3_MixedVTypeVariableSSNComp.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_ad552c848f780007d59f489540fa7e4d6"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">CPS::Attribute::Ptr</a></div><div class="ttdeci">AttributePointer&lt; Attribute&lt; T &gt; &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00250">Attribute.h:250</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space_html_a284c273802908393f20bfbf0b7db2a01"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a284c273802908393f20bfbf0b7db2a01">CPS::DP::Ph3::AvVoltSourceInverterStateSpace::setParameters</a></div><div class="ttdeci">void setParameters(Real lf, Real cf, Real rf, Real rc, Real omegaN, Real kpPLL, Real kiPLL, Real omegaCutoff, Real pRef, Real qRef, Real kpPowerCtrl, Real kiPowerCtrl, Real kpCurrCtrl, Real kiCurrCtrl, Real iRefNd=0.0, Real iRefNq=0.0)</div><div class="ttdef"><b>Definition</b> <a href="_d_p___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00042">DP_Ph3_AvVoltSourceInverterStateSpace.cpp:42</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space_html_a5ba060c70b4b4d73010033780da62c7d"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a5ba060c70b4b4d73010033780da62c7d">CPS::DP::Ph3::AvVoltSourceInverterStateSpace::initializeFromNodesAndTerminals</a></div><div class="ttdeci">void initializeFromNodesAndTerminals(Real frequency) override</div><div class="ttdoc">Initializes Component variables according to power flow data stored in Nodes.</div><div class="ttdef"><b>Definition</b> <a href="_d_p___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00552">DP_Ph3_AvVoltSourceInverterStateSpace.cpp:552</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space_html_a7589ffb897e6275fa06979f3d90b284e"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a7589ffb897e6275fa06979f3d90b284e">CPS::DP::Ph3::AvVoltSourceInverterStateSpace::updateLogAttributes</a></div><div class="ttdeci">void updateLogAttributes(const Matrix &amp;u) const override final</div><div class="ttdef"><b>Definition</b> <a href="_d_p___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00508">DP_Ph3_AvVoltSourceInverterStateSpace.cpp:508</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space_html_a86da3c17bf092c7c64242b0a86b3075a"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a86da3c17bf092c7c64242b0a86b3075a">CPS::DP::Ph3::AvVoltSourceInverterStateSpace::AvVoltSourceInverterStateSpace</a></div><div class="ttdeci">AvVoltSourceInverterStateSpace(String uid, String name, Logger::Level logLevel=Logger::Level::off, Bool enableNegSeqControl=false)</div><div class="ttdef"><b>Definition</b> <a href="_d_p___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00017">DP_Ph3_AvVoltSourceInverterStateSpace.cpp:17</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space_html_a9aae69e55d196bf0acd60b98310bb497"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a9aae69e55d196bf0acd60b98310bb497">CPS::DP::Ph3::AvVoltSourceInverterStateSpace::AvVoltSourceInverterStateSpace</a></div><div class="ttdeci">AvVoltSourceInverterStateSpace(String name, Logger::Level logLevel=Logger::Level::off, Bool enableNegSeqControl=false)</div><div class="ttdef"><b>Definition</b> <a href="#l00149">DP_Ph3_AvVoltSourceInverterStateSpace.h:149</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space_html_ad4ea7087af7a80a90399735972b760e6"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#ad4ea7087af7a80a90399735972b760e6">CPS::DP::Ph3::AvVoltSourceInverterStateSpace::updateComponentParameters</a></div><div class="ttdeci">Bool updateComponentParameters() override final</div><div class="ttdoc">Rebuild A/B/C/D/E/F from the current state/input; returns true if the stamp changed.</div><div class="ttdef"><b>Definition</b> <a href="_d_p___ph3___av_volt_source_inverter_state_space_8cpp_source.html#l00494">DP_Ph3_AvVoltSourceInverterStateSpace.cpp:494</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp_html_ae9725811fac14e811c13f1fcbb8e612e"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#ae9725811fac14e811c13f1fcbb8e612e">CPS::DP::Ph3::MixedVTypeVariableSSNComp::MixedVTypeVariableSSNComp</a></div><div class="ttdeci">MixedVTypeVariableSSNComp(String uid, String name, Int realStateCount, Int complexStateCount, Logger::Level logLevel=Logger::Level::off)</div><div class="ttdef"><b>Definition</b> <a href="_d_p___ph3___mixed_v_type_variable_s_s_n_comp_8cpp_source.html#l00010">DP_Ph3_MixedVTypeVariableSSNComp.cpp:10</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a38b8318459b1651160029263eff6ca47"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">CPS::IdentifiedObject::name</a></div><div class="ttdeci">String name()</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00059">IdentifiedObject.h:59</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a66b765f33341283bc9b916c74047c749"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">CPS::IdentifiedObject::uid</a></div><div class="ttdeci">String uid()</div><div class="ttdoc">Returns unique id.</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00061">IdentifiedObject.h:61</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_logger_html_a021e964d1ab0d217a05b95736d2ea804"><div class="ttname"><a href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a></div><div class="ttdeci">spdlog::level::level_enum Level</div><div class="ttdef"><b>Definition</b> <a href="_logger_8h_source.html#l00033">Logger.h:33</a></div></div>
 <div class="ttc" id="aclass_shared_factory_html"><div class="ttname"><a href="class_shared_factory.html">SharedFactory</a></div><div class="ttdef"><b>Definition</b> <a href="_ptr_factory_8h_source.html#l00016">PtrFactory.h:16</a></div></div>
+<div class="ttc" id="aclass_shared_factory_html_a2ffdfd3b547bb9cb777f33e1bf6ec7ef"><div class="ttname"><a href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">SharedFactory&lt; AvVoltSourceInverterStateSpace &gt;::make</a></div><div class="ttdeci">static std::shared_ptr&lt; AvVoltSourceInverterStateSpace &gt; make(Args &amp;&amp;...args)</div><div class="ttdef"><b>Definition</b> <a href="_ptr_factory_8h_source.html#l00019">PtrFactory.h:19</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_1_1_d_p_1_1_ph3_html"><div class="ttname"><a href="namespace_c_p_s_1_1_d_p_1_1_ph3.html">CPS::DP::Ph3</a></div><div class="ttdef"><b>Definition</b> <a href="#l00012">DP_Ph3_AvVoltSourceInverterStateSpace.h:12</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_1_1_d_p_html"><div class="ttname"><a href="namespace_c_p_s_1_1_d_p.html">CPS::DP</a></div><div class="ttdef"><b>Definition</b> <a href="_d_p___i_type_s_s_n_comp_8h_source.html#l00009">DP_ITypeSSNComp.h:9</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html"><div class="ttname"><a href="namespace_c_p_s.html">CPS</a></div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00017">Attribute.h:17</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a077ababc38cbf7a0d8c175260b129a6ca0d61f8370cad1d412f80b84d143e1257"><div class="ttname"><a href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca0d61f8370cad1d412f80b84d143e1257">CPS::PhaseType::C</a></div><div class="ttdeci">@ C</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00113">Definitions.h:113</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a077ababc38cbf7a0d8c175260b129a6ca7fc56270e7a70fa81a5935b72eacbe29"><div class="ttname"><a href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca7fc56270e7a70fa81a5935b72eacbe29">CPS::PhaseType::A</a></div><div class="ttdeci">@ A</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00113">Definitions.h:113</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a077ababc38cbf7a0d8c175260b129a6ca9d5ed678fe57bcca610140957afab571"><div class="ttname"><a href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca9d5ed678fe57bcca610140957afab571">CPS::PhaseType::B</a></div><div class="ttdeci">@ B</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00113">Definitions.h:113</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a081464dfe063130c6fca7929ce291b15"><div class="ttname"><a href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">CPS::Matrix</a></div><div class="ttdeci">Eigen::Matrix&lt; Real, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor &gt; Matrix</div><div class="ttdoc">Dense matrix for real numbers.</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00081">Definitions.h:81</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a09f6ad37b12370b4b58624822be9b055"><div class="ttname"><a href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a></div><div class="ttdeci">std::string String</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00065">Definitions.h:65</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a603c4b77d70922bc0423adc57725df50"><div class="ttname"><a href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a></div><div class="ttdeci">double Real</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00062">Definitions.h:62</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_aabddb6241134e6ad9d61ae357bc104fa"><div class="ttname"><a href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">CPS::Int</a></div><div class="ttdeci">int Int</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00061">Definitions.h:61</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_aaed6ab259d5cbd0d6709102c47391a7a"><div class="ttname"><a href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">CPS::Complex</a></div><div class="ttdeci">std::complex&lt; Real &gt; Complex</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00063">Definitions.h:63</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_ace0e6b9548abd863a1c8637775434218"><div class="ttname"><a href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">CPS::Bool</a></div><div class="ttdeci">bool Bool</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00064">Definitions.h:64</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_88adc964ffa02c1923288cb07a48abab.html">DP</a></li><li class="navelem"><a class="el" href="_d_p___ph3___av_volt_source_inverter_state_space_8h.html">DP_Ph3_AvVoltSourceInverterStateSpace.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_d_psim_1_1_interface_queued.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_interface_queued.html">InterfaceQueued</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">DPsim::InterfaceQueued Member List</div></div>
 </div><!--header-->
@@ -94,45 +102,49 @@ $(function(){ initResizable(false); });
 
 <p>This is the complete list of members for <a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a>, including all inherited members.</p>
 <table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>addExport</b>(CPS::AttributeBase::Ptr attr) (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>addImport</b>(CPS::AttributeBase::Ptr attr, bool blockOnRead=false, bool syncOnSimulationStart=true) (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>AttributePacket</b> typedef (defined in <a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>AttributePacketFlags</b> enum name (defined in <a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>close</b>() override (defined in <a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>getName</b>() (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>getTasks</b>() override (defined in <a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>Interface</b>(const String &amp;name=&quot;&quot;, spdlog::level::level_enum logLevel=spdlog::level::level_enum::info) (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>InterfaceQueued</b>(std::shared_ptr&lt; InterfaceWorker &gt; intf, const String &amp;name=&quot;&quot;, UInt downsampling=1) (defined in <a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mCurrentSequenceDpsimToInterface</b> (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mDownsampling</b> (defined in <a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mExportAttrsDpsim</b> (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mImportAttrsDpsim</b> (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mInterfaceReaderThread</b> (defined in <a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mInterfaceWorker</b> (defined in <a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mInterfaceWriterThread</b> (defined in <a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mLog</b> (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mName</b> (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mNextSequenceInterfaceToDpsim</b> (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mOpened</b> (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mQueueDpsimToInterface</b> (defined in <a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mQueueInterfaceToDpsim</b> (defined in <a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mSyncOnSimulationStart</b> (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>open</b>() override (defined in <a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>PACKET_CLOSE_INTERFACE</b> enum value (defined in <a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>PACKET_NO_FLAGS</b> enum value (defined in <a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>popDpsimAttrsFromQueue</b>(bool isSync=false) (defined in <a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>Ptr</b> typedef (defined in <a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>pushDpsimAttrsToQueue</b>() (defined in <a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>setLogger</b>(CPS::Logger::Log log) override (defined in <a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>syncExports</b>() override (defined in <a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#ab7799cc7e87df1920e55288a84063497">addExport</a>(CPS::AttributeBase::Ptr attr)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#a6b00acb09b792e3352ff76ae817f696d">addImport</a>(CPS::AttributeBase::Ptr attr, bool blockOnRead=false, bool syncOnSimulationStart=true)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html#a8cdc9a06f396b2b6ba3f27bd69de3388">AttributePacket</a> typedef</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html#acbb6e9580893278da9f22a5022802b9a">AttributePacketFlags</a> enum name</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html#a9c63fd57af0c1a9d587e2802b8468271">close</a>() override</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#a999d2998d8f639c3044b72133c19b19b">getName</a>()</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html#aa69d78384580c67c3e6ca2e7a3f40ea2">getTasks</a>() override</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#af7ff184a7ead2918ca54d461d7087bb1">Interface</a>(const String &amp;name=&quot;&quot;, spdlog::level::level_enum logLevel=spdlog::level::level_enum::info)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html#a490350e7c7db54c52a3968c97e3cba44">InterfaceQueued</a>(std::shared_ptr&lt; InterfaceWorker &gt; intf, const String &amp;name=&quot;&quot;, UInt downsampling=1)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">DPsim::make</a>(Args &amp;&amp;...args)</td><td class="entry"><a class="el" href="class_shared_factory.html">SharedFactory&lt; Interface &gt;</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">SharedFactory&lt; InterfaceQueued &gt;::make</a>(Args &amp;&amp;...args)</td><td class="entry"><a class="el" href="class_shared_factory.html">SharedFactory&lt; InterfaceQueued &gt;</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">static</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#a4a1cca8d5dcd44a3d1be753be4881829">mCurrentSequenceDpsimToInterface</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html#aa0b35f2635f83b3335bd69e4de1ab0ea">mDownsampling</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#af0bc158390ed482f079bb79798860eb3">mExportAttrsDpsim</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#a33a81c7c3de33abb899eedfff741acd2">mImportAttrsDpsim</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html#a24b7de5209a1d7753e89de2b050b90e2">mInterfaceReaderThread</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html#af0ff6c1e751cfb7d115167f7b7be6f3d">mInterfaceWorker</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html#a2422bd887d071e3e32ec36ba377a7d24">mInterfaceWriterThread</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#ac147df20daebd31b0ae90182f0191a5c">mLog</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#a2a9bcf319b311804a05b63ef3e358e2e">mName</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#a35f39d4546ff58e41152b5c66a78cf14">mNextSequenceInterfaceToDpsim</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#a46f7fd95003532d77c6a965280c2c3a0">mOpened</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html#a15b4a2b5e214e425a636a5bcbae1084f">mQueueDpsimToInterface</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html#a10937bf25e81d445606874933d0f4729">mQueueInterfaceToDpsim</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#a304a9ae30f34fad55dcfe3588e759726">mSyncOnSimulationStart</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html#a17eb21ddc93232e01c04893d93b2b4cd">open</a>() override</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html#acbb6e9580893278da9f22a5022802b9aa08e4fabea76f96f4d9e9ea2ec0559719">PACKET_CLOSE_INTERFACE</a> enum value</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html#acbb6e9580893278da9f22a5022802b9aaa5a11fdbe5b8929910c71cc6ef0dcb38">PACKET_NO_FLAGS</a> enum value</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html#a6b3b092189da3d307aa52b166d278de6">popDpsimAttrsFromQueue</a>(bool isSync=false)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html#a0af27634eaae8ba995189d8b728dbe55">Ptr</a> typedef</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html#adec44a53d47b3e5df88de6d7c0a58bca">pushDpsimAttrsToQueue</a>()</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html#a22ac575eff84392077aa44622e130577">setLogger</a>(CPS::Logger::Log log) override</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html#a0da7cfd7e90f80bec88693c1e73a509a">syncExports</a>() override</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html#aa2e7c5c7907eb3ff710246854714dd9a">syncImports</a>() override</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~Interface</b>()=default (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>~InterfaceQueued</b>() (defined in <a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#aa4df0761a44b8224328004fff6b2ec9e">~Interface</a>()=default</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html#a517ddca82c4e3b880e1526990b3b6f79">~InterfaceQueued</a>()</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_queued.html">DPsim::InterfaceQueued</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
 </table></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

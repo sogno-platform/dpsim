@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_s_p___ph1___p_q_node_8cpp_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_6fea149062de1f45e98577920f986d53.html">src</a></li><li class="navelem"><a class="el" href="dir_a4d0ec1c07aed1343cf30f65cecac41f.html">SP</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">SP_Ph1_PQNode.cpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_s_p___ph1___p_q_node_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -99,35 +107,57 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * file, You can obtain one at https://mozilla.org/MPL/2.0/.</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> *********************************************************************************/</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;dpsim-models/SP/SP_Ph1_PQNode.h&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;<a class="code" href="_s_p___ph1___p_q_node_8h.html">dpsim-models/SP/SP_Ph1_PQNode.h</a>&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">using namespace </span>CPS;</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespace_c_p_s.html">CPS</a>;</div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>SP::Ph1::PQNode::PQNode(String uid, String name, Logger::Level logLevel)</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    : <a class="code hl_class" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt;Complex&gt;(uid, name, logLevel),</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>      mPower(mAttributes-&gt;create&lt;Real&gt;(<span class="stringliteral">&quot;P&quot;</span>)),</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>      mReactivePower(mAttributes-&gt;create&lt;Real&gt;(<span class="stringliteral">&quot;Q&quot;</span>)),</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>      mPowerNom(mAttributes-&gt;create&lt;Real&gt;(<span class="stringliteral">&quot;P_nom&quot;</span>)),</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>      mReactivePowerNom(mAttributes-&gt;create&lt;Real&gt;(<span class="stringliteral">&quot;Q_nom&quot;</span>)) {}</div>
+<div class="foldopen" id="foldopen00013" data-start="{" data-end="}">
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node.html#ad183059fedd0bc16e34ffae84c778be8">   13</a></span><a class="code hl_function" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node.html#ad183059fedd0bc16e34ffae84c778be8">SP::Ph1::PQNode::PQNode</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel)</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    : <a class="code hl_function" href="class_c_p_s_1_1_sim_power_comp.html#a35001c5c131c1cab0e02628e110436ba">SimPowerComp</a>&lt;<a class="code hl_typedef" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a>&gt;(<a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, logLevel),</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>      <a class="code hl_variable" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node.html#a2be75a407fee33b446dd4aa4ad47d5ad">mPower</a>(<a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#af7497f9b94a45040b1601ac58f5e3d97">mAttributes</a>-&gt;create&lt;<a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&gt;(<span class="stringliteral">&quot;P&quot;</span>)),</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>      <a class="code hl_variable" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node.html#adeb7bb4ea032d5556b1a9bdb2785fd50">mReactivePower</a>(<a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#af7497f9b94a45040b1601ac58f5e3d97">mAttributes</a>-&gt;create&lt;<a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&gt;(<span class="stringliteral">&quot;Q&quot;</span>)),</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>      <a class="code hl_variable" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node.html#a42f621210d3f507768a727b10746b350">mPowerNom</a>(<a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#af7497f9b94a45040b1601ac58f5e3d97">mAttributes</a>-&gt;create&lt;<a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&gt;(<span class="stringliteral">&quot;P_nom&quot;</span>)),</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>      <a class="code hl_variable" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node.html#ac95ccec1cf69e2a57238981f086a6556">mReactivePowerNom</a>(<a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#af7497f9b94a45040b1601ac58f5e3d97">mAttributes</a>-&gt;create&lt;<a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&gt;(<span class="stringliteral">&quot;Q_nom&quot;</span>)) {}</div>
+</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>SP::Ph1::PQNode::PQNode(String uid, String name, Real power,</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>                        Real reactive_power, Logger::Level logLevel)</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    : PQNode(uid, name, logLevel) {</div>
+<div class="foldopen" id="foldopen00020" data-start="{" data-end="}">
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node.html#aae4523d3def5e57b6fec261353a67331">   20</a></span><a class="code hl_function" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node.html#ad183059fedd0bc16e34ffae84c778be8">SP::Ph1::PQNode::PQNode</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> power,</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>                        <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> reactive_power, <a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel)</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    : <a class="code hl_function" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node.html#ad183059fedd0bc16e34ffae84c778be8">PQNode</a>(<a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, logLevel) {</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  **mPower = power;</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  **mPowerNom = power;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  **mReactivePower = reactive_power;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  **mReactivePowerNom = reactive_power;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  **<a class="code hl_variable" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node.html#a2be75a407fee33b446dd4aa4ad47d5ad">mPower</a> = power;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  **<a class="code hl_variable" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node.html#a42f621210d3f507768a727b10746b350">mPowerNom</a> = power;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  **<a class="code hl_variable" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node.html#adeb7bb4ea032d5556b1a9bdb2785fd50">mReactivePower</a> = reactive_power;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  **<a class="code hl_variable" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node.html#ac95ccec1cf69e2a57238981f086a6556">mReactivePowerNom</a> = reactive_power;</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  SPDLOG_LOGGER_INFO(mSLog, <span class="stringliteral">&quot;Create PQ node for {} P={}, Q={}&quot;</span>, name,</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>                     **mPowerNom, **mReactivePowerNom);</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  SPDLOG_LOGGER_INFO(<a class="code hl_variable" href="class_c_p_s_1_1_topological_power_comp.html#a7c61e480e446111d56ac35399643d5b0">mSLog</a>, <span class="stringliteral">&quot;Create PQ node for {} P={}, Q={}&quot;</span>, <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>,</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>                     **<a class="code hl_variable" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node.html#a42f621210d3f507768a727b10746b350">mPowerNom</a>, **<a class="code hl_variable" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node.html#ac95ccec1cf69e2a57238981f086a6556">mReactivePowerNom</a>);</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>}</div>
-<div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp</a></div><div class="ttdoc">Base class for all components that are transmitting power.</div><div class="ttdef"><b>Definition</b> <a href="_sim_power_comp_8h_source.html#l00017">SimPowerComp.h:17</a></div></div>
+</div>
+<div class="ttc" id="a_s_p___ph1___p_q_node_8h_html"><div class="ttname"><a href="_s_p___ph1___p_q_node_8h.html">SP_Ph1_PQNode.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a38b8318459b1651160029263eff6ca47"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">CPS::IdentifiedObject::name</a></div><div class="ttdeci">String name()</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00059">IdentifiedObject.h:59</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a66b765f33341283bc9b916c74047c749"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">CPS::IdentifiedObject::uid</a></div><div class="ttdeci">String uid()</div><div class="ttdoc">Returns unique id.</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00061">IdentifiedObject.h:61</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_af7497f9b94a45040b1601ac58f5e3d97"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#af7497f9b94a45040b1601ac58f5e3d97">CPS::IdentifiedObject::mAttributes</a></div><div class="ttdeci">AttributeList::Ptr mAttributes</div><div class="ttdoc">Attribute List.</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00022">IdentifiedObject.h:22</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_logger_html_a021e964d1ab0d217a05b95736d2ea804"><div class="ttname"><a href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a></div><div class="ttdeci">spdlog::level::level_enum Level</div><div class="ttdef"><b>Definition</b> <a href="_logger_8h_source.html#l00033">Logger.h:33</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node_html_a2be75a407fee33b446dd4aa4ad47d5ad"><div class="ttname"><a href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node.html#a2be75a407fee33b446dd4aa4ad47d5ad">CPS::SP::Ph1::PQNode::mPower</a></div><div class="ttdeci">const Attribute&lt; Real &gt;::Ptr mPower</div><div class="ttdef"><b>Definition</b> <a href="_s_p___ph1___p_q_node_8h_source.html#l00021">SP_Ph1_PQNode.h:21</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node_html_a42f621210d3f507768a727b10746b350"><div class="ttname"><a href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node.html#a42f621210d3f507768a727b10746b350">CPS::SP::Ph1::PQNode::mPowerNom</a></div><div class="ttdeci">const Attribute&lt; Real &gt;::Ptr mPowerNom</div><div class="ttdef"><b>Definition</b> <a href="_s_p___ph1___p_q_node_8h_source.html#l00019">SP_Ph1_PQNode.h:19</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node_html_ac95ccec1cf69e2a57238981f086a6556"><div class="ttname"><a href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node.html#ac95ccec1cf69e2a57238981f086a6556">CPS::SP::Ph1::PQNode::mReactivePowerNom</a></div><div class="ttdeci">const Attribute&lt; Real &gt;::Ptr mReactivePowerNom</div><div class="ttdef"><b>Definition</b> <a href="_s_p___ph1___p_q_node_8h_source.html#l00020">SP_Ph1_PQNode.h:20</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node_html_ad183059fedd0bc16e34ffae84c778be8"><div class="ttname"><a href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node.html#ad183059fedd0bc16e34ffae84c778be8">CPS::SP::Ph1::PQNode::PQNode</a></div><div class="ttdeci">PQNode(String uid, String name, Logger::Level logLevel=Logger::Level::off)</div><div class="ttdef"><b>Definition</b> <a href="#l00013">SP_Ph1_PQNode.cpp:13</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node_html_adeb7bb4ea032d5556b1a9bdb2785fd50"><div class="ttname"><a href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_p_q_node.html#adeb7bb4ea032d5556b1a9bdb2785fd50">CPS::SP::Ph1::PQNode::mReactivePower</a></div><div class="ttdeci">const Attribute&lt; Real &gt;::Ptr mReactivePower</div><div class="ttdef"><b>Definition</b> <a href="_s_p___ph1___p_q_node_8h_source.html#l00022">SP_Ph1_PQNode.h:22</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html_a35001c5c131c1cab0e02628e110436ba"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html#a35001c5c131c1cab0e02628e110436ba">CPS::SimPowerComp&lt; Complex &gt;::SimPowerComp</a></div><div class="ttdeci">SimPowerComp(String uid, String name, Logger::Level logLevel=Logger::Level::off)</div><div class="ttdef"><b>Definition</b> <a href="_sim_power_comp_8cpp_source.html#l00050">SimPowerComp.cpp:14</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_topological_power_comp_html_a7c61e480e446111d56ac35399643d5b0"><div class="ttname"><a href="class_c_p_s_1_1_topological_power_comp.html#a7c61e480e446111d56ac35399643d5b0">CPS::TopologicalPowerComp::mSLog</a></div><div class="ttdeci">Logger::Log mSLog</div><div class="ttdoc">Component logger.</div><div class="ttdef"><b>Definition</b> <a href="_topological_power_comp_8h_source.html#l00034">TopologicalPowerComp.h:34</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html"><div class="ttname"><a href="namespace_c_p_s.html">CPS</a></div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00017">Attribute.h:17</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a09f6ad37b12370b4b58624822be9b055"><div class="ttname"><a href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a></div><div class="ttdeci">std::string String</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00065">Definitions.h:65</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a603c4b77d70922bc0423adc57725df50"><div class="ttname"><a href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a></div><div class="ttdeci">double Real</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00062">Definitions.h:62</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_aaed6ab259d5cbd0d6709102c47391a7a"><div class="ttname"><a href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">CPS::Complex</a></div><div class="ttdeci">std::complex&lt; Real &gt; Complex</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00063">Definitions.h:63</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_6fea149062de1f45e98577920f986d53.html">src</a></li><li class="navelem"><a class="el" href="dir_a4d0ec1c07aed1343cf30f65cecac41f.html">SP</a></li><li class="navelem"><a class="el" href="_s_p___ph1___p_q_node_8cpp.html">SP_Ph1_PQNode.cpp</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

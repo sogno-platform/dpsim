@@ -69,7 +69,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000007" class="node">
 <title>Node7</title>
 <g id="a_Node000007"><a xlink:href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="1117,-515.5 938.25,-515.5 938.25,-479 1117,-479 1117,-515.5"/>
+<polygon fill="white" stroke="#666666" points="1117,-515.5 938.25,-515.5 938.25,-479 1117,-479 1117,-515.5"/>
 <text text-anchor="start" x="946.25" y="-502" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Base::ReducedOrderSynchron</text>
 <text text-anchor="middle" x="1027.62" y="-487.75" font-family="Helvetica,sans-Serif" font-size="10.00">Generator&lt; Complex &gt;</text>
 </a>
@@ -89,7 +89,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000024" class="node">
 <title>Node24</title>
 <g id="a_Node000024"><a xlink:href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="1117,-174.5 938.25,-174.5 938.25,-138 1117,-138 1117,-174.5"/>
+<polygon fill="white" stroke="#666666" points="1117,-174.5 938.25,-174.5 938.25,-138 1117,-138 1117,-174.5"/>
 <text text-anchor="start" x="946.25" y="-161" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Base::ReducedOrderSynchron</text>
 <text text-anchor="middle" x="1027.62" y="-146.75" font-family="Helvetica,sans-Serif" font-size="10.00">Generator&lt; Real &gt;</text>
 </a>

@@ -1,0 +1,871 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DPsim – Models</title><link>https://sogno.energy/dpsim/docs/concepts/models/</link><description>Recent content in Models on DPsim</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://sogno.energy/dpsim/docs/concepts/models/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: RLC-Elements</title><link>https://sogno.energy/dpsim/docs/concepts/models/rlc-elements/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/models/rlc-elements/</guid><description>
+&lt;h2 id="emt-equations-and-modified-nodal-analysis">EMT Equations and Modified Nodal Analysis&lt;/h2>
+&lt;h3 id="inductance">Inductance&lt;/h3>
+&lt;p>An inductance is described by&lt;/p>
+&lt;div class="math">$$v_j(t) - v_k(t) = v_L(t) = L \frac{\mathrm{d} i_L(t)}{\mathrm{d}t}$$&lt;/div>&lt;p>Integration results in an equation to compute the current at time $t$ from a previous state at $t - \Delta t$.&lt;/p>
+&lt;div class="math">$$i_L(t) = i_L(t - \Delta t) + \frac{1}{L} \ \int_{t - \Delta t}^{t} v_L(\tau) \ \mathrm{d} \tau$$&lt;/div>&lt;p>There are various methods to discretize this equation in order to solve it numerically.
+The trapezoidal rule, an implicit second-order method, is commonly applied for circuit simulation:&lt;/p>
+&lt;div class="math">$$\int_{t - \Delta t}^{t} f(\tau) \ \mathrm{d} \tau \approx \frac{\Delta t}{2}(f(t) + f(t - \Delta t))$$&lt;/div>&lt;p>Applying the trapezoidal rule to leads to&lt;/p>
+&lt;div class="math">$$i_L(t) = i_L(t - \Delta t) + \frac{\Delta t}{2L}(v_L(t) + v_L(t - \Delta t))$$&lt;/div>&lt;p>This can be rewritten in terms of an equivalent conductance and current source and the number of time steps $k$ with size $\Delta t$.&lt;/p>
+&lt;div class="math">$$i_L(k) = g_L v_L(k) + i_{L,equiv}(k-1)$$&lt;/div>
+&lt;div class="math">$$i_{L,equiv}(k-1) = i_L(k-1) + \frac{\Delta t}{2L} v_L(k-1)$$&lt;/div>
+&lt;div class="math">$$g_L = \frac{\Delta t}{2L}$$&lt;/div>&lt;p>Hence, components described by differential equations are transformed into a DC equivalent circuit as depicted in the figure below.&lt;/p>
+&lt;p>&lt;img src="electrical_resistive_companion_inductance.svg" alt="inductance resistive companion">&lt;/p>
+&lt;h3 id="capacitance">Capacitance&lt;/h3>
+&lt;p>The same procedure can be applied to a capacitance.
+Integration on both side yields&lt;/p>
+&lt;div class="math">$$i_C(t) = C \frac{\mathrm{d}}{\mathrm{d}t} \ v_C(t)$$&lt;/div>
+&lt;div class="math">$$v_C(t) = v_C(t - \Delta t) + \frac{1}{C} \int_{t - \Delta t}^t i_C(\tau) \mathrm{d} \tau$$&lt;/div>&lt;p>Finally, the equivalent circuit is described by a current source and a conductance.&lt;/p>
+&lt;div class="math">$$i_{C}(k) = g_{C} v_C(k) + i_{C,equiv}(k-1)$$&lt;/div>
+&lt;div class="math">$$i_{C,equiv}(k-1) = -i_{C}(k-1) - g_C v_C(k-1)$$&lt;/div>
+&lt;div class="math">$$g_{C} = \frac{2C}{\Delta t}$$&lt;/div>&lt;p>This equation set is visualized in the figure below.&lt;/p>
+&lt;p>&lt;img src="electrical_resistive_companion_capacitance.svg" alt="capacitance resistive companion">&lt;/p>
+&lt;p>Hence, the vector of unknowns $\boldsymbol{x}$ and the source vector $\boldsymbol{b}$ become time dependent and this leads to the system description:&lt;/p>
+&lt;div class="math">$$\boldsymbol{A} \boldsymbol{x}(t) = \boldsymbol{b}(t)$$&lt;/div>&lt;p>To simulate the transient behavior of circuits, this linear equation has to be solved repeatedly.
+As long as the system topology and the time step is fixed, the system matrix is constant.&lt;/p>
+&lt;h3 id="extension-with-dynamic-phasors">Extension with Dynamic Phasors&lt;/h3>
+&lt;p>The dynamic phasor concept can be integrated with nodal analysis.
+The overall procedure does not change but the system equations are rewritten using complex numbers and all variables need to be expressed in terms of dynamic phasors.
+Therefore, the resistive companion representations of inductances and capacitances have to be adapted as well.&lt;/p>
+&lt;h3 id="inductance-1">Inductance&lt;/h3>
+&lt;p>In dynamic phasors the integration of the inductance equation yields&lt;/p>
+&lt;div class="math">$$\begin{align}
+\langle v_L \rangle(t) &amp;= \Big \langle L \frac{\mathrm{d} i_L}{\mathrm{d}t} \Big \rangle(t) \nonumber \\
+&amp;= L \frac{\mathrm{d}}{dt} \langle i_L \rangle(t) + j \omega L \ \langle i_L \rangle(t)
+\end{align}$$&lt;/div>
+&lt;div class="math">$$\langle i_L \rangle(t) = \langle i_L \rangle(t - \Delta t) + \int_{t - \Delta t}^t \frac{1}{L} \langle v_L \rangle(\tau) - j \omega \ \langle i_L \rangle(\tau) \mathrm{d} \tau$$&lt;/div>&lt;p>Applying the trapezoidal method leads to the finite difference equation:&lt;/p>
+&lt;div class="math">$$\begin{aligned}
+\langle i_L \rangle(k) = \langle i_L \rangle(k-1) + \frac{\Delta t}{2} \bigg[ \frac{1}{L} (\langle v_L \rangle(k) + \langle v_L \rangle(k-1))
+- j \omega (\langle i_L \rangle(t) + \langle i_L \rangle(k-1) \bigg]
+\end{aligned}$$&lt;/div>&lt;p>Solving this for $\langle i_L \rangle(k)$ results in the \ac{DP} equivalent circuit model:&lt;/p>
+&lt;div class="math">$$\langle i_L \rangle(k) = \frac{a - jab}{1 + b^2} \langle v_L \rangle(k) + \langle i_{L,equiv} \rangle(k-1)$$&lt;/div>&lt;p>with&lt;/p>
+&lt;div class="math">$$a = \frac{\Delta t}{2L}, \qquad b = \frac{\Delta t \omega}{2}$$&lt;/div>
+&lt;div class="math">$$\langle i_{L,equiv} \rangle(k-1) = \frac{1 - b^2 - j2b}{1 + b^2} \langle i_L \rangle(k-1) + \frac{a - jab}{1 + b^2} \langle v_L \rangle(k-1)$$&lt;/div>&lt;h3 id="capacitance-1">Capacitance&lt;/h3>
+&lt;p>Similarly, a capacitance is described by as follows&lt;/p>
+&lt;div class="math">$$\langle i_C \rangle(k) = C \ \frac{\mathrm{d} \langle v_C \rangle}{\mathrm{d} t} + j \omega C \ \langle v_C \rangle(t)$$&lt;/div>
+&lt;div class="math">$$v_C(t) = v_C(t- \Delta t) + \int_{t- \Delta t}^{t} \frac{1}{C} \ i_C(\tau) -j \omega \ v_C(\tau) \ \mathrm{d} \tau$$&lt;/div>&lt;p>Applying the trapezoidal rule for the capacitance equation leads to the finite difference equation:&lt;/p>
+&lt;div class="math">$$\begin{aligned}
+\langle v_C \rangle(k) = \langle v_C \rangle(k-1)
++ \frac{\Delta t}{2} \bigg[ \frac{1}{C} \ \langle i_C \rangle(k) - j \omega \ \langle v_C \rangle(k) \\
++ \frac{1}{C} \ \langle i_C \rangle(k-1) - j \omega \ \langle v_C \rangle(k-1) \bigg]
+\end{aligned}$$&lt;/div>&lt;p>The DP model for the capacitance is defined by&lt;/p>
+&lt;div class="math">$$\langle i_C \rangle(k) = \frac{1+jb}{a} \ \langle v_C \rangle(k) + \langle i_{C,equiv} \rangle(k-1)$$&lt;/div>&lt;p>with&lt;/p>
+&lt;div class="math">$$a = \frac{\Delta t}{2C}, \qquad
+b = \frac{\Delta t \omega}{2}$$&lt;/div>
+&lt;div class="math">$$\langle i_{C,equiv} \rangle(k-1) = - \frac{1-jb}{a} \ \langle v_C \rangle(k-1) - \langle i_C \rangle(k-1)$$&lt;/div>&lt;h3 id="rl-series-element">RL-series element&lt;/h3>
+&lt;p>In dynamic phasors the integration of the inductance equation yields&lt;/p>
+&lt;div class="math">$$\langle v \rangle(t) = L \frac{\mathrm{d}}{dt} \langle i \rangle(t) + j \omega L \ \langle i \rangle(t) + R \ \langle i \rangle(t)$$&lt;/div>
+&lt;div class="math">$$\langle i \rangle(t) = \langle i \rangle(t - \Delta t) + \int_{t - \Delta t}^t \frac{1}{L} \langle v \rangle(\tau) - j \omega \ \langle i \rangle(\tau) - \frac{R}{L} \ \langle i \rangle(\tau) \mathrm{d} \tau$$&lt;/div>&lt;p>Applying the trapezoidal method leads to the finite difference equation:&lt;/p>
+&lt;div class="math">$$\begin{aligned}
+\langle i \rangle(k) = \langle i \rangle(k-1) + \frac{\Delta t}{2} \bigg[ \frac{1}{L} (\langle v \rangle(k) + \langle v \rangle(k-1))
+- \left( j \omega + \frac{R}{L} \right) (\langle i \rangle(k) + \langle i \rangle(k-1)) \bigg]
+\end{aligned}$$&lt;/div>&lt;p>Solving this for $\langle i \rangle(k)$ results in the \ac{DP} equivalent circuit model:&lt;/p>
+&lt;div class="math">$$\langle i \rangle(k) = \frac{a + Ra^2 - jab}{(1+Ra)^2 + b^2} \langle v \rangle(k) + \langle i_{equiv} \rangle(k-1)$$&lt;/div>&lt;p>with&lt;/p>
+&lt;div class="math">$$a = \frac{\Delta t}{2L}, \qquad b = \frac{\Delta t \omega}{2}$$&lt;/div>
+&lt;div class="math">$$\langle i_{equiv} \rangle(k-1) = \frac{1 - b^2 - j2b + 2Ra + (Ra)^2 - j2Rab}{(1+Ra^2) + b^2} \langle i \rangle(k-1) + \frac{a + Ra^2 - jab}{(1+Ra)^2 + b^2} \langle v \rangle(k-1)$$&lt;/div></description></item><item><title>Docs: Branches</title><link>https://sogno.energy/dpsim/docs/concepts/models/branches/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/models/branches/</guid><description>
+&lt;p>Both line models below are composite components: they do not stamp the system matrix directly
+but are built from resistor, inductor and capacitor subcomponents, each of which contributes its
+own stamp. See &lt;a href="https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/subcomponents/">subcomponents&lt;/a> for how that
+composition works, and &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/rlc-elements/">RLC elements&lt;/a> for the stamps of the
+individual elements.&lt;/p>
+&lt;p>The transformer is documented separately under &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/transformer/">transformer&lt;/a>.&lt;/p>
+&lt;h2 id="rx-line">RX-Line&lt;/h2>
+&lt;p>The RX line represents a line by its series resistance and series inductance only, ignoring the
+shunt admittance. It is the appropriate choice for short lines, where the charging current is
+negligible, and it is what the CIM reader produces for an &lt;code>ACLineSegment&lt;/code> when no shunt data is
+present.&lt;/p>
+&lt;p>The model is composed of a series resistor and a series inductor between the two terminals:&lt;/p>
+&lt;div class="math">$$\underline{Z} = R + j \omega L$$&lt;/div>&lt;p>An additional resistor from the inductor terminal to ground is present to make initialisation
+well posed. It is not part of the physical model.&lt;/p>
+&lt;p>&lt;code>RxLine&lt;/code> exists in &lt;code>DP::Ph1&lt;/code>, &lt;code>EMT::Ph3&lt;/code>, &lt;code>SP::Ph1&lt;/code> and &lt;code>SP::Ph3&lt;/code>.&lt;/p>
+&lt;h2 id="pi-line">PI-Line&lt;/h2>
+&lt;p>The PI line adds the shunt admittance of the line, split evenly between the two terminals, which
+matters once the line is long enough for the charging current to affect the result. The name
+comes from the shape of the equivalent circuit: a series branch with one shunt branch at each
+end.&lt;/p>
+&lt;p>The series branch carries the resistance and inductance as above. Each terminal additionally
+carries half of the total shunt capacitance and half of the total shunt conductance:&lt;/p>
+&lt;div class="math">$$\underline{Y}_{shunt} = \frac{G + j \omega C}{2}$$&lt;/div>&lt;p>The shunt capacitance and conductance are specified as totals for the line, and the halving between
+the two ends is part of the model rather than something the user does.&lt;/p>
+&lt;h2 id="decoupling-line">Decoupling Line&lt;/h2>
+&lt;p>The decoupling line is a distributed parameter line based on the Bergeron travelling wave
+method. Unlike the two models above it is not primarily a fidelity improvement: its purpose is
+to remove the direct coupling between the two terminals so that the network on either side can
+be solved as an independent system, which is what makes splitting a network across solvers or
+across simulators possible.&lt;/p>
+&lt;p>The method rests on the behaviour of a lossless line. For a line with distributed inductance and
+capacitance, the quantity $v + Z_c, i$ observed at one end reappears unchanged at the other end
+one travel time later, and likewise in the opposite direction. Nothing propagates faster than
+that travel time, so the two ends cannot influence each other within it. The surge impedance and
+the travel time follow from the line&amp;rsquo;s total inductance and capacitance,&lt;/p>
+&lt;div class="math">$$Z_c = \sqrt{\frac{L}{C}}, \qquad \tau = \sqrt{L C}.$$&lt;/div>&lt;p>Each terminal is then represented by a resistance to ground in parallel with a current source.
+The resistance is $Z_c + R/4$, and the current source carries the history term, whose value
+depends on the voltage and current recorded at the &lt;em>other&lt;/em> terminal one travel time ago. Because
+that value is already known when the step begins, it enters the system as a constant injection
+rather than as a coupling into the admittance matrix, and the matrix separates into two blocks
+that can be factorised and solved independently.&lt;/p>
+&lt;p>The series resistance is not distributed along the line. It is lumped, with $R/4$ placed at each
+end and the remainder in the middle of the equivalent, which is why the terminating resistance
+and the history coefficients carry $R/4$ terms rather than the full $R$.&lt;/p>
+&lt;p>The travel time is not required to be a whole number of time steps. The recorded quantities are
+held in a buffer of $\lceil \tau / \Delta t \rceil$ samples and the value one travel time ago is
+recovered by linear interpolation between the two nearest entries. The one hard requirement is
+that the travel time exceed the time step; a line whose $\tau$ is shorter than $\Delta t$ cannot
+decouple anything, and setting one up is rejected rather than silently approximated.&lt;/p>
+&lt;p>In the dynamic phasor domain the history terms carry an additional rotation $e^{-j \omega_s
+\tau}$. This is a direct consequence of working with envelopes: a delay of $\tau$ applied to an
+instantaneous waveform becomes, for the envelope, the same delay together with a phase rotation
+of the carrier over that interval, as described under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/dyn-phasors/">dynamic phasors&lt;/a>. Note that this rotation is
+currently evaluated at a fixed 50 Hz rather than at the system frequency in use.&lt;/p>
+&lt;p>The decoupling is exact for the lossless travelling wave line it is derived from. The error
+introduced in practice comes from the lumped treatment of the series resistance and from the
+interpolation of the delayed quantities, and it grows as the time step approaches the travel
+time.&lt;/p>
+&lt;h2 id="choosing-between-them">Choosing between them&lt;/h2>
+&lt;p>Use the RX line when the shunt admittance can be neglected and you want the smaller system
+matrix, since the PI line introduces additional nodes for its shunt branches. Use the PI line
+when the line is long enough that its charging current matters, or when you are comparing
+against a reference tool that models the shunt branch.&lt;/p>
+&lt;p>Both are lumped parameter models and therefore do not reproduce travelling wave behaviour. Use
+the decoupling line when you need that behaviour, or when the reason for reaching for a line
+model is to split the network in the first place. For the domains each model is available in,
+see &lt;a href="https://sogno.energy/dpsim/docs/reference/model-availability/">model availability&lt;/a>.&lt;/p></description></item><item><title>Docs: Transformer</title><link>https://sogno.energy/dpsim/docs/concepts/models/transformer/</link><pubDate>Thu, 22 Jul 2021 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/models/transformer/</guid><description>
+&lt;h2 id="2-winding-transformer">2-Winding Transformer&lt;/h2>
+&lt;p>The transformer model is composed of an RL-segment and an ideal transformer.
+The single line diagram is depicted in the figure below.&lt;/p>
+&lt;p>&lt;img src="electrical_transformer.svg" alt="Transformer">&lt;/p>
+&lt;p>If node reduction is not applied, two virtual nodes are created to stamp this model into the system matrix.&lt;/p>
+&lt;p>Furthermore, the ideal transformer has an additional equation, which requires an extension of the system matrix.
+The complete matrix stamp for the ideal transformer is&lt;/p>
+&lt;div class="math">$$\begin{array}{c|c c c}
+~ &amp; j &amp; k &amp; l \cr
+\hline
+j &amp; &amp; &amp; -1 \cr
+k &amp; &amp; &amp; T \cr
+l &amp; 1 &amp; -T &amp; 0
+\end{array}
+\begin{pmatrix}
+v_j \cr
+v_k \cr
+i_{l} \cr
+\end{pmatrix}
+=
+\begin{pmatrix}
+\cr
+\cr
+0\cr
+\end{pmatrix}$$&lt;/div>&lt;p>The variable $j$ denotes the high voltage node while $k$ is the low voltage node.
+$l$ indicates the inserted row and column to accommodate the relation between the two voltages at the ends of the transformer.
+The transformer ratio is defined as $T = V_{j} / V_{k}$.
+A phase shift can be introduced if $T$ is considered as a complex number.&lt;/p>
+&lt;h2 id="why-the-ideal-part-needs-an-extra-equation">Why the ideal part needs an extra equation&lt;/h2>
+&lt;p>The ideal transformer imposes two constraints at once: the voltages are in a fixed ratio and the
+powers on the two sides are equal, which makes the currents inversely proportional to the same ratio,&lt;/p>
+&lt;div class="math">$$\frac{v_j}{v_k} = T, \qquad i_k = -T \, i_j .$$&lt;/div>&lt;p>Neither is a current balance at a node, so neither can be written as an admittance. This is the same
+situation as an ideal voltage source described under &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/sources/">sources&lt;/a>: the
+system is extended with the branch current as an unknown, the constraint occupies the added row, and
+the added diagonal entry is zero. The asymmetry of the stamp, $-1$ against $T$ in the added column
+and $1$ against $-T$ in the added row, is exactly the statement that voltage scales by $T$ while
+current scales by $1/T$ with opposite sign.&lt;/p>
+&lt;p>Making $T$ complex adds a phase shift, which is how a delta-wye connection is represented without
+modelling the windings. The magnitude and the angle then carry the tap ratio and the vector group
+respectively.&lt;/p>
+&lt;h2 id="series-impedance-and-the-direction-of-the-ratio">Series impedance and the direction of the ratio&lt;/h2>
+&lt;p>The winding resistance and leakage inductance are lumped into one series branch on one side of the
+ideal part rather than split between the two sides. Referring an impedance across an ideal
+transformer scales it by $T^2$, so the choice of side is a choice of reference, not an
+approximation, and the parameters have to be given consistently with it.&lt;/p>
+&lt;p>The ratio is defined greater than one, from high voltage to low. Supplying it the other way round
+describes the same physical device but with the two ends exchanged, so a transformer given an
+inverted ratio has to have its terminal assignment inverted with it to remain the same transformer.&lt;/p>
+&lt;h2 id="numerical-damping">Numerical damping&lt;/h2>
+&lt;p>Connecting an inductive branch between two nodes that have no other path to ground leaves those
+nodes weakly defined, and the resulting matrix can be poorly conditioned or singular. Small shunt
+elements at each terminal remove that, at the cost of a negligible current that would not exist in
+the physical device.&lt;/p>
+&lt;p>Those elements are sized from the transformer&amp;rsquo;s rated power, which makes the rating a required
+parameter rather than documentation. Without a positive rating there is no scale to size them
+against, and the natural result is an infinite resistance and a zero capacitance whose admittance is
+not a number. A single such entry propagates through the factorisation and destroys the whole
+solution, not merely the transformer, so the rating cannot be treated as optional.&lt;/p></description></item><item><title>Docs: Ideal Transformer Model</title><link>https://sogno.energy/dpsim/docs/concepts/models/ideal-transformer-model/</link><pubDate>Fri, 26 Jun 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/models/ideal-transformer-model/</guid><description>
+&lt;p>The Ideal Transformer Model (ITM) is a signal component that splits a circuit into two subcircuits, using a common node as a Point of Common Coupling (PCC), in such a way that a copy of this node is found in the two subcircuits, as shown in Fig. 1, where the copies of the node are denoted as $n$ and $m$. Moreover, the circuits are coupled using a controlled voltage source and a controlled current source, which exchange their interface currents and voltages, respectively, namely the interface signals. This exchange takes place using a ring buffer, on top of which a second ring buffer has been implemented to emulate a co-simualtion using a macro-step, which means that the exchange of interface signals can be made at an interval larger than the simulation&amp;rsquo;s step size. This second ring buffer is used to implement Zero- and First-Order hold extrapolation methods, while the first ring buffer allows to linearly interpolate the value of the signal at the current time step, in case the delay between both subcircuits is not an integer multiple of the step size.&lt;/p>
+&lt;center>
+&lt;figure margin=30%>
+&lt;img src="./images/ITM.svg" alt="ITM">
+&lt;figcaption>Fig. 1: Ideal Transformer Model Circuit diagram.
+&lt;/figcaption>
+&lt;/figure>
+&lt;/center>
+&lt;p>To add an ITM, users must split the cirtuit and create the copies of the PCC node. An example of this process can be found in the Notebook &lt;code>ITM.ipynb&lt;/code>.&lt;/p>
+&lt;p>To avoid connections of the controlled voltage source with a capacitor, or the controlled current source with an inductor, the resistors $R_{\mathrm{series}}$ and $R_{\mathrm{parallel}}$ are included.&lt;/p>
+&lt;h2 id="why-the-resistors-are-necessary">Why the resistors are necessary&lt;/h2>
+&lt;p>The two failure cases they prevent are the same one seen twice. A voltage source directly across a
+capacitor over-determines that node: both impose a voltage, and the capacitor&amp;rsquo;s companion model and
+the source&amp;rsquo;s constraint row describe the same quantity. A current source in series with an inductor
+under-determines the branch in the dual way, since both impose a current. In each case the system
+matrix becomes singular rather than merely ill-conditioned, so the resistors are a condition for the
+method to work at all and not a refinement of it.&lt;/p>
+&lt;p>Their values are a compromise of the kind described under &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/switches/">switches&lt;/a>.
+Small enough to be electrically negligible, large enough not to dominate the condition number.&lt;/p>
+&lt;h2 id="what-the-delay-costs">What the delay costs&lt;/h2>
+&lt;p>The exchanged signals are always at least one step old, because each side computes from what the
+other produced previously. That delay is the reason the two subcircuits can be solved separately at
+all, and it is also the entire error of the method: the coupled system is not the original circuit
+but the original circuit with a transport delay inserted at the point of common coupling.&lt;/p>
+&lt;p>The consequence is that accuracy is governed by how much the interface signals change within one
+exchange interval, not by how accurately either side is solved internally. Refining the step inside
+a subcircuit while holding the macro-step fixed improves nothing at the interface.&lt;/p>
+&lt;p>A macro-step larger than the simulation step makes this explicit, which is the point of the second
+ring buffer: it is the co-simulation case, where the two sides may be different tools exchanging at
+a rate neither controls. Zero-order hold holds the last received value for the whole interval;
+first-order hold extrapolates linearly from the last two. The first is safe and lags; the second
+tracks a smoothly varying signal better and overshoots at a discontinuity, which is exactly what a
+fault produces.&lt;/p>
+&lt;h2 id="contrast-with-the-alternatives">Contrast with the alternatives&lt;/h2>
+&lt;p>Three ways of splitting a network appear in this documentation and they differ in what they cost.&lt;/p>
+&lt;p>Tearing, described under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/alternative-solvers/">alternative solution methods&lt;/a>, is exact: the
+removed branches are restored within the same step, so the answer matches the intact network. It
+does not allow the parts to be advanced independently.&lt;/p>
+&lt;p>The travelling-wave line under &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/branches/">branches&lt;/a> is exact for the lossless
+line it derives from, and its delay is physical rather than introduced. It requires that a real line
+with a travel time longer than the step exists at the splitting point.&lt;/p>
+&lt;p>The ideal transformer model requires no such line and can split anywhere, and pays for that with a
+delay that has no physical counterpart. It is the general method and the least accurate of the
+three.&lt;/p></description></item><item><title>Docs: Switches</title><link>https://sogno.energy/dpsim/docs/concepts/models/switches/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/models/switches/</guid><description>
+&lt;p>A switch in a nodal formulation is not an ideal open or short. Both would be singular: an ideal
+short shorts two node equations together, and an ideal open leaves a node with no path to ground.
+Switches are therefore represented by a finite resistance that takes one of two values.&lt;/p>
+&lt;h2 id="the-two-resistance-model">The two-resistance model&lt;/h2>
+&lt;p>The switch contributes a single admittance between its two terminals,&lt;/p>
+&lt;div class="math">$$G = \begin{cases}
+1 / R_{closed} &amp; \text{closed} \\
+1 / R_{open} &amp; \text{open}
+\end{cases}$$&lt;/div>&lt;p>stamped as a conductance between the two terminal nodes, with the usual reduction when one terminal
+is grounded. Typical values are far apart, of the order of milliohms closed and megohms open, so the
+switch is a near short or a near open without ever being singular.&lt;/p>
+&lt;p>The consequence of this choice is that the ratio $R_{open} / R_{closed}$ lands directly in the
+condition number of the system matrix. Making the contrast arbitrarily large to approach an ideal
+switch degrades the accuracy of every node voltage in the network, not only those near the switch.
+The values are a numerical compromise, not a physical measurement.&lt;/p>
+&lt;p>Because the admittance appears in the system matrix rather than in the right hand side, changing
+state requires the matrix to be refactorised. This is why a network that switches often costs more
+than one that does not, even though the model itself is trivial.&lt;/p>
+&lt;h2 id="why-a-step-change-in-resistance-is-a-problem">Why a step change in resistance is a problem&lt;/h2>
+&lt;p>Opening a switch that carries inductive current asks the network to interrupt that current within
+one time step. The inductor opposes it, and with the trapezoidal companion model the result is a
+numerical oscillation across the switch: the current alternates sign at the step frequency and
+decays slowly, contaminating the solution for many steps after the event.&lt;/p>
+&lt;p>This is a property of the discretisation, not of the physical circuit. The physical arc that would
+form across real contacts dissipates that energy; a two-valued resistance has no equivalent
+mechanism.&lt;/p>
+&lt;h2 id="the-variable-resistance-switch">The variable-resistance switch&lt;/h2>
+&lt;p>The variable-resistance switch removes the oscillation by refusing to make the change in a single
+step. On opening, the resistance is multiplied by a fixed factor each step,&lt;/p>
+&lt;div class="math">$$R[k+1] = \alpha \, R[k], \qquad \alpha > 1,$$&lt;/div>&lt;p>until it reaches the target open value, after which it is held there. The current therefore decays
+geometrically over several steps rather than being interrupted at once, which is close to what an
+arc does and which the trapezoidal companion model can follow without ringing.&lt;/p>
+&lt;p>The growth factor is tied to the step size so that the transition covers a comparable interval of
+time rather than a comparable number of steps. Closing is not ramped: the resistance is taken
+straight to its closed value, because energising a path through a small resistance does not produce
+the same interruption problem.&lt;/p>
+&lt;p>The cost is that the system matrix changes on every step of the transition rather than once, so each
+of those steps requires a refactorisation. The switch is worth its cost where the interruption is
+severe, typically a fault applied at a machine terminal or a transformer winding, and unnecessary
+for ordinary load switching.&lt;/p>
+&lt;h2 id="series-switching">Series switching&lt;/h2>
+&lt;p>Where a switch is combined with the series resistance it energises, the two are represented as one
+element rather than as a switch plus a resistor. This keeps the branch to a single admittance and
+avoids introducing an internal node that carries no physical meaning and adds an equation to the
+system.&lt;/p></description></item><item><title>Docs: Loads</title><link>https://sogno.energy/dpsim/docs/concepts/models/loads/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/models/loads/</guid><description>
+&lt;p>A load is specified as an active and a reactive power at a nominal voltage, but a nodal solver needs
+either an admittance or a current. The two ways of making that conversion behave differently as the
+terminal voltage moves away from nominal, and the difference matters more than the model&amp;rsquo;s
+simplicity suggests.&lt;/p>
+&lt;h2 id="constant-impedance">Constant impedance&lt;/h2>
+&lt;p>The powers are converted once, at the nominal voltage, into a resistance and a reactance,&lt;/p>
+&lt;div class="math">$$R = \frac{V_{nom}^2}{P}, \qquad X = \frac{V_{nom}^2}{Q},$$&lt;/div>&lt;p>and the reactance becomes an inductance or a capacitance according to its sign,&lt;/p>
+&lt;div class="math">$$L = \frac{X}{\omega} \quad (X > 0), \qquad C = -\frac{1}{\omega X} \quad (X &lt; 0).$$&lt;/div>&lt;p>The load is then an ordinary passive branch to ground, and it is stamped exactly as the elements it
+is built from.&lt;/p>
+&lt;p>Both conversions divide by a power, so a load with zero active power has no defined resistance and
+one with zero reactive power has no defined reactance. Such a branch is simply absent rather than
+infinite, which is the correct behaviour but means a load specified with one of the two set to zero
+is not the load a reader might expect.&lt;/p>
+&lt;p>The assumption is that consumption follows the square of the voltage. At nominal voltage the load
+draws exactly $P$ and $Q$; at 0.9 per unit it draws 81 percent of them. For a genuinely impedance
+like load this is right, and for anything regulated it understates the demand during a depression.&lt;/p>
+&lt;h2 id="constant-current">Constant current&lt;/h2>
+&lt;p>The alternative injects a current derived from the specified power,&lt;/p>
+&lt;div class="math">$$\underline{I} = \left( \frac{S}{V_{nom}} \right)^{*},$$&lt;/div>&lt;p>held fixed as the terminal voltage varies. Consumption then falls linearly with voltage rather than
+quadratically, which is closer to the behaviour of many aggregated loads.&lt;/p>
+&lt;p>Note what this is not. Because the current is computed from the nominal voltage and not from the
+present terminal voltage, this is a constant current model and not a constant power one. A true
+constant power load would require the current to be recomputed from the solved voltage at every
+step, making the component nonlinear and the nodal solve iterative. The linear model is used
+because it keeps the system matrix constant.&lt;/p>
+&lt;h2 id="which-to-use">Which to use&lt;/h2>
+&lt;p>The three canonical load characteristics are constant impedance, constant current and constant
+power, differing in whether demand follows the square of voltage, the voltage, or neither. Only the
+first two are available as linear models. For a voltage excursion of a few percent the choice
+changes little; for a deep depression during a fault it changes the answer materially, and the
+constant impedance model is the optimistic one because it sheds load exactly when the network is
+weakest.&lt;/p>
+&lt;h2 id="shunts">Shunts&lt;/h2>
+&lt;p>A shunt is specified directly as a conductance and a susceptance rather than as a power, so no
+conversion is involved. It is the natural representation for a capacitor bank or a reactor, where
+the rating is an admittance and the consumed power is a consequence of the voltage rather than the
+specification.&lt;/p></description></item><item><title>Docs: Sources</title><link>https://sogno.energy/dpsim/docs/concepts/models/sources/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/models/sources/</guid><description>
+&lt;p>A source imposes a quantity on the network. Which quantity it imposes, and whether it does so
+exactly, determines how it enters the system of equations and what it costs.&lt;/p>
+&lt;h2 id="current-sources-are-free-voltage-sources-are-not">Current sources are free, voltage sources are not&lt;/h2>
+&lt;p>A current source imposes a known current into a node. Its contribution is entirely on the right hand
+side of the nodal equations, and the system matrix does not know it exists.&lt;/p>
+&lt;p>A voltage source imposes a relation between two node voltages, which is not a nodal equation at all.
+Nodal analysis has one equation per node expressing current balance, and there is no current
+variable for an ideal voltage source to appear in. The system is extended with the source current as
+an unknown and with the constraint that fixes the voltage difference, as described under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/nodal-analysis/">nodal analysis&lt;/a>. The matrix grows by one row and
+column per source, and the added diagonal entry is zero, so the extended matrix is no longer
+positive definite and cannot be factorised by methods that assume it is.&lt;/p>
+&lt;p>This asymmetry is the reason so many models are formulated as current injections even when what they
+physically represent is a voltage behind an impedance.&lt;/p>
+&lt;h2 id="the-norton-equivalent">The Norton equivalent&lt;/h2>
+&lt;p>A voltage source with a series resistance can avoid the extension entirely. Source transformation
+replaces a voltage $V$ behind a resistance $R$ with a current $V/R$ in parallel with the same
+resistance,&lt;/p>
+&lt;div class="math">$$I_{eq} = \frac{V}{R}, \qquad G = \frac{1}{R},$$&lt;/div>&lt;p>which contributes a conductance to the matrix and a current to the right hand side. No extra
+unknown, no zero on the diagonal, and the matrix stays the shape it would have had without the
+source.&lt;/p>
+&lt;p>The two representations are equivalent at the terminals, exactly, for any $R$ that is not zero. The
+choice is therefore numerical rather than physical, and the cost is that the source is no longer
+ideal: its terminal voltage falls with the current drawn. Where a genuinely stiff source is wanted,
+$R$ has to be made small, and a small $R$ means a large conductance, which is the same conditioning
+trade-off that appears in &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/switches/">switches&lt;/a>.&lt;/p>
+&lt;h2 id="sources-that-change-over-time">Sources that change over time&lt;/h2>
+&lt;p>The simplest time-varying source takes its value from a generator, as described under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/signal-processing/">signal processing blocks&lt;/a>.&lt;/p>
+&lt;p>A ramp source is more specific: it holds one value, then moves to a second over a defined interval,
+and holds that. The subtlety is what happens when the ramp changes not only the magnitude and phase
+but also the frequency. Interpolating a frequency linearly and applying it as if it had always been
+in force produces a phase discontinuity at both ends of the ramp, because phase is the integral of
+frequency and not its product with time. Blending the frequency contribution in and out smoothly
+over the ramp interval avoids that, at the price that the frequency during the transition is not the
+linear interpolation it appears to be.&lt;/p>
+&lt;p>A profile source takes its value from a recorded sequence instead of from a formula, stepping
+through samples as the simulation advances. It is the right choice when the excitation comes from a
+measurement, and it carries the obvious constraint that the sample rate and the simulation step must
+be reconciled: a profile is silent about what happens between its samples, and the simulation will
+ask.&lt;/p>
+&lt;h2 id="controlled-sources">Controlled sources&lt;/h2>
+&lt;p>A controlled source takes its reference from another quantity in the simulation rather than from a
+parameter or a clock. This is what allows a component to be built out of sources: a converter
+imposes a voltage its control law computed, and an interface between two solvers imposes a value the
+other side produced.&lt;/p>
+&lt;p>The distinction from a time-varying source is that the reference is not known in advance. Since the
+reference is read as an input rather than solved simultaneously, it is the value from the previous
+step, which introduces a delay of one step into whatever loop the source closes. For a control loop
+that is usually acceptable and always worth knowing about; for a coupling between two solvers it is
+the central property of the method, and it is the subject of
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/branches/">branches&lt;/a> where the same delay is used deliberately.&lt;/p></description></item><item><title>Docs: Network Injection and Compensation</title><link>https://sogno.energy/dpsim/docs/concepts/models/network-injection-and-compensation/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/models/network-injection-and-compensation/</guid><description>
+&lt;p>Every simulated network stops somewhere. What lies beyond the boundary has to be represented by
+something, and once it is, the question of holding voltage at a bus becomes a question about what
+that representation will support.&lt;/p>
+&lt;h2 id="the-external-network">The external network&lt;/h2>
+&lt;p>The rest of the grid is represented as an ideal voltage source behind no impedance: a bus whose
+voltage is imposed and whose current is whatever the network draws. This is the slack of the
+powerflow carried into the time domain, and it supplies unlimited power at a fixed voltage and
+frequency.&lt;/p>
+&lt;p>That idealisation is the right one when the external system is genuinely much stiffer than what is
+being studied, and it is misleading when it is not. A stiff boundary suppresses exactly the
+behaviour that a weak grid study is about: it holds the voltage the compensator is supposed to be
+regulating and absorbs the power swings the converters are supposed to be sharing. Placing an
+impedance between the source and the network is what makes the boundary finite, and the short
+circuit ratio it produces is a modelling decision rather than a detail.&lt;/p>
+&lt;p>Because the imposed voltage comes from a signal generator rather than a constant, the boundary can
+also be driven: a frequency ramp to study the response to rate of change of frequency, or a
+modulated frequency to probe a control loop. The boundary then becomes the disturbance source rather
+than the reference.&lt;/p>
+&lt;h2 id="static-reactive-compensation">Static reactive compensation&lt;/h2>
+&lt;p>A static compensator regulates bus voltage by varying a shunt susceptance. It exchanges reactive
+power only, so it can raise or lower voltage but supplies no energy.&lt;/p>
+&lt;p>The regulator measures the bus voltage through a first-order lag, forms the per-unit error against a
+reference, and drives the susceptance through a further first-order lag with gain $K_r$ and time
+constant $T_r$,&lt;/p>
+&lt;div class="math">$$T_r \dot{B} = K_r \, \frac{V_{meas} - V_{ref}}{V_{nom}} - B ,$$&lt;/div>&lt;p>both lags integrated with the trapezoidal rule so that the controller and the network advance
+consistently.&lt;/p>
+&lt;p>Two properties follow from the physics rather than from the controller. The susceptance is bounded
+at both ends by the installed capacitive and inductive ratings, and the regulator saturates against
+those bounds rather than failing; a compensator sitting on its limit is providing everything it has
+and the voltage error persists. And because the device is a susceptance rather than a source, the
+reactive power it delivers falls with the square of the voltage. It is weakest exactly when the
+voltage is lowest, which is when it is most needed.&lt;/p>
+&lt;p>The measurement lag matters more than it appears. It sits inside the regulator loop, so it is not
+merely a smoothing of the reported value; making it small to track faster couples the compensator to
+noise, and making it large delays the response into a range where it can interact with nearby
+machine controls.&lt;/p>
+&lt;h2 id="discrete-compensation">Discrete compensation&lt;/h2>
+&lt;p>Where the compensation is switched rather than continuous, the control is a different kind. The
+regulator compares the voltage error against a deadband, and only if the error exceeds it does it
+move by one discrete step, in the direction that reduces the error, subject to end stops.&lt;/p>
+&lt;p>The deadband is not a refinement but the central element. Without it any measurement noise drives
+continual switching, and the switching is mechanical and finite in life. With it, the steady-state
+voltage is not the reference but anywhere within a band around it, which is the accepted cost.&lt;/p>
+&lt;h2 id="power-flow-control">Power flow control&lt;/h2>
+&lt;p>A device that connects two systems through a converter pair rather than through a magnetic circuit
+does not transfer voltage; it transfers power. Both sides are then specified as power exchanges
+rather than by a turns ratio: an active power to be moved from one side to the other, and a reactive
+power at each terminal set independently.&lt;/p>
+&lt;p>The distinction from a conventional transformer is that the sides are decoupled. The reactive power
+on one side is not a consequence of the other, the transfer does not depend on the angle across the
+device, and the two systems need not share a frequency. What is not free is the active power, which
+is common to both terminals up to losses; specifying it independently on each side would ask the
+device to create or destroy energy.&lt;/p></description></item><item><title>Docs: Synchronous Generator</title><link>https://sogno.energy/dpsim/docs/concepts/models/synchronous-generator/</link><pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/models/synchronous-generator/</guid><description>
+&lt;p>Two different synchronous machine models are currently available:&lt;/p>
+&lt;ul>
+&lt;li>the full order dq0 reference frame model (EMT, DP) [Kundur, Power system stability and control, 1994]&lt;/li>
+&lt;li>and the much simpler transient stability model (DP) [Eremia, Handbook of Electrical Power System Dynamics, 2003]&lt;/li>
+&lt;/ul>
+&lt;p>Reduced order machines from third to sixth order are derived under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/synchronous-generator/reduced-order/">reduced order machine models&lt;/a>. How any of these are stamped into
+the solver is covered under
+&lt;a href="https://sogno.energy/dpsim/docs/developer-guide/model-implementations/reduced-order-generator/">reduced order generator implementation&lt;/a>.&lt;/p>
+&lt;h2 id="basic-equations">Basic Equations&lt;/h2>
+&lt;p>The equations of the stator and rotor voltages are&lt;/p>
+&lt;div class="math">$$\begin{align}
+\mathbf{v}_{abcs} &amp;= \mathbf{R}_s \mathbf{i}_{abcs} + \frac{d}{dt} \boldsymbol{\lambda}_{abcs} \\
+\mathbf{v}_{dqr} &amp;= \mathbf{R}_r \mathbf{i}_{dqr} + \frac{d}{dt} \boldsymbol{\lambda}_{dqr}
+\end{align}$$&lt;/div>&lt;p>where&lt;/p>
+&lt;div class="math">$$\begin{align}
+\mathbf{v}_{abcs} &amp;=
+\begin{pmatrix}
+v_{as} &amp; v_{bs} &amp; v_{cs}
+\end{pmatrix}^T \\
+%
+\mathbf{v}_{dqr} &amp;=
+\begin{pmatrix}
+v_{fd} &amp; v_{kd} &amp; v_{kq1} &amp; v_{kq2}
+\end{pmatrix}^T \\
+%
+\mathbf{i}_{abcs} &amp;=
+\begin{pmatrix}
+i_{as} &amp; i_{bs} &amp; i_{cs}
+\end{pmatrix}^T \\
+%
+\mathbf{i}_{dqr} &amp;=
+\begin{pmatrix}
+i_{fd} &amp; i_{kd} &amp; i_{kq1} &amp; i_{kq2}
+\end{pmatrix}^T \\
+%
+\boldsymbol{\lambda}_{abcs} &amp;=
+\begin{pmatrix}
+\lambda_{as} &amp; \lambda_{bs} &amp; \lambda_{cs}
+\end{pmatrix}^T \\
+%
+\boldsymbol{\lambda}_{dqr} &amp;=
+\begin{pmatrix}
+\lambda_{fd} &amp; \lambda_{kd} &amp; \lambda_{kq1} &amp; \lambda_{kq2}
+\end{pmatrix}^T \\
+%
+\mathbf{R}_s &amp;= diag
+\begin{bmatrix}
+R_s &amp; R_s &amp; R_s
+\end{bmatrix} \\
+%
+\mathbf{R}_r &amp;= diag
+\begin{bmatrix}
+R_{fd} &amp; R_{kd} &amp; R_{kq1} &amp; R_{kq2}
+\end{bmatrix}
+\end{align}$$&lt;/div>&lt;p>The flux linkage equations are defined as&lt;/p>
+&lt;div class="math">$$\begin{equation}
+\begin{bmatrix}
+\boldsymbol{\lambda}_{abcs} \\
+\boldsymbol{\lambda}_{dqr}
+\end{bmatrix}
+=
+\begin{bmatrix}
+\mathbf{L}_s &amp; \mathbf{L}_{rs} \\
+{(\mathbf{L}_{rs})}^{T} &amp; \mathbf{L}_r
+\end{bmatrix}
+\begin{bmatrix}
+\mathbf{i}_{abcs} \\
+\mathbf{i}_{dqr}
+\end{bmatrix}
+\end{equation}$$&lt;/div>&lt;p>The inductance matrices are varying with the rotor position $\theta_r$ which varies with time.&lt;/p>
+&lt;p>The mechanical equations are:&lt;/p>
+&lt;div class="math">$$\begin{align}
+\frac{d\theta_r}{dt} &amp;= \omega_r \\
+\frac{d\omega_r}{dt} &amp;= \frac{P}{2J} (T_e-T_m)
+\end{align}$$&lt;/div>&lt;p>$\theta_r$ is the rotor position, $\omega_r$ is the angular electrical speed, $P$ is the number of poles, $J$ is the moment of inertia, $T_m$ and $T_e$ are the mechanical and electrical torque, respectively.
+Motor convention is used for all models.&lt;/p>
+&lt;h3 id="dq0-reference-frame-9th-order-model">dq0 Reference Frame 9th Order Model&lt;/h3>
+&lt;p>For stator referred variables, the base quantities for per unit are chosen as follows:&lt;/p>
+&lt;ul>
+&lt;li>$v_{s base}$ peak value of rated line-to-neutral voltage in V&lt;/li>
+&lt;li>$i_{s base}$ peak value of rated line current in A&lt;/li>
+&lt;li>$f_{base}$ rated frequency in Hz&lt;/li>
+&lt;/ul>
+&lt;p>The synchronous generator equations in terms of per unit values in the rotor reference frame become:&lt;/p>
+&lt;div class="math">$$\begin{equation}
+\begin{bmatrix}
+\mathbf{v}_{dq0s} \\
+\mathbf{v}_{dqr}
+\end{bmatrix}
+=
+\mathbf{R}_{sr}
+\begin{bmatrix}
+\mathbf{i}_{dq0s} \\
+\mathbf{i}_{dqr}
+\end{bmatrix}
++
+\frac{d}{dt}
+\begin{bmatrix}
+\boldsymbol{\lambda}_{dq0s} \\
+\boldsymbol{\lambda}_{dqr}
+\end{bmatrix}
++ \omega_r
+\begin{bmatrix}
+\boldsymbol{\lambda}_{qds} \\
+0
+\end{bmatrix}
+\end{equation}$$&lt;/div>&lt;p>where&lt;/p>
+&lt;div class="math">$$\begin{align}
+\mathbf{v}_{dq0s} &amp;=
+\begin{pmatrix}
+v_{ds} &amp; v_{qs} &amp; v_{0s}
+\end{pmatrix}^T \nonumber \\
+%
+\mathbf{i}_{dq0s} &amp;=
+\begin{pmatrix}
+i_{ds} &amp; i_{qs} &amp; i_{0s}
+\end{pmatrix}^T \nonumber \\
+%
+\boldsymbol{\lambda}_{dq0s} &amp;=
+\begin{pmatrix}
+\lambda_{ds} &amp; \lambda_{qs} &amp; \lambda_{0s}
+\end{pmatrix}^T \nonumber \\
+%
+\mathbf{R}_{sr} &amp;= diag
+\begin{bmatrix}
+R_s &amp; R_s &amp; R_s &amp; R_{fd} &amp; R_{kd} &amp; R_{kq1} &amp; R_{kq2}
+\end{bmatrix} \nonumber \\
+%
+\boldsymbol{\lambda}_{dqs} &amp;=
+\begin{pmatrix}
+-\lambda_{qs} &amp; \lambda_{ds} &amp; 0
+\end{pmatrix}^T.
+\end{align}$$&lt;/div>&lt;p>The flux linkages are:&lt;/p>
+&lt;div class="math">$$\begin{equation}
+\begin{pmatrix}
+\boldsymbol{\lambda}_{dq0s} \\
+\boldsymbol{\lambda}_{dqr}
+\end{pmatrix}
+=
+\begin{bmatrix}
+\mathbf{L}_{dqss} &amp; \mathbf{L}_{dqsr} \\
+\mathbf{L}_{dqrs} &amp; \mathbf{L}_{dqrr}
+\end{bmatrix}
+\begin{pmatrix}
+\mathbf{i}_{dq0s} \\
+\mathbf{i}_{dqr}
+\end{pmatrix}
+\end{equation}$$&lt;/div>&lt;p>where&lt;/p>
+&lt;div class="math">$$\begin{align}
+\mathbf{L}_{dqss} &amp;=
+\begin{bmatrix}
+L_{d} &amp; 0 &amp; 0 \\
+0 &amp; L_{q} &amp; 0 \\
+0 &amp; 0 &amp; L_{ls}
+\end{bmatrix} \nonumber \\
+\mathbf{L}_{dqsr} &amp;=
+\begin{bmatrix}
+L_{md} &amp; L_{md} &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; L_{mq} &amp; L_{mq} \\
+0 &amp; 0 &amp; 0 &amp; 0
+\end{bmatrix} \nonumber \\
+\mathbf{L}_{dqrs} &amp;=
+\begin{bmatrix}
+L_{md} &amp; 0 &amp; 0 \\
+L_{md} &amp; 0 &amp; 0 \\
+0 &amp; L_{mq} &amp; 0 \\
+0 &amp; L_{mq} &amp; 0
+\end{bmatrix} \nonumber \\
+\mathbf{L}_{rr} &amp;=
+\begin{bmatrix}
+L_{fd} &amp; L_{md} &amp; 0 &amp; 0 \\
+L_{md} &amp; L_{kd} &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; L_{kq1} &amp; L_{mq} \\
+0 &amp; 0 &amp; L_{mq} &amp; L_{kq2}
+\end{bmatrix} \nonumber \\
+\end{align}$$&lt;/div>&lt;p>with&lt;/p>
+&lt;div class="math">$$\begin{align}
+L_{d} &amp;= L_{ls} + L_{md} \nonumber \\
+L_{q} &amp;= L_{ls} + L_{mq} \nonumber \\
+L_{fd} &amp;= L_{lfd} + L_{md} \nonumber \\
+L_{kd} &amp;= L_{lkd} + L_{md} \nonumber \\
+L_{kq1} &amp;= L_{lkq1} + L_{mq} \nonumber \\
+L_{kq2} &amp;= L_{lkq2} + L_{mq}.
+\end{align}$$&lt;/div>&lt;p>The mechanical equations in per unit become:&lt;/p>
+&lt;div class="math">$$\begin{align}
+T_e &amp;= \lambda_{qs} i_{ds} - \lambda_{ds} i_{qs} \\
+\frac{d \omega_r}{dt} &amp;= \omega_r \\
+\frac{1}{\omega_b} \frac{d \omega_r}{dt} &amp;= \frac{1}{2H} (T_m - T_e).
+\end{align}$$&lt;/div>&lt;p>For the simulation, fluxes are chosen as state variables.
+To avoid the calculation of currents from fluxes using the inverse of the inductance matrix, the equation set needs to be solved for the fluxes analytically.
+To simplify the calculations, dq axis magnetizing flux linkages are defined [Krause, Analysis of electric machinery and drive systems, 2002]:&lt;/p>
+&lt;div class="math">$$\begin{align}
+\lambda_{md} &amp;= L_{md} \left( i_{ds} + i_{fd} + i_{kd} \right) \nonumber \\
+\lambda_{mq} &amp;= L_{mq} \left( i_{qs} + i_{kq1} + i_{kq2} \right)
+\end{align}$$&lt;/div>&lt;p>Using the flux linkages results in a simpler equation set for the fluxes:&lt;/p>
+&lt;div class="math">$$\begin{align}
+\lambda_{ds} &amp;= L_{ls} i_{ds} + L_{md} \left( i_{ds} + i_{fd} + i_{kd} \right) \nonumber \\
+\lambda_{qs} &amp;= L_{ls} i_{qs} + L_{mq} \left( i_{qs} + i_{kq1} + i_{kq2} \right) \nonumber \\
+\lambda_{0s} &amp;= L_{ls} i_{0s} \nonumber \\
+\lambda_{fd} &amp;= L_{ls} i_{fd} + L_{md} \left( i_{ds} + i_{fd} + i_{kd} \right) \nonumber \\
+\lambda_{kd} &amp;= L_{ls} i_{kd} + L_{md} \left( i_{ds} + i_{fd} + i_{kd} \right) \nonumber \\
+\lambda_{kq1} &amp;= L_{ls} i_{kq1} + L_{mq} \left( i_{qs} + i_{kq1} + i_{kq2} \right) \nonumber \\
+\lambda_{kq2} &amp;= L_{ls} i_{kq2} + L_{mq} \left( i_{qs} + i_{kq1} + i_{kq2} \right)
+\end{align}$$&lt;/div>
+&lt;div class="math">$$\begin{align}
+\lambda_{ds} &amp;= L_{ls} i_{ds} + \lambda_{md} \nonumber \\
+\lambda_{qs} &amp;= L_{ls} i_{qs} + \lambda_{mq} \nonumber \\
+\lambda_{0s} &amp;= L_{ls} i_{0s} \nonumber \\
+\lambda_{fd} &amp;= L_{lfd} i_{fd} + \lambda_{md} \nonumber \\
+\lambda_{kd} &amp;= L_{lkd} i_{kd} + \lambda_{md} \nonumber \\
+\lambda_{kq1} &amp;= L_{lkq1} i_{kq1} + \lambda_{mq} \nonumber \\
+\lambda_{kq2} &amp;= L_{lkq2} i_{kq2} + \lambda_{mq}
+\end{align}$$&lt;/div>&lt;h4 id="dynamic-phasor-model">Dynamic Phasor Model&lt;/h4>
+&lt;p>The fundamental dynamic phasors are similar to the dq0 quantities for symmetrical conditions since both yield DC quantities in a rotating reference frame.
+The network abc dynamic phasor quantities can be converted to dq0 dynamic phasors by applying the symmetrical components transformation and a rotation.&lt;/p>
+&lt;p>The angle $\delta$ is the orientation of the dq0 reference frame relative to the abc frame.&lt;/p>
+&lt;div class="math">$$\begin{align}
+\langle i_{ds} \rangle_{0} &amp;= \mathbf{Re} \left\{ \langle i_{p} \rangle_1 \ \mathrm{e}^{-j \delta} \right\} \nonumber \\
+\langle i_{qs} \rangle_{0} &amp;= \mathbf{Im} \left\{ \langle i_{p} \rangle_1 \ \mathrm{e}^{-j \delta} \right\} \nonumber \\
+\langle i_{ds} \rangle_{2} &amp;= \mathbf{Re} \left\{ \langle i_{n} \rangle_{1}^* \ \mathrm{e}^{-j \delta} \right\} \nonumber \\
+\langle i_{qs} \rangle_{2} &amp;= \mathbf{Im} \left\{ \langle i_{n} \rangle_{1}^* \ \mathrm{e}^{-j \delta} \right\} \nonumber \\
+\langle i_{0s} \rangle_{1} &amp;= \mathbf{Re} \left\{ \langle i_{z} \rangle_1 \right\}
+\end{align}$$&lt;/div>&lt;p>The winding currents for positive and zero sequence components can be expressed as&lt;/p>
+&lt;div class="math">$$\begin{align}
+\langle i_{ds} \rangle_0 &amp;= \frac{\langle \lambda_{ds} \rangle_0 - \langle \lambda_{md} \rangle_0 }{L_{ls}} \nonumber \\
+\langle i_{qs} \rangle_0 &amp;= \frac{\langle \lambda_{qs} \rangle_0 - \langle \lambda_{mq} \rangle_0}{L_{ls}} \nonumber \\
+\langle i_{0s} \rangle_1 &amp;= \frac{\langle \lambda_{0s} \rangle_1}{L_{ls}} \nonumber \\
+\langle i_{fd} \rangle_0 &amp;= \frac{\langle \lambda_{fd} \rangle_0 - \langle \lambda_{md} \rangle_0}{L_{lfd}} \nonumber \\
+\langle i_{kd} \rangle_0 &amp;= \frac{\langle \lambda_{kd} \rangle_0 - \langle \lambda_{md} \rangle_0}{L_{lkd}} \nonumber \\
+\langle i_{kq1} \rangle_0 &amp;= \frac{\langle \lambda_{kq1} \rangle_0 - \langle \lambda_{mq} \rangle_0}{L_{lkq1}} \nonumber \\
+\langle i_{kq2} \rangle_0 &amp;= \frac{\langle \lambda_{kq2} \rangle_0 - \langle \lambda_{mq} \rangle_0}{L_{lkq2}}.
+\end{align}$$&lt;/div>
+&lt;div class="math">$$\begin{align}
+\frac{d}{dt} \langle \lambda_{ds} \rangle_0 &amp;= \langle v_{ds} \rangle_0 + \langle \omega_r \rangle_0 \langle \lambda_{qs} \rangle_0 + \frac{R_s}{L_{ls}} \left( \langle \lambda_{md} \rangle_0 - \langle \lambda_{ds} \rangle_0 \right) \nonumber \\
+\frac{d}{dt} \langle \lambda_{qs} \rangle_0 &amp;= \langle v_{qs} \rangle_0 - \langle \omega_r \rangle_0 \langle \lambda_{ds} \rangle_0 + \frac{R_s}{L_{ls}} \left( \langle \lambda_{mq} \rangle_0 - \langle \lambda_{qs} \rangle_0 \right) \nonumber \\
+\frac{d}{dt} \langle \lambda_{0s} \rangle_1 &amp;= \langle v_{0s} \rangle_1 - \frac{R_s}{L_{ls}} \langle \lambda_{0s} \rangle_1 -j \omega_s \langle \lambda_{0s} \rangle_1 \nonumber \\
+\frac{d}{dt} \langle \lambda_{fd} \rangle_0 &amp;= \langle v_{fd} \rangle_0 + \frac{R_{fd}}{L_{lfd}} \left( \langle \lambda_{md} \rangle_0 - \langle \lambda_{fd} \rangle_0 \right) \nonumber \\
+\frac{d}{dt} \langle \lambda_{kd} \rangle_0 &amp;= \frac{R_{kd}}{L_{lkd}} \left( \langle \lambda_{md} \rangle_0 - \langle \lambda_{kd} \rangle_0 \right) \nonumber \\
+\frac{d}{dt} \langle \lambda_{kq1} \rangle_0 &amp;= \frac{R_{kq1}}{L_{lkq1}} \left( \langle \lambda_{mq} \rangle_0 - \langle \lambda_{kq1} \rangle_0 \right) \nonumber \\
+\frac{d}{dt} \langle \lambda_{kq2} \rangle_0 &amp;= \frac{R_{kq2}}{L_{lkq2}} \left( \langle \lambda_{mq} \rangle_0 - \langle \lambda_{kq2} \rangle_0 \right).
+\end{align}$$&lt;/div>&lt;p>In the dynamic phasor case, the equation for $\frac{d}{dt} \langle \lambda_{0s} \rangle_1$ has a frequency shift.
+To complete the state model, the magnetizing flux linkages are expressed as:&lt;/p>
+&lt;div class="math">$$\begin{align}
+\langle \lambda_{md} \rangle_0 &amp;= L_{ad} \left( \frac{\langle \lambda_{ds} \rangle_0}{L_{ls}} + \frac{\langle \lambda_{fd} \rangle_0}{L_{lfd}} + \frac{\langle \lambda_{kd} \rangle_0}{L_{lkd}} \right) \nonumber \\
+\langle \lambda_{mq} \rangle_0 &amp;= L_{aq} \left( \frac{\langle \lambda_{qs} \rangle_0}{L_{ls}} + \frac{\langle \lambda_{kq1} \rangle_0}{L_{lkq1}} + \frac{\langle \lambda_{kq2} \rangle_0}{L_{lkq2}} \right)
+\end{align}$$&lt;/div>&lt;p>where&lt;/p>
+&lt;div class="math">$$\begin{align}
+L_{ad} &amp;= \left( \frac{1}{L_{md}} + \frac{1}{L_{ls}} + \frac{1}{L_{lfd}} + \frac{1}{L_{lkd}} \right) \nonumber \\
+L_{aq} &amp;= \left( \frac{1}{L_{mq}} + \frac{1}{L_{ls}} + \frac{1}{L_{lkq1}} + \frac{1}{L_{lkq2}} \right).
+\end{align}$$&lt;/div>&lt;p>The mechanical equations in dynamic phasors are:&lt;/p>
+&lt;div class="math">$$\begin{align}
+T_e &amp;= \langle \lambda_{qs} \rangle_0 \langle i_{ds} \rangle_0 - \langle \lambda_{ds} \rangle_0 \langle i_{qs} \rangle_0 \\
+\frac{1}{\omega_s} \frac{d \delta_r}{dt} &amp;= \omega_r - 1 \\
+\frac{d \omega_r}{dt} &amp;= \frac{1}{2H} (T_m - T_e).
+\end{align}$$&lt;/div>&lt;h3 id="transient-stability-model">Transient Stability Model&lt;/h3></description></item><item><title>Docs: Synchronous Generator Regulators</title><link>https://sogno.energy/dpsim/docs/concepts/models/synchronous-generator-regulators/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/models/synchronous-generator-regulators/</guid><description>
+&lt;p>In DPSim, synchronous generator control systems are solved separately from the electric network. The outputs of the electric network (active and reactive power, node voltages, branch currents and rotor speed of synchronous generators) at time $k- \Delta t$ are used as the input of the controllers to calculate their states at time $k$. Because of the relatively slow response of the controllers, the error in the network solution due to the time delay $\Delta t$ introduced by this approach is negligible.&lt;/p>
+&lt;h2 id="references">References&lt;/h2>
+&lt;ul>
+&lt;li>[1] “IEEE Recommended Practice for Excitation System Models for Power System Stability Studies,” in IEEE Std 421.5-2016 (Revision of IEEE Std 421.5-2005) , vol., no., pp.1-207, 26 Aug. 2016, doi: 10.1109/IEEESTD.2016.7553421.&lt;/li>
+&lt;li>[2] F. Milano, “Power system modelling and scripting,” in Power System Modelling and Scripting. London: Springer-Verlag, 2010, ISBN: 978-3-642-13669-6. doi: 10.1007/978-3-642-13669-6.&lt;/li>
+&lt;li>[3] F. Milano, A. Manjavacas, “Frequency Variations in Power Systems: Modeling, State Estimation, and Control”. ISBN: 978-1-119-55184-3.&lt;/li>
+&lt;li>[4] F. Milano, “Power System Analysis Toolbox: Documentation for PSAT”, ISBN: 979-8573500560.&lt;/li>
+&lt;li>[5] M. Eremia; M. Shahidehpour, “Handbook of Electrical Power System Dynamics: Modeling, Stability, and Control”, &lt;a href="https://ieeexplore.ieee.org/book/6480471">https://ieeexplore.ieee.org/book/6480471&lt;/a>&lt;/li>
+&lt;li>[6] A. Roehder, B. Fuchs, J. Massman, M. Quester, A. Schnettler, “Transmission system stability assessment within an integrated grid development process”.&lt;/li>
+&lt;/ul></description></item><item><title>Docs: Power Electronics</title><link>https://sogno.energy/dpsim/docs/concepts/models/power-electronics/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/models/power-electronics/</guid><description>
+&lt;p>Every inverter model here is averaged: the switching is not represented, and the converter is
+treated as a controllable voltage behind its filter. Averaging removes the switching frequency from
+the problem, which is what allows a step size set by the control bandwidth rather than by the
+carrier. It also means these models say nothing about switching losses, harmonic injection or any
+behaviour that depends on the modulation itself.&lt;/p>
+&lt;p>The control that sits on top of each is derived separately under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/converter-control/">converter control&lt;/a>, because the same cascade appears in more
+than one of these models.&lt;/p>
+&lt;h2 id="choosing-among-them">Choosing among them&lt;/h2>
+&lt;p>The models differ along two axes: which domain they are written in, and whether the converter
+follows the grid or forms it.&lt;/p>
+&lt;p>&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/power-electronics/emt-ph3-averaged-vsi/">EMT Ph3 averaged VSI&lt;/a> is the reference formulation. All
+fourteen states are real, the three filter phases are represented individually, and there is no
+carrier, so nothing is assumed about the bandwidth of what it carries.&lt;/p>
+&lt;p>&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/power-electronics/dp-ph1-averaged-vsi/">DP Ph1 averaged VSI&lt;/a> is the same converter as a single
+positive-sequence envelope. Its six real filter states become two complex envelopes, which is the
+saving the envelope description buys, at the cost of being unable to represent an unbalance.&lt;/p>
+&lt;p>&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/power-electronics/dp-ph3-averaged-vsi/">DP Ph3 averaged VSI&lt;/a> restores per-phase representation in the
+envelope domain, with one complex envelope per phase and a controller that keeps a single
+positive-sequence frame. Because three independent phase envelopes admit a negative-sequence
+component, it carries negative-sequence current control that the single-phase model has no need for.&lt;/p>
+&lt;p>&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/power-electronics/emt-ph3-grid-forming-vsi/">EMT Ph3 grid-forming VSI&lt;/a> is the one that differs in
+kind rather than in representation. It carries its own frequency and angle as states instead of
+tracking the grid&amp;rsquo;s, so it can energise a network with no other source. Its control is nonlinear
+enough that the model is linearized numerically at each operating point rather than written in
+closed form.&lt;/p>
+&lt;h2 id="what-they-share">What they share&lt;/h2>
+&lt;p>All four are solved simultaneously with the network rather than through a delayed injection, using
+the state-space nodal method described under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/ssn-components/">SSN components&lt;/a>. All four are therefore re-formed as the
+operating point moves, and all four make the system matrix change at every step, which is the cost
+of the approach.&lt;/p></description></item><item><title>Docs: Converter Control</title><link>https://sogno.energy/dpsim/docs/concepts/models/converter-control/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/models/converter-control/</guid><description>
+&lt;p>A converter model needs an angle to transform between the phase frame and its control frame, and a
+control law that decides what to synthesise. The two questions are separable, and the answer to the
+first is what distinguishes a grid-following converter from a grid-forming one.&lt;/p>
+&lt;h2 id="tracking-an-angle-the-phase-locked-loop">Tracking an angle: the phase-locked loop&lt;/h2>
+&lt;p>A phase-locked loop drives the estimated angle until the measured voltage sits on the chosen axis of
+the control frame. The error signal is the off-axis component, which is zero exactly when the frame
+is aligned, and it is fed to a proportional-integral controller whose output is a frequency
+correction.&lt;/p>
+&lt;p>With the integrator state $\phi$ and the frequency error input $e$, the loop is&lt;/p>
+&lt;div class="math">$$\dot{\phi} = k_i e, \qquad
+\omega = \omega_{nom} + k_p e + \phi, \qquad
+\dot{\theta} = \omega .$$&lt;/div>&lt;p>The nominal frequency enters as a feed-forward term rather than being learned, so the loop only has
+to supply the deviation from it. That keeps the integrator near zero in normal operation and is why
+a loop initialised at nominal frequency locks quickly.&lt;/p>
+&lt;p>The proportional gain sets how fast the loop follows a phase step and the integral gain how fast it
+removes a standing frequency error. Making them large tracks disturbances the converter should
+arguably ignore: a phase-locked loop that follows a fault as fast as it can is not obviously
+desirable, since the converter then propagates the disturbance into its own control frame.&lt;/p>
+&lt;p>The important structural point is that a converter with a phase-locked loop takes its angle from the
+network. It cannot operate without a voltage to lock to, which is what &amp;ldquo;grid following&amp;rdquo; means.&lt;/p>
+&lt;h2 id="generating-an-angle-the-oscillator">Generating an angle: the oscillator&lt;/h2>
+&lt;p>The alternative is to carry the angle as a state and advance it at a commanded frequency,&lt;/p>
+&lt;div class="math">$$\dot{\theta} = \omega_{ref},$$&lt;/div>&lt;p>with no measurement involved. The converter then imposes a phase rather than following one, which is
+what &amp;ldquo;grid forming&amp;rdquo; means, and it continues to operate into a network with no other voltage source.&lt;/p>
+&lt;p>The difference between the two is one equation, but it determines whether the converter can start a
+de-energised network or support frequency, and whether it has any defined behaviour when the grid
+voltage collapses.&lt;/p>
+&lt;h2 id="cascaded-control">Cascaded control&lt;/h2>
+&lt;p>Above the angle sits a cascade, ordered from slowest to fastest.&lt;/p>
+&lt;p>The outer loop compares measured active and reactive power against their references. The measurement
+is low-pass filtered first, because the instantaneous power computed from the terminal quantities
+carries components at twice the fundamental under any unbalance, and feeding those into a controller
+produces a modulation the converter should not emit. The filter cut-off therefore bounds how fast
+this loop can be, independently of its gains.&lt;/p>
+&lt;p>The inner loop regulates the filter current to the reference the outer loop produced. It must be
+substantially faster than the outer loop for the cascade to behave as intended: the outer loop is
+designed assuming its commanded current is achieved essentially immediately, and that assumption
+fails if the two bandwidths approach each other. The usual consequence is not instability but an
+interaction that appears as a poorly damped oscillation at neither loop&amp;rsquo;s design frequency.&lt;/p>
+&lt;p>Both loops are proportional-integral in the control frame, where a balanced fundamental quantity is
+constant, so an integrator can drive the steady-state error to zero. This is the reason for working
+in a rotating frame at all: the same controller applied to a sinusoid in the phase frame would leave
+a standing error, because an integrator cannot track a moving target.&lt;/p>
+&lt;h2 id="grid-forming-voltage-control">Grid-forming voltage control&lt;/h2>
+&lt;p>A grid-forming converter replaces the outer power loop with a voltage magnitude and frequency law.
+Droop characteristics relate active power to frequency and reactive power to voltage, which lets
+several converters share load without communicating: each responds to the same measured deviation,
+and the split follows from the droop gains.&lt;/p>
+&lt;p>Below that, a voltage loop regulates the filter capacitor voltage and hands a current reference to
+the same inner current loop as before. The inner loop is therefore common to both control
+philosophies; only what sits above it changes.&lt;/p></description></item><item><title>Docs: State-Space Nodal Components</title><link>https://sogno.energy/dpsim/docs/concepts/models/ssn-components/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/models/ssn-components/</guid><description>
+&lt;p>The &lt;a href="https://sogno.energy/dpsim/docs/concepts/state-space-nodal/">state-space nodal&lt;/a> method solves a component
+simultaneously with the network instead of coupling it through a delayed injection. This page covers
+the other half: how a single component is written so that the method applies to it, and what the
+resulting stamp is.&lt;/p>
+&lt;h2 id="what-a-component-supplies">What a component supplies&lt;/h2>
+&lt;p>Each component provides a continuous-time model in a state, an input and an output of its own
+choosing,&lt;/p>
+&lt;div class="math">$$\dot{\boldsymbol{x}} = \boldsymbol{A}\boldsymbol{x} + \boldsymbol{B}\boldsymbol{u}, \qquad
+\boldsymbol{y} = \boldsymbol{C}\boldsymbol{x} + \boldsymbol{D}\boldsymbol{u}.$$&lt;/div>&lt;p>The choice of what the vectors mean is the entire modelling step. For a component that behaves as an
+admittance the input is the terminal voltage and the output is the terminal current; for one that
+behaves as an impedance the roles are exchanged. Everything after this is mechanical.&lt;/p>
+&lt;h2 id="discretisation">Discretisation&lt;/h2>
+&lt;p>The state equation is integrated with the trapezoidal rule, which gives the discrete pair&lt;/p>
+&lt;div class="math">$$\boldsymbol{A}_d = \left( \boldsymbol{I} - \tfrac{\Delta t}{2}\boldsymbol{A} \right)^{-1}
+\left( \boldsymbol{I} + \tfrac{\Delta t}{2}\boldsymbol{A} \right), \qquad
+\boldsymbol{B}_d = \left( \boldsymbol{I} - \tfrac{\Delta t}{2}\boldsymbol{A} \right)^{-1}
+\tfrac{\Delta t}{2} \boldsymbol{B}.$$&lt;/div>&lt;p>Substituting the discrete state into the output equation separates the output into a part that
+depends on the present input and a part that does not,&lt;/p>
+&lt;div class="math">$$\boldsymbol{y} = \boldsymbol{W}\boldsymbol{u} + \boldsymbol{y}_{hist}, \qquad
+\boldsymbol{W} = \boldsymbol{C}\boldsymbol{B}_d + \boldsymbol{D}, \qquad
+\boldsymbol{y}_{hist} = \boldsymbol{C}\left( \boldsymbol{A}_d \boldsymbol{x} + \boldsymbol{B}_d \boldsymbol{u} \right).$$&lt;/div>&lt;p>This is exactly a companion model. $\boldsymbol{W}$ is an equivalent admittance that goes into the
+system matrix and $\boldsymbol{y}_{hist}$ is an equivalent source that goes into the right hand
+side. The difference from element-by-element companion models is only that $\boldsymbol{W}$ is
+derived from the component&amp;rsquo;s own state-space description rather than written by hand, so a component
+with internal states and cross-coupling between phases needs no special treatment.&lt;/p>
+&lt;h2 id="the-simplest-case-reproduces-the-classical-result">The simplest case reproduces the classical result&lt;/h2>
+&lt;p>Take a three-phase inductor. The natural choice is the current as state, the voltage as input and
+the current as output, giving&lt;/p>
+&lt;div class="math">$$\boldsymbol{A} = \boldsymbol{0}, \quad
+\boldsymbol{B} = \boldsymbol{L}^{-1}, \quad
+\boldsymbol{C} = \boldsymbol{I}, \quad
+\boldsymbol{D} = \boldsymbol{0}.$$&lt;/div>&lt;p>With $\boldsymbol{A} = \boldsymbol{0}$ the discretisation collapses to
+$\boldsymbol{A}_d = \boldsymbol{I}$ and $\boldsymbol{B}_d = \tfrac{\Delta t}{2}\boldsymbol{L}^{-1}$,
+so the equivalent admittance is $\tfrac{\Delta t}{2}\boldsymbol{L}^{-1}$ and the history term is the
+previous current plus the previous voltage contribution. For a single phase that is
+$\Delta t / 2L$, the familiar trapezoidal companion model of an inductor.&lt;/p>
+&lt;p>This is worth doing once because it shows the machinery adds no approximation of its own. A
+component whose model is a plain inductor gets exactly the stamp it would have had.&lt;/p>
+&lt;h2 id="where-it-earns-its-cost">Where it earns its cost&lt;/h2>
+&lt;p>The method is worth using when the component cannot be decomposed into independent elements. A
+series RLC branch written as three separate companion models introduces two internal nodes; written
+as one state-space model it introduces none, and the resulting stamp is a full matrix that captures
+the coupling directly. The same applies to any component whose phases are coupled through a
+non-diagonal inductance or through a control law.&lt;/p>
+&lt;p>The cost is that $\boldsymbol{W}$ is dense over the component&amp;rsquo;s terminals, where element models
+produce sparse contributions, and that a matrix inverse of the size of the state vector is required
+whenever the model changes.&lt;/p>
+&lt;p>The derivation above is the instantaneous case. The same component model is discretised differently
+in an envelope domain; see
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/ssn-domain-formulation/">SSN across domains&lt;/a>.&lt;/p>
+&lt;h2 id="fixed-and-varying-models">Fixed and varying models&lt;/h2>
+&lt;p>If $\boldsymbol{A}$, $\boldsymbol{B}$, $\boldsymbol{C}$ and $\boldsymbol{D}$ are constant, the
+discrete matrices are computed once and the system matrix never changes on account of the component.&lt;/p>
+&lt;p>If the model depends on the operating point, it must be re-formed and re-discretised as the
+operating point moves, and the system matrix refactorised with it. A saturating inductor whose
+inductance is a piecewise linear function of flux is the simple case; a converter whose control law
+is nonlinear is the general one.&lt;/p>
+&lt;h2 id="initialization">Initialization&lt;/h2>
+&lt;p>The steady state at a given frequency follows from the continuous model directly,&lt;/p>
+&lt;div class="math">$$\boldsymbol{x} = \left( j\omega \boldsymbol{I} - \boldsymbol{A} \right)^{-1} \boldsymbol{B} \boldsymbol{u},$$&lt;/div>&lt;p>which is the state-space equivalent of evaluating a phasor impedance. A component initialized this
+way starts in steady state rather than settling into it, provided the model is linear at the
+operating point.&lt;/p></description></item><item><title>Docs: Signal Processing Blocks</title><link>https://sogno.energy/dpsim/docs/concepts/models/signal-processing/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/models/signal-processing/</guid><description>
+&lt;p>Alongside the network components, a simulation contains blocks that carry no current and connect to
+no node. They compute a value from another value, and they exist because controllers and sources are
+built out of them.&lt;/p>
+&lt;h2 id="integration">Integration&lt;/h2>
+&lt;p>An integrator advances a state from its input using the trapezoidal rule,&lt;/p>
+&lt;div class="math">$$x[k] = x[k-1] + \frac{\Delta t}{2} \left( u[k] + u[k-1] \right),$$&lt;/div>&lt;p>which is the same rule the network solver applies to reactive elements, so a control loop and the
+circuit it acts on are integrated consistently. Using a cruder rule for the controller would put an
+error into the loop that no amount of tuning removes.&lt;/p>
+&lt;p>Not every block needs that accuracy. An angle accumulator advancing at a commanded frequency is
+often stepped with the rectangular rule instead,&lt;/p>
+&lt;div class="math">$$\theta[k] = \theta[k-1] + \Delta t \, \omega[k],$$&lt;/div>&lt;p>which is a step behind but adds no dependence on the previous input. The distinction is worth
+knowing when comparing an angle against one produced elsewhere, because the two rules differ by half
+a step of phase.&lt;/p>
+&lt;h2 id="finite-impulse-response-filtering">Finite impulse response filtering&lt;/h2>
+&lt;p>A finite impulse response filter forms its output as a weighted sum of the most recent inputs,&lt;/p>
+&lt;div class="math">$$y[k] = \sum_{i=0}^{N-1} h_i \, u[k-i],$$&lt;/div>&lt;p>holding those inputs in a circular buffer of length $N$. Because the output depends only on past
+inputs and never on past outputs, the filter cannot become unstable whatever the coefficients are,
+and its phase response can be made exactly linear. The price is that a given sharpness needs a long
+filter, which costs both memory and delay.&lt;/p>
+&lt;p>The delay is the part that matters in a control loop: a filter of length $N$ contributes roughly
+$N/2$ steps of it. Inside a feedback path that delay is a phase lag, and it erodes stability margin
+just as surely as raising a gain would.&lt;/p>
+&lt;h2 id="signal-generators">Signal generators&lt;/h2>
+&lt;p>A source that varies over time takes its value from a generator. Four behaviours cover most uses: a
+constant, a sinusoid at a fixed frequency and amplitude, a sinusoid whose frequency ramps between
+two values, and one whose frequency is modulated continuously.&lt;/p>
+&lt;p>The frequency ramp is the one with a subtlety. A ramp is described by a start frequency, an end
+frequency and a rate of change, and it is tempting to generate it by evaluating $\sin(\omega(t),t)$
+with a time-varying $\omega$. That is wrong: the argument of the sine is the accumulated phase, not
+the product of the present frequency and the elapsed time, and the two differ whenever the frequency
+is not constant. The phase must be accumulated,&lt;/p>
+&lt;div class="math">$$\theta[k] = \theta[k-1] + 2\pi f[k] \, \Delta t ,$$&lt;/div>&lt;p>so that the instantaneous frequency is the derivative of the phase by construction. Generating a
+ramp the naive way produces a signal whose actual frequency sweeps at twice the intended rate.&lt;/p>
+&lt;p>Accumulating phase makes the result depend on the step size and on the history of the run. Where an
+exactly reproducible waveform is wanted, independent of when the simulation started or what steps it
+took, the phase can instead be computed in closed form from the ramp parameters, which for a linear
+ramp is a quadratic in time.&lt;/p></description></item></channel></rss>

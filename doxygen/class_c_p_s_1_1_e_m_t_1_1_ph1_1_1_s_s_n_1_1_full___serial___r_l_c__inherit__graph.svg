@@ -285,7 +285,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000012" class="node">
 <title>Node12</title>
 <g id="a_Node000012"><a xlink:href="class_c_p_s_1_1_base_1_1_ph1_1_1_resistor.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="920.12,-102.25 790.88,-102.25 790.88,-80 920.12,-80 920.12,-102.25"/>
+<polygon fill="white" stroke="#666666" points="920.12,-102.25 790.88,-102.25 790.88,-80 920.12,-80 920.12,-102.25"/>
 <text text-anchor="middle" x="855.5" y="-88.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Base::Ph1::Resistor</text>
 </a>
 </g>
@@ -303,7 +303,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000013" class="node">
 <title>Node13</title>
 <g id="a_Node000013"><a xlink:href="class_c_p_s_1_1_base_1_1_ph1_1_1_inductor.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="921.62,-62.25 789.38,-62.25 789.38,-40 921.62,-40 921.62,-62.25"/>
+<polygon fill="white" stroke="#666666" points="921.62,-62.25 789.38,-62.25 789.38,-40 921.62,-40 921.62,-62.25"/>
 <text text-anchor="middle" x="855.5" y="-48.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Base::Ph1::Inductor</text>
 </a>
 </g>
@@ -321,7 +321,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000014" class="node">
 <title>Node14</title>
 <g id="a_Node000014"><a xlink:href="class_c_p_s_1_1_base_1_1_ph1_1_1_capacitor.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="923.12,-22.25 787.88,-22.25 787.88,0 923.12,0 923.12,-22.25"/>
+<polygon fill="white" stroke="#666666" points="923.12,-22.25 787.88,-22.25 787.88,0 923.12,0 923.12,-22.25"/>
 <text text-anchor="middle" x="855.5" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Base::Ph1::Capacitor</text>
 </a>
 </g>

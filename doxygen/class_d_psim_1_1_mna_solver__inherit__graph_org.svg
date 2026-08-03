@@ -58,7 +58,7 @@
 <g id="Node000004" class="node">
 <title>Node4</title>
 <g id="a_Node000004"><a xlink:href="class_d_psim_1_1_mna_solver_plugin.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="142.38,-36.5 13.12,-36.5 13.12,0 142.38,0 142.38,-36.5"/>
+<polygon fill="white" stroke="#666666" points="142.38,-36.5 13.12,-36.5 13.12,0 142.38,0 142.38,-36.5"/>
 <text text-anchor="start" x="21.12" y="-23" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::MnaSolverPlugin</text>
 <text text-anchor="middle" x="77.75" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; VarType &gt;</text>
 </a>

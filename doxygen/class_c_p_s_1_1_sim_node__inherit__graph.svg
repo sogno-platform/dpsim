@@ -68,7 +68,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000007" class="node">
 <title>Node7</title>
 <g id="a_Node000007"><a xlink:href="class_c_p_s_1_1_sim_node.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="804.5,-111.38 667,-111.38 667,-89.12 804.5,-89.12 804.5,-111.38"/>
+<polygon fill="white" stroke="#666666" points="804.5,-111.38 667,-111.38 667,-89.12 804.5,-89.12 804.5,-111.38"/>
 <text text-anchor="middle" x="735.75" y="-97.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SimNode&lt; Complex &gt;</text>
 </a>
 </g>
@@ -87,7 +87,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000008" class="node">
 <title>Node8</title>
 <g id="a_Node000008"><a xlink:href="class_c_p_s_1_1_sim_node.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="794.38,-71.38 677.12,-71.38 677.12,-49.12 794.38,-49.12 794.38,-71.38"/>
+<polygon fill="white" stroke="#666666" points="794.38,-71.38 677.12,-71.38 677.12,-49.12 794.38,-49.12 794.38,-71.38"/>
 <text text-anchor="middle" x="735.75" y="-57.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SimNode&lt; Real &gt;</text>
 </a>
 </g>
@@ -106,7 +106,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="class_c_p_s_1_1_topological_node.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="390.88,-146.38 275.12,-146.38 275.12,-124.12 390.88,-124.12 390.88,-146.38"/>
+<polygon fill="white" stroke="#666666" points="390.88,-146.38 275.12,-146.38 275.12,-124.12 390.88,-124.12 390.88,-146.38"/>
 <text text-anchor="middle" x="333" y="-132.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::TopologicalNode</text>
 </a>
 </g>
@@ -142,7 +142,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000004" class="node">
 <title>Node4</title>
 <g id="a_Node000004"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="390.12,-105.62 275.88,-105.62 275.88,-54.88 390.12,-54.88 390.12,-105.62"/>
+<polygon fill="white" stroke="#666666" points="390.12,-105.62 275.88,-105.62 275.88,-54.88 390.12,-54.88 390.12,-105.62"/>
 <text text-anchor="start" x="283.88" y="-92.12" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="283.88" y="-77.88" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; SimNode</text>
 <text text-anchor="middle" x="333" y="-63.62" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; VarType &gt; &gt;</text>

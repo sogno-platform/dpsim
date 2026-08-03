@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>CPS</b></li><li class="navelem"><b>Base</b></li><li class="navelem"><b>Ph3</b></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html">Switch</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
@@ -105,42 +113,42 @@ $(function(){ initResizable(false); });
 Inheritance diagram for CPS::Base::Ph3::Switch:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_base_1_1_ph3_1_1_switch__inherit__graph.svg" width="342" height="119"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for CPS::Base::Ph3::Switch:</div>
 <div class="dyncontent">
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_base_1_1_ph3_1_1_switch__coll__graph.svg" width="100%" height="538"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a84fbcd8c6998046238bf81eb4b6a65d3" id="r_a84fbcd8c6998046238bf81eb4b6a65d3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a84fbcd8c6998046238bf81eb4b6a65d3">Switch</a> (CPS::AttributeList::Ptr attributeList)</td></tr>
+<tr class="memitem:a84fbcd8c6998046238bf81eb4b6a65d3" id="r_a84fbcd8c6998046238bf81eb4b6a65d3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a84fbcd8c6998046238bf81eb4b6a65d3">Switch</a> (<a class="el" href="class_c_p_s_1_1_attribute_list.html#a49ff97075315610f2b8c923084bcd7d2">CPS::AttributeList::Ptr</a> attributeList)</td></tr>
 <tr class="separator:a84fbcd8c6998046238bf81eb4b6a65d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abf2cf0550239633cfec1111efe592832" id="r_abf2cf0550239633cfec1111efe592832"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abf2cf0550239633cfec1111efe592832">setParameters</a> (Matrix openResistance, Matrix closedResistance, Bool closed=false)</td></tr>
+<tr class="memitem:abf2cf0550239633cfec1111efe592832" id="r_abf2cf0550239633cfec1111efe592832"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abf2cf0550239633cfec1111efe592832">setParameters</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> openResistance, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> closedResistance, <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> closed=false)</td></tr>
 <tr class="separator:abf2cf0550239633cfec1111efe592832"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51d83197c457140a3ac6c993fd0ebafd" id="r_a51d83197c457140a3ac6c993fd0ebafd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a51d83197c457140a3ac6c993fd0ebafd">closeSwitch</a> ()</td></tr>
 <tr class="separator:a51d83197c457140a3ac6c993fd0ebafd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1a0784d7c6bf0888e897d2ca151c1b0" id="r_ae1a0784d7c6bf0888e897d2ca151c1b0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae1a0784d7c6bf0888e897d2ca151c1b0">openSwitch</a> ()</td></tr>
 <tr class="separator:ae1a0784d7c6bf0888e897d2ca151c1b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af08602c4ecfecdb47762ffa5a4adc79e" id="r_af08602c4ecfecdb47762ffa5a4adc79e"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af08602c4ecfecdb47762ffa5a4adc79e">isClosed</a> ()</td></tr>
+<tr class="memitem:af08602c4ecfecdb47762ffa5a4adc79e" id="r_af08602c4ecfecdb47762ffa5a4adc79e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af08602c4ecfecdb47762ffa5a4adc79e">isClosed</a> ()</td></tr>
 <tr class="memdesc:af08602c4ecfecdb47762ffa5a4adc79e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if switch is closed.  <br /></td></tr>
 <tr class="separator:af08602c4ecfecdb47762ffa5a4adc79e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a7eed4472e687daec85c7c59d60930a04" id="r_a7eed4472e687daec85c7c59d60930a04"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; Matrix &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7eed4472e687daec85c7c59d60930a04">mOpenResistance</a></td></tr>
+<tr class="memitem:a7eed4472e687daec85c7c59d60930a04" id="r_a7eed4472e687daec85c7c59d60930a04"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7eed4472e687daec85c7c59d60930a04">mOpenResistance</a></td></tr>
 <tr class="memdesc:a7eed4472e687daec85c7c59d60930a04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resistance if switch is open [ohm].  <br /></td></tr>
 <tr class="separator:a7eed4472e687daec85c7c59d60930a04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03e3aaeec70e7a57c23a1b4ff85f85f7" id="r_a03e3aaeec70e7a57c23a1b4ff85f85f7"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; Matrix &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a03e3aaeec70e7a57c23a1b4ff85f85f7">mClosedResistance</a></td></tr>
+<tr class="memitem:a03e3aaeec70e7a57c23a1b4ff85f85f7" id="r_a03e3aaeec70e7a57c23a1b4ff85f85f7"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a03e3aaeec70e7a57c23a1b4ff85f85f7">mClosedResistance</a></td></tr>
 <tr class="memdesc:a03e3aaeec70e7a57c23a1b4ff85f85f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resistance if switch is closed [ohm].  <br /></td></tr>
 <tr class="separator:a03e3aaeec70e7a57c23a1b4ff85f85f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1910acc67ad6e3d7f3bb65b340ce1c0" id="r_ae1910acc67ad6e3d7f3bb65b340ce1c0"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; Bool &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae1910acc67ad6e3d7f3bb65b340ce1c0">mIsClosed</a></td></tr>
+<tr class="memitem:ae1910acc67ad6e3d7f3bb65b340ce1c0" id="r_ae1910acc67ad6e3d7f3bb65b340ce1c0"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae1910acc67ad6e3d7f3bb65b340ce1c0">mIsClosed</a></td></tr>
 <tr class="memdesc:ae1910acc67ad6e3d7f3bb65b340ce1c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines if <a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html" title="Dynamic Phasor Three-Phase Switch.">Switch</a> is open or closed.  <br /></td></tr>
 <tr class="separator:ae1910acc67ad6e3d7f3bb65b340ce1c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:af3bbe83af0843cf3455db6e3b2928fcd" id="r_af3bbe83af0843cf3455db6e3b2928fcd"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af3bbe83af0843cf3455db6e3b2928fcd">mIsClosedPrev</a> = false</td></tr>
+<tr class="memitem:af3bbe83af0843cf3455db6e3b2928fcd" id="r_af3bbe83af0843cf3455db6e3b2928fcd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af3bbe83af0843cf3455db6e3b2928fcd">mIsClosedPrev</a> = false</td></tr>
 <tr class="separator:af3bbe83af0843cf3455db6e3b2928fcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -160,7 +168,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">CPS::Base::Ph3::Switch::Switch </td>
           <td>(</td>
-          <td class="paramtype">CPS::AttributeList::Ptr</td>          <td class="paramname"><span class="paramname"><em>attributeList</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_attribute_list.html#a49ff97075315610f2b8c923084bcd7d2">CPS::AttributeList::Ptr</a></td>          <td class="paramname"><span class="paramname"><em>attributeList</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -213,7 +221,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Bool CPS::Base::Ph3::Switch::isClosed </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> CPS::Base::Ph3::Switch::isClosed </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -271,17 +279,17 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">void CPS::Base::Ph3::Switch::setParameters </td>
           <td>(</td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>openResistance</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>openResistance</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>closedResistance</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>closedResistance</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Bool</td>          <td class="paramname"><span class="paramname"><em>closed</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a></td>          <td class="paramname"><span class="paramname"><em>closed</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -303,7 +311,7 @@ Protected Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt;Matrix&gt;::Ptr CPS::Base::Ph3::Switch::mClosedResistance</td>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&gt;::Ptr CPS::Base::Ph3::Switch::mClosedResistance</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -321,7 +329,7 @@ Protected Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt;Bool&gt;::Ptr CPS::Base::Ph3::Switch::mIsClosed</td>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&gt;::Ptr CPS::Base::Ph3::Switch::mIsClosed</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -342,7 +350,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Bool CPS::Base::Ph3::Switch::mIsClosedPrev = false</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> CPS::Base::Ph3::Switch::mIsClosedPrev = false</td>
         </tr>
       </table>
   </td>
@@ -363,7 +371,7 @@ Protected Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt;Matrix&gt;::Ptr CPS::Base::Ph3::Switch::mOpenResistance</td>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&gt;::Ptr CPS::Base::Ph3::Switch::mOpenResistance</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -378,10 +386,13 @@ Protected Attributes</h2></td></tr>
 <li>/__w/dpsim/dpsim/dpsim-models/include/dpsim-models/Base/<a class="el" href="_base___ph3___switch_8h_source.html">Base_Ph3_Switch.h</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_c_p_s.html">CPS</a></li><li class="navelem"><a class="el" href="namespace_c_p_s_1_1_base.html">Base</a></li><li class="navelem"><a class="el" href="namespace_c_p_s_1_1_base_1_1_ph3.html">Ph3</a></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html">Switch</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

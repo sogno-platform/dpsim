@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_c_p_s_1_1_base_1_1_av_voltage_source_inverter_d_q.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>CPS</b></li><li class="navelem"><b>Base</b></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_base_1_1_av_voltage_source_inverter_d_q.html">AvVoltageSourceInverterDQ</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
@@ -96,7 +104,7 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 
-<p>Base model of average inverter.  
+<p><a class="el" href="namespace_c_p_s_1_1_base.html">Base</a> model of average inverter.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_base___av_voltage_source_inverter_d_q_8h_source.html">Base_AvVoltageSourceInverterDQ.h</a>&gt;</code></p>
@@ -104,46 +112,46 @@ $(function(){ initResizable(false); });
 Inheritance diagram for CPS::Base::AvVoltageSourceInverterDQ:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_base_1_1_av_voltage_source_inverter_d_q__inherit__graph.svg" width="470" height="280"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a1c952209616dd5e9a7626715598b8a41" id="r_a1c952209616dd5e9a7626715598b8a41"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1c952209616dd5e9a7626715598b8a41">setFilterParameters</a> (Real Lf, Real Cf, Real Rf, Real Rc)</td></tr>
+<tr class="memitem:a1c952209616dd5e9a7626715598b8a41" id="r_a1c952209616dd5e9a7626715598b8a41"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1c952209616dd5e9a7626715598b8a41">setFilterParameters</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> Lf, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> Cf, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> Rf, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> Rc)</td></tr>
 <tr class="memdesc:a1c952209616dd5e9a7626715598b8a41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setter for filter parameters.  <br /></td></tr>
 <tr class="separator:a1c952209616dd5e9a7626715598b8a41"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2cfc3d24bad74199334e06a9e3f9da7" id="r_ab2cfc3d24bad74199334e06a9e3f9da7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab2cfc3d24bad74199334e06a9e3f9da7">setTransformerParameters</a> (Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs, Real ratioPhase, Real resistance, Real inductance)</td></tr>
+<tr class="memitem:ab2cfc3d24bad74199334e06a9e3f9da7" id="r_ab2cfc3d24bad74199334e06a9e3f9da7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab2cfc3d24bad74199334e06a9e3f9da7">setTransformerParameters</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> nomVoltageEnd1, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> nomVoltageEnd2, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> ratedPower, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> ratioAbs, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> ratioPhase, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> resistance, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> inductance)</td></tr>
 <tr class="memdesc:ab2cfc3d24bad74199334e06a9e3f9da7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setter for optional connection transformer.  <br /></td></tr>
 <tr class="separator:ab2cfc3d24bad74199334e06a9e3f9da7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a1f82ecd77de49e6e72ca4eae8e873fd7" id="r_a1f82ecd77de49e6e72ca4eae8e873fd7"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1f82ecd77de49e6e72ca4eae8e873fd7">mLf</a></td></tr>
+<tr class="memitem:a1f82ecd77de49e6e72ca4eae8e873fd7" id="r_a1f82ecd77de49e6e72ca4eae8e873fd7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1f82ecd77de49e6e72ca4eae8e873fd7">mLf</a></td></tr>
 <tr class="memdesc:a1f82ecd77de49e6e72ca4eae8e873fd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">filter parameters  <br /></td></tr>
 <tr class="separator:a1f82ecd77de49e6e72ca4eae8e873fd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a4d008e6b2828c61e24f9c4a9c1de62" id="r_a0a4d008e6b2828c61e24f9c4a9c1de62"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0a4d008e6b2828c61e24f9c4a9c1de62">mCf</a></td></tr>
+<tr class="memitem:a0a4d008e6b2828c61e24f9c4a9c1de62" id="r_a0a4d008e6b2828c61e24f9c4a9c1de62"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0a4d008e6b2828c61e24f9c4a9c1de62">mCf</a></td></tr>
 <tr class="separator:a0a4d008e6b2828c61e24f9c4a9c1de62"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed0ca28aeac0766e096f1325e4d3608f" id="r_aed0ca28aeac0766e096f1325e4d3608f"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed0ca28aeac0766e096f1325e4d3608f">mRf</a></td></tr>
+<tr class="memitem:aed0ca28aeac0766e096f1325e4d3608f" id="r_aed0ca28aeac0766e096f1325e4d3608f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed0ca28aeac0766e096f1325e4d3608f">mRf</a></td></tr>
 <tr class="separator:aed0ca28aeac0766e096f1325e4d3608f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab0284416beb0b0e7bfb6ca5838f133ea" id="r_ab0284416beb0b0e7bfb6ca5838f133ea"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab0284416beb0b0e7bfb6ca5838f133ea">mRc</a></td></tr>
+<tr class="memitem:ab0284416beb0b0e7bfb6ca5838f133ea" id="r_ab0284416beb0b0e7bfb6ca5838f133ea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab0284416beb0b0e7bfb6ca5838f133ea">mRc</a></td></tr>
 <tr class="separator:ab0284416beb0b0e7bfb6ca5838f133ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8cc09e8194fab9d0da231b7ed6979473" id="r_a8cc09e8194fab9d0da231b7ed6979473"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8cc09e8194fab9d0da231b7ed6979473">mTransformerNominalVoltageEnd1</a></td></tr>
+<tr class="memitem:a8cc09e8194fab9d0da231b7ed6979473" id="r_a8cc09e8194fab9d0da231b7ed6979473"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8cc09e8194fab9d0da231b7ed6979473">mTransformerNominalVoltageEnd1</a></td></tr>
 <tr class="memdesc:a8cc09e8194fab9d0da231b7ed6979473"><td class="mdescLeft">&#160;</td><td class="mdescRight">transformer  <br /></td></tr>
 <tr class="separator:a8cc09e8194fab9d0da231b7ed6979473"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53219b1b31e2db1049c7ace10e0d96e2" id="r_a53219b1b31e2db1049c7ace10e0d96e2"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a53219b1b31e2db1049c7ace10e0d96e2">mTransformerNominalVoltageEnd2</a></td></tr>
+<tr class="memitem:a53219b1b31e2db1049c7ace10e0d96e2" id="r_a53219b1b31e2db1049c7ace10e0d96e2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a53219b1b31e2db1049c7ace10e0d96e2">mTransformerNominalVoltageEnd2</a></td></tr>
 <tr class="separator:a53219b1b31e2db1049c7ace10e0d96e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2031c8bb7eaa4a58cc7d36a27fcdcb0" id="r_ae2031c8bb7eaa4a58cc7d36a27fcdcb0"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae2031c8bb7eaa4a58cc7d36a27fcdcb0">mTransformerRatedPower</a></td></tr>
+<tr class="memitem:ae2031c8bb7eaa4a58cc7d36a27fcdcb0" id="r_ae2031c8bb7eaa4a58cc7d36a27fcdcb0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae2031c8bb7eaa4a58cc7d36a27fcdcb0">mTransformerRatedPower</a></td></tr>
 <tr class="separator:ae2031c8bb7eaa4a58cc7d36a27fcdcb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9328103f3bd89a30988294c0986db22c" id="r_a9328103f3bd89a30988294c0986db22c"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9328103f3bd89a30988294c0986db22c">mTransformerResistance</a></td></tr>
+<tr class="memitem:a9328103f3bd89a30988294c0986db22c" id="r_a9328103f3bd89a30988294c0986db22c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9328103f3bd89a30988294c0986db22c">mTransformerResistance</a></td></tr>
 <tr class="separator:a9328103f3bd89a30988294c0986db22c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af4acc4185e6840bd34394fd7107d4eb7" id="r_af4acc4185e6840bd34394fd7107d4eb7"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af4acc4185e6840bd34394fd7107d4eb7">mTransformerInductance</a></td></tr>
+<tr class="memitem:af4acc4185e6840bd34394fd7107d4eb7" id="r_af4acc4185e6840bd34394fd7107d4eb7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af4acc4185e6840bd34394fd7107d4eb7">mTransformerInductance</a></td></tr>
 <tr class="separator:af4acc4185e6840bd34394fd7107d4eb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad8449dfe5e6279732449b38ce7e55939" id="r_ad8449dfe5e6279732449b38ce7e55939"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad8449dfe5e6279732449b38ce7e55939">mTransformerRatioAbs</a></td></tr>
+<tr class="memitem:ad8449dfe5e6279732449b38ce7e55939" id="r_ad8449dfe5e6279732449b38ce7e55939"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad8449dfe5e6279732449b38ce7e55939">mTransformerRatioAbs</a></td></tr>
 <tr class="separator:ad8449dfe5e6279732449b38ce7e55939"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31924164405ef902dddc7f0f4a95976e" id="r_a31924164405ef902dddc7f0f4a95976e"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a31924164405ef902dddc7f0f4a95976e">mTransformerRatioPhase</a></td></tr>
+<tr class="memitem:a31924164405ef902dddc7f0f4a95976e" id="r_a31924164405ef902dddc7f0f4a95976e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a31924164405ef902dddc7f0f4a95976e">mTransformerRatioPhase</a></td></tr>
 <tr class="separator:a31924164405ef902dddc7f0f4a95976e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Base model of average inverter. </p>
+<div class="textblock"><p><a class="el" href="namespace_c_p_s_1_1_base.html">Base</a> model of average inverter. </p>
 
 <p class="definition">Definition at line <a class="el" href="_base___av_voltage_source_inverter_d_q_8h_source.html#l00017">17</a> of file <a class="el" href="_base___av_voltage_source_inverter_d_q_8h_source.html">Base_AvVoltageSourceInverterDQ.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
@@ -156,22 +164,22 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">void Base::AvVoltageSourceInverterDQ::setFilterParameters </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>Lf</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>Lf</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>Cf</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>Cf</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>Rf</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>Rf</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>Rc</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>Rc</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -191,37 +199,37 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">void Base::AvVoltageSourceInverterDQ::setTransformerParameters </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>nomVoltageEnd1</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>nomVoltageEnd1</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>nomVoltageEnd2</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>nomVoltageEnd2</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>ratedPower</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>ratedPower</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>ratioAbs</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>ratioAbs</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>ratioPhase</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>ratioPhase</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>resistance</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>resistance</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>inductance</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>inductance</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -243,7 +251,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real CPS::Base::AvVoltageSourceInverterDQ::mCf</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> CPS::Base::AvVoltageSourceInverterDQ::mCf</td>
         </tr>
       </table>
   </td>
@@ -267,7 +275,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real CPS::Base::AvVoltageSourceInverterDQ::mLf</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> CPS::Base::AvVoltageSourceInverterDQ::mLf</td>
         </tr>
       </table>
   </td>
@@ -293,7 +301,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real CPS::Base::AvVoltageSourceInverterDQ::mRc</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> CPS::Base::AvVoltageSourceInverterDQ::mRc</td>
         </tr>
       </table>
   </td>
@@ -317,7 +325,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real CPS::Base::AvVoltageSourceInverterDQ::mRf</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> CPS::Base::AvVoltageSourceInverterDQ::mRf</td>
         </tr>
       </table>
   </td>
@@ -341,7 +349,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real CPS::Base::AvVoltageSourceInverterDQ::mTransformerInductance</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> CPS::Base::AvVoltageSourceInverterDQ::mTransformerInductance</td>
         </tr>
       </table>
   </td>
@@ -365,7 +373,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real CPS::Base::AvVoltageSourceInverterDQ::mTransformerNominalVoltageEnd1</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> CPS::Base::AvVoltageSourceInverterDQ::mTransformerNominalVoltageEnd1</td>
         </tr>
       </table>
   </td>
@@ -391,7 +399,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real CPS::Base::AvVoltageSourceInverterDQ::mTransformerNominalVoltageEnd2</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> CPS::Base::AvVoltageSourceInverterDQ::mTransformerNominalVoltageEnd2</td>
         </tr>
       </table>
   </td>
@@ -415,7 +423,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real CPS::Base::AvVoltageSourceInverterDQ::mTransformerRatedPower</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> CPS::Base::AvVoltageSourceInverterDQ::mTransformerRatedPower</td>
         </tr>
       </table>
   </td>
@@ -439,7 +447,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real CPS::Base::AvVoltageSourceInverterDQ::mTransformerRatioAbs</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> CPS::Base::AvVoltageSourceInverterDQ::mTransformerRatioAbs</td>
         </tr>
       </table>
   </td>
@@ -463,7 +471,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real CPS::Base::AvVoltageSourceInverterDQ::mTransformerRatioPhase</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> CPS::Base::AvVoltageSourceInverterDQ::mTransformerRatioPhase</td>
         </tr>
       </table>
   </td>
@@ -487,7 +495,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real CPS::Base::AvVoltageSourceInverterDQ::mTransformerResistance</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> CPS::Base::AvVoltageSourceInverterDQ::mTransformerResistance</td>
         </tr>
       </table>
   </td>
@@ -506,10 +514,13 @@ Protected Attributes</h2></td></tr>
 <li>/__w/dpsim/dpsim/dpsim-models/src/Base/<a class="el" href="_base___av_voltage_source_inverter_d_q_8cpp_source.html">Base_AvVoltageSourceInverterDQ.cpp</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_c_p_s.html">CPS</a></li><li class="navelem"><a class="el" href="namespace_c_p_s_1_1_base.html">Base</a></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_base_1_1_av_voltage_source_inverter_d_q.html">AvVoltageSourceInverterDQ</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

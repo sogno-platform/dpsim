@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_d_psim_1_1_real_time_data_logger.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">RealTimeDataLogger</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">DPsim::RealTimeDataLogger Member List</div></div>
 </div><!--header-->
@@ -94,29 +102,32 @@ $(function(){ initResizable(false); });
 
 <p>This is the complete list of members for <a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a>, including all inherited members.</p>
 <table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>DataLoggerInterface</b>() (defined in <a class="el" href="class_d_psim_1_1_data_logger_interface.html">DPsim::DataLoggerInterface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_data_logger_interface.html">DPsim::DataLoggerInterface</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>getTask</b>() override (defined in <a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>List</b> typedef (defined in <a class="el" href="class_d_psim_1_1_data_logger_interface.html">DPsim::DataLoggerInterface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_data_logger_interface.html">DPsim::DataLoggerInterface</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>log</b>(Real time, Int timeStepCount) override (defined in <a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>logAttribute</b>(const String &amp;name, CPS::AttributeBase::Ptr attr, UInt rowsMax=0, UInt colsMax=0) (defined in <a class="el" href="class_d_psim_1_1_data_logger_interface.html">DPsim::DataLoggerInterface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_data_logger_interface.html">DPsim::DataLoggerInterface</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_data_logger_interface.html#a36cf6856b7123eaa445c699bb79c429c">DataLoggerInterface</a>()</td><td class="entry"><a class="el" href="class_d_psim_1_1_data_logger_interface.html">DPsim::DataLoggerInterface</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html#a37b32b262cf4aedcc239f92a84f0978a">getTask</a>() override</td><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_data_logger_interface.html#a214bf11836ef4716f134d5302386026c">List</a> typedef</td><td class="entry"><a class="el" href="class_d_psim_1_1_data_logger_interface.html">DPsim::DataLoggerInterface</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html#a66b300427bc8da91e785bd071d805643">log</a>(Real time, Int timeStepCount) override</td><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_data_logger_interface.html#a36dcf22d169fd43255d309a39f94e4f8">logAttribute</a>(const String &amp;name, CPS::AttributeBase::Ptr attr, UInt rowsMax=0, UInt colsMax=0)</td><td class="entry"><a class="el" href="class_d_psim_1_1_data_logger_interface.html">DPsim::DataLoggerInterface</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_data_logger_interface.html#a85226b2b4bed1ef60f79344d3c6e1d47">logAttribute</a>(const std::vector&lt; String &gt; &amp;name, CPS::AttributeBase::Ptr attr)</td><td class="entry"><a class="el" href="class_d_psim_1_1_data_logger_interface.html">DPsim::DataLoggerInterface</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mAttributeData</b> (defined in <a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mAttributes</b> (defined in <a class="el" href="class_d_psim_1_1_data_logger_interface.html">DPsim::DataLoggerInterface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_data_logger_interface.html">DPsim::DataLoggerInterface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mCurrentAttribute</b> (defined in <a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mCurrentRow</b> (defined in <a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mFilename</b> (defined in <a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mRowNumber</b> (defined in <a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Ptr</b> typedef (defined in <a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>RealTimeDataLogger</b>(std::filesystem::path &amp;filename, Real finalTime, Real timeStep) (defined in <a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>RealTimeDataLogger</b>(std::filesystem::path &amp;filename, size_t rowNumber) (defined in <a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>start</b>() override (defined in <a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>stop</b>() override (defined in <a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>~DataLoggerInterface</b>()=default (defined in <a class="el" href="class_d_psim_1_1_data_logger_interface.html">DPsim::DataLoggerInterface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_data_logger_interface.html">DPsim::DataLoggerInterface</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">make</a>(Args &amp;&amp;...args)</td><td class="entry"><a class="el" href="class_shared_factory.html">SharedFactory&lt; RealTimeDataLogger &gt;</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">static</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html#af5f9269ab53c84db3e30f9719a4b2f13">mAttributeData</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_data_logger_interface.html#a7fa81acd8b59011576ffb65f014f3ce4">mAttributes</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_data_logger_interface.html">DPsim::DataLoggerInterface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html#a2b21f2c37fc061b1e161594dc3b02acc">mCurrentAttribute</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html#a0c64ed82a5942c14a29a89dcdfe9ce42">mCurrentRow</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html#ab0e14a2a29cdbc9ada29e28a4d84c7e8">mFilename</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html#ad50065ba65a0709fc856a406118cd921">mRowNumber</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html#ac52c8823e3c82be3c885903768affa61">Ptr</a> typedef</td><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html#a0f87eaf87e2ada36940e8e181a3910ac">RealTimeDataLogger</a>(std::filesystem::path &amp;filename, Real finalTime, Real timeStep)</td><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html#ab9706901cd812f1343ae1ae48b627663">RealTimeDataLogger</a>(std::filesystem::path &amp;filename, size_t rowNumber)</td><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html#a514d823bdba91d4310a0c12d371f7483">start</a>() override</td><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html#a08531572551da67bbad9983a3c344164">stop</a>() override</td><td class="entry"><a class="el" href="class_d_psim_1_1_real_time_data_logger.html">DPsim::RealTimeDataLogger</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_data_logger_interface.html#a3cd6476ecb39ec48f8b097288c342808">~DataLoggerInterface</a>()=default</td><td class="entry"><a class="el" href="class_d_psim_1_1_data_logger_interface.html">DPsim::DataLoggerInterface</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
 </table></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

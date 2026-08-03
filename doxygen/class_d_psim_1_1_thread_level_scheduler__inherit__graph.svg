@@ -32,7 +32,7 @@
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="class_d_psim_1_1_thread_scheduler.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="142,-80.5 12,-80.5 12,-58.25 142,-58.25 142,-80.5"/>
+<polygon fill="white" stroke="#666666" points="142,-80.5 12,-80.5 12,-58.25 142,-58.25 142,-80.5"/>
 <text text-anchor="middle" x="77" y="-67" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::ThreadScheduler</text>
 </a>
 </g>
@@ -50,7 +50,7 @@
 <g id="Node000003" class="node">
 <title>Node3</title>
 <g id="a_Node000003"><a xlink:href="class_d_psim_1_1_scheduler.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="125.88,-138.75 28.12,-138.75 28.12,-116.5 125.88,-116.5 125.88,-138.75"/>
+<polygon fill="white" stroke="#666666" points="125.88,-138.75 28.12,-138.75 28.12,-116.5 125.88,-116.5 125.88,-138.75"/>
 <text text-anchor="middle" x="77" y="-125.25" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::Scheduler</text>
 </a>
 </g>

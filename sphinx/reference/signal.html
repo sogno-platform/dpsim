@@ -1,0 +1,963 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signal Models &mdash; DPsim - documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=dd079cb8" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=b1628c55"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Co-simulation" href="cosimulation.html" />
+    <link rel="prev" title="(Quasi) Static / RMS Models" href="sp.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../about.html" class="icon icon-home">
+            DPsim
+              <img src="../_static/dpsim.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../Reference.html">Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsim-python-bindings">DPsim Python bindings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.Attribute"><code class="docutils literal notranslate"><span class="pre">Attribute</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeComplex"><code class="docutils literal notranslate"><span class="pre">AttributeComplex</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeComplexDyn"><code class="docutils literal notranslate"><span class="pre">AttributeComplexDyn</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeComplexStat"><code class="docutils literal notranslate"><span class="pre">AttributeComplexStat</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeMatrix"><code class="docutils literal notranslate"><span class="pre">AttributeMatrix</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeMatrixComp"><code class="docutils literal notranslate"><span class="pre">AttributeMatrixComp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeMatrixCompDyn"><code class="docutils literal notranslate"><span class="pre">AttributeMatrixCompDyn</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeMatrixCompStat"><code class="docutils literal notranslate"><span class="pre">AttributeMatrixCompStat</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeMatrixDyn"><code class="docutils literal notranslate"><span class="pre">AttributeMatrixDyn</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeMatrixStat"><code class="docutils literal notranslate"><span class="pre">AttributeMatrixStat</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeReal"><code class="docutils literal notranslate"><span class="pre">AttributeReal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeRealDyn"><code class="docutils literal notranslate"><span class="pre">AttributeRealDyn</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeRealStat"><code class="docutils literal notranslate"><span class="pre">AttributeRealStat</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeString"><code class="docutils literal notranslate"><span class="pre">AttributeString</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeStringDyn"><code class="docutils literal notranslate"><span class="pre">AttributeStringDyn</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeStringStat"><code class="docutils literal notranslate"><span class="pre">AttributeStringStat</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.CIMReader"><code class="docutils literal notranslate"><span class="pre">CIMReader</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.CIMReaderVoltageTargetUnit"><code class="docutils literal notranslate"><span class="pre">CIMReaderVoltageTargetUnit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.CSVReader"><code class="docutils literal notranslate"><span class="pre">CSVReader</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.CSVReaderFormat"><code class="docutils literal notranslate"><span class="pre">CSVReaderFormat</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.CSVReaderMode"><code class="docutils literal notranslate"><span class="pre">CSVReaderMode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.CouplingMethod"><code class="docutils literal notranslate"><span class="pre">CouplingMethod</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.DataLoggerInterface"><code class="docutils literal notranslate"><span class="pre">DataLoggerInterface</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.DirectLinearSolverConfiguration"><code class="docutils literal notranslate"><span class="pre">DirectLinearSolverConfiguration</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.DirectLinearSolverImpl"><code class="docutils literal notranslate"><span class="pre">DirectLinearSolverImpl</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.Domain"><code class="docutils literal notranslate"><span class="pre">Domain</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.GeneratorType"><code class="docutils literal notranslate"><span class="pre">GeneratorType</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.IdentifiedObject"><code class="docutils literal notranslate"><span class="pre">IdentifiedObject</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.Interface"><code class="docutils literal notranslate"><span class="pre">Interface</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.LogLevel"><code class="docutils literal notranslate"><span class="pre">LogLevel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.Logger"><code class="docutils literal notranslate"><span class="pre">Logger</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.MNAStateSpaceExtractor"><code class="docutils literal notranslate"><span class="pre">MNAStateSpaceExtractor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.Math"><code class="docutils literal notranslate"><span class="pre">Math</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.PhaseType"><code class="docutils literal notranslate"><span class="pre">PhaseType</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType"><code class="docutils literal notranslate"><span class="pre">PowerflowBusType</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.RealTimeDataLogger"><code class="docutils literal notranslate"><span class="pre">RealTimeDataLogger</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.RealTimeSimulation"><code class="docutils literal notranslate"><span class="pre">RealTimeSimulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.SimPowerCompComplex"><code class="docutils literal notranslate"><span class="pre">SimPowerCompComplex</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.SimPowerCompReal"><code class="docutils literal notranslate"><span class="pre">SimPowerCompReal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.SimTerminalComplex"><code class="docutils literal notranslate"><span class="pre">SimTerminalComplex</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.SimTerminalReal"><code class="docutils literal notranslate"><span class="pre">SimTerminalReal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.Simulation"><code class="docutils literal notranslate"><span class="pre">Simulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.Solver"><code class="docutils literal notranslate"><span class="pre">Solver</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.SolverBehaviour"><code class="docutils literal notranslate"><span class="pre">SolverBehaviour</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.StateSpaceAnalysisFrame"><code class="docutils literal notranslate"><span class="pre">StateSpaceAnalysisFrame</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.StateSpaceModalAnalysis"><code class="docutils literal notranslate"><span class="pre">StateSpaceModalAnalysis</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.SystemMatrixRecomputationMode"><code class="docutils literal notranslate"><span class="pre">SystemMatrixRecomputationMode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.SystemTopology"><code class="docutils literal notranslate"><span class="pre">SystemTopology</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.TopologicalNode"><code class="docutils literal notranslate"><span class="pre">TopologicalNode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.TopologicalPowerComp"><code class="docutils literal notranslate"><span class="pre">TopologicalPowerComp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.TopologicalTerminal"><code class="docutils literal notranslate"><span class="pre">TopologicalTerminal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.fill_in_reduction_method"><code class="docutils literal notranslate"><span class="pre">fill_in_reduction_method</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.partial_refactorization_method"><code class="docutils literal notranslate"><span class="pre">partial_refactorization_method</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.scaling_method"><code class="docutils literal notranslate"><span class="pre">scaling_method</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.use_btf"><code class="docutils literal notranslate"><span class="pre">use_btf</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#module-dpsimpy.base">Base Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#module-dpsimpy.event">Events</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="dp.html">Dynamic Phasor / SFA Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="dp.html#dpsimpy.dp.SimNode"><code class="docutils literal notranslate"><span class="pre">SimNode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dp.html#module-dpsimpy.dp.ph1">Single Phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dp.html#module-dpsimpy.dp.ph3">Three Phase</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="emt.html">Electromagnetic Transient Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="emt.html#dpsimpy.emt.SimNode"><code class="docutils literal notranslate"><span class="pre">SimNode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="emt.html#module-dpsimpy.emt.ph1">Single Phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="emt.html#module-dpsimpy.emt.ph3">Three Phase</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sp.html">(Quasi) Static / RMS Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sp.html#module-dpsimpy.sp.ph1">Single Phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sp.html#module-dpsimpy.sp.ph3">Three Phase</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Signal Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.DecouplingIdealTransformer_DP_Ph1"><code class="docutils literal notranslate"><span class="pre">DecouplingIdealTransformer_DP_Ph1</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph1"><code class="docutils literal notranslate"><span class="pre">DecouplingIdealTransformer_EMT_Ph1</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph3"><code class="docutils literal notranslate"><span class="pre">DecouplingIdealTransformer_EMT_Ph3</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.DecouplingIdealTransformer_SP_Ph1"><code class="docutils literal notranslate"><span class="pre">DecouplingIdealTransformer_SP_Ph1</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.DecouplingLine"><code class="docutils literal notranslate"><span class="pre">DecouplingLine</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.DecouplingLineEMT"><code class="docutils literal notranslate"><span class="pre">DecouplingLineEMT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.DecouplingLineEMT_Ph3"><code class="docutils literal notranslate"><span class="pre">DecouplingLineEMT_Ph3</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.Exciter"><code class="docutils literal notranslate"><span class="pre">Exciter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.ExciterDC1"><code class="docutils literal notranslate"><span class="pre">ExciterDC1</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.ExciterDC1Parameters"><code class="docutils literal notranslate"><span class="pre">ExciterDC1Parameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.ExciterDC1Simp"><code class="docutils literal notranslate"><span class="pre">ExciterDC1Simp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.ExciterDC1SimpParameters"><code class="docutils literal notranslate"><span class="pre">ExciterDC1SimpParameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.ExciterParameters"><code class="docutils literal notranslate"><span class="pre">ExciterParameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.ExciterST1Parameters"><code class="docutils literal notranslate"><span class="pre">ExciterST1Parameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.ExciterST1Simp"><code class="docutils literal notranslate"><span class="pre">ExciterST1Simp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.ExciterStatic"><code class="docutils literal notranslate"><span class="pre">ExciterStatic</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.ExciterStaticParameters"><code class="docutils literal notranslate"><span class="pre">ExciterStaticParameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.Governor"><code class="docutils literal notranslate"><span class="pre">Governor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.GovernorParameters"><code class="docutils literal notranslate"><span class="pre">GovernorParameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.HydroGovernorParameters"><code class="docutils literal notranslate"><span class="pre">HydroGovernorParameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.HydroTurbine"><code class="docutils literal notranslate"><span class="pre">HydroTurbine</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.HydroTurbineGovernor"><code class="docutils literal notranslate"><span class="pre">HydroTurbineGovernor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.HydroTurbineParameters"><code class="docutils literal notranslate"><span class="pre">HydroTurbineParameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.PSS"><code class="docutils literal notranslate"><span class="pre">PSS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.PSS1A"><code class="docutils literal notranslate"><span class="pre">PSS1A</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.PSS1AParameters"><code class="docutils literal notranslate"><span class="pre">PSS1AParameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.PSSParameters"><code class="docutils literal notranslate"><span class="pre">PSSParameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.SimSignalComp"><code class="docutils literal notranslate"><span class="pre">SimSignalComp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.SteamGovernorParameters"><code class="docutils literal notranslate"><span class="pre">SteamGovernorParameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.SteamTurbine"><code class="docutils literal notranslate"><span class="pre">SteamTurbine</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.SteamTurbineGovernor"><code class="docutils literal notranslate"><span class="pre">SteamTurbineGovernor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.SteamTurbineParameters"><code class="docutils literal notranslate"><span class="pre">SteamTurbineParameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.TopologicalSignalComp"><code class="docutils literal notranslate"><span class="pre">TopologicalSignalComp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.Turbine"><code class="docutils literal notranslate"><span class="pre">Turbine</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.TurbineGovernorType1"><code class="docutils literal notranslate"><span class="pre">TurbineGovernorType1</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpy.signal.TurbineParameters"><code class="docutils literal notranslate"><span class="pre">TurbineParameters</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cosimulation.html">Co-simulation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cosimulation.html#dpsimpyvillas.InterfaceVillas"><code class="docutils literal notranslate"><span class="pre">InterfaceVillas</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../about.html">DPsim</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../about.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../Reference.html">Reference</a></li>
+      <li class="breadcrumb-item active">Signal Models</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="https://github.com/sogno-platform/dpsim/docs/reference/signal.rst">View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="signal-models">
+<h1>Signal Models<a class="headerlink" href="#signal-models" title="Link to this heading"></a></h1>
+<p>Controllers, exciters, governors and signal generators.</p>
+<p id="module-dpsimpy.signal">signal models</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.DecouplingIdealTransformer_DP_Ph1">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">DecouplingIdealTransformer_DP_Ph1</span></span><a class="headerlink" href="#dpsimpy.signal.DecouplingIdealTransformer_DP_Ph1" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.SimSignalComp" title="dpsimpy.signal.SimSignalComp"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimSignalComp</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.DecouplingIdealTransformer_DP_Ph1.get_components">
+<span class="sig-name descname"><span class="pre">get_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.DecouplingIdealTransformer_DP_Ph1" title="dpsimpy.signal.DecouplingIdealTransformer_DP_Ph1"><span class="pre">DecouplingIdealTransformer_DP_Ph1</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="core.html#dpsimpy.IdentifiedObject" title="dpsimpy.IdentifiedObject"><span class="pre">IdentifiedObject</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#dpsimpy.signal.DecouplingIdealTransformer_DP_Ph1.get_components" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.DecouplingIdealTransformer_DP_Ph1.get_virtual_node">
+<span class="sig-name descname"><span class="pre">get_virtual_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.DecouplingIdealTransformer_DP_Ph1" title="dpsimpy.signal.DecouplingIdealTransformer_DP_Ph1"><span class="pre">DecouplingIdealTransformer_DP_Ph1</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.TopologicalNode" title="dpsimpy.TopologicalNode"><span class="pre">TopologicalNode</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.DecouplingIdealTransformer_DP_Ph1.get_virtual_node" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.DecouplingIdealTransformer_DP_Ph1.set_parameters">
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.DecouplingIdealTransformer_DP_Ph1" title="dpsimpy.signal.DecouplingIdealTransformer_DP_Ph1"><span class="pre">DecouplingIdealTransformer_DP_Ph1</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dp.html#dpsimpy.dp.SimNode" title="dpsimpy.dp.SimNode"><span class="pre">SimNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dp.html#dpsimpy.dp.SimNode" title="dpsimpy.dp.SimNode"><span class="pre">SimNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_src_intf_cur</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.typing.ArrayLike</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.float64</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'[m,</span> <span class="pre">n]'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cur1_extrap_0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsComplex</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coupling_method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="core.html#dpsimpy.CouplingMethod" title="dpsimpy.CouplingMethod"><span class="pre">CouplingMethod</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.DecouplingIdealTransformer_DP_Ph1.set_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph1">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">DecouplingIdealTransformer_EMT_Ph1</span></span><a class="headerlink" href="#dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph1" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.SimSignalComp" title="dpsimpy.signal.SimSignalComp"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimSignalComp</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph1.get_components">
+<span class="sig-name descname"><span class="pre">get_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph1" title="dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph1"><span class="pre">DecouplingIdealTransformer_EMT_Ph1</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="core.html#dpsimpy.IdentifiedObject" title="dpsimpy.IdentifiedObject"><span class="pre">IdentifiedObject</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph1.get_components" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph1.set_parameters">
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph1" title="dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph1"><span class="pre">DecouplingIdealTransformer_EMT_Ph1</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="emt.html#dpsimpy.emt.SimNode" title="dpsimpy.emt.SimNode"><span class="pre">SimNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="emt.html#dpsimpy.emt.SimNode" title="dpsimpy.emt.SimNode"><span class="pre">SimNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_src_intf_cur</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.typing.ArrayLike</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.float64</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'[m,</span> <span class="pre">n]'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cur1_extrap_0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coupling_method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="core.html#dpsimpy.CouplingMethod" title="dpsimpy.CouplingMethod"><span class="pre">CouplingMethod</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph1.set_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph3">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">DecouplingIdealTransformer_EMT_Ph3</span></span><a class="headerlink" href="#dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph3" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.SimSignalComp" title="dpsimpy.signal.SimSignalComp"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimSignalComp</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph3.get_components">
+<span class="sig-name descname"><span class="pre">get_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph3" title="dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph3"><span class="pre">DecouplingIdealTransformer_EMT_Ph3</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="core.html#dpsimpy.IdentifiedObject" title="dpsimpy.IdentifiedObject"><span class="pre">IdentifiedObject</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph3.get_components" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph3.get_virtual_node">
+<span class="sig-name descname"><span class="pre">get_virtual_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph3" title="dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph3"><span class="pre">DecouplingIdealTransformer_EMT_Ph3</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.TopologicalNode" title="dpsimpy.TopologicalNode"><span class="pre">TopologicalNode</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph3.get_virtual_node" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph3.set_parameters">
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph3" title="dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph3"><span class="pre">DecouplingIdealTransformer_EMT_Ph3</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="emt.html#dpsimpy.emt.SimNode" title="dpsimpy.emt.SimNode"><span class="pre">SimNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="emt.html#dpsimpy.emt.SimNode" title="dpsimpy.emt.SimNode"><span class="pre">SimNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_src_intf_cur</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.typing.ArrayLike</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.float64</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'[m,</span> <span class="pre">n]'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cur1_extrap_0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.typing.ArrayLike</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.float64</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'[m,</span> <span class="pre">n]'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coupling_method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="core.html#dpsimpy.CouplingMethod" title="dpsimpy.CouplingMethod"><span class="pre">CouplingMethod</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph3.set_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.DecouplingIdealTransformer_SP_Ph1">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">DecouplingIdealTransformer_SP_Ph1</span></span><a class="headerlink" href="#dpsimpy.signal.DecouplingIdealTransformer_SP_Ph1" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.SimSignalComp" title="dpsimpy.signal.SimSignalComp"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimSignalComp</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.DecouplingIdealTransformer_SP_Ph1.get_components">
+<span class="sig-name descname"><span class="pre">get_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.DecouplingIdealTransformer_SP_Ph1" title="dpsimpy.signal.DecouplingIdealTransformer_SP_Ph1"><span class="pre">DecouplingIdealTransformer_SP_Ph1</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="core.html#dpsimpy.IdentifiedObject" title="dpsimpy.IdentifiedObject"><span class="pre">IdentifiedObject</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#dpsimpy.signal.DecouplingIdealTransformer_SP_Ph1.get_components" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.DecouplingIdealTransformer_SP_Ph1.get_virtual_node">
+<span class="sig-name descname"><span class="pre">get_virtual_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.DecouplingIdealTransformer_SP_Ph1" title="dpsimpy.signal.DecouplingIdealTransformer_SP_Ph1"><span class="pre">DecouplingIdealTransformer_SP_Ph1</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.TopologicalNode" title="dpsimpy.TopologicalNode"><span class="pre">TopologicalNode</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.DecouplingIdealTransformer_SP_Ph1.get_virtual_node" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.DecouplingIdealTransformer_SP_Ph1.set_parameters">
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.DecouplingIdealTransformer_SP_Ph1" title="dpsimpy.signal.DecouplingIdealTransformer_SP_Ph1"><span class="pre">DecouplingIdealTransformer_SP_Ph1</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dp.html#dpsimpy.dp.SimNode" title="dpsimpy.dp.SimNode"><span class="pre">SimNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dp.html#dpsimpy.dp.SimNode" title="dpsimpy.dp.SimNode"><span class="pre">SimNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_src_intf_cur</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.typing.ArrayLike</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.float64</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'[m,</span> <span class="pre">n]'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cur1_extrap_0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsComplex</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coupling_method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="core.html#dpsimpy.CouplingMethod" title="dpsimpy.CouplingMethod"><span class="pre">CouplingMethod</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.DecouplingIdealTransformer_SP_Ph1.set_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.DecouplingLine">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">DecouplingLine</span></span><a class="headerlink" href="#dpsimpy.signal.DecouplingLine" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.SimSignalComp" title="dpsimpy.signal.SimSignalComp"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimSignalComp</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.DecouplingLine.get_line_components">
+<span class="sig-name descname"><span class="pre">get_line_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.DecouplingLine" title="dpsimpy.signal.DecouplingLine"><span class="pre">DecouplingLine</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="core.html#dpsimpy.IdentifiedObject" title="dpsimpy.IdentifiedObject"><span class="pre">IdentifiedObject</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#dpsimpy.signal.DecouplingLine.get_line_components" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.DecouplingLine.set_parameters">
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.DecouplingLine" title="dpsimpy.signal.DecouplingLine"><span class="pre">DecouplingLine</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dp.html#dpsimpy.dp.SimNode" title="dpsimpy.dp.SimNode"><span class="pre">SimNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="dp.html#dpsimpy.dp.SimNode" title="dpsimpy.dp.SimNode"><span class="pre">SimNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">resistance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inductance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capacitance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.DecouplingLine.set_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.DecouplingLineEMT">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">DecouplingLineEMT</span></span><a class="headerlink" href="#dpsimpy.signal.DecouplingLineEMT" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.SimSignalComp" title="dpsimpy.signal.SimSignalComp"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimSignalComp</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.DecouplingLineEMT.get_line_components">
+<span class="sig-name descname"><span class="pre">get_line_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.DecouplingLineEMT" title="dpsimpy.signal.DecouplingLineEMT"><span class="pre">DecouplingLineEMT</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="core.html#dpsimpy.IdentifiedObject" title="dpsimpy.IdentifiedObject"><span class="pre">IdentifiedObject</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#dpsimpy.signal.DecouplingLineEMT.get_line_components" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.DecouplingLineEMT.set_parameters">
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.DecouplingLineEMT" title="dpsimpy.signal.DecouplingLineEMT"><span class="pre">DecouplingLineEMT</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="emt.html#dpsimpy.emt.SimNode" title="dpsimpy.emt.SimNode"><span class="pre">SimNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="emt.html#dpsimpy.emt.SimNode" title="dpsimpy.emt.SimNode"><span class="pre">SimNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">resistance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inductance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capacitance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.DecouplingLineEMT.set_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.DecouplingLineEMT_Ph3">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">DecouplingLineEMT_Ph3</span></span><a class="headerlink" href="#dpsimpy.signal.DecouplingLineEMT_Ph3" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.SimSignalComp" title="dpsimpy.signal.SimSignalComp"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimSignalComp</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.DecouplingLineEMT_Ph3.get_line_components">
+<span class="sig-name descname"><span class="pre">get_line_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.DecouplingLineEMT_Ph3" title="dpsimpy.signal.DecouplingLineEMT_Ph3"><span class="pre">DecouplingLineEMT_Ph3</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="core.html#dpsimpy.IdentifiedObject" title="dpsimpy.IdentifiedObject"><span class="pre">IdentifiedObject</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#dpsimpy.signal.DecouplingLineEMT_Ph3.get_line_components" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.DecouplingLineEMT_Ph3.set_parameters">
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.DecouplingLineEMT_Ph3" title="dpsimpy.signal.DecouplingLineEMT_Ph3"><span class="pre">DecouplingLineEMT_Ph3</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="emt.html#dpsimpy.emt.SimNode" title="dpsimpy.emt.SimNode"><span class="pre">SimNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="emt.html#dpsimpy.emt.SimNode" title="dpsimpy.emt.SimNode"><span class="pre">SimNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">resistance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.typing.ArrayLike</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.float64</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'[m,</span> <span class="pre">n]'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inductance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.typing.ArrayLike</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.float64</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'[m,</span> <span class="pre">n]'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capacitance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.typing.ArrayLike</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.float64</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'[m,</span> <span class="pre">n]'</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.DecouplingLineEMT_Ph3.set_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.Exciter">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Exciter</span></span><a class="headerlink" href="#dpsimpy.signal.Exciter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pybind11_object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">ExciterDC1</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.SimSignalComp" title="dpsimpy.signal.SimSignalComp"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimSignalComp</span></code></a>, <a class="reference internal" href="#dpsimpy.signal.Exciter" title="dpsimpy.signal.Exciter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exciter</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1.set_parameters">
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.ExciterDC1" title="dpsimpy.signal.ExciterDC1"><span class="pre">ExciterDC1</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.ExciterDC1Parameters" title="dpsimpy.signal.ExciterDC1Parameters"><span class="pre">ExciterDC1Parameters</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1.set_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1Parameters">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">ExciterDC1Parameters</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1Parameters" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.ExciterParameters" title="dpsimpy.signal.ExciterParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExciterParameters</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1Parameters.Aef">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Aef</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1Parameters.Aef" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1Parameters.Bef">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Bef</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1Parameters.Bef" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1Parameters.Ka">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Ka</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1Parameters.Ka" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1Parameters.Kef">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Kef</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1Parameters.Kef" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1Parameters.Kf">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Kf</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1Parameters.Kf" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1Parameters.MaxVa">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">MaxVa</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1Parameters.MaxVa" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1Parameters.MinVa">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">MinVa</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1Parameters.MinVa" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1Parameters.Ta">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Ta</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1Parameters.Ta" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1Parameters.Tb">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Tb</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1Parameters.Tb" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1Parameters.Tc">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Tc</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1Parameters.Tc" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1Parameters.Tef">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Tef</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1Parameters.Tef" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1Parameters.Tf">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Tf</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1Parameters.Tf" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1Parameters.Tr">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Tr</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1Parameters.Tr" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1Simp">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">ExciterDC1Simp</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1Simp" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.SimSignalComp" title="dpsimpy.signal.SimSignalComp"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimSignalComp</span></code></a>, <a class="reference internal" href="#dpsimpy.signal.Exciter" title="dpsimpy.signal.Exciter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exciter</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1Simp.set_parameters">
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.ExciterDC1Simp" title="dpsimpy.signal.ExciterDC1Simp"><span class="pre">ExciterDC1Simp</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.ExciterDC1SimpParameters" title="dpsimpy.signal.ExciterDC1SimpParameters"><span class="pre">ExciterDC1SimpParameters</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1Simp.set_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1SimpParameters">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">ExciterDC1SimpParameters</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1SimpParameters" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.ExciterParameters" title="dpsimpy.signal.ExciterParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExciterParameters</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1SimpParameters.Aef">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Aef</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1SimpParameters.Aef" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1SimpParameters.Bef">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Bef</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1SimpParameters.Bef" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1SimpParameters.Ka">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Ka</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1SimpParameters.Ka" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1SimpParameters.Kef">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Kef</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1SimpParameters.Kef" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1SimpParameters.Kf">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Kf</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1SimpParameters.Kf" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1SimpParameters.MaxVa">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">MaxVa</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1SimpParameters.MaxVa" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1SimpParameters.MinVa">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">MinVa</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1SimpParameters.MinVa" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1SimpParameters.Ta">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Ta</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1SimpParameters.Ta" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1SimpParameters.Tef">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Tef</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1SimpParameters.Tef" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1SimpParameters.Tf">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Tf</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1SimpParameters.Tf" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterDC1SimpParameters.Tr">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Tr</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterDC1SimpParameters.Tr" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterParameters">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">ExciterParameters</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterParameters" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pybind11_object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterST1Parameters">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">ExciterST1Parameters</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterST1Parameters" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.ExciterParameters" title="dpsimpy.signal.ExciterParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExciterParameters</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterST1Parameters.Ka">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Ka</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterST1Parameters.Ka" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterST1Parameters.MaxVa">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">MaxVa</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterST1Parameters.MaxVa" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterST1Parameters.MinVa">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">MinVa</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterST1Parameters.MinVa" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterST1Parameters.Tr">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Tr</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterST1Parameters.Tr" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterST1Simp">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">ExciterST1Simp</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterST1Simp" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.SimSignalComp" title="dpsimpy.signal.SimSignalComp"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimSignalComp</span></code></a>, <a class="reference internal" href="#dpsimpy.signal.Exciter" title="dpsimpy.signal.Exciter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exciter</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterST1Simp.set_parameters">
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.ExciterST1Simp" title="dpsimpy.signal.ExciterST1Simp"><span class="pre">ExciterST1Simp</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.ExciterST1Parameters" title="dpsimpy.signal.ExciterST1Parameters"><span class="pre">ExciterST1Parameters</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.ExciterST1Simp.set_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterStatic">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">ExciterStatic</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterStatic" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.SimSignalComp" title="dpsimpy.signal.SimSignalComp"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimSignalComp</span></code></a>, <a class="reference internal" href="#dpsimpy.signal.Exciter" title="dpsimpy.signal.Exciter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exciter</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterStatic.set_parameters">
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.ExciterStatic" title="dpsimpy.signal.ExciterStatic"><span class="pre">ExciterStatic</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.ExciterStaticParameters" title="dpsimpy.signal.ExciterStaticParameters"><span class="pre">ExciterStaticParameters</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.ExciterStatic.set_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterStaticParameters">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">ExciterStaticParameters</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterStaticParameters" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.ExciterParameters" title="dpsimpy.signal.ExciterParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExciterParameters</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterStaticParameters.Ka">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Ka</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterStaticParameters.Ka" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterStaticParameters.Kbc">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Kbc</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterStaticParameters.Kbc" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterStaticParameters.MaxEfd">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">MaxEfd</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterStaticParameters.MaxEfd" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterStaticParameters.MinEfd">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">MinEfd</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterStaticParameters.MinEfd" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterStaticParameters.Ta">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Ta</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterStaticParameters.Ta" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterStaticParameters.Tb">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Tb</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterStaticParameters.Tb" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterStaticParameters.Te">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Te</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterStaticParameters.Te" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.ExciterStaticParameters.Tr">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Tr</span></span><a class="headerlink" href="#dpsimpy.signal.ExciterStaticParameters.Tr" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.Governor">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Governor</span></span><a class="headerlink" href="#dpsimpy.signal.Governor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pybind11_object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.GovernorParameters">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">GovernorParameters</span></span><a class="headerlink" href="#dpsimpy.signal.GovernorParameters" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pybind11_object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.HydroGovernorParameters">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">HydroGovernorParameters</span></span><a class="headerlink" href="#dpsimpy.signal.HydroGovernorParameters" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.GovernorParameters" title="dpsimpy.signal.GovernorParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">GovernorParameters</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.HydroGovernorParameters.OmRef">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">OmRef</span></span><a class="headerlink" href="#dpsimpy.signal.HydroGovernorParameters.OmRef" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.HydroGovernorParameters.Pmax">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Pmax</span></span><a class="headerlink" href="#dpsimpy.signal.HydroGovernorParameters.Pmax" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.HydroGovernorParameters.Pmin">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Pmin</span></span><a class="headerlink" href="#dpsimpy.signal.HydroGovernorParameters.Pmin" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.HydroGovernorParameters.R">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">R</span></span><a class="headerlink" href="#dpsimpy.signal.HydroGovernorParameters.R" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.HydroGovernorParameters.T1">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">T1</span></span><a class="headerlink" href="#dpsimpy.signal.HydroGovernorParameters.T1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.HydroGovernorParameters.T2">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">T2</span></span><a class="headerlink" href="#dpsimpy.signal.HydroGovernorParameters.T2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.HydroGovernorParameters.T3">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">T3</span></span><a class="headerlink" href="#dpsimpy.signal.HydroGovernorParameters.T3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.HydroTurbine">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">HydroTurbine</span></span><a class="headerlink" href="#dpsimpy.signal.HydroTurbine" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.SimSignalComp" title="dpsimpy.signal.SimSignalComp"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimSignalComp</span></code></a>, <a class="reference internal" href="#dpsimpy.signal.Turbine" title="dpsimpy.signal.Turbine"><code class="xref py py-class docutils literal notranslate"><span class="pre">Turbine</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.HydroTurbine.initialize_states">
+<span class="sig-name descname"><span class="pre">initialize_states</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.HydroTurbine" title="dpsimpy.signal.HydroTurbine"><span class="pre">HydroTurbine</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">Pminit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.HydroTurbine.initialize_states" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.HydroTurbine.set_parameters">
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.HydroTurbine" title="dpsimpy.signal.HydroTurbine"><span class="pre">HydroTurbine</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.TurbineParameters" title="dpsimpy.signal.TurbineParameters"><span class="pre">TurbineParameters</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.HydroTurbine.set_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.HydroTurbineGovernor">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">HydroTurbineGovernor</span></span><a class="headerlink" href="#dpsimpy.signal.HydroTurbineGovernor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.SimSignalComp" title="dpsimpy.signal.SimSignalComp"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimSignalComp</span></code></a>, <a class="reference internal" href="#dpsimpy.signal.Governor" title="dpsimpy.signal.Governor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Governor</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.HydroTurbineGovernor.initialize_states">
+<span class="sig-name descname"><span class="pre">initialize_states</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.HydroTurbineGovernor" title="dpsimpy.signal.HydroTurbineGovernor"><span class="pre">HydroTurbineGovernor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">Pref</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.HydroTurbineGovernor.initialize_states" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.HydroTurbineGovernor.set_parameters">
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.HydroTurbineGovernor" title="dpsimpy.signal.HydroTurbineGovernor"><span class="pre">HydroTurbineGovernor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.GovernorParameters" title="dpsimpy.signal.GovernorParameters"><span class="pre">GovernorParameters</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.HydroTurbineGovernor.set_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.HydroTurbineParameters">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">HydroTurbineParameters</span></span><a class="headerlink" href="#dpsimpy.signal.HydroTurbineParameters" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.TurbineParameters" title="dpsimpy.signal.TurbineParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">TurbineParameters</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.HydroTurbineParameters.Tw">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Tw</span></span><a class="headerlink" href="#dpsimpy.signal.HydroTurbineParameters.Tw" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.PSS">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">PSS</span></span><a class="headerlink" href="#dpsimpy.signal.PSS" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pybind11_object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.PSS1A">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">PSS1A</span></span><a class="headerlink" href="#dpsimpy.signal.PSS1A" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.SimSignalComp" title="dpsimpy.signal.SimSignalComp"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimSignalComp</span></code></a>, <a class="reference internal" href="#dpsimpy.signal.PSS" title="dpsimpy.signal.PSS"><code class="xref py py-class docutils literal notranslate"><span class="pre">PSS</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.PSS1A.set_parameters">
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.PSS1A" title="dpsimpy.signal.PSS1A"><span class="pre">PSS1A</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.PSSParameters" title="dpsimpy.signal.PSSParameters"><span class="pre">PSSParameters</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.PSS1A.set_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.PSS1AParameters">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">PSS1AParameters</span></span><a class="headerlink" href="#dpsimpy.signal.PSS1AParameters" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.PSSParameters" title="dpsimpy.signal.PSSParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">PSSParameters</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.PSS1AParameters.Kp">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Kp</span></span><a class="headerlink" href="#dpsimpy.signal.PSS1AParameters.Kp" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.PSS1AParameters.Kv">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Kv</span></span><a class="headerlink" href="#dpsimpy.signal.PSS1AParameters.Kv" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.PSS1AParameters.Kw">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Kw</span></span><a class="headerlink" href="#dpsimpy.signal.PSS1AParameters.Kw" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.PSS1AParameters.T1">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">T1</span></span><a class="headerlink" href="#dpsimpy.signal.PSS1AParameters.T1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.PSS1AParameters.T2">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">T2</span></span><a class="headerlink" href="#dpsimpy.signal.PSS1AParameters.T2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.PSS1AParameters.T3">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">T3</span></span><a class="headerlink" href="#dpsimpy.signal.PSS1AParameters.T3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.PSS1AParameters.T4">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">T4</span></span><a class="headerlink" href="#dpsimpy.signal.PSS1AParameters.T4" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.PSS1AParameters.Tw">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Tw</span></span><a class="headerlink" href="#dpsimpy.signal.PSS1AParameters.Tw" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.PSS1AParameters.Vs_max">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Vs_max</span></span><a class="headerlink" href="#dpsimpy.signal.PSS1AParameters.Vs_max" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.PSS1AParameters.Vs_min">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Vs_min</span></span><a class="headerlink" href="#dpsimpy.signal.PSS1AParameters.Vs_min" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.PSSParameters">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">PSSParameters</span></span><a class="headerlink" href="#dpsimpy.signal.PSSParameters" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pybind11_object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.SimSignalComp">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">SimSignalComp</span></span><a class="headerlink" href="#dpsimpy.signal.SimSignalComp" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.TopologicalSignalComp" title="dpsimpy.signal.TopologicalSignalComp"><code class="xref py py-class docutils literal notranslate"><span class="pre">TopologicalSignalComp</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.SteamGovernorParameters">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">SteamGovernorParameters</span></span><a class="headerlink" href="#dpsimpy.signal.SteamGovernorParameters" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.GovernorParameters" title="dpsimpy.signal.GovernorParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">GovernorParameters</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.SteamGovernorParameters.Kbc">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Kbc</span></span><a class="headerlink" href="#dpsimpy.signal.SteamGovernorParameters.Kbc" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.SteamGovernorParameters.OmRef">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">OmRef</span></span><a class="headerlink" href="#dpsimpy.signal.SteamGovernorParameters.OmRef" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.SteamGovernorParameters.Pmax">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Pmax</span></span><a class="headerlink" href="#dpsimpy.signal.SteamGovernorParameters.Pmax" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.SteamGovernorParameters.Pmin">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Pmin</span></span><a class="headerlink" href="#dpsimpy.signal.SteamGovernorParameters.Pmin" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.SteamGovernorParameters.R">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">R</span></span><a class="headerlink" href="#dpsimpy.signal.SteamGovernorParameters.R" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.SteamGovernorParameters.T1">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">T1</span></span><a class="headerlink" href="#dpsimpy.signal.SteamGovernorParameters.T1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.SteamGovernorParameters.T2">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">T2</span></span><a class="headerlink" href="#dpsimpy.signal.SteamGovernorParameters.T2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.SteamGovernorParameters.T3">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">T3</span></span><a class="headerlink" href="#dpsimpy.signal.SteamGovernorParameters.T3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.SteamGovernorParameters.dPmax">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">dPmax</span></span><a class="headerlink" href="#dpsimpy.signal.SteamGovernorParameters.dPmax" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.SteamGovernorParameters.dPmin">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">dPmin</span></span><a class="headerlink" href="#dpsimpy.signal.SteamGovernorParameters.dPmin" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.SteamTurbine">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">SteamTurbine</span></span><a class="headerlink" href="#dpsimpy.signal.SteamTurbine" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.SimSignalComp" title="dpsimpy.signal.SimSignalComp"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimSignalComp</span></code></a>, <a class="reference internal" href="#dpsimpy.signal.Turbine" title="dpsimpy.signal.Turbine"><code class="xref py py-class docutils literal notranslate"><span class="pre">Turbine</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.SteamTurbine.initialize_states">
+<span class="sig-name descname"><span class="pre">initialize_states</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.SteamTurbine" title="dpsimpy.signal.SteamTurbine"><span class="pre">SteamTurbine</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">Pminit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.SteamTurbine.initialize_states" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.SteamTurbine.set_parameters">
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.SteamTurbine" title="dpsimpy.signal.SteamTurbine"><span class="pre">SteamTurbine</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.TurbineParameters" title="dpsimpy.signal.TurbineParameters"><span class="pre">TurbineParameters</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.SteamTurbine.set_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.SteamTurbineGovernor">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">SteamTurbineGovernor</span></span><a class="headerlink" href="#dpsimpy.signal.SteamTurbineGovernor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.SimSignalComp" title="dpsimpy.signal.SimSignalComp"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimSignalComp</span></code></a>, <a class="reference internal" href="#dpsimpy.signal.Governor" title="dpsimpy.signal.Governor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Governor</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.SteamTurbineGovernor.initialize_states">
+<span class="sig-name descname"><span class="pre">initialize_states</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.SteamTurbineGovernor" title="dpsimpy.signal.SteamTurbineGovernor"><span class="pre">SteamTurbineGovernor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">Pref</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.SteamTurbineGovernor.initialize_states" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.SteamTurbineGovernor.set_parameters">
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.SteamTurbineGovernor" title="dpsimpy.signal.SteamTurbineGovernor"><span class="pre">SteamTurbineGovernor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.GovernorParameters" title="dpsimpy.signal.GovernorParameters"><span class="pre">GovernorParameters</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.SteamTurbineGovernor.set_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.SteamTurbineParameters">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">SteamTurbineParameters</span></span><a class="headerlink" href="#dpsimpy.signal.SteamTurbineParameters" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.TurbineParameters" title="dpsimpy.signal.TurbineParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">TurbineParameters</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.SteamTurbineParameters.Fhp">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Fhp</span></span><a class="headerlink" href="#dpsimpy.signal.SteamTurbineParameters.Fhp" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.SteamTurbineParameters.Fip">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Fip</span></span><a class="headerlink" href="#dpsimpy.signal.SteamTurbineParameters.Fip" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.SteamTurbineParameters.Flp">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Flp</span></span><a class="headerlink" href="#dpsimpy.signal.SteamTurbineParameters.Flp" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.SteamTurbineParameters.Tch">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Tch</span></span><a class="headerlink" href="#dpsimpy.signal.SteamTurbineParameters.Tch" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.SteamTurbineParameters.Tco">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Tco</span></span><a class="headerlink" href="#dpsimpy.signal.SteamTurbineParameters.Tco" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.signal.SteamTurbineParameters.Trh">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Trh</span></span><a class="headerlink" href="#dpsimpy.signal.SteamTurbineParameters.Trh" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.TopologicalSignalComp">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">TopologicalSignalComp</span></span><a class="headerlink" href="#dpsimpy.signal.TopologicalSignalComp" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="core.html#dpsimpy.IdentifiedObject" title="dpsimpy.IdentifiedObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">IdentifiedObject</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.Turbine">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Turbine</span></span><a class="headerlink" href="#dpsimpy.signal.Turbine" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pybind11_object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.TurbineGovernorType1">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">TurbineGovernorType1</span></span><a class="headerlink" href="#dpsimpy.signal.TurbineGovernorType1" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dpsimpy.signal.SimSignalComp" title="dpsimpy.signal.SimSignalComp"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimSignalComp</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.TurbineGovernorType1.initialize_states">
+<span class="sig-name descname"><span class="pre">initialize_states</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.TurbineGovernorType1" title="dpsimpy.signal.TurbineGovernorType1"><span class="pre">TurbineGovernorType1</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">TmRef</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.TurbineGovernorType1.initialize_states" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.signal.TurbineGovernorType1.set_parameters">
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.signal.TurbineGovernorType1" title="dpsimpy.signal.TurbineGovernorType1"><span class="pre">TurbineGovernorType1</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">T3</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T4</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T5</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tmin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tmax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">OmRef</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.signal.TurbineGovernorType1.set_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.signal.TurbineParameters">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">TurbineParameters</span></span><a class="headerlink" href="#dpsimpy.signal.TurbineParameters" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pybind11_object</span></code></p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="sp.html" class="btn btn-neutral float-left" title="(Quasi) Static / RMS Models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cosimulation.html" class="btn btn-neutral float-right" title="Co-simulation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2017-2023, The DPsim Authors..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

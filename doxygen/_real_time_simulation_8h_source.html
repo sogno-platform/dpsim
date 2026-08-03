@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_real_time_simulation_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">RealTimeSimulation.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_real_time_simulation_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -106,40 +114,52 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;chrono&gt;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;dpsim/Config.h&gt;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;dpsim/Simulation.h&gt;</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;dpsim/Timer.h&gt;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;<a class="code" href="_simulation_8h.html">dpsim/Simulation.h</a>&gt;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;<a class="code" href="_timer_8h.html">dpsim/Timer.h</a>&gt;</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_d_psim.html">DPsim</a> {</div>
 <div class="foldopen" id="foldopen00021" data-start="{" data-end="};">
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_real_time_simulation.html">   21</a></span><span class="keyword">class </span>RealTimeSimulation : <span class="keyword">public</span> <a class="code hl_function" href="class_d_psim_1_1_simulation.html#ac3489f2a307ee9f63c5e778b13402241">Simulation</a> {</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_real_time_simulation.html">   21</a></span><span class="keyword">class </span><a class="code hl_function" href="class_d_psim_1_1_real_time_simulation.html#a5d52e3cc5182192ddd6c8c34f158d695">RealTimeSimulation</a> : <span class="keyword">public</span> <a class="code hl_function" href="class_d_psim_1_1_simulation.html#ac3489f2a307ee9f63c5e778b13402241">Simulation</a> {</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  <a class="code hl_class" href="class_d_psim_1_1_timer.html">Timer</a> mTimer;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_real_time_simulation.html#ac3bb97bd32c571e7e2b30a54ed3f54a2">   24</a></span>  <a class="code hl_class" href="class_d_psim_1_1_timer.html">Timer</a> <a class="code hl_variable" href="class_d_psim_1_1_real_time_simulation.html#ac3bb97bd32c571e7e2b30a54ed3f54a2">mTimer</a>;</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  RealTimeSimulation(String name, <a class="code hl_class" href="class_d_psim_1_1_command_line_args.html">CommandLineArgs</a> &amp;args);</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  RealTimeSimulation(String name,</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>                     CPS::Logger::Level logLevel = CPS::Logger::Level::info);</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <a class="code hl_function" href="class_d_psim_1_1_real_time_simulation.html#a5d52e3cc5182192ddd6c8c34f158d695">RealTimeSimulation</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> <a class="code hl_function" href="class_d_psim_1_1_simulation.html#a1f09cfe1d848d7245f89f62a8a5e231a">name</a>, <a class="code hl_class" href="class_d_psim_1_1_command_line_args.html">CommandLineArgs</a> &amp;args);</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  <a class="code hl_function" href="class_d_psim_1_1_real_time_simulation.html#a5d52e3cc5182192ddd6c8c34f158d695">RealTimeSimulation</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> <a class="code hl_function" href="class_d_psim_1_1_simulation.html#a1f09cfe1d848d7245f89f62a8a5e231a">name</a>,</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>                     <a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a> logLevel = CPS::Logger::Level::info);</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span></div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keywordtype">void</span></div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <a class="code hl_function" href="class_d_psim_1_1_simulation.html#ae5c367f87c0b5dc9740bc6d00e44e72c">run</a>(<span class="keyword">const</span> Timer::StartClock::duration &amp;startIn = std::chrono::seconds(1));</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_simulation.html#ae5c367f87c0b5dc9740bc6d00e44e72c">run</a>(<span class="keyword">const</span> Timer::StartClock::time_point &amp;startAt);</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_simulation.html#ae5c367f87c0b5dc9740bc6d00e44e72c">run</a>(Int startIn) { <a class="code hl_function" href="class_d_psim_1_1_simulation.html#ae5c367f87c0b5dc9740bc6d00e44e72c">run</a>(std::chrono::seconds(startIn)); }</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_real_time_simulation.html#ab9f66b7d6c11e8fc40348f5ba7fe02c9">   41</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_real_time_simulation.html#ab9f66b7d6c11e8fc40348f5ba7fe02c9">run</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> startIn) { <a class="code hl_function" href="class_d_psim_1_1_real_time_simulation.html#ab9f66b7d6c11e8fc40348f5ba7fe02c9">run</a>(std::chrono::seconds(startIn)); }</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>};</div>
 </div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>} <span class="comment">// namespace DPsim</span></div>
+<div class="ttc" id="a_simulation_8h_html"><div class="ttname"><a href="_simulation_8h.html">Simulation.h</a></div></div>
+<div class="ttc" id="a_timer_8h_html"><div class="ttname"><a href="_timer_8h.html">Timer.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_logger_html_a021e964d1ab0d217a05b95736d2ea804"><div class="ttname"><a href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a></div><div class="ttdeci">spdlog::level::level_enum Level</div><div class="ttdef"><b>Definition</b> <a href="_logger_8h_source.html#l00033">Logger.h:33</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_command_line_args_html"><div class="ttname"><a href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_utils_8h_source.html#l00037">Utils.h:37</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_real_time_simulation_html_a5d52e3cc5182192ddd6c8c34f158d695"><div class="ttname"><a href="class_d_psim_1_1_real_time_simulation.html#a5d52e3cc5182192ddd6c8c34f158d695">DPsim::RealTimeSimulation::RealTimeSimulation</a></div><div class="ttdeci">RealTimeSimulation(String name, CommandLineArgs &amp;args)</div><div class="ttdef"><b>Definition</b> <a href="_real_time_simulation_8cpp_source.html#l00018">RealTimeSimulation.cpp:18</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_real_time_simulation_html_ab9f66b7d6c11e8fc40348f5ba7fe02c9"><div class="ttname"><a href="class_d_psim_1_1_real_time_simulation.html#ab9f66b7d6c11e8fc40348f5ba7fe02c9">DPsim::RealTimeSimulation::run</a></div><div class="ttdeci">void run(Int startIn)</div><div class="ttdef"><b>Definition</b> <a href="#l00041">RealTimeSimulation.h:41</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_real_time_simulation_html_ac3bb97bd32c571e7e2b30a54ed3f54a2"><div class="ttname"><a href="class_d_psim_1_1_real_time_simulation.html#ac3bb97bd32c571e7e2b30a54ed3f54a2">DPsim::RealTimeSimulation::mTimer</a></div><div class="ttdeci">Timer mTimer</div><div class="ttdef"><b>Definition</b> <a href="#l00024">RealTimeSimulation.h:24</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_simulation_html_a1f09cfe1d848d7245f89f62a8a5e231a"><div class="ttname"><a href="class_d_psim_1_1_simulation.html#a1f09cfe1d848d7245f89f62a8a5e231a">DPsim::Simulation::name</a></div><div class="ttdeci">String name() const</div><div class="ttdef"><b>Definition</b> <a href="_simulation_8h_source.html#l00339">Simulation.h:339</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_simulation_html_ac3489f2a307ee9f63c5e778b13402241"><div class="ttname"><a href="class_d_psim_1_1_simulation.html#ac3489f2a307ee9f63c5e778b13402241">DPsim::Simulation::Simulation</a></div><div class="ttdeci">Simulation(String name, CommandLineArgs &amp;args)</div><div class="ttdoc">Creates simulation with name and CommandLineArgs.</div><div class="ttdef"><b>Definition</b> <a href="_simulation_8cpp_source.html#l00051">Simulation.cpp:51</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_simulation_html_ae5c367f87c0b5dc9740bc6d00e44e72c"><div class="ttname"><a href="class_d_psim_1_1_simulation.html#ae5c367f87c0b5dc9740bc6d00e44e72c">DPsim::Simulation::run</a></div><div class="ttdeci">void run()</div><div class="ttdoc">Run simulation until total time is elapsed.</div><div class="ttdef"><b>Definition</b> <a href="_simulation_8cpp_source.html#l00465">Simulation.cpp:465</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_timer_html"><div class="ttname"><a href="class_d_psim_1_1_timer.html">DPsim::Timer</a></div><div class="ttdef"><b>Definition</b> <a href="_timer_8h_source.html#l00018">Timer.h:18</a></div></div>
 <div class="ttc" id="anamespace_d_psim_html"><div class="ttname"><a href="namespace_d_psim.html">DPsim</a></div><div class="ttdef"><b>Definition</b> <a href="_dense_l_u_adapter_8cpp_source.html#l00013">DenseLUAdapter.cpp:13</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a66e48a625a26fd3c1d2198148f9d59e9"><div class="ttname"><a href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">DPsim::String</a></div><div class="ttdeci">CPS::String String</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00020">Definitions.h:20</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a6a29611b9912f8abc0545523b3f84f8c"><div class="ttname"><a href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">DPsim::Int</a></div><div class="ttdeci">CPS::Int Int</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00022">Definitions.h:22</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li><li class="navelem"><a class="el" href="_real_time_simulation_8h.html">RealTimeSimulation.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

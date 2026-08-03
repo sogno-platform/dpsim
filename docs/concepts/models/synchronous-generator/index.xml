@@ -1,0 +1,116 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DPsim – Synchronous Generator</title><link>https://sogno.energy/dpsim/docs/concepts/models/synchronous-generator/</link><description>Recent content in Synchronous Generator on DPsim</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Wed, 18 Mar 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://sogno.energy/dpsim/docs/concepts/models/synchronous-generator/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Reduced Order Machine Models</title><link>https://sogno.energy/dpsim/docs/concepts/models/synchronous-generator/reduced-order/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/models/synchronous-generator/reduced-order/</guid><description>
+&lt;p>The full dq0 machine keeps every rotor winding as a state. Reduced order models keep the rotor
+flux linkages that matter on the timescale of interest and represent the rest algebraically, which
+removes the fastest states and lets the machine be stepped at the same rate as the network.&lt;/p>
+&lt;p>This page derives the equations. Nothing here depends on how they are arranged in software.&lt;/p>
+&lt;h2 id="per-unit-system-and-operational-parameters">Per unit system and operational parameters&lt;/h2>
+&lt;p>All quantities are in the reciprocal per unit system referred to the direct axis mutual
+inductance [&lt;a href="#Kundur1994">Kundur1994&lt;/a>]. With rated apparent power $S_n$ and rated line to line
+voltage $V_n$ as the stator base, the base peak phase voltage, base current and base impedance are&lt;/p>
+&lt;div class="math">$$V_{base} = \frac{\sqrt{2}}{\sqrt{3}} V_n, \qquad
+I_{base} = \frac{S_n}{\frac{3}{2} V_{base}}, \qquad
+Z_{base} = \frac{V_n}{S_n / V_n}.$$&lt;/div>&lt;p>The machine is described by operational parameters rather than by winding data: the synchronous
+inductances $L_d$ and $L_q$, the transient inductances $L_d&amp;rsquo;$ and $L_q&amp;rsquo;$, the subtransient
+inductances $L_d&amp;rsquo;&amp;rsquo;$ and $L_q&amp;rsquo;&amp;rsquo;$, the corresponding open circuit time constants $T_{d0}&amp;rsquo;$,
+$T_{q0}&amp;rsquo;$, $T_{d0}&amp;rsquo;&amp;rsquo;$, $T_{q0}&amp;rsquo;&amp;rsquo;$, and the inertia constant $H$. A sixth parameter $T_{aa}$, the
+armature to field coupling time constant, distinguishes the two sixth order variants.&lt;/p>
+&lt;h2 id="which-states-each-order-retains">Which states each order retains&lt;/h2>
+&lt;p>The state variables are the voltages behind the transient and subtransient reactances,
+$E_d&amp;rsquo;$, $E_q&amp;rsquo;$, $E_d&amp;rsquo;&amp;rsquo;$ and $E_q&amp;rsquo;&amp;rsquo;$, together with the two mechanical states. They are defined
+from the terminal quantities by&lt;/p>
+&lt;div class="math">$$E_d' = V_d - L_q' I_q, \qquad E_q' = V_q + L_d' I_d,$$&lt;/div>&lt;p>and analogously for the subtransient pair with $L_d&amp;rsquo;&amp;rsquo;$ and $L_q&amp;rsquo;&amp;rsquo;$.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Order&lt;/th>
+&lt;th>Electrical states&lt;/th>
+&lt;th>Physical content&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>3&lt;/td>
+&lt;td>$E_q'$&lt;/td>
+&lt;td>Field winding only; the q axis rotor is neglected.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>4&lt;/td>
+&lt;td>$E_d&amp;rsquo;$, $E_q'$&lt;/td>
+&lt;td>Field winding and one q axis damper.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>5&lt;/td>
+&lt;td>$E_q&amp;rsquo;$, $E_d&amp;rsquo;&amp;rsquo;$, $E_q&amp;rsquo;'$&lt;/td>
+&lt;td>Adds both subtransient windings, no q axis transient state.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>6a&lt;/td>
+&lt;td>$E_d&amp;rsquo;$, $E_q&amp;rsquo;$, $E_d&amp;rsquo;&amp;rsquo;$, $E_q&amp;rsquo;'$&lt;/td>
+&lt;td>Full transient and subtransient set, with $T_{aa} \neq 0$.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>6b&lt;/td>
+&lt;td>$E_d&amp;rsquo;$, $E_q&amp;rsquo;$, $E_d&amp;rsquo;&amp;rsquo;$, $E_q&amp;rsquo;'$&lt;/td>
+&lt;td>Same states with $T_{aa} = 0$.&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>Every order carries the same two mechanical states, so the third order model has five states in
+total and the sixth order models have eight.&lt;/p>
+&lt;h2 id="voltage-behind-reactance-form">Voltage behind reactance form&lt;/h2>
+&lt;p>Written directly, the stator equations couple the machine currents to the network currents, and the
+machine inductances appear in the axis frame while the network is solved in the phase frame. The
+voltage behind reactance form removes that coupling: the machine is expressed as an internal
+voltage in series with a reactance that is constant in the axis frame, so the only quantity that
+changes between steps is the internal voltage.&lt;/p>
+&lt;p>The internal voltage is not a free variable. Applying the trapezoidal rule to the rotor flux
+equations over one step $\Delta t$ gives it as a recursion in quantities already known at the start
+of the step. For the transient states,&lt;/p>
+&lt;div class="math">$$E_{h,d} = A_d' \, I_q + B_d' \, E_d', \qquad
+E_{h,q} = A_q' \, I_d + B_q' \, E_q' + D_q' \left( E_{f}[k-1] + E_{f}[k] \right),$$&lt;/div>&lt;p>where $E_f$ is the field voltage supplied by the excitation system. The coefficients follow from
+the trapezoidal integration and depend only on the parameters and the step size:&lt;/p>
+&lt;div class="math">$$A_d' = \frac{\Delta t \, Z_d'}{2 T_{q0}' + \Delta t}, \qquad
+B_d' = \frac{2 T_{q0}' - \Delta t}{2 T_{q0}' + \Delta t},$$&lt;/div>
+&lt;div class="math">$$A_q' = \frac{-\Delta t \, Z_q'}{2 T_{d0}' + \Delta t}, \qquad
+B_q' = \frac{2 T_{d0}' - \Delta t}{2 T_{d0}' + \Delta t}, \qquad
+D_q' = \frac{\Delta t \left( 1 - T_f \right)}{2 T_{d0}' + \Delta t}.$$&lt;/div>&lt;p>The reactance differences are $Z_q&amp;rsquo; = L_d - L_d&amp;rsquo; - Y_d$ and $Z_d&amp;rsquo; = L_q - L_q&amp;rsquo; - Y_q$. For the
+orders without subtransient states $Y_d = Y_q = 0$ and $T_f = 0$. For the sixth order variant with
+armature coupling,&lt;/p>
+&lt;div class="math">$$Y_d = \frac{T_{d0}''}{T_{d0}'} \frac{L_d''}{L_d'} \left( L_d - L_d' \right), \qquad
+Y_q = \frac{T_{q0}''}{T_{q0}'} \frac{L_q''}{L_q'} \left( L_q - L_q' \right), \qquad
+T_f = \frac{T_{aa}}{T_{d0}'}.$$&lt;/div>&lt;p>The subtransient states obey a recursion of the same shape with $T_{d0}&amp;rsquo;&amp;rsquo;$ and $T_{q0}&amp;rsquo;&amp;rsquo;$ in place
+of the transient time constants, and with the transient history entering as a forcing term.&lt;/p>
+&lt;p>Two properties of this form matter. The coefficients are computed once for a fixed step size, since
+they contain no state. And because $B_d&amp;rsquo;$ and $B_q&amp;rsquo;$ are the trapezoidal amplification factors
+$(2T - \Delta t)/(2T + \Delta t)$, they lie strictly inside the unit interval for any positive time
+constant, so the flux recursion is unconditionally stable regardless of step size.&lt;/p>
+&lt;h2 id="mechanical-equations">Mechanical equations&lt;/h2>
+&lt;p>The rotor obeys the swing equation in per unit,&lt;/p>
+&lt;div class="math">$$2H \frac{d \omega_r}{dt} = T_m - T_e, \qquad \frac{d \theta}{dt} = \omega_{base} \, \omega_r,$$&lt;/div>&lt;p>with the electrical torque taken from the axis frame quantities as
+$T_e = V_d I_d + V_q I_q$. The load angle follows from the initial operating point as the phase of
+$V + j L_q I$, which is the standard construction of the q axis position from terminal conditions.&lt;/p>
+&lt;h2 id="solution-schemes">Solution schemes&lt;/h2>
+&lt;p>The recursion above evaluates the internal voltage from quantities at the previous step, so the
+machine and the network are solved once per step in sequence. Two refinements exist for cases where
+that single pass is not accurate enough.&lt;/p>
+&lt;p>The predictor corrector method takes the single pass result as a prediction, re-evaluates the flux
+recursion using the corrected terminal quantities, and repeats until the change between successive
+passes falls below a tolerance. It converges to the solution of the implicit trapezoidal step
+rather than to its explicit approximation, at the cost of repeated network solutions.&lt;/p>
+&lt;p>The two stage predictor method splits the step differently: it advances the machine state on a
+predicted terminal voltage, then applies a single correction derived from the network solution,
+without iterating to convergence. It costs one extra network solve per step and removes most of the
+one step delay error.&lt;/p>
+&lt;p>Both are schemes for solving the same equations. They do not change the model order or the retained
+states.&lt;/p>
+&lt;h2 id="validity">Validity&lt;/h2>
+&lt;p>The reduced order models assume the stator transients are fast enough to be neglected, so the
+stator is treated as algebraic. This is the assumption that makes the model valid for
+electromechanical studies and invalid where stator dynamics matter, such as during the first cycles
+of a close-in fault or for subsynchronous interaction. Neglecting the q axis rotor entirely, as the
+third order model does, additionally removes damping that is physically present, so a third order
+machine oscillates more than the same machine represented at fourth order.&lt;/p>
+&lt;h2 id="references">References&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a name="Kundur1994">&lt;/a>[Kundur1994] P. Kundur, &lt;em>Power System Stability and Control&lt;/em>. New York: McGraw-Hill, 1994. Source of the reciprocal per unit system and of the operational parameter definitions used throughout this page.&lt;/li>
+&lt;/ul></description></item></channel></rss>

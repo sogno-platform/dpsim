@@ -77,7 +77,7 @@
 <g id="Node000004" class="node">
 <title>Node4</title>
 <g id="a_Node000004"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="267,-50.75 152,-50.75 152,0 267,0 267,-50.75"/>
+<polygon fill="white" stroke="#666666" points="267,-50.75 152,-50.75 152,0 267,0 267,-50.75"/>
 <text text-anchor="start" x="160" y="-37.25" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="160" y="-23" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="209.5" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Matrix &gt; &gt;</text>
@@ -107,7 +107,7 @@
 <g id="Node000006" class="node">
 <title>Node6</title>
 <g id="a_Node000006"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="115,-89.75 0,-89.75 0,-39 115,-39 115,-89.75"/>
+<polygon fill="white" stroke="#666666" points="115,-89.75 0,-89.75 0,-39 115,-39 115,-89.75"/>
 <text text-anchor="start" x="8" y="-76.25" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="8" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="57.5" y="-47.75" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; T &gt; &gt;</text>

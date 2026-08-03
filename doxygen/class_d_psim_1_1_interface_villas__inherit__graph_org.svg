@@ -21,7 +21,7 @@
 <g id="Node000008" class="node">
 <title>Node8</title>
 <g id="a_Node000008"><a xlink:href="class_py_interface_villas.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="266,-22.25 172.75,-22.25 172.75,0 266,0 266,-22.25"/>
+<polygon fill="white" stroke="#666666" points="266,-22.25 172.75,-22.25 172.75,0 266,0 266,-22.25"/>
 <text text-anchor="middle" x="219.38" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">PyInterfaceVillas</text>
 </a>
 </g>
@@ -39,7 +39,7 @@
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="class_d_psim_1_1_interface_queued.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="236.5,-140.75 104.25,-140.75 104.25,-118.5 236.5,-118.5 236.5,-140.75"/>
+<polygon fill="white" stroke="#666666" points="236.5,-140.75 104.25,-140.75 104.25,-118.5 236.5,-118.5 236.5,-140.75"/>
 <text text-anchor="middle" x="170.38" y="-127.25" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::InterfaceQueued</text>
 </a>
 </g>
@@ -57,7 +57,7 @@
 <g id="Node000003" class="node">
 <title>Node3</title>
 <g id="a_Node000003"><a xlink:href="class_d_psim_1_1_interface.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="135.75,-235.5 41,-235.5 41,-213.25 135.75,-213.25 135.75,-235.5"/>
+<polygon fill="white" stroke="#666666" points="135.75,-235.5 41,-235.5 41,-213.25 135.75,-213.25 135.75,-235.5"/>
 <text text-anchor="middle" x="88.38" y="-222" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::Interface</text>
 </a>
 </g>

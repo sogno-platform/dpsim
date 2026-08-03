@@ -1,0 +1,26 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DPsim – Tutorials</title><link>https://sogno.energy/dpsim/docs/tutorials/</link><description>Recent content in Tutorials on DPsim</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://sogno.energy/dpsim/docs/tutorials/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Python Tutorials</title><link>https://sogno.energy/dpsim/docs/tutorials/python/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/tutorials/python/</guid><description>
+&lt;p>Each tutorial starts from the one before and adds exactly one new thing. Work through them in order;
+each is a complete runnable script rather than a fragment.&lt;/p>
+&lt;ol>
+&lt;li>&lt;a href="https://sogno.energy/dpsim/docs/tutorials/python/first-simulation/">Your first simulation&lt;/a>. A source and a resistor. The shape of
+a script, and how to read a result back.&lt;/li>
+&lt;li>&lt;a href="https://sogno.energy/dpsim/docs/tutorials/python/adding-dynamics/">Adding dynamics&lt;/a>. An inductor, the transient it produces, and
+how to choose a time step.&lt;/li>
+&lt;li>&lt;a href="https://sogno.energy/dpsim/docs/tutorials/python/two-bus-network/">A network, and where it starts from&lt;/a>. A line between two
+buses, and initializing the dynamic run from a powerflow.&lt;/li>
+&lt;li>&lt;a href="https://sogno.energy/dpsim/docs/tutorials/python/applying-a-fault/">Applying a fault&lt;/a>. Switching during a run, and why clearing
+a fault needs more care than applying one.&lt;/li>
+&lt;li>&lt;a href="https://sogno.energy/dpsim/docs/tutorials/python/comparing-domains/">The same circuit in two domains&lt;/a>. Waveforms against envelopes,
+and what the envelope buys.&lt;/li>
+&lt;li>&lt;a href="https://sogno.energy/dpsim/docs/tutorials/python/a-machine/">Adding a machine&lt;/a>. A synchronous generator, initializing it correctly,
+and what the model order changes.&lt;/li>
+&lt;li>&lt;a href="https://sogno.energy/dpsim/docs/tutorials/python/exchanging-data/">Exchanging data with another tool&lt;/a>. Handing a value out of a
+running simulation, and where the boundary lies.&lt;/li>
+&lt;/ol>
+&lt;p>A rung on converters and their control belongs between the last two and is not written yet.&lt;/p>
+&lt;h2 id="what-you-need">What you need&lt;/h2>
+&lt;p>DPsim importable from Python. If it is not, see
+&lt;a href="https://sogno.energy/dpsim/docs/user-guide/install/">install&lt;/a> or
+&lt;a href="https://sogno.energy/dpsim/docs/developer-guide/architecture-and-conventions/build/">build&lt;/a>.&lt;/p>
+&lt;p>Reading results back and plotting them uses the data processing package the example notebooks also
+use. It is separate from DPsim and is imported as &lt;code>villas.dataprocessing&lt;/code>.&lt;/p></description></item></channel></rss>

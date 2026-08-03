@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_c_p_s_1_1_math.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>CPS</b></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_math.html">Math</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
@@ -95,122 +103,124 @@ $(function(){ initResizable(false); });
   <div class="headertitle"><div class="title">CPS::Math Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="_math_utils_8h_source.html">MathUtils.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a9c3dbc3fcd1ce9eb3266db93b4966b58" id="r_a9c3dbc3fcd1ce9eb3266db93b4966b58"><td class="memItemLeft" align="right" valign="top">typedef Real(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c3dbc3fcd1ce9eb3266db93b4966b58">DeriveFnPtr</a>) (Matrix inputs)</td></tr>
+<tr class="memitem:a9c3dbc3fcd1ce9eb3266db93b4966b58" id="r_a9c3dbc3fcd1ce9eb3266db93b4966b58"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c3dbc3fcd1ce9eb3266db93b4966b58">DeriveFnPtr</a>) (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> inputs)</td></tr>
 <tr class="separator:a9c3dbc3fcd1ce9eb3266db93b4966b58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:afa004eafcd5d46b69897008d4f3fad86" id="r_afa004eafcd5d46b69897008d4f3fad86"><td class="memItemLeft" align="right" valign="top">static Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afa004eafcd5d46b69897008d4f3fad86">radtoDeg</a> (Real rad)</td></tr>
+<tr class="memitem:afa004eafcd5d46b69897008d4f3fad86" id="r_afa004eafcd5d46b69897008d4f3fad86"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afa004eafcd5d46b69897008d4f3fad86">radtoDeg</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> rad)</td></tr>
 <tr class="separator:afa004eafcd5d46b69897008d4f3fad86"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3635bac389d718d5a2379e19e82624df" id="r_a3635bac389d718d5a2379e19e82624df"><td class="memItemLeft" align="right" valign="top">static Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3635bac389d718d5a2379e19e82624df">degToRad</a> (Real deg)</td></tr>
+<tr class="memitem:a3635bac389d718d5a2379e19e82624df" id="r_a3635bac389d718d5a2379e19e82624df"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3635bac389d718d5a2379e19e82624df">degToRad</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> deg)</td></tr>
 <tr class="separator:a3635bac389d718d5a2379e19e82624df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e824e939eb34621c44a630baa821b29" id="r_a9e824e939eb34621c44a630baa821b29"><td class="memItemLeft" align="right" valign="top">static Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9e824e939eb34621c44a630baa821b29">phase</a> (Complex value)</td></tr>
+<tr class="memitem:a9e824e939eb34621c44a630baa821b29" id="r_a9e824e939eb34621c44a630baa821b29"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9e824e939eb34621c44a630baa821b29">phase</a> (<a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> value)</td></tr>
 <tr class="separator:a9e824e939eb34621c44a630baa821b29"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ad2fde4fa185dcde2c973c5406f3142" id="r_a9ad2fde4fa185dcde2c973c5406f3142"><td class="memItemLeft" align="right" valign="top">static Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9ad2fde4fa185dcde2c973c5406f3142">phaseDeg</a> (Complex value)</td></tr>
+<tr class="memitem:a9ad2fde4fa185dcde2c973c5406f3142" id="r_a9ad2fde4fa185dcde2c973c5406f3142"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9ad2fde4fa185dcde2c973c5406f3142">phaseDeg</a> (<a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> value)</td></tr>
 <tr class="separator:a9ad2fde4fa185dcde2c973c5406f3142"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad778408f22b79894bf80a3b719c98b04" id="r_ad778408f22b79894bf80a3b719c98b04"><td class="memItemLeft" align="right" valign="top">static Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad778408f22b79894bf80a3b719c98b04">abs</a> (Complex value)</td></tr>
+<tr class="memitem:ad778408f22b79894bf80a3b719c98b04" id="r_ad778408f22b79894bf80a3b719c98b04"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad778408f22b79894bf80a3b719c98b04">abs</a> (<a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> value)</td></tr>
 <tr class="separator:ad778408f22b79894bf80a3b719c98b04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add459a3b840681bf42d4c6e2b614851c" id="r_add459a3b840681bf42d4c6e2b614851c"><td class="memItemLeft" align="right" valign="top">static Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#add459a3b840681bf42d4c6e2b614851c">abs</a> (const MatrixComp &amp;mat)</td></tr>
+<tr class="memitem:add459a3b840681bf42d4c6e2b614851c" id="r_add459a3b840681bf42d4c6e2b614851c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#add459a3b840681bf42d4c6e2b614851c">abs</a> (const <a class="el" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a> &amp;mat)</td></tr>
 <tr class="separator:add459a3b840681bf42d4c6e2b614851c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1f2b82af2dfcf3adaaff6bf26ddcfed" id="r_aa1f2b82af2dfcf3adaaff6bf26ddcfed"><td class="memItemLeft" align="right" valign="top">static Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa1f2b82af2dfcf3adaaff6bf26ddcfed">phase</a> (const MatrixComp &amp;mat)</td></tr>
+<tr class="memitem:aa1f2b82af2dfcf3adaaff6bf26ddcfed" id="r_aa1f2b82af2dfcf3adaaff6bf26ddcfed"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa1f2b82af2dfcf3adaaff6bf26ddcfed">phase</a> (const <a class="el" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a> &amp;mat)</td></tr>
 <tr class="separator:aa1f2b82af2dfcf3adaaff6bf26ddcfed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a008cb55a3259abba4d234d7eeb9cb497" id="r_a008cb55a3259abba4d234d7eeb9cb497"><td class="memItemLeft" align="right" valign="top">static Complex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a008cb55a3259abba4d234d7eeb9cb497">polar</a> (Real abs, Real phase)</td></tr>
+<tr class="memitem:a008cb55a3259abba4d234d7eeb9cb497" id="r_a008cb55a3259abba4d234d7eeb9cb497"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a008cb55a3259abba4d234d7eeb9cb497">polar</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="el" href="#ad778408f22b79894bf80a3b719c98b04">abs</a>, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="el" href="#a9e824e939eb34621c44a630baa821b29">phase</a>)</td></tr>
 <tr class="separator:a008cb55a3259abba4d234d7eeb9cb497"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b14583d157475ffbdba9a701a1104b9" id="r_a1b14583d157475ffbdba9a701a1104b9"><td class="memItemLeft" align="right" valign="top">static Complex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1b14583d157475ffbdba9a701a1104b9">polarDeg</a> (Real abs, Real phase)</td></tr>
+<tr class="memitem:a1b14583d157475ffbdba9a701a1104b9" id="r_a1b14583d157475ffbdba9a701a1104b9"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1b14583d157475ffbdba9a701a1104b9">polarDeg</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="el" href="#ad778408f22b79894bf80a3b719c98b04">abs</a>, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="el" href="#a9e824e939eb34621c44a630baa821b29">phase</a>)</td></tr>
 <tr class="separator:a1b14583d157475ffbdba9a701a1104b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7aee9bf67780737a250b591ec9a978c5" id="r_a7aee9bf67780737a250b591ec9a978c5"><td class="memTemplParams" colspan="2">template&lt;typename DerivedA, typename DerivedB&gt; </td></tr>
 <tr class="memitem:a7aee9bf67780737a250b591ec9a978c5"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a7aee9bf67780737a250b591ec9a978c5">elementwiseProduct</a> (const Eigen::MatrixBase&lt; DerivedA &gt; &amp;a, const Eigen::MatrixBase&lt; DerivedB &gt; &amp;b)</td></tr>
 <tr class="memdesc:a7aee9bf67780737a250b591ec9a978c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Elementwise product of two same-shaped Eigen expressions.  <br /></td></tr>
 <tr class="separator:a7aee9bf67780737a250b591ec9a978c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acec5cd79d3c43a7fce3b065a987fba44" id="r_acec5cd79d3c43a7fce3b065a987fba44"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acec5cd79d3c43a7fce3b065a987fba44">isFinite</a> (Real value)</td></tr>
+<tr class="memitem:acec5cd79d3c43a7fce3b065a987fba44" id="r_acec5cd79d3c43a7fce3b065a987fba44"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acec5cd79d3c43a7fce3b065a987fba44">isFinite</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> value)</td></tr>
 <tr class="separator:acec5cd79d3c43a7fce3b065a987fba44"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5655797beb8514b5a14758ef2f8bc646" id="r_a5655797beb8514b5a14758ef2f8bc646"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5655797beb8514b5a14758ef2f8bc646">isFinite</a> (Complex value)</td></tr>
+<tr class="memitem:a5655797beb8514b5a14758ef2f8bc646" id="r_a5655797beb8514b5a14758ef2f8bc646"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5655797beb8514b5a14758ef2f8bc646">isFinite</a> (<a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> value)</td></tr>
 <tr class="separator:a5655797beb8514b5a14758ef2f8bc646"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4df43f5e1f75bc5040ea7e05491e2d9f" id="r_a4df43f5e1f75bc5040ea7e05491e2d9f"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4df43f5e1f75bc5040ea7e05491e2d9f">setVectorElement</a> (Matrix &amp;mat, Matrix::Index row, Complex value, Int maxFreq=1, Int freqIdx=0, Matrix::Index colOffset=0)</td></tr>
+<tr class="memitem:a4df43f5e1f75bc5040ea7e05491e2d9f" id="r_a4df43f5e1f75bc5040ea7e05491e2d9f"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4df43f5e1f75bc5040ea7e05491e2d9f">setVectorElement</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;mat, Matrix::Index row, <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> value, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> maxFreq=1, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> freqIdx=0, Matrix::Index colOffset=0)</td></tr>
 <tr class="separator:a4df43f5e1f75bc5040ea7e05491e2d9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6fc51d31c7607f2662aae93f9adeb6b5" id="r_a6fc51d31c7607f2662aae93f9adeb6b5"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6fc51d31c7607f2662aae93f9adeb6b5">addToVectorElement</a> (Matrix &amp;mat, Matrix::Index row, Complex value, Int maxFreq=1, Int freqIdx=0)</td></tr>
+<tr class="memitem:a6fc51d31c7607f2662aae93f9adeb6b5" id="r_a6fc51d31c7607f2662aae93f9adeb6b5"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6fc51d31c7607f2662aae93f9adeb6b5">addToVectorElement</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;mat, Matrix::Index row, <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> value, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> maxFreq=1, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> freqIdx=0)</td></tr>
 <tr class="separator:a6fc51d31c7607f2662aae93f9adeb6b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a32bd53e58cb82f9dd16fccc7a858bf0a" id="r_a32bd53e58cb82f9dd16fccc7a858bf0a"><td class="memItemLeft" align="right" valign="top">static Complex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a32bd53e58cb82f9dd16fccc7a858bf0a">complexFromVectorElement</a> (const Matrix &amp;mat, Matrix::Index row, Int maxFreq=1, Int freqIdx=0)</td></tr>
+<tr class="memitem:a32bd53e58cb82f9dd16fccc7a858bf0a" id="r_a32bd53e58cb82f9dd16fccc7a858bf0a"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a32bd53e58cb82f9dd16fccc7a858bf0a">complexFromVectorElement</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;mat, Matrix::Index row, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> maxFreq=1, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> freqIdx=0)</td></tr>
 <tr class="separator:a32bd53e58cb82f9dd16fccc7a858bf0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ff31fbed8982c83096eeca81b5b7814" id="r_a9ff31fbed8982c83096eeca81b5b7814"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9ff31fbed8982c83096eeca81b5b7814">addToVectorElement</a> (Matrix &amp;mat, Matrix::Index row, Real value)</td></tr>
+<tr class="memitem:a9ff31fbed8982c83096eeca81b5b7814" id="r_a9ff31fbed8982c83096eeca81b5b7814"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9ff31fbed8982c83096eeca81b5b7814">addToVectorElement</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;mat, Matrix::Index row, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> value)</td></tr>
 <tr class="separator:a9ff31fbed8982c83096eeca81b5b7814"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85f687f05f297bca630b2db153ab5630" id="r_a85f687f05f297bca630b2db153ab5630"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a85f687f05f297bca630b2db153ab5630">setVectorElement</a> (Matrix &amp;mat, Matrix::Index row, Real value)</td></tr>
+<tr class="memitem:a85f687f05f297bca630b2db153ab5630" id="r_a85f687f05f297bca630b2db153ab5630"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a85f687f05f297bca630b2db153ab5630">setVectorElement</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;mat, Matrix::Index row, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> value)</td></tr>
 <tr class="separator:a85f687f05f297bca630b2db153ab5630"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a473ad66fcb23f3439e5ed4faa1e45c19" id="r_a473ad66fcb23f3439e5ed4faa1e45c19"><td class="memItemLeft" align="right" valign="top">static Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a473ad66fcb23f3439e5ed4faa1e45c19">realFromVectorElement</a> (const Matrix &amp;mat, Matrix::Index row)</td></tr>
+<tr class="memitem:a473ad66fcb23f3439e5ed4faa1e45c19" id="r_a473ad66fcb23f3439e5ed4faa1e45c19"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a473ad66fcb23f3439e5ed4faa1e45c19">realFromVectorElement</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;mat, Matrix::Index row)</td></tr>
 <tr class="separator:a473ad66fcb23f3439e5ed4faa1e45c19"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa797c9ff51137c745131c459ba441754" id="r_aa797c9ff51137c745131c459ba441754"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa797c9ff51137c745131c459ba441754">setMatrixElement</a> (SparseMatrixRow &amp;mat, Matrix::Index row, Matrix::Index column, Complex value, Int maxFreq=1, Int freqIdx=0)</td></tr>
+<tr class="memitem:aa797c9ff51137c745131c459ba441754" id="r_aa797c9ff51137c745131c459ba441754"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa797c9ff51137c745131c459ba441754">setMatrixElement</a> (<a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;mat, Matrix::Index row, Matrix::Index column, <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> value, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> maxFreq=1, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> freqIdx=0)</td></tr>
 <tr class="separator:aa797c9ff51137c745131c459ba441754"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad98d7e8ddd1b77b37f273165e9109fc4" id="r_ad98d7e8ddd1b77b37f273165e9109fc4"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad98d7e8ddd1b77b37f273165e9109fc4">addToMatrixElement</a> (SparseMatrixRow &amp;mat, Matrix::Index row, Matrix::Index column, Complex value, Int maxFreq=1, Int freqIdx=0)</td></tr>
+<tr class="memitem:ad98d7e8ddd1b77b37f273165e9109fc4" id="r_ad98d7e8ddd1b77b37f273165e9109fc4"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad98d7e8ddd1b77b37f273165e9109fc4">addToMatrixElement</a> (<a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;mat, Matrix::Index row, Matrix::Index column, <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> value, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> maxFreq=1, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> freqIdx=0)</td></tr>
 <tr class="separator:ad98d7e8ddd1b77b37f273165e9109fc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8914e2fe1ae566ee360c6da692ebaf74" id="r_a8914e2fe1ae566ee360c6da692ebaf74"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8914e2fe1ae566ee360c6da692ebaf74">addToMatrixElement</a> (SparseMatrixRow &amp;mat, Matrix::Index row, Matrix::Index column, Matrix value, Int maxFreq=1, Int freqIdx=0)</td></tr>
+<tr class="memitem:a8914e2fe1ae566ee360c6da692ebaf74" id="r_a8914e2fe1ae566ee360c6da692ebaf74"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8914e2fe1ae566ee360c6da692ebaf74">addToMatrixElement</a> (<a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;mat, Matrix::Index row, Matrix::Index column, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> value, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> maxFreq=1, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> freqIdx=0)</td></tr>
 <tr class="separator:a8914e2fe1ae566ee360c6da692ebaf74"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44f46d06e9a1201c4912751961e5284e" id="r_a44f46d06e9a1201c4912751961e5284e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a44f46d06e9a1201c4912751961e5284e">setMatrixElement</a> (SparseMatrixRow &amp;mat, Matrix::Index row, Matrix::Index column, Real value)</td></tr>
+<tr class="memitem:a44f46d06e9a1201c4912751961e5284e" id="r_a44f46d06e9a1201c4912751961e5284e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a44f46d06e9a1201c4912751961e5284e">setMatrixElement</a> (<a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;mat, Matrix::Index row, Matrix::Index column, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> value)</td></tr>
 <tr class="separator:a44f46d06e9a1201c4912751961e5284e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9cca8797b98cfc70e4eb7a0ecc5ce59" id="r_aa9cca8797b98cfc70e4eb7a0ecc5ce59"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9cca8797b98cfc70e4eb7a0ecc5ce59">addToMatrixElement</a> (SparseMatrixRow &amp;mat, std::vector&lt; UInt &gt; rows, std::vector&lt; UInt &gt; columns, Complex value)</td></tr>
+<tr class="memitem:aa9cca8797b98cfc70e4eb7a0ecc5ce59" id="r_aa9cca8797b98cfc70e4eb7a0ecc5ce59"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9cca8797b98cfc70e4eb7a0ecc5ce59">addToMatrixElement</a> (<a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;mat, std::vector&lt; <a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> &gt; rows, std::vector&lt; <a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> &gt; columns, <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> value)</td></tr>
 <tr class="separator:aa9cca8797b98cfc70e4eb7a0ecc5ce59"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8cb37d1d16c13279777b4e527aea259e" id="r_a8cb37d1d16c13279777b4e527aea259e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8cb37d1d16c13279777b4e527aea259e">addToMatrixElement</a> (SparseMatrixRow &amp;mat, Matrix::Index row, Matrix::Index column, Real value)</td></tr>
+<tr class="memitem:a8cb37d1d16c13279777b4e527aea259e" id="r_a8cb37d1d16c13279777b4e527aea259e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8cb37d1d16c13279777b4e527aea259e">addToMatrixElement</a> (<a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;mat, Matrix::Index row, Matrix::Index column, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> value)</td></tr>
 <tr class="separator:a8cb37d1d16c13279777b4e527aea259e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a04811419e589ef49e2d7e0e16fb1647b" id="r_a04811419e589ef49e2d7e0e16fb1647b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a04811419e589ef49e2d7e0e16fb1647b">addToMatrixElement</a> (SparseMatrixRow &amp;mat, std::vector&lt; UInt &gt; rows, std::vector&lt; UInt &gt; columns, Real value)</td></tr>
+<tr class="memitem:a04811419e589ef49e2d7e0e16fb1647b" id="r_a04811419e589ef49e2d7e0e16fb1647b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a04811419e589ef49e2d7e0e16fb1647b">addToMatrixElement</a> (<a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;mat, std::vector&lt; <a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> &gt; rows, std::vector&lt; <a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> &gt; columns, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> value)</td></tr>
 <tr class="separator:a04811419e589ef49e2d7e0e16fb1647b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec57285d288acb6921cd3a912a82bc89" id="r_aec57285d288acb6921cd3a912a82bc89"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aec57285d288acb6921cd3a912a82bc89">invertMatrix</a> (const Matrix &amp;mat, Matrix &amp;matInv)</td></tr>
+<tr class="memitem:aec57285d288acb6921cd3a912a82bc89" id="r_aec57285d288acb6921cd3a912a82bc89"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aec57285d288acb6921cd3a912a82bc89">invertMatrix</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;mat, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;matInv)</td></tr>
 <tr class="separator:aec57285d288acb6921cd3a912a82bc89"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afcb0ad38959e35247f781f7db5b27d71" id="r_afcb0ad38959e35247f781f7db5b27d71"><td class="memItemLeft" align="right" valign="top">static Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afcb0ad38959e35247f781f7db5b27d71">StateSpaceTrapezoidal</a> (Matrix states, Matrix A, Matrix B, Real dt, Matrix u_new, Matrix u_old)</td></tr>
+<tr class="memitem:afcb0ad38959e35247f781f7db5b27d71" id="r_afcb0ad38959e35247f781f7db5b27d71"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afcb0ad38959e35247f781f7db5b27d71">StateSpaceTrapezoidal</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> states, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca7fc56270e7a70fa81a5935b72eacbe29">A</a>, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca9d5ed678fe57bcca610140957afab571">B</a>, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> dt, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> u_new, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> u_old)</td></tr>
 <tr class="separator:afcb0ad38959e35247f781f7db5b27d71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c5fcdb26152e2f656c71df02dcb6faf" id="r_a0c5fcdb26152e2f656c71df02dcb6faf"><td class="memItemLeft" align="right" valign="top">static Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0c5fcdb26152e2f656c71df02dcb6faf">StateSpaceTrapezoidal</a> (Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u_new, Matrix u_old)</td></tr>
+<tr class="memitem:a0c5fcdb26152e2f656c71df02dcb6faf" id="r_a0c5fcdb26152e2f656c71df02dcb6faf"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0c5fcdb26152e2f656c71df02dcb6faf">StateSpaceTrapezoidal</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> states, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca7fc56270e7a70fa81a5935b72eacbe29">A</a>, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca9d5ed678fe57bcca610140957afab571">B</a>, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca0d61f8370cad1d412f80b84d143e1257">C</a>, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> dt, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> u_new, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> u_old)</td></tr>
 <tr class="separator:a0c5fcdb26152e2f656c71df02dcb6faf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad93fe4fc808e2d1d54effb61bebe6cfc" id="r_ad93fe4fc808e2d1d54effb61bebe6cfc"><td class="memItemLeft" align="right" valign="top">static Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad93fe4fc808e2d1d54effb61bebe6cfc">StateSpaceTrapezoidal</a> (Matrix states, Matrix A, Matrix B, Real dt, Matrix u)</td></tr>
+<tr class="memitem:ad93fe4fc808e2d1d54effb61bebe6cfc" id="r_ad93fe4fc808e2d1d54effb61bebe6cfc"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad93fe4fc808e2d1d54effb61bebe6cfc">StateSpaceTrapezoidal</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> states, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca7fc56270e7a70fa81a5935b72eacbe29">A</a>, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca9d5ed678fe57bcca610140957afab571">B</a>, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> dt, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> u)</td></tr>
 <tr class="separator:ad93fe4fc808e2d1d54effb61bebe6cfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a14df1b40d5149eca18dd5751ad9609bd" id="r_a14df1b40d5149eca18dd5751ad9609bd"><td class="memItemLeft" align="right" valign="top">static Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a14df1b40d5149eca18dd5751ad9609bd">StateSpaceTrapezoidal</a> (Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u)</td></tr>
+<tr class="memitem:a14df1b40d5149eca18dd5751ad9609bd" id="r_a14df1b40d5149eca18dd5751ad9609bd"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a14df1b40d5149eca18dd5751ad9609bd">StateSpaceTrapezoidal</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> states, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca7fc56270e7a70fa81a5935b72eacbe29">A</a>, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca9d5ed678fe57bcca610140957afab571">B</a>, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca0d61f8370cad1d412f80b84d143e1257">C</a>, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> dt, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> u)</td></tr>
 <tr class="separator:a14df1b40d5149eca18dd5751ad9609bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac003a250ea1f052af33885bd0649bfa9" id="r_ac003a250ea1f052af33885bd0649bfa9"><td class="memItemLeft" align="right" valign="top">static Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac003a250ea1f052af33885bd0649bfa9">StateSpaceTrapezoidal</a> (Matrix states, Matrix A, Matrix input, Real dt)</td></tr>
+<tr class="memitem:ac003a250ea1f052af33885bd0649bfa9" id="r_ac003a250ea1f052af33885bd0649bfa9"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac003a250ea1f052af33885bd0649bfa9">StateSpaceTrapezoidal</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> states, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca7fc56270e7a70fa81a5935b72eacbe29">A</a>, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> input, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> dt)</td></tr>
 <tr class="separator:ac003a250ea1f052af33885bd0649bfa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb98ee5242e8e99514ffda67f2a66400" id="r_afb98ee5242e8e99514ffda67f2a66400"><td class="memItemLeft" align="right" valign="top">static Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afb98ee5242e8e99514ffda67f2a66400">StateSpaceTrapezoidal</a> (Real states, Real A, Real B, Real C, Real dt, Real u)</td></tr>
+<tr class="memitem:afb98ee5242e8e99514ffda67f2a66400" id="r_afb98ee5242e8e99514ffda67f2a66400"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afb98ee5242e8e99514ffda67f2a66400">StateSpaceTrapezoidal</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> states, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca7fc56270e7a70fa81a5935b72eacbe29">A</a>, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca9d5ed678fe57bcca610140957afab571">B</a>, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca0d61f8370cad1d412f80b84d143e1257">C</a>, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> dt, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> u)</td></tr>
 <tr class="separator:afb98ee5242e8e99514ffda67f2a66400"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1558030eb91c318959d84fe349a61b7a" id="r_a1558030eb91c318959d84fe349a61b7a"><td class="memItemLeft" align="right" valign="top">static Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1558030eb91c318959d84fe349a61b7a">StateSpaceTrapezoidal</a> (Real states, Real A, Real B, Real dt, Real u)</td></tr>
+<tr class="memitem:a1558030eb91c318959d84fe349a61b7a" id="r_a1558030eb91c318959d84fe349a61b7a"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1558030eb91c318959d84fe349a61b7a">StateSpaceTrapezoidal</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> states, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca7fc56270e7a70fa81a5935b72eacbe29">A</a>, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca9d5ed678fe57bcca610140957afab571">B</a>, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> dt, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> u)</td></tr>
 <tr class="separator:a1558030eb91c318959d84fe349a61b7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f18043c21af0fcce5bab172cb0431ec" id="r_a1f18043c21af0fcce5bab172cb0431ec"><td class="memItemLeft" align="right" valign="top">static Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1f18043c21af0fcce5bab172cb0431ec">StateSpaceEuler</a> (Matrix states, Matrix A, Matrix B, Real dt, Matrix u)</td></tr>
+<tr class="memitem:a1f18043c21af0fcce5bab172cb0431ec" id="r_a1f18043c21af0fcce5bab172cb0431ec"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1f18043c21af0fcce5bab172cb0431ec">StateSpaceEuler</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> states, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca7fc56270e7a70fa81a5935b72eacbe29">A</a>, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca9d5ed678fe57bcca610140957afab571">B</a>, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> dt, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> u)</td></tr>
 <tr class="separator:a1f18043c21af0fcce5bab172cb0431ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a190d6a399517a2b2fc65a799e71be7a3" id="r_a190d6a399517a2b2fc65a799e71be7a3"><td class="memItemLeft" align="right" valign="top">static Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a190d6a399517a2b2fc65a799e71be7a3">StateSpaceEuler</a> (Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u)</td></tr>
+<tr class="memitem:a190d6a399517a2b2fc65a799e71be7a3" id="r_a190d6a399517a2b2fc65a799e71be7a3"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a190d6a399517a2b2fc65a799e71be7a3">StateSpaceEuler</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> states, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca7fc56270e7a70fa81a5935b72eacbe29">A</a>, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca9d5ed678fe57bcca610140957afab571">B</a>, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca0d61f8370cad1d412f80b84d143e1257">C</a>, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> dt, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> u)</td></tr>
 <tr class="separator:a190d6a399517a2b2fc65a799e71be7a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8bf97fb242df292f0b3791ef3f037f51" id="r_a8bf97fb242df292f0b3791ef3f037f51"><td class="memItemLeft" align="right" valign="top">static Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8bf97fb242df292f0b3791ef3f037f51">StateSpaceEuler</a> (Matrix states, Matrix A, Matrix input, Real dt)</td></tr>
+<tr class="memitem:a8bf97fb242df292f0b3791ef3f037f51" id="r_a8bf97fb242df292f0b3791ef3f037f51"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8bf97fb242df292f0b3791ef3f037f51">StateSpaceEuler</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> states, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca7fc56270e7a70fa81a5935b72eacbe29">A</a>, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> input, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> dt)</td></tr>
 <tr class="separator:a8bf97fb242df292f0b3791ef3f037f51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac1f76a2465003fe661d30997a7c1af64" id="r_ac1f76a2465003fe661d30997a7c1af64"><td class="memItemLeft" align="right" valign="top">static Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac1f76a2465003fe661d30997a7c1af64">StateSpaceEuler</a> (Real states, Real A, Real B, Real dt, Real u)</td></tr>
+<tr class="memitem:ac1f76a2465003fe661d30997a7c1af64" id="r_ac1f76a2465003fe661d30997a7c1af64"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac1f76a2465003fe661d30997a7c1af64">StateSpaceEuler</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> states, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca7fc56270e7a70fa81a5935b72eacbe29">A</a>, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca9d5ed678fe57bcca610140957afab571">B</a>, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> dt, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> u)</td></tr>
 <tr class="separator:ac1f76a2465003fe661d30997a7c1af64"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6c825a537557ddadf275bd7e1546e3f" id="r_ad6c825a537557ddadf275bd7e1546e3f"><td class="memItemLeft" align="right" valign="top">static Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad6c825a537557ddadf275bd7e1546e3f">StateSpaceEuler</a> (Real states, Real A, Real B, Real C, Real dt, Real u)</td></tr>
+<tr class="memitem:ad6c825a537557ddadf275bd7e1546e3f" id="r_ad6c825a537557ddadf275bd7e1546e3f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad6c825a537557ddadf275bd7e1546e3f">StateSpaceEuler</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> states, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca7fc56270e7a70fa81a5935b72eacbe29">A</a>, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca9d5ed678fe57bcca610140957afab571">B</a>, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca0d61f8370cad1d412f80b84d143e1257">C</a>, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> dt, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> u)</td></tr>
 <tr class="separator:ad6c825a537557ddadf275bd7e1546e3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d9024f94dbee45b8f0d947a225a6c69" id="r_a4d9024f94dbee45b8f0d947a225a6c69"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d9024f94dbee45b8f0d947a225a6c69">calculateStateSpaceTrapezoidalMatrices</a> (const Matrix &amp;A, const Matrix &amp;B, const Matrix &amp;C, const Real &amp;dt, Matrix &amp;Ad, Matrix &amp;Bd, Matrix &amp;Cd)</td></tr>
+<tr class="memitem:a4d9024f94dbee45b8f0d947a225a6c69" id="r_a4d9024f94dbee45b8f0d947a225a6c69"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d9024f94dbee45b8f0d947a225a6c69">calculateStateSpaceTrapezoidalMatrices</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;<a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca7fc56270e7a70fa81a5935b72eacbe29">A</a>, const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;<a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca9d5ed678fe57bcca610140957afab571">B</a>, const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;<a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca0d61f8370cad1d412f80b84d143e1257">C</a>, const <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &amp;dt, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;Ad, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;Bd, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;Cd)</td></tr>
 <tr class="memdesc:a4d9024f94dbee45b8f0d947a225a6c69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the discretized state space matrices Ad, Bd, Cd using trapezoidal rule.  <br /></td></tr>
 <tr class="separator:a4d9024f94dbee45b8f0d947a225a6c69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2cb29a26667767e426f3a8260a82b9c7" id="r_a2cb29a26667767e426f3a8260a82b9c7"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2cb29a26667767e426f3a8260a82b9c7">calculateStateSpaceTrapezoidalMatrices</a> (const Matrix &amp;A, const Matrix &amp;B, const Real &amp;dt, Matrix &amp;Ad, Matrix &amp;Bd)</td></tr>
+<tr class="memitem:a2cb29a26667767e426f3a8260a82b9c7" id="r_a2cb29a26667767e426f3a8260a82b9c7"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2cb29a26667767e426f3a8260a82b9c7">calculateStateSpaceTrapezoidalMatrices</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;<a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca7fc56270e7a70fa81a5935b72eacbe29">A</a>, const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;<a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca9d5ed678fe57bcca610140957afab571">B</a>, const <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &amp;dt, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;Ad, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;Bd)</td></tr>
 <tr class="separator:a2cb29a26667767e426f3a8260a82b9c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4fbe7cafce1d49a7461a40dd0b67f04" id="r_ab4fbe7cafce1d49a7461a40dd0b67f04"><td class="memItemLeft" align="right" valign="top">static Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab4fbe7cafce1d49a7461a40dd0b67f04">applyStateSpaceTrapezoidalMatrices</a> (const Matrix &amp;Ad, const Matrix &amp;Bd, const Matrix &amp;Cd, const Matrix &amp;statesPrevStep, const Matrix &amp;inputCurrStep, const Matrix &amp;inputPrevStep)</td></tr>
+<tr class="memitem:ab4fbe7cafce1d49a7461a40dd0b67f04" id="r_ab4fbe7cafce1d49a7461a40dd0b67f04"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab4fbe7cafce1d49a7461a40dd0b67f04">applyStateSpaceTrapezoidalMatrices</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;Ad, const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;Bd, const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;Cd, const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;statesPrevStep, const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;inputCurrStep, const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;inputPrevStep)</td></tr>
 <tr class="memdesc:ab4fbe7cafce1d49a7461a40dd0b67f04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply the trapezoidal based state space matrices Ad, Bd, Cd to get the states at the current time step.  <br /></td></tr>
 <tr class="separator:ab4fbe7cafce1d49a7461a40dd0b67f04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af9b2297779df98592c875d3f49f50aa2" id="r_af9b2297779df98592c875d3f49f50aa2"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af9b2297779df98592c875d3f49f50aa2">FFT</a> (std::vector&lt; Complex &gt; &amp;samples)</td></tr>
+<tr class="memitem:af9b2297779df98592c875d3f49f50aa2" id="r_af9b2297779df98592c875d3f49f50aa2"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af9b2297779df98592c875d3f49f50aa2">FFT</a> (std::vector&lt; <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> &gt; &amp;samples)</td></tr>
 <tr class="separator:af9b2297779df98592c875d3f49f50aa2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a755687ef7e29ec00960581b4b4644613" id="r_a755687ef7e29ec00960581b4b4644613"><td class="memItemLeft" align="right" valign="top">static Complex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a755687ef7e29ec00960581b4b4644613">rotatingFrame2to1</a> (Complex f2, Real theta1, Real theta2)</td></tr>
+<tr class="memitem:a755687ef7e29ec00960581b4b4644613" id="r_a755687ef7e29ec00960581b4b4644613"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a755687ef7e29ec00960581b4b4644613">rotatingFrame2to1</a> (<a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> f2, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> theta1, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> theta2)</td></tr>
 <tr class="separator:a755687ef7e29ec00960581b4b4644613"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afac1e51eed00267c2f5443c6b6ec8059" id="r_afac1e51eed00267c2f5443c6b6ec8059"><td class="memItemLeft" align="right" valign="top">static MatrixComp&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afac1e51eed00267c2f5443c6b6ec8059">singlePhaseVariableToThreePhase</a> (Complex var_1ph)</td></tr>
+<tr class="memitem:afac1e51eed00267c2f5443c6b6ec8059" id="r_afac1e51eed00267c2f5443c6b6ec8059"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afac1e51eed00267c2f5443c6b6ec8059">singlePhaseVariableToThreePhase</a> (<a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> var_1ph)</td></tr>
 <tr class="memdesc:afac1e51eed00267c2f5443c6b6ec8059"><td class="mdescLeft">&#160;</td><td class="mdescRight">To convert single phase complex variables (voltages, currents) to symmetrical three phase ones.  <br /></td></tr>
 <tr class="separator:afac1e51eed00267c2f5443c6b6ec8059"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5518b3d1f130bce937689486bdae3b2" id="r_ac5518b3d1f130bce937689486bdae3b2"><td class="memItemLeft" align="right" valign="top">static Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac5518b3d1f130bce937689486bdae3b2">singlePhaseParameterToThreePhase</a> (Real parameter)</td></tr>
+<tr class="memitem:ac5518b3d1f130bce937689486bdae3b2" id="r_ac5518b3d1f130bce937689486bdae3b2"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac5518b3d1f130bce937689486bdae3b2">singlePhaseParameterToThreePhase</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> parameter)</td></tr>
 <tr class="memdesc:ac5518b3d1f130bce937689486bdae3b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">To convert single phase parameters to symmetrical three phase ones.  <br /></td></tr>
 <tr class="separator:ac5518b3d1f130bce937689486bdae3b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a037f3b5662cf7658156d87d107523781" id="r_a037f3b5662cf7658156d87d107523781"><td class="memItemLeft" align="right" valign="top">static Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a037f3b5662cf7658156d87d107523781">singlePhasePowerToThreePhase</a> (Real power)</td></tr>
+<tr class="memitem:a037f3b5662cf7658156d87d107523781" id="r_a037f3b5662cf7658156d87d107523781"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a037f3b5662cf7658156d87d107523781">singlePhasePowerToThreePhase</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> power)</td></tr>
 <tr class="memdesc:a037f3b5662cf7658156d87d107523781"><td class="mdescLeft">&#160;</td><td class="mdescRight">To convert single phase power to symmetrical three phase.  <br /></td></tr>
 <tr class="separator:a037f3b5662cf7658156d87d107523781"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a030f43fa8dd357dc48007a6b862790b1" id="r_a030f43fa8dd357dc48007a6b862790b1"><td class="memItemLeft" align="right" valign="top">static std::pair&lt; Real, Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a030f43fa8dd357dc48007a6b862790b1">pccPowerFromFilterPowerReference</a> (Real pFilterRef, Real qFilterRef, Real rc, Real vGridRmsLL)</td></tr>
+<tr class="memitem:a030f43fa8dd357dc48007a6b862790b1" id="r_a030f43fa8dd357dc48007a6b862790b1"><td class="memItemLeft" align="right" valign="top">static std::pair&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a030f43fa8dd357dc48007a6b862790b1">pccPowerFromFilterPowerReference</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> pFilterRef, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> qFilterRef, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> rc, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> vGridRmsLL)</td></tr>
 <tr class="separator:a030f43fa8dd357dc48007a6b862790b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab43109b9657531e2feaba4f3a1460a66" id="r_ab43109b9657531e2feaba4f3a1460a66"><td class="memItemLeft" align="right" valign="top">static Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab43109b9657531e2feaba4f3a1460a66">parkTransformPowerInvariant</a> (Real theta, const Matrix &amp;fabc)</td></tr>
+<tr class="memitem:ab43109b9657531e2feaba4f3a1460a66" id="r_ab43109b9657531e2feaba4f3a1460a66"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab43109b9657531e2feaba4f3a1460a66">parkTransformPowerInvariant</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> theta, const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;fabc)</td></tr>
 <tr class="separator:ab43109b9657531e2feaba4f3a1460a66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6c1cd143af60ea23ce2caf90cde21ad" id="r_af6c1cd143af60ea23ce2caf90cde21ad"><td class="memItemLeft" align="right" valign="top">static Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af6c1cd143af60ea23ce2caf90cde21ad">parkTransformMatrixPowerInvariant</a> (Real theta)</td></tr>
+<tr class="memitem:af6c1cd143af60ea23ce2caf90cde21ad" id="r_af6c1cd143af60ea23ce2caf90cde21ad"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af6c1cd143af60ea23ce2caf90cde21ad">parkTransformMatrixPowerInvariant</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> theta)</td></tr>
 <tr class="separator:af6c1cd143af60ea23ce2caf90cde21ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af4d6937696795c8985211532c70f5328" id="r_af4d6937696795c8985211532c70f5328"><td class="memItemLeft" align="right" valign="top">static Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af4d6937696795c8985211532c70f5328">inverseParkTransformPowerInvariant</a> (Real theta, const Matrix &amp;fdq)</td></tr>
+<tr class="memitem:af4d6937696795c8985211532c70f5328" id="r_af4d6937696795c8985211532c70f5328"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af4d6937696795c8985211532c70f5328">inverseParkTransformPowerInvariant</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> theta, const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;fdq)</td></tr>
 <tr class="separator:af4d6937696795c8985211532c70f5328"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8cc7d0a2235e8225a30cc427ede79021" id="r_a8cc7d0a2235e8225a30cc427ede79021"><td class="memItemLeft" align="right" valign="top">static Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8cc7d0a2235e8225a30cc427ede79021">inverseParkTransformMatrixPowerInvariant</a> (Real theta)</td></tr>
+<tr class="memitem:a8cc7d0a2235e8225a30cc427ede79021" id="r_a8cc7d0a2235e8225a30cc427ede79021"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8cc7d0a2235e8225a30cc427ede79021">inverseParkTransformMatrixPowerInvariant</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> theta)</td></tr>
 <tr class="separator:a8cc7d0a2235e8225a30cc427ede79021"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -224,7 +234,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef Real(* CPS::Math::DeriveFnPtr) (Matrix inputs)</td>
+          <td class="memname">typedef <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>(* CPS::Math::DeriveFnPtr) (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> inputs)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -244,9 +254,9 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real Math::abs </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> Math::abs </td>
           <td>(</td>
-          <td class="paramtype">Complex</td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a></td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -271,9 +281,9 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix Math::abs </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> Math::abs </td>
           <td>(</td>
-          <td class="paramtype">const MatrixComp &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -300,7 +310,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Math::addToMatrixElement </td>
           <td>(</td>
-          <td class="paramtype">SparseMatrixRow &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -315,17 +325,17 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Complex</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a></td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Int</td>          <td class="paramname"><span class="paramname"><em>maxFreq</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a></td>          <td class="paramname"><span class="paramname"><em>maxFreq</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Int</td>          <td class="paramname"><span class="paramname"><em>freqIdx</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a></td>          <td class="paramname"><span class="paramname"><em>freqIdx</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -351,7 +361,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Math::addToMatrixElement </td>
           <td>(</td>
-          <td class="paramtype">SparseMatrixRow &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -366,17 +376,17 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Int</td>          <td class="paramname"><span class="paramname"><em>maxFreq</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a></td>          <td class="paramname"><span class="paramname"><em>maxFreq</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Int</td>          <td class="paramname"><span class="paramname"><em>freqIdx</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a></td>          <td class="paramname"><span class="paramname"><em>freqIdx</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -402,7 +412,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Math::addToMatrixElement </td>
           <td>(</td>
-          <td class="paramtype">SparseMatrixRow &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -417,7 +427,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>value</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>value</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -443,22 +453,22 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Math::addToMatrixElement </td>
           <td>(</td>
-          <td class="paramtype">SparseMatrixRow &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::vector&lt; UInt &gt;</td>          <td class="paramname"><span class="paramname"><em>rows</em></span>, </td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>rows</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::vector&lt; UInt &gt;</td>          <td class="paramname"><span class="paramname"><em>columns</em></span>, </td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>columns</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Complex</td>          <td class="paramname"><span class="paramname"><em>value</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a></td>          <td class="paramname"><span class="paramname"><em>value</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -484,22 +494,22 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Math::addToMatrixElement </td>
           <td>(</td>
-          <td class="paramtype">SparseMatrixRow &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::vector&lt; UInt &gt;</td>          <td class="paramname"><span class="paramname"><em>rows</em></span>, </td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>rows</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::vector&lt; UInt &gt;</td>          <td class="paramname"><span class="paramname"><em>columns</em></span>, </td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>columns</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>value</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>value</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -525,7 +535,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Math::addToVectorElement </td>
           <td>(</td>
-          <td class="paramtype">Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -535,17 +545,17 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Complex</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a></td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Int</td>          <td class="paramname"><span class="paramname"><em>maxFreq</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a></td>          <td class="paramname"><span class="paramname"><em>maxFreq</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Int</td>          <td class="paramname"><span class="paramname"><em>freqIdx</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a></td>          <td class="paramname"><span class="paramname"><em>freqIdx</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -571,7 +581,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Math::addToVectorElement </td>
           <td>(</td>
-          <td class="paramtype">Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -581,7 +591,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>value</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>value</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -605,34 +615,34 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix Math::applyStateSpaceTrapezoidalMatrices </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> Math::applyStateSpaceTrapezoidalMatrices </td>
           <td>(</td>
-          <td class="paramtype">const Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>Ad</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>Ad</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>Bd</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>Bd</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>Cd</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>Cd</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>statesPrevStep</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>statesPrevStep</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>inputCurrStep</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>inputCurrStep</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>inputPrevStep</em></span>&#160;)</td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>inputPrevStep</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -660,37 +670,37 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Math::calculateStateSpaceTrapezoidalMatrices </td>
           <td>(</td>
-          <td class="paramtype">const Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>C</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>C</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Real &amp;</td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>Ad</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>Ad</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>Bd</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>Bd</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>Cd</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>Cd</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -718,27 +728,27 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Math::calculateStateSpaceTrapezoidalMatrices </td>
           <td>(</td>
-          <td class="paramtype">const Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Real &amp;</td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>Ad</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>Ad</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>Bd</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>Bd</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -762,9 +772,9 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Complex Math::complexFromVectorElement </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> Math::complexFromVectorElement </td>
           <td>(</td>
-          <td class="paramtype">const Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -774,12 +784,12 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Int</td>          <td class="paramname"><span class="paramname"><em>maxFreq</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a></td>          <td class="paramname"><span class="paramname"><em>maxFreq</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Int</td>          <td class="paramname"><span class="paramname"><em>freqIdx</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a></td>          <td class="paramname"><span class="paramname"><em>freqIdx</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -803,9 +813,9 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real Math::degToRad </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> Math::degToRad </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>deg</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>deg</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -867,7 +877,7 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
         <tr>
           <td class="memname">void Math::FFT </td>
           <td>(</td>
-          <td class="paramtype">std::vector&lt; Complex &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>samples</em></span></td><td>)</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>samples</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -892,9 +902,9 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix Math::inverseParkTransformMatrixPowerInvariant </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> Math::inverseParkTransformMatrixPowerInvariant </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>theta</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>theta</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -919,14 +929,14 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix Math::inverseParkTransformPowerInvariant </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> Math::inverseParkTransformPowerInvariant </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>theta</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>theta</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>fdq</em></span>&#160;)</td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>fdq</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -952,12 +962,12 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
         <tr>
           <td class="memname">void Math::invertMatrix </td>
           <td>(</td>
-          <td class="paramtype">const Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>matInv</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>matInv</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -983,7 +993,7 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
         <tr>
           <td class="memname">bool Math::isFinite </td>
           <td>(</td>
-          <td class="paramtype">Complex</td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a></td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1010,7 +1020,7 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
         <tr>
           <td class="memname">bool Math::isFinite </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1035,9 +1045,9 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix Math::parkTransformMatrixPowerInvariant </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> Math::parkTransformMatrixPowerInvariant </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>theta</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>theta</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1062,14 +1072,14 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix Math::parkTransformPowerInvariant </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> Math::parkTransformPowerInvariant </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>theta</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>theta</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>fabc</em></span>&#160;)</td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>fabc</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -1093,24 +1103,24 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::pair&lt; Real, Real &gt; Math::pccPowerFromFilterPowerReference </td>
+          <td class="memname">std::pair&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt; Math::pccPowerFromFilterPowerReference </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>pFilterRef</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>pFilterRef</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>qFilterRef</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>qFilterRef</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>rc</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>rc</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>vGridRmsLL</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>vGridRmsLL</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -1135,9 +1145,9 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real Math::phase </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> Math::phase </td>
           <td>(</td>
-          <td class="paramtype">Complex</td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a></td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1162,9 +1172,9 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix Math::phase </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> Math::phase </td>
           <td>(</td>
-          <td class="paramtype">const MatrixComp &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1189,9 +1199,9 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real Math::phaseDeg </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> Math::phaseDeg </td>
           <td>(</td>
-          <td class="paramtype">Complex</td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a></td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1216,14 +1226,14 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Complex Math::polar </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> Math::polar </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>abs</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>abs</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>phase</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>phase</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -1247,14 +1257,14 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Complex Math::polarDeg </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> Math::polarDeg </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>abs</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>abs</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>phase</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>phase</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -1278,9 +1288,9 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real Math::radtoDeg </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> Math::radtoDeg </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>rad</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>rad</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1305,9 +1315,9 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real Math::realFromVectorElement </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> Math::realFromVectorElement </td>
           <td>(</td>
-          <td class="paramtype">const Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1336,19 +1346,19 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Complex Math::rotatingFrame2to1 </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> Math::rotatingFrame2to1 </td>
           <td>(</td>
-          <td class="paramtype">Complex</td>          <td class="paramname"><span class="paramname"><em>f2</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a></td>          <td class="paramname"><span class="paramname"><em>f2</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>theta1</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>theta1</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>theta2</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>theta2</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -1374,7 +1384,7 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
         <tr>
           <td class="memname">void Math::setMatrixElement </td>
           <td>(</td>
-          <td class="paramtype">SparseMatrixRow &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1389,17 +1399,17 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Complex</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a></td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Int</td>          <td class="paramname"><span class="paramname"><em>maxFreq</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a></td>          <td class="paramname"><span class="paramname"><em>maxFreq</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Int</td>          <td class="paramname"><span class="paramname"><em>freqIdx</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a></td>          <td class="paramname"><span class="paramname"><em>freqIdx</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -1425,7 +1435,7 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
         <tr>
           <td class="memname">void Math::setMatrixElement </td>
           <td>(</td>
-          <td class="paramtype">SparseMatrixRow &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1440,7 +1450,7 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>value</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>value</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -1466,7 +1476,7 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
         <tr>
           <td class="memname">void Math::setVectorElement </td>
           <td>(</td>
-          <td class="paramtype">Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1476,17 +1486,17 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Complex</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a></td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Int</td>          <td class="paramname"><span class="paramname"><em>maxFreq</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a></td>          <td class="paramname"><span class="paramname"><em>maxFreq</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Int</td>          <td class="paramname"><span class="paramname"><em>freqIdx</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a></td>          <td class="paramname"><span class="paramname"><em>freqIdx</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1517,7 +1527,7 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
         <tr>
           <td class="memname">void Math::setVectorElement </td>
           <td>(</td>
-          <td class="paramtype">Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1527,7 +1537,7 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>value</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>value</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -1551,9 +1561,9 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix Math::singlePhaseParameterToThreePhase </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> Math::singlePhaseParameterToThreePhase </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>parameter</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>parameter</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1580,9 +1590,9 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix Math::singlePhasePowerToThreePhase </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> Math::singlePhasePowerToThreePhase </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>power</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>power</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1609,9 +1619,9 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">MatrixComp Math::singlePhaseVariableToThreePhase </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a> Math::singlePhaseVariableToThreePhase </td>
           <td>(</td>
-          <td class="paramtype">Complex</td>          <td class="paramname"><span class="paramname"><em>var_1ph</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a></td>          <td class="paramname"><span class="paramname"><em>var_1ph</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1638,34 +1648,34 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix Math::StateSpaceEuler </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> Math::StateSpaceEuler </td>
           <td>(</td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>states</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>states</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>C</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>C</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>u</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>u</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -1689,29 +1699,29 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix Math::StateSpaceEuler </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> Math::StateSpaceEuler </td>
           <td>(</td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>states</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>states</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>u</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>u</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -1735,24 +1745,24 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix Math::StateSpaceEuler </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> Math::StateSpaceEuler </td>
           <td>(</td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>states</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>states</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>input</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>input</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>dt</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>dt</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -1776,34 +1786,34 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real Math::StateSpaceEuler </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> Math::StateSpaceEuler </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>states</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>states</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>C</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>C</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>u</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>u</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -1827,29 +1837,29 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real Math::StateSpaceEuler </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> Math::StateSpaceEuler </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>states</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>states</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>u</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>u</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -1873,34 +1883,34 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix Math::StateSpaceTrapezoidal </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> Math::StateSpaceTrapezoidal </td>
           <td>(</td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>states</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>states</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>C</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>C</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>u</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>u</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -1924,39 +1934,39 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix Math::StateSpaceTrapezoidal </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> Math::StateSpaceTrapezoidal </td>
           <td>(</td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>states</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>states</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>C</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>C</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>u_new</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>u_new</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>u_old</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>u_old</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -1980,29 +1990,29 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix Math::StateSpaceTrapezoidal </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> Math::StateSpaceTrapezoidal </td>
           <td>(</td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>states</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>states</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>u</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>u</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -2026,34 +2036,34 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix Math::StateSpaceTrapezoidal </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> Math::StateSpaceTrapezoidal </td>
           <td>(</td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>states</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>states</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>u_new</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>u_new</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>u_old</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>u_old</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -2077,24 +2087,24 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix Math::StateSpaceTrapezoidal </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> Math::StateSpaceTrapezoidal </td>
           <td>(</td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>states</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>states</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>input</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>input</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>dt</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>dt</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -2118,34 +2128,34 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real Math::StateSpaceTrapezoidal </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> Math::StateSpaceTrapezoidal </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>states</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>states</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>C</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>C</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>u</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>u</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -2169,29 +2179,29 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real Math::StateSpaceTrapezoidal </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> Math::StateSpaceTrapezoidal </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>states</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>states</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>A</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>dt</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>u</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>u</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -2210,10 +2220,13 @@ template&lt;typename DerivedA, typename DerivedB&gt; </div>
 <li>/__w/dpsim/dpsim/dpsim-models/src/<a class="el" href="_math_utils_8cpp_source.html">MathUtils.cpp</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_c_p_s.html">CPS</a></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_math.html">Math</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

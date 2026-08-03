@@ -50,7 +50,7 @@
 <g id="Node000003" class="node">
 <title>Node3</title>
 <g id="a_Node000003"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_rx_line.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="270.5,-142.25 157,-142.25 157,-120 270.5,-120 270.5,-142.25"/>
+<polygon fill="white" stroke="#666666" points="270.5,-142.25 157,-142.25 157,-120 270.5,-120 270.5,-142.25"/>
 <text text-anchor="middle" x="213.75" y="-128.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph1::RxLine</text>
 </a>
 </g>
@@ -104,7 +104,7 @@
 <g id="Node000006" class="node">
 <title>Node6</title>
 <g id="a_Node000006"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="269.75,-22.25 157.75,-22.25 157.75,0 269.75,0 269.75,-22.25"/>
+<polygon fill="white" stroke="#666666" points="269.75,-22.25 157.75,-22.25 157.75,0 269.75,0 269.75,-22.25"/>
 <text text-anchor="middle" x="213.75" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::RXLine</text>
 </a>
 </g>

@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,19 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
 </div><!-- top -->
-<div id="doc-content">
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('functions_vars_t.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -84,11 +96,11 @@ $(function(){ initResizable(false); });
 </div>
 
 <div class="contents">
-<div class="textblock">Here is a list of all documented variables with links to the class documentation for each member:</div>
+<div class="textblock">Here is a list of all variables with links to the classes they belong to:</div>
 
 <h3><a id="index_t" name="index_t"></a>- t -</h3><ul>
-<li>T1&#160;:&#160;<a class="el" href="class_c_p_s_1_1_signal_1_1_hydro_governor_parameters.html#ada631ab0d12ea4ed4327f55c059a4c92">CPS::Signal::HydroGovernorParameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html#ae1f6de9eb8ef65ed3c1295d995ccf735">CPS::Signal::PSS1AParameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#ac4e8eca2faf376c1cffdfa3bfc589b23">CPS::Signal::SteamGovernorParameters</a></li>
-<li>T2&#160;:&#160;<a class="el" href="class_c_p_s_1_1_signal_1_1_hydro_governor_parameters.html#ac913ff2e3a1d0bcd4a2fbc2348dffd43">CPS::Signal::HydroGovernorParameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html#a692bbf5651833c75553ebc9bf82c8fb2">CPS::Signal::PSS1AParameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#ab298a724ac472b9f4164362adac90bfb">CPS::Signal::SteamGovernorParameters</a></li>
+<li>T1&#160;:&#160;<a class="el" href="class_c_p_s_1_1_signal_1_1_hydro_governor_parameters.html#ada631ab0d12ea4ed4327f55c059a4c92">CPS::Signal::HydroGovernorParameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html#ae1f6de9eb8ef65ed3c1295d995ccf735">CPS::Signal::PSS1AParameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#ac4e8eca2faf376c1cffdfa3bfc589b23">CPS::Signal::SteamGovernorParameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_turbine_governor.html#af18a4b56f45e70c2c8820ad71045a5ac">CPS::Signal::TurbineGovernor</a></li>
+<li>T2&#160;:&#160;<a class="el" href="class_c_p_s_1_1_signal_1_1_hydro_governor_parameters.html#ac913ff2e3a1d0bcd4a2fbc2348dffd43">CPS::Signal::HydroGovernorParameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html#a692bbf5651833c75553ebc9bf82c8fb2">CPS::Signal::PSS1AParameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#ab298a724ac472b9f4164362adac90bfb">CPS::Signal::SteamGovernorParameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_turbine_governor.html#a27c6833bdbef7b131eda455e92ed3963">CPS::Signal::TurbineGovernor</a></li>
 <li>T3&#160;:&#160;<a class="el" href="class_c_p_s_1_1_signal_1_1_hydro_governor_parameters.html#a8577adc6579b96f34127bc2d68a802c6">CPS::Signal::HydroGovernorParameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html#a17ef999adb5796dcfd0a4401d275eb7b">CPS::Signal::PSS1AParameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#a3822ac6b6e5bc99b52aa8522ebb7bf99">CPS::Signal::SteamGovernorParameters</a></li>
 <li>T4&#160;:&#160;<a class="el" href="class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html#a3838b8b5c08a47749e6da9510b2cadc5">CPS::Signal::PSS1AParameters</a></li>
 <li>Ta&#160;:&#160;<a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_parameters.html#af20d453c3c96fc34489bb045b08aa4cb">CPS::Signal::ExciterDC1Parameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ae80536d003d0837495069d3bb58ef1ac">CPS::Signal::ExciterDC1SimpParameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_static_parameters.html#a4ee5efd46a11cbfde20b448200ad5148">CPS::Signal::ExciterStaticParameters</a></li>
@@ -100,16 +112,20 @@ $(function(){ initResizable(false); });
 <li>Tef&#160;:&#160;<a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_parameters.html#ac6bcab7a098b0d94f576aed2f3d99cb8">CPS::Signal::ExciterDC1Parameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a2ff6b2e4ed50aab5fe67912c469ed9c8">CPS::Signal::ExciterDC1SimpParameters</a></li>
 <li>Tf&#160;:&#160;<a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_parameters.html#a0db988acd32edb42ee9c8cd7c91ed8ff">CPS::Signal::ExciterDC1Parameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a4c8288c570530a66dd24031561b248d8">CPS::Signal::ExciterDC1SimpParameters</a></li>
 <li>times&#160;:&#160;<a class="el" href="class_d_psim_1_1_o_d_eint_solver.html#a256d8c8a63989afe52a8ae7ce4b7f360">DPsim::ODEintSolver</a></li>
+<li>timeStep&#160;:&#160;<a class="el" href="class_d_psim_1_1_command_line_args.html#ab9cd494a83c92387c9b25992d683a81d">DPsim::CommandLineArgs</a></li>
 <li>Tr&#160;:&#160;<a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_parameters.html#a909be8f472ac2b1124f2bb8a2c64ef34">CPS::Signal::ExciterDC1Parameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ab843482f0cc69c952cfa484505715ee8">CPS::Signal::ExciterDC1SimpParameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_s_t1_parameters.html#a0ff7efc988ec8f4d9cc63f567dd5fc7f">CPS::Signal::ExciterST1Parameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_static_parameters.html#a260f533f3ecf7e12c65cbecf8b3b4157">CPS::Signal::ExciterStaticParameters</a></li>
 <li>tret&#160;:&#160;<a class="el" href="class_d_psim_1_1_d_a_e_solver.html#adea56266dda0d3210123e4104625db83">DPsim::DAESolver</a></li>
 <li>Trh&#160;:&#160;<a class="el" href="class_c_p_s_1_1_signal_1_1_steam_turbine_parameters.html#a33fd261c8c1bd64ebe1d5783eac79b13">CPS::Signal::SteamTurbineParameters</a></li>
 <li>Tw&#160;:&#160;<a class="el" href="class_c_p_s_1_1_signal_1_1_hydro_turbine_parameters.html#a205e5b35292ed0563d482b339c5d21d0">CPS::Signal::HydroTurbineParameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html#a4a059d2dfa96cf59b590618e058b4c9b">CPS::Signal::PSS1AParameters</a></li>
+<li>type&#160;:&#160;<a class="el" href="class_d_psim_1_1_command_line_args.html#a11f591237231d9024804374543b72d94">DPsim::CommandLineArgs</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

@@ -21,7 +21,7 @@
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="class_d_psim_1_1_interface.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="129.75,-81.5 35,-81.5 35,-59.25 129.75,-59.25 129.75,-81.5"/>
+<polygon fill="white" stroke="#666666" points="129.75,-81.5 35,-81.5 35,-59.25 129.75,-59.25 129.75,-81.5"/>
 <text text-anchor="middle" x="82.38" y="-68" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::Interface</text>
 </a>
 </g>

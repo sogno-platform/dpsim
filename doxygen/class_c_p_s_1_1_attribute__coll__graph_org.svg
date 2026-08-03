@@ -39,7 +39,7 @@
 <g id="Node000003" class="node">
 <title>Node3</title>
 <g id="a_Node000003"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="237.75,-109 122.75,-109 122.75,-58.25 237.75,-58.25 237.75,-109"/>
+<polygon fill="white" stroke="#666666" points="237.75,-109 122.75,-109 122.75,-58.25 237.75,-58.25 237.75,-109"/>
 <text text-anchor="start" x="130.75" y="-95.5" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="130.75" y="-81.25" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="180.25" y="-67" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; T &gt; &gt;</text>

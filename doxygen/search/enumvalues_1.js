@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['disabled_0',['Disabled',['../class_d_psim_1_1_solver.html#ada054cfffa83077943a93e71e1fb8792ab9f5c797ebbf55adccdd8539a65a0241',1,'DPsim::Solver']]]
+  ['b_0',['B',['../namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca9d5ed678fe57bcca610140957afab571',1,'CPS']]]
 ];

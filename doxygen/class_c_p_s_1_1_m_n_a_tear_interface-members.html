@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_c_p_s_1_1_m_n_a_tear_interface.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>CPS</b></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">MNATearInterface</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">CPS::MNATearInterface Member List</div></div>
 </div><!--header-->
@@ -94,19 +102,21 @@ $(function(){ initResizable(false); });
 
 <p>This is the complete list of members for <a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a>, including all inherited members.</p>
 <table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mnaTearApplyMatrixStamp</b>(SparseMatrixRow &amp;tearMatrix)=0 (defined in <a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mnaTearApplyVoltageStamp</b>(Matrix &amp;currentVector) (defined in <a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mnaTearGroundComponents</b>() (defined in <a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mnaTearInitialize</b>(Real omega, Real timeStep) (defined in <a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mnaTearPostStep</b>(Complex voltage, Complex current) (defined in <a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mnaTearPostStep</b>(MatrixComp voltage, MatrixComp current) (defined in <a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mnaTearSetIdx</b>(UInt compIdx) (defined in <a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mTearIdx</b> (defined in <a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html#a67793d2e89375d95a0038d4e18ab4b65">mnaTearApplyMatrixStamp</a>(SparseMatrixRow &amp;tearMatrix)=0</td><td class="entry"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html#af5d2da552ed5d0e98a37899dff440601">mnaTearApplyVoltageStamp</a>(Matrix &amp;currentVector)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html#af92023875982fbb1351d14dd0e30cf99">mnaTearGroundComponents</a>()</td><td class="entry"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html#a14640bf6c779d2d200d9eed88022053a">mnaTearInitialize</a>(Real omega, Real timeStep)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html#aa977b70347339ec54709fd6bf9459a75">mnaTearPostStep</a>(Complex voltage, Complex current)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html#a71d2ba500e1243f30914663d8752fde2">mnaTearPostStep</a>(MatrixComp voltage, MatrixComp current)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html#a73d1005579e98d1d04851792dd0dad01">mnaTearSetIdx</a>(UInt compIdx)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html#a5c21f156daabad8a7a9278ed6ae23b43">mTearIdx</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">CPS::MNATearInterface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
 </table></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

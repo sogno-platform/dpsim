@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_k_l_u_adapter_8cpp_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_af103632340511860a5310da360a5028.html">src</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">KLUAdapter.cpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_k_l_u_adapter_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -99,7 +107,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * file, You can obtain one at https://mozilla.org/MPL/2.0/.</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> *********************************************************************************/</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;dpsim/KLUAdapter.h&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;<a class="code" href="_k_l_u_adapter_8h.html">dpsim/KLUAdapter.h</a>&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespace_d_psim.html">DPsim</a>;</div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
@@ -131,20 +139,20 @@ $(function(){ initResizable(false); });
 </div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
 <div class="foldopen" id="foldopen00036" data-start="{" data-end="}">
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_k_l_u_adapter.html#ac76eef631b79fac5a71e73325c4006d0">   36</a></span><a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#ad109bcfac8eec87bc66fe72b3475d8a6">KLUAdapter::KLUAdapter</a>(CPS::Logger::Log log) : <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#ad109bcfac8eec87bc66fe72b3475d8a6">KLUAdapter</a>() {</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_k_l_u_adapter.html#ac76eef631b79fac5a71e73325c4006d0">   36</a></span><a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#ad109bcfac8eec87bc66fe72b3475d8a6">KLUAdapter::KLUAdapter</a>(<a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a> log) : <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#ad109bcfac8eec87bc66fe72b3475d8a6">KLUAdapter</a>() {</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  this-&gt;<a class="code hl_variable" href="class_d_psim_1_1_direct_linear_solver.html#aafeb18cf0ebae9f0255e62dc74d938c9">mSLog</a> = log;</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>}</div>
 </div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
 <div class="foldopen" id="foldopen00040" data-start="{" data-end="}">
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_k_l_u_adapter.html#ad566113de2099c870c1c70a00c276f2a">   40</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#ad566113de2099c870c1c70a00c276f2a">KLUAdapter::preprocessing</a>(</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    SparseMatrix &amp;systemMatrix,</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix,</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    std::vector&lt;std::pair&lt;UInt, UInt&gt;&gt; &amp;listVariableSystemMatrixEntries) {</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  <span class="keywordflow">if</span> (mSymbolic) {</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    klu_free_symbolic(&amp;mSymbolic, &amp;mCommon);</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  }</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keyword">const</span> Int n = Eigen::internal::convert_index&lt;Int&gt;(systemMatrix.rows());</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> n = Eigen::internal::convert_index&lt;Int&gt;(systemMatrix.rows());</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keyword">auto</span> Ap = Eigen::internal::convert_index&lt;Int *&gt;(systemMatrix.outerIndexPtr());</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keyword">auto</span> Ai = Eigen::internal::convert_index&lt;Int *&gt;(systemMatrix.innerIndexPtr());</div>
@@ -153,7 +161,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  mVaryingRows.clear();</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  mChangedEntries = listVariableSystemMatrixEntries;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  Int varying_entries =</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> varying_entries =</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>      Eigen::internal::convert_index&lt;Int&gt;(mChangedEntries.size());</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;changedEntry : mChangedEntries) {</div>
@@ -187,7 +195,7 @@ $(function(){ initResizable(false); });
 </div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
 <div class="foldopen" id="foldopen00088" data-start="{" data-end="}">
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_k_l_u_adapter.html#a1f3ecbfe79f73a2956c681f9074bb860">   88</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#a1f3ecbfe79f73a2956c681f9074bb860">KLUAdapter::factorize</a>(SparseMatrix &amp;systemMatrix) {</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_k_l_u_adapter.html#a1f3ecbfe79f73a2956c681f9074bb860">   88</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#a1f3ecbfe79f73a2956c681f9074bb860">KLUAdapter::factorize</a>(<a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix) {</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  <span class="keywordflow">if</span> (mNumeric) {</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    klu_free_numeric(&amp;mNumeric, &amp;mCommon);</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  }</div>
@@ -198,7 +206,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  mNumeric = klu_factor(Ap, Ai, Ax, mSymbolic, &amp;mCommon);</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  Int varying_entries =</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> varying_entries =</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>      Eigen::internal::convert_index&lt;Int&gt;(mChangedEntries.size());</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  <span class="comment">/* Make sure that factorization path is not computed if there are no varying entries.</span></div>
@@ -206,11 +214,11 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="comment">   */</span></div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>  <span class="keywordflow">if</span> (!(mVaryingColumns.empty()) &amp;&amp; !(mVaryingRows.empty())) {</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="keywordflow">if</span> (mPartialRefactorizationMethod ==</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        DPsim::PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH) {</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        <a class="code hl_enumvalue" href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482aa0f1b121c7e25301bef9f408f3069e239">DPsim::PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH</a>) {</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>      klu_compute_path(mSymbolic, mNumeric, &amp;mCommon, Ap, Ai,</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>                       &amp;mVaryingColumns[0], &amp;mVaryingRows[0], varying_entries);</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (mPartialRefactorizationMethod ==</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>               DPsim::PARTIAL_REFACTORIZATION_METHOD::REFACTORIZATION_RESTART) {</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>               <a class="code hl_enumvalue" href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482aaefd5b98938a1793a1c26e331b1e118c0">DPsim::PARTIAL_REFACTORIZATION_METHOD::REFACTORIZATION_RESTART</a>) {</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>      klu_determine_start(mSymbolic, mNumeric, &amp;mCommon, Ap, Ai,</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>                          &amp;mVaryingColumns[0], &amp;mVaryingRows[0],</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>                          varying_entries);</div>
@@ -220,7 +228,7 @@ $(function(){ initResizable(false); });
 </div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
 <div class="foldopen" id="foldopen00119" data-start="{" data-end="}">
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_k_l_u_adapter.html#aa7a815403a9340eeb529729a618d70d9">  119</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#aa7a815403a9340eeb529729a618d70d9">KLUAdapter::refactorize</a>(SparseMatrix &amp;systemMatrix) {</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_k_l_u_adapter.html#aa7a815403a9340eeb529729a618d70d9">  119</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#aa7a815403a9340eeb529729a618d70d9">KLUAdapter::refactorize</a>(<a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix) {</div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  <span class="comment">// TODO: Remove if-else when zero&lt;-&gt;non-zero issue during matrix stamping has been fixed. Also remove in partialRefactorize then.</span></div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  <span class="keywordflow">if</span> (systemMatrix.nonZeros() != nnz) {</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#ad566113de2099c870c1c70a00c276f2a">preprocessing</a>(systemMatrix, mChangedEntries);</div>
@@ -238,7 +246,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
 <div class="foldopen" id="foldopen00134" data-start="{" data-end="}">
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_k_l_u_adapter.html#aab79cf99de7a9ef4b38d739fa2198d17">  134</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#aab79cf99de7a9ef4b38d739fa2198d17">KLUAdapter::partialRefactorize</a>(</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    SparseMatrix &amp;systemMatrix,</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    <a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix,</div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    std::vector&lt;std::pair&lt;UInt, UInt&gt;&gt; &amp;listVariableSystemMatrixEntries) {</div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>  <span class="keywordflow">if</span> (systemMatrix.nonZeros() != nnz) {</div>
 <div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#ad566113de2099c870c1c70a00c276f2a">preprocessing</a>(systemMatrix, listVariableSystemMatrixEntries);</div>
@@ -251,10 +259,10 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    <span class="keyword">auto</span> Ax = Eigen::internal::convert_index&lt;Real *&gt;(systemMatrix.valuePtr());</div>
 <div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    <span class="keywordflow">if</span> (mPartialRefactorizationMethod ==</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>        PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH) {</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>        <a class="code hl_enumvalue" href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482aa0f1b121c7e25301bef9f408f3069e239">PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH</a>) {</div>
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>      klu_partial_factorization_path(Ap, Ai, Ax, mSymbolic, mNumeric, &amp;mCommon);</div>
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (mPartialRefactorizationMethod ==</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>               PARTIAL_REFACTORIZATION_METHOD::REFACTORIZATION_RESTART) {</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>               <a class="code hl_enumvalue" href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482aaefd5b98938a1793a1c26e331b1e118c0">PARTIAL_REFACTORIZATION_METHOD::REFACTORIZATION_RESTART</a>) {</div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>      klu_partial_refactorization_restart(Ap, Ai, Ax, mSymbolic, mNumeric,</div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>                                          &amp;mCommon);</div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    } <span class="keywordflow">else</span> {</div>
@@ -271,18 +279,18 @@ $(function(){ initResizable(false); });
 </div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span> </div>
 <div class="foldopen" id="foldopen00166" data-start="{" data-end="}">
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_k_l_u_adapter.html#a227389e7c48ed266d97f365e9eb1f89b">  166</a></span>Matrix <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#a227389e7c48ed266d97f365e9eb1f89b">KLUAdapter::solve</a>(Matrix &amp;rightSideVector) {</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_k_l_u_adapter.html#a227389e7c48ed266d97f365e9eb1f89b">  166</a></span><a class="code hl_typedef" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#a227389e7c48ed266d97f365e9eb1f89b">KLUAdapter::solve</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;rightSideVector) {</div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>  <span class="comment">// TODO: this calls malloc, which is not allowed in the simulation loop</span></div>
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>  <span class="comment">// We should preallocate this buffer.</span></div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>  Matrix x = rightSideVector;</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> x = rightSideVector;</div>
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span> </div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>  <span class="comment">/* Number of right hands sides</span></div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span><span class="comment">   * usually one, KLU can handle multiple right hand sides.</span></div>
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span><span class="comment">   */</span></div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>  Int rhsCols = Eigen::internal::convert_index&lt;Int&gt;(rightSideVector.cols());</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> rhsCols = Eigen::internal::convert_index&lt;Int&gt;(rightSideVector.cols());</div>
 <div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
 <div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>  <span class="comment">// Leading dimension, also called &quot;n&quot;.</span></div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>  Int rhsRows = Eigen::internal::convert_index&lt;Int&gt;(rightSideVector.rows());</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> rhsRows = Eigen::internal::convert_index&lt;Int&gt;(rightSideVector.rows());</div>
 <div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span> </div>
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>  <span class="comment">/* tsolve refers to transpose solve. Input matrix is stored in compressed row format,</span></div>
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span><span class="comment">   * KLU operates on compressed column format. This way, the transpose of the matrix is factored.</span></div>
@@ -296,14 +304,14 @@ $(function(){ initResizable(false); });
 </div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span> </div>
 <div class="foldopen" id="foldopen00189" data-start="{" data-end="}">
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_k_l_u_adapter.html#aa91539174590b5fa910a8c9f2cf10fb9">  189</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#aa91539174590b5fa910a8c9f2cf10fb9">KLUAdapter::printMatrixMarket</a>(SparseMatrix &amp;matrix, <span class="keywordtype">int</span> counter)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_k_l_u_adapter.html#aa91539174590b5fa910a8c9f2cf10fb9">  189</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#aa91539174590b5fa910a8c9f2cf10fb9">KLUAdapter::printMatrixMarket</a>(<a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;matrix, <span class="keywordtype">int</span> counter)<span class="keyword"> const </span>{</div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>  std::string outputName = <span class="stringliteral">&quot;A&quot;</span> + std::to_string(counter) + <span class="stringliteral">&quot;.mtx&quot;</span>;</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>  Int n = Eigen::internal::convert_index&lt;Int&gt;(matrix.rows());</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> n = Eigen::internal::convert_index&lt;Int&gt;(matrix.rows());</div>
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span> </div>
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>  <span class="keyword">auto</span> Ap = Eigen::internal::convert_index&lt;const Int *&gt;(matrix.outerIndexPtr());</div>
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>  <span class="keyword">auto</span> Ai = Eigen::internal::convert_index&lt;const Int *&gt;(matrix.innerIndexPtr());</div>
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>  <span class="keyword">auto</span> Ax = Eigen::internal::convert_index&lt;const Real *&gt;(matrix.valuePtr());</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>  Int nz = Eigen::internal::convert_index&lt;Int&gt;(matrix.nonZeros());</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> nz = Eigen::internal::convert_index&lt;Int&gt;(matrix.nonZeros());</div>
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>  std::ofstream ofs;</div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>  ofs.open(outputName);</div>
@@ -325,13 +333,13 @@ $(function(){ initResizable(false); });
 <div class="foldopen" id="foldopen00214" data-start="{" data-end="}">
 <div class="line"><a id="l00214" name="l00214"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_k_l_u_adapter.html#a14883b8c2cd220468dfc0b8c8f999c89">  214</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#a14883b8c2cd220468dfc0b8c8f999c89">KLUAdapter::applyConfiguration</a>() {</div>
 <div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>  <span class="keywordflow">switch</span> (<a class="code hl_variable" href="class_d_psim_1_1_direct_linear_solver.html#a9f0386f35ad2c6219ba3fafefe40e541">mConfiguration</a>.getScalingMethod()) {</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>  <span class="keywordflow">case</span> SCALING_METHOD::NO_SCALING:</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>  <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408acea7253c96ba812305c09a9530842ffd">SCALING_METHOD::NO_SCALING</a>:</div>
 <div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    mCommon.scale = 0;</div>
 <div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>  <span class="keywordflow">case</span> SCALING_METHOD::SUM_SCALING:</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>  <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408ab858a94fe00a0f083a74e2b1df8c951f">SCALING_METHOD::SUM_SCALING</a>:</div>
 <div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    mCommon.scale = 1;</div>
 <div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>  <span class="keywordflow">case</span> SCALING_METHOD::MAX_SCALING:</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>  <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408a6fcfc46a3bb86c91718223faa150eee3">SCALING_METHOD::MAX_SCALING</a>:</div>
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    mCommon.scale = 2;</div>
 <div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    <span class="keywordflow">break</span>;</div>
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>  <span class="keywordflow">default</span>:</div>
@@ -343,13 +351,13 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span> </div>
 <div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>  <span class="comment">// TODO: Implement support for COLAMD (modifiy SuiteSparse)</span></div>
 <div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>  <span class="keywordflow">switch</span> (<a class="code hl_variable" href="class_d_psim_1_1_direct_linear_solver.html#a9f0386f35ad2c6219ba3fafefe40e541">mConfiguration</a>.getFillInReductionMethod()) {</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>  <span class="keywordflow">case</span> FILL_IN_REDUCTION_METHOD::AMD:</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>  <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74a48af4341f745163f945fa838eeabb062">FILL_IN_REDUCTION_METHOD::AMD</a>:</div>
 <div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    mPreordering = AMD_ORDERING;</div>
 <div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>    <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>  <span class="keywordflow">case</span> FILL_IN_REDUCTION_METHOD::AMD_NV:</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>  <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74a8774ee50e1ce95e2a7fa4ed950def2a0">FILL_IN_REDUCTION_METHOD::AMD_NV</a>:</div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    mPreordering = AMD_ORDERING_NV;</div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>  <span class="keywordflow">case</span> FILL_IN_REDUCTION_METHOD::AMD_RA:</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>  <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74a4c9734327c294ff2dd891696d10e2d12">FILL_IN_REDUCTION_METHOD::AMD_RA</a>:</div>
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    mPreordering = AMD_ORDERING_RA;</div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    <span class="keywordflow">break</span>;</div>
 <div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>  <span class="keywordflow">default</span>:</div>
@@ -369,10 +377,10 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>                 <a class="code hl_variable" href="class_d_psim_1_1_direct_linear_solver.html#a9f0386f35ad2c6219ba3fafefe40e541">mConfiguration</a>.getPartialRefactorizationMethodString());</div>
 <div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
 <div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>  <span class="keywordflow">switch</span> (<a class="code hl_variable" href="class_d_psim_1_1_direct_linear_solver.html#a9f0386f35ad2c6219ba3fafefe40e541">mConfiguration</a>.getBTF()) {</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>  <span class="keywordflow">case</span> USE_BTF::DO_BTF:</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>  <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespace_d_psim.html#a69fee78420eca0273fbc1bb935a999ada9bf90ce2a4f39a9fc944585242cda030">USE_BTF::DO_BTF</a>:</div>
 <div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    mCommon.btf = 1;</div>
 <div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>  <span class="keywordflow">case</span> USE_BTF::NO_BTF:</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>  <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespace_d_psim.html#a69fee78420eca0273fbc1bb935a999adabf32c05a299b622cab394809ca4102d9">USE_BTF::NO_BTF</a>:</div>
 <div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>    mCommon.btf = 0;</div>
 <div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>    <span class="keywordflow">break</span>;</div>
 <div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>  <span class="keywordflow">default</span>:</div>
@@ -384,6 +392,8 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>}</div>
 </div>
 <div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>} <span class="comment">// namespace DPsim</span></div>
+<div class="ttc" id="a_k_l_u_adapter_8h_html"><div class="ttname"><a href="_k_l_u_adapter_8h.html">KLUAdapter.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_logger_html_a1dd42a2424f56886f0eec500a7851423"><div class="ttname"><a href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a></div><div class="ttdeci">std::shared_ptr&lt; spdlog::logger &gt; Log</div><div class="ttdef"><b>Definition</b> <a href="_logger_8h_source.html#l00034">Logger.h:34</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_html_a9f0386f35ad2c6219ba3fafefe40e541"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver.html#a9f0386f35ad2c6219ba3fafefe40e541">DPsim::DirectLinearSolver::mConfiguration</a></div><div class="ttdeci">DirectLinearSolverConfiguration mConfiguration</div><div class="ttdoc">Object that carries configuration options.</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_8h_source.html#l00078">DirectLinearSolver.h:78</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_html_aafeb18cf0ebae9f0255e62dc74d938c9"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver.html#aafeb18cf0ebae9f0255e62dc74d938c9">DPsim::DirectLinearSolver::mSLog</a></div><div class="ttdeci">CPS::Logger::Log mSLog</div><div class="ttdoc">Stores logger of solver class.</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_8h_source.html#l00075">DirectLinearSolver.h:75</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_k_l_u_adapter_html_a14883b8c2cd220468dfc0b8c8f999c89"><div class="ttname"><a href="class_d_psim_1_1_k_l_u_adapter.html#a14883b8c2cd220468dfc0b8c8f999c89">DPsim::KLUAdapter::applyConfiguration</a></div><div class="ttdeci">void applyConfiguration() override</div><div class="ttdoc">Apply configuration.</div><div class="ttdef"><b>Definition</b> <a href="#l00214">KLUAdapter.cpp:214</a></div></div>
@@ -396,11 +406,27 @@ $(function(){ initResizable(false); });
 <div class="ttc" id="aclass_d_psim_1_1_k_l_u_adapter_html_ad109bcfac8eec87bc66fe72b3475d8a6"><div class="ttname"><a href="class_d_psim_1_1_k_l_u_adapter.html#ad109bcfac8eec87bc66fe72b3475d8a6">DPsim::KLUAdapter::KLUAdapter</a></div><div class="ttdeci">KLUAdapter()</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition</b> <a href="#l00022">KLUAdapter.cpp:22</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_k_l_u_adapter_html_ad566113de2099c870c1c70a00c276f2a"><div class="ttname"><a href="class_d_psim_1_1_k_l_u_adapter.html#ad566113de2099c870c1c70a00c276f2a">DPsim::KLUAdapter::preprocessing</a></div><div class="ttdeci">void preprocessing(SparseMatrix &amp;systemMatrix, std::vector&lt; std::pair&lt; UInt, UInt &gt; &gt; &amp;listVariableSystemMatrixEntries) override</div><div class="ttdoc">preprocessing function pre-ordering and scaling the matrix</div><div class="ttdef"><b>Definition</b> <a href="#l00040">KLUAdapter.cpp:40</a></div></div>
 <div class="ttc" id="anamespace_d_psim_html"><div class="ttname"><a href="namespace_d_psim.html">DPsim</a></div><div class="ttdef"><b>Definition</b> <a href="_dense_l_u_adapter_8cpp_source.html#l00013">DenseLUAdapter.cpp:13</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a1a29b9e3bd92795ee5dafd0697248408a6fcfc46a3bb86c91718223faa150eee3"><div class="ttname"><a href="namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408a6fcfc46a3bb86c91718223faa150eee3">DPsim::SCALING_METHOD::MAX_SCALING</a></div><div class="ttdeci">@ MAX_SCALING</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8h_source.html#l00016">DirectLinearSolverConfiguration.h:16</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a1a29b9e3bd92795ee5dafd0697248408ab858a94fe00a0f083a74e2b1df8c951f"><div class="ttname"><a href="namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408ab858a94fe00a0f083a74e2b1df8c951f">DPsim::SCALING_METHOD::SUM_SCALING</a></div><div class="ttdeci">@ SUM_SCALING</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8h_source.html#l00016">DirectLinearSolverConfiguration.h:16</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a1a29b9e3bd92795ee5dafd0697248408acea7253c96ba812305c09a9530842ffd"><div class="ttname"><a href="namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408acea7253c96ba812305c09a9530842ffd">DPsim::SCALING_METHOD::NO_SCALING</a></div><div class="ttdeci">@ NO_SCALING</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8h_source.html#l00016">DirectLinearSolverConfiguration.h:16</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a62ee66cb7d49fe8ab3480d0d0146482aa0f1b121c7e25301bef9f408f3069e239"><div class="ttname"><a href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482aa0f1b121c7e25301bef9f408f3069e239">DPsim::PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH</a></div><div class="ttdeci">@ FACTORIZATION_PATH</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8h_source.html#l00029">DirectLinearSolverConfiguration.h:29</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a62ee66cb7d49fe8ab3480d0d0146482aaefd5b98938a1793a1c26e331b1e118c0"><div class="ttname"><a href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482aaefd5b98938a1793a1c26e331b1e118c0">DPsim::PARTIAL_REFACTORIZATION_METHOD::REFACTORIZATION_RESTART</a></div><div class="ttdeci">@ REFACTORIZATION_RESTART</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8h_source.html#l00030">DirectLinearSolverConfiguration.h:30</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a69fee78420eca0273fbc1bb935a999ada9bf90ce2a4f39a9fc944585242cda030"><div class="ttname"><a href="namespace_d_psim.html#a69fee78420eca0273fbc1bb935a999ada9bf90ce2a4f39a9fc944585242cda030">DPsim::USE_BTF::DO_BTF</a></div><div class="ttdeci">@ DO_BTF</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8h_source.html#l00034">DirectLinearSolverConfiguration.h:34</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a69fee78420eca0273fbc1bb935a999adabf32c05a299b622cab394809ca4102d9"><div class="ttname"><a href="namespace_d_psim.html#a69fee78420eca0273fbc1bb935a999adabf32c05a299b622cab394809ca4102d9">DPsim::USE_BTF::NO_BTF</a></div><div class="ttdeci">@ NO_BTF</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8h_source.html#l00034">DirectLinearSolverConfiguration.h:34</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a6a29611b9912f8abc0545523b3f84f8c"><div class="ttname"><a href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">DPsim::Int</a></div><div class="ttdeci">CPS::Int Int</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00022">Definitions.h:22</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a7920162dfc7e843a4f1a1248fe9ccb0e"><div class="ttname"><a href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">DPsim::Matrix</a></div><div class="ttdeci">CPS::Matrix Matrix</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00024">Definitions.h:24</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_ab6afa34bab94cdc2ff33e09d4a1d2c9c"><div class="ttname"><a href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">DPsim::SparseMatrix</a></div><div class="ttdeci">CPS::SparseMatrixRow SparseMatrix</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00026">Definitions.h:26</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_afb1a2956e105f204d9d5322e4800df74a48af4341f745163f945fa838eeabb062"><div class="ttname"><a href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74a48af4341f745163f945fa838eeabb062">DPsim::FILL_IN_REDUCTION_METHOD::AMD</a></div><div class="ttdeci">@ AMD</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8h_source.html#l00020">DirectLinearSolverConfiguration.h:20</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_afb1a2956e105f204d9d5322e4800df74a4c9734327c294ff2dd891696d10e2d12"><div class="ttname"><a href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74a4c9734327c294ff2dd891696d10e2d12">DPsim::FILL_IN_REDUCTION_METHOD::AMD_RA</a></div><div class="ttdeci">@ AMD_RA</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8h_source.html#l00022">DirectLinearSolverConfiguration.h:22</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_afb1a2956e105f204d9d5322e4800df74a8774ee50e1ce95e2a7fa4ed950def2a0"><div class="ttname"><a href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74a8774ee50e1ce95e2a7fa4ed950def2a0">DPsim::FILL_IN_REDUCTION_METHOD::AMD_NV</a></div><div class="ttdeci">@ AMD_NV</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8h_source.html#l00021">DirectLinearSolverConfiguration.h:21</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_af103632340511860a5310da360a5028.html">src</a></li><li class="navelem"><a class="el" href="_k_l_u_adapter_8cpp.html">KLUAdapter.cpp</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

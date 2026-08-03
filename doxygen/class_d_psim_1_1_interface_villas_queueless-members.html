@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_d_psim_1_1_interface_villas_queueless.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">InterfaceVillasQueueless</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">DPsim::InterfaceVillasQueueless Member List</div></div>
 </div><!--header-->
@@ -94,43 +102,47 @@ $(function(){ initResizable(false); });
 
 <p>This is the complete list of members for <a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a>, including all inherited members.</p>
 <table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>addExport</b>(CPS::AttributeBase::Ptr attr) (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>addImport</b>(CPS::AttributeBase::Ptr attr, bool blockOnRead=false, bool syncOnSimulationStart=true) (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>close</b>() override (defined in <a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>createNode</b>() (defined in <a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>createSignals</b>() (defined in <a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>getName</b>() (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>getTasks</b>() override (defined in <a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>Interface</b>(const String &amp;name=&quot;&quot;, spdlog::level::level_enum logLevel=spdlog::level::level_enum::info) (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#ab7799cc7e87df1920e55288a84063497">addExport</a>(CPS::AttributeBase::Ptr attr)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#a6b00acb09b792e3352ff76ae817f696d">addImport</a>(CPS::AttributeBase::Ptr attr, bool blockOnRead=false, bool syncOnSimulationStart=true)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html#aa38e99db6bac2f5cdba09ebd44962896">close</a>() override</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html#acfed568dcc1ed619a3a1c0d38060c737">createNode</a>()</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html#a533d7c7e7394777d5b2fe4116034488a">createSignals</a>()</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#a999d2998d8f639c3044b72133c19b19b">getName</a>()</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html#a1e1535b1b77a2fd4d73657bb1249eaba">getTasks</a>() override</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#af7ff184a7ead2918ca54d461d7087bb1">Interface</a>(const String &amp;name=&quot;&quot;, spdlog::level::level_enum logLevel=spdlog::level::level_enum::info)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html#a5d88431d0910bc284100fdd98d19e67a">InterfaceVillasQueueless</a>(const String &amp;nodeConfig, const String &amp;name=&quot;&quot;, spdlog::level::level_enum logLevel=spdlog::level::level_enum::info)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mCurrentSequenceDpsimToInterface</b> (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mExportAttrsDpsim</b> (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mImportAttrsDpsim</b> (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mLog</b> (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mName</b> (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mNextSequenceInterfaceToDpsim</b> (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mNode</b> (defined in <a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mNodeConfig</b> (defined in <a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mOpened</b> (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mSamplePool</b> (defined in <a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mSequenceFromDpsim</b> (defined in <a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mSequenceToDpsim</b> (defined in <a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mSyncOnSimulationStart</b> (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>open</b>() override (defined in <a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>printVillasSignals</b>() const (defined in <a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Ptr</b> typedef (defined in <a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>readFromVillas</b>() (defined in <a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">protected</span><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>setLogger</b>(CPS::Logger::Log log) (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>syncExports</b>() override (defined in <a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">DPsim::make</a>(Args &amp;&amp;...args)</td><td class="entry"><a class="el" href="class_shared_factory.html">SharedFactory&lt; Interface &gt;</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">SharedFactory&lt; InterfaceVillasQueueless &gt;::make</a>(Args &amp;&amp;...args)</td><td class="entry"><a class="el" href="class_shared_factory.html">SharedFactory&lt; InterfaceVillasQueueless &gt;</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">static</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#a4a1cca8d5dcd44a3d1be753be4881829">mCurrentSequenceDpsimToInterface</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#af0bc158390ed482f079bb79798860eb3">mExportAttrsDpsim</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#a33a81c7c3de33abb899eedfff741acd2">mImportAttrsDpsim</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#ac147df20daebd31b0ae90182f0191a5c">mLog</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#a2a9bcf319b311804a05b63ef3e358e2e">mName</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#a35f39d4546ff58e41152b5c66a78cf14">mNextSequenceInterfaceToDpsim</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html#a1e6c2d6cfdc307043ec13d9850652ac9">mNode</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html#a0da0592700d1f57befa8cad53ad8ec83">mNodeConfig</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#a46f7fd95003532d77c6a965280c2c3a0">mOpened</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html#aa5b5ba03c27c7c167d757e797a6c0e80">mSamplePool</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html#a88f6a8381c0cae8685fe7f959932465e">mSequenceFromDpsim</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html#aaeb31fe21694327d738ea53dfe32da0a">mSequenceToDpsim</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#a304a9ae30f34fad55dcfe3588e759726">mSyncOnSimulationStart</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html#a6005db299c748dd4275dd632e773b2fd">open</a>() override</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html#a33fb3e4333ed0c23a55630d109fc7d5a">printVillasSignals</a>() const</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html#a14d7846f7a27d02fb7b23ce7d280ee57">Ptr</a> typedef</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html#a71addad1787dc4f570a3cef327364fe1">readFromVillas</a>()</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">protected</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#a84d521b290775ce69bc442e7ce4175eb">setLogger</a>(CPS::Logger::Log log)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html#af4b8baa80b02e1236e2a5bedd258a53f">syncExports</a>() override</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html#a40bdaca6a037492d9877b9b04faeb3b5">syncImports</a>() override</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>writeToVillas</b>() (defined in <a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">protected</span><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~Interface</b>()=default (defined in <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>~InterfaceVillasQueueless</b>() (defined in <a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html#aea5c262c1e08169087a6c28d56957d23">writeToVillas</a>()</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">protected</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html#aa4df0761a44b8224328004fff6b2ec9e">~Interface</a>()=default</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html#ac29203bd85b81b84e2545112ccf2bad3">~InterfaceVillasQueueless</a>()</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_villas_queueless.html">DPsim::InterfaceVillasQueueless</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
 </table></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

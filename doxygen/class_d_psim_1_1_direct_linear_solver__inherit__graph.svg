@@ -32,7 +32,7 @@
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="class_d_psim_1_1_dense_l_u_adapter.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="311.38,-222.25 179.12,-222.25 179.12,-200 311.38,-200 311.38,-222.25"/>
+<polygon fill="white" stroke="#666666" points="311.38,-222.25 179.12,-222.25 179.12,-200 311.38,-200 311.38,-222.25"/>
 <text text-anchor="middle" x="245.25" y="-208.75" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::DenseLUAdapter</text>
 </a>
 </g>
@@ -50,7 +50,7 @@
 <g id="Node000003" class="node">
 <title>Node3</title>
 <g id="a_Node000003"><a xlink:href="class_d_psim_1_1_gpu_dense_adapter.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="314.75,-182.25 175.75,-182.25 175.75,-160 314.75,-160 314.75,-182.25"/>
+<polygon fill="white" stroke="#666666" points="314.75,-182.25 175.75,-182.25 175.75,-160 314.75,-160 314.75,-182.25"/>
 <text text-anchor="middle" x="245.25" y="-168.75" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::GpuDenseAdapter</text>
 </a>
 </g>
@@ -68,7 +68,7 @@
 <g id="Node000004" class="node">
 <title>Node4</title>
 <g id="a_Node000004"><a xlink:href="class_d_psim_1_1_gpu_magma_adapter.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="317,-142.25 173.5,-142.25 173.5,-120 317,-120 317,-142.25"/>
+<polygon fill="white" stroke="#666666" points="317,-142.25 173.5,-142.25 173.5,-120 317,-120 317,-142.25"/>
 <text text-anchor="middle" x="245.25" y="-128.75" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::GpuMagmaAdapter</text>
 </a>
 </g>
@@ -86,7 +86,7 @@
 <g id="Node000005" class="node">
 <title>Node5</title>
 <g id="a_Node000005"><a xlink:href="class_d_psim_1_1_gpu_sparse_adapter.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="315.5,-102.25 175,-102.25 175,-80 315.5,-80 315.5,-102.25"/>
+<polygon fill="white" stroke="#666666" points="315.5,-102.25 175,-102.25 175,-80 315.5,-80 315.5,-102.25"/>
 <text text-anchor="middle" x="245.25" y="-88.75" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::GpuSparseAdapter</text>
 </a>
 </g>
@@ -104,7 +104,7 @@
 <g id="Node000006" class="node">
 <title>Node6</title>
 <g id="a_Node000006"><a xlink:href="class_d_psim_1_1_k_l_u_adapter.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="299.38,-62.25 191.12,-62.25 191.12,-40 299.38,-40 299.38,-62.25"/>
+<polygon fill="white" stroke="#666666" points="299.38,-62.25 191.12,-62.25 191.12,-40 299.38,-40 299.38,-62.25"/>
 <text text-anchor="middle" x="245.25" y="-48.75" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::KLUAdapter</text>
 </a>
 </g>
@@ -122,7 +122,7 @@
 <g id="Node000007" class="node">
 <title>Node7</title>
 <g id="a_Node000007"><a xlink:href="class_d_psim_1_1_sparse_l_u_adapter.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="312.12,-22.25 178.38,-22.25 178.38,0 312.12,0 312.12,-22.25"/>
+<polygon fill="white" stroke="#666666" points="312.12,-22.25 178.38,-22.25 178.38,0 312.12,0 312.12,-22.25"/>
 <text text-anchor="middle" x="245.25" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::SparseLUAdapter</text>
 </a>
 </g>

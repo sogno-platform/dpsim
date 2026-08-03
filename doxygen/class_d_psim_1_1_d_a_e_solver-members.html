@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_d_psim_1_1_d_a_e_solver.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DAESolver</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">DPsim::DAESolver Member List</div></div>
 </div><!--header-->
@@ -96,18 +104,18 @@ $(function(){ initResizable(false); });
 <table class="directory">
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#ae18022b8b6584b8fa53fe1b94866bbaa">A</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#aa759f278890d2b0e2f3eb5d49c4d94c9">abstol</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Behaviour</b> enum name (defined in <a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#abf97ba7da8f4320061ac8101ef45cf2f">Behaviour</a> enum name</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#aa106d6b154d1afb1dffcf2ca05d017cf">DAESolver</a>(String name, const CPS::SystemTopology &amp;system, Real dt, Real mT0)</td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>doFrequencyParallelization</b>(Bool freqParallel) (defined in <a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#a9680fc1be173642556299eb91e300002">doFrequencyParallelization</a>(Bool freqParallel)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#af0d672f76696567eeffb57b333d62be3">doInitFromNodesAndTerminals</a>(Bool f)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#a67ae1b76aa257df267fd660c8c542813">doSteadyStateInit</a>(Bool f)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#acaca0ec55e6c02924c09da8de629912e">doSystemMatrixRecomputation</a>(Bool value)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a26f0b859a687c1b54acc13da4d378341">dstate_dt</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a565800dde7f5fa518924447ab4e4b5c5">getTasks</a>() override</td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Initialization</b> enum value (defined in <a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#abf97ba7da8f4320061ac8101ef45cf2faf599f4b013b69e30e84451f3de0c4069">Initialization</a> enum value</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#aab741458f52cae64ea769962d0ec5b2b">initialize</a>() final</td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>interalSteps</b> (defined in <a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>List</b> typedef (defined in <a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a2a86c98ec67d6fb3c6db07701aae2572">interalSteps</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#a1b7b853ce69c4c12f8e41994b1944b0c">List</a> typedef</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#ab809bab8e470b23d3fbedb056197eeb6">log</a>(Real time, Int timeStepCount)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#a9067693a5c1240839d825ff3adbdd50d">logLUTimes</a>()</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a292a6da4dc96988fceb6c57c960e11a3">LS</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
@@ -124,45 +132,47 @@ $(function(){ initResizable(false); });
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a3deac63d22fa2dd2dc5135683d4b7438">mNEQ</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a9d8b80d7da956319cac5f7924693c888">mNodes</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a8dcc474c87d774565d44518b7d2d8115">mOffsets</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mResidualFunctions</b> (defined in <a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a2a329ce1d9f8bba4a78c612ff18fb31e">mResidualFunctions</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#a19567cb788c079090ad68cc8b1c2f348">mSteadStIniAccLimit</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#a4e82b47444f296c2aa4b84eeea7515e0">mSteadStIniTimeLimit</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#ac1052010e7821d5c2e07e3e1a64187e7">mSteadyStateInit</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mSystem</b> (defined in <a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a57e9abfa1a45cbd4d2f302e183faec45">mSystem</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#a19bbb595644cc88dd6cd5cc653138a8b">mSystemMatrixRecomputationEnabled</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#acb0d898410bd0427fe38fd7552e15776">mSystemMatrixRecomputationMode</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mT0</b> (defined in <a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a3946084f3ebb52bece88134b4e7322fc">mT0</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#a2679d6c4e6b94ecf2b11b0bd7c2a5cf2">mTimeStep</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a943f3332309781d6c1274f12cf5ba55c">mTimestep</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>Ptr</b> typedef (defined in <a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>resEval</b> (defined in <a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>residualFunction</b>(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid) (defined in <a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#a7806d21e027fcba76a9ab2be5b5f28ba">Ptr</a> typedef</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a2dee8dc20f9cb3d8e32961a93e5b19f0">resEval</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a89e2480499e63154622f6e291b2a5c58">residualFunction</a>(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid)</td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#ade05f8b154ad1a46c813ada12fd3f09b">residualFunctionWrapper</a>(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data)</td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">protected</span><span class="mlabel">static</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#aa59e5c0bd44bac11e3f4b4f187de1a5c">rtol</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#a8ebf8f186a5707b10619c4393eae9c7f">setDirectLinearSolverConfiguration</a>(DirectLinearSolverConfiguration &amp;)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>setLogSolveTimes</b>(Bool value) (defined in <a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>setMaxNumberOfIterations</b>(int maxIterations) (defined in <a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#a9ad333c04d5e81c7d15c0a039e74e855">setLogSolveTimes</a>(Bool value)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#a88df10e32f8f761edff25a6f5bdbc548">setMaxNumberOfIterations</a>(int maxIterations)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#a9acdaabc5d46b35299fd5af1d893b840">setSolverAndComponentBehaviour</a>(Solver::Behaviour behaviour)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#a1b43ecdd64e83a3e4d5762355647b3ea">setSteadStIniAccLimit</a>(Real v)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#ad228b7c049f634a7935e437010bacc1b">setSteadStIniTimeLimit</a>(Real v)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>setSystem</b>(const CPS::SystemTopology &amp;system) (defined in <a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#a55d0b0fd08980de35d936ea167bf8a86">setSystem</a>(const CPS::SystemTopology &amp;system)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#af333a4dee89c17bbf902ef0fb2d68d52">setSystemMatrixRecomputationMode</a>(SystemMatrixRecomputationMode mode)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>setTimeStep</b>(Real timeStep) (defined in <a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>Simulation</b> enum value (defined in <a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Solver</b>(String name, CPS::Logger::Level logLevel) (defined in <a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#a6ec0c84fef733b967c37fad1835e2b6f">setTimeStep</a>(Real timeStep)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#abf97ba7da8f4320061ac8101ef45cf2fa0280f4fd824860a5c40d033b0395522d">Simulation</a> enum value</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#a43f3a5b98bf07a364645fa5f8193a5e7">Solver</a>(String name, CPS::Logger::Level logLevel)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a1bf8f9d55bfaac779b39d141a06e53b6">state</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a378f1542c04293d3c2621b62db1061ad">step</a>(Real time)</td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#ada054cfffa83077943a93e71e1fb8792">SystemMatrixRecomputationMode</a> enum name</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#adea56266dda0d3210123e4104625db83">tret</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919e">Type</a> enum name</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a9883d637f808f05263dace05a8761e84">~DAESolver</a>()</td><td class="entry"><a class="el" href="class_d_psim_1_1_d_a_e_solver.html">DPsim::DAESolver</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>~Solver</b>() (defined in <a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html#ae4f0e215033efa8e18e567c148488836">~Solver</a>()</td><td class="entry"><a class="el" href="class_d_psim_1_1_solver.html">DPsim::Solver</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
 </table></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

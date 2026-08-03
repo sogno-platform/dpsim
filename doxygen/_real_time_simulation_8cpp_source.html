@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_real_time_simulation_8cpp_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_af103632340511860a5310da360a5028.html">src</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">RealTimeSimulation.cpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_real_time_simulation_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -101,19 +109,21 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;chrono&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;ctime&gt;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;dpsim/RealTimeSimulation.h&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;<a class="code" href="_real_time_simulation_8h.html">dpsim/RealTimeSimulation.h</a>&gt;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;iomanip&gt;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;spdlog/fmt/chrono.h&gt;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">using namespace </span>CPS;</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespace_c_p_s.html">CPS</a>;</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespace_d_psim.html">DPsim</a>;</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>RealTimeSimulation::RealTimeSimulation(String name, <a class="code hl_class" href="class_d_psim_1_1_command_line_args.html">CommandLineArgs</a> &amp;args)</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    : <a class="code hl_class" href="class_d_psim_1_1_simulation.html">Simulation</a>(name, args), mTimer(){};</div>
+<div class="foldopen" id="foldopen00018" data-start="{" data-end="}">
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_real_time_simulation.html#a5d52e3cc5182192ddd6c8c34f158d695">   18</a></span><a class="code hl_function" href="class_d_psim_1_1_real_time_simulation.html#a5d52e3cc5182192ddd6c8c34f158d695">RealTimeSimulation::RealTimeSimulation</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> <a class="code hl_function" href="class_d_psim_1_1_simulation.html#a1f09cfe1d848d7245f89f62a8a5e231a">name</a>, <a class="code hl_class" href="class_d_psim_1_1_command_line_args.html">CommandLineArgs</a> &amp;args)</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    : <a class="code hl_function" href="class_d_psim_1_1_simulation.html#ac3489f2a307ee9f63c5e778b13402241">Simulation</a>(<a class="code hl_function" href="class_d_psim_1_1_simulation.html#a1f09cfe1d848d7245f89f62a8a5e231a">name</a>, args), <a class="code hl_variable" href="class_d_psim_1_1_real_time_simulation.html#ac3bb97bd32c571e7e2b30a54ed3f54a2">mTimer</a>(){};</div>
+</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
 <div class="foldopen" id="foldopen00021" data-start="{" data-end="}">
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_real_time_simulation.html#a96ac45b8475c7eb13d66d73d6958e748">   21</a></span>RealTimeSimulation::RealTimeSimulation(String name, Logger::Level logLevel)</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    : <a class="code hl_function" href="class_d_psim_1_1_simulation.html#ac3489f2a307ee9f63c5e778b13402241">Simulation</a>(name, logLevel), mTimer() {</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_real_time_simulation.html#a96ac45b8475c7eb13d66d73d6958e748">   21</a></span><a class="code hl_function" href="class_d_psim_1_1_real_time_simulation.html#a5d52e3cc5182192ddd6c8c34f158d695">RealTimeSimulation::RealTimeSimulation</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> <a class="code hl_function" href="class_d_psim_1_1_simulation.html#a1f09cfe1d848d7245f89f62a8a5e231a">name</a>, <a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel)</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    : <a class="code hl_function" href="class_d_psim_1_1_simulation.html#ac3489f2a307ee9f63c5e778b13402241">Simulation</a>(<a class="code hl_function" href="class_d_psim_1_1_simulation.html#a1f09cfe1d848d7245f89f62a8a5e231a">name</a>, logLevel), <a class="code hl_variable" href="class_d_psim_1_1_real_time_simulation.html#ac3bb97bd32c571e7e2b30a54ed3f54a2">mTimer</a>() {</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  <span class="comment">//addAttribute&lt;Int &gt;(&quot;overruns&quot;, nullptr, [=](){ return mTimer.overruns(); }, Flags::read);</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  <span class="comment">//addAttribute&lt;Int &gt;(&quot;overruns&quot;, nullptr, nullptr, Flags::read);</span></div>
@@ -126,8 +136,9 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>}</div>
 </div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_simulation.html#ae5c367f87c0b5dc9740bc6d00e44e72c">RealTimeSimulation::run</a>(<span class="keyword">const</span> Timer::StartClock::time_point &amp;startAt) {</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keywordflow">if</span> (!mInitialized)</div>
+<div class="foldopen" id="foldopen00032" data-start="{" data-end="}">
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_real_time_simulation.html#ae02f2c36653f681631bab1c7284df396">   32</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_simulation.html#ae5c367f87c0b5dc9740bc6d00e44e72c">RealTimeSimulation::run</a>(<span class="keyword">const</span> Timer::StartClock::time_point &amp;startAt) {</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keywordflow">if</span> (!<a class="code hl_variable" href="class_d_psim_1_1_simulation.html#ae0ff52940df19c32fc5dedb20914ee3b">mInitialized</a>)</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <a class="code hl_function" href="class_d_psim_1_1_simulation.html#a6e7d1624005c861948f1a07e6986770e">initialize</a>();</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> lg : <a class="code hl_variable" href="class_d_psim_1_1_simulation.html#ae9ac9cda0247820f7ca2cdfc9506c557">mLoggers</a>)</div>
@@ -145,16 +156,16 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>      <span class="stringliteral">&quot;Starting simulation at {:%Y-%m-%d %H:%M:%S} (delta_T = {} seconds)&quot;</span>,</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>      startAt, startAt - Timer::StartClock::now());</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  mTimer.setStartTime(startAt);</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  mTimer.setInterval(**<a class="code hl_variable" href="class_d_psim_1_1_simulation.html#a40be48cb7e32c3705830b046bd1cf859">mTimeStep</a>);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  mTimer.start();</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  <a class="code hl_variable" href="class_d_psim_1_1_real_time_simulation.html#ac3bb97bd32c571e7e2b30a54ed3f54a2">mTimer</a>.setStartTime(startAt);</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <a class="code hl_variable" href="class_d_psim_1_1_real_time_simulation.html#ac3bb97bd32c571e7e2b30a54ed3f54a2">mTimer</a>.setInterval(**<a class="code hl_variable" href="class_d_psim_1_1_simulation.html#a40be48cb7e32c3705830b046bd1cf859">mTimeStep</a>);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <a class="code hl_variable" href="class_d_psim_1_1_real_time_simulation.html#ac3bb97bd32c571e7e2b30a54ed3f54a2">mTimer</a>.start();</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  <span class="comment">// main loop</span></div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <span class="keywordflow">do</span> {</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    mTimer.<a class="code hl_function" href="class_d_psim_1_1_timer.html#a6b3d6e79d249b567a71104c4091d652f">sleep</a>();</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <a class="code hl_variable" href="class_d_psim_1_1_real_time_simulation.html#ac3bb97bd32c571e7e2b30a54ed3f54a2">mTimer</a>.sleep();</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <a class="code hl_function" href="class_d_psim_1_1_simulation.html#a3715d9008824a4e2754cac8d4f6bb2a3">step</a>();</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordflow">if</span> (mTimer.ticks() == 1)</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="class_d_psim_1_1_real_time_simulation.html#ac3bb97bd32c571e7e2b30a54ed3f54a2">mTimer</a>.ticks() == 1)</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>      SPDLOG_LOGGER_INFO(<a class="code hl_variable" href="class_d_psim_1_1_simulation.html#af53a5d3fbcf360257ced8b7033a654d0">mLog</a>, <span class="stringliteral">&quot;Simulation started.&quot;</span>);</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  } <span class="keywordflow">while</span> (<a class="code hl_variable" href="class_d_psim_1_1_simulation.html#ae19d32c4a69b5d90003504a28acb38ad">mTime</a> &lt; **<a class="code hl_variable" href="class_d_psim_1_1_simulation.html#a79e5b01e62de7b2e2cdd48671f038430">mFinalTime</a>);</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
@@ -168,10 +179,15 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> lg : <a class="code hl_variable" href="class_d_psim_1_1_simulation.html#ae9ac9cda0247820f7ca2cdfc9506c557">mLoggers</a>)</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    lg-&gt;stop();</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  mTimer.<a class="code hl_function" href="class_d_psim_1_1_timer.html#a63f0eb44b27402196590a03781515dba">stop</a>();</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  <a class="code hl_variable" href="class_d_psim_1_1_real_time_simulation.html#ac3bb97bd32c571e7e2b30a54ed3f54a2">mTimer</a>.stop();</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>}</div>
+</div>
+<div class="ttc" id="a_real_time_simulation_8h_html"><div class="ttname"><a href="_real_time_simulation_8h.html">RealTimeSimulation.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_logger_html_a021e964d1ab0d217a05b95736d2ea804"><div class="ttname"><a href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a></div><div class="ttdeci">spdlog::level::level_enum Level</div><div class="ttdef"><b>Definition</b> <a href="_logger_8h_source.html#l00033">Logger.h:33</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_command_line_args_html"><div class="ttname"><a href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_utils_8h_source.html#l00037">Utils.h:37</a></div></div>
-<div class="ttc" id="aclass_d_psim_1_1_simulation_html"><div class="ttname"><a href="class_d_psim_1_1_simulation.html">DPsim::Simulation</a></div><div class="ttdoc">The Simulation holds a SystemTopology and a Solver.</div><div class="ttdef"><b>Definition</b> <a href="_simulation_8h_source.html#l00031">Simulation.h:31</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_real_time_simulation_html_a5d52e3cc5182192ddd6c8c34f158d695"><div class="ttname"><a href="class_d_psim_1_1_real_time_simulation.html#a5d52e3cc5182192ddd6c8c34f158d695">DPsim::RealTimeSimulation::RealTimeSimulation</a></div><div class="ttdeci">RealTimeSimulation(String name, CommandLineArgs &amp;args)</div><div class="ttdef"><b>Definition</b> <a href="#l00018">RealTimeSimulation.cpp:18</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_real_time_simulation_html_ac3bb97bd32c571e7e2b30a54ed3f54a2"><div class="ttname"><a href="class_d_psim_1_1_real_time_simulation.html#ac3bb97bd32c571e7e2b30a54ed3f54a2">DPsim::RealTimeSimulation::mTimer</a></div><div class="ttdeci">Timer mTimer</div><div class="ttdef"><b>Definition</b> <a href="_real_time_simulation_8h_source.html#l00024">RealTimeSimulation.h:24</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_simulation_html_a1f09cfe1d848d7245f89f62a8a5e231a"><div class="ttname"><a href="class_d_psim_1_1_simulation.html#a1f09cfe1d848d7245f89f62a8a5e231a">DPsim::Simulation::name</a></div><div class="ttdeci">String name() const</div><div class="ttdef"><b>Definition</b> <a href="_simulation_8h_source.html#l00339">Simulation.h:339</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_simulation_html_a225ef7913a0d6e26e3217afe1959ee53"><div class="ttname"><a href="class_d_psim_1_1_simulation.html#a225ef7913a0d6e26e3217afe1959ee53">DPsim::Simulation::sync</a></div><div class="ttdeci">void sync() const</div><div class="ttdoc">Synchronize simulation with remotes by exchanging intial state over interfaces.</div><div class="ttdef"><b>Definition</b> <a href="_simulation_8cpp_source.html#l00226">Simulation.cpp:226</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_simulation_html_a3715d9008824a4e2754cac8d4f6bb2a3"><div class="ttname"><a href="class_d_psim_1_1_simulation.html#a3715d9008824a4e2754cac8d4f6bb2a3">DPsim::Simulation::step</a></div><div class="ttdeci">virtual Real step()</div><div class="ttdoc">Solve system A * x = z for x and current time.</div><div class="ttdef"><b>Definition</b> <a href="_simulation_8cpp_source.html#l00475">Simulation.cpp:475</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_simulation_html_a40be48cb7e32c3705830b046bd1cf859"><div class="ttname"><a href="class_d_psim_1_1_simulation.html#a40be48cb7e32c3705830b046bd1cf859">DPsim::Simulation::mTimeStep</a></div><div class="ttdeci">const CPS::Attribute&lt; Real &gt;::Ptr mTimeStep</div><div class="ttdoc">Simulation timestep.</div><div class="ttdef"><b>Definition</b> <a href="_simulation_8h_source.html#l00042">Simulation.h:42</a></div></div>
@@ -180,18 +196,22 @@ $(function(){ initResizable(false); });
 <div class="ttc" id="aclass_d_psim_1_1_simulation_html_a987bfea6444e5a647924b4ea1e026e2b"><div class="ttname"><a href="class_d_psim_1_1_simulation.html#a987bfea6444e5a647924b4ea1e026e2b">DPsim::Simulation::mScheduler</a></div><div class="ttdeci">std::shared_ptr&lt; Scheduler &gt; mScheduler</div><div class="ttdoc">Scheduler used for task scheduling.</div><div class="ttdef"><b>Definition</b> <a href="_simulation_8h_source.html#l00145">Simulation.h:145</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_simulation_html_a9b936cb2befdb516e6ef39e278522953"><div class="ttname"><a href="class_d_psim_1_1_simulation.html#a9b936cb2befdb516e6ef39e278522953">DPsim::Simulation::mInterfaces</a></div><div class="ttdeci">std::vector&lt; Interface::Ptr &gt; mInterfaces</div><div class="ttdoc">Vector of Interfaces.</div><div class="ttdef"><b>Definition</b> <a href="_simulation_8h_source.html#l00152">Simulation.h:152</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_simulation_html_ac3489f2a307ee9f63c5e778b13402241"><div class="ttname"><a href="class_d_psim_1_1_simulation.html#ac3489f2a307ee9f63c5e778b13402241">DPsim::Simulation::Simulation</a></div><div class="ttdeci">Simulation(String name, CommandLineArgs &amp;args)</div><div class="ttdoc">Creates simulation with name and CommandLineArgs.</div><div class="ttdef"><b>Definition</b> <a href="_simulation_8cpp_source.html#l00051">Simulation.cpp:51</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_simulation_html_ae0ff52940df19c32fc5dedb20914ee3b"><div class="ttname"><a href="class_d_psim_1_1_simulation.html#ae0ff52940df19c32fc5dedb20914ee3b">DPsim::Simulation::mInitialized</a></div><div class="ttdeci">Bool mInitialized</div><div class="ttdef"><b>Definition</b> <a href="_simulation_8h_source.html#l00135">Simulation.h:135</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_simulation_html_ae19d32c4a69b5d90003504a28acb38ad"><div class="ttname"><a href="class_d_psim_1_1_simulation.html#ae19d32c4a69b5d90003504a28acb38ad">DPsim::Simulation::mTime</a></div><div class="ttdeci">Real mTime</div><div class="ttdoc">Time variable that is incremented at every step.</div><div class="ttdef"><b>Definition</b> <a href="_simulation_8h_source.html#l00081">Simulation.h:81</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_simulation_html_ae5c367f87c0b5dc9740bc6d00e44e72c"><div class="ttname"><a href="class_d_psim_1_1_simulation.html#ae5c367f87c0b5dc9740bc6d00e44e72c">DPsim::Simulation::run</a></div><div class="ttdeci">void run()</div><div class="ttdoc">Run simulation until total time is elapsed.</div><div class="ttdef"><b>Definition</b> <a href="_simulation_8cpp_source.html#l00465">Simulation.cpp:465</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_simulation_html_ae9ac9cda0247820f7ca2cdfc9506c557"><div class="ttname"><a href="class_d_psim_1_1_simulation.html#ae9ac9cda0247820f7ca2cdfc9506c557">DPsim::Simulation::mLoggers</a></div><div class="ttdeci">DataLoggerInterface::List mLoggers</div><div class="ttdoc">The data loggers.</div><div class="ttdef"><b>Definition</b> <a href="_simulation_8h_source.html#l00162">Simulation.h:162</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_simulation_html_af53a5d3fbcf360257ced8b7033a654d0"><div class="ttname"><a href="class_d_psim_1_1_simulation.html#af53a5d3fbcf360257ced8b7033a654d0">DPsim::Simulation::mLog</a></div><div class="ttdeci">CPS::Logger::Log mLog</div><div class="ttdoc">Simulation logger.</div><div class="ttdef"><b>Definition</b> <a href="_simulation_8h_source.html#l00178">Simulation.h:178</a></div></div>
-<div class="ttc" id="aclass_d_psim_1_1_timer_html_a63f0eb44b27402196590a03781515dba"><div class="ttname"><a href="class_d_psim_1_1_timer.html#a63f0eb44b27402196590a03781515dba">DPsim::Timer::stop</a></div><div class="ttdeci">void stop()</div><div class="ttdoc">Stop real-time timer.</div><div class="ttdef"><b>Definition</b> <a href="_timer_8cpp_source.html#l00125">Timer.cpp:125</a></div></div>
-<div class="ttc" id="aclass_d_psim_1_1_timer_html_a6b3d6e79d249b567a71104c4091d652f"><div class="ttname"><a href="class_d_psim_1_1_timer.html#a6b3d6e79d249b567a71104c4091d652f">DPsim::Timer::sleep</a></div><div class="ttdeci">void sleep()</div><div class="ttdoc">Suspend thread execution until next tick.</div><div class="ttdef"><b>Definition</b> <a href="_timer_8cpp_source.html#l00054">Timer.cpp:54</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html"><div class="ttname"><a href="namespace_c_p_s.html">CPS</a></div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00017">Attribute.h:17</a></div></div>
 <div class="ttc" id="anamespace_d_psim_html"><div class="ttname"><a href="namespace_d_psim.html">DPsim</a></div><div class="ttdef"><b>Definition</b> <a href="_dense_l_u_adapter_8cpp_source.html#l00013">DenseLUAdapter.cpp:13</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a66e48a625a26fd3c1d2198148f9d59e9"><div class="ttname"><a href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">DPsim::String</a></div><div class="ttdeci">CPS::String String</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00020">Definitions.h:20</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_af103632340511860a5310da360a5028.html">src</a></li><li class="navelem"><a class="el" href="_real_time_simulation_8cpp.html">RealTimeSimulation.cpp</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

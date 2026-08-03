@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_d_psim_1_1cuda_1_1_vector.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><b>cuda</b></li><li class="navelem"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">Vector</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">DPsim::cuda::Vector&lt; T &gt; Member List</div></div>
 </div><!--header-->
@@ -94,21 +102,23 @@ $(function(){ initResizable(false); });
 
 <p>This is the complete list of members for <a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a>, including all inherited members.</p>
 <table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>begin</b>() (defined in <a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>data</b>() const (defined in <a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>end</b>() (defined in <a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>operator=</b>(const Vector &amp;)=delete (defined in <a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>operator=</b>(Vector &amp;&amp;other) (defined in <a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>operator[]</b>(size_t pos) (defined in <a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Vector</b>(size_t preAlloc) (defined in <a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>Vector</b>(Vector &amp;)=delete (defined in <a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Vector</b>(Vector &amp;&amp;other) (defined in <a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>~Vector</b>() (defined in <a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html#a2e013e23c686a82e4f7f80401a585acf">begin</a>()</td><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html#ad5b0a00ebde4c039e395ca49a2b848c3">data</a>() const</td><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html#a5bca8edd8a54fd26180fb9870d56550b">end</a>()</td><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html#aa180685e874339bbfdf3f167ddeaee05">operator=</a>(const Vector &amp;)=delete</td><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html#af21e84c2629a254123013f82d849f994">operator=</a>(Vector &amp;&amp;other)</td><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html#aba2e0853551d89e1fd29147d37ec112b">operator[]</a>(size_t pos)</td><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html#aa56504a5e61e8d4c384429d41a89e164">Vector</a>(size_t preAlloc)</td><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html#a3a584a10ab6875951ef277b143dcdaac">Vector</a>(Vector &amp;)=delete</td><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html#aa385877c5e5d083f93b91b8b4b5825d8">Vector</a>(Vector &amp;&amp;other)</td><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html#a6e55037aa13de4fb01fc0b58b325dcbe">~Vector</a>()</td><td class="entry"><a class="el" href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
 </table></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

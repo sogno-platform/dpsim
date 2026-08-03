@@ -22,7 +22,7 @@
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="131.5,-123.25 0,-123.25 0,-72.5 131.5,-72.5 131.5,-123.25"/>
+<polygon fill="white" stroke="#666666" points="131.5,-123.25 0,-123.25 0,-72.5 131.5,-72.5 131.5,-123.25"/>
 <text text-anchor="start" x="8" y="-109.75" font-family="Helvetica,sans-Serif" font-size="10.00">std::iterator&lt; std</text>
 <text text-anchor="start" x="8" y="-95.5" font-family="Helvetica,sans-Serif" font-size="10.00">::random_access_iterator</text>
 <text text-anchor="middle" x="65.75" y="-81.25" font-family="Helvetica,sans-Serif" font-size="10.00">_tag, T &gt;</text>

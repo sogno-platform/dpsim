@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_e_m_t___v_type_s_s_n_comp_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,58 +95,73 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_0ab18182ec9e12ca28df221a97888cf8.html">EMT</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">EMT_VTypeSSNComp.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University</span></div>
+<a href="_e_m_t___v_type_s_s_n_comp_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_SSNComp.h&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;<a class="code" href="_e_m_t___s_s_n_comp_8h.html">dpsim-models/EMT/EMT_SSNComp.h</a>&gt;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">namespace </span>CPS {</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">namespace </span>EMT {</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s.html">CPS</a> {</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s_1_1_e_m_t.html">EMT</a> {</div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span></div>
 <div class="foldopen" id="foldopen00020" data-start="{" data-end="};">
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html">   20</a></span><span class="keyword">class </span>VTypeSSNComp : <span class="keyword">public</span> SSNComp {</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html">   20</a></span><span class="keyword">class </span><a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html#a3302fb62bea571ffbefca7d1d81fbb8e">VTypeSSNComp</a> : <span class="keyword">public</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a9d77cb61e7374cb1e09b91c3e0f04116">SSNComp</a> {</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  VTypeSSNComp(String <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, String name, Int inputSize, Int outputSize,</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>               Logger::Level logLevel = Logger::Level::off);</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html#a3302fb62bea571ffbefca7d1d81fbb8e">VTypeSSNComp</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="code hl_typedef" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> inputSize, <a class="code hl_typedef" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> outputSize,</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>               <a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel = Logger::Level::off);</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  Attribute&lt;Matrix&gt;::Ptr inputAttribute() <span class="keyword">const</span> <span class="keyword">override</span> <span class="keyword">final</span>;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  Attribute&lt;Matrix&gt;::Ptr outputAttribute() <span class="keyword">const</span> <span class="keyword">override</span> <span class="keyword">final</span>;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;Matrix&gt;::Ptr</a> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html#a0f49f121e5880bf57c18cfe620f0f593">inputAttribute</a>() <span class="keyword">const</span> <span class="keyword">override</span> <span class="keyword">final</span>;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;Matrix&gt;::Ptr</a> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html#a890597b92d8d113dd955623282ec7f53">outputAttribute</a>() <span class="keyword">const</span> <span class="keyword">override</span> <span class="keyword">final</span>;</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="comment">// Reconstruct the steady-state SSN input vector from node/terminal data.</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  <span class="comment">// For V-type SSN components, this corresponds to the interface voltage input.</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <span class="keyword">virtual</span> MatrixComp buildInitialInputFromNodes(Real frequency) = 0;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html#a235cf61eeb51ae6be19264aa5b237d05">   30</a></span>  <span class="keyword">virtual</span> <a class="code hl_typedef" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html#a235cf61eeb51ae6be19264aa5b237d05">buildInitialInputFromNodes</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> frequency) = 0;</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html#a6caea111f850de191efe8fb837bbbde4">initializeFromNodesAndTerminals</a>(Real frequency) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html#a6caea111f850de191efe8fb837bbbde4">initializeFromNodesAndTerminals</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> frequency) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <span class="keywordtype">void</span> mnaCompUpdateCurrent(<span class="keyword">const</span> Matrix &amp;leftVector) <span class="keyword">override</span> <span class="keyword">final</span>;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html#a6dfd03f04b35fbb13cea311fcc531000">mnaCompUpdateCurrent</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;leftVector) <span class="keyword">override</span> <span class="keyword">final</span>;</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="keywordtype">void</span> mnaCompPostStep(Real time, Int timeStepCount,</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                       Attribute&lt;Matrix&gt;::Ptr &amp;leftVector) <span class="keyword">override</span> <span class="keyword">final</span>;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html#aad2fedf7718c00d9c5be8cf3705a6449">mnaCompPostStep</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> time, <a class="code hl_typedef" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> timeStepCount,</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                       <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;Matrix&gt;::Ptr</a> &amp;leftVector) <span class="keyword">override</span> <span class="keyword">final</span>;</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>};</div>
 </div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>} <span class="comment">// namespace EMT</span></div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>} <span class="comment">// namespace CPS</span></div>
+<div class="ttc" id="a_e_m_t___s_s_n_comp_8h_html"><div class="ttname"><a href="_e_m_t___s_s_n_comp_8h.html">EMT_SSNComp.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_ad552c848f780007d59f489540fa7e4d6"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">CPS::Attribute::Ptr</a></div><div class="ttdeci">AttributePointer&lt; Attribute&lt; T &gt; &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00250">Attribute.h:250</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_s_s_n_comp_html_a9d77cb61e7374cb1e09b91c3e0f04116"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a9d77cb61e7374cb1e09b91c3e0f04116">CPS::EMT::SSNComp::SSNComp</a></div><div class="ttdeci">SSNComp(String uid, String name, Int inputSize, Int outputSize, Logger::Level logLevel=Logger::Level::off)</div><div class="ttdef"><b>Definition</b> <a href="_e_m_t___s_s_n_comp_8cpp_source.html#l00008">EMT_SSNComp.cpp:8</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp_html_a0f49f121e5880bf57c18cfe620f0f593"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html#a0f49f121e5880bf57c18cfe620f0f593">CPS::EMT::VTypeSSNComp::inputAttribute</a></div><div class="ttdeci">Attribute&lt; Matrix &gt;::Ptr inputAttribute() const override final</div><div class="ttdef"><b>Definition</b> <a href="_e_m_t___v_type_s_s_n_comp_8cpp_source.html#l00015">EMT_VTypeSSNComp.cpp:15</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp_html_a235cf61eeb51ae6be19264aa5b237d05"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html#a235cf61eeb51ae6be19264aa5b237d05">CPS::EMT::VTypeSSNComp::buildInitialInputFromNodes</a></div><div class="ttdeci">virtual MatrixComp buildInitialInputFromNodes(Real frequency)=0</div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp_html_a3302fb62bea571ffbefca7d1d81fbb8e"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html#a3302fb62bea571ffbefca7d1d81fbb8e">CPS::EMT::VTypeSSNComp::VTypeSSNComp</a></div><div class="ttdeci">VTypeSSNComp(String uid, String name, Int inputSize, Int outputSize, Logger::Level logLevel=Logger::Level::off)</div><div class="ttdef"><b>Definition</b> <a href="_e_m_t___v_type_s_s_n_comp_8cpp_source.html#l00008">EMT_VTypeSSNComp.cpp:8</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp_html_a6caea111f850de191efe8fb837bbbde4"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html#a6caea111f850de191efe8fb837bbbde4">CPS::EMT::VTypeSSNComp::initializeFromNodesAndTerminals</a></div><div class="ttdeci">void initializeFromNodesAndTerminals(Real frequency) override</div><div class="ttdoc">Initializes Component variables according to power flow data stored in Nodes.</div><div class="ttdef"><b>Definition</b> <a href="_e_m_t___v_type_s_s_n_comp_8cpp_source.html#l00023">EMT_VTypeSSNComp.cpp:23</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp_html_a6dfd03f04b35fbb13cea311fcc531000"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html#a6dfd03f04b35fbb13cea311fcc531000">CPS::EMT::VTypeSSNComp::mnaCompUpdateCurrent</a></div><div class="ttdeci">void mnaCompUpdateCurrent(const Matrix &amp;leftVector) override final</div><div class="ttdef"><b>Definition</b> <a href="_e_m_t___v_type_s_s_n_comp_8cpp_source.html#l00048">EMT_VTypeSSNComp.cpp:48</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp_html_a890597b92d8d113dd955623282ec7f53"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html#a890597b92d8d113dd955623282ec7f53">CPS::EMT::VTypeSSNComp::outputAttribute</a></div><div class="ttdeci">Attribute&lt; Matrix &gt;::Ptr outputAttribute() const override final</div><div class="ttdef"><b>Definition</b> <a href="_e_m_t___v_type_s_s_n_comp_8cpp_source.html#l00019">EMT_VTypeSSNComp.cpp:19</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp_html_aad2fedf7718c00d9c5be8cf3705a6449"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html#aad2fedf7718c00d9c5be8cf3705a6449">CPS::EMT::VTypeSSNComp::mnaCompPostStep</a></div><div class="ttdeci">void mnaCompPostStep(Real time, Int timeStepCount, Attribute&lt; Matrix &gt;::Ptr &amp;leftVector) override final</div><div class="ttdef"><b>Definition</b> <a href="_e_m_t___v_type_s_s_n_comp_8cpp_source.html#l00052">EMT_VTypeSSNComp.cpp:52</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a38b8318459b1651160029263eff6ca47"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">CPS::IdentifiedObject::name</a></div><div class="ttdeci">String name()</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00059">IdentifiedObject.h:59</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a66b765f33341283bc9b916c74047c749"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">CPS::IdentifiedObject::uid</a></div><div class="ttdeci">String uid()</div><div class="ttdoc">Returns unique id.</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00061">IdentifiedObject.h:61</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_logger_html_a021e964d1ab0d217a05b95736d2ea804"><div class="ttname"><a href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a></div><div class="ttdeci">spdlog::level::level_enum Level</div><div class="ttdef"><b>Definition</b> <a href="_logger_8h_source.html#l00033">Logger.h:33</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_1_1_e_m_t_html"><div class="ttname"><a href="namespace_c_p_s_1_1_e_m_t.html">CPS::EMT</a></div><div class="ttdef"><b>Definition</b> <a href="_e_m_t___i_type_s_s_n_comp_8h_source.html#l00010">EMT_ITypeSSNComp.h:10</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html"><div class="ttname"><a href="namespace_c_p_s.html">CPS</a></div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00017">Attribute.h:17</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a081464dfe063130c6fca7929ce291b15"><div class="ttname"><a href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">CPS::Matrix</a></div><div class="ttdeci">Eigen::Matrix&lt; Real, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor &gt; Matrix</div><div class="ttdoc">Dense matrix for real numbers.</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00081">Definitions.h:81</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a09f6ad37b12370b4b58624822be9b055"><div class="ttname"><a href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a></div><div class="ttdeci">std::string String</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00065">Definitions.h:65</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a603c4b77d70922bc0423adc57725df50"><div class="ttname"><a href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a></div><div class="ttdeci">double Real</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00062">Definitions.h:62</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_aabddb6241134e6ad9d61ae357bc104fa"><div class="ttname"><a href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">CPS::Int</a></div><div class="ttdeci">int Int</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00061">Definitions.h:61</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_ab73adea852da41581c8fb6965d891567"><div class="ttname"><a href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">CPS::MatrixComp</a></div><div class="ttdeci">Eigen::Matrix&lt; Complex, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor &gt; MatrixComp</div><div class="ttdoc">Dense matrix for complex numbers.</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00084">Definitions.h:84</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_0ab18182ec9e12ca28df221a97888cf8.html">EMT</a></li><li class="navelem"><a class="el" href="_e_m_t___v_type_s_s_n_comp_8h.html">EMT_VTypeSSNComp.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

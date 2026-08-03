@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,19 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
 </div><!-- top -->
-<div id="doc-content">
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('functions_func.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -84,46 +96,69 @@ $(function(){ initResizable(false); });
 </div>
 
 <div class="contents">
-<div class="textblock">Here is a list of all documented functions with links to the class documentation for each member:</div>
+<div class="textblock">Here is a list of all functions with links to the classes they belong to:</div>
 
 <h3><a id="index_a" name="index_a"></a>- a -</h3><ul>
 <li>abcToDq0Transform()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q.html#a9b887e9c2c5b8df5cc86426bfa80146c">CPS::DP::Ph3::SynchronGeneratorDQ</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#ab720d99e3964b81152bb17dc95598725">CPS::DP::Ph3::SynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_d_q.html#ad6eaf7fd137a1517de4f55cd57a3450b">CPS::EMT::Ph3::SynchronGeneratorDQ</a></li>
+<li>abs()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_math.html#ad778408f22b79894bf80a3b719c98b04">CPS::Math</a></li>
+<li>addBarrier()&#160;:&#160;<a class="el" href="class_d_psim_1_1_barrier_task.html#ae11b0b139ed4922a2506f6d82280ce25">DPsim::BarrierTask</a></li>
+<li>AddBStep()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab_1_1_add_b_step.html#a9825409c41d491c84ad4f6793624aa5c">CPS::DP::Ph1::SynchronGeneratorTrStab::AddBStep</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_tr_stab_1_1_add_b_step.html#abedcedef5f4bf6f5d584b130a7d6ba70">CPS::EMT::Ph3::SynchronGeneratorTrStab::AddBStep</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator_tr_stab_1_1_add_b_step.html#a57e16c6a23e513758c07793f992b3b92">CPS::SP::Ph1::SynchronGeneratorTrStab::AddBStep</a></li>
 <li>addComponent()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_system_topology.html#aa53ac68ad700fd9670a93f3f1988315b">CPS::SystemTopology</a></li>
 <li>addComponents()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_system_topology.html#a9c818fae4148fd62e5f8177e3d541491">CPS::SystemTopology</a></li>
 <li>addControlPreStepDependencies()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html#aa2c8e36ec3b8a8ffc5e629f98eedaff7">CPS::DP::Ph1::AvVoltageSourceInverterDQ</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q.html#a6d21d484b178cdfe2f62e6dda56c1c1e">CPS::EMT::Ph3::AvVoltageSourceInverterDQ</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_v_s_i_voltage_control_v_c_o.html#aa0917a1d260a901db299adcc799a08a2">CPS::EMT::Ph3::VSIVoltageControlVCO</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html#a75c2394e58803a1320e4d6df858f8ab7">CPS::SP::Ph1::AvVoltageSourceInverterDQ</a></li>
 <li>addControlStepDependencies()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html#a6cd1e8afb5bb4b8c665af537324aeb56">CPS::DP::Ph1::AvVoltageSourceInverterDQ</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q.html#a53ddb73e65a92602d4ab8806dbe840df">CPS::EMT::Ph3::AvVoltageSourceInverterDQ</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_v_s_i_voltage_control_v_c_o.html#a0be5141a9e9f386b596e40eb867e79c9">CPS::EMT::Ph3::VSIVoltageControlVCO</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html#a840cb344183cffc90132b62d35642033">CPS::SP::Ph1::AvVoltageSourceInverterDQ</a></li>
-<li>addEvent()&#160;:&#160;<a class="el" href="class_d_psim_1_1_simulation.html#ad4c419f1b7baccc3eefa059b3e052e7f">DPsim::Simulation</a></li>
+<li>addEdge()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_graph_1_1_graph.html#a1a082ba16620ca94c7588bdd4aff010c">CPS::Graph::Graph</a></li>
+<li>addEvent()&#160;:&#160;<a class="el" href="class_d_psim_1_1_event_queue.html#ad86256bd6b5e95c71c239df57fb57c00">DPsim::EventQueue</a>, <a class="el" href="class_d_psim_1_1_simulation.html#ad4c419f1b7baccc3eefa059b3e052e7f">DPsim::Simulation</a></li>
 <li>addExciter()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#a84c6c8b1cd87edddf59a70e861b551e2">CPS::Base::ReducedOrderSynchronGenerator&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_base_1_1_synchron_generator.html#a92fbc4fc76fa961d44e24737b35ec2c3">CPS::Base::SynchronGenerator</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#ad4257b52bf1131cf132460bf1538a621">CPS::DP::Ph3::SynchronGeneratorVBR</a></li>
-<li>addGovernor()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#ad1ca06be2a302784852245d5bc142afe">CPS::Base::ReducedOrderSynchronGenerator&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_base_1_1_synchron_generator.html#ac50cd11b714a9baa11733b45ea81ed9c">CPS::Base::SynchronGenerator</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#ab739cf424ee0d12ef27ec1d0a1b05a36">CPS::DP::Ph3::SynchronGeneratorVBR</a></li>
+<li>addExport()&#160;:&#160;<a class="el" href="class_d_psim_1_1_interface.html#ab7799cc7e87df1920e55288a84063497">DPsim::Interface</a></li>
+<li>addGovernor()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#ad1ca06be2a302784852245d5bc142afe">CPS::Base::ReducedOrderSynchronGenerator&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_base_1_1_synchron_generator.html#a763d03947fbed7314c1fc97d88293e9d">CPS::Base::SynchronGenerator</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#ab739cf424ee0d12ef27ec1d0a1b05a36">CPS::DP::Ph3::SynchronGeneratorVBR</a></li>
 <li>addGovernorAndTurbine()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#a06ef7fcabd73e353fbd2fc56ab590084">CPS::Base::ReducedOrderSynchronGenerator&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_base_1_1_synchron_generator.html#a49d6380fc090fa7ee1c77fd4036ed2e0">CPS::Base::SynchronGenerator</a></li>
+<li>addImport()&#160;:&#160;<a class="el" href="class_d_psim_1_1_interface.html#a6b00acb09b792e3352ff76ae817f696d">DPsim::Interface</a></li>
+<li>addInterface()&#160;:&#160;<a class="el" href="class_d_psim_1_1_simulation.html#accd524957be9de39afa9890c99fbffe7">DPsim::Simulation</a></li>
 <li>addLogger()&#160;:&#160;<a class="el" href="class_d_psim_1_1_simulation.html#a63a4772e43122e1412acfb2f5b7b646e">DPsim::Simulation</a></li>
 <li>addMNASubComponent()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a36787ca664e85614aca65a2683547147">CPS::CompositePowerComp&lt; VarType &gt;</a></li>
-<li>addNode()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_system_topology.html#a51b4e341647b58752989b8531b96a290">CPS::SystemTopology</a></li>
+<li>addNode()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_graph_1_1_graph.html#ae638521a28e63d5187aa97f19b245fac">CPS::Graph::Graph</a>, <a class="el" href="class_c_p_s_1_1_system_topology.html#a51b4e341647b58752989b8531b96a290">CPS::SystemTopology</a></li>
 <li>addNodeAt()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_system_topology.html#a8d4d3ba26491a69e8777065d78794b39">CPS::SystemTopology</a></li>
 <li>addNodes()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_system_topology.html#a19f28928530459ef66b4f25ebc71006f">CPS::SystemTopology</a></li>
 <li>addPSS()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#a4af1224cbd034142295c2c2fdec057aa">CPS::Base::ReducedOrderSynchronGenerator&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_base_1_1_synchron_generator.html#a5ecf4746e704ac7793bc458b2f0eaaf0">CPS::Base::SynchronGenerator</a></li>
 <li>addTask()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_attribute_dynamic.html#a1c947ae5b79f4387cc909ddb6c69af06">CPS::AttributeDynamic&lt; T &gt;</a></li>
 <li>addTearComponent()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_system_topology.html#a646f57b58f20c228888118963ec2390e">CPS::SystemTopology</a></li>
 <li>addTearComponents()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_system_topology.html#af229503029043929f06446f117d7e6b2">CPS::SystemTopology</a></li>
+<li>addToMatrixElement()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_math.html#ad98d7e8ddd1b77b37f273165e9109fc4">CPS::Math</a></li>
+<li>addToVectorElement()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_math.html#a6fc51d31c7607f2662aae93f9adeb6b5">CPS::Math</a></li>
+<li>allocateDeviceMemory()&#160;:&#160;<a class="el" href="class_d_psim_1_1_gpu_dense_adapter.html#a82a4ee5ccd38e419cfaec8d0baea5032">DPsim::GpuDenseAdapter</a></li>
 <li>appendDependencies()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_attribute_base.html#ad239e5eb700b2f6a13f0cf0a417e3d23">CPS::AttributeBase</a>, <a class="el" href="class_c_p_s_1_1_attribute_dynamic.html#a6ae57409a29917f653ff5772fe1fa5de">CPS::AttributeDynamic&lt; T &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute_static.html#a636c3781af596ecaf9bbf1f4f17df27c">CPS::AttributeStatic&lt; T &gt;</a></li>
-<li>applyConfiguration()&#160;:&#160;<a class="el" href="class_d_psim_1_1_k_l_u_adapter.html#a14883b8c2cd220468dfc0b8c8f999c89">DPsim::KLUAdapter</a></li>
+<li>applyConfiguration()&#160;:&#160;<a class="el" href="class_d_psim_1_1_direct_linear_solver.html#a9c464c753c4460154f10cab2e09d7cea">DPsim::DirectLinearSolver</a>, <a class="el" href="class_d_psim_1_1_k_l_u_adapter.html#a14883b8c2cd220468dfc0b8c8f999c89">DPsim::KLUAdapter</a></li>
 <li>applyDPToDQTransform()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#ad6be34cdda05ebd7022376e6e8b95b2d">CPS::DP::Ph1::DPDQInterface</a></li>
 <li>applyDQToDPTransform()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#a693510349339e86d0c2733e9f8f63506">CPS::DP::Ph1::DPDQInterface</a></li>
+<li>applyFundamentalPerUnitParameters()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_base_1_1_synchron_generator.html#ad8dd05bd26c84373477cbe89adefcfc6">CPS::Base::SynchronGenerator</a></li>
 <li>applyParametersOperationalPerUnit()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_d_q.html#a1e439670c8c9bea39eca69ce1c2c19e6">CPS::EMT::Ph3::SynchronGeneratorDQ</a></li>
 <li>applyStateSpaceTrapezoidalMatrices()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_math.html#ab4fbe7cafce1d49a7461a40dd0b67f04">CPS::Math</a></li>
 <li>asRawPointer()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_attribute.html#a5b33beb625bf79a8a868e6d0019e63e1">CPS::Attribute&lt; T &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute_dynamic.html#ab21c9218dace4c65bdaba7113fff4e36">CPS::AttributeDynamic&lt; T &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute_static.html#a3a93c8879210b69160db32639794df3b">CPS::AttributeStatic&lt; T &gt;</a></li>
 <li>assignLoadProfile()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#aee322f4b844dce6629b34aaa49e2a736">CPS::CSVReader</a></li>
+<li>assignLoadProfileDP()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#acd806c9dd7a269f61c6ac192d4cd0925">CPS::CSVReader</a></li>
 <li>assignMatrixNodeIndices()&#160;:&#160;<a class="el" href="class_d_psim_1_1_mna_solver.html#abefb21e1d88c529189f275d80879d64f">DPsim::MnaSolver&lt; VarType &gt;</a>, <a class="el" href="class_d_psim_1_1_p_f_solver.html#a4ed031ce17e93a6393955245961541b1">DPsim::PFSolver</a></li>
+<li>assignPVGeneration()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#aa56a0bfd0b45a8964dd8e0fa0e8da1ff">CPS::CSVReader</a></li>
+<li>Attribute()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_attribute.html#a202fa49158c4b5d8bb94aee1ff07fb11">CPS::Attribute&lt; T &gt;</a></li>
 <li>attribute()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_attribute_list.html#a56852dd159520e4a6226e39234fa42f4">CPS::AttributeList</a>, <a class="el" href="class_c_p_s_1_1_identified_object.html#acd676ba54ba38172e56e1b492bfe54ad">CPS::IdentifiedObject</a></li>
+<li>AttributeDynamic()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_attribute_dynamic.html#a1ae7507bac1d91bfcfd884317cee99ef">CPS::AttributeDynamic&lt; T &gt;</a></li>
+<li>AttributeEvent()&#160;:&#160;<a class="el" href="class_d_psim_1_1_attribute_event.html#abb8938ff5c0ad511fe578bf5004ddac5">DPsim::AttributeEvent&lt; T &gt;</a></li>
+<li>AttributeList()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_attribute_list.html#a59d05036e7d815bde56c0bb7bb3fd8f4">CPS::AttributeList</a></li>
+<li>AttributePointer()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_attribute_pointer.html#a2467358442aa4a08cf6e2650ac292a58">CPS::AttributePointer&lt; T &gt;</a></li>
+<li>attributes()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_attribute_list.html#a5bd26da5f8623dcc96ae92d7f3ca6af1">CPS::AttributeList</a>, <a class="el" href="class_c_p_s_1_1_identified_object.html#a23d3f8e780f080b4049b9e5be0662957">CPS::IdentifiedObject</a></li>
+<li>AttributeStatic()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_attribute_static.html#a96dd5da19794a13aed30762f83d5739a">CPS::AttributeStatic&lt; T &gt;</a></li>
 <li>attributeTyped()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_attribute_list.html#aa798f74c213e3ef35fd51984ade2b334">CPS::AttributeList</a>, <a class="el" href="class_c_p_s_1_1_identified_object.html#a3e10f199c595e0699725ad2cd4391c2c">CPS::IdentifiedObject</a></li>
+<li>AttributeUpdateTask()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_attribute_update_task.html#a6dec466031aadcfc867988436d5c842e">CPS::AttributeUpdateTask&lt; DependentType, DependencyTypes &gt;</a></li>
 <li>AvVoltageSourceInverterDQ()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html#a4e362f6efd22bccf7f81073475a5d549">CPS::DP::Ph1::AvVoltageSourceInverterDQ</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q.html#aa26b5bcdef0ca623ba1a31d0e4cb585d">CPS::EMT::Ph3::AvVoltageSourceInverterDQ</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html#a3dae9b24bfc07b451c427f3c5eb4cd85">CPS::SP::Ph1::AvVoltageSourceInverterDQ</a></li>
-<li>AvVoltSourceInverterStateSpace()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a86da3c17bf092c7c64242b0a86b3075a">CPS::DP::Ph3::AvVoltSourceInverterStateSpace</a></li>
+<li>AvVoltSourceInverterStateSpace()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_volt_source_inverter_state_space.html#a60b4958d38d927c0ac518e56dffb5088">CPS::DP::Ph1::AvVoltSourceInverterStateSpace</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#a86da3c17bf092c7c64242b0a86b3075a">CPS::DP::Ph3::AvVoltSourceInverterStateSpace</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html#ae6e9221e970fedd6a4550f8a9689cfc2">CPS::EMT::Ph3::AvVoltSourceInverterStateSpace</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

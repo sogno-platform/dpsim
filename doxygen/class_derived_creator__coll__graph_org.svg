@@ -22,7 +22,7 @@
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="class_creator.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="136.38,-94.75 23.62,-94.75 23.62,-72.5 136.38,-72.5 136.38,-94.75"/>
+<polygon fill="white" stroke="#666666" points="136.38,-94.75 23.62,-94.75 23.62,-72.5 136.38,-72.5 136.38,-94.75"/>
 <text text-anchor="middle" x="80" y="-81.25" font-family="Helvetica,sans-Serif" font-size="10.00">Creator&lt; BaseClass &gt;</text>
 </a>
 </g>

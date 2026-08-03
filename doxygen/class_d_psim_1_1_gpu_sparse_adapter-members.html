@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_d_psim_1_1_gpu_sparse_adapter.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">GpuSparseAdapter</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">DPsim::GpuSparseAdapter Member List</div></div>
 </div><!--header-->
@@ -94,38 +102,40 @@ $(function(){ initResizable(false); });
 
 <p>This is the complete list of members for <a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a>, including all inherited members.</p>
 <table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>applyConfiguration</b>() (defined in <a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DPsim::DirectLinearSolver</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DPsim::DirectLinearSolver</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html#a9c464c753c4460154f10cab2e09d7cea">applyConfiguration</a>()</td><td class="entry"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DPsim::DirectLinearSolver</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html#a2b121961736a57b6aa1622d373fe6019">DirectLinearSolver</a>()=default</td><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html#a0471fec62a1b9853f46334d71863e9c3">DirectLinearSolver</a>(const DirectLinearSolver &amp;)=default</td><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html#a36c002c86dbdb16ce32f90d480ee1ae9">DirectLinearSolver</a>(DirectLinearSolver &amp;&amp;)=default</td><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html#a3623a79b73370d72cbb67d2825b32f91">DirectLinearSolver</a>(CPS::Logger::Log log)</td><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html#a9322e2066c5a25e6731168d6a9020dcf">factorize</a>(SparseMatrix &amp;systemMatrix) override</td><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html#a4ab390bb359add1fd43e6ab1301d9e7a">GpuSparseAdapter</a>()</td><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>iluPreconditioner</b>() (defined in <a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html#a3b92a97c09e632464619e1947149b6c2">iluPreconditioner</a>()</td><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html#a9f0386f35ad2c6219ba3fafefe40e541">mConfiguration</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DPsim::DirectLinearSolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mCusolverhandle</b> (defined in <a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html#a95e69eaa888396f9aebc0a7f9a4dd451">mCusolverhandle</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html#ab35b01327e310742127763db4661a8d4">mCusparsehandle</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html#a96e0230ba520d5239b2c87d9bf62256b">mGpuIntermediateVec</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html#a14cab7c31da7d634577c8cfd5b861b49">mGpuLhsVec</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html#a1a8060798656ac3c8ba8a216088e1850">mGpuRhsVec</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html#aafeb18cf0ebae9f0255e62dc74d938c9">mSLog</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DPsim::DirectLinearSolver</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html#a86acbb984352c331053f19dceb8f1b92">mSysMat</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mTransp</b> (defined in <a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html#a03d836fbc677e345e2f6211cfeff0b90">mTransp</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html#ad43db3ea0b37056f1d10251037ef0286">operator=</a>(const DirectLinearSolver &amp;)=default</td><td class="entry"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DPsim::DirectLinearSolver</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html#ab4fe3b4fa4ab765fe70a921e3f3ac676">operator=</a>(DirectLinearSolver &amp;&amp;)=default</td><td class="entry"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DPsim::DirectLinearSolver</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html#af6b2cbf01bae9cb3769c35c2da364213">partialRefactorize</a>(SparseMatrix &amp;systemMatrix, std::vector&lt; std::pair&lt; UInt, UInt &gt; &gt; &amp;listVariableSystemMatrixEntries) override</td><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>performFactorization</b>(SparseMatrix &amp;systemMatrix) (defined in <a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html#ad7caedc8d64bd998d041ecce3e86aaae">performFactorization</a>(SparseMatrix &amp;systemMatrix)</td><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html#a5da6cdf02e594c1e0562f78141d6e0d9">preprocessing</a>(SparseMatrix &amp;systemMatrix, std::vector&lt; std::pair&lt; UInt, UInt &gt; &gt; &amp;listVariableSystemMatrixEntries) override</td><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html#a0997fd095ddcecdc1b1174c933c7063e">refactorize</a>(SparseMatrix &amp;systemMatrix) override</td><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>setConfiguration</b>(DirectLinearSolverConfiguration &amp;configuration) (defined in <a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DPsim::DirectLinearSolver</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DPsim::DirectLinearSolver</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html#aba1fd03692134eef001154b5043e8760">setConfiguration</a>(DirectLinearSolverConfiguration &amp;configuration)</td><td class="entry"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DPsim::DirectLinearSolver</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html#a2950062bac45bf31574fd94bcd54adbe">solve</a>(Matrix &amp;rightSideVector) override</td><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html#add6f353643024c32915f2ccb4da076b0">~DirectLinearSolver</a>()=default</td><td class="entry"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DPsim::DirectLinearSolver</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html#a05cc418073f75761900f9f59ca021681">~GpuSparseAdapter</a>()</td><td class="entry"><a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html">DPsim::GpuSparseAdapter</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
 </table></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

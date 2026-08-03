@@ -1,0 +1,23 @@
+<map id="/__w/dpsim/dpsim/dpsim/include/dpsim/Definitions.h" name="/__w/dpsim/dpsim/dpsim/include/dpsim/Definitions.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="316,5,512,54"/>
+<area shape="rect" id="Node000002" href="$dpsim-models_2include_2dpsim-models_2_definitions_8h.html" title=" " alt="" coords="319,102,510,132"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="417,55,417,86,412,86,412,55"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,180,69,209"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="322,135,212,154,84,182,83,177,211,149,321,130"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="93,180,152,209"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="352,135,168,182,166,176,350,130"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="176,180,248,209"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="377,135,264,177,262,172,375,130"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="272,180,354,209"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="397,134,346,172,342,168,394,130"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="377,180,452,209"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="417,132,417,164,412,164,412,132"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="475,180,532,209"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="433,130,477,167,474,172,429,134"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="557,180,661,209"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="452,130,559,171,557,176,450,135"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="686,180,786,209"/>
+<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="475,130,671,175,670,181,474,135"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="810,180,912,209"/>
+<area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="511,129,795,176,794,182,510,135"/>
+</map>

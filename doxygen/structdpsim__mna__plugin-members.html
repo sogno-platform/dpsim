@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('structdpsim__mna__plugin.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,8 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">dpsim_mna_plugin Member List</div></div>
 </div><!--header-->
@@ -90,16 +102,18 @@ $(function(){ initResizable(false); });
 
 <p>This is the complete list of members for <a class="el" href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a>, including all inherited members.</p>
 <table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>cleanup</b> (defined in <a class="el" href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a>)</td><td class="entry"><a class="el" href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>init</b> (defined in <a class="el" href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a>)</td><td class="entry"><a class="el" href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>log</b> (defined in <a class="el" href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a>)</td><td class="entry"><a class="el" href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>lu_decomp</b> (defined in <a class="el" href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a>)</td><td class="entry"><a class="el" href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>solve</b> (defined in <a class="el" href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a>)</td><td class="entry"><a class="el" href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="structdpsim__mna__plugin.html#a29852621fe931554a89b34e3cdb1c8e2">cleanup</a></td><td class="entry"><a class="el" href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="structdpsim__mna__plugin.html#a648abad109296f842adbecdd076bb16a">init</a></td><td class="entry"><a class="el" href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="structdpsim__mna__plugin.html#a7c3a71b50072fdd34bbd09faaafffb7f">log</a></td><td class="entry"><a class="el" href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="structdpsim__mna__plugin.html#adc003f2e1b7b391d2885fa7a7076e64a">lu_decomp</a></td><td class="entry"><a class="el" href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="structdpsim__mna__plugin.html#a8adbf4683cdf3756dba77ed99f9ad3fe">solve</a></td><td class="entry"><a class="el" href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

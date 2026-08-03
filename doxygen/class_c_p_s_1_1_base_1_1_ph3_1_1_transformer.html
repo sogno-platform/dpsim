@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_c_p_s_1_1_base_1_1_ph3_1_1_transformer.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>CPS</b></li><li class="navelem"><b>Base</b></li><li class="navelem"><b>Ph3</b></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_transformer.html">Transformer</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
@@ -96,45 +104,47 @@ $(function(){ initResizable(false); });
   <div class="headertitle"><div class="title">CPS::Base::Ph3::Transformer Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="_base___ph3___transformer_8h_source.html">Base_Ph3_Transformer.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for CPS::Base::Ph3::Transformer:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_base_1_1_ph3_1_1_transformer__inherit__graph.svg" width="211" height="119"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for CPS::Base::Ph3::Transformer:</div>
 <div class="dyncontent">
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_base_1_1_ph3_1_1_transformer__coll__graph.svg" width="100%" height="439"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:affd6d9a5edad484e0dbd7296de876290" id="r_affd6d9a5edad484e0dbd7296de876290"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#affd6d9a5edad484e0dbd7296de876290">Transformer</a> (CPS::AttributeList::Ptr attributeList)</td></tr>
+<tr class="memitem:affd6d9a5edad484e0dbd7296de876290" id="r_affd6d9a5edad484e0dbd7296de876290"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#affd6d9a5edad484e0dbd7296de876290">Transformer</a> (<a class="el" href="class_c_p_s_1_1_attribute_list.html#a49ff97075315610f2b8c923084bcd7d2">CPS::AttributeList::Ptr</a> attributeList)</td></tr>
 <tr class="separator:affd6d9a5edad484e0dbd7296de876290"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a161f60c3f701b782d3e405c7a229b68d" id="r_a161f60c3f701b782d3e405c7a229b68d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a161f60c3f701b782d3e405c7a229b68d">setParameters</a> (Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs, Real ratioPhase, Matrix resistance, Matrix inductance)</td></tr>
+<tr class="memitem:a161f60c3f701b782d3e405c7a229b68d" id="r_a161f60c3f701b782d3e405c7a229b68d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a161f60c3f701b782d3e405c7a229b68d">setParameters</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> nomVoltageEnd1, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> nomVoltageEnd2, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> ratedPower, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> ratioAbs, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> ratioPhase, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> resistance, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> inductance)</td></tr>
 <tr class="separator:a161f60c3f701b782d3e405c7a229b68d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a275a257ca46a4290196f2d2434eac2d7" id="r_a275a257ca46a4290196f2d2434eac2d7"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Complex &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a275a257ca46a4290196f2d2434eac2d7">mRatio</a></td></tr>
+<tr class="memitem:a275a257ca46a4290196f2d2434eac2d7" id="r_a275a257ca46a4290196f2d2434eac2d7"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a275a257ca46a4290196f2d2434eac2d7">mRatio</a></td></tr>
 <tr class="memdesc:a275a257ca46a4290196f2d2434eac2d7"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_transformer.html">Transformer</a> ratio.  <br /></td></tr>
 <tr class="separator:a275a257ca46a4290196f2d2434eac2d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a03faa6403e7a46af71b47be835416b75" id="r_a03faa6403e7a46af71b47be835416b75"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a03faa6403e7a46af71b47be835416b75">mNominalVoltageEnd1</a></td></tr>
+<tr class="memitem:a03faa6403e7a46af71b47be835416b75" id="r_a03faa6403e7a46af71b47be835416b75"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a03faa6403e7a46af71b47be835416b75">mNominalVoltageEnd1</a></td></tr>
 <tr class="memdesc:a03faa6403e7a46af71b47be835416b75"><td class="mdescLeft">&#160;</td><td class="mdescRight">Nominal voltage of primary side.  <br /></td></tr>
 <tr class="separator:a03faa6403e7a46af71b47be835416b75"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13ce54c1286536606c94ccce1b0fbc6b" id="r_a13ce54c1286536606c94ccce1b0fbc6b"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a13ce54c1286536606c94ccce1b0fbc6b">mNominalVoltageEnd2</a></td></tr>
+<tr class="memitem:a13ce54c1286536606c94ccce1b0fbc6b" id="r_a13ce54c1286536606c94ccce1b0fbc6b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a13ce54c1286536606c94ccce1b0fbc6b">mNominalVoltageEnd2</a></td></tr>
 <tr class="memdesc:a13ce54c1286536606c94ccce1b0fbc6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Nominal voltage of secondary side.  <br /></td></tr>
 <tr class="separator:a13ce54c1286536606c94ccce1b0fbc6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae18f5f7d1df69594d149d5ceed5f756b" id="r_ae18f5f7d1df69594d149d5ceed5f756b"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae18f5f7d1df69594d149d5ceed5f756b">mRatedPower</a></td></tr>
+<tr class="memitem:ae18f5f7d1df69594d149d5ceed5f756b" id="r_ae18f5f7d1df69594d149d5ceed5f756b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae18f5f7d1df69594d149d5ceed5f756b">mRatedPower</a></td></tr>
 <tr class="memdesc:ae18f5f7d1df69594d149d5ceed5f756b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rated Apparent Power [VA].  <br /></td></tr>
 <tr class="separator:ae18f5f7d1df69594d149d5ceed5f756b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6d478309321242ef5bb1b7874f3cbc01" id="r_a6d478309321242ef5bb1b7874f3cbc01"><td class="memItemLeft" align="right" valign="top">Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6d478309321242ef5bb1b7874f3cbc01">mResistance</a></td></tr>
+<tr class="memitem:a6d478309321242ef5bb1b7874f3cbc01" id="r_a6d478309321242ef5bb1b7874f3cbc01"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6d478309321242ef5bb1b7874f3cbc01">mResistance</a></td></tr>
 <tr class="memdesc:a6d478309321242ef5bb1b7874f3cbc01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resistance [Ohm].  <br /></td></tr>
 <tr class="separator:a6d478309321242ef5bb1b7874f3cbc01"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e1de416751e37640c0883e50f3c3daf" id="r_a6e1de416751e37640c0883e50f3c3daf"><td class="memItemLeft" align="right" valign="top">Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6e1de416751e37640c0883e50f3c3daf">mInductance</a></td></tr>
+<tr class="memitem:a6e1de416751e37640c0883e50f3c3daf" id="r_a6e1de416751e37640c0883e50f3c3daf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6e1de416751e37640c0883e50f3c3daf">mInductance</a></td></tr>
 <tr class="memdesc:a6e1de416751e37640c0883e50f3c3daf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inductance [H].  <br /></td></tr>
 <tr class="separator:a6e1de416751e37640c0883e50f3c3daf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -154,7 +164,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">CPS::Base::Ph3::Transformer::Transformer </td>
           <td>(</td>
-          <td class="paramtype">CPS::AttributeList::Ptr</td>          <td class="paramname"><span class="paramname"><em>attributeList</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_attribute_list.html#a49ff97075315610f2b8c923084bcd7d2">CPS::AttributeList::Ptr</a></td>          <td class="paramname"><span class="paramname"><em>attributeList</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -182,37 +192,37 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">void CPS::Base::Ph3::Transformer::setParameters </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>nomVoltageEnd1</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>nomVoltageEnd1</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>nomVoltageEnd2</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>nomVoltageEnd2</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>ratedPower</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>ratedPower</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>ratioAbs</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>ratioAbs</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>ratioPhase</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>ratioPhase</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>resistance</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>resistance</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Matrix</td>          <td class="paramname"><span class="paramname"><em>inductance</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a></td>          <td class="paramname"><span class="paramname"><em>inductance</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -237,7 +247,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix CPS::Base::Ph3::Transformer::mInductance</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::Base::Ph3::Transformer::mInductance</td>
         </tr>
       </table>
   </td>
@@ -263,7 +273,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real CPS::Base::Ph3::Transformer::mNominalVoltageEnd1</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> CPS::Base::Ph3::Transformer::mNominalVoltageEnd1</td>
         </tr>
       </table>
   </td>
@@ -289,7 +299,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real CPS::Base::Ph3::Transformer::mNominalVoltageEnd2</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> CPS::Base::Ph3::Transformer::mNominalVoltageEnd2</td>
         </tr>
       </table>
   </td>
@@ -315,7 +325,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real CPS::Base::Ph3::Transformer::mRatedPower</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> CPS::Base::Ph3::Transformer::mRatedPower</td>
         </tr>
       </table>
   </td>
@@ -338,7 +348,7 @@ Protected Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;Complex&gt;::Ptr CPS::Base::Ph3::Transformer::mRatio</td>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a>&gt;::Ptr CPS::Base::Ph3::Transformer::mRatio</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -359,7 +369,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Matrix CPS::Base::Ph3::Transformer::mResistance</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::Base::Ph3::Transformer::mResistance</td>
         </tr>
       </table>
   </td>
@@ -379,10 +389,13 @@ Protected Attributes</h2></td></tr>
 <li>/__w/dpsim/dpsim/dpsim-models/include/dpsim-models/Base/<a class="el" href="_base___ph3___transformer_8h_source.html">Base_Ph3_Transformer.h</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_c_p_s.html">CPS</a></li><li class="navelem"><a class="el" href="namespace_c_p_s_1_1_base.html">Base</a></li><li class="navelem"><a class="el" href="namespace_c_p_s_1_1_base_1_1_ph3.html">Ph3</a></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_transformer.html">Transformer</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

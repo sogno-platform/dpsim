@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_o_d_e_interface_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_c606c461256b0aa853babb18ff6844c9.html">Solver</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">ODEInterface.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_o_d_e_interface_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -101,25 +109,25 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;dpsim-models/AttributeList.h&gt;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;dpsim-models/Definitions.h&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;<a class="code" href="_attribute_list_8h.html">dpsim-models/AttributeList.h</a>&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;<a class="code" href="dpsim-models_2include_2dpsim-models_2_definitions_8h.html">dpsim-models/Definitions.h</a>&gt;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span>CPS {</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s.html">CPS</a> {</div>
 <div class="foldopen" id="foldopen00016" data-start="{" data-end="};">
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_o_d_e_interface.html">   16</a></span><span class="keyword">class </span>ODEInterface {</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_o_d_e_interface.html">   16</a></span><span class="keyword">class </span><a class="code hl_function" href="class_c_p_s_1_1_o_d_e_interface.html#a17822411ad5f543f8dc2c8e25266dd2f">ODEInterface</a> {</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>  <span class="keyword">using </span>Ptr = std::shared_ptr&lt;ODEInterface&gt;;</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_o_d_e_interface.html#af539ef288692900c8cd723b8619fdb85">   18</a></span>  <span class="keyword">using </span><a class="code hl_typedef" href="class_c_p_s_1_1_o_d_e_interface.html#af539ef288692900c8cd723b8619fdb85">Ptr</a> = std::shared_ptr&lt;ODEInterface&gt;;</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  <span class="comment">//typedef std::vector&lt;Ptr&gt; List;</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  <span class="keyword">const</span> CPS::AttributeList::Ptr mAttributeList;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_o_d_e_interface.html#ae0e44b640f6d3f0c04853f53d9151cf9">   21</a></span>  <span class="keyword">const</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute_list.html#a49ff97075315610f2b8c923084bcd7d2">CPS::AttributeList::Ptr</a> <a class="code hl_variable" href="class_c_p_s_1_1_o_d_e_interface.html#ae0e44b640f6d3f0c04853f53d9151cf9">mAttributeList</a>;</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  <span class="keyword">const</span> CPS::Attribute&lt;Matrix&gt;::Ptr mOdePreState;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  <span class="keyword">const</span> CPS::Attribute&lt;Matrix&gt;::Ptr mOdePostState;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_o_d_e_interface.html#a49bdfe9589a53d16bfd5450b70b1dba9">   23</a></span>  <span class="keyword">const</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">CPS::Attribute&lt;Matrix&gt;::Ptr</a> <a class="code hl_variable" href="class_c_p_s_1_1_o_d_e_interface.html#a49bdfe9589a53d16bfd5450b70b1dba9">mOdePreState</a>;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_o_d_e_interface.html#a000add3b2ca053b9cfb084558191c4e5">   24</a></span>  <span class="keyword">const</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">CPS::Attribute&lt;Matrix&gt;::Ptr</a> <a class="code hl_variable" href="class_c_p_s_1_1_o_d_e_interface.html#a000add3b2ca053b9cfb084558191c4e5">mOdePostState</a>;</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_o_d_e_interface.html#a83205176110d836e157f4175fbb6df6e">   27</a></span>  <span class="keyword">using </span><a class="code hl_typedef" href="class_c_p_s_1_1_o_d_e_interface.html#a83205176110d836e157f4175fbb6df6e">StSpFn</a> = std::function&lt;void(<span class="keywordtype">double</span>, <span class="keyword">const</span> <span class="keywordtype">double</span> *, <span class="keywordtype">double</span> *)&gt;;</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  <span class="keyword">using </span>JacFn = std::function&lt;void(<span class="keywordtype">double</span>, <span class="keyword">const</span> <span class="keywordtype">double</span> *, <span class="keywordtype">double</span> *, <span class="keywordtype">double</span> *,</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_o_d_e_interface.html#a86f97f3d136a80593d433afaa926bc46">   29</a></span>  <span class="keyword">using </span><a class="code hl_typedef" href="class_c_p_s_1_1_o_d_e_interface.html#a86f97f3d136a80593d433afaa926bc46">JacFn</a> = std::function&lt;void(<span class="keywordtype">double</span>, <span class="keyword">const</span> <span class="keywordtype">double</span> *, <span class="keywordtype">double</span> *, <span class="keywordtype">double</span> *,</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>                                   <span class="keywordtype">double</span> *, <span class="keywordtype">double</span> *, <span class="keywordtype">double</span> *)&gt;;</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <span class="comment">// #### ODE Section ####</span></div>
@@ -129,21 +137,38 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                           <span class="keywordtype">double</span> tmp1[], <span class="keywordtype">double</span> tmp2[], <span class="keywordtype">double</span> tmp3[]) = 0;</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <span class="keyword">explicit</span> ODEInterface(AttributeList::Ptr attrList)</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>      : mAttributeList(attrList),</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        mOdePreState(attrList-&gt;create&lt;Matrix&gt;(<span class="stringliteral">&quot;ode_pre_state&quot;</span>)),</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        mOdePostState(attrList-&gt;create&lt;Matrix&gt;(<span class="stringliteral">&quot;ode_post_state&quot;</span>)) {}</div>
+<div class="foldopen" id="foldopen00041" data-start="{" data-end="}">
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_o_d_e_interface.html#a17822411ad5f543f8dc2c8e25266dd2f">   41</a></span>  <span class="keyword">explicit</span> <a class="code hl_function" href="class_c_p_s_1_1_o_d_e_interface.html#a17822411ad5f543f8dc2c8e25266dd2f">ODEInterface</a>(<a class="code hl_typedef" href="class_c_p_s_1_1_attribute_list.html#a49ff97075315610f2b8c923084bcd7d2">AttributeList::Ptr</a> attrList)</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>      : <a class="code hl_variable" href="class_c_p_s_1_1_o_d_e_interface.html#ae0e44b640f6d3f0c04853f53d9151cf9">mAttributeList</a>(attrList),</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        <a class="code hl_variable" href="class_c_p_s_1_1_o_d_e_interface.html#a49bdfe9589a53d16bfd5450b70b1dba9">mOdePreState</a>(attrList-&gt;create&lt;<a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&gt;(<span class="stringliteral">&quot;ode_pre_state&quot;</span>)),</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        <a class="code hl_variable" href="class_c_p_s_1_1_o_d_e_interface.html#a000add3b2ca053b9cfb084558191c4e5">mOdePostState</a>(attrList-&gt;create&lt;<a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&gt;(<span class="stringliteral">&quot;ode_post_state&quot;</span>)) {}</div>
+</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>};</div>
 </div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>} <span class="comment">// namespace CPS</span></div>
+<div class="ttc" id="a_attribute_list_8h_html"><div class="ttname"><a href="_attribute_list_8h.html">AttributeList.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_ad552c848f780007d59f489540fa7e4d6"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">CPS::Attribute::Ptr</a></div><div class="ttdeci">AttributePointer&lt; Attribute&lt; T &gt; &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00250">Attribute.h:250</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_list_html_a49ff97075315610f2b8c923084bcd7d2"><div class="ttname"><a href="class_c_p_s_1_1_attribute_list.html#a49ff97075315610f2b8c923084bcd7d2">CPS::AttributeList::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; AttributeList &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_attribute_list_8h_source.html#l00026">AttributeList.h:26</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_o_d_e_interface_html_a000add3b2ca053b9cfb084558191c4e5"><div class="ttname"><a href="class_c_p_s_1_1_o_d_e_interface.html#a000add3b2ca053b9cfb084558191c4e5">CPS::ODEInterface::mOdePostState</a></div><div class="ttdeci">const CPS::Attribute&lt; Matrix &gt;::Ptr mOdePostState</div><div class="ttdef"><b>Definition</b> <a href="#l00024">ODEInterface.h:24</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_o_d_e_interface_html_a17822411ad5f543f8dc2c8e25266dd2f"><div class="ttname"><a href="class_c_p_s_1_1_o_d_e_interface.html#a17822411ad5f543f8dc2c8e25266dd2f">CPS::ODEInterface::ODEInterface</a></div><div class="ttdeci">ODEInterface(AttributeList::Ptr attrList)</div><div class="ttdef"><b>Definition</b> <a href="#l00041">ODEInterface.h:41</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_o_d_e_interface_html_a398c3afac3ef56a04a02789df2396636"><div class="ttname"><a href="class_c_p_s_1_1_o_d_e_interface.html#a398c3afac3ef56a04a02789df2396636">CPS::ODEInterface::odeStateSpace</a></div><div class="ttdeci">virtual void odeStateSpace(double t, const double y[], double ydot[])=0</div><div class="ttdoc">State Space Equation System for ODE Solver.</div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_o_d_e_interface_html_a49bdfe9589a53d16bfd5450b70b1dba9"><div class="ttname"><a href="class_c_p_s_1_1_o_d_e_interface.html#a49bdfe9589a53d16bfd5450b70b1dba9">CPS::ODEInterface::mOdePreState</a></div><div class="ttdeci">const CPS::Attribute&lt; Matrix &gt;::Ptr mOdePreState</div><div class="ttdef"><b>Definition</b> <a href="#l00023">ODEInterface.h:23</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_o_d_e_interface_html_a83205176110d836e157f4175fbb6df6e"><div class="ttname"><a href="class_c_p_s_1_1_o_d_e_interface.html#a83205176110d836e157f4175fbb6df6e">CPS::ODEInterface::StSpFn</a></div><div class="ttdeci">std::function&lt; void(double, const double *, double *)&gt; StSpFn</div><div class="ttdoc">Use this to pass the individual components StateSpace implementation to the ODESolver class.</div><div class="ttdef"><b>Definition</b> <a href="#l00027">ODEInterface.h:27</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_o_d_e_interface_html_a86f97f3d136a80593d433afaa926bc46"><div class="ttname"><a href="class_c_p_s_1_1_o_d_e_interface.html#a86f97f3d136a80593d433afaa926bc46">CPS::ODEInterface::JacFn</a></div><div class="ttdeci">std::function&lt; void(double, const double *, double *, double *, double *, double *, double *)&gt; JacFn</div><div class="ttdef"><b>Definition</b> <a href="#l00029">ODEInterface.h:29</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_o_d_e_interface_html_ae0e44b640f6d3f0c04853f53d9151cf9"><div class="ttname"><a href="class_c_p_s_1_1_o_d_e_interface.html#ae0e44b640f6d3f0c04853f53d9151cf9">CPS::ODEInterface::mAttributeList</a></div><div class="ttdeci">const CPS::AttributeList::Ptr mAttributeList</div><div class="ttdef"><b>Definition</b> <a href="#l00021">ODEInterface.h:21</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_o_d_e_interface_html_af539ef288692900c8cd723b8619fdb85"><div class="ttname"><a href="class_c_p_s_1_1_o_d_e_interface.html#af539ef288692900c8cd723b8619fdb85">CPS::ODEInterface::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; ODEInterface &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="#l00018">ODEInterface.h:18</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_o_d_e_interface_html_af8399e2a2870e3aacbb18dd46843bfda"><div class="ttname"><a href="class_c_p_s_1_1_o_d_e_interface.html#af8399e2a2870e3aacbb18dd46843bfda">CPS::ODEInterface::odeJacobian</a></div><div class="ttdeci">virtual void odeJacobian(double t, const double y[], double fy[], double J[], double tmp1[], double tmp2[], double tmp3[])=0</div><div class="ttdoc">Jacobian Matrix (of State Space System) needed for implicit solve.</div></div>
+<div class="ttc" id="adpsim-models_2include_2dpsim-models_2_definitions_8h_html"><div class="ttname"><a href="dpsim-models_2include_2dpsim-models_2_definitions_8h.html">Definitions.h</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html"><div class="ttname"><a href="namespace_c_p_s.html">CPS</a></div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00017">Attribute.h:17</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a081464dfe063130c6fca7929ce291b15"><div class="ttname"><a href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">CPS::Matrix</a></div><div class="ttdeci">Eigen::Matrix&lt; Real, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor &gt; Matrix</div><div class="ttdoc">Dense matrix for real numbers.</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00081">Definitions.h:81</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_c606c461256b0aa853babb18ff6844c9.html">Solver</a></li><li class="navelem"><a class="el" href="_o_d_e_interface_8h.html">ODEInterface.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

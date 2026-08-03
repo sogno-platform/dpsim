@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,19 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
 </div><!-- top -->
-<div id="doc-content">
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('functions_vars_c.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -84,18 +96,34 @@ $(function(){ initResizable(false); });
 </div>
 
 <div class="contents">
-<div class="textblock">Here is a list of all documented variables with links to the class documentation for each member:</div>
+<div class="textblock">Here is a list of all variables with links to the classes they belong to:</div>
 
 <h3><a id="index_c" name="index_c"></a>- c -</h3><ul>
 <li>c11&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a299820be4253622dd1734d4a671770cd">CPS::DP::Ph3::SynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#aef62d5c12eb30ba67ee9e3dab5432d67">CPS::EMT::Ph3::SynchronGeneratorVBR</a></li>
+<li>c12&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a0296c4a52c4e1ba8cf450e1c2996b3a1">CPS::DP::Ph3::SynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a3c828a53acf03d045eb0cb1f24e0b917">CPS::EMT::Ph3::SynchronGeneratorVBR</a></li>
+<li>c13_omega&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#afe189a5e9080cd8461c9629ddf04a2ca">CPS::DP::Ph3::SynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a88e06490cae37ea793d223d40178e2b2">CPS::EMT::Ph3::SynchronGeneratorVBR</a></li>
+<li>c14_omega&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a9c1b5d250b54aa79828ce775bea0ed04">CPS::DP::Ph3::SynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a342c2ff92b5e236f818944676f0cc6f9">CPS::EMT::Ph3::SynchronGeneratorVBR</a></li>
+<li>c15&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#ad37c29eeb3835bedcea699fbae4180e9">CPS::DP::Ph3::SynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a6fa114d2314b0cc9c84be73d13532299">CPS::EMT::Ph3::SynchronGeneratorVBR</a></li>
 <li>c21_omega&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a11bf3651b108b60ba24c3b8d6f5d0d08">CPS::DP::Ph3::SynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a6016ecbdffdc555a70d3568398ba2a69">CPS::EMT::Ph3::SynchronGeneratorVBR</a></li>
+<li>c22_omega&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#ae43dbd1ea1d013bfac433d8b7abec675">CPS::DP::Ph3::SynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#adf0b94675c9df8abd4e10cc633850dab">CPS::EMT::Ph3::SynchronGeneratorVBR</a></li>
+<li>c23&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#aa813f9df8748151f2ee152649fdc29a6">CPS::DP::Ph3::SynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a844bae911489c0bc39f647f198e44750">CPS::EMT::Ph3::SynchronGeneratorVBR</a></li>
+<li>c24&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a874222997f5ecfd842c9d8a8a9adc95f">CPS::DP::Ph3::SynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a3ab257e9efc44c8112b8940e4729bcc6">CPS::EMT::Ph3::SynchronGeneratorVBR</a></li>
+<li>c25&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a41796ed33956e5a11e28ee76aa8e40ec">CPS::DP::Ph3::SynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a4f41b35dd160eb7f7b20a3bcc2ae7ce5">CPS::EMT::Ph3::SynchronGeneratorVBR</a></li>
+<li>C26&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a5d95c40238ac434e84e51bf031cc2248">CPS::DP::Ph3::SynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a15b84347c6fdbefde9e97f2718af557f">CPS::EMT::Ph3::SynchronGeneratorVBR</a></li>
+<li>c26&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#aee9dfcc240e2a8fcfb1ec202dc38354a">CPS::DP::Ph3::SynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#aa2be7ad3f79b4bc7da34a3882cb744c4">CPS::EMT::Ph3::SynchronGeneratorVBR</a></li>
+<li>cleanup&#160;:&#160;<a class="el" href="structdpsim__mna__plugin.html#a29852621fe931554a89b34e3cdb1c8e2">dpsim_mna_plugin</a></li>
+<li>cliLogLevel&#160;:&#160;<a class="el" href="class_d_psim_1_1_command_line_args.html#a0447f969e045b2a4894c5b115493b31b">DPsim::CommandLineArgs</a></li>
+<li>col&#160;:&#160;<a class="el" href="struct_d_psim_1_1cuda_1_1_cuda_matrix.html#aa302db41f991c73f6596af20beea7d50">DPsim::cuda::CudaMatrix&lt; ValueType, IndexType &gt;</a></li>
+<li>colIndex&#160;:&#160;<a class="el" href="structdpsim__csr__matrix.html#a8812963f59d5cbbb82e969669fe1edc7">dpsim_csr_matrix</a></li>
 <li>curSolution&#160;:&#160;<a class="el" href="class_d_psim_1_1_o_d_eint_solver.html#af35efd5f5f1555f58e11a5e81f3535df">DPsim::ODEintSolver</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

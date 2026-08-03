@@ -1,6 +1,28 @@
 var searchData=
 [
-  ['vector_0',['vector',['../struct_d_psim_1_1_gpu_dense_adapter_1_1_gpu_data.html#a7d95bd81de88f2c0962f1b5fb5af82ab',1,'DPsim::GpuDenseAdapter::GpuData']]],
-  ['vs_5fmax_1',['Vs_max',['../class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html#a0d551f5115118c96f10931618271862b',1,'CPS::Signal::PSS1AParameters']]],
-  ['vs_5fmin_2',['Vs_min',['../class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html#a228a2fd6d94f097748ab7d3157673cd8',1,'CPS::Signal::PSS1AParameters']]]
+  ['scenario_0',['scenario',['../class_d_psim_1_1_command_line_args.html#ae4df82b7a87a80e73e16494ca9f8bf2e',1,'DPsim::CommandLineArgs']]],
+  ['simnode_3c_20vartype_20_3e_3a_3agnd_1',['GND',['../namespace_c_p_s.html#ad464b80af14fdd9f09946df7cdaaa672',1,'CPS']]],
+  ['size_2',['size',['../structdps__magma__data.html#a237b3d6ad72f9f82f104c45f7aa3c244',1,'dps_magma_data::size'],['../struct_d_psim_1_1_gpu_dense_adapter_1_1_gpu_data.html#aafd0b8e3b9d2695232e594bc1fa44923',1,'DPsim::GpuDenseAdapter::GpuData::size']]],
+  ['sol_5fd_3',['sol_D',['../class_d_psim_1_1_p_f_solver_power_polar.html#a52ee6bf46bc259c2eb73213cf742a339',1,'DPsim::PFSolverPowerPolar']]],
+  ['sol_5fp_4',['sol_P',['../class_d_psim_1_1_p_f_solver_power_polar.html#a0117a10de15ec6b31c336db2bfa2bca4',1,'DPsim::PFSolverPowerPolar']]],
+  ['sol_5fq_5',['sol_Q',['../class_d_psim_1_1_p_f_solver_power_polar.html#a7d317fe96794c812962f6cb7e85b6644',1,'DPsim::PFSolverPowerPolar']]],
+  ['sol_5fs_5fcomplex_6',['sol_S_complex',['../class_d_psim_1_1_p_f_solver_power_polar.html#a2e443bdf23140067d6d8f1182ef56700',1,'DPsim::PFSolverPowerPolar']]],
+  ['sol_5fv_7',['sol_V',['../class_d_psim_1_1_p_f_solver_power_polar.html#af1e6f395375a205b68197044d3dc61c7',1,'DPsim::PFSolverPowerPolar']]],
+  ['sol_5fv_5fcomplex_8',['sol_V_complex',['../class_d_psim_1_1_p_f_solver_power_polar.html#afd9cd61ae5417352c8a1c36ac90d212f',1,'DPsim::PFSolverPowerPolar']]],
+  ['solution_9',['solution',['../class_d_psim_1_1_o_d_eint_solver.html#aa9f9bcf0c1af654f0c759a2081d3fcf3',1,'DPsim::ODEintSolver']]],
+  ['solutioncomplexinitialized_10',['solutionComplexInitialized',['../class_d_psim_1_1_p_f_solver.html#a9a453fe8dd3f8226ef4f80b2af6b0120',1,'DPsim::PFSolver']]],
+  ['solutioninitialized_11',['solutionInitialized',['../class_d_psim_1_1_p_f_solver.html#a8c557b0f0b283a7ee60f7ca921b24cd5',1,'DPsim::PFSolver']]],
+  ['solve_12',['solve',['../structdpsim__mna__plugin.html#a8adbf4683cdf3756dba77ed99f9ad3fe',1,'dpsim_mna_plugin']]],
+  ['solver_13',['solver',['../class_d_psim_1_1_command_line_args.html#aafb0c641d2ce7c5f4d7120d8f50c9363',1,'DPsim::CommandLineArgs']]],
+  ['solverpluginname_14',['solverPluginName',['../class_d_psim_1_1_command_line_args.html#a0264d30bc7359a4ced52dd52f835d8f7',1,'DPsim::CommandLineArgs']]],
+  ['startsynch_15',['startSynch',['../class_d_psim_1_1_command_line_args.html#a154d40a473538a52fd92f920ed93ef66',1,'DPsim::CommandLineArgs']]],
+  ['starttime_16',['startTime',['../class_d_psim_1_1_command_line_args.html#aea6a6113e1aff3bab5165a48f6c5e0fa',1,'DPsim::CommandLineArgs']]],
+  ['state_17',['state',['../class_d_psim_1_1_d_a_e_solver.html#a1bf8f9d55bfaac779b39d141a06e53b6',1,'DPsim::DAESolver']]],
+  ['statenames_18',['stateNames',['../struct_d_psim_1_1_state_space_metadata.html#a3927751c6535b5cdff10339cc0ef7f86',1,'DPsim::StateSpaceMetadata']]],
+  ['steadyinit_19',['steadyInit',['../class_d_psim_1_1_command_line_args.html#ac11f38849eaa698ecda7f512c4af4f8f',1,'DPsim::CommandLineArgs']]],
+  ['stepper_20',['stepper',['../class_d_psim_1_1_o_d_eint_solver.html#a6ad3f231f733e591ef8157482e4d6fc4',1,'DPsim::ODEintSolver']]],
+  ['switchtime_21',['switchTime',['../struct_d_psim_1_1_switch_configuration.html#ac676c80cb6ae76db56afde36c1d84320',1,'DPsim::SwitchConfiguration']]],
+  ['sysfreq_22',['sysFreq',['../class_d_psim_1_1_command_line_args.html#a1f684b0043f8b3b53b93504ea7e63750',1,'DPsim::CommandLineArgs']]],
+  ['system_23',['system',['../class_d_psim_1_1_o_d_eint_solver.html#a0c07ce0b888b2291298aac4841dca2ff',1,'DPsim::ODEintSolver']]],
+  ['systemindex_24',['systemIndex',['../struct_d_psim_1_1_switch_configuration.html#a4cb351414537c1bdbe9f546b1aeada0b',1,'DPsim::SwitchConfiguration']]]
 ];

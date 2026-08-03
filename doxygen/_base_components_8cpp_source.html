@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_base_components_8cpp_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_af103632340511860a5310da360a5028.html">src</a></li><li class="navelem"><a class="el" href="dir_d276b151acbeca8449958d8b52771fc8.html">pybind</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">BaseComponents.cpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_base_components_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -99,23 +107,24 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * file, You can obtain one at https://mozilla.org/MPL/2.0/.</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> *********************************************************************************/</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;DPsim.h&gt;</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;dpsim-models/Base/Base_Governor.h&gt;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;dpsim-models/Base/Base_PSS.h&gt;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;dpsim-models/Base/Base_Turbine.h&gt;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;dpsim-models/CSVReader.h&gt;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;dpsim-models/IdentifiedObject.h&gt;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;dpsim-models/Signal/PSS1A.h&gt;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;dpsim-models/Signal/TurbineGovernorType1.h&gt;</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;dpsim/RealTimeSimulation.h&gt;</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;dpsim/Simulation.h&gt;</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;dpsim/pybind/BaseComponents.h&gt;</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;dpsim/pybind/Utils.h&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;<a class="code" href="_d_psim_8h.html">DPsim.h</a>&gt;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;<a class="code" href="_base___governor_8h.html">dpsim-models/Base/Base_Governor.h</a>&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;<a class="code" href="_base___p_s_s_8h.html">dpsim-models/Base/Base_PSS.h</a>&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;<a class="code" href="_base___turbine_8h.html">dpsim-models/Base/Base_Turbine.h</a>&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;<a class="code" href="_c_s_v_reader_8h.html">dpsim-models/CSVReader.h</a>&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;<a class="code" href="_identified_object_8h.html">dpsim-models/IdentifiedObject.h</a>&gt;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;<a class="code" href="_p_s_s1_a_8h.html">dpsim-models/Signal/PSS1A.h</a>&gt;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;<a class="code" href="_turbine_governor_type1_8h.html">dpsim-models/Signal/TurbineGovernorType1.h</a>&gt;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;<a class="code" href="_real_time_simulation_8h.html">dpsim/RealTimeSimulation.h</a>&gt;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;<a class="code" href="_simulation_8h.html">dpsim/Simulation.h</a>&gt;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;<a class="code" href="_base_components_8h.html">dpsim/pybind/BaseComponents.h</a>&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;<a class="code" href="dpsim_2include_2dpsim_2pybind_2_utils_8h.html">dpsim/pybind/Utils.h</a>&gt;</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">namespace </span>py = pybind11;</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">using namespace </span>pybind11::literals;</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keywordtype">void</span> addBaseComponents(py::module_ mBase) {</div>
+<div class="foldopen" id="foldopen00025" data-start="{" data-end="}">
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="_base_components_8cpp.html#a38c860646d8a3f84e6117a501d991339">   25</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="_base_components_8cpp.html#a38c860646d8a3f84e6117a501d991339">addBaseComponents</a>(py::module_ mBase) {</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  py::class_&lt;CPS::Base::Ph1::Switch, std::shared_ptr&lt;CPS::Base::Ph1::Switch&gt;&gt;(</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>      mBase, <span class="stringliteral">&quot;Switch&quot;</span>);</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  py::class_&lt;CPS::Base::Ph3::Switch, std::shared_ptr&lt;CPS::Base::Ph3::Switch&gt;&gt;(</div>
@@ -126,7 +135,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>      mBase, <span class="stringliteral">&quot;MNASyncGenInterface&quot;</span>, py::multiple_inheritance())</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>      .def(<span class="stringliteral">&quot;set_max_iterations&quot;</span>, &amp;<a class="code hl_function" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#ac309e80826a824dda6dcfdd1bc051024">CPS::MNASyncGenInterface::setMaxIterations</a>,</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>           <span class="stringliteral">&quot;max_iter&quot;</span>_a)</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>      .def(<span class="stringliteral">&quot;set_tolerance&quot;</span>, &amp;CPS::MNASyncGenInterface::setTolerance,</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>      .def(<span class="stringliteral">&quot;set_tolerance&quot;</span>, &amp;<a class="code hl_function" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a90eeb488471f94dafec2a319549acadd">CPS::MNASyncGenInterface::setTolerance</a>,</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>           <span class="stringliteral">&quot;tolerance&quot;</span>_a);</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  py::class_&lt;</div>
@@ -136,20 +145,20 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>      mBase, <span class="stringliteral">&quot;ReducedOrderSynchronGeneratorComplex&quot;</span>, py::multiple_inheritance())</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>      .def(<span class="stringliteral">&quot;set_base_parameters&quot;</span>,</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>           &amp;<a class="code hl_class" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html">CPS::Base::ReducedOrderSynchronGenerator</a>&lt;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>               CPS::Complex&gt;::setBaseParameters,</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>               <a class="code hl_typedef" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">CPS::Complex</a>&gt;::setBaseParameters,</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>           <span class="stringliteral">&quot;nom_power&quot;</span>_a, <span class="stringliteral">&quot;nom_voltage&quot;</span>_a, <span class="stringliteral">&quot;nom_frequency&quot;</span>_a)</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>      .def(<span class="stringliteral">&quot;set_initial_values&quot;</span>,</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>           &amp;<a class="code hl_class" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html">CPS::Base::ReducedOrderSynchronGenerator</a>&lt;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>               CPS::Complex&gt;::setInitialValues,</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>               <a class="code hl_typedef" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">CPS::Complex</a>&gt;::setInitialValues,</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>           <span class="stringliteral">&quot;init_complex_electrical_power&quot;</span>_a, <span class="stringliteral">&quot;init_mechanical_power&quot;</span>_a,</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>           <span class="stringliteral">&quot;init_complex_terminal_voltage&quot;</span>_a)</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>      .def(<span class="stringliteral">&quot;scale_inertia_constant&quot;</span>,</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>           &amp;<a class="code hl_class" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html">CPS::Base::ReducedOrderSynchronGenerator</a>&lt;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>               CPS::Complex&gt;::scaleInertiaConstant,</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>               <a class="code hl_typedef" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">CPS::Complex</a>&gt;::scaleInertiaConstant,</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>           <span class="stringliteral">&quot;scaling_factor&quot;</span>_a)</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>      .def(<span class="stringliteral">&quot;set_model_as_norton_source&quot;</span>,</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>           &amp;<a class="code hl_class" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html">CPS::Base::ReducedOrderSynchronGenerator</a>&lt;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>               CPS::Complex&gt;::setModelAsNortonSource,</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>               <a class="code hl_typedef" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">CPS::Complex</a>&gt;::setModelAsNortonSource,</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>           <span class="stringliteral">&quot;model_as_norton_source&quot;</span>_a)</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>      .def(</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>          <span class="stringliteral">&quot;add_exciter&quot;</span>,</div>
@@ -169,9 +178,9 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>      .def(</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>          <span class="stringliteral">&quot;add_exciter&quot;</span>,</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>          [](<a class="code hl_class" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html">CPS::Base::ReducedOrderSynchronGenerator&lt;CPS::Complex&gt;</a> &amp;self,</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>             CPS::Real Ta, CPS::Real Ka, CPS::Real Te, CPS::Real Ke,</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>             CPS::Real Tf, CPS::Real Kf,</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>             CPS::Real Tr) { self.<a class="code hl_function" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#a84c6c8b1cd87edddf59a70e861b551e2">addExciter</a>(Ta, Ka, Te, Ke, Tf, Kf, Tr); },</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>             <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> Ta, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> Ka, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> Te, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> Ke,</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>             <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> Tf, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> Kf,</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>             <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> Tr) { self.<a class="code hl_function" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#a84c6c8b1cd87edddf59a70e861b551e2">addExciter</a>(Ta, Ka, Te, Ke, Tf, Kf, Tr); },</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>          <span class="stringliteral">&quot;Ta&quot;</span>_a, <span class="stringliteral">&quot;Ka&quot;</span>_a, <span class="stringliteral">&quot;Te&quot;</span>_a, <span class="stringliteral">&quot;Ke&quot;</span>_a, <span class="stringliteral">&quot;Tf&quot;</span>_a, <span class="stringliteral">&quot;Kf&quot;</span>_a, <span class="stringliteral">&quot;Tr&quot;</span>_a)</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>      .def(<span class="stringliteral">&quot;add_pss&quot;</span>,</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>           py::overload_cast&lt;std::shared_ptr&lt;CPS::Base::PSS&gt;,</div>
@@ -192,9 +201,9 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>      .def(</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>          <span class="stringliteral">&quot;add_governor&quot;</span>,</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>          [](<a class="code hl_class" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html">CPS::Base::ReducedOrderSynchronGenerator&lt;CPS::Complex&gt;</a> &amp;self,</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>             CPS::Real T3, CPS::Real T4, CPS::Real T5, CPS::Real Tc,</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>             CPS::Real Ts, CPS::Real R, CPS::Real Pmin, CPS::Real Pmax,</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>             CPS::Real OmRef, CPS::Real TmRef) {</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>             <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> T3, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> T4, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> T5, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> Tc,</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>             <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> Ts, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> R, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> Pmin, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> Pmax,</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>             <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> OmRef, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> TmRef) {</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>            self.<a class="code hl_function" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#ad1ca06be2a302784852245d5bc142afe">addGovernor</a>(T3, T4, T5, Tc, Ts, R, Pmin, Pmax, OmRef, TmRef);</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>          },</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>          <span class="stringliteral">&quot;T3&quot;</span>_a, <span class="stringliteral">&quot;T4&quot;</span>_a, <span class="stringliteral">&quot;T5&quot;</span>_a, <span class="stringliteral">&quot;Tc&quot;</span>_a, <span class="stringliteral">&quot;Ts&quot;</span>_a, <span class="stringliteral">&quot;R&quot;</span>_a, <span class="stringliteral">&quot;Pmin&quot;</span>_a, <span class="stringliteral">&quot;Pmax&quot;</span>_a,</div>
@@ -226,20 +235,20 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>                                    py::multiple_inheritance())</div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>      .def(<span class="stringliteral">&quot;set_base_parameters&quot;</span>,</div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>           &amp;<a class="code hl_class" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html">CPS::Base::ReducedOrderSynchronGenerator</a>&lt;</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>               CPS::Real&gt;::setBaseParameters,</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>               <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a>&gt;::setBaseParameters,</div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>           <span class="stringliteral">&quot;nom_power&quot;</span>_a, <span class="stringliteral">&quot;nom_voltage&quot;</span>_a, <span class="stringliteral">&quot;nom_frequency&quot;</span>_a)</div>
 <div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>      .def(<span class="stringliteral">&quot;set_initial_values&quot;</span>,</div>
 <div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>           &amp;<a class="code hl_class" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html">CPS::Base::ReducedOrderSynchronGenerator</a>&lt;</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>               CPS::Real&gt;::setInitialValues,</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>               <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a>&gt;::setInitialValues,</div>
 <div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>           <span class="stringliteral">&quot;init_complex_electrical_power&quot;</span>_a, <span class="stringliteral">&quot;init_mechanical_power&quot;</span>_a,</div>
 <div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>           <span class="stringliteral">&quot;init_complex_terminal_voltage&quot;</span>_a)</div>
 <div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>      .def(<span class="stringliteral">&quot;scale_inertia_constant&quot;</span>,</div>
 <div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>           &amp;<a class="code hl_class" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html">CPS::Base::ReducedOrderSynchronGenerator</a>&lt;</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>               CPS::Real&gt;::scaleInertiaConstant,</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>               <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a>&gt;::scaleInertiaConstant,</div>
 <div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>           <span class="stringliteral">&quot;scaling_factor&quot;</span>_a)</div>
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>      .def(<span class="stringliteral">&quot;set_model_as_norton_source&quot;</span>,</div>
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>           &amp;<a class="code hl_class" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html">CPS::Base::ReducedOrderSynchronGenerator</a>&lt;</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>               CPS::Real&gt;::setModelAsNortonSource,</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>               <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a>&gt;::setModelAsNortonSource,</div>
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>           <span class="stringliteral">&quot;model_as_norton_source&quot;</span>_a)</div>
 <div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>      .def(</div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>          <span class="stringliteral">&quot;add_exciter&quot;</span>,</div>
@@ -259,9 +268,9 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>      .def(</div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>          <span class="stringliteral">&quot;add_exciter&quot;</span>,</div>
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>          [](<a class="code hl_class" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html">CPS::Base::ReducedOrderSynchronGenerator&lt;CPS::Real&gt;</a> &amp;self,</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>             CPS::Real Ta, CPS::Real Ka, CPS::Real Te, CPS::Real Ke,</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>             CPS::Real Tf, CPS::Real Kf,</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>             CPS::Real Tr) { self.<a class="code hl_function" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#a84c6c8b1cd87edddf59a70e861b551e2">addExciter</a>(Ta, Ka, Te, Ke, Tf, Kf, Tr); },</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>             <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> Ta, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> Ka, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> Te, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> Ke,</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>             <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> Tf, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> Kf,</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>             <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> Tr) { self.<a class="code hl_function" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#a84c6c8b1cd87edddf59a70e861b551e2">addExciter</a>(Ta, Ka, Te, Ke, Tf, Kf, Tr); },</div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>          <span class="stringliteral">&quot;Ta&quot;</span>_a, <span class="stringliteral">&quot;Ka&quot;</span>_a, <span class="stringliteral">&quot;Te&quot;</span>_a, <span class="stringliteral">&quot;Ke&quot;</span>_a, <span class="stringliteral">&quot;Tf&quot;</span>_a, <span class="stringliteral">&quot;Kf&quot;</span>_a, <span class="stringliteral">&quot;Tr&quot;</span>_a)</div>
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>      .def(<span class="stringliteral">&quot;add_pss&quot;</span>,</div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>           py::overload_cast&lt;std::shared_ptr&lt;CPS::Base::PSS&gt;,</div>
@@ -282,9 +291,9 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>      .def(</div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>          <span class="stringliteral">&quot;add_governor&quot;</span>,</div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>          [](<a class="code hl_class" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html">CPS::Base::ReducedOrderSynchronGenerator&lt;CPS::Real&gt;</a> &amp;self,</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>             CPS::Real T3, CPS::Real T4, CPS::Real T5, CPS::Real Tc,</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>             CPS::Real Ts, CPS::Real R, CPS::Real Pmin, CPS::Real Pmax,</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>             CPS::Real OmRef, CPS::Real TmRef) {</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>             <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> T3, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> T4, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> T5, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> Tc,</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>             <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> Ts, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> R, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> Pmin, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> Pmax,</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>             <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> OmRef, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> TmRef) {</div>
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>            self.<a class="code hl_function" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#ad1ca06be2a302784852245d5bc142afe">addGovernor</a>(T3, T4, T5, Tc, Ts, R, Pmin, Pmax, OmRef, TmRef);</div>
 <div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>          },</div>
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>          <span class="stringliteral">&quot;T3&quot;</span>_a, <span class="stringliteral">&quot;T4&quot;</span>_a, <span class="stringliteral">&quot;T5&quot;</span>_a, <span class="stringliteral">&quot;Tc&quot;</span>_a, <span class="stringliteral">&quot;Ts&quot;</span>_a, <span class="stringliteral">&quot;R&quot;</span>_a, <span class="stringliteral">&quot;Pmin&quot;</span>_a, <span class="stringliteral">&quot;Pmax&quot;</span>_a,</div>
@@ -309,19 +318,39 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>          },</div>
 <div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>          <span class="stringliteral">&quot;governor&quot;</span>_a, <span class="stringliteral">&quot;turbine&quot;</span>_a);</div>
 <div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>}</div>
+</div>
+<div class="ttc" id="a_base___governor_8h_html"><div class="ttname"><a href="_base___governor_8h.html">Base_Governor.h</a></div></div>
+<div class="ttc" id="a_base___p_s_s_8h_html"><div class="ttname"><a href="_base___p_s_s_8h.html">Base_PSS.h</a></div></div>
+<div class="ttc" id="a_base___turbine_8h_html"><div class="ttname"><a href="_base___turbine_8h.html">Base_Turbine.h</a></div></div>
+<div class="ttc" id="a_base_components_8cpp_html_a38c860646d8a3f84e6117a501d991339"><div class="ttname"><a href="_base_components_8cpp.html#a38c860646d8a3f84e6117a501d991339">addBaseComponents</a></div><div class="ttdeci">void addBaseComponents(py::module_ mBase)</div><div class="ttdef"><b>Definition</b> <a href="#l00025">BaseComponents.cpp:25</a></div></div>
+<div class="ttc" id="a_base_components_8h_html"><div class="ttname"><a href="_base_components_8h.html">BaseComponents.h</a></div></div>
+<div class="ttc" id="a_c_s_v_reader_8h_html"><div class="ttname"><a href="_c_s_v_reader_8h.html">CSVReader.h</a></div></div>
+<div class="ttc" id="a_d_psim_8h_html"><div class="ttname"><a href="_d_psim_8h.html">DPsim.h</a></div></div>
+<div class="ttc" id="a_identified_object_8h_html"><div class="ttname"><a href="_identified_object_8h.html">IdentifiedObject.h</a></div></div>
+<div class="ttc" id="a_p_s_s1_a_8h_html"><div class="ttname"><a href="_p_s_s1_a_8h.html">PSS1A.h</a></div></div>
+<div class="ttc" id="a_real_time_simulation_8h_html"><div class="ttname"><a href="_real_time_simulation_8h.html">RealTimeSimulation.h</a></div></div>
+<div class="ttc" id="a_simulation_8h_html"><div class="ttname"><a href="_simulation_8h.html">Simulation.h</a></div></div>
+<div class="ttc" id="a_turbine_governor_type1_8h_html"><div class="ttname"><a href="_turbine_governor_type1_8h.html">TurbineGovernorType1.h</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_base_1_1_reduced_order_synchron_generator_html"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html">CPS::Base::ReducedOrderSynchronGenerator</a></div><div class="ttdef"><b>Definition</b> <a href="_base___reduced_order_synchron_generator_8h_source.html#l00023">Base_ReducedOrderSynchronGenerator.h:23</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_base_1_1_reduced_order_synchron_generator_html_a06ef7fcabd73e353fbd2fc56ab590084"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#a06ef7fcabd73e353fbd2fc56ab590084">CPS::Base::ReducedOrderSynchronGenerator::addGovernorAndTurbine</a></div><div class="ttdeci">void addGovernorAndTurbine(std::shared_ptr&lt; Base::Governor &gt; governor, std::shared_ptr&lt; Base::GovernorParameters &gt; govParams, std::shared_ptr&lt; Base::Turbine &gt; turbine, std::shared_ptr&lt; Base::TurbineParameters &gt; turbineParams)</div><div class="ttdoc">Add a modular governor + turbine pair (new API for SteamTurbineGovernor / SteamTurbine)</div><div class="ttdef"><b>Definition</b> <a href="_base___reduced_order_synchron_generator_8cpp_source.html#l00712">Base_ReducedOrderSynchronGenerator.cpp:712</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_base_1_1_reduced_order_synchron_generator_html_a4af1224cbd034142295c2c2fdec057aa"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#a4af1224cbd034142295c2c2fdec057aa">CPS::Base::ReducedOrderSynchronGenerator::addPSS</a></div><div class="ttdeci">void addPSS(std::shared_ptr&lt; Base::PSS &gt; pss, std::shared_ptr&lt; Base::PSSParameters &gt; parameters)</div><div class="ttdoc">Attach a PSS (initialises parameters) to this generator.</div><div class="ttdef"><b>Definition</b> <a href="_base___reduced_order_synchron_generator_8cpp_source.html#l00758">Base_ReducedOrderSynchronGenerator.cpp:758</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_base_1_1_reduced_order_synchron_generator_html_a84c6c8b1cd87edddf59a70e861b551e2"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#a84c6c8b1cd87edddf59a70e861b551e2">CPS::Base::ReducedOrderSynchronGenerator::addExciter</a></div><div class="ttdeci">void addExciter(std::shared_ptr&lt; Base::Exciter &gt; exciter, std::shared_ptr&lt; Base::ExciterParameters &gt; params)</div><div class="ttdoc">Add voltage regulator and exciter.</div><div class="ttdef"><b>Definition</b> <a href="_base___reduced_order_synchron_generator_8cpp_source.html#l00613">Base_ReducedOrderSynchronGenerator.cpp:613</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_base_1_1_reduced_order_synchron_generator_html_ad1ca06be2a302784852245d5bc142afe"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#ad1ca06be2a302784852245d5bc142afe">CPS::Base::ReducedOrderSynchronGenerator::addGovernor</a></div><div class="ttdeci">void addGovernor(Real T3, Real T4, Real T5, Real Tc, Real Ts, Real R, Real Pmin, Real Pmax, Real OmRef, Real TmRef)</div><div class="ttdoc">Add governor and turbine (TurbineGovernorType1 legacy API)</div><div class="ttdef"><b>Definition</b> <a href="_base___reduced_order_synchron_generator_8cpp_source.html#l00688">Base_ReducedOrderSynchronGenerator.cpp:688</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_m_n_a_sync_gen_interface_html"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html">CPS::MNASyncGenInterface</a></div><div class="ttdoc">Interface to be used by synchronous generators.</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_sync_gen_interface_8h_source.html#l00017">MNASyncGenInterface.h:17</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_m_n_a_sync_gen_interface_html_a90eeb488471f94dafec2a319549acadd"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a90eeb488471f94dafec2a319549acadd">CPS::MNASyncGenInterface::setTolerance</a></div><div class="ttdeci">void setTolerance(Real Tolerance)</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_sync_gen_interface_8h_source.html#l00044">MNASyncGenInterface.h:44</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_m_n_a_sync_gen_interface_html_ac309e80826a824dda6dcfdd1bc051024"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#ac309e80826a824dda6dcfdd1bc051024">CPS::MNASyncGenInterface::setMaxIterations</a></div><div class="ttdeci">void setMaxIterations(Int maxIterations)</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_sync_gen_interface_8h_source.html#l00042">MNASyncGenInterface.h:42</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp</a></div><div class="ttdoc">Base class for all components that are transmitting power.</div><div class="ttdef"><b>Definition</b> <a href="_sim_power_comp_8h_source.html#l00017">SimPowerComp.h:17</a></div></div>
+<div class="ttc" id="adpsim_2include_2dpsim_2pybind_2_utils_8h_html"><div class="ttname"><a href="dpsim_2include_2dpsim_2pybind_2_utils_8h.html">Utils.h</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a603c4b77d70922bc0423adc57725df50"><div class="ttname"><a href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a></div><div class="ttdeci">double Real</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00062">Definitions.h:62</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_aaed6ab259d5cbd0d6709102c47391a7a"><div class="ttname"><a href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">CPS::Complex</a></div><div class="ttdeci">std::complex&lt; Real &gt; Complex</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00063">Definitions.h:63</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_af103632340511860a5310da360a5028.html">src</a></li><li class="navelem"><a class="el" href="dir_d276b151acbeca8449958d8b52771fc8.html">pybind</a></li><li class="navelem"><a class="el" href="_base_components_8cpp.html">BaseComponents.cpp</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

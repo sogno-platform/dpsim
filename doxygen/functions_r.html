@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,19 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
 </div><!-- top -->
-<div id="doc-content">
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('functions_r.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -84,49 +96,80 @@ $(function(){ initResizable(false); });
 </div>
 
 <div class="contents">
-<div class="textblock">Here is a list of all documented class members with links to the class documentation for each member:</div>
+<div class="textblock">Here is a list of all class members with links to the classes they belong to:</div>
 
 <h3><a id="index_r" name="index_r"></a>- r -</h3><ul>
 <li>R&#160;:&#160;<a class="el" href="class_c_p_s_1_1_signal_1_1_hydro_governor_parameters.html#ab46abb32c45be5b3786ee7127276c60d">CPS::Signal::HydroGovernorParameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#abc7dca8bb26f8183436316750debc50c">CPS::Signal::SteamGovernorParameters</a></li>
+<li>r&#160;:&#160;<a class="el" href="struct_c_p_s_1_1_utils_1_1_rgb.html#a98c73e6319685d501bfc0356ddc33c98">CPS::Utils::Rgb</a></li>
 <li>R_EQ&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a1362151ce1fe69fd55ab503d3aa5ef5e">CPS::DP::Ph3::SynchronGeneratorVBR</a></li>
 <li>R_eq_DP&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a51efbc7b2741403bea212b0cbf04b5bc">CPS::DP::Ph3::SynchronGeneratorVBR</a></li>
 <li>R_eq_vbr&#160;:&#160;<a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a582b417fb968dd97d88a2065ffd3773d">CPS::EMT::Ph3::SynchronGeneratorVBR</a></li>
 <li>R_load&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#aaefdceb9fc52dcc7f3387f7033359506">CPS::DP::Ph3::SynchronGeneratorVBR</a></li>
+<li>radtoDeg()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_math.html#afa004eafcd5d46b69897008d4f3fad86">CPS::Math</a></li>
 <li>Reader()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_c_i_m_1_1_reader.html#a66d6947477702d25bc59902b68007655">CPS::CIM::Reader</a></li>
+<li>ReaderThread()&#160;:&#160;<a class="el" href="class_d_psim_1_1_interface_queued_1_1_reader_thread.html#a87c058fdc4497a380f916a3070605c02">DPsim::InterfaceQueued::ReaderThread</a></li>
+<li>readFromVillas()&#160;:&#160;<a class="el" href="class_d_psim_1_1_interface_villas_queueless.html#a71addad1787dc4f570a3cef327364fe1">DPsim::InterfaceVillasQueueless</a></li>
 <li>readLoadProfile()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#a6d2d9b2ae5cff7b334d9fa571796f82a">CPS::CSVReader</a></li>
+<li>readLoadProfileDP()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#aeaab644dbddc681ae65bd0e3125941a3">CPS::CSVReader</a></li>
 <li>readMeasurements()&#160;:&#160;<a class="el" href="class_d_psim_1_1_scheduler.html#a51cc3480e6e15a64e9b750ac430f40de">DPsim::Scheduler</a></li>
+<li>readNextRow()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_c_s_v_row.html#a14b9ac6d9ffb01a7b05ea903cfd04eeb">CPS::CSVRow</a></li>
+<li>readPQData()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#a2607ea94f260d1661a1521ccba97d6e0">CPS::CSVReader</a></li>
 <li>readValuesFromEnv()&#160;:&#160;<a class="el" href="class_d_psim_1_1_interface_worker.html#a777f4be15b259e0067c7fdbec62dd07f">DPsim::InterfaceWorker</a>, <a class="el" href="class_d_psim_1_1_interface_worker_villas.html#ae073163e4947d2952a3fae317cb3addf">DPsim::InterfaceWorkerVillas</a></li>
-<li>RealTimeSimulation()&#160;:&#160;<a class="el" href="class_d_psim_1_1_real_time_simulation.html#a96ac45b8475c7eb13d66d73d6958e748">DPsim::RealTimeSimulation</a></li>
+<li>realFromVectorElement()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_math.html#a473ad66fcb23f3439e5ed4faa1e45c19">CPS::Math</a></li>
+<li>RealTimeDataLogger()&#160;:&#160;<a class="el" href="class_d_psim_1_1_real_time_data_logger.html#a0f87eaf87e2ada36940e8e181a3910ac">DPsim::RealTimeDataLogger</a></li>
+<li>RealTimeSimulation()&#160;:&#160;<a class="el" href="class_d_psim_1_1_real_time_simulation.html#a5d52e3cc5182192ddd6c8c34f158d695">DPsim::RealTimeSimulation</a></li>
+<li>realToString()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_logger.html#aca598e00b3d611fcf84c6c67c5e38b99">CPS::Logger</a></li>
 <li>rebuildBusIndexAggregates()&#160;:&#160;<a class="el" href="class_d_psim_1_1_p_f_solver.html#a8767067d7a51730f64757d5fe19e0ff7">DPsim::PFSolver</a></li>
 <li>reclassifyBuses()&#160;:&#160;<a class="el" href="class_d_psim_1_1_p_f_solver.html#a0a9b9fc53359cef19c70f9ddf37890ad">DPsim::PFSolver</a></li>
-<li>recomputeDiscreteModel()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_s_s_n_comp.html#a57d5512c1bd925cf0f863ad5edc99d03">CPS::DP::SSNComp</a></li>
+<li>recomputeDiscreteModel()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_mixed_v_type_variable_s_s_n_comp.html#abc567a3c1da03a47621b3ba5db0270c3">CPS::DP::Ph1::MixedVTypeVariableSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#aa81557e2aa4aa80298ea62ee1bc703f8">CPS::DP::Ph3::MixedVTypeVariableSSNComp</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_s_s_n_comp.html#a57d5512c1bd925cf0f863ad5edc99d03">CPS::DP::SSNComp</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a495a816ae71d4cec4f0d9e78ca78f4a7">CPS::EMT::SSNComp</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html#a2f3ebc14902ed3eef0ba2bc6f5d7ed73">CPS::EMT::VTypeVariableSSNComp</a></li>
+<li>recomputeSubnetMatrix()&#160;:&#160;<a class="el" href="class_d_psim_1_1_diakoptics_solver_1_1_subnet_solve_task.html#a500bd1d882597bb5b73bc0a351281dd4">DPsim::DiakopticsSolver&lt; VarType &gt;::SubnetSolveTask</a></li>
 <li>recomputeSystemMatrix()&#160;:&#160;<a class="el" href="class_d_psim_1_1_mna_solver_direct.html#a4af2e4bc579523971e00d989521c9ad6">DPsim::MnaSolverDirect&lt; VarType &gt;</a>, <a class="el" href="class_d_psim_1_1_mna_solver_plugin.html#ae4f09201203d356cfd31497561a0a8dd">DPsim::MnaSolverPlugin&lt; VarType &gt;</a></li>
+<li>ReducedOrderSynchronGenerator()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#ae70df3bff1938794d43d414a6f78f036">CPS::Base::ReducedOrderSynchronGenerator&lt; VarType &gt;</a></li>
 <li>ReducedOrderSynchronGeneratorVBR()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_reduced_order_synchron_generator_v_b_r.html#afa7e37421765c4ef304c59dad583cd3a">CPS::DP::Ph1::ReducedOrderSynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_reduced_order_synchron_generator_v_b_r.html#ab834a3a4dfdcc30ff943cb0f728ead47">CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_reduced_order_synchron_generator_v_b_r.html#af64f3668ccbbecaf910435082412c1bc">CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR</a></li>
 <li>refactorize()&#160;:&#160;<a class="el" href="class_d_psim_1_1_dense_l_u_adapter.html#a87c2b1102ed663b35838fed7c8154989">DPsim::DenseLUAdapter</a>, <a class="el" href="class_d_psim_1_1_direct_linear_solver.html#a038b2194287e5838fcfd16a365fa2e9c">DPsim::DirectLinearSolver</a>, <a class="el" href="class_d_psim_1_1_gpu_dense_adapter.html#aec7e70cf182925770f69e72a27a804fd">DPsim::GpuDenseAdapter</a>, <a class="el" href="class_d_psim_1_1_gpu_magma_adapter.html#a52b15e1cb199bc6728ff18fddecf79c9">DPsim::GpuMagmaAdapter</a>, <a class="el" href="class_d_psim_1_1_gpu_sparse_adapter.html#a0997fd095ddcecdc1b1174c933c7063e">DPsim::GpuSparseAdapter</a>, <a class="el" href="class_d_psim_1_1_k_l_u_adapter.html#aa7a815403a9340eeb529729a618d70d9">DPsim::KLUAdapter</a>, <a class="el" href="class_d_psim_1_1_sparse_l_u_adapter.html#a1c512f04a37f13f479e7641c69245320">DPsim::SparseLUAdapter</a></li>
+<li>registerExciter()&#160;:&#160;<a class="el" href="class_factory.html#a0ac4a78e00dd2f0439b93a57801bbe0c">Factory&lt; BaseClass &gt;</a></li>
 <li>reltol&#160;:&#160;<a class="el" href="class_d_psim_1_1_o_d_e_solver.html#adb557bbc3bcc190c1f95d15fe7054582">DPsim::ODESolver</a></li>
 <li>removeComponent()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_system_topology.html#a4e531684191248682d03cb2fc05227bd">CPS::SystemTopology</a></li>
+<li>removeNode()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_system_topology.html#a064bca78b0ac8a36aea14a5a140f13ce">CPS::SystemTopology</a></li>
+<li>render()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_graph_1_1_graph.html#afb0067225921f3925f784e4f3c0048d8">CPS::Graph::Graph</a></li>
+<li>requiresIteration()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_p_c_m.html#a93b4aa9caabffe4eecbda1a897641574">CPS::DP::Ph1::SynchronGenerator4OrderPCM</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_t_p_m.html#a0d964bc0bfcfe79d8fca9cfccc591ec3">CPS::DP::Ph1::SynchronGenerator4OrderTPM</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6_order_p_c_m.html#a7085c76359bd51fcce3c729e68690f46">CPS::DP::Ph1::SynchronGenerator6OrderPCM</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_iter.html#a7a93bf525aec432d0dcb9353ad61187e">CPS::DP::Ph1::SynchronGeneratorIter</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html#a198ab152ff6d0c38eeca6044c51e5641">CPS::EMT::Ph3::SynchronGenerator4OrderPCM</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a58ebbb3b9ca1c39ea6024300b85f44c2">CPS::MNASyncGenInterface</a></li>
 <li>reset()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_system_topology.html#a8c4eabd16dd938e7ec9e037be28d9361">CPS::SystemTopology</a></li>
 <li>resetToOriginalClassification()&#160;:&#160;<a class="el" href="class_d_psim_1_1_p_f_solver.html#a11f2767235c9d05e4995f5ef09ed70e2">DPsim::PFSolver</a></li>
+<li>resEval&#160;:&#160;<a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a2dee8dc20f9cb3d8e32961a93e5b19f0">DPsim::DAESolver</a></li>
+<li>ResFn&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_a_e_interface.html#a65661bbd04e99f2561ba79b35ac6aebe">CPS::DAEInterface</a></li>
+<li>residualFunction()&#160;:&#160;<a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a89e2480499e63154622f6e291b2a5c58">DPsim::DAESolver</a></li>
 <li>residualFunctionWrapper()&#160;:&#160;<a class="el" href="class_d_psim_1_1_d_a_e_solver.html#ade05f8b154ad1a46c813ada12fd3f09b">DPsim::DAESolver</a></li>
 <li>ResIndSeries()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_res_ind_series.html#ad4dc4badbed1e6e2c99f47980e3beb1b">CPS::DP::Ph1::ResIndSeries</a></li>
-<li>Resistor()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_resistor.html#a43f33b59e1c7b08b28db925a58c9b806">CPS::DP::Ph1::Resistor</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_resistor.html#aa0acf26c378689bcff336ad425f60693">CPS::DP::Ph3::Resistor</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_resistor.html#afe96454e1dfe92b6f6e62234cc715c58">CPS::EMT::Ph1::Resistor</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_resistor.html#aca01be5c37f6096ee7602329f7417567">CPS::EMT::Ph3::Resistor</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_resistor.html#a81ff29ed84fc84fc511c1085d8a126dc">CPS::SP::Ph1::Resistor</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_resistor.html#ac1efd5a40d19f56aa32493256f1e9dc4">CPS::SP::Ph3::Resistor</a></li>
+<li>Resistor()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_resistor.html#a50bf786c2ac4b9aa1f9bbd3eda4f2991">CPS::Base::Ph1::Resistor</a>, <a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_resistor.html#a622f95c7615fd230176233226af857c2">CPS::Base::Ph3::Resistor</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_resistor.html#a43f33b59e1c7b08b28db925a58c9b806">CPS::DP::Ph1::Resistor</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_resistor.html#aa0acf26c378689bcff336ad425f60693">CPS::DP::Ph3::Resistor</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_resistor.html#afe96454e1dfe92b6f6e62234cc715c58">CPS::EMT::Ph1::Resistor</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_resistor.html#aca01be5c37f6096ee7602329f7417567">CPS::EMT::Ph3::Resistor</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_resistor.html#a81ff29ed84fc84fc511c1085d8a126dc">CPS::SP::Ph1::Resistor</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_resistor.html#ac1efd5a40d19f56aa32493256f1e9dc4">CPS::SP::Ph3::Resistor</a></li>
 <li>resize_complex_sol()&#160;:&#160;<a class="el" href="class_d_psim_1_1_p_f_solver_power_polar.html#a116d5def16c3542a555e7c06584b04fc">DPsim::PFSolverPowerPolar</a></li>
 <li>resize_sol()&#160;:&#160;<a class="el" href="class_d_psim_1_1_p_f_solver_power_polar.html#ad3197a1ac60601b2c351cca67f3bc3b7">DPsim::PFSolverPowerPolar</a></li>
 <li>resolveDeps()&#160;:&#160;<a class="el" href="class_d_psim_1_1_scheduler.html#a0d839869a3f6ab4025773c3b5da9e347">DPsim::Scheduler</a></li>
 <li>resolveSystemMatrixRecomputationMode()&#160;:&#160;<a class="el" href="class_d_psim_1_1_mna_solver.html#a077d48c70718b3f3a69ae58a2646aa90">DPsim::MnaSolver&lt; VarType &gt;</a></li>
+<li>rhs_buffer&#160;:&#160;<a class="el" href="structdps__magma__data.html#aad414273ee6c89cd18d549fdf713563c">dps_magma_data</a></li>
+<li>rightSideVector()&#160;:&#160;<a class="el" href="class_d_psim_1_1_mna_solver.html#a0e807ac5a9b4de28508b916b7d70a8af">DPsim::MnaSolver&lt; VarType &gt;</a></li>
+<li>Root()&#160;:&#160;<a class="el" href="class_d_psim_1_1_scheduler_1_1_root.html#a7e45b8c2d1e82314b2b5b7ef4c3a42c2">DPsim::Scheduler::Root</a></li>
+<li>rotatingFrame2to1()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_math.html#a755687ef7e29ec00960581b4b4644613">CPS::Math</a></li>
+<li>rotationalSpeed()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q.html#abf95f186112d7ee133843e509631da2f">CPS::DP::Ph3::SynchronGeneratorDQ</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a9d538ccca1e3de146e7b8fb7b4a32d60">CPS::DP::Ph3::SynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_d_q.html#a7d5f0bd1cee1402428c1b783a467ac5d">CPS::EMT::Ph3::SynchronGeneratorDQ</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#ad0481462ef07c2efc6c408a72290eced">CPS::EMT::Ph3::SynchronGeneratorVBR</a></li>
+<li>rotorPosition()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q.html#ac54185d261e298aa1ea19808d3e98fc7">CPS::DP::Ph3::SynchronGeneratorDQ</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a6dd1beb7c6422344815784d210e61188">CPS::DP::Ph3::SynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_d_q.html#ab2fbf06314b37628f12f5e21b764fc05">CPS::EMT::Ph3::SynchronGeneratorDQ</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a349638f04f15f990b417a284ce8c8a85">CPS::EMT::Ph3::SynchronGeneratorVBR</a></li>
+<li>row&#160;:&#160;<a class="el" href="struct_d_psim_1_1cuda_1_1_cuda_matrix.html#a05d73683113accca9ba6663654e5b0aa">DPsim::cuda::CudaMatrix&lt; ValueType, IndexType &gt;</a></li>
+<li>row_number&#160;:&#160;<a class="el" href="structdpsim__csr__matrix.html#a945d159011e85b5a9a44937cb9f1bec7">dpsim_csr_matrix</a></li>
+<li>rowIndex&#160;:&#160;<a class="el" href="structdpsim__csr__matrix.html#a5d6df5f643539aaaeafab636423913da">dpsim_csr_matrix</a></li>
 <li>rtol&#160;:&#160;<a class="el" href="class_d_psim_1_1_d_a_e_solver.html#aa59e5c0bd44bac11e3f4b4f187de1a5c">DPsim::DAESolver</a></li>
 <li>run()&#160;:&#160;<a class="el" href="class_d_psim_1_1_real_time_simulation.html#ab3aa8190debf6f0197c09a96c7aba069">DPsim::RealTimeSimulation</a>, <a class="el" href="class_d_psim_1_1_simulation.html#ae5c367f87c0b5dc9740bc6d00e44e72c">DPsim::Simulation</a></li>
 <li>runNewtonRaphson()&#160;:&#160;<a class="el" href="class_d_psim_1_1_p_f_solver.html#a0f0ef0c26056453f372e81814574d1f2">DPsim::PFSolver</a></li>
+<li>running&#160;:&#160;<a class="el" href="class_d_psim_1_1_timer.html#a9fef844c9b066326a4d4bd201bd3494aaf2630e5c741a4627d11c5b03a9c2d213">DPsim::Timer</a></li>
 <li>RXLine()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#acbef7bb2d6e70ec541b15cc0e530b013">CPS::SP::Ph1::RXLine</a></li>
 <li>RxLine()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_rx_line.html#af83ee593b46b96df918bb818f7a14cb6">CPS::DP::Ph1::RxLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#a676431a600764ccdc754ab56cf0a178d">CPS::EMT::Ph3::RxLine</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_rx_line.html#a7a103cb416352373f28f0031ea528db6">CPS::SP::Ph3::RxLine</a></li>
 <li>RXLoad()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#a22c6104ebbbc44decbf36bc088c79b4c">CPS::DP::Ph1::RXLoad</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_r_x_load.html#a2ecb78844563e0265b245eb70b7474af">CPS::EMT::Ph3::RXLoad</a></li>
 <li>RXLoadSwitch()&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load_switch.html#a9203e9ef65342a38059718ab8bcd4410">CPS::DP::Ph1::RXLoadSwitch</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

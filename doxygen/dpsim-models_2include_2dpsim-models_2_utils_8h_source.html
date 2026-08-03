@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('dpsim-models_2include_2dpsim-models_2_utils_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">Utils.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="dpsim-models_2include_2dpsim-models_2_utils_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -105,27 +113,29 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;cxxabi.h&gt;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;dpsim-models/Definitions.h&gt;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;dpsim-models/Logger.h&gt;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;<a class="code" href="dpsim-models_2include_2dpsim-models_2_definitions_8h.html">dpsim-models/Definitions.h</a>&gt;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;<a class="code" href="_logger_8h.html">dpsim-models/Logger.h</a>&gt;</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">namespace </span>CPS {</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">namespace </span>Utils {</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s.html">CPS</a> {</div>
+<div class="foldopen" id="foldopen00019" data-start="{" data-end="}">
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="namespace_c_p_s_1_1_utils.html">   19</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s_1_1_utils.html">Utils</a> {</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; String className(T *ptr, <span class="keyword">const</span> String &amp;prefix = <span class="stringliteral">&quot;CPS::&quot;</span>) {</div>
+<div class="foldopen" id="foldopen00021" data-start="{" data-end="}">
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="namespace_c_p_s_1_1_utils.html#a4dc1810e52a17e2e342d3d8e830e0fd1">   21</a></span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="namespace_c_p_s_1_1_utils.html#a4dc1810e52a17e2e342d3d8e830e0fd1">className</a>(T *ptr, <span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;prefix = <span class="stringliteral">&quot;CPS::&quot;</span>) {</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  <span class="keyword">const</span> <span class="keywordtype">char</span> *mangled;</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  mangled = <span class="keyword">typeid</span>(*ptr).name();</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#if !defined(__GNUC__) || defined(__clang__)</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  String ret(mangled);</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> ret(mangled);</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <span class="keywordflow">return</span> ret;</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  Int status = 1;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> status = 1;</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  <span class="keyword">const</span> <span class="keywordtype">char</span> *unmangled;</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  unmangled = abi::__cxa_demangle(mangled, NULL, NULL, &amp;status);</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <span class="keywordflow">if</span> (status) {</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keywordflow">return</span> mangled;</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    String ret(unmangled);</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> ret(unmangled);</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    free((<span class="keywordtype">void</span> *)unmangled);</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keywordflow">if</span> (ret.find(prefix) == 0)</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>      <span class="keywordflow">return</span> ret.substr(prefix.size());</div>
@@ -134,39 +144,60 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  }</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>}</div>
+</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
 <div class="foldopen" id="foldopen00045" data-start="{" data-end="};">
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="struct_c_p_s_1_1_utils_1_1_rgb.html">   45</a></span><span class="keyword">struct </span><a class="code hl_struct" href="struct_c_p_s_1_1_utils_1_1_rgb.html">Rgb</a> {</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keywordtype">double</span> r, g, b;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="struct_c_p_s_1_1_utils_1_1_rgb.html#a34b7bc91f3345ecb9bf12c2bf1ab7caf">   46</a></span>  <span class="keywordtype">double</span> <a class="code hl_variable" href="struct_c_p_s_1_1_utils_1_1_rgb.html#a98c73e6319685d501bfc0356ddc33c98">r</a>, <a class="code hl_variable" href="struct_c_p_s_1_1_utils_1_1_rgb.html#a8b33f964d2692bf7197335605f5f8ef0">g</a>, <a class="code hl_variable" href="struct_c_p_s_1_1_utils_1_1_rgb.html#a34b7bc91f3345ecb9bf12c2bf1ab7caf">b</a>;</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <span class="keyword">static</span> <a class="code hl_struct" href="struct_c_p_s_1_1_utils_1_1_rgb.html">Rgb</a> gradient(<span class="keywordtype">double</span> x) {</div>
+<div class="foldopen" id="foldopen00048" data-start="{" data-end="}">
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="struct_c_p_s_1_1_utils_1_1_rgb.html#aa8049d363052672e168b78d7fdd25a78">   48</a></span>  <span class="keyword">static</span> <a class="code hl_struct" href="struct_c_p_s_1_1_utils_1_1_rgb.html">Rgb</a> <a class="code hl_function" href="struct_c_p_s_1_1_utils_1_1_rgb.html#aa8049d363052672e168b78d7fdd25a78">gradient</a>(<span class="keywordtype">double</span> x) {</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keywordflow">if</span> (x &gt; 1.0)</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>      x = 1.0;</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <a class="code hl_struct" href="struct_c_p_s_1_1_utils_1_1_rgb.html">Rgb</a> c = {2.0 * x, 2.0 * (1 - x), 0.0};</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordflow">if</span> (c.r &gt; 1.0)</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>      c.r = 1.0;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordflow">if</span> (c.g &gt; 1.0)</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>      c.g = 1.0;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordflow">if</span> (c.<a class="code hl_variable" href="struct_c_p_s_1_1_utils_1_1_rgb.html#a98c73e6319685d501bfc0356ddc33c98">r</a> &gt; 1.0)</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>      c.<a class="code hl_variable" href="struct_c_p_s_1_1_utils_1_1_rgb.html#a98c73e6319685d501bfc0356ddc33c98">r</a> = 1.0;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordflow">if</span> (c.<a class="code hl_variable" href="struct_c_p_s_1_1_utils_1_1_rgb.html#a8b33f964d2692bf7197335605f5f8ef0">g</a> &gt; 1.0)</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>      c.<a class="code hl_variable" href="struct_c_p_s_1_1_utils_1_1_rgb.html#a8b33f964d2692bf7197335605f5f8ef0">g</a> = 1.0;</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordflow">return</span> c;</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  }</div>
+</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  String hex() {</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordflow">return</span> fmt::format(<span class="stringliteral">&quot;#{:02x}{:02x}{:02x}&quot;</span>, (<span class="keywordtype">unsigned</span>)(r * 255),</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>                       (<span class="keywordtype">unsigned</span>)(g * 255), (<span class="keywordtype">unsigned</span>)(b * 255));</div>
+<div class="foldopen" id="foldopen00062" data-start="{" data-end="}">
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="struct_c_p_s_1_1_utils_1_1_rgb.html#a28a545b8b811851669f6e12973dd9992">   62</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="struct_c_p_s_1_1_utils_1_1_rgb.html#a28a545b8b811851669f6e12973dd9992">hex</a>() {</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordflow">return</span> fmt::format(<span class="stringliteral">&quot;#{:02x}{:02x}{:02x}&quot;</span>, (<span class="keywordtype">unsigned</span>)(<a class="code hl_variable" href="struct_c_p_s_1_1_utils_1_1_rgb.html#a98c73e6319685d501bfc0356ddc33c98">r</a> * 255),</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>                       (<span class="keywordtype">unsigned</span>)(<a class="code hl_variable" href="struct_c_p_s_1_1_utils_1_1_rgb.html#a8b33f964d2692bf7197335605f5f8ef0">g</a> * 255), (<span class="keywordtype">unsigned</span>)(<a class="code hl_variable" href="struct_c_p_s_1_1_utils_1_1_rgb.html#a34b7bc91f3345ecb9bf12c2bf1ab7caf">b</a> * 255));</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  }</div>
+</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>};</div>
 </div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>} <span class="comment">// namespace Utils</span></div>
+</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>} <span class="comment">// namespace CPS</span></div>
+<div class="ttc" id="a_logger_8h_html"><div class="ttname"><a href="_logger_8h.html">Logger.h</a></div></div>
+<div class="ttc" id="adpsim-models_2include_2dpsim-models_2_definitions_8h_html"><div class="ttname"><a href="dpsim-models_2include_2dpsim-models_2_definitions_8h.html">Definitions.h</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_1_1_utils_html"><div class="ttname"><a href="namespace_c_p_s_1_1_utils.html">CPS::Utils</a></div><div class="ttdef"><b>Definition</b> <a href="#l00019">Utils.h:19</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_1_1_utils_html_a4dc1810e52a17e2e342d3d8e830e0fd1"><div class="ttname"><a href="namespace_c_p_s_1_1_utils.html#a4dc1810e52a17e2e342d3d8e830e0fd1">CPS::Utils::className</a></div><div class="ttdeci">String className(T *ptr, const String &amp;prefix=&quot;CPS::&quot;)</div><div class="ttdef"><b>Definition</b> <a href="#l00021">Utils.h:21</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html"><div class="ttname"><a href="namespace_c_p_s.html">CPS</a></div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00017">Attribute.h:17</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a09f6ad37b12370b4b58624822be9b055"><div class="ttname"><a href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a></div><div class="ttdeci">std::string String</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00065">Definitions.h:65</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_aabddb6241134e6ad9d61ae357bc104fa"><div class="ttname"><a href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">CPS::Int</a></div><div class="ttdeci">int Int</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00061">Definitions.h:61</a></div></div>
 <div class="ttc" id="astruct_c_p_s_1_1_utils_1_1_rgb_html"><div class="ttname"><a href="struct_c_p_s_1_1_utils_1_1_rgb.html">CPS::Utils::Rgb</a></div><div class="ttdef"><b>Definition</b> <a href="#l00045">Utils.h:45</a></div></div>
+<div class="ttc" id="astruct_c_p_s_1_1_utils_1_1_rgb_html_a28a545b8b811851669f6e12973dd9992"><div class="ttname"><a href="struct_c_p_s_1_1_utils_1_1_rgb.html#a28a545b8b811851669f6e12973dd9992">CPS::Utils::Rgb::hex</a></div><div class="ttdeci">String hex()</div><div class="ttdef"><b>Definition</b> <a href="#l00062">Utils.h:62</a></div></div>
+<div class="ttc" id="astruct_c_p_s_1_1_utils_1_1_rgb_html_a34b7bc91f3345ecb9bf12c2bf1ab7caf"><div class="ttname"><a href="struct_c_p_s_1_1_utils_1_1_rgb.html#a34b7bc91f3345ecb9bf12c2bf1ab7caf">CPS::Utils::Rgb::b</a></div><div class="ttdeci">double b</div><div class="ttdef"><b>Definition</b> <a href="#l00046">Utils.h:46</a></div></div>
+<div class="ttc" id="astruct_c_p_s_1_1_utils_1_1_rgb_html_a8b33f964d2692bf7197335605f5f8ef0"><div class="ttname"><a href="struct_c_p_s_1_1_utils_1_1_rgb.html#a8b33f964d2692bf7197335605f5f8ef0">CPS::Utils::Rgb::g</a></div><div class="ttdeci">double g</div><div class="ttdef"><b>Definition</b> <a href="#l00046">Utils.h:46</a></div></div>
+<div class="ttc" id="astruct_c_p_s_1_1_utils_1_1_rgb_html_a98c73e6319685d501bfc0356ddc33c98"><div class="ttname"><a href="struct_c_p_s_1_1_utils_1_1_rgb.html#a98c73e6319685d501bfc0356ddc33c98">CPS::Utils::Rgb::r</a></div><div class="ttdeci">double r</div><div class="ttdef"><b>Definition</b> <a href="#l00046">Utils.h:46</a></div></div>
+<div class="ttc" id="astruct_c_p_s_1_1_utils_1_1_rgb_html_aa8049d363052672e168b78d7fdd25a78"><div class="ttname"><a href="struct_c_p_s_1_1_utils_1_1_rgb.html#aa8049d363052672e168b78d7fdd25a78">CPS::Utils::Rgb::gradient</a></div><div class="ttdeci">static Rgb gradient(double x)</div><div class="ttdef"><b>Definition</b> <a href="#l00048">Utils.h:48</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dpsim-models_2include_2dpsim-models_2_utils_8h.html">Utils.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

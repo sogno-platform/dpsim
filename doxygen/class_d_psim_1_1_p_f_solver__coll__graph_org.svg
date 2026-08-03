@@ -39,7 +39,7 @@
 <g id="Node000003" class="node">
 <title>Node3</title>
 <g id="a_Node000003"><a xlink:href="class_c_p_s_1_1_system_topology.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="213.75,-94.75 98.75,-94.75 98.75,-72.5 213.75,-72.5 213.75,-94.75"/>
+<polygon fill="white" stroke="#666666" points="213.75,-94.75 98.75,-94.75 98.75,-72.5 213.75,-72.5 213.75,-94.75"/>
 <text text-anchor="middle" x="156.25" y="-81.25" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SystemTopology</text>
 </a>
 </g>

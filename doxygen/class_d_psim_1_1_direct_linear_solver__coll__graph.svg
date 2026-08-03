@@ -32,7 +32,7 @@
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="class_d_psim_1_1_direct_linear_solver_configuration.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="137.5,-109 0,-109 0,-72.5 137.5,-72.5 137.5,-109"/>
+<polygon fill="white" stroke="#666666" points="137.5,-109 0,-109 0,-72.5 137.5,-72.5 137.5,-109"/>
 <text text-anchor="start" x="8" y="-95.5" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::DirectLinearSolver</text>
 <text text-anchor="middle" x="68.75" y="-81.25" font-family="Helvetica,sans-Serif" font-size="10.00">Configuration</text>
 </a>

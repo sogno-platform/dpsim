@@ -252,7 +252,7 @@ var sectionId = 'dynsection-1';
 <g id="Node000008" class="node">
 <title>Node8</title>
 <g id="a_Node000008"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="352.62,-464.53 237.62,-464.53 237.62,-413.78 352.62,-413.78 352.62,-464.53"/>
+<polygon fill="white" stroke="#666666" points="352.62,-464.53 237.62,-464.53 237.62,-413.78 352.62,-413.78 352.62,-464.53"/>
 <text text-anchor="start" x="245.62" y="-451.03" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="245.62" y="-436.78" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="295.12" y="-422.53" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; String &gt; &gt;</text>
@@ -312,7 +312,7 @@ var sectionId = 'dynsection-1';
 <g id="Node000010" class="node">
 <title>Node10</title>
 <g id="a_Node000010"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="115,-436.53 0,-436.53 0,-385.78 115,-385.78 115,-436.53"/>
+<polygon fill="white" stroke="#666666" points="115,-436.53 0,-436.53 0,-385.78 115,-385.78 115,-436.53"/>
 <text text-anchor="start" x="8" y="-423.03" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="8" y="-408.78" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="57.5" y="-394.53" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; T &gt; &gt;</text>
@@ -346,7 +346,7 @@ var sectionId = 'dynsection-1';
 <g id="Node000012" class="node">
 <title>Node12</title>
 <g id="a_Node000012"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="352.62,-358.53 237.62,-358.53 237.62,-307.78 352.62,-307.78 352.62,-358.53"/>
+<polygon fill="white" stroke="#666666" points="352.62,-358.53 237.62,-358.53 237.62,-307.78 352.62,-307.78 352.62,-358.53"/>
 <text text-anchor="start" x="245.62" y="-345.03" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="245.62" y="-330.78" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="295.12" y="-316.53" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Real &gt; &gt;</text>
@@ -380,7 +380,7 @@ var sectionId = 'dynsection-1';
 <g id="Node000014" class="node">
 <title>Node14</title>
 <g id="a_Node000014"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="352.62,-159.53 237.62,-159.53 237.62,-108.78 352.62,-108.78 352.62,-159.53"/>
+<polygon fill="white" stroke="#666666" points="352.62,-159.53 237.62,-159.53 237.62,-108.78 352.62,-108.78 352.62,-159.53"/>
 <text text-anchor="start" x="245.62" y="-146.03" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="245.62" y="-131.78" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="295.12" y="-117.53" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Bool &gt; &gt;</text>
@@ -410,7 +410,7 @@ var sectionId = 'dynsection-1';
 <g id="Node000016" class="node">
 <title>Node16</title>
 <g id="a_Node000016"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="352.62,-53.53 237.62,-53.53 237.62,-2.78 352.62,-2.78 352.62,-53.53"/>
+<polygon fill="white" stroke="#666666" points="352.62,-53.53 237.62,-53.53 237.62,-2.78 352.62,-2.78 352.62,-53.53"/>
 <text text-anchor="start" x="245.62" y="-40.03" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="245.62" y="-25.78" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="295.12" y="-11.53" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; CPS::UInt &gt; &gt;</text>
@@ -430,7 +430,7 @@ var sectionId = 'dynsection-1';
 <g id="Node000017" class="node">
 <title>Node17</title>
 <g id="a_Node000017"><a xlink:href="class_d_psim_1_1_event_queue.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="584.25,-125.28 475.25,-125.28 475.25,-103.03 584.25,-103.03 584.25,-125.28"/>
+<polygon fill="white" stroke="#666666" points="584.25,-125.28 475.25,-125.28 475.25,-103.03 584.25,-103.03 584.25,-125.28"/>
 <text text-anchor="middle" x="529.75" y="-111.78" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::EventQueue</text>
 </a>
 </g>
@@ -449,7 +449,7 @@ var sectionId = 'dynsection-1';
 <g id="Node000018" class="node">
 <title>Node18</title>
 <g id="a_Node000018"><a xlink:href="class_c_p_s_1_1_system_topology.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="587.25,-85.28 472.25,-85.28 472.25,-63.03 587.25,-63.03 587.25,-85.28"/>
+<polygon fill="white" stroke="#666666" points="587.25,-85.28 472.25,-85.28 472.25,-63.03 587.25,-63.03 587.25,-85.28"/>
 <text text-anchor="middle" x="529.75" y="-71.78" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SystemTopology</text>
 </a>
 </g>
@@ -468,7 +468,7 @@ var sectionId = 'dynsection-1';
 <g id="Node000019" class="node">
 <title>Node19</title>
 <g id="a_Node000019"><a xlink:href="class_d_psim_1_1_direct_linear_solver_configuration.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="598.5,-45.41 461,-45.41 461,-8.91 598.5,-8.91 598.5,-45.41"/>
+<polygon fill="white" stroke="#666666" points="598.5,-45.41 461,-45.41 461,-8.91 598.5,-8.91 598.5,-45.41"/>
 <text text-anchor="start" x="469" y="-31.91" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::DirectLinearSolver</text>
 <text text-anchor="middle" x="529.75" y="-17.66" font-family="Helvetica,sans-Serif" font-size="10.00">Configuration</text>
 </a>
@@ -488,7 +488,7 @@ var sectionId = 'dynsection-1';
 <g id="Node000020" class="node">
 <title>Node20</title>
 <g id="a_Node000020"><a xlink:href="class_d_psim_1_1_timer.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="883.75,-150.28 805.5,-150.28 805.5,-128.03 883.75,-128.03 883.75,-150.28"/>
+<polygon fill="white" stroke="#666666" points="883.75,-150.28 805.5,-150.28 805.5,-128.03 883.75,-128.03 883.75,-150.28"/>
 <text text-anchor="middle" x="844.62" y="-136.78" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::Timer</text>
 </a>
 </g>

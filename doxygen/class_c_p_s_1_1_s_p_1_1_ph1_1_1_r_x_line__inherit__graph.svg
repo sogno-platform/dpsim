@@ -377,7 +377,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000016" class="node">
 <title>Node16</title>
 <g id="a_Node000016"><a xlink:href="class_c_p_s_1_1_base_1_1_ph1_1_1_pi_line.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="1157.75,-22.25 1038.25,-22.25 1038.25,0 1157.75,0 1157.75,-22.25"/>
+<polygon fill="white" stroke="#666666" points="1157.75,-22.25 1038.25,-22.25 1038.25,0 1157.75,0 1157.75,-22.25"/>
 <text text-anchor="middle" x="1098" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Base::Ph1::PiLine</text>
 </a>
 </g>

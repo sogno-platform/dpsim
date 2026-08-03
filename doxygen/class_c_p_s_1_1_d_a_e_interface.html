@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_c_p_s_1_1_d_a_e_interface.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>CPS</b></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_d_a_e_interface.html">DAEInterface</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
@@ -95,17 +103,19 @@ $(function(){ initResizable(false); });
   <div class="headertitle"><div class="title">CPS::DAEInterface Class Reference<span class="mlabels"><span class="mlabel abstract">abstract</span></span></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="_d_a_e_interface_8h_source.html">DAEInterface.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for CPS::DAEInterface:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_d_a_e_interface__inherit__graph.svg" width="412" height="432"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:ae5b364df486165906a0b973dd9180962" id="r_ae5b364df486165906a0b973dd9180962"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_d_a_e_interface.html">DAEInterface</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae5b364df486165906a0b973dd9180962">Ptr</a></td></tr>
 <tr class="separator:ae5b364df486165906a0b973dd9180962"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a344f948d58bf550093e722922a3fa168" id="r_a344f948d58bf550093e722922a3fa168"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; Ptr &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a344f948d58bf550093e722922a3fa168">List</a></td></tr>
+<tr class="memitem:a344f948d58bf550093e722922a3fa168" id="r_a344f948d58bf550093e722922a3fa168"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="#ae5b364df486165906a0b973dd9180962">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a344f948d58bf550093e722922a3fa168">List</a></td></tr>
 <tr class="separator:a344f948d58bf550093e722922a3fa168"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a65661bbd04e99f2561ba79b35ac6aebe" id="r_a65661bbd04e99f2561ba79b35ac6aebe"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a65661bbd04e99f2561ba79b35ac6aebe">ResFn</a></td></tr>
 <tr class="separator:a65661bbd04e99f2561ba79b35ac6aebe"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -115,7 +125,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a229bcc8533df868e5e5bc30ca2d9b4bf" id="r_a229bcc8533df868e5e5bc30ca2d9b4bf"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a229bcc8533df868e5e5bc30ca2d9b4bf">daeResidual</a> (double ttime, const double state[], const double dstate_dt[], double resid[], std::vector&lt; int &gt; &amp;off)=0</td></tr>
 <tr class="memdesc:a229bcc8533df868e5e5bc30ca2d9b4bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Residual Function for DAE Solver.  <br /></td></tr>
 <tr class="separator:a229bcc8533df868e5e5bc30ca2d9b4bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba8b07b9cdf688b57119a07836f0b885" id="r_aba8b07b9cdf688b57119a07836f0b885"><td class="memItemLeft" align="right" valign="top">virtual Complex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba8b07b9cdf688b57119a07836f0b885">daeInitialize</a> ()=0</td></tr>
+<tr class="memitem:aba8b07b9cdf688b57119a07836f0b885" id="r_aba8b07b9cdf688b57119a07836f0b885"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba8b07b9cdf688b57119a07836f0b885">daeInitialize</a> ()=0</td></tr>
 <tr class="memdesc:aba8b07b9cdf688b57119a07836f0b885"><td class="mdescLeft">&#160;</td><td class="mdescRight">Voltage Getter for Components.  <br /></td></tr>
 <tr class="separator:aba8b07b9cdf688b57119a07836f0b885"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -130,7 +140,7 @@ Public Member Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::vector&lt;Ptr&gt; CPS::DAEInterface::List</td>
+          <td class="memname">typedef std::vector&lt;<a class="el" href="#ae5b364df486165906a0b973dd9180962">Ptr</a>&gt; <a class="el" href="#a344f948d58bf550093e722922a3fa168">CPS::DAEInterface::List</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -146,7 +156,7 @@ Public Member Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::shared_ptr&lt;<a class="el" href="class_c_p_s_1_1_d_a_e_interface.html">DAEInterface</a>&gt; CPS::DAEInterface::Ptr</td>
+          <td class="memname">typedef std::shared_ptr&lt;<a class="el" href="class_c_p_s_1_1_d_a_e_interface.html">DAEInterface</a>&gt; <a class="el" href="#ae5b364df486165906a0b973dd9180962">CPS::DAEInterface::Ptr</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -162,7 +172,7 @@ Public Member Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using CPS::DAEInterface::ResFn</td>
+          <td class="memname">using <a class="el" href="#a65661bbd04e99f2561ba79b35ac6aebe">CPS::DAEInterface::ResFn</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -184,7 +194,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual Complex CPS::DAEInterface::daeInitialize </td>
+          <td class="memname">virtual <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> CPS::DAEInterface::daeInitialize </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -255,10 +265,13 @@ Public Member Functions</h2></td></tr>
 <li>/__w/dpsim/dpsim/dpsim-models/include/dpsim-models/Solver/<a class="el" href="_d_a_e_interface_8h_source.html">DAEInterface.h</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_c_p_s.html">CPS</a></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_d_a_e_interface.html">DAEInterface</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,19 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
 </div><!-- top -->
-<div id="doc-content">
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('functions_vars_s.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -84,10 +96,11 @@ $(function(){ initResizable(false); });
 </div>
 
 <div class="contents">
-<div class="textblock">Here is a list of all documented variables with links to the class documentation for each member:</div>
+<div class="textblock">Here is a list of all variables with links to the classes they belong to:</div>
 
 <h3><a id="index_s" name="index_s"></a>- s -</h3><ul>
-<li>size&#160;:&#160;<a class="el" href="struct_d_psim_1_1_gpu_dense_adapter_1_1_gpu_data.html#aafd0b8e3b9d2695232e594bc1fa44923">DPsim::GpuDenseAdapter::GpuData</a></li>
+<li>scenario&#160;:&#160;<a class="el" href="class_d_psim_1_1_command_line_args.html#ae4df82b7a87a80e73e16494ca9f8bf2e">DPsim::CommandLineArgs</a></li>
+<li>size&#160;:&#160;<a class="el" href="structdps__magma__data.html#a237b3d6ad72f9f82f104c45f7aa3c244">dps_magma_data</a>, <a class="el" href="struct_d_psim_1_1_gpu_dense_adapter_1_1_gpu_data.html#aafd0b8e3b9d2695232e594bc1fa44923">DPsim::GpuDenseAdapter::GpuData</a></li>
 <li>sol_D&#160;:&#160;<a class="el" href="class_d_psim_1_1_p_f_solver_power_polar.html#a52ee6bf46bc259c2eb73213cf742a339">DPsim::PFSolverPowerPolar</a></li>
 <li>sol_P&#160;:&#160;<a class="el" href="class_d_psim_1_1_p_f_solver_power_polar.html#a0117a10de15ec6b31c336db2bfa2bca4">DPsim::PFSolverPowerPolar</a></li>
 <li>sol_Q&#160;:&#160;<a class="el" href="class_d_psim_1_1_p_f_solver_power_polar.html#a7d317fe96794c812962f6cb7e85b6644">DPsim::PFSolverPowerPolar</a></li>
@@ -97,16 +110,27 @@ $(function(){ initResizable(false); });
 <li>solution&#160;:&#160;<a class="el" href="class_d_psim_1_1_o_d_eint_solver.html#aa9f9bcf0c1af654f0c759a2081d3fcf3">DPsim::ODEintSolver</a></li>
 <li>solutionComplexInitialized&#160;:&#160;<a class="el" href="class_d_psim_1_1_p_f_solver.html#a9a453fe8dd3f8226ef4f80b2af6b0120">DPsim::PFSolver</a></li>
 <li>solutionInitialized&#160;:&#160;<a class="el" href="class_d_psim_1_1_p_f_solver.html#a8c557b0f0b283a7ee60f7ca921b24cd5">DPsim::PFSolver</a></li>
+<li>solve&#160;:&#160;<a class="el" href="structdpsim__mna__plugin.html#a8adbf4683cdf3756dba77ed99f9ad3fe">dpsim_mna_plugin</a></li>
+<li>solver&#160;:&#160;<a class="el" href="class_d_psim_1_1_command_line_args.html#aafb0c641d2ce7c5f4d7120d8f50c9363">DPsim::CommandLineArgs</a></li>
+<li>solverPluginName&#160;:&#160;<a class="el" href="class_d_psim_1_1_command_line_args.html#a0264d30bc7359a4ced52dd52f835d8f7">DPsim::CommandLineArgs</a></li>
+<li>startSynch&#160;:&#160;<a class="el" href="class_d_psim_1_1_command_line_args.html#a154d40a473538a52fd92f920ed93ef66">DPsim::CommandLineArgs</a></li>
+<li>startTime&#160;:&#160;<a class="el" href="class_d_psim_1_1_command_line_args.html#aea6a6113e1aff3bab5165a48f6c5e0fa">DPsim::CommandLineArgs</a></li>
 <li>state&#160;:&#160;<a class="el" href="class_d_psim_1_1_d_a_e_solver.html#a1bf8f9d55bfaac779b39d141a06e53b6">DPsim::DAESolver</a></li>
 <li>stateNames&#160;:&#160;<a class="el" href="struct_d_psim_1_1_state_space_metadata.html#a3927751c6535b5cdff10339cc0ef7f86">DPsim::StateSpaceMetadata</a></li>
+<li>steadyInit&#160;:&#160;<a class="el" href="class_d_psim_1_1_command_line_args.html#ac11f38849eaa698ecda7f512c4af4f8f">DPsim::CommandLineArgs</a></li>
 <li>stepper&#160;:&#160;<a class="el" href="class_d_psim_1_1_o_d_eint_solver.html#a6ad3f231f733e591ef8157482e4d6fc4">DPsim::ODEintSolver</a></li>
+<li>switchTime&#160;:&#160;<a class="el" href="struct_d_psim_1_1_switch_configuration.html#ac676c80cb6ae76db56afde36c1d84320">DPsim::SwitchConfiguration</a></li>
+<li>sysFreq&#160;:&#160;<a class="el" href="class_d_psim_1_1_command_line_args.html#a1f684b0043f8b3b53b93504ea7e63750">DPsim::CommandLineArgs</a></li>
 <li>system&#160;:&#160;<a class="el" href="class_d_psim_1_1_o_d_eint_solver.html#a0c07ce0b888b2291298aac4841dca2ff">DPsim::ODEintSolver</a></li>
+<li>systemIndex&#160;:&#160;<a class="el" href="struct_d_psim_1_1_switch_configuration.html#a4cb351414537c1bdbe9f546b1aeada0b">DPsim::SwitchConfiguration</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

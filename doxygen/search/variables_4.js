@@ -1,6 +1,18 @@
 var searchData=
 [
-  ['e_5feq_5fdp_0',['E_eq_DP',['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a53490ca840067570c5c7cf188c27e0e8',1,'CPS::DP::Ph3::SynchronGeneratorVBR']]],
-  ['e_5feq_5fvbr_1',['E_eq_vbr',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a6d806f2eda8316600adcc16d844c25af',1,'CPS::EMT::Ph3::SynchronGeneratorVBR']]],
-  ['errinfo_2',['errInfo',['../struct_d_psim_1_1_gpu_dense_adapter_1_1_gpu_data.html#a66a886a70dd7f1d964ab0a2a1bc5e154',1,'DPsim::GpuDenseAdapter::GpuData']]]
+  ['e1_0',['E1',['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a8e2216ee935f95b722d2c4e9d4477d2c',1,'CPS::DP::Ph3::SynchronGeneratorVBR::E1'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a4ad6e791b4f0c57fb6dacaca637b0d23',1,'CPS::EMT::Ph3::SynchronGeneratorVBR::E1']]],
+  ['e1_5f1d_1',['E1_1d',['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a2be551868bc70cf2b5e613f87bd4a41c',1,'CPS::DP::Ph3::SynchronGeneratorVBR::E1_1d'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a440e6821b36ba1491c6fc6315c389a2d',1,'CPS::EMT::Ph3::SynchronGeneratorVBR::E1_1d']]],
+  ['e1b_2',['E1b',['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a04f6d6ac0cf53edc9019cb6181eed2ef',1,'CPS::DP::Ph3::SynchronGeneratorVBR::E1b'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a142eaf6a1d660e1a40734d4e9061eda1',1,'CPS::EMT::Ph3::SynchronGeneratorVBR::E1b']]],
+  ['e2_3',['E2',['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#afe80c57341de86a3a4cadd39a4b5ed8d',1,'CPS::DP::Ph3::SynchronGeneratorVBR::E2'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#ad16cda607358544c935e3ed4716e5b4a',1,'CPS::EMT::Ph3::SynchronGeneratorVBR::E2']]],
+  ['e2_5f1d_4',['E2_1d',['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#ae374e378ab1a5e50792896583443131e',1,'CPS::DP::Ph3::SynchronGeneratorVBR::E2_1d'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a049694195d3446eaba95a52a5e4e9777',1,'CPS::EMT::Ph3::SynchronGeneratorVBR::E2_1d']]],
+  ['e2b_5',['E2b',['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#ac72b05bb8e810a34ce31538e720b9164',1,'CPS::DP::Ph3::SynchronGeneratorVBR::E2b'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a927385c0b9624e17e8ceed26907bad2a',1,'CPS::EMT::Ph3::SynchronGeneratorVBR::E2b']]],
+  ['e_5feq_5fdp_6',['E_eq_DP',['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a53490ca840067570c5c7cf188c27e0e8',1,'CPS::DP::Ph3::SynchronGeneratorVBR']]],
+  ['e_5feq_5fvbr_7',['E_eq_vbr',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a6d806f2eda8316600adcc16d844c25af',1,'CPS::EMT::Ph3::SynchronGeneratorVBR']]],
+  ['e_5fr_5fvbr_8',['E_r_vbr',['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a8f8dfa9265b2ba63b8d48d70e9676234',1,'CPS::DP::Ph3::SynchronGeneratorVBR::E_r_vbr'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a608759179fe69d6178a37d85f2742e9b',1,'CPS::EMT::Ph3::SynchronGeneratorVBR::E_r_vbr']]],
+  ['e_5fr_5fvbr_5fdp_9',['E_r_vbr_DP',['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a83cfdd11d86b0d7bd64e38847a142742',1,'CPS::DP::Ph3::SynchronGeneratorVBR']]],
+  ['e_5fr_5fvbr_5fdp2_10',['E_r_vbr_DP2',['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a6df81f2aa21c1655e99fd762ff01b87e',1,'CPS::DP::Ph3::SynchronGeneratorVBR']]],
+  ['ea_11',['Ea',['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#aad731c00b15e74cfa165d21a21f95a98',1,'CPS::DP::Ph3::SynchronGeneratorVBR::Ea'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#af4e5b638bbc26be8191ec89b14a729ff',1,'CPS::EMT::Ph3::SynchronGeneratorVBR::Ea']]],
+  ['errinfo_12',['errInfo',['../struct_d_psim_1_1_gpu_dense_adapter_1_1_gpu_data.html#a66a886a70dd7f1d964ab0a2a1bc5e154',1,'DPsim::GpuDenseAdapter::GpuData']]],
+  ['example_5fplugin_13',['example_plugin',['../example_8c.html#a9d282677358285b7415fc4f7cc555e11',1,'example.c']]],
+  ['external_14',['external',['../class_d_psim_1_1_scheduler.html#a5369e74df20f3b2e96a5442ff36bd62c',1,'DPsim::Scheduler']]]
 ];

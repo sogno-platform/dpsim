@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_exciter_d_c1_simp_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,27 +95,21 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_9ee3725555df841850f10a3655158b62.html">Signal</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">ExciterDC1Simp.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// SPDX-FileCopyrightText: 2025 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University</span></div>
+<a href="_exciter_d_c1_simp_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// SPDX-FileCopyrightText: 2025 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;dpsim-models/Base/Base_Exciter.h&gt;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;dpsim-models/Logger.h&gt;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;dpsim-models/SimSignalComp.h&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;<a class="code" href="_base___exciter_8h.html">dpsim-models/Base/Base_Exciter.h</a>&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;<a class="code" href="_logger_8h.html">dpsim-models/Logger.h</a>&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;<a class="code" href="_sim_signal_comp_8h.html">dpsim-models/SimSignalComp.h</a>&gt;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">namespace </span>CPS {</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">namespace </span>Signal {</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s.html">CPS</a> {</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s_1_1_signal.html">Signal</a> {</div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
 <div class="foldopen" id="foldopen00013" data-start="{" data-end="};">
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html">   13</a></span><span class="keyword">class </span><a class="code hl_class" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html">ExciterDC1SimpParameters</a></div>
@@ -109,56 +117,62 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>      <span class="keyword">public</span> <a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;ExciterDC1SimpParameters&gt; {</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ab843482f0cc69c952cfa484505715ee8">   19</a></span>  Real <a class="code hl_variable" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ab843482f0cc69c952cfa484505715ee8">Tr</a> = 0;</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ae80536d003d0837495069d3bb58ef1ac">   21</a></span>  Real <a class="code hl_variable" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ae80536d003d0837495069d3bb58ef1ac">Ta</a> = 0;</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a2ff6b2e4ed50aab5fe67912c469ed9c8">   23</a></span>  Real <a class="code hl_variable" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a2ff6b2e4ed50aab5fe67912c469ed9c8">Tef</a> = 0;</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a4c8288c570530a66dd24031561b248d8">   25</a></span>  Real <a class="code hl_variable" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a4c8288c570530a66dd24031561b248d8">Tf</a> = 0;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a5fe91a1dd7d5242152b896c37b58ead6">   27</a></span>  Real <a class="code hl_variable" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a5fe91a1dd7d5242152b896c37b58ead6">Ka</a> = 0;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ab3e99d5ec94029e303aaabf779905100">   29</a></span>  Real <a class="code hl_variable" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ab3e99d5ec94029e303aaabf779905100">Kef</a> = 0;</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a468e72035be0b1e6b6eb871d108ce30f">   31</a></span>  Real <a class="code hl_variable" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a468e72035be0b1e6b6eb871d108ce30f">Kf</a> = 0;</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#adb7797a325fc5eb5e6edf1a9197b3000">   33</a></span>  Real <a class="code hl_variable" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#adb7797a325fc5eb5e6edf1a9197b3000">Aef</a> = 0;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a71013de2bff5fd92657525e493214541">   35</a></span>  Real <a class="code hl_variable" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a71013de2bff5fd92657525e493214541">Bef</a> = 0;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  Real MaxVa = 0;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  Real MinVa = 0;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ab843482f0cc69c952cfa484505715ee8">   19</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="code hl_variable" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ab843482f0cc69c952cfa484505715ee8">Tr</a> = 0;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ae80536d003d0837495069d3bb58ef1ac">   21</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="code hl_variable" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ae80536d003d0837495069d3bb58ef1ac">Ta</a> = 0;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a2ff6b2e4ed50aab5fe67912c469ed9c8">   23</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="code hl_variable" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a2ff6b2e4ed50aab5fe67912c469ed9c8">Tef</a> = 0;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a4c8288c570530a66dd24031561b248d8">   25</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="code hl_variable" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a4c8288c570530a66dd24031561b248d8">Tf</a> = 0;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a5fe91a1dd7d5242152b896c37b58ead6">   27</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="code hl_variable" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a5fe91a1dd7d5242152b896c37b58ead6">Ka</a> = 0;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ab3e99d5ec94029e303aaabf779905100">   29</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="code hl_variable" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ab3e99d5ec94029e303aaabf779905100">Kef</a> = 0;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a468e72035be0b1e6b6eb871d108ce30f">   31</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="code hl_variable" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a468e72035be0b1e6b6eb871d108ce30f">Kf</a> = 0;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#adb7797a325fc5eb5e6edf1a9197b3000">   33</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="code hl_variable" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#adb7797a325fc5eb5e6edf1a9197b3000">Aef</a> = 0;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a71013de2bff5fd92657525e493214541">   35</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="code hl_variable" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a71013de2bff5fd92657525e493214541">Bef</a> = 0;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ac29b34e88fa9a416cf34bd94f7a2ed75">   37</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="code hl_variable" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ac29b34e88fa9a416cf34bd94f7a2ed75">MaxVa</a> = 0;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ac94b47bd6e3e0620f3414c2306c98b21">   39</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="code hl_variable" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ac94b47bd6e3e0620f3414c2306c98b21">MinVa</a> = 0;</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>};</div>
 </div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span></div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
 <div class="foldopen" id="foldopen00047" data-start="{" data-end="};">
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp.html">   47</a></span><span class="keyword">class </span><a class="code hl_function" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp.html#abe8ff6a4b5c93bfc74f6e5c582f4f0d2">ExciterDC1Simp</a> : <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_base_1_1_exciter.html">Base::Exciter</a>,</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                       <span class="keyword">public</span> SimSignalComp,</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                       <span class="keyword">public</span> <a class="code hl_function" href="class_c_p_s_1_1_sim_signal_comp.html#ac0a5edec1e98621bf94aaee8f20e1040">SimSignalComp</a>,</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>                       <span class="keyword">public</span> <a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;ExciterDC1Simp&gt; {</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="keyword">private</span>:</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  std::shared_ptr&lt;ExciterDC1SimpParameters&gt; mParameters;</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  <span class="comment">// ### Exciter Variables ####</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  Real mVref = 0;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  Real mVr_prev = 0;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  Real mVf_prev = 0;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  Real mVa_prev = 0;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  Real mEf_prev = 0;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mVref = 0;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mVr_prev = 0;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mVf_prev = 0;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mVa_prev = 0;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mEf_prev = 0;</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <span class="keyword">const</span> Attribute&lt;Real&gt;::Ptr mVh;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  <span class="keyword">const</span> Attribute&lt;Real&gt;::Ptr mVr;</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  Real mVf;</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  Real mVin;</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  Real mVa;</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  Real mVsat;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  <span class="keyword">const</span> Attribute&lt;Real&gt;::Ptr mEf;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;Real&gt;::Ptr</a> mVh;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;Real&gt;::Ptr</a> mVr;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mVf;</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mVin;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mVa;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mVsat;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;Real&gt;::Ptr</a> mEf;</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  <a class="code hl_function" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp.html#abe8ff6a4b5c93bfc74f6e5c582f4f0d2">ExciterDC1Simp</a>(<span class="keyword">const</span> String &amp;name,</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>                 CPS::Logger::Level logLevel = Logger::Level::info);</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  <a class="code hl_function" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp.html#abe8ff6a4b5c93bfc74f6e5c582f4f0d2">ExciterDC1Simp</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;<a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>,</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>                 <a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a> logLevel = Logger::Level::info);</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp.html#aca9f0f0b3fd4eff9eca6d69ced8a0b5b">setParameters</a>(std::shared_ptr&lt;Base::ExciterParameters&gt; parameters) <span class="keyword">final</span>;</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp.html#ab96902cf0356dcbf922c1a5767252735">initializeStates</a>(Real Vh_init, Real Vf_init) <span class="keyword">final</span>;</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  Real <a class="code hl_function" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp.html#ad627e40e71f83777f9b4509aebe68443">step</a>(Real mVd, Real mVq, Real dt, Real Vpss = 0) <span class="keyword">final</span>;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp.html#ab96902cf0356dcbf922c1a5767252735">initializeStates</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> Vh_init, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> Vf_init) <span class="keyword">final</span>;</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="code hl_function" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp.html#ad627e40e71f83777f9b4509aebe68443">step</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mVd, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mVq, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> dt, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> Vpss = 0) <span class="keyword">final</span>;</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>};</div>
 </div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>} <span class="comment">// namespace Signal</span></div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>} <span class="comment">// namespace CPS</span></div>
+<div class="ttc" id="a_base___exciter_8h_html"><div class="ttname"><a href="_base___exciter_8h.html">Base_Exciter.h</a></div></div>
+<div class="ttc" id="a_logger_8h_html"><div class="ttname"><a href="_logger_8h.html">Logger.h</a></div></div>
+<div class="ttc" id="a_sim_signal_comp_8h_html"><div class="ttname"><a href="_sim_signal_comp_8h.html">SimSignalComp.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_ad552c848f780007d59f489540fa7e4d6"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">CPS::Attribute::Ptr</a></div><div class="ttdeci">AttributePointer&lt; Attribute&lt; T &gt; &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00250">Attribute.h:250</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_base_1_1_exciter_html"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_exciter.html">CPS::Base::Exciter</a></div><div class="ttdoc">Base model for exciters.</div><div class="ttdef"><b>Definition</b> <a href="_base___exciter_8h_source.html#l00018">Base_Exciter.h:18</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_base_1_1_exciter_parameters_html"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_exciter_parameters.html">CPS::Base::ExciterParameters</a></div><div class="ttdef"><b>Definition</b> <a href="_base___exciter_8h_source.html#l00011">Base_Exciter.h:11</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a38b8318459b1651160029263eff6ca47"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">CPS::IdentifiedObject::name</a></div><div class="ttdeci">String name()</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00059">IdentifiedObject.h:59</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_logger_html_a021e964d1ab0d217a05b95736d2ea804"><div class="ttname"><a href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a></div><div class="ttdeci">spdlog::level::level_enum Level</div><div class="ttdef"><b>Definition</b> <a href="_logger_8h_source.html#l00033">Logger.h:33</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_html_ab96902cf0356dcbf922c1a5767252735"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp.html#ab96902cf0356dcbf922c1a5767252735">CPS::Signal::ExciterDC1Simp::initializeStates</a></div><div class="ttdeci">void initializeStates(Real Vh_init, Real Vf_init) final</div><div class="ttdoc">Initializes exciter variables.</div><div class="ttdef"><b>Definition</b> <a href="_exciter_d_c1_simp_8cpp_source.html#l00077">ExciterDC1Simp.cpp:77</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_html_abe8ff6a4b5c93bfc74f6e5c582f4f0d2"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp.html#abe8ff6a4b5c93bfc74f6e5c582f4f0d2">CPS::Signal::ExciterDC1Simp::ExciterDC1Simp</a></div><div class="ttdeci">ExciterDC1Simp(const String &amp;name, CPS::Logger::Level logLevel=Logger::Level::info)</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition</b> <a href="_exciter_d_c1_simp_8cpp_source.html#l00009">ExciterDC1Simp.cpp:9</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_html_aca9f0f0b3fd4eff9eca6d69ced8a0b5b"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp.html#aca9f0f0b3fd4eff9eca6d69ced8a0b5b">CPS::Signal::ExciterDC1Simp::setParameters</a></div><div class="ttdeci">void setParameters(std::shared_ptr&lt; Base::ExciterParameters &gt; parameters) final</div><div class="ttdoc">Initializes exciter parameters.</div><div class="ttdef"><b>Definition</b> <a href="_exciter_d_c1_simp_8cpp_source.html#l00015">ExciterDC1Simp.cpp:15</a></div></div>
@@ -171,14 +185,24 @@ $(function(){ initResizable(false); });
 <div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters_html_a71013de2bff5fd92657525e493214541"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a71013de2bff5fd92657525e493214541">CPS::Signal::ExciterDC1SimpParameters::Bef</a></div><div class="ttdeci">Real Bef</div><div class="ttdoc">Second ceiling coefficient.</div><div class="ttdef"><b>Definition</b> <a href="#l00035">ExciterDC1Simp.h:35</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters_html_ab3e99d5ec94029e303aaabf779905100"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ab3e99d5ec94029e303aaabf779905100">CPS::Signal::ExciterDC1SimpParameters::Kef</a></div><div class="ttdeci">Real Kef</div><div class="ttdoc">Field circuit integral deviation.</div><div class="ttdef"><b>Definition</b> <a href="#l00029">ExciterDC1Simp.h:29</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters_html_ab843482f0cc69c952cfa484505715ee8"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ab843482f0cc69c952cfa484505715ee8">CPS::Signal::ExciterDC1SimpParameters::Tr</a></div><div class="ttdeci">Real Tr</div><div class="ttdoc">Transducer time constant (s)</div><div class="ttdef"><b>Definition</b> <a href="#l00019">ExciterDC1Simp.h:19</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters_html_ac29b34e88fa9a416cf34bd94f7a2ed75"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ac29b34e88fa9a416cf34bd94f7a2ed75">CPS::Signal::ExciterDC1SimpParameters::MaxVa</a></div><div class="ttdeci">Real MaxVa</div><div class="ttdef"><b>Definition</b> <a href="#l00037">ExciterDC1Simp.h:37</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters_html_ac94b47bd6e3e0620f3414c2306c98b21"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ac94b47bd6e3e0620f3414c2306c98b21">CPS::Signal::ExciterDC1SimpParameters::MinVa</a></div><div class="ttdeci">Real MinVa</div><div class="ttdef"><b>Definition</b> <a href="#l00039">ExciterDC1Simp.h:39</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters_html_adb7797a325fc5eb5e6edf1a9197b3000"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#adb7797a325fc5eb5e6edf1a9197b3000">CPS::Signal::ExciterDC1SimpParameters::Aef</a></div><div class="ttdeci">Real Aef</div><div class="ttdoc">First ceiling coefficient.</div><div class="ttdef"><b>Definition</b> <a href="#l00033">ExciterDC1Simp.h:33</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters_html_ae80536d003d0837495069d3bb58ef1ac"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ae80536d003d0837495069d3bb58ef1ac">CPS::Signal::ExciterDC1SimpParameters::Ta</a></div><div class="ttdeci">Real Ta</div><div class="ttdoc">Amplifier time constant.</div><div class="ttdef"><b>Definition</b> <a href="#l00021">ExciterDC1Simp.h:21</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_sim_signal_comp_html_ac0a5edec1e98621bf94aaee8f20e1040"><div class="ttname"><a href="class_c_p_s_1_1_sim_signal_comp.html#ac0a5edec1e98621bf94aaee8f20e1040">CPS::SimSignalComp::SimSignalComp</a></div><div class="ttdeci">SimSignalComp(String uid, String name, Logger::Level logLevel=Logger::Level::off)</div><div class="ttdef"><b>Definition</b> <a href="_sim_signal_comp_8h_source.html#l00031">SimSignalComp.h:31</a></div></div>
 <div class="ttc" id="aclass_shared_factory_html"><div class="ttname"><a href="class_shared_factory.html">SharedFactory</a></div><div class="ttdef"><b>Definition</b> <a href="_ptr_factory_8h_source.html#l00016">PtrFactory.h:16</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_1_1_signal_html"><div class="ttname"><a href="namespace_c_p_s_1_1_signal.html">CPS::Signal</a></div><div class="ttdef"><b>Definition</b> <a href="_cosine_f_m_generator_8h_source.html#l00014">CosineFMGenerator.h:14</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html"><div class="ttname"><a href="namespace_c_p_s.html">CPS</a></div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00017">Attribute.h:17</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a09f6ad37b12370b4b58624822be9b055"><div class="ttname"><a href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a></div><div class="ttdeci">std::string String</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00065">Definitions.h:65</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a603c4b77d70922bc0423adc57725df50"><div class="ttname"><a href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a></div><div class="ttdeci">double Real</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00062">Definitions.h:62</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_9ee3725555df841850f10a3655158b62.html">Signal</a></li><li class="navelem"><a class="el" href="_exciter_d_c1_simp_8h.html">ExciterDC1Simp.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

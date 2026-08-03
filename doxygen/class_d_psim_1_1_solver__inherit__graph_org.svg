@@ -39,7 +39,7 @@
 <g id="Node000003" class="node">
 <title>Node3</title>
 <g id="a_Node000003"><a xlink:href="class_d_psim_1_1_diakoptics_solver.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="258.12,-203.5 130.38,-203.5 130.38,-167 258.12,-167 258.12,-203.5"/>
+<polygon fill="white" stroke="#666666" points="258.12,-203.5 130.38,-203.5 130.38,-167 258.12,-167 258.12,-203.5"/>
 <text text-anchor="start" x="138.38" y="-190" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::DiakopticsSolver</text>
 <text text-anchor="middle" x="194.25" y="-175.75" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; VarType &gt;</text>
 </a>
@@ -149,7 +149,7 @@
 <g id="Node000006" class="node">
 <title>Node6</title>
 <g id="a_Node000006"><a xlink:href="class_d_psim_1_1_mna_solver_plugin.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="627.25,-156.5 498,-156.5 498,-120 627.25,-120 627.25,-156.5"/>
+<polygon fill="white" stroke="#666666" points="627.25,-156.5 498,-156.5 498,-120 627.25,-120 627.25,-156.5"/>
 <text text-anchor="start" x="506" y="-143" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::MnaSolverPlugin</text>
 <text text-anchor="middle" x="562.62" y="-128.75" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; VarType &gt;</text>
 </a>

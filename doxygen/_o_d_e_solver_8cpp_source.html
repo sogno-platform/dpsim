@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_o_d_e_solver_8cpp_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_af103632340511860a5310da360a5028.html">src</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">ODESolver.cpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_o_d_e_solver_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -99,15 +107,15 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * file, You can obtain one at https://mozilla.org/MPL/2.0/.</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> *********************************************************************************/</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;dpsim-models/SimPowerComp.h&gt;</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;dpsim/ODESolver.h&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;<a class="code" href="_sim_power_comp_8h.html">dpsim-models/SimPowerComp.h</a>&gt;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;<a class="code" href="_o_d_e_solver_8h.html">dpsim/ODESolver.h</a>&gt;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespace_d_psim.html">DPsim</a>;</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
 <div class="foldopen" id="foldopen00014" data-start="{" data-end="}">
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_o_d_e_solver.html#a249642cf69a1e9713a7b8d2d6e3d286a">   14</a></span><a class="code hl_function" href="class_d_psim_1_1_o_d_e_solver.html#a249642cf69a1e9713a7b8d2d6e3d286a">ODESolver::ODESolver</a>(String name, <span class="keyword">const</span> CPS::ODEInterface::Ptr &amp;comp,</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>                     <span class="keywordtype">bool</span> implicit_integration, Real timestep)</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    : Solver(name, CPS::Logger::Level::info), <a class="code hl_variable" href="class_d_psim_1_1_o_d_e_solver.html#a2e605a09beeaee4c38f5548daa1ed051">mComponent</a>(comp),</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_o_d_e_solver.html#a249642cf69a1e9713a7b8d2d6e3d286a">   14</a></span><a class="code hl_function" href="class_d_psim_1_1_o_d_e_solver.html#a249642cf69a1e9713a7b8d2d6e3d286a">ODESolver::ODESolver</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> name, <span class="keyword">const</span> <a class="code hl_typedef" href="class_c_p_s_1_1_o_d_e_interface.html#af539ef288692900c8cd723b8619fdb85">CPS::ODEInterface::Ptr</a> &amp;comp,</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>                     <span class="keywordtype">bool</span> implicit_integration, <a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> timestep)</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    : <a class="code hl_function" href="class_d_psim_1_1_solver.html#a43f3a5b98bf07a364645fa5f8193a5e7">Solver</a>(name, <a class="code hl_namespace" href="namespace_c_p_s.html">CPS</a>::<a class="code hl_typedef" href="namespace_d_psim.html#a0c1ad9f4200f1770537b7f206a6dc1fc">Logger</a>::Level::info), <a class="code hl_variable" href="class_d_psim_1_1_o_d_e_solver.html#a2e605a09beeaee4c38f5548daa1ed051">mComponent</a>(comp),</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>      <a class="code hl_variable" href="class_d_psim_1_1_o_d_e_solver.html#a851ff90ac5c4b48a33c2a186698d109c">mImplicitIntegration</a>(implicit_integration), <a class="code hl_variable" href="class_d_psim_1_1_o_d_e_solver.html#aa983f2cd66e1e91f9af46cfa113fddac">mTimestep</a>(timestep) {</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>  <a class="code hl_variable" href="class_d_psim_1_1_o_d_e_solver.html#acd5af55919b067e3e04fa74536f55c83">mProbDim</a> = <a class="code hl_variable" href="class_d_psim_1_1_o_d_e_solver.html#a2e605a09beeaee4c38f5548daa1ed051">mComponent</a>-&gt;mOdePreState-&gt;get().rows();</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  <a class="code hl_function" href="class_d_psim_1_1_o_d_e_solver.html#a7cd71791cadd3bc396fa5ec2a021b34a">initialize</a>();</div>
@@ -125,11 +133,11 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  NV_OWN_DATA_S(<a class="code hl_variable" href="class_d_psim_1_1_o_d_e_solver.html#a7b9e3714d4c34cefd0d3d86b06b2367e">mStates</a>) = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <span class="comment">// Analogous to DAESolver</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  CPS::ODEInterface::Ptr dummy = <a class="code hl_variable" href="class_d_psim_1_1_o_d_e_solver.html#a2e605a09beeaee4c38f5548daa1ed051">mComponent</a>;</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  mStSpFunction = [dummy](<span class="keywordtype">double</span> t, <span class="keyword">const</span> <span class="keywordtype">double</span> y[], <span class="keywordtype">double</span> ydot[]) {</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <a class="code hl_typedef" href="class_c_p_s_1_1_o_d_e_interface.html#af539ef288692900c8cd723b8619fdb85">CPS::ODEInterface::Ptr</a> dummy = <a class="code hl_variable" href="class_d_psim_1_1_o_d_e_solver.html#a2e605a09beeaee4c38f5548daa1ed051">mComponent</a>;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <a class="code hl_variable" href="class_d_psim_1_1_o_d_e_solver.html#af1a5f75826768c51e487a90631d8c166">mStSpFunction</a> = [dummy](<span class="keywordtype">double</span> t, <span class="keyword">const</span> <span class="keywordtype">double</span> y[], <span class="keywordtype">double</span> ydot[]) {</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    dummy-&gt;odeStateSpace(t, y, ydot);</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  };</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  mJacFunction = [dummy](<span class="keywordtype">double</span> t, <span class="keyword">const</span> <span class="keywordtype">double</span> y[], <span class="keywordtype">double</span> fy[], <span class="keywordtype">double</span> J[],</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <a class="code hl_variable" href="class_d_psim_1_1_o_d_e_solver.html#a6a579f50a5cee84fc1d06e7156342339">mJacFunction</a> = [dummy](<span class="keywordtype">double</span> t, <span class="keyword">const</span> <span class="keywordtype">double</span> y[], <span class="keywordtype">double</span> fy[], <span class="keywordtype">double</span> J[],</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>                         <span class="keywordtype">double</span> tmp1[], <span class="keywordtype">double</span> tmp2[], <span class="keywordtype">double</span> tmp3[]) {</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    dummy-&gt;odeJacobian(t, y, fy, J, tmp1, tmp2, tmp3);</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  };</div>
@@ -140,31 +148,37 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_o_d_e_solver.html#afdb9fe3550d25ee4556fc6e82df528c9">   42</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="class_d_psim_1_1_o_d_e_solver.html#afdb9fe3550d25ee4556fc6e82df528c9">ODESolver::StateSpaceWrapper</a>(realtype t, N_Vector y, N_Vector ydot,</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                                 <span class="keywordtype">void</span> *user_data) {</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <a class="code hl_function" href="class_d_psim_1_1_o_d_e_solver.html#a249642cf69a1e9713a7b8d2d6e3d286a">ODESolver</a> *self = <span class="keyword">reinterpret_cast&lt;</span><a class="code hl_function" href="class_d_psim_1_1_o_d_e_solver.html#a249642cf69a1e9713a7b8d2d6e3d286a">ODESolver</a> *<span class="keyword">&gt;</span>(user_data);</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keywordflow">return</span> self-&gt;StateSpace(t, y, ydot);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keywordflow">return</span> self-&gt;<a class="code hl_function" href="class_d_psim_1_1_o_d_e_solver.html#a16fd97459f2bbd7cd497dd28d6c4bba5">StateSpace</a>(t, y, ydot);</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>}</div>
 </div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keywordtype">int</span> ODESolver::StateSpace(realtype t, N_Vector y, N_Vector ydot) {</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  mStSpFunction(t, NV_DATA_S(y), NV_DATA_S(ydot));</div>
+<div class="foldopen" id="foldopen00048" data-start="{" data-end="}">
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_o_d_e_solver.html#a16fd97459f2bbd7cd497dd28d6c4bba5">   48</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="class_d_psim_1_1_o_d_e_solver.html#a16fd97459f2bbd7cd497dd28d6c4bba5">ODESolver::StateSpace</a>(realtype t, N_Vector y, N_Vector ydot) {</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <a class="code hl_variable" href="class_d_psim_1_1_o_d_e_solver.html#af1a5f75826768c51e487a90631d8c166">mStSpFunction</a>(t, NV_DATA_S(y), NV_DATA_S(ydot));</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>}</div>
+</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="keywordtype">int</span> ODESolver::JacobianWrapper(realtype t, N_Vector y, N_Vector fy, SUNMatrix J,</div>
+<div class="foldopen" id="foldopen00053" data-start="{" data-end="}">
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_o_d_e_solver.html#ad47a80deaa772e2e5b70d4090c1a8a0e">   53</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="class_d_psim_1_1_o_d_e_solver.html#ad47a80deaa772e2e5b70d4090c1a8a0e">ODESolver::JacobianWrapper</a>(realtype t, N_Vector y, N_Vector fy, SUNMatrix J,</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>                               <span class="keywordtype">void</span> *user_data, N_Vector tmp1, N_Vector tmp2,</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>                               N_Vector tmp3) {</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <a class="code hl_class" href="class_d_psim_1_1_o_d_e_solver.html">ODESolver</a> *self = <span class="keyword">reinterpret_cast&lt;</span><a class="code hl_class" href="class_d_psim_1_1_o_d_e_solver.html">ODESolver</a> *<span class="keyword">&gt;</span>(user_data);</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  <span class="keywordflow">return</span> self-&gt;Jacobian(t, y, fy, J, tmp1, tmp2, tmp3);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <a class="code hl_function" href="class_d_psim_1_1_o_d_e_solver.html#a249642cf69a1e9713a7b8d2d6e3d286a">ODESolver</a> *self = <span class="keyword">reinterpret_cast&lt;</span><a class="code hl_function" href="class_d_psim_1_1_o_d_e_solver.html#a249642cf69a1e9713a7b8d2d6e3d286a">ODESolver</a> *<span class="keyword">&gt;</span>(user_data);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  <span class="keywordflow">return</span> self-&gt;<a class="code hl_function" href="class_d_psim_1_1_o_d_e_solver.html#af5351a458b9f64eafd3b18441d614c6c">Jacobian</a>(t, y, fy, J, tmp1, tmp2, tmp3);</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>}</div>
+</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="keywordtype">int</span> ODESolver::Jacobian(realtype t, N_Vector y, N_Vector fy, SUNMatrix J,</div>
+<div class="foldopen" id="foldopen00060" data-start="{" data-end="}">
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_o_d_e_solver.html#af5351a458b9f64eafd3b18441d614c6c">   60</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="class_d_psim_1_1_o_d_e_solver.html#af5351a458b9f64eafd3b18441d614c6c">ODESolver::Jacobian</a>(realtype t, N_Vector y, N_Vector fy, SUNMatrix J,</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                        N_Vector tmp1, N_Vector tmp2, N_Vector tmp3) {</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  mJacFunction(t, NV_DATA_S(y), NV_DATA_S(fy), SM_DATA_D(J), NV_DATA_S(tmp1),</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  <a class="code hl_variable" href="class_d_psim_1_1_o_d_e_solver.html#a6a579f50a5cee84fc1d06e7156342339">mJacFunction</a>(t, NV_DATA_S(y), NV_DATA_S(fy), SM_DATA_D(J), NV_DATA_S(tmp1),</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>               NV_DATA_S(tmp2), NV_DATA_S(tmp3));</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>}</div>
+</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
 <div class="foldopen" id="foldopen00067" data-start="{" data-end="}">
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_o_d_e_solver.html#a4496640d054270c85d15e001a758a2f6">   67</a></span>Real <a class="code hl_function" href="class_d_psim_1_1_o_d_e_solver.html#a4496640d054270c85d15e001a758a2f6">ODESolver::step</a>(Real initial_time) {</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_o_d_e_solver.html#a4496640d054270c85d15e001a758a2f6">   67</a></span><a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> <a class="code hl_function" href="class_d_psim_1_1_o_d_e_solver.html#a4496640d054270c85d15e001a758a2f6">ODESolver::step</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> initial_time) {</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <span class="comment">// Not absolutely necessary; realtype by default double (same as Real)</span></div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  realtype T0 = (realtype)initial_time;</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  realtype Tf = (realtype)initial_time + <a class="code hl_variable" href="class_d_psim_1_1_o_d_e_solver.html#aa983f2cd66e1e91f9af46cfa113fddac">mTimestep</a>;</div>
@@ -209,7 +223,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>      <span class="keywordflow">throw</span> <a class="code hl_class" href="class_c_p_s_1_1_exception.html">CPS::Exception</a>();</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <span class="comment">// Set Jacobian routine</span></div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <a class="code hl_variable" href="class_d_psim_1_1_o_d_e_solver.html#a4ff1d6c3c06b2d0e897a80093b13e633">mFlag</a> = ARKDlsSetJacFn(<a class="code hl_variable" href="class_d_psim_1_1_o_d_e_solver.html#a4d4b3167a7e6d258b99422b9130a2e66">mArkode_mem</a>, &amp;ODESolver::JacobianWrapper);</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <a class="code hl_variable" href="class_d_psim_1_1_o_d_e_solver.html#a4ff1d6c3c06b2d0e897a80093b13e633">mFlag</a> = ARKDlsSetJacFn(<a class="code hl_variable" href="class_d_psim_1_1_o_d_e_solver.html#a4d4b3167a7e6d258b99422b9130a2e66">mArkode_mem</a>, &amp;<a class="code hl_function" href="class_d_psim_1_1_o_d_e_solver.html#ad47a80deaa772e2e5b70d4090c1a8a0e">ODESolver::JacobianWrapper</a>);</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="class_d_psim_1_1_o_d_e_solver.html#a75a68ec5b681bbf98029d04941ed6754">check_flag</a>(&amp;<a class="code hl_variable" href="class_d_psim_1_1_o_d_e_solver.html#a4ff1d6c3c06b2d0e897a80093b13e633">mFlag</a>, <span class="stringliteral">&quot;ARKDlsSetJacFn&quot;</span>, 1))</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>      <span class="keywordflow">throw</span> <a class="code hl_class" href="class_c_p_s_1_1_exception.html">CPS::Exception</a>();</div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  } <span class="keywordflow">else</span> {</div>
@@ -249,9 +263,11 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>}</div>
 </div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span><span class="keywordtype">void</span> ODESolver::SolveTask::execute(Real time, Int timeStepCount) {</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>  mSolver.<a class="code hl_function" href="class_d_psim_1_1_o_d_e_solver.html#a4496640d054270c85d15e001a758a2f6">step</a>(time);</div>
+<div class="foldopen" id="foldopen00153" data-start="{" data-end="}">
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_o_d_e_solver_1_1_solve_task.html#ac5cc233d5ee48e5d6841630ba0be4ac6">  153</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_o_d_e_solver_1_1_solve_task.html#ac5cc233d5ee48e5d6841630ba0be4ac6">ODESolver::SolveTask::execute</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> time, <a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> timeStepCount) {</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>  mSolver.step(time);</div>
 <div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>}</div>
+</div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span> </div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span><span class="comment">// ARKode-Error checking functions</span></div>
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span><span class="comment">// Check function return value...</span></div>
@@ -295,14 +311,19 @@ $(function(){ initResizable(false); });
 </div>
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span> </div>
 <div class="line"><a id="l00196" name="l00196"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_o_d_e_solver.html#a9e750ff70b2b4500883796633ae2ad3d">  196</a></span><a class="code hl_function" href="class_d_psim_1_1_o_d_e_solver.html#a9e750ff70b2b4500883796633ae2ad3d">ODESolver::~ODESolver</a>() { N_VDestroy(<a class="code hl_variable" href="class_d_psim_1_1_o_d_e_solver.html#a7b9e3714d4c34cefd0d3d86b06b2367e">mStates</a>); }</div>
+<div class="ttc" id="a_o_d_e_solver_8h_html"><div class="ttname"><a href="_o_d_e_solver_8h.html">ODESolver.h</a></div></div>
+<div class="ttc" id="a_sim_power_comp_8h_html"><div class="ttname"><a href="_sim_power_comp_8h.html">SimPowerComp.h</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_exception_html"><div class="ttname"><a href="class_c_p_s_1_1_exception.html">CPS::Exception</a></div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00138">Definitions.h:138</a></div></div>
-<div class="ttc" id="aclass_d_psim_1_1_o_d_e_solver_html"><div class="ttname"><a href="class_d_psim_1_1_o_d_e_solver.html">DPsim::ODESolver</a></div><div class="ttdoc">Solver class for ODE (Ordinary Differential Equation) systems.</div><div class="ttdef"><b>Definition</b> <a href="_o_d_e_solver_8h_source.html#l00025">ODESolver.h:25</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_o_d_e_interface_html_af539ef288692900c8cd723b8619fdb85"><div class="ttname"><a href="class_c_p_s_1_1_o_d_e_interface.html#af539ef288692900c8cd723b8619fdb85">CPS::ODEInterface::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; ODEInterface &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_o_d_e_interface_8h_source.html#l00018">ODEInterface.h:18</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_o_d_e_solver_1_1_solve_task_html_ac5cc233d5ee48e5d6841630ba0be4ac6"><div class="ttname"><a href="class_d_psim_1_1_o_d_e_solver_1_1_solve_task.html#ac5cc233d5ee48e5d6841630ba0be4ac6">DPsim::ODESolver::SolveTask::execute</a></div><div class="ttdeci">void execute(Real time, Int timeStepCount)</div><div class="ttdef"><b>Definition</b> <a href="#l00153">ODESolver.cpp:153</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_o_d_e_solver_html_a16fd97459f2bbd7cd497dd28d6c4bba5"><div class="ttname"><a href="class_d_psim_1_1_o_d_e_solver.html#a16fd97459f2bbd7cd497dd28d6c4bba5">DPsim::ODESolver::StateSpace</a></div><div class="ttdeci">int StateSpace(realtype t, N_Vector y, N_Vector ydot)</div><div class="ttdef"><b>Definition</b> <a href="#l00048">ODESolver.cpp:48</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_o_d_e_solver_html_a249642cf69a1e9713a7b8d2d6e3d286a"><div class="ttname"><a href="class_d_psim_1_1_o_d_e_solver.html#a249642cf69a1e9713a7b8d2d6e3d286a">DPsim::ODESolver::ODESolver</a></div><div class="ttdeci">ODESolver(String name, const CPS::ODEInterface::Ptr &amp;comp, bool implicit_integration, Real timestep)</div><div class="ttdoc">Create solve object with corresponding component and information on the integration type.</div><div class="ttdef"><b>Definition</b> <a href="#l00014">ODESolver.cpp:14</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_o_d_e_solver_html_a2e605a09beeaee4c38f5548daa1ed051"><div class="ttname"><a href="class_d_psim_1_1_o_d_e_solver.html#a2e605a09beeaee4c38f5548daa1ed051">DPsim::ODESolver::mComponent</a></div><div class="ttdeci">CPS::ODEInterface::Ptr mComponent</div><div class="ttdoc">Component to simulate, possible specialized component needed.</div><div class="ttdef"><b>Definition</b> <a href="_o_d_e_solver_8h_source.html#l00028">ODESolver.h:28</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_o_d_e_solver_html_a4496640d054270c85d15e001a758a2f6"><div class="ttname"><a href="class_d_psim_1_1_o_d_e_solver.html#a4496640d054270c85d15e001a758a2f6">DPsim::ODESolver::step</a></div><div class="ttdeci">Real step(Real initial_time)</div><div class="ttdoc">Solve system for the current time.</div><div class="ttdef"><b>Definition</b> <a href="#l00067">ODESolver.cpp:67</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_o_d_e_solver_html_a4d4b3167a7e6d258b99422b9130a2e66"><div class="ttname"><a href="class_d_psim_1_1_o_d_e_solver.html#a4d4b3167a7e6d258b99422b9130a2e66">DPsim::ODESolver::mArkode_mem</a></div><div class="ttdeci">void * mArkode_mem</div><div class="ttdoc">Memory block allocated by ARKode.</div><div class="ttdef"><b>Definition</b> <a href="_o_d_e_solver_8h_source.html#l00035">ODESolver.h:35</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_o_d_e_solver_html_a4ff1d6c3c06b2d0e897a80093b13e633"><div class="ttname"><a href="class_d_psim_1_1_o_d_e_solver.html#a4ff1d6c3c06b2d0e897a80093b13e633">DPsim::ODESolver::mFlag</a></div><div class="ttdeci">int mFlag</div><div class="ttdoc">Reusable error-checking flag.</div><div class="ttdef"><b>Definition</b> <a href="_o_d_e_solver_8h_source.html#l00057">ODESolver.h:57</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_o_d_e_solver_html_a63d3f99323b34ba33c96d2f598272211"><div class="ttname"><a href="class_d_psim_1_1_o_d_e_solver.html#a63d3f99323b34ba33c96d2f598272211">DPsim::ODESolver::abstol</a></div><div class="ttdeci">realtype abstol</div><div class="ttdoc">Scalar absolute tolerance.</div><div class="ttdef"><b>Definition</b> <a href="_o_d_e_solver_8h_source.html#l00054">ODESolver.h:54</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_o_d_e_solver_html_a6a579f50a5cee84fc1d06e7156342339"><div class="ttname"><a href="class_d_psim_1_1_o_d_e_solver.html#a6a579f50a5cee84fc1d06e7156342339">DPsim::ODESolver::mJacFunction</a></div><div class="ttdeci">CPS::ODEInterface::JacFn mJacFunction</div><div class="ttdef"><b>Definition</b> <a href="_o_d_e_solver_8h_source.html#l00061">ODESolver.h:61</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_o_d_e_solver_html_a6ad990146018b3f5891b2d43bf421349"><div class="ttname"><a href="class_d_psim_1_1_o_d_e_solver.html#a6ad990146018b3f5891b2d43bf421349">DPsim::ODESolver::LS</a></div><div class="ttdeci">SUNLinearSolver LS</div><div class="ttdoc">Empty linear solver object.</div><div class="ttdef"><b>Definition</b> <a href="_o_d_e_solver_8h_source.html#l00045">ODESolver.h:45</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_o_d_e_solver_html_a75a68ec5b681bbf98029d04941ed6754"><div class="ttname"><a href="class_d_psim_1_1_o_d_e_solver.html#a75a68ec5b681bbf98029d04941ed6754">DPsim::ODESolver::check_flag</a></div><div class="ttdeci">int check_flag(void *flagvalue, const std::string &amp;funcname, int opt)</div><div class="ttdoc">ARKode- standard error detection function; in DAE-solver not detection function is used -&gt; for effici...</div><div class="ttdef"><b>Definition</b> <a href="#l00165">ODESolver.cpp:165</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_o_d_e_solver_html_a7b9e3714d4c34cefd0d3d86b06b2367e"><div class="ttname"><a href="class_d_psim_1_1_o_d_e_solver.html#a7b9e3714d4c34cefd0d3d86b06b2367e">DPsim::ODESolver::mStates</a></div><div class="ttdeci">N_Vector mStates</div><div class="ttdoc">State vector.</div><div class="ttdef"><b>Definition</b> <a href="_o_d_e_solver_8h_source.html#l00037">ODESolver.h:37</a></div></div>
@@ -312,14 +333,26 @@ $(function(){ initResizable(false); });
 <div class="ttc" id="aclass_d_psim_1_1_o_d_e_solver_html_aa983f2cd66e1e91f9af46cfa113fddac"><div class="ttname"><a href="class_d_psim_1_1_o_d_e_solver.html#aa983f2cd66e1e91f9af46cfa113fddac">DPsim::ODESolver::mTimestep</a></div><div class="ttdeci">Real mTimestep</div><div class="ttdoc">Constant time step.</div><div class="ttdef"><b>Definition</b> <a href="_o_d_e_solver_8h_source.html#l00048">ODESolver.h:48</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_o_d_e_solver_html_abdc48c4fd1a4ea96eaa71a24c3fc7420"><div class="ttname"><a href="class_d_psim_1_1_o_d_e_solver.html#abdc48c4fd1a4ea96eaa71a24c3fc7420">DPsim::ODESolver::A</a></div><div class="ttdeci">SUNMatrix A</div><div class="ttdoc">Empty matrix for linear solve in each Newton step while solving the Jacobian Matrix.</div><div class="ttdef"><b>Definition</b> <a href="_o_d_e_solver_8h_source.html#l00043">ODESolver.h:43</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_o_d_e_solver_html_acd5af55919b067e3e04fa74536f55c83"><div class="ttname"><a href="class_d_psim_1_1_o_d_e_solver.html#acd5af55919b067e3e04fa74536f55c83">DPsim::ODESolver::mProbDim</a></div><div class="ttdeci">Int mProbDim</div><div class="ttdoc">Number of differential Variables (states)</div><div class="ttdef"><b>Definition</b> <a href="_o_d_e_solver_8h_source.html#l00031">ODESolver.h:31</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_o_d_e_solver_html_ad47a80deaa772e2e5b70d4090c1a8a0e"><div class="ttname"><a href="class_d_psim_1_1_o_d_e_solver.html#ad47a80deaa772e2e5b70d4090c1a8a0e">DPsim::ODESolver::JacobianWrapper</a></div><div class="ttdeci">static int JacobianWrapper(realtype t, N_Vector y, N_Vector fy, SUNMatrix J, void *user_data, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)</div><div class="ttdef"><b>Definition</b> <a href="#l00053">ODESolver.cpp:53</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_o_d_e_solver_html_adb557bbc3bcc190c1f95d15fe7054582"><div class="ttname"><a href="class_d_psim_1_1_o_d_e_solver.html#adb557bbc3bcc190c1f95d15fe7054582">DPsim::ODESolver::reltol</a></div><div class="ttdeci">realtype reltol</div><div class="ttdoc">Relative tolerance.</div><div class="ttdef"><b>Definition</b> <a href="_o_d_e_solver_8h_source.html#l00052">ODESolver.h:52</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_o_d_e_solver_html_af1a5f75826768c51e487a90631d8c166"><div class="ttname"><a href="class_d_psim_1_1_o_d_e_solver.html#af1a5f75826768c51e487a90631d8c166">DPsim::ODESolver::mStSpFunction</a></div><div class="ttdeci">CPS::ODEInterface::StSpFn mStSpFunction</div><div class="ttdef"><b>Definition</b> <a href="_o_d_e_solver_8h_source.html#l00060">ODESolver.h:60</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_o_d_e_solver_html_af5351a458b9f64eafd3b18441d614c6c"><div class="ttname"><a href="class_d_psim_1_1_o_d_e_solver.html#af5351a458b9f64eafd3b18441d614c6c">DPsim::ODESolver::Jacobian</a></div><div class="ttdeci">int Jacobian(realtype t, N_Vector y, N_Vector fy, SUNMatrix J, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)</div><div class="ttdef"><b>Definition</b> <a href="#l00060">ODESolver.cpp:60</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_o_d_e_solver_html_afdb9fe3550d25ee4556fc6e82df528c9"><div class="ttname"><a href="class_d_psim_1_1_o_d_e_solver.html#afdb9fe3550d25ee4556fc6e82df528c9">DPsim::ODESolver::StateSpaceWrapper</a></div><div class="ttdeci">static int StateSpaceWrapper(realtype t, N_Vector y, N_Vector ydot, void *user_data)</div><div class="ttdoc">Use wrappers similar to DAE_Solver.</div><div class="ttdef"><b>Definition</b> <a href="#l00042">ODESolver.cpp:42</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_solver_html_a43f3a5b98bf07a364645fa5f8193a5e7"><div class="ttname"><a href="class_d_psim_1_1_solver.html#a43f3a5b98bf07a364645fa5f8193a5e7">DPsim::Solver::Solver</a></div><div class="ttdeci">Solver(String name, CPS::Logger::Level logLevel)</div><div class="ttdef"><b>Definition</b> <a href="_solver_8h_source.html#l00083">Solver.h:83</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html"><div class="ttname"><a href="namespace_c_p_s.html">CPS</a></div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00017">Attribute.h:17</a></div></div>
 <div class="ttc" id="anamespace_d_psim_html"><div class="ttname"><a href="namespace_d_psim.html">DPsim</a></div><div class="ttdef"><b>Definition</b> <a href="_dense_l_u_adapter_8cpp_source.html#l00013">DenseLUAdapter.cpp:13</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a0c1ad9f4200f1770537b7f206a6dc1fc"><div class="ttname"><a href="namespace_d_psim.html#a0c1ad9f4200f1770537b7f206a6dc1fc">DPsim::Logger</a></div><div class="ttdeci">CPS::Logger Logger</div><div class="ttdef"><b>Definition</b> <a href="_d_psim_8h_source.html#l00037">DPsim.h:37</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a52dcbc3a0896b912333104eb61a7b29b"><div class="ttname"><a href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">DPsim::Real</a></div><div class="ttdeci">CPS::Real Real</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00018">Definitions.h:18</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a66e48a625a26fd3c1d2198148f9d59e9"><div class="ttname"><a href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">DPsim::String</a></div><div class="ttdeci">CPS::String String</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00020">Definitions.h:20</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a6a29611b9912f8abc0545523b3f84f8c"><div class="ttname"><a href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">DPsim::Int</a></div><div class="ttdeci">CPS::Int Int</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00022">Definitions.h:22</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_af103632340511860a5310da360a5028.html">src</a></li><li class="navelem"><a class="el" href="_o_d_e_solver_8cpp.html">ODESolver.cpp</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

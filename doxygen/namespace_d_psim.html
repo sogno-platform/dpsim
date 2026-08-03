@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('namespace_d_psim.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,10 +95,9 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
+<a href="#namespaces">Namespaces</a> &#124;
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
@@ -93,6 +106,13 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_psim_1_1cuda.html">cuda</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_psim_1_1_utils.html">Utils</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_attribute_event.html">AttributeEvent</a></td></tr>
@@ -192,7 +212,7 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_sequential_scheduler.html">SequentialScheduler</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_simulation.html">Simulation</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="class_d_psim_1_1_simulation.html" title="The Simulation holds a SystemTopology and a Solver.">Simulation</a> holds a SystemTopology and a <a class="el" href="class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA.">Solver</a>.  <a href="class_d_psim_1_1_simulation.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="class_d_psim_1_1_simulation.html" title="The Simulation holds a SystemTopology and a Solver.">Simulation</a> holds a <a class="el" href="#a9601f77c71a01b0254690136f56690ff">SystemTopology</a> and a <a class="el" href="class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA.">Solver</a>.  <a href="class_d_psim_1_1_simulation.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_solver.html">Solver</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base class for more specific solvers such as MNA, ODE or IDA.  <a href="class_d_psim_1_1_solver.html#details">More...</a><br /></td></tr>
@@ -229,79 +249,79 @@ Classes</h2></td></tr>
 Typedefs</h2></td></tr>
 <tr class="memitem:a9601f77c71a01b0254690136f56690ff" id="r_a9601f77c71a01b0254690136f56690ff"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9601f77c71a01b0254690136f56690ff">SystemTopology</a> = <a class="el" href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a></td></tr>
 <tr class="separator:a9601f77c71a01b0254690136f56690ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6fa05e3cd5eaec7cd8b0ba9024a15cb" id="r_ae6fa05e3cd5eaec7cd8b0ba9024a15cb"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae6fa05e3cd5eaec7cd8b0ba9024a15cb">SystemNodeList</a> = CPS::TopologicalNode::List</td></tr>
+<tr class="memitem:ae6fa05e3cd5eaec7cd8b0ba9024a15cb" id="r_ae6fa05e3cd5eaec7cd8b0ba9024a15cb"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae6fa05e3cd5eaec7cd8b0ba9024a15cb">SystemNodeList</a> = <a class="el" href="class_c_p_s_1_1_topological_node.html#a0cbcf37d0706078e9d2fa5fab180faea">CPS::TopologicalNode::List</a></td></tr>
 <tr class="separator:ae6fa05e3cd5eaec7cd8b0ba9024a15cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5bf7e48d611a6d9023634a597d0a5971" id="r_a5bf7e48d611a6d9023634a597d0a5971"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5bf7e48d611a6d9023634a597d0a5971">SystemComponentList</a> = CPS::IdentifiedObject::List</td></tr>
+<tr class="memitem:a5bf7e48d611a6d9023634a597d0a5971" id="r_a5bf7e48d611a6d9023634a597d0a5971"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5bf7e48d611a6d9023634a597d0a5971">SystemComponentList</a> = <a class="el" href="class_c_p_s_1_1_identified_object.html#a981a607f5a619bbc40c916fcf7048a24">CPS::IdentifiedObject::List</a></td></tr>
 <tr class="separator:a5bf7e48d611a6d9023634a597d0a5971"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c1ad9f4200f1770537b7f206a6dc1fc" id="r_a0c1ad9f4200f1770537b7f206a6dc1fc"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0c1ad9f4200f1770537b7f206a6dc1fc">Logger</a> = <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td></tr>
 <tr class="separator:a0c1ad9f4200f1770537b7f206a6dc1fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a04c887bfd6dbe389d9871dad82aea58e" id="r_a04c887bfd6dbe389d9871dad82aea58e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a04c887bfd6dbe389d9871dad82aea58e">Domain</a> = CPS::Domain</td></tr>
+<tr class="memitem:a04c887bfd6dbe389d9871dad82aea58e" id="r_a04c887bfd6dbe389d9871dad82aea58e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a04c887bfd6dbe389d9871dad82aea58e">Domain</a> = <a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9">CPS::Domain</a></td></tr>
 <tr class="separator:a04c887bfd6dbe389d9871dad82aea58e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1193174a52098ed49c28b05996357c4" id="r_ad1193174a52098ed49c28b05996357c4"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad1193174a52098ed49c28b05996357c4">PhaseType</a> = CPS::PhaseType</td></tr>
+<tr class="memitem:ad1193174a52098ed49c28b05996357c4" id="r_ad1193174a52098ed49c28b05996357c4"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad1193174a52098ed49c28b05996357c4">PhaseType</a> = <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6c">CPS::PhaseType</a></td></tr>
 <tr class="separator:ad1193174a52098ed49c28b05996357c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77086f7eadcee073b641ef0713f63050" id="r_a77086f7eadcee073b641ef0713f63050"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a77086f7eadcee073b641ef0713f63050">CSVReader</a> = <a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td></tr>
 <tr class="separator:a77086f7eadcee073b641ef0713f63050"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a52dcbc3a0896b912333104eb61a7b29b" id="r_a52dcbc3a0896b912333104eb61a7b29b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a52dcbc3a0896b912333104eb61a7b29b">Real</a> = CPS::Real</td></tr>
+<tr class="memitem:a52dcbc3a0896b912333104eb61a7b29b" id="r_a52dcbc3a0896b912333104eb61a7b29b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a52dcbc3a0896b912333104eb61a7b29b">Real</a> = <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a></td></tr>
 <tr class="separator:a52dcbc3a0896b912333104eb61a7b29b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03403343e4d2f9595ce691ee9c566fba" id="r_a03403343e4d2f9595ce691ee9c566fba"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a03403343e4d2f9595ce691ee9c566fba">Complex</a> = CPS::Complex</td></tr>
+<tr class="memitem:a03403343e4d2f9595ce691ee9c566fba" id="r_a03403343e4d2f9595ce691ee9c566fba"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a03403343e4d2f9595ce691ee9c566fba">Complex</a> = <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">CPS::Complex</a></td></tr>
 <tr class="separator:a03403343e4d2f9595ce691ee9c566fba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a66e48a625a26fd3c1d2198148f9d59e9" id="r_a66e48a625a26fd3c1d2198148f9d59e9"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a66e48a625a26fd3c1d2198148f9d59e9">String</a> = CPS::String</td></tr>
+<tr class="memitem:a66e48a625a26fd3c1d2198148f9d59e9" id="r_a66e48a625a26fd3c1d2198148f9d59e9"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a66e48a625a26fd3c1d2198148f9d59e9">String</a> = <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a></td></tr>
 <tr class="separator:a66e48a625a26fd3c1d2198148f9d59e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7f17909fba1876614c5f455ad2a453d" id="r_aa7f17909fba1876614c5f455ad2a453d"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa7f17909fba1876614c5f455ad2a453d">Bool</a> = CPS::Bool</td></tr>
+<tr class="memitem:aa7f17909fba1876614c5f455ad2a453d" id="r_aa7f17909fba1876614c5f455ad2a453d"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa7f17909fba1876614c5f455ad2a453d">Bool</a> = <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">CPS::Bool</a></td></tr>
 <tr class="separator:aa7f17909fba1876614c5f455ad2a453d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a29611b9912f8abc0545523b3f84f8c" id="r_a6a29611b9912f8abc0545523b3f84f8c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6a29611b9912f8abc0545523b3f84f8c">Int</a> = CPS::Int</td></tr>
+<tr class="memitem:a6a29611b9912f8abc0545523b3f84f8c" id="r_a6a29611b9912f8abc0545523b3f84f8c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6a29611b9912f8abc0545523b3f84f8c">Int</a> = <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">CPS::Int</a></td></tr>
 <tr class="separator:a6a29611b9912f8abc0545523b3f84f8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca275dbce4c75f8e270755c373b13d5d" id="r_aca275dbce4c75f8e270755c373b13d5d"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aca275dbce4c75f8e270755c373b13d5d">UInt</a> = CPS::UInt</td></tr>
+<tr class="memitem:aca275dbce4c75f8e270755c373b13d5d" id="r_aca275dbce4c75f8e270755c373b13d5d"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aca275dbce4c75f8e270755c373b13d5d">UInt</a> = <a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">CPS::UInt</a></td></tr>
 <tr class="separator:aca275dbce4c75f8e270755c373b13d5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7920162dfc7e843a4f1a1248fe9ccb0e" id="r_a7920162dfc7e843a4f1a1248fe9ccb0e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> = CPS::Matrix</td></tr>
+<tr class="memitem:a7920162dfc7e843a4f1a1248fe9ccb0e" id="r_a7920162dfc7e843a4f1a1248fe9ccb0e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> = <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">CPS::Matrix</a></td></tr>
 <tr class="separator:a7920162dfc7e843a4f1a1248fe9ccb0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0bfc9e1bca3f19eba070fb04225ac59" id="r_af0bfc9e1bca3f19eba070fb04225ac59"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af0bfc9e1bca3f19eba070fb04225ac59">MatrixComp</a> = CPS::MatrixComp</td></tr>
+<tr class="memitem:af0bfc9e1bca3f19eba070fb04225ac59" id="r_af0bfc9e1bca3f19eba070fb04225ac59"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af0bfc9e1bca3f19eba070fb04225ac59">MatrixComp</a> = <a class="el" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">CPS::MatrixComp</a></td></tr>
 <tr class="separator:af0bfc9e1bca3f19eba070fb04225ac59"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab6afa34bab94cdc2ff33e09d4a1d2c9c" id="r_ab6afa34bab94cdc2ff33e09d4a1d2c9c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> = CPS::SparseMatrixRow</td></tr>
+<tr class="memitem:ab6afa34bab94cdc2ff33e09d4a1d2c9c" id="r_ab6afa34bab94cdc2ff33e09d4a1d2c9c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> = <a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">CPS::SparseMatrixRow</a></td></tr>
 <tr class="separator:ab6afa34bab94cdc2ff33e09d4a1d2c9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee87530e7e3f690cb05f6fc24afe179f" id="r_aee87530e7e3f690cb05f6fc24afe179f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aee87530e7e3f690cb05f6fc24afe179f">SparseMatrixComp</a> = CPS::SparseMatrixCompRow</td></tr>
+<tr class="memitem:aee87530e7e3f690cb05f6fc24afe179f" id="r_aee87530e7e3f690cb05f6fc24afe179f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aee87530e7e3f690cb05f6fc24afe179f">SparseMatrixComp</a> = <a class="el" href="namespace_c_p_s.html#a2c9ce176dd016c230425982758e2f946">CPS::SparseMatrixCompRow</a></td></tr>
 <tr class="separator:aee87530e7e3f690cb05f6fc24afe179f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b20704b5715a96db8d095eb5c86bd16" id="r_a2b20704b5715a96db8d095eb5c86bd16"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
-<tr class="memitem:a2b20704b5715a96db8d095eb5c86bd16"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a2b20704b5715a96db8d095eb5c86bd16">MatrixVar</a> = CPS::MatrixVar&lt;T&gt;</td></tr>
+<tr class="memitem:a2b20704b5715a96db8d095eb5c86bd16"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a2b20704b5715a96db8d095eb5c86bd16">MatrixVar</a> = <a class="el" href="namespace_c_p_s.html#aac8786917470ab4cc7b3c610e2eb3ab1">CPS::MatrixVar</a>&lt;T&gt;</td></tr>
 <tr class="separator:a2b20704b5715a96db8d095eb5c86bd16"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a1a29b9e3bd92795ee5dafd0697248408" id="r_a1a29b9e3bd92795ee5dafd0697248408"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>SCALING_METHOD</b> { <b>NO_SCALING</b>
-, <b>SUM_SCALING</b>
-, <b>MAX_SCALING</b>
+<tr class="memitem:a1a29b9e3bd92795ee5dafd0697248408" id="r_a1a29b9e3bd92795ee5dafd0697248408"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1a29b9e3bd92795ee5dafd0697248408">SCALING_METHOD</a> { <a class="el" href="#a1a29b9e3bd92795ee5dafd0697248408acea7253c96ba812305c09a9530842ffd">NO_SCALING</a>
+, <a class="el" href="#a1a29b9e3bd92795ee5dafd0697248408ab858a94fe00a0f083a74e2b1df8c951f">SUM_SCALING</a>
+, <a class="el" href="#a1a29b9e3bd92795ee5dafd0697248408a6fcfc46a3bb86c91718223faa150eee3">MAX_SCALING</a>
  }</td></tr>
 <tr class="separator:a1a29b9e3bd92795ee5dafd0697248408"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb1a2956e105f204d9d5322e4800df74" id="r_afb1a2956e105f204d9d5322e4800df74"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>FILL_IN_REDUCTION_METHOD</b> { <b>AMD</b>
-, <b>AMD_NV</b>
-, <b>AMD_RA</b>
-, <b>COLAMD</b>
+<tr class="memitem:afb1a2956e105f204d9d5322e4800df74" id="r_afb1a2956e105f204d9d5322e4800df74"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afb1a2956e105f204d9d5322e4800df74">FILL_IN_REDUCTION_METHOD</a> { <a class="el" href="#afb1a2956e105f204d9d5322e4800df74a48af4341f745163f945fa838eeabb062">AMD</a>
+, <a class="el" href="#afb1a2956e105f204d9d5322e4800df74a8774ee50e1ce95e2a7fa4ed950def2a0">AMD_NV</a>
+, <a class="el" href="#afb1a2956e105f204d9d5322e4800df74a4c9734327c294ff2dd891696d10e2d12">AMD_RA</a>
+, <a class="el" href="#afb1a2956e105f204d9d5322e4800df74a7f1645ee49907cca43e375548d257a77">COLAMD</a>
  }</td></tr>
 <tr class="separator:afb1a2956e105f204d9d5322e4800df74"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62ee66cb7d49fe8ab3480d0d0146482a" id="r_a62ee66cb7d49fe8ab3480d0d0146482a"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>PARTIAL_REFACTORIZATION_METHOD</b> { <b>NO_PARTIAL_REFACTORIZATION</b>
-, <b>FACTORIZATION_PATH</b>
-, <b>REFACTORIZATION_RESTART</b>
+<tr class="memitem:a62ee66cb7d49fe8ab3480d0d0146482a" id="r_a62ee66cb7d49fe8ab3480d0d0146482a"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a62ee66cb7d49fe8ab3480d0d0146482a">PARTIAL_REFACTORIZATION_METHOD</a> { <a class="el" href="#a62ee66cb7d49fe8ab3480d0d0146482aa51aefb8422e44dbd3890332a0ed58251">NO_PARTIAL_REFACTORIZATION</a>
+, <a class="el" href="#a62ee66cb7d49fe8ab3480d0d0146482aa0f1b121c7e25301bef9f408f3069e239">FACTORIZATION_PATH</a>
+, <a class="el" href="#a62ee66cb7d49fe8ab3480d0d0146482aaefd5b98938a1793a1c26e331b1e118c0">REFACTORIZATION_RESTART</a>
  }</td></tr>
 <tr class="separator:a62ee66cb7d49fe8ab3480d0d0146482a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69fee78420eca0273fbc1bb935a999ad" id="r_a69fee78420eca0273fbc1bb935a999ad"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>USE_BTF</b> { <b>NO_BTF</b>
-, <b>DO_BTF</b>
+<tr class="memitem:a69fee78420eca0273fbc1bb935a999ad" id="r_a69fee78420eca0273fbc1bb935a999ad"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a69fee78420eca0273fbc1bb935a999ad">USE_BTF</a> { <a class="el" href="#a69fee78420eca0273fbc1bb935a999adabf32c05a299b622cab394809ca4102d9">NO_BTF</a>
+, <a class="el" href="#a69fee78420eca0273fbc1bb935a999ada9bf90ce2a4f39a9fc944585242cda030">DO_BTF</a>
  }</td></tr>
 <tr class="separator:a69fee78420eca0273fbc1bb935a999ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7fe221419e28403d220d17a0013b457" id="r_ab7fe221419e28403d220d17a0013b457"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><b>DirectLinearSolverImpl</b> { <br />
-&#160;&#160;<b>Undef</b> = 0
-, <b>KLU</b>
-, <b>SparseLU</b>
-, <b>DenseLU</b>
+<tr class="memitem:ab7fe221419e28403d220d17a0013b457" id="r_ab7fe221419e28403d220d17a0013b457"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab7fe221419e28403d220d17a0013b457">DirectLinearSolverImpl</a> { <br />
+&#160;&#160;<a class="el" href="#ab7fe221419e28403d220d17a0013b457ab4e86cd881162888f9fe0afa8863ea45">Undef</a> = 0
+, <a class="el" href="#ab7fe221419e28403d220d17a0013b457a102d1784ab244b636827fc43963a995b">KLU</a>
+, <a class="el" href="#ab7fe221419e28403d220d17a0013b457a9a5e6eae6a80915040abf06ff0e5cfc0">SparseLU</a>
+, <a class="el" href="#ab7fe221419e28403d220d17a0013b457a8c3e355004be96e6a5fa3853abd513c9">DenseLU</a>
 , <br />
-&#160;&#160;<b>CUDADense</b>
-, <b>CUDASparse</b>
-, <b>CUDAMagma</b>
-, <b>Plugin</b>
+&#160;&#160;<a class="el" href="#ab7fe221419e28403d220d17a0013b457aebe110fb34545ecd37c1cf88bc96688d">CUDADense</a>
+, <a class="el" href="#ab7fe221419e28403d220d17a0013b457a533f9ea55a14b93c55fe398df9746ef4">CUDASparse</a>
+, <a class="el" href="#ab7fe221419e28403d220d17a0013b457a81cc7f376aa3d27f27553ff770fd04be">CUDAMagma</a>
+, <a class="el" href="#ab7fe221419e28403d220d17a0013b457af57a10e73c2af24c85f3d8f5c233a201">Plugin</a>
 <br />
  }</td></tr>
 <tr class="separator:ab7fe221419e28403d220d17a0013b457"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c517ef9d32e7ec0604ce0f8a4fa2dd8" id="r_a4c517ef9d32e7ec0604ce0f8a4fa2dd8"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>StateSpaceAnalysisFrame</b> { <b>Native</b>
-, <b>GlobalDQ0</b>
+<tr class="memitem:a4c517ef9d32e7ec0604ce0f8a4fa2dd8" id="r_a4c517ef9d32e7ec0604ce0f8a4fa2dd8"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4c517ef9d32e7ec0604ce0f8a4fa2dd8">StateSpaceAnalysisFrame</a> { <a class="el" href="#a4c517ef9d32e7ec0604ce0f8a4fa2dd8a925641e0b76c28cc940e8f3ca178d826">Native</a>
+, <a class="el" href="#a4c517ef9d32e7ec0604ce0f8a4fa2dd8a5680b2c54295a358195d05496e48ea41">GlobalDQ0</a>
  }</td></tr>
 <tr class="separator:a4c517ef9d32e7ec0604ce0f8a4fa2dd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -309,6 +329,8 @@ Enumerations</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:a940a5e935cacdc8429c211f3085bcd3b" id="r_a940a5e935cacdc8429c211f3085bcd3b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a940a5e935cacdc8429c211f3085bcd3b">pluginLogger</a> (const char *str)</td></tr>
 <tr class="separator:a940a5e935cacdc8429c211f3085bcd3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb16a4e561e2530544f80a0fddfb90e2" id="r_abb16a4e561e2530544f80a0fddfb90e2"><td class="memItemLeft" align="right" valign="top">static node::SignalType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb16a4e561e2530544f80a0fddfb90e2">stdTypeToNodeType</a> (const std::type_info &amp;type)</td></tr>
+<tr class="separator:abb16a4e561e2530544f80a0fddfb90e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><ul>
@@ -324,7 +346,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using DPsim::Bool = CPS::Bool</td>
+          <td class="memname">using <a class="el" href="#aa7f17909fba1876614c5f455ad2a453d">DPsim::Bool</a> = <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">CPS::Bool</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -340,7 +362,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using DPsim::Complex = CPS::Complex</td>
+          <td class="memname">using <a class="el" href="#a03403343e4d2f9595ce691ee9c566fba">DPsim::Complex</a> = <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">CPS::Complex</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -356,7 +378,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">DPsim::CSVReader</a> = <a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td>
+          <td class="memname">using <a class="el" href="#a77086f7eadcee073b641ef0713f63050">DPsim::CSVReader</a> = <a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -372,7 +394,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using DPsim::Domain = CPS::Domain</td>
+          <td class="memname">using <a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9">DPsim::Domain</a> = <a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9">CPS::Domain</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -388,7 +410,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using DPsim::Int = CPS::Int</td>
+          <td class="memname">using <a class="el" href="#a6a29611b9912f8abc0545523b3f84f8c">DPsim::Int</a> = <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">CPS::Int</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -404,7 +426,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="class_c_p_s_1_1_logger.html">DPsim::Logger</a> = <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td>
+          <td class="memname">using <a class="el" href="#a0c1ad9f4200f1770537b7f206a6dc1fc">DPsim::Logger</a> = <a class="el" href="class_c_p_s_1_1_logger.html">CPS::Logger</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -420,7 +442,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using DPsim::Matrix = CPS::Matrix</td>
+          <td class="memname">using <a class="el" href="#a7920162dfc7e843a4f1a1248fe9ccb0e">DPsim::Matrix</a> = <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">CPS::Matrix</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -436,7 +458,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using DPsim::MatrixComp = CPS::MatrixComp</td>
+          <td class="memname">using <a class="el" href="#af0bfc9e1bca3f19eba070fb04225ac59">DPsim::MatrixComp</a> = <a class="el" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">CPS::MatrixComp</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -454,7 +476,7 @@ Functions</h2></td></tr>
 template&lt;typename T&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using DPsim::MatrixVar = CPS::MatrixVar&lt;T&gt;</td>
+          <td class="memname">using <a class="el" href="#a2b20704b5715a96db8d095eb5c86bd16">DPsim::MatrixVar</a> = <a class="el" href="namespace_c_p_s.html#aac8786917470ab4cc7b3c610e2eb3ab1">CPS::MatrixVar</a>&lt;T&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -470,7 +492,7 @@ template&lt;typename T&gt; </div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using DPsim::PhaseType = CPS::PhaseType</td>
+          <td class="memname">using <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6c">DPsim::PhaseType</a> = <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6c">CPS::PhaseType</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -486,7 +508,7 @@ template&lt;typename T&gt; </div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using DPsim::Real = CPS::Real</td>
+          <td class="memname">using <a class="el" href="#a52dcbc3a0896b912333104eb61a7b29b">DPsim::Real</a> = <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -502,7 +524,7 @@ template&lt;typename T&gt; </div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using DPsim::SparseMatrix = CPS::SparseMatrixRow</td>
+          <td class="memname">using <a class="el" href="#ab6afa34bab94cdc2ff33e09d4a1d2c9c">DPsim::SparseMatrix</a> = <a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">CPS::SparseMatrixRow</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -518,7 +540,7 @@ template&lt;typename T&gt; </div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using DPsim::SparseMatrixComp = CPS::SparseMatrixCompRow</td>
+          <td class="memname">using <a class="el" href="#aee87530e7e3f690cb05f6fc24afe179f">DPsim::SparseMatrixComp</a> = <a class="el" href="namespace_c_p_s.html#a2c9ce176dd016c230425982758e2f946">CPS::SparseMatrixCompRow</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -534,7 +556,7 @@ template&lt;typename T&gt; </div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using DPsim::String = CPS::String</td>
+          <td class="memname">using <a class="el" href="#a66e48a625a26fd3c1d2198148f9d59e9">DPsim::String</a> = <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -550,7 +572,7 @@ template&lt;typename T&gt; </div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using DPsim::SystemComponentList = CPS::IdentifiedObject::List</td>
+          <td class="memname">using <a class="el" href="#a5bf7e48d611a6d9023634a597d0a5971">DPsim::SystemComponentList</a> = <a class="el" href="class_c_p_s_1_1_identified_object.html#a981a607f5a619bbc40c916fcf7048a24">CPS::IdentifiedObject::List</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -566,7 +588,7 @@ template&lt;typename T&gt; </div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using DPsim::SystemNodeList = CPS::TopologicalNode::List</td>
+          <td class="memname">using <a class="el" href="#ae6fa05e3cd5eaec7cd8b0ba9024a15cb">DPsim::SystemNodeList</a> = <a class="el" href="class_c_p_s_1_1_topological_node.html#a0cbcf37d0706078e9d2fa5fab180faea">CPS::TopologicalNode::List</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -582,7 +604,7 @@ template&lt;typename T&gt; </div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="class_c_p_s_1_1_system_topology.html">DPsim::SystemTopology</a> = <a class="el" href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a></td>
+          <td class="memname">using <a class="el" href="#a9601f77c71a01b0254690136f56690ff">DPsim::SystemTopology</a> = <a class="el" href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -598,7 +620,7 @@ template&lt;typename T&gt; </div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using DPsim::UInt = CPS::UInt</td>
+          <td class="memname">using <a class="el" href="#aca275dbce4c75f8e270755c373b13d5d">DPsim::UInt</a> = <a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">CPS::UInt</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -615,10 +637,20 @@ template&lt;typename T&gt; </div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum DPsim::DirectLinearSolverImpl</td>
+          <td class="memname">enum <a class="el" href="#ab7fe221419e28403d220d17a0013b457">DPsim::DirectLinearSolverImpl</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ab7fe221419e28403d220d17a0013b457ab4e86cd881162888f9fe0afa8863ea45" name="ab7fe221419e28403d220d17a0013b457ab4e86cd881162888f9fe0afa8863ea45"></a>Undef&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ab7fe221419e28403d220d17a0013b457a102d1784ab244b636827fc43963a995b" name="ab7fe221419e28403d220d17a0013b457a102d1784ab244b636827fc43963a995b"></a>KLU&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ab7fe221419e28403d220d17a0013b457a9a5e6eae6a80915040abf06ff0e5cfc0" name="ab7fe221419e28403d220d17a0013b457a9a5e6eae6a80915040abf06ff0e5cfc0"></a>SparseLU&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ab7fe221419e28403d220d17a0013b457a8c3e355004be96e6a5fa3853abd513c9" name="ab7fe221419e28403d220d17a0013b457a8c3e355004be96e6a5fa3853abd513c9"></a>DenseLU&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ab7fe221419e28403d220d17a0013b457aebe110fb34545ecd37c1cf88bc96688d" name="ab7fe221419e28403d220d17a0013b457aebe110fb34545ecd37c1cf88bc96688d"></a>CUDADense&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ab7fe221419e28403d220d17a0013b457a533f9ea55a14b93c55fe398df9746ef4" name="ab7fe221419e28403d220d17a0013b457a533f9ea55a14b93c55fe398df9746ef4"></a>CUDASparse&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ab7fe221419e28403d220d17a0013b457a81cc7f376aa3d27f27553ff770fd04be" name="ab7fe221419e28403d220d17a0013b457a81cc7f376aa3d27f27553ff770fd04be"></a>CUDAMagma&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ab7fe221419e28403d220d17a0013b457af57a10e73c2af24c85f3d8f5c233a201" name="ab7fe221419e28403d220d17a0013b457af57a10e73c2af24c85f3d8f5c233a201"></a>Plugin&#160;</td><td class="fielddoc"></td></tr>
+</table>
 
 <p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8h_source.html#l00048">48</a> of file <a class="el" href="_m_n_a_solver_direct_8h_source.html">MNASolverDirect.h</a>.</p>
 
@@ -634,7 +666,7 @@ template&lt;typename T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum class DPsim::FILL_IN_REDUCTION_METHOD</td>
+          <td class="memname">enum class <a class="el" href="#afb1a2956e105f204d9d5322e4800df74">DPsim::FILL_IN_REDUCTION_METHOD</a></td>
         </tr>
       </table>
   </td>
@@ -643,6 +675,12 @@ template&lt;typename T&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="afb1a2956e105f204d9d5322e4800df74a48af4341f745163f945fa838eeabb062" name="afb1a2956e105f204d9d5322e4800df74a48af4341f745163f945fa838eeabb062"></a>AMD&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="afb1a2956e105f204d9d5322e4800df74a8774ee50e1ce95e2a7fa4ed950def2a0" name="afb1a2956e105f204d9d5322e4800df74a8774ee50e1ce95e2a7fa4ed950def2a0"></a>AMD_NV&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="afb1a2956e105f204d9d5322e4800df74a4c9734327c294ff2dd891696d10e2d12" name="afb1a2956e105f204d9d5322e4800df74a4c9734327c294ff2dd891696d10e2d12"></a>AMD_RA&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="afb1a2956e105f204d9d5322e4800df74a7f1645ee49907cca43e375548d257a77" name="afb1a2956e105f204d9d5322e4800df74a7f1645ee49907cca43e375548d257a77"></a>COLAMD&#160;</td><td class="fielddoc"></td></tr>
+</table>
 
 <p class="definition">Definition at line <a class="el" href="_direct_linear_solver_configuration_8h_source.html#l00019">19</a> of file <a class="el" href="_direct_linear_solver_configuration_8h_source.html">DirectLinearSolverConfiguration.h</a>.</p>
 
@@ -658,7 +696,7 @@ template&lt;typename T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum class DPsim::PARTIAL_REFACTORIZATION_METHOD</td>
+          <td class="memname">enum class <a class="el" href="#a62ee66cb7d49fe8ab3480d0d0146482a">DPsim::PARTIAL_REFACTORIZATION_METHOD</a></td>
         </tr>
       </table>
   </td>
@@ -667,6 +705,11 @@ template&lt;typename T&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a62ee66cb7d49fe8ab3480d0d0146482aa51aefb8422e44dbd3890332a0ed58251" name="a62ee66cb7d49fe8ab3480d0d0146482aa51aefb8422e44dbd3890332a0ed58251"></a>NO_PARTIAL_REFACTORIZATION&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a62ee66cb7d49fe8ab3480d0d0146482aa0f1b121c7e25301bef9f408f3069e239" name="a62ee66cb7d49fe8ab3480d0d0146482aa0f1b121c7e25301bef9f408f3069e239"></a>FACTORIZATION_PATH&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a62ee66cb7d49fe8ab3480d0d0146482aaefd5b98938a1793a1c26e331b1e118c0" name="a62ee66cb7d49fe8ab3480d0d0146482aaefd5b98938a1793a1c26e331b1e118c0"></a>REFACTORIZATION_RESTART&#160;</td><td class="fielddoc"></td></tr>
+</table>
 
 <p class="definition">Definition at line <a class="el" href="_direct_linear_solver_configuration_8h_source.html#l00027">27</a> of file <a class="el" href="_direct_linear_solver_configuration_8h_source.html">DirectLinearSolverConfiguration.h</a>.</p>
 
@@ -682,7 +725,7 @@ template&lt;typename T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum class DPsim::SCALING_METHOD</td>
+          <td class="memname">enum class <a class="el" href="#a1a29b9e3bd92795ee5dafd0697248408">DPsim::SCALING_METHOD</a></td>
         </tr>
       </table>
   </td>
@@ -691,6 +734,11 @@ template&lt;typename T&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a1a29b9e3bd92795ee5dafd0697248408acea7253c96ba812305c09a9530842ffd" name="a1a29b9e3bd92795ee5dafd0697248408acea7253c96ba812305c09a9530842ffd"></a>NO_SCALING&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a1a29b9e3bd92795ee5dafd0697248408ab858a94fe00a0f083a74e2b1df8c951f" name="a1a29b9e3bd92795ee5dafd0697248408ab858a94fe00a0f083a74e2b1df8c951f"></a>SUM_SCALING&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a1a29b9e3bd92795ee5dafd0697248408a6fcfc46a3bb86c91718223faa150eee3" name="a1a29b9e3bd92795ee5dafd0697248408a6fcfc46a3bb86c91718223faa150eee3"></a>MAX_SCALING&#160;</td><td class="fielddoc"></td></tr>
+</table>
 
 <p class="definition">Definition at line <a class="el" href="_direct_linear_solver_configuration_8h_source.html#l00016">16</a> of file <a class="el" href="_direct_linear_solver_configuration_8h_source.html">DirectLinearSolverConfiguration.h</a>.</p>
 
@@ -706,7 +754,7 @@ template&lt;typename T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum class DPsim::StateSpaceAnalysisFrame</td>
+          <td class="memname">enum class <a class="el" href="#a4c517ef9d32e7ec0604ce0f8a4fa2dd8">DPsim::StateSpaceAnalysisFrame</a></td>
         </tr>
       </table>
   </td>
@@ -715,6 +763,10 @@ template&lt;typename T&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a4c517ef9d32e7ec0604ce0f8a4fa2dd8a925641e0b76c28cc940e8f3ca178d826" name="a4c517ef9d32e7ec0604ce0f8a4fa2dd8a925641e0b76c28cc940e8f3ca178d826"></a>Native&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a4c517ef9d32e7ec0604ce0f8a4fa2dd8a5680b2c54295a358195d05496e48ea41" name="a4c517ef9d32e7ec0604ce0f8a4fa2dd8a5680b2c54295a358195d05496e48ea41"></a>GlobalDQ0&#160;</td><td class="fielddoc"></td></tr>
+</table>
 
 <p class="definition">Definition at line <a class="el" href="_state_space_modal_analysis_8h_source.html#l00012">12</a> of file <a class="el" href="_state_space_modal_analysis_8h_source.html">StateSpaceModalAnalysis.h</a>.</p>
 
@@ -730,7 +782,7 @@ template&lt;typename T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum class DPsim::USE_BTF</td>
+          <td class="memname">enum class <a class="el" href="#a69fee78420eca0273fbc1bb935a999ad">DPsim::USE_BTF</a></td>
         </tr>
       </table>
   </td>
@@ -739,6 +791,10 @@ template&lt;typename T&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a69fee78420eca0273fbc1bb935a999adabf32c05a299b622cab394809ca4102d9" name="a69fee78420eca0273fbc1bb935a999adabf32c05a299b622cab394809ca4102d9"></a>NO_BTF&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a69fee78420eca0273fbc1bb935a999ada9bf90ce2a4f39a9fc944585242cda030" name="a69fee78420eca0273fbc1bb935a999ada9bf90ce2a4f39a9fc944585242cda030"></a>DO_BTF&#160;</td><td class="fielddoc"></td></tr>
+</table>
 
 <p class="definition">Definition at line <a class="el" href="_direct_linear_solver_configuration_8h_source.html#l00034">34</a> of file <a class="el" href="_direct_linear_solver_configuration_8h_source.html">DirectLinearSolverConfiguration.h</a>.</p>
 
@@ -764,11 +820,41 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
+<a id="abb16a4e561e2530544f80a0fddfb90e2" name="abb16a4e561e2530544f80a0fddfb90e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb16a4e561e2530544f80a0fddfb90e2">&#9670;&#160;</a></span>stdTypeToNodeType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static node::SignalType DPsim::stdTypeToNodeType </td>
+          <td>(</td>
+          <td class="paramtype">const std::type_info &amp;</td>          <td class="paramname"><span class="paramname"><em>type</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_interface_villas_queueless_8cpp_source.html#l00089">89</a> of file <a class="el" href="_interface_villas_queueless_8cpp_source.html">InterfaceVillasQueueless.cpp</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

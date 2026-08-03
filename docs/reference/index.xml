@@ -1,0 +1,1016 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DPsim – Reference</title><link>https://sogno.energy/dpsim/docs/reference/</link><description>Recent content in Reference on DPsim</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://sogno.energy/dpsim/docs/reference/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Model Availability</title><link>https://sogno.energy/dpsim/docs/reference/model-availability/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/reference/model-availability/</guid><description>
+&lt;p>Which model exists in which domain. A tick means the domain has an implementation, a dash means it
+does not.&lt;/p>
+&lt;p>The table below is generated from the headers under &lt;code>dpsim-models/include/dpsim-models&lt;/code> by
+&lt;code>scripts/docs/generate_model_availability.py&lt;/code>. Do not edit it by hand; run the script with &lt;code>--write&lt;/code>
+instead. A model class the script does not recognise makes it fail rather than silently drop the
+model, so the table cannot fall behind the code. For the equations behind a model, see
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/">models&lt;/a>.&lt;/p>
+&lt;!-- BEGIN GENERATED -->
+&lt;h2 id="passive-elements-and-sources">Passive elements and sources&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Model&lt;/th>
+&lt;th style="text-align:center">SP::Ph1&lt;/th>
+&lt;th style="text-align:center">SP::Ph3&lt;/th>
+&lt;th style="text-align:center">DP::Ph1&lt;/th>
+&lt;th style="text-align:center">DP::Ph3&lt;/th>
+&lt;th style="text-align:center">EMT::Ph1&lt;/th>
+&lt;th style="text-align:center">EMT::Ph3&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Resistor&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Inductor&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Capacitor&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>VoltageSource&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>CurrentSource&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>VoltageSourceNorton&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>VoltageSourceRamp&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ProfileVoltageSource&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ControlledVoltageSource&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ControlledCurrentSource&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>NetworkInjection&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="branches">Branches&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Model&lt;/th>
+&lt;th style="text-align:center">SP::Ph1&lt;/th>
+&lt;th style="text-align:center">SP::Ph3&lt;/th>
+&lt;th style="text-align:center">DP::Ph1&lt;/th>
+&lt;th style="text-align:center">DP::Ph3&lt;/th>
+&lt;th style="text-align:center">EMT::Ph1&lt;/th>
+&lt;th style="text-align:center">EMT::Ph3&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>PiLine&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>RxLine&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>RXLine&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SeriesResistor&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ResIndSeries&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Transformer&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SolidStateTransformer&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="switches-and-loads">Switches and loads&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Model&lt;/th>
+&lt;th style="text-align:center">SP::Ph1&lt;/th>
+&lt;th style="text-align:center">SP::Ph3&lt;/th>
+&lt;th style="text-align:center">DP::Ph1&lt;/th>
+&lt;th style="text-align:center">DP::Ph3&lt;/th>
+&lt;th style="text-align:center">EMT::Ph1&lt;/th>
+&lt;th style="text-align:center">EMT::Ph3&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Switch&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SeriesSwitch&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>varResSwitch&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>RXLoad&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>RXLoadSwitch&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>PQLoadCS&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Load&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Shunt&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SVC&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="synchronous-generators">Synchronous generators&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Model&lt;/th>
+&lt;th style="text-align:center">SP::Ph1&lt;/th>
+&lt;th style="text-align:center">SP::Ph3&lt;/th>
+&lt;th style="text-align:center">DP::Ph1&lt;/th>
+&lt;th style="text-align:center">DP::Ph3&lt;/th>
+&lt;th style="text-align:center">EMT::Ph1&lt;/th>
+&lt;th style="text-align:center">EMT::Ph3&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>SynchronGenerator&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SynchronGeneratorDQ&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SynchronGeneratorDQODE&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SynchronGeneratorDQTrapez&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SynchronGeneratorVBR&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SynchronGenerator3OrderVBR&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SynchronGenerator4OrderVBR&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SynchronGenerator5OrderVBR&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SynchronGenerator6aOrderVBR&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SynchronGenerator6bOrderVBR&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SynchronGenerator4OrderPCM&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SynchronGenerator6OrderPCM&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SynchronGenerator4OrderTPM&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SynchronGeneratorIdeal&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SynchronGeneratorIter&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SynchronGeneratorTrStab&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="power-electronics">Power electronics&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Model&lt;/th>
+&lt;th style="text-align:center">SP::Ph1&lt;/th>
+&lt;th style="text-align:center">SP::Ph3&lt;/th>
+&lt;th style="text-align:center">DP::Ph1&lt;/th>
+&lt;th style="text-align:center">DP::Ph3&lt;/th>
+&lt;th style="text-align:center">EMT::Ph1&lt;/th>
+&lt;th style="text-align:center">EMT::Ph3&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>AvVoltageSourceInverterDQ&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>AvVoltSourceInverterStateSpace&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Inverter&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>VoltageSourceInverter&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>VSIVoltageControlVCO&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SSN_GFM&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="state-space-nodal-components">State-space nodal components&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Model&lt;/th>
+&lt;th style="text-align:center">SP::Ph1&lt;/th>
+&lt;th style="text-align:center">SP::Ph3&lt;/th>
+&lt;th style="text-align:center">DP::Ph1&lt;/th>
+&lt;th style="text-align:center">DP::Ph3&lt;/th>
+&lt;th style="text-align:center">EMT::Ph1&lt;/th>
+&lt;th style="text-align:center">EMT::Ph3&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>SSN_Full_Serial_RLC&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SSN_Variable_Serial_RLC&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SSN_Capacitor&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SSN_Inductor&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SSNTypeV2T&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SSNTypeI2T&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>PiecewiseLinearInductor&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>GenericTwoTerminalVTypeSSN&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>GenericTwoTerminalITypeSSN&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>GenericFourTerminalVTypeSSN&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="excitation-and-stabilizers">Excitation and stabilizers&lt;/h2>
+&lt;ul>
+&lt;li>&lt;code>ExciterDC1&lt;/code>&lt;/li>
+&lt;li>&lt;code>ExciterDC1Simp&lt;/code>&lt;/li>
+&lt;li>&lt;code>ExciterST1Simp&lt;/code>&lt;/li>
+&lt;li>&lt;code>ExciterStatic&lt;/code>&lt;/li>
+&lt;li>&lt;code>PSS1A&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;h2 id="turbines-and-governors">Turbines and governors&lt;/h2>
+&lt;ul>
+&lt;li>&lt;code>SteamTurbine&lt;/code>&lt;/li>
+&lt;li>&lt;code>SteamTurbineGovernor&lt;/code>&lt;/li>
+&lt;li>&lt;code>HydroTurbine&lt;/code>&lt;/li>
+&lt;li>&lt;code>HydroTurbineGovernor&lt;/code>&lt;/li>
+&lt;li>&lt;code>TurbineGovernor&lt;/code>&lt;/li>
+&lt;li>&lt;code>TurbineGovernorType1&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;h2 id="converter-control">Converter control&lt;/h2>
+&lt;ul>
+&lt;li>&lt;code>PowerControllerVSI&lt;/code>&lt;/li>
+&lt;li>&lt;code>VoltageControllerVSI&lt;/code>&lt;/li>
+&lt;li>&lt;code>PLL&lt;/code>&lt;/li>
+&lt;li>&lt;code>VCO&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;h2 id="signal-sources-and-filters">Signal sources and filters&lt;/h2>
+&lt;ul>
+&lt;li>&lt;code>SignalGenerator&lt;/code>&lt;/li>
+&lt;li>&lt;code>SineWaveGenerator&lt;/code>&lt;/li>
+&lt;li>&lt;code>CosineFMGenerator&lt;/code>&lt;/li>
+&lt;li>&lt;code>DCGenerator&lt;/code>&lt;/li>
+&lt;li>&lt;code>FrequencyRampGenerator&lt;/code>&lt;/li>
+&lt;li>&lt;code>FIRFilter&lt;/code>&lt;/li>
+&lt;li>&lt;code>Integrator&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;h2 id="decoupling-components">Decoupling components&lt;/h2>
+&lt;p>These are network components: they connect to nodes and own their own sources. They are declared in the &lt;code>Signal&lt;/code> namespace for historical reasons, which is why their domain appears in the class name rather than in the namespace.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Model&lt;/th>
+&lt;th style="text-align:center">SP::Ph1&lt;/th>
+&lt;th style="text-align:center">SP::Ph3&lt;/th>
+&lt;th style="text-align:center">DP::Ph1&lt;/th>
+&lt;th style="text-align:center">DP::Ph3&lt;/th>
+&lt;th style="text-align:center">EMT::Ph1&lt;/th>
+&lt;th style="text-align:center">EMT::Ph3&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>DecouplingLine&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DecouplingLineEMT&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DecouplingLineEMT_Ph3&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DecouplingIdealTransformer_SP_Ph1&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DecouplingIdealTransformer_DP_Ph1&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DecouplingIdealTransformer_EMT_Ph1&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DecouplingIdealTransformer_EMT_Ph3&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">–&lt;/td>
+&lt;td style="text-align:center">✓&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;!-- END GENERATED --></description></item><item><title>Docs: Signal Models</title><link>https://sogno.energy/dpsim/docs/reference/signal-models/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/reference/signal-models/</guid><description>
+&lt;p>Signal models live in &lt;code>CPS::Signal&lt;/code> and are domain independent: the same controller drives a
+dynamic phasor or an electromagnetic transient machine model, because it operates on scalar
+signals rather than on network quantities. The exception is the decoupling group, which exists
+per domain since it inserts real components into the network.&lt;/p>
+&lt;h2 id="excitation-systems">Excitation systems&lt;/h2>
+&lt;p>Regulate generator terminal voltage by acting on field voltage. Equations and block diagrams are on the
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/synchronous-generator-regulators/">regulators&lt;/a> page.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Model&lt;/th>
+&lt;th>Description&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>ExciterDC1&lt;/code>&lt;/td>
+&lt;td>Standard IEEE type DC1 exciter&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>ExciterDC1Simp&lt;/code>&lt;/td>
+&lt;td>Simplified version of the IEEE type DC1 exciter&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>ExciterST1Simp&lt;/code>&lt;/td>
+&lt;td>Simplified static exciter&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>ExciterStatic&lt;/code>&lt;/td>
+&lt;td>Static exciter, with an anti-windup strategy for the integral component&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="power-system-stabiliser">Power system stabiliser&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Model&lt;/th>
+&lt;th>Description&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>PSS1A&lt;/code>&lt;/td>
+&lt;td>Simplified IEEE PSS1A. Enhances damping of electromechanical oscillations, accepting rotor speed, active power and terminal voltage magnitude as optional inputs. Its output feeds the exciter&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="turbines-and-governors">Turbines and governors&lt;/h2>
+&lt;p>Governors set mechanical power from speed deviation; turbine models convert that into the torque
+applied to the machine.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Model&lt;/th>
+&lt;th>Description&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>SteamTurbine&lt;/code>&lt;/td>
+&lt;td>Steam turbine, used in series with its governor&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>SteamTurbineGovernor&lt;/code>&lt;/td>
+&lt;td>Governor for the steam turbine, instantiated separately from it&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>HydroTurbine&lt;/code>&lt;/td>
+&lt;td>Hydro turbine, used in series with its governor&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>HydroTurbineGovernor&lt;/code>&lt;/td>
+&lt;td>Governor for the hydro turbine, instantiated separately from it&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>TurbineGovernorType1&lt;/code>&lt;/td>
+&lt;td>Turbine and governor combined in one component&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>TurbineGovernor&lt;/code>&lt;/td>
+&lt;td>Turbine and governor combined in one component&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="converter-control">Converter control&lt;/h2>
+&lt;p>Control loops for the averaged inverter models. See
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/power-electronics/">power electronics&lt;/a> for how these
+attach to the converter.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Model&lt;/th>
+&lt;th>Description&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>PowerControllerVSI&lt;/code>&lt;/td>
+&lt;td>Power control loop used by the averaged grid-following inverter models&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>VoltageControllerVSI&lt;/code>&lt;/td>
+&lt;td>Voltage control loop used by the grid-forming inverter models&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>PLL&lt;/code>&lt;/td>
+&lt;td>Phase-locked loop&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>VCO&lt;/code>&lt;/td>
+&lt;td>Voltage-controlled oscillator&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="signal-generators">Signal generators&lt;/h2>
+&lt;p>Drive sources and setpoints from a prescribed waveform rather than a constant.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Model&lt;/th>
+&lt;th>Description&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>SignalGenerator&lt;/code>&lt;/td>
+&lt;td>Base class for the generators below&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>SineWaveGenerator&lt;/code>&lt;/td>
+&lt;td>Sine wave&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>CosineFMGenerator&lt;/code>&lt;/td>
+&lt;td>Frequency-modulated cosine&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>FrequencyRampGenerator&lt;/code>&lt;/td>
+&lt;td>Frequency ramp&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>DCGenerator&lt;/code>&lt;/td>
+&lt;td>Constant value&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="filters-and-maths">Filters and maths&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Model&lt;/th>
+&lt;th>Description&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>FIRFilter&lt;/code>&lt;/td>
+&lt;td>Finite impulse response filter&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>Integrator&lt;/code>&lt;/td>
+&lt;td>Integrator block used inside the control models&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="decoupling">Decoupling&lt;/h2>
+&lt;p>Split a network into parts that can be solved separately, either across solvers or across
+simulators in a co-simulation. See
+&lt;a href="https://sogno.energy/dpsim/docs/user-guide/co-simulation/">co-simulation&lt;/a>.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Model&lt;/th>
+&lt;th>Domains&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>DecouplingLine&lt;/code>&lt;/td>
+&lt;td>&lt;code>DP::Ph1&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>DecouplingLineEMT&lt;/code>&lt;/td>
+&lt;td>&lt;code>EMT::Ph1&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>DecouplingLineEMT_Ph3&lt;/code>&lt;/td>
+&lt;td>&lt;code>EMT::Ph3&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>DecouplingIdealTransformer&lt;/code>&lt;/td>
+&lt;td>&lt;code>DP::Ph1&lt;/code>, &lt;code>EMT::Ph1&lt;/code>, &lt;code>EMT::Ph3&lt;/code>, &lt;code>SP::Ph1&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="references">References&lt;/h2>
+&lt;ul>
+&lt;li>IEEE Std 421.5-2016, &amp;ldquo;IEEE Recommended Practice for Excitation System Models for Power System
+Stability Studies&amp;rdquo;. &lt;a href="https://doi.org/10.1109/IEEESTD.2016.7553421">https://doi.org/10.1109/IEEESTD.2016.7553421&lt;/a>&lt;/li>
+&lt;li>F. Milano, &lt;em>Power System Modelling and Scripting&lt;/em>. London: Springer-Verlag, 2010.
+&lt;a href="https://doi.org/10.1007/978-3-642-13669-6">https://doi.org/10.1007/978-3-642-13669-6&lt;/a>&lt;/li>
+&lt;li>M. Eremia and M. Shahidehpour, &lt;em>Handbook of Electrical Power System Dynamics: Modeling,
+Stability, and Control&lt;/em>. &lt;a href="https://ieeexplore.ieee.org/book/6480471">https://ieeexplore.ieee.org/book/6480471&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Docs: State-Space Extraction Support</title><link>https://sogno.energy/dpsim/docs/reference/state-space-extraction-support/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/reference/state-space-extraction-support/</guid><description>
+&lt;p>For how extraction works and how to enable it, see
+&lt;a href="https://sogno.energy/dpsim/docs/developer-guide/solvers/state-space-extraction/">state-space extraction&lt;/a>.&lt;/p>
+&lt;p>State-space extraction is available for EMT Ph3 and DP Ph1 simulations
+using the direct MNA solver. For models containing switches, the extracted matrix represents the currently
+active switch configuration. The matrix is recomputed when the switch status
+changes.&lt;/p>
+&lt;h2 id="emt-ph3">EMT Ph3&lt;/h2>
+&lt;p>Supported components with extraction states are:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>EMT::Ph3::Inductor&lt;/code>,&lt;/li>
+&lt;li>&lt;code>EMT::Ph3::Capacitor&lt;/code>,&lt;/li>
+&lt;li>&lt;code>EMT::Ph3::TwoTerminalVTypeSSNComp&lt;/code>,&lt;/li>
+&lt;li>&lt;code>EMT::Ph3::TwoTerminalVTypeVariableSSNComp&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;p>Supported algebraic components without extraction states are:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>EMT::Ph3::Resistor&lt;/code>,&lt;/li>
+&lt;li>&lt;code>EMT::Ph3::Switch&lt;/code>,&lt;/li>
+&lt;li>&lt;code>EMT::Ph3::VoltageSource&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;p>The following composite components are supported through their immediate
+MNA subcomponents:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>EMT::Ph3::NetworkInjection&lt;/code>,&lt;/li>
+&lt;li>&lt;code>EMT::Ph3::PiLine&lt;/code>,&lt;/li>
+&lt;li>&lt;code>EMT::Ph3::RXLoad&lt;/code>,&lt;/li>
+&lt;li>&lt;code>EMT::Ph3::RxLine&lt;/code>,&lt;/li>
+&lt;li>&lt;code>EMT::Ph3::Shunt&lt;/code>,&lt;/li>
+&lt;li>&lt;code>EMT::Ph3::Transformer&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="dp-ph1">DP Ph1&lt;/h2>
+&lt;p>Supported components with extraction states are:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>DP::Ph1::Inductor&lt;/code>,&lt;/li>
+&lt;li>&lt;code>DP::Ph1::Capacitor&lt;/code>,&lt;/li>
+&lt;li>&lt;code>DP::Ph1::TwoTerminalVTypeSSNComp&lt;/code>,&lt;/li>
+&lt;li>&lt;code>DP::Ph1::MixedVTypeVariableSSNComp&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;p>Supported algebraic components without extraction states are:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>DP::Ph1::Resistor&lt;/code>,&lt;/li>
+&lt;li>&lt;code>DP::Ph1::Switch&lt;/code>,&lt;/li>
+&lt;li>&lt;code>DP::Ph1::VoltageSource&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;p>The following composite components are supported through their immediate
+MNA subcomponents:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>DP::Ph1::NetworkInjection&lt;/code>,&lt;/li>
+&lt;li>&lt;code>DP::Ph1::PiLine&lt;/code>,&lt;/li>
+&lt;li>&lt;code>DP::Ph1::RXLoad&lt;/code>,&lt;/li>
+&lt;li>&lt;code>DP::Ph1::RxLine&lt;/code>,&lt;/li>
+&lt;li>&lt;code>DP::Ph1::Shunt&lt;/code>,&lt;/li>
+&lt;li>&lt;code>DP::Ph1::Transformer&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;p>Supported composite components are expanded by one level during contributor
+discovery. Their immediate MNA subcomponents provide the state-space
+contributions, while the composite parent remains part of the simulation and
+retains its normal MNA stamping. Nested composites are currently unsupported.&lt;/p>
+&lt;p>Other component types are rejected explicitly when state-space extraction is
+enabled.&lt;/p></description></item></channel></rss>

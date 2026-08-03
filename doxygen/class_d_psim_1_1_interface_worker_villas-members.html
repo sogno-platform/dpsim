@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_d_psim_1_1_interface_worker_villas.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">InterfaceWorkerVillas</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">DPsim::InterfaceWorkerVillas Member List</div></div>
 </div><!--header-->
@@ -95,30 +103,33 @@ $(function(){ initResizable(false); });
 <p>This is the complete list of members for <a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a>, including all inherited members.</p>
 <table class="directory">
   <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html#a72cb1f35a612281678f1419cb701d5a6">close</a>() override</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>configureExport</b>(UInt attributeId, const std::type_info &amp;type, UInt idx, Bool waitForOnWrite, const String &amp;name=&quot;&quot;, const String &amp;unit=&quot;&quot;) (defined in <a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>configureImport</b>(UInt attributeId, const std::type_info &amp;type, UInt idx, const String &amp;name=&quot;&quot;, const String &amp;unit=&quot;&quot;) (defined in <a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>InterfaceWorker</b>()=default (defined in <a class="el" href="class_d_psim_1_1_interface_worker.html">DPsim::InterfaceWorker</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker.html">DPsim::InterfaceWorker</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>InterfaceWorkerVillas</b>(const String &amp;nodeConfig, UInt queueLenght=512, UInt sampleLenght=64, spdlog::level::level_enum logLevel=spdlog::level::level_enum::info) (defined in <a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mCurrentSequenceInterfaceToDpsim</b> (defined in <a class="el" href="class_d_psim_1_1_interface_worker.html">DPsim::InterfaceWorker</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker.html">DPsim::InterfaceWorker</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mLog</b> (defined in <a class="el" href="class_d_psim_1_1_interface_worker.html">DPsim::InterfaceWorker</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker.html">DPsim::InterfaceWorker</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mOpened</b> (defined in <a class="el" href="class_d_psim_1_1_interface_worker.html">DPsim::InterfaceWorker</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker.html">DPsim::InterfaceWorker</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html#a7fecbf348f751d0eeaca4a79bfd4a5cd">open</a>() override</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>printSignals</b>() const (defined in <a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Ptr</b> typedef (defined in <a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html#ae073163e4947d2952a3fae317cb3addf">readValuesFromEnv</a>(std::vector&lt; InterfaceQueued::AttributePacket &gt; &amp;updatedAttrs) override</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>readValuesFromEnv</b>(std::vector&lt; std::tuple&lt; CPS::AttributeBase::Ptr, UInt, bool, bool &gt; &gt; &amp;updatedAttrs) (defined in <a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>Sample</b> typedef (defined in <a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>villasAffinity</b> (defined in <a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>villasHugePages</b> (defined in <a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>villasPriority</b> (defined in <a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html#aa3f9bbc452144c608802d937099c56b8">writeValuesToEnv</a>(std::vector&lt; InterfaceQueued::AttributePacket &gt; &amp;updatedAttrs) override</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>writeValuesToEnv</b>(std::vector&lt; std::tuple&lt; CPS::AttributeBase::Ptr, UInt &gt; &gt; &amp;updatedAttrs) (defined in <a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>~InterfaceWorker</b>()=default (defined in <a class="el" href="class_d_psim_1_1_interface_worker.html">DPsim::InterfaceWorker</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker.html">DPsim::InterfaceWorker</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html#a8d59a5ea17b86de4135f6dd4b1cc2287">configureExport</a>(UInt attributeId, const std::type_info &amp;type, UInt idx, Bool waitForOnWrite, const String &amp;name=&quot;&quot;, const String &amp;unit=&quot;&quot;)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html#aef5e8459ba1c353b4dbffa088b86e308">configureImport</a>(UInt attributeId, const std::type_info &amp;type, UInt idx, const String &amp;name=&quot;&quot;, const String &amp;unit=&quot;&quot;)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker.html#a7d9a48986fce8e13a16c57066ec8e636">InterfaceWorker</a>()=default</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker.html">DPsim::InterfaceWorker</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html#a29259a404a37611d22f3f26b8c741ae3">InterfaceWorkerVillas</a>(const String &amp;nodeConfig, UInt queueLenght=512, UInt sampleLenght=64, spdlog::level::level_enum logLevel=spdlog::level::level_enum::info)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">make</a>(Args &amp;&amp;...args)</td><td class="entry"><a class="el" href="class_shared_factory.html">SharedFactory&lt; InterfaceWorkerVillas &gt;</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker.html#a63a595e0a23974cb5eaed6a7e564882a">mCurrentSequenceInterfaceToDpsim</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker.html">DPsim::InterfaceWorker</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker.html#add460f2871afc571eecd7c6ac99d5c3a">mLog</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker.html">DPsim::InterfaceWorker</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker.html#abfbb4ef86f17ed72b6c0df4023e622ee">mOpened</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker.html">DPsim::InterfaceWorker</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html#a7fecbf348f751d0eeaca4a79bfd4a5cd">open</a>() override</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html#aae979550d323a6f0ef40d75946455ba9">printSignals</a>() const</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html#acbcd553af7a17043e163bb9f2d070a60">Ptr</a> typedef</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html#ae073163e4947d2952a3fae317cb3addf">readValuesFromEnv</a>(std::vector&lt; InterfaceQueued::AttributePacket &gt; &amp;updatedAttrs) override</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html#a912491545a92a80835c3d99e71f425d5">readValuesFromEnv</a>(std::vector&lt; std::tuple&lt; CPS::AttributeBase::Ptr, UInt, bool, bool &gt; &gt; &amp;updatedAttrs)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html#a8fb09e470c063559d7ac13c385a5a6bf">Sample</a> typedef</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html#ac5eb0fdc843dc6d7b7a0130bfe3ba4c7">villasAffinity</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html#ad08af6c02b7a8634979ec5f982cc1824">villasHugePages</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html#adaf22ba019ce9a4ef9325c5b99a432db">villasPriority</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html#aa3f9bbc452144c608802d937099c56b8">writeValuesToEnv</a>(std::vector&lt; InterfaceQueued::AttributePacket &gt; &amp;updatedAttrs) override</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html#ab829ad106ba4bec4430306b06f0daa8e">writeValuesToEnv</a>(std::vector&lt; std::tuple&lt; CPS::AttributeBase::Ptr, UInt &gt; &gt; &amp;updatedAttrs)</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker_villas.html">DPsim::InterfaceWorkerVillas</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker.html#aa9c12820d821fadfaf7fe71e0b0580b1">~InterfaceWorker</a>()=default</td><td class="entry"><a class="el" href="class_d_psim_1_1_interface_worker.html">DPsim::InterfaceWorker</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
 </table></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

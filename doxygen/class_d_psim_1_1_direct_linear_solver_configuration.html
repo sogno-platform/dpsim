@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_d_psim_1_1_direct_linear_solver_configuration.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_direct_linear_solver_configuration.html">DirectLinearSolverConfiguration</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
@@ -94,33 +102,36 @@ $(function(){ initResizable(false); });
   <div class="headertitle"><div class="title">DPsim::DirectLinearSolverConfiguration Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="_direct_linear_solver_configuration_8h_source.html">DirectLinearSolverConfiguration.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a2951b62d10e6195eb08235ccd0e1c9a0" id="r_a2951b62d10e6195eb08235ccd0e1c9a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2951b62d10e6195eb08235ccd0e1c9a0">setFillInReductionMethod</a> (FILL_IN_REDUCTION_METHOD fillInReductionMethod)</td></tr>
+<tr class="memitem:a3b0479cb3470551a596f8580d4e7d912" id="r_a3b0479cb3470551a596f8580d4e7d912"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3b0479cb3470551a596f8580d4e7d912">DirectLinearSolverConfiguration</a> ()</td></tr>
+<tr class="separator:a3b0479cb3470551a596f8580d4e7d912"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2951b62d10e6195eb08235ccd0e1c9a0" id="r_a2951b62d10e6195eb08235ccd0e1c9a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2951b62d10e6195eb08235ccd0e1c9a0">setFillInReductionMethod</a> (<a class="el" href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74">FILL_IN_REDUCTION_METHOD</a> fillInReductionMethod)</td></tr>
 <tr class="separator:a2951b62d10e6195eb08235ccd0e1c9a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a066fca77a63b150e0449d7e653075bd7" id="r_a066fca77a63b150e0449d7e653075bd7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a066fca77a63b150e0449d7e653075bd7">setScalingMethod</a> (SCALING_METHOD scalingMethod)</td></tr>
+<tr class="memitem:a066fca77a63b150e0449d7e653075bd7" id="r_a066fca77a63b150e0449d7e653075bd7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a066fca77a63b150e0449d7e653075bd7">setScalingMethod</a> (<a class="el" href="namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408">SCALING_METHOD</a> scalingMethod)</td></tr>
 <tr class="separator:a066fca77a63b150e0449d7e653075bd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10239dcf1b13c5ac7eb92294c2fc61a3" id="r_a10239dcf1b13c5ac7eb92294c2fc61a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a10239dcf1b13c5ac7eb92294c2fc61a3">setPartialRefactorizationMethod</a> (PARTIAL_REFACTORIZATION_METHOD partialRefactorizationMethod)</td></tr>
+<tr class="memitem:a10239dcf1b13c5ac7eb92294c2fc61a3" id="r_a10239dcf1b13c5ac7eb92294c2fc61a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a10239dcf1b13c5ac7eb92294c2fc61a3">setPartialRefactorizationMethod</a> (<a class="el" href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482a">PARTIAL_REFACTORIZATION_METHOD</a> partialRefactorizationMethod)</td></tr>
 <tr class="separator:a10239dcf1b13c5ac7eb92294c2fc61a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a81e1e69ecf63bbc6fef256cd8ee06d06" id="r_a81e1e69ecf63bbc6fef256cd8ee06d06"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a81e1e69ecf63bbc6fef256cd8ee06d06">setBTF</a> (USE_BTF useBTF)</td></tr>
+<tr class="memitem:a81e1e69ecf63bbc6fef256cd8ee06d06" id="r_a81e1e69ecf63bbc6fef256cd8ee06d06"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a81e1e69ecf63bbc6fef256cd8ee06d06">setBTF</a> (<a class="el" href="namespace_d_psim.html#a69fee78420eca0273fbc1bb935a999ad">USE_BTF</a> useBTF)</td></tr>
 <tr class="separator:a81e1e69ecf63bbc6fef256cd8ee06d06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9690061c0f0aad4de91ef6b693d29c6f" id="r_a9690061c0f0aad4de91ef6b693d29c6f"><td class="memItemLeft" align="right" valign="top">SCALING_METHOD&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9690061c0f0aad4de91ef6b693d29c6f">getScalingMethod</a> () const</td></tr>
+<tr class="memitem:a9690061c0f0aad4de91ef6b693d29c6f" id="r_a9690061c0f0aad4de91ef6b693d29c6f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408">SCALING_METHOD</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9690061c0f0aad4de91ef6b693d29c6f">getScalingMethod</a> () const</td></tr>
 <tr class="separator:a9690061c0f0aad4de91ef6b693d29c6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afd06e461c13870ad0d2950a208147e23" id="r_afd06e461c13870ad0d2950a208147e23"><td class="memItemLeft" align="right" valign="top">FILL_IN_REDUCTION_METHOD&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afd06e461c13870ad0d2950a208147e23">getFillInReductionMethod</a> () const</td></tr>
+<tr class="memitem:afd06e461c13870ad0d2950a208147e23" id="r_afd06e461c13870ad0d2950a208147e23"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74">FILL_IN_REDUCTION_METHOD</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afd06e461c13870ad0d2950a208147e23">getFillInReductionMethod</a> () const</td></tr>
 <tr class="separator:afd06e461c13870ad0d2950a208147e23"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8634bad2f85b0543856e6c39d87433a0" id="r_a8634bad2f85b0543856e6c39d87433a0"><td class="memItemLeft" align="right" valign="top">PARTIAL_REFACTORIZATION_METHOD&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8634bad2f85b0543856e6c39d87433a0">getPartialRefactorizationMethod</a> () const</td></tr>
+<tr class="memitem:a8634bad2f85b0543856e6c39d87433a0" id="r_a8634bad2f85b0543856e6c39d87433a0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482a">PARTIAL_REFACTORIZATION_METHOD</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8634bad2f85b0543856e6c39d87433a0">getPartialRefactorizationMethod</a> () const</td></tr>
 <tr class="separator:a8634bad2f85b0543856e6c39d87433a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7550e603f8fb3e36e954bef2fe39073f" id="r_a7550e603f8fb3e36e954bef2fe39073f"><td class="memItemLeft" align="right" valign="top"><a id="a7550e603f8fb3e36e954bef2fe39073f" name="a7550e603f8fb3e36e954bef2fe39073f"></a>
-USE_BTF&#160;</td><td class="memItemRight" valign="bottom"><b>getBTF</b> () const</td></tr>
+<tr class="memitem:a7550e603f8fb3e36e954bef2fe39073f" id="r_a7550e603f8fb3e36e954bef2fe39073f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a69fee78420eca0273fbc1bb935a999ad">USE_BTF</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7550e603f8fb3e36e954bef2fe39073f">getBTF</a> () const</td></tr>
 <tr class="separator:a7550e603f8fb3e36e954bef2fe39073f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b788b711029111e94227c5db764f317" id="r_a6b788b711029111e94227c5db764f317"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b788b711029111e94227c5db764f317">getScalingMethodString</a> () const</td></tr>
+<tr class="memitem:a6b788b711029111e94227c5db764f317" id="r_a6b788b711029111e94227c5db764f317"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b788b711029111e94227c5db764f317">getScalingMethodString</a> () const</td></tr>
 <tr class="separator:a6b788b711029111e94227c5db764f317"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3745e829a81e57fe5b195252bd5604f5" id="r_a3745e829a81e57fe5b195252bd5604f5"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3745e829a81e57fe5b195252bd5604f5">getFillInReductionMethodString</a> () const</td></tr>
+<tr class="memitem:a3745e829a81e57fe5b195252bd5604f5" id="r_a3745e829a81e57fe5b195252bd5604f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3745e829a81e57fe5b195252bd5604f5">getFillInReductionMethodString</a> () const</td></tr>
 <tr class="separator:a3745e829a81e57fe5b195252bd5604f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a68301741ca3dd9218164b5b94cb98b88" id="r_a68301741ca3dd9218164b5b94cb98b88"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a68301741ca3dd9218164b5b94cb98b88">getPartialRefactorizationMethodString</a> () const</td></tr>
+<tr class="memitem:a68301741ca3dd9218164b5b94cb98b88" id="r_a68301741ca3dd9218164b5b94cb98b88"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a68301741ca3dd9218164b5b94cb98b88">getPartialRefactorizationMethodString</a> () const</td></tr>
 <tr class="separator:a68301741ca3dd9218164b5b94cb98b88"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a322be56aa2ca4c3305395c5b8fe1d5d3" id="r_a322be56aa2ca4c3305395c5b8fe1d5d3"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a322be56aa2ca4c3305395c5b8fe1d5d3">getBTFString</a> () const</td></tr>
+<tr class="memitem:a322be56aa2ca4c3305395c5b8fe1d5d3" id="r_a322be56aa2ca4c3305395c5b8fe1d5d3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a322be56aa2ca4c3305395c5b8fe1d5d3">getBTFString</a> () const</td></tr>
 <tr class="separator:a322be56aa2ca4c3305395c5b8fe1d5d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -147,6 +158,23 @@ USE_BTF&#160;</td><td class="memItemRight" valign="bottom"><b>getBTF</b> () cons
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a7550e603f8fb3e36e954bef2fe39073f" name="a7550e603f8fb3e36e954bef2fe39073f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7550e603f8fb3e36e954bef2fe39073f">&#9670;&#160;</a></span>getBTF()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#a69fee78420eca0273fbc1bb935a999ad">USE_BTF</a> DPsim::DirectLinearSolverConfiguration::getBTF </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a322be56aa2ca4c3305395c5b8fe1d5d3" name="a322be56aa2ca4c3305395c5b8fe1d5d3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a322be56aa2ca4c3305395c5b8fe1d5d3">&#9670;&#160;</a></span>getBTFString()</h2>
 
@@ -154,7 +182,7 @@ USE_BTF&#160;</td><td class="memItemRight" valign="bottom"><b>getBTF</b> () cons
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">String DPsim::DirectLinearSolverConfiguration::getBTFString </td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> DPsim::DirectLinearSolverConfiguration::getBTFString </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -173,7 +201,7 @@ USE_BTF&#160;</td><td class="memItemRight" valign="bottom"><b>getBTF</b> () cons
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">FILL_IN_REDUCTION_METHOD DPsim::DirectLinearSolverConfiguration::getFillInReductionMethod </td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74">FILL_IN_REDUCTION_METHOD</a> DPsim::DirectLinearSolverConfiguration::getFillInReductionMethod </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -192,7 +220,7 @@ USE_BTF&#160;</td><td class="memItemRight" valign="bottom"><b>getBTF</b> () cons
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">String DPsim::DirectLinearSolverConfiguration::getFillInReductionMethodString </td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> DPsim::DirectLinearSolverConfiguration::getFillInReductionMethodString </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -211,7 +239,7 @@ USE_BTF&#160;</td><td class="memItemRight" valign="bottom"><b>getBTF</b> () cons
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">PARTIAL_REFACTORIZATION_METHOD DPsim::DirectLinearSolverConfiguration::getPartialRefactorizationMethod </td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482a">PARTIAL_REFACTORIZATION_METHOD</a> DPsim::DirectLinearSolverConfiguration::getPartialRefactorizationMethod </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -230,7 +258,7 @@ USE_BTF&#160;</td><td class="memItemRight" valign="bottom"><b>getBTF</b> () cons
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">String DPsim::DirectLinearSolverConfiguration::getPartialRefactorizationMethodString </td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> DPsim::DirectLinearSolverConfiguration::getPartialRefactorizationMethodString </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -249,7 +277,7 @@ USE_BTF&#160;</td><td class="memItemRight" valign="bottom"><b>getBTF</b> () cons
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SCALING_METHOD DPsim::DirectLinearSolverConfiguration::getScalingMethod </td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408">SCALING_METHOD</a> DPsim::DirectLinearSolverConfiguration::getScalingMethod </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -268,7 +296,7 @@ USE_BTF&#160;</td><td class="memItemRight" valign="bottom"><b>getBTF</b> () cons
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">String DPsim::DirectLinearSolverConfiguration::getScalingMethodString </td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> DPsim::DirectLinearSolverConfiguration::getScalingMethodString </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -289,7 +317,7 @@ USE_BTF&#160;</td><td class="memItemRight" valign="bottom"><b>getBTF</b> () cons
         <tr>
           <td class="memname">void DPsim::DirectLinearSolverConfiguration::setBTF </td>
           <td>(</td>
-          <td class="paramtype">USE_BTF</td>          <td class="paramname"><span class="paramname"><em>useBTF</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a69fee78420eca0273fbc1bb935a999ad">USE_BTF</a></td>          <td class="paramname"><span class="paramname"><em>useBTF</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -308,7 +336,7 @@ USE_BTF&#160;</td><td class="memItemRight" valign="bottom"><b>getBTF</b> () cons
         <tr>
           <td class="memname">void DPsim::DirectLinearSolverConfiguration::setFillInReductionMethod </td>
           <td>(</td>
-          <td class="paramtype">FILL_IN_REDUCTION_METHOD</td>          <td class="paramname"><span class="paramname"><em>fillInReductionMethod</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74">FILL_IN_REDUCTION_METHOD</a></td>          <td class="paramname"><span class="paramname"><em>fillInReductionMethod</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -327,7 +355,7 @@ USE_BTF&#160;</td><td class="memItemRight" valign="bottom"><b>getBTF</b> () cons
         <tr>
           <td class="memname">void DPsim::DirectLinearSolverConfiguration::setPartialRefactorizationMethod </td>
           <td>(</td>
-          <td class="paramtype">PARTIAL_REFACTORIZATION_METHOD</td>          <td class="paramname"><span class="paramname"><em>partialRefactorizationMethod</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482a">PARTIAL_REFACTORIZATION_METHOD</a></td>          <td class="paramname"><span class="paramname"><em>partialRefactorizationMethod</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -346,7 +374,7 @@ USE_BTF&#160;</td><td class="memItemRight" valign="bottom"><b>getBTF</b> () cons
         <tr>
           <td class="memname">void DPsim::DirectLinearSolverConfiguration::setScalingMethod </td>
           <td>(</td>
-          <td class="paramtype">SCALING_METHOD</td>          <td class="paramname"><span class="paramname"><em>scalingMethod</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408">SCALING_METHOD</a></td>          <td class="paramname"><span class="paramname"><em>scalingMethod</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -361,10 +389,13 @@ USE_BTF&#160;</td><td class="memItemRight" valign="bottom"><b>getBTF</b> () cons
 <li>/__w/dpsim/dpsim/dpsim/src/<a class="el" href="_direct_linear_solver_configuration_8cpp_source.html">DirectLinearSolverConfiguration.cpp</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_direct_linear_solver_configuration.html">DirectLinearSolverConfiguration</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

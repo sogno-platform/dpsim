@@ -1,0 +1,27 @@
+var class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c =
+[
+    [ "setControllerParameters", "class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#a546418a4af8df3e6e93cc15b49b586a7", null ],
+    [ "setMechModelParameter", "class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#acf12815c2d027082c509be2933c0ae76", null ],
+    [ "setParameters", "class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#a3a06595c392958dea4383904c5c46356", null ],
+    [ "mBMax", "class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#a7e7375336b3fa2e30c51aeca8f98449f", null ],
+    [ "mBMin", "class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#ad0183eadc5f5b3f541c237a39be66269", null ],
+    [ "mBN", "class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#aada7a8cf3f69e5be8a9f72c35feb18bd", null ],
+    [ "mBPrev", "class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#a2f46f699e233673a4342456321b53850", null ],
+    [ "mDeadband", "class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#a0e047ff5ed9e3f5701886fcb3d13a3bf", null ],
+    [ "mDeltaT", "class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#a64d4676254fa62340caefdf11db45219", null ],
+    [ "mDeltaV", "class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#a200ab3241f667dc7ffc95fb0f198f33a", null ],
+    [ "mInductance", "class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#a841eabfda7ef39d4cb2aa4edd6624e4e", null ],
+    [ "mKr", "class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#aa119603f87845cfb1ad11568372e6f14", null ],
+    [ "mMaxPos", "class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#a750a9061bd4814d36af3d620a7d55e59", null ],
+    [ "mMechMode", "class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#a8bee3f03458b52d4f6b590e0dfb091d7", null ],
+    [ "mMechSwitchDelay", "class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#a1ff2118775edfd5512d138eebedd5fe2", null ],
+    [ "mMinPos", "class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#a9ebd588f8cb0b2d6c4facf268521f42d", null ],
+    [ "mNomVolt", "class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#ace73d40207d7bd5c8279bacfe58f08ac", null ],
+    [ "mPrevTimeStep", "class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#a6518361ffd734263f57e239571d430b5", null ],
+    [ "mPrevVoltage", "class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#a54370960c0333c1e3e04e5d21ac6cd65", null ],
+    [ "mQN", "class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#af773c87897c34141017c4c377342e14a", null ],
+    [ "mRefVolt", "class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#ae08988ecd2add0b8da0871647853f6db", null ],
+    [ "mTapPos", "class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#a94af357c30b1b617d8d74ae8b2632587", null ],
+    [ "mTr", "class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#a2a53817e5cc0e80c0f989f41f6969353", null ],
+    [ "mViolationCounter", "class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html#ab79694ec5dc98b94e0fbe8e2c842c231", null ]
+];

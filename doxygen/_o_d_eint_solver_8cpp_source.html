@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_o_d_eint_solver_8cpp_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_af103632340511860a5310da360a5028.html">src</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">ODEintSolver.cpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_o_d_eint_solver_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -99,13 +107,13 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * file, You can obtain one at https://mozilla.org/MPL/2.0/.</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> *********************************************************************************/</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;dpsim/ODEintSolver.h&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;<a class="code" href="_o_d_eint_solver_8h.html">dpsim/ODEintSolver.h</a>&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespace_d_psim.html">DPsim</a>;</div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
 <div class="foldopen" id="foldopen00013" data-start="{" data-end="}">
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_o_d_eint_solver.html#a391aea7e37bb02ee663086d5d1c43676">   13</a></span><a class="code hl_function" href="class_d_psim_1_1_o_d_eint_solver.html#a391aea7e37bb02ee663086d5d1c43676">ODEintSolver::ODEintSolver</a>(String name, CPS::ODEintInterface::Ptr comp, Real dt,</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>                           Real t0)</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_o_d_eint_solver.html#a391aea7e37bb02ee663086d5d1c43676">   13</a></span><a class="code hl_function" href="class_d_psim_1_1_o_d_eint_solver.html#a391aea7e37bb02ee663086d5d1c43676">ODEintSolver::ODEintSolver</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> name, <a class="code hl_typedef" href="class_c_p_s_1_1_o_d_eint_interface.html#a7789f247c51b7d3301f590b57cf7bc8a">CPS::ODEintInterface::Ptr</a> comp, <a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> dt,</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>                           <a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> t0)</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    : <a class="code hl_variable" href="class_d_psim_1_1_o_d_eint_solver.html#afc34e3cecf3643ef245fed21b7a58384">mComponent</a>(comp), <a class="code hl_variable" href="class_d_psim_1_1_o_d_eint_solver.html#aa11ff681942289cf582cf0d53a675384">mTimestep</a>(dt) {</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>  <a class="code hl_variable" href="class_d_psim_1_1_o_d_eint_solver.html#a256d8c8a63989afe52a8ae7ce4b7f360">times</a>.push_back(t0);</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>  self = <span class="keyword">this</span>; <span class="comment">// sets static pointer to current object</span></div>
@@ -121,12 +129,12 @@ $(function(){ initResizable(false); });
 </div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
 <div class="foldopen" id="foldopen00028" data-start="{" data-end="}">
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_o_d_eint_solver.html#aa26276e92b4d1d1d69711c68d45d0ef3">   28</a></span>Real <a class="code hl_function" href="class_d_psim_1_1_o_d_eint_solver.html#aa26276e92b4d1d1d69711c68d45d0ef3">ODEintSolver::step</a>(Real time) {</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_o_d_eint_solver.html#aa26276e92b4d1d1d69711c68d45d0ef3">   28</a></span><a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> <a class="code hl_function" href="class_d_psim_1_1_o_d_eint_solver.html#aa26276e92b4d1d1d69711c68d45d0ef3">ODEintSolver::step</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> time) {</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <a class="code hl_variable" href="class_d_psim_1_1_o_d_eint_solver.html#afc34e3cecf3643ef245fed21b7a58384">mComponent</a>-&gt;pre_step(); </div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <a class="code hl_variable" href="class_d_psim_1_1_o_d_eint_solver.html#af35efd5f5f1555f58e11a5e81f3535df">curSolution</a>.assign(<a class="code hl_variable" href="class_d_psim_1_1_o_d_eint_solver.html#afc34e3cecf3643ef245fed21b7a58384">mComponent</a>-&gt;state_vector(),</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>                     <a class="code hl_variable" href="class_d_psim_1_1_o_d_eint_solver.html#afc34e3cecf3643ef245fed21b7a58384">mComponent</a>-&gt;state_vector() + <a class="code hl_variable" href="class_d_psim_1_1_o_d_eint_solver.html#a7cb88da0437f01c68d1e2ff5760ff974">ProbDim</a>);</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  Real NextTime = time + <a class="code hl_variable" href="class_d_psim_1_1_o_d_eint_solver.html#aa11ff681942289cf582cf0d53a675384">mTimestep</a>;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> NextTime = time + <a class="code hl_variable" href="class_d_psim_1_1_o_d_eint_solver.html#aa11ff681942289cf582cf0d53a675384">mTimestep</a>;</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;Current Time &quot;</span> &lt;&lt; NextTime &lt;&lt; std::endl;</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
@@ -155,6 +163,8 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>}</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_o_d_eint_solver.html#ad5a3755a0137810d4ec3c9fe0563058b">   60</a></span><a class="code hl_function" href="class_d_psim_1_1_o_d_eint_solver.html#ad5a3755a0137810d4ec3c9fe0563058b">ODEintSolver::~ODEintSolver</a>() {}</div>
+<div class="ttc" id="a_o_d_eint_solver_8h_html"><div class="ttname"><a href="_o_d_eint_solver_8h.html">ODEintSolver.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_o_d_eint_interface_html_a7789f247c51b7d3301f590b57cf7bc8a"><div class="ttname"><a href="class_c_p_s_1_1_o_d_eint_interface.html#a7789f247c51b7d3301f590b57cf7bc8a">CPS::ODEintInterface::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; ODEintInterface &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_o_d_eint_interface_8h_source.html#l00017">ODEintInterface.h:17</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_o_d_eint_solver_html_a0c07ce0b888b2291298aac4841dca2ff"><div class="ttname"><a href="class_d_psim_1_1_o_d_eint_solver.html#a0c07ce0b888b2291298aac4841dca2ff">DPsim::ODEintSolver::system</a></div><div class="ttdeci">std::vector&lt; CPS::ODEintInterface::stateFnc &gt; system</div><div class="ttdoc">ODE of Component.</div><div class="ttdef"><b>Definition</b> <a href="_o_d_eint_solver_8h_source.html#l00040">ODEintSolver.h:40</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_o_d_eint_solver_html_a256d8c8a63989afe52a8ae7ce4b7f360"><div class="ttname"><a href="class_d_psim_1_1_o_d_eint_solver.html#a256d8c8a63989afe52a8ae7ce4b7f360">DPsim::ODEintSolver::times</a></div><div class="ttdeci">std::vector&lt; Real &gt; times</div><div class="ttdoc">Vector containing all timesteps.</div><div class="ttdef"><b>Definition</b> <a href="_o_d_eint_solver_8h_source.html#l00038">ODEintSolver.h:38</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_o_d_eint_solver_html_a391aea7e37bb02ee663086d5d1c43676"><div class="ttname"><a href="class_d_psim_1_1_o_d_eint_solver.html#a391aea7e37bb02ee663086d5d1c43676">DPsim::ODEintSolver::ODEintSolver</a></div><div class="ttdeci">ODEintSolver(String name, CPS::ODEintInterface::Ptr comp, Real dt, Real t0)</div><div class="ttdoc">Create solve object with given parameters.</div><div class="ttdef"><b>Definition</b> <a href="#l00013">ODEintSolver.cpp:13</a></div></div>
@@ -167,11 +177,16 @@ $(function(){ initResizable(false); });
 <div class="ttc" id="aclass_d_psim_1_1_o_d_eint_solver_html_af35efd5f5f1555f58e11a5e81f3535df"><div class="ttname"><a href="class_d_psim_1_1_o_d_eint_solver.html#af35efd5f5f1555f58e11a5e81f3535df">DPsim::ODEintSolver::curSolution</a></div><div class="ttdeci">std::vector&lt; Real &gt; curSolution</div><div class="ttdoc">Current solution vector.</div><div class="ttdef"><b>Definition</b> <a href="_o_d_eint_solver_8h_source.html#l00051">ODEintSolver.h:51</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_o_d_eint_solver_html_afc34e3cecf3643ef245fed21b7a58384"><div class="ttname"><a href="class_d_psim_1_1_o_d_eint_solver.html#afc34e3cecf3643ef245fed21b7a58384">DPsim::ODEintSolver::mComponent</a></div><div class="ttdeci">CPS::ODEintInterface::Ptr mComponent</div><div class="ttdoc">Pointer to current Component.</div><div class="ttdef"><b>Definition</b> <a href="_o_d_eint_solver_8h_source.html#l00028">ODEintSolver.h:28</a></div></div>
 <div class="ttc" id="anamespace_d_psim_html"><div class="ttname"><a href="namespace_d_psim.html">DPsim</a></div><div class="ttdef"><b>Definition</b> <a href="_dense_l_u_adapter_8cpp_source.html#l00013">DenseLUAdapter.cpp:13</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a52dcbc3a0896b912333104eb61a7b29b"><div class="ttname"><a href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">DPsim::Real</a></div><div class="ttdeci">CPS::Real Real</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00018">Definitions.h:18</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a66e48a625a26fd3c1d2198148f9d59e9"><div class="ttname"><a href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">DPsim::String</a></div><div class="ttdeci">CPS::String String</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00020">Definitions.h:20</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_af103632340511860a5310da360a5028.html">src</a></li><li class="navelem"><a class="el" href="_o_d_eint_solver_8cpp.html">ODEintSolver.cpp</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_c_p_s_1_1_m_n_a_interface.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>CPS</b></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_m_n_a_interface.html">MNAInterface</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
@@ -104,13 +112,13 @@ $(function(){ initResizable(false); });
 Inheritance diagram for CPS::MNAInterface:</div>
 <div class="dyncontent">
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_m_n_a_interface__inherit__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:ae0ae005f7e53b1d5c27f508149a0da2e" id="r_ae0ae005f7e53b1d5c27f508149a0da2e"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html">MNAInterface</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae0ae005f7e53b1d5c27f508149a0da2e">Ptr</a></td></tr>
 <tr class="separator:ae0ae005f7e53b1d5c27f508149a0da2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99daa13babcb894a6f878fc889faa0a7" id="r_a99daa13babcb894a6f878fc889faa0a7"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; Ptr &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a99daa13babcb894a6f878fc889faa0a7">List</a></td></tr>
+<tr class="memitem:a99daa13babcb894a6f878fc889faa0a7" id="r_a99daa13babcb894a6f878fc889faa0a7"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="#ae0ae005f7e53b1d5c27f508149a0da2e">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a99daa13babcb894a6f878fc889faa0a7">List</a></td></tr>
 <tr class="separator:a99daa13babcb894a6f878fc889faa0a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -118,56 +126,50 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a780dfe2d2caa891938f3e4e9796cca1d" id="r_a780dfe2d2caa891938f3e4e9796cca1d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a780dfe2d2caa891938f3e4e9796cca1d">createSubComponents</a> ()</td></tr>
 <tr class="memdesc:a780dfe2d2caa891938f3e4e9796cca1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs and registers MNA subcomponents; called before collectVirtualNodes so virtual nodes exist before matrix sizing.  <br /></td></tr>
 <tr class="separator:a780dfe2d2caa891938f3e4e9796cca1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19f3b3770b99fc16550413b2f77dbf2b" id="r_a19f3b3770b99fc16550413b2f77dbf2b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a19f3b3770b99fc16550413b2f77dbf2b">mnaInitialize</a> (Real omega, Real timeStep)=0</td></tr>
+<tr class="memitem:a19f3b3770b99fc16550413b2f77dbf2b" id="r_a19f3b3770b99fc16550413b2f77dbf2b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a19f3b3770b99fc16550413b2f77dbf2b">mnaInitialize</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> omega, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> timeStep)=0</td></tr>
 <tr class="memdesc:a19f3b3770b99fc16550413b2f77dbf2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes variables of components.  <br /></td></tr>
 <tr class="separator:a19f3b3770b99fc16550413b2f77dbf2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa583b6d80d2ff9a01dab0446698a8cad" id="r_aa583b6d80d2ff9a01dab0446698a8cad"><td class="memItemLeft" align="right" valign="top"><a id="aa583b6d80d2ff9a01dab0446698a8cad" name="aa583b6d80d2ff9a01dab0446698a8cad"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaInitialize</b> (Real omega, Real timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr leftVector)=0</td></tr>
+<tr class="memitem:aa583b6d80d2ff9a01dab0446698a8cad" id="r_aa583b6d80d2ff9a01dab0446698a8cad"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa583b6d80d2ff9a01dab0446698a8cad">mnaInitialize</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> omega, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="#ae0ae005f7e53b1d5c27f508149a0da2e">::Ptr</a> leftVector)=0</td></tr>
 <tr class="separator:aa583b6d80d2ff9a01dab0446698a8cad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3054b9f3600edea682208639cd2aacc7" id="r_a3054b9f3600edea682208639cd2aacc7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3054b9f3600edea682208639cd2aacc7">mnaApplySystemMatrixStamp</a> (SparseMatrixRow &amp;systemMatrix)=0</td></tr>
+<tr class="memitem:a3054b9f3600edea682208639cd2aacc7" id="r_a3054b9f3600edea682208639cd2aacc7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3054b9f3600edea682208639cd2aacc7">mnaApplySystemMatrixStamp</a> (<a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;systemMatrix)=0</td></tr>
 <tr class="memdesc:a3054b9f3600edea682208639cd2aacc7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix.  <br /></td></tr>
 <tr class="separator:a3054b9f3600edea682208639cd2aacc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3753ef48000d7fda7b940f8ea627e30d" id="r_a3753ef48000d7fda7b940f8ea627e30d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3753ef48000d7fda7b940f8ea627e30d">mnaApplyRightSideVectorStamp</a> (Matrix &amp;rightVector)=0</td></tr>
+<tr class="memitem:a3753ef48000d7fda7b940f8ea627e30d" id="r_a3753ef48000d7fda7b940f8ea627e30d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3753ef48000d7fda7b940f8ea627e30d">mnaApplyRightSideVectorStamp</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;rightVector)=0</td></tr>
 <tr class="memdesc:a3753ef48000d7fda7b940f8ea627e30d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps right side (source) vector.  <br /></td></tr>
 <tr class="separator:a3753ef48000d7fda7b940f8ea627e30d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aadd6fae66474b5c63b5156122c461605" id="r_aadd6fae66474b5c63b5156122c461605"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aadd6fae66474b5c63b5156122c461605">mnaUpdateVoltage</a> (const Matrix &amp;leftVector)=0</td></tr>
+<tr class="memitem:aadd6fae66474b5c63b5156122c461605" id="r_aadd6fae66474b5c63b5156122c461605"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aadd6fae66474b5c63b5156122c461605">mnaUpdateVoltage</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;leftVector)=0</td></tr>
 <tr class="memdesc:aadd6fae66474b5c63b5156122c461605"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update interface voltage from MNA system result.  <br /></td></tr>
 <tr class="separator:aadd6fae66474b5c63b5156122c461605"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0412c47ba97bbc82f9c06f9ea90c4536" id="r_a0412c47ba97bbc82f9c06f9ea90c4536"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0412c47ba97bbc82f9c06f9ea90c4536">mnaUpdateCurrent</a> (const Matrix &amp;leftVector)=0</td></tr>
+<tr class="memitem:a0412c47ba97bbc82f9c06f9ea90c4536" id="r_a0412c47ba97bbc82f9c06f9ea90c4536"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0412c47ba97bbc82f9c06f9ea90c4536">mnaUpdateCurrent</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;leftVector)=0</td></tr>
 <tr class="memdesc:a0412c47ba97bbc82f9c06f9ea90c4536"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update interface current from MNA system result.  <br /></td></tr>
 <tr class="separator:a0412c47ba97bbc82f9c06f9ea90c4536"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3613e89136e28aa3369d0606463f06e7" id="r_a3613e89136e28aa3369d0606463f06e7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3613e89136e28aa3369d0606463f06e7">mnaPreStep</a> (Real time, Int timeStepCount)=0</td></tr>
+<tr class="memitem:a3613e89136e28aa3369d0606463f06e7" id="r_a3613e89136e28aa3369d0606463f06e7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3613e89136e28aa3369d0606463f06e7">mnaPreStep</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> time, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> timeStepCount)=0</td></tr>
 <tr class="memdesc:a3613e89136e28aa3369d0606463f06e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">MNA pre step operations.  <br /></td></tr>
 <tr class="separator:a3613e89136e28aa3369d0606463f06e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23b816adf7872d4724cbb86ba0d85df3" id="r_a23b816adf7872d4724cbb86ba0d85df3"><td class="memItemLeft" align="right" valign="top"><a id="a23b816adf7872d4724cbb86ba0d85df3" name="a23b816adf7872d4724cbb86ba0d85df3"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaPostStep</b> (Real time, Int timeStepCount, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr &amp;leftVector)=0</td></tr>
-<tr class="memdesc:a23b816adf7872d4724cbb86ba0d85df3"><td class="mdescLeft">&#160;</td><td class="mdescRight">MNA post step operations. <br /></td></tr>
+<tr class="memitem:a23b816adf7872d4724cbb86ba0d85df3" id="r_a23b816adf7872d4724cbb86ba0d85df3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a23b816adf7872d4724cbb86ba0d85df3">mnaPostStep</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> time, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> timeStepCount, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="#ae0ae005f7e53b1d5c27f508149a0da2e">::Ptr</a> &amp;leftVector)=0</td></tr>
+<tr class="memdesc:a23b816adf7872d4724cbb86ba0d85df3"><td class="mdescLeft">&#160;</td><td class="mdescRight">MNA post step operations.  <br /></td></tr>
 <tr class="separator:a23b816adf7872d4724cbb86ba0d85df3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19edf22751b0e9666ba1e232e34bffde" id="r_a19edf22751b0e9666ba1e232e34bffde"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a19edf22751b0e9666ba1e232e34bffde">mnaAddPreStepDependencies</a> (AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes)=0</td></tr>
+<tr class="memitem:a19edf22751b0e9666ba1e232e34bffde" id="r_a19edf22751b0e9666ba1e232e34bffde"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a19edf22751b0e9666ba1e232e34bffde">mnaAddPreStepDependencies</a> (<a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">AttributeBase::List</a> &amp;prevStepDependencies, <a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">AttributeBase::List</a> &amp;attributeDependencies, <a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">AttributeBase::List</a> &amp;modifiedAttributes)=0</td></tr>
 <tr class="memdesc:a19edf22751b0e9666ba1e232e34bffde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add MNA pre step dependencies.  <br /></td></tr>
 <tr class="separator:a19edf22751b0e9666ba1e232e34bffde"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0179016962f9ebfe686f16ede91d6404" id="r_a0179016962f9ebfe686f16ede91d6404"><td class="memItemLeft" align="right" valign="top"><a id="a0179016962f9ebfe686f16ede91d6404" name="a0179016962f9ebfe686f16ede91d6404"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaAddPostStepDependencies</b> (AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr &amp;leftVector)=0</td></tr>
-<tr class="memdesc:a0179016962f9ebfe686f16ede91d6404"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add MNA post step dependencies. <br /></td></tr>
+<tr class="memitem:a0179016962f9ebfe686f16ede91d6404" id="r_a0179016962f9ebfe686f16ede91d6404"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0179016962f9ebfe686f16ede91d6404">mnaAddPostStepDependencies</a> (<a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">AttributeBase::List</a> &amp;prevStepDependencies, <a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">AttributeBase::List</a> &amp;attributeDependencies, <a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">AttributeBase::List</a> &amp;modifiedAttributes, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="#ae0ae005f7e53b1d5c27f508149a0da2e">::Ptr</a> &amp;leftVector)=0</td></tr>
+<tr class="memdesc:a0179016962f9ebfe686f16ede91d6404"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add MNA post step dependencies.  <br /></td></tr>
 <tr class="separator:a0179016962f9ebfe686f16ede91d6404"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca665eb0006e91958366aefca2863ee0" id="r_aca665eb0006e91958366aefca2863ee0"><td class="memItemLeft" align="right" valign="top"><a id="aca665eb0006e91958366aefca2863ee0" name="aca665eb0006e91958366aefca2863ee0"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaInitializeHarm</b> (Real omega, Real timeStep, std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr &gt; leftVector)=0</td></tr>
-<tr class="memdesc:aca665eb0006e91958366aefca2863ee0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes variables of components. <br /></td></tr>
+<tr class="memitem:aca665eb0006e91958366aefca2863ee0" id="r_aca665eb0006e91958366aefca2863ee0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aca665eb0006e91958366aefca2863ee0">mnaInitializeHarm</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> omega, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> timeStep, std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="#ae0ae005f7e53b1d5c27f508149a0da2e">::Ptr</a> &gt; leftVector)=0</td></tr>
+<tr class="memdesc:aca665eb0006e91958366aefca2863ee0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes variables of components.  <br /></td></tr>
 <tr class="separator:aca665eb0006e91958366aefca2863ee0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7ccfb0f111f5450e095132ac13b4f3dc" id="r_a7ccfb0f111f5450e095132ac13b4f3dc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7ccfb0f111f5450e095132ac13b4f3dc">mnaApplySystemMatrixStampHarm</a> (SparseMatrixRow &amp;systemMatrix, Int freqIdx)=0</td></tr>
+<tr class="memitem:a7ccfb0f111f5450e095132ac13b4f3dc" id="r_a7ccfb0f111f5450e095132ac13b4f3dc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7ccfb0f111f5450e095132ac13b4f3dc">mnaApplySystemMatrixStampHarm</a> (<a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;systemMatrix, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> freqIdx)=0</td></tr>
 <tr class="memdesc:a7ccfb0f111f5450e095132ac13b4f3dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix considering the frequency index.  <br /></td></tr>
 <tr class="separator:a7ccfb0f111f5450e095132ac13b4f3dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d789508c9d4e94c743394354a196227" id="r_a8d789508c9d4e94c743394354a196227"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8d789508c9d4e94c743394354a196227">mnaApplyRightSideVectorStampHarm</a> (Matrix &amp;sourceVector)=0</td></tr>
+<tr class="memitem:a8d789508c9d4e94c743394354a196227" id="r_a8d789508c9d4e94c743394354a196227"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8d789508c9d4e94c743394354a196227">mnaApplyRightSideVectorStampHarm</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;sourceVector)=0</td></tr>
 <tr class="memdesc:a8d789508c9d4e94c743394354a196227"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps right side (source) vector considering the frequency index.  <br /></td></tr>
 <tr class="separator:a8d789508c9d4e94c743394354a196227"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb882f75b0d0a49bb81b7674394b8420" id="r_adb882f75b0d0a49bb81b7674394b8420"><td class="memItemLeft" align="right" valign="top"><a id="adb882f75b0d0a49bb81b7674394b8420" name="adb882f75b0d0a49bb81b7674394b8420"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaApplyRightSideVectorStampHarm</b> (Matrix &amp;sourceVector, Int freqIdx)=0</td></tr>
+<tr class="memitem:adb882f75b0d0a49bb81b7674394b8420" id="r_adb882f75b0d0a49bb81b7674394b8420"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adb882f75b0d0a49bb81b7674394b8420">mnaApplyRightSideVectorStampHarm</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;sourceVector, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> freqIdx)=0</td></tr>
 <tr class="separator:adb882f75b0d0a49bb81b7674394b8420"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96a887a2ef3d82c277bc87d97adaa5f1" id="r_a96a887a2ef3d82c277bc87d97adaa5f1"><td class="memItemLeft" align="right" valign="top">virtual const Task::List &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a96a887a2ef3d82c277bc87d97adaa5f1">mnaTasks</a> () const =0</td></tr>
+<tr class="memitem:a96a887a2ef3d82c277bc87d97adaa5f1" id="r_a96a887a2ef3d82c277bc87d97adaa5f1"><td class="memItemLeft" align="right" valign="top">virtual const <a class="el" href="class_c_p_s_1_1_task.html#ad081ca27190e0b2e1887a8d6cb612a66">Task::List</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a96a887a2ef3d82c277bc87d97adaa5f1">mnaTasks</a> () const =0</td></tr>
 <tr class="memdesc:a96a887a2ef3d82c277bc87d97adaa5f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return list of MNA tasks.  <br /></td></tr>
 <tr class="separator:a96a887a2ef3d82c277bc87d97adaa5f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e43fe74ecdc1153c0408462cddc67df" id="r_a6e43fe74ecdc1153c0408462cddc67df"><td class="memItemLeft" align="right" valign="top"><a id="a6e43fe74ecdc1153c0408462cddc67df" name="a6e43fe74ecdc1153c0408462cddc67df"></a>
-virtual <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Matrix &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><b>getRightVector</b> () const =0</td></tr>
+<tr class="memitem:a6e43fe74ecdc1153c0408462cddc67df" id="r_a6e43fe74ecdc1153c0408462cddc67df"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="#ae0ae005f7e53b1d5c27f508149a0da2e">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6e43fe74ecdc1153c0408462cddc67df">getRightVector</a> () const =0</td></tr>
 <tr class="separator:a6e43fe74ecdc1153c0408462cddc67df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -182,7 +184,7 @@ virtual <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Ma
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::vector&lt;Ptr&gt; CPS::MNAInterface::List</td>
+          <td class="memname">typedef std::vector&lt;<a class="el" href="#ae0ae005f7e53b1d5c27f508149a0da2e">Ptr</a>&gt; <a class="el" href="#a99daa13babcb894a6f878fc889faa0a7">CPS::MNAInterface::List</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -198,7 +200,7 @@ virtual <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Ma
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::shared_ptr&lt;<a class="el" href="class_c_p_s_1_1_m_n_a_interface.html">MNAInterface</a>&gt; CPS::MNAInterface::Ptr</td>
+          <td class="memname">typedef std::shared_ptr&lt;<a class="el" href="class_c_p_s_1_1_m_n_a_interface.html">MNAInterface</a>&gt; <a class="el" href="#ae0ae005f7e53b1d5c27f508149a0da2e">CPS::MNAInterface::Ptr</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -239,6 +241,74 @@ virtual <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Ma
 
 </div>
 </div>
+<a id="a6e43fe74ecdc1153c0408462cddc67df" name="a6e43fe74ecdc1153c0408462cddc67df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e43fe74ecdc1153c0408462cddc67df">&#9670;&#160;</a></span>getRightVector()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="#ae0ae005f7e53b1d5c27f508149a0da2e">::Ptr</a> CPS::MNAInterface::getRightVector </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a24fa222b6fc7a3152af5d181f87215cf">CPS::MNASimPowerComp&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a24fa222b6fc7a3152af5d181f87215cf">CPS::MNASimPowerComp&lt; Complex &gt;</a>, and <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a24fa222b6fc7a3152af5d181f87215cf">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
+
+</div>
+</div>
+<a id="a0179016962f9ebfe686f16ede91d6404" name="a0179016962f9ebfe686f16ede91d6404"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0179016962f9ebfe686f16ede91d6404">&#9670;&#160;</a></span>mnaAddPostStepDependencies()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void CPS::MNAInterface::mnaAddPostStepDependencies </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">AttributeBase::List</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>prevStepDependencies</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">AttributeBase::List</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>attributeDependencies</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">AttributeBase::List</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>modifiedAttributes</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="#ae0ae005f7e53b1d5c27f508149a0da2e">::Ptr</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>leftVector</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Add MNA post step dependencies. </p>
+
+</div>
+</div>
 <a id="a19edf22751b0e9666ba1e232e34bffde" name="a19edf22751b0e9666ba1e232e34bffde"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a19edf22751b0e9666ba1e232e34bffde">&#9670;&#160;</a></span>mnaAddPreStepDependencies()</h2>
 
@@ -251,17 +321,17 @@ virtual <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Ma
         <tr>
           <td class="memname">virtual void CPS::MNAInterface::mnaAddPreStepDependencies </td>
           <td>(</td>
-          <td class="paramtype">AttributeBase::List &amp;</td>          <td class="paramname"><span class="paramname"><em>prevStepDependencies</em></span>, </td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">AttributeBase::List</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>prevStepDependencies</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">AttributeBase::List &amp;</td>          <td class="paramname"><span class="paramname"><em>attributeDependencies</em></span>, </td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">AttributeBase::List</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>attributeDependencies</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">AttributeBase::List &amp;</td>          <td class="paramname"><span class="paramname"><em>modifiedAttributes</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">AttributeBase::List</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>modifiedAttributes</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -289,7 +359,7 @@ virtual <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Ma
         <tr>
           <td class="memname">virtual void CPS::MNAInterface::mnaApplyRightSideVectorStamp </td>
           <td>(</td>
-          <td class="paramtype">Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>rightVector</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>rightVector</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -307,7 +377,7 @@ virtual <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Ma
 </div>
 </div>
 <a id="a8d789508c9d4e94c743394354a196227" name="a8d789508c9d4e94c743394354a196227"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8d789508c9d4e94c743394354a196227">&#9670;&#160;</a></span>mnaApplyRightSideVectorStampHarm()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d789508c9d4e94c743394354a196227">&#9670;&#160;</a></span>mnaApplyRightSideVectorStampHarm() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -318,7 +388,7 @@ virtual <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Ma
         <tr>
           <td class="memname">virtual void CPS::MNAInterface::mnaApplyRightSideVectorStampHarm </td>
           <td>(</td>
-          <td class="paramtype">Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>sourceVector</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>sourceVector</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -335,6 +405,37 @@ virtual <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Ma
 
 </div>
 </div>
+<a id="adb882f75b0d0a49bb81b7674394b8420" name="adb882f75b0d0a49bb81b7674394b8420"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb882f75b0d0a49bb81b7674394b8420">&#9670;&#160;</a></span>mnaApplyRightSideVectorStampHarm() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void CPS::MNAInterface::mnaApplyRightSideVectorStampHarm </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>sourceVector</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a></td>          <td class="paramname"><span class="paramname"><em>freqIdx</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a5e09ab5ff31e8064d3c7c092d8318876">CPS::MNASimPowerComp&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a5e09ab5ff31e8064d3c7c092d8318876">CPS::MNASimPowerComp&lt; Complex &gt;</a>, and <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a5e09ab5ff31e8064d3c7c092d8318876">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
+
+</div>
+</div>
 <a id="a3054b9f3600edea682208639cd2aacc7" name="a3054b9f3600edea682208639cd2aacc7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3054b9f3600edea682208639cd2aacc7">&#9670;&#160;</a></span>mnaApplySystemMatrixStamp()</h2>
 
@@ -347,7 +448,7 @@ virtual <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Ma
         <tr>
           <td class="memname">virtual void CPS::MNAInterface::mnaApplySystemMatrixStamp </td>
           <td>(</td>
-          <td class="paramtype">SparseMatrixRow &amp;</td>          <td class="paramname"><span class="paramname"><em>systemMatrix</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>systemMatrix</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -376,12 +477,12 @@ virtual <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Ma
         <tr>
           <td class="memname">virtual void CPS::MNAInterface::mnaApplySystemMatrixStampHarm </td>
           <td>(</td>
-          <td class="paramtype">SparseMatrixRow &amp;</td>          <td class="paramname"><span class="paramname"><em>systemMatrix</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>systemMatrix</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Int</td>          <td class="paramname"><span class="paramname"><em>freqIdx</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a></td>          <td class="paramname"><span class="paramname"><em>freqIdx</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -398,7 +499,7 @@ virtual <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Ma
 </div>
 </div>
 <a id="a19f3b3770b99fc16550413b2f77dbf2b" name="a19f3b3770b99fc16550413b2f77dbf2b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a19f3b3770b99fc16550413b2f77dbf2b">&#9670;&#160;</a></span>mnaInitialize()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a19f3b3770b99fc16550413b2f77dbf2b">&#9670;&#160;</a></span>mnaInitialize() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -409,12 +510,12 @@ virtual <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Ma
         <tr>
           <td class="memname">virtual void CPS::MNAInterface::mnaInitialize </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>omega</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>omega</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>timeStep</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>timeStep</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -430,6 +531,112 @@ virtual <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Ma
 
 </div>
 </div>
+<a id="aa583b6d80d2ff9a01dab0446698a8cad" name="aa583b6d80d2ff9a01dab0446698a8cad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa583b6d80d2ff9a01dab0446698a8cad">&#9670;&#160;</a></span>mnaInitialize() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void CPS::MNAInterface::mnaInitialize </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>omega</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>timeStep</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="#ae0ae005f7e53b1d5c27f508149a0da2e">::Ptr</a></td>          <td class="paramname"><span class="paramname"><em>leftVector</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aca665eb0006e91958366aefca2863ee0" name="aca665eb0006e91958366aefca2863ee0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca665eb0006e91958366aefca2863ee0">&#9670;&#160;</a></span>mnaInitializeHarm()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void CPS::MNAInterface::mnaInitializeHarm </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>omega</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>timeStep</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="#ae0ae005f7e53b1d5c27f508149a0da2e">::Ptr</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>leftVector</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Initializes variables of components. </p>
+
+</div>
+</div>
+<a id="a23b816adf7872d4724cbb86ba0d85df3" name="a23b816adf7872d4724cbb86ba0d85df3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23b816adf7872d4724cbb86ba0d85df3">&#9670;&#160;</a></span>mnaPostStep()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void CPS::MNAInterface::mnaPostStep </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>time</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a></td>          <td class="paramname"><span class="paramname"><em>timeStepCount</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="#ae0ae005f7e53b1d5c27f508149a0da2e">::Ptr</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>leftVector</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>MNA post step operations. </p>
+
+</div>
+</div>
 <a id="a3613e89136e28aa3369d0606463f06e7" name="a3613e89136e28aa3369d0606463f06e7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3613e89136e28aa3369d0606463f06e7">&#9670;&#160;</a></span>mnaPreStep()</h2>
 
@@ -442,12 +649,12 @@ virtual <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Ma
         <tr>
           <td class="memname">virtual void CPS::MNAInterface::mnaPreStep </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>time</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>time</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Int</td>          <td class="paramname"><span class="paramname"><em>timeStepCount</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a></td>          <td class="paramname"><span class="paramname"><em>timeStepCount</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -473,7 +680,7 @@ virtual <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Ma
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual const Task::List &amp; CPS::MNAInterface::mnaTasks </td>
+          <td class="memname">virtual const <a class="el" href="class_c_p_s_1_1_task.html#ad081ca27190e0b2e1887a8d6cb612a66">Task::List</a> &amp; CPS::MNAInterface::mnaTasks </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -504,7 +711,7 @@ virtual <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Ma
         <tr>
           <td class="memname">virtual void CPS::MNAInterface::mnaUpdateCurrent </td>
           <td>(</td>
-          <td class="paramtype">const Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>leftVector</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>leftVector</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -533,7 +740,7 @@ virtual <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Ma
         <tr>
           <td class="memname">virtual void CPS::MNAInterface::mnaUpdateVoltage </td>
           <td>(</td>
-          <td class="paramtype">const Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>leftVector</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>leftVector</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -554,10 +761,13 @@ virtual <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Ma
 <li>/__w/dpsim/dpsim/dpsim-models/include/dpsim-models/Solver/<a class="el" href="_m_n_a_interface_8h_source.html">MNAInterface.h</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_c_p_s.html">CPS</a></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_m_n_a_interface.html">MNAInterface</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

@@ -21,7 +21,7 @@
 <g id="Node000004" class="node">
 <title>Node4</title>
 <g id="a_Node000004"><a xlink:href="class_d_psim_1_1_diakoptics_solver.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="127.75,-95.75 0,-95.75 0,-59.25 127.75,-59.25 127.75,-95.75"/>
+<polygon fill="white" stroke="#666666" points="127.75,-95.75 0,-95.75 0,-59.25 127.75,-59.25 127.75,-95.75"/>
 <text text-anchor="start" x="8" y="-82.25" font-family="Helvetica,sans-Serif" font-size="10.00">DPsim::DiakopticsSolver</text>
 <text text-anchor="middle" x="63.88" y="-68" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; VarType &gt;</text>
 </a>

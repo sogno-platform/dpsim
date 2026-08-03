@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_d_p___ph1___d_p_d_q_interface_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_88adc964ffa02c1923288cb07a48abab.html">DP</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">DP_Ph1_DPDQInterface.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_d_p___ph1___d_p_d_q_interface_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -101,33 +109,33 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;dpsim-models/Definitions.h&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;<a class="code" href="dpsim-models_2include_2dpsim-models_2_definitions_8h.html">dpsim-models/Definitions.h</a>&gt;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">namespace </span>CPS {</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">namespace </span>DP {</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span>Ph1 {</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s.html">CPS</a> {</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s_1_1_d_p.html">DP</a> {</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s_1_1_d_p_1_1_ph1.html">Ph1</a> {</div>
 <div class="foldopen" id="foldopen00017" data-start="{" data-end="};">
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html">   17</a></span><span class="keyword">class </span><a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#a7b56f326a03b82c345aded964eb33899">DPDQInterface</a> {</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#a190e5153ee0851659e8e85c77395b563">   21</a></span>  MatrixFixedSize&lt;2, 2&gt; <a class="code hl_variable" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#a190e5153ee0851659e8e85c77395b563">mDQToDPTransform</a>;</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#adec5b8ca1659d59c28489b59aeb36e02">   23</a></span>  MatrixFixedSize&lt;2, 2&gt; <a class="code hl_variable" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#adec5b8ca1659d59c28489b59aeb36e02">mDPToDQTransform</a>;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#a190e5153ee0851659e8e85c77395b563">   21</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a3d9c5de95b4ef7cdaa753155ab3a762c">MatrixFixedSize&lt;2, 2&gt;</a> <a class="code hl_variable" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#a190e5153ee0851659e8e85c77395b563">mDQToDPTransform</a>;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#adec5b8ca1659d59c28489b59aeb36e02">   23</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a3d9c5de95b4ef7cdaa753155ab3a762c">MatrixFixedSize&lt;2, 2&gt;</a> <a class="code hl_variable" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#adec5b8ca1659d59c28489b59aeb36e02">mDPToDQTransform</a>;</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#af73e99a65bf8179018922d28854be376">   26</a></span>  Real <a class="code hl_variable" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#af73e99a65bf8179018922d28854be376">mOmegaShift</a>;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#af73e99a65bf8179018922d28854be376">   26</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="code hl_variable" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#af73e99a65bf8179018922d28854be376">mOmegaShift</a>;</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">public</span>:</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#a7b56f326a03b82c345aded964eb33899">   30</a></span>  <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#a7b56f326a03b82c345aded964eb33899">DPDQInterface</a>() {}</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#af741f7e247e779f0f53fcdd157d987c1">setDPShiftFrequency</a>(<span class="keyword">const</span> Real &amp;omegaShift);</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#af741f7e247e779f0f53fcdd157d987c1">setDPShiftFrequency</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &amp;omegaShift);</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#a5f3cd2c8a81a448e90fb8ff2de6962ba">   36</a></span>  MatrixFixedSize&lt;2, 2&gt; <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#a5f3cd2c8a81a448e90fb8ff2de6962ba">DQToDPTransform</a>() { <span class="keywordflow">return</span> <a class="code hl_variable" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#a190e5153ee0851659e8e85c77395b563">mDQToDPTransform</a>; };</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#adcb08f78673fc2848103b3656d8b12e7">   38</a></span>  MatrixFixedSize&lt;2, 2&gt; <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#adcb08f78673fc2848103b3656d8b12e7">DPToDQTransform</a>() { <span class="keywordflow">return</span> <a class="code hl_variable" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#adec5b8ca1659d59c28489b59aeb36e02">mDPToDQTransform</a>; };</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#a5f3cd2c8a81a448e90fb8ff2de6962ba">   36</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a3d9c5de95b4ef7cdaa753155ab3a762c">MatrixFixedSize&lt;2, 2&gt;</a> <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#a5f3cd2c8a81a448e90fb8ff2de6962ba">DQToDPTransform</a>() { <span class="keywordflow">return</span> <a class="code hl_variable" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#a190e5153ee0851659e8e85c77395b563">mDQToDPTransform</a>; };</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#adcb08f78673fc2848103b3656d8b12e7">   38</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a3d9c5de95b4ef7cdaa753155ab3a762c">MatrixFixedSize&lt;2, 2&gt;</a> <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#adcb08f78673fc2848103b3656d8b12e7">DPToDQTransform</a>() { <span class="keywordflow">return</span> <a class="code hl_variable" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#adec5b8ca1659d59c28489b59aeb36e02">mDPToDQTransform</a>; };</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#a367d24e4223f879c74014900a268942c">updateDQToDPTransform</a>(<span class="keyword">const</span> Real &amp;thetaDQ, <span class="keyword">const</span> Real &amp;simTime);</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#a55b706a28dec748577b9a603b53b7800">updateDPToDQTransform</a>(<span class="keyword">const</span> Real &amp;thetaDQ, <span class="keyword">const</span> Real &amp;simTime);</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#a367d24e4223f879c74014900a268942c">updateDQToDPTransform</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &amp;thetaDQ, <span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &amp;simTime);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#a55b706a28dec748577b9a603b53b7800">updateDPToDQTransform</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &amp;thetaDQ, <span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &amp;simTime);</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  Complex <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#a693510349339e86d0c2733e9f8f63506">applyDQToDPTransform</a>(<span class="keyword">const</span> MatrixFixedSize&lt;2, 1&gt; &amp;dqMatrix);</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  MatrixFixedSize&lt;2, 1&gt; <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#ad6be34cdda05ebd7022376e6e8b95b2d">applyDPToDQTransform</a>(<span class="keyword">const</span> Complex &amp;dpComplex);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#a693510349339e86d0c2733e9f8f63506">applyDQToDPTransform</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a3d9c5de95b4ef7cdaa753155ab3a762c">MatrixFixedSize&lt;2, 1&gt;</a> &amp;dqMatrix);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a3d9c5de95b4ef7cdaa753155ab3a762c">MatrixFixedSize&lt;2, 1&gt;</a> <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#ad6be34cdda05ebd7022376e6e8b95b2d">applyDPToDQTransform</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> &amp;dpComplex);</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>};</div>
 </div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>} <span class="comment">// namespace Ph1</span></div>
@@ -144,11 +152,21 @@ $(function(){ initResizable(false); });
 <div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface_html_adec5b8ca1659d59c28489b59aeb36e02"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#adec5b8ca1659d59c28489b59aeb36e02">CPS::DP::Ph1::DPDQInterface::mDPToDQTransform</a></div><div class="ttdeci">MatrixFixedSize&lt; 2, 2 &gt; mDPToDQTransform</div><div class="ttdoc">Transform from DP to DQ domain.</div><div class="ttdef"><b>Definition</b> <a href="#l00023">DP_Ph1_DPDQInterface.h:23</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface_html_af73e99a65bf8179018922d28854be376"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#af73e99a65bf8179018922d28854be376">CPS::DP::Ph1::DPDQInterface::mOmegaShift</a></div><div class="ttdeci">Real mOmegaShift</div><div class="ttdoc">Shifting frequency of the DP domain (assumed to be constant)</div><div class="ttdef"><b>Definition</b> <a href="#l00026">DP_Ph1_DPDQInterface.h:26</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface_html_af741f7e247e779f0f53fcdd157d987c1"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_d_p_d_q_interface.html#af741f7e247e779f0f53fcdd157d987c1">CPS::DP::Ph1::DPDQInterface::setDPShiftFrequency</a></div><div class="ttdeci">void setDPShiftFrequency(const Real &amp;omegaShift)</div><div class="ttdoc">Setter for shit frequency.</div><div class="ttdef"><b>Definition</b> <a href="_d_p___ph1___d_p_d_q_interface_8cpp_source.html#l00013">DP_Ph1_DPDQInterface.cpp:13</a></div></div>
+<div class="ttc" id="adpsim-models_2include_2dpsim-models_2_definitions_8h_html"><div class="ttname"><a href="dpsim-models_2include_2dpsim-models_2_definitions_8h.html">Definitions.h</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_1_1_d_p_1_1_ph1_html"><div class="ttname"><a href="namespace_c_p_s_1_1_d_p_1_1_ph1.html">CPS::DP::Ph1</a></div><div class="ttdef"><b>Definition</b> <a href="_d_p___ph1___av_voltage_source_inverter_d_q_8h_source.html#l00024">DP_Ph1_AvVoltageSourceInverterDQ.h:24</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_1_1_d_p_html"><div class="ttname"><a href="namespace_c_p_s_1_1_d_p.html">CPS::DP</a></div><div class="ttdef"><b>Definition</b> <a href="_d_p___i_type_s_s_n_comp_8h_source.html#l00009">DP_ITypeSSNComp.h:9</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html"><div class="ttname"><a href="namespace_c_p_s.html">CPS</a></div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00017">Attribute.h:17</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a3d9c5de95b4ef7cdaa753155ab3a762c"><div class="ttname"><a href="namespace_c_p_s.html#a3d9c5de95b4ef7cdaa753155ab3a762c">CPS::MatrixFixedSize</a></div><div class="ttdeci">Eigen::Matrix&lt; Real, rows, cols, Eigen::ColMajor &gt; MatrixFixedSize</div><div class="ttdoc">Dense matrix for real numbers with fixed dimension.</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00101">Definitions.h:101</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a603c4b77d70922bc0423adc57725df50"><div class="ttname"><a href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a></div><div class="ttdeci">double Real</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00062">Definitions.h:62</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_aaed6ab259d5cbd0d6709102c47391a7a"><div class="ttname"><a href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">CPS::Complex</a></div><div class="ttdeci">std::complex&lt; Real &gt; Complex</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00063">Definitions.h:63</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_88adc964ffa02c1923288cb07a48abab.html">DP</a></li><li class="navelem"><a class="el" href="_d_p___ph1___d_p_d_q_interface_8h.html">DP_Ph1_DPDQInterface.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

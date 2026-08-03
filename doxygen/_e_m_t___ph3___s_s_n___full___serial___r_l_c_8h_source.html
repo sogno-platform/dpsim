@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_e_m_t___ph3___s_s_n___full___serial___r_l_c_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,52 +95,46 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_0ab18182ec9e12ca28df221a97888cf8.html">EMT</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">EMT_Ph3_SSN_Full_Serial_RLC.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University</span></div>
+<a href="_e_m_t___ph3___s_s_n___full___serial___r_l_c_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;dpsim-models/Base/Base_Ph3_Capacitor.h&gt;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;dpsim-models/Base/Base_Ph3_Inductor.h&gt;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;dpsim-models/Base/Base_Ph3_Resistor.h&gt;</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_Ph3_TwoTerminalVTypeSSNComp.h&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;<a class="code" href="_base___ph3___capacitor_8h.html">dpsim-models/Base/Base_Ph3_Capacitor.h</a>&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;<a class="code" href="_base___ph3___inductor_8h.html">dpsim-models/Base/Base_Ph3_Inductor.h</a>&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;<a class="code" href="_base___ph3___resistor_8h.html">dpsim-models/Base/Base_Ph3_Resistor.h</a>&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;<a class="code" href="_e_m_t___ph3___two_terminal_v_type_s_s_n_comp_8h.html">dpsim-models/EMT/EMT_Ph3_TwoTerminalVTypeSSNComp.h</a>&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">namespace </span>CPS {</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">namespace </span>EMT {</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">namespace </span>Ph3 {</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">namespace </span>SSN {</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s.html">CPS</a> {</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s_1_1_e_m_t.html">EMT</a> {</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s_1_1_e_m_t_1_1_ph3.html">Ph3</a> {</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n.html">SSN</a> {</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span></div>
 <div class="foldopen" id="foldopen00028" data-start="{" data-end="};">
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html">   28</a></span><span class="keyword">class </span><a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html#ae57c6ea3ebb505dfdd9074cd2ae86ed5">Full_Serial_RLC</a> final : <span class="keyword">public</span> TwoTerminalVTypeSSNComp,</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html">   28</a></span><span class="keyword">class </span><a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html#ae57c6ea3ebb505dfdd9074cd2ae86ed5">Full_Serial_RLC</a> final : <span class="keyword">public</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html#a9021c38720407a105858076df12e5df5">TwoTerminalVTypeSSNComp</a>,</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>                              <span class="keyword">public</span> <a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;Full_Serial_RLC&gt;,</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>                              <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_base_1_1_ph3_1_1_resistor.html">Base::Ph3::Resistor</a>,</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>                              <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html">Base::Ph3::Inductor</a>,</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>                              <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_base_1_1_ph3_1_1_capacitor.html">Base::Ph3::Capacitor</a> {</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keyword">using </span><a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;<a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html#ae57c6ea3ebb505dfdd9074cd2ae86ed5">Full_Serial_RLC</a>&gt;::make;</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keyword">using </span><a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;<a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html#ae57c6ea3ebb505dfdd9074cd2ae86ed5">Full_Serial_RLC</a>&gt;<a class="code hl_function" href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">::make</a>;</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html#ae57c6ea3ebb505dfdd9074cd2ae86ed5">Full_Serial_RLC</a>(String <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, String name,</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                  Logger::Level logLevel = Logger::Level::off);</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html#ae57c6ea3ebb505dfdd9074cd2ae86ed5">Full_Serial_RLC</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>,</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                  <a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel = Logger::Level::off);</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span></div>
 <div class="foldopen" id="foldopen00041" data-start="{" data-end="}">
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html#a73abb57af4e9b5b0d904eceb64c91693">   41</a></span>  <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html#a73abb57af4e9b5b0d904eceb64c91693">Full_Serial_RLC</a>(String name, Logger::Level logLevel = Logger::Level::off)</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>      : <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html#ae57c6ea3ebb505dfdd9074cd2ae86ed5">Full_Serial_RLC</a>(name, name, logLevel) {}</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html#a73abb57af4e9b5b0d904eceb64c91693">   41</a></span>  <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html#a73abb57af4e9b5b0d904eceb64c91693">Full_Serial_RLC</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel = Logger::Level::off)</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>      : <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html#ae57c6ea3ebb505dfdd9074cd2ae86ed5">Full_Serial_RLC</a>(<a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, logLevel) {}</div>
 </div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  SimPowerComp&lt;Real&gt;::Ptr <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html#ac9cdb9f6e3c3db575688b9eabaf2083c">clone</a>(String name) <span class="keyword">override</span> <span class="keyword">final</span>;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <a class="code hl_typedef" href="class_c_p_s_1_1_sim_power_comp.html#aa5946ceeb6894fb6b04ab9d4788ec600">SimPowerComp&lt;Real&gt;::Ptr</a> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html#ac9cdb9f6e3c3db575688b9eabaf2083c">clone</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>) <span class="keyword">override</span> <span class="keyword">final</span>;</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keywordtype">void</span> setParameters(<span class="keyword">const</span> Matrix &amp;resistance, <span class="keyword">const</span> Matrix &amp;inductance,</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                     <span class="keyword">const</span> Matrix &amp;capacitance);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html#ac0d25390527a730978bb75730818c10d">setParameters</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;resistance, <span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;inductance,</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                     <span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;capacitance);</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>};</div>
 </div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
@@ -134,19 +142,38 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>} <span class="comment">// namespace Ph3</span></div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>} <span class="comment">// namespace EMT</span></div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>} <span class="comment">// namespace CPS</span></div>
+<div class="ttc" id="a_base___ph3___capacitor_8h_html"><div class="ttname"><a href="_base___ph3___capacitor_8h.html">Base_Ph3_Capacitor.h</a></div></div>
+<div class="ttc" id="a_base___ph3___inductor_8h_html"><div class="ttname"><a href="_base___ph3___inductor_8h.html">Base_Ph3_Inductor.h</a></div></div>
+<div class="ttc" id="a_base___ph3___resistor_8h_html"><div class="ttname"><a href="_base___ph3___resistor_8h.html">Base_Ph3_Resistor.h</a></div></div>
+<div class="ttc" id="a_e_m_t___ph3___two_terminal_v_type_s_s_n_comp_8h_html"><div class="ttname"><a href="_e_m_t___ph3___two_terminal_v_type_s_s_n_comp_8h.html">EMT_Ph3_TwoTerminalVTypeSSNComp.h</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_base_1_1_ph3_1_1_capacitor_html"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_ph3_1_1_capacitor.html">CPS::Base::Ph3::Capacitor</a></div><div class="ttdef"><b>Definition</b> <a href="_base___ph3___capacitor_8h_source.html#l00017">Base_Ph3_Capacitor.h:17</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_base_1_1_ph3_1_1_inductor_html"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html">CPS::Base::Ph3::Inductor</a></div><div class="ttdef"><b>Definition</b> <a href="_base___ph3___inductor_8h_source.html#l00017">Base_Ph3_Inductor.h:17</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_base_1_1_ph3_1_1_resistor_html"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_ph3_1_1_resistor.html">CPS::Base::Ph3::Resistor</a></div><div class="ttdef"><b>Definition</b> <a href="_base___ph3___resistor_8h_source.html#l00016">Base_Ph3_Resistor.h:16</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c_html_a73abb57af4e9b5b0d904eceb64c91693"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html#a73abb57af4e9b5b0d904eceb64c91693">CPS::EMT::Ph3::SSN::Full_Serial_RLC::Full_Serial_RLC</a></div><div class="ttdeci">Full_Serial_RLC(String name, Logger::Level logLevel=Logger::Level::off)</div><div class="ttdoc">Defines name and logging level.</div><div class="ttdef"><b>Definition</b> <a href="#l00041">EMT_Ph3_SSN_Full_Serial_RLC.h:41</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c_html_ac0d25390527a730978bb75730818c10d"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html#ac0d25390527a730978bb75730818c10d">CPS::EMT::Ph3::SSN::Full_Serial_RLC::setParameters</a></div><div class="ttdeci">void setParameters(const Matrix &amp;resistance, const Matrix &amp;inductance, const Matrix &amp;capacitance)</div><div class="ttdef"><b>Definition</b> <a href="_e_m_t___ph3___s_s_n___full___serial___r_l_c_8cpp_source.html#l00020">EMT_Ph3_SSN_Full_Serial_RLC.cpp:20</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c_html_ac9cdb9f6e3c3db575688b9eabaf2083c"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html#ac9cdb9f6e3c3db575688b9eabaf2083c">CPS::EMT::Ph3::SSN::Full_Serial_RLC::clone</a></div><div class="ttdeci">SimPowerComp&lt; Real &gt;::Ptr clone(String name) override final</div><div class="ttdoc">Returns a modified copy of the component with the given suffix added to the name and without.</div><div class="ttdef"><b>Definition</b> <a href="_e_m_t___ph3___s_s_n___full___serial___r_l_c_8cpp_source.html#l00014">EMT_Ph3_SSN_Full_Serial_RLC.cpp:14</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c_html_ae57c6ea3ebb505dfdd9074cd2ae86ed5"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html#ae57c6ea3ebb505dfdd9074cd2ae86ed5">CPS::EMT::Ph3::SSN::Full_Serial_RLC::Full_Serial_RLC</a></div><div class="ttdeci">Full_Serial_RLC(String uid, String name, Logger::Level logLevel=Logger::Level::off)</div><div class="ttdoc">Defines UID, name, component parameters and logging level.</div><div class="ttdef"><b>Definition</b> <a href="_e_m_t___ph3___s_s_n___full___serial___r_l_c_8cpp_source.html#l00008">EMT_Ph3_SSN_Full_Serial_RLC.cpp:8</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp_html_a9021c38720407a105858076df12e5df5"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html#a9021c38720407a105858076df12e5df5">CPS::EMT::Ph3::TwoTerminalVTypeSSNComp::TwoTerminalVTypeSSNComp</a></div><div class="ttdeci">TwoTerminalVTypeSSNComp(String uid, String name, Logger::Level logLevel=Logger::Level::off)</div><div class="ttdef"><b>Definition</b> <a href="_e_m_t___ph3___two_terminal_v_type_s_s_n_comp_8cpp_source.html#l00008">EMT_Ph3_TwoTerminalVTypeSSNComp.cpp:8</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a38b8318459b1651160029263eff6ca47"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">CPS::IdentifiedObject::name</a></div><div class="ttdeci">String name()</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00059">IdentifiedObject.h:59</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a66b765f33341283bc9b916c74047c749"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">CPS::IdentifiedObject::uid</a></div><div class="ttdeci">String uid()</div><div class="ttdoc">Returns unique id.</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00061">IdentifiedObject.h:61</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_logger_html_a021e964d1ab0d217a05b95736d2ea804"><div class="ttname"><a href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a></div><div class="ttdeci">spdlog::level::level_enum Level</div><div class="ttdef"><b>Definition</b> <a href="_logger_8h_source.html#l00033">Logger.h:33</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html_aa5946ceeb6894fb6b04ab9d4788ec600"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html#aa5946ceeb6894fb6b04ab9d4788ec600">CPS::SimPowerComp::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; SimPowerComp&lt; VarType &gt; &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_sim_power_comp_8h_source.html#l00041">SimPowerComp.h:41</a></div></div>
 <div class="ttc" id="aclass_shared_factory_html"><div class="ttname"><a href="class_shared_factory.html">SharedFactory</a></div><div class="ttdef"><b>Definition</b> <a href="_ptr_factory_8h_source.html#l00016">PtrFactory.h:16</a></div></div>
+<div class="ttc" id="aclass_shared_factory_html_a2ffdfd3b547bb9cb777f33e1bf6ec7ef"><div class="ttname"><a href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">SharedFactory&lt; Full_Serial_RLC &gt;::make</a></div><div class="ttdeci">static std::shared_ptr&lt; Full_Serial_RLC &gt; make(Args &amp;&amp;...args)</div><div class="ttdef"><b>Definition</b> <a href="_ptr_factory_8h_source.html#l00019">PtrFactory.h:19</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_html"><div class="ttname"><a href="namespace_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n.html">CPS::EMT::Ph3::SSN</a></div><div class="ttdef"><b>Definition</b> <a href="_e_m_t___ph3___s_s_n___capacitor_8h_source.html#l00013">EMT_Ph3_SSN_Capacitor.h:13</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_1_1_e_m_t_1_1_ph3_html"><div class="ttname"><a href="namespace_c_p_s_1_1_e_m_t_1_1_ph3.html">CPS::EMT::Ph3</a></div><div class="ttdef"><b>Definition</b> <a href="_e_m_t___ph3___av_voltage_source_inverter_d_q_8h_source.html#l00024">EMT_Ph3_AvVoltageSourceInverterDQ.h:24</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_1_1_e_m_t_html"><div class="ttname"><a href="namespace_c_p_s_1_1_e_m_t.html">CPS::EMT</a></div><div class="ttdef"><b>Definition</b> <a href="_e_m_t___i_type_s_s_n_comp_8h_source.html#l00010">EMT_ITypeSSNComp.h:10</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html"><div class="ttname"><a href="namespace_c_p_s.html">CPS</a></div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00017">Attribute.h:17</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a081464dfe063130c6fca7929ce291b15"><div class="ttname"><a href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">CPS::Matrix</a></div><div class="ttdeci">Eigen::Matrix&lt; Real, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor &gt; Matrix</div><div class="ttdoc">Dense matrix for real numbers.</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00081">Definitions.h:81</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a09f6ad37b12370b4b58624822be9b055"><div class="ttname"><a href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a></div><div class="ttdeci">std::string String</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00065">Definitions.h:65</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_0ab18182ec9e12ca28df221a97888cf8.html">EMT</a></li><li class="navelem"><a class="el" href="_e_m_t___ph3___s_s_n___full___serial___r_l_c_8h.html">EMT_Ph3_SSN_Full_Serial_RLC.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

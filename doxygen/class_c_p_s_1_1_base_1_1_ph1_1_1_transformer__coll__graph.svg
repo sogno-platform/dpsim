@@ -143,7 +143,7 @@ var sectionId = 'dynsection-1';
 <g id="Node000004" class="node">
 <title>Node4</title>
 <g id="a_Node000004"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="267,-231.04 152,-231.04 152,-180.29 267,-180.29 267,-231.04"/>
+<polygon fill="white" stroke="#666666" points="267,-231.04 152,-231.04 152,-180.29 267,-180.29 267,-231.04"/>
 <text text-anchor="start" x="160" y="-217.54" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="160" y="-203.29" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="209.5" y="-189.04" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Real &gt; &gt;</text>
@@ -183,7 +183,7 @@ var sectionId = 'dynsection-1';
 <g id="Node000006" class="node">
 <title>Node6</title>
 <g id="a_Node000006"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="115,-105.04 0,-105.04 0,-54.29 115,-54.29 115,-105.04"/>
+<polygon fill="white" stroke="#666666" points="115,-105.04 0,-105.04 0,-54.29 115,-54.29 115,-105.04"/>
 <text text-anchor="start" x="8" y="-91.54" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="8" y="-77.29" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="57.5" y="-63.04" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; T &gt; &gt;</text>
@@ -213,7 +213,7 @@ var sectionId = 'dynsection-1';
 <g id="Node000008" class="node">
 <title>Node8</title>
 <g id="a_Node000008"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="267,-81.04 152,-81.04 152,-30.29 267,-30.29 267,-81.04"/>
+<polygon fill="white" stroke="#666666" points="267,-81.04 152,-81.04 152,-30.29 267,-30.29 267,-81.04"/>
 <text text-anchor="start" x="160" y="-67.54" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="160" y="-53.29" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="209.5" y="-39.04" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Complex &gt; &gt;</text>

@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_topological_node_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">TopologicalNode.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_topological_node_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -101,48 +109,81 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;dpsim-models/IdentifiedObject.h&gt;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;dpsim-models/MathUtils.h&gt;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;dpsim-models/PtrFactory.h&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;<a class="code" href="_identified_object_8h.html">dpsim-models/IdentifiedObject.h</a>&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;<a class="code" href="_math_utils_8h.html">dpsim-models/MathUtils.h</a>&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;<a class="code" href="_ptr_factory_8h.html">dpsim-models/PtrFactory.h</a>&gt;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span>CPS {</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s.html">CPS</a> {</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
 <div class="foldopen" id="foldopen00017" data-start="{" data-end="};">
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_topological_node.html">   17</a></span><span class="keyword">class </span>TopologicalNode : <span class="keyword">public</span> IdentifiedObject {</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_topological_node.html">   17</a></span><span class="keyword">class </span><a class="code hl_function" href="class_c_p_s_1_1_topological_node.html#ae487bf5e8464d6b52d2c6945d9323523">TopologicalNode</a> : <span class="keyword">public</span> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#af266e0a6fb154503432cf5361d70584e">IdentifiedObject</a> {</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  PhaseType mPhaseType = PhaseType::Single;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  Bool mIsGround = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_topological_node.html#a5f696a579757c0ff58f5411135c41e35">   19</a></span>  <a class="code hl_enumeration" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6c">PhaseType</a> <a class="code hl_variable" href="class_c_p_s_1_1_topological_node.html#a5f696a579757c0ff58f5411135c41e35">mPhaseType</a> = <a class="code hl_enumvalue" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca66ba162102bbf6ae31b522aec561735e">PhaseType::Single</a>;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_topological_node.html#a6a07de1f7df8b2e853ba22e473a3b06a">   20</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> <a class="code hl_variable" href="class_c_p_s_1_1_topological_node.html#a6a07de1f7df8b2e853ba22e473a3b06a">mIsGround</a> = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  <span class="keyword">typedef</span> std::shared_ptr&lt;TopologicalNode&gt; Ptr;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  <span class="keyword">typedef</span> std::vector&lt;Ptr&gt; List;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_topological_node.html#ab221cd2b94f27ba65067e70962f37b50">   23</a></span>  <span class="keyword">typedef</span> std::shared_ptr&lt;TopologicalNode&gt; <a class="code hl_typedef" href="class_c_p_s_1_1_topological_node.html#ab221cd2b94f27ba65067e70962f37b50">Ptr</a>;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_topological_node.html#a0cbcf37d0706078e9d2fa5fab180faea">   24</a></span>  <span class="keyword">typedef</span> std::vector&lt;Ptr&gt; <a class="code hl_typedef" href="class_c_p_s_1_1_topological_node.html#a0cbcf37d0706078e9d2fa5fab180faea">List</a>;</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <span class="keyword">const</span> Attribute&lt;MatrixComp&gt;::Ptr mInitialVoltage;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_topological_node.html#a577bb94f712bc4aa0134035cd8ca4880">   26</a></span>  <span class="keyword">const</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;MatrixComp&gt;::Ptr</a> <a class="code hl_variable" href="class_c_p_s_1_1_topological_node.html#a577bb94f712bc4aa0134035cd8ca4880">mInitialVoltage</a>;</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  TopologicalNode() {}</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  TopologicalNode(String <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, String name, PhaseType phaseType,</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>                  <span class="keyword">const</span> std::vector&lt;Complex&gt; &amp;initialVoltage);</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keyword">virtual</span> ~TopologicalNode() {}</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_topological_node.html#ae487bf5e8464d6b52d2c6945d9323523">   28</a></span>  <a class="code hl_function" href="class_c_p_s_1_1_topological_node.html#ae487bf5e8464d6b52d2c6945d9323523">TopologicalNode</a>() {}</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <a class="code hl_function" href="class_c_p_s_1_1_topological_node.html#ae487bf5e8464d6b52d2c6945d9323523">TopologicalNode</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="code hl_enumeration" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6c">PhaseType</a> <a class="code hl_function" href="class_c_p_s_1_1_topological_node.html#a5c6b4a1a2df1d395ffb0da55990d2302">phaseType</a>,</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>                  <span class="keyword">const</span> std::vector&lt;Complex&gt; &amp;<a class="code hl_function" href="class_c_p_s_1_1_topological_node.html#ae3c81d4e9ac812c3b607fefac68f90ba">initialVoltage</a>);</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_topological_node.html#a371c3246ac97de65e39a38b283b58f5a">   33</a></span>  <span class="keyword">virtual</span> <a class="code hl_function" href="class_c_p_s_1_1_topological_node.html#a371c3246ac97de65e39a38b283b58f5a">~TopologicalNode</a>() {}</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  Bool isGround() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  MatrixComp initialVoltage() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <span class="keywordtype">void</span> setInitialVoltage(MatrixComp voltage) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keywordtype">void</span> setInitialVoltage(Complex voltage) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keywordtype">void</span> setInitialVoltage(Complex voltage, Int phaseIndex) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  Complex initialSingleVoltage(PhaseType phaseType = PhaseType::Single);</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  PhaseType phaseType() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keyword">virtual</span> UInt matrixNodeIndex(PhaseType phaseType = PhaseType::Single) = 0;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <span class="keyword">virtual</span> std::vector&lt;UInt&gt; matrixNodeIndices() = 0;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> setMatrixNodeIndex(UInt phase, UInt matrixNodeIndex) = 0;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> <a class="code hl_function" href="class_c_p_s_1_1_topological_node.html#ae3a7cbde5f09f8d7f87e7157ab4cc9c0">isGround</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a> <a class="code hl_function" href="class_c_p_s_1_1_topological_node.html#ae3c81d4e9ac812c3b607fefac68f90ba">initialVoltage</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_topological_node.html#a3f2b1876259c6c96f04e69dde6e8a732">setInitialVoltage</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a> voltage) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_topological_node.html#a3f2b1876259c6c96f04e69dde6e8a732">setInitialVoltage</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> voltage) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_topological_node.html#a3f2b1876259c6c96f04e69dde6e8a732">setInitialVoltage</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> voltage, <a class="code hl_typedef" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> phaseIndex) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> <a class="code hl_function" href="class_c_p_s_1_1_topological_node.html#abbc212f9f90c16aa74f43f58bc450c69">initialSingleVoltage</a>(<a class="code hl_enumeration" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6c">PhaseType</a> <a class="code hl_function" href="class_c_p_s_1_1_topological_node.html#a5c6b4a1a2df1d395ffb0da55990d2302">phaseType</a> = <a class="code hl_enumvalue" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca66ba162102bbf6ae31b522aec561735e">PhaseType::Single</a>);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <a class="code hl_enumeration" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6c">PhaseType</a> <a class="code hl_function" href="class_c_p_s_1_1_topological_node.html#a5c6b4a1a2df1d395ffb0da55990d2302">phaseType</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_topological_node.html#a29218509f30f895438a2874b14b7b37a">   50</a></span>  <span class="keyword">virtual</span> <a class="code hl_typedef" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> <a class="code hl_function" href="class_c_p_s_1_1_topological_node.html#a29218509f30f895438a2874b14b7b37a">matrixNodeIndex</a>(<a class="code hl_enumeration" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6c">PhaseType</a> <a class="code hl_function" href="class_c_p_s_1_1_topological_node.html#a5c6b4a1a2df1d395ffb0da55990d2302">phaseType</a> = <a class="code hl_enumvalue" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca66ba162102bbf6ae31b522aec561735e">PhaseType::Single</a>) = 0;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_topological_node.html#a86a5c2f131db1dd3390d82de743e97b4">   52</a></span>  <span class="keyword">virtual</span> std::vector&lt;UInt&gt; <a class="code hl_function" href="class_c_p_s_1_1_topological_node.html#a86a5c2f131db1dd3390d82de743e97b4">matrixNodeIndices</a>() = 0;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_topological_node.html#a5f0a6e5f890dd18cfcd56b0cffb8c897">   54</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_topological_node.html#a5f0a6e5f890dd18cfcd56b0cffb8c897">setMatrixNodeIndex</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> phase, <a class="code hl_typedef" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> <a class="code hl_function" href="class_c_p_s_1_1_topological_node.html#a29218509f30f895438a2874b14b7b37a">matrixNodeIndex</a>) = 0;</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>};</div>
 </div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>} <span class="comment">// namespace CPS</span></div>
+<div class="ttc" id="a_identified_object_8h_html"><div class="ttname"><a href="_identified_object_8h.html">IdentifiedObject.h</a></div></div>
+<div class="ttc" id="a_math_utils_8h_html"><div class="ttname"><a href="_math_utils_8h.html">MathUtils.h</a></div></div>
+<div class="ttc" id="a_ptr_factory_8h_html"><div class="ttname"><a href="_ptr_factory_8h.html">PtrFactory.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_ad552c848f780007d59f489540fa7e4d6"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">CPS::Attribute::Ptr</a></div><div class="ttdeci">AttributePointer&lt; Attribute&lt; T &gt; &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00250">Attribute.h:250</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a38b8318459b1651160029263eff6ca47"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">CPS::IdentifiedObject::name</a></div><div class="ttdeci">String name()</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00059">IdentifiedObject.h:59</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a66b765f33341283bc9b916c74047c749"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">CPS::IdentifiedObject::uid</a></div><div class="ttdeci">String uid()</div><div class="ttdoc">Returns unique id.</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00061">IdentifiedObject.h:61</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_af266e0a6fb154503432cf5361d70584e"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#af266e0a6fb154503432cf5361d70584e">CPS::IdentifiedObject::IdentifiedObject</a></div><div class="ttdeci">IdentifiedObject()</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00033">IdentifiedObject.h:33</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_topological_node_html_a0cbcf37d0706078e9d2fa5fab180faea"><div class="ttname"><a href="class_c_p_s_1_1_topological_node.html#a0cbcf37d0706078e9d2fa5fab180faea">CPS::TopologicalNode::List</a></div><div class="ttdeci">std::vector&lt; Ptr &gt; List</div><div class="ttdef"><b>Definition</b> <a href="#l00024">TopologicalNode.h:24</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_topological_node_html_a29218509f30f895438a2874b14b7b37a"><div class="ttname"><a href="class_c_p_s_1_1_topological_node.html#a29218509f30f895438a2874b14b7b37a">CPS::TopologicalNode::matrixNodeIndex</a></div><div class="ttdeci">virtual UInt matrixNodeIndex(PhaseType phaseType=PhaseType::Single)=0</div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_topological_node_html_a371c3246ac97de65e39a38b283b58f5a"><div class="ttname"><a href="class_c_p_s_1_1_topological_node.html#a371c3246ac97de65e39a38b283b58f5a">CPS::TopologicalNode::~TopologicalNode</a></div><div class="ttdeci">virtual ~TopologicalNode()</div><div class="ttdef"><b>Definition</b> <a href="#l00033">TopologicalNode.h:33</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_topological_node_html_a3f2b1876259c6c96f04e69dde6e8a732"><div class="ttname"><a href="class_c_p_s_1_1_topological_node.html#a3f2b1876259c6c96f04e69dde6e8a732">CPS::TopologicalNode::setInitialVoltage</a></div><div class="ttdeci">void setInitialVoltage(MatrixComp voltage) const</div><div class="ttdef"><b>Definition</b> <a href="_topological_node_8cpp_source.html#l00017">TopologicalNode.cpp:17</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_topological_node_html_a577bb94f712bc4aa0134035cd8ca4880"><div class="ttname"><a href="class_c_p_s_1_1_topological_node.html#a577bb94f712bc4aa0134035cd8ca4880">CPS::TopologicalNode::mInitialVoltage</a></div><div class="ttdeci">const Attribute&lt; MatrixComp &gt;::Ptr mInitialVoltage</div><div class="ttdef"><b>Definition</b> <a href="#l00026">TopologicalNode.h:26</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_topological_node_html_a5c6b4a1a2df1d395ffb0da55990d2302"><div class="ttname"><a href="class_c_p_s_1_1_topological_node.html#a5c6b4a1a2df1d395ffb0da55990d2302">CPS::TopologicalNode::phaseType</a></div><div class="ttdeci">PhaseType phaseType() const</div><div class="ttdef"><b>Definition</b> <a href="_topological_node_8cpp_source.html#l00035">TopologicalNode.cpp:35</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_topological_node_html_a5f0a6e5f890dd18cfcd56b0cffb8c897"><div class="ttname"><a href="class_c_p_s_1_1_topological_node.html#a5f0a6e5f890dd18cfcd56b0cffb8c897">CPS::TopologicalNode::setMatrixNodeIndex</a></div><div class="ttdeci">virtual void setMatrixNodeIndex(UInt phase, UInt matrixNodeIndex)=0</div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_topological_node_html_a5f696a579757c0ff58f5411135c41e35"><div class="ttname"><a href="class_c_p_s_1_1_topological_node.html#a5f696a579757c0ff58f5411135c41e35">CPS::TopologicalNode::mPhaseType</a></div><div class="ttdeci">PhaseType mPhaseType</div><div class="ttdef"><b>Definition</b> <a href="#l00019">TopologicalNode.h:19</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_topological_node_html_a6a07de1f7df8b2e853ba22e473a3b06a"><div class="ttname"><a href="class_c_p_s_1_1_topological_node.html#a6a07de1f7df8b2e853ba22e473a3b06a">CPS::TopologicalNode::mIsGround</a></div><div class="ttdeci">Bool mIsGround</div><div class="ttdef"><b>Definition</b> <a href="#l00020">TopologicalNode.h:20</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_topological_node_html_a86a5c2f131db1dd3390d82de743e97b4"><div class="ttname"><a href="class_c_p_s_1_1_topological_node.html#a86a5c2f131db1dd3390d82de743e97b4">CPS::TopologicalNode::matrixNodeIndices</a></div><div class="ttdeci">virtual std::vector&lt; UInt &gt; matrixNodeIndices()=0</div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_topological_node_html_ab221cd2b94f27ba65067e70962f37b50"><div class="ttname"><a href="class_c_p_s_1_1_topological_node.html#ab221cd2b94f27ba65067e70962f37b50">CPS::TopologicalNode::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; TopologicalNode &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="#l00023">TopologicalNode.h:23</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_topological_node_html_abbc212f9f90c16aa74f43f58bc450c69"><div class="ttname"><a href="class_c_p_s_1_1_topological_node.html#abbc212f9f90c16aa74f43f58bc450c69">CPS::TopologicalNode::initialSingleVoltage</a></div><div class="ttdeci">Complex initialSingleVoltage(PhaseType phaseType=PhaseType::Single)</div><div class="ttdef"><b>Definition</b> <a href="_topological_node_8cpp_source.html#l00055">TopologicalNode.cpp:55</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_topological_node_html_ae3a7cbde5f09f8d7f87e7157ab4cc9c0"><div class="ttname"><a href="class_c_p_s_1_1_topological_node.html#ae3a7cbde5f09f8d7f87e7157ab4cc9c0">CPS::TopologicalNode::isGround</a></div><div class="ttdeci">Bool isGround() const</div><div class="ttdef"><b>Definition</b> <a href="_topological_node_8cpp_source.html#l00013">TopologicalNode.cpp:13</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_topological_node_html_ae3c81d4e9ac812c3b607fefac68f90ba"><div class="ttname"><a href="class_c_p_s_1_1_topological_node.html#ae3c81d4e9ac812c3b607fefac68f90ba">CPS::TopologicalNode::initialVoltage</a></div><div class="ttdeci">MatrixComp initialVoltage() const</div><div class="ttdef"><b>Definition</b> <a href="_topological_node_8cpp_source.html#l00015">TopologicalNode.cpp:15</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_topological_node_html_ae487bf5e8464d6b52d2c6945d9323523"><div class="ttname"><a href="class_c_p_s_1_1_topological_node.html#ae487bf5e8464d6b52d2c6945d9323523">CPS::TopologicalNode::TopologicalNode</a></div><div class="ttdeci">TopologicalNode()</div><div class="ttdef"><b>Definition</b> <a href="#l00028">TopologicalNode.h:28</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html"><div class="ttname"><a href="namespace_c_p_s.html">CPS</a></div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00017">Attribute.h:17</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a077ababc38cbf7a0d8c175260b129a6c"><div class="ttname"><a href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6c">CPS::PhaseType</a></div><div class="ttdeci">PhaseType</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00113">Definitions.h:113</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a077ababc38cbf7a0d8c175260b129a6ca66ba162102bbf6ae31b522aec561735e"><div class="ttname"><a href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca66ba162102bbf6ae31b522aec561735e">CPS::PhaseType::Single</a></div><div class="ttdeci">@ Single</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00113">Definitions.h:113</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a09f6ad37b12370b4b58624822be9b055"><div class="ttname"><a href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a></div><div class="ttdeci">std::string String</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00065">Definitions.h:65</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_aabddb6241134e6ad9d61ae357bc104fa"><div class="ttname"><a href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">CPS::Int</a></div><div class="ttdeci">int Int</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00061">Definitions.h:61</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_aaed6ab259d5cbd0d6709102c47391a7a"><div class="ttname"><a href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">CPS::Complex</a></div><div class="ttdeci">std::complex&lt; Real &gt; Complex</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00063">Definitions.h:63</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_ab73adea852da41581c8fb6965d891567"><div class="ttname"><a href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">CPS::MatrixComp</a></div><div class="ttdeci">Eigen::Matrix&lt; Complex, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor &gt; MatrixComp</div><div class="ttdoc">Dense matrix for complex numbers.</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00084">Definitions.h:84</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_ace0e6b9548abd863a1c8637775434218"><div class="ttname"><a href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">CPS::Bool</a></div><div class="ttdeci">bool Bool</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00064">Definitions.h:64</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_ae5e72b1a2405f04bed0cd13fc63aac57"><div class="ttname"><a href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">CPS::UInt</a></div><div class="ttdeci">unsigned int UInt</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00060">Definitions.h:60</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="_topological_node_8h.html">TopologicalNode.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

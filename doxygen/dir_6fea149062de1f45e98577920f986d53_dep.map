@@ -1,10 +1,25 @@
 <map id="/__w/dpsim/dpsim/dpsim&#45;models/src" name="/__w/dpsim/dpsim/dpsim&#45;models/src">
-<area shape="rect" id="node2" href="dir_0bb973f6ea5c36754c091dfeaedf0bb8.html" title="Base" alt="" coords="100,67,151,97"/>
-<area shape="rect" id="node3" href="dir_03f78b5d3cb77a23345b6fd7194be509.html" title="CIM" alt="" coords="176,67,222,97"/>
-<area shape="rect" id="node4" href="dir_621813f9b4c502f03ed48dd248a52328.html" title="DP" alt="" coords="246,67,285,97"/>
-<area shape="rect" id="node5" href="dir_ae95efbb9d0e2c3db498e7cf294ca207.html" title="EMT" alt="" coords="310,67,357,97"/>
-<area shape="rect" id="node6" href="dir_c59dc91b4d75cd962c10e1beb2d12efe.html" title="Signal" alt="" coords="381,67,438,97"/>
-<area shape="rect" id="node7" href="dir_a4d0ec1c07aed1343cf30f65cecac41f.html" title="SP" alt="" coords="462,67,501,97"/>
+<area shape="rect" id="node1" href="dir_1247628433d32dacb883bd6358d8ae70.html" title="include" alt="" coords="233,145,298,174"/>
+<area shape="poly" id="edge1" href="dir_000031_000019.html" alt="" coords="72,94,89,105,156,131,219,147,217,152,154,136,87,110,69,98"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000031_000019.html" title="250" alt="" coords="205,131,229,150"/>
+<area shape="rect" id="node3" href="dir_0bb973f6ea5c36754c091dfeaedf0bb8.html" title="Base" alt="" coords="100,67,151,97"/>
+<area shape="poly" id="edge2" href="dir_000001_000019.html" alt="" coords="149,95,165,105,223,135,221,140,163,110,146,100"/>
+<area shape="rect" id="edge2-headlabel" href="dir_000001_000019.html" title="6" alt="" coords="219,119,227,138"/>
+<area shape="rect" id="node4" href="dir_03f78b5d3cb77a23345b6fd7194be509.html" title="CIM" alt="" coords="176,67,222,97"/>
+<area shape="poly" id="edge3" href="dir_000003_000019.html" alt="" coords="213,96,245,131,241,134,209,99"/>
+<area shape="rect" id="edge3-headlabel" href="dir_000003_000019.html" title="1" alt="" coords="243,115,251,134"/>
+<area shape="rect" id="node5" href="dir_621813f9b4c502f03ed48dd248a52328.html" title="DP" alt="" coords="246,67,285,97"/>
+<area shape="poly" id="edge4" href="dir_000009_000019.html" alt="" coords="268,97,268,129,263,129,263,97"/>
+<area shape="rect" id="edge4-headlabel" href="dir_000009_000019.html" title="79" alt="" coords="266,116,282,135"/>
+<area shape="rect" id="node6" href="dir_ae95efbb9d0e2c3db498e7cf294ca207.html" title="EMT" alt="" coords="310,67,357,97"/>
+<area shape="poly" id="edge5" href="dir_000017_000019.html" alt="" coords="323,99,290,135,286,131,319,95"/>
+<area shape="rect" id="edge5-headlabel" href="dir_000017_000019.html" title="62" alt="" coords="289,127,305,146"/>
+<area shape="rect" id="node7" href="dir_c59dc91b4d75cd962c10e1beb2d12efe.html" title="Signal" alt="" coords="381,67,438,97"/>
+<area shape="poly" id="edge6" href="dir_000026_000019.html" alt="" coords="388,100,371,110,311,140,308,135,368,105,385,95"/>
+<area shape="rect" id="edge6-headlabel" href="dir_000026_000019.html" title="44" alt="" coords="308,135,324,154"/>
+<area shape="rect" id="node8" href="dir_a4d0ec1c07aed1343cf30f65cecac41f.html" title="SP" alt="" coords="462,67,501,97"/>
+<area shape="poly" id="edge7" href="dir_000030_000019.html" alt="" coords="467,99,452,110,381,137,314,153,313,148,379,132,449,105,464,95"/>
+<area shape="rect" id="edge7-headlabel" href="dir_000030_000019.html" title="43" alt="" coords="310,149,326,168"/>
 <area shape="rect" id="clust2" href="dir_6fea149062de1f45e98577920f986d53.html" alt="" coords="27,56,511,107"/>
-<area shape="rect" id="clust1" href="dir_a932513a424ca3c4132fc92721c4e6d6.html" title="dpsim&#45;models" alt="" coords="16,16,521,118"/>
+<area shape="rect" id="clust1" href="dir_a932513a424ca3c4132fc92721c4e6d6.html" title="dpsim&#45;models" alt="" coords="16,16,521,185"/>
 </map>

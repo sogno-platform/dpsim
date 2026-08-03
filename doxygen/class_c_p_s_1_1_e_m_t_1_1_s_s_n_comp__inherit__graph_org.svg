@@ -273,7 +273,7 @@
 <g id="Node000013" class="node">
 <title>Node13</title>
 <g id="a_Node000013"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_capacitor.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="1574.25,-366.5 1467.5,-366.5 1467.5,-330 1574.25,-330 1574.25,-366.5"/>
+<polygon fill="white" stroke="#666666" points="1574.25,-366.5 1467.5,-366.5 1467.5,-330 1574.25,-330 1574.25,-366.5"/>
 <text text-anchor="start" x="1475.5" y="-353" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::SSN</text>
 <text text-anchor="middle" x="1520.88" y="-338.75" font-family="Helvetica,sans-Serif" font-size="10.00">::Capacitor</text>
 </a>
@@ -292,7 +292,7 @@
 <g id="Node000015" class="node">
 <title>Node15</title>
 <g id="a_Node000015"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_four_terminal_v_type_s_s_n_comp.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="1397.5,-203.5 1247.25,-203.5 1247.25,-167 1397.5,-167 1397.5,-203.5"/>
+<polygon fill="white" stroke="#666666" points="1397.5,-203.5 1247.25,-203.5 1247.25,-167 1397.5,-167 1397.5,-203.5"/>
 <text text-anchor="start" x="1255.25" y="-190" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::FourTerminal</text>
 <text text-anchor="middle" x="1322.38" y="-175.75" font-family="Helvetica,sans-Serif" font-size="10.00">VTypeSSNComp</text>
 </a>
@@ -348,7 +348,7 @@
 <g id="Node000016" class="node">
 <title>Node16</title>
 <g id="a_Node000016"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_generic_four_terminal_v_type_s_s_n.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="1594.5,-201.5 1447.25,-201.5 1447.25,-165 1594.5,-165 1594.5,-201.5"/>
+<polygon fill="white" stroke="#666666" points="1594.5,-201.5 1447.25,-201.5 1447.25,-165 1594.5,-165 1594.5,-201.5"/>
 <text text-anchor="start" x="1455.25" y="-188" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::GenericFour</text>
 <text text-anchor="middle" x="1520.88" y="-173.75" font-family="Helvetica,sans-Serif" font-size="10.00">TerminalVTypeSSN</text>
 </a>
@@ -443,7 +443,7 @@
 <g id="Node000023" class="node">
 <title>Node23</title>
 <g id="a_Node000023"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="1781.75,-311.5 1631.5,-311.5 1631.5,-275 1781.75,-275 1781.75,-311.5"/>
+<polygon fill="white" stroke="#666666" points="1781.75,-311.5 1631.5,-311.5 1631.5,-275 1781.75,-275 1781.75,-311.5"/>
 <text text-anchor="start" x="1639.5" y="-298" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::AvVoltSource</text>
 <text text-anchor="middle" x="1706.62" y="-283.75" font-family="Helvetica,sans-Serif" font-size="10.00">InverterStateSpace</text>
 </a>

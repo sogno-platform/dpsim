@@ -322,7 +322,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000013" class="node">
 <title>Node13</title>
 <g id="a_Node000013"><a xlink:href="class_c_p_s_1_1_d_a_e_interface.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="1202.38,-62.25 1100.88,-62.25 1100.88,-40 1202.38,-40 1202.38,-62.25"/>
+<polygon fill="white" stroke="#666666" points="1202.38,-62.25 1100.88,-62.25 1100.88,-40 1202.38,-40 1202.38,-62.25"/>
 <text text-anchor="middle" x="1151.62" y="-48.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DAEInterface</text>
 </a>
 </g>

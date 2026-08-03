@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_power_profile_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">PowerProfile.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_power_profile_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -100,30 +108,40 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> *********************************************************************************/</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;dpsim-models/Definitions.h&gt;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;<a class="code" href="dpsim-models_2include_2dpsim-models_2_definitions_8h.html">dpsim-models/Definitions.h</a>&gt;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">namespace </span>CPS {</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s.html">CPS</a> {</div>
 <div class="foldopen" id="foldopen00013" data-start="{" data-end="};">
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="struct_c_p_s_1_1_p_q_data.html">   13</a></span><span class="keyword">struct </span><a class="code hl_struct" href="struct_c_p_s_1_1_p_q_data.html">PQData</a> {</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>  Real p;</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>  Real q;</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="struct_c_p_s_1_1_p_q_data.html#a4ae21da43c1d1636c4688b71fb06f102">   14</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="code hl_variable" href="struct_c_p_s_1_1_p_q_data.html#a4ae21da43c1d1636c4688b71fb06f102">p</a>;</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="struct_c_p_s_1_1_p_q_data.html#a867baa72f03116e67c5e9153daf48d4d">   15</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="code hl_variable" href="struct_c_p_s_1_1_p_q_data.html#a867baa72f03116e67c5e9153daf48d4d">q</a>;</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>};</div>
 </div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
 <div class="foldopen" id="foldopen00018" data-start="{" data-end="};">
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="struct_c_p_s_1_1_power_profile.html">   18</a></span><span class="keyword">struct </span><a class="code hl_struct" href="struct_c_p_s_1_1_power_profile.html">PowerProfile</a> {</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  std::map&lt;Real, PQData&gt; pqData;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  std::map&lt;Real, Real&gt; weightingFactors;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="struct_c_p_s_1_1_power_profile.html#ad8e4e2b4c0394b7ee1f5cd8258200b88">   19</a></span>  std::map&lt;Real, PQData&gt; <a class="code hl_variable" href="struct_c_p_s_1_1_power_profile.html#ad8e4e2b4c0394b7ee1f5cd8258200b88">pqData</a>;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="struct_c_p_s_1_1_power_profile.html#af409f4cc90c1d732fd792cf3116b53e5">   20</a></span>  std::map&lt;Real, Real&gt; <a class="code hl_variable" href="struct_c_p_s_1_1_power_profile.html#af409f4cc90c1d732fd792cf3116b53e5">weightingFactors</a>;</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>};</div>
 </div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>} <span class="comment">// namespace CPS</span></div>
+<div class="ttc" id="adpsim-models_2include_2dpsim-models_2_definitions_8h_html"><div class="ttname"><a href="dpsim-models_2include_2dpsim-models_2_definitions_8h.html">Definitions.h</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html"><div class="ttname"><a href="namespace_c_p_s.html">CPS</a></div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00017">Attribute.h:17</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a603c4b77d70922bc0423adc57725df50"><div class="ttname"><a href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a></div><div class="ttdeci">double Real</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00062">Definitions.h:62</a></div></div>
 <div class="ttc" id="astruct_c_p_s_1_1_p_q_data_html"><div class="ttname"><a href="struct_c_p_s_1_1_p_q_data.html">CPS::PQData</a></div><div class="ttdef"><b>Definition</b> <a href="#l00013">PowerProfile.h:13</a></div></div>
+<div class="ttc" id="astruct_c_p_s_1_1_p_q_data_html_a4ae21da43c1d1636c4688b71fb06f102"><div class="ttname"><a href="struct_c_p_s_1_1_p_q_data.html#a4ae21da43c1d1636c4688b71fb06f102">CPS::PQData::p</a></div><div class="ttdeci">Real p</div><div class="ttdef"><b>Definition</b> <a href="#l00014">PowerProfile.h:14</a></div></div>
+<div class="ttc" id="astruct_c_p_s_1_1_p_q_data_html_a867baa72f03116e67c5e9153daf48d4d"><div class="ttname"><a href="struct_c_p_s_1_1_p_q_data.html#a867baa72f03116e67c5e9153daf48d4d">CPS::PQData::q</a></div><div class="ttdeci">Real q</div><div class="ttdef"><b>Definition</b> <a href="#l00015">PowerProfile.h:15</a></div></div>
 <div class="ttc" id="astruct_c_p_s_1_1_power_profile_html"><div class="ttname"><a href="struct_c_p_s_1_1_power_profile.html">CPS::PowerProfile</a></div><div class="ttdef"><b>Definition</b> <a href="#l00018">PowerProfile.h:18</a></div></div>
+<div class="ttc" id="astruct_c_p_s_1_1_power_profile_html_ad8e4e2b4c0394b7ee1f5cd8258200b88"><div class="ttname"><a href="struct_c_p_s_1_1_power_profile.html#ad8e4e2b4c0394b7ee1f5cd8258200b88">CPS::PowerProfile::pqData</a></div><div class="ttdeci">std::map&lt; Real, PQData &gt; pqData</div><div class="ttdef"><b>Definition</b> <a href="#l00019">PowerProfile.h:19</a></div></div>
+<div class="ttc" id="astruct_c_p_s_1_1_power_profile_html_af409f4cc90c1d732fd792cf3116b53e5"><div class="ttname"><a href="struct_c_p_s_1_1_power_profile.html#af409f4cc90c1d732fd792cf3116b53e5">CPS::PowerProfile::weightingFactors</a></div><div class="ttdeci">std::map&lt; Real, Real &gt; weightingFactors</div><div class="ttdef"><b>Definition</b> <a href="#l00020">PowerProfile.h:20</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="_power_profile_8h.html">PowerProfile.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

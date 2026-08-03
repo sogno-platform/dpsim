@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_c_p_s_1_1_attribute_update_task.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>CPS</b></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_attribute_update_task.html">AttributeUpdateTask</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
@@ -102,12 +110,12 @@ $(function(){ initResizable(false); });
 Inheritance diagram for CPS::AttributeUpdateTask&lt; DependentType, DependencyTypes &gt;:</div>
 <div class="dyncontent">
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_attribute_update_task__inherit__graph.svg" width="100%" height="414"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for CPS::AttributeUpdateTask&lt; DependentType, DependencyTypes &gt;:</div>
 <div class="dyncontent">
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_attribute_update_task__coll__graph.svg" width="100%" height="414"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -119,20 +127,23 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6dec466031aadcfc867988436d5c842e" id="r_a6dec466031aadcfc867988436d5c842e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6dec466031aadcfc867988436d5c842e">AttributeUpdateTask</a> (UpdateTaskKind kind, Actor &amp;actorFunction, typename <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; DependencyTypes &gt;::Ptr... dependencies)</td></tr>
+<tr class="memitem:a6dec466031aadcfc867988436d5c842e" id="r_a6dec466031aadcfc867988436d5c842e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6dec466031aadcfc867988436d5c842e">AttributeUpdateTask</a> (<a class="el" href="namespace_c_p_s.html#a8e443e562cabd6ba1553da3c6a37823c">UpdateTaskKind</a> kind, <a class="el" href="#ae79773b9df95d8e1fe2b7e69f99e6895">Actor</a> &amp;actorFunction, typename <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; DependencyTypes &gt;::Ptr... dependencies)</td></tr>
 <tr class="separator:a6dec466031aadcfc867988436d5c842e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a377e5adc36cfbea237e83b81e08f41b4" id="r_a377e5adc36cfbea237e83b81e08f41b4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a377e5adc36cfbea237e83b81e08f41b4">executeUpdate</a> (std::shared_ptr&lt; DependentType &gt; &amp;dependent) override</td></tr>
 <tr class="separator:a377e5adc36cfbea237e83b81e08f41b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0ac8456162526792a7bfa9f6076d9c4" id="r_aa0ac8456162526792a7bfa9f6076d9c4"><td class="memItemLeft" align="right" valign="top">virtual AttributeBase::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa0ac8456162526792a7bfa9f6076d9c4">getDependencies</a> () override</td></tr>
+<tr class="memitem:aa0ac8456162526792a7bfa9f6076d9c4" id="r_aa0ac8456162526792a7bfa9f6076d9c4"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">AttributeBase::List</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa0ac8456162526792a7bfa9f6076d9c4">getDependencies</a> () override</td></tr>
 <tr class="separator:aa0ac8456162526792a7bfa9f6076d9c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_class_c_p_s_1_1_attribute_update_task_base"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_c_p_s_1_1_attribute_update_task_base')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_c_p_s_1_1_attribute_update_task_base.html">CPS::AttributeUpdateTaskBase&lt; DependentType &gt;</a></td></tr>
+<tr class="memitem:a0760f1d4d6e711bd9bdafbf25acc0d6e inherit pub_methods_class_c_p_s_1_1_attribute_update_task_base" id="r_a0760f1d4d6e711bd9bdafbf25acc0d6e"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_attribute_update_task_base.html#a0760f1d4d6e711bd9bdafbf25acc0d6e">~AttributeUpdateTaskBase</a> ()=default</td></tr>
+<tr class="separator:a0760f1d4d6e711bd9bdafbf25acc0d6e inherit pub_methods_class_c_p_s_1_1_attribute_update_task_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a7251dde7745eb99d34ee0f2ed6dbbcbf" id="r_a7251dde7745eb99d34ee0f2ed6dbbcbf"><td class="memItemLeft" align="right" valign="top">std::tuple&lt; typename <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; DependencyTypes &gt;::Ptr... &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7251dde7745eb99d34ee0f2ed6dbbcbf">mDependencies</a></td></tr>
 <tr class="separator:a7251dde7745eb99d34ee0f2ed6dbbcbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf609823bff5eab5b9ba6ee73021f096" id="r_adf609823bff5eab5b9ba6ee73021f096"><td class="memItemLeft" align="right" valign="top">Actor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adf609823bff5eab5b9ba6ee73021f096">mActorFunction</a></td></tr>
+<tr class="memitem:adf609823bff5eab5b9ba6ee73021f096" id="r_adf609823bff5eab5b9ba6ee73021f096"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ae79773b9df95d8e1fe2b7e69f99e6895">Actor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adf609823bff5eab5b9ba6ee73021f096">mActorFunction</a></td></tr>
 <tr class="separator:adf609823bff5eab5b9ba6ee73021f096"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a734989b41e06de1a510b0aa8c407ffd0" id="r_a734989b41e06de1a510b0aa8c407ffd0"><td class="memItemLeft" align="right" valign="top">UpdateTaskKind&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a734989b41e06de1a510b0aa8c407ffd0">mKind</a></td></tr>
+<tr class="memitem:a734989b41e06de1a510b0aa8c407ffd0" id="r_a734989b41e06de1a510b0aa8c407ffd0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a8e443e562cabd6ba1553da3c6a37823c">UpdateTaskKind</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a734989b41e06de1a510b0aa8c407ffd0">mKind</a></td></tr>
 <tr class="separator:a734989b41e06de1a510b0aa8c407ffd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
@@ -168,7 +179,8 @@ template&lt;class DependentType, class... DependencyTypes&gt; </div>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line"> </div>
 <div class="line">      std::function&lt;void(std::shared_ptr&lt;DependentType&gt; &amp;,</div>
-<div class="line">                         <span class="keyword">typename</span> Attribute&lt;DependencyTypes&gt;::Ptr...)&gt;</div>
+<div class="line">                         <span class="keyword">typename</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;DependencyTypes&gt;::Ptr</a>...)&gt;</div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_ad552c848f780007d59f489540fa7e4d6"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">CPS::Attribute::Ptr</a></div><div class="ttdeci">AttributePointer&lt; Attribute&lt; T &gt; &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00250">Attribute.h:250</a></div></div>
 </div><!-- fragment -->
 <p class="definition">Definition at line <a class="el" href="_attribute_8h_source.html#l00201">201</a> of file <a class="el" href="_attribute_8h_source.html">Attribute.h</a>.</p>
 
@@ -189,12 +201,12 @@ template&lt;class DependentType, class... DependencyTypes&gt; </div>
         <tr>
           <td class="memname"><a class="el" href="class_c_p_s_1_1_attribute_update_task.html">CPS::AttributeUpdateTask</a>&lt; DependentType, DependencyTypes &gt;::AttributeUpdateTask </td>
           <td>(</td>
-          <td class="paramtype">UpdateTaskKind</td>          <td class="paramname"><span class="paramname"><em>kind</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a8e443e562cabd6ba1553da3c6a37823c">UpdateTaskKind</a></td>          <td class="paramname"><span class="paramname"><em>kind</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Actor &amp;</td>          <td class="paramname"><span class="paramname"><em>actorFunction</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#ae79773b9df95d8e1fe2b7e69f99e6895">Actor</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>actorFunction</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -239,7 +251,7 @@ template&lt;class DependentType, class... DependencyTypes&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="class_c_p_s_1_1_attribute_update_task_base.html">CPS::AttributeUpdateTaskBase&lt; DependentType &gt;</a>.</p>
+<p>Implements <a class="el" href="class_c_p_s_1_1_attribute_update_task_base.html#a8432f2c80f87b7148130ff3305cff9a5">CPS::AttributeUpdateTaskBase&lt; DependentType &gt;</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="_attribute_8h_source.html#l00218">218</a> of file <a class="el" href="_attribute_8h_source.html">Attribute.h</a>.</p>
 
@@ -257,7 +269,7 @@ template&lt;class DependentType, class... DependencyTypes&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual AttributeBase::List <a class="el" href="class_c_p_s_1_1_attribute_update_task.html">CPS::AttributeUpdateTask</a>&lt; DependentType, DependencyTypes &gt;::getDependencies </td>
+          <td class="memname">virtual <a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">AttributeBase::List</a> <a class="el" href="class_c_p_s_1_1_attribute_update_task.html">CPS::AttributeUpdateTask</a>&lt; DependentType, DependencyTypes &gt;::getDependencies </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -271,7 +283,7 @@ template&lt;class DependentType, class... DependencyTypes&gt; </div>
 </div><div class="memdoc">
 <p>Returns all dependency elements in the <code>mDependency</code> tuple in a list over <a class="el" href="class_c_p_s_1_1_attribute_base.html">AttributeBase</a> pointers. </p>
 
-<p>Implements <a class="el" href="class_c_p_s_1_1_attribute_update_task_base.html">CPS::AttributeUpdateTaskBase&lt; DependentType &gt;</a>.</p>
+<p>Implements <a class="el" href="class_c_p_s_1_1_attribute_update_task_base.html#a4d786c5fb559ee8c4255cbbb1fb2d2ce">CPS::AttributeUpdateTaskBase&lt; DependentType &gt;</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="_attribute_8h_source.html#l00227">227</a> of file <a class="el" href="_attribute_8h_source.html">Attribute.h</a>.</p>
 
@@ -290,7 +302,7 @@ template&lt;class DependentType, class... DependencyTypes&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Actor <a class="el" href="class_c_p_s_1_1_attribute_update_task.html">CPS::AttributeUpdateTask</a>&lt; DependentType, DependencyTypes &gt;::mActorFunction</td>
+          <td class="memname"><a class="el" href="#ae79773b9df95d8e1fe2b7e69f99e6895">Actor</a> <a class="el" href="class_c_p_s_1_1_attribute_update_task.html">CPS::AttributeUpdateTask</a>&lt; DependentType, DependencyTypes &gt;::mActorFunction</td>
         </tr>
       </table>
   </td>
@@ -342,7 +354,7 @@ template&lt;class DependentType, class... DependencyTypes&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">UpdateTaskKind <a class="el" href="class_c_p_s_1_1_attribute_update_task.html">CPS::AttributeUpdateTask</a>&lt; DependentType, DependencyTypes &gt;::mKind</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a8e443e562cabd6ba1553da3c6a37823c">UpdateTaskKind</a> <a class="el" href="class_c_p_s_1_1_attribute_update_task.html">CPS::AttributeUpdateTask</a>&lt; DependentType, DependencyTypes &gt;::mKind</td>
         </tr>
       </table>
   </td>
@@ -360,10 +372,13 @@ template&lt;class DependentType, class... DependencyTypes&gt; </div>
 <li>/__w/dpsim/dpsim/dpsim-models/include/dpsim-models/<a class="el" href="_attribute_8h_source.html">Attribute.h</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_c_p_s.html">CPS</a></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_attribute_update_task.html">AttributeUpdateTask</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

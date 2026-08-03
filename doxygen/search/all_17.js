@@ -1,22 +1,12 @@
 var searchData=
 [
-  ['_7ecompositepowercomp_0',['~CompositePowerComp',['../class_c_p_s_1_1_composite_power_comp.html#acd5001ab92e80e42d9beaadc1a8dca1c',1,'CPS::CompositePowerComp']]],
-  ['_7edaesolver_1',['~DAESolver',['../class_d_psim_1_1_d_a_e_solver.html#a9883d637f808f05263dace05a8761e84',1,'DPsim::DAESolver']]],
-  ['_7edenseluadapter_2',['~DenseLUAdapter',['../class_d_psim_1_1_dense_l_u_adapter.html#a820e776d3c98c88d0faeeaf5f791020e',1,'DPsim::DenseLUAdapter']]],
-  ['_7edirectlinearsolver_3',['~DirectLinearSolver',['../class_d_psim_1_1_direct_linear_solver.html#add6f353643024c32915f2ccb4da076b0',1,'DPsim::DirectLinearSolver']]],
-  ['_7egpudenseadapter_4',['~GpuDenseAdapter',['../class_d_psim_1_1_gpu_dense_adapter.html#aadbad3d6fef03364421316da7dbae35c',1,'DPsim::GpuDenseAdapter']]],
-  ['_7egpumagmaadapter_5',['~GpuMagmaAdapter',['../class_d_psim_1_1_gpu_magma_adapter.html#a3d54eec767ae26afe52d410eb05e656f',1,'DPsim::GpuMagmaAdapter']]],
-  ['_7egpusparseadapter_6',['~GpuSparseAdapter',['../class_d_psim_1_1_gpu_sparse_adapter.html#a05cc418073f75761900f9f59ca021681',1,'DPsim::GpuSparseAdapter']]],
-  ['_7ekluadapter_7',['~KLUAdapter',['../class_d_psim_1_1_k_l_u_adapter.html#ac0a481a271301ec563224db0928b1592',1,'DPsim::KLUAdapter']]],
-  ['_7emnasimpowercomp_8',['~MNASimPowerComp',['../class_c_p_s_1_1_m_n_a_sim_power_comp.html#a2ddb3a168d346de565deb3cf438764ec',1,'CPS::MNASimPowerComp']]],
-  ['_7emnasolver_9',['~MnaSolver',['../class_d_psim_1_1_mna_solver.html#a325a87c991303ffe089319d0e92fe618',1,'DPsim::MnaSolver']]],
-  ['_7emnasolverdirect_10',['~MnaSolverDirect',['../class_d_psim_1_1_mna_solver_direct.html#a2969ed9a344caa15829791a388be297b',1,'DPsim::MnaSolverDirect']]],
-  ['_7eodeintsolver_11',['~ODEintSolver',['../class_d_psim_1_1_o_d_eint_solver.html#ad5a3755a0137810d4ec3c9fe0563058b',1,'DPsim::ODEintSolver']]],
-  ['_7eodesolver_12',['~ODESolver',['../class_d_psim_1_1_o_d_e_solver.html#a9e750ff70b2b4500883796633ae2ad3d',1,'DPsim::ODESolver']]],
-  ['_7ereducedordersynchrongenerator_13',['~ReducedOrderSynchronGenerator',['../class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#a6598fb1ae8f4efa2bcd9e1d8ffa9221e',1,'CPS::Base::ReducedOrderSynchronGenerator']]],
-  ['_7esimpowercomp_14',['~SimPowerComp',['../class_c_p_s_1_1_sim_power_comp.html#ad97a21c4d5a81ee87bbe4ac3c3667dc0',1,'CPS::SimPowerComp']]],
-  ['_7esimulation_15',['~Simulation',['../class_d_psim_1_1_simulation.html#a9339463ecdce19fe26bf6096145b63aa',1,'DPsim::Simulation']]],
-  ['_7esparseluadapter_16',['~SparseLUAdapter',['../class_d_psim_1_1_sparse_l_u_adapter.html#a396959c82d21dc4c33f5b1e1241ea727',1,'DPsim::SparseLUAdapter']]],
-  ['_7esynchrongenerator_17',['~SynchronGenerator',['../class_c_p_s_1_1_base_1_1_synchron_generator.html#ac6e1cdc082a49b5d09a9f81e4e1276a0',1,'CPS::Base::SynchronGenerator']]],
-  ['_7etopologicalpowercomp_18',['~TopologicalPowerComp',['../class_c_p_s_1_1_topological_power_comp.html#a852ee05173a519e7a67c0f3912ca1628',1,'CPS::TopologicalPowerComp']]]
+  ['wait_0',['wait',['../class_d_psim_1_1_barrier.html#ad1de72b60109184428d844953c616fb0',1,'DPsim::Barrier::wait()'],['../class_d_psim_1_1_counter.html#acaa987c2c6a680020bea3aeae6058991',1,'DPsim::Counter::wait()']]],
+  ['warnx_1',['warnx',['../getopt_8h.html#acece1548dfba3be0fbea0cbd38959768',1,'getopt.h']]],
+  ['weightingfactors_2',['weightingFactors',['../struct_c_p_s_1_1_power_profile.html#af409f4cc90c1d732fd792cf3116b53e5',1,'CPS::PowerProfile']]],
+  ['withcontrol_3',['withControl',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html#a76ee7f47cc4b97631c039adfc11e70da',1,'CPS::DP::Ph1::AvVoltageSourceInverterDQ::withControl()'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q.html#a2562e408b423c7fdd0d1c52596382c45',1,'CPS::EMT::Ph3::AvVoltageSourceInverterDQ::withControl()'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_v_s_i_voltage_control_v_c_o.html#a034cd2dacc7d7e0be2d5c04df69319fd',1,'CPS::EMT::Ph3::VSIVoltageControlVCO::withControl()'],['../class_c_p_s_1_1_s_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html#a7a9e379d22c3c5452d757c17cc8ee169',1,'CPS::SP::Ph1::AvVoltageSourceInverterDQ::withControl()']]],
+  ['workspace_4',['workSpace',['../struct_d_psim_1_1_gpu_dense_adapter_1_1_gpu_data.html#aca587c6d942b5012a05c3edfd75bdfe6',1,'DPsim::GpuDenseAdapter::GpuData']]],
+  ['writemeasurements_5',['writeMeasurements',['../class_d_psim_1_1_scheduler.html#a115454f5c25bd50c0295af51e217dec5',1,'DPsim::Scheduler']]],
+  ['writerthread_6',['WriterThread',['../class_d_psim_1_1_interface_queued_1_1_writer_thread.html',1,'DPsim::InterfaceQueued::WriterThread'],['../class_d_psim_1_1_interface_queued_1_1_writer_thread.html#a3673e29e7fb52e687ca80836b00c8c7d',1,'DPsim::InterfaceQueued::WriterThread::WriterThread()']]],
+  ['writetovillas_7',['writeToVillas',['../class_d_psim_1_1_interface_villas_queueless.html#aea5c262c1e08169087a6c28d56957d23',1,'DPsim::InterfaceVillasQueueless']]],
+  ['writevaluestoenv_8',['writeValuesToEnv',['../class_d_psim_1_1_interface_worker.html#a4eb7974757ddbc17e3d4f1a648af0b2e',1,'DPsim::InterfaceWorker::writeValuesToEnv()'],['../class_d_psim_1_1_interface_worker_villas.html#aa3f9bbc452144c608802d937099c56b8',1,'DPsim::InterfaceWorkerVillas::writeValuesToEnv(std::vector&lt; InterfaceQueued::AttributePacket &gt; &amp;updatedAttrs) override'],['../class_d_psim_1_1_interface_worker_villas.html#ab829ad106ba4bec4430306b06f0daa8e',1,'DPsim::InterfaceWorkerVillas::writeValuesToEnv(std::vector&lt; std::tuple&lt; CPS::AttributeBase::Ptr, UInt &gt; &gt; &amp;updatedAttrs)']]]
 ];

@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_d_psim_1_1_command_line_args.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_command_line_args.html">CommandLineArgs</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">DPsim::CommandLineArgs Member List</div></div>
 </div><!--header-->
@@ -94,41 +102,43 @@ $(function(){ initResizable(false); });
 
 <p>This is the complete list of members for <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>, including all inherited members.</p>
 <table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>blocking</b> (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>cliLogLevel</b> (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>CommandLineArgs</b>(int argc, char *argv[], String name=&quot;dpsim&quot;, Real dt=0.001, Real d=1, Real sf=50, Int s=-1, CPS::Logger::Level ll=CPS::Logger::Level::info, CPS::Logger::Level clill=CPS::Logger::Level::off, Bool ss=false, Bool b=false, Bool si=false, CPS::Domain sd=CPS::Domain::DP, Solver::Type st=Solver::Type::MNA, DirectLinearSolverImpl mi=DirectLinearSolverImpl::KLU, String spn=&quot;plugin.so&quot;, String params=&quot;default.json&quot;) (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>CommandLineArgs</b>(String name=&quot;dpsim&quot;, Real dt=0.001, Real d=1, Real sf=50, Int s=-1, CPS::Logger::Level ll=CPS::Logger::Level::info, CPS::Logger::Level clill=CPS::Logger::Level::off, Bool ss=false, Bool b=false, Bool si=false, CPS::Domain sd=CPS::Domain::DP, Solver::Type st=Solver::Type::MNA, DirectLinearSolverImpl mi=DirectLinearSolverImpl::KLU, String spn=&quot;plugin.so&quot;) (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>directImpl</b> (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>domain</b> (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>duration</b> (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>getOptionBool</b>(String optionName) (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>getOptionInt</b>(String optionName) (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>getOptionReal</b>(String optionName) (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>getOptionString</b>(String optionName) (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>logLevel</b> (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mArguments</b> (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mProgramName</b> (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>name</b> (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>options</b> (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>params</b> (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>parseArguments</b>(int argc, char *argv[]) (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>positional</b> (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>positionalPaths</b>() const (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>scenario</b> (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>showUsage</b>() (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>solver</b> (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>solverPluginName</b> (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>startSynch</b> (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>startTime</b> (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>steadyInit</b> (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>sysFreq</b> (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>timeStep</b> (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>type</b> (defined in <a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#a4d181083b92b0f1feebc7edb80351836">blocking</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#a0447f969e045b2a4894c5b115493b31b">cliLogLevel</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#a9f46b641eca3cb284e33f9421976cb47">CommandLineArgs</a>(int argc, char *argv[], String name=&quot;dpsim&quot;, Real dt=0.001, Real d=1, Real sf=50, Int s=-1, CPS::Logger::Level ll=CPS::Logger::Level::info, CPS::Logger::Level clill=CPS::Logger::Level::off, Bool ss=false, Bool b=false, Bool si=false, CPS::Domain sd=CPS::Domain::DP, Solver::Type st=Solver::Type::MNA, DirectLinearSolverImpl mi=DirectLinearSolverImpl::KLU, String spn=&quot;plugin.so&quot;, String params=&quot;default.json&quot;)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#ae948df8b7c0f57b911eaa9a9acc2dd84">CommandLineArgs</a>(String name=&quot;dpsim&quot;, Real dt=0.001, Real d=1, Real sf=50, Int s=-1, CPS::Logger::Level ll=CPS::Logger::Level::info, CPS::Logger::Level clill=CPS::Logger::Level::off, Bool ss=false, Bool b=false, Bool si=false, CPS::Domain sd=CPS::Domain::DP, Solver::Type st=Solver::Type::MNA, DirectLinearSolverImpl mi=DirectLinearSolverImpl::KLU, String spn=&quot;plugin.so&quot;)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#a2da2a22c737699f2f431bc477faef091">directImpl</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#a8dd37f10c1b9bd911caaa950bfdabaa6">domain</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#aeb6f19bba202bf134191a4a78c61ce0b">duration</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#aa2ebe0eaf9631d51e95cc712d321326d">getOptionBool</a>(String optionName)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#a065d8a7325cbb27e1e5a9e237d9616c2">getOptionInt</a>(String optionName)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#a1cec6e9029efb8651b6d7a1f60f008d9">getOptionReal</a>(String optionName)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#a7da06f9a09774d815ffcb47dc956893f">getOptionString</a>(String optionName)</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#aff3d45fe224711297937cad8db73a418">logLevel</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#ac03072b0f7681a8fac0acdd98fb4d946">mArguments</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#ad300dd7fd23c759922201855db95b309">mProgramName</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#a202d6991a8fa9cd915e94cb7d57791a8">name</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#abbfce348732c328fa1805c4f279076a4">options</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#af31cf22c8f966878873955e37ac57d52">params</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#a294700cf80743d71ad28ac98d438518e">parseArguments</a>(int argc, char *argv[])</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#a1b6c36d53a8ca2fd02f19e26b6447d97">positional</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#a61fc5ba7a9d5fbf95b1741a6947ad5a5">positionalPaths</a>() const</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#ae4df82b7a87a80e73e16494ca9f8bf2e">scenario</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#a845b2760becb55decd19bdf1fcfe6e0c">showUsage</a>()</td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#aafb0c641d2ce7c5f4d7120d8f50c9363">solver</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#a0264d30bc7359a4ced52dd52f835d8f7">solverPluginName</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#a154d40a473538a52fd92f920ed93ef66">startSynch</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#aea6a6113e1aff3bab5165a48f6c5e0fa">startTime</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#ac11f38849eaa698ecda7f512c4af4f8f">steadyInit</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#a1f684b0043f8b3b53b93504ea7e63750">sysFreq</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#ab9cd494a83c92387c9b25992d683a81d">timeStep</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html#a11f591237231d9024804374543b72d94">type</a></td><td class="entry"><a class="el" href="class_d_psim_1_1_command_line_args.html">DPsim::CommandLineArgs</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

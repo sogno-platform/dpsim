@@ -24,7 +24,7 @@
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="83.5,-239.5 0,-239.5 0,-217.25 83.5,-217.25 83.5,-239.5"/>
+<polygon fill="white" stroke="#666666" points="83.5,-239.5 0,-239.5 0,-217.25 83.5,-217.25 83.5,-239.5"/>
 <text text-anchor="middle" x="41.75" y="-226" font-family="Helvetica,sans-Serif" font-size="10.00">std::false_type</text>
 </a>
 </g>
@@ -42,7 +42,7 @@
 <g id="Node000004" class="node">
 <title>Node4</title>
 <g id="a_Node000004"><a xlink:href="struct_c_p_s_1_1_c_i_m_1_1has__value__member.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="193.38,-180.25 58.12,-180.25 58.12,-143.75 193.38,-143.75 193.38,-180.25"/>
+<polygon fill="white" stroke="#666666" points="193.38,-180.25 58.12,-180.25 58.12,-143.75 193.38,-143.75 193.38,-180.25"/>
 <text text-anchor="start" x="66.12" y="-166.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::CIM::has_value</text>
 <text text-anchor="middle" x="125.75" y="-152.5" font-family="Helvetica,sans-Serif" font-size="10.00">_member&lt; T, typename &gt;</text>
 </a>
@@ -61,7 +61,7 @@
 <g id="Node000003" class="node">
 <title>Node3</title>
 <g id="a_Node000003"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="295.75,-173.12 213.75,-173.12 213.75,-150.88 295.75,-150.88 295.75,-173.12"/>
+<polygon fill="white" stroke="#666666" points="295.75,-173.12 213.75,-173.12 213.75,-150.88 295.75,-150.88 295.75,-173.12"/>
 <text text-anchor="middle" x="254.75" y="-159.62" font-family="Helvetica,sans-Serif" font-size="10.00">std::true_type</text>
 </a>
 </g>

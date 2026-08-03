@@ -32,7 +32,7 @@
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_capacitor.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="323,-222.25 199,-222.25 199,-200 323,-200 323,-222.25"/>
+<polygon fill="white" stroke="#666666" points="323,-222.25 199,-222.25 199,-200 323,-200 323,-222.25"/>
 <text text-anchor="middle" x="261" y="-208.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::Capacitor</text>
 </a>
 </g>
@@ -68,7 +68,7 @@
 <g id="Node000004" class="node">
 <title>Node4</title>
 <g id="a_Node000004"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="317,-142.25 205,-142.25 205,-120 317,-120 317,-142.25"/>
+<polygon fill="white" stroke="#666666" points="317,-142.25 205,-142.25 205,-120 317,-120 317,-142.25"/>
 <text text-anchor="middle" x="261" y="-128.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::RXLine</text>
 </a>
 </g>
@@ -104,7 +104,7 @@
 <g id="Node000006" class="node">
 <title>Node6</title>
 <g id="a_Node000006"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_shunt.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="314.75,-62.25 207.25,-62.25 207.25,-40 314.75,-40 314.75,-62.25"/>
+<polygon fill="white" stroke="#666666" points="314.75,-62.25 207.25,-62.25 207.25,-40 314.75,-40 314.75,-62.25"/>
 <text text-anchor="middle" x="261" y="-48.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::Shunt</text>
 </a>
 </g>

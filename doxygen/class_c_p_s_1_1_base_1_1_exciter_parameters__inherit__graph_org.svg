@@ -21,7 +21,7 @@
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_parameters.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="366.5,-170.38 189.25,-170.38 189.25,-148.12 366.5,-148.12 366.5,-170.38"/>
+<polygon fill="white" stroke="#666666" points="366.5,-170.38 189.25,-170.38 189.25,-148.12 366.5,-148.12 366.5,-170.38"/>
 <text text-anchor="middle" x="277.88" y="-156.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::ExciterDC1Parameters</text>
 </a>
 </g>
@@ -39,7 +39,7 @@
 <g id="Node000003" class="node">
 <title>Node3</title>
 <g id="a_Node000003"><a xlink:href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="350.75,-130.5 205,-130.5 205,-94 350.75,-94 350.75,-130.5"/>
+<polygon fill="white" stroke="#666666" points="350.75,-130.5 205,-130.5 205,-94 350.75,-94 350.75,-130.5"/>
 <text text-anchor="start" x="213" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::ExciterDC1Simp</text>
 <text text-anchor="middle" x="277.88" y="-102.75" font-family="Helvetica,sans-Serif" font-size="10.00">Parameters</text>
 </a>
@@ -58,7 +58,7 @@
 <g id="Node000004" class="node">
 <title>Node4</title>
 <g id="a_Node000004"><a xlink:href="class_c_p_s_1_1_signal_1_1_exciter_s_t1_parameters.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="365,-76.38 190.75,-76.38 190.75,-54.12 365,-54.12 365,-76.38"/>
+<polygon fill="white" stroke="#666666" points="365,-76.38 190.75,-76.38 190.75,-54.12 365,-54.12 365,-76.38"/>
 <text text-anchor="middle" x="277.88" y="-62.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::ExciterST1Parameters</text>
 </a>
 </g>
@@ -76,7 +76,7 @@
 <g id="Node000005" class="node">
 <title>Node5</title>
 <g id="a_Node000005"><a xlink:href="class_c_p_s_1_1_signal_1_1_exciter_static_parameters.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="342.12,-36.5 213.62,-36.5 213.62,0 342.12,0 342.12,-36.5"/>
+<polygon fill="white" stroke="#666666" points="342.12,-36.5 213.62,-36.5 213.62,0 342.12,0 342.12,-36.5"/>
 <text text-anchor="start" x="221.62" y="-23" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Signal::ExciterStatic</text>
 <text text-anchor="middle" x="277.88" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">Parameters</text>
 </a>

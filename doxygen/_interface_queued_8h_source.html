@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_interface_queued_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">InterfaceQueued.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Author: Niklas Eiling &lt;niklas.eiling@eonerc.rwth-aachen.de&gt;</span></div>
+<a href="_interface_queued_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Author: Niklas Eiling &lt;niklas.eiling@eonerc.rwth-aachen.de&gt;</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> * SPDX-FileCopyrightText: 2023-2024 Niklas Eiling &lt;niklas.eiling@eonerc.rwth-aachen.de&gt;</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * SPDX-License-Identifier: MPL-2.0</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> */</span></div>
@@ -100,13 +108,13 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;thread&gt;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;dpsim-models/Attribute.h&gt;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;dpsim-models/Logger.h&gt;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;dpsim-models/Task.h&gt;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;<a class="code" href="_attribute_8h.html">dpsim-models/Attribute.h</a>&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;<a class="code" href="_logger_8h.html">dpsim-models/Logger.h</a>&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;<a class="code" href="_task_8h.html">dpsim-models/Task.h</a>&gt;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;dpsim/Config.h&gt;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;dpsim/Definitions.h&gt;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;dpsim/Interface.h&gt;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;dpsim/Scheduler.h&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;<a class="code" href="dpsim_2include_2dpsim_2_definitions_8h.html">dpsim/Definitions.h</a>&gt;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;<a class="code" href="_interface_8h.html">dpsim/Interface.h</a>&gt;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;<a class="code" href="_scheduler_8h.html">dpsim/Scheduler.h</a>&gt;</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;readerwriterqueue.h&gt;</span></div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
@@ -115,90 +123,100 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">class </span><a class="code hl_class" href="class_d_psim_1_1_interface_worker.html">InterfaceWorker</a>;</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="foldopen" id="foldopen00024" data-start="{" data-end="};">
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued.html">   24</a></span><span class="keyword">class </span>InterfaceQueued : <span class="keyword">public</span> Interface,</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued.html">   24</a></span><span class="keyword">class </span><a class="code hl_function" href="class_d_psim_1_1_interface_queued.html#a490350e7c7db54c52a3968c97e3cba44">InterfaceQueued</a> : <span class="keyword">public</span> <a class="code hl_function" href="class_d_psim_1_1_interface.html#af7ff184a7ead2918ca54d461d7087bb1">Interface</a>,</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>                        <span class="keyword">public</span> <a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;InterfaceQueued&gt; {</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="keyword">typedef</span> std::shared_ptr&lt;InterfaceQueued&gt; Ptr;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued.html#a0af27634eaae8ba995189d8b728dbe55">   28</a></span>  <span class="keyword">typedef</span> std::shared_ptr&lt;InterfaceQueued&gt; <a class="code hl_typedef" href="class_d_psim_1_1_interface_queued.html#a0af27634eaae8ba995189d8b728dbe55">Ptr</a>;</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <span class="keyword">using </span>AttributePacket = <span class="keyword">struct </span>AttributePacket {</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    CPS::AttributeBase::Ptr value;</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    UInt</div>
+<div class="foldopen" id="foldopen00030" data-start="{" data-end="};">
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued.html#a8cdc9a06f396b2b6ba3f27bd69de3388">   30</a></span>  <span class="keyword">using </span><a class="code hl_typedef" href="class_d_psim_1_1_interface_queued.html#a8cdc9a06f396b2b6ba3f27bd69de3388">AttributePacket</a> = <span class="keyword">struct </span><a class="code hl_typedef" href="class_d_psim_1_1_interface_queued.html#a8cdc9a06f396b2b6ba3f27bd69de3388">AttributePacket</a> {</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <a class="code hl_typedef" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">CPS::AttributeBase::Ptr</a> value;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <a class="code hl_typedef" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a></div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        attributeId; <span class="comment">// Used to identify the attribute. Defined by the position in the `mExportAttrsDpsim` and `mImportAttrsDpsim` lists</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    UInt</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <a class="code hl_typedef" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a></div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        sequenceId; <span class="comment">// Increasing ID used to discern multiple consecutive updates of a single attribute</span></div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> flags; <span class="comment">// Bit 0 set: Close interface</span></div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  };</div>
+</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <span class="keyword">enum</span> AttributePacketFlags {</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    PACKET_NO_FLAGS = 0,</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    PACKET_CLOSE_INTERFACE = 1,</div>
+<div class="foldopen" id="foldopen00039" data-start="{" data-end="};">
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued.html#acbb6e9580893278da9f22a5022802b9a">   39</a></span>  <span class="keyword">enum</span> <a class="code hl_enumeration" href="class_d_psim_1_1_interface_queued.html#acbb6e9580893278da9f22a5022802b9a">AttributePacketFlags</a> {</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued.html#acbb6e9580893278da9f22a5022802b9aaa5a11fdbe5b8929910c71cc6ef0dcb38">   40</a></span>    <a class="code hl_enumvalue" href="class_d_psim_1_1_interface_queued.html#acbb6e9580893278da9f22a5022802b9aaa5a11fdbe5b8929910c71cc6ef0dcb38">PACKET_NO_FLAGS</a> = 0,</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued.html#acbb6e9580893278da9f22a5022802b9aa08e4fabea76f96f4d9e9ea2ec0559719">   41</a></span>    <a class="code hl_enumvalue" href="class_d_psim_1_1_interface_queued.html#acbb6e9580893278da9f22a5022802b9aa08e4fabea76f96f4d9e9ea2ec0559719">PACKET_CLOSE_INTERFACE</a> = 1,</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  };</div>
+</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  InterfaceQueued(std::shared_ptr&lt;InterfaceWorker&gt; intf,</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                  <span class="keyword">const</span> String &amp;name = <span class="stringliteral">&quot;&quot;</span>, UInt downsampling = 1)</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>      : Interface(name), mInterfaceWorker(intf), mDownsampling(downsampling) {</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    mQueueDpsimToInterface = std::make_shared&lt;</div>
+<div class="foldopen" id="foldopen00044" data-start="{" data-end="}">
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued.html#a490350e7c7db54c52a3968c97e3cba44">   44</a></span>  <a class="code hl_function" href="class_d_psim_1_1_interface_queued.html#a490350e7c7db54c52a3968c97e3cba44">InterfaceQueued</a>(std::shared_ptr&lt;InterfaceWorker&gt; intf,</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                  <span class="keyword">const</span> <a class="code hl_typedef" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> &amp;name = <span class="stringliteral">&quot;&quot;</span>, <a class="code hl_typedef" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> downsampling = 1)</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>      : <a class="code hl_function" href="class_d_psim_1_1_interface.html#af7ff184a7ead2918ca54d461d7087bb1">Interface</a>(name), <a class="code hl_variable" href="class_d_psim_1_1_interface_queued.html#af0ff6c1e751cfb7d115167f7b7be6f3d">mInterfaceWorker</a>(intf), <a class="code hl_variable" href="class_d_psim_1_1_interface_queued.html#aa0b35f2635f83b3335bd69e4de1ab0ea">mDownsampling</a>(downsampling) {</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <a class="code hl_variable" href="class_d_psim_1_1_interface_queued.html#a15b4a2b5e214e425a636a5bcbae1084f">mQueueDpsimToInterface</a> = std::make_shared&lt;</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        moodycamel::BlockingReaderWriterQueue&lt;AttributePacket&gt;&gt;();</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    mQueueInterfaceToDpsim = std::make_shared&lt;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <a class="code hl_variable" href="class_d_psim_1_1_interface_queued.html#a10937bf25e81d445606874933d0f4729">mQueueInterfaceToDpsim</a> = std::make_shared&lt;</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        moodycamel::BlockingReaderWriterQueue&lt;AttributePacket&gt;&gt;();</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  };</div>
+</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> open() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> close() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_interface_queued.html#a17eb21ddc93232e01c04893d93b2b4cd">open</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_interface_queued.html#a9c63fd57af0c1a9d587e2802b8468271">close</a>() <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <span class="comment">// Function used in the interface&#39;s simulation task to read all imported attributes from the queue</span></div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  <span class="comment">// Called once before every simulation timestep</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> pushDpsimAttrsToQueue();</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_interface_queued.html#adec44a53d47b3e5df88de6d7c0a58bca">pushDpsimAttrsToQueue</a>();</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  <span class="comment">// Function used in the interface&#39;s simulation task to write all exported attributes to the queue</span></div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  <span class="comment">// Called once after every simulation timestep</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> popDpsimAttrsFromQueue(<span class="keywordtype">bool</span> isSync = <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_interface_queued.html#a6b3b092189da3d307aa52b166d278de6">popDpsimAttrsFromQueue</a>(<span class="keywordtype">bool</span> isSync = <span class="keyword">false</span>);</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  <span class="comment">// Function called by the Simulation to perform interface synchronization</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> syncExports() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_interface_queued.html#a0da7cfd7e90f80bec88693c1e73a509a">syncExports</a>() <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_interface_queued.html#aa2e7c5c7907eb3ff710246854714dd9a">syncImports</a>() <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <span class="keyword">virtual</span> CPS::Task::List getTasks() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <span class="keyword">virtual</span> <a class="code hl_typedef" href="class_c_p_s_1_1_task.html#ad081ca27190e0b2e1887a8d6cb612a66">CPS::Task::List</a> <a class="code hl_function" href="class_d_psim_1_1_interface_queued.html#aa69d78384580c67c3e6ca2e7a3f40ea2">getTasks</a>() <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> setLogger(CPS::Logger::Log log) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_interface_queued.html#a22ac575eff84392077aa44622e130577">setLogger</a>(<a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a> log) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  <span class="keyword">virtual</span> ~InterfaceQueued() {</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keywordflow">if</span> (mOpened)</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>      close();</div>
+<div class="foldopen" id="foldopen00072" data-start="{" data-end="}">
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued.html#a517ddca82c4e3b880e1526990b3b6f79">   72</a></span>  <span class="keyword">virtual</span> <a class="code hl_function" href="class_d_psim_1_1_interface_queued.html#a517ddca82c4e3b880e1526990b3b6f79">~InterfaceQueued</a>() {</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="class_d_psim_1_1_interface.html#a46f7fd95003532d77c6a965280c2c3a0">mOpened</a>)</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>      <a class="code hl_function" href="class_d_psim_1_1_interface_queued.html#a9c63fd57af0c1a9d587e2802b8468271">close</a>();</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  }</div>
+</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  std::shared_ptr&lt;InterfaceWorker&gt; mInterfaceWorker;</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  UInt mDownsampling;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  std::thread mInterfaceWriterThread;</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  std::thread mInterfaceReaderThread;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued.html#af0ff6c1e751cfb7d115167f7b7be6f3d">   78</a></span>  std::shared_ptr&lt;InterfaceWorker&gt; <a class="code hl_variable" href="class_d_psim_1_1_interface_queued.html#af0ff6c1e751cfb7d115167f7b7be6f3d">mInterfaceWorker</a>;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued.html#aa0b35f2635f83b3335bd69e4de1ab0ea">   79</a></span>  <a class="code hl_typedef" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> <a class="code hl_variable" href="class_d_psim_1_1_interface_queued.html#aa0b35f2635f83b3335bd69e4de1ab0ea">mDownsampling</a>;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued.html#a2422bd887d071e3e32ec36ba377a7d24">   80</a></span>  std::thread <a class="code hl_variable" href="class_d_psim_1_1_interface_queued.html#a2422bd887d071e3e32ec36ba377a7d24">mInterfaceWriterThread</a>;</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued.html#a24b7de5209a1d7753e89de2b050b90e2">   81</a></span>  std::thread <a class="code hl_variable" href="class_d_psim_1_1_interface_queued.html#a24b7de5209a1d7753e89de2b050b90e2">mInterfaceReaderThread</a>;</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  std::shared_ptr&lt;moodycamel::BlockingReaderWriterQueue&lt;AttributePacket&gt;&gt;</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>      mQueueDpsimToInterface;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued.html#a15b4a2b5e214e425a636a5bcbae1084f">   84</a></span>      <a class="code hl_variable" href="class_d_psim_1_1_interface_queued.html#a15b4a2b5e214e425a636a5bcbae1084f">mQueueDpsimToInterface</a>;</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  std::shared_ptr&lt;moodycamel::BlockingReaderWriterQueue&lt;AttributePacket&gt;&gt;</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>      mQueueInterfaceToDpsim;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued.html#a10937bf25e81d445606874933d0f4729">   86</a></span>      <a class="code hl_variable" href="class_d_psim_1_1_interface_queued.html#a10937bf25e81d445606874933d0f4729">mQueueInterfaceToDpsim</a>;</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="keyword">public</span>:</div>
 <div class="foldopen" id="foldopen00089" data-start="{" data-end="};">
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued_1_1_writer_thread.html">   89</a></span>  <span class="keyword">class </span>WriterThread {</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued_1_1_writer_thread.html">   89</a></span>  <span class="keyword">class </span><a class="code hl_function" href="class_d_psim_1_1_interface_queued_1_1_writer_thread.html#a3673e29e7fb52e687ca80836b00c8c7d">WriterThread</a> {</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    std::shared_ptr&lt;moodycamel::BlockingReaderWriterQueue&lt;AttributePacket&gt;&gt;</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        mQueueDpsimToInterface;</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    std::shared_ptr&lt;InterfaceWorker&gt; mInterfaceWorker;</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    WriterThread(</div>
+<div class="foldopen" id="foldopen00096" data-start="{" data-end="}">
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued_1_1_writer_thread.html#a3673e29e7fb52e687ca80836b00c8c7d">   96</a></span>    <a class="code hl_function" href="class_d_psim_1_1_interface_queued_1_1_writer_thread.html#a3673e29e7fb52e687ca80836b00c8c7d">WriterThread</a>(</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        std::shared_ptr&lt;moodycamel::BlockingReaderWriterQueue&lt;AttributePacket&gt;&gt;</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>            queueDpsimToInterface,</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        std::shared_ptr&lt;InterfaceWorker&gt; intf)</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        : mQueueDpsimToInterface(queueDpsimToInterface),</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>          mInterfaceWorker(intf){};</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    <span class="keywordtype">void</span> operator()() <span class="keyword">const</span>;</div>
+</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_interface_queued_1_1_writer_thread.html#a4727542ab2a0ac8aab475eaf01690d75">operator()</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>  };</div>
 </div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
 <div class="foldopen" id="foldopen00105" data-start="{" data-end="};">
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued_1_1_reader_thread.html">  105</a></span>  <span class="keyword">class </span>ReaderThread {</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued_1_1_reader_thread.html">  105</a></span>  <span class="keyword">class </span><a class="code hl_function" href="class_d_psim_1_1_interface_queued_1_1_reader_thread.html#a87c058fdc4497a380f916a3070605c02">ReaderThread</a> {</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    std::shared_ptr&lt;moodycamel::BlockingReaderWriterQueue&lt;AttributePacket&gt;&gt;</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        mQueueInterfaceToDpsim;</div>
@@ -206,64 +224,122 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    std::atomic&lt;bool&gt; &amp;mOpened;</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    ReaderThread(</div>
+<div class="foldopen" id="foldopen00113" data-start="{" data-end="}">
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued_1_1_reader_thread.html#a87c058fdc4497a380f916a3070605c02">  113</a></span>    <a class="code hl_function" href="class_d_psim_1_1_interface_queued_1_1_reader_thread.html#a87c058fdc4497a380f916a3070605c02">ReaderThread</a>(</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        std::shared_ptr&lt;moodycamel::BlockingReaderWriterQueue&lt;AttributePacket&gt;&gt;</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>            queueInterfaceToDpsim,</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        std::shared_ptr&lt;InterfaceWorker&gt; intf, std::atomic&lt;bool&gt; &amp;opened)</div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        : mQueueInterfaceToDpsim(queueInterfaceToDpsim), mInterfaceWorker(intf),</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>          mOpened(opened){};</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    <span class="keywordtype">void</span> operator()() <span class="keyword">const</span>;</div>
+</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_interface_queued_1_1_reader_thread.html#a74bd2b8e5bbfa4d57a4bff45dcd493be">operator()</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  };</div>
 </div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
 <div class="foldopen" id="foldopen00122" data-start="{" data-end="};">
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued_1_1_pre_step.html">  122</a></span>  <span class="keyword">class </span>PreStep : <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_task.html">CPS::Task</a> {</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued_1_1_pre_step.html">  122</a></span>  <span class="keyword">class </span><a class="code hl_function" href="class_d_psim_1_1_interface_queued_1_1_pre_step.html#a511ec9b3ce6a9d8e8ea44db0962eeb24">PreStep</a> : <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_task.html">CPS::Task</a> {</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <span class="keyword">explicit</span> PreStep(InterfaceQueued &amp;intf)</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        : Task(intf.getName() + <span class="stringliteral">&quot;.Read&quot;</span>), mIntf(intf) {</div>
+<div class="foldopen" id="foldopen00124" data-start="{" data-end="}">
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued_1_1_pre_step.html#a511ec9b3ce6a9d8e8ea44db0962eeb24">  124</a></span>    <span class="keyword">explicit</span> <a class="code hl_function" href="class_d_psim_1_1_interface_queued_1_1_pre_step.html#a511ec9b3ce6a9d8e8ea44db0962eeb24">PreStep</a>(<a class="code hl_function" href="class_d_psim_1_1_interface_queued.html#a490350e7c7db54c52a3968c97e3cba44">InterfaceQueued</a> &amp;intf)</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        : <a class="code hl_function" href="class_c_p_s_1_1_task.html#a6e4219251f24641dc33eeeebaa3820c9">Task</a>(intf.<a class="code hl_function" href="class_d_psim_1_1_interface.html#a999d2998d8f639c3044b72133c19b19b">getName</a>() + <span class="stringliteral">&quot;.Read&quot;</span>), mIntf(intf) {</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>      <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;[attr, _seqId, _blockOnRead, _syncOnStart] :</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>           intf.mImportAttrsDpsim) {</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>           intf.<a class="code hl_variable" href="class_d_psim_1_1_interface.html#a33a81c7c3de33abb899eedfff741acd2">mImportAttrsDpsim</a>) {</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        mModifiedAttributes.push_back(attr);</div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>      }</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    }</div>
+</div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <span class="keywordtype">void</span> execute(Real time, Int timeStepCount) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_interface_queued_1_1_pre_step.html#a1441e46df7b2223834defcd07164d2b5">execute</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> time, <a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> timeStepCount) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    InterfaceQueued &amp;mIntf;</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    <a class="code hl_function" href="class_d_psim_1_1_interface_queued.html#a490350e7c7db54c52a3968c97e3cba44">InterfaceQueued</a> &amp;mIntf;</div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>  };</div>
 </div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
 <div class="foldopen" id="foldopen00138" data-start="{" data-end="};">
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued_1_1_post_step.html">  138</a></span>  <span class="keyword">class </span>PostStep : <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_task.html">CPS::Task</a> {</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued_1_1_post_step.html">  138</a></span>  <span class="keyword">class </span><a class="code hl_function" href="class_d_psim_1_1_interface_queued_1_1_post_step.html#aba7a256b9b3166c4f3a9ca994a1cb12c">PostStep</a> : <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_task.html">CPS::Task</a> {</div>
 <div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    <span class="keyword">explicit</span> PostStep(InterfaceQueued &amp;intf)</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>        : Task(intf.getName() + <span class="stringliteral">&quot;.Write&quot;</span>), mIntf(intf) {</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>      <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;[attr, _seqId] : intf.mExportAttrsDpsim) {</div>
+<div class="foldopen" id="foldopen00140" data-start="{" data-end="}">
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_interface_queued_1_1_post_step.html#aba7a256b9b3166c4f3a9ca994a1cb12c">  140</a></span>    <span class="keyword">explicit</span> <a class="code hl_function" href="class_d_psim_1_1_interface_queued_1_1_post_step.html#aba7a256b9b3166c4f3a9ca994a1cb12c">PostStep</a>(<a class="code hl_function" href="class_d_psim_1_1_interface_queued.html#a490350e7c7db54c52a3968c97e3cba44">InterfaceQueued</a> &amp;intf)</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>        : <a class="code hl_function" href="class_c_p_s_1_1_task.html#a6e4219251f24641dc33eeeebaa3820c9">Task</a>(intf.<a class="code hl_function" href="class_d_psim_1_1_interface.html#a999d2998d8f639c3044b72133c19b19b">getName</a>() + <span class="stringliteral">&quot;.Write&quot;</span>), mIntf(intf) {</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>      <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;[attr, _seqId] : intf.<a class="code hl_variable" href="class_d_psim_1_1_interface.html#af0bc158390ed482f079bb79798860eb3">mExportAttrsDpsim</a>) {</div>
 <div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>        mAttributeDependencies.push_back(attr);</div>
 <div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>      }</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>      mModifiedAttributes.push_back(Scheduler::external);</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>      <a class="code hl_variable" href="class_c_p_s_1_1_task.html#a516624749680c3cc812f229bb6caef4c">mModifiedAttributes</a>.push_back(<a class="code hl_variable" href="class_d_psim_1_1_scheduler.html#a5369e74df20f3b2e96a5442ff36bd62c">Scheduler::external</a>);</div>
 <div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    }</div>
+</div>
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span> </div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    <span class="keywordtype">void</span> execute(Real time, Int timeStepCount) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_interface_queued_1_1_post_step.html#ad2c12d86e08c32fec6898623f7fbd728">execute</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> time, <a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> timeStepCount) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    InterfaceQueued &amp;mIntf;</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    <a class="code hl_function" href="class_d_psim_1_1_interface_queued.html#a490350e7c7db54c52a3968c97e3cba44">InterfaceQueued</a> &amp;mIntf;</div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>  };</div>
 </div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>};</div>
 </div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>} <span class="comment">// namespace DPsim</span></div>
+<div class="ttc" id="a_attribute_8h_html"><div class="ttname"><a href="_attribute_8h.html">Attribute.h</a></div></div>
+<div class="ttc" id="a_interface_8h_html"><div class="ttname"><a href="_interface_8h.html">Interface.h</a></div></div>
+<div class="ttc" id="a_logger_8h_html"><div class="ttname"><a href="_logger_8h.html">Logger.h</a></div></div>
+<div class="ttc" id="a_scheduler_8h_html"><div class="ttname"><a href="_scheduler_8h.html">Scheduler.h</a></div></div>
+<div class="ttc" id="a_task_8h_html"><div class="ttname"><a href="_task_8h.html">Task.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_base_html_af06cf61c74c46ce667c58f124d69a679"><div class="ttname"><a href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">CPS::AttributeBase::Ptr</a></div><div class="ttdeci">AttributePointer&lt; AttributeBase &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00122">Attribute.h:122</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_logger_html_a1dd42a2424f56886f0eec500a7851423"><div class="ttname"><a href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a></div><div class="ttdeci">std::shared_ptr&lt; spdlog::logger &gt; Log</div><div class="ttdef"><b>Definition</b> <a href="_logger_8h_source.html#l00034">Logger.h:34</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_task_html"><div class="ttname"><a href="class_c_p_s_1_1_task.html">CPS::Task</a></div><div class="ttdoc">Tasks to be defined by every component.</div><div class="ttdef"><b>Definition</b> <a href="_task_8h_source.html#l00025">Task.h:25</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_task_html_a516624749680c3cc812f229bb6caef4c"><div class="ttname"><a href="class_c_p_s_1_1_task.html#a516624749680c3cc812f229bb6caef4c">CPS::Task::mModifiedAttributes</a></div><div class="ttdeci">std::vector&lt; AttributeBase::Ptr &gt; mModifiedAttributes</div><div class="ttdef"><b>Definition</b> <a href="_task_8h_source.html#l00053">Task.h:53</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_task_html_a6e4219251f24641dc33eeeebaa3820c9"><div class="ttname"><a href="class_c_p_s_1_1_task.html#a6e4219251f24641dc33eeeebaa3820c9">CPS::Task::Task</a></div><div class="ttdeci">Task()</div><div class="ttdef"><b>Definition</b> <a href="_task_8h_source.html#l00030">Task.h:30</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_task_html_ad081ca27190e0b2e1887a8d6cb612a66"><div class="ttname"><a href="class_c_p_s_1_1_task.html#ad081ca27190e0b2e1887a8d6cb612a66">CPS::Task::List</a></div><div class="ttdeci">std::vector&lt; Ptr &gt; List</div><div class="ttdef"><b>Definition</b> <a href="_task_8h_source.html#l00028">Task.h:28</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_html_a33a81c7c3de33abb899eedfff741acd2"><div class="ttname"><a href="class_d_psim_1_1_interface.html#a33a81c7c3de33abb899eedfff741acd2">DPsim::Interface::mImportAttrsDpsim</a></div><div class="ttdeci">std::vector&lt; std::tuple&lt; CPS::AttributeBase::Ptr, UInt, bool, bool &gt; &gt; mImportAttrsDpsim</div><div class="ttdef"><b>Definition</b> <a href="_interface_8h_source.html#l00049">Interface.h:49</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_html_a46f7fd95003532d77c6a965280c2c3a0"><div class="ttname"><a href="class_d_psim_1_1_interface.html#a46f7fd95003532d77c6a965280c2c3a0">DPsim::Interface::mOpened</a></div><div class="ttdeci">std::atomic&lt; bool &gt; mOpened</div><div class="ttdef"><b>Definition</b> <a href="_interface_8h_source.html#l00063">Interface.h:63</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_html_a999d2998d8f639c3044b72133c19b19b"><div class="ttname"><a href="class_d_psim_1_1_interface.html#a999d2998d8f639c3044b72133c19b19b">DPsim::Interface::getName</a></div><div class="ttdeci">virtual String &amp; getName()</div><div class="ttdef"><b>Definition</b> <a href="_interface_8h_source.html#l00044">Interface.h:44</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_html_af0bc158390ed482f079bb79798860eb3"><div class="ttname"><a href="class_d_psim_1_1_interface.html#af0bc158390ed482f079bb79798860eb3">DPsim::Interface::mExportAttrsDpsim</a></div><div class="ttdeci">std::vector&lt; std::tuple&lt; CPS::AttributeBase::Ptr, UInt &gt; &gt; mExportAttrsDpsim</div><div class="ttdef"><b>Definition</b> <a href="_interface_8h_source.html#l00051">Interface.h:51</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_html_af7ff184a7ead2918ca54d461d7087bb1"><div class="ttname"><a href="class_d_psim_1_1_interface.html#af7ff184a7ead2918ca54d461d7087bb1">DPsim::Interface::Interface</a></div><div class="ttdeci">Interface(const String &amp;name=&quot;&quot;, spdlog::level::level_enum logLevel=spdlog::level::level_enum::info)</div><div class="ttdef"><b>Definition</b> <a href="_interface_8h_source.html#l00024">Interface.h:24</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_1_1_post_step_html_aba7a256b9b3166c4f3a9ca994a1cb12c"><div class="ttname"><a href="class_d_psim_1_1_interface_queued_1_1_post_step.html#aba7a256b9b3166c4f3a9ca994a1cb12c">DPsim::InterfaceQueued::PostStep::PostStep</a></div><div class="ttdeci">PostStep(InterfaceQueued &amp;intf)</div><div class="ttdef"><b>Definition</b> <a href="#l00140">InterfaceQueued.h:140</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_1_1_post_step_html_ad2c12d86e08c32fec6898623f7fbd728"><div class="ttname"><a href="class_d_psim_1_1_interface_queued_1_1_post_step.html#ad2c12d86e08c32fec6898623f7fbd728">DPsim::InterfaceQueued::PostStep::execute</a></div><div class="ttdeci">void execute(Real time, Int timeStepCount) override</div><div class="ttdef"><b>Definition</b> <a href="_interface_queued_8cpp_source.html#l00058">InterfaceQueued.cpp:58</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_1_1_pre_step_html_a1441e46df7b2223834defcd07164d2b5"><div class="ttname"><a href="class_d_psim_1_1_interface_queued_1_1_pre_step.html#a1441e46df7b2223834defcd07164d2b5">DPsim::InterfaceQueued::PreStep::execute</a></div><div class="ttdeci">void execute(Real time, Int timeStepCount) override</div><div class="ttdef"><b>Definition</b> <a href="_interface_queued_8cpp_source.html#l00053">InterfaceQueued.cpp:53</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_1_1_pre_step_html_a511ec9b3ce6a9d8e8ea44db0962eeb24"><div class="ttname"><a href="class_d_psim_1_1_interface_queued_1_1_pre_step.html#a511ec9b3ce6a9d8e8ea44db0962eeb24">DPsim::InterfaceQueued::PreStep::PreStep</a></div><div class="ttdeci">PreStep(InterfaceQueued &amp;intf)</div><div class="ttdef"><b>Definition</b> <a href="#l00124">InterfaceQueued.h:124</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_1_1_reader_thread_html_a74bd2b8e5bbfa4d57a4bff45dcd493be"><div class="ttname"><a href="class_d_psim_1_1_interface_queued_1_1_reader_thread.html#a74bd2b8e5bbfa4d57a4bff45dcd493be">DPsim::InterfaceQueued::ReaderThread::operator()</a></div><div class="ttdeci">void operator()() const</div><div class="ttdef"><b>Definition</b> <a href="_interface_queued_8cpp_source.html#l00168">InterfaceQueued.cpp:168</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_1_1_reader_thread_html_a87c058fdc4497a380f916a3070605c02"><div class="ttname"><a href="class_d_psim_1_1_interface_queued_1_1_reader_thread.html#a87c058fdc4497a380f916a3070605c02">DPsim::InterfaceQueued::ReaderThread::ReaderThread</a></div><div class="ttdeci">ReaderThread(std::shared_ptr&lt; moodycamel::BlockingReaderWriterQueue&lt; AttributePacket &gt; &gt; queueInterfaceToDpsim, std::shared_ptr&lt; InterfaceWorker &gt; intf, std::atomic&lt; bool &gt; &amp;opened)</div><div class="ttdef"><b>Definition</b> <a href="#l00113">InterfaceQueued.h:113</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_1_1_writer_thread_html_a3673e29e7fb52e687ca80836b00c8c7d"><div class="ttname"><a href="class_d_psim_1_1_interface_queued_1_1_writer_thread.html#a3673e29e7fb52e687ca80836b00c8c7d">DPsim::InterfaceQueued::WriterThread::WriterThread</a></div><div class="ttdeci">WriterThread(std::shared_ptr&lt; moodycamel::BlockingReaderWriterQueue&lt; AttributePacket &gt; &gt; queueDpsimToInterface, std::shared_ptr&lt; InterfaceWorker &gt; intf)</div><div class="ttdef"><b>Definition</b> <a href="#l00096">InterfaceQueued.h:96</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_1_1_writer_thread_html_a4727542ab2a0ac8aab475eaf01690d75"><div class="ttname"><a href="class_d_psim_1_1_interface_queued_1_1_writer_thread.html#a4727542ab2a0ac8aab475eaf01690d75">DPsim::InterfaceQueued::WriterThread::operator()</a></div><div class="ttdeci">void operator()() const</div><div class="ttdef"><b>Definition</b> <a href="_interface_queued_8cpp_source.html#l00141">InterfaceQueued.cpp:141</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_html_a0af27634eaae8ba995189d8b728dbe55"><div class="ttname"><a href="class_d_psim_1_1_interface_queued.html#a0af27634eaae8ba995189d8b728dbe55">DPsim::InterfaceQueued::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; InterfaceQueued &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="#l00028">InterfaceQueued.h:28</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_html_a0da7cfd7e90f80bec88693c1e73a509a"><div class="ttname"><a href="class_d_psim_1_1_interface_queued.html#a0da7cfd7e90f80bec88693c1e73a509a">DPsim::InterfaceQueued::syncExports</a></div><div class="ttdeci">virtual void syncExports() override</div><div class="ttdef"><b>Definition</b> <a href="_interface_queued_8cpp_source.html#l00075">InterfaceQueued.cpp:75</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_html_a10937bf25e81d445606874933d0f4729"><div class="ttname"><a href="class_d_psim_1_1_interface_queued.html#a10937bf25e81d445606874933d0f4729">DPsim::InterfaceQueued::mQueueInterfaceToDpsim</a></div><div class="ttdeci">std::shared_ptr&lt; moodycamel::BlockingReaderWriterQueue&lt; AttributePacket &gt; &gt; mQueueInterfaceToDpsim</div><div class="ttdef"><b>Definition</b> <a href="#l00086">InterfaceQueued.h:86</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_html_a15b4a2b5e214e425a636a5bcbae1084f"><div class="ttname"><a href="class_d_psim_1_1_interface_queued.html#a15b4a2b5e214e425a636a5bcbae1084f">DPsim::InterfaceQueued::mQueueDpsimToInterface</a></div><div class="ttdeci">std::shared_ptr&lt; moodycamel::BlockingReaderWriterQueue&lt; AttributePacket &gt; &gt; mQueueDpsimToInterface</div><div class="ttdef"><b>Definition</b> <a href="#l00084">InterfaceQueued.h:84</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_html_a17eb21ddc93232e01c04893d93b2b4cd"><div class="ttname"><a href="class_d_psim_1_1_interface_queued.html#a17eb21ddc93232e01c04893d93b2b4cd">DPsim::InterfaceQueued::open</a></div><div class="ttdeci">virtual void open() override</div><div class="ttdef"><b>Definition</b> <a href="_interface_queued_8cpp_source.html#l00013">InterfaceQueued.cpp:13</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_html_a22ac575eff84392077aa44622e130577"><div class="ttname"><a href="class_d_psim_1_1_interface_queued.html#a22ac575eff84392077aa44622e130577">DPsim::InterfaceQueued::setLogger</a></div><div class="ttdeci">virtual void setLogger(CPS::Logger::Log log) override</div><div class="ttdef"><b>Definition</b> <a href="_interface_queued_8cpp_source.html#l00063">InterfaceQueued.cpp:63</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_html_a2422bd887d071e3e32ec36ba377a7d24"><div class="ttname"><a href="class_d_psim_1_1_interface_queued.html#a2422bd887d071e3e32ec36ba377a7d24">DPsim::InterfaceQueued::mInterfaceWriterThread</a></div><div class="ttdeci">std::thread mInterfaceWriterThread</div><div class="ttdef"><b>Definition</b> <a href="#l00080">InterfaceQueued.h:80</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_html_a24b7de5209a1d7753e89de2b050b90e2"><div class="ttname"><a href="class_d_psim_1_1_interface_queued.html#a24b7de5209a1d7753e89de2b050b90e2">DPsim::InterfaceQueued::mInterfaceReaderThread</a></div><div class="ttdeci">std::thread mInterfaceReaderThread</div><div class="ttdef"><b>Definition</b> <a href="#l00081">InterfaceQueued.h:81</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_html_a490350e7c7db54c52a3968c97e3cba44"><div class="ttname"><a href="class_d_psim_1_1_interface_queued.html#a490350e7c7db54c52a3968c97e3cba44">DPsim::InterfaceQueued::InterfaceQueued</a></div><div class="ttdeci">InterfaceQueued(std::shared_ptr&lt; InterfaceWorker &gt; intf, const String &amp;name=&quot;&quot;, UInt downsampling=1)</div><div class="ttdef"><b>Definition</b> <a href="#l00044">InterfaceQueued.h:44</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_html_a517ddca82c4e3b880e1526990b3b6f79"><div class="ttname"><a href="class_d_psim_1_1_interface_queued.html#a517ddca82c4e3b880e1526990b3b6f79">DPsim::InterfaceQueued::~InterfaceQueued</a></div><div class="ttdeci">virtual ~InterfaceQueued()</div><div class="ttdef"><b>Definition</b> <a href="#l00072">InterfaceQueued.h:72</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_html_a6b3b092189da3d307aa52b166d278de6"><div class="ttname"><a href="class_d_psim_1_1_interface_queued.html#a6b3b092189da3d307aa52b166d278de6">DPsim::InterfaceQueued::popDpsimAttrsFromQueue</a></div><div class="ttdeci">virtual void popDpsimAttrsFromQueue(bool isSync=false)</div><div class="ttdef"><b>Definition</b> <a href="_interface_queued_8cpp_source.html#l00080">InterfaceQueued.cpp:80</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_html_a8cdc9a06f396b2b6ba3f27bd69de3388"><div class="ttname"><a href="class_d_psim_1_1_interface_queued.html#a8cdc9a06f396b2b6ba3f27bd69de3388">DPsim::InterfaceQueued::AttributePacket</a></div><div class="ttdeci">struct AttributePacket { CPS::AttributeBase::Ptr value; UInt attributeId; UInt sequenceId; unsigned char flags; } AttributePacket</div><div class="ttdef"><b>Definition</b> <a href="#l00030">InterfaceQueued.h:30</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_html_a9c63fd57af0c1a9d587e2802b8468271"><div class="ttname"><a href="class_d_psim_1_1_interface_queued.html#a9c63fd57af0c1a9d587e2802b8468271">DPsim::InterfaceQueued::close</a></div><div class="ttdeci">virtual void close() override</div><div class="ttdef"><b>Definition</b> <a href="_interface_queued_8cpp_source.html#l00027">InterfaceQueued.cpp:27</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_html_aa0b35f2635f83b3335bd69e4de1ab0ea"><div class="ttname"><a href="class_d_psim_1_1_interface_queued.html#aa0b35f2635f83b3335bd69e4de1ab0ea">DPsim::InterfaceQueued::mDownsampling</a></div><div class="ttdeci">UInt mDownsampling</div><div class="ttdef"><b>Definition</b> <a href="#l00079">InterfaceQueued.h:79</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_interface_queued_html_aa2e7c5c7907eb3ff710246854714dd9a"><div class="ttname"><a href="class_d_psim_1_1_interface_queued.html#aa2e7c5c7907eb3ff710246854714dd9a">DPsim::InterfaceQueued::syncImports</a></div><div class="ttdeci">virtual void syncImports() override</div><div class="ttdoc">Function called by the Simulation to perform interface synchronization.</div><div class="ttdef"><b>Definition</b> <a href="_interface_queued_8cpp_source.html#l00070">InterfaceQueued.cpp:70</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_html_aa69d78384580c67c3e6ca2e7a3f40ea2"><div class="ttname"><a href="class_d_psim_1_1_interface_queued.html#aa69d78384580c67c3e6ca2e7a3f40ea2">DPsim::InterfaceQueued::getTasks</a></div><div class="ttdeci">virtual CPS::Task::List getTasks() override</div><div class="ttdef"><b>Definition</b> <a href="_interface_queued_8cpp_source.html#l00042">InterfaceQueued.cpp:42</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_html_acbb6e9580893278da9f22a5022802b9a"><div class="ttname"><a href="class_d_psim_1_1_interface_queued.html#acbb6e9580893278da9f22a5022802b9a">DPsim::InterfaceQueued::AttributePacketFlags</a></div><div class="ttdeci">AttributePacketFlags</div><div class="ttdef"><b>Definition</b> <a href="#l00039">InterfaceQueued.h:39</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_html_acbb6e9580893278da9f22a5022802b9aa08e4fabea76f96f4d9e9ea2ec0559719"><div class="ttname"><a href="class_d_psim_1_1_interface_queued.html#acbb6e9580893278da9f22a5022802b9aa08e4fabea76f96f4d9e9ea2ec0559719">DPsim::InterfaceQueued::PACKET_CLOSE_INTERFACE</a></div><div class="ttdeci">@ PACKET_CLOSE_INTERFACE</div><div class="ttdef"><b>Definition</b> <a href="#l00041">InterfaceQueued.h:41</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_html_acbb6e9580893278da9f22a5022802b9aaa5a11fdbe5b8929910c71cc6ef0dcb38"><div class="ttname"><a href="class_d_psim_1_1_interface_queued.html#acbb6e9580893278da9f22a5022802b9aaa5a11fdbe5b8929910c71cc6ef0dcb38">DPsim::InterfaceQueued::PACKET_NO_FLAGS</a></div><div class="ttdeci">@ PACKET_NO_FLAGS</div><div class="ttdef"><b>Definition</b> <a href="#l00040">InterfaceQueued.h:40</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_html_adec44a53d47b3e5df88de6d7c0a58bca"><div class="ttname"><a href="class_d_psim_1_1_interface_queued.html#adec44a53d47b3e5df88de6d7c0a58bca">DPsim::InterfaceQueued::pushDpsimAttrsToQueue</a></div><div class="ttdeci">virtual void pushDpsimAttrsToQueue()</div><div class="ttdef"><b>Definition</b> <a href="_interface_queued_8cpp_source.html#l00130">InterfaceQueued.cpp:130</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_html_af0ff6c1e751cfb7d115167f7b7be6f3d"><div class="ttname"><a href="class_d_psim_1_1_interface_queued.html#af0ff6c1e751cfb7d115167f7b7be6f3d">DPsim::InterfaceQueued::mInterfaceWorker</a></div><div class="ttdeci">std::shared_ptr&lt; InterfaceWorker &gt; mInterfaceWorker</div><div class="ttdef"><b>Definition</b> <a href="#l00078">InterfaceQueued.h:78</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_interface_worker_html"><div class="ttname"><a href="class_d_psim_1_1_interface_worker.html">DPsim::InterfaceWorker</a></div><div class="ttdef"><b>Definition</b> <a href="_interface_worker_8h_source.html#l00018">InterfaceWorker.h:18</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_scheduler_html_a5369e74df20f3b2e96a5442ff36bd62c"><div class="ttname"><a href="class_d_psim_1_1_scheduler.html#a5369e74df20f3b2e96a5442ff36bd62c">DPsim::Scheduler::external</a></div><div class="ttdeci">static CPS::AttributeBase::Ptr external</div><div class="ttdef"><b>Definition</b> <a href="_scheduler_8h_source.html#l00063">Scheduler.h:63</a></div></div>
 <div class="ttc" id="aclass_shared_factory_html"><div class="ttname"><a href="class_shared_factory.html">SharedFactory</a></div><div class="ttdef"><b>Definition</b> <a href="_ptr_factory_8h_source.html#l00016">PtrFactory.h:16</a></div></div>
+<div class="ttc" id="adpsim_2include_2dpsim_2_definitions_8h_html"><div class="ttname"><a href="dpsim_2include_2dpsim_2_definitions_8h.html">Definitions.h</a></div></div>
 <div class="ttc" id="anamespace_d_psim_html"><div class="ttname"><a href="namespace_d_psim.html">DPsim</a></div><div class="ttdef"><b>Definition</b> <a href="_dense_l_u_adapter_8cpp_source.html#l00013">DenseLUAdapter.cpp:13</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a52dcbc3a0896b912333104eb61a7b29b"><div class="ttname"><a href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">DPsim::Real</a></div><div class="ttdeci">CPS::Real Real</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00018">Definitions.h:18</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a66e48a625a26fd3c1d2198148f9d59e9"><div class="ttname"><a href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">DPsim::String</a></div><div class="ttdeci">CPS::String String</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00020">Definitions.h:20</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a6a29611b9912f8abc0545523b3f84f8c"><div class="ttname"><a href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">DPsim::Int</a></div><div class="ttdeci">CPS::Int Int</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00022">Definitions.h:22</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_aca275dbce4c75f8e270755c373b13d5d"><div class="ttname"><a href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">DPsim::UInt</a></div><div class="ttdeci">CPS::UInt UInt</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00023">Definitions.h:23</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li><li class="navelem"><a class="el" href="_interface_queued_8h.html">InterfaceQueued.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

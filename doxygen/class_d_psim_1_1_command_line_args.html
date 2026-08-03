@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_d_psim_1_1_command_line_args.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_command_line_args.html">CommandLineArgs</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
@@ -97,6 +105,8 @@ $(function(){ initResizable(false); });
   <div class="headertitle"><div class="title">DPsim::CommandLineArgs Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="dpsim_2include_2dpsim_2_utils_8h_source.html">Utils.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -105,9 +115,9 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9f46b641eca3cb284e33f9421976cb47" id="r_a9f46b641eca3cb284e33f9421976cb47"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9f46b641eca3cb284e33f9421976cb47">CommandLineArgs</a> (int argc, char *argv[], String name=&quot;dpsim&quot;, Real dt=0.001, Real d=1, Real sf=50, Int s=-1, CPS::Logger::Level ll=CPS::Logger::Level::info, CPS::Logger::Level clill=CPS::Logger::Level::off, Bool ss=false, Bool b=false, Bool si=false, CPS::Domain sd=CPS::Domain::DP, <a class="el" href="class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919e">Solver::Type</a> st=Solver::Type::MNA, DirectLinearSolverImpl mi=DirectLinearSolverImpl::KLU, String spn=&quot;plugin.so&quot;, String params=&quot;default.json&quot;)</td></tr>
+<tr class="memitem:a9f46b641eca3cb284e33f9421976cb47" id="r_a9f46b641eca3cb284e33f9421976cb47"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9f46b641eca3cb284e33f9421976cb47">CommandLineArgs</a> (int argc, char *argv[], <a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> <a class="el" href="#a202d6991a8fa9cd915e94cb7d57791a8">name</a>=&quot;dpsim&quot;, <a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> dt=0.001, <a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> d=1, <a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> sf=50, <a class="el" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> s=-1, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a> ll=CPS::Logger::Level::info, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a> clill=CPS::Logger::Level::off, <a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> ss=false, <a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> b=false, <a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> si=false, <a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9">CPS::Domain</a> sd=<a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9ae2fca8135c2fadca093abd79a6b1c0d2">CPS::Domain::DP</a>, <a class="el" href="class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919e">Solver::Type</a> st=<a class="el" href="class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919eaf125e1a54049f4b74b5cbe6e6d7abac6">Solver::Type::MNA</a>, <a class="el" href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457">DirectLinearSolverImpl</a> mi=<a class="el" href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a102d1784ab244b636827fc43963a995b">DirectLinearSolverImpl::KLU</a>, <a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> spn=&quot;plugin.so&quot;, <a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> <a class="el" href="#af31cf22c8f966878873955e37ac57d52">params</a>=&quot;default.json&quot;)</td></tr>
 <tr class="separator:a9f46b641eca3cb284e33f9421976cb47"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae948df8b7c0f57b911eaa9a9acc2dd84" id="r_ae948df8b7c0f57b911eaa9a9acc2dd84"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae948df8b7c0f57b911eaa9a9acc2dd84">CommandLineArgs</a> (String name=&quot;dpsim&quot;, Real dt=0.001, Real d=1, Real sf=50, Int s=-1, CPS::Logger::Level ll=CPS::Logger::Level::info, CPS::Logger::Level clill=CPS::Logger::Level::off, Bool ss=false, Bool b=false, Bool si=false, CPS::Domain sd=CPS::Domain::DP, <a class="el" href="class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919e">Solver::Type</a> st=Solver::Type::MNA, DirectLinearSolverImpl mi=DirectLinearSolverImpl::KLU, String spn=&quot;plugin.so&quot;)</td></tr>
+<tr class="memitem:ae948df8b7c0f57b911eaa9a9acc2dd84" id="r_ae948df8b7c0f57b911eaa9a9acc2dd84"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae948df8b7c0f57b911eaa9a9acc2dd84">CommandLineArgs</a> (<a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> <a class="el" href="#a202d6991a8fa9cd915e94cb7d57791a8">name</a>=&quot;dpsim&quot;, <a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> dt=0.001, <a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> d=1, <a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> sf=50, <a class="el" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> s=-1, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a> ll=CPS::Logger::Level::info, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a> clill=CPS::Logger::Level::off, <a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> ss=false, <a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> b=false, <a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> si=false, <a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9">CPS::Domain</a> sd=<a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9ae2fca8135c2fadca093abd79a6b1c0d2">CPS::Domain::DP</a>, <a class="el" href="class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919e">Solver::Type</a> st=<a class="el" href="class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919eaf125e1a54049f4b74b5cbe6e6d7abac6">Solver::Type::MNA</a>, <a class="el" href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457">DirectLinearSolverImpl</a> mi=<a class="el" href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a102d1784ab244b636827fc43963a995b">DirectLinearSolverImpl::KLU</a>, <a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> spn=&quot;plugin.so&quot;)</td></tr>
 <tr class="separator:ae948df8b7c0f57b911eaa9a9acc2dd84"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a294700cf80743d71ad28ac98d438518e" id="r_a294700cf80743d71ad28ac98d438518e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a294700cf80743d71ad28ac98d438518e">parseArguments</a> (int argc, char *argv[])</td></tr>
 <tr class="separator:a294700cf80743d71ad28ac98d438518e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -115,13 +125,13 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a845b2760becb55decd19bdf1fcfe6e0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61fc5ba7a9d5fbf95b1741a6947ad5a5" id="r_a61fc5ba7a9d5fbf95b1741a6947ad5a5"><td class="memItemLeft" align="right" valign="top">std::list&lt; fs::path &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a61fc5ba7a9d5fbf95b1741a6947ad5a5">positionalPaths</a> () const</td></tr>
 <tr class="separator:a61fc5ba7a9d5fbf95b1741a6947ad5a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a065d8a7325cbb27e1e5a9e237d9616c2" id="r_a065d8a7325cbb27e1e5a9e237d9616c2"><td class="memItemLeft" align="right" valign="top">Int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a065d8a7325cbb27e1e5a9e237d9616c2">getOptionInt</a> (String optionName)</td></tr>
+<tr class="memitem:a065d8a7325cbb27e1e5a9e237d9616c2" id="r_a065d8a7325cbb27e1e5a9e237d9616c2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a065d8a7325cbb27e1e5a9e237d9616c2">getOptionInt</a> (<a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> optionName)</td></tr>
 <tr class="separator:a065d8a7325cbb27e1e5a9e237d9616c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1cec6e9029efb8651b6d7a1f60f008d9" id="r_a1cec6e9029efb8651b6d7a1f60f008d9"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1cec6e9029efb8651b6d7a1f60f008d9">getOptionReal</a> (String optionName)</td></tr>
+<tr class="memitem:a1cec6e9029efb8651b6d7a1f60f008d9" id="r_a1cec6e9029efb8651b6d7a1f60f008d9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1cec6e9029efb8651b6d7a1f60f008d9">getOptionReal</a> (<a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> optionName)</td></tr>
 <tr class="separator:a1cec6e9029efb8651b6d7a1f60f008d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2ebe0eaf9631d51e95cc712d321326d" id="r_aa2ebe0eaf9631d51e95cc712d321326d"><td class="memItemLeft" align="right" valign="top">Bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa2ebe0eaf9631d51e95cc712d321326d">getOptionBool</a> (String optionName)</td></tr>
+<tr class="memitem:aa2ebe0eaf9631d51e95cc712d321326d" id="r_aa2ebe0eaf9631d51e95cc712d321326d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa2ebe0eaf9631d51e95cc712d321326d">getOptionBool</a> (<a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> optionName)</td></tr>
 <tr class="separator:aa2ebe0eaf9631d51e95cc712d321326d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7da06f9a09774d815ffcb47dc956893f" id="r_a7da06f9a09774d815ffcb47dc956893f"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7da06f9a09774d815ffcb47dc956893f">getOptionString</a> (String optionName)</td></tr>
+<tr class="memitem:a7da06f9a09774d815ffcb47dc956893f" id="r_a7da06f9a09774d815ffcb47dc956893f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7da06f9a09774d815ffcb47dc956893f">getOptionString</a> (<a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> optionName)</td></tr>
 <tr class="separator:a7da06f9a09774d815ffcb47dc956893f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -134,13 +144,13 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a1f684b0043f8b3b53b93504ea7e63750"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4df82b7a87a80e73e16494ca9f8bf2e" id="r_ae4df82b7a87a80e73e16494ca9f8bf2e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae4df82b7a87a80e73e16494ca9f8bf2e">scenario</a></td></tr>
 <tr class="separator:ae4df82b7a87a80e73e16494ca9f8bf2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff3d45fe224711297937cad8db73a418" id="r_aff3d45fe224711297937cad8db73a418"><td class="memItemLeft" align="right" valign="top">CPS::Logger::Level&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aff3d45fe224711297937cad8db73a418">logLevel</a></td></tr>
+<tr class="memitem:aff3d45fe224711297937cad8db73a418" id="r_aff3d45fe224711297937cad8db73a418"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aff3d45fe224711297937cad8db73a418">logLevel</a></td></tr>
 <tr class="separator:aff3d45fe224711297937cad8db73a418"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0447f969e045b2a4894c5b115493b31b" id="r_a0447f969e045b2a4894c5b115493b31b"><td class="memItemLeft" align="right" valign="top">CPS::Logger::Level&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0447f969e045b2a4894c5b115493b31b">cliLogLevel</a></td></tr>
+<tr class="memitem:a0447f969e045b2a4894c5b115493b31b" id="r_a0447f969e045b2a4894c5b115493b31b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0447f969e045b2a4894c5b115493b31b">cliLogLevel</a></td></tr>
 <tr class="separator:a0447f969e045b2a4894c5b115493b31b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a202d6991a8fa9cd915e94cb7d57791a8" id="r_a202d6991a8fa9cd915e94cb7d57791a8"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a202d6991a8fa9cd915e94cb7d57791a8">name</a></td></tr>
+<tr class="memitem:a202d6991a8fa9cd915e94cb7d57791a8" id="r_a202d6991a8fa9cd915e94cb7d57791a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a202d6991a8fa9cd915e94cb7d57791a8">name</a></td></tr>
 <tr class="separator:a202d6991a8fa9cd915e94cb7d57791a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af31cf22c8f966878873955e37ac57d52" id="r_af31cf22c8f966878873955e37ac57d52"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af31cf22c8f966878873955e37ac57d52">params</a></td></tr>
+<tr class="memitem:af31cf22c8f966878873955e37ac57d52" id="r_af31cf22c8f966878873955e37ac57d52"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af31cf22c8f966878873955e37ac57d52">params</a></td></tr>
 <tr class="separator:af31cf22c8f966878873955e37ac57d52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a154d40a473538a52fd92f920ed93ef66" id="r_a154d40a473538a52fd92f920ed93ef66"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a154d40a473538a52fd92f920ed93ef66">startSynch</a></td></tr>
 <tr class="separator:a154d40a473538a52fd92f920ed93ef66"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -148,29 +158,28 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a4d181083b92b0f1feebc7edb80351836"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac11f38849eaa698ecda7f512c4af4f8f" id="r_ac11f38849eaa698ecda7f512c4af4f8f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac11f38849eaa698ecda7f512c4af4f8f">steadyInit</a></td></tr>
 <tr class="separator:ac11f38849eaa698ecda7f512c4af4f8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aafb0c641d2ce7c5f4d7120d8f50c9363" id="r_aafb0c641d2ce7c5f4d7120d8f50c9363"><td class="memItemLeft" ><a id="aafb0c641d2ce7c5f4d7120d8f50c9363" name="aafb0c641d2ce7c5f4d7120d8f50c9363"></a>
-struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memitem:aafb0c641d2ce7c5f4d7120d8f50c9363" id="r_aafb0c641d2ce7c5f4d7120d8f50c9363"><td class="memItemLeft" >struct {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b9b7ee5e102e7afb4f86542fee02282" id="r_a2b9b7ee5e102e7afb4f86542fee02282"><td class="memItemLeft" >&#160;&#160;&#160;CPS::Domain&#160;&#160;&#160;<a class="el" href="#a8dd37f10c1b9bd911caaa950bfdabaa6">domain</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memitem:a2b9b7ee5e102e7afb4f86542fee02282" id="r_a2b9b7ee5e102e7afb4f86542fee02282"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9">CPS::Domain</a>&#160;&#160;&#160;<a class="el" href="#a8dd37f10c1b9bd911caaa950bfdabaa6">domain</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
 <tr class="separator:a2b9b7ee5e102e7afb4f86542fee02282"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49a09739479e292e2ab72e29054aefe2" id="r_a49a09739479e292e2ab72e29054aefe2"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919e">Solver::Type</a>&#160;&#160;&#160;<a class="el" href="#a11f591237231d9024804374543b72d94">type</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
 <tr class="separator:a49a09739479e292e2ab72e29054aefe2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aafb0c641d2ce7c5f4d7120d8f50c9363" id="r_aafb0c641d2ce7c5f4d7120d8f50c9363"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><b>solver</b>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="memitem:aafb0c641d2ce7c5f4d7120d8f50c9363" id="r_aafb0c641d2ce7c5f4d7120d8f50c9363"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aafb0c641d2ce7c5f4d7120d8f50c9363">solver</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
 <tr class="separator:aafb0c641d2ce7c5f4d7120d8f50c9363"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2da2a22c737699f2f431bc477faef091" id="r_a2da2a22c737699f2f431bc477faef091"><td class="memItemLeft" align="right" valign="top">DPsim::DirectLinearSolverImpl&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2da2a22c737699f2f431bc477faef091">directImpl</a></td></tr>
+<tr class="memitem:a2da2a22c737699f2f431bc477faef091" id="r_a2da2a22c737699f2f431bc477faef091"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457">DPsim::DirectLinearSolverImpl</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2da2a22c737699f2f431bc477faef091">directImpl</a></td></tr>
 <tr class="separator:a2da2a22c737699f2f431bc477faef091"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0264d30bc7359a4ced52dd52f835d8f7" id="r_a0264d30bc7359a4ced52dd52f835d8f7"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0264d30bc7359a4ced52dd52f835d8f7">solverPluginName</a></td></tr>
+<tr class="memitem:a0264d30bc7359a4ced52dd52f835d8f7" id="r_a0264d30bc7359a4ced52dd52f835d8f7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0264d30bc7359a4ced52dd52f835d8f7">solverPluginName</a></td></tr>
 <tr class="separator:a0264d30bc7359a4ced52dd52f835d8f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea6a6113e1aff3bab5165a48f6c5e0fa" id="r_aea6a6113e1aff3bab5165a48f6c5e0fa"><td class="memItemLeft" align="right" valign="top">DPsim::Timer::StartClock::time_point&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aea6a6113e1aff3bab5165a48f6c5e0fa">startTime</a></td></tr>
 <tr class="separator:aea6a6113e1aff3bab5165a48f6c5e0fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b6c36d53a8ca2fd02f19e26b6447d97" id="r_a1b6c36d53a8ca2fd02f19e26b6447d97"><td class="memItemLeft" align="right" valign="top">std::list&lt; String &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1b6c36d53a8ca2fd02f19e26b6447d97">positional</a></td></tr>
+<tr class="memitem:a1b6c36d53a8ca2fd02f19e26b6447d97" id="r_a1b6c36d53a8ca2fd02f19e26b6447d97"><td class="memItemLeft" align="right" valign="top">std::list&lt; <a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1b6c36d53a8ca2fd02f19e26b6447d97">positional</a></td></tr>
 <tr class="separator:a1b6c36d53a8ca2fd02f19e26b6447d97"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbfce348732c328fa1805c4f279076a4" id="r_abbfce348732c328fa1805c4f279076a4"><td class="memItemLeft" align="right" valign="top">std::map&lt; String, String &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abbfce348732c328fa1805c4f279076a4">options</a></td></tr>
+<tr class="memitem:abbfce348732c328fa1805c4f279076a4" id="r_abbfce348732c328fa1805c4f279076a4"><td class="memItemLeft" align="right" valign="top">std::map&lt; <a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a>, <a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abbfce348732c328fa1805c4f279076a4">options</a></td></tr>
 <tr class="separator:abbfce348732c328fa1805c4f279076a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:ad300dd7fd23c759922201855db95b309" id="r_ad300dd7fd23c759922201855db95b309"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad300dd7fd23c759922201855db95b309">mProgramName</a></td></tr>
+<tr class="memitem:ad300dd7fd23c759922201855db95b309" id="r_ad300dd7fd23c759922201855db95b309"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad300dd7fd23c759922201855db95b309">mProgramName</a></td></tr>
 <tr class="separator:ad300dd7fd23c759922201855db95b309"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac03072b0f7681a8fac0acdd98fb4d946" id="r_ac03072b0f7681a8fac0acdd98fb4d946"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="struct_d_psim_1_1_command_line_args_1_1_argument.html">Argument</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac03072b0f7681a8fac0acdd98fb4d946">mArguments</a></td></tr>
 <tr class="separator:ac03072b0f7681a8fac0acdd98fb4d946"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -198,77 +207,77 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">String</td>          <td class="paramname"><span class="paramname"><em>name</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;dpsim&quot;</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a></td>          <td class="paramname"><span class="paramname"><em>name</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;dpsim&quot;</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>dt</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0.001</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a></td>          <td class="paramname"><span class="paramname"><em>dt</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0.001</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>d</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a></td>          <td class="paramname"><span class="paramname"><em>d</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>sf</em></span><span class="paramdefsep"> = </span><span class="paramdefval">50</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a></td>          <td class="paramname"><span class="paramname"><em>sf</em></span><span class="paramdefsep"> = </span><span class="paramdefval">50</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Int</td>          <td class="paramname"><span class="paramname"><em>s</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a></td>          <td class="paramname"><span class="paramname"><em>s</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">CPS::Logger::Level</td>          <td class="paramname"><span class="paramname"><em>ll</em></span><span class="paramdefsep"> = </span><span class="paramdefval">CPS::Logger::Level::info</span>, </td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a></td>          <td class="paramname"><span class="paramname"><em>ll</em></span><span class="paramdefsep"> = </span><span class="paramdefval">CPS::Logger::Level::info</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">CPS::Logger::Level</td>          <td class="paramname"><span class="paramname"><em>clill</em></span><span class="paramdefsep"> = </span><span class="paramdefval">CPS::Logger::Level::off</span>, </td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a></td>          <td class="paramname"><span class="paramname"><em>clill</em></span><span class="paramdefsep"> = </span><span class="paramdefval">CPS::Logger::Level::off</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Bool</td>          <td class="paramname"><span class="paramname"><em>ss</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a></td>          <td class="paramname"><span class="paramname"><em>ss</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Bool</td>          <td class="paramname"><span class="paramname"><em>b</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a></td>          <td class="paramname"><span class="paramname"><em>b</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Bool</td>          <td class="paramname"><span class="paramname"><em>si</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a></td>          <td class="paramname"><span class="paramname"><em>si</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">CPS::Domain</td>          <td class="paramname"><span class="paramname"><em>sd</em></span><span class="paramdefsep"> = </span><span class="paramdefval">CPS::Domain::DP</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9">CPS::Domain</a></td>          <td class="paramname"><span class="paramname"><em>sd</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9ae2fca8135c2fadca093abd79a6b1c0d2">CPS::Domain::DP</a></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919e">Solver::Type</a></td>          <td class="paramname"><span class="paramname"><em>st</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Solver::Type::MNA</span>, </td>
+          <td class="paramtype"><a class="el" href="class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919e">Solver::Type</a></td>          <td class="paramname"><span class="paramname"><em>st</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919eaf125e1a54049f4b74b5cbe6e6d7abac6">Solver::Type::MNA</a></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">DirectLinearSolverImpl</td>          <td class="paramname"><span class="paramname"><em>mi</em></span><span class="paramdefsep"> = </span><span class="paramdefval">DirectLinearSolverImpl::KLU</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457">DirectLinearSolverImpl</a></td>          <td class="paramname"><span class="paramname"><em>mi</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a102d1784ab244b636827fc43963a995b">DirectLinearSolverImpl::KLU</a></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">String</td>          <td class="paramname"><span class="paramname"><em>spn</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;plugin.so&quot;</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a></td>          <td class="paramname"><span class="paramname"><em>spn</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;plugin.so&quot;</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">String</td>          <td class="paramname"><span class="paramname"><em>params</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;default.json&quot;</span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a></td>          <td class="paramname"><span class="paramname"><em>params</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;default.json&quot;</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -286,72 +295,72 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">CommandLineArgs::CommandLineArgs </td>
           <td>(</td>
-          <td class="paramtype">String</td>          <td class="paramname"><span class="paramname"><em>name</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;dpsim&quot;</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a></td>          <td class="paramname"><span class="paramname"><em>name</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;dpsim&quot;</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>dt</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0.001</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a></td>          <td class="paramname"><span class="paramname"><em>dt</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0.001</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>d</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a></td>          <td class="paramname"><span class="paramname"><em>d</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>sf</em></span><span class="paramdefsep"> = </span><span class="paramdefval">50</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a></td>          <td class="paramname"><span class="paramname"><em>sf</em></span><span class="paramdefsep"> = </span><span class="paramdefval">50</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Int</td>          <td class="paramname"><span class="paramname"><em>s</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a></td>          <td class="paramname"><span class="paramname"><em>s</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">CPS::Logger::Level</td>          <td class="paramname"><span class="paramname"><em>ll</em></span><span class="paramdefsep"> = </span><span class="paramdefval">CPS::Logger::Level::info</span>, </td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a></td>          <td class="paramname"><span class="paramname"><em>ll</em></span><span class="paramdefsep"> = </span><span class="paramdefval">CPS::Logger::Level::info</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">CPS::Logger::Level</td>          <td class="paramname"><span class="paramname"><em>clill</em></span><span class="paramdefsep"> = </span><span class="paramdefval">CPS::Logger::Level::off</span>, </td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a></td>          <td class="paramname"><span class="paramname"><em>clill</em></span><span class="paramdefsep"> = </span><span class="paramdefval">CPS::Logger::Level::off</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Bool</td>          <td class="paramname"><span class="paramname"><em>ss</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a></td>          <td class="paramname"><span class="paramname"><em>ss</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Bool</td>          <td class="paramname"><span class="paramname"><em>b</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a></td>          <td class="paramname"><span class="paramname"><em>b</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Bool</td>          <td class="paramname"><span class="paramname"><em>si</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a></td>          <td class="paramname"><span class="paramname"><em>si</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">CPS::Domain</td>          <td class="paramname"><span class="paramname"><em>sd</em></span><span class="paramdefsep"> = </span><span class="paramdefval">CPS::Domain::DP</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9">CPS::Domain</a></td>          <td class="paramname"><span class="paramname"><em>sd</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9ae2fca8135c2fadca093abd79a6b1c0d2">CPS::Domain::DP</a></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919e">Solver::Type</a></td>          <td class="paramname"><span class="paramname"><em>st</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Solver::Type::MNA</span>, </td>
+          <td class="paramtype"><a class="el" href="class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919e">Solver::Type</a></td>          <td class="paramname"><span class="paramname"><em>st</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919eaf125e1a54049f4b74b5cbe6e6d7abac6">Solver::Type::MNA</a></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">DirectLinearSolverImpl</td>          <td class="paramname"><span class="paramname"><em>mi</em></span><span class="paramdefsep"> = </span><span class="paramdefval">DirectLinearSolverImpl::KLU</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457">DirectLinearSolverImpl</a></td>          <td class="paramname"><span class="paramname"><em>mi</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a102d1784ab244b636827fc43963a995b">DirectLinearSolverImpl::KLU</a></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">String</td>          <td class="paramname"><span class="paramname"><em>spn</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;plugin.so&quot;</span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a></td>          <td class="paramname"><span class="paramname"><em>spn</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;plugin.so&quot;</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -371,9 +380,9 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Bool DPsim::CommandLineArgs::getOptionBool </td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> DPsim::CommandLineArgs::getOptionBool </td>
           <td>(</td>
-          <td class="paramtype">String</td>          <td class="paramname"><span class="paramname"><em>optionName</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a></td>          <td class="paramname"><span class="paramname"><em>optionName</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -398,9 +407,9 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Int DPsim::CommandLineArgs::getOptionInt </td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> DPsim::CommandLineArgs::getOptionInt </td>
           <td>(</td>
-          <td class="paramtype">String</td>          <td class="paramname"><span class="paramname"><em>optionName</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a></td>          <td class="paramname"><span class="paramname"><em>optionName</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -425,9 +434,9 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real DPsim::CommandLineArgs::getOptionReal </td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> DPsim::CommandLineArgs::getOptionReal </td>
           <td>(</td>
-          <td class="paramtype">String</td>          <td class="paramname"><span class="paramname"><em>optionName</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a></td>          <td class="paramname"><span class="paramname"><em>optionName</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -452,9 +461,9 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">String DPsim::CommandLineArgs::getOptionString </td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> DPsim::CommandLineArgs::getOptionString </td>
           <td>(</td>
-          <td class="paramtype">String</td>          <td class="paramname"><span class="paramname"><em>optionName</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a></td>          <td class="paramname"><span class="paramname"><em>optionName</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -554,7 +563,7 @@ Protected Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">CPS::Logger::Level DPsim::CommandLineArgs::cliLogLevel</td>
+          <td class="memname"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a> DPsim::CommandLineArgs::cliLogLevel</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -570,7 +579,7 @@ Protected Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">DPsim::DirectLinearSolverImpl DPsim::CommandLineArgs::directImpl</td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457">DPsim::DirectLinearSolverImpl</a> DPsim::CommandLineArgs::directImpl</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -586,7 +595,7 @@ Protected Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">CPS::Domain DPsim::CommandLineArgs::domain</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9">CPS::Domain</a> DPsim::CommandLineArgs::domain</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -618,7 +627,7 @@ Protected Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">CPS::Logger::Level DPsim::CommandLineArgs::logLevel</td>
+          <td class="memname"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a> DPsim::CommandLineArgs::logLevel</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -661,7 +670,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">String DPsim::CommandLineArgs::mProgramName</td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> DPsim::CommandLineArgs::mProgramName</td>
         </tr>
       </table>
   </td>
@@ -682,7 +691,7 @@ Protected Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">String DPsim::CommandLineArgs::name</td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> DPsim::CommandLineArgs::name</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -698,7 +707,7 @@ Protected Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::map&lt;String, String&gt; DPsim::CommandLineArgs::options</td>
+          <td class="memname">std::map&lt;<a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a>, <a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a>&gt; DPsim::CommandLineArgs::options</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -714,7 +723,7 @@ Protected Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">String DPsim::CommandLineArgs::params</td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> DPsim::CommandLineArgs::params</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -730,7 +739,7 @@ Protected Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::list&lt;String&gt; DPsim::CommandLineArgs::positional</td>
+          <td class="memname">std::list&lt;<a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a>&gt; DPsim::CommandLineArgs::positional</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -755,6 +764,20 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="aafb0c641d2ce7c5f4d7120d8f50c9363" name="aafb0c641d2ce7c5f4d7120d8f50c9363"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aafb0c641d2ce7c5f4d7120d8f50c9363">&#9670;&#160;</a></span>[struct]</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct  { ... }  DPsim::CommandLineArgs::solver</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a0264d30bc7359a4ced52dd52f835d8f7" name="a0264d30bc7359a4ced52dd52f835d8f7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0264d30bc7359a4ced52dd52f835d8f7">&#9670;&#160;</a></span>solverPluginName</h2>
 
@@ -762,7 +785,7 @@ Protected Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">String DPsim::CommandLineArgs::solverPluginName</td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> DPsim::CommandLineArgs::solverPluginName</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -872,10 +895,13 @@ Protected Attributes</h2></td></tr>
 <li>/__w/dpsim/dpsim/dpsim/src/<a class="el" href="_utils_8cpp_source.html">Utils.cpp</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_command_line_args.html">CommandLineArgs</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

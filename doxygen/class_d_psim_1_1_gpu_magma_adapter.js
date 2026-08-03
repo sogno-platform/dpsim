@@ -1,0 +1,25 @@
+var class_d_psim_1_1_gpu_magma_adapter =
+[
+    [ "~GpuMagmaAdapter", "class_d_psim_1_1_gpu_magma_adapter.html#a3d54eec767ae26afe52d410eb05e656f", null ],
+    [ "GpuMagmaAdapter", "class_d_psim_1_1_gpu_magma_adapter.html#ada35ad16d488ffe7f4d1bfc7ba3f0318", null ],
+    [ "DirectLinearSolver", "class_d_psim_1_1_gpu_magma_adapter.html#a2b121961736a57b6aa1622d373fe6019", null ],
+    [ "DirectLinearSolver", "class_d_psim_1_1_gpu_magma_adapter.html#a0471fec62a1b9853f46334d71863e9c3", null ],
+    [ "DirectLinearSolver", "class_d_psim_1_1_gpu_magma_adapter.html#a3623a79b73370d72cbb67d2825b32f91", null ],
+    [ "DirectLinearSolver", "class_d_psim_1_1_gpu_magma_adapter.html#a36c002c86dbdb16ce32f90d480ee1ae9", null ],
+    [ "factorize", "class_d_psim_1_1_gpu_magma_adapter.html#a33b86c63540e4db43a1c909c82e0c4bc", null ],
+    [ "iluPreconditioner", "class_d_psim_1_1_gpu_magma_adapter.html#aeb42e4b9f9ae3b4daf873429f188c705", null ],
+    [ "partialRefactorize", "class_d_psim_1_1_gpu_magma_adapter.html#a8374eca1cb3a68dd309994516b372d4e", null ],
+    [ "performFactorization", "class_d_psim_1_1_gpu_magma_adapter.html#ae4bec67064c52206e26bc982a8e5b176", null ],
+    [ "preprocessing", "class_d_psim_1_1_gpu_magma_adapter.html#a696501ab20446333d4a6934becb0a60f", null ],
+    [ "refactorize", "class_d_psim_1_1_gpu_magma_adapter.html#a52b15e1cb199bc6728ff18fddecf79c9", null ],
+    [ "solve", "class_d_psim_1_1_gpu_magma_adapter.html#a8bd4bb1c02f44794c9e060d349f29cfb", null ],
+    [ "mDevLhsVec", "class_d_psim_1_1_gpu_magma_adapter.html#a7510abd7978df557690295871ef4f8b9", null ],
+    [ "mDevRhsVec", "class_d_psim_1_1_gpu_magma_adapter.html#ad98a5bea3c7b0b5de3b91eea73495ee8", null ],
+    [ "mDevSysMat", "class_d_psim_1_1_gpu_magma_adapter.html#af9d13d75c0c9b06e4ef8ec8a9571c017", null ],
+    [ "mHostLhsVec", "class_d_psim_1_1_gpu_magma_adapter.html#a1187631984f439fb8cf15dd6b077e336", null ],
+    [ "mHostRhsVec", "class_d_psim_1_1_gpu_magma_adapter.html#a72938568a4ddb645f57668aabe2004e5", null ],
+    [ "mHostSysMat", "class_d_psim_1_1_gpu_magma_adapter.html#a900b12e4070081d2f977f2fa83f112ee", null ],
+    [ "mMagmaOpts", "class_d_psim_1_1_gpu_magma_adapter.html#a68535fd35ae7f942ba0e2ddd17ce7f92", null ],
+    [ "mMagmaQueue", "class_d_psim_1_1_gpu_magma_adapter.html#a7bf4f674e99c1557fca9aa541769df11", null ],
+    [ "mTransp", "class_d_psim_1_1_gpu_magma_adapter.html#a98d0f540b307a6375285c97b025ced26", null ]
+];

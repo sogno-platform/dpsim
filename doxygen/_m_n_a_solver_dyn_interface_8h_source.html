@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_m_n_a_solver_dyn_interface_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">MNASolverDynInterface.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_m_n_a_solver_dyn_interface_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -104,40 +112,54 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
 <div class="foldopen" id="foldopen00012" data-start="{" data-end="};">
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="structdpsim__csr__matrix.html">   12</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structdpsim__csr__matrix.html">dpsim_csr_matrix</a> {</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>  <span class="keywordtype">double</span> *values; <span class="comment">//size: nnz</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>  <span class="keywordtype">int</span> *rowIndex;  <span class="comment">//size: nnz</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>  <span class="keywordtype">int</span> *colIndex;  <span class="comment">//size: row_numer+1</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>  <span class="keywordtype">int</span> row_number; <span class="comment">//number of rows of the matrix</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>  <span class="keywordtype">int</span> nnz;        <span class="comment">//number of non-zero elements in matrix</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="structdpsim__csr__matrix.html#a9c79ea6d8c91199feb877b993032f120">   13</a></span>  <span class="keywordtype">double</span> *<a class="code hl_variable" href="structdpsim__csr__matrix.html#a9c79ea6d8c91199feb877b993032f120">values</a>; <span class="comment">//size: nnz</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="structdpsim__csr__matrix.html#a5d6df5f643539aaaeafab636423913da">   14</a></span>  <span class="keywordtype">int</span> *<a class="code hl_variable" href="structdpsim__csr__matrix.html#a5d6df5f643539aaaeafab636423913da">rowIndex</a>;  <span class="comment">//size: nnz</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="structdpsim__csr__matrix.html#a8812963f59d5cbbb82e969669fe1edc7">   15</a></span>  <span class="keywordtype">int</span> *<a class="code hl_variable" href="structdpsim__csr__matrix.html#a8812963f59d5cbbb82e969669fe1edc7">colIndex</a>;  <span class="comment">//size: row_numer+1</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="structdpsim__csr__matrix.html#a945d159011e85b5a9a44937cb9f1bec7">   16</a></span>  <span class="keywordtype">int</span> <a class="code hl_variable" href="structdpsim__csr__matrix.html#a945d159011e85b5a9a44937cb9f1bec7">row_number</a>; <span class="comment">//number of rows of the matrix</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="structdpsim__csr__matrix.html#a07559bc24cc188650ddceaa51a7ac55b">   17</a></span>  <span class="keywordtype">int</span> <a class="code hl_variable" href="structdpsim__csr__matrix.html#a07559bc24cc188650ddceaa51a7ac55b">nnz</a>;        <span class="comment">//number of non-zero elements in matrix</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>};</div>
 </div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
 <div class="foldopen" id="foldopen00020" data-start="{" data-end="};">
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="structdpsim__mna__plugin.html">   20</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a> {</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  void (*log)(<span class="keyword">const</span> <span class="keywordtype">char</span> *);</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  int (*init)(<span class="keyword">struct </span><a class="code hl_struct" href="structdpsim__csr__matrix.html">dpsim_csr_matrix</a> *);</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  int (*lu_decomp)(<span class="keyword">struct </span><a class="code hl_struct" href="structdpsim__csr__matrix.html">dpsim_csr_matrix</a> *);</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  int (*solve)(<span class="keywordtype">double</span> *, <span class="keywordtype">double</span> *);</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  void (*cleanup)(void);</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="structdpsim__mna__plugin.html#a7c3a71b50072fdd34bbd09faaafffb7f">   21</a></span>  void (*<a class="code hl_variable" href="structdpsim__mna__plugin.html#a7c3a71b50072fdd34bbd09faaafffb7f">log</a>)(<span class="keyword">const</span> <span class="keywordtype">char</span> *);</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="structdpsim__mna__plugin.html#a648abad109296f842adbecdd076bb16a">   22</a></span>  int (*<a class="code hl_variable" href="structdpsim__mna__plugin.html#a648abad109296f842adbecdd076bb16a">init</a>)(<span class="keyword">struct </span><a class="code hl_struct" href="structdpsim__csr__matrix.html">dpsim_csr_matrix</a> *);</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="structdpsim__mna__plugin.html#adc003f2e1b7b391d2885fa7a7076e64a">   23</a></span>  int (*<a class="code hl_variable" href="structdpsim__mna__plugin.html#adc003f2e1b7b391d2885fa7a7076e64a">lu_decomp</a>)(<span class="keyword">struct </span><a class="code hl_struct" href="structdpsim__csr__matrix.html">dpsim_csr_matrix</a> *);</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="structdpsim__mna__plugin.html#a8adbf4683cdf3756dba77ed99f9ad3fe">   24</a></span>  int (*<a class="code hl_variable" href="structdpsim__mna__plugin.html#a8adbf4683cdf3756dba77ed99f9ad3fe">solve</a>)(<span class="keywordtype">double</span> *, <span class="keywordtype">double</span> *);</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="structdpsim__mna__plugin.html#a29852621fe931554a89b34e3cdb1c8e2">   25</a></span>  void (*<a class="code hl_variable" href="structdpsim__mna__plugin.html#a29852621fe931554a89b34e3cdb1c8e2">cleanup</a>)(void);</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>};</div>
 </div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#ifdef __cplusplus</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">struct </span><a class="code hl_struct" href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a> *get_mna_plugin(<span class="keyword">const</span> <span class="keywordtype">char</span> *name);</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">struct </span><a class="code hl_struct" href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a> *<a class="code hl_function" href="_m_n_a_solver_dyn_interface_8h.html#a6bee17fa31ca342f31ecd9c57a5c9468">get_mna_plugin</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *name);</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#ifdef __cplusplus</span></div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>}</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="a_m_n_a_solver_dyn_interface_8h_html_a6bee17fa31ca342f31ecd9c57a5c9468"><div class="ttname"><a href="_m_n_a_solver_dyn_interface_8h.html#a6bee17fa31ca342f31ecd9c57a5c9468">get_mna_plugin</a></div><div class="ttdeci">struct dpsim_mna_plugin * get_mna_plugin(const char *name)</div><div class="ttdef"><b>Definition</b> <a href="example_8c_source.html#l00022">example.c:22</a></div></div>
 <div class="ttc" id="astructdpsim__csr__matrix_html"><div class="ttname"><a href="structdpsim__csr__matrix.html">dpsim_csr_matrix</a></div><div class="ttdef"><b>Definition</b> <a href="#l00012">MNASolverDynInterface.h:12</a></div></div>
+<div class="ttc" id="astructdpsim__csr__matrix_html_a07559bc24cc188650ddceaa51a7ac55b"><div class="ttname"><a href="structdpsim__csr__matrix.html#a07559bc24cc188650ddceaa51a7ac55b">dpsim_csr_matrix::nnz</a></div><div class="ttdeci">int nnz</div><div class="ttdef"><b>Definition</b> <a href="#l00017">MNASolverDynInterface.h:17</a></div></div>
+<div class="ttc" id="astructdpsim__csr__matrix_html_a5d6df5f643539aaaeafab636423913da"><div class="ttname"><a href="structdpsim__csr__matrix.html#a5d6df5f643539aaaeafab636423913da">dpsim_csr_matrix::rowIndex</a></div><div class="ttdeci">int * rowIndex</div><div class="ttdef"><b>Definition</b> <a href="#l00014">MNASolverDynInterface.h:14</a></div></div>
+<div class="ttc" id="astructdpsim__csr__matrix_html_a8812963f59d5cbbb82e969669fe1edc7"><div class="ttname"><a href="structdpsim__csr__matrix.html#a8812963f59d5cbbb82e969669fe1edc7">dpsim_csr_matrix::colIndex</a></div><div class="ttdeci">int * colIndex</div><div class="ttdef"><b>Definition</b> <a href="#l00015">MNASolverDynInterface.h:15</a></div></div>
+<div class="ttc" id="astructdpsim__csr__matrix_html_a945d159011e85b5a9a44937cb9f1bec7"><div class="ttname"><a href="structdpsim__csr__matrix.html#a945d159011e85b5a9a44937cb9f1bec7">dpsim_csr_matrix::row_number</a></div><div class="ttdeci">int row_number</div><div class="ttdef"><b>Definition</b> <a href="#l00016">MNASolverDynInterface.h:16</a></div></div>
+<div class="ttc" id="astructdpsim__csr__matrix_html_a9c79ea6d8c91199feb877b993032f120"><div class="ttname"><a href="structdpsim__csr__matrix.html#a9c79ea6d8c91199feb877b993032f120">dpsim_csr_matrix::values</a></div><div class="ttdeci">double * values</div><div class="ttdef"><b>Definition</b> <a href="#l00013">MNASolverDynInterface.h:13</a></div></div>
 <div class="ttc" id="astructdpsim__mna__plugin_html"><div class="ttname"><a href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a></div><div class="ttdef"><b>Definition</b> <a href="#l00020">MNASolverDynInterface.h:20</a></div></div>
+<div class="ttc" id="astructdpsim__mna__plugin_html_a29852621fe931554a89b34e3cdb1c8e2"><div class="ttname"><a href="structdpsim__mna__plugin.html#a29852621fe931554a89b34e3cdb1c8e2">dpsim_mna_plugin::cleanup</a></div><div class="ttdeci">void(* cleanup)(void)</div><div class="ttdef"><b>Definition</b> <a href="#l00025">MNASolverDynInterface.h:25</a></div></div>
+<div class="ttc" id="astructdpsim__mna__plugin_html_a648abad109296f842adbecdd076bb16a"><div class="ttname"><a href="structdpsim__mna__plugin.html#a648abad109296f842adbecdd076bb16a">dpsim_mna_plugin::init</a></div><div class="ttdeci">int(* init)(struct dpsim_csr_matrix *)</div><div class="ttdef"><b>Definition</b> <a href="#l00022">MNASolverDynInterface.h:22</a></div></div>
+<div class="ttc" id="astructdpsim__mna__plugin_html_a7c3a71b50072fdd34bbd09faaafffb7f"><div class="ttname"><a href="structdpsim__mna__plugin.html#a7c3a71b50072fdd34bbd09faaafffb7f">dpsim_mna_plugin::log</a></div><div class="ttdeci">void(* log)(const char *)</div><div class="ttdef"><b>Definition</b> <a href="#l00021">MNASolverDynInterface.h:21</a></div></div>
+<div class="ttc" id="astructdpsim__mna__plugin_html_a8adbf4683cdf3756dba77ed99f9ad3fe"><div class="ttname"><a href="structdpsim__mna__plugin.html#a8adbf4683cdf3756dba77ed99f9ad3fe">dpsim_mna_plugin::solve</a></div><div class="ttdeci">int(* solve)(double *, double *)</div><div class="ttdef"><b>Definition</b> <a href="#l00024">MNASolverDynInterface.h:24</a></div></div>
+<div class="ttc" id="astructdpsim__mna__plugin_html_adc003f2e1b7b391d2885fa7a7076e64a"><div class="ttname"><a href="structdpsim__mna__plugin.html#adc003f2e1b7b391d2885fa7a7076e64a">dpsim_mna_plugin::lu_decomp</a></div><div class="ttdeci">int(* lu_decomp)(struct dpsim_csr_matrix *)</div><div class="ttdef"><b>Definition</b> <a href="#l00023">MNASolverDynInterface.h:23</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li><li class="navelem"><a class="el" href="_m_n_a_solver_dyn_interface_8h.html">MNASolverDynInterface.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

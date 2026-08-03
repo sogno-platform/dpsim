@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,19 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
 </div><!-- top -->
-<div id="doc-content">
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('functions_vars_k.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -84,9 +96,18 @@ $(function(){ initResizable(false); });
 </div>
 
 <div class="contents">
-<div class="textblock">Here is a list of all documented variables with links to the class documentation for each member:</div>
+<div class="textblock">Here is a list of all variables with links to the classes they belong to:</div>
 
 <h3><a id="index_k" name="index_k"></a>- k -</h3><ul>
+<li>K&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a68ab0470bebbb6c1a65560ca4290f8f4">CPS::DP::Ph3::SynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#ac33cd5da6829710e1a3e2c82dde862e4">CPS::EMT::Ph3::SynchronGeneratorVBR</a></li>
+<li>K1&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a06f3e79dc2f5134e02cc6a937c985ec8">CPS::DP::Ph3::SynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a3a0d8172f78d7830ab4cfab3a30cdaf2">CPS::EMT::Ph3::SynchronGeneratorVBR</a></li>
+<li>K1a&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#ac73930edca47d6086d00238528e5a1cb">CPS::DP::Ph3::SynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#aeadf68c788039fa0fec150044cfbe8fd">CPS::EMT::Ph3::SynchronGeneratorVBR</a></li>
+<li>K1b&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#ae4bf3268da0aef09125e2126a9e396d1">CPS::DP::Ph3::SynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#ac03cc01b8dc896adbeab4998c6ea612c">CPS::EMT::Ph3::SynchronGeneratorVBR</a></li>
+<li>K1K2&#160;:&#160;<a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a270dc9e8bb062b067aa5aa5f5b6f0612">CPS::EMT::Ph3::SynchronGeneratorVBR</a></li>
+<li>K2&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#aed7c654f81c6f0a97a585d8c4bca92c9">CPS::DP::Ph3::SynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a27c236648121b2f9515d3ff841dd114d">CPS::EMT::Ph3::SynchronGeneratorVBR</a></li>
+<li>K2a&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#af30cee1b572f55beb12c6fefa10865ad">CPS::DP::Ph3::SynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a621fd8d90e5167f1d775a6f44d37774a">CPS::EMT::Ph3::SynchronGeneratorVBR</a></li>
+<li>K2b&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#ad1b9dbdcf5e5080bdccdbc4bcddd130a">CPS::DP::Ph3::SynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a1fa85d7a57791123bfff09ef95f9dda5">CPS::EMT::Ph3::SynchronGeneratorVBR</a></li>
+<li>K_DP&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a9e8942b18051d8ced6974de2a367e0a2">CPS::DP::Ph3::SynchronGeneratorVBR</a></li>
 <li>Ka&#160;:&#160;<a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_parameters.html#ab1d069703f03ae847080b2ed3bf3b2e8">CPS::Signal::ExciterDC1Parameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a5fe91a1dd7d5242152b896c37b58ead6">CPS::Signal::ExciterDC1SimpParameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_s_t1_parameters.html#a7948435db3396808f191141501a3dfb6">CPS::Signal::ExciterST1Parameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_static_parameters.html#aa47be6fb79f767cab95be38a3f7ccf0d">CPS::Signal::ExciterStaticParameters</a></li>
 <li>Kbc&#160;:&#160;<a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_static_parameters.html#a32d0a958fe2f8a43c95a80e80385be9c">CPS::Signal::ExciterStaticParameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#afb4e0a24c8cd7ee13bf1b0a8d9a132e2">CPS::Signal::SteamGovernorParameters</a></li>
 <li>Kef&#160;:&#160;<a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_parameters.html#a367de213cc456f2df5749ed57e75a505">CPS::Signal::ExciterDC1Parameters</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ab3e99d5ec94029e303aaabf779905100">CPS::Signal::ExciterDC1SimpParameters</a></li>
@@ -96,10 +117,12 @@ $(function(){ initResizable(false); });
 <li>Kw&#160;:&#160;<a class="el" href="class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html#ac5538c189b17c81b55ee8c9b2fa58156">CPS::Signal::PSS1AParameters</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

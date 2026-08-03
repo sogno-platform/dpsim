@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_p_f_solver_power_polar_sparse_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,29 +95,23 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">PFSolverPowerPolarSparse.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University</span></div>
+<a href="_p_f_solver_power_polar_sparse_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;dpsim/DirectLinearSolver.h&gt;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;dpsim/PFSolverPowerPolar.h&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;<a class="code" href="_direct_linear_solver_8h.html">dpsim/DirectLinearSolver.h</a>&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;<a class="code" href="_p_f_solver_power_polar_8h.html">dpsim/PFSolverPowerPolar.h</a>&gt;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_d_psim.html">DPsim</a> {</div>
 <div class="foldopen" id="foldopen00012" data-start="{" data-end="};">
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html">   12</a></span><span class="keyword">class </span><a class="code hl_function" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#abeb4b7c3e23546ffc66f8052d52fe382">PFSolverPowerPolarSparse</a> : <span class="keyword">public</span> <a class="code hl_function" href="class_d_psim_1_1_p_f_solver_power_polar.html#a33db5f8bd66a6e2eb1881c65f2379b0b">PFSolverPowerPolar</a> {</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#a1c6e668225007e111f7195fc39dfd046">   15</a></span>  CPS::SparseMatrixRow <a class="code hl_variable" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#a1c6e668225007e111f7195fc39dfd046">mJsparse</a>;</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#a1c6e668225007e111f7195fc39dfd046">   15</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">CPS::SparseMatrixRow</a> <a class="code hl_variable" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#a1c6e668225007e111f7195fc39dfd046">mJsparse</a>;</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#a01a1725e13009ec56d4c6b3b182f1d43">   17</a></span>  std::shared_ptr&lt;DirectLinearSolver&gt; <a class="code hl_variable" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#a01a1725e13009ec56d4c6b3b182f1d43">mLinearSolver</a>;</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#aaef20fe691c1482eb40b7a1419cffbbf">   19</a></span>  std::vector&lt;std::pair&lt;CPS::UInt, CPS::UInt&gt;&gt; <a class="code hl_variable" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#aaef20fe691c1482eb40b7a1419cffbbf">mVariableSystemMatrixEntries</a>;</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span></div>
@@ -112,19 +120,23 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#af52d4576ad7bec4b32a6286ffbcad30d">solveJacobianSystem</a>() <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#afb045522cac6b3fbd334ada701a8a5bc">buildJacobianPattern</a>();</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#a81b10ddbc39ad79b212a22b877be8469">isConnected</a>(CPS::UInt k, CPS::UInt j);</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#a81b10ddbc39ad79b212a22b877be8469">isConnected</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">CPS::UInt</a> k, <a class="code hl_typedef" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">CPS::UInt</a> j);</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <a class="code hl_function" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#abeb4b7c3e23546ffc66f8052d52fe382">PFSolverPowerPolarSparse</a>(CPS::String name, <span class="keyword">const</span> <a class="code hl_class" href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a> &amp;system,</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>                           CPS::Real timeStep, CPS::Logger::Level logLevel);</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <span class="keyword">virtual</span> <a class="code hl_function" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#abeb4b7c3e23546ffc66f8052d52fe382">~PFSolverPowerPolarSparse</a>(){};</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <a class="code hl_function" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#abeb4b7c3e23546ffc66f8052d52fe382">PFSolverPowerPolarSparse</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a> name, <span class="keyword">const</span> <a class="code hl_class" href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a> &amp;system,</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>                           <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> timeStep, <a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a> logLevel);</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#a2b146816a7bee977891d1561e4951fcf">   38</a></span>  <span class="keyword">virtual</span> <a class="code hl_function" href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#a2b146816a7bee977891d1561e4951fcf">~PFSolverPowerPolarSparse</a>(){};</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>};</div>
 </div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>} <span class="comment">// namespace DPsim</span></div>
+<div class="ttc" id="a_direct_linear_solver_8h_html"><div class="ttname"><a href="_direct_linear_solver_8h.html">DirectLinearSolver.h</a></div></div>
+<div class="ttc" id="a_p_f_solver_power_polar_8h_html"><div class="ttname"><a href="_p_f_solver_power_polar_8h.html">PFSolverPowerPolar.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_logger_html_a021e964d1ab0d217a05b95736d2ea804"><div class="ttname"><a href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a></div><div class="ttdeci">spdlog::level::level_enum Level</div><div class="ttdef"><b>Definition</b> <a href="_logger_8h_source.html#l00033">Logger.h:33</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_system_topology_html"><div class="ttname"><a href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a></div><div class="ttdef"><b>Definition</b> <a href="_system_topology_8h_source.html#l00023">SystemTopology.h:23</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_p_f_solver_power_polar_html_a33db5f8bd66a6e2eb1881c65f2379b0b"><div class="ttname"><a href="class_d_psim_1_1_p_f_solver_power_polar.html#a33db5f8bd66a6e2eb1881c65f2379b0b">DPsim::PFSolverPowerPolar::PFSolverPowerPolar</a></div><div class="ttdeci">PFSolverPowerPolar(CPS::String name, const CPS::SystemTopology &amp;system, CPS::Real timeStep, CPS::Logger::Level logLevel)</div><div class="ttdoc">Constructor to be used in simulation examples.</div><div class="ttdef"><b>Definition</b> <a href="_p_f_solver_power_polar_8cpp_source.html#l00017">PFSolverPowerPolar.cpp:17</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_p_f_solver_power_polar_sparse_html_a01a1725e13009ec56d4c6b3b182f1d43"><div class="ttname"><a href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#a01a1725e13009ec56d4c6b3b182f1d43">DPsim::PFSolverPowerPolarSparse::mLinearSolver</a></div><div class="ttdeci">std::shared_ptr&lt; DirectLinearSolver &gt; mLinearSolver</div><div class="ttdoc">Direct linear solver reused across iterations (symbolic factorization computed once)</div><div class="ttdef"><b>Definition</b> <a href="#l00017">PFSolverPowerPolarSparse.h:17</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_p_f_solver_power_polar_sparse_html_a1c6e668225007e111f7195fc39dfd046"><div class="ttname"><a href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#a1c6e668225007e111f7195fc39dfd046">DPsim::PFSolverPowerPolarSparse::mJsparse</a></div><div class="ttdeci">CPS::SparseMatrixRow mJsparse</div><div class="ttdoc">Sparse Jacobian (row-major, fixed pattern, values updated in place each iteration)</div><div class="ttdef"><b>Definition</b> <a href="#l00015">PFSolverPowerPolarSparse.h:15</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_p_f_solver_power_polar_sparse_html_a2b146816a7bee977891d1561e4951fcf"><div class="ttname"><a href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#a2b146816a7bee977891d1561e4951fcf">DPsim::PFSolverPowerPolarSparse::~PFSolverPowerPolarSparse</a></div><div class="ttdeci">virtual ~PFSolverPowerPolarSparse()</div><div class="ttdef"><b>Definition</b> <a href="#l00038">PFSolverPowerPolarSparse.h:38</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_p_f_solver_power_polar_sparse_html_a81b10ddbc39ad79b212a22b877be8469"><div class="ttname"><a href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#a81b10ddbc39ad79b212a22b877be8469">DPsim::PFSolverPowerPolarSparse::isConnected</a></div><div class="ttdeci">bool isConnected(CPS::UInt k, CPS::UInt j)</div><div class="ttdoc">Whether buses k and j are connected (off-diagonal Jacobian entry exists)</div><div class="ttdef"><b>Definition</b> <a href="_p_f_solver_power_polar_sparse_8cpp_source.html#l00022">PFSolverPowerPolarSparse.cpp:22</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_p_f_solver_power_polar_sparse_html_aad1768818c70fb8d2a59cb2eef80a19b"><div class="ttname"><a href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#aad1768818c70fb8d2a59cb2eef80a19b">DPsim::PFSolverPowerPolarSparse::setUpJacobianStorage</a></div><div class="ttdeci">void setUpJacobianStorage() override</div><div class="ttdoc">Build the fixed sparsity pattern, create the linear solver and analyze the pattern once.</div><div class="ttdef"><b>Definition</b> <a href="_p_f_solver_power_polar_sparse_8cpp_source.html#l00066">PFSolverPowerPolarSparse.cpp:66</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_p_f_solver_power_polar_sparse_html_aaef20fe691c1482eb40b7a1419cffbbf"><div class="ttname"><a href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#aaef20fe691c1482eb40b7a1419cffbbf">DPsim::PFSolverPowerPolarSparse::mVariableSystemMatrixEntries</a></div><div class="ttdeci">std::vector&lt; std::pair&lt; CPS::UInt, CPS::UInt &gt; &gt; mVariableSystemMatrixEntries</div><div class="ttdoc">Empty list: PF uses full refactorization, not partial refactorization.</div><div class="ttdef"><b>Definition</b> <a href="#l00019">PFSolverPowerPolarSparse.h:19</a></div></div>
@@ -132,12 +144,19 @@ $(function(){ initResizable(false); });
 <div class="ttc" id="aclass_d_psim_1_1_p_f_solver_power_polar_sparse_html_abeb4b7c3e23546ffc66f8052d52fe382"><div class="ttname"><a href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#abeb4b7c3e23546ffc66f8052d52fe382">DPsim::PFSolverPowerPolarSparse::PFSolverPowerPolarSparse</a></div><div class="ttdeci">PFSolverPowerPolarSparse(CPS::String name, const CPS::SystemTopology &amp;system, CPS::Real timeStep, CPS::Logger::Level logLevel)</div><div class="ttdoc">Constructor to be used in simulation examples.</div><div class="ttdef"><b>Definition</b> <a href="_p_f_solver_power_polar_sparse_8cpp_source.html#l00017">PFSolverPowerPolarSparse.cpp:17</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_p_f_solver_power_polar_sparse_html_af52d4576ad7bec4b32a6286ffbcad30d"><div class="ttname"><a href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#af52d4576ad7bec4b32a6286ffbcad30d">DPsim::PFSolverPowerPolarSparse::solveJacobianSystem</a></div><div class="ttdeci">void solveJacobianSystem() override</div><div class="ttdoc">Factorize (first iteration of a run) or refactorize, then solve.</div><div class="ttdef"><b>Definition</b> <a href="_p_f_solver_power_polar_sparse_8cpp_source.html#l00165">PFSolverPowerPolarSparse.cpp:165</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_p_f_solver_power_polar_sparse_html_afb045522cac6b3fbd334ada701a8a5bc"><div class="ttname"><a href="class_d_psim_1_1_p_f_solver_power_polar_sparse.html#afb045522cac6b3fbd334ada701a8a5bc">DPsim::PFSolverPowerPolarSparse::buildJacobianPattern</a></div><div class="ttdeci">void buildJacobianPattern()</div><div class="ttdoc">Construct the structural sparsity pattern of the Jacobian from the bus admittance matrix.</div><div class="ttdef"><b>Definition</b> <a href="_p_f_solver_power_polar_sparse_8cpp_source.html#l00026">PFSolverPowerPolarSparse.cpp:26</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a09f6ad37b12370b4b58624822be9b055"><div class="ttname"><a href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a></div><div class="ttdeci">std::string String</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00065">Definitions.h:65</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a603c4b77d70922bc0423adc57725df50"><div class="ttname"><a href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a></div><div class="ttdeci">double Real</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00062">Definitions.h:62</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_ae5e72b1a2405f04bed0cd13fc63aac57"><div class="ttname"><a href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">CPS::UInt</a></div><div class="ttdeci">unsigned int UInt</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00060">Definitions.h:60</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_af0203b5aa6a69ba1b8642d8ccf5eb7be"><div class="ttname"><a href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">CPS::SparseMatrixRow</a></div><div class="ttdeci">Eigen::SparseMatrix&lt; Real, Eigen::RowMajor &gt; SparseMatrixRow</div><div class="ttdoc">Sparse matrix for real numbers (row major).</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00074">Definitions.h:74</a></div></div>
 <div class="ttc" id="anamespace_d_psim_html"><div class="ttname"><a href="namespace_d_psim.html">DPsim</a></div><div class="ttdef"><b>Definition</b> <a href="_dense_l_u_adapter_8cpp_source.html#l00013">DenseLUAdapter.cpp:13</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li><li class="navelem"><a class="el" href="_p_f_solver_power_polar_sparse_8h.html">PFSolverPowerPolarSparse.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

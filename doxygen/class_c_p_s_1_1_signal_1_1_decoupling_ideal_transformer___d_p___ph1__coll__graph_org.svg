@@ -168,7 +168,7 @@
 <g id="Node000007" class="node">
 <title>Node7</title>
 <g id="a_Node000007"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="267,-344.09 152,-344.09 152,-293.34 267,-293.34 267,-344.09"/>
+<polygon fill="white" stroke="#666666" points="267,-344.09 152,-344.09 152,-293.34 267,-293.34 267,-344.09"/>
 <text text-anchor="start" x="160" y="-330.59" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="160" y="-316.34" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="209.5" y="-302.09" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; String &gt; &gt;</text>
@@ -218,7 +218,7 @@
 <g id="Node000009" class="node">
 <title>Node9</title>
 <g id="a_Node000009"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="115,-316.09 0,-316.09 0,-265.34 115,-265.34 115,-316.09"/>
+<polygon fill="white" stroke="#666666" points="115,-316.09 0,-316.09 0,-265.34 115,-265.34 115,-316.09"/>
 <text text-anchor="start" x="8" y="-302.59" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="8" y="-288.34" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="57.5" y="-274.09" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; T &gt; &gt;</text>
@@ -292,7 +292,7 @@
 <g id="Node000013" class="node">
 <title>Node13</title>
 <g id="a_Node000013"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="267,-76.09 152,-76.09 152,-25.34 267,-25.34 267,-76.09"/>
+<polygon fill="white" stroke="#666666" points="267,-76.09 152,-76.09 152,-25.34 267,-25.34 267,-76.09"/>
 <text text-anchor="start" x="160" y="-62.59" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="160" y="-48.34" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="209.5" y="-34.09" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Complex &gt; &gt;</text>
@@ -322,7 +322,7 @@
 <g id="Node000015" class="node">
 <title>Node15</title>
 <g id="a_Node000015"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="267,-238.09 152,-238.09 152,-187.34 267,-187.34 267,-238.09"/>
+<polygon fill="white" stroke="#666666" points="267,-238.09 152,-238.09 152,-187.34 267,-187.34 267,-238.09"/>
 <text text-anchor="start" x="160" y="-224.59" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="160" y="-210.34" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="209.5" y="-196.09" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Matrix &gt; &gt;</text>

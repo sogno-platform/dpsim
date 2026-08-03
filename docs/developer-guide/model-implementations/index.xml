@@ -1,0 +1,695 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DPsim – Model Implementations</title><link>https://sogno.energy/dpsim/docs/developer-guide/model-implementations/</link><description>Recent content in Model Implementations on DPsim</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://sogno.energy/dpsim/docs/developer-guide/model-implementations/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Reduced Order Generator Implementation</title><link>https://sogno.energy/dpsim/docs/developer-guide/model-implementations/reduced-order-generator/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/model-implementations/reduced-order-generator/</guid><description>
+&lt;p>The equations are derived under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/synchronous-generator/reduced-order/">reduced order machine models&lt;/a>.
+This page covers only their arrangement in code.&lt;/p>
+&lt;h2 id="class-hierarchy">Class hierarchy&lt;/h2>
+&lt;p>&lt;code>Base::ReducedOrderSynchronGenerator&amp;lt;VarType&amp;gt;&lt;/code> holds everything independent of domain and of order:
+the per unit base values, the operational parameters, the mechanical states, the controller
+attachments and the discretisation coefficients. It is templated on &lt;code>Real&lt;/code> for EMT and &lt;code>Complex&lt;/code>
+for DP and SP, which is why the axis frame quantities appear twice, as &lt;code>mVdq0&lt;/code>/&lt;code>mIdq0&lt;/code> in the real
+specialisation and &lt;code>mVdq&lt;/code>/&lt;code>mIdq&lt;/code> in the complex one.&lt;/p>
+&lt;p>Each domain then provides a &lt;code>ReducedOrderSynchronGeneratorVBR&lt;/code> layer holding the frame transform,
+and each order a concrete class. The order is recorded in &lt;code>mSGOrder&lt;/code>, which selects which
+coefficients are computed.&lt;/p>
+&lt;h2 id="network-interface">Network interface&lt;/h2>
+&lt;p>&lt;code>setModelAsNortonSource&lt;/code> chooses between the two interface forms. The default is the Norton
+equivalent, in which the machine contributes only to the right hand side vector and requests no
+virtual nodes. The Thevenin form requests two virtual nodes instead. Both represent the same model;
+the Norton form is cheaper because it leaves the system matrix untouched between steps
+[&lt;a href="#Wang2010">Wang2010&lt;/a>].&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">Watch out: call setModelAsNortonSource before connecting&lt;/h4>
+Note that &lt;code>setModelAsNortonSource&lt;/code> calls &lt;code>setVirtualNodeNumber&lt;/code>, so it must be called before the
+component is connected.
+&lt;/div>
+&lt;h2 id="coefficients">Coefficients&lt;/h2>
+&lt;p>&lt;code>calculateAuxiliarConstants&lt;/code> computes the discretisation coefficients once, since they depend only
+on the parameters and the step size. The member names map to the symbols on the theory page as
+follows.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Member&lt;/th>
+&lt;th>Symbol&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>mAd_t&lt;/code>, &lt;code>mBd_t&lt;/code>&lt;/td>
+&lt;td>$A_d&amp;rsquo;$, $B_d'$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>mAq_t&lt;/code>, &lt;code>mBq_t&lt;/code>, &lt;code>mDq_t&lt;/code>&lt;/td>
+&lt;td>$A_q&amp;rsquo;$, $B_q&amp;rsquo;$, $D_q'$&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>mAd_s&lt;/code>, &lt;code>mBq_s&lt;/code>, &lt;code>mCd_s&lt;/code>, &lt;code>mCq_s&lt;/code>, &lt;code>mAq_s&lt;/code>&lt;/td>
+&lt;td>subtransient coefficients&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>mYd&lt;/code>, &lt;code>mYq&lt;/code>&lt;/td>
+&lt;td>$Y_d$, $Y_q$, non-zero only for the 6a variant&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>The naming looks wrong at first and is not. &lt;code>Zd_t&lt;/code> is built from $L_q - L_q&amp;rsquo;$ and &lt;code>Zq_t&lt;/code> from
+$L_d - L_d&amp;rsquo;$, because each is named for the axis whose coefficient it feeds rather than for the
+parameters it is assembled from. That follows the physics: the d-axis internal voltage arises from
+q-axis rotor flux and decays with $T_{q0}&amp;rsquo;$, so &lt;code>mAd_t&lt;/code> correctly combines $L_q - L_q&amp;rsquo;$ with
+$T_{q0}&amp;rsquo;$ and multiplies the q-axis current.&lt;/p>
+&lt;p>Read a coefficient&amp;rsquo;s use rather than its assignment line before concluding an axis is swapped.&lt;/p>
+&lt;h2 id="step-sequence">Step sequence&lt;/h2>
+&lt;p>&lt;code>mnaCompPreStep&lt;/code> runs before the network solve and does three things in order. It advances the
+controllers, saving &lt;code>mEf_prev&lt;/code> and &lt;code>mMechTorque_prev&lt;/code> first because the trapezoidal history terms
+need the previous values. It calls &lt;code>stepInPerUnit&lt;/code>, which updates the frame transforms from
+&lt;code>mThetaMech&lt;/code>, recomputes the axis frame state from the terminal quantities, and evaluates the
+history voltage into &lt;code>mEh_vbr&lt;/code>. It then stamps the result into the right hand side vector.&lt;/p>
+&lt;p>Each concrete order implements only &lt;code>specificInitialization&lt;/code> and &lt;code>stepInPerUnit&lt;/code>. Everything else is
+inherited.&lt;/p>
+&lt;h2 id="initialization">Initialization&lt;/h2>
+&lt;p>Initialization runs from the powerflow solution, not from user supplied states. The base class
+computes the load angle as the phase of $V + j L_q I$, projects the terminal voltage and current
+onto the axis frame, and derives the field voltage from the no-load relation. Only then does
+&lt;code>specificInitialization&lt;/code> set the order specific states, which is why a concrete class can assume
+&lt;code>mVdq&lt;/code> and &lt;code>mIdq&lt;/code> are already populated.&lt;/p>
+&lt;p>Attached controllers are initialized afterwards from the machine&amp;rsquo;s own initial values, so an
+exciter or governor never needs its own operating point.&lt;/p>
+&lt;h2 id="controllers">Controllers&lt;/h2>
+&lt;p>Excitation, governor, turbine and power system stabilizer attach through the base class and are
+optional, guarded by &lt;code>mHasExciter&lt;/code>, &lt;code>mHasGovernorAndTurbine&lt;/code>, &lt;code>mHasTurbineGovernor&lt;/code> and &lt;code>mHasPSS&lt;/code>.
+The stabilizer output feeds the exciter within the same step, and the governor output feeds the
+turbine, so the order of the calls in &lt;code>mnaCompPreStep&lt;/code> is load bearing.&lt;/p>
+&lt;h2 id="source-code">Source code&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/include/dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h">Base class header&lt;/a>, &lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/src/Base/Base_ReducedOrderSynchronGenerator.cpp">implementation&lt;/a>&lt;/li>
+&lt;li>Concrete orders under &lt;code>dpsim-models/src/{SP,DP,EMT}/&lt;/code> named &lt;code>SynchronGenerator&amp;lt;N&amp;gt;OrderVBR&lt;/code>&lt;/li>
+&lt;li>Availability per domain is listed under &lt;a href="https://sogno.energy/dpsim/docs/reference/model-availability/">model availability&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="references">References&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a name="Wang2010">&lt;/a>[Wang2010] &lt;a href="https://ieeexplore.ieee.org/document/5411963">IEEE Xplore document 5411963&lt;/a>. Cited in the machine model pages as the basis for interfacing a machine to a nodal solver through a current source that leaves the system matrix unchanged.&lt;/li>
+&lt;/ul></description></item><item><title>Docs: Switch and Load Implementation</title><link>https://sogno.energy/dpsim/docs/developer-guide/model-implementations/switches-and-loads/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/model-implementations/switches-and-loads/</guid><description>
+&lt;p>The models are derived under &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/switches/">switches&lt;/a> and
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/loads/">loads&lt;/a>. This page covers only their arrangement in
+code. Availability per domain is in
+&lt;a href="https://sogno.energy/dpsim/docs/reference/model-availability/">model availability&lt;/a>.&lt;/p>
+&lt;h2 id="switches">Switches&lt;/h2>
+&lt;p>&lt;code>Switch&lt;/code> implements &lt;code>Base::Ph1::Switch&lt;/code> and stamps one admittance chosen by &lt;code>mIsClosed&lt;/code>, using
+&lt;code>MNAStampUtils::stampAdmittance&lt;/code> so the grounded-terminal cases are handled centrally.
+&lt;code>SeriesSwitch&lt;/code> folds a series resistance into the same branch.&lt;/p>
+&lt;p>&lt;code>varResSwitch&lt;/code> additionally implements &lt;code>MNAVariableCompInterface&lt;/code>, which is what allows it to change
+the system matrix during a run. Its &lt;code>hasParameterChanged&lt;/code> is called each step and drives the
+transition:&lt;/p>
+&lt;ul>
+&lt;li>Opening multiplies the resistance by &lt;code>mDeltaResOpen&lt;/code> each step until it passes the target open
+value, then clamps to it and reports the transition finished.&lt;/li>
+&lt;li>Closing uses &lt;code>mDeltaResClosed&lt;/code>, which is &lt;code>0&lt;/code>, so the first step takes the resistance to zero, the
+clamp catches it and sets the closed value. Closing is therefore immediate by construction, not by
+a separate code path.&lt;/li>
+&lt;/ul>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">Watch out: setInitParameters is mandatory&lt;/h4>
+&lt;code>setInitParameters(timestep)&lt;/code> must be called before the simulation, because the growth factor is
+derived from the step size as &lt;code>0.5 * timestep / 0.001 + 1&lt;/code>. It also captures the configured
+resistances as the transition targets, since the live attributes are overwritten during the ramp. If
+it is not called, &lt;code>mDeltaResOpen&lt;/code> keeps its default of &lt;code>1.5&lt;/code>, which is the value for a 1 ms step and
+wrong for any other.
+&lt;/div>
+&lt;p>Its &lt;code>initializeFromNodesAndTerminals&lt;/code> carries a comment saying it is not used.&lt;/p>
+&lt;h2 id="loads">Loads&lt;/h2>
+&lt;p>&lt;code>RXLoad&lt;/code> is a &lt;code>CompositePowerComp&lt;/code>. In &lt;code>initializeFromNodesAndTerminals&lt;/code> it converts the powers to
+element values and builds sub-components:&lt;/p>
+&lt;ul>
+&lt;li>a resistor, &lt;strong>only if&lt;/strong> the active power is non-zero&lt;/li>
+&lt;li>an inductor if the reactance is positive, a capacitor if negative, and &lt;strong>nothing&lt;/strong> if the reactive
+power is zero&lt;/li>
+&lt;/ul>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">Watch out: a zero power silently drops a branch&lt;/h4>
+Each is registered with &lt;code>addMNASubComponent&lt;/code> and connected between ground and the load terminal. The
+conditionals are the trap: a load configured with &lt;code>P&lt;/code> or &lt;code>Q&lt;/code> at zero silently omits that branch. It
+does not error, and the missing branch is only visible as a load that draws less than expected.
+&lt;/div>
+&lt;p>&lt;code>PQLoadCS&lt;/code> wraps a current source and sets its reference in &lt;code>updateSetPoint&lt;/code> from
+&lt;code>conj(S / mNomVoltage)&lt;/code>. The nominal voltage, not the terminal voltage, is deliberate; the line
+using the terminal voltage is present but commented out. Changing it would make the component
+nonlinear and require an iterative solve.&lt;/p>
+&lt;p>&lt;code>Shunt&lt;/code> takes a conductance and a susceptance directly and additionally carries per-unit attributes,
+since it is the form the powerflow solver consumes.&lt;/p>
+&lt;h2 id="source">Source&lt;/h2>
+&lt;ul>
+&lt;li>Switches: &lt;code>{SP,DP,EMT}_Ph{1,3}_Switch&lt;/code>, &lt;code>DP_Ph3_SeriesSwitch&lt;/code>, &lt;code>EMT_Ph3_SeriesSwitch&lt;/code>, &lt;code>{DP,SP}_Ph1_varResSwitch&lt;/code> under &lt;code>dpsim-models/src/&lt;/code>&lt;/li>
+&lt;li>Loads: &lt;code>DP_Ph1_RXLoad&lt;/code>, &lt;code>EMT_Ph3_RXLoad&lt;/code>, &lt;code>DP_Ph1_RXLoadSwitch&lt;/code>, &lt;code>DP_Ph1_PQLoadCS&lt;/code>, &lt;code>SP_Ph1_Load&lt;/code>, &lt;code>{SP,DP}_Ph1_Shunt&lt;/code>, &lt;code>EMT_Ph3_Shunt&lt;/code>&lt;/li>
+&lt;/ul></description></item><item><title>Docs: Source Implementation</title><link>https://sogno.energy/dpsim/docs/developer-guide/model-implementations/sources/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/model-implementations/sources/</guid><description>
+&lt;p>The models are derived under &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/sources/">sources&lt;/a>. This page
+covers only the code.&lt;/p>
+&lt;h2 id="ideal-sources">Ideal sources&lt;/h2>
+&lt;p>&lt;code>VoltageSource&lt;/code> requests one virtual node, which carries the source current as the extra unknown,
+and stamps the constraint rows that fix the terminal voltage difference. &lt;code>CurrentSource&lt;/code> requests
+none and contributes only to the right hand side.&lt;/p>
+&lt;p>&lt;code>ControlledVoltageSource&lt;/code> and &lt;code>ControlledCurrentSource&lt;/code> are the same components with their reference
+supplied as an attribute rather than a parameter, so another component or an interface can drive
+them. The reference is read during the pre-step, which is why it is the previous step&amp;rsquo;s value.&lt;/p>
+&lt;h2 id="voltagesourcenorton">&lt;code>VoltageSourceNorton&lt;/code>&lt;/h2>
+&lt;p>Stamps directly rather than through a virtual node. &lt;code>mnaCompApplySystemMatrixStamp&lt;/code> adds
+&lt;code>mConductance&lt;/code> to both diagonal entries and subtracts it from the two off-diagonal entries, guarded
+by &lt;code>terminalNotGrounded&lt;/code>, and &lt;code>mnaCompApplyRightSideVectorStamp&lt;/code> sets the equivalent current
+&lt;code>mIntfVoltage / mResistance&lt;/code> with opposite signs at the two terminals.&lt;/p>
+&lt;p>&lt;code>mConductance&lt;/code> is computed in &lt;code>setParameters&lt;/code> as &lt;code>1 / resistance&lt;/code>, so calling &lt;code>setParameters&lt;/code> is
+mandatory before the run and a zero resistance is a division by zero rather than an ideal source.&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">Watch out: EMT::Ph3 must set the phase type first&lt;/h4>
+The EMT::Ph3 variant was missing &lt;code>mPhaseType = PhaseType::ABC&lt;/code> in its constructor until 2026-07-31.
+Without it &lt;code>SimPowerComp::initialize&lt;/code> sized the interface matrices to one row and the component
+aborted the process on an Eigen bounds assertion when it wrote rows 1 and 2. The general rule that
+came out of it is on the &lt;a href="https://sogno.energy/dpsim/docs/developer-guide/model-implementations/reduced-order-generator/">reduced order generator&lt;/a> page and
+applies to any EMT::Ph3 component: set the phase type in the constructor, before
+&lt;code>setVirtualNodeNumber&lt;/code>.
+&lt;/div>
+&lt;h2 id="voltagesourceramp">&lt;code>VoltageSourceRamp&lt;/code>&lt;/h2>
+&lt;p>A composite wrapping a &lt;code>VoltageSource&lt;/code> whose reference it rewrites each step in &lt;code>updateState(time)&lt;/code>.
+Three regimes: before &lt;code>mSwitchTime&lt;/code> the reference is unchanged; during &lt;code>mRampTime&lt;/code> the added voltage
+is interpolated linearly while the added frequency is blended by a raised sine
+&lt;code>0.5 + 0.5 * sin(pi * t / T - pi/2)&lt;/code>; afterwards both are fully applied.&lt;/p>
+&lt;p>The two are blended differently on purpose. A linear frequency interpolation applied as a phase
+offset would step the phase at both ends of the ramp; the raised sine has zero derivative at both
+ends, so the frequency contribution enters and leaves smoothly. The consequence is that the
+instantaneous frequency during the ramp is not the linear interpolation between the two values, and
+reading &lt;code>mAddSrcFreq&lt;/code> as &amp;ldquo;the frequency at the midpoint&amp;rdquo; is wrong.&lt;/p>
+&lt;p>Note also that the added frequency term is applied as &lt;code>mAddSrcFreq * time&lt;/code>, using absolute
+simulation time rather than time since the switch, so the phase contribution depends on when in the
+run the ramp occurs.&lt;/p>
+&lt;h2 id="profilevoltagesource">&lt;code>ProfileVoltageSource&lt;/code>&lt;/h2>
+&lt;p>Holds a &lt;code>std::filesystem::path&lt;/code>, a sample vector and an index, and reads the file in &lt;code>readFromFile&lt;/code>
+at construction. It implements &lt;code>DAEInterface&lt;/code> in addition to the MNA hooks.&lt;/p>
+&lt;p>The samples are stepped by index rather than interpolated against simulation time, so the profile&amp;rsquo;s
+sample rate and the simulation step must match for the waveform to have the intended duration. It is
+bound in Python and constructing it with a file that is not a readable sample list raises rather
+than crashing, which is covered by a test.&lt;/p>
+&lt;h2 id="source">Source&lt;/h2>
+&lt;p>Under &lt;code>dpsim-models/src/{SP,DP,EMT}/&lt;/code>. Availability per domain is in
+&lt;a href="https://sogno.energy/dpsim/docs/reference/model-availability/">model availability&lt;/a>.&lt;/p></description></item><item><title>Docs: Injection and Compensation Implementation</title><link>https://sogno.energy/dpsim/docs/developer-guide/model-implementations/network-injection-and-compensation/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/model-implementations/network-injection-and-compensation/</guid><description>
+&lt;p>The models are derived under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/network-injection-and-compensation/">network injection and compensation&lt;/a>.
+This page covers only the code.&lt;/p>
+&lt;h2 id="networkinjection">&lt;code>NetworkInjection&lt;/code>&lt;/h2>
+&lt;p>A &lt;code>CompositePowerComp&lt;/code> wrapping a single &lt;code>VoltageSource&lt;/code> sub-component. It owns no equations of its
+own; it exists so that the external network is a named component rather than a bare source, and so
+that the driving waveform can be swapped without changing the network description.&lt;/p>
+&lt;p>&lt;code>setParameters&lt;/code> is overloaded by the kind of generator wanted behind it: a constant phasor for a
+fixed source, a start frequency with a rate of change for a ramp, and an initial phasor with a
+modulation frequency for a modulated one. Which overload is called determines which
+&lt;code>SignalGenerator&lt;/code> the sub-source is given; see
+&lt;a href="https://sogno.energy/dpsim/docs/developer-guide/model-implementations/signal-components/">signal component implementation&lt;/a>.&lt;/p>
+&lt;p>Because the source is ideal, adding an impedance to represent a finite short circuit level is the
+caller&amp;rsquo;s job. Nothing in the component does it.&lt;/p>
+&lt;h2 id="svc">&lt;code>SVC&lt;/code>&lt;/h2>
+&lt;p>Not composite. It computes a susceptance each step and realises it by reconfiguring an internal
+reactive element, so it implements the variable-component interface and forces a refactorisation
+whenever the value changes.&lt;/p>
+&lt;p>&lt;code>updateSusceptance&lt;/code> performs both lags with the trapezoidal rule, using precomputed constants
+&lt;code>Fac1 = dt / (2 Tr)&lt;/code>, &lt;code>Fac2 = dt Kr / (2 Tr)&lt;/code> and &lt;code>Fac3 = dt / (2 Tm)&lt;/code>. The measurement lag is
+applied first, then the error is formed in per unit against &lt;code>mNomVolt&lt;/code>, then the susceptance follows
+from the previous value and the present and previous error.&lt;/p>
+&lt;p>The result is clamped to &lt;code>mBMax&lt;/code> and &lt;code>mBMin&lt;/code> before use, and the internal element is only rebuilt
+when the value actually changed. The sign of the clamped susceptance selects which element is
+formed: positive gives an inductance &lt;code>1 / (omega * B * mBN)&lt;/code>, negative a capacitance
+&lt;code>B * mBN / (-omega)&lt;/code>. &lt;code>mBN&lt;/code> is the base susceptance, so &lt;code>B&lt;/code> is per unit.&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">Watch out: mMechMode selects a different control law&lt;/h4>
+&lt;code>mMechMode&lt;/code> switches the component to the discrete branch entirely. That path ignores the continuous
+regulator and instead moves &lt;code>mTapPos&lt;/code> by one step when the error exceeds &lt;code>mDeadband&lt;/code>, bounded by
+&lt;code>mMinPos&lt;/code> and &lt;code>mMaxPos&lt;/code>. The two modes share the component but not the control law, so a parameter
+that matters in one is inert in the other.
+&lt;/div>
+&lt;div class="alert alert-danger" role="alert">
+&lt;h4 class="alert-heading">Suspected defect: magnitude taken from the real part only&lt;/h4>
+Note that the voltage magnitude is taken as &lt;code>abs(real(V))&lt;/code> of the interface voltage rather than the
+magnitude of the complex envelope. For a dynamic phasor quantity those differ, and the difference is
+not negligible when the envelope has a significant imaginary part.
+&lt;/div>
+&lt;h2 id="solidstatetransformer">&lt;code>SolidStateTransformer&lt;/code>&lt;/h2>
+&lt;p>A &lt;code>CompositePowerComp&lt;/code> that represents each side as a current source rather than as a coupled
+winding pair. &lt;code>setParameters(nomV1, nomV2, Pref, Q1ref, Q2ref)&lt;/code> takes the two nominal voltages and
+three power set points; the active power is common to both sides, while the reactive powers are set
+per side.&lt;/p>
+&lt;p>Values are held in per unit internally, so the nominal voltages are the base rather than a turns
+ratio. There is no magnetising branch, no leakage impedance and no angle dependence, which is the
+representation the concept page describes and not an omission.&lt;/p>
+&lt;h2 id="source">Source&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/src/DP/DP_Ph1_NetworkInjection.cpp">&lt;code>DP_Ph1_NetworkInjection&lt;/code>&lt;/a>, and the SP and EMT variants alongside it&lt;/li>
+&lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/src/DP/DP_Ph1_SVC.cpp">&lt;code>DP_Ph1_SVC&lt;/code>&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/src/SP/SP_Ph1_SolidStateTransformer.cpp">&lt;code>SP_Ph1_SolidStateTransformer&lt;/code>&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>Availability per domain is in
+&lt;a href="https://sogno.energy/dpsim/docs/reference/model-availability/">model availability&lt;/a>.&lt;/p></description></item><item><title>Docs: SSN Component Implementation</title><link>https://sogno.energy/dpsim/docs/developer-guide/model-implementations/ssn-components/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/model-implementations/ssn-components/</guid><description>
+&lt;p>The method is derived under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/ssn-components/">state-space nodal components&lt;/a> and
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/state-space-nodal/">state-space nodal&lt;/a>. This page covers only the
+code.&lt;/p>
+&lt;h2 id="base-hierarchy">Base hierarchy&lt;/h2>
+&lt;p>&lt;code>SSNComp&lt;/code> holds the continuous matrices, the discrete pair, the equivalent admittance &lt;code>mW&lt;/code>, the
+history vector &lt;code>mYHist&lt;/code> and the state attribute &lt;code>x&lt;/code>. Two branches specialise it by which quantity is
+the input:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>VTypeSSNComp&lt;/code> takes voltage in and gives current out, so it stamps as an admittance&lt;/li>
+&lt;li>&lt;code>ITypeSSNComp&lt;/code> is the dual&lt;/li>
+&lt;/ul>
+&lt;p>Terminal-count layers sit on top: &lt;code>TwoTerminalVTypeSSNComp&lt;/code>, &lt;code>TwoTerminalITypeSSNComp&lt;/code> and
+&lt;code>FourTerminalVTypeSSNComp&lt;/code> handle the mapping from terminal quantities to the model input, and the
+&lt;code>Variable&lt;/code> layers add re-forming of the model between steps. Every EMT::Ph3 base sets
+&lt;code>PhaseType::ABC&lt;/code> in its constructor, which the concrete components rely on.&lt;/p>
+&lt;h2 id="what-a-component-provides">What a component provides&lt;/h2>
+&lt;p>A fixed-model component only calls &lt;code>SSNComp::setParameters(A, B, C, D)&lt;/code> with its chosen state,
+input and output. &lt;code>EMT::Ph3::SSN::Inductor&lt;/code> is the whole pattern:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">Matrix&lt;/span> &lt;span style="color:#000">aMatrix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">Matrix&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Zero&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">3&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">3&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// x = i_abc
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#000">Matrix&lt;/span> &lt;span style="color:#000">bMatrix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">inductance&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">inverse&lt;/span>&lt;span style="color:#000;font-weight:bold">();&lt;/span> &lt;span style="color:#8f5902;font-style:italic">// u = v_abc
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">&lt;/span>&lt;span style="color:#000">Matrix&lt;/span> &lt;span style="color:#000">cMatrix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">Matrix&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Identity&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">3&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">3&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">Matrix&lt;/span> &lt;span style="color:#000">dMatrix&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">Matrix&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">Zero&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">3&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">3&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">SSNComp&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">::&lt;/span>&lt;span style="color:#000">setParameters&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">aMatrix&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">bMatrix&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">cMatrix&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">dMatrix&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The base does the rest: &lt;code>recomputeDiscreteModel&lt;/code> calls
+&lt;code>Math::calculateStateSpaceTrapezoidalMatrices&lt;/code> and sets &lt;code>mW = mC * mdB + mD&lt;/code>,
+&lt;code>calculateHistoryVector&lt;/code> returns &lt;code>mC * (mdA * x + mdB * u)&lt;/code>, and the post step updates the state
+from the old and new input.&lt;/p>
+&lt;p>A varying component additionally overrides &lt;code>updateStateSpaceModel&lt;/code> (a no-op for linear components)
+and, for the variable bases, &lt;code>updateComponentParameters&lt;/code> to report whether the model changed. Only
+when it reports a change is the system matrix refactorised.&lt;/p>
+&lt;h2 id="domain-differences">Domain differences&lt;/h2>
+&lt;p>The formulation differs by domain, and so does the code path. The theory is under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/ssn-domain-formulation/">SSN across domains&lt;/a>.&lt;/p>
+&lt;p>A component supplies the same &lt;strong>real&lt;/strong> &lt;code>(A, B, C, D)&lt;/code> in either domain. &lt;code>EMT::SSNComp&lt;/code> discretises
+them directly. &lt;code>DP::SSNComp&lt;/code> does not: &lt;code>buildAugmentedA(omega)&lt;/code> assembles the real-augmented
+&lt;code>2n x 2n&lt;/code> matrix with &lt;code>A&lt;/code> on both diagonal blocks and &lt;code>+wI&lt;/code> / &lt;code>-wI&lt;/code> off-diagonal,
+&lt;code>buildAugmentedB&lt;/code> places &lt;code>B&lt;/code> on both diagonal blocks, and the result goes through the &lt;em>same&lt;/em>
+&lt;code>Math::calculateStateSpaceTrapezoidalMatrices&lt;/code> helper as EMT. The discrete blocks are then folded
+back into complex form as &lt;code>topLeft + j * bottomLeft&lt;/code>, which is the inverse of the
+&lt;code>[[P, -Q], [Q, P]]&lt;/code> representation. &lt;code>mW&lt;/code> and the history vector are complex as a result.&lt;/p>
+&lt;p>&lt;code>recomputeDiscreteModel&lt;/code> therefore takes &lt;code>omega&lt;/code> in DP and takes no argument in EMT. A component
+that hardcodes a frequency here rather than using the value handed to &lt;code>mnaCompInitialize&lt;/code> is wrong
+at any other system frequency.&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">Watch out: the mixed SSN base needs a pre-shifted matrix&lt;/h4>
+One base does not follow this pattern. &lt;code>MixedVTypeVariableSSNComp&lt;/code> does &lt;strong>not&lt;/strong> augment internally:
+it requires the derived component to hand it a state matrix that is already carrier shifted, because
+its steady-state solve assumes so. Supplying an unshifted matrix there initializes to the wrong
+operating point rather than failing, and it is the single easiest mistake to make when porting a
+component from EMT to DP.
+&lt;/div>
+&lt;h2 id="frame-metadata">Frame metadata&lt;/h2>
+&lt;p>&lt;code>getLocalAbcStateBlocks&lt;/code> returns nothing by default and should be overridden &lt;strong>only&lt;/strong> for states
+that genuinely form physical abc triples. It is consumed by tooling that reasons about the state
+vector in the phase frame, and declaring a block that is not one produces wrong groupings rather
+than an error.&lt;/p>
+&lt;h2 id="initialization">Initialization&lt;/h2>
+&lt;p>&lt;code>calculateSteadyStateStateFromInput&lt;/code> evaluates &lt;code>(jωI − A)⁻¹ B u&lt;/code>, which requires the continuous
+model to be set first. Components with real control states cannot use the default
+&lt;code>initializeFromNodesAndTerminals&lt;/code> on the mixed base; see
+&lt;a href="https://sogno.energy/dpsim/docs/developer-guide/model-implementations/dp-ph1-averaged-vsi-implementation/">DP Ph1 averaged VSI implementation&lt;/a> for that
+case and for the requirement that the state matrix be handed over already carrier shifted.&lt;/p>
+&lt;h2 id="the-components">The components&lt;/h2>
+&lt;p>Fixed models: &lt;code>SSN_Full_Serial_RLC&lt;/code>, &lt;code>SSN_Capacitor&lt;/code>, &lt;code>SSN_Inductor&lt;/code>, &lt;code>SSNTypeV2T&lt;/code>, &lt;code>SSNTypeI2T&lt;/code>.
+Varying models: &lt;code>SSN_Variable_Serial_RLC&lt;/code>, &lt;code>PiecewiseLinearInductor&lt;/code>, and the inverter models under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/power-electronics/">power electronics&lt;/a>. The &lt;code>Generic&lt;/code> two- and
+four-terminal classes take the matrices from the caller instead of forming them, so they are the
+route to an SSN component without writing C++. Availability per domain is in
+&lt;a href="https://sogno.energy/dpsim/docs/reference/model-availability/">model availability&lt;/a>.&lt;/p></description></item><item><title>Docs: Signal Component Implementation</title><link>https://sogno.energy/dpsim/docs/developer-guide/model-implementations/signal-components/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/model-implementations/signal-components/</guid><description>
+&lt;p>The models are derived under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/converter-control/">converter control&lt;/a> and
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/signal-processing/">signal processing blocks&lt;/a>. This page
+covers only the code.&lt;/p>
+&lt;h2 id="base-and-scheduling">Base and scheduling&lt;/h2>
+&lt;p>Signal blocks derive from &lt;code>SimSignalComp&lt;/code> and take no part in the nodal solve. They contribute tasks
+through &lt;code>getTasks()&lt;/code> rather than through the MNA hooks, and the scheduler orders them from the
+attribute dependencies those tasks declare. A block that reads an attribute without declaring it may
+still produce the right answer, by luck of ordering, and then change behaviour when an unrelated
+component is added; see
+&lt;a href="https://sogno.energy/dpsim/docs/developer-guide/attributes-and-scheduling/adding-tasks/">adding tasks to a component&lt;/a>.&lt;/p>
+&lt;p>Most blocks follow a two-task shape: a &lt;code>PreStep&lt;/code> that copies the current values into the previous
+ones, and a &lt;code>Step&lt;/code> that computes the new state and output. The split exists so that a value consumed
+by another block within the same step is unambiguous about which timestep it belongs to.&lt;/p>
+&lt;h2 id="the-minputprev--minputcurr-pattern">The &lt;code>mInputPrev&lt;/code> / &lt;code>mInputCurr&lt;/code> pattern&lt;/h2>
+&lt;p>Blocks that integrate with the trapezoidal rule need both the present and the previous input, so
+they carry &lt;code>mInputPrev&lt;/code>, &lt;code>mInputCurr&lt;/code>, &lt;code>mStatePrev&lt;/code>, &lt;code>mStateCurr&lt;/code> and the matching output pair. The
+&lt;code>PreStep&lt;/code> task performs the shift. &lt;code>Integrator::signalStep&lt;/code> is the whole pattern:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">**&lt;/span>&lt;span style="color:#000">mStateCurr&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">**&lt;/span>&lt;span style="color:#000">mStatePrev&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">+&lt;/span> &lt;span style="color:#000">mTimeStep&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">/&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">2.0&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">**&lt;/span>&lt;span style="color:#000">mInputCurr&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ce5c00;font-weight:bold">+&lt;/span> &lt;span style="color:#000">mTimeStep&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">/&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">2.0&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">**&lt;/span>&lt;span style="color:#000">mInputPrev&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ce5c00;font-weight:bold">**&lt;/span>&lt;span style="color:#000">mOutputCurr&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">**&lt;/span>&lt;span style="color:#000">mStateCurr&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>VCO::signalStep&lt;/code> deliberately does not, using &lt;code>state + dt * input&lt;/code>, because it accumulates an angle
+rather than integrating a control signal.&lt;/p>
+&lt;p>Every one of these blocks needs &lt;code>setSimulationParameters(timestep)&lt;/code> before the run, since the step
+size appears directly in the update. Blocks that expose &lt;code>setInitialValues&lt;/code> must also have it called,
+or they start from zero rather than from the operating point.&lt;/p>
+&lt;h2 id="state-space-blocks">State-space blocks&lt;/h2>
+&lt;p>&lt;code>PLL&lt;/code> is written as an explicit state-space block rather than as arithmetic, setting&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">mA&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">mKi&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">mB&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">mKp&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">mC&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">mD&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The first input is the nominal frequency and is held constant, which is how the feed-forward term
+enters. Writing it this way means the block can be discretised by the same helpers as anything else
+rather than by hand.&lt;/p>
+&lt;h2 id="firfilter">&lt;code>FIRFilter&lt;/code>&lt;/h2>
+&lt;p>&lt;code>FIRFilter&lt;/code> keeps a circular buffer and a write index, and &lt;code>step&lt;/code> sums &lt;code>mFilter[i] * mSignal[...]&lt;/code>
+over the filter length before advancing the index. It contributes a single &lt;code>Step&lt;/code> task. Filter
+coefficients are supplied by the caller; nothing validates their length against the buffer or checks
+that they sum to a sensible gain.&lt;/p>
+&lt;h2 id="generators">Generators&lt;/h2>
+&lt;p>&lt;code>SignalGenerator&lt;/code> is the abstract base; &lt;code>SineWaveGenerator&lt;/code>, &lt;code>DCGenerator&lt;/code>, &lt;code>CosineFMGenerator&lt;/code> and
+&lt;code>FrequencyRampGenerator&lt;/code> are the concrete ones, and all expose their value through a &lt;code>sigOut&lt;/code>
+attribute that a source component references.&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">Watch out: the default ramp depends on step history&lt;/h4>
+&lt;code>FrequencyRampGenerator&lt;/code> has two modes. The default accumulates phase incrementally, deriving its
+timestep as &lt;code>time - mOldTime&lt;/code> rather than from a configured step. The &lt;code>mUseAbsoluteCalc&lt;/code> path
+computes the phase in closed form from the ramp parameters instead. The incremental path makes the
+waveform depend on the step history; the absolute path does not. Prefer the absolute path when
+comparing runs at different step sizes.
+&lt;/div>
+&lt;h2 id="source">Source&lt;/h2>
+&lt;p>Under &lt;code>dpsim-models/src/Signal/&lt;/code>. Availability is in
+&lt;a href="https://sogno.energy/dpsim/docs/reference/model-availability/">model availability&lt;/a>; these blocks are domain
+independent and appear there as a list rather than a matrix.&lt;/p></description></item><item><title>Docs: DP Ph1 Averaged VSI Implementation</title><link>https://sogno.energy/dpsim/docs/developer-guide/model-implementations/dp-ph1-averaged-vsi-implementation/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/model-implementations/dp-ph1-averaged-vsi-implementation/</guid><description>
+&lt;p>The equations are derived under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/power-electronics/dp-ph1-averaged-vsi/">DP Ph1 averaged voltage source inverter&lt;/a>.
+This page covers only their arrangement in code.&lt;/p>
+&lt;h2 id="class-and-base">Class and base&lt;/h2>
+&lt;p>&lt;code>DP::Ph1::AvVoltSourceInverterStateSpace&lt;/code> is &lt;code>final&lt;/code> and derives from
+&lt;code>DP::Ph1::MixedVTypeVariableSSNComp&lt;/code>. The mixed base is what makes the model possible in this
+domain: eight of the twelve states are real baseband control states and only the last four are the
+real and imaginary parts of the two carrier-band envelopes, so the component cannot use the plain
+complex SSN base.&lt;/p>
+&lt;h2 id="state-layout">State layout&lt;/h2>
+&lt;p>The state order is fixed by a private &lt;code>StateIndex&lt;/code> enum, which the linearization indexes directly.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Index&lt;/th>
+&lt;th>Name&lt;/th>
+&lt;th>Kind&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>0&lt;/td>
+&lt;td>&lt;code>Psi&lt;/code>&lt;/td>
+&lt;td>PLL angle deviation from the nominal carrier phase&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1&lt;/td>
+&lt;td>&lt;code>PhiPLL&lt;/code>&lt;/td>
+&lt;td>PLL integrator&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2, 3&lt;/td>
+&lt;td>&lt;code>PFiltered&lt;/code>, &lt;code>QFiltered&lt;/code>&lt;/td>
+&lt;td>power filter&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>4, 5&lt;/td>
+&lt;td>&lt;code>PhiD&lt;/code>, &lt;code>PhiQ&lt;/code>&lt;/td>
+&lt;td>outer power control integrators&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>6, 7&lt;/td>
+&lt;td>&lt;code>GammaD&lt;/code>, &lt;code>GammaQ&lt;/code>&lt;/td>
+&lt;td>inner current control integrators&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>8, 9&lt;/td>
+&lt;td>&lt;code>VcRe&lt;/code>, &lt;code>VcIm&lt;/code>&lt;/td>
+&lt;td>filter capacitor voltage envelope&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>10, 11&lt;/td>
+&lt;td>&lt;code>IfRe&lt;/code>, &lt;code>IfIm&lt;/code>&lt;/td>
+&lt;td>filter inductor current envelope&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>The base does not impose this ordering. It is told only how many real and how many complex states
+there are, and sizes the packed real vector as &lt;code>realStateCount + 2 * complexStateCount&lt;/code>. The
+three-phase model orders its states the other way round, envelopes first and controls after, and is
+equally valid. What the base does require is that the derived class hand it a state matrix that is
+&lt;strong>already carrier shifted&lt;/strong>: the steady-state solve assumes it, and a model that supplies an
+unshifted matrix initializes to the wrong operating point rather than failing.&lt;/p>
+&lt;p>The default &lt;code>initializeFromNodesAndTerminals&lt;/code> throws unless &lt;code>realStateCount&lt;/code> is zero, so any model
+with real control states, which includes this one, must override it.&lt;/p>
+&lt;p>Tracking &lt;code>Psi&lt;/code> rather than the raw PLL angle keeps the tracked quantity bounded. The raw angle grows
+without limit, which costs relinearization accuracy as a run gets longer.&lt;/p>
+&lt;h2 id="parameters">Parameters&lt;/h2>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">Watch out: fourteen positional parameters with no defaults&lt;/h4>
+&lt;code>setParameters&lt;/code> takes the filter and control parameters positionally, in the order
+&lt;code>lf, cf, rf, rc, omegaN, kpPLL, kiPLL, omegaCutoff, pRef, qRef, kpPowerCtrl, kiPowerCtrl, kpCurrCtrl, kiCurrCtrl&lt;/code>. There are fourteen of them and no defaults, so a transposed pair is easy to
+introduce and produces a model that runs and is wrong rather than one that fails.
+&lt;/div>
+&lt;p>&lt;code>initializeFromNodesAndTerminals&lt;/code> derives the initial state from the connected node voltage, so the
+operating point comes from the powerflow rather than from user supplied states.&lt;/p>
+&lt;h2 id="source-and-examples">Source and examples&lt;/h2>
+&lt;ul>
+&lt;li>Source: &lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/include/dpsim-models/DP/DP_Ph1_AvVoltSourceInverterStateSpace.h">header&lt;/a>, &lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/src/DP/DP_Ph1_AvVoltSourceInverterStateSpace.cpp">implementation&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim/examples/cxx/Components/DP_Ph1_AvVoltSourceInverterStateSpace.cpp">C++ example&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/examples/Notebooks/Components/DP_Ph1_AvVoltSourceInverterStateSpace.ipynb">Python notebook&lt;/a>&lt;/li>
+&lt;li>The state-space nodal interfacing this model relies on is described under &lt;a href="https://sogno.energy/dpsim/docs/concepts/state-space-nodal/">state-space nodal&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Docs: DP Ph3 Averaged VSI Implementation</title><link>https://sogno.energy/dpsim/docs/developer-guide/model-implementations/dp-ph3-averaged-vsi-implementation/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/model-implementations/dp-ph3-averaged-vsi-implementation/</guid><description>
+&lt;p>The equations are derived under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/power-electronics/dp-ph3-averaged-vsi/">DP Ph3 averaged voltage source inverter&lt;/a>.
+This page covers only their arrangement in code.&lt;/p>
+&lt;h2 id="class-and-base">Class and base&lt;/h2>
+&lt;p>&lt;code>DP::Ph3::AvVoltSourceInverterStateSpace&lt;/code> is &lt;code>final&lt;/code> and derives from
+&lt;code>DP::Ph1::MixedVTypeVariableSSNComp&lt;/code>, the same mixed base as the single-phase model. Per-phase
+complex quantities are carried as &lt;code>std::array&amp;lt;Complex, 3&amp;gt;&lt;/code>.&lt;/p>
+&lt;h2 id="state-layout">State layout&lt;/h2>
+&lt;p>Twenty states by default, ordered envelopes first and controls afterwards, or twenty-two with the
+optional negative-sequence loop enabled.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Index&lt;/th>
+&lt;th>Name&lt;/th>
+&lt;th>Kind&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>0–5&lt;/td>
+&lt;td>&lt;code>VcARe&lt;/code> … &lt;code>VcCIm&lt;/code>&lt;/td>
+&lt;td>filter capacitor voltage envelope, per phase&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>6–11&lt;/td>
+&lt;td>&lt;code>IfARe&lt;/code> … &lt;code>IfCIm&lt;/code>&lt;/td>
+&lt;td>filter inductor current envelope, per phase&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>12&lt;/td>
+&lt;td>&lt;code>Psi&lt;/code>&lt;/td>
+&lt;td>PLL angle deviation from the nominal carrier phase&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>13&lt;/td>
+&lt;td>&lt;code>PhiPLL&lt;/code>&lt;/td>
+&lt;td>PLL integrator&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>14, 15&lt;/td>
+&lt;td>&lt;code>PFiltered&lt;/code>, &lt;code>QFiltered&lt;/code>&lt;/td>
+&lt;td>power filter&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>16, 17&lt;/td>
+&lt;td>&lt;code>PhiD&lt;/code>, &lt;code>PhiQ&lt;/code>&lt;/td>
+&lt;td>outer power control integrators&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>18, 19&lt;/td>
+&lt;td>&lt;code>GammaD&lt;/code>, &lt;code>GammaQ&lt;/code>&lt;/td>
+&lt;td>inner current control integrators&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>20, 21&lt;/td>
+&lt;td>&lt;code>GammaND&lt;/code>, &lt;code>GammaNQ&lt;/code>&lt;/td>
+&lt;td>negative-sequence current control integrators, only when enabled&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>This is the reverse of the single-phase ordering, which places controls first. The base does not
+care: it is given only the counts of real and complex states and sizes the packed real vector as
+&lt;code>realStateCount + 2 * complexStateCount&lt;/code>. What it does require is a state matrix that is already
+carrier shifted, since the steady-state solve assumes it.&lt;/p>
+&lt;p>The last two states are the difference from the single-phase model beyond the per-phase filter.
+Three independent phase envelopes admit a negative-sequence component that a single positive-sequence
+envelope cannot represent, so the controller carries its own negative-sequence integrator pair.&lt;/p>
+&lt;h2 id="enabling-the-negative-sequence-loop">Enabling the negative-sequence loop&lt;/h2>
+&lt;p>The constructor takes an &lt;code>enableNegSeqControl&lt;/code> flag, &lt;code>false&lt;/code> by default. The two references
+$i_{nd,\mathrm{ref}}$ and $i_{nq,\mathrm{ref}}$ are the last two arguments of &lt;code>setParameters&lt;/code> and
+default to zero, which makes the loop a suppressor rather than an injector. The measured
+$i_{rc,nd}$ and $i_{rc,nq}$ are exposed as the &lt;code>irc_n_d&lt;/code> and &lt;code>irc_n_q&lt;/code> attributes, and stay at zero
+while the loop is disabled.&lt;/p>
+&lt;div class="alert alert-info" role="alert">
+&lt;h4 class="alert-heading">Leave it off to compare against EMT::Ph3&lt;/h4>
+The flag exists because the two configurations answer different questions. Off, the model has the
+same 20 states and the same eigenvalue count as its &lt;code>EMT::Ph3&lt;/code> counterpart, which is what a
+cross-domain comparison needs. On, it gains 2 states and can regulate an unbalanced terminal.
+&lt;/div>
+&lt;p>The two integrators are appended after the control block rather than inserted next to the other
+control states, so enabling the flag leaves every envelope and positive-sequence control index
+unchanged. Code indexing into the state vector therefore does not need to know about the flag.&lt;/p>
+&lt;p>The theory behind the loop is derived under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/power-electronics/dp-ph3-averaged-vsi/">DP Ph3 averaged VSI&lt;/a>.&lt;/p>
+&lt;h2 id="source-and-examples">Source and examples&lt;/h2>
+&lt;ul>
+&lt;li>Source: &lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/include/dpsim-models/DP/DP_Ph3_AvVoltSourceInverterStateSpace.h">header&lt;/a>, &lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/src/DP/DP_Ph3_AvVoltSourceInverterStateSpace.cpp">implementation&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim/examples/cxx/Components/DP_Ph3_AvVoltSourceInverterStateSpace.cpp">C++ example&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/examples/Notebooks/Components/DP_Ph3_AvVoltSourceInverterStateSpace.ipynb">Python notebook&lt;/a>&lt;/li>
+&lt;li>Single-phase counterpart: &lt;a href="https://sogno.energy/dpsim/docs/developer-guide/model-implementations/dp-ph1-averaged-vsi-implementation/">DP Ph1 averaged VSI implementation&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Docs: EMT Ph3 Averaged VSI Implementation</title><link>https://sogno.energy/dpsim/docs/developer-guide/model-implementations/emt-ph3-averaged-vsi-implementation/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/model-implementations/emt-ph3-averaged-vsi-implementation/</guid><description>
+&lt;p>The equations are derived under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/power-electronics/emt-ph3-averaged-vsi/">EMT Ph3 averaged voltage source inverter&lt;/a>.
+This page covers only their arrangement in code.&lt;/p>
+&lt;h2 id="class-and-base">Class and base&lt;/h2>
+&lt;p>&lt;code>EMT::Ph3::AvVoltSourceInverterStateSpace&lt;/code> is &lt;code>final&lt;/code> and derives from
+&lt;code>EMT::Ph3::TwoTerminalVTypeVariableSSNComp&lt;/code>. Unlike the dynamic phasor ports of this model, every
+state here is real, so it uses the plain variable state-space nodal base rather than the mixed one.
+The base sets &lt;code>PhaseType::ABC&lt;/code> in its constructor, which this component relies on.&lt;/p>
+&lt;h2 id="state-layout">State layout&lt;/h2>
+&lt;p>Fourteen real states, controls first and filter states afterwards.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Index&lt;/th>
+&lt;th>Name&lt;/th>
+&lt;th>Kind&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>0&lt;/td>
+&lt;td>&lt;code>ThetaPLL&lt;/code>&lt;/td>
+&lt;td>PLL angle&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1&lt;/td>
+&lt;td>&lt;code>PhiPLL&lt;/code>&lt;/td>
+&lt;td>PLL integrator&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2, 3&lt;/td>
+&lt;td>&lt;code>PFiltered&lt;/code>, &lt;code>QFiltered&lt;/code>&lt;/td>
+&lt;td>power filter&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>4, 5&lt;/td>
+&lt;td>&lt;code>PhiD&lt;/code>, &lt;code>PhiQ&lt;/code>&lt;/td>
+&lt;td>outer power control integrators&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>6, 7&lt;/td>
+&lt;td>&lt;code>GammaD&lt;/code>, &lt;code>GammaQ&lt;/code>&lt;/td>
+&lt;td>inner current control integrators&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>8–10&lt;/td>
+&lt;td>&lt;code>VcA&lt;/code>, &lt;code>VcB&lt;/code>, &lt;code>VcC&lt;/code>&lt;/td>
+&lt;td>filter capacitor voltage, per phase&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>11–13&lt;/td>
+&lt;td>&lt;code>IfA&lt;/code>, &lt;code>IfB&lt;/code>, &lt;code>IfC&lt;/code>&lt;/td>
+&lt;td>filter inductor current, per phase&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>The first state is the raw PLL angle. The dynamic phasor ports track the deviation from the nominal
+carrier phase instead, because there the angle is compared against a carrier and an unboundedly
+growing value costs relinearization accuracy. In EMT there is no carrier to drift against, so the
+raw angle is used directly.&lt;/p>
+&lt;p>Six real filter states here correspond to two complex envelopes in the single-phase dynamic phasor
+model and six in the three-phase one. That correspondence is the practical statement of what the
+envelope transform buys.&lt;/p>
+&lt;h2 id="source-and-examples">Source and examples&lt;/h2>
+&lt;ul>
+&lt;li>Source: &lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/include/dpsim-models/EMT/EMT_Ph3_AvVoltSourceInverterStateSpace.h">header&lt;/a>, &lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/src/EMT/EMT_Ph3_AvVoltSourceInverterStateSpace.cpp">implementation&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim/examples/cxx/Components/EMT_Ph3_AvVoltSourceInverterStateSpace.cpp">C++ example&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/examples/Notebooks/Components/EMT_Ph3_AvVoltSourceInverterStateSpace.ipynb">Python notebook&lt;/a>&lt;/li>
+&lt;li>Dynamic phasor counterparts: &lt;a href="https://sogno.energy/dpsim/docs/developer-guide/model-implementations/dp-ph1-averaged-vsi-implementation/">DP Ph1&lt;/a>, &lt;a href="https://sogno.energy/dpsim/docs/developer-guide/model-implementations/dp-ph3-averaged-vsi-implementation/">DP Ph3&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Docs: EMT Ph3 Grid-Forming VSI Implementation</title><link>https://sogno.energy/dpsim/docs/developer-guide/model-implementations/emt-ph3-grid-forming-vsi-implementation/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/model-implementations/emt-ph3-grid-forming-vsi-implementation/</guid><description>
+&lt;p>The equations and the linearization mathematics are derived under
+&lt;a href="https://sogno.energy/dpsim/docs/concepts/models/power-electronics/emt-ph3-grid-forming-vsi/">EMT Ph3 grid-forming voltage source inverter&lt;/a>.
+This page covers only their arrangement in code.&lt;/p>
+&lt;h2 id="class-and-base">Class and base&lt;/h2>
+&lt;p>&lt;code>EMT::Ph3::SSN_GFM&lt;/code> is &lt;code>final&lt;/code> and derives from &lt;code>EMT::Ph3::TwoTerminalVTypeVariableSSNComp&lt;/code>. All
+seventeen states are real.&lt;/p>
+&lt;h2 id="state-layout">State layout&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Index&lt;/th>
+&lt;th>Name&lt;/th>
+&lt;th>Kind&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>0, 1&lt;/td>
+&lt;td>&lt;code>PFiltered&lt;/code>, &lt;code>QFiltered&lt;/code>&lt;/td>
+&lt;td>power filter&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2, 3&lt;/td>
+&lt;td>&lt;code>Omega&lt;/code>, &lt;code>Theta&lt;/code>&lt;/td>
+&lt;td>droop frequency and angle&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>4&lt;/td>
+&lt;td>&lt;code>VoltageMagnitude&lt;/code>&lt;/td>
+&lt;td>voltage droop output&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>5, 6&lt;/td>
+&lt;td>&lt;code>VoltageIntegratorD&lt;/code>, &lt;code>VoltageIntegratorQ&lt;/code>&lt;/td>
+&lt;td>outer voltage control&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>7, 8&lt;/td>
+&lt;td>&lt;code>CurrentIntegratorD&lt;/code>, &lt;code>CurrentIntegratorQ&lt;/code>&lt;/td>
+&lt;td>inner current control&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>9, 10&lt;/td>
+&lt;td>&lt;code>DelayVoltageD&lt;/code>, &lt;code>DelayVoltageQ&lt;/code>&lt;/td>
+&lt;td>modulation delay&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>11–13&lt;/td>
+&lt;td>&lt;code>VcA&lt;/code>, &lt;code>VcB&lt;/code>, &lt;code>VcC&lt;/code>&lt;/td>
+&lt;td>filter capacitor voltage, per phase&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>14–16&lt;/td>
+&lt;td>&lt;code>IfA&lt;/code>, &lt;code>IfB&lt;/code>, &lt;code>IfC&lt;/code>&lt;/td>
+&lt;td>filter inductor current, per phase&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>&lt;code>Omega&lt;/code> and &lt;code>Theta&lt;/code> being states rather than inputs is what makes this grid forming: the converter
+carries its own frequency and angle instead of tracking a measured one through a PLL.&lt;/p>
+&lt;h2 id="numerical-linearization">Numerical linearization&lt;/h2>
+&lt;p>The Jacobians are not written out by hand. &lt;code>calculateNumericalJacobians&lt;/code> forms all four by central
+differences of the nonlinear state and output functions, so a change to the control equations needs
+no matching change to any matrix code.&lt;/p>
+&lt;p>The perturbation for column $j$ is &lt;code>absoluteStep + relativeStep * max(1, |x_j|)&lt;/code>, defaulting to
+&lt;code>1e-8&lt;/code> and &lt;code>1e-6&lt;/code> and adjustable at runtime. The &lt;code>max(1, ...)&lt;/code> floor means the step is effectively
+absolute for small states and relative for large ones, which keeps the difference well conditioned
+across states whose magnitudes differ by orders.&lt;/p>
+&lt;p>Because the model is time varying, the state-space form and its stamp are recomputed every step
+rather than cached. That is the cost of this approach and the reason it is used only where the
+control is genuinely nonlinear.&lt;/p>
+&lt;h2 id="source-and-examples">Source and examples&lt;/h2>
+&lt;ul>
+&lt;li>Source: &lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/include/dpsim-models/EMT/EMT_Ph3_SSN_GFM.h">header&lt;/a>, &lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/src/EMT/EMT_Ph3_SSN_GFM.cpp">implementation&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/dpsim/examples/cxx/Circuits/EMT_Ph3_IEEE9_SSN_InverterMix.cpp">C++ example, IEEE 9-bus mixed machine and inverter&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/sogno-platform/dpsim/blob/master/examples/Notebooks/Circuits/EMT_Ph3_IEEE9_SSN_InverterMix.ipynb">Python notebook&lt;/a>&lt;/li>
+&lt;li>Grid-following counterpart: &lt;a href="https://sogno.energy/dpsim/docs/developer-guide/model-implementations/emt-ph3-averaged-vsi-implementation/">EMT Ph3 averaged VSI implementation&lt;/a>&lt;/li>
+&lt;/ul></description></item></channel></rss>

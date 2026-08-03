@@ -150,7 +150,7 @@
 <g id="Node000007" class="node">
 <title>Node7</title>
 <g id="a_Node000007"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="267,-235.18 152,-235.18 152,-184.43 267,-184.43 267,-235.18"/>
+<polygon fill="white" stroke="#666666" points="267,-235.18 152,-235.18 152,-184.43 267,-184.43 267,-235.18"/>
 <text text-anchor="start" x="160" y="-221.68" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="160" y="-207.43" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="209.5" y="-193.18" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; String &gt; &gt;</text>
@@ -190,7 +190,7 @@
 <g id="Node000009" class="node">
 <title>Node9</title>
 <g id="a_Node000009"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="115,-109.18 0,-109.18 0,-58.43 115,-58.43 115,-109.18"/>
+<polygon fill="white" stroke="#666666" points="115,-109.18 0,-109.18 0,-58.43 115,-58.43 115,-109.18"/>
 <text text-anchor="start" x="8" y="-95.68" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="8" y="-81.43" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="57.5" y="-67.18" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; T &gt; &gt;</text>
@@ -265,7 +265,7 @@
 <g id="Node000013" class="node">
 <title>Node13</title>
 <g id="a_Node000013"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="267,-85.18 152,-85.18 152,-34.43 267,-34.43 267,-85.18"/>
+<polygon fill="white" stroke="#666666" points="267,-85.18 152,-85.18 152,-34.43 267,-34.43 267,-85.18"/>
 <text text-anchor="start" x="160" y="-71.68" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="160" y="-57.43" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="209.5" y="-43.18" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Matrix &gt; &gt;</text>

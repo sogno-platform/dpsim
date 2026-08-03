@@ -87,7 +87,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000100" class="node">
 <title>Node100</title>
 <g id="a_Node000100"><a xlink:href="class_c_p_s_1_1_m_n_a_sim_power_comp.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="orangered" points="566.5,-130.5 430.5,-130.5 430.5,-94 566.5,-94 566.5,-130.5"/>
+<polygon fill="#fff0f0" stroke="red" points="566.5,-130.5 430.5,-130.5 430.5,-94 566.5,-94 566.5,-130.5"/>
 <text text-anchor="start" x="438.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::MNASimPowerComp</text>
 <text text-anchor="middle" x="498.5" y="-102.75" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Real &gt;</text>
 </a>
@@ -143,7 +143,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000003" class="node">
 <title>Node3</title>
 <g id="a_Node000003"><a xlink:href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="orangered" points="787.5,-1794.5 608.75,-1794.5 608.75,-1758 787.5,-1758 787.5,-1794.5"/>
+<polygon fill="#fff0f0" stroke="red" points="787.5,-1794.5 608.75,-1794.5 608.75,-1758 787.5,-1758 787.5,-1794.5"/>
 <text text-anchor="start" x="616.75" y="-1781" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Base::ReducedOrderSynchron</text>
 <text text-anchor="middle" x="698.12" y="-1766.75" font-family="Helvetica,sans-Serif" font-size="10.00">Generator&lt; Complex &gt;</text>
 </a>
@@ -162,7 +162,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000020" class="node">
 <title>Node20</title>
 <g id="a_Node000020"><a xlink:href="class_c_p_s_1_1_composite_power_comp.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="orangered" points="771,-1739.5 625.25,-1739.5 625.25,-1703 771,-1703 771,-1739.5"/>
+<polygon fill="#fff0f0" stroke="red" points="771,-1739.5 625.25,-1739.5 625.25,-1703 771,-1703 771,-1739.5"/>
 <text text-anchor="start" x="633.25" y="-1726" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::CompositePowerComp</text>
 <text text-anchor="middle" x="698.12" y="-1711.75" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Complex &gt;</text>
 </a>
@@ -310,7 +310,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000053" class="node">
 <title>Node53</title>
 <g id="a_Node000053"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_profile_voltage_source.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="772.12,-1361.5 624.12,-1361.5 624.12,-1325 772.12,-1325 772.12,-1361.5"/>
+<polygon fill="white" stroke="#666666" points="772.12,-1361.5 624.12,-1361.5 624.12,-1325 772.12,-1325 772.12,-1361.5"/>
 <text text-anchor="start" x="632.12" y="-1348" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph1::ProfileVoltage</text>
 <text text-anchor="middle" x="698.12" y="-1333.75" font-family="Helvetica,sans-Serif" font-size="10.00">Source</text>
 </a>
@@ -511,7 +511,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000065" class="node">
 <title>Node65</title>
 <g id="a_Node000065"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_resistor.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="758.25,-879.38 638,-879.38 638,-857.12 758.25,-857.12 758.25,-879.38"/>
+<polygon fill="white" stroke="#666666" points="758.25,-879.38 638,-879.38 638,-857.12 758.25,-857.12 758.25,-879.38"/>
 <text text-anchor="middle" x="698.12" y="-865.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph3::Resistor</text>
 </a>
 </g>
@@ -529,7 +529,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000066" class="node">
 <title>Node66</title>
 <g id="a_Node000066"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_resistor.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="772.5,-839.38 623.75,-839.38 623.75,-817.12 772.5,-817.12 772.5,-839.38"/>
+<polygon fill="white" stroke="#666666" points="772.5,-839.38 623.75,-839.38 623.75,-817.12 772.5,-817.12 772.5,-839.38"/>
 <text text-anchor="middle" x="698.12" y="-825.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph3::SeriesResistor</text>
 </a>
 </g>
@@ -637,7 +637,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000086" class="node">
 <title>Node86</title>
 <g id="a_Node000086"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_capacitor.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="760.12,-599.38 636.12,-599.38 636.12,-577.12 760.12,-577.12 760.12,-599.38"/>
+<polygon fill="white" stroke="#666666" points="760.12,-599.38 636.12,-599.38 636.12,-577.12 760.12,-577.12 760.12,-599.38"/>
 <text text-anchor="middle" x="698.12" y="-585.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::Capacitor</text>
 </a>
 </g>
@@ -855,7 +855,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000098" class="node">
 <title>Node98</title>
 <g id="a_Node000098"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_resistor.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="757.12,-1874.38 639.12,-1874.38 639.12,-1852.12 757.12,-1852.12 757.12,-1874.38"/>
+<polygon fill="white" stroke="#666666" points="757.12,-1874.38 639.12,-1874.38 639.12,-1852.12 757.12,-1852.12 757.12,-1874.38"/>
 <text text-anchor="middle" x="698.12" y="-1860.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph3::Resistor</text>
 </a>
 </g>
@@ -891,7 +891,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000101" class="node">
 <title>Node101</title>
 <g id="a_Node000101"><a xlink:href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="orangered" points="787.5,-36.5 608.75,-36.5 608.75,0 787.5,0 787.5,-36.5"/>
+<polygon fill="#fff0f0" stroke="red" points="787.5,-36.5 608.75,-36.5 608.75,0 787.5,0 787.5,-36.5"/>
 <text text-anchor="start" x="616.75" y="-23" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Base::ReducedOrderSynchron</text>
 <text text-anchor="middle" x="698.12" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">Generator&lt; Real &gt;</text>
 </a>
@@ -910,7 +910,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000109" class="node">
 <title>Node109</title>
 <g id="a_Node000109"><a xlink:href="class_c_p_s_1_1_composite_power_comp.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="orangered" points="771,-130.5 625.25,-130.5 625.25,-94 771,-94 771,-130.5"/>
+<polygon fill="#fff0f0" stroke="red" points="771,-130.5 625.25,-130.5 625.25,-94 771,-94 771,-130.5"/>
 <text text-anchor="start" x="633.25" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::CompositePowerComp</text>
 <text text-anchor="middle" x="698.12" y="-102.75" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Real &gt;</text>
 </a>

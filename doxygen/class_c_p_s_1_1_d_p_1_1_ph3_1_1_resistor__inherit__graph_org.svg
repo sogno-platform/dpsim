@@ -199,7 +199,7 @@
 <g id="Node000010" class="node">
 <title>Node10</title>
 <g id="a_Node000010"><a xlink:href="class_c_p_s_1_1_base_1_1_ph3_1_1_resistor.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="913,-102.25 783.75,-102.25 783.75,-80 913,-80 913,-102.25"/>
+<polygon fill="white" stroke="#666666" points="913,-102.25 783.75,-102.25 783.75,-80 913,-80 913,-102.25"/>
 <text text-anchor="middle" x="848.38" y="-88.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Base::Ph3::Resistor</text>
 </a>
 </g>
@@ -217,7 +217,7 @@
 <g id="Node000011" class="node">
 <title>Node11</title>
 <g id="a_Node000011"><a xlink:href="class_c_p_s_1_1_m_n_a_tear_interface.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="911.12,-62.25 785.62,-62.25 785.62,-40 911.12,-40 911.12,-62.25"/>
+<polygon fill="white" stroke="#666666" points="911.12,-62.25 785.62,-62.25 785.62,-40 911.12,-40 911.12,-62.25"/>
 <text text-anchor="middle" x="848.38" y="-48.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::MNATearInterface</text>
 </a>
 </g>

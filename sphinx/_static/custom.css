@@ -1,0 +1,25 @@
+/* The bindings are generated, so signatures are long and dense. */
+
+/* Wrap long signatures instead of overflowing them horizontally. */
+.rst-content dl.py > dt {
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.6;
+}
+
+/* Separate consecutive entries so the list is scannable. */
+.rst-content dl.py > dt.sig-object {
+    margin-bottom: 0.5em;
+    padding: 0.4em 0.6em;
+}
+
+/* De-emphasise the self parameter, which pybind repeats on every method. */
+.rst-content dl.py em.sig-param:first-of-type {
+    opacity: 0.65;
+}
+
+/* Give each module section room to breathe. */
+.rst-content .section > dl.py,
+.rst-content section > dl.py {
+    margin-bottom: 1.2em;
+}

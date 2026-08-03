@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>CPS</b></li><li class="navelem"><b>Signal</b></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html">ExciterDC1SimpParameters</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">CPS::Signal::ExciterDC1SimpParameters Member List</div></div>
 </div><!--header-->
@@ -96,22 +104,25 @@ $(function(){ initResizable(false); });
 <table class="directory">
   <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#adb7797a325fc5eb5e6edf1a9197b3000">Aef</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html">CPS::Signal::ExciterDC1SimpParameters</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a71013de2bff5fd92657525e493214541">Bef</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html">CPS::Signal::ExciterDC1SimpParameters</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>ExciterParameters</b>() (defined in <a class="el" href="class_c_p_s_1_1_base_1_1_exciter_parameters.html">CPS::Base::ExciterParameters</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_base_1_1_exciter_parameters.html">CPS::Base::ExciterParameters</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_base_1_1_exciter_parameters.html#a4f2369ec2fe8ddd8da6a407b79e048d1">ExciterParameters</a>()</td><td class="entry"><a class="el" href="class_c_p_s_1_1_base_1_1_exciter_parameters.html">CPS::Base::ExciterParameters</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a5fe91a1dd7d5242152b896c37b58ead6">Ka</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html">CPS::Signal::ExciterDC1SimpParameters</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ab3e99d5ec94029e303aaabf779905100">Kef</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html">CPS::Signal::ExciterDC1SimpParameters</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a468e72035be0b1e6b6eb871d108ce30f">Kf</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html">CPS::Signal::ExciterDC1SimpParameters</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>MaxVa</b> (defined in <a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html">CPS::Signal::ExciterDC1SimpParameters</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html">CPS::Signal::ExciterDC1SimpParameters</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>MinVa</b> (defined in <a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html">CPS::Signal::ExciterDC1SimpParameters</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html">CPS::Signal::ExciterDC1SimpParameters</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ae80536d003d0837495069d3bb58ef1ac">Ta</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html">CPS::Signal::ExciterDC1SimpParameters</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a2ff6b2e4ed50aab5fe67912c469ed9c8">Tef</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html">CPS::Signal::ExciterDC1SimpParameters</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a4c8288c570530a66dd24031561b248d8">Tf</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html">CPS::Signal::ExciterDC1SimpParameters</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ab843482f0cc69c952cfa484505715ee8">Tr</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html">CPS::Signal::ExciterDC1SimpParameters</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~ExciterParameters</b>()=default (defined in <a class="el" href="class_c_p_s_1_1_base_1_1_exciter_parameters.html">CPS::Base::ExciterParameters</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_base_1_1_exciter_parameters.html">CPS::Base::ExciterParameters</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">make</a>(Args &amp;&amp;...args)</td><td class="entry"><a class="el" href="class_shared_factory.html">SharedFactory&lt; ExciterDC1SimpParameters &gt;</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">static</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ac29b34e88fa9a416cf34bd94f7a2ed75">MaxVa</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html">CPS::Signal::ExciterDC1SimpParameters</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ac94b47bd6e3e0620f3414c2306c98b21">MinVa</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html">CPS::Signal::ExciterDC1SimpParameters</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ae80536d003d0837495069d3bb58ef1ac">Ta</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html">CPS::Signal::ExciterDC1SimpParameters</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a2ff6b2e4ed50aab5fe67912c469ed9c8">Tef</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html">CPS::Signal::ExciterDC1SimpParameters</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#a4c8288c570530a66dd24031561b248d8">Tf</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html">CPS::Signal::ExciterDC1SimpParameters</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html#ab843482f0cc69c952cfa484505715ee8">Tr</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_exciter_d_c1_simp_parameters.html">CPS::Signal::ExciterDC1SimpParameters</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_base_1_1_exciter_parameters.html#a577cc70b010126a473fb7cbeb3dc020b">~ExciterParameters</a>()=default</td><td class="entry"><a class="el" href="class_c_p_s_1_1_base_1_1_exciter_parameters.html">CPS::Base::ExciterParameters</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
 </table></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

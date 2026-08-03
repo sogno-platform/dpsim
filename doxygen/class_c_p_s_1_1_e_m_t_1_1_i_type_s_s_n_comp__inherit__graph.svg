@@ -302,7 +302,7 @@ var sectionId = 'dynsection-0';
 <g id="Node000013" class="node">
 <title>Node13</title>
 <g id="a_Node000013"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_capacitor.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="1542,-105.5 1435.25,-105.5 1435.25,-69 1542,-69 1542,-105.5"/>
+<polygon fill="white" stroke="#666666" points="1542,-105.5 1435.25,-105.5 1435.25,-69 1542,-69 1542,-105.5"/>
 <text text-anchor="start" x="1443.25" y="-92" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::SSN</text>
 <text text-anchor="middle" x="1488.62" y="-77.75" font-family="Helvetica,sans-Serif" font-size="10.00">::Capacitor</text>
 </a>

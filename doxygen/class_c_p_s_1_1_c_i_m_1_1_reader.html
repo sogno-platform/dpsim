@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_c_p_s_1_1_c_i_m_1_1_reader.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>CPS</b></li><li class="navelem"><b>CIM</b></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_c_i_m_1_1_reader.html">Reader</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
@@ -95,37 +103,41 @@ $(function(){ initResizable(false); });
   <div class="headertitle"><div class="title">CPS::CIM::Reader Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="_reader_8h_source.html">Reader.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:ae147742b28f99b4c06f8115bc79e1229" id="r_ae147742b28f99b4c06f8115bc79e1229"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>VoltageTargetUnit</b> { <b>Auto</b>
-, <b>PerUnit</b>
-, <b>Absolute</b>
+<tr class="memitem:ae147742b28f99b4c06f8115bc79e1229" id="r_ae147742b28f99b4c06f8115bc79e1229"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae147742b28f99b4c06f8115bc79e1229">VoltageTargetUnit</a> { <a class="el" href="#ae147742b28f99b4c06f8115bc79e1229a06b9281e396db002010bde1de57262eb">Auto</a>
+, <a class="el" href="#ae147742b28f99b4c06f8115bc79e1229a699a2f0f0b31a281375f40580dac7810">PerUnit</a>
+, <a class="el" href="#ae147742b28f99b4c06f8115bc79e1229ab51ca26c6c89cfc9bec338f7a0d3e0c8">Absolute</a>
  }</td></tr>
 <tr class="separator:ae147742b28f99b4c06f8115bc79e1229"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a66d6947477702d25bc59902b68007655" id="r_a66d6947477702d25bc59902b68007655"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a66d6947477702d25bc59902b68007655">Reader</a> (String name, Logger::Level logLevel=Logger::Level::info, Logger::Level componentLogLevel=Logger::Level::off)</td></tr>
+<tr class="memitem:a66d6947477702d25bc59902b68007655" id="r_a66d6947477702d25bc59902b68007655"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a66d6947477702d25bc59902b68007655">Reader</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> name, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel=Logger::Level::info, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> componentLogLevel=Logger::Level::off)</td></tr>
 <tr class="separator:a66d6947477702d25bc59902b68007655"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a450d6c419d1fc7845d5b402ab2094ce7" id="r_a450d6c419d1fc7845d5b402ab2094ce7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_system_topology.html">SystemTopology</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a450d6c419d1fc7845d5b402ab2094ce7">loadCIM</a> (Real systemFrequency, const fs::path &amp;filename, Domain domain=Domain::DP, PhaseType phase=PhaseType::Single, GeneratorType genType=GeneratorType::None)</td></tr>
-<tr class="memdesc:a450d6c419d1fc7845d5b402ab2094ce7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses data from CIM files into the CPS data structure.  <br /></td></tr>
+<tr class="memitem:a78089542fd27a0ac2df6702fffe8725c" id="r_a78089542fd27a0ac2df6702fffe8725c"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a78089542fd27a0ac2df6702fffe8725c">~Reader</a> ()</td></tr>
+<tr class="separator:a78089542fd27a0ac2df6702fffe8725c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a450d6c419d1fc7845d5b402ab2094ce7" id="r_a450d6c419d1fc7845d5b402ab2094ce7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_system_topology.html">SystemTopology</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a450d6c419d1fc7845d5b402ab2094ce7">loadCIM</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> systemFrequency, const fs::path &amp;filename, <a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9">Domain</a> domain=<a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9ae2fca8135c2fadca093abd79a6b1c0d2">Domain::DP</a>, <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6c">PhaseType</a> phase=<a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca66ba162102bbf6ae31b522aec561735e">PhaseType::Single</a>, <a class="el" href="namespace_c_p_s.html#ada17f6a04d29355cd45243f13e7078f8">GeneratorType</a> genType=<a class="el" href="namespace_c_p_s.html#ada17f6a04d29355cd45243f13e7078f8a6adf97f83acf6453d4a6a4b1070f3754">GeneratorType::None</a>)</td></tr>
+<tr class="memdesc:a450d6c419d1fc7845d5b402ab2094ce7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses data from <a class="el" href="namespace_c_p_s_1_1_c_i_m.html">CIM</a> files into the <a class="el" href="namespace_c_p_s.html">CPS</a> data structure.  <br /></td></tr>
 <tr class="separator:a450d6c419d1fc7845d5b402ab2094ce7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a61b4a25d22a271f2463a50917ae20f9c" id="r_a61b4a25d22a271f2463a50917ae20f9c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_system_topology.html">SystemTopology</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a61b4a25d22a271f2463a50917ae20f9c">loadCIM</a> (Real systemFrequency, const std::list&lt; fs::path &gt; &amp;filenames, Domain domain=Domain::DP, PhaseType phase=PhaseType::Single, GeneratorType genType=GeneratorType::None)</td></tr>
-<tr class="memdesc:a61b4a25d22a271f2463a50917ae20f9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses data from CIM files into the CPS data structure.  <br /></td></tr>
+<tr class="memitem:a61b4a25d22a271f2463a50917ae20f9c" id="r_a61b4a25d22a271f2463a50917ae20f9c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_system_topology.html">SystemTopology</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a61b4a25d22a271f2463a50917ae20f9c">loadCIM</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> systemFrequency, const std::list&lt; fs::path &gt; &amp;filenames, <a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9">Domain</a> domain=<a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9ae2fca8135c2fadca093abd79a6b1c0d2">Domain::DP</a>, <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6c">PhaseType</a> phase=<a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca66ba162102bbf6ae31b522aec561735e">PhaseType::Single</a>, <a class="el" href="namespace_c_p_s.html#ada17f6a04d29355cd45243f13e7078f8">GeneratorType</a> genType=<a class="el" href="namespace_c_p_s.html#ada17f6a04d29355cd45243f13e7078f8a6adf97f83acf6453d4a6a4b1070f3754">GeneratorType::None</a>)</td></tr>
+<tr class="memdesc:a61b4a25d22a271f2463a50917ae20f9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses data from <a class="el" href="namespace_c_p_s_1_1_c_i_m.html">CIM</a> files into the <a class="el" href="namespace_c_p_s.html">CPS</a> data structure.  <br /></td></tr>
 <tr class="separator:a61b4a25d22a271f2463a50917ae20f9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12655f4ed33c7a50a764451cad22a89a" id="r_a12655f4ed33c7a50a764451cad22a89a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_system_topology.html">SystemTopology</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a12655f4ed33c7a50a764451cad22a89a">loadCIM</a> (Real systemFrequency, const std::list&lt; CPS::String &gt; &amp;filenamesString, Domain domain=Domain::DP, PhaseType phase=PhaseType::Single, GeneratorType genType=GeneratorType::None)</td></tr>
+<tr class="memitem:a12655f4ed33c7a50a764451cad22a89a" id="r_a12655f4ed33c7a50a764451cad22a89a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_system_topology.html">SystemTopology</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a12655f4ed33c7a50a764451cad22a89a">loadCIM</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> systemFrequency, const std::list&lt; <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a> &gt; &amp;filenamesString, <a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9">Domain</a> domain=<a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9ae2fca8135c2fadca093abd79a6b1c0d2">Domain::DP</a>, <a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6c">PhaseType</a> phase=<a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca66ba162102bbf6ae31b522aec561735e">PhaseType::Single</a>, <a class="el" href="namespace_c_p_s.html#ada17f6a04d29355cd45243f13e7078f8">GeneratorType</a> genType=<a class="el" href="namespace_c_p_s.html#ada17f6a04d29355cd45243f13e7078f8a6adf97f83acf6453d4a6a4b1070f3754">GeneratorType::None</a>)</td></tr>
 <tr class="separator:a12655f4ed33c7a50a764451cad22a89a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add9d77a1aa8c8c0f892f46f8f2176351" id="r_add9d77a1aa8c8c0f892f46f8f2176351"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#add9d77a1aa8c8c0f892f46f8f2176351">setShuntCapacitor</a> (Real v)</td></tr>
+<tr class="memitem:add9d77a1aa8c8c0f892f46f8f2176351" id="r_add9d77a1aa8c8c0f892f46f8f2176351"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#add9d77a1aa8c8c0f892f46f8f2176351">setShuntCapacitor</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> v)</td></tr>
 <tr class="memdesc:add9d77a1aa8c8c0f892f46f8f2176351"><td class="mdescLeft">&#160;</td><td class="mdescRight">set shunt capacitor value  <br /></td></tr>
 <tr class="separator:add9d77a1aa8c8c0f892f46f8f2176351"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a276f3231f7e53c32713e51817f51ddc9" id="r_a276f3231f7e53c32713e51817f51ddc9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a276f3231f7e53c32713e51817f51ddc9">setShuntConductance</a> (Real v)</td></tr>
+<tr class="memitem:a276f3231f7e53c32713e51817f51ddc9" id="r_a276f3231f7e53c32713e51817f51ddc9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a276f3231f7e53c32713e51817f51ddc9">setShuntConductance</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> v)</td></tr>
 <tr class="memdesc:a276f3231f7e53c32713e51817f51ddc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">set shunt conductance value  <br /></td></tr>
 <tr class="separator:a276f3231f7e53c32713e51817f51ddc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a61ad5bec56b65b1d6234676ef589038c" id="r_a61ad5bec56b65b1d6234676ef589038c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a61ad5bec56b65b1d6234676ef589038c">useProtectionSwitches</a> (Bool value=true)</td></tr>
+<tr class="memitem:a61ad5bec56b65b1d6234676ef589038c" id="r_a61ad5bec56b65b1d6234676ef589038c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a61ad5bec56b65b1d6234676ef589038c">useProtectionSwitches</a> (<a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> value=true)</td></tr>
 <tr class="memdesc:a61ad5bec56b65b1d6234676ef589038c"><td class="mdescLeft">&#160;</td><td class="mdescRight">If set, some components like loads include protection switches.  <br /></td></tr>
 <tr class="separator:a61ad5bec56b65b1d6234676ef589038c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1fb0113581a62b1d65c0c6e6d38052bb" id="r_a1fb0113581a62b1d65c0c6e6d38052bb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1fb0113581a62b1d65c0c6e6d38052bb">setExtnetVoltageTargetUnit</a> (VoltageTargetUnit unit)</td></tr>
+<tr class="memitem:a1fb0113581a62b1d65c0c6e6d38052bb" id="r_a1fb0113581a62b1d65c0c6e6d38052bb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1fb0113581a62b1d65c0c6e6d38052bb">setExtnetVoltageTargetUnit</a> (<a class="el" href="#ae147742b28f99b4c06f8115bc79e1229">VoltageTargetUnit</a> unit)</td></tr>
 <tr class="separator:a1fb0113581a62b1d65c0c6e6d38052bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -142,7 +154,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum class CPS::CIM::Reader::VoltageTargetUnit</td>
+          <td class="memname">enum class <a class="el" href="#ae147742b28f99b4c06f8115bc79e1229">CPS::CIM::Reader::VoltageTargetUnit</a></td>
         </tr>
       </table>
   </td>
@@ -151,6 +163,11 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ae147742b28f99b4c06f8115bc79e1229a06b9281e396db002010bde1de57262eb" name="ae147742b28f99b4c06f8115bc79e1229a06b9281e396db002010bde1de57262eb"></a>Auto&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ae147742b28f99b4c06f8115bc79e1229a699a2f0f0b31a281375f40580dac7810" name="ae147742b28f99b4c06f8115bc79e1229a699a2f0f0b31a281375f40580dac7810"></a>PerUnit&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ae147742b28f99b4c06f8115bc79e1229ab51ca26c6c89cfc9bec338f7a0d3e0c8" name="ae147742b28f99b4c06f8115bc79e1229ab51ca26c6c89cfc9bec338f7a0d3e0c8"></a>Absolute&#160;</td><td class="fielddoc"></td></tr>
+</table>
 
 <p class="definition">Definition at line <a class="el" href="_reader_8h_source.html#l00081">81</a> of file <a class="el" href="_reader_8h_source.html">Reader.h</a>.</p>
 
@@ -166,17 +183,17 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">Reader::Reader </td>
           <td>(</td>
-          <td class="paramtype">String</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Logger::Level</td>          <td class="paramname"><span class="paramname"><em>logLevel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Logger::Level::info</span>, </td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a></td>          <td class="paramname"><span class="paramname"><em>logLevel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Logger::Level::info</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Logger::Level</td>          <td class="paramname"><span class="paramname"><em>componentLogLevel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Logger::Level::off</span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a></td>          <td class="paramname"><span class="paramname"><em>componentLogLevel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Logger::Level::off</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -223,7 +240,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="class_c_p_s_1_1_system_topology.html">SystemTopology</a> Reader::loadCIM </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>systemFrequency</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>systemFrequency</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -233,22 +250,22 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Domain</td>          <td class="paramname"><span class="paramname"><em>domain</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Domain::DP</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9">Domain</a></td>          <td class="paramname"><span class="paramname"><em>domain</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9ae2fca8135c2fadca093abd79a6b1c0d2">Domain::DP</a></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">PhaseType</td>          <td class="paramname"><span class="paramname"><em>phase</em></span><span class="paramdefsep"> = </span><span class="paramdefval">PhaseType::Single</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6c">PhaseType</a></td>          <td class="paramname"><span class="paramname"><em>phase</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca66ba162102bbf6ae31b522aec561735e">PhaseType::Single</a></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">GeneratorType</td>          <td class="paramname"><span class="paramname"><em>genType</em></span><span class="paramdefsep"> = </span><span class="paramdefval">GeneratorType::None</span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#ada17f6a04d29355cd45243f13e7078f8">GeneratorType</a></td>          <td class="paramname"><span class="paramname"><em>genType</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="namespace_c_p_s.html#ada17f6a04d29355cd45243f13e7078f8a6adf97f83acf6453d4a6a4b1070f3754">GeneratorType::None</a></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Parses data from CIM files into the CPS data structure. </p>
+<p>Parses data from <a class="el" href="namespace_c_p_s_1_1_c_i_m.html">CIM</a> files into the <a class="el" href="namespace_c_p_s.html">CPS</a> data structure. </p>
 
 <p class="definition">Definition at line <a class="el" href="_reader_8cpp_source.html#l00249">249</a> of file <a class="el" href="_reader_8cpp_source.html">Reader.cpp</a>.</p>
 
@@ -263,27 +280,27 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="class_c_p_s_1_1_system_topology.html">SystemTopology</a> Reader::loadCIM </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>systemFrequency</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>systemFrequency</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::list&lt; CPS::String &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>filenamesString</em></span>, </td>
+          <td class="paramtype">const std::list&lt; <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>filenamesString</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Domain</td>          <td class="paramname"><span class="paramname"><em>domain</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Domain::DP</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9">Domain</a></td>          <td class="paramname"><span class="paramname"><em>domain</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9ae2fca8135c2fadca093abd79a6b1c0d2">Domain::DP</a></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">PhaseType</td>          <td class="paramname"><span class="paramname"><em>phase</em></span><span class="paramdefsep"> = </span><span class="paramdefval">PhaseType::Single</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6c">PhaseType</a></td>          <td class="paramname"><span class="paramname"><em>phase</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca66ba162102bbf6ae31b522aec561735e">PhaseType::Single</a></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">GeneratorType</td>          <td class="paramname"><span class="paramname"><em>genType</em></span><span class="paramdefsep"> = </span><span class="paramdefval">GeneratorType::None</span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#ada17f6a04d29355cd45243f13e7078f8">GeneratorType</a></td>          <td class="paramname"><span class="paramname"><em>genType</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="namespace_c_p_s.html#ada17f6a04d29355cd45243f13e7078f8a6adf97f83acf6453d4a6a4b1070f3754">GeneratorType::None</a></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -301,7 +318,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="class_c_p_s_1_1_system_topology.html">SystemTopology</a> Reader::loadCIM </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>systemFrequency</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>systemFrequency</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -311,22 +328,22 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Domain</td>          <td class="paramname"><span class="paramname"><em>domain</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Domain::DP</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9">Domain</a></td>          <td class="paramname"><span class="paramname"><em>domain</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9ae2fca8135c2fadca093abd79a6b1c0d2">Domain::DP</a></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">PhaseType</td>          <td class="paramname"><span class="paramname"><em>phase</em></span><span class="paramdefsep"> = </span><span class="paramdefval">PhaseType::Single</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6c">PhaseType</a></td>          <td class="paramname"><span class="paramname"><em>phase</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca66ba162102bbf6ae31b522aec561735e">PhaseType::Single</a></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">GeneratorType</td>          <td class="paramname"><span class="paramname"><em>genType</em></span><span class="paramdefsep"> = </span><span class="paramdefval">GeneratorType::None</span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#ada17f6a04d29355cd45243f13e7078f8">GeneratorType</a></td>          <td class="paramname"><span class="paramname"><em>genType</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="namespace_c_p_s.html#ada17f6a04d29355cd45243f13e7078f8a6adf97f83acf6453d4a6a4b1070f3754">GeneratorType::None</a></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Parses data from CIM files into the CPS data structure. </p>
+<p>Parses data from <a class="el" href="namespace_c_p_s_1_1_c_i_m.html">CIM</a> files into the <a class="el" href="namespace_c_p_s.html">CPS</a> data structure. </p>
 
 <p class="definition">Definition at line <a class="el" href="_reader_8cpp_source.html#l00262">262</a> of file <a class="el" href="_reader_8cpp_source.html">Reader.cpp</a>.</p>
 
@@ -341,7 +358,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Reader::setExtnetVoltageTargetUnit </td>
           <td>(</td>
-          <td class="paramtype">VoltageTargetUnit</td>          <td class="paramname"><span class="paramname"><em>unit</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="#ae147742b28f99b4c06f8115bc79e1229">VoltageTargetUnit</a></td>          <td class="paramname"><span class="paramname"><em>unit</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -360,7 +377,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Reader::setShuntCapacitor </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -381,7 +398,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Reader::setShuntConductance </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -402,7 +419,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Reader::useProtectionSwitches </td>
           <td>(</td>
-          <td class="paramtype">Bool</td>          <td class="paramname"><span class="paramname"><em>value</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a></td>          <td class="paramname"><span class="paramname"><em>value</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -419,10 +436,13 @@ Public Member Functions</h2></td></tr>
 <li>/__w/dpsim/dpsim/dpsim-models/src/CIM/<a class="el" href="_reader_8cpp_source.html">Reader.cpp</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_c_p_s.html">CPS</a></li><li class="navelem"><a class="el" href="namespace_c_p_s_1_1_c_i_m.html">CIM</a></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_c_i_m_1_1_reader.html">Reader</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

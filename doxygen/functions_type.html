@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,19 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
 </div><!-- top -->
-<div id="doc-content">
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('functions_type.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -84,16 +96,80 @@ $(function(){ initResizable(false); });
 </div>
 
 <div class="contents">
-<div class="textblock">Here is a list of all documented typedefs with links to the class documentation for each member:</div><ul>
+<div class="textblock">Here is a list of all typedefs with links to the classes they belong to:</div>
+
+<h3><a id="index_a" name="index_a"></a>- a -</h3><ul>
+<li>Actor&#160;:&#160;<a class="el" href="class_c_p_s_1_1_attribute_update_task.html#ae79773b9df95d8e1fe2b7e69f99e6895">CPS::AttributeUpdateTask&lt; DependentType, DependencyTypes &gt;</a></li>
+<li>AttributePacket&#160;:&#160;<a class="el" href="class_d_psim_1_1_interface_queued.html#a8cdc9a06f396b2b6ba3f27bd69de3388">DPsim::InterfaceQueued</a></li>
+</ul>
+
+
+<h3><a id="index_d" name="index_d"></a>- d -</h3><ul>
+<li>DeriveFnPtr&#160;:&#160;<a class="el" href="class_c_p_s_1_1_math.html#a9c3dbc3fcd1ce9eb3266db93b4966b58">CPS::Math</a></li>
+</ul>
+
+
+<h3><a id="index_e" name="index_e"></a>- e -</h3><ul>
 <li>Edges&#160;:&#160;<a class="el" href="class_d_psim_1_1_scheduler.html#a9b7e679e940b7ef3c991ad4bfd9f1a4b">DPsim::Scheduler</a></li>
+<li>element_type&#160;:&#160;<a class="el" href="class_c_p_s_1_1_attribute_pointer.html#ad81c2ae83a7742fcf71d6499f8fb2551">CPS::AttributePointer&lt; T &gt;</a></li>
+</ul>
+
+
+<h3><a id="index_i" name="index_i"></a>- i -</h3><ul>
+<li>IntervalClock&#160;:&#160;<a class="el" href="class_d_psim_1_1_timer.html#aa349603c2f3425edc762fc576060aeb1">DPsim::Timer</a></li>
+<li>IntervalTimePoint&#160;:&#160;<a class="el" href="class_d_psim_1_1_timer.html#ab0495f695a8e3398f77c4c2cb25c9c00">DPsim::Timer</a></li>
+</ul>
+
+
+<h3><a id="index_j" name="index_j"></a>- j -</h3><ul>
+<li>JacFn&#160;:&#160;<a class="el" href="class_c_p_s_1_1_o_d_e_interface.html#a86f97f3d136a80593d433afaa926bc46">CPS::ODEInterface</a></li>
+</ul>
+
+
+<h3><a id="index_l" name="index_l"></a>- l -</h3><ul>
+<li>Level&#160;:&#160;<a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger</a></li>
+<li>List&#160;:&#160;<a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">CPS::AttributeBase</a>, <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a0f2211c6a8794f294b5b50ade0e277a2">CPS::CompositePowerComp&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_d_a_e_interface.html#a344f948d58bf550093e722922a3fa168">CPS::DAEInterface</a>, <a class="el" href="class_c_p_s_1_1_identified_object.html#a981a607f5a619bbc40c916fcf7048a24">CPS::IdentifiedObject</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a99daa13babcb894a6f878fc889faa0a7">CPS::MNAInterface</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a3b2ef98b8377d258d5cc02bdee5dec9e">CPS::MNASimPowerComp&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a9bbee0656cd4d4e76d5e0ea3bb0646b2">CPS::MNASwitchInterface</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a0690973e34c6f1baa8d27de3a57c902f">CPS::MNASyncGenInterface</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_variable_comp_interface.html#ab0656efd4ef9e2add757244a76f50989">CPS::MNAVariableCompInterface</a>, <a class="el" href="class_c_p_s_1_1_p_f_solver_interface_bus.html#ab39ada57136add7f53da5b22bb42062e">CPS::PFSolverInterfaceBus</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_signal_generator.html#a32a296ab9014c6c1a51ac812d8abfc48">CPS::Signal::SignalGenerator</a>, <a class="el" href="class_c_p_s_1_1_sim_node.html#ad4160295aad4b504e06b203d72ba8baa">CPS::SimNode&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a820b19d65a66e64d40ac2b1b94831b1c">CPS::SimPowerComp&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a90c96524f4d727d98dd92d0f123606a1">CPS::SimSignalComp</a>, <a class="el" href="class_c_p_s_1_1_sim_terminal.html#a7926e8db3d15b3472970ee326ac68ee6">CPS::SimTerminal&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_task.html#ad081ca27190e0b2e1887a8d6cb612a66">CPS::Task</a>, <a class="el" href="class_c_p_s_1_1_topological_node.html#a0cbcf37d0706078e9d2fa5fab180faea">CPS::TopologicalNode</a>, <a class="el" href="class_c_p_s_1_1_topological_power_comp.html#a5d64157d6fda3ae34c8eb88585f8c343">CPS::TopologicalPowerComp</a>, <a class="el" href="class_c_p_s_1_1_topological_signal_comp.html#af67a88cdc55bae6c936850b733d196fe">CPS::TopologicalSignalComp</a>, <a class="el" href="class_c_p_s_1_1_topological_terminal.html#ad2bb37a96931c1238fa5262aff415b0a">CPS::TopologicalTerminal</a>, <a class="el" href="class_d_psim_1_1_data_logger_interface.html#a214bf11836ef4716f134d5302386026c">DPsim::DataLoggerInterface</a>, <a class="el" href="class_d_psim_1_1_m_n_a_state_space_contributor.html#a3f40edaf81f811a71d0eca14a9a0fb1c">DPsim::MNAStateSpaceContributor</a>, <a class="el" href="class_d_psim_1_1_solver.html#a1b7b853ce69c4c12f8e41994b1944b0c">DPsim::Solver</a></li>
+<li>Log&#160;:&#160;<a class="el" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger</a></li>
+</ul>
+
+
+<h3><a id="index_m" name="index_m"></a>- m -</h3><ul>
+<li>Map&#160;:&#160;<a class="el" href="class_c_p_s_1_1_attribute_base.html#afe3836eb4d78517b454cd0a1d1aabd1e">CPS::AttributeBase</a></li>
+</ul>
+
+
+<h3><a id="index_p" name="index_p"></a>- p -</h3><ul>
+<li>Ptr&#160;:&#160;<a class="el" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">CPS::Attribute&lt; T &gt;</a>, <a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">CPS::AttributeBase</a>, <a class="el" href="class_c_p_s_1_1_attribute_list.html#a49ff97075315610f2b8c923084bcd7d2">CPS::AttributeList</a>, <a class="el" href="class_c_p_s_1_1_attribute_update_task_base.html#aba6766f55ecbaa75b1984371ec88ff7d">CPS::AttributeUpdateTaskBase&lt; DependentType &gt;</a>, <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a707ca832f3ea093c4cb430c5466cc823">CPS::CompositePowerComp&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_d_a_e_interface.html#ae5b364df486165906a0b973dd9180962">CPS::DAEInterface</a>, <a class="el" href="class_c_p_s_1_1_identified_object.html#a45edcbbe8a23ba53d17473f08d7adf95">CPS::IdentifiedObject</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#ae0ae005f7e53b1d5c27f508149a0da2e">CPS::MNAInterface</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#aab0bf0401a097ee2b253a9a6fc328101">CPS::MNASimPowerComp&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">CPS::MNASwitchInterface</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a0eae826b2242049de1e259da488b08da">CPS::MNASyncGenInterface</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_variable_comp_interface.html#aa67f7e7b0da77a611fb6be0d2b4820c8">CPS::MNAVariableCompInterface</a>, <a class="el" href="class_c_p_s_1_1_o_d_e_interface.html#af539ef288692900c8cd723b8619fdb85">CPS::ODEInterface</a>, <a class="el" href="class_c_p_s_1_1_o_d_eint_interface.html#a7789f247c51b7d3301f590b57cf7bc8a">CPS::ODEintInterface</a>, <a class="el" href="class_c_p_s_1_1_p_f_solver_interface_bus.html#af6945d9c894ccfadcde7d71b0526f26f">CPS::PFSolverInterfaceBus</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___d_p___ph1.html#aad7d32c3835bbcb3a40ca7c0c8f11079">CPS::Signal::DecouplingIdealTransformer_DP_Ph1</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___e_m_t___ph1.html#a8cd199aefdae6246a1429dfcdf155542">CPS::Signal::DecouplingIdealTransformer_EMT_Ph1</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___e_m_t___ph3.html#a834b092dc1ac0d336f7302a45a4d9818">CPS::Signal::DecouplingIdealTransformer_EMT_Ph3</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___s_p___ph1.html#abbaa702b26f4da8a90ba138f00f1fd0a">CPS::Signal::DecouplingIdealTransformer_SP_Ph1</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_line.html#a695cc2a6c3883ce76fed3a86e086f96c">CPS::Signal::DecouplingLine</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#a968c5469fbc9f223f9af1ef82e1a9661">CPS::Signal::DecouplingLineEMT</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t___ph3.html#a2589d34f3d5ce4b60b99c4963a4cbcf4">CPS::Signal::DecouplingLineEMT_Ph3</a>, <a class="el" href="class_c_p_s_1_1_signal_1_1_signal_generator.html#a0202843b7c5eb5418cab1d32fa6e36fd">CPS::Signal::SignalGenerator</a>, <a class="el" href="class_c_p_s_1_1_sim_node.html#a17ad2d76624d89ffb88b8996d67fb83c">CPS::SimNode&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aa5946ceeb6894fb6b04ab9d4788ec600">CPS::SimPowerComp&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#ac0e7daab9cffc2059b8432cbeb4aa2e5">CPS::SimSignalComp</a>, <a class="el" href="class_c_p_s_1_1_sim_terminal.html#a5e9c027812e0f457a7d16834d030fe3c">CPS::SimTerminal&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_system_topology.html#a88c173381cf3eea1a18b39a48d514e94">CPS::SystemTopology</a>, <a class="el" href="class_c_p_s_1_1_task.html#aad353cc3de2bb176874999876318a3f4">CPS::Task</a>, <a class="el" href="class_c_p_s_1_1_topological_node.html#ab221cd2b94f27ba65067e70962f37b50">CPS::TopologicalNode</a>, <a class="el" href="class_c_p_s_1_1_topological_power_comp.html#ab92768bb51c7160c9151d81038eebd90">CPS::TopologicalPowerComp</a>, <a class="el" href="class_c_p_s_1_1_topological_signal_comp.html#a6b59eedccabbaef56eaf1c032cfd88e5">CPS::TopologicalSignalComp</a>, <a class="el" href="class_c_p_s_1_1_topological_terminal.html#a70362c9ae65297f8e440b79529a49ebd">CPS::TopologicalTerminal</a>, <a class="el" href="class_d_psim_1_1_barrier_task.html#a549656ae0880bfe59eea4e5b7db8c481">DPsim::BarrierTask</a>, <a class="el" href="class_d_psim_1_1_data_logger.html#a92b09ed4164db7ade360daa74a6b3405">DPsim::DataLogger</a>, <a class="el" href="class_d_psim_1_1_data_logger_interface.html#a6856aa5ff8bfa17fbaf8c4b8a002b036">DPsim::DataLoggerInterface</a>, <a class="el" href="class_d_psim_1_1_event.html#a7792e265bd546c9690ec7335ef152cbf">DPsim::Event</a>, <a class="el" href="class_d_psim_1_1_interface.html#ace8b0d4b3ba7141eddac4ffd2e3f9ade">DPsim::Interface</a>, <a class="el" href="class_d_psim_1_1_interface_queued.html#a0af27634eaae8ba995189d8b728dbe55">DPsim::InterfaceQueued</a>, <a class="el" href="class_d_psim_1_1_interface_villas_queueless.html#a14d7846f7a27d02fb7b23ce7d280ee57">DPsim::InterfaceVillasQueueless</a>, <a class="el" href="class_d_psim_1_1_interface_worker.html#a692190dc86e94af2ab8b288e951264da">DPsim::InterfaceWorker</a>, <a class="el" href="class_d_psim_1_1_interface_worker_villas.html#acbcd553af7a17043e163bb9f2d070a60">DPsim::InterfaceWorkerVillas</a>, <a class="el" href="class_d_psim_1_1_m_n_a_state_space_contributor.html#a387b5377f961a3410683cbf32bbcc6f7">DPsim::MNAStateSpaceContributor</a>, <a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#a62deee047d569150dba037bcb5fc6f2e">DPsim::MNAStateSpaceExtractor</a>, <a class="el" href="class_d_psim_1_1_real_time_data_logger.html#ac52c8823e3c82be3c885903768affa61">DPsim::RealTimeDataLogger</a>, <a class="el" href="class_d_psim_1_1_simulation.html#ace93da8ebecb7913a351f42b8a06f343">DPsim::Simulation</a>, <a class="el" href="class_d_psim_1_1_solver.html#a7806d21e027fcba76a9ab2be5b5f28ba">DPsim::Solver</a></li>
+</ul>
+
+
+<h3><a id="index_r" name="index_r"></a>- r -</h3><ul>
+<li>ResFn&#160;:&#160;<a class="el" href="class_c_p_s_1_1_d_a_e_interface.html#a65661bbd04e99f2561ba79b35ac6aebe">CPS::DAEInterface</a></li>
+</ul>
+
+
+<h3><a id="index_s" name="index_s"></a>- s -</h3><ul>
+<li>Sample&#160;:&#160;<a class="el" href="class_d_psim_1_1_interface_worker_villas.html#a8fb09e470c063559d7ac13c385a5a6bf">DPsim::InterfaceWorkerVillas</a></li>
+<li>Set&#160;:&#160;<a class="el" href="class_c_p_s_1_1_attribute_base.html#afa17d63b4a338a173e15abb1e9841944">CPS::AttributeBase</a></li>
+<li>StartClock&#160;:&#160;<a class="el" href="class_d_psim_1_1_timer.html#a7e4e8feed1cc690ca744741f7517d876">DPsim::Timer</a></li>
+<li>StartTimePoint&#160;:&#160;<a class="el" href="class_d_psim_1_1_timer.html#a62df96a4a039625248210a73dcfd5f38">DPsim::Timer</a></li>
+<li>stateFnc&#160;:&#160;<a class="el" href="class_c_p_s_1_1_o_d_eint_interface.html#a0ee26a9627289d051ce069892768146f">CPS::ODEintInterface</a></li>
 <li>StSpFn&#160;:&#160;<a class="el" href="class_c_p_s_1_1_o_d_e_interface.html#a83205176110d836e157f4175fbb6df6e">CPS::ODEInterface</a></li>
+</ul>
+
+
+<h3><a id="index_t" name="index_t"></a>- t -</h3><ul>
 <li>TaskTime&#160;:&#160;<a class="el" href="class_d_psim_1_1_scheduler.html#ac704fccfba4117720ba75fb50e47cd39">DPsim::Scheduler</a></li>
+<li>Ticks&#160;:&#160;<a class="el" href="class_d_psim_1_1_timer.html#a51282a457a14063c54f5fde0a1fba8ef">DPsim::Timer</a></li>
+<li>Type&#160;:&#160;<a class="el" href="class_c_p_s_1_1_attribute.html#a82f90d2ce028adc4608b8035e77a1d1e">CPS::Attribute&lt; T &gt;</a>, <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#ad3333b463d0ba8881005ba97066e8dd3">CPS::CompositePowerComp&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a1dba155e613421ab4506288ba0d1923e">CPS::MNASimPowerComp&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_sim_node.html#a69fe11447b67243c37fab7f4973bca4a">CPS::SimNode&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a4b29d68ae7350d8f29ef7d69ca6f0590">CPS::SimPowerComp&lt; VarType &gt;</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

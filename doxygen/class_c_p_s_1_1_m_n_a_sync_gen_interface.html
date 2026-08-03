@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_c_p_s_1_1_m_n_a_sync_gen_interface.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>CPS</b></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html">MNASyncGenInterface</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
@@ -106,33 +114,33 @@ $(function(){ initResizable(false); });
 Inheritance diagram for CPS::MNASyncGenInterface:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_m_n_a_sync_gen_interface__inherit__graph.svg" width="511" height="332"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for CPS::MNASyncGenInterface:</div>
 <div class="dyncontent">
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_m_n_a_sync_gen_interface__coll__graph.svg" width="100%" height="439"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:a0eae826b2242049de1e259da488b08da" id="r_a0eae826b2242049de1e259da488b08da"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html">MNASyncGenInterface</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0eae826b2242049de1e259da488b08da">Ptr</a></td></tr>
 <tr class="separator:a0eae826b2242049de1e259da488b08da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0690973e34c6f1baa8d27de3a57c902f" id="r_a0690973e34c6f1baa8d27de3a57c902f"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; Ptr &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0690973e34c6f1baa8d27de3a57c902f">List</a></td></tr>
+<tr class="memitem:a0690973e34c6f1baa8d27de3a57c902f" id="r_a0690973e34c6f1baa8d27de3a57c902f"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="#a0eae826b2242049de1e259da488b08da">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0690973e34c6f1baa8d27de3a57c902f">List</a></td></tr>
 <tr class="separator:a0690973e34c6f1baa8d27de3a57c902f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a2c68ba119680d791d76178222113520a" id="r_a2c68ba119680d791d76178222113520a"><td class="memItemLeft" align="right" valign="top"><a id="a2c68ba119680d791d76178222113520a" name="a2c68ba119680d791d76178222113520a"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>correctorStep</b> ()=0</td></tr>
+<tr class="memitem:af2c2a7365b1ad1609a637cdb1c3f695c" id="r_af2c2a7365b1ad1609a637cdb1c3f695c"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af2c2a7365b1ad1609a637cdb1c3f695c">~MNASyncGenInterface</a> ()</td></tr>
+<tr class="separator:af2c2a7365b1ad1609a637cdb1c3f695c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c68ba119680d791d76178222113520a" id="r_a2c68ba119680d791d76178222113520a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2c68ba119680d791d76178222113520a">correctorStep</a> ()=0</td></tr>
 <tr class="separator:a2c68ba119680d791d76178222113520a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8018a5f5cfb7dd4c252316d785903e9" id="r_af8018a5f5cfb7dd4c252316d785903e9"><td class="memItemLeft" align="right" valign="top"><a id="af8018a5f5cfb7dd4c252316d785903e9" name="af8018a5f5cfb7dd4c252316d785903e9"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>updateVoltage</b> (const Matrix &amp;leftVector)=0</td></tr>
+<tr class="memitem:af8018a5f5cfb7dd4c252316d785903e9" id="r_af8018a5f5cfb7dd4c252316d785903e9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af8018a5f5cfb7dd4c252316d785903e9">updateVoltage</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;leftVector)=0</td></tr>
 <tr class="separator:af8018a5f5cfb7dd4c252316d785903e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58ebbb3b9ca1c39ea6024300b85f44c2" id="r_a58ebbb3b9ca1c39ea6024300b85f44c2"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a58ebbb3b9ca1c39ea6024300b85f44c2">requiresIteration</a> ()</td></tr>
 <tr class="separator:a58ebbb3b9ca1c39ea6024300b85f44c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac309e80826a824dda6dcfdd1bc051024" id="r_ac309e80826a824dda6dcfdd1bc051024"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac309e80826a824dda6dcfdd1bc051024">setMaxIterations</a> (Int maxIterations)</td></tr>
+<tr class="memitem:ac309e80826a824dda6dcfdd1bc051024" id="r_ac309e80826a824dda6dcfdd1bc051024"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac309e80826a824dda6dcfdd1bc051024">setMaxIterations</a> (<a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> maxIterations)</td></tr>
 <tr class="separator:ac309e80826a824dda6dcfdd1bc051024"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a90eeb488471f94dafec2a319549acadd" id="r_a90eeb488471f94dafec2a319549acadd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a90eeb488471f94dafec2a319549acadd">setTolerance</a> (Real Tolerance)</td></tr>
+<tr class="memitem:a90eeb488471f94dafec2a319549acadd" id="r_a90eeb488471f94dafec2a319549acadd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a90eeb488471f94dafec2a319549acadd">setTolerance</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> Tolerance)</td></tr>
 <tr class="separator:a90eeb488471f94dafec2a319549acadd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
@@ -143,11 +151,11 @@ Protected Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a7439d4b542ed0c1a8fb2142c2c93c117" id="r_a7439d4b542ed0c1a8fb2142c2c93c117"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; Int &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7439d4b542ed0c1a8fb2142c2c93c117">mNumIter</a></td></tr>
+<tr class="memitem:a7439d4b542ed0c1a8fb2142c2c93c117" id="r_a7439d4b542ed0c1a8fb2142c2c93c117"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> &gt;<a class="el" href="#a0eae826b2242049de1e259da488b08da">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7439d4b542ed0c1a8fb2142c2c93c117">mNumIter</a></td></tr>
 <tr class="separator:a7439d4b542ed0c1a8fb2142c2c93c117"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37c1d746b81a309609b6229161b8b90a" id="r_a37c1d746b81a309609b6229161b8b90a"><td class="memItemLeft" align="right" valign="top">Int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a37c1d746b81a309609b6229161b8b90a">mMaxIter</a> = 25</td></tr>
+<tr class="memitem:a37c1d746b81a309609b6229161b8b90a" id="r_a37c1d746b81a309609b6229161b8b90a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a37c1d746b81a309609b6229161b8b90a">mMaxIter</a> = 25</td></tr>
 <tr class="separator:a37c1d746b81a309609b6229161b8b90a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6107112713051af9aa7ce043258e6268" id="r_a6107112713051af9aa7ce043258e6268"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6107112713051af9aa7ce043258e6268">mTolerance</a> = 1e-6</td></tr>
+<tr class="memitem:a6107112713051af9aa7ce043258e6268" id="r_a6107112713051af9aa7ce043258e6268"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6107112713051af9aa7ce043258e6268">mTolerance</a> = 1e-6</td></tr>
 <tr class="separator:a6107112713051af9aa7ce043258e6268"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -162,7 +170,7 @@ Protected Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::vector&lt;Ptr&gt; CPS::MNASyncGenInterface::List</td>
+          <td class="memname">typedef std::vector&lt;<a class="el" href="#a0eae826b2242049de1e259da488b08da">Ptr</a>&gt; <a class="el" href="#a0690973e34c6f1baa8d27de3a57c902f">CPS::MNASyncGenInterface::List</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -178,7 +186,7 @@ Protected Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::shared_ptr&lt;<a class="el" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html">MNASyncGenInterface</a>&gt; CPS::MNASyncGenInterface::Ptr</td>
+          <td class="memname">typedef std::shared_ptr&lt;<a class="el" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html">MNASyncGenInterface</a>&gt; <a class="el" href="#a0eae826b2242049de1e259da488b08da">CPS::MNASyncGenInterface::Ptr</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -245,6 +253,33 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a2c68ba119680d791d76178222113520a" name="a2c68ba119680d791d76178222113520a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c68ba119680d791d76178222113520a">&#9670;&#160;</a></span>correctorStep()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void CPS::MNASyncGenInterface::correctorStep </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_p_c_m.html#ae6da7131f673b7dd959a122d790cc342">CPS::DP::Ph1::SynchronGenerator4OrderPCM</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_t_p_m.html#a243fd39339073b2b0c11cfbd019f124a">CPS::DP::Ph1::SynchronGenerator4OrderTPM</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6_order_p_c_m.html#a3b3ede4bb29ad20f563f2aba6f97e950">CPS::DP::Ph1::SynchronGenerator6OrderPCM</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_iter.html#a401b774f5f9e0462bd52acfc52ab777b">CPS::DP::Ph1::SynchronGeneratorIter</a>, and <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html#a29354165950926bb1d00e69b762346f7">CPS::EMT::Ph3::SynchronGenerator4OrderPCM</a>.</p>
+
+</div>
+</div>
 <a id="a58ebbb3b9ca1c39ea6024300b85f44c2" name="a58ebbb3b9ca1c39ea6024300b85f44c2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a58ebbb3b9ca1c39ea6024300b85f44c2">&#9670;&#160;</a></span>requiresIteration()</h2>
 
@@ -268,6 +303,8 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Reimplemented in <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_p_c_m.html#a93b4aa9caabffe4eecbda1a897641574">CPS::DP::Ph1::SynchronGenerator4OrderPCM</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_t_p_m.html#a0d964bc0bfcfe79d8fca9cfccc591ec3">CPS::DP::Ph1::SynchronGenerator4OrderTPM</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6_order_p_c_m.html#a7085c76359bd51fcce3c729e68690f46">CPS::DP::Ph1::SynchronGenerator6OrderPCM</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_iter.html#a7a93bf525aec432d0dcb9353ad61187e">CPS::DP::Ph1::SynchronGeneratorIter</a>, and <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html#a198ab152ff6d0c38eeca6044c51e5641">CPS::EMT::Ph3::SynchronGenerator4OrderPCM</a>.</p>
+
 <p class="definition">Definition at line <a class="el" href="_m_n_a_sync_gen_interface_8h_source.html#l00038">38</a> of file <a class="el" href="_m_n_a_sync_gen_interface_8h_source.html">MNASyncGenInterface.h</a>.</p>
 
 </div>
@@ -284,7 +321,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">void CPS::MNASyncGenInterface::setMaxIterations </td>
           <td>(</td>
-          <td class="paramtype">Int</td>          <td class="paramname"><span class="paramname"><em>maxIterations</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a></td>          <td class="paramname"><span class="paramname"><em>maxIterations</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -312,7 +349,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">void CPS::MNASyncGenInterface::setTolerance </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>Tolerance</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>Tolerance</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -327,6 +364,33 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="af8018a5f5cfb7dd4c252316d785903e9" name="af8018a5f5cfb7dd4c252316d785903e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8018a5f5cfb7dd4c252316d785903e9">&#9670;&#160;</a></span>updateVoltage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void CPS::MNASyncGenInterface::updateVoltage </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>leftVector</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_p_c_m.html#ad332c82ff4b1282671d4a20b92b90139">CPS::DP::Ph1::SynchronGenerator4OrderPCM</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_t_p_m.html#a1bd5242c44eaaae8a20bc8a5377aff07">CPS::DP::Ph1::SynchronGenerator4OrderTPM</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6_order_p_c_m.html#ae472378af5a537e89b05bb0714d5a668">CPS::DP::Ph1::SynchronGenerator6OrderPCM</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_iter.html#a0020dc345015e91f9ac38a718588d5c4">CPS::DP::Ph1::SynchronGeneratorIter</a>, and <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html#a3729144032e3fe5e6fccf772da546a2f">CPS::EMT::Ph3::SynchronGenerator4OrderPCM</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="a37c1d746b81a309609b6229161b8b90a" name="a37c1d746b81a309609b6229161b8b90a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a37c1d746b81a309609b6229161b8b90a">&#9670;&#160;</a></span>mMaxIter</h2>
@@ -338,7 +402,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Int CPS::MNASyncGenInterface::mMaxIter = 25</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> CPS::MNASyncGenInterface::mMaxIter = 25</td>
         </tr>
       </table>
   </td>
@@ -362,7 +426,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;Int&gt;::Ptr CPS::MNASyncGenInterface::mNumIter</td>
+          <td class="memname"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a>&gt;<a class="el" href="#a0eae826b2242049de1e259da488b08da">::Ptr</a> CPS::MNASyncGenInterface::mNumIter</td>
         </tr>
       </table>
   </td>
@@ -386,7 +450,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Real CPS::MNASyncGenInterface::mTolerance = 1e-6</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> CPS::MNASyncGenInterface::mTolerance = 1e-6</td>
         </tr>
       </table>
   </td>
@@ -404,10 +468,13 @@ Protected Attributes</h2></td></tr>
 <li>/__w/dpsim/dpsim/dpsim-models/include/dpsim-models/Solver/<a class="el" href="_m_n_a_sync_gen_interface_8h_source.html">MNASyncGenInterface.h</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_c_p_s.html">CPS</a></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html">MNASyncGenInterface</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

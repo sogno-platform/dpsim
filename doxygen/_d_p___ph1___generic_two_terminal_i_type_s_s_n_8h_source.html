@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_d_p___ph1___generic_two_terminal_i_type_s_s_n_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,55 +95,66 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_88adc964ffa02c1923288cb07a48abab.html">DP</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">DP_Ph1_GenericTwoTerminalITypeSSN.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University</span></div>
+<a href="_d_p___ph1___generic_two_terminal_i_type_s_s_n_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;dpsim-models/DP/DP_Ph1_TwoTerminalITypeSSNComp.h&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;<a class="code" href="_d_p___ph1___two_terminal_i_type_s_s_n_comp_8h.html">dpsim-models/DP/DP_Ph1_TwoTerminalITypeSSNComp.h</a>&gt;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">namespace </span>CPS {</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">namespace </span>DP {</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">namespace </span>Ph1 {</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s.html">CPS</a> {</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s_1_1_d_p.html">DP</a> {</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s_1_1_d_p_1_1_ph1.html">Ph1</a> {</div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span></div>
 <div class="foldopen" id="foldopen00016" data-start="{" data-end="};">
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_generic_two_terminal_i_type_s_s_n.html">   16</a></span><span class="keyword">class </span>GenericTwoTerminalITypeSSN final</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    : <span class="keyword">public</span> TwoTerminalITypeSSNComp,</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_generic_two_terminal_i_type_s_s_n.html">   16</a></span><span class="keyword">class </span><a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_generic_two_terminal_i_type_s_s_n.html#acf028772ce2d64beaca5bfa225eb64b3">GenericTwoTerminalITypeSSN</a> final</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    : <span class="keyword">public</span> <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#a1542408ba14fc15251b495e904ad68bf">TwoTerminalITypeSSNComp</a>,</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>      <span class="keyword">public</span> <a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;GenericTwoTerminalITypeSSN&gt; {</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  <span class="keyword">using </span><a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;GenericTwoTerminalITypeSSN&gt;::make;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  <span class="keyword">using </span><a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;<a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_generic_two_terminal_i_type_s_s_n.html#acf028772ce2d64beaca5bfa225eb64b3">GenericTwoTerminalITypeSSN</a>&gt;<a class="code hl_function" href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">::make</a>;</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  GenericTwoTerminalITypeSSN(String <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, String name,</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>                             Logger::Level logLevel = Logger::Level::off);</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  GenericTwoTerminalITypeSSN(String name,</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>                             Logger::Level logLevel = Logger::Level::off)</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>      : GenericTwoTerminalITypeSSN(name, name, logLevel) {}</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_generic_two_terminal_i_type_s_s_n.html#acf028772ce2d64beaca5bfa225eb64b3">GenericTwoTerminalITypeSSN</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>,</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>                             <a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel = Logger::Level::off);</div>
+<div class="foldopen" id="foldopen00024" data-start="{" data-end="}">
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_generic_two_terminal_i_type_s_s_n.html#a2dfea99614347586072d017049b78ca7">   24</a></span>  <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_generic_two_terminal_i_type_s_s_n.html#a2dfea99614347586072d017049b78ca7">GenericTwoTerminalITypeSSN</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>,</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>                             <a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel = Logger::Level::off)</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>      : <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_generic_two_terminal_i_type_s_s_n.html#acf028772ce2d64beaca5bfa225eb64b3">GenericTwoTerminalITypeSSN</a>(<a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, logLevel) {}</div>
+</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  SimPowerComp&lt;Complex&gt;::Ptr <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_generic_two_terminal_i_type_s_s_n.html#aa36bcc26d93323820efcd28660b19d6b">clone</a>(String name) <span class="keyword">override</span> <span class="keyword">final</span>;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <a class="code hl_typedef" href="class_c_p_s_1_1_sim_power_comp.html#aa5946ceeb6894fb6b04ab9d4788ec600">SimPowerComp&lt;Complex&gt;::Ptr</a> <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_generic_two_terminal_i_type_s_s_n.html#aa36bcc26d93323820efcd28660b19d6b">clone</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>) <span class="keyword">override</span> <span class="keyword">final</span>;</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>};</div>
 </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>} <span class="comment">// namespace Ph1</span></div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>} <span class="comment">// namespace DP</span></div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>} <span class="comment">// namespace CPS</span></div>
+<div class="ttc" id="a_d_p___ph1___two_terminal_i_type_s_s_n_comp_8h_html"><div class="ttname"><a href="_d_p___ph1___two_terminal_i_type_s_s_n_comp_8h.html">DP_Ph1_TwoTerminalITypeSSNComp.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph1_1_1_generic_two_terminal_i_type_s_s_n_html_a2dfea99614347586072d017049b78ca7"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_generic_two_terminal_i_type_s_s_n.html#a2dfea99614347586072d017049b78ca7">CPS::DP::Ph1::GenericTwoTerminalITypeSSN::GenericTwoTerminalITypeSSN</a></div><div class="ttdeci">GenericTwoTerminalITypeSSN(String name, Logger::Level logLevel=Logger::Level::off)</div><div class="ttdef"><b>Definition</b> <a href="#l00024">DP_Ph1_GenericTwoTerminalITypeSSN.h:24</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph1_1_1_generic_two_terminal_i_type_s_s_n_html_aa36bcc26d93323820efcd28660b19d6b"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_generic_two_terminal_i_type_s_s_n.html#aa36bcc26d93323820efcd28660b19d6b">CPS::DP::Ph1::GenericTwoTerminalITypeSSN::clone</a></div><div class="ttdeci">SimPowerComp&lt; Complex &gt;::Ptr clone(String name) override final</div><div class="ttdoc">Returns a modified copy of the component with the given suffix added to the name and without.</div><div class="ttdef"><b>Definition</b> <a href="_d_p___ph1___generic_two_terminal_i_type_s_s_n_8cpp_source.html#l00013">DP_Ph1_GenericTwoTerminalITypeSSN.cpp:13</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph1_1_1_generic_two_terminal_i_type_s_s_n_html_acf028772ce2d64beaca5bfa225eb64b3"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_generic_two_terminal_i_type_s_s_n.html#acf028772ce2d64beaca5bfa225eb64b3">CPS::DP::Ph1::GenericTwoTerminalITypeSSN::GenericTwoTerminalITypeSSN</a></div><div class="ttdeci">GenericTwoTerminalITypeSSN(String uid, String name, Logger::Level logLevel=Logger::Level::off)</div><div class="ttdef"><b>Definition</b> <a href="_d_p___ph1___generic_two_terminal_i_type_s_s_n_8cpp_source.html#l00008">DP_Ph1_GenericTwoTerminalITypeSSN.cpp:8</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp_html_a1542408ba14fc15251b495e904ad68bf"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#a1542408ba14fc15251b495e904ad68bf">CPS::DP::Ph1::TwoTerminalITypeSSNComp::TwoTerminalITypeSSNComp</a></div><div class="ttdeci">TwoTerminalITypeSSNComp(String uid, String name, Logger::Level logLevel=Logger::Level::off)</div><div class="ttdef"><b>Definition</b> <a href="_d_p___ph1___two_terminal_i_type_s_s_n_comp_8cpp_source.html#l00009">DP_Ph1_TwoTerminalITypeSSNComp.cpp:9</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a38b8318459b1651160029263eff6ca47"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">CPS::IdentifiedObject::name</a></div><div class="ttdeci">String name()</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00059">IdentifiedObject.h:59</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a66b765f33341283bc9b916c74047c749"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">CPS::IdentifiedObject::uid</a></div><div class="ttdeci">String uid()</div><div class="ttdoc">Returns unique id.</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00061">IdentifiedObject.h:61</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_logger_html_a021e964d1ab0d217a05b95736d2ea804"><div class="ttname"><a href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a></div><div class="ttdeci">spdlog::level::level_enum Level</div><div class="ttdef"><b>Definition</b> <a href="_logger_8h_source.html#l00033">Logger.h:33</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html_aa5946ceeb6894fb6b04ab9d4788ec600"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html#aa5946ceeb6894fb6b04ab9d4788ec600">CPS::SimPowerComp::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; SimPowerComp&lt; VarType &gt; &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_sim_power_comp_8h_source.html#l00041">SimPowerComp.h:41</a></div></div>
 <div class="ttc" id="aclass_shared_factory_html"><div class="ttname"><a href="class_shared_factory.html">SharedFactory</a></div><div class="ttdef"><b>Definition</b> <a href="_ptr_factory_8h_source.html#l00016">PtrFactory.h:16</a></div></div>
+<div class="ttc" id="aclass_shared_factory_html_a2ffdfd3b547bb9cb777f33e1bf6ec7ef"><div class="ttname"><a href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">SharedFactory&lt; GenericTwoTerminalITypeSSN &gt;::make</a></div><div class="ttdeci">static std::shared_ptr&lt; GenericTwoTerminalITypeSSN &gt; make(Args &amp;&amp;...args)</div><div class="ttdef"><b>Definition</b> <a href="_ptr_factory_8h_source.html#l00019">PtrFactory.h:19</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_1_1_d_p_1_1_ph1_html"><div class="ttname"><a href="namespace_c_p_s_1_1_d_p_1_1_ph1.html">CPS::DP::Ph1</a></div><div class="ttdef"><b>Definition</b> <a href="_d_p___ph1___av_voltage_source_inverter_d_q_8h_source.html#l00024">DP_Ph1_AvVoltageSourceInverterDQ.h:24</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_1_1_d_p_html"><div class="ttname"><a href="namespace_c_p_s_1_1_d_p.html">CPS::DP</a></div><div class="ttdef"><b>Definition</b> <a href="_d_p___i_type_s_s_n_comp_8h_source.html#l00009">DP_ITypeSSNComp.h:9</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html"><div class="ttname"><a href="namespace_c_p_s.html">CPS</a></div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00017">Attribute.h:17</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a09f6ad37b12370b4b58624822be9b055"><div class="ttname"><a href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a></div><div class="ttdeci">std::string String</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00065">Definitions.h:65</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_88adc964ffa02c1923288cb07a48abab.html">DP</a></li><li class="navelem"><a class="el" href="_d_p___ph1___generic_two_terminal_i_type_s_s_n_8h.html">DP_Ph1_GenericTwoTerminalITypeSSN.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

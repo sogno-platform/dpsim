@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_graph_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">Graph.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_graph_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -105,80 +113,109 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;graphviz/cgraph.h&gt;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;dpsim-models/Definitions.h&gt;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;<a class="code" href="dpsim-models_2include_2dpsim-models_2_definitions_8h.html">dpsim-models/Definitions.h</a>&gt;</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">namespace </span>CPS {</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">namespace </span>Graph {</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s.html">CPS</a> {</div>
+<div class="foldopen" id="foldopen00018" data-start="{" data-end="}">
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="namespace_c_p_s_1_1_graph.html">   18</a></span><span class="keyword">namespace </span><a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_graph.html">Graph</a> {</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">enum class</span> Type { undirected, directed };</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="namespace_c_p_s_1_1_graph.html#af8d47f814a254ca34d890ff561ca463ea42e55a2462c0d3774dba7cba6835ff52">   20</a></span><span class="keyword">enum class</span> <a class="code hl_enumeration" href="namespace_c_p_s_1_1_graph.html#af8d47f814a254ca34d890ff561ca463e">Type</a> { <a class="code hl_enumvalue" href="namespace_c_p_s_1_1_graph.html#af8d47f814a254ca34d890ff561ca463eabc26cd8237a1f32814d687d6745880db">undirected</a>, <a class="code hl_enumvalue" href="namespace_c_p_s_1_1_graph.html#af8d47f814a254ca34d890ff561ca463ea42e55a2462c0d3774dba7cba6835ff52">directed</a> };</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">class </span><a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_graph.html">Graph</a>;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">class </span><a class="code hl_namespace" href="namespace_c_p_s_1_1_graph.html">Graph</a>;</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="foldopen" id="foldopen00024" data-start="{" data-end="};">
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_graph_1_1_element.html">   24</a></span><span class="keyword">class </span><a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_element.html">Element</a> {</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="keywordtype">void</span> *mPtr;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="keywordtype">int</span> mKind;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_graph_1_1_element.html#ab69bd579fa2316f691b6926135cf7667">   27</a></span>  <span class="keywordtype">void</span> *<a class="code hl_variable" href="class_c_p_s_1_1_graph_1_1_element.html#ab69bd579fa2316f691b6926135cf7667">mPtr</a>;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_graph_1_1_element.html#ab03fc83260310d4551b421cb34c73a43">   28</a></span>  <span class="keywordtype">int</span> <a class="code hl_variable" href="class_c_p_s_1_1_graph_1_1_element.html#ab03fc83260310d4551b421cb34c73a43">mKind</a>;</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <span class="keywordtype">void</span> set(<span class="keyword">const</span> String &amp;key, <span class="keyword">const</span> String &amp;value, <span class="keywordtype">bool</span> html = <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_graph_1_1_element.html#a5ee60cf2a82add448ba452cbbdb306d3">set</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;key, <span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;value, <span class="keywordtype">bool</span> html = <span class="keyword">false</span>);</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>};</div>
 </div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
 <div class="foldopen" id="foldopen00034" data-start="{" data-end="};">
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_graph_1_1_node.html">   34</a></span><span class="keyword">class </span>Node : <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_element.html">Element</a> {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_graph_1_1_node.html">   34</a></span><span class="keyword">class </span><a class="code hl_function" href="class_c_p_s_1_1_graph_1_1_node.html#ad0fa66e23f248e16e6c4edf26db4316a">Node</a> : <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_element.html">Element</a> {</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  Agnode_t *mNode;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_graph_1_1_node.html#a5e13d461c01f272ba9f860db7c1022b1">   36</a></span>  Agnode_t *<a class="code hl_variable" href="class_c_p_s_1_1_graph_1_1_node.html#a5e13d461c01f272ba9f860db7c1022b1">mNode</a>;</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  Node(<a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_graph.html">Graph</a> *g, <span class="keyword">const</span> String &amp;name);</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <a class="code hl_function" href="class_c_p_s_1_1_graph_1_1_node.html#ad0fa66e23f248e16e6c4edf26db4316a">Node</a>(<a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_graph.html">Graph</a> *g, <span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;name);</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>};</div>
 </div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
 <div class="foldopen" id="foldopen00041" data-start="{" data-end="};">
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_graph_1_1_edge.html">   41</a></span><span class="keyword">class </span>Edge : <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_element.html">Element</a> {</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_graph_1_1_edge.html">   41</a></span><span class="keyword">class </span><a class="code hl_function" href="class_c_p_s_1_1_graph_1_1_edge.html#aaaa41480031ebf60ec59ccdb97425db4">Edge</a> : <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_element.html">Element</a> {</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  Agedge_t *mEdge;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_graph_1_1_edge.html#ad7f96907b2b8c66dd0b09901fdd7abd0">   43</a></span>  Agedge_t *<a class="code hl_variable" href="class_c_p_s_1_1_graph_1_1_edge.html#ad7f96907b2b8c66dd0b09901fdd7abd0">mEdge</a>;</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  Edge(<a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_graph.html">Graph</a> *g, <span class="keyword">const</span> String &amp;name, <a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_node.html">Node</a> *head, <a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_node.html">Node</a> *tail);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <a class="code hl_function" href="class_c_p_s_1_1_graph_1_1_edge.html#aaaa41480031ebf60ec59ccdb97425db4">Edge</a>(<a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_graph.html">Graph</a> *g, <span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;name, <a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_node.html">Node</a> *head, <a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_node.html">Node</a> *tail);</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>};</div>
 </div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="comment">// See: http://www.graphviz.org/pdf/libguide.pdf</span></div>
 <div class="foldopen" id="foldopen00049" data-start="{" data-end="};">
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_graph_1_1_graph.html">   49</a></span><span class="keyword">class </span>Graph : <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_element.html">Element</a> {</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_graph_1_1_graph.html">   49</a></span><span class="keyword">class </span><a class="code hl_function" href="class_c_p_s_1_1_graph_1_1_graph.html#af815b8fefc1e7e183f6df37161b24534">Graph</a> : <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_element.html">Element</a> {</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  std::map&lt;String, Node *&gt; mNodes;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  std::map&lt;String, Edge *&gt; mEdges;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_graph_1_1_graph.html#ad69f699bb18ea88e3538a1e3157a768a">   52</a></span>  std::map&lt;String, Node *&gt; <a class="code hl_variable" href="class_c_p_s_1_1_graph_1_1_graph.html#ad69f699bb18ea88e3538a1e3157a768a">mNodes</a>;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_graph_1_1_graph.html#a74b7431eb194ddc40f019b6af49b19b6">   53</a></span>  std::map&lt;String, Edge *&gt; <a class="code hl_variable" href="class_c_p_s_1_1_graph_1_1_graph.html#a74b7431eb194ddc40f019b6af49b19b6">mEdges</a>;</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  Agraph_t *mGraph;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_graph_1_1_graph.html#a822880f2b1b2d098004530cb0408c2b3">   56</a></span>  Agraph_t *<a class="code hl_variable" href="class_c_p_s_1_1_graph_1_1_graph.html#a822880f2b1b2d098004530cb0408c2b3">mGraph</a>;</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  Graph(<span class="keyword">const</span> String &amp;name, Type type, <span class="keywordtype">bool</span> strict = <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  ~Graph();</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  <a class="code hl_function" href="class_c_p_s_1_1_graph_1_1_graph.html#af815b8fefc1e7e183f6df37161b24534">Graph</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;name, <a class="code hl_enumeration" href="namespace_c_p_s_1_1_graph.html#af8d47f814a254ca34d890ff561ca463e">Type</a> type, <span class="keywordtype">bool</span> strict = <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  <a class="code hl_function" href="class_c_p_s_1_1_graph_1_1_graph.html#a783a058ceadd0a323d020040888f2fd3">~Graph</a>();</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  <span class="keywordtype">void</span> render(std::ostream &amp;os, <span class="keyword">const</span> String &amp;layout = <span class="stringliteral">&quot;dot&quot;</span>,</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>              <span class="keyword">const</span> String &amp;format = <span class="stringliteral">&quot;svg&quot;</span>);</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_graph_1_1_graph.html#afb0067225921f3925f784e4f3c0048d8">render</a>(std::ostream &amp;os, <span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;layout = <span class="stringliteral">&quot;dot&quot;</span>,</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>              <span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;format = <span class="stringliteral">&quot;svg&quot;</span>);</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_node.html">Node</a> *addNode(<span class="keyword">const</span> String &amp;name);</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  <a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_edge.html">Edge</a> *addEdge(<span class="keyword">const</span> String &amp;name, <a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_node.html">Node</a> *head, <a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_node.html">Node</a> *tail);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_node.html">Node</a> *<a class="code hl_function" href="class_c_p_s_1_1_graph_1_1_graph.html#ae638521a28e63d5187aa97f19b245fac">addNode</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;name);</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  <a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_edge.html">Edge</a> *<a class="code hl_function" href="class_c_p_s_1_1_graph_1_1_graph.html#a1a082ba16620ca94c7588bdd4aff010c">addEdge</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;name, <a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_node.html">Node</a> *head, <a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_node.html">Node</a> *tail);</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  <a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_node.html">Node</a> *node(<span class="keyword">const</span> String &amp;name);</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_edge.html">Edge</a> *edge(<span class="keyword">const</span> String &amp;name);</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  <a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_node.html">Node</a> *<a class="code hl_function" href="class_c_p_s_1_1_graph_1_1_graph.html#ab08cbdbf7d49ffd6be04d2de22f66f32">node</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;name);</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <a class="code hl_class" href="class_c_p_s_1_1_graph_1_1_edge.html">Edge</a> *<a class="code hl_function" href="class_c_p_s_1_1_graph_1_1_graph.html#a23eb64506e29c4a011597041d93b2cf4">edge</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;name);</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>};</div>
 </div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>} <span class="comment">// namespace Graph</span></div>
+</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>} <span class="comment">// namespace CPS</span></div>
 <div class="ttc" id="aclass_c_p_s_1_1_graph_1_1_edge_html"><div class="ttname"><a href="class_c_p_s_1_1_graph_1_1_edge.html">CPS::Graph::Edge</a></div><div class="ttdef"><b>Definition</b> <a href="#l00041">Graph.h:41</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_graph_1_1_edge_html_aaaa41480031ebf60ec59ccdb97425db4"><div class="ttname"><a href="class_c_p_s_1_1_graph_1_1_edge.html#aaaa41480031ebf60ec59ccdb97425db4">CPS::Graph::Edge::Edge</a></div><div class="ttdeci">Edge(Graph *g, const String &amp;name, Node *head, Node *tail)</div><div class="ttdef"><b>Definition</b> <a href="_graph_8cpp_source.html#l00093">Graph.cpp:93</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_graph_1_1_edge_html_ad7f96907b2b8c66dd0b09901fdd7abd0"><div class="ttname"><a href="class_c_p_s_1_1_graph_1_1_edge.html#ad7f96907b2b8c66dd0b09901fdd7abd0">CPS::Graph::Edge::mEdge</a></div><div class="ttdeci">Agedge_t * mEdge</div><div class="ttdef"><b>Definition</b> <a href="#l00043">Graph.h:43</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_graph_1_1_element_html"><div class="ttname"><a href="class_c_p_s_1_1_graph_1_1_element.html">CPS::Graph::Element</a></div><div class="ttdef"><b>Definition</b> <a href="#l00024">Graph.h:24</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_graph_1_1_element_html_a5ee60cf2a82add448ba452cbbdb306d3"><div class="ttname"><a href="class_c_p_s_1_1_graph_1_1_element.html#a5ee60cf2a82add448ba452cbbdb306d3">CPS::Graph::Element::set</a></div><div class="ttdeci">void set(const String &amp;key, const String &amp;value, bool html=false)</div><div class="ttdef"><b>Definition</b> <a href="_graph_8cpp_source.html#l00075">Graph.cpp:75</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_graph_1_1_element_html_ab03fc83260310d4551b421cb34c73a43"><div class="ttname"><a href="class_c_p_s_1_1_graph_1_1_element.html#ab03fc83260310d4551b421cb34c73a43">CPS::Graph::Element::mKind</a></div><div class="ttdeci">int mKind</div><div class="ttdef"><b>Definition</b> <a href="#l00028">Graph.h:28</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_graph_1_1_element_html_ab69bd579fa2316f691b6926135cf7667"><div class="ttname"><a href="class_c_p_s_1_1_graph_1_1_element.html#ab69bd579fa2316f691b6926135cf7667">CPS::Graph::Element::mPtr</a></div><div class="ttdeci">void * mPtr</div><div class="ttdef"><b>Definition</b> <a href="#l00027">Graph.h:27</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_graph_1_1_graph_html"><div class="ttname"><a href="class_c_p_s_1_1_graph_1_1_graph.html">CPS::Graph::Graph</a></div><div class="ttdef"><b>Definition</b> <a href="#l00049">Graph.h:49</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_graph_1_1_graph_html_a1a082ba16620ca94c7588bdd4aff010c"><div class="ttname"><a href="class_c_p_s_1_1_graph_1_1_graph.html#a1a082ba16620ca94c7588bdd4aff010c">CPS::Graph::Graph::addEdge</a></div><div class="ttdeci">Edge * addEdge(const String &amp;name, Node *head, Node *tail)</div><div class="ttdef"><b>Definition</b> <a href="_graph_8cpp_source.html#l00062">Graph.cpp:62</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_graph_1_1_graph_html_a23eb64506e29c4a011597041d93b2cf4"><div class="ttname"><a href="class_c_p_s_1_1_graph_1_1_graph.html#a23eb64506e29c4a011597041d93b2cf4">CPS::Graph::Graph::edge</a></div><div class="ttdeci">Edge * edge(const String &amp;name)</div><div class="ttdef"><b>Definition</b> <a href="_graph_8cpp_source.html#l00073">Graph.cpp:73</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_graph_1_1_graph_html_a74b7431eb194ddc40f019b6af49b19b6"><div class="ttname"><a href="class_c_p_s_1_1_graph_1_1_graph.html#a74b7431eb194ddc40f019b6af49b19b6">CPS::Graph::Graph::mEdges</a></div><div class="ttdeci">std::map&lt; String, Edge * &gt; mEdges</div><div class="ttdef"><b>Definition</b> <a href="#l00053">Graph.h:53</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_graph_1_1_graph_html_a783a058ceadd0a323d020040888f2fd3"><div class="ttname"><a href="class_c_p_s_1_1_graph_1_1_graph.html#a783a058ceadd0a323d020040888f2fd3">CPS::Graph::Graph::~Graph</a></div><div class="ttdeci">~Graph()</div><div class="ttdef"><b>Definition</b> <a href="_graph_8cpp_source.html#l00033">Graph.cpp:33</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_graph_1_1_graph_html_a822880f2b1b2d098004530cb0408c2b3"><div class="ttname"><a href="class_c_p_s_1_1_graph_1_1_graph.html#a822880f2b1b2d098004530cb0408c2b3">CPS::Graph::Graph::mGraph</a></div><div class="ttdeci">Agraph_t * mGraph</div><div class="ttdef"><b>Definition</b> <a href="#l00056">Graph.h:56</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_graph_1_1_graph_html_ab08cbdbf7d49ffd6be04d2de22f66f32"><div class="ttname"><a href="class_c_p_s_1_1_graph_1_1_graph.html#ab08cbdbf7d49ffd6be04d2de22f66f32">CPS::Graph::Graph::node</a></div><div class="ttdeci">Node * node(const String &amp;name)</div><div class="ttdef"><b>Definition</b> <a href="_graph_8cpp_source.html#l00071">Graph.cpp:71</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_graph_1_1_graph_html_ad69f699bb18ea88e3538a1e3157a768a"><div class="ttname"><a href="class_c_p_s_1_1_graph_1_1_graph.html#ad69f699bb18ea88e3538a1e3157a768a">CPS::Graph::Graph::mNodes</a></div><div class="ttdeci">std::map&lt; String, Node * &gt; mNodes</div><div class="ttdef"><b>Definition</b> <a href="#l00052">Graph.h:52</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_graph_1_1_graph_html_ae638521a28e63d5187aa97f19b245fac"><div class="ttname"><a href="class_c_p_s_1_1_graph_1_1_graph.html#ae638521a28e63d5187aa97f19b245fac">CPS::Graph::Graph::addNode</a></div><div class="ttdeci">Node * addNode(const String &amp;name)</div><div class="ttdef"><b>Definition</b> <a href="_graph_8cpp_source.html#l00054">Graph.cpp:54</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_graph_1_1_graph_html_af815b8fefc1e7e183f6df37161b24534"><div class="ttname"><a href="class_c_p_s_1_1_graph_1_1_graph.html#af815b8fefc1e7e183f6df37161b24534">CPS::Graph::Graph::Graph</a></div><div class="ttdeci">Graph(const String &amp;name, Type type, bool strict=false)</div><div class="ttdef"><b>Definition</b> <a href="_graph_8cpp_source.html#l00016">Graph.cpp:16</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_graph_1_1_graph_html_afb0067225921f3925f784e4f3c0048d8"><div class="ttname"><a href="class_c_p_s_1_1_graph_1_1_graph.html#afb0067225921f3925f784e4f3c0048d8">CPS::Graph::Graph::render</a></div><div class="ttdeci">void render(std::ostream &amp;os, const String &amp;layout=&quot;dot&quot;, const String &amp;format=&quot;svg&quot;)</div><div class="ttdef"><b>Definition</b> <a href="_graph_8cpp_source.html#l00035">Graph.cpp:35</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_graph_1_1_node_html"><div class="ttname"><a href="class_c_p_s_1_1_graph_1_1_node.html">CPS::Graph::Node</a></div><div class="ttdef"><b>Definition</b> <a href="#l00034">Graph.h:34</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_graph_1_1_node_html_a5e13d461c01f272ba9f860db7c1022b1"><div class="ttname"><a href="class_c_p_s_1_1_graph_1_1_node.html#a5e13d461c01f272ba9f860db7c1022b1">CPS::Graph::Node::mNode</a></div><div class="ttdeci">Agnode_t * mNode</div><div class="ttdef"><b>Definition</b> <a href="#l00036">Graph.h:36</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_graph_1_1_node_html_ad0fa66e23f248e16e6c4edf26db4316a"><div class="ttname"><a href="class_c_p_s_1_1_graph_1_1_node.html#ad0fa66e23f248e16e6c4edf26db4316a">CPS::Graph::Node::Node</a></div><div class="ttdeci">Node(Graph *g, const String &amp;name)</div><div class="ttdef"><b>Definition</b> <a href="_graph_8cpp_source.html#l00087">Graph.cpp:87</a></div></div>
+<div class="ttc" id="adpsim-models_2include_2dpsim-models_2_definitions_8h_html"><div class="ttname"><a href="dpsim-models_2include_2dpsim-models_2_definitions_8h.html">Definitions.h</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_1_1_graph_html"><div class="ttname"><a href="namespace_c_p_s_1_1_graph.html">CPS::Graph</a></div><div class="ttdef"><b>Definition</b> <a href="#l00018">Graph.h:18</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_1_1_graph_html_af8d47f814a254ca34d890ff561ca463e"><div class="ttname"><a href="namespace_c_p_s_1_1_graph.html#af8d47f814a254ca34d890ff561ca463e">CPS::Graph::Type</a></div><div class="ttdeci">Type</div><div class="ttdef"><b>Definition</b> <a href="#l00020">Graph.h:20</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_1_1_graph_html_af8d47f814a254ca34d890ff561ca463ea42e55a2462c0d3774dba7cba6835ff52"><div class="ttname"><a href="namespace_c_p_s_1_1_graph.html#af8d47f814a254ca34d890ff561ca463ea42e55a2462c0d3774dba7cba6835ff52">CPS::Graph::Type::directed</a></div><div class="ttdeci">@ directed</div><div class="ttdef"><b>Definition</b> <a href="#l00020">Graph.h:20</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_1_1_graph_html_af8d47f814a254ca34d890ff561ca463eabc26cd8237a1f32814d687d6745880db"><div class="ttname"><a href="namespace_c_p_s_1_1_graph.html#af8d47f814a254ca34d890ff561ca463eabc26cd8237a1f32814d687d6745880db">CPS::Graph::Type::undirected</a></div><div class="ttdeci">@ undirected</div><div class="ttdef"><b>Definition</b> <a href="#l00020">Graph.h:20</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html"><div class="ttname"><a href="namespace_c_p_s.html">CPS</a></div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00017">Attribute.h:17</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a09f6ad37b12370b4b58624822be9b055"><div class="ttname"><a href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a></div><div class="ttdeci">std::string String</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00065">Definitions.h:65</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="_graph_8h.html">Graph.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

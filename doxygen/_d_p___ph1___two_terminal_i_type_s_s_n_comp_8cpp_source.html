@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_d_p___ph1___two_terminal_i_type_s_s_n_comp_8cpp_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,87 +95,127 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_6fea149062de1f45e98577920f986d53.html">src</a></li><li class="navelem"><a class="el" href="dir_621813f9b4c502f03ed48dd248a52328.html">DP</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">DP_Ph1_TwoTerminalITypeSSNComp.cpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University</span></div>
+<a href="_d_p___ph1___two_terminal_i_type_s_s_n_comp_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;dpsim-models/DP/DP_Ph1_TwoTerminalITypeSSNComp.h&gt;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;dpsim-models/MNAStampUtils.h&gt;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;<a class="code" href="_d_p___ph1___two_terminal_i_type_s_s_n_comp_8h.html">dpsim-models/DP/DP_Ph1_TwoTerminalITypeSSNComp.h</a>&gt;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;<a class="code" href="_m_n_a_stamp_utils_8h.html">dpsim-models/MNAStampUtils.h</a>&gt;</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">using namespace </span>CPS;</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespace_c_p_s.html">CPS</a>;</div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>DP::Ph1::TwoTerminalITypeSSNComp::TwoTerminalITypeSSNComp(</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    String uid, String name, Logger::Level logLevel)</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    : ITypeSSNComp(uid, name, 1, 1, logLevel) {</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>  mPhaseType = PhaseType::Single;</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>  setTerminalNumber(2);</div>
+<div class="foldopen" id="foldopen00009" data-start="{" data-end="}">
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#a1542408ba14fc15251b495e904ad68bf">    9</a></span><a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#a1542408ba14fc15251b495e904ad68bf">DP::Ph1::TwoTerminalITypeSSNComp::TwoTerminalITypeSSNComp</a>(</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel)</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    : <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_i_type_s_s_n_comp.html#a04b44cbd3ff5fd6e1ccfe2b7fc78d395">ITypeSSNComp</a>(<a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, 1, 1, logLevel) {</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>  <a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a4eb8e140b7ea6ae0b916cf5a57f2a56b">mPhaseType</a> = <a class="code hl_enumvalue" href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca66ba162102bbf6ae31b522aec561735e">PhaseType::Single</a>;</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>  <a class="code hl_function" href="class_c_p_s_1_1_sim_power_comp.html#aec155c4e00e22278ecbf43f8cd259da6">setTerminalNumber</a>(2);</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>}</div>
+</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
 <div class="foldopen" id="foldopen00016" data-start="{" data-end="}">
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#a4c4e6e5e3db90c0cf0f55fe0f1a82c8a">   16</a></span>MatrixComp <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#a4c4e6e5e3db90c0cf0f55fe0f1a82c8a">DP::Ph1::TwoTerminalITypeSSNComp::buildInitialInputFromNodes</a>(Real) {</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#a4c4e6e5e3db90c0cf0f55fe0f1a82c8a">   16</a></span><a class="code hl_typedef" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a> <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#a4c4e6e5e3db90c0cf0f55fe0f1a82c8a">DP::Ph1::TwoTerminalITypeSSNComp::buildInitialInputFromNodes</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>) {</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>  <span class="comment">// Interface current convention: positive current flows from terminal1 to</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>  <span class="comment">// terminal0. No initial terminal current is available here, so start at zero.</span></div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  <span class="keywordflow">return</span> MatrixComp::Zero(1, 1);</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>}</div>
 </div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keywordtype">void</span> DP::Ph1::TwoTerminalITypeSSNComp::mnaCompApplySystemMatrixStamp(</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    SparseMatrixRow &amp;systemMatrix) {</div>
+<div class="foldopen" id="foldopen00022" data-start="{" data-end="}">
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#ae82b1d948ab4f934757b97463497aebc">   22</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#ae82b1d948ab4f934757b97463497aebc">DP::Ph1::TwoTerminalITypeSSNComp::mnaCompApplySystemMatrixStamp</a>(</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <a class="code hl_typedef" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;systemMatrix) {</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  <span class="comment">// Norton-equivalent admittance G = W^-1 (v = W i + yHist =&gt; i = G v - G yHist).</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  Complex g = Complex(1., 0.) / mW(0, 0);</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <span class="keywordflow">for</span> (UInt freq = 0; freq &lt; mNumFreqs; freq++) {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    MNAStampUtils::stampAdmittance(</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        g, systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        terminalNotGrounded(0), terminalNotGrounded(1), mSLog, mNumFreqs, freq);</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> g = <a class="code hl_typedef" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a>(1., 0.) / <a class="code hl_variable" href="class_c_p_s_1_1_d_p_1_1_s_s_n_comp.html#a5e3bf76090083da86305f284db445409">mW</a>(0, 0);</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> freq = 0; freq &lt; <a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a05b0f927c867097d46df3ba93745a15d">mNumFreqs</a>; freq++) {</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <a class="code hl_function" href="class_c_p_s_1_1_m_n_a_stamp_utils.html#aa3962ad403e8b6393ca44aae4d9b7898">MNAStampUtils::stampAdmittance</a>(</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        g, systemMatrix, <a class="code hl_function" href="class_c_p_s_1_1_sim_power_comp.html#a0926717376dfff957f6863e886e0297c">matrixNodeIndex</a>(0), <a class="code hl_function" href="class_c_p_s_1_1_sim_power_comp.html#a0926717376dfff957f6863e886e0297c">matrixNodeIndex</a>(1),</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <a class="code hl_function" href="class_c_p_s_1_1_sim_power_comp.html#ad09b2e404137cd4597ed7da88acf47f6">terminalNotGrounded</a>(0), <a class="code hl_function" href="class_c_p_s_1_1_sim_power_comp.html#ad09b2e404137cd4597ed7da88acf47f6">terminalNotGrounded</a>(1), <a class="code hl_variable" href="class_c_p_s_1_1_topological_power_comp.html#a7c61e480e446111d56ac35399643d5b0">mSLog</a>, <a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a05b0f927c867097d46df3ba93745a15d">mNumFreqs</a>, freq);</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  }</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>}</div>
+</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keywordtype">void</span> DP::Ph1::TwoTerminalITypeSSNComp::mnaCompApplyRightSideVectorStamp(</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    Matrix &amp;rightVector) {</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  Complex iHist = -mYHist(0, 0) / mW(0, 0);</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keywordflow">for</span> (UInt freq = 0; freq &lt; mNumFreqs; freq++) {</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keywordflow">if</span> (terminalNotGrounded(0))</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>      Math::setVectorElement(rightVector, matrixNodeIndex(0), iHist, mNumFreqs,</div>
+<div class="foldopen" id="foldopen00033" data-start="{" data-end="}">
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#ab64cc850a55944e036e33756d272ea3a">   33</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#ab64cc850a55944e036e33756d272ea3a">DP::Ph1::TwoTerminalITypeSSNComp::mnaCompApplyRightSideVectorStamp</a>(</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;rightVector) {</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> iHist = -<a class="code hl_variable" href="class_c_p_s_1_1_d_p_1_1_s_s_n_comp.html#a4aa2398c85635e7b2da00dcb756523f1">mYHist</a>(0, 0) / <a class="code hl_variable" href="class_c_p_s_1_1_d_p_1_1_s_s_n_comp.html#a5e3bf76090083da86305f284db445409">mW</a>(0, 0);</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> freq = 0; freq &lt; <a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a05b0f927c867097d46df3ba93745a15d">mNumFreqs</a>; freq++) {</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="class_c_p_s_1_1_sim_power_comp.html#ad09b2e404137cd4597ed7da88acf47f6">terminalNotGrounded</a>(0))</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>      <a class="code hl_function" href="class_c_p_s_1_1_math.html#a4df43f5e1f75bc5040ea7e05491e2d9f">Math::setVectorElement</a>(rightVector, <a class="code hl_function" href="class_c_p_s_1_1_sim_power_comp.html#a0926717376dfff957f6863e886e0297c">matrixNodeIndex</a>(0), iHist, <a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a05b0f927c867097d46df3ba93745a15d">mNumFreqs</a>,</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>                             freq);</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordflow">if</span> (terminalNotGrounded(1))</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>      Math::setVectorElement(rightVector, matrixNodeIndex(1), -iHist, mNumFreqs,</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="class_c_p_s_1_1_sim_power_comp.html#ad09b2e404137cd4597ed7da88acf47f6">terminalNotGrounded</a>(1))</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>      <a class="code hl_function" href="class_c_p_s_1_1_math.html#a4df43f5e1f75bc5040ea7e05491e2d9f">Math::setVectorElement</a>(rightVector, <a class="code hl_function" href="class_c_p_s_1_1_sim_power_comp.html#a0926717376dfff957f6863e886e0297c">matrixNodeIndex</a>(1), -iHist, <a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a05b0f927c867097d46df3ba93745a15d">mNumFreqs</a>,</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>                             freq);</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  }</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>}</div>
+</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="keywordtype">void</span> DP::Ph1::TwoTerminalITypeSSNComp::mnaCompUpdateCurrent(<span class="keyword">const</span> Matrix &amp;) {</div>
+<div class="foldopen" id="foldopen00046" data-start="{" data-end="}">
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#a8956e9e2582a510b38786396ad25b10a">   46</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#a8956e9e2582a510b38786396ad25b10a">DP::Ph1::TwoTerminalITypeSSNComp::mnaCompUpdateCurrent</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;) {</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="comment">// i = W^-1 (v - yHist)</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  **mIntfCurrent = mW.inverse() * (**mIntfVoltage - mYHist);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  **<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">mIntfCurrent</a> = <a class="code hl_variable" href="class_c_p_s_1_1_d_p_1_1_s_s_n_comp.html#a5e3bf76090083da86305f284db445409">mW</a>.inverse() * (**<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a7210276935119e370dfb1f98d02c3a9a">mIntfVoltage</a> - <a class="code hl_variable" href="class_c_p_s_1_1_d_p_1_1_s_s_n_comp.html#a4aa2398c85635e7b2da00dcb756523f1">mYHist</a>);</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>}</div>
+</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="keywordtype">void</span> DP::Ph1::TwoTerminalITypeSSNComp::mnaCompUpdateVoltage(</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">const</span> Matrix &amp;leftVector) {</div>
+<div class="foldopen" id="foldopen00051" data-start="{" data-end="}">
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#af871c10e69b51ac3b2b2c36010b64f7a">   51</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#af871c10e69b51ac3b2b2c36010b64f7a">DP::Ph1::TwoTerminalITypeSSNComp::mnaCompUpdateVoltage</a>(</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;leftVector) {</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="comment">// v = v_terminal1 - v_terminal0 (DP envelope phasor)</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  <span class="keywordflow">for</span> (UInt freq = 0; freq &lt; mNumFreqs; freq++) {</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> freq = 0; freq &lt; <a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a05b0f927c867097d46df3ba93745a15d">mNumFreqs</a>; freq++) {</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    (**mIntfVoltage)(0, freq) = 0;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordflow">if</span> (terminalNotGrounded(1))</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>      (**mIntfVoltage)(0, freq) = Math::complexFromVectorElement(</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>          leftVector, matrixNodeIndex(1), mNumFreqs, freq);</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordflow">if</span> (terminalNotGrounded(0))</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>      (**mIntfVoltage)(0, freq) -= Math::complexFromVectorElement(</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>          leftVector, matrixNodeIndex(0), mNumFreqs, freq);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="class_c_p_s_1_1_sim_power_comp.html#ad09b2e404137cd4597ed7da88acf47f6">terminalNotGrounded</a>(1))</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>      (**mIntfVoltage)(0, freq) = <a class="code hl_function" href="class_c_p_s_1_1_math.html#a32bd53e58cb82f9dd16fccc7a858bf0a">Math::complexFromVectorElement</a>(</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>          leftVector, <a class="code hl_function" href="class_c_p_s_1_1_sim_power_comp.html#a0926717376dfff957f6863e886e0297c">matrixNodeIndex</a>(1), <a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a05b0f927c867097d46df3ba93745a15d">mNumFreqs</a>, freq);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="class_c_p_s_1_1_sim_power_comp.html#ad09b2e404137cd4597ed7da88acf47f6">terminalNotGrounded</a>(0))</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>      (**mIntfVoltage)(0, freq) -= <a class="code hl_function" href="class_c_p_s_1_1_math.html#a32bd53e58cb82f9dd16fccc7a858bf0a">Math::complexFromVectorElement</a>(</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>          leftVector, <a class="code hl_function" href="class_c_p_s_1_1_sim_power_comp.html#a0926717376dfff957f6863e886e0297c">matrixNodeIndex</a>(0), <a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a05b0f927c867097d46df3ba93745a15d">mNumFreqs</a>, freq);</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  }</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>}</div>
+</div>
+<div class="ttc" id="a_d_p___ph1___two_terminal_i_type_s_s_n_comp_8h_html"><div class="ttname"><a href="_d_p___ph1___two_terminal_i_type_s_s_n_comp_8h.html">DP_Ph1_TwoTerminalITypeSSNComp.h</a></div></div>
+<div class="ttc" id="a_m_n_a_stamp_utils_8h_html"><div class="ttname"><a href="_m_n_a_stamp_utils_8h.html">MNAStampUtils.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_i_type_s_s_n_comp_html_a04b44cbd3ff5fd6e1ccfe2b7fc78d395"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_i_type_s_s_n_comp.html#a04b44cbd3ff5fd6e1ccfe2b7fc78d395">CPS::DP::ITypeSSNComp::ITypeSSNComp</a></div><div class="ttdeci">ITypeSSNComp(String uid, String name, Int inputSize, Int outputSize, Logger::Level logLevel=Logger::Level::off)</div><div class="ttdef"><b>Definition</b> <a href="_d_p___i_type_s_s_n_comp_8cpp_source.html#l00008">DP_ITypeSSNComp.cpp:8</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp_html_a1542408ba14fc15251b495e904ad68bf"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#a1542408ba14fc15251b495e904ad68bf">CPS::DP::Ph1::TwoTerminalITypeSSNComp::TwoTerminalITypeSSNComp</a></div><div class="ttdeci">TwoTerminalITypeSSNComp(String uid, String name, Logger::Level logLevel=Logger::Level::off)</div><div class="ttdef"><b>Definition</b> <a href="#l00009">DP_Ph1_TwoTerminalITypeSSNComp.cpp:9</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp_html_a4c4e6e5e3db90c0cf0f55fe0f1a82c8a"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#a4c4e6e5e3db90c0cf0f55fe0f1a82c8a">CPS::DP::Ph1::TwoTerminalITypeSSNComp::buildInitialInputFromNodes</a></div><div class="ttdeci">MatrixComp buildInitialInputFromNodes(Real frequency) override final</div><div class="ttdoc">Reconstruct the initial input current from node/terminal phasors.</div><div class="ttdef"><b>Definition</b> <a href="#l00016">DP_Ph1_TwoTerminalITypeSSNComp.cpp:16</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp_html_a8956e9e2582a510b38786396ad25b10a"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#a8956e9e2582a510b38786396ad25b10a">CPS::DP::Ph1::TwoTerminalITypeSSNComp::mnaCompUpdateCurrent</a></div><div class="ttdeci">void mnaCompUpdateCurrent(const Matrix &amp;leftVector) override final</div><div class="ttdef"><b>Definition</b> <a href="#l00046">DP_Ph1_TwoTerminalITypeSSNComp.cpp:46</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp_html_ab64cc850a55944e036e33756d272ea3a"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#ab64cc850a55944e036e33756d272ea3a">CPS::DP::Ph1::TwoTerminalITypeSSNComp::mnaCompApplyRightSideVectorStamp</a></div><div class="ttdeci">void mnaCompApplyRightSideVectorStamp(Matrix &amp;rightVector) override final</div><div class="ttdef"><b>Definition</b> <a href="#l00033">DP_Ph1_TwoTerminalITypeSSNComp.cpp:33</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp_html_ae82b1d948ab4f934757b97463497aebc"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#ae82b1d948ab4f934757b97463497aebc">CPS::DP::Ph1::TwoTerminalITypeSSNComp::mnaCompApplySystemMatrixStamp</a></div><div class="ttdeci">void mnaCompApplySystemMatrixStamp(SparseMatrixRow &amp;systemMatrix) override final</div><div class="ttdef"><b>Definition</b> <a href="#l00022">DP_Ph1_TwoTerminalITypeSSNComp.cpp:22</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp_html_af871c10e69b51ac3b2b2c36010b64f7a"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_two_terminal_i_type_s_s_n_comp.html#af871c10e69b51ac3b2b2c36010b64f7a">CPS::DP::Ph1::TwoTerminalITypeSSNComp::mnaCompUpdateVoltage</a></div><div class="ttdeci">void mnaCompUpdateVoltage(const Matrix &amp;leftVector) override final</div><div class="ttdef"><b>Definition</b> <a href="#l00051">DP_Ph1_TwoTerminalITypeSSNComp.cpp:51</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_s_s_n_comp_html_a4aa2398c85635e7b2da00dcb756523f1"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_s_s_n_comp.html#a4aa2398c85635e7b2da00dcb756523f1">CPS::DP::SSNComp::mYHist</a></div><div class="ttdeci">MatrixComp mYHist</div><div class="ttdoc">Complex history term.</div><div class="ttdef"><b>Definition</b> <a href="_d_p___s_s_n_comp_8h_source.html#l00039">DP_SSNComp.h:39</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_d_p_1_1_s_s_n_comp_html_a5e3bf76090083da86305f284db445409"><div class="ttname"><a href="class_c_p_s_1_1_d_p_1_1_s_s_n_comp.html#a5e3bf76090083da86305f284db445409">CPS::DP::SSNComp::mW</a></div><div class="ttdeci">MatrixComp mW</div><div class="ttdoc">Complex Norton matrix W = C dB + D.</div><div class="ttdef"><b>Definition</b> <a href="_d_p___s_s_n_comp_8h_source.html#l00037">DP_SSNComp.h:37</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a38b8318459b1651160029263eff6ca47"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">CPS::IdentifiedObject::name</a></div><div class="ttdeci">String name()</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00059">IdentifiedObject.h:59</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a66b765f33341283bc9b916c74047c749"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">CPS::IdentifiedObject::uid</a></div><div class="ttdeci">String uid()</div><div class="ttdoc">Returns unique id.</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00061">IdentifiedObject.h:61</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_logger_html_a021e964d1ab0d217a05b95736d2ea804"><div class="ttname"><a href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a></div><div class="ttdeci">spdlog::level::level_enum Level</div><div class="ttdef"><b>Definition</b> <a href="_logger_8h_source.html#l00033">Logger.h:33</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_m_n_a_stamp_utils_html_aa3962ad403e8b6393ca44aae4d9b7898"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_stamp_utils.html#aa3962ad403e8b6393ca44aae4d9b7898">CPS::MNAStampUtils::stampAdmittance</a></div><div class="ttdeci">static void stampAdmittance(Complex admittance, SparseMatrixRow &amp;mat, UInt node1Index, UInt node2Index, Bool isTerminal1NotGrounded, Bool isTerminal2NotGrounded, const Logger::Log &amp;mSLog, Int maxFreq=1, Int freqIdx=0)</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_stamp_utils_8cpp_source.html#l00018">MNAStampUtils.cpp:18</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_math_html_a32bd53e58cb82f9dd16fccc7a858bf0a"><div class="ttname"><a href="class_c_p_s_1_1_math.html#a32bd53e58cb82f9dd16fccc7a858bf0a">CPS::Math::complexFromVectorElement</a></div><div class="ttdeci">static Complex complexFromVectorElement(const Matrix &amp;mat, Matrix::Index row, Int maxFreq=1, Int freqIdx=0)</div><div class="ttdef"><b>Definition</b> <a href="_math_utils_8cpp_source.html#l00094">MathUtils.cpp:94</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_math_html_a4df43f5e1f75bc5040ea7e05491e2d9f"><div class="ttname"><a href="class_c_p_s_1_1_math.html#a4df43f5e1f75bc5040ea7e05491e2d9f">CPS::Math::setVectorElement</a></div><div class="ttdeci">static void setVectorElement(Matrix &amp;mat, Matrix::Index row, Complex value, Int maxFreq=1, Int freqIdx=0, Matrix::Index colOffset=0)</div><div class="ttdef"><b>Definition</b> <a href="_math_utils_8cpp_source.html#l00073">MathUtils.cpp:73</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html_a05b0f927c867097d46df3ba93745a15d"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html#a05b0f927c867097d46df3ba93745a15d">CPS::SimPowerComp&lt; Complex &gt;::mNumFreqs</a></div><div class="ttdeci">UInt mNumFreqs</div><div class="ttdef"><b>Definition</b> <a href="_sim_power_comp_8h_source.html#l00027">SimPowerComp.h:27</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html_a0926717376dfff957f6863e886e0297c"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html#a0926717376dfff957f6863e886e0297c">CPS::SimPowerComp&lt; Complex &gt;::matrixNodeIndex</a></div><div class="ttdeci">UInt matrixNodeIndex(UInt nodeIndex)</div><div class="ttdef"><b>Definition</b> <a href="_sim_power_comp_8cpp_source.html#l00094">SimPowerComp.cpp:45</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html_a141d3e207fff12a4808e3f562a99fda1"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">CPS::SimPowerComp&lt; Complex &gt;::mIntfCurrent</a></div><div class="ttdeci">const Attribute&lt; MatrixVar&lt; Complex &gt; &gt;::Ptr mIntfCurrent</div><div class="ttdef"><b>Definition</b> <a href="_sim_power_comp_8h_source.html#l00047">SimPowerComp.h:47</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html_a4eb8e140b7ea6ae0b916cf5a57f2a56b"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html#a4eb8e140b7ea6ae0b916cf5a57f2a56b">CPS::SimPowerComp&lt; Complex &gt;::mPhaseType</a></div><div class="ttdeci">PhaseType mPhaseType</div><div class="ttdef"><b>Definition</b> <a href="_sim_power_comp_8h_source.html#l00029">SimPowerComp.h:29</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html_a7210276935119e370dfb1f98d02c3a9a"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html#a7210276935119e370dfb1f98d02c3a9a">CPS::SimPowerComp&lt; Complex &gt;::mIntfVoltage</a></div><div class="ttdeci">const Attribute&lt; MatrixVar&lt; Complex &gt; &gt;::Ptr mIntfVoltage</div><div class="ttdef"><b>Definition</b> <a href="_sim_power_comp_8h_source.html#l00045">SimPowerComp.h:45</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html_ad09b2e404137cd4597ed7da88acf47f6"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html#ad09b2e404137cd4597ed7da88acf47f6">CPS::SimPowerComp&lt; Complex &gt;::terminalNotGrounded</a></div><div class="ttdeci">Bool terminalNotGrounded(UInt index)</div><div class="ttdef"><b>Definition</b> <a href="_sim_power_comp_8cpp_source.html#l00129">SimPowerComp.cpp:112</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html_aec155c4e00e22278ecbf43f8cd259da6"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html#aec155c4e00e22278ecbf43f8cd259da6">CPS::SimPowerComp&lt; Complex &gt;::setTerminalNumber</a></div><div class="ttdeci">void setTerminalNumber(UInt num)</div><div class="ttdef"><b>Definition</b> <a href="_sim_power_comp_8cpp_source.html#l00077">SimPowerComp.cpp:163</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_topological_power_comp_html_a7c61e480e446111d56ac35399643d5b0"><div class="ttname"><a href="class_c_p_s_1_1_topological_power_comp.html#a7c61e480e446111d56ac35399643d5b0">CPS::TopologicalPowerComp::mSLog</a></div><div class="ttdeci">Logger::Log mSLog</div><div class="ttdoc">Component logger.</div><div class="ttdef"><b>Definition</b> <a href="_topological_power_comp_8h_source.html#l00034">TopologicalPowerComp.h:34</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html"><div class="ttname"><a href="namespace_c_p_s.html">CPS</a></div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00017">Attribute.h:17</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a077ababc38cbf7a0d8c175260b129a6ca66ba162102bbf6ae31b522aec561735e"><div class="ttname"><a href="namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca66ba162102bbf6ae31b522aec561735e">CPS::PhaseType::Single</a></div><div class="ttdeci">@ Single</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00113">Definitions.h:113</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a081464dfe063130c6fca7929ce291b15"><div class="ttname"><a href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">CPS::Matrix</a></div><div class="ttdeci">Eigen::Matrix&lt; Real, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor &gt; Matrix</div><div class="ttdoc">Dense matrix for real numbers.</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00081">Definitions.h:81</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a09f6ad37b12370b4b58624822be9b055"><div class="ttname"><a href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a></div><div class="ttdeci">std::string String</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00065">Definitions.h:65</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a603c4b77d70922bc0423adc57725df50"><div class="ttname"><a href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a></div><div class="ttdeci">double Real</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00062">Definitions.h:62</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_aaed6ab259d5cbd0d6709102c47391a7a"><div class="ttname"><a href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">CPS::Complex</a></div><div class="ttdeci">std::complex&lt; Real &gt; Complex</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00063">Definitions.h:63</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_ab73adea852da41581c8fb6965d891567"><div class="ttname"><a href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">CPS::MatrixComp</a></div><div class="ttdeci">Eigen::Matrix&lt; Complex, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor &gt; MatrixComp</div><div class="ttdoc">Dense matrix for complex numbers.</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00084">Definitions.h:84</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_ae5e72b1a2405f04bed0cd13fc63aac57"><div class="ttname"><a href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">CPS::UInt</a></div><div class="ttdeci">unsigned int UInt</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00060">Definitions.h:60</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_af0203b5aa6a69ba1b8642d8ccf5eb7be"><div class="ttname"><a href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">CPS::SparseMatrixRow</a></div><div class="ttdeci">Eigen::SparseMatrix&lt; Real, Eigen::RowMajor &gt; SparseMatrixRow</div><div class="ttdoc">Sparse matrix for real numbers (row major).</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00074">Definitions.h:74</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_6fea149062de1f45e98577920f986d53.html">src</a></li><li class="navelem"><a class="el" href="dir_621813f9b4c502f03ed48dd248a52328.html">DP</a></li><li class="navelem"><a class="el" href="_d_p___ph1___two_terminal_i_type_s_s_n_comp_8cpp.html">DP_Ph1_TwoTerminalITypeSSNComp.cpp</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

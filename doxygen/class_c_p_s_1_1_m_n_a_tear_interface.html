@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_c_p_s_1_1_m_n_a_tear_interface.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>CPS</b></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">MNATearInterface</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
@@ -95,39 +103,67 @@ $(function(){ initResizable(false); });
   <div class="headertitle"><div class="title">CPS::MNATearInterface Class Reference<span class="mlabels"><span class="mlabel abstract">abstract</span></span></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="_m_n_a_tear_interface_8h_source.html">MNATearInterface.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for CPS::MNATearInterface:</div>
 <div class="dyncontent">
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_m_n_a_tear_interface__inherit__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af92023875982fbb1351d14dd0e30cf99" id="r_af92023875982fbb1351d14dd0e30cf99"><td class="memItemLeft" align="right" valign="top">virtual MNAInterface::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af92023875982fbb1351d14dd0e30cf99">mnaTearGroundComponents</a> ()</td></tr>
+<tr class="memitem:af92023875982fbb1351d14dd0e30cf99" id="r_af92023875982fbb1351d14dd0e30cf99"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a99daa13babcb894a6f878fc889faa0a7">MNAInterface::List</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af92023875982fbb1351d14dd0e30cf99">mnaTearGroundComponents</a> ()</td></tr>
 <tr class="separator:af92023875982fbb1351d14dd0e30cf99"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a14640bf6c779d2d200d9eed88022053a" id="r_a14640bf6c779d2d200d9eed88022053a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a14640bf6c779d2d200d9eed88022053a">mnaTearInitialize</a> (Real omega, Real timeStep)</td></tr>
+<tr class="memitem:a14640bf6c779d2d200d9eed88022053a" id="r_a14640bf6c779d2d200d9eed88022053a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a14640bf6c779d2d200d9eed88022053a">mnaTearInitialize</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> omega, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> timeStep)</td></tr>
 <tr class="separator:a14640bf6c779d2d200d9eed88022053a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67793d2e89375d95a0038d4e18ab4b65" id="r_a67793d2e89375d95a0038d4e18ab4b65"><td class="memItemLeft" align="right" valign="top"><a id="a67793d2e89375d95a0038d4e18ab4b65" name="a67793d2e89375d95a0038d4e18ab4b65"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>mnaTearApplyMatrixStamp</b> (SparseMatrixRow &amp;tearMatrix)=0</td></tr>
+<tr class="memitem:a67793d2e89375d95a0038d4e18ab4b65" id="r_a67793d2e89375d95a0038d4e18ab4b65"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a67793d2e89375d95a0038d4e18ab4b65">mnaTearApplyMatrixStamp</a> (<a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;tearMatrix)=0</td></tr>
 <tr class="separator:a67793d2e89375d95a0038d4e18ab4b65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af5d2da552ed5d0e98a37899dff440601" id="r_af5d2da552ed5d0e98a37899dff440601"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af5d2da552ed5d0e98a37899dff440601">mnaTearApplyVoltageStamp</a> (Matrix &amp;currentVector)</td></tr>
+<tr class="memitem:af5d2da552ed5d0e98a37899dff440601" id="r_af5d2da552ed5d0e98a37899dff440601"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af5d2da552ed5d0e98a37899dff440601">mnaTearApplyVoltageStamp</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;currentVector)</td></tr>
 <tr class="separator:af5d2da552ed5d0e98a37899dff440601"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa977b70347339ec54709fd6bf9459a75" id="r_aa977b70347339ec54709fd6bf9459a75"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa977b70347339ec54709fd6bf9459a75">mnaTearPostStep</a> (Complex voltage, Complex current)</td></tr>
+<tr class="memitem:aa977b70347339ec54709fd6bf9459a75" id="r_aa977b70347339ec54709fd6bf9459a75"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa977b70347339ec54709fd6bf9459a75">mnaTearPostStep</a> (<a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> voltage, <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> current)</td></tr>
 <tr class="separator:aa977b70347339ec54709fd6bf9459a75"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71d2ba500e1243f30914663d8752fde2" id="r_a71d2ba500e1243f30914663d8752fde2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a71d2ba500e1243f30914663d8752fde2">mnaTearPostStep</a> (MatrixComp voltage, MatrixComp current)</td></tr>
+<tr class="memitem:a71d2ba500e1243f30914663d8752fde2" id="r_a71d2ba500e1243f30914663d8752fde2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a71d2ba500e1243f30914663d8752fde2">mnaTearPostStep</a> (<a class="el" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a> voltage, <a class="el" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a> current)</td></tr>
 <tr class="separator:a71d2ba500e1243f30914663d8752fde2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73d1005579e98d1d04851792dd0dad01" id="r_a73d1005579e98d1d04851792dd0dad01"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a73d1005579e98d1d04851792dd0dad01">mnaTearSetIdx</a> (UInt compIdx)</td></tr>
+<tr class="memitem:a73d1005579e98d1d04851792dd0dad01" id="r_a73d1005579e98d1d04851792dd0dad01"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a73d1005579e98d1d04851792dd0dad01">mnaTearSetIdx</a> (<a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> compIdx)</td></tr>
 <tr class="separator:a73d1005579e98d1d04851792dd0dad01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a5c21f156daabad8a7a9278ed6ae23b43" id="r_a5c21f156daabad8a7a9278ed6ae23b43"><td class="memItemLeft" align="right" valign="top">UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5c21f156daabad8a7a9278ed6ae23b43">mTearIdx</a></td></tr>
+<tr class="memitem:a5c21f156daabad8a7a9278ed6ae23b43" id="r_a5c21f156daabad8a7a9278ed6ae23b43"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5c21f156daabad8a7a9278ed6ae23b43">mTearIdx</a></td></tr>
 <tr class="separator:a5c21f156daabad8a7a9278ed6ae23b43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
 <p class="definition">Definition at line <a class="el" href="_m_n_a_tear_interface_8h_source.html#l00015">15</a> of file <a class="el" href="_m_n_a_tear_interface_8h_source.html">MNATearInterface.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a67793d2e89375d95a0038d4e18ab4b65" name="a67793d2e89375d95a0038d4e18ab4b65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67793d2e89375d95a0038d4e18ab4b65">&#9670;&#160;</a></span>mnaTearApplyMatrixStamp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void CPS::MNATearInterface::mnaTearApplyMatrixStamp </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>tearMatrix</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor.html#a2bac639bc50a23c373f0b96daa6bdb0e">CPS::DP::Ph1::Inductor</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_pi_line.html#a37b7565353534a04a34b241ba2fa86f3">CPS::DP::Ph1::PiLine</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_resistor.html#ac53b3d8c97a0b41d55a67706a8c13a6c">CPS::DP::Ph1::Resistor</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html#a89cf6544de3dab1a294c58c58233e190">CPS::DP::Ph3::Inductor</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_pi_line.html#a1f4791e2655c4a7f6b764283bf220e85">CPS::DP::Ph3::PiLine</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_resistor.html#a064603f00b07e71143e807d8aab20d27">CPS::DP::Ph3::Resistor</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_inductor.html#a6a026de4d1d482f1dcc13fc2439b5c9c">CPS::EMT::Ph1::Inductor</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_pi_line.html#a254fbdc96ea073d00a75ca0fcdbd4323">CPS::EMT::Ph1::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_resistor.html#a5d25bb93278747653fa40bfd19979e4f">CPS::EMT::Ph1::Resistor</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor.html#a22b6c8b1c647ed11e2b39794aea905d0">CPS::EMT::Ph3::Inductor</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html#a2a590d3a0b8a20cd097093f4f20f5712">CPS::EMT::Ph3::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_resistor.html#a4f1f39ec7d0be9646a05afdcffbc6831">CPS::EMT::Ph3::Resistor</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_inductor.html#aae048c3368aba20eb800122862208426">CPS::SP::Ph1::Inductor</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_pi_line.html#aa0af518a22d1bb6610fff72427f5a3b3">CPS::SP::Ph1::PiLine</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_resistor.html#a9643a976d39e69cf86eb5dff2b853d5e">CPS::SP::Ph1::Resistor</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#a36200b821ea696b71e4a75ea6dc37fcb">CPS::SP::Ph3::Inductor</a>, and <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph3_1_1_resistor.html#a243927c75fd0b7d3b9a1a38474149b28">CPS::SP::Ph3::Resistor</a>.</p>
+
+</div>
+</div>
 <a id="af5d2da552ed5d0e98a37899dff440601" name="af5d2da552ed5d0e98a37899dff440601"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af5d2da552ed5d0e98a37899dff440601">&#9670;&#160;</a></span>mnaTearApplyVoltageStamp()</h2>
 
@@ -140,7 +176,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">virtual void CPS::MNATearInterface::mnaTearApplyVoltageStamp </td>
           <td>(</td>
-          <td class="paramtype">Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>currentVector</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>currentVector</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -150,6 +186,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor.html#a2734b6db40e4bd5e138e57444cc1103c">CPS::DP::Ph1::Inductor</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_pi_line.html#a8c94d2388da6f72ce79502d16cb32bb4">CPS::DP::Ph1::PiLine</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html#ace23178a9c87b8f5ea4c9fac62622c56">CPS::DP::Ph3::Inductor</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_pi_line.html#a662d3491be5ae2ff5f0acbe0d4f11f19">CPS::DP::Ph3::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_inductor.html#a746c9a9ef3ceed04a24f1f4b2c0ca6aa">CPS::EMT::Ph1::Inductor</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_pi_line.html#a829eb0e6256744ab91ebec29e52ed281">CPS::EMT::Ph1::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor.html#ab5eadb8ee3e0d72c81a338793504a217">CPS::EMT::Ph3::Inductor</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html#ac34ee5cb0446b6a8299aaaf07f1fc845">CPS::EMT::Ph3::PiLine</a>, and <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_pi_line.html#ab9e84ee51b6d36cb35c604330743df7b">CPS::SP::Ph1::PiLine</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="_m_n_a_tear_interface_8h_source.html#l00028">28</a> of file <a class="el" href="_m_n_a_tear_interface_8h_source.html">MNATearInterface.h</a>.</p>
 
@@ -165,7 +203,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual MNAInterface::List CPS::MNATearInterface::mnaTearGroundComponents </td>
+          <td class="memname">virtual <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a99daa13babcb894a6f878fc889faa0a7">MNAInterface::List</a> CPS::MNATearInterface::mnaTearGroundComponents </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -177,6 +215,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_pi_line.html#a77c607c1ce3859acc52a44e7c828e68f">CPS::DP::Ph1::PiLine</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_pi_line.html#ae686ff94b3b425ce9dc2fd288ae0a12b">CPS::DP::Ph3::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_pi_line.html#a39da209c4f391a9bcdb13d40eed3e8dc">CPS::EMT::Ph1::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html#a5abf27e4c0e1689546e7eca95444c621">CPS::EMT::Ph3::PiLine</a>, and <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_pi_line.html#a43225450d6b66449919dbd4cc453db22">CPS::SP::Ph1::PiLine</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="_m_n_a_tear_interface_8h_source.html#l00019">19</a> of file <a class="el" href="_m_n_a_tear_interface_8h_source.html">MNATearInterface.h</a>.</p>
 
@@ -194,12 +234,12 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">virtual void CPS::MNATearInterface::mnaTearInitialize </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>omega</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>omega</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>timeStep</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>timeStep</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -208,6 +248,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor.html#a7a538ada99b1a3e10757cdb76a6b1def">CPS::DP::Ph1::Inductor</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_pi_line.html#aedec8a7ed8aee368488a16762e28cb75">CPS::DP::Ph1::PiLine</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html#aa403e779aa32084cef9d1059f5db0415">CPS::DP::Ph3::Inductor</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_pi_line.html#a308eaf9770f1604d04a4cde6e04d7b6d">CPS::DP::Ph3::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_inductor.html#aa985b5854c781a562446855ac61bde99">CPS::EMT::Ph1::Inductor</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_pi_line.html#ad1b6e56553b5daeb387523760bbbfbdf">CPS::EMT::Ph1::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor.html#a5cb8b26c714bb0c3c07f3a2a7734a7a1">CPS::EMT::Ph3::Inductor</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html#ae2efab270285bc79c0c408564c473daf">CPS::EMT::Ph3::PiLine</a>, and <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_pi_line.html#ac7a9b3bf579326e3a2659df06bbb3083">CPS::SP::Ph1::PiLine</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="_m_n_a_tear_interface_8h_source.html#l00023">23</a> of file <a class="el" href="_m_n_a_tear_interface_8h_source.html">MNATearInterface.h</a>.</p>
 
@@ -225,12 +267,12 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">virtual void CPS::MNATearInterface::mnaTearPostStep </td>
           <td>(</td>
-          <td class="paramtype">Complex</td>          <td class="paramname"><span class="paramname"><em>voltage</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a></td>          <td class="paramname"><span class="paramname"><em>voltage</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Complex</td>          <td class="paramname"><span class="paramname"><em>current</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a></td>          <td class="paramname"><span class="paramname"><em>current</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -239,6 +281,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor.html#a86efe64bfd0d7288717389a57aae35bd">CPS::DP::Ph1::Inductor</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_pi_line.html#aa4761a7241270d3d83191f976b81df29">CPS::DP::Ph1::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_inductor.html#a1a6b89b933c5b69e0bf71810dad6270f">CPS::EMT::Ph1::Inductor</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_pi_line.html#a61af56f0f498484d5e5de1ad22419b30">CPS::EMT::Ph1::PiLine</a>, and <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_pi_line.html#ae2bb7d22bef7d8189a3906716d530528">CPS::SP::Ph1::PiLine</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="_m_n_a_tear_interface_8h_source.html#l00030">30</a> of file <a class="el" href="_m_n_a_tear_interface_8h_source.html">MNATearInterface.h</a>.</p>
 
@@ -256,12 +300,12 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">virtual void CPS::MNATearInterface::mnaTearPostStep </td>
           <td>(</td>
-          <td class="paramtype">MatrixComp</td>          <td class="paramname"><span class="paramname"><em>voltage</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a></td>          <td class="paramname"><span class="paramname"><em>voltage</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">MatrixComp</td>          <td class="paramname"><span class="paramname"><em>current</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a></td>          <td class="paramname"><span class="paramname"><em>current</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -270,6 +314,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html#a3567d6913a996c8bdada47cee98e31df">CPS::DP::Ph3::Inductor</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_pi_line.html#a371628c2905d0482b6ee8758a3760da7">CPS::DP::Ph3::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor.html#afafa331f8115698465486d3582567d68">CPS::EMT::Ph3::Inductor</a>, and <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html#aebe3971d9639fe20fc6024e4955a9128">CPS::EMT::Ph3::PiLine</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="_m_n_a_tear_interface_8h_source.html#l00032">32</a> of file <a class="el" href="_m_n_a_tear_interface_8h_source.html">MNATearInterface.h</a>.</p>
 
@@ -287,7 +333,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">void CPS::MNATearInterface::mnaTearSetIdx </td>
           <td>(</td>
-          <td class="paramtype">UInt</td>          <td class="paramname"><span class="paramname"><em>compIdx</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a></td>          <td class="paramname"><span class="paramname"><em>compIdx</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -313,7 +359,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">UInt CPS::MNATearInterface::mTearIdx</td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> CPS::MNATearInterface::mTearIdx</td>
         </tr>
       </table>
   </td>
@@ -331,10 +377,13 @@ Protected Attributes</h2></td></tr>
 <li>/__w/dpsim/dpsim/dpsim-models/include/dpsim-models/Solver/<a class="el" href="_m_n_a_tear_interface_8h_source.html">MNATearInterface.h</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_c_p_s.html">CPS</a></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_m_n_a_tear_interface.html">MNATearInterface</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

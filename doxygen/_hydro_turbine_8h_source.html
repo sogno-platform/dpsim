@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_hydro_turbine_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,74 +95,84 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_9ee3725555df841850f10a3655158b62.html">Signal</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">HydroTurbine.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University</span></div>
+<a href="_hydro_turbine_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;dpsim-models/Base/Base_Turbine.h&gt;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;dpsim-models/Logger.h&gt;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;dpsim-models/SimSignalComp.h&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;<a class="code" href="_base___turbine_8h.html">dpsim-models/Base/Base_Turbine.h</a>&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;<a class="code" href="_logger_8h.html">dpsim-models/Logger.h</a>&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;<a class="code" href="_sim_signal_comp_8h.html">dpsim-models/SimSignalComp.h</a>&gt;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">namespace </span>CPS {</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">namespace </span>Signal {</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s.html">CPS</a> {</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s_1_1_signal.html">Signal</a> {</div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
 <div class="foldopen" id="foldopen00013" data-start="{" data-end="};">
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_hydro_turbine_parameters.html">   13</a></span><span class="keyword">class </span><a class="code hl_class" href="class_c_p_s_1_1_signal_1_1_hydro_turbine_parameters.html">HydroTurbineParameters</a> : <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_base_1_1_turbine_parameters.html">Base::TurbineParameters</a>,</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>                               <span class="keyword">public</span> <a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;HydroTurbineParameters&gt; {</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_hydro_turbine_parameters.html#a205e5b35292ed0563d482b339c5d21d0">   17</a></span>  Real <a class="code hl_variable" href="class_c_p_s_1_1_signal_1_1_hydro_turbine_parameters.html#a205e5b35292ed0563d482b339c5d21d0">Tw</a> = 0;</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_hydro_turbine_parameters.html#a205e5b35292ed0563d482b339c5d21d0">   17</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="code hl_variable" href="class_c_p_s_1_1_signal_1_1_hydro_turbine_parameters.html#a205e5b35292ed0563d482b339c5d21d0">Tw</a> = 0;</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>};</div>
 </div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span></div>
 <div class="foldopen" id="foldopen00025" data-start="{" data-end="};">
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_hydro_turbine.html">   25</a></span><span class="keyword">class </span>HydroTurbine : <span class="keyword">public</span> SimSignalComp,</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_signal_1_1_hydro_turbine.html">   25</a></span><span class="keyword">class </span><a class="code hl_function" href="class_c_p_s_1_1_signal_1_1_hydro_turbine.html#ae1714298c93205fbd8dd1321fa6c9e72">HydroTurbine</a> : <span class="keyword">public</span> <a class="code hl_function" href="class_c_p_s_1_1_sim_signal_comp.html#ac0a5edec1e98621bf94aaee8f20e1040">SimSignalComp</a>,</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>                     <span class="keyword">public</span> <a class="code hl_class" href="class_c_p_s_1_1_base_1_1_turbine.html">Base::Turbine</a>,</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>                     <span class="keyword">public</span> <a class="code hl_class" href="class_shared_factory.html">SharedFactory</a>&lt;HydroTurbine&gt; {</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">private</span>:</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  std::shared_ptr&lt;HydroTurbineParameters&gt; mParameters;</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <span class="comment">// ### State variables (current step) — loggable via .attr() ###</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keyword">const</span> Attribute&lt;Real&gt;::Ptr mX1;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <span class="keyword">const</span> Attribute&lt;Real&gt;::Ptr mPm;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;Real&gt;::Ptr</a> mX1;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;Real&gt;::Ptr</a> mPm;</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="comment">// ### Staging variable for next step ###</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  Real mX1_next = 0;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> mX1_next = 0;</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  HydroTurbine(<span class="keyword">const</span> String &amp;name,</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>               CPS::Logger::Level logLevel = CPS::Logger::Level::off);</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <a class="code hl_function" href="class_c_p_s_1_1_signal_1_1_hydro_turbine.html#ae1714298c93205fbd8dd1321fa6c9e72">HydroTurbine</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;<a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>,</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>               <a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a> logLevel = CPS::Logger::Level::off);</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keywordtype">void</span> setParameters(std::shared_ptr&lt;Base::TurbineParameters&gt; parameters) <span class="keyword">final</span>;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_signal_1_1_hydro_turbine.html#a5c778a5c8eb21e2168b37152492f478f">initializeStates</a>(Real Pminit) <span class="keyword">final</span>;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  Real <a class="code hl_function" href="class_c_p_s_1_1_signal_1_1_hydro_turbine.html#a66bc40dd670de83800895ce89b7b7431">step</a>(Real Pgv, Real dt) <span class="keyword">final</span>;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_signal_1_1_hydro_turbine.html#ac0a08c08adf7527bb44741ecddfa6163">setParameters</a>(std::shared_ptr&lt;Base::TurbineParameters&gt; parameters) <span class="keyword">final</span>;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_signal_1_1_hydro_turbine.html#a5c778a5c8eb21e2168b37152492f478f">initializeStates</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> Pminit) <span class="keyword">final</span>;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="code hl_function" href="class_c_p_s_1_1_signal_1_1_hydro_turbine.html#a66bc40dd670de83800895ce89b7b7431">step</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> Pgv, <a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> dt) <span class="keyword">final</span>;</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>};</div>
 </div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>} <span class="comment">// namespace Signal</span></div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>} <span class="comment">// namespace CPS</span></div>
+<div class="ttc" id="a_base___turbine_8h_html"><div class="ttname"><a href="_base___turbine_8h.html">Base_Turbine.h</a></div></div>
+<div class="ttc" id="a_logger_8h_html"><div class="ttname"><a href="_logger_8h.html">Logger.h</a></div></div>
+<div class="ttc" id="a_sim_signal_comp_8h_html"><div class="ttname"><a href="_sim_signal_comp_8h.html">SimSignalComp.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_ad552c848f780007d59f489540fa7e4d6"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">CPS::Attribute::Ptr</a></div><div class="ttdeci">AttributePointer&lt; Attribute&lt; T &gt; &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00250">Attribute.h:250</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_base_1_1_turbine_html"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_turbine.html">CPS::Base::Turbine</a></div><div class="ttdoc">Base model for Turbines.</div><div class="ttdef"><b>Definition</b> <a href="_base___turbine_8h_source.html#l00018">Base_Turbine.h:18</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_base_1_1_turbine_parameters_html"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_turbine_parameters.html">CPS::Base::TurbineParameters</a></div><div class="ttdef"><b>Definition</b> <a href="_base___turbine_8h_source.html#l00011">Base_Turbine.h:11</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a38b8318459b1651160029263eff6ca47"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">CPS::IdentifiedObject::name</a></div><div class="ttdeci">String name()</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00059">IdentifiedObject.h:59</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_logger_html_a021e964d1ab0d217a05b95736d2ea804"><div class="ttname"><a href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a></div><div class="ttdeci">spdlog::level::level_enum Level</div><div class="ttdef"><b>Definition</b> <a href="_logger_8h_source.html#l00033">Logger.h:33</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_hydro_turbine_html_a5c778a5c8eb21e2168b37152492f478f"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_hydro_turbine.html#a5c778a5c8eb21e2168b37152492f478f">CPS::Signal::HydroTurbine::initializeStates</a></div><div class="ttdeci">void initializeStates(Real Pminit) final</div><div class="ttdoc">Set steady-state initial values (call after setParameters, before first step)</div><div class="ttdef"><b>Definition</b> <a href="_hydro_turbine_8cpp_source.html#l00038">HydroTurbine.cpp:38</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_hydro_turbine_html_a66bc40dd670de83800895ce89b7b7431"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_hydro_turbine.html#a66bc40dd670de83800895ce89b7b7431">CPS::Signal::HydroTurbine::step</a></div><div class="ttdeci">Real step(Real Pgv, Real dt) final</div><div class="ttdoc">Step the turbine with valve/gate opening Pgv and return mechanical power Pm.</div><div class="ttdef"><b>Definition</b> <a href="_hydro_turbine_8cpp_source.html#l00058">HydroTurbine.cpp:58</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_hydro_turbine_html_ac0a08c08adf7527bb44741ecddfa6163"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_hydro_turbine.html#ac0a08c08adf7527bb44741ecddfa6163">CPS::Signal::HydroTurbine::setParameters</a></div><div class="ttdeci">void setParameters(std::shared_ptr&lt; Base::TurbineParameters &gt; parameters) final</div><div class="ttdef"><b>Definition</b> <a href="_hydro_turbine_8cpp_source.html#l00014">HydroTurbine.cpp:14</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_hydro_turbine_html_ae1714298c93205fbd8dd1321fa6c9e72"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_hydro_turbine.html#ae1714298c93205fbd8dd1321fa6c9e72">CPS::Signal::HydroTurbine::HydroTurbine</a></div><div class="ttdeci">HydroTurbine(const String &amp;name, CPS::Logger::Level logLevel=CPS::Logger::Level::off)</div><div class="ttdef"><b>Definition</b> <a href="_hydro_turbine_8cpp_source.html#l00009">HydroTurbine.cpp:9</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_hydro_turbine_parameters_html"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_hydro_turbine_parameters.html">CPS::Signal::HydroTurbineParameters</a></div><div class="ttdef"><b>Definition</b> <a href="#l00013">HydroTurbine.h:14</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_signal_1_1_hydro_turbine_parameters_html_a205e5b35292ed0563d482b339c5d21d0"><div class="ttname"><a href="class_c_p_s_1_1_signal_1_1_hydro_turbine_parameters.html#a205e5b35292ed0563d482b339c5d21d0">CPS::Signal::HydroTurbineParameters::Tw</a></div><div class="ttdeci">Real Tw</div><div class="ttdoc">Water starting time (s)</div><div class="ttdef"><b>Definition</b> <a href="#l00017">HydroTurbine.h:17</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_sim_signal_comp_html_ac0a5edec1e98621bf94aaee8f20e1040"><div class="ttname"><a href="class_c_p_s_1_1_sim_signal_comp.html#ac0a5edec1e98621bf94aaee8f20e1040">CPS::SimSignalComp::SimSignalComp</a></div><div class="ttdeci">SimSignalComp(String uid, String name, Logger::Level logLevel=Logger::Level::off)</div><div class="ttdef"><b>Definition</b> <a href="_sim_signal_comp_8h_source.html#l00031">SimSignalComp.h:31</a></div></div>
 <div class="ttc" id="aclass_shared_factory_html"><div class="ttname"><a href="class_shared_factory.html">SharedFactory</a></div><div class="ttdef"><b>Definition</b> <a href="_ptr_factory_8h_source.html#l00016">PtrFactory.h:16</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_1_1_signal_html"><div class="ttname"><a href="namespace_c_p_s_1_1_signal.html">CPS::Signal</a></div><div class="ttdef"><b>Definition</b> <a href="_cosine_f_m_generator_8h_source.html#l00014">CosineFMGenerator.h:14</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html"><div class="ttname"><a href="namespace_c_p_s.html">CPS</a></div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00017">Attribute.h:17</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a09f6ad37b12370b4b58624822be9b055"><div class="ttname"><a href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a></div><div class="ttdeci">std::string String</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00065">Definitions.h:65</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a603c4b77d70922bc0423adc57725df50"><div class="ttname"><a href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a></div><div class="ttdeci">double Real</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00062">Definitions.h:62</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_9ee3725555df841850f10a3655158b62.html">Signal</a></li><li class="navelem"><a class="el" href="_hydro_turbine_8h.html">HydroTurbine.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

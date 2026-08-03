@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_d_psim_1_1_m_n_a_state_space_extractor.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">MNAStateSpaceExtractor</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">DPsim::MNAStateSpaceExtractor Member List</div></div>
 </div><!--header-->
@@ -94,22 +102,24 @@ $(function(){ initResizable(false); });
 
 <p>This is the complete list of members for <a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a>, including all inherited members.</p>
 <table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>extract</b>(DirectLinearSolver &amp;linearSolver, Bool variableModelChanged, Bool systemMatrixChanged, Real time) (defined in <a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>getDiscreteStateMatrix</b>() const (defined in <a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>getLastExtractionTime</b>() const (defined in <a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>getMetadata</b>() const (defined in <a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>getStateCount</b>() const (defined in <a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>getTimeStep</b>() const (defined in <a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>hasExtractionTime</b>() const (defined in <a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>initialize</b>(const CPS::MNAInterface::List &amp;components, UInt mnaVectorSize, Real timeStep) (defined in <a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>isInitialized</b>() const (defined in <a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>MNAStateSpaceExtractor</b>()=default (defined in <a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Ptr</b> typedef (defined in <a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a>)</td><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#a83dba1f2a8468df523b878c05b9ff437">extract</a>(DirectLinearSolver &amp;linearSolver, Bool variableModelChanged, Bool systemMatrixChanged, Real time)</td><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#a6668f307d935de225c541be2301bdcf2">getDiscreteStateMatrix</a>() const</td><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#a01e50ec6162fa83b5cbf4f32d51223cd">getLastExtractionTime</a>() const</td><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#adcd2db840a547bb380233556fc2c40fe">getMetadata</a>() const</td><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#ac6e404146e77cb5b4d46149c8b6eae8f">getStateCount</a>() const</td><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#aa40eed08aa7f69c3143c4b0a580475c6">getTimeStep</a>() const</td><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#aa80a8a93659987276b056edfca528e76">hasExtractionTime</a>() const</td><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#a5b5403a66a2733ed09252550a6a5c398">initialize</a>(const CPS::MNAInterface::List &amp;components, UInt mnaVectorSize, Real timeStep)</td><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#ac026aa9d179ce92b58b77862855b0185">isInitialized</a>() const</td><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#a63257dacd76bf8952ad4b9923b4e49e8">MNAStateSpaceExtractor</a>()=default</td><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html#a62deee047d569150dba037bcb5fc6f2e">Ptr</a> typedef</td><td class="entry"><a class="el" href="class_d_psim_1_1_m_n_a_state_space_extractor.html">DPsim::MNAStateSpaceExtractor</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

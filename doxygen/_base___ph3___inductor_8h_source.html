@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_base___ph3___inductor_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_7aeedf4198247b218c530e3581ac7557.html">Base</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">Base_Ph3_Inductor.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_base___ph3___inductor_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -101,33 +109,47 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;dpsim-models/AttributeList.h&gt;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;dpsim-models/Definitions.h&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;<a class="code" href="_attribute_list_8h.html">dpsim-models/AttributeList.h</a>&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;<a class="code" href="dpsim-models_2include_2dpsim-models_2_definitions_8h.html">dpsim-models/Definitions.h</a>&gt;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">namespace </span>CPS {</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span>Base {</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">namespace </span>Ph3 {</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s.html">CPS</a> {</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s_1_1_base.html">Base</a> {</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s_1_1_base_1_1_ph3.html">Ph3</a> {</div>
 <div class="foldopen" id="foldopen00017" data-start="{" data-end="};">
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html">   17</a></span><span class="keyword">class </span>Inductor {</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html">   17</a></span><span class="keyword">class </span><a class="code hl_function" href="class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html#a3c36a4248061b8b47660d077721f3ed3">Inductor</a> {</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html#a1678a7538083ab343bc1aba288dacc50">   20</a></span>  <span class="keyword">const</span> CPS::Attribute&lt;Matrix&gt;::Ptr <a class="code hl_variable" href="class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html#a1678a7538083ab343bc1aba288dacc50">mInductance</a>;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html#a1678a7538083ab343bc1aba288dacc50">   20</a></span>  <span class="keyword">const</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">CPS::Attribute&lt;Matrix&gt;::Ptr</a> <a class="code hl_variable" href="class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html#a1678a7538083ab343bc1aba288dacc50">mInductance</a>;</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  <span class="keyword">explicit</span> Inductor(CPS::AttributeList::Ptr attributeList)</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>      : <a class="code hl_variable" href="class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html#a1678a7538083ab343bc1aba288dacc50">mInductance</a>(attributeList-&gt;create&lt;Matrix&gt;(<span class="stringliteral">&quot;L&quot;</span>)){};</div>
+<div class="foldopen" id="foldopen00022" data-start="{" data-end="}">
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html#a3c36a4248061b8b47660d077721f3ed3">   22</a></span>  <span class="keyword">explicit</span> <a class="code hl_function" href="class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html#a3c36a4248061b8b47660d077721f3ed3">Inductor</a>(<a class="code hl_typedef" href="class_c_p_s_1_1_attribute_list.html#a49ff97075315610f2b8c923084bcd7d2">CPS::AttributeList::Ptr</a> attributeList)</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>      : <a class="code hl_variable" href="class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html#a1678a7538083ab343bc1aba288dacc50">mInductance</a>(attributeList-&gt;create&lt;<a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&gt;(<span class="stringliteral">&quot;L&quot;</span>)){};</div>
+</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html#abfe9d1c1b28667f45d263e9939eba412">   26</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html#abfe9d1c1b28667f45d263e9939eba412">setParameters</a>(Matrix inductance) { **<a class="code hl_variable" href="class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html#a1678a7538083ab343bc1aba288dacc50">mInductance</a> = inductance; }</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html#abfe9d1c1b28667f45d263e9939eba412">   26</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html#abfe9d1c1b28667f45d263e9939eba412">setParameters</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> inductance) { **<a class="code hl_variable" href="class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html#a1678a7538083ab343bc1aba288dacc50">mInductance</a> = inductance; }</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>};</div>
 </div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>} <span class="comment">// namespace Ph3</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>} <span class="comment">// namespace Base</span></div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>} <span class="comment">// namespace CPS</span></div>
+<div class="ttc" id="a_attribute_list_8h_html"><div class="ttname"><a href="_attribute_list_8h.html">AttributeList.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_ad552c848f780007d59f489540fa7e4d6"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">CPS::Attribute::Ptr</a></div><div class="ttdeci">AttributePointer&lt; Attribute&lt; T &gt; &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00250">Attribute.h:250</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_list_html_a49ff97075315610f2b8c923084bcd7d2"><div class="ttname"><a href="class_c_p_s_1_1_attribute_list.html#a49ff97075315610f2b8c923084bcd7d2">CPS::AttributeList::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; AttributeList &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_attribute_list_8h_source.html#l00026">AttributeList.h:26</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_base_1_1_ph3_1_1_inductor_html_a1678a7538083ab343bc1aba288dacc50"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html#a1678a7538083ab343bc1aba288dacc50">CPS::Base::Ph3::Inductor::mInductance</a></div><div class="ttdeci">const CPS::Attribute&lt; Matrix &gt;::Ptr mInductance</div><div class="ttdoc">Inductance [H].</div><div class="ttdef"><b>Definition</b> <a href="#l00020">Base_Ph3_Inductor.h:20</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_base_1_1_ph3_1_1_inductor_html_a3c36a4248061b8b47660d077721f3ed3"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html#a3c36a4248061b8b47660d077721f3ed3">CPS::Base::Ph3::Inductor::Inductor</a></div><div class="ttdeci">Inductor(CPS::AttributeList::Ptr attributeList)</div><div class="ttdef"><b>Definition</b> <a href="#l00022">Base_Ph3_Inductor.h:22</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_base_1_1_ph3_1_1_inductor_html_abfe9d1c1b28667f45d263e9939eba412"><div class="ttname"><a href="class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html#abfe9d1c1b28667f45d263e9939eba412">CPS::Base::Ph3::Inductor::setParameters</a></div><div class="ttdeci">void setParameters(Matrix inductance)</div><div class="ttdoc">Sets model specific parameters.</div><div class="ttdef"><b>Definition</b> <a href="#l00026">Base_Ph3_Inductor.h:26</a></div></div>
+<div class="ttc" id="adpsim-models_2include_2dpsim-models_2_definitions_8h_html"><div class="ttname"><a href="dpsim-models_2include_2dpsim-models_2_definitions_8h.html">Definitions.h</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_1_1_base_1_1_ph3_html"><div class="ttname"><a href="namespace_c_p_s_1_1_base_1_1_ph3.html">CPS::Base::Ph3</a></div><div class="ttdef"><b>Definition</b> <a href="_base___ph3___capacitor_8h_source.html#l00016">Base_Ph3_Capacitor.h:16</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_1_1_base_html"><div class="ttname"><a href="namespace_c_p_s_1_1_base.html">CPS::Base</a></div><div class="ttdef"><b>Definition</b> <a href="_base___av_voltage_source_inverter_d_q_8h_source.html#l00015">Base_AvVoltageSourceInverterDQ.h:15</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html"><div class="ttname"><a href="namespace_c_p_s.html">CPS</a></div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00017">Attribute.h:17</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a081464dfe063130c6fca7929ce291b15"><div class="ttname"><a href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">CPS::Matrix</a></div><div class="ttdeci">Eigen::Matrix&lt; Real, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor &gt; Matrix</div><div class="ttdoc">Dense matrix for real numbers.</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00081">Definitions.h:81</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_7aeedf4198247b218c530e3581ac7557.html">Base</a></li><li class="navelem"><a class="el" href="_base___ph3___inductor_8h.html">Base_Ph3_Inductor.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

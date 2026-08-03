@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_thread_scheduler_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">ThreadScheduler.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_thread_scheduler_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -101,33 +109,33 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;dpsim/Scheduler.h&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;<a class="code" href="_scheduler_8h.html">dpsim/Scheduler.h</a>&gt;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;thread&gt;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_d_psim.html">DPsim</a> {</div>
 <div class="foldopen" id="foldopen00017" data-start="{" data-end="};">
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_thread_scheduler.html">   17</a></span><span class="keyword">class </span>ThreadScheduler : <span class="keyword">public</span> Scheduler {</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_thread_scheduler.html">   17</a></span><span class="keyword">class </span><a class="code hl_function" href="class_d_psim_1_1_thread_scheduler.html#ae3196d210ffcb000e9b644ca8b1f1913">ThreadScheduler</a> : <span class="keyword">public</span> <a class="code hl_function" href="class_d_psim_1_1_scheduler.html#a29bf76034436267e58b854d510cfa024">Scheduler</a> {</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  ThreadScheduler(Int threads, String outMeasurementFile,</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>                  Bool useConditionVariable);</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  <span class="keyword">virtual</span> ~ThreadScheduler();</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  <a class="code hl_function" href="class_d_psim_1_1_thread_scheduler.html#ae3196d210ffcb000e9b644ca8b1f1913">ThreadScheduler</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> threads, <a class="code hl_typedef" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> outMeasurementFile,</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>                  <a class="code hl_typedef" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> useConditionVariable);</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  <span class="keyword">virtual</span> <a class="code hl_function" href="class_d_psim_1_1_thread_scheduler.html#ab0b3faf5db91ff546ad2666b32c6a3ae">~ThreadScheduler</a>();</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_thread_scheduler.html#a693ab28de772055eedc74c2274f50795">step</a>(Real time, Int timeStepCount);</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_thread_scheduler.html#a693ab28de772055eedc74c2274f50795">step</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> time, <a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> timeStepCount);</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_thread_scheduler.html#a466a51656b39092eda1376c5aa18bb0d">stop</a>();</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="keywordtype">void</span> finishSchedule(<span class="keyword">const</span> <a class="code hl_typedef" href="class_d_psim_1_1_scheduler.html#a9b7e679e940b7ef3c991ad4bfd9f1a4b">Edges</a> &amp;inEdges);</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="keywordtype">void</span> scheduleTask(<span class="keywordtype">int</span> thread, CPS::Task::Ptr task);</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_thread_scheduler.html#afc5d44209335b896c4c2908665153bb0">finishSchedule</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="class_d_psim_1_1_scheduler.html#a9b7e679e940b7ef3c991ad4bfd9f1a4b">Edges</a> &amp;inEdges);</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_thread_scheduler.html#af5b06c6c6174da9d1830c3599d6960a3">scheduleTask</a>(<span class="keywordtype">int</span> thread, <a class="code hl_typedef" href="class_c_p_s_1_1_task.html#aad353cc3de2bb176874999876318a3f4">CPS::Task::Ptr</a> task);</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  Int mNumThreads;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_thread_scheduler.html#a5f602d78379423d3635a2874c1b2381a">   30</a></span>  <a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> <a class="code hl_variable" href="class_d_psim_1_1_thread_scheduler.html#a5f602d78379423d3635a2874c1b2381a">mNumThreads</a>;</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keywordtype">void</span> doStep(Int scheduleIdx);</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> threadFunction(ThreadScheduler *sched, Int idx);</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keywordtype">void</span> doStep(<a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> scheduleIdx);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> threadFunction(<a class="code hl_function" href="class_d_psim_1_1_thread_scheduler.html#ae3196d210ffcb000e9b644ca8b1f1913">ThreadScheduler</a> *sched, <a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> idx);</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  String mOutMeasurementFile;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> mOutMeasurementFile;</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <a class="code hl_class" href="class_d_psim_1_1_barrier.html">Barrier</a> mStartBarrier;</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  std::vector&lt;std::thread&gt; mThreads;</div>
@@ -140,24 +148,39 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  };</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  std::vector&lt;ScheduleEntry *&gt; mSchedules;</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  Bool mJoining = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  Real mTime = 0;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  Int mTimeStepCount = 0;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <a class="code hl_typedef" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> mJoining = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> mTime = 0;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> mTimeStepCount = 0;</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>};</div>
 </div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>} <span class="comment">// namespace DPsim</span></div>
+<div class="ttc" id="a_scheduler_8h_html"><div class="ttname"><a href="_scheduler_8h.html">Scheduler.h</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_task_html"><div class="ttname"><a href="class_c_p_s_1_1_task.html">CPS::Task</a></div><div class="ttdoc">Tasks to be defined by every component.</div><div class="ttdef"><b>Definition</b> <a href="_task_8h_source.html#l00025">Task.h:25</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_task_html_aad353cc3de2bb176874999876318a3f4"><div class="ttname"><a href="class_c_p_s_1_1_task.html#aad353cc3de2bb176874999876318a3f4">CPS::Task::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; Task &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_task_8h_source.html#l00027">Task.h:27</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_barrier_html"><div class="ttname"><a href="class_d_psim_1_1_barrier.html">DPsim::Barrier</a></div><div class="ttdef"><b>Definition</b> <a href="_scheduler_8h_source.html#l00118">Scheduler.h:118</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_counter_html"><div class="ttname"><a href="class_d_psim_1_1_counter.html">DPsim::Counter</a></div><div class="ttdef"><b>Definition</b> <a href="_scheduler_8h_source.html#l00207">Scheduler.h:207</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_scheduler_html_a29bf76034436267e58b854d510cfa024"><div class="ttname"><a href="class_d_psim_1_1_scheduler.html#a29bf76034436267e58b854d510cfa024">DPsim::Scheduler::Scheduler</a></div><div class="ttdeci">Scheduler(CPS::Logger::Level logLevel=CPS::Logger::Level::off)</div><div class="ttdef"><b>Definition</b> <a href="_scheduler_8h_source.html#l00036">Scheduler.h:36</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_scheduler_html_a9b7e679e940b7ef3c991ad4bfd9f1a4b"><div class="ttname"><a href="class_d_psim_1_1_scheduler.html#a9b7e679e940b7ef3c991ad4bfd9f1a4b">DPsim::Scheduler::Edges</a></div><div class="ttdeci">std::unordered_map&lt; CPS::Task::Ptr, std::deque&lt; CPS::Task::Ptr &gt; &gt; Edges</div><div class="ttdef"><b>Definition</b> <a href="_scheduler_8h_source.html#l00031">Scheduler.h:31</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_thread_scheduler_html_a466a51656b39092eda1376c5aa18bb0d"><div class="ttname"><a href="class_d_psim_1_1_thread_scheduler.html#a466a51656b39092eda1376c5aa18bb0d">DPsim::ThreadScheduler::stop</a></div><div class="ttdeci">virtual void stop()</div><div class="ttdoc">Called on simulation stop to reliably clean up e.g. running helper threads.</div><div class="ttdef"><b>Definition</b> <a href="_thread_scheduler_8cpp_source.html#l00081">ThreadScheduler.cpp:81</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_thread_scheduler_html_a5f602d78379423d3635a2874c1b2381a"><div class="ttname"><a href="class_d_psim_1_1_thread_scheduler.html#a5f602d78379423d3635a2874c1b2381a">DPsim::ThreadScheduler::mNumThreads</a></div><div class="ttdeci">Int mNumThreads</div><div class="ttdef"><b>Definition</b> <a href="#l00030">ThreadScheduler.h:30</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_thread_scheduler_html_a693ab28de772055eedc74c2274f50795"><div class="ttname"><a href="class_d_psim_1_1_thread_scheduler.html#a693ab28de772055eedc74c2274f50795">DPsim::ThreadScheduler::step</a></div><div class="ttdeci">void step(Real time, Int timeStepCount)</div><div class="ttdoc">Performs a single simulation step.</div><div class="ttdef"><b>Definition</b> <a href="_thread_scheduler_8cpp_source.html#l00067">ThreadScheduler.cpp:67</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_thread_scheduler_html_ab0b3faf5db91ff546ad2666b32c6a3ae"><div class="ttname"><a href="class_d_psim_1_1_thread_scheduler.html#ab0b3faf5db91ff546ad2666b32c6a3ae">DPsim::ThreadScheduler::~ThreadScheduler</a></div><div class="ttdeci">virtual ~ThreadScheduler()</div><div class="ttdef"><b>Definition</b> <a href="_thread_scheduler_8cpp_source.html#l00026">ThreadScheduler.cpp:26</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_thread_scheduler_html_ae3196d210ffcb000e9b644ca8b1f1913"><div class="ttname"><a href="class_d_psim_1_1_thread_scheduler.html#ae3196d210ffcb000e9b644ca8b1f1913">DPsim::ThreadScheduler::ThreadScheduler</a></div><div class="ttdeci">ThreadScheduler(Int threads, String outMeasurementFile, Bool useConditionVariable)</div><div class="ttdef"><b>Definition</b> <a href="_thread_scheduler_8cpp_source.html#l00016">ThreadScheduler.cpp:16</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_thread_scheduler_html_af5b06c6c6174da9d1830c3599d6960a3"><div class="ttname"><a href="class_d_psim_1_1_thread_scheduler.html#af5b06c6c6174da9d1830c3599d6960a3">DPsim::ThreadScheduler::scheduleTask</a></div><div class="ttdeci">void scheduleTask(int thread, CPS::Task::Ptr task)</div><div class="ttdef"><b>Definition</b> <a href="_thread_scheduler_8cpp_source.html#l00031">ThreadScheduler.cpp:31</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_thread_scheduler_html_afc5d44209335b896c4c2908665153bb0"><div class="ttname"><a href="class_d_psim_1_1_thread_scheduler.html#afc5d44209335b896c4c2908665153bb0">DPsim::ThreadScheduler::finishSchedule</a></div><div class="ttdeci">void finishSchedule(const Edges &amp;inEdges)</div><div class="ttdef"><b>Definition</b> <a href="_thread_scheduler_8cpp_source.html#l00035">ThreadScheduler.cpp:35</a></div></div>
 <div class="ttc" id="anamespace_d_psim_html"><div class="ttname"><a href="namespace_d_psim.html">DPsim</a></div><div class="ttdef"><b>Definition</b> <a href="_dense_l_u_adapter_8cpp_source.html#l00013">DenseLUAdapter.cpp:13</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a52dcbc3a0896b912333104eb61a7b29b"><div class="ttname"><a href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">DPsim::Real</a></div><div class="ttdeci">CPS::Real Real</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00018">Definitions.h:18</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a66e48a625a26fd3c1d2198148f9d59e9"><div class="ttname"><a href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">DPsim::String</a></div><div class="ttdeci">CPS::String String</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00020">Definitions.h:20</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a6a29611b9912f8abc0545523b3f84f8c"><div class="ttname"><a href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">DPsim::Int</a></div><div class="ttdeci">CPS::Int Int</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00022">Definitions.h:22</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_aa7f17909fba1876614c5f455ad2a453d"><div class="ttname"><a href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">DPsim::Bool</a></div><div class="ttdeci">CPS::Bool Bool</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00021">Definitions.h:21</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li><li class="navelem"><a class="el" href="_thread_scheduler_8h.html">ThreadScheduler.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

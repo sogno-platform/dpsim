@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_c_p_s_1_1_c_s_v_reader.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>CPS</b></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CSVReader</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
@@ -103,56 +111,52 @@ $(function(){ initResizable(false); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a07ab85b64411bd9e48d7a2e4a6df6b18" id="r_a07ab85b64411bd9e48d7a2e4a6df6b18"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a07ab85b64411bd9e48d7a2e4a6df6b18">Mode</a> { <b>AUTO</b>
-, <b>MANUAL</b>
+<tr class="memitem:a07ab85b64411bd9e48d7a2e4a6df6b18" id="r_a07ab85b64411bd9e48d7a2e4a6df6b18"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a07ab85b64411bd9e48d7a2e4a6df6b18">Mode</a> { <a class="el" href="#a07ab85b64411bd9e48d7a2e4a6df6b18ae1f2d5134ed2543d38a0de9751cf75d9">AUTO</a>
+, <a class="el" href="#a07ab85b64411bd9e48d7a2e4a6df6b18aa60a6a471c0681e5a49c4f5d00f6bc5a">MANUAL</a>
  }</td></tr>
 <tr class="separator:a07ab85b64411bd9e48d7a2e4a6df6b18"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71c248f331cd2c1fd63db4f171b6ea7d" id="r_a71c248f331cd2c1fd63db4f171b6ea7d"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><b>DataFormat</b> { <b>HHMMSS</b>
-, <b>SECONDS</b>
-, <b>HOURS</b>
-, <b>MINUTES</b>
+<tr class="memitem:a71c248f331cd2c1fd63db4f171b6ea7d" id="r_a71c248f331cd2c1fd63db4f171b6ea7d"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7d">DataFormat</a> { <a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7da7bd7c2b8451cee6e5873842d51de88a3">HHMMSS</a>
+, <a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7daa9126caa6ef3db9cf3c35ac627ad22b5">SECONDS</a>
+, <a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7da5ab9376a7869a83e84e94bcb25aa8cbd">HOURS</a>
+, <a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7da7ffb9cea885bcba59e55574d54f819c2">MINUTES</a>
  }</td></tr>
 <tr class="separator:a71c248f331cd2c1fd63db4f171b6ea7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a72974ae698b3fec9110130b62400849d" id="r_a72974ae698b3fec9110130b62400849d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a72974ae698b3fec9110130b62400849d">CSVReader</a> (String name, std::list&lt; fs::path &gt; path, Logger::Level logLevel)</td></tr>
+<tr class="memitem:a72974ae698b3fec9110130b62400849d" id="r_a72974ae698b3fec9110130b62400849d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a72974ae698b3fec9110130b62400849d">CSVReader</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> name, std::list&lt; fs::path &gt; path, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel)</td></tr>
 <tr class="separator:a72974ae698b3fec9110130b62400849d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2bcb49f4a4b8cad68e8e058c52615526" id="r_a2bcb49f4a4b8cad68e8e058c52615526"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2bcb49f4a4b8cad68e8e058c52615526">CSVReader</a> (String name, String path, Logger::Level logLevel)</td></tr>
+<tr class="memitem:a2bcb49f4a4b8cad68e8e058c52615526" id="r_a2bcb49f4a4b8cad68e8e058c52615526"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2bcb49f4a4b8cad68e8e058c52615526">CSVReader</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> name, <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> path, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel)</td></tr>
 <tr class="separator:a2bcb49f4a4b8cad68e8e058c52615526"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab9fc2acb6bcd4fc98235efc2f4e8607" id="r_aab9fc2acb6bcd4fc98235efc2f4e8607"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab9fc2acb6bcd4fc98235efc2f4e8607">CSVReader</a> (String name, std::list&lt; fs::path &gt; path, std::map&lt; String, String &gt; &amp;assignList, Logger::Level logLevel)</td></tr>
+<tr class="memitem:aab9fc2acb6bcd4fc98235efc2f4e8607" id="r_aab9fc2acb6bcd4fc98235efc2f4e8607"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab9fc2acb6bcd4fc98235efc2f4e8607">CSVReader</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> name, std::list&lt; fs::path &gt; path, std::map&lt; <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>, <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &gt; &amp;assignList, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel)</td></tr>
 <tr class="separator:aab9fc2acb6bcd4fc98235efc2f4e8607"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac0f59e6b3b0949c5cb0eb0657d53741c" id="r_ac0f59e6b3b0949c5cb0eb0657d53741c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac0f59e6b3b0949c5cb0eb0657d53741c">CSVReader</a> (String name, String path, std::map&lt; String, String &gt; &amp;assignList, Logger::Level logLevel)</td></tr>
+<tr class="memitem:ac0f59e6b3b0949c5cb0eb0657d53741c" id="r_ac0f59e6b3b0949c5cb0eb0657d53741c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac0f59e6b3b0949c5cb0eb0657d53741c">CSVReader</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> name, <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> path, std::map&lt; <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>, <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &gt; &amp;assignList, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel)</td></tr>
 <tr class="separator:ac0f59e6b3b0949c5cb0eb0657d53741c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6eca102a05b639d2c39c829f3fac506" id="r_af6eca102a05b639d2c39c829f3fac506"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af6eca102a05b639d2c39c829f3fac506">time_format_convert</a> (const String &amp;time)</td></tr>
+<tr class="memitem:af6eca102a05b639d2c39c829f3fac506" id="r_af6eca102a05b639d2c39c829f3fac506"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af6eca102a05b639d2c39c829f3fac506">time_format_convert</a> (const <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;time)</td></tr>
 <tr class="separator:af6eca102a05b639d2c39c829f3fac506"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ba4109a0cc5b1380f7e78db657a6401" id="r_a8ba4109a0cc5b1380f7e78db657a6401"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ba4109a0cc5b1380f7e78db657a6401">doSkipFirstRow</a> (Bool value=true)</td></tr>
+<tr class="memitem:a8ba4109a0cc5b1380f7e78db657a6401" id="r_a8ba4109a0cc5b1380f7e78db657a6401"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ba4109a0cc5b1380f7e78db657a6401">doSkipFirstRow</a> (<a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> value=true)</td></tr>
 <tr class="memdesc:a8ba4109a0cc5b1380f7e78db657a6401"><td class="mdescLeft">&#160;</td><td class="mdescRight">Skip first row if it has no digits at beginning.  <br /></td></tr>
 <tr class="separator:a8ba4109a0cc5b1380f7e78db657a6401"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad032428164768eabb2014c65254cc277" id="r_ad032428164768eabb2014c65254cc277"><td class="memItemLeft" align="right" valign="top">MatrixRow&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad032428164768eabb2014c65254cc277">csv2Eigen</a> (const String &amp;path)</td></tr>
+<tr class="memitem:ad032428164768eabb2014c65254cc277" id="r_ad032428164768eabb2014c65254cc277"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a98aadb044b809d0b930278d983c3312b">MatrixRow</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad032428164768eabb2014c65254cc277">csv2Eigen</a> (const <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;path)</td></tr>
 <tr class="separator:ad032428164768eabb2014c65254cc277"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeaab644dbddc681ae65bd0e3125941a3" id="r_aeaab644dbddc681ae65bd0e3125941a3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="struct_c_p_s_1_1_p_q_data.html">PQData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeaab644dbddc681ae65bd0e3125941a3">readLoadProfileDP</a> (fs::path file, Real start_time=-1, Real time_step=1, Real end_time=-1, Real scale_factor=1, CSVReader::DataFormat format=CSVReader::DataFormat::SECONDS)</td></tr>
+<tr class="memitem:aeaab644dbddc681ae65bd0e3125941a3" id="r_aeaab644dbddc681ae65bd0e3125941a3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="struct_c_p_s_1_1_p_q_data.html">PQData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeaab644dbddc681ae65bd0e3125941a3">readLoadProfileDP</a> (fs::path file, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> start_time=-1, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> time_step=1, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> end_time=-1, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> scale_factor=1, <a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7d">CSVReader::DataFormat</a> format=<a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7daa9126caa6ef3db9cf3c35ac627ad22b5">CSVReader::DataFormat::SECONDS</a>)</td></tr>
 <tr class="separator:aeaab644dbddc681ae65bd0e3125941a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd806c9dd7a269f61c6ac192d4cd0925" id="r_acd806c9dd7a269f61c6ac192d4cd0925"><td class="memItemLeft" align="right" valign="top"><a id="acd806c9dd7a269f61c6ac192d4cd0925" name="acd806c9dd7a269f61c6ac192d4cd0925"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>assignLoadProfileDP</b> (std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html">CPS::DP::Ph1::AvVoltageSourceInverterDQ</a> &gt; &gt; &amp;loads, Real start_time=-1, Real time_step=1, Real end_time=-1, Real scale_factor=1, <a class="el" href="#a07ab85b64411bd9e48d7a2e4a6df6b18">CSVReader::Mode</a> mode=CSVReader::Mode::AUTO, CSVReader::DataFormat format=CSVReader::DataFormat::SECONDS)</td></tr>
+<tr class="memitem:acd806c9dd7a269f61c6ac192d4cd0925" id="r_acd806c9dd7a269f61c6ac192d4cd0925"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acd806c9dd7a269f61c6ac192d4cd0925">assignLoadProfileDP</a> (std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html">CPS::DP::Ph1::AvVoltageSourceInverterDQ</a> &gt; &gt; &amp;loads, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> start_time=-1, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> time_step=1, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> end_time=-1, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> scale_factor=1, <a class="el" href="#a07ab85b64411bd9e48d7a2e4a6df6b18">CSVReader::Mode</a> mode=<a class="el" href="#a07ab85b64411bd9e48d7a2e4a6df6b18ae1f2d5134ed2543d38a0de9751cf75d9">CSVReader::Mode::AUTO</a>, <a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7d">CSVReader::DataFormat</a> format=<a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7daa9126caa6ef3db9cf3c35ac627ad22b5">CSVReader::DataFormat::SECONDS</a>)</td></tr>
 <tr class="separator:acd806c9dd7a269f61c6ac192d4cd0925"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6d2d9b2ae5cff7b334d9fa571796f82a" id="r_a6d2d9b2ae5cff7b334d9fa571796f82a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_c_p_s_1_1_power_profile.html">PowerProfile</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6d2d9b2ae5cff7b334d9fa571796f82a">readLoadProfile</a> (fs::path file, Real start_time=-1, Real time_step=1, Real end_time=-1, CSVReader::DataFormat format=CSVReader::DataFormat::SECONDS)</td></tr>
+<tr class="memitem:a6d2d9b2ae5cff7b334d9fa571796f82a" id="r_a6d2d9b2ae5cff7b334d9fa571796f82a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_c_p_s_1_1_power_profile.html">PowerProfile</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6d2d9b2ae5cff7b334d9fa571796f82a">readLoadProfile</a> (fs::path file, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> start_time=-1, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> time_step=1, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> end_time=-1, <a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7d">CSVReader::DataFormat</a> format=<a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7daa9126caa6ef3db9cf3c35ac627ad22b5">CSVReader::DataFormat::SECONDS</a>)</td></tr>
 <tr class="separator:a6d2d9b2ae5cff7b334d9fa571796f82a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2607ea94f260d1661a1521ccba97d6e0" id="r_a2607ea94f260d1661a1521ccba97d6e0"><td class="memItemLeft" align="right" valign="top">std::vector&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2607ea94f260d1661a1521ccba97d6e0">readPQData</a> (fs::path file, Real start_time=-1, Real time_step=1, Real end_time=-1, CSVReader::DataFormat format=CSVReader::DataFormat::SECONDS)</td></tr>
+<tr class="memitem:a2607ea94f260d1661a1521ccba97d6e0" id="r_a2607ea94f260d1661a1521ccba97d6e0"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2607ea94f260d1661a1521ccba97d6e0">readPQData</a> (fs::path file, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> start_time=-1, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> time_step=1, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> end_time=-1, <a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7d">CSVReader::DataFormat</a> format=<a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7daa9126caa6ef3db9cf3c35ac627ad22b5">CSVReader::DataFormat::SECONDS</a>)</td></tr>
 <tr class="separator:a2607ea94f260d1661a1521ccba97d6e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee322f4b844dce6629b34aaa49e2a736" id="r_aee322f4b844dce6629b34aaa49e2a736"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aee322f4b844dce6629b34aaa49e2a736">assignLoadProfile</a> (<a class="el" href="class_c_p_s_1_1_system_topology.html">SystemTopology</a> &amp;sys, Real start_time=-1, Real time_step=1, Real end_time=-1, <a class="el" href="#a07ab85b64411bd9e48d7a2e4a6df6b18">CSVReader::Mode</a> mode=CSVReader::Mode::AUTO, CSVReader::DataFormat format=CSVReader::DataFormat::SECONDS)</td></tr>
+<tr class="memitem:aee322f4b844dce6629b34aaa49e2a736" id="r_aee322f4b844dce6629b34aaa49e2a736"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aee322f4b844dce6629b34aaa49e2a736">assignLoadProfile</a> (<a class="el" href="class_c_p_s_1_1_system_topology.html">SystemTopology</a> &amp;sys, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> start_time=-1, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> time_step=1, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> end_time=-1, <a class="el" href="#a07ab85b64411bd9e48d7a2e4a6df6b18">CSVReader::Mode</a> mode=<a class="el" href="#a07ab85b64411bd9e48d7a2e4a6df6b18ae1f2d5134ed2543d38a0de9751cf75d9">CSVReader::Mode::AUTO</a>, <a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7d">CSVReader::DataFormat</a> format=<a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7daa9126caa6ef3db9cf3c35ac627ad22b5">CSVReader::DataFormat::SECONDS</a>)</td></tr>
 <tr class="memdesc:aee322f4b844dce6629b34aaa49e2a736"><td class="mdescLeft">&#160;</td><td class="mdescRight">assign load profile to corresponding load object  <br /></td></tr>
 <tr class="separator:aee322f4b844dce6629b34aaa49e2a736"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa56a0bfd0b45a8964dd8e0fa0e8da1ff" id="r_aa56a0bfd0b45a8964dd8e0fa0e8da1ff"><td class="memItemLeft" align="right" valign="top"><a id="aa56a0bfd0b45a8964dd8e0fa0e8da1ff" name="aa56a0bfd0b45a8964dd8e0fa0e8da1ff"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>assignPVGeneration</b> (<a class="el" href="class_c_p_s_1_1_system_topology.html">SystemTopology</a> &amp;sys, Real start_time=-1, Real time_step=1, Real end_time=-1, <a class="el" href="#a07ab85b64411bd9e48d7a2e4a6df6b18">CSVReader::Mode</a> mode=CSVReader::Mode::AUTO)</td></tr>
+<tr class="memitem:aa56a0bfd0b45a8964dd8e0fa0e8da1ff" id="r_aa56a0bfd0b45a8964dd8e0fa0e8da1ff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa56a0bfd0b45a8964dd8e0fa0e8da1ff">assignPVGeneration</a> (<a class="el" href="class_c_p_s_1_1_system_topology.html">SystemTopology</a> &amp;sys, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> start_time=-1, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> time_step=1, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> end_time=-1, <a class="el" href="#a07ab85b64411bd9e48d7a2e4a6df6b18">CSVReader::Mode</a> mode=<a class="el" href="#a07ab85b64411bd9e48d7a2e4a6df6b18ae1f2d5134ed2543d38a0de9751cf75d9">CSVReader::Mode::AUTO</a>)</td></tr>
 <tr class="separator:aa56a0bfd0b45a8964dd8e0fa0e8da1ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75a33af720d82201e40ac94c805c7f16" id="r_a75a33af720d82201e40ac94c805c7f16"><td class="memItemLeft" align="right" valign="top"><a id="a75a33af720d82201e40ac94c805c7f16" name="a75a33af720d82201e40ac94c805c7f16"></a>
-<a class="el" href="struct_c_p_s_1_1_p_q_data.html">PQData</a>&#160;</td><td class="memItemRight" valign="bottom"><b>interpol_linear</b> (std::map&lt; Real, <a class="el" href="struct_c_p_s_1_1_p_q_data.html">PQData</a> &gt; &amp;data_PQ, Real x)</td></tr>
-<tr class="memdesc:a75a33af720d82201e40ac94c805c7f16"><td class="mdescLeft">&#160;</td><td class="mdescRight">interpolation for PQ data points <br /></td></tr>
+<tr class="memitem:a75a33af720d82201e40ac94c805c7f16" id="r_a75a33af720d82201e40ac94c805c7f16"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_c_p_s_1_1_p_q_data.html">PQData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a75a33af720d82201e40ac94c805c7f16">interpol_linear</a> (std::map&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>, <a class="el" href="struct_c_p_s_1_1_p_q_data.html">PQData</a> &gt; &amp;data_PQ, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> x)</td></tr>
+<tr class="memdesc:a75a33af720d82201e40ac94c805c7f16"><td class="mdescLeft">&#160;</td><td class="mdescRight">interpolation for PQ data points  <br /></td></tr>
 <tr class="separator:a75a33af720d82201e40ac94c805c7f16"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef0021cfe52b019483de44dcb59ab48b" id="r_aef0021cfe52b019483de44dcb59ab48b"><td class="memItemLeft" align="right" valign="top"><a id="aef0021cfe52b019483de44dcb59ab48b" name="aef0021cfe52b019483de44dcb59ab48b"></a>
-Real&#160;</td><td class="memItemRight" valign="bottom"><b>interpol_linear</b> (std::map&lt; Real, Real &gt; &amp;data_wf, Real x)</td></tr>
-<tr class="memdesc:aef0021cfe52b019483de44dcb59ab48b"><td class="mdescLeft">&#160;</td><td class="mdescRight">interpolation for weighting factor data points <br /></td></tr>
+<tr class="memitem:aef0021cfe52b019483de44dcb59ab48b" id="r_aef0021cfe52b019483de44dcb59ab48b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef0021cfe52b019483de44dcb59ab48b">interpol_linear</a> (std::map&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt; &amp;data_wf, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> x)</td></tr>
+<tr class="memdesc:aef0021cfe52b019483de44dcb59ab48b"><td class="mdescLeft">&#160;</td><td class="mdescRight">interpolation for weighting factor data points  <br /></td></tr>
 <tr class="separator:aef0021cfe52b019483de44dcb59ab48b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -170,7 +174,7 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>interpol_linear</b> (
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum class CPS::CSVReader::DataFormat</td>
+          <td class="memname">enum class <a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7d">CPS::CSVReader::DataFormat</a></td>
         </tr>
       </table>
   </td>
@@ -179,6 +183,12 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>interpol_linear</b> (
   </tr>
 </table>
 </div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a71c248f331cd2c1fd63db4f171b6ea7da7bd7c2b8451cee6e5873842d51de88a3" name="a71c248f331cd2c1fd63db4f171b6ea7da7bd7c2b8451cee6e5873842d51de88a3"></a>HHMMSS&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a71c248f331cd2c1fd63db4f171b6ea7daa9126caa6ef3db9cf3c35ac627ad22b5" name="a71c248f331cd2c1fd63db4f171b6ea7daa9126caa6ef3db9cf3c35ac627ad22b5"></a>SECONDS&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a71c248f331cd2c1fd63db4f171b6ea7da5ab9376a7869a83e84e94bcb25aa8cbd" name="a71c248f331cd2c1fd63db4f171b6ea7da5ab9376a7869a83e84e94bcb25aa8cbd"></a>HOURS&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a71c248f331cd2c1fd63db4f171b6ea7da7ffb9cea885bcba59e55574d54f819c2" name="a71c248f331cd2c1fd63db4f171b6ea7da7ffb9cea885bcba59e55574d54f819c2"></a>MINUTES&#160;</td><td class="fielddoc"></td></tr>
+</table>
 
 <p class="definition">Definition at line <a class="el" href="_c_s_v_reader_8h_source.html#l00052">52</a> of file <a class="el" href="_c_s_v_reader_8h_source.html">CSVReader.h</a>.</p>
 
@@ -204,6 +214,10 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>interpol_linear</b> (
 </table>
 </div><div class="memdoc">
 <p>set load profile assigning pattern. AUTO for assigning load profile name (csv file name) to load object with the same name (mName) MANUAL for providing an assign pattern manually. see power flow example: CIM/CIGRE_MV_PowerFlowTest_LoadProfiles.cpp </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a07ab85b64411bd9e48d7a2e4a6df6b18ae1f2d5134ed2543d38a0de9751cf75d9" name="a07ab85b64411bd9e48d7a2e4a6df6b18ae1f2d5134ed2543d38a0de9751cf75d9"></a>AUTO&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a07ab85b64411bd9e48d7a2e4a6df6b18aa60a6a471c0681e5a49c4f5d00f6bc5a" name="a07ab85b64411bd9e48d7a2e4a6df6b18aa60a6a471c0681e5a49c4f5d00f6bc5a"></a>MANUAL&#160;</td><td class="fielddoc"></td></tr>
+</table>
 
 <p class="definition">Definition at line <a class="el" href="_c_s_v_reader_8h_source.html#l00044">44</a> of file <a class="el" href="_c_s_v_reader_8h_source.html">CSVReader.h</a>.</p>
 
@@ -219,7 +233,7 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>interpol_linear</b> (
         <tr>
           <td class="memname">CSVReader::CSVReader </td>
           <td>(</td>
-          <td class="paramtype">CPS::String</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -229,7 +243,7 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>interpol_linear</b> (
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Logger::Level</td>          <td class="paramname"><span class="paramname"><em>logLevel</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a></td>          <td class="paramname"><span class="paramname"><em>logLevel</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -247,17 +261,17 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>interpol_linear</b> (
         <tr>
           <td class="memname">CSVReader::CSVReader </td>
           <td>(</td>
-          <td class="paramtype">CPS::String</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">CPS::String</td>          <td class="paramname"><span class="paramname"><em>path</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a></td>          <td class="paramname"><span class="paramname"><em>path</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Logger::Level</td>          <td class="paramname"><span class="paramname"><em>logLevel</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a></td>          <td class="paramname"><span class="paramname"><em>logLevel</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -275,7 +289,7 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>interpol_linear</b> (
         <tr>
           <td class="memname">CSVReader::CSVReader </td>
           <td>(</td>
-          <td class="paramtype">CPS::String</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -285,12 +299,12 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>interpol_linear</b> (
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::map&lt; String, String &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>assignList</em></span>, </td>
+          <td class="paramtype">std::map&lt; <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>, <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>assignList</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Logger::Level</td>          <td class="paramname"><span class="paramname"><em>logLevel</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a></td>          <td class="paramname"><span class="paramname"><em>logLevel</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -308,22 +322,22 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>interpol_linear</b> (
         <tr>
           <td class="memname">CSVReader::CSVReader </td>
           <td>(</td>
-          <td class="paramtype">CPS::String</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">CPS::String</td>          <td class="paramname"><span class="paramname"><em>path</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a></td>          <td class="paramname"><span class="paramname"><em>path</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::map&lt; String, String &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>assignList</em></span>, </td>
+          <td class="paramtype">std::map&lt; <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>, <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>assignList</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Logger::Level</td>          <td class="paramname"><span class="paramname"><em>logLevel</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a></td>          <td class="paramname"><span class="paramname"><em>logLevel</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -347,27 +361,27 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>interpol_linear</b> (
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>start_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>start_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>time_step</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>time_step</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>end_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>end_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="#a07ab85b64411bd9e48d7a2e4a6df6b18">CSVReader::Mode</a></td>          <td class="paramname"><span class="paramname"><em>mode</em></span><span class="paramdefsep"> = </span><span class="paramdefval">CSVReader::Mode::AUTO</span>, </td>
+          <td class="paramtype"><a class="el" href="#a07ab85b64411bd9e48d7a2e4a6df6b18">CSVReader::Mode</a></td>          <td class="paramname"><span class="paramname"><em>mode</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="#a07ab85b64411bd9e48d7a2e4a6df6b18ae1f2d5134ed2543d38a0de9751cf75d9">CSVReader::Mode::AUTO</a></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">CSVReader::DataFormat</td>          <td class="paramname"><span class="paramname"><em>format</em></span><span class="paramdefsep"> = </span><span class="paramdefval">CSVReader::DataFormat::SECONDS</span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7d">CSVReader::DataFormat</a></td>          <td class="paramname"><span class="paramname"><em>format</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7daa9126caa6ef3db9cf3c35ac627ad22b5">CSVReader::DataFormat::SECONDS</a></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -378,6 +392,88 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>interpol_linear</b> (
 
 </div>
 </div>
+<a id="acd806c9dd7a269f61c6ac192d4cd0925" name="acd806c9dd7a269f61c6ac192d4cd0925"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd806c9dd7a269f61c6ac192d4cd0925">&#9670;&#160;</a></span>assignLoadProfileDP()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CPS::CSVReader::assignLoadProfileDP </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html">CPS::DP::Ph1::AvVoltageSourceInverterDQ</a> &gt; &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>loads</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>start_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>time_step</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>end_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>scale_factor</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a07ab85b64411bd9e48d7a2e4a6df6b18">CSVReader::Mode</a></td>          <td class="paramname"><span class="paramname"><em>mode</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="#a07ab85b64411bd9e48d7a2e4a6df6b18ae1f2d5134ed2543d38a0de9751cf75d9">CSVReader::Mode::AUTO</a></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7d">CSVReader::DataFormat</a></td>          <td class="paramname"><span class="paramname"><em>format</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7daa9126caa6ef3db9cf3c35ac627ad22b5">CSVReader::DataFormat::SECONDS</a></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa56a0bfd0b45a8964dd8e0fa0e8da1ff" name="aa56a0bfd0b45a8964dd8e0fa0e8da1ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa56a0bfd0b45a8964dd8e0fa0e8da1ff">&#9670;&#160;</a></span>assignPVGeneration()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CPS::CSVReader::assignPVGeneration </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_system_topology.html">SystemTopology</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>sys</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>start_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>time_step</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>end_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a07ab85b64411bd9e48d7a2e4a6df6b18">CSVReader::Mode</a></td>          <td class="paramname"><span class="paramname"><em>mode</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="#a07ab85b64411bd9e48d7a2e4a6df6b18ae1f2d5134ed2543d38a0de9751cf75d9">CSVReader::Mode::AUTO</a></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ad032428164768eabb2014c65254cc277" name="ad032428164768eabb2014c65254cc277"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad032428164768eabb2014c65254cc277">&#9670;&#160;</a></span>csv2Eigen()</h2>
 
@@ -385,9 +481,9 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>interpol_linear</b> (
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">MatrixRow CSVReader::csv2Eigen </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a98aadb044b809d0b930278d983c3312b">MatrixRow</a> CSVReader::csv2Eigen </td>
           <td>(</td>
-          <td class="paramtype">const String &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -409,7 +505,7 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>interpol_linear</b> (
         <tr>
           <td class="memname">void CPS::CSVReader::doSkipFirstRow </td>
           <td>(</td>
-          <td class="paramtype">Bool</td>          <td class="paramname"><span class="paramname"><em>value</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a></td>          <td class="paramname"><span class="paramname"><em>value</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -423,6 +519,52 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>interpol_linear</b> (
 <p>Skip first row if it has no digits at beginning. </p>
 
 <p class="definition">Definition at line <a class="el" href="_c_s_v_reader_8h_source.html#l00069">69</a> of file <a class="el" href="_c_s_v_reader_8h_source.html">CSVReader.h</a>.</p>
+
+</div>
+</div>
+<a id="a75a33af720d82201e40ac94c805c7f16" name="a75a33af720d82201e40ac94c805c7f16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75a33af720d82201e40ac94c805c7f16">&#9670;&#160;</a></span>interpol_linear() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_c_p_s_1_1_p_q_data.html">PQData</a> CPS::CSVReader::interpol_linear </td>
+          <td>(</td>
+          <td class="paramtype">std::map&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>, <a class="el" href="struct_c_p_s_1_1_p_q_data.html">PQData</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>data_PQ</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>x</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>interpolation for PQ data points </p>
+
+</div>
+</div>
+<a id="aef0021cfe52b019483de44dcb59ab48b" name="aef0021cfe52b019483de44dcb59ab48b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef0021cfe52b019483de44dcb59ab48b">&#9670;&#160;</a></span>interpol_linear() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> CPS::CSVReader::interpol_linear </td>
+          <td>(</td>
+          <td class="paramtype">std::map&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>data_wf</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>x</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>interpolation for weighting factor data points </p>
 
 </div>
 </div>
@@ -440,22 +582,22 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>interpol_linear</b> (
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>start_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>start_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>time_step</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>time_step</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>end_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>end_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">CSVReader::DataFormat</td>          <td class="paramname"><span class="paramname"><em>format</em></span><span class="paramdefsep"> = </span><span class="paramdefval">CSVReader::DataFormat::SECONDS</span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7d">CSVReader::DataFormat</a></td>          <td class="paramname"><span class="paramname"><em>format</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7daa9126caa6ef3db9cf3c35ac627ad22b5">CSVReader::DataFormat::SECONDS</a></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -479,27 +621,27 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>interpol_linear</b> (
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>start_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>start_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>time_step</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>time_step</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>end_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>end_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>scale_factor</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>scale_factor</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">CSVReader::DataFormat</td>          <td class="paramname"><span class="paramname"><em>format</em></span><span class="paramdefsep"> = </span><span class="paramdefval">CSVReader::DataFormat::SECONDS</span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7d">CSVReader::DataFormat</a></td>          <td class="paramname"><span class="paramname"><em>format</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7daa9126caa6ef3db9cf3c35ac627ad22b5">CSVReader::DataFormat::SECONDS</a></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -515,29 +657,29 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>interpol_linear</b> (
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt; Real &gt; CSVReader::readPQData </td>
+          <td class="memname">std::vector&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt; CSVReader::readPQData </td>
           <td>(</td>
           <td class="paramtype">fs::path</td>          <td class="paramname"><span class="paramname"><em>file</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>start_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>start_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>time_step</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>time_step</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>end_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>end_time</em></span><span class="paramdefsep"> = </span><span class="paramdefval">-1</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">CSVReader::DataFormat</td>          <td class="paramname"><span class="paramname"><em>format</em></span><span class="paramdefsep"> = </span><span class="paramdefval">CSVReader::DataFormat::SECONDS</span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7d">CSVReader::DataFormat</a></td>          <td class="paramname"><span class="paramname"><em>format</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="#a71c248f331cd2c1fd63db4f171b6ea7daa9126caa6ef3db9cf3c35ac627ad22b5">CSVReader::DataFormat::SECONDS</a></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -553,9 +695,9 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>interpol_linear</b> (
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">CPS::Real CSVReader::time_format_convert </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a> CSVReader::time_format_convert </td>
           <td>(</td>
-          <td class="paramtype">const String &amp;</td>          <td class="paramname"><span class="paramname"><em>time</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>time</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -571,10 +713,13 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><b>interpol_linear</b> (
 <li>/__w/dpsim/dpsim/dpsim-models/src/<a class="el" href="_c_s_v_reader_8cpp_source.html">CSVReader.cpp</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_c_p_s.html">CPS</a></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CSVReader</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

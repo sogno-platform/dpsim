@@ -236,7 +236,7 @@ var sectionId = 'dynsection-1';
 <g id="Node000008" class="node">
 <title>Node8</title>
 <g id="a_Node000008"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="280.12,-275.75 165.12,-275.75 165.12,-225 280.12,-225 280.12,-275.75"/>
+<polygon fill="white" stroke="#666666" points="280.12,-275.75 165.12,-275.75 165.12,-225 280.12,-225 280.12,-275.75"/>
 <text text-anchor="start" x="173.12" y="-262.25" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="173.12" y="-248" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="222.62" y="-233.75" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; String &gt; &gt;</text>
@@ -286,7 +286,7 @@ var sectionId = 'dynsection-1';
 <g id="Node000010" class="node">
 <title>Node10</title>
 <g id="a_Node000010"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="115,-50.75 0,-50.75 0,0 115,0 115,-50.75"/>
+<polygon fill="white" stroke="#666666" points="115,-50.75 0,-50.75 0,0 115,0 115,-50.75"/>
 <text text-anchor="start" x="8" y="-37.25" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="8" y="-23" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="57.5" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; T &gt; &gt;</text>
@@ -317,7 +317,7 @@ var sectionId = 'dynsection-1';
 <g id="Node000012" class="node">
 <title>Node12</title>
 <g id="a_Node000012"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="293.25,-344.75 152,-344.75 152,-294 293.25,-294 293.25,-344.75"/>
+<polygon fill="white" stroke="#666666" points="293.25,-344.75 152,-344.75 152,-294 293.25,-294 293.25,-344.75"/>
 <text text-anchor="start" x="160" y="-331.25" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="160" y="-317" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="222.62" y="-302.75" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; MatrixVar&lt; VarType &gt; &gt; &gt;</text>
@@ -365,7 +365,7 @@ var sectionId = 'dynsection-1';
 <g id="Node000015" class="node">
 <title>Node15</title>
 <g id="a_Node000015"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="280.12,-128.75 165.12,-128.75 165.12,-78 280.12,-78 280.12,-128.75"/>
+<polygon fill="white" stroke="#666666" points="280.12,-128.75 165.12,-128.75 165.12,-78 280.12,-78 280.12,-128.75"/>
 <text text-anchor="start" x="173.12" y="-115.25" font-family="Helvetica,sans-Serif" font-size="10.00">std::enable_shared</text>
 <text text-anchor="start" x="173.12" y="-101" font-family="Helvetica,sans-Serif" font-size="10.00">_from_this&lt; Attribute</text>
 <text text-anchor="middle" x="222.62" y="-86.75" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Matrix &gt; &gt;</text>

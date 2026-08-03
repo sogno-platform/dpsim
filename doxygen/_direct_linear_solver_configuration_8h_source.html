@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_direct_linear_solver_configuration_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">DirectLinearSolverConfiguration.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_direct_linear_solver_configuration_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">*                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">*</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">* This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -102,73 +110,111 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;dpsim/Config.h&gt;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;dpsim/Definitions.h&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;<a class="code" href="dpsim_2include_2dpsim_2_definitions_8h.html">dpsim/Definitions.h</a>&gt;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_d_psim.html">DPsim</a> {</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment">// Define method to scale the input matrix</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">enum class</span> SCALING_METHOD { NO_SCALING, SUM_SCALING, MAX_SCALING };</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408a6fcfc46a3bb86c91718223faa150eee3">   16</a></span><span class="keyword">enum class</span> <a class="code hl_enumeration" href="namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408">SCALING_METHOD</a> { <a class="code hl_enumvalue" href="namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408acea7253c96ba812305c09a9530842ffd">NO_SCALING</a>, <a class="code hl_enumvalue" href="namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408ab858a94fe00a0f083a74e2b1df8c951f">SUM_SCALING</a>, <a class="code hl_enumvalue" href="namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408a6fcfc46a3bb86c91718223faa150eee3">MAX_SCALING</a> };</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment">// Define preordering to reduce fill-in</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">enum class</span> FILL_IN_REDUCTION_METHOD {</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  AMD,</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  AMD_NV, <span class="comment">// AMD ordering with non-varying preference</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  AMD_RA, <span class="comment">// AMD ordering with right arranging of varying entries</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  COLAMD</div>
+<div class="foldopen" id="foldopen00019" data-start="{" data-end="};">
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74">   19</a></span><span class="keyword">enum class</span> <a class="code hl_enumeration" href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74">FILL_IN_REDUCTION_METHOD</a> {</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74a48af4341f745163f945fa838eeabb062">   20</a></span>  <a class="code hl_enumvalue" href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74a48af4341f745163f945fa838eeabb062">AMD</a>,</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74a8774ee50e1ce95e2a7fa4ed950def2a0">   21</a></span>  <a class="code hl_enumvalue" href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74a8774ee50e1ce95e2a7fa4ed950def2a0">AMD_NV</a>, <span class="comment">// AMD ordering with non-varying preference</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74a4c9734327c294ff2dd891696d10e2d12">   22</a></span>  <a class="code hl_enumvalue" href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74a4c9734327c294ff2dd891696d10e2d12">AMD_RA</a>, <span class="comment">// AMD ordering with right arranging of varying entries</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74a7f1645ee49907cca43e375548d257a77">   23</a></span>  <a class="code hl_enumvalue" href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74a7f1645ee49907cca43e375548d257a77">COLAMD</a></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>};</div>
+</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment">// Define partial refactorization method, if applicable</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">enum class</span> PARTIAL_REFACTORIZATION_METHOD {</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  NO_PARTIAL_REFACTORIZATION,</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  FACTORIZATION_PATH,</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  REFACTORIZATION_RESTART</div>
+<div class="foldopen" id="foldopen00027" data-start="{" data-end="};">
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482a">   27</a></span><span class="keyword">enum class</span> <a class="code hl_enumeration" href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482a">PARTIAL_REFACTORIZATION_METHOD</a> {</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482aa51aefb8422e44dbd3890332a0ed58251">   28</a></span>  <a class="code hl_enumvalue" href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482aa51aefb8422e44dbd3890332a0ed58251">NO_PARTIAL_REFACTORIZATION</a>,</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482aa0f1b121c7e25301bef9f408f3069e239">   29</a></span>  <a class="code hl_enumvalue" href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482aa0f1b121c7e25301bef9f408f3069e239">FACTORIZATION_PATH</a>,</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482aaefd5b98938a1793a1c26e331b1e118c0">   30</a></span>  <a class="code hl_enumvalue" href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482aaefd5b98938a1793a1c26e331b1e118c0">REFACTORIZATION_RESTART</a></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>};</div>
+</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="comment">// Define BTF usage, if applicable</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">enum class</span> USE_BTF { NO_BTF, DO_BTF };</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="namespace_d_psim.html#a69fee78420eca0273fbc1bb935a999ada9bf90ce2a4f39a9fc944585242cda030">   34</a></span><span class="keyword">enum class</span> <a class="code hl_enumeration" href="namespace_d_psim.html#a69fee78420eca0273fbc1bb935a999ad">USE_BTF</a> { <a class="code hl_enumvalue" href="namespace_d_psim.html#a69fee78420eca0273fbc1bb935a999adabf32c05a299b622cab394809ca4102d9">NO_BTF</a>, <a class="code hl_enumvalue" href="namespace_d_psim.html#a69fee78420eca0273fbc1bb935a999ada9bf90ce2a4f39a9fc944585242cda030">DO_BTF</a> };</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
 <div class="foldopen" id="foldopen00036" data-start="{" data-end="};">
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_direct_linear_solver_configuration.html">   36</a></span><span class="keyword">class </span>DirectLinearSolverConfiguration {</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  SCALING_METHOD mScalingMethod;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  FILL_IN_REDUCTION_METHOD mFillInReductionMethod;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  PARTIAL_REFACTORIZATION_METHOD mPartialRefactorizationMethod;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  USE_BTF mUseBTF;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_direct_linear_solver_configuration.html">   36</a></span><span class="keyword">class </span><a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver_configuration.html#a3b0479cb3470551a596f8580d4e7d912">DirectLinearSolverConfiguration</a> {</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <a class="code hl_enumeration" href="namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408">SCALING_METHOD</a> mScalingMethod;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <a class="code hl_enumeration" href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74">FILL_IN_REDUCTION_METHOD</a> mFillInReductionMethod;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <a class="code hl_enumeration" href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482a">PARTIAL_REFACTORIZATION_METHOD</a> mPartialRefactorizationMethod;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <a class="code hl_enumeration" href="namespace_d_psim.html#a69fee78420eca0273fbc1bb935a999ad">USE_BTF</a> mUseBTF;</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  DirectLinearSolverConfiguration();</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver_configuration.html#a3b0479cb3470551a596f8580d4e7d912">DirectLinearSolverConfiguration</a>();</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keywordtype">void</span> setFillInReductionMethod(FILL_IN_REDUCTION_METHOD fillInReductionMethod);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver_configuration.html#a2951b62d10e6195eb08235ccd0e1c9a0">setFillInReductionMethod</a>(<a class="code hl_enumeration" href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74">FILL_IN_REDUCTION_METHOD</a> fillInReductionMethod);</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keywordtype">void</span> setScalingMethod(SCALING_METHOD scalingMethod);</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver_configuration.html#a066fca77a63b150e0449d7e653075bd7">setScalingMethod</a>(<a class="code hl_enumeration" href="namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408">SCALING_METHOD</a> scalingMethod);</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keywordtype">void</span> setPartialRefactorizationMethod(</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>      PARTIAL_REFACTORIZATION_METHOD partialRefactorizationMethod);</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver_configuration.html#a10239dcf1b13c5ac7eb92294c2fc61a3">setPartialRefactorizationMethod</a>(</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>      <a class="code hl_enumeration" href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482a">PARTIAL_REFACTORIZATION_METHOD</a> partialRefactorizationMethod);</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <span class="keywordtype">void</span> setBTF(USE_BTF useBTF);</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver_configuration.html#a81e1e69ecf63bbc6fef256cd8ee06d06">setBTF</a>(<a class="code hl_enumeration" href="namespace_d_psim.html#a69fee78420eca0273fbc1bb935a999ad">USE_BTF</a> useBTF);</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  SCALING_METHOD getScalingMethod() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  <a class="code hl_enumeration" href="namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408">SCALING_METHOD</a> <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver_configuration.html#a9690061c0f0aad4de91ef6b693d29c6f">getScalingMethod</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  FILL_IN_REDUCTION_METHOD getFillInReductionMethod() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <a class="code hl_enumeration" href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74">FILL_IN_REDUCTION_METHOD</a> <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver_configuration.html#afd06e461c13870ad0d2950a208147e23">getFillInReductionMethod</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  PARTIAL_REFACTORIZATION_METHOD getPartialRefactorizationMethod() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  <a class="code hl_enumeration" href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482a">PARTIAL_REFACTORIZATION_METHOD</a> <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver_configuration.html#a8634bad2f85b0543856e6c39d87433a0">getPartialRefactorizationMethod</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  USE_BTF getBTF() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_direct_linear_solver_configuration.html#a7550e603f8fb3e36e954bef2fe39073f">   60</a></span>  <a class="code hl_enumeration" href="namespace_d_psim.html#a69fee78420eca0273fbc1bb935a999ad">USE_BTF</a> <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver_configuration.html#a7550e603f8fb3e36e954bef2fe39073f">getBTF</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  String getScalingMethodString() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver_configuration.html#a6b788b711029111e94227c5db764f317">getScalingMethodString</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  String getFillInReductionMethodString() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver_configuration.html#a3745e829a81e57fe5b195252bd5604f5">getFillInReductionMethodString</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  String getPartialRefactorizationMethodString() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver_configuration.html#a68301741ca3dd9218164b5b94cb98b88">getPartialRefactorizationMethodString</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  String getBTFString() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> <a class="code hl_function" href="class_d_psim_1_1_direct_linear_solver_configuration.html#a322be56aa2ca4c3305395c5b8fe1d5d3">getBTFString</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>};</div>
 </div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>} <span class="comment">// namespace DPsim</span></div>
+<div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_configuration_html_a066fca77a63b150e0449d7e653075bd7"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver_configuration.html#a066fca77a63b150e0449d7e653075bd7">DPsim::DirectLinearSolverConfiguration::setScalingMethod</a></div><div class="ttdeci">void setScalingMethod(SCALING_METHOD scalingMethod)</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8cpp_source.html#l00027">DirectLinearSolverConfiguration.cpp:27</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_configuration_html_a10239dcf1b13c5ac7eb92294c2fc61a3"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver_configuration.html#a10239dcf1b13c5ac7eb92294c2fc61a3">DPsim::DirectLinearSolverConfiguration::setPartialRefactorizationMethod</a></div><div class="ttdeci">void setPartialRefactorizationMethod(PARTIAL_REFACTORIZATION_METHOD partialRefactorizationMethod)</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8cpp_source.html#l00032">DirectLinearSolverConfiguration.cpp:32</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_configuration_html_a2951b62d10e6195eb08235ccd0e1c9a0"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver_configuration.html#a2951b62d10e6195eb08235ccd0e1c9a0">DPsim::DirectLinearSolverConfiguration::setFillInReductionMethod</a></div><div class="ttdeci">void setFillInReductionMethod(FILL_IN_REDUCTION_METHOD fillInReductionMethod)</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8cpp_source.html#l00022">DirectLinearSolverConfiguration.cpp:22</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_configuration_html_a322be56aa2ca4c3305395c5b8fe1d5d3"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver_configuration.html#a322be56aa2ca4c3305395c5b8fe1d5d3">DPsim::DirectLinearSolverConfiguration::getBTFString</a></div><div class="ttdeci">String getBTFString() const</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8cpp_source.html#l00103">DirectLinearSolverConfiguration.cpp:103</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_configuration_html_a3745e829a81e57fe5b195252bd5604f5"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver_configuration.html#a3745e829a81e57fe5b195252bd5604f5">DPsim::DirectLinearSolverConfiguration::getFillInReductionMethodString</a></div><div class="ttdeci">String getFillInReductionMethodString() const</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8cpp_source.html#l00074">DirectLinearSolverConfiguration.cpp:74</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_configuration_html_a3b0479cb3470551a596f8580d4e7d912"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver_configuration.html#a3b0479cb3470551a596f8580d4e7d912">DPsim::DirectLinearSolverConfiguration::DirectLinearSolverConfiguration</a></div><div class="ttdeci">DirectLinearSolverConfiguration()</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8cpp_source.html#l00014">DirectLinearSolverConfiguration.cpp:14</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_configuration_html_a68301741ca3dd9218164b5b94cb98b88"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver_configuration.html#a68301741ca3dd9218164b5b94cb98b88">DPsim::DirectLinearSolverConfiguration::getPartialRefactorizationMethodString</a></div><div class="ttdeci">String getPartialRefactorizationMethodString() const</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8cpp_source.html#l00090">DirectLinearSolverConfiguration.cpp:90</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_configuration_html_a6b788b711029111e94227c5db764f317"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver_configuration.html#a6b788b711029111e94227c5db764f317">DPsim::DirectLinearSolverConfiguration::getScalingMethodString</a></div><div class="ttdeci">String getScalingMethodString() const</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8cpp_source.html#l00061">DirectLinearSolverConfiguration.cpp:61</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_configuration_html_a7550e603f8fb3e36e954bef2fe39073f"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver_configuration.html#a7550e603f8fb3e36e954bef2fe39073f">DPsim::DirectLinearSolverConfiguration::getBTF</a></div><div class="ttdeci">USE_BTF getBTF() const</div></div>
+<div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_configuration_html_a81e1e69ecf63bbc6fef256cd8ee06d06"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver_configuration.html#a81e1e69ecf63bbc6fef256cd8ee06d06">DPsim::DirectLinearSolverConfiguration::setBTF</a></div><div class="ttdeci">void setBTF(USE_BTF useBTF)</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8cpp_source.html#l00037">DirectLinearSolverConfiguration.cpp:37</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_configuration_html_a8634bad2f85b0543856e6c39d87433a0"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver_configuration.html#a8634bad2f85b0543856e6c39d87433a0">DPsim::DirectLinearSolverConfiguration::getPartialRefactorizationMethod</a></div><div class="ttdeci">PARTIAL_REFACTORIZATION_METHOD getPartialRefactorizationMethod() const</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8cpp_source.html#l00051">DirectLinearSolverConfiguration.cpp:51</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_configuration_html_a9690061c0f0aad4de91ef6b693d29c6f"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver_configuration.html#a9690061c0f0aad4de91ef6b693d29c6f">DPsim::DirectLinearSolverConfiguration::getScalingMethod</a></div><div class="ttdeci">SCALING_METHOD getScalingMethod() const</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8cpp_source.html#l00041">DirectLinearSolverConfiguration.cpp:41</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_configuration_html_afd06e461c13870ad0d2950a208147e23"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver_configuration.html#afd06e461c13870ad0d2950a208147e23">DPsim::DirectLinearSolverConfiguration::getFillInReductionMethod</a></div><div class="ttdeci">FILL_IN_REDUCTION_METHOD getFillInReductionMethod() const</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8cpp_source.html#l00046">DirectLinearSolverConfiguration.cpp:46</a></div></div>
+<div class="ttc" id="adpsim_2include_2dpsim_2_definitions_8h_html"><div class="ttname"><a href="dpsim_2include_2dpsim_2_definitions_8h.html">Definitions.h</a></div></div>
 <div class="ttc" id="anamespace_d_psim_html"><div class="ttname"><a href="namespace_d_psim.html">DPsim</a></div><div class="ttdef"><b>Definition</b> <a href="_dense_l_u_adapter_8cpp_source.html#l00013">DenseLUAdapter.cpp:13</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a1a29b9e3bd92795ee5dafd0697248408"><div class="ttname"><a href="namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408">DPsim::SCALING_METHOD</a></div><div class="ttdeci">SCALING_METHOD</div><div class="ttdef"><b>Definition</b> <a href="#l00016">DirectLinearSolverConfiguration.h:16</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a1a29b9e3bd92795ee5dafd0697248408a6fcfc46a3bb86c91718223faa150eee3"><div class="ttname"><a href="namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408a6fcfc46a3bb86c91718223faa150eee3">DPsim::SCALING_METHOD::MAX_SCALING</a></div><div class="ttdeci">@ MAX_SCALING</div><div class="ttdef"><b>Definition</b> <a href="#l00016">DirectLinearSolverConfiguration.h:16</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a1a29b9e3bd92795ee5dafd0697248408ab858a94fe00a0f083a74e2b1df8c951f"><div class="ttname"><a href="namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408ab858a94fe00a0f083a74e2b1df8c951f">DPsim::SCALING_METHOD::SUM_SCALING</a></div><div class="ttdeci">@ SUM_SCALING</div><div class="ttdef"><b>Definition</b> <a href="#l00016">DirectLinearSolverConfiguration.h:16</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a1a29b9e3bd92795ee5dafd0697248408acea7253c96ba812305c09a9530842ffd"><div class="ttname"><a href="namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408acea7253c96ba812305c09a9530842ffd">DPsim::SCALING_METHOD::NO_SCALING</a></div><div class="ttdeci">@ NO_SCALING</div><div class="ttdef"><b>Definition</b> <a href="#l00016">DirectLinearSolverConfiguration.h:16</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a62ee66cb7d49fe8ab3480d0d0146482a"><div class="ttname"><a href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482a">DPsim::PARTIAL_REFACTORIZATION_METHOD</a></div><div class="ttdeci">PARTIAL_REFACTORIZATION_METHOD</div><div class="ttdef"><b>Definition</b> <a href="#l00027">DirectLinearSolverConfiguration.h:27</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a62ee66cb7d49fe8ab3480d0d0146482aa0f1b121c7e25301bef9f408f3069e239"><div class="ttname"><a href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482aa0f1b121c7e25301bef9f408f3069e239">DPsim::PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH</a></div><div class="ttdeci">@ FACTORIZATION_PATH</div><div class="ttdef"><b>Definition</b> <a href="#l00029">DirectLinearSolverConfiguration.h:29</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a62ee66cb7d49fe8ab3480d0d0146482aa51aefb8422e44dbd3890332a0ed58251"><div class="ttname"><a href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482aa51aefb8422e44dbd3890332a0ed58251">DPsim::PARTIAL_REFACTORIZATION_METHOD::NO_PARTIAL_REFACTORIZATION</a></div><div class="ttdeci">@ NO_PARTIAL_REFACTORIZATION</div><div class="ttdef"><b>Definition</b> <a href="#l00028">DirectLinearSolverConfiguration.h:28</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a62ee66cb7d49fe8ab3480d0d0146482aaefd5b98938a1793a1c26e331b1e118c0"><div class="ttname"><a href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482aaefd5b98938a1793a1c26e331b1e118c0">DPsim::PARTIAL_REFACTORIZATION_METHOD::REFACTORIZATION_RESTART</a></div><div class="ttdeci">@ REFACTORIZATION_RESTART</div><div class="ttdef"><b>Definition</b> <a href="#l00030">DirectLinearSolverConfiguration.h:30</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a66e48a625a26fd3c1d2198148f9d59e9"><div class="ttname"><a href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">DPsim::String</a></div><div class="ttdeci">CPS::String String</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00020">Definitions.h:20</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a69fee78420eca0273fbc1bb935a999ad"><div class="ttname"><a href="namespace_d_psim.html#a69fee78420eca0273fbc1bb935a999ad">DPsim::USE_BTF</a></div><div class="ttdeci">USE_BTF</div><div class="ttdef"><b>Definition</b> <a href="#l00034">DirectLinearSolverConfiguration.h:34</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a69fee78420eca0273fbc1bb935a999ada9bf90ce2a4f39a9fc944585242cda030"><div class="ttname"><a href="namespace_d_psim.html#a69fee78420eca0273fbc1bb935a999ada9bf90ce2a4f39a9fc944585242cda030">DPsim::USE_BTF::DO_BTF</a></div><div class="ttdeci">@ DO_BTF</div><div class="ttdef"><b>Definition</b> <a href="#l00034">DirectLinearSolverConfiguration.h:34</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a69fee78420eca0273fbc1bb935a999adabf32c05a299b622cab394809ca4102d9"><div class="ttname"><a href="namespace_d_psim.html#a69fee78420eca0273fbc1bb935a999adabf32c05a299b622cab394809ca4102d9">DPsim::USE_BTF::NO_BTF</a></div><div class="ttdeci">@ NO_BTF</div><div class="ttdef"><b>Definition</b> <a href="#l00034">DirectLinearSolverConfiguration.h:34</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_afb1a2956e105f204d9d5322e4800df74"><div class="ttname"><a href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74">DPsim::FILL_IN_REDUCTION_METHOD</a></div><div class="ttdeci">FILL_IN_REDUCTION_METHOD</div><div class="ttdef"><b>Definition</b> <a href="#l00019">DirectLinearSolverConfiguration.h:19</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_afb1a2956e105f204d9d5322e4800df74a48af4341f745163f945fa838eeabb062"><div class="ttname"><a href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74a48af4341f745163f945fa838eeabb062">DPsim::FILL_IN_REDUCTION_METHOD::AMD</a></div><div class="ttdeci">@ AMD</div><div class="ttdef"><b>Definition</b> <a href="#l00020">DirectLinearSolverConfiguration.h:20</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_afb1a2956e105f204d9d5322e4800df74a4c9734327c294ff2dd891696d10e2d12"><div class="ttname"><a href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74a4c9734327c294ff2dd891696d10e2d12">DPsim::FILL_IN_REDUCTION_METHOD::AMD_RA</a></div><div class="ttdeci">@ AMD_RA</div><div class="ttdef"><b>Definition</b> <a href="#l00022">DirectLinearSolverConfiguration.h:22</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_afb1a2956e105f204d9d5322e4800df74a7f1645ee49907cca43e375548d257a77"><div class="ttname"><a href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74a7f1645ee49907cca43e375548d257a77">DPsim::FILL_IN_REDUCTION_METHOD::COLAMD</a></div><div class="ttdeci">@ COLAMD</div><div class="ttdef"><b>Definition</b> <a href="#l00023">DirectLinearSolverConfiguration.h:23</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_afb1a2956e105f204d9d5322e4800df74a8774ee50e1ce95e2a7fa4ed950def2a0"><div class="ttname"><a href="namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74a8774ee50e1ce95e2a7fa4ed950def2a0">DPsim::FILL_IN_REDUCTION_METHOD::AMD_NV</a></div><div class="ttdeci">@ AMD_NV</div><div class="ttdef"><b>Definition</b> <a href="#l00021">DirectLinearSolverConfiguration.h:21</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li><li class="navelem"><a class="el" href="_direct_linear_solver_configuration_8h.html">DirectLinearSolverConfiguration.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

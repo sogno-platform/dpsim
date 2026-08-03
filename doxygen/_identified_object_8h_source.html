@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_identified_object_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">IdentifiedObject.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_identified_object_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -101,73 +109,101 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;dpsim-models/AttributeList.h&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;<a class="code" href="_attribute_list_8h.html">dpsim-models/AttributeList.h</a>&gt;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;dpsim-models/Config.h&gt;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;dpsim-models/Definitions.h&gt;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;dpsim-models/Utils.h&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;<a class="code" href="dpsim-models_2include_2dpsim-models_2_definitions_8h.html">dpsim-models/Definitions.h</a>&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;<a class="code" href="dpsim-models_2include_2dpsim-models_2_utils_8h.html">dpsim-models/Utils.h</a>&gt;</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">namespace </span>CPS {</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_c_p_s.html">CPS</a> {</div>
 <div class="foldopen" id="foldopen00019" data-start="{" data-end="};">
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html">   19</a></span><span class="keyword">class </span>IdentifiedObject {</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html">   19</a></span><span class="keyword">class </span><a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#af266e0a6fb154503432cf5361d70584e">IdentifiedObject</a> {</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html#af7497f9b94a45040b1601ac58f5e3d97">   22</a></span>  AttributeList::Ptr <a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#af7497f9b94a45040b1601ac58f5e3d97">mAttributes</a> = AttributeList::make();</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html#af7497f9b94a45040b1601ac58f5e3d97">   22</a></span>  <a class="code hl_typedef" href="class_c_p_s_1_1_attribute_list.html#a49ff97075315610f2b8c923084bcd7d2">AttributeList::Ptr</a> <a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#af7497f9b94a45040b1601ac58f5e3d97">mAttributes</a> = <a class="code hl_function" href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">AttributeList::make</a>();</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html#a13661eab6b670e4a5a3aa5777f8fd5d0">   26</a></span>  <span class="keyword">const</span> Attribute&lt;String&gt;::Ptr <a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#a13661eab6b670e4a5a3aa5777f8fd5d0">mName</a>;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html#ad143c517fdb9d0deca573f15169e97e8">   28</a></span>  <span class="keyword">const</span> Attribute&lt;String&gt;::Ptr <a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#ad143c517fdb9d0deca573f15169e97e8">mUID</a>;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html#a13661eab6b670e4a5a3aa5777f8fd5d0">   26</a></span>  <span class="keyword">const</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;String&gt;::Ptr</a> <a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#a13661eab6b670e4a5a3aa5777f8fd5d0">mName</a>;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html#ad143c517fdb9d0deca573f15169e97e8">   28</a></span>  <span class="keyword">const</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;String&gt;::Ptr</a> <a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#ad143c517fdb9d0deca573f15169e97e8">mUID</a>;</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <span class="keyword">typedef</span> std::shared_ptr&lt;IdentifiedObject&gt; Ptr;</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <span class="keyword">typedef</span> std::vector&lt;Ptr&gt; List;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html#a45edcbbe8a23ba53d17473f08d7adf95">   30</a></span>  <span class="keyword">typedef</span> std::shared_ptr&lt;IdentifiedObject&gt; <a class="code hl_typedef" href="class_c_p_s_1_1_identified_object.html#a45edcbbe8a23ba53d17473f08d7adf95">Ptr</a>;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html#a981a607f5a619bbc40c916fcf7048a24">   31</a></span>  <span class="keyword">typedef</span> std::vector&lt;Ptr&gt; <a class="code hl_typedef" href="class_c_p_s_1_1_identified_object.html#a981a607f5a619bbc40c916fcf7048a24">List</a>;</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  IdentifiedObject() {}</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html#af266e0a6fb154503432cf5361d70584e">   33</a></span>  <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#af266e0a6fb154503432cf5361d70584e">IdentifiedObject</a>() {}</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <a class="code hl_class" href="class_c_p_s_1_1_identified_object.html">IdentifiedObject</a>(<span class="keyword">const</span> String &amp;<a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <span class="keyword">const</span> String &amp;name)</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>      : <a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#a13661eab6b670e4a5a3aa5777f8fd5d0">mName</a>(<a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#af7497f9b94a45040b1601ac58f5e3d97">mAttributes</a>-&gt;create(<span class="stringliteral">&quot;name&quot;</span>, name)),</div>
+<div class="foldopen" id="foldopen00035" data-start="{" data-end="}">
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html#a48494cd9857a6df115d6ae5aa0073d5d">   35</a></span>  <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a48494cd9857a6df115d6ae5aa0073d5d">IdentifiedObject</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;<a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;<a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>)</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>      : <a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#a13661eab6b670e4a5a3aa5777f8fd5d0">mName</a>(<a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#af7497f9b94a45040b1601ac58f5e3d97">mAttributes</a>-&gt;create(<span class="stringliteral">&quot;name&quot;</span>, <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>)),</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#ad143c517fdb9d0deca573f15169e97e8">mUID</a>(<a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#af7497f9b94a45040b1601ac58f5e3d97">mAttributes</a>-&gt;create(<span class="stringliteral">&quot;uid&quot;</span>, <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>)) {}</div>
+</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <span class="keyword">explicit</span> IdentifiedObject(<span class="keyword">const</span> String &amp;name)</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>      : IdentifiedObject(name, name) {}</div>
+<div class="foldopen" id="foldopen00039" data-start="{" data-end="}">
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html#ae27a37f7381c0923d50fd2d73382dea6">   39</a></span>  <span class="keyword">explicit</span> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#ae27a37f7381c0923d50fd2d73382dea6">IdentifiedObject</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;<a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>)</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>      : <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#af266e0a6fb154503432cf5361d70584e">IdentifiedObject</a>(<a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>) {}</div>
+</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keyword">virtual</span> ~IdentifiedObject() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html#a4aa0b3df2d317b36e7627ac1deefe395">   42</a></span>  <span class="keyword">virtual</span> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a4aa0b3df2d317b36e7627ac1deefe395">~IdentifiedObject</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span></div>
 <div class="foldopen" id="foldopen00045" data-start="{" data-end="}">
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html#acd676ba54ba38172e56e1b492bfe54ad">   45</a></span>  AttributeBase::Ptr <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#acd676ba54ba38172e56e1b492bfe54ad">attribute</a>(<span class="keyword">const</span> String &amp;name)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#af7497f9b94a45040b1601ac58f5e3d97">mAttributes</a>-&gt;attribute(name);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html#acd676ba54ba38172e56e1b492bfe54ad">   45</a></span>  <a class="code hl_typedef" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">AttributeBase::Ptr</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#acd676ba54ba38172e56e1b492bfe54ad">attribute</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;<a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#af7497f9b94a45040b1601ac58f5e3d97">mAttributes</a>-&gt;attribute(<a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>);</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  }</div>
 </div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span></div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="foldopen" id="foldopen00051" data-start="{" data-end="}">
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html#a3e10f199c595e0699725ad2cd4391c2c">   51</a></span>  <span class="keyword">typename</span> Attribute&lt;T&gt;::Ptr <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a3e10f199c595e0699725ad2cd4391c2c">attributeTyped</a>(<span class="keyword">const</span> String &amp;name)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#af7497f9b94a45040b1601ac58f5e3d97">mAttributes</a>-&gt;attributeTyped&lt;T&gt;(name);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html#a3e10f199c595e0699725ad2cd4391c2c">   51</a></span>  <span class="keyword">typename</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;T&gt;::Ptr</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a3e10f199c595e0699725ad2cd4391c2c">attributeTyped</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &amp;<a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#af7497f9b94a45040b1601ac58f5e3d97">mAttributes</a>-&gt;attributeTyped&lt;T&gt;(<a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>);</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  }</div>
 </div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  <span class="keyword">const</span> AttributeBase::Map &amp;attributes()<span class="keyword"> const </span>{</div>
+<div class="foldopen" id="foldopen00055" data-start="{" data-end="}">
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html#a23d3f8e780f080b4049b9e5be0662957">   55</a></span>  <span class="keyword">const</span> <a class="code hl_typedef" href="class_c_p_s_1_1_attribute_base.html#afe3836eb4d78517b454cd0a1d1aabd1e">AttributeBase::Map</a> &amp;<a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a23d3f8e780f080b4049b9e5be0662957">attributes</a>()<span class="keyword"> const </span>{</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#af7497f9b94a45040b1601ac58f5e3d97">mAttributes</a>-&gt;attributes();</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  };</div>
+</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  String name() { <span class="keywordflow">return</span> **<a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#a13661eab6b670e4a5a3aa5777f8fd5d0">mName</a>; }</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">   61</a></span>  String <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>() { <span class="keywordflow">return</span> **<a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#ad143c517fdb9d0deca573f15169e97e8">mUID</a>; }</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html#a9a95f413fe2dd50b6e2a0369bda063e6">   63</a></span>  String <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a9a95f413fe2dd50b6e2a0369bda063e6">type</a>() { <span class="keywordflow">return</span> Utils::className(<span class="keyword">this</span>); }</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">   59</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>() { <span class="keywordflow">return</span> **<a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#a13661eab6b670e4a5a3aa5777f8fd5d0">mName</a>; }</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">   61</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>() { <span class="keywordflow">return</span> **<a class="code hl_variable" href="class_c_p_s_1_1_identified_object.html#ad143c517fdb9d0deca573f15169e97e8">mUID</a>; }</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html#a9a95f413fe2dd50b6e2a0369bda063e6">   63</a></span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a9a95f413fe2dd50b6e2a0369bda063e6">type</a>() { <span class="keywordflow">return</span> <a class="code hl_function" href="namespace_c_p_s_1_1_utils.html#a4dc1810e52a17e2e342d3d8e830e0fd1">Utils::className</a>(<span class="keyword">this</span>); }</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <span class="comment">// Returns a description of the object</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  <span class="keyword">virtual</span> String description() { <span class="keywordflow">return</span> <span class="stringliteral">&quot;&quot;</span>; }</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_identified_object.html#ae08800e327db6af9a7249cabefe4ba2f">   65</a></span>  <span class="keyword">virtual</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#ae08800e327db6af9a7249cabefe4ba2f">description</a>() { <span class="keywordflow">return</span> <span class="stringliteral">&quot;&quot;</span>; }</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>};</div>
 </div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>} <span class="comment">// namespace CPS</span></div>
-<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html">CPS::IdentifiedObject</a></div><div class="ttdef"><b>Definition</b> <a href="#l00019">IdentifiedObject.h:19</a></div></div>
+<div class="ttc" id="a_attribute_list_8h_html"><div class="ttname"><a href="_attribute_list_8h.html">AttributeList.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_base_html_af06cf61c74c46ce667c58f124d69a679"><div class="ttname"><a href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">CPS::AttributeBase::Ptr</a></div><div class="ttdeci">AttributePointer&lt; AttributeBase &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00122">Attribute.h:122</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_base_html_afe3836eb4d78517b454cd0a1d1aabd1e"><div class="ttname"><a href="class_c_p_s_1_1_attribute_base.html#afe3836eb4d78517b454cd0a1d1aabd1e">CPS::AttributeBase::Map</a></div><div class="ttdeci">std::map&lt; String, Ptr &gt; Map</div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00125">Attribute.h:125</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_ad552c848f780007d59f489540fa7e4d6"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">CPS::Attribute::Ptr</a></div><div class="ttdeci">AttributePointer&lt; Attribute&lt; T &gt; &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00250">Attribute.h:250</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_list_html_a49ff97075315610f2b8c923084bcd7d2"><div class="ttname"><a href="class_c_p_s_1_1_attribute_list.html#a49ff97075315610f2b8c923084bcd7d2">CPS::AttributeList::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; AttributeList &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_attribute_list_8h_source.html#l00026">AttributeList.h:26</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a13661eab6b670e4a5a3aa5777f8fd5d0"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a13661eab6b670e4a5a3aa5777f8fd5d0">CPS::IdentifiedObject::mName</a></div><div class="ttdeci">const Attribute&lt; String &gt;::Ptr mName</div><div class="ttdoc">Human readable name.</div><div class="ttdef"><b>Definition</b> <a href="#l00026">IdentifiedObject.h:26</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a23d3f8e780f080b4049b9e5be0662957"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a23d3f8e780f080b4049b9e5be0662957">CPS::IdentifiedObject::attributes</a></div><div class="ttdeci">const AttributeBase::Map &amp; attributes() const</div><div class="ttdef"><b>Definition</b> <a href="#l00055">IdentifiedObject.h:55</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a38b8318459b1651160029263eff6ca47"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">CPS::IdentifiedObject::name</a></div><div class="ttdeci">String name()</div><div class="ttdef"><b>Definition</b> <a href="#l00059">IdentifiedObject.h:59</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a3e10f199c595e0699725ad2cd4391c2c"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a3e10f199c595e0699725ad2cd4391c2c">CPS::IdentifiedObject::attributeTyped</a></div><div class="ttdeci">Attribute&lt; T &gt;::Ptr attributeTyped(const String &amp;name) const</div><div class="ttdoc">Return pointer to an attribute.</div><div class="ttdef"><b>Definition</b> <a href="#l00051">IdentifiedObject.h:51</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a45edcbbe8a23ba53d17473f08d7adf95"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a45edcbbe8a23ba53d17473f08d7adf95">CPS::IdentifiedObject::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; IdentifiedObject &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="#l00030">IdentifiedObject.h:30</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a48494cd9857a6df115d6ae5aa0073d5d"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a48494cd9857a6df115d6ae5aa0073d5d">CPS::IdentifiedObject::IdentifiedObject</a></div><div class="ttdeci">IdentifiedObject(const String &amp;uid, const String &amp;name)</div><div class="ttdef"><b>Definition</b> <a href="#l00035">IdentifiedObject.h:35</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a4aa0b3df2d317b36e7627ac1deefe395"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a4aa0b3df2d317b36e7627ac1deefe395">CPS::IdentifiedObject::~IdentifiedObject</a></div><div class="ttdeci">virtual ~IdentifiedObject()=default</div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a66b765f33341283bc9b916c74047c749"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">CPS::IdentifiedObject::uid</a></div><div class="ttdeci">String uid()</div><div class="ttdoc">Returns unique id.</div><div class="ttdef"><b>Definition</b> <a href="#l00061">IdentifiedObject.h:61</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a981a607f5a619bbc40c916fcf7048a24"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a981a607f5a619bbc40c916fcf7048a24">CPS::IdentifiedObject::List</a></div><div class="ttdeci">std::vector&lt; Ptr &gt; List</div><div class="ttdef"><b>Definition</b> <a href="#l00031">IdentifiedObject.h:31</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a9a95f413fe2dd50b6e2a0369bda063e6"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a9a95f413fe2dd50b6e2a0369bda063e6">CPS::IdentifiedObject::type</a></div><div class="ttdeci">String type()</div><div class="ttdoc">Get component type (cross-platform)</div><div class="ttdef"><b>Definition</b> <a href="#l00063">IdentifiedObject.h:63</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_acd676ba54ba38172e56e1b492bfe54ad"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#acd676ba54ba38172e56e1b492bfe54ad">CPS::IdentifiedObject::attribute</a></div><div class="ttdeci">AttributeBase::Ptr attribute(const String &amp;name) const</div><div class="ttdoc">Return pointer to an attribute.</div><div class="ttdef"><b>Definition</b> <a href="#l00045">IdentifiedObject.h:45</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_ad143c517fdb9d0deca573f15169e97e8"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#ad143c517fdb9d0deca573f15169e97e8">CPS::IdentifiedObject::mUID</a></div><div class="ttdeci">const Attribute&lt; String &gt;::Ptr mUID</div><div class="ttdoc">Unique identifier.</div><div class="ttdef"><b>Definition</b> <a href="#l00028">IdentifiedObject.h:28</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_ae08800e327db6af9a7249cabefe4ba2f"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#ae08800e327db6af9a7249cabefe4ba2f">CPS::IdentifiedObject::description</a></div><div class="ttdeci">virtual String description()</div><div class="ttdef"><b>Definition</b> <a href="#l00065">IdentifiedObject.h:65</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_ae27a37f7381c0923d50fd2d73382dea6"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#ae27a37f7381c0923d50fd2d73382dea6">CPS::IdentifiedObject::IdentifiedObject</a></div><div class="ttdeci">IdentifiedObject(const String &amp;name)</div><div class="ttdef"><b>Definition</b> <a href="#l00039">IdentifiedObject.h:39</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_af266e0a6fb154503432cf5361d70584e"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#af266e0a6fb154503432cf5361d70584e">CPS::IdentifiedObject::IdentifiedObject</a></div><div class="ttdeci">IdentifiedObject()</div><div class="ttdef"><b>Definition</b> <a href="#l00033">IdentifiedObject.h:33</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_af7497f9b94a45040b1601ac58f5e3d97"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#af7497f9b94a45040b1601ac58f5e3d97">CPS::IdentifiedObject::mAttributes</a></div><div class="ttdeci">AttributeList::Ptr mAttributes</div><div class="ttdoc">Attribute List.</div><div class="ttdef"><b>Definition</b> <a href="#l00022">IdentifiedObject.h:22</a></div></div>
+<div class="ttc" id="aclass_shared_factory_html_a2ffdfd3b547bb9cb777f33e1bf6ec7ef"><div class="ttname"><a href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">SharedFactory&lt; AttributeList &gt;::make</a></div><div class="ttdeci">static std::shared_ptr&lt; AttributeList &gt; make(Args &amp;&amp;...args)</div><div class="ttdef"><b>Definition</b> <a href="_ptr_factory_8h_source.html#l00019">PtrFactory.h:19</a></div></div>
+<div class="ttc" id="adpsim-models_2include_2dpsim-models_2_definitions_8h_html"><div class="ttname"><a href="dpsim-models_2include_2dpsim-models_2_definitions_8h.html">Definitions.h</a></div></div>
+<div class="ttc" id="adpsim-models_2include_2dpsim-models_2_utils_8h_html"><div class="ttname"><a href="dpsim-models_2include_2dpsim-models_2_utils_8h.html">Utils.h</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_1_1_utils_html_a4dc1810e52a17e2e342d3d8e830e0fd1"><div class="ttname"><a href="namespace_c_p_s_1_1_utils.html#a4dc1810e52a17e2e342d3d8e830e0fd1">CPS::Utils::className</a></div><div class="ttdeci">String className(T *ptr, const String &amp;prefix=&quot;CPS::&quot;)</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_utils_8h_source.html#l00021">Utils.h:21</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html"><div class="ttname"><a href="namespace_c_p_s.html">CPS</a></div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00017">Attribute.h:17</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a09f6ad37b12370b4b58624822be9b055"><div class="ttname"><a href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a></div><div class="ttdeci">std::string String</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00065">Definitions.h:65</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_1247628433d32dacb883bd6358d8ae70.html">include</a></li><li class="navelem"><a class="el" href="dir_d7cbd78282fbd8dd3f259b7cbd89a493.html">dpsim-models</a></li><li class="navelem"><a class="el" href="_identified_object_8h.html">IdentifiedObject.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

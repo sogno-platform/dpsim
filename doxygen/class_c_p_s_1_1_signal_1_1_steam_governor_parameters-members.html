@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>CPS</b></li><li class="navelem"><b>Signal</b></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html">SteamGovernorParameters</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">CPS::Signal::SteamGovernorParameters Member List</div></div>
 </div><!--header-->
@@ -96,21 +104,24 @@ $(function(){ initResizable(false); });
 <table class="directory">
   <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#a3739506cda14cd3f69e396765f673fd6">dPmax</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html">CPS::Signal::SteamGovernorParameters</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#a6f4b1f6aad2a52e7e499488749886437">dPmin</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html">CPS::Signal::SteamGovernorParameters</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>GovernorParameters</b>() (defined in <a class="el" href="class_c_p_s_1_1_base_1_1_governor_parameters.html">CPS::Base::GovernorParameters</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_base_1_1_governor_parameters.html">CPS::Base::GovernorParameters</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_base_1_1_governor_parameters.html#aa35b1aeb7c55a10b5bdd92575d89bace">GovernorParameters</a>()</td><td class="entry"><a class="el" href="class_c_p_s_1_1_base_1_1_governor_parameters.html">CPS::Base::GovernorParameters</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#afb4e0a24c8cd7ee13bf1b0a8d9a132e2">Kbc</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html">CPS::Signal::SteamGovernorParameters</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#abf576b04e726b71c7e76b2673cc5165f">OmRef</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html">CPS::Signal::SteamGovernorParameters</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#a4b08d81b8eba0e0f0ebf9248177d3bea">Pmax</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html">CPS::Signal::SteamGovernorParameters</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#a120b05fc00a4075f1c0a3f935e28f52e">Pmin</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html">CPS::Signal::SteamGovernorParameters</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#abc7dca8bb26f8183436316750debc50c">R</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html">CPS::Signal::SteamGovernorParameters</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#ac4e8eca2faf376c1cffdfa3bfc589b23">T1</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html">CPS::Signal::SteamGovernorParameters</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#ab298a724ac472b9f4164362adac90bfb">T2</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html">CPS::Signal::SteamGovernorParameters</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#a3822ac6b6e5bc99b52aa8522ebb7bf99">T3</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html">CPS::Signal::SteamGovernorParameters</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>~GovernorParameters</b>()=default (defined in <a class="el" href="class_c_p_s_1_1_base_1_1_governor_parameters.html">CPS::Base::GovernorParameters</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_base_1_1_governor_parameters.html">CPS::Base::GovernorParameters</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">make</a>(Args &amp;&amp;...args)</td><td class="entry"><a class="el" href="class_shared_factory.html">SharedFactory&lt; SteamGovernorParameters &gt;</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">static</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#abf576b04e726b71c7e76b2673cc5165f">OmRef</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html">CPS::Signal::SteamGovernorParameters</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#a4b08d81b8eba0e0f0ebf9248177d3bea">Pmax</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html">CPS::Signal::SteamGovernorParameters</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#a120b05fc00a4075f1c0a3f935e28f52e">Pmin</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html">CPS::Signal::SteamGovernorParameters</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#abc7dca8bb26f8183436316750debc50c">R</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html">CPS::Signal::SteamGovernorParameters</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#ac4e8eca2faf376c1cffdfa3bfc589b23">T1</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html">CPS::Signal::SteamGovernorParameters</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#ab298a724ac472b9f4164362adac90bfb">T2</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html">CPS::Signal::SteamGovernorParameters</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#a3822ac6b6e5bc99b52aa8522ebb7bf99">T3</a></td><td class="entry"><a class="el" href="class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html">CPS::Signal::SteamGovernorParameters</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_base_1_1_governor_parameters.html#ab66d9dfc6980fae430c18333348ae945">~GovernorParameters</a>()=default</td><td class="entry"><a class="el" href="class_c_p_s_1_1_base_1_1_governor_parameters.html">CPS::Base::GovernorParameters</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
 </table></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

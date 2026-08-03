@@ -1,0 +1,252 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Co-simulation &mdash; DPsim - documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=dd079cb8" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=b1628c55"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Signal Models" href="signal.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../about.html" class="icon icon-home">
+            DPsim
+              <img src="../_static/dpsim.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../Reference.html">Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsim-python-bindings">DPsim Python bindings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.Attribute"><code class="docutils literal notranslate"><span class="pre">Attribute</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeComplex"><code class="docutils literal notranslate"><span class="pre">AttributeComplex</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeComplexDyn"><code class="docutils literal notranslate"><span class="pre">AttributeComplexDyn</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeComplexStat"><code class="docutils literal notranslate"><span class="pre">AttributeComplexStat</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeMatrix"><code class="docutils literal notranslate"><span class="pre">AttributeMatrix</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeMatrixComp"><code class="docutils literal notranslate"><span class="pre">AttributeMatrixComp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeMatrixCompDyn"><code class="docutils literal notranslate"><span class="pre">AttributeMatrixCompDyn</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeMatrixCompStat"><code class="docutils literal notranslate"><span class="pre">AttributeMatrixCompStat</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeMatrixDyn"><code class="docutils literal notranslate"><span class="pre">AttributeMatrixDyn</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeMatrixStat"><code class="docutils literal notranslate"><span class="pre">AttributeMatrixStat</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeReal"><code class="docutils literal notranslate"><span class="pre">AttributeReal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeRealDyn"><code class="docutils literal notranslate"><span class="pre">AttributeRealDyn</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeRealStat"><code class="docutils literal notranslate"><span class="pre">AttributeRealStat</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeString"><code class="docutils literal notranslate"><span class="pre">AttributeString</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeStringDyn"><code class="docutils literal notranslate"><span class="pre">AttributeStringDyn</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.AttributeStringStat"><code class="docutils literal notranslate"><span class="pre">AttributeStringStat</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.CIMReader"><code class="docutils literal notranslate"><span class="pre">CIMReader</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.CIMReaderVoltageTargetUnit"><code class="docutils literal notranslate"><span class="pre">CIMReaderVoltageTargetUnit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.CSVReader"><code class="docutils literal notranslate"><span class="pre">CSVReader</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.CSVReaderFormat"><code class="docutils literal notranslate"><span class="pre">CSVReaderFormat</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.CSVReaderMode"><code class="docutils literal notranslate"><span class="pre">CSVReaderMode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.CouplingMethod"><code class="docutils literal notranslate"><span class="pre">CouplingMethod</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.DataLoggerInterface"><code class="docutils literal notranslate"><span class="pre">DataLoggerInterface</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.DirectLinearSolverConfiguration"><code class="docutils literal notranslate"><span class="pre">DirectLinearSolverConfiguration</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.DirectLinearSolverImpl"><code class="docutils literal notranslate"><span class="pre">DirectLinearSolverImpl</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.Domain"><code class="docutils literal notranslate"><span class="pre">Domain</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.GeneratorType"><code class="docutils literal notranslate"><span class="pre">GeneratorType</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.IdentifiedObject"><code class="docutils literal notranslate"><span class="pre">IdentifiedObject</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.Interface"><code class="docutils literal notranslate"><span class="pre">Interface</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.LogLevel"><code class="docutils literal notranslate"><span class="pre">LogLevel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.Logger"><code class="docutils literal notranslate"><span class="pre">Logger</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.MNAStateSpaceExtractor"><code class="docutils literal notranslate"><span class="pre">MNAStateSpaceExtractor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.Math"><code class="docutils literal notranslate"><span class="pre">Math</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.PhaseType"><code class="docutils literal notranslate"><span class="pre">PhaseType</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType"><code class="docutils literal notranslate"><span class="pre">PowerflowBusType</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.RealTimeDataLogger"><code class="docutils literal notranslate"><span class="pre">RealTimeDataLogger</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.RealTimeSimulation"><code class="docutils literal notranslate"><span class="pre">RealTimeSimulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.SimPowerCompComplex"><code class="docutils literal notranslate"><span class="pre">SimPowerCompComplex</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.SimPowerCompReal"><code class="docutils literal notranslate"><span class="pre">SimPowerCompReal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.SimTerminalComplex"><code class="docutils literal notranslate"><span class="pre">SimTerminalComplex</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.SimTerminalReal"><code class="docutils literal notranslate"><span class="pre">SimTerminalReal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.Simulation"><code class="docutils literal notranslate"><span class="pre">Simulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.Solver"><code class="docutils literal notranslate"><span class="pre">Solver</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.SolverBehaviour"><code class="docutils literal notranslate"><span class="pre">SolverBehaviour</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.StateSpaceAnalysisFrame"><code class="docutils literal notranslate"><span class="pre">StateSpaceAnalysisFrame</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.StateSpaceModalAnalysis"><code class="docutils literal notranslate"><span class="pre">StateSpaceModalAnalysis</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.SystemMatrixRecomputationMode"><code class="docutils literal notranslate"><span class="pre">SystemMatrixRecomputationMode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.SystemTopology"><code class="docutils literal notranslate"><span class="pre">SystemTopology</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.TopologicalNode"><code class="docutils literal notranslate"><span class="pre">TopologicalNode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.TopologicalPowerComp"><code class="docutils literal notranslate"><span class="pre">TopologicalPowerComp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.TopologicalTerminal"><code class="docutils literal notranslate"><span class="pre">TopologicalTerminal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.fill_in_reduction_method"><code class="docutils literal notranslate"><span class="pre">fill_in_reduction_method</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.partial_refactorization_method"><code class="docutils literal notranslate"><span class="pre">partial_refactorization_method</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.scaling_method"><code class="docutils literal notranslate"><span class="pre">scaling_method</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#dpsimpy.use_btf"><code class="docutils literal notranslate"><span class="pre">use_btf</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#module-dpsimpy.base">Base Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#module-dpsimpy.event">Events</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="dp.html">Dynamic Phasor / SFA Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="dp.html#dpsimpy.dp.SimNode"><code class="docutils literal notranslate"><span class="pre">SimNode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dp.html#module-dpsimpy.dp.ph1">Single Phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dp.html#module-dpsimpy.dp.ph3">Three Phase</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="emt.html">Electromagnetic Transient Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="emt.html#dpsimpy.emt.SimNode"><code class="docutils literal notranslate"><span class="pre">SimNode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="emt.html#module-dpsimpy.emt.ph1">Single Phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="emt.html#module-dpsimpy.emt.ph3">Three Phase</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sp.html">(Quasi) Static / RMS Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sp.html#module-dpsimpy.sp.ph1">Single Phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sp.html#module-dpsimpy.sp.ph3">Three Phase</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="signal.html">Signal Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.DecouplingIdealTransformer_DP_Ph1"><code class="docutils literal notranslate"><span class="pre">DecouplingIdealTransformer_DP_Ph1</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph1"><code class="docutils literal notranslate"><span class="pre">DecouplingIdealTransformer_EMT_Ph1</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.DecouplingIdealTransformer_EMT_Ph3"><code class="docutils literal notranslate"><span class="pre">DecouplingIdealTransformer_EMT_Ph3</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.DecouplingIdealTransformer_SP_Ph1"><code class="docutils literal notranslate"><span class="pre">DecouplingIdealTransformer_SP_Ph1</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.DecouplingLine"><code class="docutils literal notranslate"><span class="pre">DecouplingLine</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.DecouplingLineEMT"><code class="docutils literal notranslate"><span class="pre">DecouplingLineEMT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.DecouplingLineEMT_Ph3"><code class="docutils literal notranslate"><span class="pre">DecouplingLineEMT_Ph3</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.Exciter"><code class="docutils literal notranslate"><span class="pre">Exciter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.ExciterDC1"><code class="docutils literal notranslate"><span class="pre">ExciterDC1</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.ExciterDC1Parameters"><code class="docutils literal notranslate"><span class="pre">ExciterDC1Parameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.ExciterDC1Simp"><code class="docutils literal notranslate"><span class="pre">ExciterDC1Simp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.ExciterDC1SimpParameters"><code class="docutils literal notranslate"><span class="pre">ExciterDC1SimpParameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.ExciterParameters"><code class="docutils literal notranslate"><span class="pre">ExciterParameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.ExciterST1Parameters"><code class="docutils literal notranslate"><span class="pre">ExciterST1Parameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.ExciterST1Simp"><code class="docutils literal notranslate"><span class="pre">ExciterST1Simp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.ExciterStatic"><code class="docutils literal notranslate"><span class="pre">ExciterStatic</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.ExciterStaticParameters"><code class="docutils literal notranslate"><span class="pre">ExciterStaticParameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.Governor"><code class="docutils literal notranslate"><span class="pre">Governor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.GovernorParameters"><code class="docutils literal notranslate"><span class="pre">GovernorParameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.HydroGovernorParameters"><code class="docutils literal notranslate"><span class="pre">HydroGovernorParameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.HydroTurbine"><code class="docutils literal notranslate"><span class="pre">HydroTurbine</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.HydroTurbineGovernor"><code class="docutils literal notranslate"><span class="pre">HydroTurbineGovernor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.HydroTurbineParameters"><code class="docutils literal notranslate"><span class="pre">HydroTurbineParameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.PSS"><code class="docutils literal notranslate"><span class="pre">PSS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.PSS1A"><code class="docutils literal notranslate"><span class="pre">PSS1A</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.PSS1AParameters"><code class="docutils literal notranslate"><span class="pre">PSS1AParameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.PSSParameters"><code class="docutils literal notranslate"><span class="pre">PSSParameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.SimSignalComp"><code class="docutils literal notranslate"><span class="pre">SimSignalComp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.SteamGovernorParameters"><code class="docutils literal notranslate"><span class="pre">SteamGovernorParameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.SteamTurbine"><code class="docutils literal notranslate"><span class="pre">SteamTurbine</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.SteamTurbineGovernor"><code class="docutils literal notranslate"><span class="pre">SteamTurbineGovernor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.SteamTurbineParameters"><code class="docutils literal notranslate"><span class="pre">SteamTurbineParameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.TopologicalSignalComp"><code class="docutils literal notranslate"><span class="pre">TopologicalSignalComp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.Turbine"><code class="docutils literal notranslate"><span class="pre">Turbine</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.TurbineGovernorType1"><code class="docutils literal notranslate"><span class="pre">TurbineGovernorType1</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="signal.html#dpsimpy.signal.TurbineParameters"><code class="docutils literal notranslate"><span class="pre">TurbineParameters</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Co-simulation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dpsimpyvillas.InterfaceVillas"><code class="docutils literal notranslate"><span class="pre">InterfaceVillas</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../about.html">DPsim</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../about.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../Reference.html">Reference</a></li>
+      <li class="breadcrumb-item active">Co-simulation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="https://github.com/sogno-platform/dpsim/docs/reference/cosimulation.rst">View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="co-simulation">
+<h1>Co-simulation<a class="headerlink" href="#co-simulation" title="Link to this heading"></a></h1>
+<p>The VILLASnode interface used to exchange signals with other simulators at runtime.
+It lives in a separate <code class="docutils literal notranslate"><span class="pre">dpsimpyvillas</span></code> extension module, which is only built when
+DPsim is configured with VILLASnode available.</p>
+<dl class="py class" id="module-dpsimpyvillas">
+<dt class="sig sig-object py" id="dpsimpyvillas.InterfaceVillas">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">InterfaceVillas</span></span><a class="headerlink" href="#dpsimpyvillas.InterfaceVillas" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="core.html#dpsimpy.Interface" title="dpsimpy.Interface"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interface</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpyvillas.InterfaceVillas.export_attribute">
+<span class="sig-name descname"><span class="pre">export_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpyvillas.InterfaceVillas" title="dpsimpyvillas.InterfaceVillas"><span class="pre">InterfaceVillas</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="core.html#dpsimpy.Attribute" title="dpsimpy.Attribute"><span class="pre">Attribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_on_write</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpyvillas.InterfaceVillas.export_attribute" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpyvillas.InterfaceVillas.import_attribute">
+<span class="sig-name descname"><span class="pre">import_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpyvillas.InterfaceVillas" title="dpsimpyvillas.InterfaceVillas"><span class="pre">InterfaceVillas</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="core.html#dpsimpy.Attribute" title="dpsimpy.Attribute"><span class="pre">Attribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_on_read</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync_on_start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpyvillas.InterfaceVillas.import_attribute" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="signal.html" class="btn btn-neutral float-left" title="Signal Models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2017-2023, The DPsim Authors..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_d_psim_1_1_direct_linear_solver.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
@@ -96,59 +104,55 @@ $(function(){ initResizable(false); });
   <div class="headertitle"><div class="title">DPsim::DirectLinearSolver Class Reference<span class="mlabels"><span class="mlabel abstract">abstract</span></span></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="_direct_linear_solver_8h_source.html">DirectLinearSolver.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for DPsim::DirectLinearSolver:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="class_d_psim_1_1_direct_linear_solver__inherit__graph.svg" width="434" height="307"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for DPsim::DirectLinearSolver:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="class_d_psim_1_1_direct_linear_solver__coll__graph.svg" width="202" height="156"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a2b121961736a57b6aa1622d373fe6019" id="r_a2b121961736a57b6aa1622d373fe6019"><td class="memItemLeft" align="right" valign="top"><a id="a2b121961736a57b6aa1622d373fe6019" name="a2b121961736a57b6aa1622d373fe6019"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>DirectLinearSolver</b> ()=default</td></tr>
-<tr class="memdesc:a2b121961736a57b6aa1622d373fe6019"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. <br /></td></tr>
+<tr class="memitem:a2b121961736a57b6aa1622d373fe6019" id="r_a2b121961736a57b6aa1622d373fe6019"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2b121961736a57b6aa1622d373fe6019">DirectLinearSolver</a> ()=default</td></tr>
+<tr class="memdesc:a2b121961736a57b6aa1622d373fe6019"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <br /></td></tr>
 <tr class="separator:a2b121961736a57b6aa1622d373fe6019"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add6f353643024c32915f2ccb4da076b0" id="r_add6f353643024c32915f2ccb4da076b0"><td class="memItemLeft" align="right" valign="top"><a id="add6f353643024c32915f2ccb4da076b0" name="add6f353643024c32915f2ccb4da076b0"></a>
-virtual&#160;</td><td class="memItemRight" valign="bottom"><b>~DirectLinearSolver</b> ()=default</td></tr>
-<tr class="memdesc:add6f353643024c32915f2ccb4da076b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
+<tr class="memitem:add6f353643024c32915f2ccb4da076b0" id="r_add6f353643024c32915f2ccb4da076b0"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#add6f353643024c32915f2ccb4da076b0">~DirectLinearSolver</a> ()=default</td></tr>
+<tr class="memdesc:add6f353643024c32915f2ccb4da076b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <br /></td></tr>
 <tr class="separator:add6f353643024c32915f2ccb4da076b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0471fec62a1b9853f46334d71863e9c3" id="r_a0471fec62a1b9853f46334d71863e9c3"><td class="memItemLeft" align="right" valign="top"><a id="a0471fec62a1b9853f46334d71863e9c3" name="a0471fec62a1b9853f46334d71863e9c3"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>DirectLinearSolver</b> (const <a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a> &amp;)=default</td></tr>
-<tr class="memdesc:a0471fec62a1b9853f46334d71863e9c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy Constructor. <br /></td></tr>
+<tr class="memitem:a0471fec62a1b9853f46334d71863e9c3" id="r_a0471fec62a1b9853f46334d71863e9c3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0471fec62a1b9853f46334d71863e9c3">DirectLinearSolver</a> (const <a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a> &amp;)=default</td></tr>
+<tr class="memdesc:a0471fec62a1b9853f46334d71863e9c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy Constructor.  <br /></td></tr>
 <tr class="separator:a0471fec62a1b9853f46334d71863e9c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad43db3ea0b37056f1d10251037ef0286" id="r_ad43db3ea0b37056f1d10251037ef0286"><td class="memItemLeft" align="right" valign="top"><a id="ad43db3ea0b37056f1d10251037ef0286" name="ad43db3ea0b37056f1d10251037ef0286"></a>
-<a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a> &amp;)=default</td></tr>
-<tr class="memdesc:ad43db3ea0b37056f1d10251037ef0286"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy Assignment Operator. <br /></td></tr>
+<tr class="memitem:ad43db3ea0b37056f1d10251037ef0286" id="r_ad43db3ea0b37056f1d10251037ef0286"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad43db3ea0b37056f1d10251037ef0286">operator=</a> (const <a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a> &amp;)=default</td></tr>
+<tr class="memdesc:ad43db3ea0b37056f1d10251037ef0286"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy Assignment Operator.  <br /></td></tr>
 <tr class="separator:ad43db3ea0b37056f1d10251037ef0286"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a36c002c86dbdb16ce32f90d480ee1ae9" id="r_a36c002c86dbdb16ce32f90d480ee1ae9"><td class="memItemLeft" align="right" valign="top"><a id="a36c002c86dbdb16ce32f90d480ee1ae9" name="a36c002c86dbdb16ce32f90d480ee1ae9"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>DirectLinearSolver</b> (<a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a> &amp;&amp;)=default</td></tr>
-<tr class="memdesc:a36c002c86dbdb16ce32f90d480ee1ae9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move Constructor. <br /></td></tr>
+<tr class="memitem:a36c002c86dbdb16ce32f90d480ee1ae9" id="r_a36c002c86dbdb16ce32f90d480ee1ae9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a36c002c86dbdb16ce32f90d480ee1ae9">DirectLinearSolver</a> (<a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a> &amp;&amp;)=default</td></tr>
+<tr class="memdesc:a36c002c86dbdb16ce32f90d480ee1ae9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move Constructor.  <br /></td></tr>
 <tr class="separator:a36c002c86dbdb16ce32f90d480ee1ae9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4fe3b4fa4ab765fe70a921e3f3ac676" id="r_ab4fe3b4fa4ab765fe70a921e3f3ac676"><td class="memItemLeft" align="right" valign="top"><a id="ab4fe3b4fa4ab765fe70a921e3f3ac676" name="ab4fe3b4fa4ab765fe70a921e3f3ac676"></a>
-<a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a> &amp;&amp;)=default</td></tr>
-<tr class="memdesc:ab4fe3b4fa4ab765fe70a921e3f3ac676"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move Assignment Operator. <br /></td></tr>
+<tr class="memitem:ab4fe3b4fa4ab765fe70a921e3f3ac676" id="r_ab4fe3b4fa4ab765fe70a921e3f3ac676"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab4fe3b4fa4ab765fe70a921e3f3ac676">operator=</a> (<a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a> &amp;&amp;)=default</td></tr>
+<tr class="memdesc:ab4fe3b4fa4ab765fe70a921e3f3ac676"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move Assignment Operator.  <br /></td></tr>
 <tr class="separator:ab4fe3b4fa4ab765fe70a921e3f3ac676"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3623a79b73370d72cbb67d2825b32f91" id="r_a3623a79b73370d72cbb67d2825b32f91"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3623a79b73370d72cbb67d2825b32f91">DirectLinearSolver</a> (CPS::Logger::Log log)</td></tr>
-<tr class="memdesc:a3623a79b73370d72cbb67d2825b32f91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor with Logger.  <br /></td></tr>
+<tr class="memitem:a3623a79b73370d72cbb67d2825b32f91" id="r_a3623a79b73370d72cbb67d2825b32f91"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3623a79b73370d72cbb67d2825b32f91">DirectLinearSolver</a> (<a class="el" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a> log)</td></tr>
+<tr class="memdesc:a3623a79b73370d72cbb67d2825b32f91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor with <a class="el" href="namespace_d_psim.html#a0c1ad9f4200f1770537b7f206a6dc1fc">Logger</a>.  <br /></td></tr>
 <tr class="separator:a3623a79b73370d72cbb67d2825b32f91"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea32b9142bf57d4b0ac557f3921402bd" id="r_aea32b9142bf57d4b0ac557f3921402bd"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aea32b9142bf57d4b0ac557f3921402bd">preprocessing</a> (SparseMatrix &amp;systemMatrix, std::vector&lt; std::pair&lt; UInt, UInt &gt; &gt; &amp;listVariableSystemMatrixEntries)=0</td></tr>
+<tr class="memitem:aea32b9142bf57d4b0ac557f3921402bd" id="r_aea32b9142bf57d4b0ac557f3921402bd"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aea32b9142bf57d4b0ac557f3921402bd">preprocessing</a> (<a class="el" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix, std::vector&lt; std::pair&lt; <a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a>, <a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> &gt; &gt; &amp;listVariableSystemMatrixEntries)=0</td></tr>
 <tr class="memdesc:aea32b9142bf57d4b0ac557f3921402bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">preprocessing function pre-ordering and scaling the matrix  <br /></td></tr>
 <tr class="separator:aea32b9142bf57d4b0ac557f3921402bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abaeed2ec1e0a01066de92bd326a977d3" id="r_abaeed2ec1e0a01066de92bd326a977d3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abaeed2ec1e0a01066de92bd326a977d3">factorize</a> (SparseMatrix &amp;systemMatrix)=0</td></tr>
+<tr class="memitem:abaeed2ec1e0a01066de92bd326a977d3" id="r_abaeed2ec1e0a01066de92bd326a977d3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abaeed2ec1e0a01066de92bd326a977d3">factorize</a> (<a class="el" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix)=0</td></tr>
 <tr class="memdesc:abaeed2ec1e0a01066de92bd326a977d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">factorization function with partial pivoting  <br /></td></tr>
 <tr class="separator:abaeed2ec1e0a01066de92bd326a977d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a038b2194287e5838fcfd16a365fa2e9c" id="r_a038b2194287e5838fcfd16a365fa2e9c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a038b2194287e5838fcfd16a365fa2e9c">refactorize</a> (SparseMatrix &amp;systemMatrix)=0</td></tr>
+<tr class="memitem:a038b2194287e5838fcfd16a365fa2e9c" id="r_a038b2194287e5838fcfd16a365fa2e9c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a038b2194287e5838fcfd16a365fa2e9c">refactorize</a> (<a class="el" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix)=0</td></tr>
 <tr class="memdesc:a038b2194287e5838fcfd16a365fa2e9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">refactorization without partial pivoting  <br /></td></tr>
 <tr class="separator:a038b2194287e5838fcfd16a365fa2e9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e4a9d4cb4e45d8e93795e2c0c0ea6bb" id="r_a4e4a9d4cb4e45d8e93795e2c0c0ea6bb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4e4a9d4cb4e45d8e93795e2c0c0ea6bb">partialRefactorize</a> (SparseMatrix &amp;systemMatrix, std::vector&lt; std::pair&lt; UInt, UInt &gt; &gt; &amp;listVariableSystemMatrixEntries)=0</td></tr>
+<tr class="memitem:a4e4a9d4cb4e45d8e93795e2c0c0ea6bb" id="r_a4e4a9d4cb4e45d8e93795e2c0c0ea6bb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4e4a9d4cb4e45d8e93795e2c0c0ea6bb">partialRefactorize</a> (<a class="el" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix, std::vector&lt; std::pair&lt; <a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a>, <a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> &gt; &gt; &amp;listVariableSystemMatrixEntries)=0</td></tr>
 <tr class="memdesc:a4e4a9d4cb4e45d8e93795e2c0c0ea6bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">partial refactorization withouth partial pivoting  <br /></td></tr>
 <tr class="separator:a4e4a9d4cb4e45d8e93795e2c0c0ea6bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac353d50f9d36dd934a75ae751ee03184" id="r_ac353d50f9d36dd934a75ae751ee03184"><td class="memItemLeft" align="right" valign="top">virtual Matrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac353d50f9d36dd934a75ae751ee03184">solve</a> (Matrix &amp;rightSideVector)=0</td></tr>
+<tr class="memitem:ac353d50f9d36dd934a75ae751ee03184" id="r_ac353d50f9d36dd934a75ae751ee03184"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac353d50f9d36dd934a75ae751ee03184">solve</a> (<a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;rightSideVector)=0</td></tr>
 <tr class="memdesc:ac353d50f9d36dd934a75ae751ee03184"><td class="mdescLeft">&#160;</td><td class="mdescRight">solution function for a right hand side  <br /></td></tr>
 <tr class="separator:ac353d50f9d36dd934a75ae751ee03184"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba1fd03692134eef001154b5043e8760" id="r_aba1fd03692134eef001154b5043e8760"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba1fd03692134eef001154b5043e8760">setConfiguration</a> (<a class="el" href="class_d_psim_1_1_direct_linear_solver_configuration.html">DirectLinearSolverConfiguration</a> &amp;configuration)</td></tr>
@@ -161,7 +165,7 @@ Protected Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:aafeb18cf0ebae9f0255e62dc74d938c9" id="r_aafeb18cf0ebae9f0255e62dc74d938c9"><td class="memItemLeft" align="right" valign="top">CPS::Logger::Log&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aafeb18cf0ebae9f0255e62dc74d938c9">mSLog</a></td></tr>
+<tr class="memitem:aafeb18cf0ebae9f0255e62dc74d938c9" id="r_aafeb18cf0ebae9f0255e62dc74d938c9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aafeb18cf0ebae9f0255e62dc74d938c9">mSLog</a></td></tr>
 <tr class="memdesc:aafeb18cf0ebae9f0255e62dc74d938c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores logger of solver class.  <br /></td></tr>
 <tr class="separator:aafeb18cf0ebae9f0255e62dc74d938c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f0386f35ad2c6219ba3fafefe40e541" id="r_a9f0386f35ad2c6219ba3fafefe40e541"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_d_psim_1_1_direct_linear_solver_configuration.html">DirectLinearSolverConfiguration</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9f0386f35ad2c6219ba3fafefe40e541">mConfiguration</a></td></tr>
@@ -172,8 +176,8 @@ Protected Attributes</h2></td></tr>
 <div class="textblock">
 <p class="definition">Definition at line <a class="el" href="_direct_linear_solver_8h_source.html#l00023">23</a> of file <a class="el" href="_direct_linear_solver_8h_source.html">DirectLinearSolver.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a3623a79b73370d72cbb67d2825b32f91" name="a3623a79b73370d72cbb67d2825b32f91"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3623a79b73370d72cbb67d2825b32f91">&#9670;&#160;</a></span>DirectLinearSolver()</h2>
+<a id="a2b121961736a57b6aa1622d373fe6019" name="a2b121961736a57b6aa1622d373fe6019"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b121961736a57b6aa1622d373fe6019">&#9670;&#160;</a></span>DirectLinearSolver() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -184,7 +188,115 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">DPsim::DirectLinearSolver::DirectLinearSolver </td>
           <td>(</td>
-          <td class="paramtype">CPS::Logger::Log</td>          <td class="paramname"><span class="paramname"><em>log</em></span></td><td>)</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructor. </p>
+
+</div>
+</div>
+<a id="add6f353643024c32915f2ccb4da076b0" name="add6f353643024c32915f2ccb4da076b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add6f353643024c32915f2ccb4da076b0">&#9670;&#160;</a></span>~DirectLinearSolver()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual DPsim::DirectLinearSolver::~DirectLinearSolver </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel virtual">virtual</span><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Destructor. </p>
+
+</div>
+</div>
+<a id="a0471fec62a1b9853f46334d71863e9c3" name="a0471fec62a1b9853f46334d71863e9c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0471fec62a1b9853f46334d71863e9c3">&#9670;&#160;</a></span>DirectLinearSolver() <span class="overload">[2/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DPsim::DirectLinearSolver::DirectLinearSolver </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a> &amp;</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Copy Constructor. </p>
+
+</div>
+</div>
+<a id="a36c002c86dbdb16ce32f90d480ee1ae9" name="a36c002c86dbdb16ce32f90d480ee1ae9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a36c002c86dbdb16ce32f90d480ee1ae9">&#9670;&#160;</a></span>DirectLinearSolver() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DPsim::DirectLinearSolver::DirectLinearSolver </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a> &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Move Constructor. </p>
+
+</div>
+</div>
+<a id="a3623a79b73370d72cbb67d2825b32f91" name="a3623a79b73370d72cbb67d2825b32f91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3623a79b73370d72cbb67d2825b32f91">&#9670;&#160;</a></span>DirectLinearSolver() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DPsim::DirectLinearSolver::DirectLinearSolver </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a></td>          <td class="paramname"><span class="paramname"><em>log</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -195,7 +307,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Constructor with Logger. </p>
+<p>Constructor with <a class="el" href="namespace_d_psim.html#a0c1ad9f4200f1770537b7f206a6dc1fc">Logger</a>. </p>
 
 <p class="definition">Definition at line <a class="el" href="_direct_linear_solver_8h_source.html#l00044">44</a> of file <a class="el" href="_direct_linear_solver_8h_source.html">DirectLinearSolver.h</a>.</p>
 
@@ -243,7 +355,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">virtual void DPsim::DirectLinearSolver::factorize </td>
           <td>(</td>
-          <td class="paramtype">SparseMatrix &amp;</td>          <td class="paramname"><span class="paramname"><em>systemMatrix</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>systemMatrix</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -260,6 +372,60 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ad43db3ea0b37056f1d10251037ef0286" name="ad43db3ea0b37056f1d10251037ef0286"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad43db3ea0b37056f1d10251037ef0286">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a> &amp; DPsim::DirectLinearSolver::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a> &amp;</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Copy Assignment Operator. </p>
+
+</div>
+</div>
+<a id="ab4fe3b4fa4ab765fe70a921e3f3ac676" name="ab4fe3b4fa4ab765fe70a921e3f3ac676"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4fe3b4fa4ab765fe70a921e3f3ac676">&#9670;&#160;</a></span>operator=() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a> &amp; DPsim::DirectLinearSolver::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a> &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Move Assignment Operator. </p>
+
+</div>
+</div>
 <a id="a4e4a9d4cb4e45d8e93795e2c0c0ea6bb" name="a4e4a9d4cb4e45d8e93795e2c0c0ea6bb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4e4a9d4cb4e45d8e93795e2c0c0ea6bb">&#9670;&#160;</a></span>partialRefactorize()</h2>
 
@@ -272,12 +438,12 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">virtual void DPsim::DirectLinearSolver::partialRefactorize </td>
           <td>(</td>
-          <td class="paramtype">SparseMatrix &amp;</td>          <td class="paramname"><span class="paramname"><em>systemMatrix</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>systemMatrix</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::vector&lt; std::pair&lt; UInt, UInt &gt; &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>listVariableSystemMatrixEntries</em></span>&#160;)</td>
+          <td class="paramtype">std::vector&lt; std::pair&lt; <a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a>, <a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> &gt; &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>listVariableSystemMatrixEntries</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -305,12 +471,12 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">virtual void DPsim::DirectLinearSolver::preprocessing </td>
           <td>(</td>
-          <td class="paramtype">SparseMatrix &amp;</td>          <td class="paramname"><span class="paramname"><em>systemMatrix</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>systemMatrix</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::vector&lt; std::pair&lt; UInt, UInt &gt; &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>listVariableSystemMatrixEntries</em></span>&#160;)</td>
+          <td class="paramtype">std::vector&lt; std::pair&lt; <a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a>, <a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> &gt; &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>listVariableSystemMatrixEntries</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -338,7 +504,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">virtual void DPsim::DirectLinearSolver::refactorize </td>
           <td>(</td>
-          <td class="paramtype">SparseMatrix &amp;</td>          <td class="paramname"><span class="paramname"><em>systemMatrix</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>systemMatrix</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -392,9 +558,9 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual Matrix DPsim::DirectLinearSolver::solve </td>
+          <td class="memname">virtual <a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> DPsim::DirectLinearSolver::solve </td>
           <td>(</td>
-          <td class="paramtype">Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>rightSideVector</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>rightSideVector</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -448,7 +614,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">CPS::Logger::Log DPsim::DirectLinearSolver::mSLog</td>
+          <td class="memname"><a class="el" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a> DPsim::DirectLinearSolver::mSLog</td>
         </tr>
       </table>
   </td>
@@ -468,10 +634,13 @@ Protected Attributes</h2></td></tr>
 <li>/__w/dpsim/dpsim/dpsim/include/dpsim/<a class="el" href="_direct_linear_solver_8h_source.html">DirectLinearSolver.h</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

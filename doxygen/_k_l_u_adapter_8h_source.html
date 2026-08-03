@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_k_l_u_adapter_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">KLUAdapter.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_k_l_u_adapter_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -114,8 +122,8 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;dpsim/Config.h&gt;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;dpsim/Definitions.h&gt;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;dpsim/DirectLinearSolver.h&gt;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;<a class="code" href="dpsim_2include_2dpsim_2_definitions_8h.html">dpsim/Definitions.h</a>&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;<a class="code" href="_direct_linear_solver_8h.html">dpsim/DirectLinearSolver.h</a>&gt;</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_d_psim.html">DPsim</a> {</div>
 <div class="foldopen" id="foldopen00028" data-start="{" data-end="};">
@@ -133,39 +141,41 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span></div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <span class="keywordtype">int</span> mPivotFaults = 0;</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  PARTIAL_REFACTORIZATION_METHOD mPartialRefactorizationMethod =</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>      PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <a class="code hl_enumeration" href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482a">PARTIAL_REFACTORIZATION_METHOD</a> mPartialRefactorizationMethod =</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>      <a class="code hl_enumvalue" href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482aa0f1b121c7e25301bef9f408f3069e239">PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH</a>;</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  Int nnz;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> nnz;</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="keyword">public</span>:</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#ac0a481a271301ec563224db0928b1592">~KLUAdapter</a>() <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span></div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#ad109bcfac8eec87bc66fe72b3475d8a6">KLUAdapter</a>();</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#ad109bcfac8eec87bc66fe72b3475d8a6">KLUAdapter</a>(CPS::Logger::Log log);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#ad109bcfac8eec87bc66fe72b3475d8a6">KLUAdapter</a>(<a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a> log);</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#ad566113de2099c870c1c70a00c276f2a">preprocessing</a>(SparseMatrix &amp;systemMatrix,</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#ad566113de2099c870c1c70a00c276f2a">preprocessing</a>(<a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix,</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>                     std::vector&lt;std::pair&lt;UInt, UInt&gt;&gt;</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>                         &amp;listVariableSystemMatrixEntries) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#a1f3ecbfe79f73a2956c681f9074bb860">factorize</a>(SparseMatrix &amp;systemMatrix) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#a1f3ecbfe79f73a2956c681f9074bb860">factorize</a>(<a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#aa7a815403a9340eeb529729a618d70d9">refactorize</a>(SparseMatrix &amp;systemMatrix) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#aa7a815403a9340eeb529729a618d70d9">refactorize</a>(<a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span></div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#aab79cf99de7a9ef4b38d739fa2198d17">partialRefactorize</a>(SparseMatrix &amp;systemMatrix,</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#aab79cf99de7a9ef4b38d739fa2198d17">partialRefactorize</a>(<a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix,</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>                          std::vector&lt;std::pair&lt;UInt, UInt&gt;&gt;</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>                              &amp;listVariableSystemMatrixEntries) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span></div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  Matrix <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#a227389e7c48ed266d97f365e9eb1f89b">solve</a>(Matrix &amp;rightSideVector) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#a227389e7c48ed266d97f365e9eb1f89b">solve</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;rightSideVector) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#aa91539174590b5fa910a8c9f2cf10fb9">printMatrixMarket</a>(SparseMatrix &amp;systemMatrix, <span class="keywordtype">int</span> counter) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#aa91539174590b5fa910a8c9f2cf10fb9">printMatrixMarket</a>(<a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix, <span class="keywordtype">int</span> counter) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span></div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_k_l_u_adapter.html#a14883b8c2cd220468dfc0b8c8f999c89">applyConfiguration</a>() <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>};</div>
 </div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>} <span class="comment">// namespace DPsim</span></div>
+<div class="ttc" id="a_direct_linear_solver_8h_html"><div class="ttname"><a href="_direct_linear_solver_8h.html">DirectLinearSolver.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_logger_html_a1dd42a2424f56886f0eec500a7851423"><div class="ttname"><a href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a></div><div class="ttdeci">std::shared_ptr&lt; spdlog::logger &gt; Log</div><div class="ttdef"><b>Definition</b> <a href="_logger_8h_source.html#l00034">Logger.h:34</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_html_a2b121961736a57b6aa1622d373fe6019"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver.html#a2b121961736a57b6aa1622d373fe6019">DPsim::DirectLinearSolver::DirectLinearSolver</a></div><div class="ttdeci">DirectLinearSolver()=default</div><div class="ttdoc">Constructor.</div></div>
 <div class="ttc" id="aclass_d_psim_1_1_k_l_u_adapter_html_a14883b8c2cd220468dfc0b8c8f999c89"><div class="ttname"><a href="class_d_psim_1_1_k_l_u_adapter.html#a14883b8c2cd220468dfc0b8c8f999c89">DPsim::KLUAdapter::applyConfiguration</a></div><div class="ttdeci">void applyConfiguration() override</div><div class="ttdoc">Apply configuration.</div><div class="ttdef"><b>Definition</b> <a href="_k_l_u_adapter_8cpp_source.html#l00214">KLUAdapter.cpp:214</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_k_l_u_adapter_html_a1f3ecbfe79f73a2956c681f9074bb860"><div class="ttname"><a href="class_d_psim_1_1_k_l_u_adapter.html#a1f3ecbfe79f73a2956c681f9074bb860">DPsim::KLUAdapter::factorize</a></div><div class="ttdeci">void factorize(SparseMatrix &amp;systemMatrix) override</div><div class="ttdoc">factorization function with partial pivoting</div><div class="ttdef"><b>Definition</b> <a href="_k_l_u_adapter_8cpp_source.html#l00088">KLUAdapter.cpp:88</a></div></div>
@@ -176,12 +186,21 @@ $(function(){ initResizable(false); });
 <div class="ttc" id="aclass_d_psim_1_1_k_l_u_adapter_html_ac0a481a271301ec563224db0928b1592"><div class="ttname"><a href="class_d_psim_1_1_k_l_u_adapter.html#ac0a481a271301ec563224db0928b1592">DPsim::KLUAdapter::~KLUAdapter</a></div><div class="ttdeci">~KLUAdapter() override</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition</b> <a href="_k_l_u_adapter_8cpp_source.html#l00014">KLUAdapter.cpp:14</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_k_l_u_adapter_html_ad109bcfac8eec87bc66fe72b3475d8a6"><div class="ttname"><a href="class_d_psim_1_1_k_l_u_adapter.html#ad109bcfac8eec87bc66fe72b3475d8a6">DPsim::KLUAdapter::KLUAdapter</a></div><div class="ttdeci">KLUAdapter()</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition</b> <a href="_k_l_u_adapter_8cpp_source.html#l00022">KLUAdapter.cpp:22</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_k_l_u_adapter_html_ad566113de2099c870c1c70a00c276f2a"><div class="ttname"><a href="class_d_psim_1_1_k_l_u_adapter.html#ad566113de2099c870c1c70a00c276f2a">DPsim::KLUAdapter::preprocessing</a></div><div class="ttdeci">void preprocessing(SparseMatrix &amp;systemMatrix, std::vector&lt; std::pair&lt; UInt, UInt &gt; &gt; &amp;listVariableSystemMatrixEntries) override</div><div class="ttdoc">preprocessing function pre-ordering and scaling the matrix</div><div class="ttdef"><b>Definition</b> <a href="_k_l_u_adapter_8cpp_source.html#l00040">KLUAdapter.cpp:40</a></div></div>
+<div class="ttc" id="adpsim_2include_2dpsim_2_definitions_8h_html"><div class="ttname"><a href="dpsim_2include_2dpsim_2_definitions_8h.html">Definitions.h</a></div></div>
 <div class="ttc" id="anamespace_d_psim_html"><div class="ttname"><a href="namespace_d_psim.html">DPsim</a></div><div class="ttdef"><b>Definition</b> <a href="_dense_l_u_adapter_8cpp_source.html#l00013">DenseLUAdapter.cpp:13</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a62ee66cb7d49fe8ab3480d0d0146482a"><div class="ttname"><a href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482a">DPsim::PARTIAL_REFACTORIZATION_METHOD</a></div><div class="ttdeci">PARTIAL_REFACTORIZATION_METHOD</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8h_source.html#l00027">DirectLinearSolverConfiguration.h:27</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a62ee66cb7d49fe8ab3480d0d0146482aa0f1b121c7e25301bef9f408f3069e239"><div class="ttname"><a href="namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482aa0f1b121c7e25301bef9f408f3069e239">DPsim::PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH</a></div><div class="ttdeci">@ FACTORIZATION_PATH</div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8h_source.html#l00029">DirectLinearSolverConfiguration.h:29</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a6a29611b9912f8abc0545523b3f84f8c"><div class="ttname"><a href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">DPsim::Int</a></div><div class="ttdeci">CPS::Int Int</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00022">Definitions.h:22</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a7920162dfc7e843a4f1a1248fe9ccb0e"><div class="ttname"><a href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">DPsim::Matrix</a></div><div class="ttdeci">CPS::Matrix Matrix</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00024">Definitions.h:24</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_ab6afa34bab94cdc2ff33e09d4a1d2c9c"><div class="ttname"><a href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">DPsim::SparseMatrix</a></div><div class="ttdeci">CPS::SparseMatrixRow SparseMatrix</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00026">Definitions.h:26</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li><li class="navelem"><a class="el" href="_k_l_u_adapter_8h.html">KLUAdapter.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

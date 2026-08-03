@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('magma_8c_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_af103632340511860a5310da360a5028.html">src</a></li><li class="navelem"><a class="el" href="dir_41b5cd8eaa414849a0b5284f0c471335.html">SolverPlugins</a></li><li class="navelem"><a class="el" href="dir_1d1edee9def64da4e1e6f5b1b2e448d1.html">magma</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">magma.c</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#include &lt;dpsim/MNASolverDynInterface.h&gt;</span></div>
+<a href="magma_8c.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#include &lt;<a class="code" href="_m_n_a_solver_dyn_interface_8h.html">dpsim/MNASolverDynInterface.h</a>&gt;</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;string.h&gt;</span></div>
@@ -101,158 +109,165 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;magma_v2.h&gt;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;magmasparse.h&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keywordtype">int</span> dps_magma_init(<span class="keyword">struct</span> <a class="code hl_struct" href="structdpsim__csr__matrix.html">dpsim_csr_matrix</a> *matrix);</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keywordtype">int</span> dps_magma_decomp(<span class="keyword">struct</span> <a class="code hl_struct" href="structdpsim__csr__matrix.html">dpsim_csr_matrix</a> *matrix);</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keywordtype">int</span> dps_magma_solve(<span class="keywordtype">double</span> *rhs_values, <span class="keywordtype">double</span> *lhs_values);</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keywordtype">void</span> dps_magma_log(<span class="keyword">const</span> <span class="keywordtype">char</span> *str);</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keywordtype">void</span> dps_magma_cleanup(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keywordtype">int</span> <a class="code hl_function" href="magma_8c.html#acea874abde56e3ab5d6b32e64bc48aac">dps_magma_init</a>(<span class="keyword">struct</span> <a class="code hl_struct" href="structdpsim__csr__matrix.html">dpsim_csr_matrix</a> *matrix);</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keywordtype">int</span> <a class="code hl_function" href="magma_8c.html#a349038e975f431213b6d0dd4309be6d4">dps_magma_decomp</a>(<span class="keyword">struct</span> <a class="code hl_struct" href="structdpsim__csr__matrix.html">dpsim_csr_matrix</a> *matrix);</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keywordtype">int</span> <a class="code hl_function" href="magma_8c.html#afd56e817010cf225d01cfe6126000a14">dps_magma_solve</a>(<span class="keywordtype">double</span> *rhs_values, <span class="keywordtype">double</span> *lhs_values);</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keywordtype">void</span> <a class="code hl_function" href="magma_8c.html#ac9103087a92291e8b38f4cbc1b2e3e7e">dps_magma_log</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *str);</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keywordtype">void</span> <a class="code hl_function" href="magma_8c.html#a17ba1d706272c0a4f18a51eaa8b16671">dps_magma_cleanup</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
 <div class="foldopen" id="foldopen00017" data-start="{" data-end="};">
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="structdps__magma__data.html">   17</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structdps__magma__data.html">dps_magma_data</a> {</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>  <span class="keywordtype">int</span> size;</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  <span class="keywordtype">int</span> nnz;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  <span class="keywordtype">int</span> *perm_map;</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  <span class="keywordtype">double</span> *rhs_buffer;</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="structdps__magma__data.html#a237b3d6ad72f9f82f104c45f7aa3c244">   18</a></span>  <span class="keywordtype">int</span> <a class="code hl_variable" href="structdps__magma__data.html#a237b3d6ad72f9f82f104c45f7aa3c244">size</a>;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="structdps__magma__data.html#ad2ca75e7d829f9b88d690755cb102458">   19</a></span>  <span class="keywordtype">int</span> <a class="code hl_variable" href="structdps__magma__data.html#ad2ca75e7d829f9b88d690755cb102458">nnz</a>;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="structdps__magma__data.html#af02209ebc418b6e2b1346ef31eff0d90">   20</a></span>  <span class="keywordtype">int</span> *<a class="code hl_variable" href="structdps__magma__data.html#af02209ebc418b6e2b1346ef31eff0d90">perm_map</a>;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="structdps__magma__data.html#aad414273ee6c89cd18d549fdf713563c">   21</a></span>  <span class="keywordtype">double</span> *<a class="code hl_variable" href="structdps__magma__data.html#aad414273ee6c89cd18d549fdf713563c">rhs_buffer</a>;</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="structdps__magma__data.html#a6aa877ee162c866f9d2b02b7dcbf13fa">   23</a></span>  magma_dopts <a class="code hl_variable" href="structdps__magma__data.html#a6aa877ee162c866f9d2b02b7dcbf13fa">mMagmaOpts</a>;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  magma_queue_t mMagmaQueue;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="structdps__magma__data.html#ae05622c40a4743269a734988e942e188">   24</a></span>  magma_queue_t <a class="code hl_variable" href="structdps__magma__data.html#ae05622c40a4743269a734988e942e188">mMagmaQueue</a>;</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="structdps__magma__data.html#adc0c4b8293e518ac6b03b45baa5d9470">   27</a></span>  magma_d_matrix <a class="code hl_variable" href="structdps__magma__data.html#adc0c4b8293e518ac6b03b45baa5d9470">mHostSysMat</a>;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  magma_d_matrix mDevSysMat;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="structdps__magma__data.html#a892f01e2c8b8204c07fb9ef9942fa96a">   28</a></span>  magma_d_matrix <a class="code hl_variable" href="structdps__magma__data.html#a892f01e2c8b8204c07fb9ef9942fa96a">mDevSysMat</a>;</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="structdps__magma__data.html#aa89d2853f2435488661fbde59dc7498b">   31</a></span>  magma_d_matrix <a class="code hl_variable" href="structdps__magma__data.html#aa89d2853f2435488661fbde59dc7498b">mHostRhsVec</a>;</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  magma_d_matrix mDevRhsVec;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="structdps__magma__data.html#ad1d5f6a6211700a25ee3f05cca81da67">   32</a></span>  magma_d_matrix <a class="code hl_variable" href="structdps__magma__data.html#ad1d5f6a6211700a25ee3f05cca81da67">mDevRhsVec</a>;</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="structdps__magma__data.html#a598eaab4eb1411a51d59356af4b9ea32">   34</a></span>  magma_d_matrix <a class="code hl_variable" href="structdps__magma__data.html#a598eaab4eb1411a51d59356af4b9ea32">mHostLhsVec</a>;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  magma_d_matrix mDevLhsVec;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>} data;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="structdps__magma__data.html#a6d989b2edda8fd201585e0c902635e24">   35</a></span>  magma_d_matrix <a class="code hl_variable" href="structdps__magma__data.html#a6d989b2edda8fd201585e0c902635e24">mDevLhsVec</a>;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">   36</a></span>} <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>;</div>
 </div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *PLUGIN_NAME = <span class="stringliteral">&quot;libdps_magma&quot;</span>;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="keyword">static</span> <span class="keyword">struct </span><a class="code hl_struct" href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a> dps_magma_plugin = {</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="magma_8c.html#a69eb15722cc863a2a39f3e81b961e40b">   38</a></span><span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_variable" href="example_8c.html#a69eb15722cc863a2a39f3e81b961e40b">PLUGIN_NAME</a> = <span class="stringliteral">&quot;libdps_magma&quot;</span>;</div>
+<div class="foldopen" id="foldopen00039" data-start="{" data-end="};">
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="magma_8c.html#a0a9bd1cd7a2d8324f63afea3272831de">   39</a></span><span class="keyword">static</span> <span class="keyword">struct </span><a class="code hl_struct" href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a> <a class="code hl_variable" href="magma_8c.html#a0a9bd1cd7a2d8324f63afea3272831de">dps_magma_plugin</a> = {</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    .log =</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        dps_magma_log, <span class="comment">//a properly working dpsim will override this with the spdlog logger</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    .init = dps_magma_init,</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    .lu_decomp = dps_magma_decomp,</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    .solve = dps_magma_solve,</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    .cleanup = dps_magma_cleanup,</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <a class="code hl_function" href="magma_8c.html#ac9103087a92291e8b38f4cbc1b2e3e7e">dps_magma_log</a>, <span class="comment">//a properly working dpsim will override this with the spdlog logger</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    .init = <a class="code hl_function" href="magma_8c.html#acea874abde56e3ab5d6b32e64bc48aac">dps_magma_init</a>,</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    .lu_decomp = <a class="code hl_function" href="magma_8c.html#a349038e975f431213b6d0dd4309be6d4">dps_magma_decomp</a>,</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    .solve = <a class="code hl_function" href="magma_8c.html#afd56e817010cf225d01cfe6126000a14">dps_magma_solve</a>,</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    .cleanup = <a class="code hl_function" href="magma_8c.html#a17ba1d706272c0a4f18a51eaa8b16671">dps_magma_cleanup</a>,</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>};</div>
+</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">struct </span><a class="code hl_struct" href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a> *get_mna_plugin(<span class="keyword">const</span> <span class="keywordtype">char</span> *name) {</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keywordflow">if</span> (name == NULL || strcmp(name, PLUGIN_NAME) != 0) {</div>
+<div class="foldopen" id="foldopen00048" data-start="{" data-end="}">
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="magma_8c.html#a6bee17fa31ca342f31ecd9c57a5c9468">   48</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a> *<a class="code hl_function" href="magma_8c.html#a6bee17fa31ca342f31ecd9c57a5c9468">get_mna_plugin</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *name) {</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keywordflow">if</span> (name == NULL || strcmp(name, <a class="code hl_variable" href="example_8c.html#a69eb15722cc863a2a39f3e81b961e40b">PLUGIN_NAME</a>) != 0) {</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    printf(<span class="stringliteral">&quot;error: name mismatch\n&quot;</span>);</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordflow">return</span> NULL;</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  }</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="keywordflow">return</span> &amp;dps_magma_plugin;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="keywordflow">return</span> &amp;<a class="code hl_variable" href="magma_8c.html#a0a9bd1cd7a2d8324f63afea3272831de">dps_magma_plugin</a>;</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>}</div>
+</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="keywordtype">int</span> dps_magma_init(<span class="keyword">struct</span> <a class="code hl_struct" href="structdpsim__csr__matrix.html">dpsim_csr_matrix</a> *matrix) {</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  dps_magma_plugin.log(<span class="stringliteral">&quot;initialize&quot;</span>);</div>
+<div class="foldopen" id="foldopen00056" data-start="{" data-end="}">
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="magma_8c.html#acea874abde56e3ab5d6b32e64bc48aac">   56</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="magma_8c.html#acea874abde56e3ab5d6b32e64bc48aac">dps_magma_init</a>(<span class="keyword">struct</span> <a class="code hl_struct" href="structdpsim__csr__matrix.html">dpsim_csr_matrix</a> *matrix) {</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  <a class="code hl_variable" href="magma_8c.html#a0a9bd1cd7a2d8324f63afea3272831de">dps_magma_plugin</a>.log(<span class="stringliteral">&quot;initialize&quot;</span>);</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  magma_init();</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  magma_queue_create(0, &amp;data.mMagmaQueue);</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  data.mHostSysMat.storage_type = Magma_CSR;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  data.mDevSysMat.storage_type = Magma_CSR;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  data.mHostRhsVec.storage_type = Magma_CSR;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  data.mDevRhsVec.storage_type = Magma_CSR;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  data.mHostLhsVec.storage_type = Magma_CSR;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  data.mDevLhsVec.storage_type = Magma_CSR;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  data.rhs_buffer = (<span class="keywordtype">double</span> *)malloc(<span class="keyword">sizeof</span>(<span class="keywordtype">double</span>) * matrix-&gt;row_number);</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  data.perm_map = (<span class="keywordtype">int</span> *)malloc(<span class="keyword">sizeof</span>(<span class="keywordtype">int</span>) * matrix-&gt;row_number);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  magma_queue_create(0, &amp;<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaQueue);</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mHostSysMat.storage_type = Magma_CSR;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mDevSysMat.storage_type = Magma_CSR;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mHostRhsVec.storage_type = Magma_CSR;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mDevRhsVec.storage_type = Magma_CSR;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mHostLhsVec.storage_type = Magma_CSR;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mDevLhsVec.storage_type = Magma_CSR;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.rhs_buffer = (<span class="keywordtype">double</span> *)malloc(<span class="keyword">sizeof</span>(<span class="keywordtype">double</span>) * matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a945d159011e85b5a9a44937cb9f1bec7">row_number</a>);</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.perm_map = (<span class="keywordtype">int</span> *)malloc(<span class="keyword">sizeof</span>(<span class="keywordtype">int</span>) * matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a945d159011e85b5a9a44937cb9f1bec7">row_number</a>);</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  <span class="keywordflow">return</span> dps_magma_decomp(matrix);</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="magma_8c.html#a349038e975f431213b6d0dd4309be6d4">dps_magma_decomp</a>(matrix);</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>}</div>
+</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="keywordtype">int</span> dps_magma_decomp(<span class="keyword">struct</span> <a class="code hl_struct" href="structdpsim__csr__matrix.html">dpsim_csr_matrix</a> *matrix) {</div>
+<div class="foldopen" id="foldopen00072" data-start="{" data-end="}">
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="magma_8c.html#a349038e975f431213b6d0dd4309be6d4">   72</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="magma_8c.html#a349038e975f431213b6d0dd4309be6d4">dps_magma_decomp</a>(<span class="keyword">struct</span> <a class="code hl_struct" href="structdpsim__csr__matrix.html">dpsim_csr_matrix</a> *matrix) {</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  <span class="keywordtype">int</span> perm_size = 0;</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  data.size = matrix-&gt;row_number;</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  data.nnz = matrix-&gt;nnz;</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  dps_magma_plugin.log(<span class="stringliteral">&quot;decomp&quot;</span>);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.size = matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a945d159011e85b5a9a44937cb9f1bec7">row_number</a>;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.nnz = matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a07559bc24cc188650ddceaa51a7ac55b">nnz</a>;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  <a class="code hl_variable" href="magma_8c.html#a0a9bd1cd7a2d8324f63afea3272831de">dps_magma_plugin</a>.log(<span class="stringliteral">&quot;decomp&quot;</span>);</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  cusparseMatDescr_t descr_M = 0;</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  cusolverSpHandle_t mCusolverhandle;</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  <span class="keywordflow">if</span> (cusolverSpCreate(&amp;mCusolverhandle) != CUSOLVER_STATUS_SUCCESS) {</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    dps_magma_plugin.log(<span class="stringliteral">&quot;cusolverSpCreate returend an error&quot;</span>);</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <a class="code hl_variable" href="magma_8c.html#a0a9bd1cd7a2d8324f63afea3272831de">dps_magma_plugin</a>.log(<span class="stringliteral">&quot;cusolverSpCreate returend an error&quot;</span>);</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keywordflow">return</span> 1;</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  }</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  <span class="keywordflow">if</span> (cusparseCreateMatDescr(&amp;descr_M) != CUSPARSE_STATUS_SUCCESS) {</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    dps_magma_plugin.log(<span class="stringliteral">&quot;returend an error&quot;</span>);</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <a class="code hl_variable" href="magma_8c.html#a0a9bd1cd7a2d8324f63afea3272831de">dps_magma_plugin</a>.log(<span class="stringliteral">&quot;returend an error&quot;</span>);</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keywordflow">return</span> 1;</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  }</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  <span class="keywordflow">if</span> (cusparseSetMatIndexBase(descr_M, CUSPARSE_INDEX_BASE_ZERO) !=</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>      CUSPARSE_STATUS_SUCCESS) {</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    dps_magma_plugin.log(<span class="stringliteral">&quot;cusolver returend an error&quot;</span>);</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <a class="code hl_variable" href="magma_8c.html#a0a9bd1cd7a2d8324f63afea3272831de">dps_magma_plugin</a>.log(<span class="stringliteral">&quot;cusolver returend an error&quot;</span>);</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keywordflow">return</span> 1;</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  }</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  <span class="keywordflow">if</span> (cusparseSetMatType(descr_M, CUSPARSE_MATRIX_TYPE_GENERAL) !=</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>      CUSPARSE_STATUS_SUCCESS) {</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    dps_magma_plugin.log(<span class="stringliteral">&quot;cusolver returend an error&quot;</span>);</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <a class="code hl_variable" href="magma_8c.html#a0a9bd1cd7a2d8324f63afea3272831de">dps_magma_plugin</a>.log(<span class="stringliteral">&quot;cusolver returend an error&quot;</span>);</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <span class="keywordflow">return</span> 1;</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  }</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>  <span class="keywordflow">if</span> (cusolverSpDcsrzfdHost(mCusolverhandle, matrix-&gt;row_number, matrix-&gt;nnz,</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                            descr_M, matrix-&gt;values, matrix-&gt;rowIndex,</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>                            matrix-&gt;colIndex, data.perm_map,</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>  <span class="keywordflow">if</span> (cusolverSpDcsrzfdHost(mCusolverhandle, matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a945d159011e85b5a9a44937cb9f1bec7">row_number</a>, matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a07559bc24cc188650ddceaa51a7ac55b">nnz</a>,</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                            descr_M, matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a9c79ea6d8c91199feb877b993032f120">values</a>, matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a5d6df5f643539aaaeafab636423913da">rowIndex</a>,</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>                            matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a8812963f59d5cbbb82e969669fe1edc7">colIndex</a>, <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.perm_map,</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>                            &amp;perm_size) != CUSOLVER_STATUS_SUCCESS) {</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    dps_magma_plugin.log(<span class="stringliteral">&quot;cusolverSpDcsrzfdHost returend an error&quot;</span>);</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <a class="code hl_variable" href="magma_8c.html#a0a9bd1cd7a2d8324f63afea3272831de">dps_magma_plugin</a>.log(<span class="stringliteral">&quot;cusolverSpDcsrzfdHost returend an error&quot;</span>);</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keywordflow">return</span> 1;</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  }</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  <span class="keywordtype">size_t</span> bufferSize = 0;</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  <span class="keywordtype">int</span> *q = (<span class="keywordtype">int</span> *)malloc(<span class="keyword">sizeof</span>(<span class="keywordtype">int</span>) * matrix-&gt;row_number);</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>  <span class="keywordtype">int</span> *map = (<span class="keywordtype">int</span> *)malloc(<span class="keyword">sizeof</span>(<span class="keywordtype">int</span>) * matrix-&gt;nnz);</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>  <span class="keywordtype">double</span> *old_values = (<span class="keywordtype">double</span> *)malloc(<span class="keyword">sizeof</span>(<span class="keywordtype">double</span>) * matrix-&gt;nnz);</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt;= matrix-&gt;row_number; ++i) {</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  <span class="keywordtype">int</span> *q = (<span class="keywordtype">int</span> *)malloc(<span class="keyword">sizeof</span>(<span class="keywordtype">int</span>) * matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a945d159011e85b5a9a44937cb9f1bec7">row_number</a>);</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>  <span class="keywordtype">int</span> *map = (<span class="keywordtype">int</span> *)malloc(<span class="keyword">sizeof</span>(<span class="keywordtype">int</span>) * matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a07559bc24cc188650ddceaa51a7ac55b">nnz</a>);</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>  <span class="keywordtype">double</span> *old_values = (<span class="keywordtype">double</span> *)malloc(<span class="keyword">sizeof</span>(<span class="keywordtype">double</span>) * matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a07559bc24cc188650ddceaa51a7ac55b">nnz</a>);</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt;= matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a945d159011e85b5a9a44937cb9f1bec7">row_number</a>; ++i) {</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    q[i] = i;</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>  }</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt;= matrix-&gt;nnz; ++i) {</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt;= matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a07559bc24cc188650ddceaa51a7ac55b">nnz</a>; ++i) {</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    map[i] = i;</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    old_values[i] = matrix-&gt;values[i];</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    old_values[i] = matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a9c79ea6d8c91199feb877b993032f120">values</a>[i];</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>  }</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  <span class="keywordflow">if</span> (cusolverSpXcsrperm_bufferSizeHost(</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>          mCusolverhandle, matrix-&gt;row_number, matrix-&gt;row_number, matrix-&gt;nnz,</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>          descr_M, matrix-&gt;rowIndex, matrix-&gt;colIndex, data.perm_map, q,</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>          mCusolverhandle, matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a945d159011e85b5a9a44937cb9f1bec7">row_number</a>, matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a945d159011e85b5a9a44937cb9f1bec7">row_number</a>, matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a07559bc24cc188650ddceaa51a7ac55b">nnz</a>,</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>          descr_M, matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a5d6df5f643539aaaeafab636423913da">rowIndex</a>, matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a8812963f59d5cbbb82e969669fe1edc7">colIndex</a>, <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.perm_map, q,</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>          &amp;bufferSize) != CUSOLVER_STATUS_SUCCESS) {</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    dps_magma_plugin.log(<span class="stringliteral">&quot;cusolverSpXcsrperm_bufferSizeHost returend an error&quot;</span>);</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <a class="code hl_variable" href="magma_8c.html#a0a9bd1cd7a2d8324f63afea3272831de">dps_magma_plugin</a>.log(<span class="stringliteral">&quot;cusolverSpXcsrperm_bufferSizeHost returend an error&quot;</span>);</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="keywordflow">return</span> 1;</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>  }</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>  <span class="keywordtype">void</span> *buffer = malloc(bufferSize);</div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>  <span class="keywordflow">if</span> (cusolverSpXcsrpermHost(mCusolverhandle, matrix-&gt;row_number,</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                             matrix-&gt;row_number, matrix-&gt;nnz, descr_M,</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>                             matrix-&gt;rowIndex, matrix-&gt;colIndex, data.perm_map,</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>  <span class="keywordflow">if</span> (cusolverSpXcsrpermHost(mCusolverhandle, matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a945d159011e85b5a9a44937cb9f1bec7">row_number</a>,</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                             matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a945d159011e85b5a9a44937cb9f1bec7">row_number</a>, matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a07559bc24cc188650ddceaa51a7ac55b">nnz</a>, descr_M,</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>                             matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a5d6df5f643539aaaeafab636423913da">rowIndex</a>, matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a8812963f59d5cbbb82e969669fe1edc7">colIndex</a>, <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.perm_map,</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>                             q, map, buffer) != CUSOLVER_STATUS_SUCCESS) {</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    dps_magma_plugin.log(<span class="stringliteral">&quot;cusolverSpXcsrpermHost returend an error&quot;</span>);</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <a class="code hl_variable" href="magma_8c.html#a0a9bd1cd7a2d8324f63afea3272831de">dps_magma_plugin</a>.log(<span class="stringliteral">&quot;cusolverSpXcsrpermHost returend an error&quot;</span>);</div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    <span class="keywordflow">return</span> 1;</div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>  }</div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt;= matrix-&gt;nnz; ++i) {</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    matrix-&gt;values[i] = old_values[map[i]];</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt;= matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a07559bc24cc188650ddceaa51a7ac55b">nnz</a>; ++i) {</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a9c79ea6d8c91199feb877b993032f120">values</a>[i] = old_values[map[i]];</div>
 <div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>  }</div>
 <div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span> </div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>  magma_dcsrset(matrix-&gt;row_number, matrix-&gt;row_number, matrix-&gt;rowIndex,</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>                matrix-&gt;colIndex, matrix-&gt;values, &amp;data.mHostSysMat,</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>                data.mMagmaQueue);</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>  magma_dcsrset(matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a945d159011e85b5a9a44937cb9f1bec7">row_number</a>, matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a945d159011e85b5a9a44937cb9f1bec7">row_number</a>, matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a5d6df5f643539aaaeafab636423913da">rowIndex</a>,</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>                matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a8812963f59d5cbbb82e969669fe1edc7">colIndex</a>, matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a9c79ea6d8c91199feb877b993032f120">values</a>, &amp;<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mHostSysMat,</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>                <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaQueue);</div>
 <div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span> </div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>  data.mMagmaOpts.solver_par.solver = Magma_PIDRMERGE;</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>  data.mMagmaOpts.solver_par.restart = 8;</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>  data.mMagmaOpts.solver_par.maxiter = 1000;</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>  data.mMagmaOpts.solver_par.rtol = 1e-10;</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>  data.mMagmaOpts.solver_par.maxiter = 1000;</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>  data.mMagmaOpts.precond_par.solver = Magma_ILU;</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>  data.mMagmaOpts.precond_par.levels = 0;</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>  data.mMagmaOpts.precond_par.trisolver = Magma_CUSOLVE;</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>  <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaOpts.solver_par.solver = Magma_PIDRMERGE;</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>  <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaOpts.solver_par.restart = 8;</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>  <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaOpts.solver_par.maxiter = 1000;</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>  <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaOpts.solver_par.rtol = 1e-10;</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>  <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaOpts.solver_par.maxiter = 1000;</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>  <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaOpts.precond_par.solver = Magma_ILU;</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>  <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaOpts.precond_par.levels = 0;</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>  <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaOpts.precond_par.trisolver = Magma_CUSOLVE;</div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span> </div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>  magma_dsolverinfo_init(&amp;data.mMagmaOpts.solver_par,</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>                         &amp;data.mMagmaOpts.precond_par, data.mMagmaQueue);</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>  magma_dsolverinfo_init(&amp;<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaOpts.solver_par,</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>                         &amp;<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaOpts.precond_par, <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaQueue);</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  magma_dvinit(&amp;data.mDevRhsVec, Magma_DEV, matrix-&gt;row_number, 1, 0.0,</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>               data.mMagmaQueue);</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>  magma_dmtransfer(data.mHostSysMat, &amp;data.mDevSysMat, Magma_CPU, Magma_DEV,</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>                   data.mMagmaQueue);</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>  magma_d_precondsetup(data.mDevSysMat, data.mDevRhsVec,</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>                       &amp;data.mMagmaOpts.solver_par,</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>                       &amp;data.mMagmaOpts.precond_par, data.mMagmaQueue);</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  magma_dvinit(&amp;<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mDevRhsVec, Magma_DEV, matrix-&gt;<a class="code hl_variable" href="structdpsim__csr__matrix.html#a945d159011e85b5a9a44937cb9f1bec7">row_number</a>, 1, 0.0,</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>               <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaQueue);</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>  magma_dmtransfer(<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mHostSysMat, &amp;<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mDevSysMat, Magma_CPU, Magma_DEV,</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>                   <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaQueue);</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>  magma_d_precondsetup(<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mDevSysMat, <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mDevRhsVec,</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>                       &amp;<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaOpts.solver_par,</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>                       &amp;<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaOpts.precond_par, <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaQueue);</div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span> </div>
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>  free(buffer);</div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>  free(q);</div>
@@ -263,31 +278,33 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span> </div>
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>  <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>}</div>
+</div>
 <div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span><span class="keywordtype">int</span> dps_magma_solve(<span class="keywordtype">double</span> *rhs_values, <span class="keywordtype">double</span> *lhs_values) {</div>
+<div class="foldopen" id="foldopen00176" data-start="{" data-end="}">
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno"><a class="line" href="magma_8c.html#afd56e817010cf225d01cfe6126000a14">  176</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="magma_8c.html#afd56e817010cf225d01cfe6126000a14">dps_magma_solve</a>(<span class="keywordtype">double</span> *rhs_values, <span class="keywordtype">double</span> *lhs_values) {</div>
 <div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>  <span class="keywordtype">int</span> one = 0;</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>  dps_magma_plugin.log(<span class="stringliteral">&quot;solve&quot;</span>);</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>  <a class="code hl_variable" href="magma_8c.html#a0a9bd1cd7a2d8324f63afea3272831de">dps_magma_plugin</a>.log(<span class="stringliteral">&quot;solve&quot;</span>);</div>
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span> </div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt;= data.size; ++i) {</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    data.rhs_buffer[i] = rhs_values[data.perm_map[i]];</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt;= <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.size; ++i) {</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.rhs_buffer[i] = rhs_values[<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.perm_map[i]];</div>
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>  }</div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>  <span class="comment">//</span></div>
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>  <span class="comment">//Copy right vector to device</span></div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>  magma_dvset(data.size, 1, data.rhs_buffer, &amp;data.mHostRhsVec,</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>              data.mMagmaQueue);</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>  magma_dmtransfer(data.mHostRhsVec, &amp;data.mDevRhsVec, Magma_CPU, Magma_DEV,</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                   data.mMagmaQueue);</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>  magma_dvinit(&amp;data.mDevLhsVec, Magma_DEV, data.mHostRhsVec.num_rows,</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>               data.mHostRhsVec.num_cols, 0.0, data.mMagmaQueue);</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>  magma_dvset(<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.size, 1, <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.rhs_buffer, &amp;<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mHostRhsVec,</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>              <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaQueue);</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>  magma_dmtransfer(<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mHostRhsVec, &amp;<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mDevRhsVec, Magma_CPU, Magma_DEV,</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                   <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaQueue);</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>  magma_dvinit(&amp;<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mDevLhsVec, Magma_DEV, <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mHostRhsVec.num_rows,</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>               <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mHostRhsVec.num_cols, 0.0, <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaQueue);</div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span> </div>
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>  <span class="comment">// Solve</span></div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>  magma_d_solver(data.mDevSysMat, data.mDevRhsVec, &amp;data.mDevLhsVec,</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>                 &amp;data.mMagmaOpts, data.mMagmaQueue);</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>  magma_d_solver(<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mDevSysMat, <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mDevRhsVec, &amp;<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mDevLhsVec,</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>                 &amp;<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaOpts, <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaQueue);</div>
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span> </div>
 <div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>  <span class="comment">//Copy Solution back</span></div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>  magma_dmtransfer(data.mDevLhsVec, &amp;data.mHostLhsVec, Magma_DEV, Magma_CPU,</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>                   data.mMagmaQueue);</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>  magma_dvcopy(data.mDevLhsVec, &amp;data.size, &amp;one, lhs_values, data.mMagmaQueue);</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>  magma_dmtransfer(<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mDevLhsVec, &amp;<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mHostLhsVec, Magma_DEV, Magma_CPU,</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>                   <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaQueue);</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>  magma_dvcopy(<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mDevLhsVec, &amp;<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.size, &amp;one, lhs_values, <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaQueue);</div>
 <div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span> </div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>  <span class="comment">//Apply inverse Permutation: TODO: This seems to be wrong, but why?</span></div>
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>  <span class="comment">//this-&gt;mLeftSideVector = mTransp-&gt;inverse() * this-&gt;mLeftSideVector;</span></div>
@@ -295,32 +312,61 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>  <span class="comment">// Components&#39; states will be updated by the post-step tasks</span></div>
 <div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>  <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>}</div>
+</div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span><span class="keywordtype">void</span> dps_magma_cleanup(<span class="keywordtype">void</span>) {</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>  dps_magma_plugin.log(<span class="stringliteral">&quot;cleanup&quot;</span>);</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>  magma_dmfree(&amp;data.mDevSysMat, data.mMagmaQueue);</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>  magma_dmfree(&amp;data.mDevRhsVec, data.mMagmaQueue);</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>  magma_dmfree(&amp;data.mDevLhsVec, data.mMagmaQueue);</div>
+<div class="foldopen" id="foldopen00208" data-start="{" data-end="}">
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno"><a class="line" href="magma_8c.html#a17ba1d706272c0a4f18a51eaa8b16671">  208</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="magma_8c.html#a17ba1d706272c0a4f18a51eaa8b16671">dps_magma_cleanup</a>(<span class="keywordtype">void</span>) {</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>  <a class="code hl_variable" href="magma_8c.html#a0a9bd1cd7a2d8324f63afea3272831de">dps_magma_plugin</a>.log(<span class="stringliteral">&quot;cleanup&quot;</span>);</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>  magma_dmfree(&amp;<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mDevSysMat, <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaQueue);</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>  magma_dmfree(&amp;<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mDevRhsVec, <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaQueue);</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>  magma_dmfree(&amp;<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mDevLhsVec, <a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaQueue);</div>
 <div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span> </div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>  magma_queue_destroy(data.mMagmaQueue);</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>  magma_queue_destroy(<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.mMagmaQueue);</div>
 <div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>  magma_finalize();</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>  free(data.perm_map);</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>  free(data.rhs_buffer);</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>  free(<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.perm_map);</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>  free(<a class="code hl_variable" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>.rhs_buffer);</div>
 <div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>}</div>
+</div>
 <div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span> </div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span><span class="keywordtype">void</span> dps_magma_log(<span class="keyword">const</span> <span class="keywordtype">char</span> *str) { puts(str); }</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno"><a class="line" href="magma_8c.html#ac9103087a92291e8b38f4cbc1b2e3e7e">  220</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="magma_8c.html#ac9103087a92291e8b38f4cbc1b2e3e7e">dps_magma_log</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *str) { puts(str); }</div>
+<div class="ttc" id="a_m_n_a_solver_dyn_interface_8h_html"><div class="ttname"><a href="_m_n_a_solver_dyn_interface_8h.html">MNASolverDynInterface.h</a></div></div>
+<div class="ttc" id="aexample_8c_html_a69eb15722cc863a2a39f3e81b961e40b"><div class="ttname"><a href="example_8c.html#a69eb15722cc863a2a39f3e81b961e40b">PLUGIN_NAME</a></div><div class="ttdeci">static const char * PLUGIN_NAME</div><div class="ttdef"><b>Definition</b> <a href="example_8c_source.html#l00012">example.c:12</a></div></div>
+<div class="ttc" id="amagma_8c_html_a0a9bd1cd7a2d8324f63afea3272831de"><div class="ttname"><a href="magma_8c.html#a0a9bd1cd7a2d8324f63afea3272831de">dps_magma_plugin</a></div><div class="ttdeci">static struct dpsim_mna_plugin dps_magma_plugin</div><div class="ttdef"><b>Definition</b> <a href="#l00039">magma.c:39</a></div></div>
+<div class="ttc" id="amagma_8c_html_a17ba1d706272c0a4f18a51eaa8b16671"><div class="ttname"><a href="magma_8c.html#a17ba1d706272c0a4f18a51eaa8b16671">dps_magma_cleanup</a></div><div class="ttdeci">void dps_magma_cleanup(void)</div><div class="ttdef"><b>Definition</b> <a href="#l00208">magma.c:208</a></div></div>
+<div class="ttc" id="amagma_8c_html_a349038e975f431213b6d0dd4309be6d4"><div class="ttname"><a href="magma_8c.html#a349038e975f431213b6d0dd4309be6d4">dps_magma_decomp</a></div><div class="ttdeci">int dps_magma_decomp(struct dpsim_csr_matrix *matrix)</div><div class="ttdef"><b>Definition</b> <a href="#l00072">magma.c:72</a></div></div>
+<div class="ttc" id="amagma_8c_html_a6bee17fa31ca342f31ecd9c57a5c9468"><div class="ttname"><a href="magma_8c.html#a6bee17fa31ca342f31ecd9c57a5c9468">get_mna_plugin</a></div><div class="ttdeci">struct dpsim_mna_plugin * get_mna_plugin(const char *name)</div><div class="ttdef"><b>Definition</b> <a href="#l00048">magma.c:48</a></div></div>
+<div class="ttc" id="amagma_8c_html_ac9103087a92291e8b38f4cbc1b2e3e7e"><div class="ttname"><a href="magma_8c.html#ac9103087a92291e8b38f4cbc1b2e3e7e">dps_magma_log</a></div><div class="ttdeci">void dps_magma_log(const char *str)</div><div class="ttdef"><b>Definition</b> <a href="#l00220">magma.c:220</a></div></div>
+<div class="ttc" id="amagma_8c_html_acea874abde56e3ab5d6b32e64bc48aac"><div class="ttname"><a href="magma_8c.html#acea874abde56e3ab5d6b32e64bc48aac">dps_magma_init</a></div><div class="ttdeci">int dps_magma_init(struct dpsim_csr_matrix *matrix)</div><div class="ttdef"><b>Definition</b> <a href="#l00056">magma.c:56</a></div></div>
+<div class="ttc" id="amagma_8c_html_ad7922292abd63b0e178bbc995f08d00e"><div class="ttname"><a href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a></div><div class="ttdeci">struct dps_magma_data data</div></div>
+<div class="ttc" id="amagma_8c_html_afd56e817010cf225d01cfe6126000a14"><div class="ttname"><a href="magma_8c.html#afd56e817010cf225d01cfe6126000a14">dps_magma_solve</a></div><div class="ttdeci">int dps_magma_solve(double *rhs_values, double *lhs_values)</div><div class="ttdef"><b>Definition</b> <a href="#l00176">magma.c:176</a></div></div>
 <div class="ttc" id="astructdps__magma__data_html"><div class="ttname"><a href="structdps__magma__data.html">dps_magma_data</a></div><div class="ttdef"><b>Definition</b> <a href="#l00017">magma.c:17</a></div></div>
+<div class="ttc" id="astructdps__magma__data_html_a237b3d6ad72f9f82f104c45f7aa3c244"><div class="ttname"><a href="structdps__magma__data.html#a237b3d6ad72f9f82f104c45f7aa3c244">dps_magma_data::size</a></div><div class="ttdeci">int size</div><div class="ttdef"><b>Definition</b> <a href="#l00018">magma.c:18</a></div></div>
 <div class="ttc" id="astructdps__magma__data_html_a598eaab4eb1411a51d59356af4b9ea32"><div class="ttname"><a href="structdps__magma__data.html#a598eaab4eb1411a51d59356af4b9ea32">dps_magma_data::mHostLhsVec</a></div><div class="ttdeci">magma_d_matrix mHostLhsVec</div><div class="ttdoc">LHS-Vector.</div><div class="ttdef"><b>Definition</b> <a href="#l00034">magma.c:34</a></div></div>
 <div class="ttc" id="astructdps__magma__data_html_a6aa877ee162c866f9d2b02b7dcbf13fa"><div class="ttname"><a href="structdps__magma__data.html#a6aa877ee162c866f9d2b02b7dcbf13fa">dps_magma_data::mMagmaOpts</a></div><div class="ttdeci">magma_dopts mMagmaOpts</div><div class="ttdoc">Solver-Handle.</div><div class="ttdef"><b>Definition</b> <a href="#l00023">magma.c:23</a></div></div>
+<div class="ttc" id="astructdps__magma__data_html_a6d989b2edda8fd201585e0c902635e24"><div class="ttname"><a href="structdps__magma__data.html#a6d989b2edda8fd201585e0c902635e24">dps_magma_data::mDevLhsVec</a></div><div class="ttdeci">magma_d_matrix mDevLhsVec</div><div class="ttdef"><b>Definition</b> <a href="#l00035">magma.c:35</a></div></div>
+<div class="ttc" id="astructdps__magma__data_html_a892f01e2c8b8204c07fb9ef9942fa96a"><div class="ttname"><a href="structdps__magma__data.html#a892f01e2c8b8204c07fb9ef9942fa96a">dps_magma_data::mDevSysMat</a></div><div class="ttdeci">magma_d_matrix mDevSysMat</div><div class="ttdef"><b>Definition</b> <a href="#l00028">magma.c:28</a></div></div>
 <div class="ttc" id="astructdps__magma__data_html_aa89d2853f2435488661fbde59dc7498b"><div class="ttname"><a href="structdps__magma__data.html#aa89d2853f2435488661fbde59dc7498b">dps_magma_data::mHostRhsVec</a></div><div class="ttdeci">magma_d_matrix mHostRhsVec</div><div class="ttdoc">RHS-Vector.</div><div class="ttdef"><b>Definition</b> <a href="#l00031">magma.c:31</a></div></div>
+<div class="ttc" id="astructdps__magma__data_html_aad414273ee6c89cd18d549fdf713563c"><div class="ttname"><a href="structdps__magma__data.html#aad414273ee6c89cd18d549fdf713563c">dps_magma_data::rhs_buffer</a></div><div class="ttdeci">double * rhs_buffer</div><div class="ttdef"><b>Definition</b> <a href="#l00021">magma.c:21</a></div></div>
+<div class="ttc" id="astructdps__magma__data_html_ad1d5f6a6211700a25ee3f05cca81da67"><div class="ttname"><a href="structdps__magma__data.html#ad1d5f6a6211700a25ee3f05cca81da67">dps_magma_data::mDevRhsVec</a></div><div class="ttdeci">magma_d_matrix mDevRhsVec</div><div class="ttdef"><b>Definition</b> <a href="#l00032">magma.c:32</a></div></div>
+<div class="ttc" id="astructdps__magma__data_html_ad2ca75e7d829f9b88d690755cb102458"><div class="ttname"><a href="structdps__magma__data.html#ad2ca75e7d829f9b88d690755cb102458">dps_magma_data::nnz</a></div><div class="ttdeci">int nnz</div><div class="ttdef"><b>Definition</b> <a href="#l00019">magma.c:19</a></div></div>
 <div class="ttc" id="astructdps__magma__data_html_adc0c4b8293e518ac6b03b45baa5d9470"><div class="ttname"><a href="structdps__magma__data.html#adc0c4b8293e518ac6b03b45baa5d9470">dps_magma_data::mHostSysMat</a></div><div class="ttdeci">magma_d_matrix mHostSysMat</div><div class="ttdoc">Systemmatrix.</div><div class="ttdef"><b>Definition</b> <a href="#l00027">magma.c:27</a></div></div>
+<div class="ttc" id="astructdps__magma__data_html_ae05622c40a4743269a734988e942e188"><div class="ttname"><a href="structdps__magma__data.html#ae05622c40a4743269a734988e942e188">dps_magma_data::mMagmaQueue</a></div><div class="ttdeci">magma_queue_t mMagmaQueue</div><div class="ttdef"><b>Definition</b> <a href="#l00024">magma.c:24</a></div></div>
+<div class="ttc" id="astructdps__magma__data_html_af02209ebc418b6e2b1346ef31eff0d90"><div class="ttname"><a href="structdps__magma__data.html#af02209ebc418b6e2b1346ef31eff0d90">dps_magma_data::perm_map</a></div><div class="ttdeci">int * perm_map</div><div class="ttdef"><b>Definition</b> <a href="#l00020">magma.c:20</a></div></div>
 <div class="ttc" id="astructdpsim__csr__matrix_html"><div class="ttname"><a href="structdpsim__csr__matrix.html">dpsim_csr_matrix</a></div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_solver_dyn_interface_8h_source.html#l00012">MNASolverDynInterface.h:12</a></div></div>
+<div class="ttc" id="astructdpsim__csr__matrix_html_a07559bc24cc188650ddceaa51a7ac55b"><div class="ttname"><a href="structdpsim__csr__matrix.html#a07559bc24cc188650ddceaa51a7ac55b">dpsim_csr_matrix::nnz</a></div><div class="ttdeci">int nnz</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_solver_dyn_interface_8h_source.html#l00017">MNASolverDynInterface.h:17</a></div></div>
+<div class="ttc" id="astructdpsim__csr__matrix_html_a5d6df5f643539aaaeafab636423913da"><div class="ttname"><a href="structdpsim__csr__matrix.html#a5d6df5f643539aaaeafab636423913da">dpsim_csr_matrix::rowIndex</a></div><div class="ttdeci">int * rowIndex</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_solver_dyn_interface_8h_source.html#l00014">MNASolverDynInterface.h:14</a></div></div>
+<div class="ttc" id="astructdpsim__csr__matrix_html_a8812963f59d5cbbb82e969669fe1edc7"><div class="ttname"><a href="structdpsim__csr__matrix.html#a8812963f59d5cbbb82e969669fe1edc7">dpsim_csr_matrix::colIndex</a></div><div class="ttdeci">int * colIndex</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_solver_dyn_interface_8h_source.html#l00015">MNASolverDynInterface.h:15</a></div></div>
+<div class="ttc" id="astructdpsim__csr__matrix_html_a945d159011e85b5a9a44937cb9f1bec7"><div class="ttname"><a href="structdpsim__csr__matrix.html#a945d159011e85b5a9a44937cb9f1bec7">dpsim_csr_matrix::row_number</a></div><div class="ttdeci">int row_number</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_solver_dyn_interface_8h_source.html#l00016">MNASolverDynInterface.h:16</a></div></div>
+<div class="ttc" id="astructdpsim__csr__matrix_html_a9c79ea6d8c91199feb877b993032f120"><div class="ttname"><a href="structdpsim__csr__matrix.html#a9c79ea6d8c91199feb877b993032f120">dpsim_csr_matrix::values</a></div><div class="ttdeci">double * values</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_solver_dyn_interface_8h_source.html#l00013">MNASolverDynInterface.h:13</a></div></div>
 <div class="ttc" id="astructdpsim__mna__plugin_html"><div class="ttname"><a href="structdpsim__mna__plugin.html">dpsim_mna_plugin</a></div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_solver_dyn_interface_8h_source.html#l00020">MNASolverDynInterface.h:20</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_af103632340511860a5310da360a5028.html">src</a></li><li class="navelem"><a class="el" href="dir_41b5cd8eaa414849a0b5284f0c471335.html">SolverPlugins</a></li><li class="navelem"><a class="el" href="dir_1d1edee9def64da4e1e6f5b1b2e448d1.html">magma</a></li><li class="navelem"><a class="el" href="magma_8c.html">magma.c</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

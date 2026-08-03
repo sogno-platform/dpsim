@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_m_n_a_solver_direct_8cpp_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_af103632340511860a5310da360a5028.html">src</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">MNASolverDirect.cpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_m_n_a_solver_direct_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -99,25 +107,25 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * file, You can obtain one at https://mozilla.org/MPL/2.0/.</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> *********************************************************************************/</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;dpsim/MNASolverDirect.h&gt;</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;dpsim/SequentialScheduler.h&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;<a class="code" href="_m_n_a_solver_direct_8h.html">dpsim/MNASolverDirect.h</a>&gt;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;<a class="code" href="_sequential_scheduler_8h.html">dpsim/SequentialScheduler.h</a>&gt;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespace_d_psim.html">DPsim</a>;</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">using namespace </span>CPS;</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespace_c_p_s.html">CPS</a>;</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_d_psim.html">DPsim</a> {</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
 <div class="foldopen" id="foldopen00018" data-start="{" data-end="}">
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_direct.html#adad777740bbd60072dd088bacd966a21">   18</a></span><a class="code hl_function" href="class_d_psim_1_1_mna_solver_direct.html#adad777740bbd60072dd088bacd966a21">MnaSolverDirect&lt;VarType&gt;::MnaSolverDirect</a>(String name, CPS::Domain domain,</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>                                          CPS::Logger::Level logLevel)</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_direct.html#adad777740bbd60072dd088bacd966a21">   18</a></span><a class="code hl_function" href="class_d_psim_1_1_mna_solver_direct.html#adad777740bbd60072dd088bacd966a21">MnaSolverDirect&lt;VarType&gt;::MnaSolverDirect</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> name, <a class="code hl_enumeration" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9">CPS::Domain</a> domain,</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>                                          <a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a> logLevel)</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    : <a class="code hl_function" href="class_d_psim_1_1_mna_solver.html#ab9ae5ee9efd99c25809c6b16a58c58e4">MnaSolver</a>&lt;VarType&gt;(name, domain, logLevel) {</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#ifdef WITH_KLU</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  <a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a802abeffc7d579bd96a046f62eca5663">mImplementationInUse</a> = DirectLinearSolverImpl::KLU;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  <a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a802abeffc7d579bd96a046f62eca5663">mImplementationInUse</a> = <a class="code hl_enumvalue" href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a102d1784ab244b636827fc43963a995b">DirectLinearSolverImpl::KLU</a>;</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#elif defined(WITH_SPARSE)</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  <a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a802abeffc7d579bd96a046f62eca5663">mImplementationInUse</a> = DirectLinearSolverImpl::SparseLU;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  <a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a802abeffc7d579bd96a046f62eca5663">mImplementationInUse</a> = <a class="code hl_enumvalue" href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a9a5e6eae6a80915040abf06ff0e5cfc0">DirectLinearSolverImpl::SparseLU</a>;</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a802abeffc7d579bd96a046f62eca5663">mImplementationInUse</a> = DirectLinearSolverImpl::DenseLU;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a802abeffc7d579bd96a046f62eca5663">mImplementationInUse</a> = <a class="code hl_enumvalue" href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a8c3e355004be96e6a5fa3853abd513c9">DirectLinearSolverImpl::DenseLU</a>;</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>}</div>
 </div>
@@ -132,7 +140,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
 <div class="foldopen" id="foldopen00036" data-start="{" data-end="}">
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_direct.html#ab82e6749686d074db68d98715087a15a">   36</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_mna_solver_direct.html#ac178b75b17faedb1a7cd38eb7c0d2c8e">MnaSolverDirect&lt;VarType&gt;::switchedMatrixEmpty</a>(std::size_t swIdx,</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>                                                   Int freqIdx) {</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>                                                   <a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> freqIdx) {</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a5757cf850587900999c97bcc101ae170">mSwitchedMatrices</a>[std::bitset&lt;SWITCH_NUM&gt;(swIdx)][freqIdx].setZero();</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>}</div>
 </div>
@@ -146,7 +154,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> component : comp) {</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    component-&gt;mnaApplySystemMatrixStamp(sys);</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  }</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keywordflow">for</span> (UInt i = 0; i &lt; <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aeaeaa264002a6d707062ebc0ab6a01df">mSwitches</a>.size(); ++i)</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> i = 0; i &lt; <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aeaeaa264002a6d707062ebc0ab6a01df">mSwitches</a>.size(); ++i)</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aeaeaa264002a6d707062ebc0ab6a01df">mSwitches</a>[i]-&gt;mnaApplySwitchSystemMatrixStamp(bit[i], sys, 0);</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <span class="comment">// Compute LU-factorization for system matrix</span></div>
@@ -180,7 +188,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> statElem : <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a9cc686c467592cea1e3bdca53bd7c204">mMNAComponents</a>)</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    statElem-&gt;mnaApplySystemMatrixStamp(<a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a5572496d6635b5c9e4e7e8f85aed836f">mBaseSystemMatrix</a>);</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  SPDLOG_LOGGER_INFO(<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>, <span class="stringliteral">&quot;Base matrix with only static elements: {}&quot;</span>,</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                     Logger::matrixToString(<a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a5572496d6635b5c9e4e7e8f85aed836f">mBaseSystemMatrix</a>));</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                     <a class="code hl_function" href="class_c_p_s_1_1_logger.html#aab568cd946e6d6386d6e64c500de0b53">Logger::matrixToString</a>(<a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a5572496d6635b5c9e4e7e8f85aed836f">mBaseSystemMatrix</a>));</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  <a class="code hl_variable" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>-&gt;flush();</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  <span class="comment">// Continue from base matrix</span></div>
@@ -192,7 +200,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    varElem-&gt;mnaApplySystemMatrixStamp(<a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a4b6f9d3e6aad06bc19bc82856202692f">mVariableSystemMatrix</a>);</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  SPDLOG_LOGGER_INFO(<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>, <span class="stringliteral">&quot;Initial system matrix with variable elements {}&quot;</span>,</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>                     Logger::matrixToString(<a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a4b6f9d3e6aad06bc19bc82856202692f">mVariableSystemMatrix</a>));</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>                     <a class="code hl_function" href="class_c_p_s_1_1_logger.html#aab568cd946e6d6386d6e64c500de0b53">Logger::matrixToString</a>(<a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a4b6f9d3e6aad06bc19bc82856202692f">mVariableSystemMatrix</a>));</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  <span class="comment">/* TODO: find replacement for flush() */</span></div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  <a class="code hl_variable" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>-&gt;flush();</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
@@ -211,7 +219,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
 <div class="foldopen" id="foldopen00109" data-start="{" data-end="}">
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_direct.html#ac2200627986a6e1810bd22c9e52da448">  109</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_mna_solver_direct.html#ac2200627986a6e1810bd22c9e52da448">MnaSolverDirect&lt;VarType&gt;::solveWithSystemMatrixRecomputation</a>(</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    Real time, Int timeStepCount) {</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> time, <a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> timeStepCount) {</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>  <span class="comment">// Reset source vector</span></div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a1e81a580e806486107925234c9072510">mRightSideVector</a>.setZero();</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
@@ -234,7 +242,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>  <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a7fd2da90533569ace6e5a13869dcee57">mSolveTimes</a>.push_back(diff.count());</div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>  <span class="comment">// TODO split into separate task? (dependent on x, updating all v attributes)</span></div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>  <span class="keywordflow">for</span> (UInt nodeIdx = 0; nodeIdx &lt; <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a53681d953e8a068dcd36a701615b66bf">mNumNetNodes</a>; ++nodeIdx)</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> nodeIdx = 0; nodeIdx &lt; <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a53681d953e8a068dcd36a701615b66bf">mNumNetNodes</a>; ++nodeIdx)</div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#af5f35946af4775752ccbf343c6435f65">mNodes</a>[nodeIdx]-&gt;mnaUpdateVoltage(**<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#ac7391680fc7fe4e66903ce6633fa7a26">mLeftSideVector</a>);</div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>  <span class="comment">// Components&#39; states will be updated by the post-step tasks</span></div>
@@ -243,7 +251,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
 <div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
 <div class="foldopen" id="foldopen00140" data-start="{" data-end="}">
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_direct.html#a4af2e4bc579523971e00d989521c9ad6">  140</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_mna_solver_direct.html#a4af2e4bc579523971e00d989521c9ad6">MnaSolverDirect&lt;VarType&gt;::recomputeSystemMatrix</a>(Real time) {</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_direct.html#a4af2e4bc579523971e00d989521c9ad6">  140</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_mna_solver_direct.html#a4af2e4bc579523971e00d989521c9ad6">MnaSolverDirect&lt;VarType&gt;::recomputeSystemMatrix</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> time) {</div>
 <div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>  <span class="comment">// Start from base matrix</span></div>
 <div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>  <a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a4b6f9d3e6aad06bc19bc82856202692f">mVariableSystemMatrix</a> = <a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a5572496d6635b5c9e4e7e8f85aed836f">mBaseSystemMatrix</a>;</div>
 <div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span> </div>
@@ -265,7 +273,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
 <div class="foldopen" id="foldopen00160" data-start="{" data-end="}">
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_direct.html#a3ae728e4cab585ca9457aab814e4f8e7">  160</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_mna_solver_direct.html#a3ae728e4cab585ca9457aab814e4f8e7">MnaSolverDirect&lt;VarType&gt;::extractStateSpace</a>(Real time) {</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_direct.html#a3ae728e4cab585ca9457aab814e4f8e7">  160</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_mna_solver_direct.html#a3ae728e4cab585ca9457aab814e4f8e7">MnaSolverDirect&lt;VarType&gt;::extractStateSpace</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> time) {</div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  <span class="keywordflow">if</span> (!<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a58a36755864ab1e61acfe3b9f983bc83">mStateSpaceExtractor</a>)</div>
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
@@ -283,19 +291,19 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span> </div>
 <div class="foldopen" id="foldopen00175" data-start="{" data-end="}">
 <div class="line"><a id="l00175" name="l00175"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_direct.html#ab4a11a4997afe87c8f37fad12be64fd3">  175</a></span><span class="keyword">template</span> &lt;&gt; <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_mna_solver_direct.html#ab9c9e8a957eb2718e7d71f84cd21fe60">MnaSolverDirect&lt;Real&gt;::createEmptySystemMatrix</a>() {</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aeaeaa264002a6d707062ebc0ab6a01df">mSwitches</a>.size() &gt; SWITCH_NUM)</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aeaeaa264002a6d707062ebc0ab6a01df">mSwitches</a>.size() &gt; <a class="code hl_define" href="_m_n_a_solver_8h.html#ac8442932fcaefc2bafea216934dc5cba">SWITCH_NUM</a>)</div>
 <div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    <span class="keywordflow">throw</span> <a class="code hl_class" href="class_c_p_s_1_1_system_error.html">SystemError</a>(<span class="stringliteral">&quot;Too many Switches.&quot;</span>);</div>
 <div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span> </div>
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a19bbb595644cc88dd6cd5cc653138a8b">mSystemMatrixRecomputationEnabled</a>) {</div>
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    <a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a5572496d6635b5c9e4e7e8f85aed836f">mBaseSystemMatrix</a> =</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        SparseMatrix(<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aa46b3329ad2cc52899540ae6b193b70c">mNumMatrixNodeIndices</a>, <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aa46b3329ad2cc52899540ae6b193b70c">mNumMatrixNodeIndices</a>);</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        <a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a>(<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aa46b3329ad2cc52899540ae6b193b70c">mNumMatrixNodeIndices</a>, <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aa46b3329ad2cc52899540ae6b193b70c">mNumMatrixNodeIndices</a>);</div>
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    <a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a4b6f9d3e6aad06bc19bc82856202692f">mVariableSystemMatrix</a> =</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>        SparseMatrix(<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aa46b3329ad2cc52899540ae6b193b70c">mNumMatrixNodeIndices</a>, <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aa46b3329ad2cc52899540ae6b193b70c">mNumMatrixNodeIndices</a>);</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>        <a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a>(<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aa46b3329ad2cc52899540ae6b193b70c">mNumMatrixNodeIndices</a>, <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aa46b3329ad2cc52899540ae6b193b70c">mNumMatrixNodeIndices</a>);</div>
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>  } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; (1ULL &lt;&lt; <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aeaeaa264002a6d707062ebc0ab6a01df">mSwitches</a>.size()); i++) {</div>
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>      <span class="keyword">auto</span> bit = std::bitset&lt;SWITCH_NUM&gt;(i);</div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>      <a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a5757cf850587900999c97bcc101ae170">mSwitchedMatrices</a>[bit].push_back(</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>          SparseMatrix(<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aa46b3329ad2cc52899540ae6b193b70c">mNumMatrixNodeIndices</a>, <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aa46b3329ad2cc52899540ae6b193b70c">mNumMatrixNodeIndices</a>));</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>          <a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a>(<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aa46b3329ad2cc52899540ae6b193b70c">mNumMatrixNodeIndices</a>, <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aa46b3329ad2cc52899540ae6b193b70c">mNumMatrixNodeIndices</a>));</div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>      <a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#ad057bb0522e5c5e0a11923d04d88c80c">mDirectLinearSolvers</a>[bit].push_back(</div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>          <a class="code hl_function" href="class_d_psim_1_1_mna_solver_direct.html#a5d5f55ab97e8f45a2a64bf42bc2cca66">createDirectSolverImplementation</a>(<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>));</div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    }</div>
@@ -305,14 +313,14 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span> </div>
 <div class="foldopen" id="foldopen00195" data-start="{" data-end="}">
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_direct.html#a8ce3d8ab7b5f80b50bd7bede48ca4a69">  195</a></span><span class="keyword">template</span> &lt;&gt; <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_mna_solver_direct.html#ab9c9e8a957eb2718e7d71f84cd21fe60">MnaSolverDirect&lt;Complex&gt;::createEmptySystemMatrix</a>() {</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aeaeaa264002a6d707062ebc0ab6a01df">mSwitches</a>.size() &gt; SWITCH_NUM)</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aeaeaa264002a6d707062ebc0ab6a01df">mSwitches</a>.size() &gt; <a class="code hl_define" href="_m_n_a_solver_8h.html#ac8442932fcaefc2bafea216934dc5cba">SWITCH_NUM</a>)</div>
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    <span class="keywordflow">throw</span> <a class="code hl_class" href="class_c_p_s_1_1_system_error.html">SystemError</a>(<span class="stringliteral">&quot;Too many Switches.&quot;</span>);</div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span> </div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a7af67b5b35f20665e0c2050433d69e45">mFrequencyParallel</a>) {</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    <span class="keywordflow">for</span> (UInt i = 0; i &lt; std::pow(2, <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aeaeaa264002a6d707062ebc0ab6a01df">mSwitches</a>.size()); ++i) {</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>      <span class="keywordflow">for</span> (Int freq = 0; freq &lt; <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a27f136ea59231eb91018f0c3f69661c3">mSystem</a>.mFrequencies.size(); ++freq) {</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> i = 0; i &lt; std::pow(2, <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aeaeaa264002a6d707062ebc0ab6a01df">mSwitches</a>.size()); ++i) {</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>      <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> freq = 0; freq &lt; <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a27f136ea59231eb91018f0c3f69661c3">mSystem</a>.mFrequencies.size(); ++freq) {</div>
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        <span class="keyword">auto</span> bit = std::bitset&lt;SWITCH_NUM&gt;(i);</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>        <a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a5757cf850587900999c97bcc101ae170">mSwitchedMatrices</a>[bit].push_back(SparseMatrix(</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>        <a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a5757cf850587900999c97bcc101ae170">mSwitchedMatrices</a>[bit].push_back(<a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a>(</div>
 <div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>            2 * (<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aa46b3329ad2cc52899540ae6b193b70c">mNumMatrixNodeIndices</a>), 2 * (<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aa46b3329ad2cc52899540ae6b193b70c">mNumMatrixNodeIndices</a>)));</div>
 <div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        <a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#ad057bb0522e5c5e0a11923d04d88c80c">mDirectLinearSolvers</a>[bit].push_back(</div>
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>            <a class="code hl_function" href="class_d_psim_1_1_mna_solver_direct.html#a5d5f55ab97e8f45a2a64bf42bc2cca66">createDirectSolverImplementation</a>(<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>));</div>
@@ -320,13 +328,13 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    }</div>
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a19bbb595644cc88dd6cd5cc653138a8b">mSystemMatrixRecomputationEnabled</a>) {</div>
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    <a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a5572496d6635b5c9e4e7e8f85aed836f">mBaseSystemMatrix</a> =</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>        SparseMatrix(2 * (<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aa46b3329ad2cc52899540ae6b193b70c">mNumMatrixNodeIndices</a>), 2 * (<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aa46b3329ad2cc52899540ae6b193b70c">mNumMatrixNodeIndices</a>));</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>        <a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a>(2 * (<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aa46b3329ad2cc52899540ae6b193b70c">mNumMatrixNodeIndices</a>), 2 * (<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aa46b3329ad2cc52899540ae6b193b70c">mNumMatrixNodeIndices</a>));</div>
 <div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    <a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a4b6f9d3e6aad06bc19bc82856202692f">mVariableSystemMatrix</a> =</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        SparseMatrix(2 * (<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aa46b3329ad2cc52899540ae6b193b70c">mNumMatrixNodeIndices</a>), 2 * (<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aa46b3329ad2cc52899540ae6b193b70c">mNumMatrixNodeIndices</a>));</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        <a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a>(2 * (<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aa46b3329ad2cc52899540ae6b193b70c">mNumMatrixNodeIndices</a>), 2 * (<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aa46b3329ad2cc52899540ae6b193b70c">mNumMatrixNodeIndices</a>));</div>
 <div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>  } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; (1ULL &lt;&lt; <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aeaeaa264002a6d707062ebc0ab6a01df">mSwitches</a>.size()); i++) {</div>
 <div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>      <span class="keyword">auto</span> bit = std::bitset&lt;SWITCH_NUM&gt;(i);</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>      <a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a5757cf850587900999c97bcc101ae170">mSwitchedMatrices</a>[bit].push_back(SparseMatrix(</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>      <a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a5757cf850587900999c97bcc101ae170">mSwitchedMatrices</a>[bit].push_back(<a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a>(</div>
 <div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>          2 * (<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a5f51900788d1df9456a42953d6a45061">mNumTotalMatrixNodeIndices</a>), 2 * (<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a5f51900788d1df9456a42953d6a45061">mNumTotalMatrixNodeIndices</a>)));</div>
 <div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>      <a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#ad057bb0522e5c5e0a11923d04d88c80c">mDirectLinearSolvers</a>[bit].push_back(</div>
 <div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>          <a class="code hl_function" href="class_d_psim_1_1_mna_solver_direct.html#a5d5f55ab97e8f45a2a64bf42bc2cca66">createDirectSolverImplementation</a>(<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>));</div>
@@ -352,7 +360,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
 <div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>std::shared_ptr&lt;CPS::Task&gt;</div>
 <div class="foldopen" id="foldopen00237" data-start="{" data-end="}">
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_direct.html#a89ec212d401357f6a3a1c8afb6607bc3">  237</a></span><a class="code hl_function" href="class_d_psim_1_1_mna_solver_direct.html#a89ec212d401357f6a3a1c8afb6607bc3">MnaSolverDirect&lt;VarType&gt;::createSolveTaskHarm</a>(UInt freqIdx) {</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_direct.html#a89ec212d401357f6a3a1c8afb6607bc3">  237</a></span><a class="code hl_function" href="class_d_psim_1_1_mna_solver_direct.html#a89ec212d401357f6a3a1c8afb6607bc3">MnaSolverDirect&lt;VarType&gt;::createSolveTaskHarm</a>(<a class="code hl_typedef" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> freqIdx) {</div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>  <span class="keywordflow">return</span> std::make_shared&lt;MnaSolverDirect&lt;VarType&gt;::SolveTaskHarm&gt;(*<span class="keyword">this</span>,</div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>                                                                   freqIdx);</div>
 <div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>}</div>
@@ -376,7 +384,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span> </div>
 <div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
 <div class="foldopen" id="foldopen00255" data-start="{" data-end="}">
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_direct.html#a407dddebb4e9027a76e818cfc15eb3ad">  255</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_mna_solver_direct.html#a407dddebb4e9027a76e818cfc15eb3ad">MnaSolverDirect&lt;VarType&gt;::solve</a>(Real time, Int timeStepCount) {</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_direct.html#a407dddebb4e9027a76e818cfc15eb3ad">  255</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_mna_solver_direct.html#a407dddebb4e9027a76e818cfc15eb3ad">MnaSolverDirect&lt;VarType&gt;::solve</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> time, <a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> timeStepCount) {</div>
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>  <span class="keyword">const</span> <span class="keyword">auto</span> previousSwitchStatus = <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a007a6293fcda4cdc47be380685b4fc9b">mCurrentSwitchStatus</a>;</div>
 <div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>  <span class="comment">// Reset source vector</span></div>
 <div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>  <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a1e81a580e806486107925234c9072510">mRightSideVector</a>.setZero();</div>
@@ -413,7 +421,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span> </div>
 <div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>  <span class="comment">// Additional solve steps for iterative models</span></div>
 <div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a640ee78c6e1a5c2237702c4dfc9d41fb">mSyncGen</a>.size() &gt; 0) {</div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>    UInt numCompsRequireIter;</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>    <a class="code hl_typedef" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> numCompsRequireIter;</div>
 <div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>    <span class="keywordflow">do</span> {</div>
 <div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>      <span class="comment">// count synchronous generators that require iteration</span></div>
 <div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>      numCompsRequireIter = 0;</div>
@@ -459,7 +467,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>  <a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a87140f5328fa03aedeffb654bbc76532">mSystemMatrixChanged</a> = (<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a007a6293fcda4cdc47be380685b4fc9b">mCurrentSwitchStatus</a> != previousSwitchStatus);</div>
 <div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span> </div>
 <div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>  <span class="comment">// TODO split into separate task? (dependent on x, updating all v attributes)</span></div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>  <span class="keywordflow">for</span> (UInt nodeIdx = 0; nodeIdx &lt; <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a53681d953e8a068dcd36a701615b66bf">mNumNetNodes</a>; ++nodeIdx)</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> nodeIdx = 0; nodeIdx &lt; <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a53681d953e8a068dcd36a701615b66bf">mNumNetNodes</a>; ++nodeIdx)</div>
 <div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>    <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#af5f35946af4775752ccbf343c6435f65">mNodes</a>[nodeIdx]-&gt;mnaUpdateVoltage(**<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#ac7391680fc7fe4e66903ce6633fa7a26">mLeftSideVector</a>);</div>
 <div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span> </div>
 <div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>  <span class="comment">// Components&#39; states will be updated by the post-step tasks</span></div>
@@ -468,8 +476,8 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span> </div>
 <div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
 <div class="foldopen" id="foldopen00345" data-start="{" data-end="}">
-<div class="line"><a id="l00345" name="l00345"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_direct.html#af0cadf4e804fcdeea8ca5e2750e138f8">  345</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_mna_solver_direct.html#af0cadf4e804fcdeea8ca5e2750e138f8">MnaSolverDirect&lt;VarType&gt;::solveWithHarmonics</a>(Real time, Int timeStepCount,</div>
-<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>                                                  Int freqIdx) {</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_direct.html#af0cadf4e804fcdeea8ca5e2750e138f8">  345</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_mna_solver_direct.html#af0cadf4e804fcdeea8ca5e2750e138f8">MnaSolverDirect&lt;VarType&gt;::solveWithHarmonics</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> time, <a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> timeStepCount,</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>                                                  <a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> freqIdx) {</div>
 <div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>  <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a1bdd5f5d0bd6d7244eb42ab096e37e73">mRightSideVectorHarm</a>[freqIdx].setZero();</div>
 <div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span> </div>
 <div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>  <span class="comment">// Sum of right side vectors (computed by the components&#39; pre-step tasks)</span></div>
@@ -485,26 +493,26 @@ $(function(){ initResizable(false); });
 <div class="foldopen" id="foldopen00358" data-start="{" data-end="}">
 <div class="line"><a id="l00358" name="l00358"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_direct.html#a9c7a8060c3e470ed25e480df2ffecaaf">  358</a></span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt; <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_mna_solver_direct.html#a9c7a8060c3e470ed25e480df2ffecaaf">MnaSolverDirect&lt;VarType&gt;::logSystemMatrices</a>() {</div>
 <div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a7af67b5b35f20665e0c2050433d69e45">mFrequencyParallel</a>) {</div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>    <span class="keywordflow">for</span> (UInt i = 0; i &lt; mSwitchedMatrices[std::bitset&lt;SWITCH_NUM&gt;(0)].size();</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>    <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> i = 0; i &lt; mSwitchedMatrices[std::bitset&lt;SWITCH_NUM&gt;(0)].size();</div>
 <div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>         ++i) {</div>
 <div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>      SPDLOG_LOGGER_INFO(<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>, <span class="stringliteral">&quot;System matrix for frequency: {:d} \n{:s}&quot;</span>, i,</div>
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>                         Logger::matrixToString(</div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>                         <a class="code hl_function" href="class_c_p_s_1_1_logger.html#aab568cd946e6d6386d6e64c500de0b53">Logger::matrixToString</a>(</div>
 <div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>                             <a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a5757cf850587900999c97bcc101ae170">mSwitchedMatrices</a>[std::bitset&lt;SWITCH_NUM&gt;(0)][i]));</div>
 <div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>    }</div>
 <div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span> </div>
-<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>    <span class="keywordflow">for</span> (UInt i = 0; i &lt; <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a1bdd5f5d0bd6d7244eb42ab096e37e73">mRightSideVectorHarm</a>.size(); ++i) {</div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>    <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> i = 0; i &lt; <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a1bdd5f5d0bd6d7244eb42ab096e37e73">mRightSideVectorHarm</a>.size(); ++i) {</div>
 <div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>      SPDLOG_LOGGER_INFO(<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>, <span class="stringliteral">&quot;Right side vector for frequency: {:d} \n{:s}&quot;</span>,</div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>                         i, Logger::matrixToString(<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a1bdd5f5d0bd6d7244eb42ab096e37e73">mRightSideVectorHarm</a>[i]));</div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>                         i, <a class="code hl_function" href="class_c_p_s_1_1_logger.html#aab568cd946e6d6386d6e64c500de0b53">Logger::matrixToString</a>(<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a1bdd5f5d0bd6d7244eb42ab096e37e73">mRightSideVectorHarm</a>[i]));</div>
 <div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>    }</div>
 <div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span> </div>
 <div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a19bbb595644cc88dd6cd5cc653138a8b">mSystemMatrixRecomputationEnabled</a>) {</div>
 <div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>    SPDLOG_LOGGER_INFO(<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>, <span class="stringliteral">&quot;Summarizing matrices: &quot;</span>);</div>
 <div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>    SPDLOG_LOGGER_INFO(<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>, <span class="stringliteral">&quot;Base matrix with only static elements: {}&quot;</span>,</div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>                       Logger::matrixToString(<a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a5572496d6635b5c9e4e7e8f85aed836f">mBaseSystemMatrix</a>));</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>                       <a class="code hl_function" href="class_c_p_s_1_1_logger.html#aab568cd946e6d6386d6e64c500de0b53">Logger::matrixToString</a>(<a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a5572496d6635b5c9e4e7e8f85aed836f">mBaseSystemMatrix</a>));</div>
 <div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>    SPDLOG_LOGGER_INFO(<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>, <span class="stringliteral">&quot;Initial system matrix with variable elements {}&quot;</span>,</div>
-<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>                       Logger::matrixToString(<a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a4b6f9d3e6aad06bc19bc82856202692f">mVariableSystemMatrix</a>));</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>                       <a class="code hl_function" href="class_c_p_s_1_1_logger.html#aab568cd946e6d6386d6e64c500de0b53">Logger::matrixToString</a>(<a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a4b6f9d3e6aad06bc19bc82856202692f">mVariableSystemMatrix</a>));</div>
 <div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>    SPDLOG_LOGGER_INFO(<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>, <span class="stringliteral">&quot;Right side vector: {}&quot;</span>,</div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>                       Logger::matrixToString(<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a1e81a580e806486107925234c9072510">mRightSideVector</a>));</div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>                       <a class="code hl_function" href="class_c_p_s_1_1_logger.html#aab568cd946e6d6386d6e64c500de0b53">Logger::matrixToString</a>(<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a1e81a580e806486107925234c9072510">mRightSideVector</a>));</div>
 <div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>  } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#aeaeaa264002a6d707062ebc0ab6a01df">mSwitches</a>.size() &lt; 1) {</div>
 <div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>      SPDLOG_LOGGER_INFO(<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>, <span class="stringliteral">&quot;System matrix: \n{}&quot;</span>,</div>
@@ -516,7 +524,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>      <span class="keywordflow">for</span> (<span class="keyword">auto</span> sys : <a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a5757cf850587900999c97bcc101ae170">mSwitchedMatrices</a>) {</div>
 <div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>        SPDLOG_LOGGER_INFO(<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>, <span class="stringliteral">&quot;Switching System matrix {:s} \n{:s}&quot;</span>,</div>
 <div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>                           sys.first.to_string(),</div>
-<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>                           Logger::matrixToString(sys.second[0]));</div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>                           <a class="code hl_function" href="class_c_p_s_1_1_logger.html#aab568cd946e6d6386d6e64c500de0b53">Logger::matrixToString</a>(sys.second[0]));</div>
 <div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>      }</div>
 <div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>    }</div>
 <div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>    SPDLOG_LOGGER_INFO(<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>, <span class="stringliteral">&quot;Right side vector: \n{}&quot;</span>, <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a1e81a580e806486107925234c9072510">mRightSideVector</a>);</div>
@@ -534,8 +542,8 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span> </div>
 <div class="foldopen" id="foldopen00404" data-start="{" data-end="}">
 <div class="line"><a id="l00404" name="l00404"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_direct.html#a25b12ac5846298dcede361487d3a48fb">  404</a></span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt; <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_mna_solver_direct.html#a25b12ac5846298dcede361487d3a48fb">MnaSolverDirect&lt;VarType&gt;::logSolveTime</a>() {</div>
-<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>  Real solveSum = 0.0;</div>
-<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>  Real solveMax = 0.0;</div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> solveSum = 0.0;</div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> solveMax = 0.0;</div>
 <div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> meas : <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a7fd2da90533569ace6e5a13869dcee57">mSolveTimes</a>) {</div>
 <div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>    solveSum += meas;</div>
 <div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>    <span class="keywordflow">if</span> (meas &gt; solveMax)</div>
@@ -561,8 +569,8 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
 <div class="foldopen" id="foldopen00427" data-start="{" data-end="}">
 <div class="line"><a id="l00427" name="l00427"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_direct.html#a4970129dc7964cbf2f195b429416866f">  427</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_mna_solver_direct.html#a4970129dc7964cbf2f195b429416866f">MnaSolverDirect&lt;VarType&gt;::logRecomputationTime</a>() {</div>
-<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>  Real recompSum = 0.0;</div>
-<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>  Real recompMax = 0.0;</div>
+<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> recompSum = 0.0;</div>
+<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> recompMax = 0.0;</div>
 <div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> meas : <a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#a3641330f239d7b5bb1f8223a56ba3c3f">mRecomputationTimes</a>) {</div>
 <div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span>    recompSum += meas;</div>
 <div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>    <span class="keywordflow">if</span> (meas &gt; recompMax)</div>
@@ -586,27 +594,27 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span>std::shared_ptr&lt;DirectLinearSolver&gt;</div>
 <div class="foldopen" id="foldopen00450" data-start="{" data-end="}">
 <div class="line"><a id="l00450" name="l00450"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_direct.html#a5d5f55ab97e8f45a2a64bf42bc2cca66">  450</a></span><a class="code hl_function" href="class_d_psim_1_1_mna_solver_direct.html#a5d5f55ab97e8f45a2a64bf42bc2cca66">MnaSolverDirect&lt;VarType&gt;::createDirectSolverImplementation</a>(</div>
-<div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span>    CPS::Logger::Log <a class="code hl_variable" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>) {</div>
+<div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span>    <a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a> <a class="code hl_variable" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>) {</div>
 <div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span>  <span class="keywordflow">switch</span> (this-&gt;<a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a802abeffc7d579bd96a046f62eca5663">mImplementationInUse</a>) {</div>
-<div class="line"><a id="l00453" name="l00453"></a><span class="lineno">  453</span>  <span class="keywordflow">case</span> DirectLinearSolverImpl::DenseLU:</div>
+<div class="line"><a id="l00453" name="l00453"></a><span class="lineno">  453</span>  <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a8c3e355004be96e6a5fa3853abd513c9">DirectLinearSolverImpl::DenseLU</a>:</div>
 <div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span>    <span class="keywordflow">return</span> std::make_shared&lt;DenseLUAdapter&gt;(<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>);</div>
 <div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span><span class="preprocessor">#ifdef WITH_SPARSE</span></div>
-<div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span>  <span class="keywordflow">case</span> DirectLinearSolverImpl::SparseLU:</div>
+<div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span>  <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a9a5e6eae6a80915040abf06ff0e5cfc0">DirectLinearSolverImpl::SparseLU</a>:</div>
 <div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span>    <span class="keywordflow">return</span> std::make_shared&lt;SparseLUAdapter&gt;(<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>);</div>
 <div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span><span class="preprocessor">#endif </span><span class="comment">// WITH_SPARSE</span></div>
 <div class="line"><a id="l00459" name="l00459"></a><span class="lineno">  459</span><span class="preprocessor">#ifdef WITH_KLU</span></div>
-<div class="line"><a id="l00460" name="l00460"></a><span class="lineno">  460</span>  <span class="keywordflow">case</span> DirectLinearSolverImpl::KLU:</div>
+<div class="line"><a id="l00460" name="l00460"></a><span class="lineno">  460</span>  <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a102d1784ab244b636827fc43963a995b">DirectLinearSolverImpl::KLU</a>:</div>
 <div class="line"><a id="l00461" name="l00461"></a><span class="lineno">  461</span>    <span class="keywordflow">return</span> std::make_shared&lt;KLUAdapter&gt;(<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>);</div>
 <div class="line"><a id="l00462" name="l00462"></a><span class="lineno">  462</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00463" name="l00463"></a><span class="lineno">  463</span><span class="preprocessor">#ifdef WITH_CUDA</span></div>
-<div class="line"><a id="l00464" name="l00464"></a><span class="lineno">  464</span>  <span class="keywordflow">case</span> DirectLinearSolverImpl::CUDADense:</div>
+<div class="line"><a id="l00464" name="l00464"></a><span class="lineno">  464</span>  <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457aebe110fb34545ecd37c1cf88bc96688d">DirectLinearSolverImpl::CUDADense</a>:</div>
 <div class="line"><a id="l00465" name="l00465"></a><span class="lineno">  465</span>    <span class="keywordflow">return</span> std::make_shared&lt;GpuDenseAdapter&gt;(<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>);</div>
 <div class="line"><a id="l00466" name="l00466"></a><span class="lineno">  466</span><span class="preprocessor">#ifdef WITH_CUDA_SPARSE</span></div>
-<div class="line"><a id="l00467" name="l00467"></a><span class="lineno">  467</span>  <span class="keywordflow">case</span> DirectLinearSolverImpl::CUDASparse:</div>
+<div class="line"><a id="l00467" name="l00467"></a><span class="lineno">  467</span>  <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a533f9ea55a14b93c55fe398df9746ef4">DirectLinearSolverImpl::CUDASparse</a>:</div>
 <div class="line"><a id="l00468" name="l00468"></a><span class="lineno">  468</span>    <span class="keywordflow">return</span> std::make_shared&lt;GpuSparseAdapter&gt;(<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>);</div>
 <div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span><span class="preprocessor">#ifdef WITH_MAGMA</span></div>
-<div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span>  <span class="keywordflow">case</span> DirectLinearSolverImpl::CUDAMagma:</div>
+<div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span>  <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a81cc7f376aa3d27f27553ff770fd04be">DirectLinearSolverImpl::CUDAMagma</a>:</div>
 <div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span>    <span class="keywordflow">return</span> std::make_shared&lt;GpuMagmaAdapter&gt;(<a class="code hl_variable" href="class_d_psim_1_1_solver.html#a2de9056c6c0ed70185170bdb111478a8">mSLog</a>);</div>
 <div class="line"><a id="l00473" name="l00473"></a><span class="lineno">  473</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00474" name="l00474"></a><span class="lineno">  474</span><span class="preprocessor">#endif</span></div>
@@ -619,7 +627,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00480" name="l00480"></a><span class="lineno">  480</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VarType&gt;</div>
 <div class="foldopen" id="foldopen00481" data-start="{" data-end="}">
 <div class="line"><a id="l00481" name="l00481"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_mna_solver_direct.html#a84f847f2af857ad4c5be1ae8569ecabe">  481</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_mna_solver_direct.html#a84f847f2af857ad4c5be1ae8569ecabe">MnaSolverDirect&lt;VarType&gt;::setDirectLinearSolverImplementation</a>(</div>
-<div class="line"><a id="l00482" name="l00482"></a><span class="lineno">  482</span>    DirectLinearSolverImpl implementation) {</div>
+<div class="line"><a id="l00482" name="l00482"></a><span class="lineno">  482</span>    <a class="code hl_enumeration" href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457">DirectLinearSolverImpl</a> implementation) {</div>
 <div class="line"><a id="l00483" name="l00483"></a><span class="lineno">  483</span>  this-&gt;<a class="code hl_variable" href="class_d_psim_1_1_mna_solver_direct.html#a802abeffc7d579bd96a046f62eca5663">mImplementationInUse</a> = implementation;</div>
 <div class="line"><a id="l00484" name="l00484"></a><span class="lineno">  484</span>}</div>
 </div>
@@ -636,6 +644,12 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00493" name="l00493"></a><span class="lineno">  493</span> </div>
 <div class="line"><a id="l00494" name="l00494"></a><span class="lineno">  494</span><span class="keyword">template</span> <span class="keyword">class </span><a class="code hl_class" href="class_d_psim_1_1_mna_solver_direct.html">DPsim::MnaSolverDirect&lt;Real&gt;</a>;</div>
 <div class="line"><a id="l00495" name="l00495"></a><span class="lineno">  495</span><span class="keyword">template</span> <span class="keyword">class </span><a class="code hl_class" href="class_d_psim_1_1_mna_solver_direct.html">DPsim::MnaSolverDirect&lt;Complex&gt;</a>;</div>
+<div class="ttc" id="a_m_n_a_solver_8h_html_ac8442932fcaefc2bafea216934dc5cba"><div class="ttname"><a href="_m_n_a_solver_8h.html#ac8442932fcaefc2bafea216934dc5cba">SWITCH_NUM</a></div><div class="ttdeci">#define SWITCH_NUM</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_solver_8h_source.html#l00035">MNASolver.h:35</a></div></div>
+<div class="ttc" id="a_m_n_a_solver_direct_8h_html"><div class="ttname"><a href="_m_n_a_solver_direct_8h.html">MNASolverDirect.h</a></div></div>
+<div class="ttc" id="a_sequential_scheduler_8h_html"><div class="ttname"><a href="_sequential_scheduler_8h.html">SequentialScheduler.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_logger_html_a021e964d1ab0d217a05b95736d2ea804"><div class="ttname"><a href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a></div><div class="ttdeci">spdlog::level::level_enum Level</div><div class="ttdef"><b>Definition</b> <a href="_logger_8h_source.html#l00033">Logger.h:33</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_logger_html_a1dd42a2424f56886f0eec500a7851423"><div class="ttname"><a href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a></div><div class="ttdeci">std::shared_ptr&lt; spdlog::logger &gt; Log</div><div class="ttdef"><b>Definition</b> <a href="_logger_8h_source.html#l00034">Logger.h:34</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_logger_html_aab568cd946e6d6386d6e64c500de0b53"><div class="ttname"><a href="class_c_p_s_1_1_logger.html#aab568cd946e6d6386d6e64c500de0b53">CPS::Logger::matrixToString</a></div><div class="ttdeci">static String matrixToString(const Matrix &amp;mat)</div><div class="ttdef"><b>Definition</b> <a href="_logger_8cpp_source.html#l00031">Logger.cpp:31</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_system_error_html"><div class="ttname"><a href="class_c_p_s_1_1_system_error.html">CPS::SystemError</a></div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00144">Definitions.h:144</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_configuration_html"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver_configuration.html">DPsim::DirectLinearSolverConfiguration</a></div><div class="ttdef"><b>Definition</b> <a href="_direct_linear_solver_configuration_8h_source.html#l00036">DirectLinearSolverConfiguration.h:36</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_mna_solver_direct_1_1_state_space_extraction_task_html"><div class="ttname"><a href="class_d_psim_1_1_mna_solver_direct_1_1_state_space_extraction_task.html">DPsim::MnaSolverDirect::StateSpaceExtractionTask</a></div><div class="ttdoc">State-space extraction task.</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_solver_direct_8h_source.html#l00275">MNASolverDirect.h:275</a></div></div>
@@ -703,12 +717,29 @@ $(function(){ initResizable(false); });
 <div class="ttc" id="aclass_d_psim_1_1_solver_html_a4135fe35cf60bb7b97523f2c2dc48c4f"><div class="ttname"><a href="class_d_psim_1_1_solver.html#a4135fe35cf60bb7b97523f2c2dc48c4f">DPsim::Solver::mIsInInitialization</a></div><div class="ttdeci">Bool mIsInInitialization</div><div class="ttdoc">Determines if solver is in initialization phase, which requires different behavior.</div><div class="ttdef"><b>Definition</b> <a href="_solver_8h_source.html#l00069">Solver.h:69</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_solver_html_a6ba5e40911c7cc15e83148f273c2f798"><div class="ttname"><a href="class_d_psim_1_1_solver.html#a6ba5e40911c7cc15e83148f273c2f798">DPsim::Solver::mLogSolveTimes</a></div><div class="ttdeci">Bool mLogSolveTimes</div><div class="ttdoc">Collect step time for logging.</div><div class="ttdef"><b>Definition</b> <a href="_solver_8h_source.html#l00053">Solver.h:53</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_solver_html_a7af67b5b35f20665e0c2050433d69e45"><div class="ttname"><a href="class_d_psim_1_1_solver.html#a7af67b5b35f20665e0c2050433d69e45">DPsim::Solver::mFrequencyParallel</a></div><div class="ttdeci">Bool mFrequencyParallel</div><div class="ttdoc">Activates parallelized computation of frequencies.</div><div class="ttdef"><b>Definition</b> <a href="_solver_8h_source.html#l00059">Solver.h:59</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html"><div class="ttname"><a href="namespace_c_p_s.html">CPS</a></div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00017">Attribute.h:17</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a710c4a8c0fce7ae7e20dc314a913f6c9"><div class="ttname"><a href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9">CPS::Domain</a></div><div class="ttdeci">Domain</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00114">Definitions.h:114</a></div></div>
 <div class="ttc" id="anamespace_d_psim_html"><div class="ttname"><a href="namespace_d_psim.html">DPsim</a></div><div class="ttdef"><b>Definition</b> <a href="_dense_l_u_adapter_8cpp_source.html#l00013">DenseLUAdapter.cpp:13</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a52dcbc3a0896b912333104eb61a7b29b"><div class="ttname"><a href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">DPsim::Real</a></div><div class="ttdeci">CPS::Real Real</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00018">Definitions.h:18</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a66e48a625a26fd3c1d2198148f9d59e9"><div class="ttname"><a href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">DPsim::String</a></div><div class="ttdeci">CPS::String String</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00020">Definitions.h:20</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a6a29611b9912f8abc0545523b3f84f8c"><div class="ttname"><a href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">DPsim::Int</a></div><div class="ttdeci">CPS::Int Int</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00022">Definitions.h:22</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_ab6afa34bab94cdc2ff33e09d4a1d2c9c"><div class="ttname"><a href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">DPsim::SparseMatrix</a></div><div class="ttdeci">CPS::SparseMatrixRow SparseMatrix</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00026">Definitions.h:26</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_ab7fe221419e28403d220d17a0013b457"><div class="ttname"><a href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457">DPsim::DirectLinearSolverImpl</a></div><div class="ttdeci">DirectLinearSolverImpl</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_solver_direct_8h_source.html#l00048">MNASolverDirect.h:48</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_ab7fe221419e28403d220d17a0013b457a102d1784ab244b636827fc43963a995b"><div class="ttname"><a href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a102d1784ab244b636827fc43963a995b">DPsim::KLU</a></div><div class="ttdeci">@ KLU</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_solver_direct_8h_source.html#l00050">MNASolverDirect.h:50</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_ab7fe221419e28403d220d17a0013b457a533f9ea55a14b93c55fe398df9746ef4"><div class="ttname"><a href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a533f9ea55a14b93c55fe398df9746ef4">DPsim::CUDASparse</a></div><div class="ttdeci">@ CUDASparse</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_solver_direct_8h_source.html#l00054">MNASolverDirect.h:54</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_ab7fe221419e28403d220d17a0013b457a81cc7f376aa3d27f27553ff770fd04be"><div class="ttname"><a href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a81cc7f376aa3d27f27553ff770fd04be">DPsim::CUDAMagma</a></div><div class="ttdeci">@ CUDAMagma</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_solver_direct_8h_source.html#l00055">MNASolverDirect.h:55</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_ab7fe221419e28403d220d17a0013b457a8c3e355004be96e6a5fa3853abd513c9"><div class="ttname"><a href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a8c3e355004be96e6a5fa3853abd513c9">DPsim::DenseLU</a></div><div class="ttdeci">@ DenseLU</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_solver_direct_8h_source.html#l00052">MNASolverDirect.h:52</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_ab7fe221419e28403d220d17a0013b457a9a5e6eae6a80915040abf06ff0e5cfc0"><div class="ttname"><a href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a9a5e6eae6a80915040abf06ff0e5cfc0">DPsim::SparseLU</a></div><div class="ttdeci">@ SparseLU</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_solver_direct_8h_source.html#l00051">MNASolverDirect.h:51</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_ab7fe221419e28403d220d17a0013b457aebe110fb34545ecd37c1cf88bc96688d"><div class="ttname"><a href="namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457aebe110fb34545ecd37c1cf88bc96688d">DPsim::CUDADense</a></div><div class="ttdeci">@ CUDADense</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_solver_direct_8h_source.html#l00053">MNASolverDirect.h:53</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_aca275dbce4c75f8e270755c373b13d5d"><div class="ttname"><a href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">DPsim::UInt</a></div><div class="ttdeci">CPS::UInt UInt</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00023">Definitions.h:23</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_af103632340511860a5310da360a5028.html">src</a></li><li class="navelem"><a class="el" href="_m_n_a_solver_direct_8cpp.html">MNASolverDirect.cpp</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_c_p_s_1_1_c_s_v_reader.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>CPS</b></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CSVReader</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">CPS::CSVReader Member List</div></div>
 </div><!--header-->
@@ -95,27 +103,29 @@ $(function(){ initResizable(false); });
 <p>This is the complete list of members for <a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a>, including all inherited members.</p>
 <table class="directory">
   <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#aee322f4b844dce6629b34aaa49e2a736">assignLoadProfile</a>(SystemTopology &amp;sys, Real start_time=-1, Real time_step=1, Real end_time=-1, CSVReader::Mode mode=CSVReader::Mode::AUTO, CSVReader::DataFormat format=CSVReader::DataFormat::SECONDS)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>assignLoadProfileDP</b>(std::vector&lt; std::shared_ptr&lt; CPS::DP::Ph1::AvVoltageSourceInverterDQ &gt; &gt; &amp;loads, Real start_time=-1, Real time_step=1, Real end_time=-1, Real scale_factor=1, CSVReader::Mode mode=CSVReader::Mode::AUTO, CSVReader::DataFormat format=CSVReader::DataFormat::SECONDS) (defined in <a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>assignPVGeneration</b>(SystemTopology &amp;sys, Real start_time=-1, Real time_step=1, Real end_time=-1, CSVReader::Mode mode=CSVReader::Mode::AUTO) (defined in <a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>csv2Eigen</b>(const String &amp;path) (defined in <a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>CSVReader</b>(String name, std::list&lt; fs::path &gt; path, Logger::Level logLevel) (defined in <a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>CSVReader</b>(String name, String path, Logger::Level logLevel) (defined in <a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>CSVReader</b>(String name, std::list&lt; fs::path &gt; path, std::map&lt; String, String &gt; &amp;assignList, Logger::Level logLevel) (defined in <a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>CSVReader</b>(String name, String path, std::map&lt; String, String &gt; &amp;assignList, Logger::Level logLevel) (defined in <a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>DataFormat</b> enum name (defined in <a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#acd806c9dd7a269f61c6ac192d4cd0925">assignLoadProfileDP</a>(std::vector&lt; std::shared_ptr&lt; CPS::DP::Ph1::AvVoltageSourceInverterDQ &gt; &gt; &amp;loads, Real start_time=-1, Real time_step=1, Real end_time=-1, Real scale_factor=1, CSVReader::Mode mode=CSVReader::Mode::AUTO, CSVReader::DataFormat format=CSVReader::DataFormat::SECONDS)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#aa56a0bfd0b45a8964dd8e0fa0e8da1ff">assignPVGeneration</a>(SystemTopology &amp;sys, Real start_time=-1, Real time_step=1, Real end_time=-1, CSVReader::Mode mode=CSVReader::Mode::AUTO)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#ad032428164768eabb2014c65254cc277">csv2Eigen</a>(const String &amp;path)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#a72974ae698b3fec9110130b62400849d">CSVReader</a>(String name, std::list&lt; fs::path &gt; path, Logger::Level logLevel)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#a2bcb49f4a4b8cad68e8e058c52615526">CSVReader</a>(String name, String path, Logger::Level logLevel)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#aab9fc2acb6bcd4fc98235efc2f4e8607">CSVReader</a>(String name, std::list&lt; fs::path &gt; path, std::map&lt; String, String &gt; &amp;assignList, Logger::Level logLevel)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#ac0f59e6b3b0949c5cb0eb0657d53741c">CSVReader</a>(String name, String path, std::map&lt; String, String &gt; &amp;assignList, Logger::Level logLevel)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#a71c248f331cd2c1fd63db4f171b6ea7d">DataFormat</a> enum name</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#a8ba4109a0cc5b1380f7e78db657a6401">doSkipFirstRow</a>(Bool value=true)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#a75a33af720d82201e40ac94c805c7f16">interpol_linear</a>(std::map&lt; Real, PQData &gt; &amp;data_PQ, Real x)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#aef0021cfe52b019483de44dcb59ab48b">interpol_linear</a>(std::map&lt; Real, Real &gt; &amp;data_wf, Real x)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#a07ab85b64411bd9e48d7a2e4a6df6b18">Mode</a> enum name</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#a6d2d9b2ae5cff7b334d9fa571796f82a">readLoadProfile</a>(fs::path file, Real start_time=-1, Real time_step=1, Real end_time=-1, CSVReader::DataFormat format=CSVReader::DataFormat::SECONDS)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>readLoadProfileDP</b>(fs::path file, Real start_time=-1, Real time_step=1, Real end_time=-1, Real scale_factor=1, CSVReader::DataFormat format=CSVReader::DataFormat::SECONDS) (defined in <a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>readPQData</b>(fs::path file, Real start_time=-1, Real time_step=1, Real end_time=-1, CSVReader::DataFormat format=CSVReader::DataFormat::SECONDS) (defined in <a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a>)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#aeaab644dbddc681ae65bd0e3125941a3">readLoadProfileDP</a>(fs::path file, Real start_time=-1, Real time_step=1, Real end_time=-1, Real scale_factor=1, CSVReader::DataFormat format=CSVReader::DataFormat::SECONDS)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#a2607ea94f260d1661a1521ccba97d6e0">readPQData</a>(fs::path file, Real start_time=-1, Real time_step=1, Real end_time=-1, CSVReader::DataFormat format=CSVReader::DataFormat::SECONDS)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#af6eca102a05b639d2c39c829f3fac506">time_format_convert</a>(const String &amp;time)</td><td class="entry"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html">CPS::CSVReader</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

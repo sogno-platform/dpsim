@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_gpu_sparse_adapter_8cpp_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_af103632340511860a5310da360a5028.html">src</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">GpuSparseAdapter.cpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_gpu_sparse_adapter_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -99,7 +107,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * file, You can obtain one at https://mozilla.org/MPL/2.0/.</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> *********************************************************************************/</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;dpsim/GpuSparseAdapter.h&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;<a class="code" href="_gpu_sparse_adapter_8h.html">dpsim/GpuSparseAdapter.h</a>&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespace_d_psim.html">DPsim</a>;</div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
@@ -118,8 +126,8 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    cusparseDestroyCsrsv2Info(info_U);</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    cusparseDestroy(<a class="code hl_variable" href="class_d_psim_1_1_gpu_sparse_adapter.html#ab35b01327e310742127763db4661a8d4">mCusparsehandle</a>);</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  }</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="keywordflow">if</span> (mCusolverhandle != <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    cusolverSpDestroy(mCusolverhandle);</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="class_d_psim_1_1_gpu_sparse_adapter.html#a95e69eaa888396f9aebc0a7f9a4dd451">mCusolverhandle</a> != <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    cusolverSpDestroy(<a class="code hl_variable" href="class_d_psim_1_1_gpu_sparse_adapter.html#a95e69eaa888396f9aebc0a7f9a4dd451">mCusolverhandle</a>);</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  }</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>}</div>
 </div>
@@ -133,25 +141,26 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  }</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>}</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keywordtype">void</span> GpuSparseAdapter::performFactorization(SparseMatrix &amp;systemMatrix) {</div>
+<div class="foldopen" id="foldopen00041" data-start="{" data-end="}">
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_gpu_sparse_adapter.html#ad7caedc8d64bd998d041ecce3e86aaae">   41</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_gpu_sparse_adapter.html#ad7caedc8d64bd998d041ecce3e86aaae">GpuSparseAdapter::performFactorization</a>(<a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix) {</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  cusparseStatus_t csp_status;</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  cusolverStatus_t cso_status;</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  csp_status = cusparseCreate(&amp;<a class="code hl_variable" href="class_d_psim_1_1_gpu_sparse_adapter.html#ab35b01327e310742127763db4661a8d4">mCusparsehandle</a>);</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  checkCusparseStatus(csp_status, <span class="stringliteral">&quot;cuSparse initialization failed:&quot;</span>);</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keywordflow">if</span> ((cso_status = cusolverSpCreate(&amp;mCusolverhandle)) !=</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keywordflow">if</span> ((cso_status = cusolverSpCreate(&amp;<a class="code hl_variable" href="class_d_psim_1_1_gpu_sparse_adapter.html#a95e69eaa888396f9aebc0a7f9a4dd451">mCusolverhandle</a>)) !=</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>      CUSOLVER_STATUS_SUCCESS) {</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="comment">//SPDLOG_LOGGER_ERROR(mSLog, &quot;cuSolver initialization failed: Error code {}&quot;, cso_status);</span></div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;cso_status not success&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordflow">throw</span> SolverException();</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordflow">throw</span> <a class="code hl_class" href="class_d_psim_1_1_solver_exception.html">SolverException</a>();</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  }</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  <span class="keywordtype">size_t</span> N = systemMatrix.rows();</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  <span class="keyword">auto</span> hMat = systemMatrix;</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  <a class="code hl_variable" href="class_d_psim_1_1_gpu_sparse_adapter.html#a1a8060798656ac3c8ba8a216088e1850">mGpuRhsVec</a> = cuda::Vector&lt;double&gt;(N);</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  <a class="code hl_variable" href="class_d_psim_1_1_gpu_sparse_adapter.html#a14cab7c31da7d634577c8cfd5b861b49">mGpuLhsVec</a> = cuda::Vector&lt;double&gt;(N);</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  <a class="code hl_variable" href="class_d_psim_1_1_gpu_sparse_adapter.html#a96e0230ba520d5239b2c87d9bf62256b">mGpuIntermediateVec</a> = cuda::Vector&lt;double&gt;(N);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  <a class="code hl_variable" href="class_d_psim_1_1_gpu_sparse_adapter.html#a1a8060798656ac3c8ba8a216088e1850">mGpuRhsVec</a> = <a class="code hl_class" href="class_d_psim_1_1cuda_1_1_vector.html">cuda::Vector&lt;double&gt;</a>(N);</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  <a class="code hl_variable" href="class_d_psim_1_1_gpu_sparse_adapter.html#a14cab7c31da7d634577c8cfd5b861b49">mGpuLhsVec</a> = <a class="code hl_class" href="class_d_psim_1_1cuda_1_1_vector.html">cuda::Vector&lt;double&gt;</a>(N);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  <a class="code hl_variable" href="class_d_psim_1_1_gpu_sparse_adapter.html#a96e0230ba520d5239b2c87d9bf62256b">mGpuIntermediateVec</a> = <a class="code hl_class" href="class_d_psim_1_1cuda_1_1_vector.html">cuda::Vector&lt;double&gt;</a>(N);</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  cusparseMatDescr_t descr_M = 0;</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  csrilu02Info_t info_M = 0;</div>
@@ -203,7 +212,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  <span class="keywordtype">int</span> p_nnz = 0;</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  <span class="keywordtype">int</span> p[N];</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>  cso_status = cusolverSpDcsrzfdHost(mCusolverhandle, N, nnz, descr_M,</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>  cso_status = cusolverSpDcsrzfdHost(<a class="code hl_variable" href="class_d_psim_1_1_gpu_sparse_adapter.html#a95e69eaa888396f9aebc0a7f9a4dd451">mCusolverhandle</a>, N, nnz, descr_M,</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>                                     hMat.valuePtr(), hMat.outerIndexPtr(),</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>                                     hMat.innerIndexPtr(), p, &amp;p_nnz);</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
@@ -211,16 +220,16 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="comment">//SPDLOG_LOGGER_ERROR(mSLog, &quot;cusolverSpDcsrzfdHost returend an error&quot;);</span></div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  }</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>  <span class="comment">// create Eigen::PermutationMatrix from the p</span></div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  mTransp = std::unique_ptr&lt;Eigen::PermutationMatrix&lt;Eigen::Dynamic&gt;&gt;(</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  <a class="code hl_variable" href="class_d_psim_1_1_gpu_sparse_adapter.html#a03d836fbc677e345e2f6211cfeff0b90">mTransp</a> = std::unique_ptr&lt;Eigen::PermutationMatrix&lt;Eigen::Dynamic&gt;&gt;(</div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>      <span class="keyword">new</span> Eigen::PermutationMatrix&lt;Eigen::Dynamic&gt;(</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>          Eigen::Map&lt;Eigen::Matrix&lt;int, Eigen::Dynamic, 1&gt;&gt;(p, N, 1)));</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  <span class="comment">// apply permutation</span></div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>  hMat = *mTransp * hMat;</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>  hMat = *<a class="code hl_variable" href="class_d_psim_1_1_gpu_sparse_adapter.html#a03d836fbc677e345e2f6211cfeff0b90">mTransp</a> * hMat;</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>  <span class="comment">// copy P&#39; to GPU</span></div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>  <a class="code hl_variable" href="class_d_psim_1_1_gpu_sparse_adapter.html#a86acbb984352c331053f19dceb8f1b92">mSysMat</a> = std::unique_ptr&lt;cuda::CudaMatrix&lt;double, int&gt;&gt;(</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>      <span class="keyword">new</span> cuda::CudaMatrix&lt;double, int&gt;(hMat, N));</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>      <span class="keyword">new</span> <a class="code hl_struct" href="struct_d_psim_1_1cuda_1_1_cuda_matrix.html">cuda::CudaMatrix&lt;double, int&gt;</a>(hMat, N));</div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>  <span class="keywordtype">double</span> *d_csrVal = <a class="code hl_variable" href="class_d_psim_1_1_gpu_sparse_adapter.html#a86acbb984352c331053f19dceb8f1b92">mSysMat</a>-&gt;val.data();</div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>  <span class="keywordtype">int</span> *d_csrRowPtr = <a class="code hl_variable" href="class_d_psim_1_1_gpu_sparse_adapter.html#a86acbb984352c331053f19dceb8f1b92">mSysMat</a>-&gt;row.data();</div>
@@ -246,7 +255,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>  <span class="comment">// Buffer</span></div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>  pBufferSize = std::max({pBufferSize_M, pBufferSize_L, pBufferSize_U});</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>  pBuffer = cuda::Vector&lt;char&gt;(pBufferSize);</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>  pBuffer = <a class="code hl_class" href="class_d_psim_1_1cuda_1_1_vector.html">cuda::Vector&lt;char&gt;</a>(pBufferSize);</div>
 <div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>  <span class="comment">// step 4: perform analysis of incomplete Cholesky on M</span></div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>  <span class="comment">//         perform analysis of triangular solve on L</span></div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>  <span class="comment">//         perform analysis of triangular solve on U</span></div>
@@ -263,7 +272,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    <span class="comment">//SPDLOG_LOGGER_ERROR(mSLog, &quot;A({},{}) is missing&quot;, structural_zero, structural_zero);</span></div>
 <div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    checkCusparseStatus(csp_status);</div>
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;csp_status zero pivot&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    <span class="keywordflow">throw</span> SolverException();</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    <span class="keywordflow">throw</span> <a class="code hl_class" href="class_d_psim_1_1_solver_exception.html">SolverException</a>();</div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>  }</div>
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span> </div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>  csp_status = cusparseDcsrsv2_analysis(</div>
@@ -291,7 +300,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    <span class="comment">//SPDLOG_LOGGER_ERROR(mSLog, &quot;U({},{}) is zero\n&quot;, numerical_zero, numerical_zero);</span></div>
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    checkCusparseStatus(csp_status);</div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;csp_status zero pivot&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <span class="keywordflow">throw</span> SolverException();</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <span class="keywordflow">throw</span> <a class="code hl_class" href="class_d_psim_1_1_solver_exception.html">SolverException</a>();</div>
 <div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>  }</div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>  <span class="comment">//std::cout &lt;&lt; *mSysMat.get() &lt;&lt; std::endl;</span></div>
@@ -301,47 +310,48 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>  csp_status = cusparseDestroyMatDescr(descr_M);</div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>  checkCusparseStatus(csp_status, <span class="stringliteral">&quot;failed to destroy MatDescr:&quot;</span>);</div>
 <div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>}</div>
+</div>
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span> </div>
 <div class="foldopen" id="foldopen00210" data-start="{" data-end="}">
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_gpu_sparse_adapter.html#a5da6cdf02e594c1e0562f78141d6e0d9">  210</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_gpu_sparse_adapter.html#a5da6cdf02e594c1e0562f78141d6e0d9">GpuSparseAdapter::preprocessing</a>(</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    SparseMatrix &amp;systemMatrix,</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    <a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix,</div>
 <div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    std::vector&lt;std::pair&lt;UInt, UInt&gt;&gt; &amp;listVariableSystemMatrixEntries) {</div>
 <div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>  <span class="comment">/* No preprocessing phase available yet */</span></div>
 <div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>}</div>
 </div>
 <div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span> </div>
 <div class="foldopen" id="foldopen00216" data-start="{" data-end="}">
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_gpu_sparse_adapter.html#a9322e2066c5a25e6731168d6a9020dcf">  216</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_gpu_sparse_adapter.html#a9322e2066c5a25e6731168d6a9020dcf">GpuSparseAdapter::factorize</a>(SparseMatrix &amp;systemMatrix) {</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>  performFactorization(systemMatrix);</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_gpu_sparse_adapter.html#a9322e2066c5a25e6731168d6a9020dcf">  216</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_gpu_sparse_adapter.html#a9322e2066c5a25e6731168d6a9020dcf">GpuSparseAdapter::factorize</a>(<a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix) {</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>  <a class="code hl_function" href="class_d_psim_1_1_gpu_sparse_adapter.html#ad7caedc8d64bd998d041ecce3e86aaae">performFactorization</a>(systemMatrix);</div>
 <div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>}</div>
 </div>
 <div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span> </div>
 <div class="foldopen" id="foldopen00220" data-start="{" data-end="}">
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_gpu_sparse_adapter.html#a0997fd095ddcecdc1b1174c933c7063e">  220</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_gpu_sparse_adapter.html#a0997fd095ddcecdc1b1174c933c7063e">GpuSparseAdapter::refactorize</a>(SparseMatrix &amp;systemMatrix) {</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>  performFactorization(systemMatrix);</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_gpu_sparse_adapter.html#a0997fd095ddcecdc1b1174c933c7063e">  220</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_gpu_sparse_adapter.html#a0997fd095ddcecdc1b1174c933c7063e">GpuSparseAdapter::refactorize</a>(<a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix) {</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>  <a class="code hl_function" href="class_d_psim_1_1_gpu_sparse_adapter.html#ad7caedc8d64bd998d041ecce3e86aaae">performFactorization</a>(systemMatrix);</div>
 <div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>}</div>
 </div>
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span> </div>
 <div class="foldopen" id="foldopen00224" data-start="{" data-end="}">
 <div class="line"><a id="l00224" name="l00224"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_gpu_sparse_adapter.html#af6b2cbf01bae9cb3769c35c2da364213">  224</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_gpu_sparse_adapter.html#af6b2cbf01bae9cb3769c35c2da364213">GpuSparseAdapter::partialRefactorize</a>(</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    SparseMatrix &amp;systemMatrix,</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    <a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix,</div>
 <div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    std::vector&lt;std::pair&lt;UInt, UInt&gt;&gt; &amp;listVariableSystemMatrixEntries) {</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>  performFactorization(systemMatrix);</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>  <a class="code hl_function" href="class_d_psim_1_1_gpu_sparse_adapter.html#ad7caedc8d64bd998d041ecce3e86aaae">performFactorization</a>(systemMatrix);</div>
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>}</div>
 </div>
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span> </div>
 <div class="foldopen" id="foldopen00230" data-start="{" data-end="}">
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_gpu_sparse_adapter.html#a2950062bac45bf31574fd94bcd54adbe">  230</a></span>Matrix <a class="code hl_function" href="class_d_psim_1_1_gpu_sparse_adapter.html#a2950062bac45bf31574fd94bcd54adbe">GpuSparseAdapter::solve</a>(Matrix &amp;mRightHandSideVector) {</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>  Matrix leftSideVector = mRightHandSideVector;</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_gpu_sparse_adapter.html#a2950062bac45bf31574fd94bcd54adbe">  230</a></span><a class="code hl_typedef" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> <a class="code hl_function" href="class_d_psim_1_1_gpu_sparse_adapter.html#a2950062bac45bf31574fd94bcd54adbe">GpuSparseAdapter::solve</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;mRightHandSideVector) {</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> leftSideVector = mRightHandSideVector;</div>
 <div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>  cudaError_t status;</div>
 <div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>  cusparseStatus_t csp_status;</div>
 <div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>  <span class="keywordtype">int</span> size = mRightHandSideVector.rows();</div>
 <div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span> </div>
 <div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>  <span class="comment">//Copy right vector to device</span></div>
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>  <span class="comment">//Permutate right side: R&#39; = P * R</span></div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>  mRightHandSideVector = *mTransp * mRightHandSideVector;</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>  mRightHandSideVector = *<a class="code hl_variable" href="class_d_psim_1_1_gpu_sparse_adapter.html#a03d836fbc677e345e2f6211cfeff0b90">mTransp</a> * mRightHandSideVector;</div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>  status = cudaMemcpy(<a class="code hl_variable" href="class_d_psim_1_1_gpu_sparse_adapter.html#a1a8060798656ac3c8ba8a216088e1850">mGpuRhsVec</a>.data(), &amp;mRightHandSideVector(0),</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>                      size * <span class="keyword">sizeof</span>(Real), cudaMemcpyHostToDevice);</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>                      size * <span class="keyword">sizeof</span>(<a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a>), cudaMemcpyHostToDevice);</div>
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>  <span class="keywordflow">if</span> (status != cudaSuccess) {</div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    <span class="comment">//SPDLOG_LOGGER_ERROR(mSLog, &quot;Cuda Error: {}&quot;, cudaGetErrorString(status));</span></div>
 <div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;status not cudasuccess&quot;</span> &lt;&lt; std::endl;</div>
@@ -370,7 +380,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span> </div>
 <div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>  <span class="comment">//Copy Solution back</span></div>
 <div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>  status = cudaMemcpy(&amp;(leftSideVector)(0), <a class="code hl_variable" href="class_d_psim_1_1_gpu_sparse_adapter.html#a14cab7c31da7d634577c8cfd5b861b49">mGpuLhsVec</a>.data(),</div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>                      size * <span class="keyword">sizeof</span>(Real), cudaMemcpyDeviceToHost);</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>                      size * <span class="keyword">sizeof</span>(<a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a>), cudaMemcpyDeviceToHost);</div>
 <div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>  <span class="keywordflow">if</span> (status != cudaSuccess) {</div>
 <div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    <span class="comment">//SPDLOG_LOGGER_ERROR(mSLog, &quot;Cuda Error: {}&quot;, cudaGetErrorString(status));</span></div>
 <div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;status not cudasuccess&quot;</span> &lt;&lt; std::endl;</div>
@@ -380,6 +390,8 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>}</div>
 </div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>} <span class="comment">// namespace DPsim</span></div>
+<div class="ttc" id="a_gpu_sparse_adapter_8h_html"><div class="ttname"><a href="_gpu_sparse_adapter_8h.html">GpuSparseAdapter.h</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_gpu_sparse_adapter_html_a03d836fbc677e345e2f6211cfeff0b90"><div class="ttname"><a href="class_d_psim_1_1_gpu_sparse_adapter.html#a03d836fbc677e345e2f6211cfeff0b90">DPsim::GpuSparseAdapter::mTransp</a></div><div class="ttdeci">std::unique_ptr&lt; Eigen::PermutationMatrix&lt; Eigen::Dynamic &gt; &gt; mTransp</div><div class="ttdef"><b>Definition</b> <a href="_gpu_sparse_adapter_8h_source.html#l00035">GpuSparseAdapter.h:35</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_gpu_sparse_adapter_html_a05cc418073f75761900f9f59ca021681"><div class="ttname"><a href="class_d_psim_1_1_gpu_sparse_adapter.html#a05cc418073f75761900f9f59ca021681">DPsim::GpuSparseAdapter::~GpuSparseAdapter</a></div><div class="ttdeci">virtual ~GpuSparseAdapter()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition</b> <a href="#l00019">GpuSparseAdapter.cpp:19</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_gpu_sparse_adapter_html_a0997fd095ddcecdc1b1174c933c7063e"><div class="ttname"><a href="class_d_psim_1_1_gpu_sparse_adapter.html#a0997fd095ddcecdc1b1174c933c7063e">DPsim::GpuSparseAdapter::refactorize</a></div><div class="ttdeci">virtual void refactorize(SparseMatrix &amp;systemMatrix) override</div><div class="ttdoc">refactorization without partial pivoting</div><div class="ttdef"><b>Definition</b> <a href="#l00220">GpuSparseAdapter.cpp:220</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_gpu_sparse_adapter_html_a14cab7c31da7d634577c8cfd5b861b49"><div class="ttname"><a href="class_d_psim_1_1_gpu_sparse_adapter.html#a14cab7c31da7d634577c8cfd5b861b49">DPsim::GpuSparseAdapter::mGpuLhsVec</a></div><div class="ttdeci">cuda::Vector&lt; double &gt; mGpuLhsVec</div><div class="ttdoc">LHS-Vector.</div><div class="ttdef"><b>Definition</b> <a href="_gpu_sparse_adapter_8h_source.html#l00040">GpuSparseAdapter.h:40</a></div></div>
@@ -389,16 +401,26 @@ $(function(){ initResizable(false); });
 <div class="ttc" id="aclass_d_psim_1_1_gpu_sparse_adapter_html_a5da6cdf02e594c1e0562f78141d6e0d9"><div class="ttname"><a href="class_d_psim_1_1_gpu_sparse_adapter.html#a5da6cdf02e594c1e0562f78141d6e0d9">DPsim::GpuSparseAdapter::preprocessing</a></div><div class="ttdeci">virtual void preprocessing(SparseMatrix &amp;systemMatrix, std::vector&lt; std::pair&lt; UInt, UInt &gt; &gt; &amp;listVariableSystemMatrixEntries) override</div><div class="ttdoc">preprocessing function pre-ordering and scaling the matrix</div><div class="ttdef"><b>Definition</b> <a href="#l00210">GpuSparseAdapter.cpp:210</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_gpu_sparse_adapter_html_a86acbb984352c331053f19dceb8f1b92"><div class="ttname"><a href="class_d_psim_1_1_gpu_sparse_adapter.html#a86acbb984352c331053f19dceb8f1b92">DPsim::GpuSparseAdapter::mSysMat</a></div><div class="ttdeci">std::unique_ptr&lt; cuda::CudaMatrix&lt; double, int &gt; &gt; mSysMat</div><div class="ttdoc">Systemmatrix on Device.</div><div class="ttdef"><b>Definition</b> <a href="_gpu_sparse_adapter_8h_source.html#l00034">GpuSparseAdapter.h:34</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_gpu_sparse_adapter_html_a9322e2066c5a25e6731168d6a9020dcf"><div class="ttname"><a href="class_d_psim_1_1_gpu_sparse_adapter.html#a9322e2066c5a25e6731168d6a9020dcf">DPsim::GpuSparseAdapter::factorize</a></div><div class="ttdeci">virtual void factorize(SparseMatrix &amp;systemMatrix) override</div><div class="ttdoc">factorization function with partial pivoting</div><div class="ttdef"><b>Definition</b> <a href="#l00216">GpuSparseAdapter.cpp:216</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_gpu_sparse_adapter_html_a95e69eaa888396f9aebc0a7f9a4dd451"><div class="ttname"><a href="class_d_psim_1_1_gpu_sparse_adapter.html#a95e69eaa888396f9aebc0a7f9a4dd451">DPsim::GpuSparseAdapter::mCusolverhandle</a></div><div class="ttdeci">cusolverSpHandle_t mCusolverhandle</div><div class="ttdef"><b>Definition</b> <a href="_gpu_sparse_adapter_8h_source.html#l00031">GpuSparseAdapter.h:31</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_gpu_sparse_adapter_html_a96e0230ba520d5239b2c87d9bf62256b"><div class="ttname"><a href="class_d_psim_1_1_gpu_sparse_adapter.html#a96e0230ba520d5239b2c87d9bf62256b">DPsim::GpuSparseAdapter::mGpuIntermediateVec</a></div><div class="ttdeci">cuda::Vector&lt; double &gt; mGpuIntermediateVec</div><div class="ttdoc">Intermediate Vector.</div><div class="ttdef"><b>Definition</b> <a href="_gpu_sparse_adapter_8h_source.html#l00042">GpuSparseAdapter.h:42</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_gpu_sparse_adapter_html_ab35b01327e310742127763db4661a8d4"><div class="ttname"><a href="class_d_psim_1_1_gpu_sparse_adapter.html#ab35b01327e310742127763db4661a8d4">DPsim::GpuSparseAdapter::mCusparsehandle</a></div><div class="ttdeci">cusparseHandle_t mCusparsehandle</div><div class="ttdoc">Solver-Handle.</div><div class="ttdef"><b>Definition</b> <a href="_gpu_sparse_adapter_8h_source.html#l00030">GpuSparseAdapter.h:30</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_gpu_sparse_adapter_html_ad7caedc8d64bd998d041ecce3e86aaae"><div class="ttname"><a href="class_d_psim_1_1_gpu_sparse_adapter.html#ad7caedc8d64bd998d041ecce3e86aaae">DPsim::GpuSparseAdapter::performFactorization</a></div><div class="ttdeci">void performFactorization(SparseMatrix &amp;systemMatrix)</div><div class="ttdef"><b>Definition</b> <a href="#l00041">GpuSparseAdapter.cpp:41</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_gpu_sparse_adapter_html_af6b2cbf01bae9cb3769c35c2da364213"><div class="ttname"><a href="class_d_psim_1_1_gpu_sparse_adapter.html#af6b2cbf01bae9cb3769c35c2da364213">DPsim::GpuSparseAdapter::partialRefactorize</a></div><div class="ttdeci">virtual void partialRefactorize(SparseMatrix &amp;systemMatrix, std::vector&lt; std::pair&lt; UInt, UInt &gt; &gt; &amp;listVariableSystemMatrixEntries) override</div><div class="ttdoc">partial refactorization withouth partial pivoting</div><div class="ttdef"><b>Definition</b> <a href="#l00224">GpuSparseAdapter.cpp:224</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_solver_exception_html"><div class="ttname"><a href="class_d_psim_1_1_solver_exception.html">DPsim::SolverException</a></div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00031">Definitions.h:31</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1cuda_1_1_vector_html"><div class="ttname"><a href="class_d_psim_1_1cuda_1_1_vector.html">DPsim::cuda::Vector</a></div><div class="ttdef"><b>Definition</b> <a href="_cuda_utility_8h_source.html#l00054">CudaUtility.h:54</a></div></div>
 <div class="ttc" id="anamespace_d_psim_html"><div class="ttname"><a href="namespace_d_psim.html">DPsim</a></div><div class="ttdef"><b>Definition</b> <a href="_dense_l_u_adapter_8cpp_source.html#l00013">DenseLUAdapter.cpp:13</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a52dcbc3a0896b912333104eb61a7b29b"><div class="ttname"><a href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">DPsim::Real</a></div><div class="ttdeci">CPS::Real Real</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00018">Definitions.h:18</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a7920162dfc7e843a4f1a1248fe9ccb0e"><div class="ttname"><a href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">DPsim::Matrix</a></div><div class="ttdeci">CPS::Matrix Matrix</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00024">Definitions.h:24</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_ab6afa34bab94cdc2ff33e09d4a1d2c9c"><div class="ttname"><a href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">DPsim::SparseMatrix</a></div><div class="ttdeci">CPS::SparseMatrixRow SparseMatrix</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00026">Definitions.h:26</a></div></div>
+<div class="ttc" id="astruct_d_psim_1_1cuda_1_1_cuda_matrix_html"><div class="ttname"><a href="struct_d_psim_1_1cuda_1_1_cuda_matrix.html">DPsim::cuda::CudaMatrix</a></div><div class="ttdef"><b>Definition</b> <a href="_cuda_utility_8h_source.html#l00136">CudaUtility.h:136</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_af103632340511860a5310da360a5028.html">src</a></li><li class="navelem"><a class="el" href="_gpu_sparse_adapter_8cpp.html">GpuSparseAdapter.cpp</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

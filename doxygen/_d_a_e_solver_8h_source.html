@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_d_a_e_solver_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">DAESolver.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_d_a_e_solver_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -105,11 +113,11 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;list&gt;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;dpsim/Solver.h&gt;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;<a class="code" href="_solver_8h.html">dpsim/Solver.h</a>&gt;</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;dpsim-models/Logger.h&gt;</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;dpsim-models/Solver/DAEInterface.h&gt;</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;dpsim-models/SystemTopology.h&gt;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;<a class="code" href="_logger_8h.html">dpsim-models/Logger.h</a>&gt;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;<a class="code" href="_d_a_e_interface_8h.html">dpsim-models/Solver/DAEInterface.h</a>&gt;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;<a class="code" href="_system_topology_8h.html">dpsim-models/SystemTopology.h</a>&gt;</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;ida/ida.h&gt;</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;ida/ida_direct.h&gt;</span></div>
@@ -120,18 +128,18 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_d_psim.html">DPsim</a> {</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span></div>
 <div class="foldopen" id="foldopen00030" data-start="{" data-end="};">
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_d_a_e_solver.html">   30</a></span><span class="keyword">class </span><a class="code hl_function" href="class_d_psim_1_1_d_a_e_solver.html#aa106d6b154d1afb1dffcf2ca05d017cf">DAESolver</a> : <span class="keyword">public</span> Solver {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_d_a_e_solver.html">   30</a></span><span class="keyword">class </span><a class="code hl_function" href="class_d_psim_1_1_d_a_e_solver.html#aa106d6b154d1afb1dffcf2ca05d017cf">DAESolver</a> : <span class="keyword">public</span> <a class="code hl_function" href="class_d_psim_1_1_solver.html#a43f3a5b98bf07a364645fa5f8193a5e7">Solver</a> {</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">protected</span>:</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <span class="comment">// General simulation parameters</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <a class="code hl_class" href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a> mSystem;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_d_a_e_solver.html#a57e9abfa1a45cbd4d2f302e183faec45">   33</a></span>  <a class="code hl_class" href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a> <a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#a57e9abfa1a45cbd4d2f302e183faec45">mSystem</a>;</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_d_a_e_solver.html#a8dcc474c87d774565d44518b7d2d8115">   35</a></span>  std::vector&lt;Int&gt; <a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#a8dcc474c87d774565d44518b7d2d8115">mOffsets</a>;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_d_a_e_solver.html#a943f3332309781d6c1274f12cf5ba55c">   37</a></span>  Real <a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#a943f3332309781d6c1274f12cf5ba55c">mTimestep</a>;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_d_a_e_solver.html#a3deac63d22fa2dd2dc5135683d4b7438">   39</a></span>  Int <a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#a3deac63d22fa2dd2dc5135683d4b7438">mNEQ</a>;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_d_a_e_solver.html#ab475d74b931e7a8a208858d0c6266122">   41</a></span>  CPS::IdentifiedObject::List <a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#ab475d74b931e7a8a208858d0c6266122">mComponents</a>;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_d_a_e_solver.html#a9d8b80d7da956319cac5f7924693c888">   43</a></span>  CPS::SimNode&lt;Complex&gt;::List <a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#a9d8b80d7da956319cac5f7924693c888">mNodes</a>;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_d_a_e_solver.html#a943f3332309781d6c1274f12cf5ba55c">   37</a></span>  <a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> <a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#a943f3332309781d6c1274f12cf5ba55c">mTimestep</a>;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_d_a_e_solver.html#a3deac63d22fa2dd2dc5135683d4b7438">   39</a></span>  <a class="code hl_typedef" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> <a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#a3deac63d22fa2dd2dc5135683d4b7438">mNEQ</a>;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_d_a_e_solver.html#ab475d74b931e7a8a208858d0c6266122">   41</a></span>  <a class="code hl_typedef" href="class_c_p_s_1_1_identified_object.html#a981a607f5a619bbc40c916fcf7048a24">CPS::IdentifiedObject::List</a> <a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#ab475d74b931e7a8a208858d0c6266122">mComponents</a>;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_d_a_e_solver.html#a9d8b80d7da956319cac5f7924693c888">   43</a></span>  <a class="code hl_typedef" href="class_c_p_s_1_1_sim_node.html#ad4160295aad4b504e06b203d72ba8baa">CPS::SimNode&lt;Complex&gt;::List</a> <a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#a9d8b80d7da956319cac5f7924693c888">mNodes</a>;</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="comment">// Initial time t0</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  Real mT0;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_d_a_e_solver.html#a3946084f3ebb52bece88134b4e7322fc">   46</a></span>  <a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> <a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#a3946084f3ebb52bece88134b4e7322fc">mT0</a>;</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <span class="comment">// IDA simulation variables</span></div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_d_a_e_solver.html#a0631888e2f108db71b08c2ed0006a297">   50</a></span>  <span class="keywordtype">void</span> *<a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#a0631888e2f108db71b08c2ed0006a297">mem</a> = NULL;</div>
@@ -142,35 +150,47 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_d_a_e_solver.html#aa59e5c0bd44bac11e3f4b4f187de1a5c">   60</a></span>  realtype <a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#aa59e5c0bd44bac11e3f4b4f187de1a5c">rtol</a>;</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_d_a_e_solver.html#ae18022b8b6584b8fa53fe1b94866bbaa">   62</a></span>  SUNMatrix <a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#ae18022b8b6584b8fa53fe1b94866bbaa">A</a> = NULL;</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_d_a_e_solver.html#a292a6da4dc96988fceb6c57c960e11a3">   64</a></span>  SUNLinearSolver <a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#a292a6da4dc96988fceb6c57c960e11a3">LS</a> = NULL;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  <span class="keywordtype">long</span> <span class="keywordtype">int</span> interalSteps = 0;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  <span class="keywordtype">long</span> <span class="keywordtype">int</span> resEval = 0;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  std::vector&lt;CPS::DAEInterface::ResFn&gt; mResidualFunctions;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_d_a_e_solver.html#a2a86c98ec67d6fb3c6db07701aae2572">   65</a></span>  <span class="keywordtype">long</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#a2a86c98ec67d6fb3c6db07701aae2572">interalSteps</a> = 0;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_d_a_e_solver.html#a2dee8dc20f9cb3d8e32961a93e5b19f0">   66</a></span>  <span class="keywordtype">long</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#a2dee8dc20f9cb3d8e32961a93e5b19f0">resEval</a> = 0;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_d_a_e_solver.html#a2a329ce1d9f8bba4a78c612ff18fb31e">   67</a></span>  std::vector&lt;CPS::DAEInterface::ResFn&gt; <a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#a2a329ce1d9f8bba4a78c612ff18fb31e">mResidualFunctions</a>;</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span></div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  <span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code hl_function" href="class_d_psim_1_1_d_a_e_solver.html#ade05f8b154ad1a46c813ada12fd3f09b">residualFunctionWrapper</a>(realtype ttime, N_Vector <a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#a1bf8f9d55bfaac779b39d141a06e53b6">state</a>,</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>                                     N_Vector <a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#a26f0b859a687c1b54acc13da4d378341">dstate_dt</a>, N_Vector resid,</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>                                     <span class="keywordtype">void</span> *user_data);</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  <span class="keywordtype">int</span> residualFunction(realtype ttime, N_Vector <a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#a1bf8f9d55bfaac779b39d141a06e53b6">state</a>, N_Vector <a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#a26f0b859a687c1b54acc13da4d378341">dstate_dt</a>,</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  <span class="keywordtype">int</span> <a class="code hl_function" href="class_d_psim_1_1_d_a_e_solver.html#a89e2480499e63154622f6e291b2a5c58">residualFunction</a>(realtype ttime, N_Vector <a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#a1bf8f9d55bfaac779b39d141a06e53b6">state</a>, N_Vector <a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#a26f0b859a687c1b54acc13da4d378341">dstate_dt</a>,</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>                       N_Vector resid);</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  <a class="code hl_function" href="class_d_psim_1_1_d_a_e_solver.html#aa106d6b154d1afb1dffcf2ca05d017cf">DAESolver</a>(String name, <span class="keyword">const</span> <a class="code hl_class" href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a> &amp;system, Real dt, Real mT0);</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  <a class="code hl_function" href="class_d_psim_1_1_d_a_e_solver.html#aa106d6b154d1afb1dffcf2ca05d017cf">DAESolver</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> name, <span class="keyword">const</span> <a class="code hl_class" href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a> &amp;system, <a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> dt, <a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> <a class="code hl_variable" href="class_d_psim_1_1_d_a_e_solver.html#a3946084f3ebb52bece88134b4e7322fc">mT0</a>);</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  <a class="code hl_function" href="class_d_psim_1_1_d_a_e_solver.html#a9883d637f808f05263dace05a8761e84">~DAESolver</a>();</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_d_a_e_solver.html#aab741458f52cae64ea769962d0ec5b2b">initialize</a>() final;</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span></div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  Real <a class="code hl_function" href="class_d_psim_1_1_d_a_e_solver.html#a378f1542c04293d3c2621b62db1061ad">step</a>(Real time);</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> <a class="code hl_function" href="class_d_psim_1_1_d_a_e_solver.html#a378f1542c04293d3c2621b62db1061ad">step</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">Real</a> time);</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  CPS::Task::List <a class="code hl_function" href="class_d_psim_1_1_d_a_e_solver.html#a565800dde7f5fa518924447ab4e4b5c5">getTasks</a>() override;</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  <a class="code hl_namespace" href="namespace_c_p_s.html">CPS</a>::Task::<a class="code hl_typedef" href="class_d_psim_1_1_solver.html#a1b7b853ce69c4c12f8e41994b1944b0c">List</a> <a class="code hl_function" href="class_d_psim_1_1_d_a_e_solver.html#a565800dde7f5fa518924447ab4e4b5c5">getTasks</a>() override;</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>};</div>
 </div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>} <span class="comment">// namespace DPsim</span></div>
+<div class="ttc" id="a_d_a_e_interface_8h_html"><div class="ttname"><a href="_d_a_e_interface_8h.html">DAEInterface.h</a></div></div>
+<div class="ttc" id="a_logger_8h_html"><div class="ttname"><a href="_logger_8h.html">Logger.h</a></div></div>
+<div class="ttc" id="a_solver_8h_html"><div class="ttname"><a href="_solver_8h.html">Solver.h</a></div></div>
+<div class="ttc" id="a_system_topology_8h_html"><div class="ttname"><a href="_system_topology_8h.html">SystemTopology.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a981a607f5a619bbc40c916fcf7048a24"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a981a607f5a619bbc40c916fcf7048a24">CPS::IdentifiedObject::List</a></div><div class="ttdeci">std::vector&lt; Ptr &gt; List</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00031">IdentifiedObject.h:31</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_sim_node_html_ad4160295aad4b504e06b203d72ba8baa"><div class="ttname"><a href="class_c_p_s_1_1_sim_node.html#ad4160295aad4b504e06b203d72ba8baa">CPS::SimNode::List</a></div><div class="ttdeci">std::vector&lt; Ptr &gt; List</div><div class="ttdef"><b>Definition</b> <a href="_sim_node_8h_source.html#l00033">SimNode.h:33</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_system_topology_html"><div class="ttname"><a href="class_c_p_s_1_1_system_topology.html">CPS::SystemTopology</a></div><div class="ttdef"><b>Definition</b> <a href="_system_topology_8h_source.html#l00023">SystemTopology.h:23</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_d_a_e_solver_html_a0631888e2f108db71b08c2ed0006a297"><div class="ttname"><a href="class_d_psim_1_1_d_a_e_solver.html#a0631888e2f108db71b08c2ed0006a297">DPsim::DAESolver::mem</a></div><div class="ttdeci">void * mem</div><div class="ttdoc">Memory block allocated by IDA.</div><div class="ttdef"><b>Definition</b> <a href="#l00050">DAESolver.h:50</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_d_a_e_solver_html_a1bf8f9d55bfaac779b39d141a06e53b6"><div class="ttname"><a href="class_d_psim_1_1_d_a_e_solver.html#a1bf8f9d55bfaac779b39d141a06e53b6">DPsim::DAESolver::state</a></div><div class="ttdeci">N_Vector state</div><div class="ttdoc">Vector of problem variables.</div><div class="ttdef"><b>Definition</b> <a href="#l00052">DAESolver.h:52</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_d_a_e_solver_html_a26f0b859a687c1b54acc13da4d378341"><div class="ttname"><a href="class_d_psim_1_1_d_a_e_solver.html#a26f0b859a687c1b54acc13da4d378341">DPsim::DAESolver::dstate_dt</a></div><div class="ttdeci">N_Vector dstate_dt</div><div class="ttdoc">Derivates of the state vector with respect to time.</div><div class="ttdef"><b>Definition</b> <a href="#l00054">DAESolver.h:54</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_d_a_e_solver_html_a292a6da4dc96988fceb6c57c960e11a3"><div class="ttname"><a href="class_d_psim_1_1_d_a_e_solver.html#a292a6da4dc96988fceb6c57c960e11a3">DPsim::DAESolver::LS</a></div><div class="ttdeci">SUNLinearSolver LS</div><div class="ttdoc">Linear solver object.</div><div class="ttdef"><b>Definition</b> <a href="#l00064">DAESolver.h:64</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_d_a_e_solver_html_a2a329ce1d9f8bba4a78c612ff18fb31e"><div class="ttname"><a href="class_d_psim_1_1_d_a_e_solver.html#a2a329ce1d9f8bba4a78c612ff18fb31e">DPsim::DAESolver::mResidualFunctions</a></div><div class="ttdeci">std::vector&lt; CPS::DAEInterface::ResFn &gt; mResidualFunctions</div><div class="ttdef"><b>Definition</b> <a href="#l00067">DAESolver.h:67</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_d_a_e_solver_html_a2a86c98ec67d6fb3c6db07701aae2572"><div class="ttname"><a href="class_d_psim_1_1_d_a_e_solver.html#a2a86c98ec67d6fb3c6db07701aae2572">DPsim::DAESolver::interalSteps</a></div><div class="ttdeci">long int interalSteps</div><div class="ttdef"><b>Definition</b> <a href="#l00065">DAESolver.h:65</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_d_a_e_solver_html_a2dee8dc20f9cb3d8e32961a93e5b19f0"><div class="ttname"><a href="class_d_psim_1_1_d_a_e_solver.html#a2dee8dc20f9cb3d8e32961a93e5b19f0">DPsim::DAESolver::resEval</a></div><div class="ttdeci">long int resEval</div><div class="ttdef"><b>Definition</b> <a href="#l00066">DAESolver.h:66</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_d_a_e_solver_html_a378f1542c04293d3c2621b62db1061ad"><div class="ttname"><a href="class_d_psim_1_1_d_a_e_solver.html#a378f1542c04293d3c2621b62db1061ad">DPsim::DAESolver::step</a></div><div class="ttdeci">Real step(Real time)</div><div class="ttdoc">Solve system for the current time.</div><div class="ttdef"><b>Definition</b> <a href="_d_a_e_solver_8cpp_source.html#l00209">DAESolver.cpp:209</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_d_a_e_solver_html_a3946084f3ebb52bece88134b4e7322fc"><div class="ttname"><a href="class_d_psim_1_1_d_a_e_solver.html#a3946084f3ebb52bece88134b4e7322fc">DPsim::DAESolver::mT0</a></div><div class="ttdeci">Real mT0</div><div class="ttdef"><b>Definition</b> <a href="#l00046">DAESolver.h:46</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_d_a_e_solver_html_a3deac63d22fa2dd2dc5135683d4b7438"><div class="ttname"><a href="class_d_psim_1_1_d_a_e_solver.html#a3deac63d22fa2dd2dc5135683d4b7438">DPsim::DAESolver::mNEQ</a></div><div class="ttdeci">Int mNEQ</div><div class="ttdoc">Number of equations in problem.</div><div class="ttdef"><b>Definition</b> <a href="#l00039">DAESolver.h:39</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_d_a_e_solver_html_a565800dde7f5fa518924447ab4e4b5c5"><div class="ttname"><a href="class_d_psim_1_1_d_a_e_solver.html#a565800dde7f5fa518924447ab4e4b5c5">DPsim::DAESolver::getTasks</a></div><div class="ttdeci">CPS::Task::List getTasks() override</div><div class="ttdoc">Get tasks for scheduler.</div><div class="ttdef"><b>Definition</b> <a href="_d_a_e_solver_8cpp_source.html#l00229">DAESolver.cpp:229</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_d_a_e_solver_html_a57e9abfa1a45cbd4d2f302e183faec45"><div class="ttname"><a href="class_d_psim_1_1_d_a_e_solver.html#a57e9abfa1a45cbd4d2f302e183faec45">DPsim::DAESolver::mSystem</a></div><div class="ttdeci">CPS::SystemTopology mSystem</div><div class="ttdef"><b>Definition</b> <a href="#l00033">DAESolver.h:33</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_d_a_e_solver_html_a89e2480499e63154622f6e291b2a5c58"><div class="ttname"><a href="class_d_psim_1_1_d_a_e_solver.html#a89e2480499e63154622f6e291b2a5c58">DPsim::DAESolver::residualFunction</a></div><div class="ttdeci">int residualFunction(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid)</div><div class="ttdef"><b>Definition</b> <a href="_d_a_e_solver_8cpp_source.html#l00181">DAESolver.cpp:181</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_d_a_e_solver_html_a8dcc474c87d774565d44518b7d2d8115"><div class="ttname"><a href="class_d_psim_1_1_d_a_e_solver.html#a8dcc474c87d774565d44518b7d2d8115">DPsim::DAESolver::mOffsets</a></div><div class="ttdeci">std::vector&lt; Int &gt; mOffsets</div><div class="ttdoc">Offsets vector for adding new equations to the residual vector.</div><div class="ttdef"><b>Definition</b> <a href="#l00035">DAESolver.h:35</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_d_a_e_solver_html_a943f3332309781d6c1274f12cf5ba55c"><div class="ttname"><a href="class_d_psim_1_1_d_a_e_solver.html#a943f3332309781d6c1274f12cf5ba55c">DPsim::DAESolver::mTimestep</a></div><div class="ttdeci">Real mTimestep</div><div class="ttdoc">Constant time step.</div><div class="ttdef"><b>Definition</b> <a href="#l00037">DAESolver.h:37</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_d_a_e_solver_html_a9883d637f808f05263dace05a8761e84"><div class="ttname"><a href="class_d_psim_1_1_d_a_e_solver.html#a9883d637f808f05263dace05a8761e84">DPsim::DAESolver::~DAESolver</a></div><div class="ttdeci">~DAESolver()</div><div class="ttdoc">Deallocate all memory.</div><div class="ttdef"><b>Definition</b> <a href="_d_a_e_solver_8cpp_source.html#l00234">DAESolver.cpp:234</a></div></div>
@@ -183,12 +203,21 @@ $(function(){ initResizable(false); });
 <div class="ttc" id="aclass_d_psim_1_1_d_a_e_solver_html_ade05f8b154ad1a46c813ada12fd3f09b"><div class="ttname"><a href="class_d_psim_1_1_d_a_e_solver.html#ade05f8b154ad1a46c813ada12fd3f09b">DPsim::DAESolver::residualFunctionWrapper</a></div><div class="ttdeci">static int residualFunctionWrapper(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data)</div><div class="ttdoc">Residual Function of entire System.</div><div class="ttdef"><b>Definition</b> <a href="_d_a_e_solver_8cpp_source.html#l00173">DAESolver.cpp:173</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_d_a_e_solver_html_adea56266dda0d3210123e4104625db83"><div class="ttname"><a href="class_d_psim_1_1_d_a_e_solver.html#adea56266dda0d3210123e4104625db83">DPsim::DAESolver::tret</a></div><div class="ttdeci">realtype tret</div><div class="ttdoc">Time IDA reached while solving.</div><div class="ttdef"><b>Definition</b> <a href="#l00056">DAESolver.h:56</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_d_a_e_solver_html_ae18022b8b6584b8fa53fe1b94866bbaa"><div class="ttname"><a href="class_d_psim_1_1_d_a_e_solver.html#ae18022b8b6584b8fa53fe1b94866bbaa">DPsim::DAESolver::A</a></div><div class="ttdeci">SUNMatrix A</div><div class="ttdoc">Template Jacobian Matrix.</div><div class="ttdef"><b>Definition</b> <a href="#l00062">DAESolver.h:62</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_solver_html_a1b7b853ce69c4c12f8e41994b1944b0c"><div class="ttname"><a href="class_d_psim_1_1_solver.html#a1b7b853ce69c4c12f8e41994b1944b0c">DPsim::Solver::List</a></div><div class="ttdeci">std::vector&lt; Ptr &gt; List</div><div class="ttdef"><b>Definition</b> <a href="_solver_8h_source.html#l00033">Solver.h:33</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_solver_html_a43f3a5b98bf07a364645fa5f8193a5e7"><div class="ttname"><a href="class_d_psim_1_1_solver.html#a43f3a5b98bf07a364645fa5f8193a5e7">DPsim::Solver::Solver</a></div><div class="ttdeci">Solver(String name, CPS::Logger::Level logLevel)</div><div class="ttdef"><b>Definition</b> <a href="_solver_8h_source.html#l00083">Solver.h:83</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html"><div class="ttname"><a href="namespace_c_p_s.html">CPS</a></div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00017">Attribute.h:17</a></div></div>
 <div class="ttc" id="anamespace_d_psim_html"><div class="ttname"><a href="namespace_d_psim.html">DPsim</a></div><div class="ttdef"><b>Definition</b> <a href="_dense_l_u_adapter_8cpp_source.html#l00013">DenseLUAdapter.cpp:13</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a52dcbc3a0896b912333104eb61a7b29b"><div class="ttname"><a href="namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b">DPsim::Real</a></div><div class="ttdeci">CPS::Real Real</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00018">Definitions.h:18</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a66e48a625a26fd3c1d2198148f9d59e9"><div class="ttname"><a href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">DPsim::String</a></div><div class="ttdeci">CPS::String String</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00020">Definitions.h:20</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a6a29611b9912f8abc0545523b3f84f8c"><div class="ttname"><a href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">DPsim::Int</a></div><div class="ttdeci">CPS::Int Int</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00022">Definitions.h:22</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li><li class="navelem"><a class="el" href="_d_a_e_solver_8h.html">DAESolver.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

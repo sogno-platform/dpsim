@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_c_p_s_1_1_logger.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,20 +95,17 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>CPS</b></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_logger.html">Logger</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="class_c_p_s_1_1_logger-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">CPS::Logger Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="_logger_8h_source.html">Logger.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -103,44 +114,51 @@ Public Types</h2></td></tr>
 <tr class="memitem:a1dd42a2424f56886f0eec500a7851423" id="r_a1dd42a2424f56886f0eec500a7851423"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1dd42a2424f56886f0eec500a7851423">Log</a> = std::shared_ptr&lt;spdlog::logger&gt;</td></tr>
 <tr class="separator:a1dd42a2424f56886f0eec500a7851423"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:ad48006d77515e7013e8565a9760cbf82" id="r_ad48006d77515e7013e8565a9760cbf82"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad48006d77515e7013e8565a9760cbf82">Logger</a> ()</td></tr>
+<tr class="separator:ad48006d77515e7013e8565a9760cbf82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a137318b06b148593ccbb94dff140d500" id="r_a137318b06b148593ccbb94dff140d500"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a137318b06b148593ccbb94dff140d500">~Logger</a> ()</td></tr>
+<tr class="separator:a137318b06b148593ccbb94dff140d500"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a1b630d4c934f79fa45217c5824921444" id="r_a1b630d4c934f79fa45217c5824921444"><td class="memItemLeft" align="right" valign="top">static String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1b630d4c934f79fa45217c5824921444">prefix</a> ()</td></tr>
+<tr class="memitem:a1b630d4c934f79fa45217c5824921444" id="r_a1b630d4c934f79fa45217c5824921444"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1b630d4c934f79fa45217c5824921444">prefix</a> ()</td></tr>
 <tr class="separator:a1b630d4c934f79fa45217c5824921444"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8dc6819e3cd81b48f9f39d77baed149b" id="r_a8dc6819e3cd81b48f9f39d77baed149b"><td class="memItemLeft" align="right" valign="top">static String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8dc6819e3cd81b48f9f39d77baed149b">logDir</a> ()</td></tr>
+<tr class="memitem:a8dc6819e3cd81b48f9f39d77baed149b" id="r_a8dc6819e3cd81b48f9f39d77baed149b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8dc6819e3cd81b48f9f39d77baed149b">logDir</a> ()</td></tr>
 <tr class="separator:a8dc6819e3cd81b48f9f39d77baed149b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a889b39f1266c4084542c57705d3147eb" id="r_a889b39f1266c4084542c57705d3147eb"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a889b39f1266c4084542c57705d3147eb">setLogDir</a> (String path)</td></tr>
+<tr class="memitem:a889b39f1266c4084542c57705d3147eb" id="r_a889b39f1266c4084542c57705d3147eb"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a889b39f1266c4084542c57705d3147eb">setLogDir</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> path)</td></tr>
 <tr class="memdesc:a889b39f1266c4084542c57705d3147eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set env variable CPS_LOG_DIR and overwrite.  <br /></td></tr>
 <tr class="separator:a889b39f1266c4084542c57705d3147eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a94218a27352b9fbb7d0adccb9d32002b" id="r_a94218a27352b9fbb7d0adccb9d32002b"><td class="memItemLeft" align="right" valign="top">static Log&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a94218a27352b9fbb7d0adccb9d32002b">get</a> (const std::string &amp;name, Level filelevel=Level::info, Level clilevel=Level::off)</td></tr>
+<tr class="memitem:a94218a27352b9fbb7d0adccb9d32002b" id="r_a94218a27352b9fbb7d0adccb9d32002b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#a1dd42a2424f56886f0eec500a7851423">Log</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a94218a27352b9fbb7d0adccb9d32002b">get</a> (const std::string &amp;name, <a class="el" href="#a021e964d1ab0d217a05b95736d2ea804">Level</a> filelevel=Level::info, <a class="el" href="#a021e964d1ab0d217a05b95736d2ea804">Level</a> clilevel=Level::off)</td></tr>
 <tr class="separator:a94218a27352b9fbb7d0adccb9d32002b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abebb70b32212cd6438a9cbd8ef85d928" id="r_abebb70b32212cd6438a9cbd8ef85d928"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abebb70b32212cd6438a9cbd8ef85d928">setLogLevel</a> (std::shared_ptr&lt; spdlog::logger &gt; logger, Logger::Level level)</td></tr>
+<tr class="memitem:abebb70b32212cd6438a9cbd8ef85d928" id="r_abebb70b32212cd6438a9cbd8ef85d928"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abebb70b32212cd6438a9cbd8ef85d928">setLogLevel</a> (std::shared_ptr&lt; spdlog::logger &gt; logger, <a class="el" href="#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> level)</td></tr>
 <tr class="separator:abebb70b32212cd6438a9cbd8ef85d928"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93965d71efa5e47da9cb88719b9f8dcd" id="r_a93965d71efa5e47da9cb88719b9f8dcd"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a93965d71efa5e47da9cb88719b9f8dcd">setLogPattern</a> (std::shared_ptr&lt; spdlog::logger &gt; logger, std::string pattern)</td></tr>
 <tr class="separator:a93965d71efa5e47da9cb88719b9f8dcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab568cd946e6d6386d6e64c500de0b53" id="r_aab568cd946e6d6386d6e64c500de0b53"><td class="memItemLeft" align="right" valign="top">static String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab568cd946e6d6386d6e64c500de0b53">matrixToString</a> (const Matrix &amp;mat)</td></tr>
+<tr class="memitem:aab568cd946e6d6386d6e64c500de0b53" id="r_aab568cd946e6d6386d6e64c500de0b53"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab568cd946e6d6386d6e64c500de0b53">matrixToString</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;mat)</td></tr>
 <tr class="separator:aab568cd946e6d6386d6e64c500de0b53"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a233ec7565f7f63557ea3668bd44eaf06" id="r_a233ec7565f7f63557ea3668bd44eaf06"><td class="memItemLeft" align="right" valign="top">static String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a233ec7565f7f63557ea3668bd44eaf06">matrixCompToString</a> (const MatrixComp &amp;mat)</td></tr>
+<tr class="memitem:a233ec7565f7f63557ea3668bd44eaf06" id="r_a233ec7565f7f63557ea3668bd44eaf06"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a233ec7565f7f63557ea3668bd44eaf06">matrixCompToString</a> (const <a class="el" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a> &amp;mat)</td></tr>
 <tr class="separator:a233ec7565f7f63557ea3668bd44eaf06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f9eb43d5019a44f23648544901c9a66" id="r_a7f9eb43d5019a44f23648544901c9a66"><td class="memItemLeft" align="right" valign="top">static String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7f9eb43d5019a44f23648544901c9a66">sparseMatrixToString</a> (const SparseMatrix &amp;mat)</td></tr>
+<tr class="memitem:a7f9eb43d5019a44f23648544901c9a66" id="r_a7f9eb43d5019a44f23648544901c9a66"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7f9eb43d5019a44f23648544901c9a66">sparseMatrixToString</a> (const <a class="el" href="namespace_c_p_s.html#a04fce881e6257545646bf32fd9d3fe81">SparseMatrix</a> &amp;mat)</td></tr>
 <tr class="separator:a7f9eb43d5019a44f23648544901c9a66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adac3aae4028224381d203ed406635873" id="r_adac3aae4028224381d203ed406635873"><td class="memItemLeft" align="right" valign="top">static String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adac3aae4028224381d203ed406635873">sparseMatrixCompToString</a> (const SparseMatrixComp &amp;mat)</td></tr>
+<tr class="memitem:adac3aae4028224381d203ed406635873" id="r_adac3aae4028224381d203ed406635873"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adac3aae4028224381d203ed406635873">sparseMatrixCompToString</a> (const <a class="el" href="namespace_c_p_s.html#a0b5e7be4d453e418f303612586fe3540">SparseMatrixComp</a> &amp;mat)</td></tr>
 <tr class="separator:adac3aae4028224381d203ed406635873"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a63f9b63dbd15a351ec81420a01b03226" id="r_a63f9b63dbd15a351ec81420a01b03226"><td class="memItemLeft" align="right" valign="top">static String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a63f9b63dbd15a351ec81420a01b03226">phasorMatrixToString</a> (const MatrixComp &amp;mat)</td></tr>
+<tr class="memitem:a63f9b63dbd15a351ec81420a01b03226" id="r_a63f9b63dbd15a351ec81420a01b03226"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a63f9b63dbd15a351ec81420a01b03226">phasorMatrixToString</a> (const <a class="el" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a> &amp;mat)</td></tr>
 <tr class="separator:a63f9b63dbd15a351ec81420a01b03226"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed82282e4ff9a3266735e3501d66d634" id="r_aed82282e4ff9a3266735e3501d66d634"><td class="memItemLeft" align="right" valign="top">static String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed82282e4ff9a3266735e3501d66d634">phasorToString</a> (const Complex &amp;num)</td></tr>
+<tr class="memitem:aed82282e4ff9a3266735e3501d66d634" id="r_aed82282e4ff9a3266735e3501d66d634"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed82282e4ff9a3266735e3501d66d634">phasorToString</a> (const <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> &amp;num)</td></tr>
 <tr class="separator:aed82282e4ff9a3266735e3501d66d634"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab3ba2f62077919d4d2f89fa77f31116" id="r_aab3ba2f62077919d4d2f89fa77f31116"><td class="memItemLeft" align="right" valign="top">static String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab3ba2f62077919d4d2f89fa77f31116">complexToString</a> (const Complex &amp;num)</td></tr>
+<tr class="memitem:aab3ba2f62077919d4d2f89fa77f31116" id="r_aab3ba2f62077919d4d2f89fa77f31116"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab3ba2f62077919d4d2f89fa77f31116">complexToString</a> (const <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> &amp;num)</td></tr>
 <tr class="separator:aab3ba2f62077919d4d2f89fa77f31116"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca598e00b3d611fcf84c6c67c5e38b99" id="r_aca598e00b3d611fcf84c6c67c5e38b99"><td class="memItemLeft" align="right" valign="top">static String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aca598e00b3d611fcf84c6c67c5e38b99">realToString</a> (const Real &amp;num)</td></tr>
+<tr class="memitem:aca598e00b3d611fcf84c6c67c5e38b99" id="r_aca598e00b3d611fcf84c6c67c5e38b99"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aca598e00b3d611fcf84c6c67c5e38b99">realToString</a> (const <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &amp;num)</td></tr>
 <tr class="separator:aca598e00b3d611fcf84c6c67c5e38b99"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad84d9130022e141f8c13948511c07c43" id="r_ad84d9130022e141f8c13948511c07c43"><td class="memItemLeft" align="right" valign="top">static String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad84d9130022e141f8c13948511c07c43">getCSVColumnNames</a> (std::vector&lt; String &gt; names)</td></tr>
+<tr class="memitem:ad84d9130022e141f8c13948511c07c43" id="r_ad84d9130022e141f8c13948511c07c43"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad84d9130022e141f8c13948511c07c43">getCSVColumnNames</a> (std::vector&lt; <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &gt; names)</td></tr>
 <tr class="separator:ad84d9130022e141f8c13948511c07c43"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1cf729ba5ed7694b4920f7737c952d0" id="r_ad1cf729ba5ed7694b4920f7737c952d0"><td class="memItemLeft" align="right" valign="top">static String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad1cf729ba5ed7694b4920f7737c952d0">getCSVLineFromData</a> (Real time, Real data)</td></tr>
+<tr class="memitem:ad1cf729ba5ed7694b4920f7737c952d0" id="r_ad1cf729ba5ed7694b4920f7737c952d0"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad1cf729ba5ed7694b4920f7737c952d0">getCSVLineFromData</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> time, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> <a class="el" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>)</td></tr>
 <tr class="separator:ad1cf729ba5ed7694b4920f7737c952d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac5e976263aeab2d66e89dff98bca926" id="r_aac5e976263aeab2d66e89dff98bca926"><td class="memItemLeft" align="right" valign="top">static String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac5e976263aeab2d66e89dff98bca926">getCSVLineFromData</a> (Real time, const Matrix &amp;data)</td></tr>
+<tr class="memitem:aac5e976263aeab2d66e89dff98bca926" id="r_aac5e976263aeab2d66e89dff98bca926"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac5e976263aeab2d66e89dff98bca926">getCSVLineFromData</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> time, const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;<a class="el" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>)</td></tr>
 <tr class="separator:aac5e976263aeab2d66e89dff98bca926"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada8b8284ef8791b006571b1f907a4a9e" id="r_ada8b8284ef8791b006571b1f907a4a9e"><td class="memItemLeft" align="right" valign="top">static String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ada8b8284ef8791b006571b1f907a4a9e">getCSVLineFromData</a> (Real time, const MatrixComp &amp;data)</td></tr>
+<tr class="memitem:ada8b8284ef8791b006571b1f907a4a9e" id="r_ada8b8284ef8791b006571b1f907a4a9e"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ada8b8284ef8791b006571b1f907a4a9e">getCSVLineFromData</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> time, const <a class="el" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a> &amp;<a class="el" href="magma_8c.html#ad7922292abd63b0e178bbc995f08d00e">data</a>)</td></tr>
 <tr class="separator:ada8b8284ef8791b006571b1f907a4a9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -154,7 +172,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using CPS::Logger::Level = spdlog::level::level_enum</td>
+          <td class="memname">using <a class="el" href="#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a> = spdlog::level::level_enum</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -170,12 +188,47 @@ Static Public Member Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using CPS::Logger::Log = std::shared_ptr&lt;spdlog::logger&gt;</td>
+          <td class="memname">using <a class="el" href="#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a> = std::shared_ptr&lt;spdlog::logger&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="_logger_8h_source.html#l00034">34</a> of file <a class="el" href="_logger_8h_source.html">Logger.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ad48006d77515e7013e8565a9760cbf82" name="ad48006d77515e7013e8565a9760cbf82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad48006d77515e7013e8565a9760cbf82">&#9670;&#160;</a></span>Logger()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CPS::Logger::Logger </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a137318b06b148593ccbb94dff140d500" name="a137318b06b148593ccbb94dff140d500"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a137318b06b148593ccbb94dff140d500">&#9670;&#160;</a></span>~Logger()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CPS::Logger::~Logger </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -190,9 +243,9 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">String Logger::complexToString </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> Logger::complexToString </td>
           <td>(</td>
-          <td class="paramtype">const Complex &amp;</td>          <td class="paramname"><span class="paramname"><em>num</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>num</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -217,19 +270,19 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Logger::Log Logger::get </td>
+          <td class="memname"><a class="el" href="#a1dd42a2424f56886f0eec500a7851423">Logger::Log</a> Logger::get </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Level</td>          <td class="paramname"><span class="paramname"><em>filelevel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Level::info</span>, </td>
+          <td class="paramtype"><a class="el" href="#a021e964d1ab0d217a05b95736d2ea804">Level</a></td>          <td class="paramname"><span class="paramname"><em>filelevel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Level::info</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Level</td>          <td class="paramname"><span class="paramname"><em>clilevel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Level::off</span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="#a021e964d1ab0d217a05b95736d2ea804">Level</a></td>          <td class="paramname"><span class="paramname"><em>clilevel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Level::off</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -253,9 +306,9 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">String Logger::getCSVColumnNames </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> Logger::getCSVColumnNames </td>
           <td>(</td>
-          <td class="paramtype">std::vector&lt; String &gt;</td>          <td class="paramname"><span class="paramname"><em>names</em></span></td><td>)</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>names</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -280,14 +333,14 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">String Logger::getCSVLineFromData </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> Logger::getCSVLineFromData </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>time</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>time</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span>&#160;)</td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -311,14 +364,14 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">String Logger::getCSVLineFromData </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> Logger::getCSVLineFromData </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>time</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>time</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const MatrixComp &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span>&#160;)</td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -342,14 +395,14 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">String Logger::getCSVLineFromData </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> Logger::getCSVLineFromData </td>
           <td>(</td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>time</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>time</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Real</td>          <td class="paramname"><span class="paramname"><em>data</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>data</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -373,7 +426,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">String Logger::logDir </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> Logger::logDir </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -400,9 +453,9 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">String Logger::matrixCompToString </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> Logger::matrixCompToString </td>
           <td>(</td>
-          <td class="paramtype">const MatrixComp &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -427,9 +480,9 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">String Logger::matrixToString </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> Logger::matrixToString </td>
           <td>(</td>
-          <td class="paramtype">const Matrix &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -454,9 +507,9 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">String Logger::phasorMatrixToString </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> Logger::phasorMatrixToString </td>
           <td>(</td>
-          <td class="paramtype">const MatrixComp &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -481,9 +534,9 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">String Logger::phasorToString </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> Logger::phasorToString </td>
           <td>(</td>
-          <td class="paramtype">const Complex &amp;</td>          <td class="paramname"><span class="paramname"><em>num</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>num</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -508,7 +561,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">String Logger::prefix </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> Logger::prefix </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -535,9 +588,9 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">String Logger::realToString </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> Logger::realToString </td>
           <td>(</td>
-          <td class="paramtype">const Real &amp;</td>          <td class="paramname"><span class="paramname"><em>num</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>num</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -564,7 +617,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Logger::setLogDir </td>
           <td>(</td>
-          <td class="paramtype">String</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a></td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -598,7 +651,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Logger::Level</td>          <td class="paramname"><span class="paramname"><em>level</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a></td>          <td class="paramname"><span class="paramname"><em>level</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -653,9 +706,9 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">String Logger::sparseMatrixCompToString </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> Logger::sparseMatrixCompToString </td>
           <td>(</td>
-          <td class="paramtype">const SparseMatrixComp &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a0b5e7be4d453e418f303612586fe3540">SparseMatrixComp</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -680,9 +733,9 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">String Logger::sparseMatrixToString </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> Logger::sparseMatrixToString </td>
           <td>(</td>
-          <td class="paramtype">const SparseMatrix &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a04fce881e6257545646bf32fd9d3fe81">SparseMatrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -702,10 +755,13 @@ Static Public Member Functions</h2></td></tr>
 <li>/__w/dpsim/dpsim/dpsim-models/src/<a class="el" href="_logger_8cpp_source.html">Logger.cpp</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_c_p_s.html">CPS</a></li><li class="navelem"><a class="el" href="class_c_p_s_1_1_logger.html">Logger</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

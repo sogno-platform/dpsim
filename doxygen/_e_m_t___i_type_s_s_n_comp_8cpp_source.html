@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_e_m_t___i_type_s_s_n_comp_8cpp_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,49 +95,49 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_6fea149062de1f45e98577920f986d53.html">src</a></li><li class="navelem"><a class="el" href="dir_ae95efbb9d0e2c3db498e7cf294ca207.html">EMT</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">EMT_ITypeSSNComp.cpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University</span></div>
+<a href="_e_m_t___i_type_s_s_n_comp_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;dpsim-models/EMT/EMT_ITypeSSNComp.h&gt;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;<a class="code" href="_e_m_t___i_type_s_s_n_comp_8h.html">dpsim-models/EMT/EMT_ITypeSSNComp.h</a>&gt;</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">using namespace </span>CPS;</div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespace_c_p_s.html">CPS</a>;</div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>EMT::ITypeSSNComp::ITypeSSNComp(String uid, String name, Int inputSize,</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>                                Int outputSize, Logger::Level logLevel)</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    : SSNComp(uid, name, inputSize, outputSize, logLevel) {</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>  **mIntfCurrent = Matrix::Zero(inputSize, 1);</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>  **mIntfVoltage = Matrix::Zero(outputSize, 1);</div>
+<div class="foldopen" id="foldopen00008" data-start="{" data-end="}">
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html#af18b2b1c9e29af238f7cea62ae6b27eb">    8</a></span><a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html#af18b2b1c9e29af238f7cea62ae6b27eb">EMT::ITypeSSNComp::ITypeSSNComp</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <a class="code hl_typedef" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="code hl_typedef" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> inputSize,</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>                                <a class="code hl_typedef" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> outputSize, <a class="code hl_typedef" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel)</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    : <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a9d77cb61e7374cb1e09b91c3e0f04116">SSNComp</a>(<a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <a class="code hl_function" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, inputSize, outputSize, logLevel) {</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>  **<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">mIntfCurrent</a> = Matrix::Zero(inputSize, 1);</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>  **<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a7210276935119e370dfb1f98d02c3a9a">mIntfVoltage</a> = Matrix::Zero(outputSize, 1);</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>}</div>
+</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>Attribute&lt;Matrix&gt;::Ptr EMT::ITypeSSNComp::inputAttribute()<span class="keyword"> const </span>{</div>
+<div class="foldopen" id="foldopen00015" data-start="{" data-end="}">
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html#aa32984327765d512df0f931939257a69">   15</a></span><a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;Matrix&gt;::Ptr</a> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html#aa32984327765d512df0f931939257a69">EMT::ITypeSSNComp::inputAttribute</a>()<span class="keyword"> const </span>{</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">mIntfCurrent</a>;</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>}</div>
+</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>Attribute&lt;Matrix&gt;::Ptr EMT::ITypeSSNComp::outputAttribute()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  <span class="keywordflow">return</span> mIntfVoltage;</div>
+<div class="foldopen" id="foldopen00019" data-start="{" data-end="}">
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html#a9c869dce6798876bc7466f1e986468ba">   19</a></span><a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;Matrix&gt;::Ptr</a> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html#a9c869dce6798876bc7466f1e986468ba">EMT::ITypeSSNComp::outputAttribute</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a7210276935119e370dfb1f98d02c3a9a">mIntfVoltage</a>;</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>}</div>
+</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
 <div class="foldopen" id="foldopen00023" data-start="{" data-end="}">
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html#a57d7998b7b5cd97fdf5bfed88a58398f">   23</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html#a57d7998b7b5cd97fdf5bfed88a58398f">EMT::ITypeSSNComp::initializeFromNodesAndTerminals</a>(Real frequency) {</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html#a57d7998b7b5cd97fdf5bfed88a58398f">   23</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html#a57d7998b7b5cd97fdf5bfed88a58398f">EMT::ITypeSSNComp::initializeFromNodesAndTerminals</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> frequency) {</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  <span class="keywordflow">if</span> (!<a class="code hl_variable" href="class_c_p_s_1_1_topological_power_comp.html#a7be81a0a95fe67af7776aad6e22b9665">mParametersSet</a>)</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="keywordflow">throw</span> std::logic_error(<span class="stringliteral">&quot;setParameters() must be called before &quot;</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>                           <span class="stringliteral">&quot;initializeFromNodesAndTerminals().&quot;</span>);</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  MatrixComp uInit = buildInitialInputFromNodes(frequency);</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  MatrixComp xInit = calculateSteadyStateStateFromInput(uInit, frequency);</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  MatrixComp yInit = calculateSteadyStateOutputFromInput(xInit, uInit);</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a> uInit = <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html#a13441bba746bdab6d784660a0f6ee4ec">buildInitialInputFromNodes</a>(frequency);</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a> xInit = <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#ab2f325a38f41b570126a32db90221c9a">calculateSteadyStateStateFromInput</a>(uInit, frequency);</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a> yInit = <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#ae4777618c7f8fdeda9f296fee816ff27">calculateSteadyStateOutputFromInput</a>(xInit, uInit);</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  **mX = xInit.real();</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  **<a class="code hl_variable" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a426cb27b1c1c774023fd3cb3ea48db1a">mX</a> = xInit.real();</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  **<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">mIntfCurrent</a> = uInit.real();</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  **<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a7210276935119e370dfb1f98d02c3a9a">mIntfVoltage</a> = yInit.real();</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
@@ -136,38 +150,67 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>      <span class="stringliteral">&quot;\nOutput y: {:s}&quot;</span></div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>      <span class="stringliteral">&quot;\nState x: {:s}&quot;</span></div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>      <span class="stringliteral">&quot;\n--- Initialization from nodes and terminals finished ---&quot;</span>,</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>      Logger::matrixToString(**<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">mIntfCurrent</a>),</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>      Logger::matrixToString(**<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a7210276935119e370dfb1f98d02c3a9a">mIntfVoltage</a>), Logger::matrixToString(**mX));</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>      <a class="code hl_function" href="class_c_p_s_1_1_logger.html#aab568cd946e6d6386d6e64c500de0b53">Logger::matrixToString</a>(**<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">mIntfCurrent</a>),</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>      <a class="code hl_function" href="class_c_p_s_1_1_logger.html#aab568cd946e6d6386d6e64c500de0b53">Logger::matrixToString</a>(**<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a7210276935119e370dfb1f98d02c3a9a">mIntfVoltage</a>), <a class="code hl_function" href="class_c_p_s_1_1_logger.html#aab568cd946e6d6386d6e64c500de0b53">Logger::matrixToString</a>(**<a class="code hl_variable" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a426cb27b1c1c774023fd3cb3ea48db1a">mX</a>));</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>}</div>
 </div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keywordtype">void</span> EMT::ITypeSSNComp::mnaCompUpdateVoltage(<span class="keyword">const</span> Matrix &amp;) {}</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html#a31e2eda86c3bfe538fb4a5098662f0d0">   49</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html#a31e2eda86c3bfe538fb4a5098662f0d0">EMT::ITypeSSNComp::mnaCompUpdateVoltage</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;) {}</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="keywordtype">void</span> EMT::ITypeSSNComp::mnaCompPostStep(Real, Int,</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                                        Attribute&lt;Matrix&gt;::Ptr &amp;leftVector) {</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  Matrix uOld = **mIntfCurrent;</div>
+<div class="foldopen" id="foldopen00051" data-start="{" data-end="}">
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html#a4a4ab390e0d2358247f3954622bcf3b6">   51</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html#a4a4ab390e0d2358247f3954622bcf3b6">EMT::ITypeSSNComp::mnaCompPostStep</a>(<a class="code hl_typedef" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>, <a class="code hl_typedef" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a>,</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                                        <a class="code hl_typedef" href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">Attribute&lt;Matrix&gt;::Ptr</a> &amp;leftVector) {</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <a class="code hl_typedef" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> uOld = **<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">mIntfCurrent</a>;</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  <span class="comment">// First reconstruct output voltage from the MNA solution.</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  mnaCompUpdateVoltage(**leftVector);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html#a31e2eda86c3bfe538fb4a5098662f0d0">mnaCompUpdateVoltage</a>(**leftVector);</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  <span class="comment">// Then reconstruct input current from:</span></div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  <span class="comment">//   v = mW * i + mYHist</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  mnaCompUpdateCurrent(**leftVector);</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  <a class="code hl_function" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a82fb36cf23e8e2eca8d52fc1f02ba473">mnaCompUpdateCurrent</a>(**leftVector);</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  updateState(uOld, **mIntfCurrent);</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  updateLogAttributes(**mIntfCurrent);</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a84b484ddc9b8d65f49e27aafdd7befb4">updateState</a>(uOld, **<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">mIntfCurrent</a>);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  <a class="code hl_function" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a310a4a96c67380d3a583f21389e03be9">updateLogAttributes</a>(**<a class="code hl_variable" href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">mIntfCurrent</a>);</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>}</div>
+</div>
+<div class="ttc" id="a_e_m_t___i_type_s_s_n_comp_8h_html"><div class="ttname"><a href="_e_m_t___i_type_s_s_n_comp_8h.html">EMT_ITypeSSNComp.h</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_html_ad552c848f780007d59f489540fa7e4d6"><div class="ttname"><a href="class_c_p_s_1_1_attribute.html#ad552c848f780007d59f489540fa7e4d6">CPS::Attribute::Ptr</a></div><div class="ttdeci">AttributePointer&lt; Attribute&lt; T &gt; &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00250">Attribute.h:250</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp_html_a13441bba746bdab6d784660a0f6ee4ec"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html#a13441bba746bdab6d784660a0f6ee4ec">CPS::EMT::ITypeSSNComp::buildInitialInputFromNodes</a></div><div class="ttdeci">virtual MatrixComp buildInitialInputFromNodes(Real frequency)=0</div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp_html_a31e2eda86c3bfe538fb4a5098662f0d0"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html#a31e2eda86c3bfe538fb4a5098662f0d0">CPS::EMT::ITypeSSNComp::mnaCompUpdateVoltage</a></div><div class="ttdeci">void mnaCompUpdateVoltage(const Matrix &amp;leftVector) override</div><div class="ttdef"><b>Definition</b> <a href="#l00049">EMT_ITypeSSNComp.cpp:49</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp_html_a4a4ab390e0d2358247f3954622bcf3b6"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html#a4a4ab390e0d2358247f3954622bcf3b6">CPS::EMT::ITypeSSNComp::mnaCompPostStep</a></div><div class="ttdeci">void mnaCompPostStep(Real time, Int timeStepCount, Attribute&lt; Matrix &gt;::Ptr &amp;leftVector) override final</div><div class="ttdef"><b>Definition</b> <a href="#l00051">EMT_ITypeSSNComp.cpp:51</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp_html_a57d7998b7b5cd97fdf5bfed88a58398f"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html#a57d7998b7b5cd97fdf5bfed88a58398f">CPS::EMT::ITypeSSNComp::initializeFromNodesAndTerminals</a></div><div class="ttdeci">void initializeFromNodesAndTerminals(Real frequency) override</div><div class="ttdoc">Initializes Component variables according to power flow data stored in Nodes.</div><div class="ttdef"><b>Definition</b> <a href="#l00023">EMT_ITypeSSNComp.cpp:23</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp_html_a9c869dce6798876bc7466f1e986468ba"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html#a9c869dce6798876bc7466f1e986468ba">CPS::EMT::ITypeSSNComp::outputAttribute</a></div><div class="ttdeci">Attribute&lt; Matrix &gt;::Ptr outputAttribute() const override final</div><div class="ttdef"><b>Definition</b> <a href="#l00019">EMT_ITypeSSNComp.cpp:19</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp_html_aa32984327765d512df0f931939257a69"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html#aa32984327765d512df0f931939257a69">CPS::EMT::ITypeSSNComp::inputAttribute</a></div><div class="ttdeci">Attribute&lt; Matrix &gt;::Ptr inputAttribute() const override final</div><div class="ttdef"><b>Definition</b> <a href="#l00015">EMT_ITypeSSNComp.cpp:15</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp_html_af18b2b1c9e29af238f7cea62ae6b27eb"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html#af18b2b1c9e29af238f7cea62ae6b27eb">CPS::EMT::ITypeSSNComp::ITypeSSNComp</a></div><div class="ttdeci">ITypeSSNComp(String uid, String name, Int inputSize, Int outputSize, Logger::Level logLevel=Logger::Level::off)</div><div class="ttdef"><b>Definition</b> <a href="#l00008">EMT_ITypeSSNComp.cpp:8</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_s_s_n_comp_html_a310a4a96c67380d3a583f21389e03be9"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a310a4a96c67380d3a583f21389e03be9">CPS::EMT::SSNComp::updateLogAttributes</a></div><div class="ttdeci">virtual void updateLogAttributes(const Matrix &amp;u) const</div><div class="ttdoc">Update derived attributes used for logging/inspection.</div><div class="ttdef"><b>Definition</b> <a href="_e_m_t___s_s_n_comp_8cpp_source.html#l00093">EMT_SSNComp.cpp:93</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_s_s_n_comp_html_a426cb27b1c1c774023fd3cb3ea48db1a"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a426cb27b1c1c774023fd3cb3ea48db1a">CPS::EMT::SSNComp::mX</a></div><div class="ttdeci">const Attribute&lt; Matrix &gt;::Ptr mX</div><div class="ttdef"><b>Definition</b> <a href="_e_m_t___s_s_n_comp_8h_source.html#l00043">EMT_SSNComp.h:43</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_s_s_n_comp_html_a84b484ddc9b8d65f49e27aafdd7befb4"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a84b484ddc9b8d65f49e27aafdd7befb4">CPS::EMT::SSNComp::updateState</a></div><div class="ttdeci">virtual void updateState(const Matrix &amp;uOld, const Matrix &amp;uNew)</div><div class="ttdef"><b>Definition</b> <a href="_e_m_t___s_s_n_comp_8cpp_source.html#l00089">EMT_SSNComp.cpp:89</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_s_s_n_comp_html_a9d77cb61e7374cb1e09b91c3e0f04116"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a9d77cb61e7374cb1e09b91c3e0f04116">CPS::EMT::SSNComp::SSNComp</a></div><div class="ttdeci">SSNComp(String uid, String name, Int inputSize, Int outputSize, Logger::Level logLevel=Logger::Level::off)</div><div class="ttdef"><b>Definition</b> <a href="_e_m_t___s_s_n_comp_8cpp_source.html#l00008">EMT_SSNComp.cpp:8</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_s_s_n_comp_html_ab2f325a38f41b570126a32db90221c9a"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#ab2f325a38f41b570126a32db90221c9a">CPS::EMT::SSNComp::calculateSteadyStateStateFromInput</a></div><div class="ttdeci">virtual MatrixComp calculateSteadyStateStateFromInput(const MatrixComp &amp;u, Real frequency) const</div><div class="ttdef"><b>Definition</b> <a href="_e_m_t___s_s_n_comp_8cpp_source.html#l00073">EMT_SSNComp.cpp:73</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_e_m_t_1_1_s_s_n_comp_html_ae4777618c7f8fdeda9f296fee816ff27"><div class="ttname"><a href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#ae4777618c7f8fdeda9f296fee816ff27">CPS::EMT::SSNComp::calculateSteadyStateOutputFromInput</a></div><div class="ttdeci">virtual MatrixComp calculateSteadyStateOutputFromInput(const MatrixComp &amp;x, const MatrixComp &amp;u) const</div><div class="ttdef"><b>Definition</b> <a href="_e_m_t___s_s_n_comp_8cpp_source.html#l00084">EMT_SSNComp.cpp:84</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a38b8318459b1651160029263eff6ca47"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">CPS::IdentifiedObject::name</a></div><div class="ttdeci">String name()</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00059">IdentifiedObject.h:59</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_identified_object_html_a66b765f33341283bc9b916c74047c749"><div class="ttname"><a href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">CPS::IdentifiedObject::uid</a></div><div class="ttdeci">String uid()</div><div class="ttdoc">Returns unique id.</div><div class="ttdef"><b>Definition</b> <a href="_identified_object_8h_source.html#l00061">IdentifiedObject.h:61</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_logger_html_a021e964d1ab0d217a05b95736d2ea804"><div class="ttname"><a href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">CPS::Logger::Level</a></div><div class="ttdeci">spdlog::level::level_enum Level</div><div class="ttdef"><b>Definition</b> <a href="_logger_8h_source.html#l00033">Logger.h:33</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_logger_html_aab568cd946e6d6386d6e64c500de0b53"><div class="ttname"><a href="class_c_p_s_1_1_logger.html#aab568cd946e6d6386d6e64c500de0b53">CPS::Logger::matrixToString</a></div><div class="ttdeci">static String matrixToString(const Matrix &amp;mat)</div><div class="ttdef"><b>Definition</b> <a href="_logger_8cpp_source.html#l00031">Logger.cpp:31</a></div></div>
+<div class="ttc" id="aclass_c_p_s_1_1_m_n_a_sim_power_comp_html_a82fb36cf23e8e2eca8d52fc1f02ba473"><div class="ttname"><a href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a82fb36cf23e8e2eca8d52fc1f02ba473">CPS::MNASimPowerComp&lt; Real &gt;::mnaCompUpdateCurrent</a></div><div class="ttdeci">virtual void mnaCompUpdateCurrent(const Matrix &amp;leftVector)</div><div class="ttdef"><b>Definition</b> <a href="_m_n_a_sim_power_comp_8cpp_source.html#l00081">MNASimPowerComp.cpp:144</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html_a141d3e207fff12a4808e3f562a99fda1"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html#a141d3e207fff12a4808e3f562a99fda1">CPS::SimPowerComp&lt; Real &gt;::mIntfCurrent</a></div><div class="ttdeci">const Attribute&lt; MatrixVar&lt; Real &gt; &gt;::Ptr mIntfCurrent</div><div class="ttdef"><b>Definition</b> <a href="_sim_power_comp_8h_source.html#l00047">SimPowerComp.h:47</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_sim_power_comp_html_a7210276935119e370dfb1f98d02c3a9a"><div class="ttname"><a href="class_c_p_s_1_1_sim_power_comp.html#a7210276935119e370dfb1f98d02c3a9a">CPS::SimPowerComp&lt; Real &gt;::mIntfVoltage</a></div><div class="ttdeci">const Attribute&lt; MatrixVar&lt; Real &gt; &gt;::Ptr mIntfVoltage</div><div class="ttdef"><b>Definition</b> <a href="_sim_power_comp_8h_source.html#l00045">SimPowerComp.h:45</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_topological_power_comp_html_a7be81a0a95fe67af7776aad6e22b9665"><div class="ttname"><a href="class_c_p_s_1_1_topological_power_comp.html#a7be81a0a95fe67af7776aad6e22b9665">CPS::TopologicalPowerComp::mParametersSet</a></div><div class="ttdeci">bool mParametersSet</div><div class="ttdoc">Flag indicating that parameters are set via setParameters() function.</div><div class="ttdef"><b>Definition</b> <a href="_topological_power_comp_8h_source.html#l00041">TopologicalPowerComp.h:41</a></div></div>
 <div class="ttc" id="aclass_c_p_s_1_1_topological_power_comp_html_a7c61e480e446111d56ac35399643d5b0"><div class="ttname"><a href="class_c_p_s_1_1_topological_power_comp.html#a7c61e480e446111d56ac35399643d5b0">CPS::TopologicalPowerComp::mSLog</a></div><div class="ttdeci">Logger::Log mSLog</div><div class="ttdoc">Component logger.</div><div class="ttdef"><b>Definition</b> <a href="_topological_power_comp_8h_source.html#l00034">TopologicalPowerComp.h:34</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html"><div class="ttname"><a href="namespace_c_p_s.html">CPS</a></div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00017">Attribute.h:17</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a081464dfe063130c6fca7929ce291b15"><div class="ttname"><a href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">CPS::Matrix</a></div><div class="ttdeci">Eigen::Matrix&lt; Real, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor &gt; Matrix</div><div class="ttdoc">Dense matrix for real numbers.</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00081">Definitions.h:81</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a09f6ad37b12370b4b58624822be9b055"><div class="ttname"><a href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">CPS::String</a></div><div class="ttdeci">std::string String</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00065">Definitions.h:65</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_a603c4b77d70922bc0423adc57725df50"><div class="ttname"><a href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">CPS::Real</a></div><div class="ttdeci">double Real</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00062">Definitions.h:62</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_aabddb6241134e6ad9d61ae357bc104fa"><div class="ttname"><a href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">CPS::Int</a></div><div class="ttdeci">int Int</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00061">Definitions.h:61</a></div></div>
+<div class="ttc" id="anamespace_c_p_s_html_ab73adea852da41581c8fb6965d891567"><div class="ttname"><a href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">CPS::MatrixComp</a></div><div class="ttdeci">Eigen::Matrix&lt; Complex, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor &gt; MatrixComp</div><div class="ttdoc">Dense matrix for complex numbers.</div><div class="ttdef"><b>Definition</b> <a href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00084">Definitions.h:84</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_a932513a424ca3c4132fc92721c4e6d6.html">dpsim-models</a></li><li class="navelem"><a class="el" href="dir_6fea149062de1f45e98577920f986d53.html">src</a></li><li class="navelem"><a class="el" href="dir_ae95efbb9d0e2c3db498e7cf294ca207.html">EMT</a></li><li class="navelem"><a class="el" href="_e_m_t___i_type_s_s_n_comp_8cpp.html">EMT_ITypeSSNComp.cpp</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

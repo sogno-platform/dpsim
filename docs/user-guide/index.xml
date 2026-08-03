@@ -1,0 +1,378 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DPsim – User Guide</title><link>https://sogno.energy/dpsim/docs/user-guide/</link><description>Recent content in User Guide on DPsim</description><generator>Hugo -- gohugo.io</generator><atom:link href="https://sogno.energy/dpsim/docs/user-guide/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Install</title><link>https://sogno.energy/dpsim/docs/user-guide/install/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/user-guide/install/</guid><description>
+&lt;p>DPsim is a Python module and C++ library for dynamic power system simulation.&lt;/p>
+&lt;p>The quickest route to a result is the Python module: install it, then work through the
+&lt;a href="https://sogno.energy/dpsim/docs/tutorials/">tutorials&lt;/a>, which build up one idea at a time from a source and a
+resistor. If you would rather read a finished study than build one, the
+&lt;a href="https://sogno.energy/dpsim/docs/user-guide/examples/">example notebooks&lt;/a> run complete scenarios and plot them.&lt;/p>
+&lt;p>Building from source is only needed for a platform without a published wheel, or to work on DPsim
+itself; see &lt;a href="https://sogno.energy/dpsim/docs/developer-guide/architecture-and-conventions/build/">build&lt;/a>.&lt;/p>
+&lt;h2 id="try-it-without-installing">Try it without installing&lt;/h2>
+&lt;p>The example notebooks run in the browser with no local installation:&lt;/p>
+&lt;p>&lt;a href="https://2i2c.mybinder.org/v2/gh/sogno-platform/dpsim/HEAD?urlpath=%2Fdoc%2Ftree%2Fexamples%2FIndex.ipynb">&lt;img src="https://2i2c.mybinder.org/badge_logo.svg" alt="Binder">&lt;/a>&lt;/p>
+&lt;h2 id="python-package">Python package&lt;/h2>
+&lt;p>DPsim is published on PyPI and installs like any other Python package:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>python3 -m venv venv
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">source&lt;/span> venv/bin/activate
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pip install dpsim
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+&lt;div class="alert alert-info" role="alert">
+&lt;h4 class="alert-heading">Requires Linux for the published wheels&lt;/h4>
+Two limitations are worth knowing before you start.
+Only Linux wheels are currently published, for CPython 3.9 through 3.13, so on Windows and macOS
+you have to build from source for now.
+The package also contains only the simulation core; the example notebooks additionally need
+plotting and data handling packages, which are listed in the import section of each notebook.
+&lt;/div>
+&lt;p>If you prefer conda, the equivalent is:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>conda create -n dpsim &lt;span style="color:#000">python&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>3.13
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>conda activate dpsim
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pip install dpsim
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="docker">Docker&lt;/h2>
+&lt;p>You need &lt;a href="https://docs.docker.com/install/">Docker&lt;/a> installed first. The prepared image on
+Docker Hub bundles the module together with a JupyterLab session:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>docker run -p 8888:8888 sogno/dpsim
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then open &lt;a href="http://localhost:8888/lab?token=3adaa57df44cea75e60c0169e1b2a98ae8f7de130481b5bc">http://localhost:8888/lab?token=3adaa57df44cea75e60c0169e1b2a98ae8f7de130481b5bc&lt;/a>.&lt;/p>
+&lt;p>Note that the image pins that access token in its startup command, so it is the same for
+everyone who runs the image. Publish the port on localhost only, as above, and do not expose
+it to an untrusted network.&lt;/p>
+&lt;p>To build the image yourself rather than pulling it, see
+&lt;a href="https://sogno.energy/dpsim/docs/developer-guide/architecture-and-conventions/build/">build&lt;/a>.&lt;/p></description></item><item><title>Docs: Examples</title><link>https://sogno.energy/dpsim/docs/user-guide/examples/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/user-guide/examples/</guid><description>
+&lt;p>If you are starting out, start with the &lt;a href="https://sogno.energy/dpsim/docs/tutorials/">tutorials&lt;/a> instead. They
+work through one idea at a time in order, each as a complete script. This page is the inventory of
+what else the repository carries, which is the right thing once you know what you are looking for.&lt;/p>
+&lt;p>The examples come in both languages. The Python notebooks run a scenario and plot the result in one
+place, so they are the better way to see a complete study. The C++ examples are the better reference
+for using DPsim as a library, and are what the real time and co-simulation scenarios are written in.&lt;/p>
+&lt;h2 id="where-each-kind-fits">Where each kind fits&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>If you want to&lt;/th>
+&lt;th>Go to&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Learn how a simulation is put together&lt;/td>
+&lt;td>&lt;a href="https://sogno.energy/dpsim/docs/tutorials/">Tutorials&lt;/a>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>See a complete study with plots&lt;/td>
+&lt;td>Notebooks, below&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Use DPsim from an application&lt;/td>
+&lt;td>C++ examples, below&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Look up what a model does&lt;/td>
+&lt;td>&lt;a href="https://sogno.energy/dpsim/docs/concepts/">Concepts&lt;/a>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="notebooks">Notebooks&lt;/h2>
+&lt;p>Run them in the browser with no local installation:&lt;/p>
+&lt;p>&lt;a href="https://2i2c.mybinder.org/v2/gh/sogno-platform/dpsim/HEAD?urlpath=%2Fdoc%2Ftree%2Fexamples%2FIndex.ipynb">&lt;img src="https://2i2c.mybinder.org/badge_logo.svg" alt="Binder">&lt;/a>&lt;/p>
+&lt;p>Locally, they live under
+&lt;a href="https://github.com/sogno-platform/dpsim/tree/master/examples/Notebooks">examples/Notebooks&lt;/a> and
+need the Python package on the path, as described in the
+&lt;a href="https://sogno.energy/dpsim/docs/developer-guide/architecture-and-conventions/build/">build&lt;/a> section.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Category&lt;/th>
+&lt;th>Contents&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Quickstart Guide&lt;/td>
+&lt;td>A single notebook covering a first simulation end to end&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Circuits&lt;/td>
+&lt;td>Small networks exercising one modelling aspect at a time&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Components&lt;/td>
+&lt;td>One component at a time, often comparing domains against each other&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Grids&lt;/td>
+&lt;td>Published test systems such as the WSCC 9 bus and CIGRE networks&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Features&lt;/td>
+&lt;td>Cross-cutting capabilities rather than a specific network&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Performance&lt;/td>
+&lt;td>Timing and scaling comparisons&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>StateSpace&lt;/td>
+&lt;td>State-space extraction from a running simulation&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>&lt;code>Understanding_DP.ipynb&lt;/code> is worth reading early if dynamic phasors are new to you, since it
+builds the intuition the &lt;a href="https://sogno.energy/dpsim/docs/concepts/">concepts&lt;/a> section then formalises.&lt;/p>
+&lt;h3 id="continuing-from-a-tutorial">Continuing from a tutorial&lt;/h3>
+&lt;p>Each tutorial ends at the point where the notebooks take over, so a category is usually the natural
+next step from the rung that introduced the idea.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>After this tutorial&lt;/th>
+&lt;th>These notebooks go further&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;a href="https://sogno.energy/dpsim/docs/tutorials/python/adding-dynamics/">Adding dynamics&lt;/a>&lt;/td>
+&lt;td>Circuits, for larger passive networks&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;a href="https://sogno.energy/dpsim/docs/tutorials/python/two-bus-network/">Two-bus network&lt;/a>&lt;/td>
+&lt;td>Grids, for published test systems solved the same way&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;a href="https://sogno.energy/dpsim/docs/tutorials/python/comparing-domains/">Comparing domains&lt;/a>&lt;/td>
+&lt;td>Components, which compare one model across domains&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;a href="https://sogno.energy/dpsim/docs/tutorials/python/a-machine/">Adding a machine&lt;/a>&lt;/td>
+&lt;td>Circuits, for the SMIB and multi-machine fault studies&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;a href="https://sogno.energy/dpsim/docs/tutorials/python/exchanging-data/">Exchanging data&lt;/a>&lt;/td>
+&lt;td>The co-simulation examples below&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="c-examples">C++ examples&lt;/h2>
+&lt;p>Under &lt;a href="https://github.com/sogno-platform/dpsim/tree/master/dpsim/examples/cxx">dpsim/examples/cxx&lt;/a>,
+built as part of a normal build and produced as executables in the build directory.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Directory&lt;/th>
+&lt;th>Contents&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Circuits&lt;/td>
+&lt;td>Networks assembled directly in C++&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Components&lt;/td>
+&lt;td>Single component scenarios&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>CIM&lt;/td>
+&lt;td>Reading network data from CIM and CGMES files&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>StateSpace&lt;/td>
+&lt;td>State-space extraction&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>RealTime&lt;/td>
+&lt;td>Scenarios run against the wall clock&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DAE, signals, timer&lt;/td>
+&lt;td>Smaller scenarios for the DAE solver, signal models and timing&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>The target name is the source file name without its extension, regardless of which directory the
+source sits in, and the executables are written flat into the build tree. So to build and run a
+single example from your build directory:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cmake --build . --target DP_VS_RL1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>./dpsim/examples/cxx/DP_VS_RL1
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="co-simulation">Co-simulation&lt;/h2>
+&lt;p>The &lt;a href="https://github.com/sogno-platform/dpsim/tree/master/dpsim-villas/examples/cxx">dpsim-villas&lt;/a>
+examples exchange data with other simulators or with hardware through VILLASnode. These need
+&lt;code>WITH_VILLAS&lt;/code> enabled and are therefore not available on Windows. See
+&lt;a href="https://sogno.energy/dpsim/docs/user-guide/co-simulation/">interfaces&lt;/a> for how the coupling works and
+&lt;a href="https://sogno.energy/dpsim/docs/user-guide/real-time/">real time&lt;/a> for running them against the wall
+clock.&lt;/p></description></item><item><title>Docs: Logging Results</title><link>https://sogno.energy/dpsim/docs/user-guide/logging/</link><pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/user-guide/logging/</guid><description>
+&lt;p>A simulation records nothing unless asked. Every quantity you want afterwards has to be named before
+the run, because the solver keeps only what the current step needs and discards the rest.&lt;/p>
+&lt;p>&lt;code>dpsimpy.Logger&lt;/code> is the one to reach for. It is the CSV data logger and it is what nearly every
+example and notebook uses. There is also a real-time data logger, which is the right choice under a
+real-time timer for the reason given below, and an interface for sending results somewhere other
+than a file.&lt;/p>
+&lt;h2 id="only-attributes-can-be-logged">Only attributes can be logged&lt;/h2>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">Watch out: only attributes can be logged&lt;/h4>
+&lt;p>A logger records an &lt;strong>attribute&lt;/strong> and nothing else. It cannot record an arbitrary expression, a
+plain member variable, or a quantity a component computes internally without publishing.&lt;/p>
+&lt;p>The same constraint governs co-simulation and task scheduling, so a value that is not an attribute
+cannot be logged, exchanged with another tool, or depended on by another task. Making it one is a
+change to the model, not to the call site.&lt;/p>
+&lt;/div>
+&lt;p>So the question is never &amp;ldquo;how do I log this value&amp;rdquo; but &amp;ldquo;is this value an attribute&amp;rdquo;. If it is, one
+line records it. If it is not, no logger option will reach it, and the answer is to expose it as an
+attribute in the model, which is a code change described under
+&lt;a href="https://sogno.energy/dpsim/docs/developer-guide/attributes-and-scheduling/attributes/">attributes&lt;/a>.&lt;/p>
+&lt;p>&lt;code>print_attribute_list()&lt;/code> on any object prints what it publishes, which is the reliable way to find
+out. Anything absent from that list cannot be logged.&lt;/p>
+&lt;p>The same fact explains a convenience: because attributes are the unit, a derived quantity that is
+itself an attribute is logged the same way as a terminal voltage, with no special handling.&lt;/p>
+&lt;h2 id="registering-an-attribute">Registering an attribute&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">logger&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">dpsimpy&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Logger&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;my_simulation&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">logger&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">log_attribute&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;n1.v&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;v&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">n1&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">logger&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">log_attribute&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;load.i_intf&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;i_intf&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">load&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">sim&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">add_logger&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">logger&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The three arguments are the column name you want in the output, the name of the attribute on the
+object, and the object itself. The first is yours to choose and is what you will key on when reading
+the file back; the second must match an attribute the object actually publishes.&lt;/p>
+&lt;p>Common attribute names are &lt;code>v&lt;/code> on a node, and &lt;code>i_intf&lt;/code> and &lt;code>v_intf&lt;/code> on a component for the current
+through it and the voltage across it. Components publish their own states as well: a machine offers
+&lt;code>w_r&lt;/code>, &lt;code>delta&lt;/code> and &lt;code>Te&lt;/code>, a converter its control states.&lt;/p>
+&lt;p>Naming an attribute that does not exist fails when the logger is set up, not at the end of the run,
+so a typo costs a second rather than a simulation.&lt;/p>
+&lt;h2 id="where-the-file-goes">Where the file goes&lt;/h2>
+&lt;p>By default the file is &lt;code>logs/&amp;lt;logger name&amp;gt;.csv&lt;/code> under the working directory, where the name is the
+one given to the &lt;code>Logger&lt;/code> constructor.&lt;/p>
+&lt;p>&lt;code>Logger.set_log_dir&lt;/code> changes that directory and &lt;code>Logger.get_log_dir&lt;/code> reports it. Calling it is what
+produces the nested &lt;code>logs/&amp;lt;something&amp;gt;/&amp;lt;name&amp;gt;.csv&lt;/code> layout the example notebooks use, so a script that
+does not call it gets the flat form. Setting it is worth doing when one script runs several
+simulations, since two loggers with the same name otherwise write to the same file.&lt;/p>
+&lt;p>The same setting governs the diagnostic text log, which is why the two land side by side.&lt;/p>
+&lt;p>The file is plain CSV with a &lt;code>time&lt;/code> column first and one column per logged attribute, in the order
+they were registered. A three-phase quantity becomes three columns suffixed &lt;code>_0&lt;/code>, &lt;code>_1&lt;/code>, &lt;code>_2&lt;/code>, and a
+complex quantity in an envelope domain is written as a complex value that the reading side parses
+back.&lt;/p>
+&lt;h2 id="reading-it-back">Reading it back&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">import&lt;/span> &lt;span style="color:#000">villas.dataprocessing.readtools&lt;/span> &lt;span style="color:#204a87;font-weight:bold">as&lt;/span> &lt;span style="color:#000">rt&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">results&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">rt&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">read_timeseries_dpsim&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;logs/my_simulation.csv&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">voltage&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">results&lt;/span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;n1.v&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The keys are the column names you chose. Each value carries &lt;code>time&lt;/code> and &lt;code>values&lt;/code> arrays. In an
+envelope domain the values are complex, so &lt;code>abs()&lt;/code> gives the magnitude, and
+&lt;code>frequency_shift_list&lt;/code> recovers the waveform as shown in
+&lt;a href="https://sogno.energy/dpsim/docs/tutorials/python/comparing-domains/">comparing domains&lt;/a>.&lt;/p>
+&lt;p>The first row is written before the first solve, so it holds the state the simulation started from
+rather than a result. A plot that appears to begin at zero usually begins at that row.&lt;/p>
+&lt;h2 id="what-it-costs">What it costs&lt;/h2>
+&lt;p>Logging is opt-in and costs nothing for what you do not ask for, but what you do ask for is written
+every step. A run of 100 000 steps logging 50 attributes writes five million values, and on a large
+network the file, not the solve, becomes the slow part.&lt;/p>
+&lt;p>Three things help. Log the attributes you will actually look at rather than everything available.
+Prefer a specific attribute over a whole matrix; the &lt;code>rows_max&lt;/code> and &lt;code>cols_max&lt;/code> arguments to
+&lt;code>log_attribute&lt;/code> cap how much of a matrix quantity is written. And note that a large time step
+reduces the file in exact proportion, so a study that only needs the envelope does not need the
+step of one that needs the waveform.&lt;/p>
+&lt;div class="alert alert-primary" role="alert">
+&lt;h4 class="alert-heading">Note: down-sampling is not reachable from Python&lt;/h4>
+The C++ &lt;code>DataLogger&lt;/code> additionally accepts a down-sampling factor, writing every n-th step. That
+argument is not exposed on the Python &lt;code>Logger&lt;/code>, which takes only a name, so from Python the step
+size is the only control over how many rows you get.
+&lt;/div>
+&lt;h2 id="data-logging-against-diagnostic-logging">Data logging against diagnostic logging&lt;/h2>
+&lt;p>The word covers two unrelated things and they are easy to confuse.&lt;/p>
+&lt;p>What this page describes is the &lt;strong>data logger&lt;/strong>: numerical results, CSV, opt-in per attribute. The
+other is the &lt;strong>diagnostic log&lt;/strong>, the text file recording what the solver did, controlled by
+&lt;code>dpsimpy.LogLevel&lt;/code> and passed to component constructors. Raising a component&amp;rsquo;s log level makes it
+describe its own initialization and stamping in prose; it has no effect on the CSV.&lt;/p>
+&lt;p>They land in the same &lt;code>logs/&lt;/code> directory side by side, one as &lt;code>.csv&lt;/code> and the other as &lt;code>.log&lt;/code>, which
+is why they get mistaken for each other. A component constructed with &lt;code>LogLevel.debug&lt;/code> produces a
+great deal of text and no additional results.&lt;/p>
+&lt;p>The real-time data logger mentioned at the top is a data logger like the first, not a third kind of
+log. It records the same results and differs only in buffering them in memory and writing at the
+end, because a disk write inside a real-time step has no bound on how long it takes. See
+&lt;a href="https://sogno.energy/dpsim/docs/user-guide/real-time/">real-time&lt;/a>.&lt;/p></description></item><item><title>Docs: Real-Time</title><link>https://sogno.energy/dpsim/docs/user-guide/real-time/</link><pubDate>Thu, 13 Feb 2025 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/user-guide/real-time/</guid><description>
+&lt;p>Normally a simulation runs as fast as it can: a one-second study finishes in whatever time the
+solver needs. In a real-time simulation, one second of simulated time takes one second of wall clock
+time, no faster and no slower.&lt;/p>
+&lt;h2 id="when-you-need-it">When you need it&lt;/h2>
+&lt;p>Only when something outside the simulation has its own clock. A controller running on real hardware,
+another simulator you are coupled to, or a person turning a dial all move at their own pace, and the
+simulation has to move with them. If nothing outside is waiting, running in real time only makes the
+study slower.&lt;/p>
+&lt;p>This is why &lt;a href="https://sogno.energy/dpsim/docs/user-guide/co-simulation/">co-simulation&lt;/a> and real-time usually appear together.&lt;/p>
+&lt;h2 id="what-it-changes">What it changes&lt;/h2>
+&lt;p>Two things. The simulation waits at the end of each step until the wall clock catches up, so a run
+takes as long as the time it simulates. And a step that takes longer than its own duration is an
+&lt;strong>overrun&lt;/strong>: the simulation has missed its deadline and can no longer claim to be in step with the
+outside world.&lt;/p>
+&lt;p>Overruns are the whole difficulty. Everything else about real-time execution is arranging for them
+not to happen: keeping the step&amp;rsquo;s work bounded, and keeping the operating system from interrupting
+it.&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">Watch out: an overrun does not stop the simulation&lt;/h4>
+A missed deadline is reported, not fatal. The run continues and its results remain numerically
+correct; what is no longer true is that it kept pace with anything external. A run that overran
+repeatedly is not a real-time run, however normal its output looks.
+&lt;/div>
+&lt;h2 id="what-it-takes">What it takes&lt;/h2>
+&lt;p>A time step that comfortably exceeds the work done in it, models that do nothing slow inside the
+step, and a host that will not interrupt at the wrong moment. Millisecond steps are undemanding;
+microsecond steps need a tuned kernel and careful models, and are where most of the effort goes.&lt;/p>
+&lt;p>The requirements on the host and on the models are in
+&lt;a href="https://sogno.energy/dpsim/docs/developer-guide/writing-a-model/real-time/">real-time execution&lt;/a>. With that
+tuning, steps as low as 5 us synchronised to an FPGA through VILLASnode have been achieved.&lt;/p>
+&lt;h2 id="running-a-real-time-simulation">Running a Real-Time Simulation&lt;/h2>
+&lt;p>Before running a simulation, you can run the following commands as root:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;evacuating cores&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>tuna isolate -c 9,11,13,15
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;disabling RT throttling&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">echo&lt;/span> -1 &amp;gt; /proc/sys/kernel/sched_rt_runtime_us
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;stopping systemd services&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>systemctl stop polkit
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>systemctl stop containerd
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>systemctl stop crond
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>systemctl stop chronyd
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>As a reference, real-time simulation examples are provided in the &lt;code>dpsim/examples/cxx&lt;/code> and &lt;code>dpsim-villas/examples/cxx&lt;/code> folder of the DPsim repository.&lt;/p>
+&lt;p>To benefit from the &lt;code>PREEMPT_RT&lt;/code> feature and the isolated cores, the simulation has to be started using the &lt;code>chrt&lt;/code> command to set the scheduling policy and priority, and the &lt;code>taskset&lt;/code> command to pin the process to the isolated cores.&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="http://man7.org/linux/man-pages/man1/chrt.1.html">chrt man-page&lt;/a>&lt;/li>
+&lt;li>&lt;a href="http://man7.org/linux/man-pages/man1/taskset.1.html">taskset man-page&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>In the following example, we set the FIFO scheduling policy with the highest priority (99) and pin the execution of the simulation to CPU cores 9,11,13,15 which have been reserved previously (see above).&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># the simple RT_DP_CS_R_1 simulation&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>taskset -c 9,11,13,15 chrt -f &lt;span style="color:#0000cf;font-weight:bold">99&lt;/span> build/dpsim/examples/cxx/RT_DP_CS_R_1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Cosimulation using VILLASnode, FPGA synchronized time step, and exchanging data via Aurora interface.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"># Here we need sudo, to interact with the FPGA. We disable logging (log=false) and set the time step to 50 us (-t 0.00005).&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo taskset -c 9,11,13,15 chrt -f &lt;span style="color:#0000cf;font-weight:bold">99&lt;/span> build/dpsim-villas/examples/cxx/FpgaCosim3PhInfiniteBus -o &lt;span style="color:#000">log&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">false&lt;/span> -t 0.00005 -d &lt;span style="color:#0000cf;font-weight:bold">10&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: Co-simulation and Interfaces</title><link>https://sogno.energy/dpsim/docs/user-guide/co-simulation/</link><pubDate>Thu, 13 Feb 2025 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/user-guide/co-simulation/</guid><description>
+&lt;p>Interfaces can be used to exchange simulation signals between a DPsim simulation and other soft- or hardware, for example an MQTT-broker or an FPGA.
+Simulation signals in the form of &lt;a href="https://sogno.energy/dpsim/docs/developer-guide/attributes-and-scheduling/attributes/">Attributes&lt;/a> can be &lt;strong>imported&lt;/strong> or &lt;strong>exported&lt;/strong> once per simulation time step.
+Interfaces are subclasses of &lt;code>Interface&lt;/code> and implement the methods &lt;code>addExport&lt;/code> and &lt;code>addImport&lt;/code>, which add dependencies to the passed attribute that forward the attribute value from or to the interface.
+This way, attributes that are imported are read from the interface before they are used in any DPsim component.
+Attributes that are exported are written to the interface after they are set by a DPsim component.&lt;/p>
+&lt;h2 id="where-the-boundary-is-and-where-to-read-further">Where the boundary is, and where to read further&lt;/h2>
+&lt;p>This page documents only DPsim&amp;rsquo;s side of the interface: which attributes are exchanged, when they
+are read and written relative to the time step, and how the simulation is synchronized. Everything
+on the other side of the JSON configuration belongs to VILLASnode and is documented there rather
+than here, so the two should be read together.&lt;/p>
+&lt;p>The parts most often needed are these:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://villas.fein-aachen.org/doc/node-node-types.html">Node types&lt;/a> is the reference for the
+&lt;code>type&lt;/code> key and its per-type options. Which protocols are available, and what each one requires,
+is decided here rather than in DPsim.&lt;/li>
+&lt;li>&lt;a href="https://villas.fein-aachen.org/doc/node.html">Nodes&lt;/a> covers the surrounding configuration
+structure that the node object sits in.&lt;/li>
+&lt;li>&lt;a href="https://villas.fein-aachen.org/doc/node-hooks.html">Hooks&lt;/a> describe the processing that can be
+applied to samples in transit, such as scaling, limiting or statistics. Anything that can be done
+with a hook does not need to be done in the simulation, which is usually the better place for it.&lt;/li>
+&lt;/ul>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">Watch out: the signal mapping is positional, not by name&lt;/h4>
+Two things about the split are worth knowing before configuring anything. The signal ordering in
+the VILLASnode configuration must match the order in which attributes are exported and imported,
+because the mapping is positional rather than by name; a mismatch produces a running simulation
+exchanging the wrong quantities. And the queueless interface additionally reserves the first input
+signal for a sequence number, so its signal list is offset by one relative to a queued
+configuration carrying otherwise identical data. That is described with the rest of the
+configuration under
+&lt;a href="https://sogno.energy/dpsim/docs/developer-guide/attributes-and-scheduling/interface-tasks/">interfaces&lt;/a>.
+&lt;/div></description></item></channel></rss>

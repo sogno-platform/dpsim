@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('class_d_psim_1_1_interface_queued.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,12 +95,6 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_interface_queued.html">InterfaceQueued</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
@@ -97,16 +105,18 @@ $(function(){ initResizable(false); });
   <div class="headertitle"><div class="title">DPsim::InterfaceQueued Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="_interface_queued_8h_source.html">InterfaceQueued.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for DPsim::InterfaceQueued:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="class_d_psim_1_1_interface_queued__inherit__graph.svg" width="350" height="500"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for DPsim::InterfaceQueued:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="class_d_psim_1_1_interface_queued__coll__graph.svg" width="350" height="343"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -121,8 +131,8 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:acbb6e9580893278da9f22a5022802b9a" id="r_acbb6e9580893278da9f22a5022802b9a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><b>AttributePacketFlags</b> { <b>PACKET_NO_FLAGS</b> = 0
-, <b>PACKET_CLOSE_INTERFACE</b> = 1
+<tr class="memitem:acbb6e9580893278da9f22a5022802b9a" id="r_acbb6e9580893278da9f22a5022802b9a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acbb6e9580893278da9f22a5022802b9a">AttributePacketFlags</a> { <a class="el" href="#acbb6e9580893278da9f22a5022802b9aaa5a11fdbe5b8929910c71cc6ef0dcb38">PACKET_NO_FLAGS</a> = 0
+, <a class="el" href="#acbb6e9580893278da9f22a5022802b9aa08e4fabea76f96f4d9e9ea2ec0559719">PACKET_CLOSE_INTERFACE</a> = 1
  }</td></tr>
 <tr class="separator:acbb6e9580893278da9f22a5022802b9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0af27634eaae8ba995189d8b728dbe55" id="r_a0af27634eaae8ba995189d8b728dbe55"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="class_d_psim_1_1_interface_queued.html">InterfaceQueued</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0af27634eaae8ba995189d8b728dbe55">Ptr</a></td></tr>
@@ -135,7 +145,7 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a490350e7c7db54c52a3968c97e3cba44" id="r_a490350e7c7db54c52a3968c97e3cba44"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a490350e7c7db54c52a3968c97e3cba44">InterfaceQueued</a> (std::shared_ptr&lt; <a class="el" href="class_d_psim_1_1_interface_worker.html">InterfaceWorker</a> &gt; intf, const String &amp;name=&quot;&quot;, UInt downsampling=1)</td></tr>
+<tr class="memitem:a490350e7c7db54c52a3968c97e3cba44" id="r_a490350e7c7db54c52a3968c97e3cba44"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a490350e7c7db54c52a3968c97e3cba44">InterfaceQueued</a> (std::shared_ptr&lt; <a class="el" href="class_d_psim_1_1_interface_worker.html">InterfaceWorker</a> &gt; intf, const <a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> &amp;name=&quot;&quot;, <a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> downsampling=1)</td></tr>
 <tr class="separator:a490350e7c7db54c52a3968c97e3cba44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17eb21ddc93232e01c04893d93b2b4cd" id="r_a17eb21ddc93232e01c04893d93b2b4cd"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a17eb21ddc93232e01c04893d93b2b4cd">open</a> () override</td></tr>
 <tr class="separator:a17eb21ddc93232e01c04893d93b2b4cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -150,44 +160,48 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa2e7c5c7907eb3ff710246854714dd9a" id="r_aa2e7c5c7907eb3ff710246854714dd9a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa2e7c5c7907eb3ff710246854714dd9a">syncImports</a> () override</td></tr>
 <tr class="memdesc:aa2e7c5c7907eb3ff710246854714dd9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function called by the <a class="el" href="class_d_psim_1_1_simulation.html" title="The Simulation holds a SystemTopology and a Solver.">Simulation</a> to perform interface synchronization.  <br /></td></tr>
 <tr class="separator:aa2e7c5c7907eb3ff710246854714dd9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa69d78384580c67c3e6ca2e7a3f40ea2" id="r_aa69d78384580c67c3e6ca2e7a3f40ea2"><td class="memItemLeft" align="right" valign="top">virtual CPS::Task::List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa69d78384580c67c3e6ca2e7a3f40ea2">getTasks</a> () override</td></tr>
+<tr class="memitem:aa69d78384580c67c3e6ca2e7a3f40ea2" id="r_aa69d78384580c67c3e6ca2e7a3f40ea2"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_c_p_s_1_1_task.html#ad081ca27190e0b2e1887a8d6cb612a66">CPS::Task::List</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa69d78384580c67c3e6ca2e7a3f40ea2">getTasks</a> () override</td></tr>
 <tr class="separator:aa69d78384580c67c3e6ca2e7a3f40ea2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22ac575eff84392077aa44622e130577" id="r_a22ac575eff84392077aa44622e130577"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a22ac575eff84392077aa44622e130577">setLogger</a> (CPS::Logger::Log log) override</td></tr>
+<tr class="memitem:a22ac575eff84392077aa44622e130577" id="r_a22ac575eff84392077aa44622e130577"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a22ac575eff84392077aa44622e130577">setLogger</a> (<a class="el" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a> log) override</td></tr>
 <tr class="separator:a22ac575eff84392077aa44622e130577"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a517ddca82c4e3b880e1526990b3b6f79" id="r_a517ddca82c4e3b880e1526990b3b6f79"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a517ddca82c4e3b880e1526990b3b6f79">~InterfaceQueued</a> ()</td></tr>
+<tr class="separator:a517ddca82c4e3b880e1526990b3b6f79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_d_psim_1_1_interface"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_d_psim_1_1_interface')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td></tr>
-<tr class="memitem:af7ff184a7ead2918ca54d461d7087bb1 inherit pub_methods_class_d_psim_1_1_interface" id="r_af7ff184a7ead2918ca54d461d7087bb1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#af7ff184a7ead2918ca54d461d7087bb1">Interface</a> (const String &amp;name=&quot;&quot;, spdlog::level::level_enum logLevel=spdlog::level::level_enum::info)</td></tr>
+<tr class="memitem:af7ff184a7ead2918ca54d461d7087bb1 inherit pub_methods_class_d_psim_1_1_interface" id="r_af7ff184a7ead2918ca54d461d7087bb1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#af7ff184a7ead2918ca54d461d7087bb1">Interface</a> (const <a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> &amp;name=&quot;&quot;, spdlog::level::level_enum logLevel=spdlog::level::level_enum::info)</td></tr>
 <tr class="separator:af7ff184a7ead2918ca54d461d7087bb1 inherit pub_methods_class_d_psim_1_1_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a999d2998d8f639c3044b72133c19b19b inherit pub_methods_class_d_psim_1_1_interface" id="r_a999d2998d8f639c3044b72133c19b19b"><td class="memItemLeft" align="right" valign="top">virtual String &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#a999d2998d8f639c3044b72133c19b19b">getName</a> ()</td></tr>
+<tr class="memitem:aa4df0761a44b8224328004fff6b2ec9e inherit pub_methods_class_d_psim_1_1_interface" id="r_aa4df0761a44b8224328004fff6b2ec9e"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#aa4df0761a44b8224328004fff6b2ec9e">~Interface</a> ()=default</td></tr>
+<tr class="separator:aa4df0761a44b8224328004fff6b2ec9e inherit pub_methods_class_d_psim_1_1_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a999d2998d8f639c3044b72133c19b19b inherit pub_methods_class_d_psim_1_1_interface" id="r_a999d2998d8f639c3044b72133c19b19b"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#a999d2998d8f639c3044b72133c19b19b">getName</a> ()</td></tr>
 <tr class="separator:a999d2998d8f639c3044b72133c19b19b inherit pub_methods_class_d_psim_1_1_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b00acb09b792e3352ff76ae817f696d inherit pub_methods_class_d_psim_1_1_interface" id="r_a6b00acb09b792e3352ff76ae817f696d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#a6b00acb09b792e3352ff76ae817f696d">addImport</a> (<a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a> attr, bool blockOnRead=false, bool syncOnSimulationStart=true)</td></tr>
+<tr class="memitem:a6b00acb09b792e3352ff76ae817f696d inherit pub_methods_class_d_psim_1_1_interface" id="r_a6b00acb09b792e3352ff76ae817f696d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#a6b00acb09b792e3352ff76ae817f696d">addImport</a> (<a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">CPS::AttributeBase::Ptr</a> attr, bool blockOnRead=false, bool syncOnSimulationStart=true)</td></tr>
 <tr class="separator:a6b00acb09b792e3352ff76ae817f696d inherit pub_methods_class_d_psim_1_1_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7799cc7e87df1920e55288a84063497 inherit pub_methods_class_d_psim_1_1_interface" id="r_ab7799cc7e87df1920e55288a84063497"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#ab7799cc7e87df1920e55288a84063497">addExport</a> (<a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a> attr)</td></tr>
+<tr class="memitem:ab7799cc7e87df1920e55288a84063497 inherit pub_methods_class_d_psim_1_1_interface" id="r_ab7799cc7e87df1920e55288a84063497"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#ab7799cc7e87df1920e55288a84063497">addExport</a> (<a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">CPS::AttributeBase::Ptr</a> attr)</td></tr>
 <tr class="separator:ab7799cc7e87df1920e55288a84063497 inherit pub_methods_class_d_psim_1_1_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:af0ff6c1e751cfb7d115167f7b7be6f3d" id="r_af0ff6c1e751cfb7d115167f7b7be6f3d"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="class_d_psim_1_1_interface_worker.html">InterfaceWorker</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af0ff6c1e751cfb7d115167f7b7be6f3d">mInterfaceWorker</a></td></tr>
 <tr class="separator:af0ff6c1e751cfb7d115167f7b7be6f3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0b35f2635f83b3335bd69e4de1ab0ea" id="r_aa0b35f2635f83b3335bd69e4de1ab0ea"><td class="memItemLeft" align="right" valign="top">UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa0b35f2635f83b3335bd69e4de1ab0ea">mDownsampling</a></td></tr>
+<tr class="memitem:aa0b35f2635f83b3335bd69e4de1ab0ea" id="r_aa0b35f2635f83b3335bd69e4de1ab0ea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa0b35f2635f83b3335bd69e4de1ab0ea">mDownsampling</a></td></tr>
 <tr class="separator:aa0b35f2635f83b3335bd69e4de1ab0ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2422bd887d071e3e32ec36ba377a7d24" id="r_a2422bd887d071e3e32ec36ba377a7d24"><td class="memItemLeft" align="right" valign="top">std::thread&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2422bd887d071e3e32ec36ba377a7d24">mInterfaceWriterThread</a></td></tr>
 <tr class="separator:a2422bd887d071e3e32ec36ba377a7d24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a24b7de5209a1d7753e89de2b050b90e2" id="r_a24b7de5209a1d7753e89de2b050b90e2"><td class="memItemLeft" align="right" valign="top">std::thread&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a24b7de5209a1d7753e89de2b050b90e2">mInterfaceReaderThread</a></td></tr>
 <tr class="separator:a24b7de5209a1d7753e89de2b050b90e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15b4a2b5e214e425a636a5bcbae1084f" id="r_a15b4a2b5e214e425a636a5bcbae1084f"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; moodycamel::BlockingReaderWriterQueue&lt; AttributePacket &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a15b4a2b5e214e425a636a5bcbae1084f">mQueueDpsimToInterface</a></td></tr>
+<tr class="memitem:a15b4a2b5e214e425a636a5bcbae1084f" id="r_a15b4a2b5e214e425a636a5bcbae1084f"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; moodycamel::BlockingReaderWriterQueue&lt; <a class="el" href="#a8cdc9a06f396b2b6ba3f27bd69de3388">AttributePacket</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a15b4a2b5e214e425a636a5bcbae1084f">mQueueDpsimToInterface</a></td></tr>
 <tr class="separator:a15b4a2b5e214e425a636a5bcbae1084f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10937bf25e81d445606874933d0f4729" id="r_a10937bf25e81d445606874933d0f4729"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; moodycamel::BlockingReaderWriterQueue&lt; AttributePacket &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a10937bf25e81d445606874933d0f4729">mQueueInterfaceToDpsim</a></td></tr>
+<tr class="memitem:a10937bf25e81d445606874933d0f4729" id="r_a10937bf25e81d445606874933d0f4729"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; moodycamel::BlockingReaderWriterQueue&lt; <a class="el" href="#a8cdc9a06f396b2b6ba3f27bd69de3388">AttributePacket</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a10937bf25e81d445606874933d0f4729">mQueueInterfaceToDpsim</a></td></tr>
 <tr class="separator:a10937bf25e81d445606874933d0f4729"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_d_psim_1_1_interface"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_d_psim_1_1_interface')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td></tr>
-<tr class="memitem:ac147df20daebd31b0ae90182f0191a5c inherit pro_attribs_class_d_psim_1_1_interface" id="r_ac147df20daebd31b0ae90182f0191a5c"><td class="memItemLeft" align="right" valign="top">CPS::Logger::Log&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#ac147df20daebd31b0ae90182f0191a5c">mLog</a></td></tr>
+<tr class="memitem:ac147df20daebd31b0ae90182f0191a5c inherit pro_attribs_class_d_psim_1_1_interface" id="r_ac147df20daebd31b0ae90182f0191a5c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#ac147df20daebd31b0ae90182f0191a5c">mLog</a></td></tr>
 <tr class="separator:ac147df20daebd31b0ae90182f0191a5c inherit pro_attribs_class_d_psim_1_1_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a9bcf319b311804a05b63ef3e358e2e inherit pro_attribs_class_d_psim_1_1_interface" id="r_a2a9bcf319b311804a05b63ef3e358e2e"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#a2a9bcf319b311804a05b63ef3e358e2e">mName</a></td></tr>
+<tr class="memitem:a2a9bcf319b311804a05b63ef3e358e2e inherit pro_attribs_class_d_psim_1_1_interface" id="r_a2a9bcf319b311804a05b63ef3e358e2e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#a2a9bcf319b311804a05b63ef3e358e2e">mName</a></td></tr>
 <tr class="separator:a2a9bcf319b311804a05b63ef3e358e2e inherit pro_attribs_class_d_psim_1_1_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a304a9ae30f34fad55dcfe3588e759726 inherit pro_attribs_class_d_psim_1_1_interface" id="r_a304a9ae30f34fad55dcfe3588e759726"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#a304a9ae30f34fad55dcfe3588e759726">mSyncOnSimulationStart</a></td></tr>
 <tr class="separator:a304a9ae30f34fad55dcfe3588e759726 inherit pro_attribs_class_d_psim_1_1_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a1cca8d5dcd44a3d1be753be4881829 inherit pro_attribs_class_d_psim_1_1_interface" id="r_a4a1cca8d5dcd44a3d1be753be4881829"><td class="memItemLeft" align="right" valign="top">UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#a4a1cca8d5dcd44a3d1be753be4881829">mCurrentSequenceDpsimToInterface</a> = 1</td></tr>
+<tr class="memitem:a4a1cca8d5dcd44a3d1be753be4881829 inherit pro_attribs_class_d_psim_1_1_interface" id="r_a4a1cca8d5dcd44a3d1be753be4881829"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#a4a1cca8d5dcd44a3d1be753be4881829">mCurrentSequenceDpsimToInterface</a> = 1</td></tr>
 <tr class="separator:a4a1cca8d5dcd44a3d1be753be4881829 inherit pro_attribs_class_d_psim_1_1_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a35f39d4546ff58e41152b5c66a78cf14 inherit pro_attribs_class_d_psim_1_1_interface" id="r_a35f39d4546ff58e41152b5c66a78cf14"><td class="memItemLeft" align="right" valign="top">UInt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#a35f39d4546ff58e41152b5c66a78cf14">mNextSequenceInterfaceToDpsim</a> = 1</td></tr>
+<tr class="memitem:a35f39d4546ff58e41152b5c66a78cf14 inherit pro_attribs_class_d_psim_1_1_interface" id="r_a35f39d4546ff58e41152b5c66a78cf14"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#a35f39d4546ff58e41152b5c66a78cf14">mNextSequenceInterfaceToDpsim</a> = 1</td></tr>
 <tr class="separator:a35f39d4546ff58e41152b5c66a78cf14 inherit pro_attribs_class_d_psim_1_1_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46f7fd95003532d77c6a965280c2c3a0 inherit pro_attribs_class_d_psim_1_1_interface" id="r_a46f7fd95003532d77c6a965280c2c3a0"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#a46f7fd95003532d77c6a965280c2c3a0">mOpened</a></td></tr>
 <tr class="separator:a46f7fd95003532d77c6a965280c2c3a0 inherit pro_attribs_class_d_psim_1_1_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -201,9 +215,9 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:a2ffdfd3b547bb9cb777f33e1bf6ec7ef inherit pub_static_methods_class_shared_factory" id="r_a2ffdfd3b547bb9cb777f33e1bf6ec7ef"><td class="memItemLeft" align="right" valign="top">static std::shared_ptr&lt; InterfaceQueued &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">make</a> (Args &amp;&amp;...args)</td></tr>
 <tr class="separator:a2ffdfd3b547bb9cb777f33e1bf6ec7ef inherit pub_static_methods_class_shared_factory"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_class_d_psim_1_1_interface"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_attribs_class_d_psim_1_1_interface')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a></td></tr>
-<tr class="memitem:a33a81c7c3de33abb899eedfff741acd2 inherit pub_attribs_class_d_psim_1_1_interface" id="r_a33a81c7c3de33abb899eedfff741acd2"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::tuple&lt; <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>, UInt, bool, bool &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#a33a81c7c3de33abb899eedfff741acd2">mImportAttrsDpsim</a></td></tr>
+<tr class="memitem:a33a81c7c3de33abb899eedfff741acd2 inherit pub_attribs_class_d_psim_1_1_interface" id="r_a33a81c7c3de33abb899eedfff741acd2"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::tuple&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">CPS::AttributeBase::Ptr</a>, <a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a>, bool, bool &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#a33a81c7c3de33abb899eedfff741acd2">mImportAttrsDpsim</a></td></tr>
 <tr class="separator:a33a81c7c3de33abb899eedfff741acd2 inherit pub_attribs_class_d_psim_1_1_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0bc158390ed482f079bb79798860eb3 inherit pub_attribs_class_d_psim_1_1_interface" id="r_af0bc158390ed482f079bb79798860eb3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::tuple&lt; <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributeBase::Ptr</a>, UInt &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#af0bc158390ed482f079bb79798860eb3">mExportAttrsDpsim</a></td></tr>
+<tr class="memitem:af0bc158390ed482f079bb79798860eb3 inherit pub_attribs_class_d_psim_1_1_interface" id="r_af0bc158390ed482f079bb79798860eb3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::tuple&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">CPS::AttributeBase::Ptr</a>, <a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_interface.html#af0bc158390ed482f079bb79798860eb3">mExportAttrsDpsim</a></td></tr>
 <tr class="separator:af0bc158390ed482f079bb79798860eb3 inherit pub_attribs_class_d_psim_1_1_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -217,18 +231,21 @@ Additional Inherited Members</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using DPsim::InterfaceQueued::AttributePacket</td>
+          <td class="memname">using <a class="el" href="#a8cdc9a06f396b2b6ba3f27bd69de3388">DPsim::InterfaceQueued::AttributePacket</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line"> <span class="keyword">struct </span>AttributePacket {</div>
-<div class="line">    CPS::AttributeBase::Ptr value;</div>
-<div class="line">    UInt</div>
+<b>Initial value:</b><div class="fragment"><div class="line"> <span class="keyword">struct </span><a class="code hl_typedef" href="#a8cdc9a06f396b2b6ba3f27bd69de3388">AttributePacket</a> {</div>
+<div class="line">    <a class="code hl_typedef" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">CPS::AttributeBase::Ptr</a> value;</div>
+<div class="line">    <a class="code hl_typedef" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a></div>
 <div class="line">        attributeId; </div>
-<div class="line">    UInt</div>
+<div class="line">    <a class="code hl_typedef" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a></div>
 <div class="line">        sequenceId; </div>
 <div class="line">    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> flags; </div>
 <div class="line">  }</div>
+<div class="ttc" id="aclass_c_p_s_1_1_attribute_base_html_af06cf61c74c46ce667c58f124d69a679"><div class="ttname"><a href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">CPS::AttributeBase::Ptr</a></div><div class="ttdeci">AttributePointer&lt; AttributeBase &gt; Ptr</div><div class="ttdef"><b>Definition</b> <a href="_attribute_8h_source.html#l00122">Attribute.h:122</a></div></div>
+<div class="ttc" id="aclass_d_psim_1_1_interface_queued_html_a8cdc9a06f396b2b6ba3f27bd69de3388"><div class="ttname"><a href="#a8cdc9a06f396b2b6ba3f27bd69de3388">DPsim::InterfaceQueued::AttributePacket</a></div><div class="ttdeci">struct AttributePacket { CPS::AttributeBase::Ptr value; UInt attributeId; UInt sequenceId; unsigned char flags; } AttributePacket</div><div class="ttdef"><b>Definition</b> <a href="_interface_queued_8h_source.html#l00030">InterfaceQueued.h:30</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_aca275dbce4c75f8e270755c373b13d5d"><div class="ttname"><a href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">DPsim::UInt</a></div><div class="ttdeci">CPS::UInt UInt</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00023">Definitions.h:23</a></div></div>
 </div><!-- fragment -->
 <p class="definition">Definition at line <a class="el" href="_interface_queued_8h_source.html#l00030">30</a> of file <a class="el" href="_interface_queued_8h_source.html">InterfaceQueued.h</a>.</p>
 
@@ -241,7 +258,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::shared_ptr&lt;<a class="el" href="class_d_psim_1_1_interface_queued.html">InterfaceQueued</a>&gt; DPsim::InterfaceQueued::Ptr</td>
+          <td class="memname">typedef std::shared_ptr&lt;<a class="el" href="class_d_psim_1_1_interface_queued.html">InterfaceQueued</a>&gt; <a class="el" href="#a0af27634eaae8ba995189d8b728dbe55">DPsim::InterfaceQueued::Ptr</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -258,10 +275,14 @@ Additional Inherited Members</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum DPsim::InterfaceQueued::AttributePacketFlags</td>
+          <td class="memname">enum <a class="el" href="#acbb6e9580893278da9f22a5022802b9a">DPsim::InterfaceQueued::AttributePacketFlags</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="acbb6e9580893278da9f22a5022802b9aaa5a11fdbe5b8929910c71cc6ef0dcb38" name="acbb6e9580893278da9f22a5022802b9aaa5a11fdbe5b8929910c71cc6ef0dcb38"></a>PACKET_NO_FLAGS&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="acbb6e9580893278da9f22a5022802b9aa08e4fabea76f96f4d9e9ea2ec0559719" name="acbb6e9580893278da9f22a5022802b9aa08e4fabea76f96f4d9e9ea2ec0559719"></a>PACKET_CLOSE_INTERFACE&#160;</td><td class="fielddoc"></td></tr>
+</table>
 
 <p class="definition">Definition at line <a class="el" href="_interface_queued_8h_source.html#l00039">39</a> of file <a class="el" href="_interface_queued_8h_source.html">InterfaceQueued.h</a>.</p>
 
@@ -285,12 +306,12 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const String &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;&quot;</span>, </td>
+          <td class="paramtype">const <a class="el" href="namespace_d_psim.html#a66e48a625a26fd3c1d2198148f9d59e9">String</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;&quot;</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">UInt</td>          <td class="paramname"><span class="paramname"><em>downsampling</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a></td>          <td class="paramname"><span class="paramname"><em>downsampling</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -355,7 +376,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>.</p>
+<p>Implements <a class="el" href="class_d_psim_1_1_interface.html#a1c1f8e9e588cac5322b12203338ad7da">DPsim::Interface</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="_interface_queued_8cpp_source.html#l00027">27</a> of file <a class="el" href="_interface_queued_8cpp_source.html">InterfaceQueued.cpp</a>.</p>
 
@@ -371,7 +392,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">CPS::Task::List DPsim::InterfaceQueued::getTasks </td>
+          <td class="memname"><a class="el" href="class_c_p_s_1_1_task.html#ad081ca27190e0b2e1887a8d6cb612a66">CPS::Task::List</a> DPsim::InterfaceQueued::getTasks </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -384,7 +405,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>.</p>
+<p>Implements <a class="el" href="class_d_psim_1_1_interface.html#af59ef83a2129ca0e459bf54d4cd563f2">DPsim::Interface</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="_interface_queued_8cpp_source.html#l00042">42</a> of file <a class="el" href="_interface_queued_8cpp_source.html">InterfaceQueued.cpp</a>.</p>
 
@@ -413,7 +434,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>.</p>
+<p>Implements <a class="el" href="class_d_psim_1_1_interface.html#a1abfbf3041ad0216706049969b1f469d">DPsim::Interface</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="_interface_queued_8cpp_source.html#l00013">13</a> of file <a class="el" href="_interface_queued_8cpp_source.html">InterfaceQueued.cpp</a>.</p>
 
@@ -485,7 +506,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void DPsim::InterfaceQueued::setLogger </td>
           <td>(</td>
-          <td class="paramtype">CPS::Logger::Log</td>          <td class="paramname"><span class="paramname"><em>log</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">CPS::Logger::Log</a></td>          <td class="paramname"><span class="paramname"><em>log</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -496,7 +517,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented from <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>.</p>
+<p>Reimplemented from <a class="el" href="class_d_psim_1_1_interface.html#a84d521b290775ce69bc442e7ce4175eb">DPsim::Interface</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="_interface_queued_8cpp_source.html#l00063">63</a> of file <a class="el" href="_interface_queued_8cpp_source.html">InterfaceQueued.cpp</a>.</p>
 
@@ -525,7 +546,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="class_d_psim_1_1_interface.html">DPsim::Interface</a>.</p>
+<p>Implements <a class="el" href="class_d_psim_1_1_interface.html#aa472b392a5d172437ba75d788bdd0d39">DPsim::Interface</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="_interface_queued_8cpp_source.html#l00075">75</a> of file <a class="el" href="_interface_queued_8cpp_source.html">InterfaceQueued.cpp</a>.</p>
 
@@ -573,7 +594,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">UInt DPsim::InterfaceQueued::mDownsampling</td>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> DPsim::InterfaceQueued::mDownsampling</td>
         </tr>
       </table>
   </td>
@@ -669,7 +690,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt;moodycamel::BlockingReaderWriterQueue&lt;AttributePacket&gt; &gt; DPsim::InterfaceQueued::mQueueDpsimToInterface</td>
+          <td class="memname">std::shared_ptr&lt;moodycamel::BlockingReaderWriterQueue&lt;<a class="el" href="#a8cdc9a06f396b2b6ba3f27bd69de3388">AttributePacket</a>&gt; &gt; DPsim::InterfaceQueued::mQueueDpsimToInterface</td>
         </tr>
       </table>
   </td>
@@ -693,7 +714,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt;moodycamel::BlockingReaderWriterQueue&lt;AttributePacket&gt; &gt; DPsim::InterfaceQueued::mQueueInterfaceToDpsim</td>
+          <td class="memname">std::shared_ptr&lt;moodycamel::BlockingReaderWriterQueue&lt;<a class="el" href="#a8cdc9a06f396b2b6ba3f27bd69de3388">AttributePacket</a>&gt; &gt; DPsim::InterfaceQueued::mQueueInterfaceToDpsim</td>
         </tr>
       </table>
   </td>
@@ -712,10 +733,13 @@ Additional Inherited Members</h2></td></tr>
 <li>/__w/dpsim/dpsim/dpsim/src/<a class="el" href="_interface_queued_8cpp_source.html">InterfaceQueued.cpp</a></li>
 </ul>
 </div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_d_psim.html">DPsim</a></li><li class="navelem"><a class="el" href="class_d_psim_1_1_interface_queued.html">InterfaceQueued</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>

@@ -11,6 +11,8 @@
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="cookie.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
@@ -49,17 +51,29 @@ $(function() { codefold.init(0); });
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 $(function() {
-  initMenu('',true,false,'search.php','Search',false);
+  initMenu('',true,false,'search.php','Search',true);
   $(function() { init_search(); });
 });
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){ initResizable(false); });
+$(function(){initNavTree('_dense_l_u_adapter_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,17 +95,11 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li>  </ul>
-</div>
-</div><!-- top -->
-<div id="doc-content">
 <div class="header">
   <div class="headertitle"><div class="title">DenseLUAdapter.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
+<a href="_dense_l_u_adapter_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -109,8 +117,8 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;dpsim/Config.h&gt;</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;dpsim/Definitions.h&gt;</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;dpsim/DirectLinearSolver.h&gt;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;<a class="code" href="dpsim_2include_2dpsim_2_definitions_8h.html">dpsim/Definitions.h</a>&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;<a class="code" href="_direct_linear_solver_8h.html">dpsim/DirectLinearSolver.h</a>&gt;</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespace_d_psim.html">DPsim</a> {</div>
 <div class="foldopen" id="foldopen00023" data-start="{" data-end="};">
@@ -122,22 +130,23 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="class_d_psim_1_1_dense_l_u_adapter.html#a820e776d3c98c88d0faeeaf5f791020e">   31</a></span>  <a class="code hl_function" href="class_d_psim_1_1_dense_l_u_adapter.html#a820e776d3c98c88d0faeeaf5f791020e">~DenseLUAdapter</a>() <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_dense_l_u_adapter.html#a853e59797375bf760f47acf1a68e8b31">preprocessing</a>(SparseMatrix &amp;systemMatrix,</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_dense_l_u_adapter.html#a853e59797375bf760f47acf1a68e8b31">preprocessing</a>(<a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix,</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>                     std::vector&lt;std::pair&lt;UInt, UInt&gt;&gt;</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>                         &amp;listVariableSystemMatrixEntries) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_dense_l_u_adapter.html#a69da2c15ca44af51efffbf940519300b">factorize</a>(SparseMatrix &amp;systemMatrix) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_dense_l_u_adapter.html#a69da2c15ca44af51efffbf940519300b">factorize</a>(<a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_dense_l_u_adapter.html#a87c2b1102ed663b35838fed7c8154989">refactorize</a>(SparseMatrix &amp;systemMatrix) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_dense_l_u_adapter.html#a87c2b1102ed663b35838fed7c8154989">refactorize</a>(<a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_dense_l_u_adapter.html#a6f1368e72ccfa781d31bc9214191e131">partialRefactorize</a>(SparseMatrix &amp;systemMatrix,</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_d_psim_1_1_dense_l_u_adapter.html#a6f1368e72ccfa781d31bc9214191e131">partialRefactorize</a>(<a class="code hl_typedef" href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">SparseMatrix</a> &amp;systemMatrix,</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>                          std::vector&lt;std::pair&lt;UInt, UInt&gt;&gt;</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                              &amp;listVariableSystemMatrixEntries) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  Matrix <a class="code hl_function" href="class_d_psim_1_1_dense_l_u_adapter.html#aa026457a9d8bfd687b7c20e22483c7db">solve</a>(Matrix &amp;rightSideVector) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <a class="code hl_typedef" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> <a class="code hl_function" href="class_d_psim_1_1_dense_l_u_adapter.html#aa026457a9d8bfd687b7c20e22483c7db">solve</a>(<a class="code hl_typedef" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;rightSideVector) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>};</div>
 </div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>} <span class="comment">// namespace DPsim</span></div>
+<div class="ttc" id="a_direct_linear_solver_8h_html"><div class="ttname"><a href="_direct_linear_solver_8h.html">DirectLinearSolver.h</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_dense_l_u_adapter_html"><div class="ttname"><a href="class_d_psim_1_1_dense_l_u_adapter.html">DPsim::DenseLUAdapter</a></div><div class="ttdef"><b>Definition</b> <a href="#l00023">DenseLUAdapter.h:23</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_dense_l_u_adapter_html_a2b121961736a57b6aa1622d373fe6019"><div class="ttname"><a href="class_d_psim_1_1_dense_l_u_adapter.html#a2b121961736a57b6aa1622d373fe6019">DPsim::DenseLUAdapter::DirectLinearSolver</a></div><div class="ttdeci">DirectLinearSolver()=default</div><div class="ttdoc">Constructor with logging.</div></div>
 <div class="ttc" id="aclass_d_psim_1_1_dense_l_u_adapter_html_a69da2c15ca44af51efffbf940519300b"><div class="ttname"><a href="class_d_psim_1_1_dense_l_u_adapter.html#a69da2c15ca44af51efffbf940519300b">DPsim::DenseLUAdapter::factorize</a></div><div class="ttdeci">void factorize(SparseMatrix &amp;systemMatrix) override</div><div class="ttdoc">factorization function with partial pivoting</div><div class="ttdef"><b>Definition</b> <a href="_dense_l_u_adapter_8cpp_source.html#l00023">DenseLUAdapter.cpp:23</a></div></div>
@@ -147,12 +156,18 @@ $(function(){ initResizable(false); });
 <div class="ttc" id="aclass_d_psim_1_1_dense_l_u_adapter_html_a87c2b1102ed663b35838fed7c8154989"><div class="ttname"><a href="class_d_psim_1_1_dense_l_u_adapter.html#a87c2b1102ed663b35838fed7c8154989">DPsim::DenseLUAdapter::refactorize</a></div><div class="ttdeci">void refactorize(SparseMatrix &amp;systemMatrix) override</div><div class="ttdoc">refactorization without partial pivoting</div><div class="ttdef"><b>Definition</b> <a href="_dense_l_u_adapter_8cpp_source.html#l00027">DenseLUAdapter.cpp:27</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_dense_l_u_adapter_html_aa026457a9d8bfd687b7c20e22483c7db"><div class="ttname"><a href="class_d_psim_1_1_dense_l_u_adapter.html#aa026457a9d8bfd687b7c20e22483c7db">DPsim::DenseLUAdapter::solve</a></div><div class="ttdeci">Matrix solve(Matrix &amp;rightSideVector) override</div><div class="ttdoc">solution function for a right hand side</div><div class="ttdef"><b>Definition</b> <a href="_dense_l_u_adapter_8cpp_source.html#l00039">DenseLUAdapter.cpp:39</a></div></div>
 <div class="ttc" id="aclass_d_psim_1_1_direct_linear_solver_html_a2b121961736a57b6aa1622d373fe6019"><div class="ttname"><a href="class_d_psim_1_1_direct_linear_solver.html#a2b121961736a57b6aa1622d373fe6019">DPsim::DirectLinearSolver::DirectLinearSolver</a></div><div class="ttdeci">DirectLinearSolver()=default</div><div class="ttdoc">Constructor.</div></div>
+<div class="ttc" id="adpsim_2include_2dpsim_2_definitions_8h_html"><div class="ttname"><a href="dpsim_2include_2dpsim_2_definitions_8h.html">Definitions.h</a></div></div>
 <div class="ttc" id="anamespace_d_psim_html"><div class="ttname"><a href="namespace_d_psim.html">DPsim</a></div><div class="ttdef"><b>Definition</b> <a href="_dense_l_u_adapter_8cpp_source.html#l00013">DenseLUAdapter.cpp:13</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_a7920162dfc7e843a4f1a1248fe9ccb0e"><div class="ttname"><a href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">DPsim::Matrix</a></div><div class="ttdeci">CPS::Matrix Matrix</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00024">Definitions.h:24</a></div></div>
+<div class="ttc" id="anamespace_d_psim_html_ab6afa34bab94cdc2ff33e09d4a1d2c9c"><div class="ttname"><a href="namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c">DPsim::SparseMatrix</a></div><div class="ttdeci">CPS::SparseMatrixRow SparseMatrix</div><div class="ttdef"><b>Definition</b> <a href="dpsim_2include_2dpsim_2_definitions_8h_source.html#l00026">Definitions.h:26</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
-<!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
-</small></address>
 </div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_bc6fb5fe84fc976bf1cee5abe715c7cb.html">dpsim</a></li><li class="navelem"><a class="el" href="dir_7d10317862005e90f02a5c0199d9f8ae.html">include</a></li><li class="navelem"><a class="el" href="dir_bcd0b3fc6e21bdc4835f463b1b5f7a31.html">dpsim</a></li><li class="navelem"><a class="el" href="_dense_l_u_adapter_8h.html">DenseLUAdapter.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
 </body>
 </html>
