@@ -32,8 +32,7 @@ void SP::Ph1::SVC::setParameters(Real ratedApparentPower, Real ratedVoltage,
   **mSetPointVoltage = setPointVoltage;
   **mReactivePowerMax = qLimMax;
   **mReactivePowerMin = qLimMin;
-  // The SVC always presents as a PQ bus; the outer control loop moves Q_set
-  // within [Q_min, Q_max] to hold V at V_set.
+  // Always a PQ bus; the outer loop moves Q_set within the band to hold V_set
   mPowerflowBusType = PowerflowBusType::PQ;
 
   SPDLOG_LOGGER_INFO(mSLog, "Rated Apparent Power={} [VA] Rated Voltage={} [V]",
@@ -71,7 +70,7 @@ void SP::Ph1::SVC::calculatePerUnitParameters(Real baseApparentPower,
   **mSetPointVoltagePerUnit = **mSetPointVoltage / mBaseVoltage;
   **mSetPointReactivePowerPerUnit =
       **mSetPointReactivePower / mBaseApparentPower;
-  // +/-inf limits divide to +/-inf in pu (still "unlimited"); finite limits scale.
+  // +/-inf limits stay +/-inf in pu; finite limits scale
   **mReactivePowerMaxPerUnit = **mReactivePowerMax / mBaseApparentPower;
   **mReactivePowerMinPerUnit = **mReactivePowerMin / mBaseApparentPower;
   SPDLOG_LOGGER_INFO(mSLog, "Voltage Set Point={} [pu]",
@@ -98,7 +97,7 @@ void SP::Ph1::SVC::modifyPowerFlowBusType(PowerflowBusType powerflowBusType) {
   }
 }
 
-// Method used by the SVC outer control loop to update the reactive injection
+// Called by the SVC outer control loop
 void SP::Ph1::SVC::updateReactivePowerInjection(Complex powerInj) {
   **mSetPointReactivePower = powerInj.imag();
   **mSetPointReactivePowerPerUnit =
