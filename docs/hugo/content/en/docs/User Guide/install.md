@@ -50,6 +50,28 @@ conda activate dpsim
 pip install dpsim
 ```
 
+## Installing from master
+
+A platform without a published wheel, or a fix that is on master but not yet released, can be
+installed straight from the repository:
+
+```shell
+pip install git+https://github.com/sogno-platform/dpsim
+```
+
+This compiles the C++ core rather than downloading a wheel, so it takes several minutes and needs
+the same toolchain a source build does: CMake, a C++17 compiler, and on Windows Visual Studio with
+the C++ desktop development workload. The
+[build page]({{< ref "/docs/Developer Guide/Architecture and Conventions/build.md" >}}) lists them
+per platform, and the CMake options described there are not reachable this way, so a build that
+needs VILLAS or a solver backend turned on has to be configured directly.
+
+Append `@` and a branch or tag to pin what gets built, for example
+`pip install git+https://github.com/sogno-platform/dpsim@v1.2.1`.
+
+To work on DPsim itself, build with CMake instead. An editable install is not a substitute: it links
+only the pure Python sources and leaves the compiled module behind.
+
 ## Docker
 
 You need [Docker](https://docs.docker.com/install/) installed first. The prepared image on
