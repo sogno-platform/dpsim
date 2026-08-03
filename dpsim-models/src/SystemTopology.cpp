@@ -246,6 +246,11 @@ void SystemTopology::reset() {
 void SystemTopology::removeComponent(const String &name) {
   for (auto it = mComponents.begin(); it != mComponents.end();) {
     if ((*it)->name() == name) {
+      // Drop the component from the per-node lists as well, otherwise
+      // the power flow solvers can still pick it up via mComponentsAtNode
+      for (auto &[topoNode, comps] : mComponentsAtNode) {
+        comps.erase(std::remove(comps.begin(), comps.end(), *it), comps.end());
+      }
       it = mComponents.erase(
           it); // safe: returns next valid iterator when erasing
     } else {
