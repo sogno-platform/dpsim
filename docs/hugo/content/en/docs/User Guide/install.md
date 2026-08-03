@@ -34,9 +34,9 @@ source venv/bin/activate
 pip install dpsim
 ```
 
-{{% alert title="Requires Linux for the published wheels" color="info" %}}
+{{% alert title="Published wheels cover Linux and Windows" color="info" %}}
 Two limitations are worth knowing before you start.
-Only Linux wheels are currently published, for CPython 3.9 through 3.13, so on Windows and macOS
+Wheels are published for Linux and Windows on x86-64, for CPython 3.9 through 3.13, so on macOS
 you have to build from source for now.
 The package also contains only the simulation core; the example notebooks additionally need
 plotting and data handling packages, which are listed in the import section of each notebook.
