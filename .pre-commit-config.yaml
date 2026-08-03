@@ -56,3 +56,12 @@ repos:
         args: [-r, "~MD013,~MD033,~MD024,~MD002"]
         files: ^docs/hugo/content/.*\.md$
         types: [markdown]
+
+  - repo: local
+    hooks:
+      - id: clear-notebook-outputs
+        name: clear notebook outputs
+        language: python
+        additional_dependencies: ["nbconvert==7.17.1"]
+        entry: python -m nbconvert --ClearOutputPreprocessor.enabled=True --inplace
+        files: \.ipynb$

@@ -17,6 +17,27 @@ in touch through [GitHub Discussions](https://github.com/sogno-platform/dpsim/di
 These pages cover the process. For how the code is organised and the conventions it follows, see
 the [developer guide]({{< ref "/docs/Developer Guide" >}}).
 
+## Quick start
+
+1. Fork the repository and clone your fork.
+1. Run `pre-commit install` to activate the automated checks (formatting, notebook output stripping).
+1. Create a branch with a descriptive prefix (`feature/`, `fix/`, `docs/`).
+1. Commit with a sign-off, using the conventional commit style:
+
+    ```bash
+    git commit -s -m "fix: correct node voltage initialization in DiakopticsSolver"
+    ```
+
+1. Keep your branch up to date by rebasing; do not merge the target branch into your branch:
+
+    ```bash
+    git fetch upstream
+    git rebase upstream/master
+    git push --force-with-lease
+    ```
+
+1. Open a pull request from your fork against `sogno-platform/dpsim:master`.
+
 ## Pull Requests
 
 There are no strict formal requirements besides the following:
@@ -47,9 +68,31 @@ There are no strict formal requirements besides the following:
     Keep the SPDX tags on adjacent lines with no blank line between them, as the tooling
     reads them as a block.
 
+1. **Linear History (no merge commits)**
+
+    DPsim maintains a linear git history.
+    Never merge the target branch into your feature branch; rebase instead:
+
+    ```bash
+    git rebase upstream/master
+    git push --force-with-lease
+    ```
+
+1. **No Saved Notebook Outputs**
+
+    Jupyter notebooks must be committed without saved cell outputs (images, plots, printed text).
+    Saved outputs bloat diffs and can break the notebook test collector, which re-executes notebooks and re-extracts their outputs.
+    Strip outputs before committing:
+
+    ```bash
+    jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace <notebook.ipynb>
+    ```
+
+    A `pre-commit` hook does this automatically once you have run `pre-commit install`; CI also rejects a pull request that changes a notebook still carrying saved outputs.
+
 ## Creating New Releases (info for maintainers)
 
-DPsim currently uses to [Semantic Versioning](https://semver.org/). The periodic creation of
+DPsim currently uses [Semantic Versioning](https://semver.org/). The periodic creation of
 new versions can help to mark significant changes and to analyze new portions of code using tools like SonarCloud.
 
 A new version of DPsim has to be indicated as follows:
