@@ -80,17 +80,14 @@ void SP::Ph1::SVC::calculatePerUnitParameters(Real baseApparentPower,
 
 void SP::Ph1::SVC::modifyPowerFlowBusType(PowerflowBusType powerflowBusType) {
   switch (powerflowBusType) {
-  case CPS::PowerflowBusType::PV:
-    mPowerflowBusType = powerflowBusType;
-    break;
   case CPS::PowerflowBusType::PQ:
-    mPowerflowBusType = powerflowBusType;
-    break;
-  case CPS::PowerflowBusType::VD:
     mPowerflowBusType = powerflowBusType;
     break;
   case CPS::PowerflowBusType::None:
     break;
+  case CPS::PowerflowBusType::PV:
+  case CPS::PowerflowBusType::VD:
+    throw std::invalid_argument("SVC: only PQ is a valid power flow bus type.");
   default:
     throw std::invalid_argument(" Invalid power flow bus type ");
     break;
@@ -99,6 +96,11 @@ void SP::Ph1::SVC::modifyPowerFlowBusType(PowerflowBusType powerflowBusType) {
 
 // Called by the SVC outer control loop
 void SP::Ph1::SVC::updateReactivePowerInjection(Complex powerInj) {
+  if (mBaseApparentPower <= 0)
+    throw std::invalid_argument(
+        "SVC: base apparent power must be positive (call "
+        "calculatePerUnitParameters() before updating the injection).");
+
   **mSetPointReactivePower = powerInj.imag();
   **mSetPointReactivePowerPerUnit =
       **mSetPointReactivePower / mBaseApparentPower;

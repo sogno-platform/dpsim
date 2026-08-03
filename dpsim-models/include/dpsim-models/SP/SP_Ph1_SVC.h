@@ -45,7 +45,7 @@ public:
   /// Defines name and logging level
   SVC(String name, Logger::Level logLevel = Logger::Level::off)
       : SVC(name, name, logLevel) {}
-  /// Set SVC specific parameters
+  /// Set SVC specific parameters; the rated values are logged only
   void setParameters(Real ratedApparentPower, Real ratedVoltage,
                      Real setPointVoltage,
                      Real qLimMax = std::numeric_limits<Real>::infinity(),
@@ -57,7 +57,7 @@ public:
   void setBaseVoltage(Real baseVoltage);
   /// Initializes component from power flow data
   void calculatePerUnitParameters(Real baseApparentPower, Real baseOmega);
-  /// Modify powerflow bus type
+  /// Modify powerflow bus type; only PQ is valid for an SVC
   void modifyPowerFlowBusType(PowerflowBusType powerflowBusType) override;
   /// Update reactive power injection (driven by the SVC outer control loop)
   void updateReactivePowerInjection(Complex powerInj);
