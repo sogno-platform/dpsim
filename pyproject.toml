@@ -69,9 +69,12 @@ test-command = "python -c \"import dpsimpy; import dpsim\""
 [tool.cibuildwheel.linux]
 build = "cp3{9,10,11,12,13}-manylinux_x86_64"
 manylinux-x86_64-image = "sogno/dpsim:manylinux"
+test-command = "python -c \"import dpsimpy; import dpsimpyvillas; import dpsim\""
 
 [tool.cibuildwheel.windows]
 build = "cp3{9,10,11,12,13}-win_amd64"
+before-build = "pip install delvewheel"
+repair-wheel-command = "delvewheel repair -w {dest_dir} {wheel}"
 
 [tool.pytest.ini_options]
 filterwarnings = ["ignore::DeprecationWarning"]
