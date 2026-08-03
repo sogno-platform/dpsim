@@ -24,6 +24,19 @@ PYBIND11_DECLARE_HOLDER_TYPE(T, CPS::AttributePointer<T>);
 namespace py = pybind11;
 using namespace pybind11::literals;
 
+/// Dispatches a single argument of the deprecated SystemTopology.add
+/// alias to add_node or add_component depending on its type
+static void systemTopologyAddSingle(DPsim::SystemTopology &sys,
+                                    const py::handle &item) {
+  if (py::isinstance<CPS::TopologicalNode>(item))
+    sys.addNode(item.cast<CPS::TopologicalNode::Ptr>());
+  else if (py::isinstance<CPS::IdentifiedObject>(item))
+    sys.addComponent(item.cast<CPS::IdentifiedObject::Ptr>());
+  else
+    throw py::type_error("SystemTopology.add expects a node, a component, "
+                         "or a list of nodes and components");
+}
+
 PYBIND11_MODULE(dpsimpy, m) {
   m.doc() = R"pbdoc(
   DPsim Python bindings
@@ -311,6 +324,27 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("add_component", &DPsim::SystemTopology::addComponent)
       .def("add_component", &DPsim::SystemTopology::addComponents)
       .def("add_node", &DPsim::SystemTopology::addNode)
+      // Deprecated alias for add_component/add_node, kept so that scripts
+      // written before the rename keep working
+      .def(
+          "add",
+          [](DPsim::SystemTopology &sys, const py::object &obj) {
+            if (PyErr_WarnEx(PyExc_DeprecationWarning,
+                             "SystemTopology.add is deprecated; use "
+                             "add_component for components and add_node "
+                             "for nodes instead.",
+                             1) == -1)
+              throw py::error_already_set();
+
+            if (py::isinstance<py::list>(obj) ||
+                py::isinstance<py::tuple>(obj)) {
+              for (const py::handle &item : obj)
+                systemTopologyAddSingle(sys, item);
+            } else {
+              systemTopologyAddSingle(sys, obj);
+            }
+          },
+          "Deprecated alias for add_component and add_node.")
       .def("node", py::overload_cast<std::string_view>(
                        &DPsim::SystemTopology::node<CPS::TopologicalNode>))
       .def("node", py::overload_cast<CPS::UInt>(
@@ -338,7 +372,6 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("list_idobjects", &DPsim::SystemTopology::listIdObjects)
       .def("init_with_powerflow", &DPsim::SystemTopology::initWithPowerflow,
            "systemPF"_a, "domain"_a)
-      .def("add_component", &DPsim::SystemTopology::addComponent)
       .def("add_components", &DPsim::SystemTopology::addComponents)
       .def("remove_component", &DPsim::SystemTopology::removeComponent);
 
