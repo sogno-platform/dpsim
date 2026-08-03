@@ -11,7 +11,8 @@
 #include <dpsim/StateSpaceModalAnalysis.h>
 #include <dpsim/Utils.h>
 
-#ifndef _MSC_VER
+// The real-time classes are only compiled with WITH_RT, which is Linux-only
+#ifdef WITH_RT
 #include <dpsim/RealTimeDataLogger.h>
 #include <dpsim/RealTimeSimulation.h>
 #endif
