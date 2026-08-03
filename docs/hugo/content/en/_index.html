@@ -14,8 +14,29 @@ linkTitle = "DPsim"
 </div>
 {{< /blocks/cover >}}
 
-{{< blocks/section color="dark">}}
-<div>
-	Photo by <a href="https://unsplash.com/@nasa?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">NASA</a> on <a href="https://unsplash.com/s/photos/nasa?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+{{< blocks/section color="white" type="row" >}}
+
+{{% blocks/feature icon="fa-bolt" title="EMT and dynamic phasor" %}}
+Simulate in the electromagnetic transient domain, in the dynamic phasor domain, or in
+static phasors, with a powerflow solver for standalone use or to initialise a dynamic run.
+{{% /blocks/feature %}}
+
+{{% blocks/feature icon="fa-clock" title="Real-time capable" %}}
+A C++ simulation kernel built for deterministic execution, with time steps down to the
+microsecond range and interfaces for co-simulation and hardware in the loop.
+{{% /blocks/feature %}}
+
+{{% blocks/feature icon="fab fa-python" title="Scriptable from Python" %}}
+The kernel is exposed as a Python module, so a whole study from model to plot fits in a
+single script or notebook.
+{{% /blocks/feature %}}
+
+{{< /blocks/section >}}
+
+{{< blocks/section color="dark" >}}
+<div class="mx-auto text-center">
+	<small>
+		Cover photo by <a href="https://unsplash.com/@nasa">NASA</a> on <a href="https://unsplash.com/s/photos/nasa">Unsplash</a>
+	</small>
 </div>
 {{< /blocks/section >}}

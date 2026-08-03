@@ -1,0 +1,35 @@
+# SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+# SPDX-License-Identifier: MPL-2.0
+
+cff-version: 1.2.0
+title: DPsim
+message: If you use this software, please cite both the software itself and the software paper.
+type: software
+authors:
+  - name: The DPsim Authors
+repository-code: https://github.com/sogno-platform/dpsim
+url: https://sogno.energy/dpsim/
+abstract: >-
+  DPsim is a solver library for dynamic power system simulation. It supports the
+  electromagnetic transient and dynamic phasor domains as well as continuous
+  power flow, and is capable of real-time execution.
+license: MPL-2.0
+version: 1.2.1
+preferred-citation:
+  type: article
+  title: "DPsim: A dynamic phasor real-time simulator for power systems"
+  authors:
+    - given-names: Markus
+      family-names: Mirz
+    - given-names: Steffen
+      family-names: Vogel
+    - given-names: Georg
+      family-names: Reinke
+    - given-names: Antonello
+      family-names: Monti
+  journal: SoftwareX
+  volume: 10
+  start: 100253
+  year: 2019
+  issn: 2352-7110
+  doi: 10.1016/j.softx.2019.100253

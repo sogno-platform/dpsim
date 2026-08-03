@@ -1,53 +1,16 @@
 Reference
 =========
 
+The Python API is generated from the ``dpsimpy`` extension module. It is organised by
+simulation domain: dynamic phasor (``dp``), electromagnetic transient (``emt``) and static
+phasor (``sp``), each split into single phase (``ph1``) and three phase (``ph3``) models.
+
 .. toctree::
+   :maxdepth: 2
 
-.. automodule:: dpsimpy
-    :members:
-    :undoc-members:
-
-Dynamic Phasor / SFA Models
----------------------------
-
-.. automodule:: dpsimpy.dp
-    :members:
-    :undoc-members:
-
-.. automodule:: dpsimpy.dp.ph1
-    :members:
-    :undoc-members:
-
-.. automodule:: dpsimpy.dp.ph1
-    :members:
-    :undoc-members:
-
-Electromagnetic Transient Models
---------------------------------
-
-.. automodule:: dpsimpy.emt
-    :members:
-    :undoc-members:
-
-.. automodule:: dpsimpy.emt.ph1
-    :members:
-    :undoc-members:
-
-.. automodule:: dpsimpy.emt.ph1
-    :members:
-    :undoc-members:
-
-(Quasi) Static / RMS Models
----------------------------
-
-.. automodule:: dpsimpy.sp
-    :members:
-    :undoc-members:
-
-.. automodule:: dpsimpy.sp.ph1
-    :members:
-    :undoc-members:
-
-.. automodule:: dpsimpy.sp.ph1
-    :members:
-    :undoc-members:
+   reference/core
+   reference/dp
+   reference/emt
+   reference/sp
+   reference/signal
+   reference/cosimulation

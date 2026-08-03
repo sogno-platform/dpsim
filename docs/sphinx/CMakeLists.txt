@@ -13,6 +13,12 @@ if(WITH_PYBIND)
 
 		set(SPHINX_TITLE "${PROJECT_NAME} docs")
 
+		# autodoc imports the extension modules, so every documented one must be built first
+		set(SPHINX_MODULE_TARGETS dpsimpy)
+		if(WITH_VILLAS)
+			list(APPEND SPHINX_MODULE_TARGETS dpsimpyvillas)
+		endif()
+
 		configure_file(
 			"${CMAKE_CURRENT_SOURCE_DIR}/conf.py.in"
 			"${BINARY_BUILD_DIR}/conf.py"
@@ -31,7 +37,7 @@ if(WITH_PYBIND)
 					"${SPHINX_HTML_DIR}"
 			COMMENT "Building HTML documentation with Sphinx"
 			DEPENDS
-				dpsimpy
+				${SPHINX_MODULE_TARGETS}
 		)
 
 		install(DIRECTORY ${SPHINX_HTML_DIR}

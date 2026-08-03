@@ -97,3 +97,8 @@ venv/
 .venv/
 env/
 .env/
+
+# Locally generated API reference previews; produced by `make docs` / `make docs_cxx`.
+docs/hugo/static/sphinx/
+docs/hugo/static/doxygen/
+docs/hugo/static/xml/

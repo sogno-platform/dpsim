@@ -1,6 +1,5 @@
-{{ if not (.Page.Scratch.Get "hasMermaid") }}
-  {{ .Page.Scratch.Set "hasMermaid" true }}
-{{ end }}
+{{/* Key and store must match what the theme checks, or the library is never loaded. */}}
+{{ .Page.Store.Set "hasmermaid" true -}}
 <div class="mermaid">
   {{- .Inner | safeHTML }}
 </div>
