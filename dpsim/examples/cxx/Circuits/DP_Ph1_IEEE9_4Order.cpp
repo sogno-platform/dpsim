@@ -488,12 +488,18 @@ int main(int argc, char *argv[]) {
   bool log = args.options.find("log") != args.options.end() &&
              args.getOptionBool("log");
 
-  std::filesystem::path logFilename = "./logs/" + args.name + ".csv";
   std::shared_ptr<DataLoggerInterface> logger = nullptr;
 
   if (log) {
+#ifdef WITH_RT
+    std::filesystem::path logFilename = "./logs/" + args.name + ".csv";
     logger =
         RealTimeDataLogger::make(logFilename, args.duration, args.timeStep);
+#else
+    // RealTimeDataLogger is only built with WITH_RT, which is Linux-only
+    CPS::Logger::get(args.name)->warn(
+        "Built without WITH_RT, ignoring the log option");
+#endif
   }
 
   auto sys = buildTopology(args, logger);
@@ -502,7 +508,7 @@ int main(int argc, char *argv[]) {
   sim.setSystem(sys);
   sim.setDomain(Domain::DP);
   sim.doSystemMatrixRecomputation(true);
-  if (log) {
+  if (logger) {
     sim.addLogger(logger);
   }
   sim.run();
