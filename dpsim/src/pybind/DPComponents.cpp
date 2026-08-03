@@ -83,6 +83,8 @@ void addDPPh1Components(py::module_ mDPPh1) {
                &CPS::DP::Ph1::VoltageSourceNorton::setParameters),
            py::arg("voltageRef"), py::arg("srcFreq") = -1,
            py::arg("resistance") = 1e9)
+      .def("set_voltage_ref", &CPS::DP::Ph1::VoltageSourceNorton::setVoltageRef,
+           "voltage"_a)
       .def("connect", &CPS::DP::Ph1::VoltageSourceNorton::connect, "nodes"_a);
 
   py::class_<CPS::DP::Ph1::CurrentSource,
@@ -386,6 +388,10 @@ void addDPPh1Components(py::module_ mDPPh1) {
            &CPS::DP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU,
            "nom_power"_a, "nom_volt"_a, "nom_freq"_a, "Xpd"_a, "inertia"_a,
            "Rs"_a = 0, "D"_a = 0)
+      .def("set_standard_parameters_SI",
+           &CPS::DP::Ph1::SynchronGeneratorTrStab::setStandardParametersSI,
+           "nom_power"_a, "nom_volt"_a, "nom_freq"_a, "pole_pair_number"_a,
+           "Rs"_a, "Lpd"_a, "inertia_J"_a, "Kd"_a = 0)
       .def("set_fundamental_parameters_PU",
            &CPS::DP::Ph1::SynchronGeneratorTrStab::setFundamentalParametersPU,
            "nom_power"_a, "nom_volt"_a, "nom_freq"_a, "Ll"_a, "Lmd"_a, "Llfd"_a,

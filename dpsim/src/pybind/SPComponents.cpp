@@ -266,6 +266,14 @@ void addSPPh1Components(py::module_ mSPPh1) {
            &CPS::SP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU,
            "nom_power"_a, "nom_volt"_a, "nom_freq"_a, "Xpd"_a, "inertia"_a,
            "Rs"_a = 0, "D"_a = 0)
+      .def("set_standard_parameters_SI",
+           &CPS::SP::Ph1::SynchronGeneratorTrStab::setStandardParametersSI,
+           "nom_power"_a, "nom_volt"_a, "nom_freq"_a, "pole_pair_number"_a,
+           "Rs"_a, "Lpd"_a, "inertia_J"_a, "Kd"_a = 0)
+      .def("set_fundamental_parameters_PU",
+           &CPS::SP::Ph1::SynchronGeneratorTrStab::setFundamentalParametersPU,
+           "nom_power"_a, "nom_volt"_a, "nom_freq"_a, "Ll"_a, "Lmd"_a, "Llfd"_a,
+           "inertia"_a, "D"_a = 0)
       .def("set_initial_values",
            &CPS::SP::Ph1::SynchronGeneratorTrStab::setInitialValues,
            "elec_power"_a, "mech_power"_a)
