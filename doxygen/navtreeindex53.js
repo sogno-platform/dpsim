@@ -115,6 +115,7 @@ var NAVTREEINDEX53 =
 "magma_8c_source.html":[3,0,1,1,1,1,0],
 "main_8cpp.html":[3,0,1,1,0,4],
 "main_8cpp.html#a00fd27ca3076a57beeb429df982a8d38":[3,0,1,1,0,4,0],
+"main_8cpp.html#a838a24f942e675cb01c53e49c584950e":[3,0,1,1,0,4,2],
 "main_8cpp.html#ac864a7f1a5caea8086f72bdab186c982":[3,0,1,1,0,4,1],
 "main_8cpp_source.html":[3,0,1,1,0,4],
 "namespace_c_p_s.html":[1,0,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX53 =
 "namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e":[1,0,1,66],
 "namespace_d_psim.html#a940a5e935cacdc8429c211f3085bcd3b":[1,0,1,84],
 "namespace_d_psim.html#a9601f77c71a01b0254690136f56690ff":[1,0,1,76],
-"namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d":[1,0,1,60],
-"namespace_d_psim.html#ab6afa34bab94cdc2ff33e09d4a1d2c9c":[1,0,1,71]
+"namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d":[1,0,1,60]
 };

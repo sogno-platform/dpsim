@@ -122,6 +122,8 @@ Include dependency graph for main.cpp:</div>
 Functions</h2></td></tr>
 <tr class="memitem:a00fd27ca3076a57beeb429df982a8d38" id="r_a00fd27ca3076a57beeb429df982a8d38"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a00fd27ca3076a57beeb429df982a8d38">PYBIND11_DECLARE_HOLDER_TYPE</a> (T, <a class="el" href="class_c_p_s_1_1_attribute_pointer.html">CPS::AttributePointer</a>&lt; T &gt;)</td></tr>
 <tr class="separator:a00fd27ca3076a57beeb429df982a8d38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a838a24f942e675cb01c53e49c584950e" id="r_a838a24f942e675cb01c53e49c584950e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a838a24f942e675cb01c53e49c584950e">systemTopologyAddSingle</a> (<a class="el" href="namespace_d_psim.html#a9601f77c71a01b0254690136f56690ff">DPsim::SystemTopology</a> &amp;sys, const py::handle &amp;item)</td></tr>
+<tr class="separator:a838a24f942e675cb01c53e49c584950e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac864a7f1a5caea8086f72bdab186c982" id="r_ac864a7f1a5caea8086f72bdab186c982"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac864a7f1a5caea8086f72bdab186c982">PYBIND11_MODULE</a> (dpsimpy, m)</td></tr>
 <tr class="separator:ac864a7f1a5caea8086f72bdab186c982"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -172,7 +174,39 @@ Functions</h2></td></tr>
 <p>Compatibility method. Might be removed later when the python examples have been fully adapted.;</p>
 <p>CHECK: It would be nicer if all the attributes of an IdObject were bound as properties so they show up in the documentation and auto-completion. I don't know if this is possible to do because it depends on if the attribute map is filled before or after the code in this file is run. Manually adding the attributes would of course be possible but very tedious to do for all existing components / attributes</p>
 
-<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00027">27</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00040">40</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a838a24f942e675cb01c53e49c584950e" name="a838a24f942e675cb01c53e49c584950e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a838a24f942e675cb01c53e49c584950e">&#9670;&#160;</a></span>systemTopologyAddSingle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void systemTopologyAddSingle </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a9601f77c71a01b0254690136f56690ff">DPsim::SystemTopology</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>sys</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const py::handle &amp;</td>          <td class="paramname"><span class="paramname"><em>item</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Dispatches a single argument of the deprecated SystemTopology.add alias to add_node or add_component depending on its type </p>
+
+<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00029">29</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
 
 </div>
 </div>
