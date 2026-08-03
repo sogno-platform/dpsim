@@ -231,6 +231,36 @@ def test_synchron_generator_ideal_constructs():
     dpsimpy.emt.ph3.SynchronGeneratorIdeal("sg_emt")
 
 
+@pytest.mark.parametrize("domain", ["sp", "dp", "emt"])
+def test_synchron_generator_tr_stab_parameter_entry_points_match_across_domains(
+    domain,
+):
+    mod = dpsimpy.emt.ph3 if domain == "emt" else getattr(dpsimpy, domain).ph1
+
+    pu = mod.SynchronGeneratorTrStab(f"{domain}_sg_pu")
+    pu.set_standard_parameters_PU(555e6, 24e3, 60, 0.3, 3.7)
+    pu.set_initial_values(complex(300e6, 0), 300e6)
+
+    si = mod.SynchronGeneratorTrStab(f"{domain}_sg_si")
+    si.set_standard_parameters_SI(555e6, 24e3, 60, 2, 0.003, 0.0002, 2.8e4)
+
+    fundamental = mod.SynchronGeneratorTrStab(f"{domain}_sg_fund")
+    fundamental.set_fundamental_parameters_PU(555e6, 24e3, 60, 0.15, 1.66, 0.16, 3.7)
+
+
+def test_dp_ph1_voltage_source_norton_runs():
+    gnd = dpsimpy.dp.SimNode.gnd
+    n1 = dpsimpy.dp.SimNode("n1")
+    src = dpsimpy.dp.ph1.VoltageSourceNorton("vsn")
+    src.set_parameters(complex(100, 0), 50.0, 1.0)
+    src.set_voltage_ref(complex(110, 0))
+    load = dpsimpy.dp.ph1.Resistor("r")
+    load.set_parameters(10.0)
+    src.connect([gnd, n1])
+    load.connect([n1, gnd])
+    _run("dp_ph1_vsn", dpsimpy.Domain.DP, [n1], [src, load])
+
+
 def test_emt_ph3_synchron_generator_tr_stab_parameter_entry_points():
     pu = dpsimpy.emt.ph3.SynchronGeneratorTrStab("sg_pu")
     pu.set_standard_parameters_PU(555e6, 24e3, 60, 0.3, 3.7)
