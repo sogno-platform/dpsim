@@ -296,11 +296,18 @@ void SystemTopology::removeComponentsConnectedTo(
                   comps.end());
     }
   }
+
+  for (const auto &removed : removedComponents) {
+    mTearComponents.erase(
+        std::remove(mTearComponents.begin(), mTearComponents.end(), removed),
+        mTearComponents.end());
+  }
 }
 
 void SystemTopology::removeNode(const String &name) {
   for (auto it = mNodes.begin(); it != mNodes.end();) {
-    if ((*it)->name() == name) {
+    // The ground node is the network reference and must never be removed
+    if ((*it)->name() == name && !(*it)->isGround()) {
       removeComponentsConnectedTo(*it);
       mComponentsAtNode.erase(*it);
       it = mNodes.erase(it);
