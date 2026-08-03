@@ -12,15 +12,7 @@ namespace CPS {
 namespace SP {
 namespace Ph1 {
 
-/// \brief Static VAR compensator (SVC) power-flow model.
-///
-/// Voltage-controlling shunt reactive device. Modelled as a PQ bus whose
-/// reactive injection Q_set is driven by the solver's SVC outer control loop
-/// until the bus voltage reaches V_set (clamped to [Q_min, Q_max]). This
-/// sidesteps the ill-conditioned derived-Q of the ordinary PV-bus formulation
-/// at electrically stiff, near-zero-P buses. No active power (always 0) and no
-/// admittance stamp: it participates purely through bus classification + the
-/// reactive setpoint the outer loop maintains.
+/// Static VAR compensator for power flow: PQ bus, no active power, no admittance stamp
 class SVC : public SimPowerComp<Complex>,
             public SharedFactory<SVC>,
             public PFSolverInterfaceBus {
@@ -53,14 +45,13 @@ public:
   /// Defines name and logging level
   SVC(String name, Logger::Level logLevel = Logger::Level::off)
       : SVC(name, name, logLevel) {}
-  /// Setter for SVC parameters. setPointVoltage is the controlled voltage [V];
-  /// qLimMax/qLimMin are the reactive-power band [VAr] the outer control loop
-  /// respects. The device holds no active power (always 0).
+  /// Set SVC specific parameters
   void setParameters(Real ratedApparentPower, Real ratedVoltage,
                      Real setPointVoltage,
                      Real qLimMax = std::numeric_limits<Real>::infinity(),
                      Real qLimMin = -std::numeric_limits<Real>::infinity());
   // #### Powerflow section ####
+  /// Get base voltage
   Real getBaseVoltage() const;
   /// Set base voltage
   void setBaseVoltage(Real baseVoltage);
