@@ -197,13 +197,34 @@ void SimPowerComp<VarType>::setTerminalAt(
 
 template <typename VarType>
 void SimPowerComp<VarType>::updateMatrixNodeIndices() {
-  for (UInt nodeIdx = 0; nodeIdx < mNumTerminals; nodeIdx++) {
-    mMatrixNodeIndices[3 * nodeIdx] =
-        node(nodeIdx)->matrixNodeIndex(PhaseType::A);
-    mMatrixNodeIndices[3 * nodeIdx + 1] =
-        node(nodeIdx)->matrixNodeIndex(PhaseType::B);
-    mMatrixNodeIndices[3 * nodeIdx + 2] =
-        node(nodeIdx)->matrixNodeIndex(PhaseType::C);
+  for (UInt nodeIdx = 0; nodeIdx < mNumTerminals; ++nodeIdx) {
+    const auto indices = node(nodeIdx)->matrixNodeIndices();
+
+    if (indices.empty()) {
+      throw SystemError("Node has no assigned MNA matrix index for component " +
+                        **mUID);
+    }
+
+    if (node(nodeIdx)->phaseType() == PhaseType::ABC) {
+      if (indices.size() != 3) {
+        throw SystemError("ABC node does not provide three MNA matrix indices "
+                          "for component " +
+                          **mUID);
+      }
+
+      mMatrixNodeIndices[3 * nodeIdx] = indices[0];
+      mMatrixNodeIndices[3 * nodeIdx + 1] = indices[1];
+      mMatrixNodeIndices[3 * nodeIdx + 2] = indices[2];
+    } else {
+      // Single-phase, individual-phase and DC nodes are scalar.
+      //
+      // Do not ask the node for PhaseType::A/B/C or PhaseType::DC here.
+      // The solver has already assigned the correct scalar index.
+      mMatrixNodeIndices[3 * nodeIdx] = indices[0];
+      mMatrixNodeIndices[3 * nodeIdx + 1] = 0;
+      mMatrixNodeIndices[3 * nodeIdx + 2] = 0;
+    }
+
     mMatrixNodeIndexIsGround[nodeIdx] = node(nodeIdx)->isGround();
   }
 }

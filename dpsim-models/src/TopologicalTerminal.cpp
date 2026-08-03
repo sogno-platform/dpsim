@@ -56,7 +56,8 @@ Complex TopologicalTerminal::singlePower() {
 }
 
 MatrixComp TopologicalTerminal::initialVoltage() {
-  if (mPhaseType == PhaseType::Single || mPhaseType == PhaseType::A)
+  if (mPhaseType == PhaseType::Single || mPhaseType == PhaseType::DC ||
+      mPhaseType == PhaseType::A)
     return topologicalNodes()->initialVoltage().block(0, 0, 1, 1);
   else if (mPhaseType == PhaseType::B)
     return topologicalNodes()->initialVoltage().block(1, 0, 1, 1);

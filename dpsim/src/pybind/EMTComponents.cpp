@@ -8,6 +8,12 @@
 
 #include <DPsim.h>
 #include <dpsim-models/CSVReader.h>
+#include <dpsim-models/EMT/EMT_DC_Capacitor.h>
+#include <dpsim-models/EMT/EMT_DC_CurrentSource.h>
+#include <dpsim-models/EMT/EMT_DC_Inductor.h>
+#include <dpsim-models/EMT/EMT_DC_PiLine.h>
+#include <dpsim-models/EMT/EMT_DC_Resistor.h>
+#include <dpsim-models/EMT/EMT_DC_VoltageSource.h>
 #include <dpsim-models/IdentifiedObject.h>
 #include <dpsim/RealTimeSimulation.h>
 #include <dpsim/Simulation.h>
@@ -21,6 +27,91 @@ using json = nlohmann::json;
 
 namespace py = pybind11;
 using namespace pybind11::literals;
+
+namespace {
+
+void addEMTDCComponents(py::module_ mEMTDC) {
+  py::class_<CPS::EMT::DC::VoltageSource,
+             std::shared_ptr<CPS::EMT::DC::VoltageSource>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTDC, "VoltageSource",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::EMT::DC::VoltageSource::setParameters,
+           "voltage"_a)
+      .def("connect", &CPS::EMT::DC::VoltageSource::connect)
+      .def_property_readonly("V_ref",
+                             createAttributeGetter<CPS::Real>("V_ref"));
+
+  py::class_<CPS::EMT::DC::CurrentSource,
+             std::shared_ptr<CPS::EMT::DC::CurrentSource>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTDC, "CurrentSource",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::EMT::DC::CurrentSource::setParameters,
+           "current"_a)
+      .def("connect", &CPS::EMT::DC::CurrentSource::connect)
+      .def_property_readonly("I_ref",
+                             createAttributeGetter<CPS::Real>("I_ref"));
+
+  py::class_<CPS::EMT::DC::Resistor, std::shared_ptr<CPS::EMT::DC::Resistor>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTDC, "Resistor",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::EMT::DC::Resistor::setParameters,
+           "resistance"_a)
+      .def("connect", &CPS::EMT::DC::Resistor::connect)
+      .def_property_readonly("R", createAttributeGetter<CPS::Real>("R"));
+
+  py::class_<CPS::EMT::DC::Capacitor, std::shared_ptr<CPS::EMT::DC::Capacitor>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTDC, "Capacitor",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::EMT::DC::Capacitor::setParameters,
+           "capacitance"_a)
+      .def("connect", &CPS::EMT::DC::Capacitor::connect)
+      .def_property_readonly("C", createAttributeGetter<CPS::Real>("C"))
+      .def_property_readonly("x", createAttributeGetter<CPS::Matrix>("x"));
+
+  py::class_<CPS::EMT::DC::Inductor, std::shared_ptr<CPS::EMT::DC::Inductor>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTDC, "Inductor",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::EMT::DC::Inductor::setParameters,
+           "inductance"_a, "initial_current"_a = 0.0)
+      .def("connect", &CPS::EMT::DC::Inductor::connect)
+      .def_property_readonly("L", createAttributeGetter<CPS::Real>("L"))
+      .def_property_readonly("initial_current",
+                             createAttributeGetter<CPS::Real>("i_init"))
+      .def_property_readonly("x", createAttributeGetter<CPS::Matrix>("x"));
+
+  py::class_<CPS::EMT::DC::PiLine, std::shared_ptr<CPS::EMT::DC::PiLine>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTDC, "PiLine",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::EMT::DC::PiLine::setParameters,
+           "series_resistance"_a, "series_inductance"_a,
+           "parallel_capacitance"_a = 0.0, "parallel_conductance"_a = 0.0,
+           "initial_current"_a = 0.0)
+      .def("connect", &CPS::EMT::DC::PiLine::connect)
+      .def_property_readonly("series_resistance",
+                             createAttributeGetter<CPS::Real>("R_series"))
+      .def_property_readonly("series_inductance",
+                             createAttributeGetter<CPS::Real>("L_series"))
+      .def_property_readonly("parallel_capacitance",
+                             createAttributeGetter<CPS::Real>("C_parallel"))
+      .def_property_readonly("parallel_conductance",
+                             createAttributeGetter<CPS::Real>("G_parallel"))
+      .def_property_readonly("initial_current",
+                             createAttributeGetter<CPS::Real>("i_init"));
+}
+
+} // namespace
 
 void addEMTComponents(py::module_ mEMT) {
   py::class_<CPS::EMT::SimNode, std::shared_ptr<CPS::EMT::SimNode>,
@@ -39,6 +130,10 @@ void addEMTComponents(py::module_ mEMT) {
            py::overload_cast<CPS::Complex, int>(
                &CPS::EMT::SimNode::setInitialVoltage, py::const_))
       .def_readonly_static("gnd", &CPS::EMT::SimNode::GND);
+
+  py::module_ mEMTDC =
+      mEMT.def_submodule("dc", "scalar electromagnetic-transient DC models");
+  addEMTDCComponents(mEMTDC);
 
   py::module mEMTPh1 = mEMT.def_submodule(
       "ph1", "single phase electromagnetic-transient models");

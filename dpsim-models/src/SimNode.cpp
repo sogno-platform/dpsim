@@ -80,18 +80,32 @@ VarType SimNode<VarType>::singleVoltage(PhaseType phaseType) {
 
 template <typename VarType>
 UInt SimNode<VarType>::matrixNodeIndex(PhaseType phaseType) {
+  if (mPhaseType == PhaseType::DC) {
+    if (phaseType == PhaseType::DC || phaseType == PhaseType::Single ||
+        phaseType == PhaseType::A) {
+      return mMatrixNodeIndex[0];
+    }
+
+    return 0;
+  }
+
   if ((phaseType == PhaseType::A || phaseType == PhaseType::Single) &&
       (mPhaseType == PhaseType::Single || mPhaseType == PhaseType::A ||
-       mPhaseType == PhaseType::ABC))
+       mPhaseType == PhaseType::ABC)) {
     return mMatrixNodeIndex[0];
-  else if (phaseType == PhaseType::B &&
-           (mPhaseType == PhaseType::B || mPhaseType == PhaseType::ABC))
+  }
+
+  if (phaseType == PhaseType::B &&
+      (mPhaseType == PhaseType::B || mPhaseType == PhaseType::ABC)) {
     return mMatrixNodeIndex[1];
-  else if (phaseType == PhaseType::C &&
-           (mPhaseType == PhaseType::C || mPhaseType == PhaseType::ABC))
+  }
+
+  if (phaseType == PhaseType::C &&
+      (mPhaseType == PhaseType::C || mPhaseType == PhaseType::ABC)) {
     return mMatrixNodeIndex[2];
-  else
-    return 0;
+  }
+
+  return 0;
 }
 
 template <typename VarType>
