@@ -367,8 +367,12 @@ PYBIND11_MODULE(dpsimpy, m) {
 #endif
       .def_readwrite("nodes", &DPsim::SystemTopology::mNodes)
       .def_readwrite("components", &DPsim::SystemTopology::mComponents)
-      .def_readwrite("components_at_node",
-                     &DPsim::SystemTopology::mComponentsAtNode)
+      .def_property_readonly("components_at_node",
+                             [](DPsim::SystemTopology &sys) {
+                               // Derived view: rebuild before every read (see #635)
+                               sys.componentsAtNodeList();
+                               return sys.mComponentsAtNode;
+                             })
       .def_readonly("tear_components", &DPsim::SystemTopology::mTearComponents)
       .def("list_idobjects", &DPsim::SystemTopology::listIdObjects)
       .def("init_with_powerflow", &DPsim::SystemTopology::initWithPowerflow,
