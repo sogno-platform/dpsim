@@ -112,6 +112,9 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_SynGenTrStab_3Bus_SteadyState.cpp
 	Circuits/DP_SynGenTrStab_3Bus_Fault.cpp
 	Circuits/SP_SynGenTrStab_3Bus_Fault.cpp
+
+	# DC
+	Circuits/EMT_DC_PiLine_SourceStep.cpp
 )
 
 if(WITH_JSON)
@@ -192,6 +195,7 @@ list(APPEND TEST_SOURCES
 	Circuits/EMT_Ph1_General2TerminalSSN.cpp
 	Circuits/SP_ITM_withPiLine_Ph1.cpp
 	Circuits/SP_Ph1_General2TerminalSSN.cpp
+	Circuits/EMT_DC_PiLine_SourceStep.cpp
 )
 
 if(WITH_SUNDIALS)

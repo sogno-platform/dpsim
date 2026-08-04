@@ -112,6 +112,14 @@
 #include <dpsim-models/DP/DP_Ph3_SynchronGeneratorDQODE.h>
 #endif
 
+#include <dpsim-models/EMT/EMT_DC_Capacitor.h>
+#include <dpsim-models/EMT/EMT_DC_CurrentSource.h>
+#include <dpsim-models/EMT/EMT_DC_Inductor.h>
+#include <dpsim-models/EMT/EMT_DC_PiLine.h>
+#include <dpsim-models/EMT/EMT_DC_Resistor.h>
+#include <dpsim-models/EMT/EMT_DC_TwoTerminalITypeSSNComp.h>
+#include <dpsim-models/EMT/EMT_DC_TwoTerminalVTypeSSNComp.h>
+#include <dpsim-models/EMT/EMT_DC_VoltageSource.h>
 #include <dpsim-models/EMT/EMT_ITypeSSNComp.h>
 #include <dpsim-models/EMT/EMT_SSNComp.h>
 #include <dpsim-models/EMT/EMT_VTypeSSNComp.h>

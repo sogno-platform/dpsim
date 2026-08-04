@@ -525,8 +525,12 @@ template <typename VarType> void MnaSolver<VarType>::assignMatrixNodeIndices() {
   UInt matrixNodeIndexIdx = 0;
   for (UInt idx = 0; idx < mNodes.size(); ++idx) {
     mNodes[idx]->setMatrixNodeIndex(0, matrixNodeIndexIdx);
-    SPDLOG_LOGGER_INFO(mSLog, "Assigned index {} to phase A of node {}",
-                       matrixNodeIndexIdx, idx);
+    if (mNodes[idx]->phaseType() == CPS::PhaseType::DC)
+      SPDLOG_LOGGER_INFO(mSLog, "Assigned index {} to DC node {}",
+                         matrixNodeIndexIdx, idx);
+    else
+      SPDLOG_LOGGER_INFO(mSLog, "Assigned index {} to phase A of node {}",
+                         matrixNodeIndexIdx, idx);
     ++matrixNodeIndexIdx;
     if (mNodes[idx]->phaseType() == CPS::PhaseType::ABC) {
       mNodes[idx]->setMatrixNodeIndex(1, matrixNodeIndexIdx);

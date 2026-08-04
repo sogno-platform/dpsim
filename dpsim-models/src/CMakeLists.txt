@@ -94,6 +94,14 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_VTypeVariableSSNComp.cpp
 	EMT/EMT_ITypeSSNComp.cpp
 
+	EMT/EMT_DC_Resistor.cpp
+	EMT/EMT_DC_Capacitor.cpp
+	EMT/EMT_DC_Inductor.cpp
+	EMT/EMT_DC_PiLine.cpp
+	EMT/EMT_DC_CurrentSource.cpp
+	EMT/EMT_DC_VoltageSource.cpp
+	EMT/EMT_DC_TwoTerminalVTypeSSNComp.cpp
+	EMT/EMT_DC_TwoTerminalITypeSSNComp.cpp
 
 	EMT/EMT_Ph1_Capacitor.cpp
 	EMT/EMT_Ph1_CurrentSource.cpp

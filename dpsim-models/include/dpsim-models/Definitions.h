@@ -110,7 +110,7 @@ static const Complex jComp(0.0, 1.0);
 
 // ### Enumerations ###
 enum class NumericalMethod { Euler, Trapezoidal };
-enum class PhaseType { A, B, C, ABC, Single };
+enum class PhaseType { A, B, C, ABC, Single, DC };
 enum class Domain { SP, DP, EMT };
 enum class PowerflowBusType { PV, PQ, VD, None };
 enum class GeneratorType {
