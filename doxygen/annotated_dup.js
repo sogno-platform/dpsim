@@ -121,6 +121,16 @@ var annotated_dup =
         [ "VTypeSSNComp", "class_c_p_s_1_1_d_p_1_1_v_type_s_s_n_comp.html", "class_c_p_s_1_1_d_p_1_1_v_type_s_s_n_comp" ]
       ] ],
       [ "EMT", "namespace_c_p_s_1_1_e_m_t.html", [
+        [ "DC", "namespace_c_p_s_1_1_e_m_t_1_1_d_c.html", [
+          [ "Capacitor", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_capacitor.html", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_capacitor" ],
+          [ "CurrentSource", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_current_source.html", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_current_source" ],
+          [ "Inductor", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_inductor.html", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_inductor" ],
+          [ "PiLine", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_pi_line.html", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_pi_line" ],
+          [ "Resistor", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_resistor.html", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_resistor" ],
+          [ "TwoTerminalITypeSSNComp", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_two_terminal_i_type_s_s_n_comp.html", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_two_terminal_i_type_s_s_n_comp" ],
+          [ "TwoTerminalVTypeSSNComp", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_two_terminal_v_type_s_s_n_comp.html", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_two_terminal_v_type_s_s_n_comp" ],
+          [ "VoltageSource", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_voltage_source.html", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_voltage_source" ]
+        ] ],
         [ "Ph1", "namespace_c_p_s_1_1_e_m_t_1_1_ph1.html", [
           [ "SSN", "namespace_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n.html", [
             [ "Full_Serial_RLC", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_1_1_full___serial___r_l_c.html", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_1_1_full___serial___r_l_c" ]

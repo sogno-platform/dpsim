@@ -75,7 +75,8 @@ var dpsim_models_2include_2dpsim_models_2_definitions_8h =
       [ "CPS::PhaseType::B", "namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca9d5ed678fe57bcca610140957afab571", null ],
       [ "CPS::PhaseType::C", "namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca0d61f8370cad1d412f80b84d143e1257", null ],
       [ "CPS::PhaseType::ABC", "namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca902fbdd2b1df0c4f70b4a5d23525e932", null ],
-      [ "CPS::PhaseType::Single", "namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca66ba162102bbf6ae31b522aec561735e", null ]
+      [ "CPS::PhaseType::Single", "namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca66ba162102bbf6ae31b522aec561735e", null ],
+      [ "CPS::PhaseType::DC", "namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6cacf75e54791dd1f49f918345fdfe2430b", null ]
     ] ],
     [ "CPS::PowerflowBusType", "namespace_c_p_s.html#a04a0a86fce7b8a74447274655a5fcfab", [
       [ "CPS::PowerflowBusType::PV", "namespace_c_p_s.html#a04a0a86fce7b8a74447274655a5fcfabaa565153df227b0510b1c789d5cdc39ec", null ],

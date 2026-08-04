@@ -102,20 +102,20 @@ var sectionId = 'dynsection-0';
 </a>
 </g>
 </g>
-<!-- Node175 -->
-<g id="Node000175" class="node">
-<title>Node175</title>
-<g id="a_Node000175"><a xlink:href="class_c_p_s_1_1_sim_power_comp.html" target="_top" xlink:title="Base class for all components that are transmitting power.">
+<!-- Node183 -->
+<g id="Node000183" class="node">
+<title>Node183</title>
+<g id="a_Node000183"><a xlink:href="class_c_p_s_1_1_sim_power_comp.html" target="_top" xlink:title="Base class for all components that are transmitting power.">
 <polygon fill="white" stroke="#666666" points="455,-739.38 336.25,-739.38 336.25,-702.88 455,-702.88 455,-739.38"/>
 <text text-anchor="start" x="344.25" y="-725.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SimPowerComp&lt;</text>
 <text text-anchor="middle" x="395.62" y="-711.62" font-family="Helvetica,sans-Serif" font-size="10.00"> VarType &gt;</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node175 -->
-<g id="edge47_Node000001_Node000175" class="edge">
-<title>Node1&#45;&gt;Node175</title>
-<g id="a_edge47_Node000001_Node000175"><a xlink:title=" ">
+<!-- Node1&#45;&gt;Node183 -->
+<g id="edge47_Node000001_Node000183" class="edge">
+<title>Node1&#45;&gt;Node183</title>
+<g id="a_edge47_Node000001_Node000183"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M310.58,-721.12C319.16,-721.12 327.74,-721.12 335.96,-721.12"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="310.85,-717.63 300.85,-721.13 310.85,-724.63 310.85,-717.63"/>
 </a>
@@ -926,59 +926,59 @@ var sectionId = 'dynsection-0';
 </a>
 </g>
 </g>
-<!-- Node175&#45;&gt;Node3 -->
-<g id="edge51_Node000175_Node000003" class="edge">
-<title>Node175&#45;&gt;Node3</title>
-<g id="a_edge51_Node000175_Node000003"><a xlink:title=" ">
+<!-- Node183&#45;&gt;Node3 -->
+<g id="edge51_Node000183_Node000003" class="edge">
+<title>Node183&#45;&gt;Node3</title>
+<g id="a_edge51_Node000183_Node000003"><a xlink:title=" ">
 <path fill="none" stroke="orange" stroke-dasharray="5,2" d="M465.88,-741.78C487.32,-749.06 510.75,-757.94 531.5,-767.88 552.07,-777.73 573.85,-791.44 590.21,-802.48"/>
 <polygon fill="orange" stroke="orange" points="467.23,-738.54 456.64,-738.71 465.02,-745.19 467.23,-738.54"/>
 </a>
 </g>
 <text text-anchor="middle" x="502.25" y="-772.62" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &lt; Complex &gt;</text>
 </g>
-<!-- Node175&#45;&gt;Node109 -->
-<g id="edge52_Node000175_Node000109" class="edge">
-<title>Node175&#45;&gt;Node109</title>
-<g id="a_edge52_Node000175_Node000109"><a xlink:title=" ">
+<!-- Node183&#45;&gt;Node109 -->
+<g id="edge52_Node000183_Node000109" class="edge">
+<title>Node183&#45;&gt;Node109</title>
+<g id="a_edge52_Node000183_Node000109"><a xlink:title=" ">
 <path fill="none" stroke="orange" stroke-dasharray="5,2" d="M466.28,-701.48C495.68,-693.19 529.53,-683.65 557.65,-675.72"/>
 <polygon fill="orange" stroke="orange" points="465.39,-698.1 456.72,-704.18 467.29,-704.84 465.39,-698.1"/>
 </a>
 </g>
 <text text-anchor="middle" x="502.25" y="-704.05" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &lt; Real &gt;</text>
 </g>
-<!-- Node176 -->
-<g id="Node000176" class="node">
-<title>Node176</title>
-<g id="a_Node000176"><a xlink:href="class_c_p_s_1_1_m_n_a_sim_power_comp.html" target="_top" xlink:title="Base class for all MNA components that are transmitting power.">
+<!-- Node184 -->
+<g id="Node000184" class="node">
+<title>Node184</title>
+<g id="a_Node000184"><a xlink:href="class_c_p_s_1_1_m_n_a_sim_power_comp.html" target="_top" xlink:title="Base class for all MNA components that are transmitting power.">
 <polygon fill="#fff0f0" stroke="red" points="685.5,-736.38 549.5,-736.38 549.5,-699.88 685.5,-699.88 685.5,-736.38"/>
 <text text-anchor="start" x="557.5" y="-722.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::MNASimPowerComp</text>
 <text text-anchor="middle" x="617.5" y="-708.62" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; VarType &gt;</text>
 </a>
 </g>
 </g>
-<!-- Node175&#45;&gt;Node176 -->
-<g id="edge48_Node000175_Node000176" class="edge">
-<title>Node175&#45;&gt;Node176</title>
-<g id="a_edge48_Node000175_Node000176"><a xlink:title=" ">
+<!-- Node183&#45;&gt;Node184 -->
+<g id="edge48_Node000183_Node000184" class="edge">
+<title>Node183&#45;&gt;Node184</title>
+<g id="a_edge48_Node000183_Node000184"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M466.71,-720.17C493.07,-719.81 522.97,-719.4 549.08,-719.04"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="466.72,-716.67 456.77,-720.3 466.82,-723.67 466.72,-716.67"/>
 </a>
 </g>
 </g>
-<!-- Node176&#45;&gt;Node4 -->
-<g id="edge49_Node000176_Node000004" class="edge">
-<title>Node176&#45;&gt;Node4</title>
-<g id="a_edge49_Node000176_Node000004"><a xlink:title=" ">
+<!-- Node184&#45;&gt;Node4 -->
+<g id="edge49_Node000184_Node000004" class="edge">
+<title>Node184&#45;&gt;Node4</title>
+<g id="a_edge49_Node000184_Node000004"><a xlink:title=" ">
 <path fill="none" stroke="orange" stroke-dasharray="5,2" d="M697,-716.9C732.56,-716.35 774.16,-715.7 808.26,-715.17"/>
 <polygon fill="orange" stroke="orange" points="697.15,-713.4 687.2,-717.06 697.25,-720.4 697.15,-713.4"/>
 </a>
 </g>
 <text text-anchor="middle" x="732.75" y="-721.47" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &lt; Complex &gt;</text>
 </g>
-<!-- Node176&#45;&gt;Node110 -->
-<g id="edge50_Node000176_Node000110" class="edge">
-<title>Node176&#45;&gt;Node110</title>
-<g id="a_edge50_Node000176_Node000110"><a xlink:title=" ">
+<!-- Node184&#45;&gt;Node110 -->
+<g id="edge50_Node000184_Node000110" class="edge">
+<title>Node184&#45;&gt;Node110</title>
+<g id="a_edge50_Node000184_Node000110"><a xlink:title=" ">
 <path fill="none" stroke="orange" stroke-dasharray="5,2" d="M696.54,-699.3C732.2,-690.7 774.02,-680.61 808.26,-672.35"/>
 <polygon fill="orange" stroke="orange" points="696.06,-695.81 687.16,-701.56 697.7,-702.62 696.06,-695.81"/>
 </a>

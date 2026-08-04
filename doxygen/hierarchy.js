@@ -290,6 +290,7 @@ var hierarchy =
               [ "CPS::EMT::Ph3::SynchronGenerator4OrderPCM", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html", null ]
             ] ],
             [ "CPS::CompositePowerComp< Real >", "class_c_p_s_1_1_composite_power_comp.html", [
+              [ "CPS::EMT::DC::PiLine", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_pi_line.html", null ],
               [ "CPS::EMT::Ph1::PiLine", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_pi_line.html", null ],
               [ "CPS::EMT::Ph1::VoltageSourceRamp", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_ramp.html", null ],
               [ "CPS::EMT::Ph3::AvVoltageSourceInverterDQ", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q.html", null ],
@@ -303,6 +304,8 @@ var hierarchy =
               [ "CPS::EMT::Ph3::Transformer", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html", null ],
               [ "CPS::EMT::Ph3::VSIVoltageControlVCO", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_v_s_i_voltage_control_v_c_o.html", null ]
             ] ],
+            [ "CPS::EMT::DC::CurrentSource", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_current_source.html", null ],
+            [ "CPS::EMT::DC::VoltageSource", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_voltage_source.html", null ],
             [ "CPS::EMT::Ph1::Capacitor", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_capacitor.html", null ],
             [ "CPS::EMT::Ph1::CurrentSource", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_current_source.html", null ],
             [ "CPS::EMT::Ph1::Inductor", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_inductor.html", null ],
@@ -331,12 +334,19 @@ var hierarchy =
             [ "CPS::EMT::Ph3::VoltageSourceNorton", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source_norton.html", null ],
             [ "CPS::EMT::SSNComp", "class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html", [
               [ "CPS::EMT::ITypeSSNComp", "class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html", [
+                [ "CPS::EMT::DC::TwoTerminalITypeSSNComp", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_two_terminal_i_type_s_s_n_comp.html", [
+                  [ "CPS::EMT::DC::Capacitor", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_capacitor.html", null ]
+                ] ],
                 [ "CPS::EMT::Ph3::TwoTerminalITypeSSNComp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_i_type_s_s_n_comp.html", [
                   [ "CPS::EMT::Ph3::GenericTwoTerminalITypeSSN", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_generic_two_terminal_i_type_s_s_n.html", null ],
                   [ "CPS::EMT::Ph3::SSN::Capacitor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_capacitor.html", null ]
                 ] ]
               ] ],
               [ "CPS::EMT::VTypeSSNComp", "class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html", [
+                [ "CPS::EMT::DC::TwoTerminalVTypeSSNComp", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_two_terminal_v_type_s_s_n_comp.html", [
+                  [ "CPS::EMT::DC::Inductor", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_inductor.html", null ],
+                  [ "CPS::EMT::DC::Resistor", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_resistor.html", null ]
+                ] ],
                 [ "CPS::EMT::Ph3::FourTerminalVTypeSSNComp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_four_terminal_v_type_s_s_n_comp.html", [
                   [ "CPS::EMT::Ph3::GenericFourTerminalVTypeSSN", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_generic_four_terminal_v_type_s_s_n.html", null ]
                 ] ],
@@ -605,6 +615,7 @@ var hierarchy =
     [ "SharedFactory< Capacitor >", "class_shared_factory.html", [
       [ "CPS::DP::Ph1::Capacitor", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_capacitor.html", null ],
       [ "CPS::DP::Ph3::Capacitor", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html", null ],
+      [ "CPS::EMT::DC::Capacitor", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_capacitor.html", null ],
       [ "CPS::EMT::Ph1::Capacitor", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_capacitor.html", null ],
       [ "CPS::EMT::Ph3::Capacitor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_capacitor.html", null ],
       [ "CPS::EMT::Ph3::SSN::Capacitor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_capacitor.html", null ],
@@ -627,6 +638,7 @@ var hierarchy =
     [ "SharedFactory< CurrentSource >", "class_shared_factory.html", [
       [ "CPS::DP::Ph1::CurrentSource", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_current_source.html", null ],
       [ "CPS::DP::Ph3::CurrentSource", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_current_source.html", null ],
+      [ "CPS::EMT::DC::CurrentSource", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_current_source.html", null ],
       [ "CPS::EMT::Ph1::CurrentSource", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_current_source.html", null ],
       [ "CPS::EMT::Ph3::CurrentSource", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html", null ]
     ] ],
@@ -721,6 +733,7 @@ var hierarchy =
     [ "SharedFactory< Inductor >", "class_shared_factory.html", [
       [ "CPS::DP::Ph1::Inductor", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor.html", null ],
       [ "CPS::DP::Ph3::Inductor", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html", null ],
+      [ "CPS::EMT::DC::Inductor", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_inductor.html", null ],
       [ "CPS::EMT::Ph1::Inductor", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_inductor.html", null ],
       [ "CPS::EMT::Ph3::Inductor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor.html", null ],
       [ "CPS::EMT::Ph3::SSN::Inductor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_inductor.html", null ],
@@ -770,6 +783,7 @@ var hierarchy =
     [ "SharedFactory< PiLine >", "class_shared_factory.html", [
       [ "CPS::DP::Ph1::PiLine", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_pi_line.html", null ],
       [ "CPS::DP::Ph3::PiLine", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_pi_line.html", null ],
+      [ "CPS::EMT::DC::PiLine", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_pi_line.html", null ],
       [ "CPS::EMT::Ph1::PiLine", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_pi_line.html", null ],
       [ "CPS::EMT::Ph3::PiLine", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html", null ],
       [ "CPS::SP::Ph1::PiLine", "class_c_p_s_1_1_s_p_1_1_ph1_1_1_pi_line.html", null ]
@@ -807,6 +821,7 @@ var hierarchy =
     [ "SharedFactory< Resistor >", "class_shared_factory.html", [
       [ "CPS::DP::Ph1::Resistor", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_resistor.html", null ],
       [ "CPS::DP::Ph3::Resistor", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_resistor.html", null ],
+      [ "CPS::EMT::DC::Resistor", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_resistor.html", null ],
       [ "CPS::EMT::Ph1::Resistor", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_resistor.html", null ],
       [ "CPS::EMT::Ph3::Resistor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_resistor.html", null ],
       [ "CPS::SP::Ph1::Resistor", "class_c_p_s_1_1_s_p_1_1_ph1_1_1_resistor.html", null ],
@@ -986,6 +1001,7 @@ var hierarchy =
     [ "SharedFactory< VoltageSource >", "class_shared_factory.html", [
       [ "CPS::DP::Ph1::VoltageSource", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source.html", null ],
       [ "CPS::DP::Ph3::VoltageSource", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html", null ],
+      [ "CPS::EMT::DC::VoltageSource", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_voltage_source.html", null ],
       [ "CPS::EMT::Ph1::VoltageSource", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source.html", null ],
       [ "CPS::EMT::Ph3::VoltageSource", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source.html", null ],
       [ "CPS::SP::Ph1::VoltageSource", "class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source.html", null ],

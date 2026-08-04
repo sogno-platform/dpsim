@@ -67,10 +67,10 @@ var sectionId = 'dynsection-0';
 <!-- Node11 -->
 <g id="Node000011" class="node">
 <title>Node11</title>
-<g id="a_Node000011"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_i_type_s_s_n_comp.html" target="_top" xlink:title="Abstract base class for three&#45;phase, two&#45;terminal, I&#45;type SSN components.">
-<polygon fill="white" stroke="#666666" points="1379.5,-132.5 1232.25,-132.5 1232.25,-96 1379.5,-96 1379.5,-132.5"/>
-<text text-anchor="start" x="1240.25" y="-119" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::TwoTerminal</text>
-<text text-anchor="middle" x="1305.88" y="-104.75" font-family="Helvetica,sans-Serif" font-size="10.00">ITypeSSNComp</text>
+<g id="a_Node000011"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_two_terminal_i_type_s_s_n_comp.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="1377.25,-160.5 1234.5,-160.5 1234.5,-124 1377.25,-124 1377.25,-160.5"/>
+<text text-anchor="start" x="1242.5" y="-147" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::DC::TwoTerminal</text>
+<text text-anchor="middle" x="1305.88" y="-132.75" font-family="Helvetica,sans-Serif" font-size="10.00">ITypeSSNComp</text>
 </a>
 </g>
 </g>
@@ -78,8 +78,27 @@ var sectionId = 'dynsection-0';
 <g id="edge13_Node000001_Node000011" class="edge">
 <title>Node1&#45;&gt;Node11</title>
 <g id="a_edge13_Node000001_Node000011"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1206.81,-114.25C1215.15,-114.25 1223.62,-114.25 1231.9,-114.25"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1207.04,-110.75 1197.04,-114.25 1207.04,-117.75 1207.04,-110.75"/>
+<path fill="none" stroke="#63b8ff" d="M1206.65,-126.68C1215.84,-128.14 1225.18,-129.62 1234.26,-131.06"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1207.45,-123.26 1197.02,-125.15 1206.35,-130.18 1207.45,-123.26"/>
+</a>
+</g>
+</g>
+<!-- Node13 -->
+<g id="Node000013" class="node">
+<title>Node13</title>
+<g id="a_Node000013"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_i_type_s_s_n_comp.html" target="_top" xlink:title="Abstract base class for three&#45;phase, two&#45;terminal, I&#45;type SSN components.">
+<polygon fill="white" stroke="#666666" points="1379.5,-105.5 1232.25,-105.5 1232.25,-69 1379.5,-69 1379.5,-105.5"/>
+<text text-anchor="start" x="1240.25" y="-92" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::TwoTerminal</text>
+<text text-anchor="middle" x="1305.88" y="-77.75" font-family="Helvetica,sans-Serif" font-size="10.00">ITypeSSNComp</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node13 -->
+<g id="edge15_Node000001_Node000013" class="edge">
+<title>Node1&#45;&gt;Node13</title>
+<g id="a_edge15_Node000001_Node000013"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1206.81,-102.24C1215.15,-100.97 1223.62,-99.67 1231.9,-98.41"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1206.38,-98.77 1197.02,-103.74 1207.44,-105.69 1206.38,-98.77"/>
 </a>
 </g>
 </g>
@@ -282,10 +301,9 @@ var sectionId = 'dynsection-0';
 <!-- Node12 -->
 <g id="Node000012" class="node">
 <title>Node12</title>
-<g id="a_Node000012"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_generic_two_terminal_i_type_s_s_n.html" target="_top" xlink:title="Concrete generic three&#45;phase, two&#45;terminal I&#45;type SSN component.">
-<polygon fill="white" stroke="#666666" points="1560.75,-160.5 1416.5,-160.5 1416.5,-124 1560.75,-124 1560.75,-160.5"/>
-<text text-anchor="start" x="1424.5" y="-147" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::GenericTwo</text>
-<text text-anchor="middle" x="1488.62" y="-132.75" font-family="Helvetica,sans-Serif" font-size="10.00">TerminalITypeSSN</text>
+<g id="a_Node000012"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_capacitor.html" target="_top" xlink:title="Scalar DC capacitor represented as a one&#45;state I&#45;type SSN component.">
+<polygon fill="white" stroke="#666666" points="1552.5,-153.38 1424.75,-153.38 1424.75,-131.12 1552.5,-131.12 1552.5,-153.38"/>
+<text text-anchor="middle" x="1488.62" y="-139.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::DC::Capacitor</text>
 </a>
 </g>
 </g>
@@ -293,27 +311,46 @@ var sectionId = 'dynsection-0';
 <g id="edge14_Node000011_Node000012" class="edge">
 <title>Node11&#45;&gt;Node12</title>
 <g id="a_edge14_Node000011_Node000012"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1391.17,-127.31C1399.51,-128.6 1407.92,-129.9 1416.12,-131.17"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1391.79,-123.86 1381.37,-125.79 1390.71,-130.78 1391.79,-123.86"/>
+<path fill="none" stroke="#63b8ff" d="M1388.87,-142.25C1400.79,-142.25 1412.9,-142.25 1424.37,-142.25"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1389.05,-138.75 1379.05,-142.25 1389.05,-145.75 1389.05,-138.75"/>
 </a>
 </g>
 </g>
-<!-- Node13 -->
-<g id="Node000013" class="node">
-<title>Node13</title>
-<g id="a_Node000013"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_capacitor.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="1542,-105.5 1435.25,-105.5 1435.25,-69 1542,-69 1542,-105.5"/>
-<text text-anchor="start" x="1443.25" y="-92" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::SSN</text>
-<text text-anchor="middle" x="1488.62" y="-77.75" font-family="Helvetica,sans-Serif" font-size="10.00">::Capacitor</text>
+<!-- Node14 -->
+<g id="Node000014" class="node">
+<title>Node14</title>
+<g id="a_Node000014"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_generic_two_terminal_i_type_s_s_n.html" target="_top" xlink:title="Concrete generic three&#45;phase, two&#45;terminal I&#45;type SSN component.">
+<polygon fill="white" stroke="#666666" points="1560.75,-54.5 1416.5,-54.5 1416.5,-18 1560.75,-18 1560.75,-54.5"/>
+<text text-anchor="start" x="1424.5" y="-41" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::GenericTwo</text>
+<text text-anchor="middle" x="1488.62" y="-26.75" font-family="Helvetica,sans-Serif" font-size="10.00">TerminalITypeSSN</text>
 </a>
 </g>
 </g>
-<!-- Node11&#45;&gt;Node13 -->
-<g id="edge15_Node000011_Node000013" class="edge">
-<title>Node11&#45;&gt;Node13</title>
-<g id="a_edge15_Node000011_Node000013"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1391.19,-101.65C1406.09,-99.43 1421.21,-97.17 1434.92,-95.12"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1390.74,-98.18 1381.37,-103.12 1391.78,-105.11 1390.74,-98.18"/>
+<!-- Node13&#45;&gt;Node14 -->
+<g id="edge16_Node000013_Node000014" class="edge">
+<title>Node13&#45;&gt;Node14</title>
+<g id="a_edge16_Node000013_Node000014"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1383.97,-65.5C1396.41,-61.99 1409.2,-58.38 1421.35,-54.95"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1383.28,-62.05 1374.61,-68.14 1385.18,-68.79 1383.28,-62.05"/>
+</a>
+</g>
+</g>
+<!-- Node15 -->
+<g id="Node000015" class="node">
+<title>Node15</title>
+<g id="a_Node000015"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_capacitor.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="1542,-109.5 1435.25,-109.5 1435.25,-73 1542,-73 1542,-109.5"/>
+<text text-anchor="start" x="1443.25" y="-96" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::SSN</text>
+<text text-anchor="middle" x="1488.62" y="-81.75" font-family="Helvetica,sans-Serif" font-size="10.00">::Capacitor</text>
+</a>
+</g>
+</g>
+<!-- Node13&#45;&gt;Node15 -->
+<g id="edge17_Node000013_Node000015" class="edge">
+<title>Node13&#45;&gt;Node15</title>
+<g id="a_edge17_Node000013_Node000015"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1391.19,-89.12C1406.09,-89.45 1421.21,-89.78 1434.92,-90.08"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1391.46,-85.62 1381.39,-88.9 1391.31,-92.62 1391.46,-85.62"/>
 </a>
 </g>
 </g>
