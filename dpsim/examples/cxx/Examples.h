@@ -160,6 +160,19 @@ struct Parameters {
   Real Vs_min = -0.1;
   Real Tw = 10.0;
 };
+
+struct Ieee9Gen1 : Signal::PSS1AParameters {
+  Ieee9Gen1() {
+    Kw = 20.0;
+    T1 = 0.4;
+    T2 = 0.05;
+    T3 = 0.4;
+    T4 = 0.05;
+    Vs_max = 0.1;
+    Vs_min = -0.1;
+    Tw = 10.0;
+  }
+};
 } // namespace PSS1A
 
 namespace SteamGovernor {
@@ -415,7 +428,7 @@ struct Ieee9AvVsi {
   Real KpPLL = 7.246377e-3;
   Real KiPLL = 5.797101e-3;
   Real KpPowerCtrl = 1.449275e-3;
-  Real KiPowerCtrl = 5.797101e-3;
+  Real KiPowerCtrl = 2.898551e-3;
 
   // Current loop (rebased by the impedance ratio)
   Real KpCurrCtrl = 2.975625e-2;
