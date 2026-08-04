@@ -1,5 +1,6 @@
 var NAVTREEINDEX37 =
 {
+"class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#a930275c4acf1168f6ea0eb8175413fa4":[2,0,0,6,1,1,7],
 "class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#aa6a016dd1ec78c407d1a4dc053a989a2":[1,0,0,6,1,1,9],
 "class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#aa6a016dd1ec78c407d1a4dc053a989a2":[2,0,0,6,1,1,9],
 "class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html#aac2cb48269c089c51a4faa547c6c9c28":[1,0,0,6,1,1,12],
@@ -248,6 +249,5 @@ var NAVTREEINDEX37 =
 "class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___e_m_t___ph1.html#a2d9173ea64317b80cf4d08d62d2a5721":[2,0,0,5,3,22],
 "class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___e_m_t___ph1.html#a2fcb937d527c3d89c676216ec044140f":[1,0,0,5,3,10],
 "class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___e_m_t___ph1.html#a2fcb937d527c3d89c676216ec044140f":[2,0,0,5,3,10],
-"class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___e_m_t___ph1.html#a370865deb2f188a2b86fb96f79cb11d0":[1,0,0,5,3,3],
-"class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___e_m_t___ph1.html#a370865deb2f188a2b86fb96f79cb11d0":[2,0,0,5,3,3]
+"class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___e_m_t___ph1.html#a370865deb2f188a2b86fb96f79cb11d0":[1,0,0,5,3,3]
 };
