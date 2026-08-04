@@ -69,6 +69,9 @@ void SystemTopology::connectComponentToNodes(
 }
 
 void SystemTopology::componentsAtNodeList() {
+  // Idempotent: the map is a view derived from mComponents, so rebuild it
+  // from scratch instead of accumulating entries across calls (see #635)
+  mComponentsAtNode.clear();
   for (auto comp : mComponents) {
     auto powerComp = std::dynamic_pointer_cast<TopologicalPowerComp>(comp);
     if (powerComp)
@@ -246,11 +249,8 @@ void SystemTopology::reset() {
 void SystemTopology::removeComponent(const String &name) {
   for (auto it = mComponents.begin(); it != mComponents.end();) {
     if ((*it)->name() == name) {
-      // Drop the component from the per-node lists as well, otherwise
-      // the power flow solvers can still pick it up via mComponentsAtNode
-      for (auto &[topoNode, comps] : mComponentsAtNode) {
-        comps.erase(std::remove(comps.begin(), comps.end(), *it), comps.end());
-      }
+      // mComponentsAtNode needs no manual cleanup here: it is rebuilt from
+      // mComponents by componentsAtNodeList() wherever it is consumed (#635)
       it = mComponents.erase(
           it); // safe: returns next valid iterator when erasing
     } else {
@@ -288,15 +288,8 @@ void SystemTopology::removeComponentsConnectedTo(
     }
   }
 
-  // A removed component may also be connected to other nodes,
-  // so drop it from the remaining per-node component lists as well
-  for (auto &[topoNode, comps] : mComponentsAtNode) {
-    for (const auto &removed : removedComponents) {
-      comps.erase(std::remove(comps.begin(), comps.end(), removed),
-                  comps.end());
-    }
-  }
-
+  // mComponentsAtNode needs no manual cleanup here: it is rebuilt from
+  // mComponents by componentsAtNodeList() wherever it is consumed (#635)
   for (const auto &removed : removedComponents) {
     mTearComponents.erase(
         std::remove(mTearComponents.begin(), mTearComponents.end(), removed),
@@ -309,7 +302,6 @@ void SystemTopology::removeNode(const String &name) {
     // The ground node is the network reference and must never be removed
     if ((*it)->name() == name && !(*it)->isGround()) {
       removeComponentsConnectedTo(*it);
-      mComponentsAtNode.erase(*it);
       it = mNodes.erase(it);
     } else {
       ++it;

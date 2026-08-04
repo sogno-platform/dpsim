@@ -218,6 +218,10 @@ template <typename VarType>
 TopologicalNode::List SimPowerComp<VarType>::topologicalNodes() {
   TopologicalNode::List nodes;
   for (typename SimTerminal<VarType>::Ptr term : mTerminals) {
+    // mTerminals is preallocated with nullptr and only filled by connect(),
+    // so an unconnected component must not crash the lookup (see #626)
+    if (!term)
+      continue;
     nodes.push_back(term->node());
   }
   return nodes;

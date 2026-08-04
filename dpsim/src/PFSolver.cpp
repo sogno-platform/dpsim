@@ -23,6 +23,9 @@ PFSolver::PFSolver(CPS::String name, CPS::SystemTopology system,
 
 void PFSolver::initialize() {
   SPDLOG_LOGGER_INFO(mSLog, "#### INITIALIZATION OF POWERFLOW SOLVER ");
+  // mComponentsAtNode is a view derived from mComponents; rebuild it here so
+  // the solver never sees entries for removed or re-added components (#635)
+  mSystem.componentsAtNodeList();
   for (auto comp : mSystem.mComponents) {
     if (std::shared_ptr<CPS::SP::Ph1::SynchronGenerator> gen =
             std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp))
