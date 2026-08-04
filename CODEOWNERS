@@ -1,21 +1,21 @@
 # These owners will be the default owners for everything in
 # the repo. Unless a later match takes precedence,
-# @m-mirz and @dinkelbachjan will be requested for
+# @dinkelbachjan will be requested for
 # review when someone opens a pull request.
-* @m-mirz @dinkelbachjan
+* @dinkelbachjan
 
 # Order is important; the last matching pattern takes the most
 # precedence. When someone opens a pull request that only
 # modifies the following files, only the following members
 # and not the global owner(s) will be requested for a review.
 
-/.clang-format @stv0g @m-mirz
-/.devcontainer @stv0g @m-mirz
+/.clang-format @stv0g
+/.devcontainer @stv0g
 /.dockerignore @stv0g
-/.editorconfig @stv0g @m-mirz
+/.editorconfig @stv0g
 /.git-blame-ignore-revs @stv0g
-/.github @m-mirz @leonardocarreras @stv0g
-/.gitignore @stv0g @m-mirz
+/.github @leonardocarreras @stv0g
+/.gitignore @stv0g
 /cmake @stv0g
 /cmake/FindMAGMA.cmake @n-eiling
 /configs/shmem_cosim/ @stv0g
@@ -128,16 +128,12 @@
 /examples/villas @stv0g @pipeacosta
 /examples/villas-deprecated @stv0g
 /gitlab-ci.yml @stv0g
-/packaging @m-mirz
 /packaging/Docker @stv0g
 /packaging/Docker/Dockerfile.dev-rocky @n-eiling
 /pyproject.toml @stv0g
 /pytest.ini @stv0g
 /python @gnakti @stv0g
-/README.md @m-mirz
 /requirements-manylinux.txt @dinkelbachjan
-/requirements.txt @m-mirz @stv0g
-/setup.cfg @m-mirz @stv0g
-/setup.py @m-mirz @stv0g
-/sonar-project.properties @m-mirz
-CMakeLists.txt @m-mirz
+/requirements.txt @stv0g
+/setup.cfg @stv0g
+/setup.py @stv0g
