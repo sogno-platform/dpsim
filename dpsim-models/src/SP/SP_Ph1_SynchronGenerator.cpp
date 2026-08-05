@@ -26,7 +26,8 @@ SP::Ph1::SynchronGenerator::SynchronGenerator(String uid, String name,
       mReactivePowerMaxPerUnit(mAttributes->create<Real>(
           "Q_max_pu", std::numeric_limits<Real>::infinity())),
       mReactivePowerMinPerUnit(mAttributes->create<Real>(
-          "Q_min_pu", -std::numeric_limits<Real>::infinity())) {
+          "Q_min_pu", -std::numeric_limits<Real>::infinity())),
+      mSlackWeight(mAttributes->create<Real>("slack_weight", 1.0)) {
 
   SPDLOG_LOGGER_INFO(mSLog, "Create {} of type {}", name, this->type());
   mSLog->flush();

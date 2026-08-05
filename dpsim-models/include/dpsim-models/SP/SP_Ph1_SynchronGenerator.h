@@ -48,6 +48,9 @@ public:
   const Attribute<Real>::Ptr mReactivePowerMaxPerUnit;
   /// Minimum reactive power limit [pu]
   const Attribute<Real>::Ptr mReactivePowerMinPerUnit;
+  /// Share of the bus power this machine takes in the PF write-back at a bus with
+  /// several generators. 0 means grid-following: the set points are left untouched.
+  const Attribute<Real>::Ptr mSlackWeight;
 
   /// Defines UID, name and logging level
   SynchronGenerator(String uid, String name,

@@ -445,6 +445,115 @@ Real PFSolverPowerPolar::Q(UInt k) {
   return sol_V.coeff(k) * val;
 }
 
+std::vector<std::shared_ptr<CPS::SP::Ph1::SynchronGenerator>>
+PFSolverPowerPolar::generatorsAtNode(CPS::TopologicalNode::Ptr node) {
+  std::vector<std::shared_ptr<CPS::SP::Ph1::SynchronGenerator>> generators;
+  for (auto comp : mSystem.mComponentsAtNode[node])
+    if (auto sgPtr =
+            std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp))
+      generators.push_back(sgPtr);
+  return generators;
+}
+
+std::vector<CPS::Real> PFSolverPowerPolar::splitReactivePower(
+    const std::vector<std::shared_ptr<CPS::SP::Ph1::SynchronGenerator>>
+        &generators,
+    CPS::Real totalQ) {
+  // Load every machine to the same fraction of its own [Qmin, Qmax] range, the
+  // convention MATPOWER's pfsoln uses. Falls back to the weight split when a
+  // limit is infinite or the ranges collapse, which is the hand-built-grid case.
+  std::vector<Real> shares(generators.size(), 0.0);
+  // A lone machine takes the whole amount, bit for bit as before this split existed
+  if (generators.size() == 1) {
+    shares[0] = totalQ;
+    return shares;
+  }
+
+  Real rangeSum = 0.0;
+  Real minSum = 0.0;
+  bool finiteRanges = true;
+  for (auto gen : generators) {
+    Real qMin = **(gen->mReactivePowerMinPerUnit);
+    Real qMax = **(gen->mReactivePowerMaxPerUnit);
+    // isFinite is bit-pattern based, so it's immune to -Ofast/-ffast-math.
+    if (!CPS::Math::isFinite(qMin) || !CPS::Math::isFinite(qMax) ||
+        qMax < qMin) {
+      finiteRanges = false;
+      break;
+    }
+    rangeSum += qMax - qMin;
+    minSum += qMin;
+  }
+
+  if (finiteRanges && rangeSum > 0.0) {
+    Real loading = (totalQ - minSum) / rangeSum;
+    for (UInt i = 0; i < generators.size(); ++i) {
+      Real qMin = **(generators[i]->mReactivePowerMinPerUnit);
+      Real qMax = **(generators[i]->mReactivePowerMaxPerUnit);
+      shares[i] = qMin + loading * (qMax - qMin);
+    }
+    return shares;
+  }
+
+  Real weightSum = 0.0;
+  for (auto gen : generators)
+    weightSum += std::max(0.0, **(gen->mSlackWeight));
+  for (UInt i = 0; i < generators.size(); ++i)
+    shares[i] = weightSum > 0.0
+                    ? totalQ * std::max(0.0, **(generators[i]->mSlackWeight)) /
+                          weightSum
+                    : totalQ / static_cast<Real>(generators.size());
+  return shares;
+}
+
+void PFSolverPowerPolar::distributeGeneratorPower(
+    CPS::TopologicalNode::Ptr node, CPS::Complex Sgen, bool withActivePower) {
+  auto generators = generatorsAtNode(node);
+  if (generators.empty())
+    return;
+
+  // Zero-weight machines hold their set point, the others share what is left over
+  std::vector<std::shared_ptr<CPS::SP::Ph1::SynchronGenerator>> participants;
+  Real followerP = 0.0;
+  Real followerQ = 0.0;
+  for (auto gen : generators) {
+    if (**(gen->mSlackWeight) > 0.0) {
+      participants.push_back(gen);
+    } else {
+      followerP += **(gen->mSetPointActivePowerPerUnit);
+      followerQ += **(gen->mSetPointReactivePowerPerUnit);
+    }
+  }
+  // Every machine following would leave the bus balance on nobody, so share it out
+  if (participants.empty()) {
+    participants = generators;
+    followerP = 0.0;
+    followerQ = 0.0;
+  }
+
+  auto sharesQ = splitReactivePower(participants, Sgen.imag() - followerQ);
+  Real residualP = Sgen.real() - followerP;
+  Real weightSum = 0.0;
+  for (auto gen : participants)
+    weightSum += **(gen->mSlackWeight);
+
+  for (UInt i = 0; i < participants.size(); ++i) {
+    if (!withActivePower) {
+      participants[i]->updateReactivePowerInjection(
+          CPS::Complex(0.0, sharesQ[i]) * mBaseApparentPower);
+      continue;
+    }
+    Real shareP =
+        participants.size() == 1
+            ? residualP
+            : (weightSum > 0.0
+                   ? residualP * **(participants[i]->mSlackWeight) / weightSum
+                   : residualP / static_cast<Real>(participants.size()));
+    participants[i]->updatePowerInjection(CPS::Complex(shareP, sharesQ[i]) *
+                                          mBaseApparentPower);
+  }
+}
+
 void PFSolverPowerPolar::calculatePAndQAtSlackBus() {
   for (auto topoNode : mVDBuses) {
     auto node_idx = topoNode->matrixNodeIndex();
@@ -466,20 +575,17 @@ void PFSolverPowerPolar::calculatePAndQAtSlackBus() {
     }
 
     // Update connected VD source/generator with actual generated power
+    bool handledByExtnet = false;
     for (auto comp : mSystem.mComponentsAtNode[topoNode]) {
       if (auto extnetPtr =
               std::dynamic_pointer_cast<CPS::SP::Ph1::NetworkInjection>(comp)) {
         extnetPtr->updatePowerInjection(Sgen * mBaseApparentPower);
-        break;
-      }
-
-      if (auto sgPtr =
-              std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(
-                  comp)) {
-        sgPtr->updatePowerInjection(Sgen * mBaseApparentPower);
+        handledByExtnet = true;
         break;
       }
     }
+    if (!handledByExtnet)
+      distributeGeneratorPower(topoNode, Sgen, true);
 
     // Store net nodal injection, not generator power
     sol_P(node_idx) = S.real();
@@ -506,15 +612,8 @@ void PFSolverPowerPolar::calculateQAtPVBuses() {
       }
     }
 
-    // Update PV generator with actual generator Q
-    for (auto comp : mSystem.mComponentsAtNode[topoNode]) {
-      if (auto sgPtr =
-              std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(
-                  comp)) {
-        sgPtr->updateReactivePowerInjection(Sgen * mBaseApparentPower);
-        break;
-      }
-    }
+    // Update PV generators with actual generator Q
+    distributeGeneratorPower(topoNode, Sgen, false);
 
     // Store net nodal Q injection, not generator Q
     sol_Q(node_idx) = S.imag();

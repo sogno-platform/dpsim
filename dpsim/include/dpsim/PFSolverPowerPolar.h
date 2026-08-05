@@ -69,6 +69,17 @@ protected:
   void calculatePAndQAtSlackBus();
   /// Calculate the reactive power at all PV buses from current solution
   void calculateQAtPVBuses();
+  /// All synchronous generators connected to a bus, in system component order
+  std::vector<std::shared_ptr<CPS::SP::Ph1::SynchronGenerator>>
+  generatorsAtNode(CPS::TopologicalNode::Ptr node);
+  /// Share a bus-aggregate Q [pu] out over co-located generators
+  std::vector<CPS::Real> splitReactivePower(
+      const std::vector<std::shared_ptr<CPS::SP::Ph1::SynchronGenerator>>
+          &generators,
+      CPS::Real totalQ);
+  /// Write the solved bus generation back to every generator at the bus
+  void distributeGeneratorPower(CPS::TopologicalNode::Ptr node,
+                                CPS::Complex Sgen, bool withActivePower);
   /// Generator reactive-power injection at a bus [pu], used by the Q-limit check
   CPS::Real generatorReactivePowerPerUnit(CPS::TopologicalNode::Ptr node);
   /// Total local load reactive power at a bus [pu]
