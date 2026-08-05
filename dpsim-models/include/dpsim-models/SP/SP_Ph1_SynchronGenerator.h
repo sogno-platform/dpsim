@@ -28,8 +28,7 @@ private:
   Real mBaseApparentPower;
   /// Rated apparent power [VA], 0 means unknown and caps nothing
   Real mRatedApparentPower = 0.;
-  /// Share of the bus power this machine takes when several sit on one bus,
-  /// 0 means grid-following: the set points are left untouched
+  /// Share of the bus power taken when co-located, 0 holds the set points instead
   Real mSlackWeight = 1.;
 
 public:

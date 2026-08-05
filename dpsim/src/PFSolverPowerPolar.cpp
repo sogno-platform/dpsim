@@ -459,9 +459,7 @@ std::vector<CPS::Real> PFSolverPowerPolar::splitReactivePower(
     const std::vector<std::shared_ptr<CPS::SP::Ph1::SynchronGenerator>>
         &generators,
     CPS::Real totalQ) {
-  // Load every machine to the same fraction of its own [Qmin, Qmax] range, the
-  // convention MATPOWER's pfsoln uses. Falls back to the weight split when a
-  // limit is infinite or the ranges collapse, which is the hand-built-grid case.
+  // Same fraction of each machine's own [Qmin, Qmax] range, as MATPOWER's pfsoln does
   std::vector<Real> shares(generators.size(), 0.0);
   // A lone machine takes the whole amount, bit for bit as before this split existed
   if (generators.size() == 1) {
@@ -557,8 +555,7 @@ std::vector<CPS::Real> PFSolverPowerPolar::splitActivePower(
     return shares;
   }
 
-  // What is left of the capability circle once Q is placed: P <= sqrt(S^2 - Q^2).
-  // A rating of 0 means none was given, so that machine stays uncapped.
+  // What the capability circle leaves once Q is placed, a rating of 0 means uncapped
   std::vector<Real> headroom(generators.size(), 0.0);
   for (UInt i = 0; i < generators.size(); ++i) {
     Real sRated = generators[i]->getRatedApparentPower() / mBaseApparentPower;
@@ -568,8 +565,7 @@ std::vector<CPS::Real> PFSolverPowerPolar::splitActivePower(
                       : 0.0;
   }
 
-  // Hand out in proportion to weight, then re-share what the saturated machines
-  // cannot take among those with headroom left, until nothing more saturates
+  // Share by weight, then re-share what the saturated machines cannot take
   std::vector<bool> capped(generators.size(), false);
   Real cappedP = 0.0;
   for (UInt pass = 0; pass < generators.size(); ++pass) {
@@ -597,8 +593,7 @@ std::vector<CPS::Real> PFSolverPowerPolar::splitActivePower(
       return shares;
   }
 
-  // Every machine sits on its capability circle and the bus still needs more, so
-  // overload them in proportion rather than silently dropping the bus balance
+  // All saturated and the bus still needs more, overload rather than lose the balance
   Real assigned = 0.0;
   for (auto share : shares)
     assigned += share;
