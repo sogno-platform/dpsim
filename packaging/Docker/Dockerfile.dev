@@ -83,7 +83,7 @@ RUN set -eux; \
 			exit 1 ;; \
 	esac; \
 	if [ "$(uname -m)" = "x86_64" ]; then \
-		curl -sSL -L --max-time 300 --retry 3 --retry-delay 5 "${libcimpp_url}" -o /tmp/libcimpp.rpm || (echo "Failed to download ${libcimpp_url}" >&2; exit 1); \
+		curl -fsSL --max-time 300 --retry 3 --retry-delay 5 "${libcimpp_url}" -o /tmp/libcimpp.rpm || (echo "Failed to download ${libcimpp_url}" >&2; exit 1); \
 		dnf -y install /tmp/libcimpp.rpm; \
 		rm -f /tmp/libcimpp.rpm; \
 	else \
