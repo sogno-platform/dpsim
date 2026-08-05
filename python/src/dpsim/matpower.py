@@ -1266,8 +1266,7 @@ class Reader:
             reactive_power = self.mpc_gen_data.at[index, "Qg"]
             complex_power = mw_w * complex(active_power, reactive_power)
 
-            # a slack bus is mapped as a network injection, and PQ-bus generators
-            # are absent when map_pq_bus_generators is off, so both have no component
+            # a slack bus maps to a network injection, so it has no generator component
             gen_component = self.system.component(gen_name)
             if gen_component is None:
                 continue
