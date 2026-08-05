@@ -77,6 +77,11 @@ protected:
       const std::vector<std::shared_ptr<CPS::SP::Ph1::SynchronGenerator>>
           &generators,
       CPS::Real totalQ);
+  /// Share a bus-aggregate P [pu] out, bounded by what Q leaves of each rating
+  std::vector<CPS::Real> splitActivePower(
+      const std::vector<std::shared_ptr<CPS::SP::Ph1::SynchronGenerator>>
+          &generators,
+      CPS::Real totalP, const std::vector<CPS::Real> &sharesQ);
   /// Write the solved bus generation back to every generator at the bus
   void distributeGeneratorPower(CPS::TopologicalNode::Ptr node,
                                 CPS::Complex Sgen, bool withActivePower);

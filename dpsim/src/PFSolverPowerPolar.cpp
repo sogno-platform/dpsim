@@ -497,10 +497,10 @@ std::vector<CPS::Real> PFSolverPowerPolar::splitReactivePower(
 
   Real weightSum = 0.0;
   for (auto gen : generators)
-    weightSum += std::max(0.0, **(gen->mSlackWeight));
+    weightSum += std::max(0.0, gen->getSlackWeight());
   for (UInt i = 0; i < generators.size(); ++i)
     shares[i] = weightSum > 0.0
-                    ? totalQ * std::max(0.0, **(generators[i]->mSlackWeight)) /
+                    ? totalQ * std::max(0.0, generators[i]->getSlackWeight()) /
                           weightSum
                     : totalQ / static_cast<Real>(generators.size());
   return shares;
@@ -517,7 +517,7 @@ void PFSolverPowerPolar::distributeGeneratorPower(
   Real followerP = 0.0;
   Real followerQ = 0.0;
   for (auto gen : generators) {
-    if (**(gen->mSlackWeight) > 0.0) {
+    if (gen->getSlackWeight() > 0.0) {
       participants.push_back(gen);
     } else {
       followerP += **(gen->mSetPointActivePowerPerUnit);
@@ -532,26 +532,85 @@ void PFSolverPowerPolar::distributeGeneratorPower(
   }
 
   auto sharesQ = splitReactivePower(participants, Sgen.imag() - followerQ);
-  Real residualP = Sgen.real() - followerP;
-  Real weightSum = 0.0;
-  for (auto gen : participants)
-    weightSum += **(gen->mSlackWeight);
-
-  for (UInt i = 0; i < participants.size(); ++i) {
-    if (!withActivePower) {
+  if (!withActivePower) {
+    for (UInt i = 0; i < participants.size(); ++i)
       participants[i]->updateReactivePowerInjection(
           CPS::Complex(0.0, sharesQ[i]) * mBaseApparentPower);
-      continue;
-    }
-    Real shareP =
-        participants.size() == 1
-            ? residualP
-            : (weightSum > 0.0
-                   ? residualP * **(participants[i]->mSlackWeight) / weightSum
-                   : residualP / static_cast<Real>(participants.size()));
-    participants[i]->updatePowerInjection(CPS::Complex(shareP, sharesQ[i]) *
-                                          mBaseApparentPower);
+    return;
   }
+
+  auto sharesP =
+      splitActivePower(participants, Sgen.real() - followerP, sharesQ);
+  for (UInt i = 0; i < participants.size(); ++i)
+    participants[i]->updatePowerInjection(CPS::Complex(sharesP[i], sharesQ[i]) *
+                                          mBaseApparentPower);
+}
+
+std::vector<CPS::Real> PFSolverPowerPolar::splitActivePower(
+    const std::vector<std::shared_ptr<CPS::SP::Ph1::SynchronGenerator>>
+        &generators,
+    CPS::Real totalP, const std::vector<CPS::Real> &sharesQ) {
+  std::vector<Real> shares(generators.size(), 0.0);
+  // A lone machine takes the whole amount, bit for bit as before this split existed
+  if (generators.size() == 1) {
+    shares[0] = totalP;
+    return shares;
+  }
+
+  // What is left of the capability circle once Q is placed: P <= sqrt(S^2 - Q^2).
+  // A rating of 0 means none was given, so that machine stays uncapped.
+  std::vector<Real> headroom(generators.size(), 0.0);
+  for (UInt i = 0; i < generators.size(); ++i) {
+    Real sRated = generators[i]->getRatedApparentPower() / mBaseApparentPower;
+    headroom[i] = sRated > 0.0
+                      ? std::sqrt(std::max(0.0, sRated * sRated -
+                                                    sharesQ[i] * sharesQ[i]))
+                      : 0.0;
+  }
+
+  // Hand out in proportion to weight, then re-share what the saturated machines
+  // cannot take among those with headroom left, until nothing more saturates
+  std::vector<bool> capped(generators.size(), false);
+  Real cappedP = 0.0;
+  for (UInt pass = 0; pass < generators.size(); ++pass) {
+    Real weightSum = 0.0;
+    for (UInt i = 0; i < generators.size(); ++i)
+      if (!capped[i])
+        weightSum += generators[i]->getSlackWeight();
+    if (weightSum <= 0.0)
+      break;
+
+    Real remaining = totalP - cappedP;
+    bool saturated = false;
+    for (UInt i = 0; i < generators.size(); ++i) {
+      if (capped[i])
+        continue;
+      shares[i] = remaining * generators[i]->getSlackWeight() / weightSum;
+      if (headroom[i] > 0.0 && shares[i] > headroom[i]) {
+        shares[i] = headroom[i];
+        capped[i] = true;
+        cappedP += headroom[i];
+        saturated = true;
+      }
+    }
+    if (!saturated)
+      return shares;
+  }
+
+  // Every machine sits on its capability circle and the bus still needs more, so
+  // overload them in proportion rather than silently dropping the bus balance
+  Real assigned = 0.0;
+  for (auto share : shares)
+    assigned += share;
+  if (assigned > 0.0 && std::abs(totalP - assigned) > 1e-12) {
+    SPDLOG_LOGGER_WARN(mSLog,
+                       "Generators can take {} pu of active power but the bus "
+                       "needs {} pu, overloading them proportionally",
+                       assigned, totalP);
+    for (UInt i = 0; i < shares.size(); ++i)
+      shares[i] *= totalP / assigned;
+  }
+  return shares;
 }
 
 void PFSolverPowerPolar::calculatePAndQAtSlackBus() {

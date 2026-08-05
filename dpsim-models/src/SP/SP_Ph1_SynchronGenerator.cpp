@@ -26,8 +26,7 @@ SP::Ph1::SynchronGenerator::SynchronGenerator(String uid, String name,
       mReactivePowerMaxPerUnit(mAttributes->create<Real>(
           "Q_max_pu", std::numeric_limits<Real>::infinity())),
       mReactivePowerMinPerUnit(mAttributes->create<Real>(
-          "Q_min_pu", -std::numeric_limits<Real>::infinity())),
-      mSlackWeight(mAttributes->create<Real>("slack_weight", 1.0)) {
+          "Q_min_pu", -std::numeric_limits<Real>::infinity())) {
 
   SPDLOG_LOGGER_INFO(mSLog, "Create {} of type {}", name, this->type());
   mSLog->flush();
@@ -44,6 +43,7 @@ void SP::Ph1::SynchronGenerator::setParameters(
   **mSetPointVoltage = setPointVoltage;
   **mReactivePowerMax = qLimMax;
   **mReactivePowerMin = qLimMin;
+  mRatedApparentPower = ratedApparentPower;
   mPowerflowBusType = powerflowBusType;
 
   SPDLOG_LOGGER_INFO(mSLog, "Rated Apparent Power={} [VA] Rated Voltage={} [V]",
@@ -62,6 +62,16 @@ Real SP::Ph1::SynchronGenerator::getBaseVoltage() const { return mBaseVoltage; }
 
 void SP::Ph1::SynchronGenerator::setBaseVoltage(Real baseVoltage) {
   mBaseVoltage = baseVoltage;
+}
+
+Real SP::Ph1::SynchronGenerator::getRatedApparentPower() const {
+  return mRatedApparentPower;
+}
+
+Real SP::Ph1::SynchronGenerator::getSlackWeight() const { return mSlackWeight; }
+
+void SP::Ph1::SynchronGenerator::setSlackWeight(Real slackWeight) {
+  mSlackWeight = slackWeight;
 }
 
 void SP::Ph1::SynchronGenerator::calculatePerUnitParameters(

@@ -26,6 +26,11 @@ private:
   Real mBaseVoltage;
   /// Base apparent power[VA]
   Real mBaseApparentPower;
+  /// Rated apparent power [VA], 0 means unknown and caps nothing
+  Real mRatedApparentPower = 0.;
+  /// Share of the bus power this machine takes when several sit on one bus,
+  /// 0 means grid-following: the set points are left untouched
+  Real mSlackWeight = 1.;
 
 public:
   /// Active power set point of the machine [W]
@@ -48,9 +53,6 @@ public:
   const Attribute<Real>::Ptr mReactivePowerMaxPerUnit;
   /// Minimum reactive power limit [pu]
   const Attribute<Real>::Ptr mReactivePowerMinPerUnit;
-  /// Share of the bus power this machine takes in the PF write-back at a bus with
-  /// several generators. 0 means grid-following: the set points are left untouched.
-  const Attribute<Real>::Ptr mSlackWeight;
 
   /// Defines UID, name and logging level
   SynchronGenerator(String uid, String name,
@@ -71,6 +73,12 @@ public:
   Real getBaseVoltage() const;
   /// Set base voltage
   void setBaseVoltage(Real baseVoltage);
+  /// Rated apparent power [VA] as handed to setParameters
+  Real getRatedApparentPower() const;
+  /// Share of the bus power taken when several machines sit on one bus
+  Real getSlackWeight() const;
+  /// Set the share of the bus power taken, 0 to hold the set points instead
+  void setSlackWeight(Real slackWeight);
   /// Initializes component from power flow data
   void calculatePerUnitParameters(Real baseApparentPower, Real baseOmega);
   /// Modify powerflow bus type
