@@ -674,6 +674,11 @@ class Reader:
             self.mpc_gen_data["bus"] == self.mpc_bus_data.at[index, "bus_i"]
         ]
 
+    @staticmethod
+    def gen_component_name(bus_index, gen_i):
+        # the first generator keeps its unsuffixed name, so single-gen grids are unaffected
+        return "Gen_N" + str(bus_index) + ("" if gen_i == 0 else "_" + str(gen_i))
+
     def map_generators_at_bus(self, index, bus_index, **kwargs):
         # the PF solver sums P/Q and the Q limits over all components at a node
         for gen_i in range(self.gen_data_at_bus(index).shape[0]):
@@ -690,8 +695,7 @@ class Reader:
         gen_model=None,
         gen_i=0,
     ):
-        # the first generator keeps its unsuffixed name, so single-gen grids are unaffected
-        gen_name = "Gen_N" + str(bus_index) + ("" if gen_i == 0 else "_" + str(gen_i))
+        gen_name = self.gen_component_name(bus_index, gen_i)
 
         # relevant data from self.mpc_gen_data. Identification with bus number available in mpc_bus_data and mpc_gen_data
         gen_data = self.gen_data_at_bus(index).iloc[[gen_i]]
@@ -1249,21 +1253,27 @@ class Reader:
             dpsim_node.set_initial_voltage(voltage_complex)
 
         # initialize SG
+        gen_count_at_bus = {}
         for index, gen in self.mpc_gen_data.iterrows():
-            # get generator name in dpsim
+            # get generator name in dpsim, counting per bus as the mapping did
             bus_index = self.mpc_gen_data.at[index, "bus"]
-            gen_name = "Gen_N" + str(bus_index)
+            gen_i = gen_count_at_bus.get(bus_index, 0)
+            gen_count_at_bus[bus_index] = gen_i + 1
+            gen_name = self.gen_component_name(bus_index, gen_i)
 
             # get active and reactive power
             active_power = self.mpc_gen_data.at[index, "Pg"]
             reactive_power = self.mpc_gen_data.at[index, "Qg"]
-            base_power = self.mpc_gen_data.at[index, "BaseS"]
             complex_power = mw_w * complex(active_power, reactive_power)
 
+            # a slack bus is mapped as a network injection, and PQ-bus generators
+            # are absent when map_pq_bus_generators is off, so both have no component
+            gen_component = self.system.component(gen_name)
+            if gen_component is None:
+                continue
+
             # set terminal power of generator in dpsim
-            self.system.component(gen_name).get_terminal(index=0).set_power(
-                -complex_power
-            )
+            gen_component.get_terminal(index=0).set_power(-complex_power)
 
     def get_pf_results(self, decimals=5):
         pf_results = pd.DataFrame(
