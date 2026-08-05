@@ -478,6 +478,214 @@ void EMT::Ph3::SSN_GFM::evaluateOutput(const Matrix &x, const Matrix &u,
   output = (u - vcAbc) / mRc;
 }
 
+void EMT::Ph3::SSN_GFM::calculateAnalyticalJacobians(const Matrix &x,
+                                                     const Matrix &u, Matrix &A,
+                                                     Matrix &B, Matrix &C,
+                                                     Matrix &D) const {
+
+  if (x.rows() != mStateSize || x.cols() != 1)
+    throw std::invalid_argument(
+        "SSN_GFM state vector has an invalid dimension.");
+
+  if (u.rows() != mInputSize || u.cols() != 1)
+    throw std::invalid_argument(
+        "SSN_GFM input vector has an invalid dimension.");
+
+  const Real pFiltered = x(PFiltered, 0);
+  const Real omega = x(Omega, 0);
+  const Real theta = x(Theta, 0);
+  const Real delayVoltageD = x(DelayVoltageD, 0);
+  const Real delayVoltageQ = x(DelayVoltageQ, 0);
+
+  const Matrix vcAbc = x.block(VcA, 0, 3, 1);
+  const Matrix ifAbc = x.block(IfA, 0, 3, 1);
+
+  const Matrix parkTransform = getParkTransformMatrix(theta);
+  const Matrix inverseParkTransform = getInverseParkTransformMatrix(theta);
+
+  const Matrix tD = parkTransform.row(0);
+  const Matrix tQ = parkTransform.row(1);
+  const Matrix sD = inverseParkTransform.col(0);
+  const Matrix sQ = inverseParkTransform.col(1);
+
+  const Matrix iGridAbc = (vcAbc - u) / mRc;
+
+  const Real vcD = (tD * vcAbc)(0, 0);
+  const Real vcQ = (tQ * vcAbc)(0, 0);
+  const Real ifD = (tD * ifAbc)(0, 0);
+  const Real ifQ = (tQ * ifAbc)(0, 0);
+  const Real iGridD = (tD * iGridAbc)(0, 0);
+  const Real iGridQ = (tQ * iGridAbc)(0, 0);
+
+  Matrix dVcDByX = Matrix::Zero(1, mStateSize);
+  Matrix dVcQByX = Matrix::Zero(1, mStateSize);
+  Matrix dIfDByX = Matrix::Zero(1, mStateSize);
+  Matrix dIfQByX = Matrix::Zero(1, mStateSize);
+  Matrix dIGridDByX = Matrix::Zero(1, mStateSize);
+  Matrix dIGridQByX = Matrix::Zero(1, mStateSize);
+
+  dVcDByX(0, Theta) = vcQ;
+  dVcDByX.block(0, VcA, 1, 3) = tD;
+  dVcQByX(0, Theta) = -vcD;
+  dVcQByX.block(0, VcA, 1, 3) = tQ;
+
+  dIfDByX(0, Theta) = ifQ;
+  dIfDByX.block(0, IfA, 1, 3) = tD;
+  dIfQByX(0, Theta) = -ifD;
+  dIfQByX.block(0, IfA, 1, 3) = tQ;
+
+  dIGridDByX(0, Theta) = iGridQ;
+  dIGridDByX.block(0, VcA, 1, 3) = tD / mRc;
+  dIGridQByX(0, Theta) = -iGridD;
+  dIGridQByX.block(0, VcA, 1, 3) = tQ / mRc;
+
+  const Matrix dIGridDByU = -tD / mRc;
+  const Matrix dIGridQByU = -tQ / mRc;
+
+  Matrix dPByX = 1.5 * (iGridD * dVcDByX + vcD * dIGridDByX + iGridQ * dVcQByX +
+                        vcQ * dIGridQByX);
+  const Matrix dPByU = 1.5 * (vcD * dIGridDByU + vcQ * dIGridQByU);
+
+  Matrix dQByX = 1.5 * (iGridD * dVcQByX + vcQ * dIGridDByX - iGridQ * dVcDByX -
+                        vcD * dIGridQByX);
+  const Matrix dQByU = 1.5 * (vcQ * dIGridDByU - vcD * dIGridQByU);
+
+  dPByX(0, Theta) = 0.0;
+  dQByX(0, Theta) = 0.0;
+
+  const Real pccVoltageMagnitude = std::sqrt(vcD * vcD + vcQ * vcQ);
+  Matrix dPccVoltageMagnitudeByX = Matrix::Zero(1, mStateSize);
+
+  if (pccVoltageMagnitude > 1e-12) {
+    dPccVoltageMagnitudeByX =
+        (vcD * dVcDByX + vcQ * dVcQByX) / pccVoltageMagnitude;
+    dPccVoltageMagnitudeByX(0, Theta) = 0.0;
+  }
+
+  Matrix unitOmega = Matrix::Zero(1, mStateSize);
+  Matrix unitVoltageMagnitude = Matrix::Zero(1, mStateSize);
+  Matrix unitVoltageIntegratorD = Matrix::Zero(1, mStateSize);
+  Matrix unitVoltageIntegratorQ = Matrix::Zero(1, mStateSize);
+  Matrix unitCurrentIntegratorD = Matrix::Zero(1, mStateSize);
+  Matrix unitCurrentIntegratorQ = Matrix::Zero(1, mStateSize);
+
+  unitOmega(0, Omega) = 1.0;
+  unitVoltageMagnitude(0, VoltageMagnitude) = 1.0;
+  unitVoltageIntegratorD(0, VoltageIntegratorD) = 1.0;
+  unitVoltageIntegratorQ(0, VoltageIntegratorQ) = 1.0;
+  unitCurrentIntegratorD(0, CurrentIntegratorD) = 1.0;
+  unitCurrentIntegratorQ(0, CurrentIntegratorQ) = 1.0;
+
+  const Matrix dVoltageErrorDByX = unitVoltageMagnitude -
+                                   mVirtualResistance * dIfDByX +
+                                   mVirtualReactance * dIfQByX - dVcDByX;
+  const Matrix dVoltageErrorQByX =
+      -mVirtualResistance * dIfQByX - mVirtualReactance * dIfDByX - dVcQByX;
+
+  const Matrix dCurrentReferenceDByX =
+      mGridCurrentFeedforward * dIGridDByX -
+      mCf * (vcQ * unitOmega + omega * dVcQByX) +
+      mKpVoltage * dVoltageErrorDByX + mKiVoltage * unitVoltageIntegratorD;
+  const Matrix dCurrentReferenceDByU = mGridCurrentFeedforward * dIGridDByU;
+
+  const Matrix dCurrentReferenceQByX =
+      mGridCurrentFeedforward * dIGridQByX +
+      mCf * (vcD * unitOmega + omega * dVcDByX) +
+      mKpVoltage * dVoltageErrorQByX + mKiVoltage * unitVoltageIntegratorQ;
+  const Matrix dCurrentReferenceQByU = mGridCurrentFeedforward * dIGridQByU;
+
+  const Matrix dCurrentErrorDByX = dCurrentReferenceDByX - dIfDByX;
+  const Matrix dCurrentErrorQByX = dCurrentReferenceQByX - dIfQByX;
+  const Matrix dCurrentErrorDByU = dCurrentReferenceDByU;
+  const Matrix dCurrentErrorQByU = dCurrentReferenceQByU;
+
+  const Matrix dCapacitorCurrentDByX = dIfDByX - dIGridDByX;
+  const Matrix dCapacitorCurrentQByX = dIfQByX - dIGridQByX;
+  const Matrix dCapacitorCurrentDByU = -dIGridDByU;
+  const Matrix dCapacitorCurrentQByU = -dIGridQByU;
+
+  const Matrix dConverterVoltageReferenceDByX =
+      dVcDByX - mLf * (ifQ * unitOmega + omega * dIfQByX) +
+      mKpCurrent * dCurrentErrorDByX + mKiCurrent * unitCurrentIntegratorD -
+      mActiveDampingGain * dCapacitorCurrentDByX;
+  const Matrix dConverterVoltageReferenceDByU =
+      mKpCurrent * dCurrentErrorDByU -
+      mActiveDampingGain * dCapacitorCurrentDByU;
+
+  const Matrix dConverterVoltageReferenceQByX =
+      dVcQByX + mLf * (ifD * unitOmega + omega * dIfDByX) +
+      mKpCurrent * dCurrentErrorQByX + mKiCurrent * unitCurrentIntegratorQ -
+      mActiveDampingGain * dCapacitorCurrentQByX;
+  const Matrix dConverterVoltageReferenceQByU =
+      mKpCurrent * dCurrentErrorQByU -
+      mActiveDampingGain * dCapacitorCurrentQByU;
+
+  A.setZero(mStateSize, mStateSize);
+  B.setZero(mStateSize, mInputSize);
+  C.setZero(mOutputSize, mStateSize);
+  D.setZero(mOutputSize, mInputSize);
+
+  A.row(PFiltered) = mPowerFilterCutoff * dPByX;
+  A(PFiltered, PFiltered) -= mPowerFilterCutoff;
+  B.row(PFiltered) = mPowerFilterCutoff * dPByU;
+
+  A.row(QFiltered) = mPowerFilterCutoff * dQByX;
+  A(QFiltered, QFiltered) -= mPowerFilterCutoff;
+  B.row(QFiltered) = mPowerFilterCutoff * dQByU;
+
+  const Real omegaDenominator = regularizedOmega(omega);
+  const Real omegaDenominatorDerivative =
+      std::abs(omega) >= std::abs(omegaDenominator) ? 1.0 : 0.0;
+
+  A(Omega, PFiltered) = -1.0 / (mVirtualInertia * omegaDenominator);
+  A(Omega, Omega) = (-(mPRef - pFiltered) * omegaDenominatorDerivative /
+                         (omegaDenominator * omegaDenominator) -
+                     mDampingCoefficient) /
+                    mVirtualInertia;
+
+  A(Theta, Omega) = 1.0;
+
+  if (mReactiveDroopCutoff > 0.0) {
+    A(VoltageMagnitude, QFiltered) =
+        -mReactiveDroopCutoff * mReactivePowerDroop;
+    A(VoltageMagnitude, VoltageMagnitude) = -mReactiveDroopCutoff;
+  } else {
+    A(VoltageMagnitude, QFiltered) = -mReactiveIntegralGain;
+    A.row(VoltageMagnitude) -= mVoltageDroopGain * dPccVoltageMagnitudeByX;
+  }
+
+  A.row(VoltageIntegratorD) = dVoltageErrorDByX;
+  A.row(VoltageIntegratorQ) = dVoltageErrorQByX;
+
+  A.row(CurrentIntegratorD) = dCurrentErrorDByX;
+  B.row(CurrentIntegratorD) = dCurrentErrorDByU;
+  A.row(CurrentIntegratorQ) = dCurrentErrorQByX;
+  B.row(CurrentIntegratorQ) = dCurrentErrorQByU;
+
+  A.row(DelayVoltageD) = mDelayBandwidth * dConverterVoltageReferenceDByX;
+  A(DelayVoltageD, DelayVoltageD) -= mDelayBandwidth;
+  B.row(DelayVoltageD) = mDelayBandwidth * dConverterVoltageReferenceDByU;
+
+  A.row(DelayVoltageQ) = mDelayBandwidth * dConverterVoltageReferenceQByX;
+  A(DelayVoltageQ, DelayVoltageQ) -= mDelayBandwidth;
+  B.row(DelayVoltageQ) = mDelayBandwidth * dConverterVoltageReferenceQByU;
+
+  const Matrix identity = Matrix::Identity(3, 3);
+
+  A.block(VcA, VcA, 3, 3) = -identity / (mCf * mRc);
+  A.block(VcA, IfA, 3, 3) = identity / mCf;
+  B.block(VcA, 0, 3, 3) = identity / (mCf * mRc);
+
+  A.block(IfA, VcA, 3, 3) = -identity / mLf;
+  A.block(IfA, IfA, 3, 3) = -mRf * identity / mLf;
+  A.block(IfA, Theta, 3, 1) = (sQ * delayVoltageD - sD * delayVoltageQ) / mLf;
+  A.block(IfA, DelayVoltageD, 3, 1) = sD / mLf;
+  A.block(IfA, DelayVoltageQ, 3, 1) = sQ / mLf;
+
+  C.block(0, VcA, 3, 3) = -identity / mRc;
+  D = identity / mRc;
+}
+
 void EMT::Ph3::SSN_GFM::calculateNumericalJacobians(const Matrix &x,
                                                     const Matrix &u, Matrix &A,
                                                     Matrix &B, Matrix &C,
@@ -544,7 +752,7 @@ void EMT::Ph3::SSN_GFM::buildStateSpaceModel(const Matrix &x, const Matrix &u,
                                              Matrix &D, Matrix &E,
                                              Matrix &F) const {
 
-  calculateNumericalJacobians(x, u, A, B, C, D);
+  calculateAnalyticalJacobians(x, u, A, B, C, D);
 
   Matrix stateDerivative = Matrix::Zero(mStateSize, 1);
   Matrix output = Matrix::Zero(mOutputSize, 1);

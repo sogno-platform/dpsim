@@ -146,10 +146,6 @@ private:
   /// \brief Evaluate the nonlinear output y = g(x,u).
   void evaluateOutput(const Matrix &x, const Matrix &u, Matrix &output) const;
 
-  /// \brief Numerically calculate A, B, C and D by central differences.
-  void calculateNumericalJacobians(const Matrix &x, const Matrix &u, Matrix &A,
-                                   Matrix &B, Matrix &C, Matrix &D) const;
-
   /// \brief Construct the complete local affine state-space model.
   void buildStateSpaceModel(const Matrix &x, const Matrix &u, Matrix &A,
                             Matrix &B, Matrix &C, Matrix &D, Matrix &E,
@@ -209,6 +205,15 @@ public:
   /// \brief Opt-in proportional Q-V droop replacing the integral excitation.
   /// droopGain is Dq [V/var]; cutoff [rad/s] > 0 enables it.
   void setReactivePowerDroop(Real droopGain, Real cutoff);
+
+  /// \brief Analytically calculate A, B, C and D, as the simulation does.
+  void calculateAnalyticalJacobians(const Matrix &x, const Matrix &u, Matrix &A,
+                                    Matrix &B, Matrix &C, Matrix &D) const;
+
+  /// \brief Numerically calculate A, B, C and D by central differences, as the
+  /// reference for EMT_Ph3_SSN_GFM_JacobianCheck.
+  void calculateNumericalJacobians(const Matrix &x, const Matrix &u, Matrix &A,
+                                   Matrix &B, Matrix &C, Matrix &D) const;
 
   void initializeFromNodesAndTerminals(Real frequency) override final;
 };
