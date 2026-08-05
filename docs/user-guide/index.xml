@@ -14,12 +14,20 @@ itself; see &lt;a href="https://sogno.energy/dpsim/docs/developer-guide/architec
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>python3 -m venv venv
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">source&lt;/span> venv/bin/activate
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pip install dpsim
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>On Windows the same three steps are:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-powershell" data-lang="powershell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">py&lt;/span> &lt;span style="color:#000">-m&lt;/span> &lt;span style="color:#000">venv&lt;/span> &lt;span style="color:#000">venv&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">venv&lt;/span>&lt;span style="color:#000;font-weight:bold">\&lt;/span>&lt;span style="color:#000">Scripts&lt;/span>&lt;span style="color:#000;font-weight:bold">\&lt;/span>&lt;span style="color:#000">activate&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">pip&lt;/span> &lt;span style="color:#000">install&lt;/span> &lt;span style="color:#000">dpsim&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
 &lt;div class="alert alert-info" role="alert">
-&lt;h4 class="alert-heading">Requires Linux for the published wheels&lt;/h4>
-Two limitations are worth knowing before you start.
-Only Linux wheels are currently published, for CPython 3.9 through 3.13, so on Windows and macOS
+&lt;h4 class="alert-heading">Published wheels cover Linux and Windows&lt;/h4>
+Three limitations are worth knowing before you start.
+Wheels are published for Linux and Windows on x86-64, for CPython 3.9 through 3.13, so on macOS
 you have to build from source for now.
+The Windows wheel is built without VILLASnode, real-time support and Sundials, so it has no
+&lt;code>dpsimpyvillas&lt;/code> module, no &lt;code>RealTimeSimulation&lt;/code> and &lt;code>RealTimeDataLogger&lt;/code>, and no
+&lt;code>SynchronGeneratorDQODE&lt;/code> in &lt;code>dpsimpy.dp.ph3&lt;/code> and &lt;code>dpsimpy.emt.ph3&lt;/code>; the solvers, the models and
+the CIM/CGMES reader are all available.
 The package also contains only the simulation core; the example notebooks additionally need
 plotting and data handling packages, which are listed in the import section of each notebook.
 &lt;/div>
