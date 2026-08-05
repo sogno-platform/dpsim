@@ -206,6 +206,13 @@ cmake --build . --target dpsimpy --parallel
 If CMake rejects the spdlog dependency because of its minimum policy version, add
 `-DCMAKE_POLICY_VERSION_MINIMUM=3.5`, which is what CI currently does as a workaround.
 
+Visual Studio is a multi-configuration generator, so the configuration is chosen at build time
+with `cmake --build . --config Release`, not with `CMAKE_BUILD_TYPE`. DPsim adds its optimization
+flags per configuration and per compiler: MSVC gets `/fp:fast` on top of the `/O2` that CMake
+already supplies for `Release` and `RelWithDebInfo`, while the GCC and Clang flags `-Ofast`,
+`-march=native` and `-flto` are never passed to `cl.exe`. `WITH_LTO` maps to `/GL` and `/LTCG`.
+`WITH_MARCH_NATIVE` has no MSVC equivalent and is ignored with a warning.
+
 The `dpsim-villas` library is not available on Windows, since it requires VILLASnode, which does
 not build there. `WITH_VILLAS` therefore stays off and the `dpsimpyvillas` target does not exist,
 so co-simulation examples cannot be built on Windows. The CIM reader is likewise not part of the
