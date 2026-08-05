@@ -732,9 +732,6 @@ class Reader:
                 q_limit_min=gen_q_min,
             )
             gen.set_base_voltage(gen_baseV)
-            # modifyPowerFlowBusType throws for PQ, set_parameters already stored it
-            if bus_type != dpsimpy.PowerflowBusType.PQ:
-                gen.modify_power_flow_bus_type(bus_type)
         else:
             # get dynamic data of the generator
             gen_dyn_row_idx = self.mpc_dyn_gen_data.index[
