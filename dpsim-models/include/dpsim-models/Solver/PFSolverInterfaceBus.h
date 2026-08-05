@@ -36,7 +36,7 @@ public:
   std::shared_ptr<CPS::SP::Ph1::VDNode> mVD;
 
   /// Define the type of bus the component is modelled by
-  PowerflowBusType mPowerflowBusType;
+  PowerflowBusType mPowerflowBusType = PowerflowBusType::None;
   PFSolverInterfaceBus() = default;
 
   virtual void modifyPowerFlowBusType(PowerflowBusType powerflowBusType) = 0;
