@@ -137,6 +137,10 @@ void KLUAdapter::partialRefactorize(
   if (systemMatrix.nonZeros() != nnz) {
     preprocessing(systemMatrix, listVariableSystemMatrixEntries);
     factorize(systemMatrix);
+  } else if (mPartialRefactorizationMethod !=
+                 PARTIAL_REFACTORIZATION_METHOD::NO_PARTIAL_REFACTORIZATION &&
+             (mVaryingColumns.empty() || mVaryingRows.empty())) {
+    factorize(systemMatrix);
   } else {
     auto Ap =
         Eigen::internal::convert_index<Int *>(systemMatrix.outerIndexPtr());
