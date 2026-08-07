@@ -137,7 +137,7 @@ jobs:
             -w /workspace \
             sogno/dpsim:binder \
             python examples/villas/dpsim-file.py
-    
+
       - name: Push
         run: |
           docker push sogno/dpsim:binder
