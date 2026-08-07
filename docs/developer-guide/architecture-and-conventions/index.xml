@@ -132,7 +132,7 @@ version CI uses is:&lt;/p>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Cloning, building and installing then work exactly as in the container section above.&lt;/p>
 &lt;h2 id="cmake-for-windows">CMake for Windows&lt;/h2>
 &lt;p>Windows is built in CI on &lt;code>windows-latest&lt;/code>, so the recipe below mirrors what
-&lt;code>.github/workflows/build_test_windows.yaml&lt;/code> runs. You need Visual Studio with the C++ desktop
+the &lt;code>Build Windows&lt;/code> jobs of &lt;code>.github/workflows/ci.yaml&lt;/code> run. You need Visual Studio with the C++ desktop
 development workload, &lt;a href="https://cmake.org/">CMake&lt;/a> and
 &lt;a href="https://git-scm.com/download/win">Git for Windows&lt;/a>. For Python support, install Python 3 and
 add it to your PATH. Let CMake pick the default generator rather than naming a Visual Studio

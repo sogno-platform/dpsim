@@ -1245,7 +1245,7 @@ version CI uses is:&lt;/p>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Cloning, building and installing then work exactly as in the container section above.&lt;/p>
 &lt;h2 id="cmake-for-windows">CMake for Windows&lt;/h2>
 &lt;p>Windows is built in CI on &lt;code>windows-latest&lt;/code>, so the recipe below mirrors what
-&lt;code>.github/workflows/build_test_windows.yaml&lt;/code> runs. You need Visual Studio with the C++ desktop
+the &lt;code>Build Windows&lt;/code> jobs of &lt;code>.github/workflows/ci.yaml&lt;/code> run. You need Visual Studio with the C++ desktop
 development workload, &lt;a href="https://cmake.org/">CMake&lt;/a> and
 &lt;a href="https://git-scm.com/download/win">Git for Windows&lt;/a>. For Python support, install Python 3 and
 add it to your PATH. Let CMake pick the default generator rather than naming a Visual Studio
@@ -2455,7 +2455,120 @@ bounds large early steps. Voltage magnitudes are updated multiplicatively
 voltage increment used in the Jacobian.&lt;/p>
 &lt;p>The formulation above is independent of DPsim. For the solvers it actually ships, their
 convergence controls and the reactive power limit handling, see
-&lt;a href="https://sogno.energy/dpsim/docs/developer-guide/solvers/powerflow-solvers/">power flow solvers&lt;/a>.&lt;/p></description></item><item><title>Docs: Coding Conventions</title><link>https://sogno.energy/dpsim/docs/developer-guide/architecture-and-conventions/conventions/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/architecture-and-conventions/conventions/</guid><description>
+&lt;a href="https://sogno.energy/dpsim/docs/developer-guide/solvers/powerflow-solvers/">power flow solvers&lt;/a>.&lt;/p></description></item><item><title>Docs: Continuous Integration</title><link>https://sogno.energy/dpsim/docs/contributing/continuous-integration/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/contributing/continuous-integration/</guid><description>
+&lt;h2 id="entry-point">Entry point&lt;/h2>
+&lt;p>Almost everything runs from a single workflow, &lt;code>.github/workflows/ci.yaml&lt;/code>. It
+triggers on pushes to &lt;code>master&lt;/code>, on tags, on pull requests and on manual dispatch,
+and it calls the reusable workflows that hold the actual work:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Reusable workflow&lt;/th>
+&lt;th>Contents&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>prepare-images.yaml&lt;/code>&lt;/td>
+&lt;td>builds the container images from their Dockerfiles and pushes them to the GitHub container registry&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>build-linux.yaml&lt;/code>&lt;/td>
+&lt;td>the five Linux compilations, Fedora and Rocky, with ccache&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>build-windows.yaml&lt;/code>&lt;/td>
+&lt;td>the two Windows compilations&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>checks.yaml&lt;/code>&lt;/td>
+&lt;td>pre-commit, the notebook output rule, the &lt;code>pyproject.toml&lt;/code> extras resolution, and cppcheck&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>test-linux.yaml&lt;/code>&lt;/td>
+&lt;td>the notebook test suite with coverage, the notebook result comparison, and the compiled WSCC 9 bus examples&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>run_villas_example.yaml&lt;/code>&lt;/td>
+&lt;td>one VILLASnode example per matrix entry&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>build-nix.yaml&lt;/code>&lt;/td>
+&lt;td>the Nix build&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>packaging-python.yaml&lt;/code>&lt;/td>
+&lt;td>source distribution, wheels, and the PyPI uploads&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>documentation.yaml&lt;/code>&lt;/td>
+&lt;td>the reference documentation and both deployment targets&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>&lt;code>ci.yaml&lt;/code> itself holds no build steps, only the triggers, the &lt;code>setup&lt;/code> job and the
+ordering.&lt;/p>
+&lt;p>One consequence is worth knowing before renaming anything. A required status
+check is identified by its name, and a job called through a reusable workflow
+reports as &lt;code>caller job / inner job&lt;/code>, so the branch protection rule has to list
+&lt;code>Build Linux / Rocky Linux&lt;/code> rather than &lt;code>Rocky Linux&lt;/code>. Matrix jobs whose &lt;code>name&lt;/code>
+interpolates a matrix value, as the build jobs do, are reported under exactly
+that rendered name; a matrix job with a static name would instead get a
+&lt;code>(matrix, values)&lt;/code> suffix appended. Renaming a job, or moving one between
+&lt;code>ci.yaml&lt;/code> and a reusable workflow, therefore invalidates its protection entry and
+has to be done together with an update to the branch protection settings.&lt;/p>
+&lt;h2 id="how-a-run-picks-its-container-images">How a run picks its container images&lt;/h2>
+&lt;p>The &lt;code>setup&lt;/code> job decides this per image, not for all of them at once. Each image
+has its own path filter, so editing &lt;code>Dockerfile.dev-rocky&lt;/code> rebuilds the Rocky
+image and leaves the other five alone. The two images that are built &lt;code>FROM&lt;/code> the
+development image, the release image and the Binder image, track the development
+image&amp;rsquo;s paths as well, so a change to &lt;code>Dockerfile.dev&lt;/code> rebuilds all three.
+Everything under &lt;code>packaging/Shell/&lt;/code> counts towards every image.&lt;/p>
+&lt;p>An image whose definition did not change is used as published on Docker Hub. One
+whose definition did change is rebuilt by &lt;code>prepare-images.yaml&lt;/code> and pushed to
+&lt;code>ghcr.io/&amp;lt;owner&amp;gt;/dpsim/&amp;lt;image&amp;gt;&lt;/code> under two tags, the commit SHA and the slugified
+ref name, and the run then builds against the SHA tag. This needs a token that
+may write packages, so it happens on pushes to &lt;code>master&lt;/code> and on pull requests from
+a branch of this repository; a pull request from a fork is covered below.&lt;/p>
+&lt;p>Manual dispatch takes a &lt;code>rebuild_images&lt;/code> input that forces every image to be
+rebuilt.&lt;/p>
+&lt;h2 id="images-for-pull-requests-from-forks">Images for pull requests from forks&lt;/h2>
+&lt;p>A fork pull request gets a read-only token, so it cannot publish the images it
+would need in order to be tested against its own changes.
+&lt;code>prepare-images-fork.yaml&lt;/code> closes that gap. It triggers on &lt;code>pull_request_target&lt;/code>,
+restricted to the image definition paths, and its first job carries the &lt;code>fork-pr&lt;/code>
+environment. That environment has required reviewers, and the approval is the
+only thing standing in front of a privileged run of code that came from a fork,
+so it should not be granted without reading the change.&lt;/p>
+&lt;p>The gate job resolves the head revision and nothing else; the image build runs
+behind it. No repository secret is passed into that workflow, so the only
+credential in reach is a &lt;code>GITHUB_TOKEN&lt;/code> limited to reading contents and writing
+packages.&lt;/p>
+&lt;p>The main &lt;code>CI&lt;/code> run does not wait for that approval. It probes the registry for
+the images, falls back to Docker Hub when they are not published yet, and logs a
+notice. Approve the &lt;code>Prepare Images (fork)&lt;/code> run and re-run &lt;code>CI&lt;/code> to have the
+pull request tested against its own images.&lt;/p>
+&lt;p>The probe reads the registry anonymously, so the packages under
+&lt;code>ghcr.io/&amp;lt;owner&amp;gt;/dpsim/&lt;/code> have to be public.&lt;/p>
+&lt;h2 id="publishing-to-docker-hub">Publishing to Docker Hub&lt;/h2>
+&lt;p>&lt;code>publish-images.yaml&lt;/code> is what refreshes the &lt;code>sogno/dpsim&lt;/code> images that the
+documentation and the outside world consume. It runs on the self-hosted runner,
+needs the Docker Hub credentials, and triggers on pushes to &lt;code>master&lt;/code>, where it
+applies the same per-image path filters and republishes only what changed. Its
+manual dispatch takes an &lt;code>image&lt;/code> input for republishing a single image on
+demand.&lt;/p>
+&lt;h2 id="workflows-outside-ci">Workflows outside CI&lt;/h2>
+&lt;ul>
+&lt;li>&lt;code>sonar_cloud.yaml&lt;/code> and &lt;code>sonar_cloud_scan.yaml&lt;/code> are a deliberately separate
+pair. The scan holds &lt;code>SONAR_TOKEN&lt;/code> and is triggered by the completion of the
+unprivileged build workflow; folding the build into &lt;code>CI&lt;/code> would mean that any
+unrelated failing job suppresses the analysis.&lt;/li>
+&lt;li>&lt;code>llm-review.yml&lt;/code> and &lt;code>llm-review-collect.yml&lt;/code> are described under
+&lt;a href="../llm-pr-review/">LLM Pull Request Review&lt;/a>.&lt;/li>
+&lt;li>&lt;code>build_test_linux_rocky_profiling.yaml&lt;/code> is dispatch only.&lt;/li>
+&lt;li>&lt;code>documentation.yaml&lt;/code> is called by &lt;code>CI&lt;/code> on &lt;code>master&lt;/code>, and can also be dispatched
+on its own with an &lt;code>image&lt;/code> input.&lt;/li>
+&lt;/ul></description></item><item><title>Docs: Coding Conventions</title><link>https://sogno.energy/dpsim/docs/developer-guide/architecture-and-conventions/conventions/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/architecture-and-conventions/conventions/</guid><description>
 &lt;p>Conventions that apply across the codebase. For the process of getting a change merged, see
 &lt;a href="https://sogno.energy/dpsim/docs/contributing/">contributing&lt;/a>.&lt;/p>
 &lt;p>This is a summary of general guidelines for the development of DPsim.&lt;/p>
@@ -5772,73 +5885,4 @@ The long-term goal is to migrate all sub-component construction to &lt;code>crea
 &lt;h3 id="signal-component-initialize-not-sequenced-with-power-flow">Signal component &lt;code>initialize&lt;/code> not sequenced with power flow&lt;/h3>
 &lt;p>Signal components receive &lt;code>initialize(omega, timeStep)&lt;/code> &lt;em>after&lt;/em> &lt;code>initializeFromNodesAndTerminals&lt;/code> on power components but &lt;em>before&lt;/em> the MNA tasks are registered.
 If a signal component&amp;rsquo;s initial state depends on the power-flow solution (e.g. an exciter initializing to match the generator terminal voltage), it must read the relevant attribute values directly — there is no formal mechanism today to express this dependency in the initialization sequence.
-A future improvement would be to give signal components access to the settled power-flow solution before their &lt;code>initialize&lt;/code> is called.&lt;/p></description></item><item><title>Docs: How to Cite</title><link>https://sogno.energy/dpsim/docs/citation/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/citation/</guid><description>
-&lt;p>If you use DPsim in your research, please cite the software paper below. If your work depends on
-a specific capability, cite the corresponding paper from
-&lt;a href="#further-publications">further publications&lt;/a> as well.&lt;/p>
-&lt;h2 id="software-paper">Software paper&lt;/h2>
-&lt;p>M. Mirz, S. Vogel, G. Reinke and A. Monti, &amp;ldquo;DPsim: A dynamic phasor real-time simulator for
-power systems&amp;rdquo;, &lt;em>SoftwareX&lt;/em>, vol. 10, 100253, 2019.
-&lt;a href="https://doi.org/10.1016/j.softx.2019.100253">https://doi.org/10.1016/j.softx.2019.100253&lt;/a>&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bibtex" data-lang="bibtex">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">@article&lt;/span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#f57900">mirz2019dpsim&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c4a000">title&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">{DPsim: A dynamic phasor real-time simulator for power systems}&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c4a000">author&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">{Mirz, Markus and Vogel, Steffen and Reinke, Georg and Monti, Antonello}&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c4a000">journal&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">{SoftwareX}&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c4a000">volume&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">{10}&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c4a000">pages&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">{100253}&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c4a000">year&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">{2019}&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c4a000">issn&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">{2352-7110}&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c4a000">doi&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">{10.1016/j.softx.2019.100253}&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c4a000">url&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">{https://www.sciencedirect.com/science/article/pii/S2352711018302760}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="citing-a-specific-version">Citing a specific version&lt;/h2>
-&lt;p>To make a result reproducible, cite the version you ran alongside the paper:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bibtex" data-lang="bibtex">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">@software&lt;/span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#f57900">dpsim&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c4a000">title&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">{DPsim}&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c4a000">author&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">{{The DPsim Authors}}&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c4a000">url&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">{https://github.com/sogno-platform/dpsim}&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#c4a000">note&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#4e9a06">{Version 1.2.1}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The repository also carries a &lt;code>CITATION.cff&lt;/code> file, so GitHub offers a ready-made citation
-through the &amp;ldquo;Cite this repository&amp;rdquo; link on the project page.&lt;/p>
-&lt;h2 id="further-publications">Further publications&lt;/h2>
-&lt;p>Cite these when your work builds on the specific method they describe.&lt;/p>
-&lt;p>Shifted frequency analysis and reduced-order machine models:&lt;/p>
-&lt;ul>
-&lt;li>J. Dinkelbach, M. Moraga and A. Monti, &amp;ldquo;Reduced-Order Synchronous Generator Modelling for
-Real-Time Simulation using Shifted Frequency Analysis&amp;rdquo;, &lt;em>OSMSES&lt;/em>, 2023.
-&lt;a href="https://ieeexplore.ieee.org/document/10089718">https://ieeexplore.ieee.org/document/10089718&lt;/a>&lt;/li>
-&lt;li>G. Nakti, J. Dinkelbach, M. Mirz and A. Monti, &amp;ldquo;Comparative Assessment of Shifted Frequency
-Modeling in Transient Stability Analysis using the Open Source Simulator DPsim&amp;rdquo;, &lt;em>OSMSES&lt;/em>, 2022.
-&lt;a href="https://ieeexplore.ieee.org/document/9769135">https://ieeexplore.ieee.org/document/9769135&lt;/a>&lt;/li>
-&lt;li>J. Dinkelbach, G. Nakti, M. Mirz and A. Monti, &amp;ldquo;Simulation of Low Inertia Power Systems Based
-on Shifted Frequency Analysis&amp;rdquo;, &lt;em>Energies&lt;/em>, vol. 14, no. 7, 1860, 2021.
-&lt;a href="https://www.mdpi.com/1996-1073/14/7/1860">https://www.mdpi.com/1996-1073/14/7/1860&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;p>Power electronics modelling and parallelisation:&lt;/p>
-&lt;ul>
-&lt;li>M. Mirz, J. Dinkelbach and A. Monti, &amp;ldquo;DPsim: Advancements in Power Electronics Modelling Using
-Shifted Frequency Analysis and in Real-Time Simulation Capability by Parallelization&amp;rdquo;,
-&lt;em>Energies&lt;/em>, vol. 13, no. 15, 3879, 2020. &lt;a href="https://www.mdpi.com/1996-1073/13/15/3879">https://www.mdpi.com/1996-1073/13/15/3879&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;p>Solver performance:&lt;/p>
-&lt;ul>
-&lt;li>J. Dinkelbach, L. Schumacher, L. Razik, A. Benigni and A. Monti, &amp;ldquo;Factorisation Path Based
-Refactorisation for High-Performance LU Decomposition in Real-Time Power System Simulation&amp;rdquo;,
-&lt;em>Energies&lt;/em>, vol. 14, no. 23, 7989, 2021. &lt;a href="https://www.mdpi.com/1996-1073/14/23/7989">https://www.mdpi.com/1996-1073/14/23/7989&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;p>Grid data and CIM:&lt;/p>
-&lt;ul>
-&lt;li>J. Dinkelbach, L. Razik, M. Mirz, A. Benigni and A. Monti, &amp;ldquo;Template-based generation of
-programming language specific code for smart grid modelling compliant with CIM and CGMES&amp;rdquo;,
-&lt;em>The Journal of Engineering&lt;/em>, 2022.
-&lt;a href="https://onlinelibrary.wiley.com/doi/abs/10.1049/tje2.12208">https://onlinelibrary.wiley.com/doi/abs/10.1049/tje2.12208&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;p>Real-time and co-simulation:&lt;/p>
-&lt;ul>
-&lt;li>S. Vogel, M. Mirz, L. Razik and A. Monti, &amp;ldquo;An Open Solution for Next-generation Real-time Power
-System Simulation&amp;rdquo;, &lt;em>IEEE EI2&lt;/em>, 2017. &lt;a href="https://ieeexplore.ieee.org/document/8245739">https://ieeexplore.ieee.org/document/8245739&lt;/a>&lt;/li>
-&lt;li>M. Mirz, A. Estebsari, F. Arrigo, E. Bompard and A. Monti, &amp;ldquo;Dynamic phasors to enable
-distributed real-time simulation&amp;rdquo;, &lt;em>ICCEP&lt;/em>, 2017.
-&lt;a href="https://ieeexplore.ieee.org/document/8004805">https://ieeexplore.ieee.org/document/8004805&lt;/a>&lt;/li>
-&lt;/ul></description></item></channel></rss>
+A future improvement would be to give signal components access to the settled power-flow solution before their &lt;code>initialize&lt;/code> is called.&lt;/p></description></item></channel></rss>
