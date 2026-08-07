@@ -10,7 +10,7 @@ RUN set -eux; \
 	dnf -y update; \
 	dnf -y remove systemd-standalone-tmpfiles || true; \
 	dnf -y --refresh install \
-		gcc gcc-c++ \
+		gcc gcc-c++ ccache \
 		git \
 		make cmake pkgconfig \
 		python3-pip \
