@@ -30,10 +30,9 @@ String decoupleLine(SystemTopology &sys, const String &lineName,
   auto line = Signal::DecouplingLineEMT_Ph3::make(
       "dline_" + node1 + "_" + node2, Logger::Level::debug);
 
-  line->setParameters(sys.node<EMT::SimNode>(node1),
-                      sys.node<EMT::SimNode>(node2), Rline, Lline, Cline);
+  line->connect({sys.node<EMT::SimNode>(node1), sys.node<EMT::SimNode>(node2)});
+  line->setParameters(Rline, Lline, Cline);
   sys.addComponent(line);
-  sys.addComponents(line->getLineComponents());
 
   return dline_name;
 }
