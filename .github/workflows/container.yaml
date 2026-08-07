@@ -118,10 +118,26 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_SECRET }}
 
-      - name: Build and push
-        id: docker_build_release
+      - name: Build
         uses: docker/build-push-action@v7
         with:
-         file: .binder/Dockerfile
-         push: true
-         tags: sogno/dpsim:binder
+          context: .
+          file: .binder/Dockerfile
+          load: true
+          push: false
+          tags: sogno/dpsim:binder
+
+      - name: Run test
+        run: |
+          mkdir -p logs
+          sudo chown 1000:1000 logs
+          docker run --rm \
+            -u 1000:1000 \
+            -v "$GITHUB_WORKSPACE:/workspace" \
+            -w /workspace \
+            sogno/dpsim:binder \
+            python examples/villas/dpsim-file.py
+    
+      - name: Push
+        run: |
+          docker push sogno/dpsim:binder
