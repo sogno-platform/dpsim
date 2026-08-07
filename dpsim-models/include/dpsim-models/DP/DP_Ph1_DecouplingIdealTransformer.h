@@ -14,10 +14,11 @@
 #include <dpsim-models/DP/DP_Ph1_Resistor.h>
 
 namespace CPS {
-namespace Signal {
-class DecouplingIdealTransformer_DP_Ph1
+namespace DP {
+namespace Ph1 {
+class DecouplingIdealTransformer
     : public CompositePowerComp<Complex>,
-      public SharedFactory<DecouplingIdealTransformer_DP_Ph1> {
+      public SharedFactory<DecouplingIdealTransformer> {
 protected:
   Real mDelay;
   Real mInternalSeriesResistance = 1e-9;
@@ -52,7 +53,7 @@ protected:
   Complex extrapolate(std::vector<Complex> &data);
 
 public:
-  typedef std::shared_ptr<DecouplingIdealTransformer_DP_Ph1> Ptr;
+  typedef std::shared_ptr<DecouplingIdealTransformer> Ptr;
 
   const Attribute<Complex>::Ptr mSourceVoltageIntfVoltage;
   const Attribute<Complex>::Ptr mSourceVoltageIntfCurrent;
@@ -62,11 +63,11 @@ public:
   ///FIXME: workaround for dependency analysis as long as the states aren't attributes
   const Attribute<Matrix>::Ptr mStates;
 
-  DecouplingIdealTransformer_DP_Ph1(
-      String uid, String name, Logger::Level logLevel = Logger::Level::info);
-  DecouplingIdealTransformer_DP_Ph1(
-      String name, Logger::Level logLevel = Logger::Level::info)
-      : DecouplingIdealTransformer_DP_Ph1(name, name, logLevel) {}
+  DecouplingIdealTransformer(String uid, String name,
+                             Logger::Level logLevel = Logger::Level::info);
+  DecouplingIdealTransformer(String name,
+                             Logger::Level logLevel = Logger::Level::info)
+      : DecouplingIdealTransformer(name, name, logLevel) {}
 
   void setParameters(Real delay, Matrix voltageSrcIntfCurr,
                      Complex current1Extrap0,
@@ -96,5 +97,6 @@ public:
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;
 };
-} // namespace Signal
+} // namespace Ph1
+} // namespace DP
 } // namespace CPS

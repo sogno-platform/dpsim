@@ -143,16 +143,11 @@ model, so the table cannot fall behind the code. For the equations behind a mode
 
 ## Decoupling components
 
-These are network components: they connect to nodes and own their own sources. They are declared in the `Signal` namespace for historical reasons, which is why their domain appears in the class name rather than in the namespace.
+These are network components: they connect to nodes and own their own sources, so a single addComponent is all a caller needs.
 
 | Model | SP::Ph1 | SP::Ph3 | DP::Ph1 | DP::Ph3 | EMT::Ph1 | EMT::Ph3 |
 | --- | :---: | :---: | :---: | :---: | :---: | :---: |
-| DecouplingLine | &ndash; | &ndash; | &check; | &ndash; | &ndash; | &ndash; |
-| DecouplingLineEMT | &ndash; | &ndash; | &ndash; | &ndash; | &check; | &ndash; |
-| DecouplingLineEMT_Ph3 | &ndash; | &ndash; | &ndash; | &ndash; | &ndash; | &check; |
-| DecouplingIdealTransformer_SP_Ph1 | &check; | &ndash; | &ndash; | &ndash; | &ndash; | &ndash; |
-| DecouplingIdealTransformer_DP_Ph1 | &ndash; | &ndash; | &check; | &ndash; | &ndash; | &ndash; |
-| DecouplingIdealTransformer_EMT_Ph1 | &ndash; | &ndash; | &ndash; | &ndash; | &check; | &ndash; |
-| DecouplingIdealTransformer_EMT_Ph3 | &ndash; | &ndash; | &ndash; | &ndash; | &ndash; | &check; |
+| DecouplingLine | &ndash; | &ndash; | &check; | &ndash; | &check; | &check; |
+| DecouplingIdealTransformer | &check; | &ndash; | &check; | &ndash; | &check; | &check; |
 
 <!-- END GENERATED -->

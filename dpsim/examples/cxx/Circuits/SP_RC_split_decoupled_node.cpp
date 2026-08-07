@@ -3,8 +3,8 @@
 
 #include "dpsim-models/Definitions.h"
 #include "dpsim-models/SP/SP_Ph1_Capacitor.h"
+#include "dpsim-models/SP/SP_Ph1_DecouplingIdealTransformer.h"
 #include "dpsim-models/SP/SP_Ph1_Resistor.h"
-#include "dpsim-models/Signal/DecouplingIdealTransformer_SP_Ph1.h"
 #include "dpsim-models/SimNode.h"
 #include "dpsim-models/SimPowerComp.h"
 #include "dpsim/Definitions.h"
@@ -102,7 +102,7 @@ void decoupleNode(SystemTopology &sys, const String &nodeName,
     sys.addComponent(comp);
   }
 
-  auto idealTrafo = Signal::DecouplingIdealTransformer_SP_Ph1::make(
+  auto idealTrafo = CPS::SP::Ph1::DecouplingIdealTransformer::make(
       "itm_" + nodeName, Logger::Level::debug);
   idealTrafo->connect({nodeCopy1, nodeCopy2});
   idealTrafo->setParameters(ITMDelay, irLine_0, i_inf_0, cosimMethod);
@@ -127,22 +127,22 @@ void doSim(String &name, SystemTopology &sys, Int threads, Real ts,
                          sys.node<SP::SimNode>("n2_2")->attribute("v"));
     logger->logAttribute(
         "i_intf",
-        sys.component<Signal::DecouplingIdealTransformer_SP_Ph1>("itm_n2")
+        sys.component<CPS::SP::Ph1::DecouplingIdealTransformer>("itm_n2")
             ->attribute("i_src_intf"),
         1, 1);
     logger->logAttribute(
         "i_ref",
-        sys.component<Signal::DecouplingIdealTransformer_SP_Ph1>("itm_n2")
+        sys.component<CPS::SP::Ph1::DecouplingIdealTransformer>("itm_n2")
             ->attribute("i_ref"),
         1, 1);
     logger->logAttribute(
         "v_intf",
-        sys.component<Signal::DecouplingIdealTransformer_SP_Ph1>("itm_n2")
+        sys.component<CPS::SP::Ph1::DecouplingIdealTransformer>("itm_n2")
             ->attribute("v_src_intf"),
         1, 1);
     logger->logAttribute(
         "v_ref",
-        sys.component<Signal::DecouplingIdealTransformer_SP_Ph1>("itm_n2")
+        sys.component<CPS::SP::Ph1::DecouplingIdealTransformer>("itm_n2")
             ->attribute("v_ref"),
         1, 1);
   } else {

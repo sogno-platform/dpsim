@@ -3,13 +3,18 @@ title: "Signal Models"
 linkTitle: "Signal Models"
 weight: 4
 description: >
-  Controllers, regulators, generators and decoupling elements in the Signal namespace.
+  Controllers, regulators and signal generators in the Signal namespace.
 ---
 
 Signal models live in `CPS::Signal` and are domain independent: the same controller drives a
 dynamic phasor or an electromagnetic transient machine model, because it operates on scalar
-signals rather than on network quantities. The exception is the decoupling group, which exists
-per domain since it inserts real components into the network.
+signals rather than on network quantities.
+
+The decoupling components used to live here too. They are network components, not signal
+models, so they now sit in their own domains as `DP::Ph1::DecouplingLine`,
+`EMT::Ph3::DecouplingIdealTransformer` and so on. See
+[decoupling line]({{< ref "/docs/Concepts/Models/branches.md" >}}) and
+[co-simulation]({{< ref "/docs/User Guide/co-simulation.md" >}}).
 
 ## Excitation systems
 
@@ -74,24 +79,6 @@ Drive sources and setpoints from a prescribed waveform rather than a constant.
 | --- | --- |
 | `FIRFilter` | Finite impulse response filter |
 | `Integrator` | Integrator block used inside the control models |
-
-## Decoupling
-
-Split a network into parts that can be solved separately, either across solvers or across
-simulators in a co-simulation. See
-[co-simulation]({{< ref "/docs/User Guide/co-simulation.md" >}}).
-
-These are the one group here that is not a signal model. They derive from `CompositePowerComp`,
-so they own their internal sources, resistors and virtual nodes and register them themselves.
-Give the terminals with `connect()` like any other branch and add the single component to the
-system; there is nothing else to wire up.
-
-| Model | Domains |
-| --- | --- |
-| `DecouplingLine` | `DP::Ph1` |
-| `DecouplingLineEMT` | `EMT::Ph1` |
-| `DecouplingLineEMT_Ph3` | `EMT::Ph3` |
-| `DecouplingIdealTransformer` | `DP::Ph1`, `EMT::Ph1`, `EMT::Ph3`, `SP::Ph1` |
 
 ## References
 

@@ -144,6 +144,27 @@ void addEMTComponents(py::module_ mEMT) {
 }
 
 void addEMTPh1Components(py::module_ mEMTPh1) {
+  py::class_<CPS::EMT::Ph1::DecouplingLine,
+             std::shared_ptr<CPS::EMT::Ph1::DecouplingLine>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "DecouplingLine",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::EMT::Ph1::DecouplingLine::setParameters,
+           "resistance"_a, "inductance"_a, "capacitance"_a)
+      .def("connect", &CPS::EMT::Ph1::DecouplingLine::connect);
+
+  py::class_<CPS::EMT::Ph1::DecouplingIdealTransformer,
+             std::shared_ptr<CPS::EMT::Ph1::DecouplingIdealTransformer>,
+             CPS::SimPowerComp<CPS::Real>>(
+      mEMTPh1, "DecouplingIdealTransformer", py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters",
+           &CPS::EMT::Ph1::DecouplingIdealTransformer::setParameters, "delay"_a,
+           "v_src_intf_cur"_a, "cur1_extrap_0"_a, "coupling_method"_a)
+      .def("connect", &CPS::EMT::Ph1::DecouplingIdealTransformer::connect);
+
   py::class_<CPS::EMT::Ph1::CurrentSource,
              std::shared_ptr<CPS::EMT::Ph1::CurrentSource>,
              CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "CurrentSource",
@@ -288,6 +309,27 @@ void addEMTPh1Components(py::module_ mEMTPh1) {
 }
 
 void addEMTPh3Components(py::module_ mEMTPh3) {
+  py::class_<CPS::EMT::Ph3::DecouplingLine,
+             std::shared_ptr<CPS::EMT::Ph3::DecouplingLine>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "DecouplingLine",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::EMT::Ph3::DecouplingLine::setParameters,
+           "resistance"_a, "inductance"_a, "capacitance"_a)
+      .def("connect", &CPS::EMT::Ph3::DecouplingLine::connect);
+
+  py::class_<CPS::EMT::Ph3::DecouplingIdealTransformer,
+             std::shared_ptr<CPS::EMT::Ph3::DecouplingIdealTransformer>,
+             CPS::SimPowerComp<CPS::Real>>(
+      mEMTPh3, "DecouplingIdealTransformer", py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters",
+           &CPS::EMT::Ph3::DecouplingIdealTransformer::setParameters, "delay"_a,
+           "v_src_intf_cur"_a, "cur1_extrap_0"_a, "coupling_method"_a)
+      .def("connect", &CPS::EMT::Ph3::DecouplingIdealTransformer::connect);
+
   py::class_<CPS::EMT::Ph3::VoltageSource,
              std::shared_ptr<CPS::EMT::Ph3::VoltageSource>,
              CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "VoltageSource",

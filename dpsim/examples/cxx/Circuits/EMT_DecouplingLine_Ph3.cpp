@@ -109,7 +109,8 @@ void simDecouplingLine_Ph3() {
   Real inductance = 0.16;
   Real capacitance = 1.0e-6;
 
-  auto dline = DecouplingLineEMT_Ph3::make("dline", Logger::Level::debug);
+  auto dline =
+      CPS::EMT::Ph3::DecouplingLine::make("dline", Logger::Level::debug);
   dline->setParameters(
       CPS::Math::singlePhaseParameterToThreePhase(resistance),
       CPS::Math::singlePhaseParameterToThreePhase(inductance),

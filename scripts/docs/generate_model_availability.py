@@ -165,34 +165,16 @@ CATEGORIES = [
         "Decoupling components",
         [
             "DecouplingLine",
-            "DecouplingLineEMT",
-            "DecouplingLineEMT_Ph3",
-            "DecouplingIdealTransformer_SP_Ph1",
-            "DecouplingIdealTransformer_DP_Ph1",
-            "DecouplingIdealTransformer_EMT_Ph1",
-            "DecouplingIdealTransformer_EMT_Ph3",
+            "DecouplingIdealTransformer",
         ],
     ),
 ]
 
-# These live in the Signal namespace but are domain specific: the domain is part of the
-# class name, not of the directory, so it cannot be recovered from the path.
-DOMAIN_OVERRIDES = {
-    "DecouplingLine": "DP::Ph1",
-    "DecouplingLineEMT": "EMT::Ph1",
-    "DecouplingLineEMT_Ph3": "EMT::Ph3",
-    "DecouplingIdealTransformer_SP_Ph1": "SP::Ph1",
-    "DecouplingIdealTransformer_DP_Ph1": "DP::Ph1",
-    "DecouplingIdealTransformer_EMT_Ph1": "EMT::Ph1",
-    "DecouplingIdealTransformer_EMT_Ph3": "EMT::Ph3",
-}
-
 # Fixed prose emitted under a section heading, before its table or list.
 NOTES = {
     "Decoupling components": (
-        "These are network components: they connect to nodes and own their own sources. "
-        "They are declared in the `Signal` namespace for historical reasons, which is why "
-        "their domain appears in the class name rather than in the namespace."
+        "These are network components: they connect to nodes and own their own sources, "
+        "so a single addComponent is all a caller needs."
     ),
 }
 
@@ -215,7 +197,7 @@ def scan():
                 continue
             if cls in SKIP or cls.startswith("Base_"):
                 continue
-            found.setdefault(cls, set()).add(DOMAIN_OVERRIDES.get(cls, domain))
+            found.setdefault(cls, set()).add(domain)
     return found
 
 

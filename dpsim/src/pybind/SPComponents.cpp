@@ -29,6 +29,17 @@ void addSPComponents(py::module_ mSP) {
 }
 
 void addSPPh1Components(py::module_ mSPPh1) {
+  py::class_<CPS::SP::Ph1::DecouplingIdealTransformer,
+             std::shared_ptr<CPS::SP::Ph1::DecouplingIdealTransformer>,
+             CPS::SimPowerComp<CPS::Complex>>(
+      mSPPh1, "DecouplingIdealTransformer", py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters",
+           &CPS::SP::Ph1::DecouplingIdealTransformer::setParameters, "delay"_a,
+           "v_src_intf_cur"_a, "cur1_extrap_0"_a, "coupling_method"_a)
+      .def("connect", &CPS::SP::Ph1::DecouplingIdealTransformer::connect);
+
   //SP Ph1 Components
   py::class_<CPS::SP::Ph1::VoltageSource,
              std::shared_ptr<CPS::SP::Ph1::VoltageSource>,

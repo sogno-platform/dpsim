@@ -15,9 +15,10 @@
 #include <dpsim-models/EMT/EMT_Ph1_Resistor.h>
 
 namespace CPS {
-namespace Signal {
-class DecouplingLineEMT : public CompositePowerComp<Real>,
-                          public SharedFactory<DecouplingLineEMT> {
+namespace EMT {
+namespace Ph1 {
+class DecouplingLine : public CompositePowerComp<Real>,
+                       public SharedFactory<DecouplingLine> {
 protected:
   Real mDelay;
   Real mResistance;
@@ -39,7 +40,7 @@ protected:
   Real interpolate(std::vector<Real> &data);
 
 public:
-  typedef std::shared_ptr<DecouplingLineEMT> Ptr;
+  typedef std::shared_ptr<DecouplingLine> Ptr;
 
   const Attribute<Real>::Ptr mSrcCur1Ref;
   const Attribute<Real>::Ptr mSrcCur2Ref;
@@ -47,10 +48,10 @@ public:
   ///FIXME: workaround for dependency analysis as long as the states aren't attributes
   const Attribute<Matrix>::Ptr mStates;
 
-  DecouplingLineEMT(String uid, String name,
-                    Logger::Level logLevel = Logger::Level::info);
-  DecouplingLineEMT(String name, Logger::Level logLevel = Logger::Level::info)
-      : DecouplingLineEMT(name, name, logLevel) {}
+  DecouplingLine(String uid, String name,
+                 Logger::Level logLevel = Logger::Level::info);
+  DecouplingLine(String name, Logger::Level logLevel = Logger::Level::info)
+      : DecouplingLine(name, name, logLevel) {}
 
   void setParameters(Real resistance, Real inductance, Real capacitance);
   void step(Real time, Int timeStepCount);
@@ -78,5 +79,6 @@ public:
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;
 };
-} // namespace Signal
+} // namespace Ph1
+} // namespace EMT
 } // namespace CPS

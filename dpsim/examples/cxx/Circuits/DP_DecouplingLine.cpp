@@ -86,7 +86,7 @@ void simDecoupling() {
   Real inductance = 0.16;
   Real capacitance = 1.0e-6;
   auto dline =
-      CPS::Signal::DecouplingLine::make("DecLine", Logger::Level::debug);
+      CPS::DP::Ph1::DecouplingLine::make("DecLine", Logger::Level::debug);
   dline->setParameters(resistance, inductance, capacitance);
 
   auto load = Ph1::Resistor::make("R_load");
@@ -136,7 +136,7 @@ void simDecouplingEMT() {
   Real inductance = 0.16;
   Real capacitance = 1.0e-6;
   auto dline =
-      CPS::Signal::DecouplingLineEMT::make("DecLine_emt", Logger::Level::debug);
+      CPS::EMT::Ph1::DecouplingLine::make("DecLine_emt", Logger::Level::debug);
   dline->setParameters(resistance, inductance, capacitance);
 
   auto load = CPS::EMT::Ph1::Resistor::make("R_load");
