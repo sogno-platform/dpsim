@@ -165,10 +165,8 @@ RUN echo "/usr/local/openDSSC/bin" > /etc/ld.so.conf.d/opendssc.conf && \
 # Python dependencies
 ADD pyproject.toml pyproject.toml
 RUN pip3 install --no-cache-dir --upgrade wheel build setuptools packaging && \
-	pip3 install --no-cache-dir pip-tools && \
-	pip-compile --no-header --extra dev --output-file /tmp/requirements.txt pyproject.toml && \
-	pip3 install --no-cache-dir --ignore-installed -r /tmp/requirements.txt && \
-	pip3 uninstall -y pip-tools && \
-	rm /tmp/requirements.txt
+	pip3 install --no-cache-dir uv && \
+	uv pip install --system --no-cache -r pyproject.toml --extra dev && \
+	pip3 uninstall -y uv
 
 EXPOSE 8888
