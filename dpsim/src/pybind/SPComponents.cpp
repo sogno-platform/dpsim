@@ -81,7 +81,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
              CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "NetworkInjection",
                                               py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_parameters",
            py::overload_cast<CPS::Real>(
                &CPS::SP::Ph1::NetworkInjection::setParameters),
@@ -101,7 +101,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
              CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "PiLine",
                                               py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_parameters", &CPS::SP::Ph1::PiLine::setParameters, "R"_a, "L"_a,
            "C"_a = -1, "G"_a = -1)
       .def("set_base_voltage", &CPS::SP::Ph1::PiLine::setBaseVoltage,
@@ -112,7 +112,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
              CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "Shunt",
                                               py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_parameters", &CPS::SP::Ph1::Shunt::setParameters, "G"_a, "B"_a)
       .def("set_base_voltage", &CPS::SP::Ph1::Shunt::setBaseVoltage,
            "base_voltage"_a)
@@ -122,7 +122,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
              CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "Load",
                                               py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_parameters", &CPS::SP::Ph1::Load::setParameters,
            "active_power"_a, "reactive_power"_a, "nominal_voltage"_a)
       .def("modify_power_flow_bus_type",
@@ -133,7 +133,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
              CPS::SimPowerComp<CPS::Complex>, CPS::Base::Ph1::Switch>(
       mSPPh1, "Switch", py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_parameters", &CPS::SP::Ph1::Switch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
            // cppcheck-suppress assignBoolToPointer
@@ -147,7 +147,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
              CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "SynchronGenerator",
                                               py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_parameters", (&CPS::SP::Ph1::SynchronGenerator::setParameters),
            "rated_apparent_power"_a, "rated_voltage"_a,
            "set_point_active_power"_a, "set_point_voltage"_a,
@@ -168,7 +168,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
              CPS::SimPowerComp<CPS::Complex>, CPS::Base::Ph1::Switch>(
       mSPPh1, "varResSwitch", py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_parameters", &CPS::SP::Ph1::varResSwitch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
            // cppcheck-suppress assignBoolToPointer
@@ -184,7 +184,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
              CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "SynchronGeneratorTrStab",
                                               py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_standard_parameters_PU",
            &CPS::SP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU,
            "nom_power"_a, "nom_volt"_a, "nom_freq"_a, "Xpd"_a, "inertia"_a,
@@ -219,7 +219,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
              CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR>(
       mSPPh1, "SynchronGenerator3OrderVBR", py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_operational_parameters_per_unit",
            py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
                              CPS::Real, CPS::Real, CPS::Real, CPS::Real,
@@ -235,7 +235,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
              CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR>(
       mSPPh1, "SynchronGenerator4OrderVBR", py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_operational_parameters_per_unit",
            py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
                              CPS::Real, CPS::Real, CPS::Real, CPS::Real,
@@ -251,7 +251,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
              CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR>(
       mSPPh1, "SynchronGenerator5OrderVBR", py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_operational_parameters_per_unit",
            py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
                              CPS::Real, CPS::Real, CPS::Real, CPS::Real,
@@ -269,7 +269,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
              CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR>(
       mSPPh1, "SynchronGenerator6aOrderVBR", py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_operational_parameters_per_unit",
            py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
                              CPS::Real, CPS::Real, CPS::Real, CPS::Real,
@@ -287,7 +287,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
              CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR>(
       mSPPh1, "SynchronGenerator6bOrderVBR", py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_operational_parameters_per_unit",
            py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
                              CPS::Real, CPS::Real, CPS::Real, CPS::Real,
@@ -305,9 +305,9 @@ void addSPPh1Components(py::module_ mSPPh1) {
              CPS::SimPowerComp<CPS::Complex>>(
       mSPPh1, "AvVoltageSourceInverterDQ", py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
-           "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
+           "uid"_a, "name"_a, logLevelArg(CPS::Logger::Level::off),
            // cppcheck-suppress assignBoolToPointer
            "with_trafo"_a = false)
       .def("set_parameters",
@@ -337,9 +337,9 @@ void addSPPh1Components(py::module_ mSPPh1) {
              CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "Transformer",
                                               py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
-           "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
+           "uid"_a, "name"_a, logLevelArg(CPS::Logger::Level::off),
            // cppcheck-suppress assignBoolToPointer
            "with_resistive_losses"_a = false)
       .def("set_parameters",

@@ -8,6 +8,36 @@
 
 #include <dpsim/pybind/Utils.h>
 
+py::arg_v logLevelArg(CPS::Logger::Level level, const char *name) {
+  const char *descr = nullptr;
+  switch (level) {
+  case CPS::Logger::Level::trace:
+    descr = "dpsimpy.LogLevel.trace";
+    break;
+  case CPS::Logger::Level::debug:
+    descr = "dpsimpy.LogLevel.debug";
+    break;
+  case CPS::Logger::Level::info:
+    descr = "dpsimpy.LogLevel.info";
+    break;
+  case CPS::Logger::Level::warn:
+    descr = "dpsimpy.LogLevel.warn";
+    break;
+  case CPS::Logger::Level::err:
+    descr = "dpsimpy.LogLevel.err";
+    break;
+  case CPS::Logger::Level::critical:
+    descr = "dpsimpy.LogLevel.critical";
+    break;
+  case CPS::Logger::Level::off:
+    descr = "dpsimpy.LogLevel.off";
+    break;
+  default:
+    break;
+  }
+  return py::arg_v(name, level, descr);
+}
+
 CPS::Matrix zeroMatrix(int dim) { return CPS::Matrix::Zero(dim, dim); }
 
 std::string getAttributeList(CPS::IdentifiedObject &obj) {
