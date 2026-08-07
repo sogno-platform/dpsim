@@ -104,11 +104,9 @@ void decoupleNode(SystemTopology &sys, const String &nodeName,
 
   auto idealTrafo = Signal::DecouplingIdealTransformer_SP_Ph1::make(
       "itm_" + nodeName, Logger::Level::debug);
-  idealTrafo->setParameters(nodeCopy1, nodeCopy2, ITMDelay, irLine_0, i_inf_0,
-                            cosimMethod);
+  idealTrafo->connect({nodeCopy1, nodeCopy2});
+  idealTrafo->setParameters(ITMDelay, irLine_0, i_inf_0, cosimMethod);
   sys.addComponent(idealTrafo);
-  sys.addComponents(idealTrafo->getComponents());
-  sys.addNode(idealTrafo->getVirtualNode());
 }
 
 void doSim(String &name, SystemTopology &sys, Int threads, Real ts,
@@ -130,7 +128,7 @@ void doSim(String &name, SystemTopology &sys, Int threads, Real ts,
     logger->logAttribute(
         "i_intf",
         sys.component<Signal::DecouplingIdealTransformer_SP_Ph1>("itm_n2")
-            ->attribute("i_intf"),
+            ->attribute("i_src_intf"),
         1, 1);
     logger->logAttribute(
         "i_ref",
@@ -140,7 +138,7 @@ void doSim(String &name, SystemTopology &sys, Int threads, Real ts,
     logger->logAttribute(
         "v_intf",
         sys.component<Signal::DecouplingIdealTransformer_SP_Ph1>("itm_n2")
-            ->attribute("v_intf"),
+            ->attribute("v_src_intf"),
         1, 1);
     logger->logAttribute(
         "v_ref",
