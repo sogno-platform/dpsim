@@ -87,18 +87,18 @@ void simDecoupling() {
   Real capacitance = 1.0e-6;
   auto dline =
       CPS::Signal::DecouplingLine::make("DecLine", Logger::Level::debug);
-  dline->setParameters(n1, n2, resistance, inductance, capacitance);
+  dline->setParameters(resistance, inductance, capacitance);
 
   auto load = Ph1::Resistor::make("R_load");
   load->setParameters(10000);
 
   // Topology
   vs->connect({SimNode::GND, n1});
+  dline->connect({n1, n2});
   load->connect({n2, SimNode::GND});
 
   auto sys = SystemTopology(50, SystemNodeList{n1, n2},
                             SystemComponentList{vs, dline, load});
-  sys.addComponents(dline->getLineComponents());
 
   // Logging
   auto logger = DataLogger::make(simName);
@@ -137,18 +137,18 @@ void simDecouplingEMT() {
   Real capacitance = 1.0e-6;
   auto dline =
       CPS::Signal::DecouplingLineEMT::make("DecLine_emt", Logger::Level::debug);
-  dline->setParameters(n1, n2, resistance, inductance, capacitance);
+  dline->setParameters(resistance, inductance, capacitance);
 
   auto load = CPS::EMT::Ph1::Resistor::make("R_load");
   load->setParameters(10000);
 
   // Topology
   vs->connect({CPS::EMT::SimNode::GND, n1});
+  dline->connect({n1, n2});
   load->connect({n2, CPS::EMT::SimNode::GND});
 
   auto sys = SystemTopology(50, SystemNodeList{n1, n2},
                             SystemComponentList{vs, dline, load});
-  sys.addComponents(dline->getLineComponents());
 
   // Logging
   auto logger = DataLogger::make(simName);
