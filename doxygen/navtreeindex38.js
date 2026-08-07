@@ -1,5 +1,9 @@
 var NAVTREEINDEX38 =
 {
+"class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___e_m_t___ph1.html#a2d9173ea64317b80cf4d08d62d2a5721":[2,0,0,5,3,22],
+"class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___e_m_t___ph1.html#a2fcb937d527c3d89c676216ec044140f":[1,0,0,5,3,10],
+"class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___e_m_t___ph1.html#a2fcb937d527c3d89c676216ec044140f":[2,0,0,5,3,10],
+"class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___e_m_t___ph1.html#a370865deb2f188a2b86fb96f79cb11d0":[1,0,0,5,3,3],
 "class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___e_m_t___ph1.html#a370865deb2f188a2b86fb96f79cb11d0":[2,0,0,5,3,3],
 "class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___e_m_t___ph1.html#a4069a117622938b297b5f33e99d2a4e1":[1,0,0,5,3,30],
 "class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___e_m_t___ph1.html#a4069a117622938b297b5f33e99d2a4e1":[2,0,0,5,3,30],
@@ -245,9 +249,5 @@ var NAVTREEINDEX38 =
 "class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___s_p___ph1.html#ae2880a4c3753d0b0753dfa21d29113e8":[2,0,0,5,5,27],
 "class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___s_p___ph1.html#ae6b2f3056f2a6ed5dab3a55fbc3bc1be":[1,0,0,5,5,16],
 "class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___s_p___ph1.html#ae6b2f3056f2a6ed5dab3a55fbc3bc1be":[2,0,0,5,5,16],
-"class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___s_p___ph1.html#aecef485610ff2d6f44e4b141b38dc557":[1,0,0,5,5,40],
-"class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___s_p___ph1.html#aecef485610ff2d6f44e4b141b38dc557":[2,0,0,5,5,40],
-"class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___s_p___ph1.html#af555d605b66d66cd5be87b7480160a14":[1,0,0,5,5,13],
-"class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___s_p___ph1.html#af555d605b66d66cd5be87b7480160a14":[2,0,0,5,5,13],
-"class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___s_p___ph1.html#af776a545abed8d4df2e5a98a647efb3e":[1,0,0,5,5,15]
+"class_c_p_s_1_1_signal_1_1_decoupling_ideal_transformer___s_p___ph1.html#aecef485610ff2d6f44e4b141b38dc557":[1,0,0,5,5,40]
 };

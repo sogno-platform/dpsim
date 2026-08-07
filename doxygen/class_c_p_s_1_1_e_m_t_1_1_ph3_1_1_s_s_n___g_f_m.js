@@ -2,6 +2,8 @@ var class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_m =
 [
     [ "SSN_GFM", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_m.html#a3ad1bc6b1fd7dfab7a87dc829eac1df3", null ],
     [ "SSN_GFM", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_m.html#af8d850284b399090efedbfc314f6e241", null ],
+    [ "calculateAnalyticalJacobians", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_m.html#ac67df38c9dac281034c63ae65e60346b", null ],
+    [ "calculateNumericalJacobians", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_m.html#a24e183e65cdfab7566b1e27e13aab95d", null ],
     [ "getInterfaceCurrent", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_m.html#a560e9e4dd5f75bde8679c3d4647e73b5", null ],
     [ "getInterfaceVoltage", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_m.html#a600fa20630065f9274bc11fcc18800b8", null ],
     [ "getLocalAbcStateBlocks", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_m.html#a5c50d9e57467b5cdd2cca6e78a871414", null ],
