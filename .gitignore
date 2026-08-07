@@ -4,6 +4,7 @@ build_*/
 build-*/
 dist/
 outputs/
+notebook-workdirs/
 _dpsim.pyd
 _dpsim.pdb
 .pytest_cache/

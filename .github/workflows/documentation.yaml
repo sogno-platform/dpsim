@@ -9,7 +9,7 @@ on:
 
 jobs:
   generate-reference:
-    runs-on: ubuntu-latest
+    runs-on: sogno-platform-dpsim-runner
     container: sogno/dpsim:dev
     steps:
     - name: Checkout
@@ -43,7 +43,7 @@ jobs:
 
   # Deploys to https://sogno.energy/dpsim/ through the repository gh-pages branch.
   deploy-sogno:
-    runs-on: ubuntu-latest
+    runs-on: sogno-platform-dpsim-runner
     needs: [generate-reference]
 
     permissions:
@@ -98,7 +98,7 @@ jobs:
 
   # Mirrors the same content to https://dpsim.fein-aachen.org/ which is served from its own root.
   deploy-fein:
-    runs-on: ubuntu-latest
+    runs-on: sogno-platform-dpsim-runner
     needs: [generate-reference]
 
     steps:
