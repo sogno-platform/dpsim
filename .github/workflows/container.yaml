@@ -65,6 +65,15 @@ jobs:
          push: true
          tags: sogno/dpsim:dev
 
+      - name: Build and push vscode devcontainer
+        id: docker_build_dev_vscode
+        uses: docker/build-push-action@v7
+        with:
+         file: packaging/Docker/Dockerfile.dev
+         target: dev-vscode
+         push: true
+         tags: sogno/dpsim:dev-vscode
+
   create-docker-fedora-minimal-dev:
     runs-on: sogno-platform-dpsim-runner
     steps:
