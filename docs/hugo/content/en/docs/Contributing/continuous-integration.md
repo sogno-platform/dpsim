@@ -34,19 +34,22 @@ the name the branch protection rule expects.
 
 ## How a run picks its container images
 
-The `setup` job resolves which images the rest of the run uses, and the answer
-depends on whether the run holds a token that may write packages.
+The `setup` job decides this per image, not for all of them at once. Each image
+has its own path filter, so editing `Dockerfile.dev-rocky` rebuilds the Rocky
+image and leaves the other five alone. The two images that are built `FROM` the
+development image, the release image and the Binder image, track the development
+image's paths as well, so a change to `Dockerfile.dev` rebuilds all three.
+Everything under `packaging/Shell/` counts towards every image.
 
-- Nothing under `packaging/Docker/`, `packaging/Shell/` or `.binder/Dockerfile`
-  changed: the images published on Docker Hub are used as they are.
-- An image definition changed and the run can push, that is a push to `master` or
-  a pull request from a branch of this repository: `prepare-images.yaml` rebuilds
-  the images and pushes them to `ghcr.io/<owner>/dpsim/<image>` under two tags,
-  the commit SHA and the slugified ref name. The run then builds against the SHA
-  tag.
-- An image definition changed in a pull request from a fork: see below.
+An image whose definition did not change is used as published on Docker Hub. One
+whose definition did change is rebuilt by `prepare-images.yaml` and pushed to
+`ghcr.io/<owner>/dpsim/<image>` under two tags, the commit SHA and the slugified
+ref name, and the run then builds against the SHA tag. This needs a token that
+may write packages, so it happens on pushes to `master` and on pull requests from
+a branch of this repository; a pull request from a fork is covered below.
 
-Manual dispatch takes a `rebuild_images` input that forces the rebuild.
+Manual dispatch takes a `rebuild_images` input that forces every image to be
+rebuilt.
 
 ## Images for pull requests from forks
 
@@ -75,9 +78,10 @@ The probe reads the registry anonymously, so the packages under
 
 `publish-images.yaml` is what refreshes the `sogno/dpsim` images that the
 documentation and the outside world consume. It runs on the self-hosted runner,
-needs the Docker Hub credentials, and triggers on pushes to `master` that touch
-an image definition. Its manual dispatch takes an `image` input, so a single
-image can be republished without rebuilding all six.
+needs the Docker Hub credentials, and triggers on pushes to `master`, where it
+applies the same per-image path filters and republishes only what changed. Its
+manual dispatch takes an `image` input for republishing a single image on
+demand.
 
 ## Workflows outside CI
 
