@@ -27,7 +27,7 @@ String decoupleLine(SystemTopology &sys, const String &lineName,
 
   String dline_name = "dline_" + node1 + "_" + node2;
 
-  auto line = Signal::DecouplingLineEMT_Ph3::make(
+  auto line = CPS::EMT::Ph3::DecouplingLine::make(
       "dline_" + node1 + "_" + node2, Logger::Level::debug);
 
   line->connect({sys.node<EMT::SimNode>(node1), sys.node<EMT::SimNode>(node2)});

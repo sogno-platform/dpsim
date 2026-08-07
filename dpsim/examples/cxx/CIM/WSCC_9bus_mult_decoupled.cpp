@@ -33,7 +33,7 @@ void multiply_decoupled(SystemTopology &sys, int copies, Real resistance,
     int nlines = copies == 1 ? 1 : copies + 1;
 
     for (int i = 0; i < nlines; i++) {
-      auto line = Signal::DecouplingLine::make(
+      auto line = CPS::DP::Ph1::DecouplingLine::make(
           "dline_" + orig_node + "_" + std::to_string(i), Logger::Level::info);
       line->connect({sys.node<DP::SimNode>(nodeNames[i]),
                      sys.node<DP::SimNode>(nodeNames[i + 1])});
