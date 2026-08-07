@@ -36,7 +36,7 @@ jobs:
   test-examples-1:
     name: Test Examples 1/4 - WSCC_9bus_mult_coupled
     needs: [profiling]
-    uses: sogno-platform/dpsim/.github/workflows/run_and_profile_example.yaml@main
+    uses: ./.github/workflows/run_and_profile_example.yaml
     with:
       path: ./build/dpsim/examples/cxx/WSCC_9bus_mult_coupled
       name: WSCC_9bus_mult_coupled
@@ -44,7 +44,7 @@ jobs:
   test-examples-2:
     name: Test Examples 2/4 - WSCC_9bus_mult_decoupled
     needs: [profiling]
-    uses: sogno-platform/dpsim/.github/workflows/run_and_profile_example.yaml@main
+    uses: ./.github/workflows/run_and_profile_example.yaml
     with:
       path: ./build/dpsim/examples/cxx/WSCC_9bus_mult_decoupled
       name: WSCC_9bus_mult_decoupled
@@ -52,7 +52,7 @@ jobs:
   test-examples-3:
     name: Test Examples 3/4 - EMT_WSCC_9bus_split_decoupled
     needs: [profiling]
-    uses: sogno-platform/dpsim/.github/workflows/run_and_profile_example.yaml@main
+    uses: ./.github/workflows/run_and_profile_example.yaml
     with:
       path: ./build/dpsim/examples/cxx/EMT_WSCC_9bus_split_decoupled
       name: EMT_WSCC_9bus_split_decoupled
@@ -60,7 +60,7 @@ jobs:
   test-examples-4:
     name: Test Examples 4/4 - DP_WSCC_9bus_split_decoupled
     needs: [profiling]
-    uses: sogno-platform/dpsim/.github/workflows/run_and_profile_example.yaml@main
+    uses: ./.github/workflows/run_and_profile_example.yaml
     with:
       path: ./build/dpsim/examples/cxx/DP_WSCC_9bus_split_decoupled
       name: DP_WSCC_9bus_split_decoupled

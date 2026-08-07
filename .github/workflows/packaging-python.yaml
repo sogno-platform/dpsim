@@ -1,22 +1,24 @@
-name: Publish DPsim package to Python Package Index (PyPI)
+# SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+# SPDX-License-Identifier: MPL-2.0
+
+name: Packaging (Python)
 
 on:
-  pull_request:
-  push:
-    branches:
-      - master
-    tags:
-      - '*'
+  workflow_call:
+    inputs:
+      image:
+        description: 'Development image the source distribution is built in'
+        required: true
+        type: string
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+permissions:
+  contents: read
 
 jobs:
   build-sdist:
     name: Build DPsim source distribution
     runs-on: ubuntu-24.04
-    container: sogno/dpsim:dev
+    container: ${{ inputs.image }}
     steps:
     - name: Checkout
       uses: actions/checkout@v6

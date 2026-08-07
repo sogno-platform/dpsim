@@ -1,21 +1,28 @@
 # SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
 # SPDX-License-Identifier: MPL-2.0
 
-name: Compliance checks
+name: Checks
 
 on:
-  pull_request:
+  workflow_call:
 
 permissions:
   contents: read
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
-
 jobs:
+  pre-commit:
+    name: Run pre-commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+      - uses: pre-commit/action@v3.0.1
+
   clean-notebook-outputs:
     name: Notebooks changed by this pull request have no saved outputs
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -61,3 +68,27 @@ jobs:
               print("Or install the pre-commit hooks, see the Quick start section of CONTRIBUTING.md.")
               sys.exit(1)
           PY
+
+  check-python-deps:
+    name: Validate pyproject.toml extras resolve
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+
+      - name: Install pip-tools
+        run: pip install pip-tools
+
+      - name: Resolve all extras
+        run: |
+          tmpdir=$(mktemp -d)
+          cp pyproject.toml "$tmpdir/"
+          for extra in dev manylinux test; do
+            echo "--- Resolving extra: $extra ---"
+            pip-compile --no-strip-extras --output-file=- --extra "$extra" "$tmpdir/pyproject.toml"
+          done
+          rm -rf "$tmpdir"
