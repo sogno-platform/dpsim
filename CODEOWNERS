@@ -45,6 +45,7 @@
 /dpsim-models/include/dpsim-models/EMT/EMT_Ph3_SynchronGenerator5OrderVBR.h @martinmoraga
 /dpsim-models/include/dpsim-models/EMT/EMT_Ph3_SynchronGenerator6aOrderVBR.h @martinmoraga
 /dpsim-models/include/dpsim-models/EMT/EMT_Ph3_SynchronGenerator6bOrderVBR.h @martinmoraga
+/dpsim-models/include/dpsim-models/EMT/EMT_Ph3_HalfDecouplingLine.h @leonardocarreras
 /dpsim-models/include/dpsim-models/SP/SP_Ph1_SynchronGenerator3OrderVBR.h @martinmoraga
 /dpsim-models/include/dpsim-models/SP/SP_Ph1_SynchronGenerator4OrderVBR.h @martinmoraga
 /dpsim-models/include/dpsim-models/SP/SP_Ph1_SynchronGenerator5OrderVBR.h @martinmoraga
@@ -78,6 +79,7 @@
 /dpsim-models/src/EMT/EMT_Ph3_SynchronGenerator5OrderVBR.cpp @martinmoraga
 /dpsim-models/src/EMT/EMT_Ph3_SynchronGenerator6aOrderVBR.cpp @martinmoraga
 /dpsim-models/src/EMT/EMT_Ph3_SynchronGenerator6bOrderVBR.cpp @martinmoraga
+/dpsim-models/src/EMT/EMT_Ph3_HalfDecouplingLine.cpp @leonardocarreras
 /dpsim-models/src/SP/SP_Ph1_SynchronGenerator3OrderVBR.cpp @martinmoraga
 /dpsim-models/src/SP/SP_Ph1_SynchronGenerator4OrderVBR.cpp @martinmoraga
 /dpsim-models/src/SP/SP_Ph1_SynchronGenerator5OrderVBR.cpp @martinmoraga
