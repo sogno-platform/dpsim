@@ -27,6 +27,7 @@ SP::Ph1::Load::Load(String uid, String name, Logger::Level logLevel)
   **mIntfVoltage = MatrixComp::Zero(1, 1);
   **mIntfCurrent = MatrixComp::Zero(1, 1);
   setTerminalNumber(1);
+  mPowerflowBusType = PowerflowBusType::PQ;
 };
 
 void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower,

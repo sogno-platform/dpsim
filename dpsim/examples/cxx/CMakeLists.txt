@@ -24,6 +24,7 @@ set(CIRCUIT_SOURCES
 
 	# Powerflow examples
 	Circuits/PF_Slack_PiLine_PQLoad.cpp
+	Circuits/PF_Load_BusTypeCombinations.cpp
 
 	# EMT examples
 	Circuits/EMT_CS_RL1.cpp

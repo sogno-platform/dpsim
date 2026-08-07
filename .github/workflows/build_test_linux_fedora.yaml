@@ -241,6 +241,9 @@ jobs:
     - name: Run Binaries 4/4
       run: ./build/dpsim/examples/cxx/EMT_WSCC_9bus_split_decoupled
 
+    - name: Check the power flow bus type of every load position
+      run: ./build/dpsim/examples/cxx/PF_Load_BusTypeCombinations
+
   cpp-check:
     name: Scan Sourcecode with Cppcheck
     runs-on: ubuntu-latest
