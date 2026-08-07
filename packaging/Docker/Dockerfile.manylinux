@@ -67,7 +67,6 @@ RUN cd /tmp && \
 # Python dependencies
 ADD pyproject.toml .
 RUN /opt/python/cp312-cp312/bin/python -m venv /opt/dpsim-tools && \
-	pip3 install --no-cache-dir --upgrade wheel build setuptools packaging && \
 	uv pip install --python /opt/dpsim-tools/bin/python --no-cache -r pyproject.toml --extra manylinux
 
 # Install CIMpp from source
