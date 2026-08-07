@@ -150,6 +150,12 @@ version, so the build follows whichever Visual Studio you have.&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cmake --build . --target dpsimpy --parallel
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If CMake rejects the spdlog dependency because of its minimum policy version, add
 &lt;code>-DCMAKE_POLICY_VERSION_MINIMUM=3.5&lt;/code>, which is what CI currently does as a workaround.&lt;/p>
+&lt;p>Visual Studio is a multi-configuration generator, so the configuration is chosen at build time
+with &lt;code>cmake --build . --config Release&lt;/code>, not with &lt;code>CMAKE_BUILD_TYPE&lt;/code>. DPsim adds its optimization
+flags per configuration and per compiler: MSVC gets &lt;code>/fp:fast&lt;/code> on top of the &lt;code>/O2&lt;/code> that CMake
+already supplies for &lt;code>Release&lt;/code> and &lt;code>RelWithDebInfo&lt;/code>, while the GCC and Clang flags &lt;code>-Ofast&lt;/code>,
+&lt;code>-march=native&lt;/code> and &lt;code>-flto&lt;/code> are never passed to &lt;code>cl.exe&lt;/code>. &lt;code>WITH_LTO&lt;/code> maps to &lt;code>/GL&lt;/code> and &lt;code>/LTCG&lt;/code>.
+&lt;code>WITH_MARCH_NATIVE&lt;/code> has no MSVC equivalent and is ignored with a warning.&lt;/p>
 &lt;p>The &lt;code>dpsim-villas&lt;/code> library is not available on Windows, since it requires VILLASnode, which does
 not build there. &lt;code>WITH_VILLAS&lt;/code> therefore stays off and the &lt;code>dpsimpyvillas&lt;/code> target does not exist,
 so co-simulation examples cannot be built on Windows. The CIM reader is likewise not part of the
