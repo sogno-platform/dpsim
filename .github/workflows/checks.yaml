@@ -21,7 +21,7 @@ jobs:
       - uses: pre-commit/action@v3.0.1
 
   clean-notebook-outputs:
-    name: Notebooks changed by this pull request have no saved outputs
+    name: Notebooks have no saved outputs
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:

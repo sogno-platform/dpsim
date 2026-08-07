@@ -19,7 +19,7 @@ on:
 
 jobs:
   run-villas-example:
-    name: Run a VILLASnode example across multiple containers
+    name: Run example
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
