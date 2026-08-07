@@ -227,9 +227,59 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("get_state_names", &DPsim::StateSpaceModalAnalysis::getStateNames,
            py::return_value_policy::reference_internal);
 
-  py::class_<DPsim::Simulation>(m, "Simulation")
+  py::module mEvent = m.def_submodule("event", "events");
+  py::module mBase = m.def_submodule("base", "base models");
+  py::module mDP = m.def_submodule("dp", "dynamic phasor models");
+  py::module mEMT = m.def_submodule("emt", "electromagnetic-transient models");
+  py::module mSP = m.def_submodule("sp", "static phasor models");
+  py::module mSignal = m.def_submodule("signal", "signal models");
+
+  py::class_<CPS::IdentifiedObject, std::shared_ptr<CPS::IdentifiedObject>>
+      identifiedObject(m, "IdentifiedObject");
+  py::class_<CPS::TopologicalPowerComp,
+             std::shared_ptr<CPS::TopologicalPowerComp>, CPS::IdentifiedObject>(
+      m, "TopologicalPowerComp");
+  py::class_<CPS::SimPowerComp<CPS::Complex>,
+             std::shared_ptr<CPS::SimPowerComp<CPS::Complex>>,
+             CPS::TopologicalPowerComp>
+      simPowerCompComplex(m, "SimPowerCompComplex");
+  py::class_<CPS::SimPowerComp<CPS::Real>,
+             std::shared_ptr<CPS::SimPowerComp<CPS::Real>>,
+             CPS::TopologicalPowerComp>
+      simPowerCompReal(m, "SimPowerCompReal");
+  py::class_<CPS::TopologicalNode, std::shared_ptr<CPS::TopologicalNode>,
+             CPS::IdentifiedObject>
+      topologicalNode(m, "TopologicalNode");
+  py::class_<CPS::TopologicalTerminal,
+             std::shared_ptr<CPS::TopologicalTerminal>, CPS::IdentifiedObject>
+      topologicalTerminal(m, "TopologicalTerminal");
+  py::class_<CPS::SimTerminal<CPS::Complex>,
+             std::shared_ptr<CPS::SimTerminal<CPS::Complex>>,
+             CPS::TopologicalTerminal>(m, "SimTerminalComplex");
+  py::class_<CPS::SimTerminal<CPS::Real>,
+             std::shared_ptr<CPS::SimTerminal<CPS::Real>>,
+             CPS::TopologicalTerminal>(m, "SimTerminalReal");
+  py::class_<DPsim::Interface, std::shared_ptr<DPsim::Interface>>(m,
+                                                                  "Interface");
+  py::class_<DPsim::DataLoggerInterface,
+             std::shared_ptr<DPsim::DataLoggerInterface>>
+      dataLoggerInterface(m, "DataLoggerInterface");
+  py::class_<CPS::SystemTopology, std::shared_ptr<CPS::SystemTopology>>
+      systemTopology(m, "SystemTopology");
+  py::class_<DPsim::Simulation> simulation(m, "Simulation");
+  py::class_<DPsim::Event, std::shared_ptr<DPsim::Event>>(mEvent, "Event");
+
+  addSignalComponentBases(mSignal);
+  addBaseComponents(mBase);
+  addDPComponents(mDP);
+  addEMTComponents(mEMT);
+  mSP.attr("SimNode") = mDP.attr("SimNode");
+  addSPComponents(mSP);
+  addSignalComponents(mSignal);
+
+  simulation
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("name", &DPsim::Simulation::name)
       .def("set_time_step", &DPsim::Simulation::setTimeStep)
       .def("set_final_time", &DPsim::Simulation::setFinalTime)
@@ -302,7 +352,7 @@ PYBIND11_MODULE(dpsimpy, m) {
   py::class_<DPsim::RealTimeSimulation, DPsim::Simulation>(m,
                                                            "RealTimeSimulation")
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::info)
+           logLevelArg(CPS::Logger::Level::info))
       .def("name", &DPsim::RealTimeSimulation::name)
       .def("set_time_step", &DPsim::RealTimeSimulation::setTimeStep)
       .def("set_final_time", &DPsim::RealTimeSimulation::setFinalTime)
@@ -315,8 +365,7 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("set_domain", &DPsim::RealTimeSimulation::setDomain);
 #endif
 
-  py::class_<CPS::SystemTopology, std::shared_ptr<CPS::SystemTopology>>(
-      m, "SystemTopology")
+  systemTopology
       .def(py::init<CPS::Real, CPS::TopologicalNode::List,
                     CPS::IdentifiedObject::List>())
       .def(py::init<CPS::Real, CPS::Matrix, CPS::TopologicalNode::List,
@@ -381,12 +430,7 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("remove_component", &DPsim::SystemTopology::removeComponent)
       .def("remove_node", &DPsim::SystemTopology::removeNode);
 
-  py::class_<DPsim::Interface, std::shared_ptr<DPsim::Interface>>(m,
-                                                                  "Interface");
-
-  py::class_<DPsim::DataLoggerInterface,
-             std::shared_ptr<DPsim::DataLoggerInterface>>(m,
-                                                          "DataLoggerInterface")
+  dataLoggerInterface
       .def("log_attribute",
            py::overload_cast<const CPS::String &, CPS::AttributeBase::Ptr,
                              CPS::UInt, CPS::UInt>(
@@ -493,8 +537,7 @@ PYBIND11_MODULE(dpsimpy, m) {
           "names"_a, "attr"_a, "comp"_a);
 #endif
 
-  py::class_<CPS::IdentifiedObject, std::shared_ptr<CPS::IdentifiedObject>>(
-      m, "IdentifiedObject")
+  identifiedObject
       .def("name", &CPS::IdentifiedObject::name)
       /// CHECK: It would be nicer if all the attributes of an IdObject were bound as properties so they show up in the documentation and auto-completion.
       /// I don't know if this is possible to do because it depends on if the attribute map is filled before or after the code in this file is run.
@@ -513,8 +556,8 @@ PYBIND11_MODULE(dpsimpy, m) {
 
   py::class_<CPS::CIM::Reader>(m, "CIMReader")
       .def(py::init<std::string, CPS::Logger::Level, CPS::Logger::Level>(),
-           "name"_a, "loglevel"_a = CPS::Logger::Level::info,
-           "comploglevel"_a = CPS::Logger::Level::off)
+           "name"_a, logLevelArg(CPS::Logger::Level::info),
+           logLevelArg(CPS::Logger::Level::off, "comploglevel"))
       .def("loadCIM", (CPS::SystemTopology(CPS::CIM::Reader::*)(
                           CPS::Real, const std::list<CPS::String> &,
                           CPS::Domain, CPS::PhaseType, CPS::GeneratorType)) &
@@ -530,48 +573,27 @@ PYBIND11_MODULE(dpsimpy, m) {
 
   //Base Classes
 
-  py::class_<CPS::TopologicalPowerComp,
-             std::shared_ptr<CPS::TopologicalPowerComp>, CPS::IdentifiedObject>(
-      m, "TopologicalPowerComp");
-  py::class_<CPS::SimPowerComp<CPS::Complex>,
-             std::shared_ptr<CPS::SimPowerComp<CPS::Complex>>,
-             CPS::TopologicalPowerComp>(m, "SimPowerCompComplex")
-      .def("connect", &CPS::SimPowerComp<CPS::Complex>::connect)
+  simPowerCompComplex.def("connect", &CPS::SimPowerComp<CPS::Complex>::connect)
       .def("set_intf_current", &CPS::SimPowerComp<CPS::Complex>::setIntfCurrent)
       .def("set_intf_voltage", &CPS::SimPowerComp<CPS::Complex>::setIntfVoltage)
       .def("get_terminal", &CPS::SimPowerComp<CPS::Complex>::terminal,
            "index"_a);
-  py::class_<CPS::SimPowerComp<CPS::Real>,
-             std::shared_ptr<CPS::SimPowerComp<CPS::Real>>,
-             CPS::TopologicalPowerComp>(m, "SimPowerCompReal")
-      .def("connect", &CPS::SimPowerComp<CPS::Real>::connect)
+  simPowerCompReal.def("connect", &CPS::SimPowerComp<CPS::Real>::connect)
       .def("set_intf_current", &CPS::SimPowerComp<CPS::Real>::setIntfCurrent)
       .def("set_intf_voltage", &CPS::SimPowerComp<CPS::Real>::setIntfVoltage)
       .def("get_terminal", &CPS::SimPowerComp<CPS::Real>::terminal, "index"_a);
-  py::class_<CPS::TopologicalNode, std::shared_ptr<CPS::TopologicalNode>,
-             CPS::IdentifiedObject>(m, "TopologicalNode")
-      .def("initial_single_voltage",
-           &CPS::TopologicalNode::initialSingleVoltage,
-           "phase_type"_a = CPS::PhaseType::Single);
+  topologicalNode.def("initial_single_voltage",
+                      &CPS::TopologicalNode::initialSingleVoltage,
+                      py::arg_v("phase_type", CPS::PhaseType::Single,
+                                "dpsimpy.PhaseType.Single"));
 
-  py::class_<CPS::TopologicalTerminal,
-             std::shared_ptr<CPS::TopologicalTerminal>, CPS::IdentifiedObject>(
-      m, "TopologicalTerminal")
+  topologicalTerminal
       .def("set_power",
            py::overload_cast<CPS::Complex>(&CPS::TopologicalTerminal::setPower))
       .def("set_power", py::overload_cast<CPS::MatrixComp>(
                             &CPS::TopologicalTerminal::setPower));
 
-  py::class_<CPS::SimTerminal<CPS::Complex>,
-             std::shared_ptr<CPS::SimTerminal<CPS::Complex>>,
-             CPS::TopologicalTerminal>(m, "SimTerminalComplex");
-  py::class_<CPS::SimTerminal<CPS::Real>,
-             std::shared_ptr<CPS::SimTerminal<CPS::Real>>,
-             CPS::TopologicalTerminal>(m, "SimTerminalReal");
-
   //Events
-  py::module mEvent = m.def_submodule("event", "events");
-  py::class_<DPsim::Event, std::shared_ptr<DPsim::Event>>(mEvent, "Event");
   py::class_<DPsim::SwitchEvent, std::shared_ptr<DPsim::SwitchEvent>,
              DPsim::Event>(mEvent, "SwitchEvent", py::multiple_inheritance())
       .def(py::init<CPS::Real, const std::shared_ptr<CPS::Base::Ph1::Switch>,
@@ -580,23 +602,6 @@ PYBIND11_MODULE(dpsimpy, m) {
              DPsim::Event>(mEvent, "SwitchEvent3Ph", py::multiple_inheritance())
       .def(py::init<CPS::Real, const std::shared_ptr<CPS::Base::Ph3::Switch>,
                     CPS::Bool>());
-
-  //Components
-  py::module mBase = m.def_submodule("base", "base models");
-  addBaseComponents(mBase);
-
-  py::module mDP = m.def_submodule("dp", "dynamic phasor models");
-  addDPComponents(mDP);
-
-  py::module mEMT = m.def_submodule("emt", "electromagnetic-transient models");
-  addEMTComponents(mEMT);
-
-  py::module mSP = m.def_submodule("sp", "static phasor models");
-  mSP.attr("SimNode") = mDP.attr("SimNode");
-  addSPComponents(mSP);
-
-  py::module mSignal = m.def_submodule("signal", "signal models");
-  addSignalComponents(mSignal);
 
 #ifdef VERSION_INFO
   m.attr("__version__") = VERSION_INFO;

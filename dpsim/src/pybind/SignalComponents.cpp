@@ -25,7 +25,7 @@
 namespace py = pybind11;
 using namespace pybind11::literals;
 
-void addSignalComponents(py::module_ mSignal) {
+void addSignalComponentBases(py::module_ mSignal) {
 
   py::class_<CPS::TopologicalSignalComp,
              std::shared_ptr<CPS::TopologicalSignalComp>,
@@ -39,6 +39,39 @@ void addSignalComponents(py::module_ mSignal) {
   py::class_<CPS::Base::ExciterParameters,
              std::shared_ptr<CPS::Base::ExciterParameters>>(
       mSignal, "ExciterParameters");
+
+  py::class_<CPS::Base::PSSParameters,
+             std::shared_ptr<CPS::Base::PSSParameters>>(mSignal,
+                                                        "PSSParameters");
+
+  py::class_<CPS::Base::PSS, std::shared_ptr<CPS::Base::PSS>>(mSignal, "PSS");
+
+  py::class_<CPS::Signal::TurbineGovernorType1,
+             std::shared_ptr<CPS::Signal::TurbineGovernorType1>,
+             CPS::SimSignalComp>(mSignal, "TurbineGovernorType1",
+                                 py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::Signal::TurbineGovernorType1::setParameters,
+           "T3"_a, "T4"_a, "T5"_a, "Tc"_a, "Ts"_a, "R"_a, "Tmin"_a, "Tmax"_a,
+           "OmRef"_a)
+      .def("initialize_states",
+           &CPS::Signal::TurbineGovernorType1::initializeStates, "TmRef"_a);
+
+  py::class_<CPS::Base::GovernorParameters,
+             std::shared_ptr<CPS::Base::GovernorParameters>>(
+      mSignal, "GovernorParameters");
+  py::class_<CPS::Base::Governor, std::shared_ptr<CPS::Base::Governor>>(
+      mSignal, "Governor");
+
+  py::class_<CPS::Base::TurbineParameters,
+             std::shared_ptr<CPS::Base::TurbineParameters>>(
+      mSignal, "TurbineParameters");
+  py::class_<CPS::Base::Turbine, std::shared_ptr<CPS::Base::Turbine>>(
+      mSignal, "Turbine");
+}
+
+void addSignalComponents(py::module_ mSignal) {
 
   py::class_<CPS::Signal::ExciterDC1Parameters,
              std::shared_ptr<CPS::Signal::ExciterDC1Parameters>,
@@ -244,12 +277,6 @@ void addSignalComponents(py::module_ mSignal) {
       .def("get_virtual_node",
            &CPS::Signal::DecouplingIdealTransformer_DP_Ph1::getVirtualNode);
 
-  py::class_<CPS::Base::PSSParameters,
-             std::shared_ptr<CPS::Base::PSSParameters>>(mSignal,
-                                                        "PSSParameters");
-
-  py::class_<CPS::Base::PSS, std::shared_ptr<CPS::Base::PSS>>(mSignal, "PSS");
-
   py::class_<CPS::Signal::PSS1AParameters,
              std::shared_ptr<CPS::Signal::PSS1AParameters>,
              CPS::Base::PSSParameters>(mSignal, "PSS1AParameters",
@@ -273,31 +300,6 @@ void addSignalComponents(py::module_ mSignal) {
       .def(py::init<std::string, CPS::Logger::Level>())
       .def("set_parameters", &CPS::Signal::PSS1A::setParameters,
            "parameters"_a);
-
-  py::class_<CPS::Signal::TurbineGovernorType1,
-             std::shared_ptr<CPS::Signal::TurbineGovernorType1>,
-             CPS::SimSignalComp>(mSignal, "TurbineGovernorType1",
-                                 py::multiple_inheritance())
-      .def(py::init<std::string>())
-      .def(py::init<std::string, CPS::Logger::Level>())
-      .def("set_parameters", &CPS::Signal::TurbineGovernorType1::setParameters,
-           "T3"_a, "T4"_a, "T5"_a, "Tc"_a, "Ts"_a, "R"_a, "Tmin"_a, "Tmax"_a,
-           "OmRef"_a)
-      .def("initialize_states",
-           &CPS::Signal::TurbineGovernorType1::initializeStates, "TmRef"_a);
-
-  // Base Governor / Turbine
-  py::class_<CPS::Base::GovernorParameters,
-             std::shared_ptr<CPS::Base::GovernorParameters>>(
-      mSignal, "GovernorParameters");
-  py::class_<CPS::Base::Governor, std::shared_ptr<CPS::Base::Governor>>(
-      mSignal, "Governor");
-
-  py::class_<CPS::Base::TurbineParameters,
-             std::shared_ptr<CPS::Base::TurbineParameters>>(
-      mSignal, "TurbineParameters");
-  py::class_<CPS::Base::Turbine, std::shared_ptr<CPS::Base::Turbine>>(
-      mSignal, "Turbine");
 
   // SteamTurbineGovernor
   py::class_<CPS::Signal::SteamGovernorParameters,
