@@ -14,8 +14,6 @@ ARG MAKE_OPTS=-j4
 
 ENV PLAT=manylinux_2_28_x86_64
 
-ENV PATH=/opt/dpsim-tools/bin:${PATH}
-
 LABEL \
 	org.opencontainers.image.title="DPsim" \
 	org.opencontainers.image.licenses="MPL 2.0" \
@@ -63,11 +61,6 @@ RUN cd /tmp && \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_POLICY_VERSION_MINIMUM=3.5 && \
 	make ${MAKE_OPTS} install
-
-# Python dependencies
-ADD pyproject.toml .
-RUN /opt/python/cp312-cp312/bin/python -m venv /opt/dpsim-tools && \
-	uv pip install --python /opt/dpsim-tools/bin/python --no-cache -r pyproject.toml --extra manylinux
 
 # Install CIMpp from source
 RUN cd /tmp && \
