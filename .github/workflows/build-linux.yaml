@@ -1,0 +1,115 @@
+# SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+# SPDX-License-Identifier: MPL-2.0
+
+name: Build Linux
+
+on:
+  workflow_call:
+    inputs:
+      image_dev:
+        description: 'Fedora development image'
+        required: true
+        type: string
+      image_rocky:
+        description: 'Rocky Linux development image'
+        required: true
+        type: string
+      image_minimal:
+        description: 'Minimal Fedora development image'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: ${{ matrix.title }}
+    runs-on: ubuntu-latest
+    container: ${{ matrix.image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - title: dpsimpy and tests on Fedora
+            key: fedora-dpsimpy
+            image: ${{ inputs.image_dev }}
+            cmake_args: -DCIM_VERSION=CGMES_2.4.15_16FEB2016 -DCOVERAGE=ON
+            targets: --target dpsimpy --target tests --target dpsimpyvillas
+            artifact: build-fedora-examples-cache
+          - title: Cxx examples on Fedora
+            key: fedora-examples
+            image: ${{ inputs.image_dev }}
+            cmake_args: -DCIM_VERSION=CGMES_2.4.15_16FEB2016
+            targets: ''
+            artifact: build-cache-examples-cpp
+          - title: Minimal configuration on Fedora
+            key: fedora-minimal
+            image: ${{ inputs.image_minimal }}
+            cmake_args: -DFETCH_SPDLOG=ON
+            targets: ''
+            artifact: ''
+          - title: Rocky Linux
+            key: rocky
+            image: ${{ inputs.image_rocky }}
+            cmake_args: -DFETCH_SPDLOG=ON
+            targets: ''
+            artifact: ''
+          - title: Rocky Linux with Clang
+            key: rocky-clang
+            image: ${{ inputs.image_rocky }}
+            cmake_args: -DFETCH_SPDLOG=ON -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
+            targets: ''
+            artifact: ''
+    env:
+      CCACHE_DIR: ${{ github.workspace }}/.ccache
+      CCACHE_MAXSIZE: 2G
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Create Build Environment
+        run: mkdir -p build
+
+      - name: Install ccache
+        shell: bash
+        run: command -v ccache || dnf install -y ccache
+
+      - name: Setup compiler cache
+        uses: actions/cache@v5
+        with:
+          path: ${{ github.workspace }}/.ccache
+          key: ccache-${{ matrix.key }}-${{ github.sha }}
+          restore-keys: |
+            ccache-${{ matrix.key }}-
+
+      - name: Configure CMake
+        shell: bash
+        working-directory: ${{ github.workspace }}/build
+        env:
+          CMAKE_ARGS: ${{ matrix.cmake_args }}
+        run: |
+          cmake $CMAKE_ARGS \
+            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+            "$GITHUB_WORKSPACE"
+
+      - name: Build
+        shell: bash
+        working-directory: ${{ github.workspace }}/build
+        env:
+          TARGETS: ${{ matrix.targets }}
+        run: |
+          ccache -z
+          cmake --build . $TARGETS --parallel "$(nproc)"
+          ccache -s
+
+      - name: Archive build directory
+        if: matrix.artifact != ''
+        uses: actions/upload-artifact@v7
+        with:
+          path: ${{ github.workspace }}/build
+          name: ${{ matrix.artifact }}-${{ github.sha }}
+          retention-days: 1

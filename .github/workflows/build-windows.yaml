@@ -1,0 +1,51 @@
+# SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+# SPDX-License-Identifier: MPL-2.0
+
+name: Build Windows
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: ${{ matrix.title }}
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - title: MSVC
+            key: windows
+            pybind: 'OFF'
+            targets: --target dpsim --target dpsim-models
+          - title: MSVC with Pybind
+            key: windows-bindings
+            pybind: 'ON'
+            targets: --target dpsimpy
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Create build folder
+        run: mkdir ${{ github.workspace }}/build
+
+      - name: Setup build directory cache
+        uses: actions/cache@v5
+        with:
+          path: ${{ github.workspace }}/build
+          key: build-${{ matrix.key }}-cache-${{ github.ref }}
+
+      - name: Install pybind11
+        if: matrix.pybind == 'ON'
+        run: pip install pybind11[global]
+
+      # TODO: Remove '-DCMAKE_POLICY_VERSION_MINIMUM=3.5' once spdlog version has been bumped
+      - name: Build DPsim
+        working-directory: ${{ github.workspace }}/build
+        run: |
+          git describe --tags --abbrev=0 --match "v*"
+          cmake -DWITH_PYBIND=${{ matrix.pybind }} -DCMAKE_POLICY_VERSION_MINIMUM="3.5" ..
+          cmake --build . ${{ matrix.targets }} --parallel

@@ -148,217 +148,27 @@ jobs:
       derived_images: ${{ needs.setup.outputs.derived_images }}
       base_image: ${{ needs.setup.outputs.image_dev }}
 
-  # Top-level job: the branch protection contexts are these job names.
   build-linux:
-    name: ${{ matrix.title }}
+    name: Build Linux
     needs: [setup, prepare]
     if: ${{ !cancelled() && needs.setup.result == 'success' && needs.prepare.result != 'failure' }}
-    runs-on: ubuntu-latest
-    container: ${{ matrix.image }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - title: Build dpsimpy and tests examples on Fedora Linux
-            key: fedora-dpsimpy
-            image: ${{ needs.setup.outputs.image_dev }}
-            cmake_args: -DCIM_VERSION=CGMES_2.4.15_16FEB2016 -DCOVERAGE=ON
-            targets: --target dpsimpy --target tests --target dpsimpyvillas
-            artifact: build-fedora-examples-cache
-          - title: Build Cxx examples on Fedora Linux
-            key: fedora-examples
-            image: ${{ needs.setup.outputs.image_dev }}
-            cmake_args: -DCIM_VERSION=CGMES_2.4.15_16FEB2016
-            targets: ''
-            artifact: build-cache-examples-cpp
-          - title: Build with minimal configuration on Fedora Linux
-            key: fedora-minimal
-            image: ${{ needs.setup.outputs.image_minimal }}
-            cmake_args: -DFETCH_SPDLOG=ON
-            targets: ''
-            artifact: ''
-          - title: Build on Rocky Linux
-            key: rocky
-            image: ${{ needs.setup.outputs.image_rocky }}
-            cmake_args: -DFETCH_SPDLOG=ON
-            targets: ''
-            artifact: ''
-          - title: Build on Rocky Linux using Clang
-            key: rocky-clang
-            image: ${{ needs.setup.outputs.image_rocky }}
-            cmake_args: -DFETCH_SPDLOG=ON -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
-            targets: ''
-            artifact: ''
-    env:
-      CCACHE_DIR: ${{ github.workspace }}/.ccache
-      CCACHE_MAXSIZE: 2G
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          submodules: recursive
-
-      - name: Create Build Environment
-        run: mkdir -p build
-
-      - name: Install ccache
-        shell: bash
-        run: command -v ccache || dnf install -y ccache
-
-      - name: Setup compiler cache
-        uses: actions/cache@v5
-        with:
-          path: ${{ github.workspace }}/.ccache
-          key: ccache-${{ matrix.key }}-${{ github.sha }}
-          restore-keys: |
-            ccache-${{ matrix.key }}-
-
-      - name: Configure CMake
-        shell: bash
-        working-directory: ${{ github.workspace }}/build
-        env:
-          CMAKE_ARGS: ${{ matrix.cmake_args }}
-        run: |
-          cmake $CMAKE_ARGS \
-            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-            "$GITHUB_WORKSPACE"
-
-      - name: Build
-        shell: bash
-        working-directory: ${{ github.workspace }}/build
-        env:
-          TARGETS: ${{ matrix.targets }}
-        run: |
-          ccache -z
-          cmake --build . $TARGETS --parallel "$(nproc)"
-          ccache -s
-
-      - name: Archive build directory
-        if: matrix.artifact != ''
-        uses: actions/upload-artifact@v7
-        with:
-          path: ${{ github.workspace }}/build
-          name: ${{ matrix.artifact }}-${{ github.sha }}
-          retention-days: 1
-
-  cpp-check:
-    name: Scan Sourcecode with Cppcheck
-    needs: [setup, prepare]
-    if: ${{ !cancelled() && needs.setup.result == 'success' && needs.prepare.result != 'failure' }}
-    runs-on: ubuntu-latest
-    container: ${{ needs.setup.outputs.image_dev }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Run cppcheck
-        working-directory: ${{ github.workspace }}
-        shell: bash
-        id: cppcheck
-        run: |
-          set -o pipefail
-          cppcheck --max-configs=32 -j $(nproc) --inline-suppr --error-exitcode=1 -q --enable=warning,performance,portability,information,missingInclude --std=c++17 -I dpsim/include/ -I dpsim-models/include/ -I dpsim-villas/include dpsim/src/ dpsim-models/src/ dpsim-villas/src/ 2>&1 | tee cppcheck-output.log
-        continue-on-error: true
-
-      - name: Print cppcheck errors
-        if: ${{ always() && steps.cppcheck.outcome == 'failure' }}
-        working-directory: ${{ github.workspace }}
-        shell: bash
-        run: (! cat cppcheck-output.log | grep -A 2 "error:")
-
-      - name: Print cppcheck warnings
-        if: ${{ always() && steps.cppcheck.outcome == 'failure' }}
-        working-directory: ${{ github.workspace }}
-        shell: bash
-        run: (! cat cppcheck-output.log | grep -A 2 "warning:")
-        continue-on-error: true
-
-      - name: Print cppcheck performance
-        if: ${{ always() && steps.cppcheck.outcome == 'failure' }}
-        working-directory: ${{ github.workspace }}
-        shell: bash
-        run: (! cat cppcheck-output.log | grep -A 2 "performance:")
-        continue-on-error: true
-
-      - name: Print cppcheck portability
-        if: ${{ always() && steps.cppcheck.outcome == 'failure' }}
-        working-directory: ${{ github.workspace }}
-        shell: bash
-        run: (! cat cppcheck-output.log | grep -A 2 "portability:")
-        continue-on-error: true
-
-      - name: Print cppcheck missingInclude
-        if: ${{ always() && steps.cppcheck.outcome == 'failure' }}
-        working-directory: ${{ github.workspace }}
-        shell: bash
-        run: (! cat cppcheck-output.log | grep -A 2 "missingInclude:")
-        continue-on-error: true
-
-      - name: Print cppcheck information
-        if: ${{ always() && steps.cppcheck.outcome == 'failure' }}
-        working-directory: ${{ github.workspace }}
-        shell: bash
-        run: (! cat cppcheck-output.log | grep -A 2 "information:")
-        continue-on-error: true
-
-      - name: Print cppcheck notes
-        if: ${{ always() && steps.cppcheck.outcome == 'failure' }}
-        working-directory: ${{ github.workspace }}
-        shell: bash
-        run: (! cat cppcheck-output.log | grep -A 2 "note:")
-        continue-on-error: true
-
-      - name: Archive cppcheck output
-        uses: actions/upload-artifact@v7
-        if: ${{ always() && steps.cppcheck.outcome == 'failure' }}
-        with:
-          name: cppcheck-output
-          path: cppcheck-output.log
+    uses: ./.github/workflows/build-linux.yaml
+    with:
+      image_dev: ${{ needs.setup.outputs.image_dev }}
+      image_rocky: ${{ needs.setup.outputs.image_rocky }}
+      image_minimal: ${{ needs.setup.outputs.image_minimal }}
 
   build-windows:
-    name: ${{ matrix.title }}
-    runs-on: windows-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - title: Build on Windows
-            key: windows
-            pybind: 'OFF'
-            targets: --target dpsim --target dpsim-models
-          - title: Build on Windows with Pybind
-            key: windows-bindings
-            pybind: 'ON'
-            targets: --target dpsimpy
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Create build folder
-        run: mkdir ${{ github.workspace }}/build
-
-      - name: Setup build directory cache
-        uses: actions/cache@v5
-        with:
-          path: ${{ github.workspace }}/build
-          key: build-${{ matrix.key }}-cache-${{ github.ref }}
-
-      - name: Install pybind11
-        if: matrix.pybind == 'ON'
-        run: pip install pybind11[global]
-
-      # TODO: Remove '-DCMAKE_POLICY_VERSION_MINIMUM=3.5' once spdlog version has been bumped
-      - name: Build DPsim
-        working-directory: ${{ github.workspace }}/build
-        run: |
-          git describe --tags --abbrev=0 --match "v*"
-          cmake -DWITH_PYBIND=${{ matrix.pybind }} -DCMAKE_POLICY_VERSION_MINIMUM="3.5" ..
-          cmake --build . ${{ matrix.targets }} --parallel
+    name: Build Windows
+    uses: ./.github/workflows/build-windows.yaml
 
   checks:
     name: Checks
+    needs: [setup, prepare]
+    if: ${{ !cancelled() && needs.setup.result == 'success' && needs.prepare.result != 'failure' }}
     uses: ./.github/workflows/checks.yaml
+    with:
+      image: ${{ needs.setup.outputs.image_dev }}
 
   test-linux:
     name: Test

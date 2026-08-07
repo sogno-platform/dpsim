@@ -15,22 +15,27 @@ and it calls the reusable workflows that hold the actual work:
 | Reusable workflow | Contents |
 | --- | --- |
 | `prepare-images.yaml` | builds the container images from their Dockerfiles and pushes them to the GitHub container registry |
-| `checks.yaml` | pre-commit, the notebook output rule, and the `pyproject.toml` extras resolution |
+| `build-linux.yaml` | the five Linux compilations, Fedora and Rocky, with ccache |
+| `build-windows.yaml` | the two Windows compilations |
+| `checks.yaml` | pre-commit, the notebook output rule, the `pyproject.toml` extras resolution, and cppcheck |
 | `test-linux.yaml` | the notebook test suite with coverage, the notebook result comparison, and the compiled WSCC 9 bus examples |
 | `run_villas_example.yaml` | one VILLASnode example per matrix entry |
 | `build-nix.yaml` | the Nix build |
 | `packaging-python.yaml` | source distribution, wheels, and the PyPI uploads |
 | `documentation.yaml` | the reference documentation and both deployment targets |
 
-The compilation jobs, the Windows jobs and the cppcheck job stay in `ci.yaml`
-itself rather than moving into a reusable workflow. This is deliberate and it is
-worth keeping that way: a required status check is identified by its job name,
-and a job called through a reusable workflow reports as `caller job / inner job`
-instead. Moving one of them would silently invalidate the branch protection
-entry that requires it. The compilation jobs are a matrix whose `name` is
-`${{ matrix.title }}`; because that name interpolates a matrix value, GitHub does
-not append the usual `(matrix, values)` suffix, so each job reports under exactly
-the name the branch protection rule expects.
+`ci.yaml` itself holds no build steps, only the triggers, the `setup` job and the
+ordering.
+
+One consequence is worth knowing before renaming anything. A required status
+check is identified by its name, and a job called through a reusable workflow
+reports as `caller job / inner job`, so the branch protection rule has to list
+`Build Linux / Rocky Linux` rather than `Rocky Linux`. Matrix jobs whose `name`
+interpolates a matrix value, as the build jobs do, are reported under exactly
+that rendered name; a matrix job with a static name would instead get a
+`(matrix, values)` suffix appended. Renaming a job, or moving one between
+`ci.yaml` and a reusable workflow, therefore invalidates its protection entry and
+has to be done together with an update to the branch protection settings.
 
 ## How a run picks its container images
 
