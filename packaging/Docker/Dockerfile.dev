@@ -18,7 +18,7 @@ RUN set -eux; \
 	dnf -y update; \
 	dnf -y remove systemd-standalone-tmpfiles || true; \
 	dnf -y --refresh install \
-		gcc gcc-c++ clang \
+		gcc gcc-c++ clang ccache \
 		git \
 		rpmdevtools rpm-build \
 		make cmake pkgconfig \
