@@ -71,8 +71,8 @@ protected:
   void calculateQAtPVBuses();
   /// Generator reactive-power injection at a bus [pu], used by the Q-limit check
   CPS::Real generatorReactivePowerPerUnit(CPS::TopologicalNode::Ptr node);
-  /// Complex power [pu] injected at a bus by the components that do not regulate it
-  CPS::Complex nonRegulatingPowerPerUnit(CPS::TopologicalNode::Ptr node);
+  /// Scheduled complex power [pu] injected at a bus by the components that do not regulate it
+  CPS::Complex scheduledPowerPerUnit(CPS::TopologicalNode::Ptr node);
   /// Q-limit PV<->PQ switching pass (overrides the base no-op)
   CPS::Bool enforceReactiveLimits() override;
   /// Clear the Q-limit conversion bookkeeping between solves

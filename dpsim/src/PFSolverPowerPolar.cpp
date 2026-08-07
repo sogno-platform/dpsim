@@ -71,7 +71,7 @@ void PFSolverPowerPolar::generateInitialSolution(Real time,
       sol_D(idx) = 0.0;
     }
 
-    CPS::Complex nonRegulating = nonRegulatingPowerPerUnit(pq);
+    CPS::Complex nonRegulating = scheduledPowerPerUnit(pq);
     sol_P(idx) += nonRegulating.real();
     sol_Q(idx) += nonRegulating.imag();
 
@@ -99,7 +99,7 @@ void PFSolverPowerPolar::generateInitialSolution(Real time,
       sol_V(idx) = 1.0;
     }
 
-    CPS::Complex nonRegulating = nonRegulatingPowerPerUnit(pv);
+    CPS::Complex nonRegulating = scheduledPowerPerUnit(pv);
     sol_P(idx) += nonRegulating.real();
     sol_Q(idx) += nonRegulating.imag();
 
@@ -130,7 +130,7 @@ void PFSolverPowerPolar::generateInitialSolution(Real time,
     sol_D(idx) = 0.0;
     sol_V(idx) = 1.0;
 
-    CPS::Complex nonRegulating = nonRegulatingPowerPerUnit(vd);
+    CPS::Complex nonRegulating = scheduledPowerPerUnit(vd);
     sol_P(idx) += nonRegulating.real();
     sol_Q(idx) += nonRegulating.imag();
 
@@ -443,7 +443,7 @@ void PFSolverPowerPolar::calculatePAndQAtSlackBus() {
     CPS::Complex S = sol_Vcx(node_idx) * conj(I);
 
     // Generator/source power: S_gen = S_inj - S_nonregulating
-    CPS::Complex Sgen = S - nonRegulatingPowerPerUnit(topoNode);
+    CPS::Complex Sgen = S - scheduledPowerPerUnit(topoNode);
 
     // Update connected VD source/generator with actual generated power
     for (auto comp : mSystem.mComponentsAtNode[topoNode]) {
@@ -478,7 +478,7 @@ void PFSolverPowerPolar::calculateQAtPVBuses() {
     CPS::Complex S = sol_Vcx(node_idx) * conj(I);
 
     // Generator power: S_gen = S_inj - S_nonregulating
-    CPS::Complex Sgen = S - nonRegulatingPowerPerUnit(topoNode);
+    CPS::Complex Sgen = S - scheduledPowerPerUnit(topoNode);
 
     // Update PV generator with actual generator Q
     for (auto comp : mSystem.mComponentsAtNode[topoNode]) {
@@ -496,7 +496,7 @@ void PFSolverPowerPolar::calculateQAtPVBuses() {
 }
 
 CPS::Complex
-PFSolverPowerPolar::nonRegulatingPowerPerUnit(CPS::TopologicalNode::Ptr node) {
+PFSolverPowerPolar::scheduledPowerPerUnit(CPS::TopologicalNode::Ptr node) {
   CPS::Complex power(0.0, 0.0);
   for (auto comp : mSystem.mComponentsAtNode[node]) {
     if (auto load = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
@@ -523,7 +523,7 @@ CPS::Real PFSolverPowerPolar::generatorReactivePowerPerUnit(
     I += mY.coeff(k, j) * sol_Vcx(j);
   // Net nodal injection S = generator + non-regulating; remove the latter.
   CPS::Complex S = sol_Vcx(k) * conj(I);
-  return S.imag() - nonRegulatingPowerPerUnit(node).imag();
+  return S.imag() - scheduledPowerPerUnit(node).imag();
 }
 
 CPS::Bool PFSolverPowerPolar::enforceReactiveLimits() {
@@ -599,7 +599,7 @@ CPS::Bool PFSolverPowerPolar::enforceReactiveLimits() {
                    mPVBuses.end());
     mPQBuses.push_back(node);
     UInt idx = node->matrixNodeIndex();
-    Qesp(idx) = qLimPU + nonRegulatingPowerPerUnit(node).imag();
+    Qesp(idx) = qLimPU + scheduledPowerPerUnit(node).imag();
     sol_Q(idx) = Qesp(idx);
     mQLimitConvertedAtMax[node] = atMax;
     if (++mQLimitSwitchCount[node] >= mMaxQLimitSwitchesPerBus)
