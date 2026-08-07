@@ -32,7 +32,8 @@ jobs:
       ref: ${{ steps.ref.outputs.ref }}
       tag: ${{ steps.ref.outputs.tag }}
       image_prefix: ${{ steps.images.outputs.prefix }}
-      build_images: ${{ steps.images.outputs.build }}
+      base_images: ${{ steps.images.outputs.base }}
+      derived_images: ${{ steps.images.outputs.derived }}
       image_dev: ${{ steps.images.outputs.dev }}
       image_rocky: ${{ steps.images.outputs.rocky }}
       image_minimal: ${{ steps.images.outputs.minimal }}
@@ -46,9 +47,25 @@ jobs:
         uses: dorny/paths-filter@v3
         with:
           filters: |
-            docker:
-              - 'packaging/Docker/**'
+            shared: &shared
               - 'packaging/Shell/**'
+            dev: &dev
+              - *shared
+              - 'packaging/Docker/Dockerfile.dev'
+            rocky:
+              - *shared
+              - 'packaging/Docker/Dockerfile.dev-rocky'
+            minimal:
+              - *shared
+              - 'packaging/Docker/Dockerfile.dev-minimal'
+            manylinux:
+              - *shared
+              - 'packaging/Docker/Dockerfile.manylinux'
+            release:
+              - *dev
+              - 'packaging/Docker/Dockerfile'
+            binder:
+              - *dev
               - '.binder/Dockerfile'
 
       - name: Resolve the revision under test
@@ -65,41 +82,60 @@ jobs:
         env:
           OWNER: ${{ github.repository_owner }}
           SAME_REPO: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
-          CHANGED: ${{ steps.filter.outputs.docker }}
           FORCED: ${{ inputs.rebuild_images }}
           SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          DEV: ${{ steps.filter.outputs.dev }}
+          ROCKY: ${{ steps.filter.outputs.rocky }}
+          MINIMAL: ${{ steps.filter.outputs.minimal }}
+          MANYLINUX: ${{ steps.filter.outputs.manylinux }}
+          RELEASE: ${{ steps.filter.outputs.release }}
+          BINDER: ${{ steps.filter.outputs.binder }}
         run: |
           prefix="ghcr.io/${OWNER,,}/dpsim"
-          echo "prefix=$prefix" >> "$GITHUB_OUTPUT"
 
-          build=false
-          use_sha=false
-          if [ "$CHANGED" = "true" ] || [ "$FORCED" = "true" ]; then
-            if [ "$SAME_REPO" = "true" ]; then
-              build=true
-              use_sha=true
-            elif docker manifest inspect "$prefix/dev:$SHA" > /dev/null 2>&1; then
-              use_sha=true
+          stale() {
+            [ "$1" = "true" ] || [ "$FORCED" = "true" ]
+          }
+
+          queue() {
+            jq -nc --argjson acc "$1" --arg image "$2" --arg file "$3" '$acc + [{image: $image, file: $file}]'
+          }
+
+          resolve() {
+            if ! stale "$2"; then
+              echo "sogno/dpsim:$3"
+            elif [ "$SAME_REPO" = "true" ] || docker manifest inspect "$prefix/$1:$SHA" > /dev/null 2>&1; then
+              echo "$prefix/$1:$SHA"
             else
-              echo "::notice::Images for $SHA are not published yet. Approve the \"Prepare Images (fork)\" run and re-run this workflow to test against them."
+              echo "::notice::$prefix/$1:$SHA is not published yet. Approve the \"Prepare Images (fork)\" run and re-run this workflow to test against it." >&2
+              echo "sogno/dpsim:$3"
             fi
+          }
+
+          base='[]'
+          derived='[]'
+          if [ "$SAME_REPO" = "true" ]; then
+            if stale "$DEV"; then base=$(queue "$base" dev packaging/Docker/Dockerfile.dev); fi
+            if stale "$ROCKY"; then base=$(queue "$base" dev-rocky packaging/Docker/Dockerfile.dev-rocky); fi
+            if stale "$MINIMAL"; then base=$(queue "$base" dev-minimal packaging/Docker/Dockerfile.dev-minimal); fi
+            if stale "$MANYLINUX"; then base=$(queue "$base" manylinux packaging/Docker/Dockerfile.manylinux); fi
+            if stale "$RELEASE"; then derived=$(queue "$derived" release packaging/Docker/Dockerfile); fi
+            if stale "$BINDER"; then derived=$(queue "$derived" binder .binder/Dockerfile); fi
           fi
 
-          echo "build=$build" >> "$GITHUB_OUTPUT"
-          if [ "$use_sha" = "true" ]; then
-            echo "dev=$prefix/dev:$SHA" >> "$GITHUB_OUTPUT"
-            echo "rocky=$prefix/dev-rocky:$SHA" >> "$GITHUB_OUTPUT"
-            echo "minimal=$prefix/dev-minimal:$SHA" >> "$GITHUB_OUTPUT"
-          else
-            echo "dev=sogno/dpsim:dev" >> "$GITHUB_OUTPUT"
-            echo "rocky=sogno/dpsim:dev-rocky" >> "$GITHUB_OUTPUT"
-            echo "minimal=sogno/dpsim:dev-minimal" >> "$GITHUB_OUTPUT"
-          fi
+          {
+            echo "prefix=$prefix"
+            echo "base=$base"
+            echo "derived=$derived"
+            echo "dev=$(resolve dev "$DEV" dev)"
+            echo "rocky=$(resolve dev-rocky "$ROCKY" dev-rocky)"
+            echo "minimal=$(resolve dev-minimal "$MINIMAL" dev-minimal)"
+          } >> "$GITHUB_OUTPUT"
 
   prepare:
     name: Prepare Images
     needs: [setup]
-    if: needs.setup.outputs.build_images == 'true'
+    if: ${{ needs.setup.outputs.base_images != '[]' || needs.setup.outputs.derived_images != '[]' }}
     permissions:
       contents: read
       packages: write
@@ -108,6 +144,9 @@ jobs:
       ref: ${{ needs.setup.outputs.ref }}
       tag: ${{ needs.setup.outputs.tag }}
       image_prefix: ${{ needs.setup.outputs.image_prefix }}
+      base_images: ${{ needs.setup.outputs.base_images }}
+      derived_images: ${{ needs.setup.outputs.derived_images }}
+      base_image: ${{ needs.setup.outputs.image_dev }}
 
   # Top-level job: the branch protection contexts are these job names.
   build-linux:

@@ -18,6 +18,18 @@ on:
         description: 'Registry path the images are pushed to'
         required: true
         type: string
+      base_images:
+        description: 'Images to build, as a JSON list of image and file pairs'
+        required: true
+        type: string
+      derived_images:
+        description: 'Images built on top of the development image, same format'
+        required: true
+        type: string
+      base_image:
+        description: 'Image the derived images are built from'
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -26,19 +38,12 @@ permissions:
 jobs:
   base:
     name: Build ${{ matrix.image }} image
+    if: inputs.base_images != '[]'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - image: dev
-            file: packaging/Docker/Dockerfile.dev
-          - image: dev-rocky
-            file: packaging/Docker/Dockerfile.dev-rocky
-          - image: dev-minimal
-            file: packaging/Docker/Dockerfile.dev-minimal
-          - image: manylinux
-            file: packaging/Docker/Dockerfile.manylinux
+        include: ${{ fromJSON(inputs.base_images) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -70,15 +75,12 @@ jobs:
   derived:
     name: Build ${{ matrix.image }} image
     needs: [base]
+    if: ${{ always() && needs.base.result != 'failure' && inputs.derived_images != '[]' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - image: release
-            file: packaging/Docker/Dockerfile
-          - image: binder
-            file: .binder/Dockerfile
+        include: ${{ fromJSON(inputs.derived_images) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -102,7 +104,7 @@ jobs:
           file: ${{ matrix.file }}
           push: true
           build-args: |
-            BASE_IMAGE=${{ inputs.image_prefix }}/dev:${{ inputs.ref }}
+            BASE_IMAGE=${{ inputs.base_image }}
           cache-from: type=gha,scope=${{ matrix.image }}
           cache-to: type=gha,mode=min,scope=${{ matrix.image }}
           tags: |
