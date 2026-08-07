@@ -14,7 +14,7 @@ ARG MAKE_OPTS=-j4
 
 ENV PLAT=manylinux_2_28_x86_64
 
-ENV PATH=/opt/python/cp312-cp312/bin:${PATH}
+ENV PATH=/opt/dpsim-tools/bin:${PATH}
 
 LABEL \
 	org.opencontainers.image.title="DPsim" \
@@ -66,8 +66,9 @@ RUN cd /tmp && \
 
 # Python dependencies
 ADD pyproject.toml .
-RUN pip3 install --no-cache-dir --upgrade wheel build setuptools packaging
-RUN uv pip install --system --no-cache -r pyproject.toml --extra manylinux
+RUN /opt/python/cp312-cp312/bin/python -m venv /opt/dpsim-tools && \
+	pip3 install --no-cache-dir --upgrade wheel build setuptools packaging && \
+	uv pip install --python /opt/dpsim-tools/bin/python --no-cache -r pyproject.toml --extra manylinux
 
 # Install CIMpp from source
 RUN cd /tmp && \
