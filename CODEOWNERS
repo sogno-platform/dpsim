@@ -149,3 +149,6 @@
 /dpsim-models/src/DP/DP_Ph1_SSN_Full_Serial_RLC.cpp @georgii-tishenin @leonardocarreras
 /dpsim-models/src/DP/DP_Ph1_MixedVTypeVariableSSNComp.cpp @georgii-tishenin @leonardocarreras
 /dpsim-models/src/DP/DP_Ph1_SSN_Variable_Serial_RLC.cpp @georgii-tishenin @leonardocarreras
+
+# Half decoupling line.
+/dpsim-models/**/*HalfDecouplingLine* @leonardocarreras
