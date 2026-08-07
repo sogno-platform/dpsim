@@ -10,53 +10,92 @@ using namespace CPS::EMT::Ph3;
 using namespace CPS::Signal;
 
 DecouplingIdealTransformer_EMT_Ph3::DecouplingIdealTransformer_EMT_Ph3(
-    String name, Logger::Level logLevel)
-    : SimSignalComp(name, name, logLevel),
+    String uid, String name, Logger::Level logLevel)
+    : CompositePowerComp<Real>(uid, name, true, true, logLevel),
       mStates(mAttributes->create<Matrix>("states")),
       mSourceVoltageIntfVoltage(
-          mAttributes->create<Matrix>("v_intf", Matrix::Zero(3, 1))),
+          mAttributes->create<Matrix>("v_src_intf", Matrix::Zero(3, 1))),
       mSourceVoltageIntfCurrent(
-          mAttributes->create<Matrix>("i_intf", Matrix::Zero(3, 1))),
+          mAttributes->create<Matrix>("i_src_intf", Matrix::Zero(3, 1))),
       mSrcVoltageRef(mAttributes->create<Matrix>("v_ref", Matrix::Zero(3, 1))),
       mSrcCurrentRef(mAttributes->create<Matrix>("i_ref", Matrix::Zero(3, 1))) {
 
-  mRes1 = Resistor::make(name + "_r1", logLevel);
-  mRes2 = Resistor::make(name + "_r2", logLevel);
-  mVoltageSrc = ControlledVoltageSource::make(name + "_v", logLevel);
-  mCurrentSrc = ControlledCurrentSource::make(name + "_i", logLevel);
-
-  mSrcVoltage = mVoltageSrc->mVoltageRef;
-  mSrcCurrent = mCurrentSrc->mCurrentRef;
+  mPhaseType = PhaseType::ABC;
+  setTerminalNumber(2);
+  setVirtualNodeNumber(1);
+  **mIntfVoltage = Matrix::Zero(3, 1);
+  **mIntfCurrent = Matrix::Zero(3, 1);
 }
 
 void DecouplingIdealTransformer_EMT_Ph3::setParameters(
-    SimNode<Real>::Ptr node1, SimNode<Real>::Ptr node2, Real delay,
-    Matrix voltageSrcIntfCurr, Matrix current1Extrap0, CouplingMethod method) {
-
-  mNode1 = node1;
-  mNode2 = node2;
-  mVirtualNode = SimNode<Real>::make(name() + "_virtual", PhaseType::ABC);
+    Real delay, Matrix voltageSrcIntfCurr, Matrix current1Extrap0,
+    CouplingMethod method) {
 
   mDelay = delay;
   mCouplingMethod = method;
+  mVoltageSrcIntfCurr = voltageSrcIntfCurr;
+  mCurrent1Extrap0 = current1Extrap0;
 
   if (mCouplingMethod == CouplingMethod::EXTRAPOLATION_LINEAR) {
     mExtrapolationDegree = 1;
   }
 
-  mRes1->setParameters(mInternalSeriesResistance);
-  mRes1->connect({node1, mVirtualNode});
-  mRes2->setParameters(mInternalParallelResistance);
-  mRes2->connect({node2, SimNode<Real>::GND});
-  mVoltageSrc->setParameters(Matrix::Zero(3, 1));
-  mVoltageSrcIntfCurr = voltageSrcIntfCurr;
-  mCurrent1Extrap0 = current1Extrap0;
-  mVoltageSrc->connect({mVirtualNode, SimNode<Real>::GND});
-  mCurrentSrc->setParameters(Matrix::Zero(3, 1));
-  mCurrentSrc->connect({node2, SimNode<Real>::GND});
+  mParametersSet = true;
 }
 
-void DecouplingIdealTransformer_EMT_Ph3::initialize(Real omega, Real timeStep) {
+void DecouplingIdealTransformer_EMT_Ph3::createSubComponents() {
+  if (mSubCompCreated)
+    return;
+  mSubCompCreated = true;
+
+  mRes1 = Resistor::make(**mName + "_r1", mLogLevel);
+  mRes1->setParameters(mInternalSeriesResistance);
+  mRes1->connect({mTerminals[0]->node(), mVirtualNodes[0]});
+  addMNASubComponent(mRes1, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+
+  mRes2 = Resistor::make(**mName + "_r2", mLogLevel);
+  mRes2->setParameters(mInternalParallelResistance);
+  mRes2->connect({mTerminals[1]->node(), EMT::SimNode::GND});
+  addMNASubComponent(mRes2, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+
+  mVoltageSrc = ControlledVoltageSource::make(**mName + "_v", mLogLevel);
+  mVoltageSrc->setParameters(Matrix::Zero(3, 1));
+  mVoltageSrc->connect({mVirtualNodes[0], EMT::SimNode::GND});
+  addMNASubComponent(mVoltageSrc, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+
+  mCurrentSrc = ControlledCurrentSource::make(**mName + "_i", mLogLevel);
+  mCurrentSrc->setParameters(Matrix::Zero(3, 1));
+  mCurrentSrc->connect({mTerminals[1]->node(), EMT::SimNode::GND});
+  addMNASubComponent(mCurrentSrc, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+
+  mSrcVoltage = mVoltageSrc->mVoltageRef;
+  mSrcCurrent = mCurrentSrc->mCurrentRef;
+}
+
+void DecouplingIdealTransformer_EMT_Ph3::initializeParentFromNodesAndTerminals(
+    Real frequency) {
+
+  MatrixComp cur1 = mVoltageSrcIntfCurr.cast<Complex>();
+  MatrixComp volt2 = initialVoltage(1);
+
+  mVirtualNodes[0]->setInitialVoltage(initialVoltage(0) -
+                                      mInternalSeriesResistance * cur1);
+
+  SPDLOG_LOGGER_INFO(mSLog, "initial current: i_1 {}", cur1);
+  SPDLOG_LOGGER_INFO(mSLog, "initial voltage: v_2 {}", volt2);
+
+  **mSrcVoltageRef = volt2.real();
+  **mSrcCurrentRef = cur1.real();
+  mVoltageSrc->setParameters(**mSrcVoltageRef);
+  mCurrentSrc->setParameters(**mSrcCurrentRef);
+}
+
+void DecouplingIdealTransformer_EMT_Ph3::mnaParentInitialize(
+    Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
   if (mDelay <= 0) {
     mDelay = 0;
     mBufSize = 1;
@@ -67,33 +106,23 @@ void DecouplingIdealTransformer_EMT_Ph3::initialize(Real omega, Real timeStep) {
   }
   SPDLOG_LOGGER_INFO(mSLog, "bufsize {} alpha {}", mBufSize, mAlpha);
 
-  mVoltageSrc->setIntfCurrent(mVoltageSrcIntfCurr);
-  MatrixComp cur1 = mVoltageSrc->mIntfCurrent->get();
-  MatrixComp volt2 = mNode2->initialVoltage();
+  Matrix cur1 = **mSrcCurrentRef;
+  Matrix volt2 = **mSrcVoltageRef;
 
-  mVirtualNode->setInitialVoltage(mNode1->initialVoltage() -
-                                  mInternalSeriesResistance * cur1);
+  mCurrentSrc->setIntfVoltage(volt2);
 
-  SPDLOG_LOGGER_INFO(mSLog, "initial current: i_1 {}", cur1);
-  SPDLOG_LOGGER_INFO(mSLog, "initial voltage: v_2 {}", volt2);
-
-  **mSrcVoltageRef = volt2.real();
-  **mSrcCurrentRef = cur1.real();
-  mVoltageSrc->setParameters(**mSrcVoltageRef);
-  mCurrentSrc->setParameters(**mSrcCurrentRef);
-
-  Matrix mSourceCurrentIntfVoltage = volt2.real();
-  mCurrentSrc->setIntfVoltage(mSourceCurrentIntfVoltage);
-
-  mVoltageSrc->setIntfVoltage(mSourceCurrentIntfVoltage);
+  mVoltageSrc->setIntfVoltage(volt2);
   mVoltageSrc->setIntfCurrent(mVoltageSrcIntfCurr);
 
-  **mSourceVoltageIntfVoltage = volt2.real();
+  **mSourceVoltageIntfVoltage = volt2;
   **mSourceVoltageIntfCurrent = mVoltageSrc->intfCurrent();
 
+  **mIntfVoltage = volt2;
+  **mIntfCurrent = cur1;
+
   // Resize ring buffers and initialize
-  mCur1 = cur1.real().transpose().replicate(mBufSize, 1);
-  mVol2 = volt2.real().transpose().replicate(mBufSize, 1);
+  mCur1 = cur1.transpose().replicate(mBufSize, 1);
+  mVol2 = volt2.transpose().replicate(mBufSize, 1);
 
   SPDLOG_LOGGER_INFO(mSLog, "Verify initial current: i_1 {}",
                      mCurrentSrc->intfCurrent()(0, 0));
@@ -105,7 +134,7 @@ void DecouplingIdealTransformer_EMT_Ph3::initialize(Real omega, Real timeStep) {
   if (mExtrapolationDegree > 0) {
     mCur1Extrap.row(1) = mVoltageSrcIntfCurr.transpose();
   }
-  mVol2Extrap = volt2.real().transpose().replicate(mExtrapolationDegree + 1, 1);
+  mVol2Extrap = volt2.transpose().replicate(mExtrapolationDegree + 1, 1);
 }
 
 Matrix DecouplingIdealTransformer_EMT_Ph3::interpolate(Matrix &data) {
@@ -149,11 +178,6 @@ void DecouplingIdealTransformer_EMT_Ph3::step(Real time, Int timeStepCount) {
   mSrcCurrent->set(**mSrcCurrentRef);
 }
 
-void DecouplingIdealTransformer_EMT_Ph3::PreStep::execute(Real time,
-                                                          Int timeStepCount) {
-  mITM.step(time, timeStepCount);
-}
-
 void DecouplingIdealTransformer_EMT_Ph3::postStep() {
   // Update ringbuffers with new values
   mCur1.row(mBufIdx) = -mVoltageSrc->intfCurrent().transpose();
@@ -171,20 +195,46 @@ void DecouplingIdealTransformer_EMT_Ph3::postStep() {
   }
 }
 
-void DecouplingIdealTransformer_EMT_Ph3::PostStep::execute(Real time,
-                                                           Int timeStepCount) {
-  mITM.postStep();
+void DecouplingIdealTransformer_EMT_Ph3::mnaParentPreStep(Real time,
+                                                          Int timeStepCount) {
+  step(time, timeStepCount);
+  mVoltageSrc->mnaPreStep(time, timeStepCount);
+  mCurrentSrc->mnaPreStep(time, timeStepCount);
+  mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
-Task::List DecouplingIdealTransformer_EMT_Ph3::getTasks() {
-  return Task::List(
-      {std::make_shared<PreStep>(*this), std::make_shared<PostStep>(*this)});
+void DecouplingIdealTransformer_EMT_Ph3::mnaParentPostStep(
+    Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+  mnaCompUpdateVoltage(**leftVector);
+  mnaCompUpdateCurrent(**leftVector);
+  postStep();
 }
 
-IdentifiedObject::List DecouplingIdealTransformer_EMT_Ph3::getComponents() {
-  return IdentifiedObject::List({mRes1, mRes2, mVoltageSrc, mCurrentSrc});
+void DecouplingIdealTransformer_EMT_Ph3::mnaCompUpdateVoltage(
+    const Matrix &leftVector) {
+  **mIntfVoltage = mVoltageSrc->intfVoltage();
 }
 
-TopologicalNode::Ptr DecouplingIdealTransformer_EMT_Ph3::getVirtualNode() {
-  return mVirtualNode;
+void DecouplingIdealTransformer_EMT_Ph3::mnaCompUpdateCurrent(
+    const Matrix &leftVector) {
+  **mIntfCurrent = mVoltageSrc->intfCurrent();
+}
+
+void DecouplingIdealTransformer_EMT_Ph3::mnaParentAddPreStepDependencies(
+    AttributeBase::List &prevStepDependencies,
+    AttributeBase::List &attributeDependencies,
+    AttributeBase::List &modifiedAttributes) {
+  prevStepDependencies.push_back(mStates);
+  modifiedAttributes.push_back(mRightVector);
+}
+
+void DecouplingIdealTransformer_EMT_Ph3::mnaParentAddPostStepDependencies(
+    AttributeBase::List &prevStepDependencies,
+    AttributeBase::List &attributeDependencies,
+    AttributeBase::List &modifiedAttributes,
+    Attribute<Matrix>::Ptr &leftVector) {
+  attributeDependencies.push_back(leftVector);
+  modifiedAttributes.push_back(mIntfVoltage);
+  modifiedAttributes.push_back(mIntfCurrent);
+  modifiedAttributes.push_back(mStates);
 }

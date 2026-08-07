@@ -8,16 +8,15 @@
 #include "dpsim-models/Definitions.h"
 #include "dpsim-models/EMT/EMT_Ph3_ControlledVoltageSource.h"
 #include "dpsim-models/MathUtils.h"
+#include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/EMT/EMT_Ph3_ControlledCurrentSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
-#include <dpsim-models/SimSignalComp.h>
-#include <dpsim-models/Task.h>
 
 namespace CPS {
 namespace Signal {
 
 class DecouplingIdealTransformer_EMT_Ph3
-    : public SimSignalComp,
+    : public CompositePowerComp<Real>,
       public SharedFactory<DecouplingIdealTransformer_EMT_Ph3> {
 protected:
   Real mDelay;
@@ -26,7 +25,6 @@ protected:
   Matrix mInternalParallelResistance =
       CPS::Math::singlePhaseParameterToThreePhase(1e6);
 
-  std::shared_ptr<EMT::SimNode> mNode1, mNode2, mVirtualNode;
   std::shared_ptr<EMT::Ph3::Resistor> mRes1, mRes2;
   std::shared_ptr<EMT::Ph3::ControlledCurrentSource> mCurrentSrc;
   std::shared_ptr<EMT::Ph3::ControlledVoltageSource> mVoltageSrc;
@@ -67,50 +65,38 @@ public:
   const Attribute<Matrix>::Ptr mStates;
 
   DecouplingIdealTransformer_EMT_Ph3(
-      String name, Logger::Level logLevel = Logger::Level::info);
+      String uid, String name, Logger::Level logLevel = Logger::Level::info);
+  DecouplingIdealTransformer_EMT_Ph3(
+      String name, Logger::Level logLevel = Logger::Level::info)
+      : DecouplingIdealTransformer_EMT_Ph3(name, name, logLevel) {}
 
-  void setParameters(SimNode<Real>::Ptr node1, SimNode<Real>::Ptr node2,
-                     Real delay, Matrix voltageSrcIntfCurr,
+  void setParameters(Real delay, Matrix voltageSrcIntfCurr,
                      Matrix current1Extrap0,
                      CouplingMethod method = CouplingMethod::DELAY);
-  void initialize(Real omega, Real timeStep);
   void step(Real time, Int timeStepCount);
   void postStep();
-  Task::List getTasks();
-  IdentifiedObject::List getComponents();
-  TopologicalNode::Ptr getVirtualNode();
 
-  class PreStep : public Task {
-  public:
-    PreStep(DecouplingIdealTransformer_EMT_Ph3 &itm)
-        : Task(**itm.mName + ".MnaPreStep"), mITM(itm) {
-      mPrevStepDependencies.push_back(mITM.mStates);
-      mModifiedAttributes.push_back(mITM.mVoltageSrc->mVoltageRef);
-      mModifiedAttributes.push_back(mITM.mCurrentSrc->mCurrentRef);
-    }
+  // #### General ####
+  void createSubComponents() override;
+  void initializeParentFromNodesAndTerminals(Real frequency) override;
 
-    void execute(Real time, Int timeStepCount);
-
-  private:
-    DecouplingIdealTransformer_EMT_Ph3 &mITM;
-  };
-
-  class PostStep : public Task {
-  public:
-    PostStep(DecouplingIdealTransformer_EMT_Ph3 &itm)
-        : Task(**itm.mName + ".PostStep"), mITM(itm) {
-      mAttributeDependencies.push_back(mITM.mVoltageSrc->mIntfVoltage);
-      mAttributeDependencies.push_back(mITM.mVoltageSrc->mIntfCurrent);
-      mAttributeDependencies.push_back(mITM.mCurrentSrc->mIntfVoltage);
-      mAttributeDependencies.push_back(mITM.mCurrentSrc->mIntfCurrent);
-      mModifiedAttributes.push_back(mITM.mStates);
-    }
-
-    void execute(Real time, Int timeStepCount);
-
-  private:
-    DecouplingIdealTransformer_EMT_Ph3 &mITM;
-  };
+  // #### MNA section ####
+  void mnaParentInitialize(Real omega, Real timeStep,
+                           Attribute<Matrix>::Ptr leftVector) override;
+  void mnaParentPreStep(Real time, Int timeStepCount) override;
+  void mnaParentPostStep(Real time, Int timeStepCount,
+                         Attribute<Matrix>::Ptr &leftVector) override;
+  void mnaParentAddPreStepDependencies(
+      AttributeBase::List &prevStepDependencies,
+      AttributeBase::List &attributeDependencies,
+      AttributeBase::List &modifiedAttributes) override;
+  void
+  mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
+                                   AttributeBase::List &attributeDependencies,
+                                   AttributeBase::List &modifiedAttributes,
+                                   Attribute<Matrix>::Ptr &leftVector) override;
+  void mnaCompUpdateVoltage(const Matrix &leftVector) override;
+  void mnaCompUpdateCurrent(const Matrix &leftVector) override;
 };
 } // namespace Signal
 } // namespace CPS
