@@ -15,6 +15,7 @@
 
 #include <dpsim-models/IdentifiedObject.h>
 #include <dpsim-models/Logger.h>
+#include <dpsim-models/ParameterCheck.h>
 #include <dpsim-models/TopologicalNode.h>
 #include <dpsim-models/TopologicalTerminal.h>
 
@@ -40,6 +41,8 @@ protected:
   /// Flag indicating that parameters are set via setParameters() function
   bool mParametersSet = false;
 
+  virtual void validateParameters(ParameterCheck &) {}
+
 public:
   typedef std::shared_ptr<TopologicalPowerComp> Ptr;
   typedef std::vector<Ptr> List;
@@ -59,6 +62,11 @@ public:
       : TopologicalPowerComp(name, name, logLevel) {}
   /// Destructor - does not do anything
   virtual ~TopologicalPowerComp() {}
+
+  void checkParameters(ParameterCheck::Violations &violations) {
+    ParameterCheck check(*this, violations);
+    validateParameters(check);
+  }
 
   /// Returns nodes connected to this component
   virtual TopologicalNode::List topologicalNodes() = 0;
