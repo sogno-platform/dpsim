@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2018-2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+# SPDX-License-Identifier: MPL-2.0
+
 # EditorConfig is awesome: http://EditorConfig.org
 
 # top-most EditorConfig file
@@ -25,3 +28,7 @@ indent_size = 2
 [**.{md}]
 indent_style = space
 indent_size = 2
+
+# Kept as SPDX publishes them, trailing space in MPL-2.0 included.
+[LICENSES/**]
+trim_trailing_whitespace = false
