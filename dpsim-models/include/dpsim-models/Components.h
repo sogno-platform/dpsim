@@ -172,6 +172,7 @@
 #ifdef WITH_SUNDIALS
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorDQODE.h>
 #endif
+#include <dpsim-models/EMT/EMT_Ph3_HalfDecouplingLine.h>
 #include <dpsim-models/EMT/EMT_Ph3_NetworkInjection.h>
 #include <dpsim-models/EMT/EMT_Ph3_PiLine.h>
 #include <dpsim-models/EMT/EMT_Ph3_PiecewiseLinearInductor.h>
@@ -185,7 +186,6 @@
 #include <dpsim-models/EMT/EMT_Ph3_Transformer.h>
 #include <dpsim-models/EMT/EMT_Ph3_TwoTerminalVTypeVariableSSNComp.h>
 #include <dpsim-models/EMT/EMT_Ph3_VSIVoltageControlVCO.h>
-#include <dpsim-models/EMT/EMT_Ph3_HalfDecouplingLine.h>
 
 #include <dpsim-models/Signal/CosineFMGenerator.h>
 #include <dpsim-models/Signal/DecouplingIdealTransformer_DP_Ph1.h>
