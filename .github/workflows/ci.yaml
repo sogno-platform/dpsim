@@ -60,8 +60,6 @@ jobs:
           echo "ref=$REF" >> "$GITHUB_OUTPUT"
           echo "tag=${REF_NAME//\//-}" >> "$GITHUB_OUTPUT"
 
-      # Fresh images are only reachable when the run may push to the registry, so
-      # fork pull requests keep using the images published on Docker Hub.
       - name: Resolve the development images
         id: images
         env:
@@ -73,13 +71,26 @@ jobs:
         run: |
           prefix="ghcr.io/${OWNER,,}/dpsim"
           echo "prefix=$prefix" >> "$GITHUB_OUTPUT"
-          if [ "$SAME_REPO" = "true" ] && { [ "$CHANGED" = "true" ] || [ "$FORCED" = "true" ]; }; then
-            echo "build=true" >> "$GITHUB_OUTPUT"
+
+          build=false
+          use_sha=false
+          if [ "$CHANGED" = "true" ] || [ "$FORCED" = "true" ]; then
+            if [ "$SAME_REPO" = "true" ]; then
+              build=true
+              use_sha=true
+            elif docker manifest inspect "$prefix/dev:$SHA" > /dev/null 2>&1; then
+              use_sha=true
+            else
+              echo "::notice::Images for $SHA are not published yet. Approve the \"Prepare Images (fork)\" run and re-run this workflow to test against them."
+            fi
+          fi
+
+          echo "build=$build" >> "$GITHUB_OUTPUT"
+          if [ "$use_sha" = "true" ]; then
             echo "dev=$prefix/dev:$SHA" >> "$GITHUB_OUTPUT"
             echo "rocky=$prefix/dev-rocky:$SHA" >> "$GITHUB_OUTPUT"
             echo "minimal=$prefix/dev-minimal:$SHA" >> "$GITHUB_OUTPUT"
           else
-            echo "build=false" >> "$GITHUB_OUTPUT"
             echo "dev=sogno/dpsim:dev" >> "$GITHUB_OUTPUT"
             echo "rocky=sogno/dpsim:dev-rocky" >> "$GITHUB_OUTPUT"
             echo "minimal=sogno/dpsim:dev-minimal" >> "$GITHUB_OUTPUT"
@@ -98,7 +109,7 @@ jobs:
       tag: ${{ needs.setup.outputs.tag }}
       image_prefix: ${{ needs.setup.outputs.image_prefix }}
 
-  # Kept as a top-level job so that the branch protection contexts stay the job names.
+  # Top-level job: the branch protection contexts are these job names.
   build-linux:
     name: ${{ matrix.title }}
     needs: [setup, prepare]

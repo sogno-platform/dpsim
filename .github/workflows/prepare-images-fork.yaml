@@ -1,0 +1,54 @@
+# SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+# SPDX-License-Identifier: MPL-2.0
+
+name: Prepare Images (fork)
+
+# The fork-pr approval is the only gate in front of a privileged run of fork code.
+
+on:
+  pull_request_target:
+    paths:
+      - 'packaging/Docker/**'
+      - 'packaging/Shell/**'
+      - '.binder/Dockerfile'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    name: Approve building images from a fork
+    if: github.event.pull_request.head.repo.full_name != github.repository
+    runs-on: ubuntu-latest
+    environment: fork-pr
+    outputs:
+      ref: ${{ steps.ref.outputs.ref }}
+      tag: ${{ steps.ref.outputs.tag }}
+      image_prefix: ${{ steps.ref.outputs.prefix }}
+    steps:
+      - name: Resolve the revision under test
+        id: ref
+        env:
+          REF: ${{ github.event.pull_request.head.sha }}
+          NUMBER: ${{ github.event.pull_request.number }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          echo "ref=$REF" >> "$GITHUB_OUTPUT"
+          echo "tag=$NUMBER-merge" >> "$GITHUB_OUTPUT"
+          echo "prefix=ghcr.io/${OWNER,,}/dpsim" >> "$GITHUB_OUTPUT"
+
+  prepare:
+    name: Prepare Images
+    needs: [gate]
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/prepare-images.yaml
+    with:
+      ref: ${{ needs.gate.outputs.ref }}
+      tag: ${{ needs.gate.outputs.tag }}
+      image_prefix: ${{ needs.gate.outputs.image_prefix }}
