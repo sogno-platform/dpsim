@@ -1,16 +1,13 @@
+# SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+# SPDX-License-Identifier: MPL-2.0
+
 name: Build with Nix
 
 on:
-  push:
-    branches:
-      - master
-  pull_request:
+  workflow_call:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
-
-## Build ##
+permissions:
+  contents: read
 
 jobs:
   build:

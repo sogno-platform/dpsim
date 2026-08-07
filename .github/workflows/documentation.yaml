@@ -1,16 +1,29 @@
+# SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+# SPDX-License-Identifier: MPL-2.0
+
 name: Build & Deploy Documentation
 
 on:
-  push:
-    branches:
-      - master
+  workflow_call:
+    inputs:
+      image:
+        description: 'Development image the reference documentation is built in'
+        required: true
+        type: string
 
   workflow_dispatch:
+    inputs:
+      image:
+        description: 'Development image the reference documentation is built in'
+        required: false
+        default: sogno/dpsim:dev
+        type: string
 
 jobs:
   generate-reference:
+    name: Generate reference documentation
     runs-on: ubuntu-latest
-    container: sogno/dpsim:dev
+    container: ${{ inputs.image }}
     steps:
     - name: Checkout
       uses: actions/checkout@v6
