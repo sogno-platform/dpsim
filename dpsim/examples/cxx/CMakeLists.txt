@@ -24,6 +24,7 @@ set(CIRCUIT_SOURCES
 
 	# Powerflow examples
 	Circuits/PF_Slack_PiLine_PQLoad.cpp
+	Circuits/PF_Load_BusTypeCombinations.cpp
 
 	# EMT examples
 	Circuits/EMT_CS_RL1.cpp
@@ -131,7 +132,6 @@ set(SYNCGEN_SOURCES
 	Components/DP_EMT_SynGenDq7odTrapez_SteadyState.cpp
 	Components/DP_EMT_SynGenDq7odTrapez_ThreePhFault.cpp
 	Components/DP_EMT_SynGenDq7odTrapez_LoadStep.cpp
-	Components/SP_Ph1_Load_DefaultPowerflowBusType.cpp
 	Components/DP_SP_SynGenTrStab_testModels.cpp
 	Components/DP_SP_SynGenTrStab_testModels_doubleLine.cpp
 	Components/EMT_SynchronGenerator9OrderDCIM_LoadStep_TurbineGovernor_Exciter.cpp
