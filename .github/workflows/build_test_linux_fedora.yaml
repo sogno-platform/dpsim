@@ -319,18 +319,17 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v6
-    - uses: actions/setup-python@v6
+    - name: Install uv
+      uses: astral-sh/setup-uv@v9.0.0
       with:
-        python-version: '3.x'
-    - name: Install pip-tools
-      run: pip install pip-tools
+        python-version: '3.9'
     - name: Resolve all extras
       run: |
         tmpdir=$(mktemp -d)
         cp pyproject.toml "$tmpdir/"
         for extra in dev manylinux test; do
           echo "--- Resolving extra: $extra ---"
-          pip-compile --no-strip-extras --output-file=- --extra "$extra" "$tmpdir/pyproject.toml"
+          uv pip compile --no-strip-extras --extra "$extra" "$tmpdir/pyproject.toml" -o -
         done
         rm -rf "$tmpdir"
 
