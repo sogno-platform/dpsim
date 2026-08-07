@@ -121,10 +121,7 @@ PYBIND11_MODULE(dpsimpy, m) {
       .value("Undef", DPsim::DirectLinearSolverImpl::Undef)
       .value("DenseLU", DPsim::DirectLinearSolverImpl::DenseLU)
       .value("SparseLU", DPsim::DirectLinearSolverImpl::SparseLU)
-      .value("KLU", DPsim::DirectLinearSolverImpl::KLU)
-      .value("CUDADense", DPsim::DirectLinearSolverImpl::CUDADense)
-      .value("CUDASparse", DPsim::DirectLinearSolverImpl::CUDASparse)
-      .value("CUDAMagma", DPsim::DirectLinearSolverImpl::CUDAMagma);
+      .value("KLU", DPsim::DirectLinearSolverImpl::KLU);
 
   py::enum_<DPsim::SCALING_METHOD>(m, "scaling_method")
       .value("no_scaling", DPsim::SCALING_METHOD::NO_SCALING)

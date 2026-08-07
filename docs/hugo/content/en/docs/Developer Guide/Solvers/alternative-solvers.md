@@ -57,7 +57,7 @@ implementation is correct rather than optimal.
 {{% alert title="Requires the matching build options" color="info" %}}
 The nodal solver does not implement its factorisation. `MNASolverFactory` selects an adapter, and
 `mSupportedSolverImpls` is compiled conditionally, so which of the implementations below exist
-depends entirely on how DPsim was configured. The GPU adapters need a CUDA build.
+depends entirely on how DPsim was configured.
 {{% /alert %}}
 
 | Implementation | Adapter | Notes |
@@ -65,9 +65,6 @@ depends entirely on how DPsim was configured. The GPU adapters need a CUDA build
 | `KLU` | `KLUAdapter` | Default, and the fallback when the choice is `Undef` |
 | `SparseLU` | `SparseLUAdapter` | Eigen's sparse LU |
 | `DenseLU` | `DenseLUAdapter` | Dense, for small systems |
-| `CUDADense` | `GpuDenseAdapter` | Requires a CUDA build |
-| `CUDASparse` | `GpuSparseAdapter` | Requires a CUDA build |
-| `CUDAMagma` | `GpuMagmaAdapter` | Requires a CUDA build with Magma |
 | `Plugin` | loaded at runtime | For a solver outside the tree |
 
 `DirectLinearSolverConfiguration` tunes the chosen backend, and not every option applies to every

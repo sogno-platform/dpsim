@@ -17,7 +17,6 @@
 /.github @m-mirz @leonardocarreras @stv0g
 /.gitignore @stv0g @m-mirz
 /cmake @stv0g
-/cmake/FindMAGMA.cmake @n-eiling
 /configs/shmem_cosim/ @stv0g
 /dpsim-models/include/dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h @martinmoraga
 /dpsim-models/include/dpsim-models/CIM/Reader.h @gnakti
@@ -101,9 +100,6 @@
 /dpsim/include/dpsim/MNAStateSpaceContributor.h @georgii-tishenin
 /dpsim/include/dpsim/MNAStateSpaceExtractor.h @georgii-tishenin
 /dpsim/include/dpsim/StateSpaceModalAnalysis.h @georgii-tishenin
-/dpsim/include/dpsim/GpuDenseAdapter.h @n-eiling
-/dpsim/include/dpsim/GpuMagmaAdapter.h @n-eiling
-/dpsim/include/dpsim/GpuSparseAdapter.h @n-eiling
 /dpsim/include/dpsim/MNASolverDynInterface.h @n-eiling
 /dpsim/include/dpsim/MNASolverFactory.h @n-eiling
 /dpsim/include/dpsim/MNASolverPlugin.h @n-eiling
@@ -113,9 +109,6 @@
 /dpsim/src/MNAStateSpaceContributor.cpp @georgii-tishenin
 /dpsim/src/MNAStateSpaceExtractor.cpp @georgii-tishenin
 /dpsim/src/StateSpaceModalAnalysis.cpp @georgii-tishenin
-/dpsim/src/GpuDenseAdapter.cpp @n-eiling
-/dpsim/src/GpuMagmaAdapter.cpp @n-eiling
-/dpsim/src/GpuSparseAdapter.cpp @n-eiling
 /dpsim/src/MNASolverPlugin.cpp @n-eiling
 /dpsim/src/PFSolver.cpp @gnakti
 /dpsim/src/PFSolverPowerPolar.cpp @gnakti

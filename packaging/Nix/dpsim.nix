@@ -23,8 +23,6 @@
   villas-node,
   freefont_ttf,
 
-  cudatoolkit,
-  magma,
 
   # Options
   withExamples ? false,
@@ -63,9 +61,6 @@ stdenv.mkDerivation {
       nlohmann_json
       readerwriterqueue
 
-      # TODO: Add these dependencies
-      # cudatoolkit
-      # magma
     ]
     ++ lib.optional withCIMpp cimpp
     ++ lib.optional withVILLAS villas-node

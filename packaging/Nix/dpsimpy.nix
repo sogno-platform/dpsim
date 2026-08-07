@@ -19,8 +19,6 @@
   suitesparse-dpsim,
   villas-node,
 
-  cudatoolkit,
-  magma,
 
   # Options
   withAllExtras ? true,
@@ -61,9 +59,6 @@ buildPythonPackage {
       nlohmann_json
       readerwriterqueue
 
-      # TODO: Add these dependencies
-      # cudatoolkit
-      # magma
     ]
     ++ lib.optional withCIMpp cimpp
     ++ lib.optional withVILLAS villas-node
