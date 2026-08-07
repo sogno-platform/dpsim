@@ -1,0 +1,14 @@
+# SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+# SPDX-License-Identifier: MPL-2.0
+
+# A type missing from changelog-sections in release-please-config.json is dropped from the changelog.
+extends:
+  - "@commitlint/config-conventional"
+rules:
+  type-enum:
+    - 2
+    - always
+    - [build, chore, ci, docs, feat, fix, perf, refactor, revert, security, style, test]
+  # Component names such as DP::Ph3::Switch must survive in the subject.
+  subject-case: [0]
+  header-max-length: [2, always, 120]
