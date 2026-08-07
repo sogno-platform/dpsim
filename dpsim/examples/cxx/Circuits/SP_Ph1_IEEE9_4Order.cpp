@@ -485,12 +485,17 @@ int main(int argc, char *argv[]) {
   bool log = args.options.find("log") != args.options.end() &&
              args.getOptionBool("log");
 
-  std::filesystem::path logFilename = "./logs/" + args.name + ".csv";
   std::shared_ptr<DataLoggerInterface> logger = nullptr;
 
   if (log) {
+#ifdef WITH_RT
+    std::filesystem::path logFilename = "./logs/" + args.name + ".csv";
     logger =
         RealTimeDataLogger::make(logFilename, args.duration, args.timeStep);
+#else
+    // RealTimeDataLogger needs WITH_RT, which is Linux-only
+    logger = DataLogger::make(args.name);
+#endif
   }
 
   auto sys = buildTopology(args, logger);
@@ -500,7 +505,7 @@ int main(int argc, char *argv[]) {
   sim.setDomain(Domain::SP);
   sim.setSolverType(Solver::Type::MNA);
   sim.doSystemMatrixRecomputation(true);
-  if (log) {
+  if (logger) {
     sim.addLogger(logger);
   }
   sim.run();

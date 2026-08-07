@@ -168,7 +168,7 @@ StateSpace/DP_Ph1_Switch_StateSpaceExtraction.cpp
 
 # Targets required for tests in the Jupyter Notebooks. This list is only for grouping the (already configured) targets, so every entry
 # also has to appear in another list in this file.
-list(APPEND TEST_SOURCES
+list(APPEND NOTEBOOK_TEST_SOURCES
 	Circuits/SP_Ph1_IEEE9_4Order.cpp
 	Circuits/DP_Ph1_IEEE9_4Order.cpp
 	Circuits/EMT_Ph3_IEEE9_4Order.cpp
@@ -270,13 +270,21 @@ if(WITH_CIM)
 		CIM/EMT_IEEE_39bus_Multi_CIM.cpp
 	)
 
-	list(APPEND TEST_SOURCES
+	list(APPEND NOTEBOOK_TEST_SOURCES
 		CIM/CIGRE_MV_PowerFlowTest.cpp
 		CIM/DP_WSCC-9bus_IdealVS.cpp
 		CIM/EMT_WSCC-9bus_IdealCS.cpp
 		CIM/EMT_WSCC-9bus_IdealVS.cpp
 		CIM/SP_WSCC9bus_SGReducedOrderVBR.cpp
 		CIM/EMT_IEEE_39bus_Multi_CIM.cpp
+	)
+
+	# Targets executed directly by CI instead of through a notebook.
+	list(APPEND CPP_TEST_SOURCES
+		CIM/WSCC_9bus_mult_coupled.cpp
+		CIM/WSCC_9bus_mult_decoupled.cpp
+		CIM/DP_WSCC_9bus_split_decoupled.cpp
+		CIM/EMT_WSCC_9bus_split_decoupled.cpp
 	)
 
 	if(WITH_RT)
@@ -293,6 +301,9 @@ if(WITH_OPENMP)
 endif()
 
 add_custom_target(tests)
+add_custom_target(notebook-tests)
+add_custom_target(cpp-tests)
+add_dependencies(tests notebook-tests cpp-tests)
 
 foreach(SOURCE
 		${CIRCUIT_SOURCES}
@@ -314,9 +325,14 @@ foreach(SOURCE
 	target_compile_options(${TARGET} PUBLIC ${DPSIM_CXX_FLAGS})
 endforeach()
 
-foreach(TEST_SOURCE ${TEST_SOURCES})
+foreach(TEST_SOURCE ${NOTEBOOK_TEST_SOURCES})
 	get_filename_component(TARGET ${TEST_SOURCE} NAME_WE)
-	add_dependencies(tests ${TARGET})
+	add_dependencies(notebook-tests ${TARGET})
+endforeach()
+
+foreach(TEST_SOURCE ${CPP_TEST_SOURCES})
+	get_filename_component(TARGET ${TEST_SOURCE} NAME_WE)
+	add_dependencies(cpp-tests ${TARGET})
 endforeach()
 
 add_subdirectory(cim_graphviz)

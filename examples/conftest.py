@@ -3,11 +3,15 @@ import subprocess
 import pytest
 
 
-def pytest_collect_file(parent, path):
-    if path.ext == ".yml" and path.basename.startswith("test_") and os.name == "posix":
-        return YamlFile.from_parent(parent, fspath=path)
-    if path.ext == ".ipynb":
-        return JupyterNotebook.from_parent(parent, fspath=path)
+def pytest_collect_file(parent, file_path):
+    if (
+        file_path.suffix == ".yml"
+        and file_path.name.startswith("test_")
+        and os.name == "posix"
+    ):
+        return YamlFile.from_parent(parent, path=file_path)
+    if file_path.suffix == ".ipynb":
+        return JupyterNotebook.from_parent(parent, path=file_path)
 
 
 def parse_test_params(item, spec):
@@ -17,12 +21,20 @@ def parse_test_params(item, spec):
         item.add_marker(pytest.mark.xfail)
 
 
+def uses_bash_magic(nb):
+    for cell in nb.cells:
+        first_lines = cell.get("source", "").splitlines()[:2]
+        if any(line.strip() == "%%bash" for line in first_lines):
+            return True
+    return False
+
+
 class YamlFile(pytest.File):
     def collect(self):
         # We need a yaml parser, e.g. PyYAML
         import yaml
 
-        raw = yaml.safe_load(self.fspath.open())
+        raw = yaml.safe_load(self.path.open())
 
         if not raw:
             return
@@ -81,7 +93,7 @@ class YamlItem(pytest.Item):
         return self._repr_failure_py(excinfo, style="short")
 
     def reportinfo(self):
-        return self.fspath, 0, "yaml: %s" % self.name
+        return self.path, 0, "yaml: %s" % self.name
 
 
 class JupyterNotebook(pytest.File):
@@ -91,7 +103,7 @@ class JupyterNotebook(pytest.File):
         """
         import nbformat
 
-        nb = nbformat.read(self.fspath, as_version=nbformat.NO_CONVERT)
+        nb = nbformat.read(self.path, as_version=nbformat.NO_CONVERT)
 
         base = os.path.basename(self.name)
         name = os.path.splitext(base)[0]
@@ -105,6 +117,11 @@ class JupyterNotebookExport(pytest.Item):
         super().__init__(name, parent)
         self.builddir = os.path.splitext(parent.name)[0]
         self.nb = nb
+
+        if os.name != "posix" and uses_bash_magic(nb):
+            self.add_marker(
+                pytest.mark.skip(reason="uses %%bash cell magic, requires /bin/bash")
+            )
 
         parse_test_params(self, spec)
 
@@ -144,4 +161,4 @@ class JupyterNotebookExport(pytest.Item):
         return self._repr_failure_py(excinfo, style="short")
 
     def reportinfo(self):
-        return self.fspath, 0, "nbconvert: %s" % self.name
+        return self.path, 0, "nbconvert: %s" % self.name
