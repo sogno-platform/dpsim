@@ -90,7 +90,7 @@ jobs:
         slug: sogno-platform/dpsim
 
   compare-notebook-results:
-    name: Compare Notebook results
+    name: Compare notebook results
     runs-on: ubuntu-latest
     needs: [test-jupyter-notebooks]
     steps:

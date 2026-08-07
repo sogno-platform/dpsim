@@ -21,7 +21,7 @@ on:
 
 jobs:
   generate-reference:
-    name: Generate reference documentation
+    name: Reference
     runs-on: ubuntu-latest
     container: ${{ inputs.image }}
     steps:
@@ -56,6 +56,7 @@ jobs:
 
   # Deploys to https://sogno.energy/dpsim/ through the repository gh-pages branch.
   deploy-sogno:
+    name: Deploy to sogno.energy
     runs-on: ubuntu-latest
     needs: [generate-reference]
 
@@ -111,6 +112,7 @@ jobs:
 
   # Mirrors the same content to https://dpsim.fein-aachen.org/ which is served from its own root.
   deploy-fein:
+    name: Deploy to dpsim.fein-aachen.org
     runs-on: ubuntu-latest
     needs: [generate-reference]
 

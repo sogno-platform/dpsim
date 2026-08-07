@@ -370,7 +370,7 @@ jobs:
     secrets: inherit
 
   villas-examples:
-    name: Run ${{ matrix.example }} VILLASnode example
+    name: VILLAS ${{ matrix.example }}
     needs: [build-linux]
     if: ${{ !cancelled() && needs.build-linux.result == 'success' }}
     strategy:
