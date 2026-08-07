@@ -71,23 +71,13 @@ void PFSolverPowerPolar::generateInitialSolution(Real time,
       sol_D(idx) = 0.0;
     }
 
+    CPS::Complex nonRegulating = scheduledPowerPerUnit(pq);
+    sol_P(idx) += nonRegulating.real();
+    sol_Q(idx) += nonRegulating.imag();
+
     for (auto comp : mSystem.mComponentsAtNode[pq]) {
-      if (auto load = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
-        sol_P(idx) -= load->attributeTyped<CPS::Real>("P_pu")->get();
-        sol_Q(idx) -= load->attributeTyped<CPS::Real>("Q_pu")->get();
-      } else if (auto sst = std::dynamic_pointer_cast<
-                     CPS::SP::Ph1::SolidStateTransformer>(comp)) {
-        sol_P(idx) -= sst->getNodalInjection(pq).real();
-        sol_Q(idx) -= sst->getNodalInjection(pq).imag();
-      } else if (auto vsi = std::dynamic_pointer_cast<
-                     CPS::SP::Ph1::AvVoltageSourceInverterDQ>(comp)) {
-        sol_P(idx) +=
-            vsi->attributeTyped<CPS::Real>("P_ref")->get() / mBaseApparentPower;
-        sol_Q(idx) +=
-            vsi->attributeTyped<CPS::Real>("Q_ref")->get() / mBaseApparentPower;
-      } else if (auto gen =
-                     std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(
-                         comp)) {
+      if (auto gen = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(
+              comp)) {
         sol_P(idx) += gen->attributeTyped<CPS::Real>("P_set_pu")->get();
         sol_Q(idx) += gen->attributeTyped<CPS::Real>("Q_set_pu")->get();
       }
@@ -109,19 +99,15 @@ void PFSolverPowerPolar::generateInitialSolution(Real time,
       sol_V(idx) = 1.0;
     }
 
+    CPS::Complex nonRegulating = scheduledPowerPerUnit(pv);
+    sol_P(idx) += nonRegulating.real();
+    sol_Q(idx) += nonRegulating.imag();
+
     for (auto comp : mSystem.mComponentsAtNode[pv]) {
       if (auto gen = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(
               comp)) {
         sol_P(idx) += gen->attributeTyped<CPS::Real>("P_set_pu")->get();
         sol_V(idx) = gen->attributeTyped<CPS::Real>("V_set_pu")->get();
-      } else if (auto load =
-                     std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
-        sol_P(idx) -= load->attributeTyped<CPS::Real>("P_pu")->get();
-        sol_Q(idx) -= load->attributeTyped<CPS::Real>("Q_pu")->get();
-      } else if (auto vsi = std::dynamic_pointer_cast<
-                     CPS::SP::Ph1::AvVoltageSourceInverterDQ>(comp)) {
-        sol_P(idx) +=
-            vsi->attributeTyped<CPS::Real>("P_ref")->get() / mBaseApparentPower;
       } else if (auto extnet =
                      std::dynamic_pointer_cast<CPS::SP::Ph1::NetworkInjection>(
                          comp)) {
@@ -144,14 +130,14 @@ void PFSolverPowerPolar::generateInitialSolution(Real time,
     sol_D(idx) = 0.0;
     sol_V(idx) = 1.0;
 
+    CPS::Complex nonRegulating = scheduledPowerPerUnit(vd);
+    sol_P(idx) += nonRegulating.real();
+    sol_Q(idx) += nonRegulating.imag();
+
     for (auto comp : mSystem.mComponentsAtNode[vd]) {
       if (auto extnet =
               std::dynamic_pointer_cast<CPS::SP::Ph1::NetworkInjection>(comp)) {
         sol_V(idx) = extnet->attributeTyped<CPS::Real>("V_set_pu")->get();
-      } else if (auto load =
-                     std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
-        sol_P(idx) -= load->attributeTyped<CPS::Real>("P_pu")->get();
-        sol_Q(idx) -= load->attributeTyped<CPS::Real>("Q_pu")->get();
       } else if (auto gen =
                      std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(
                          comp)) {
@@ -456,14 +442,8 @@ void PFSolverPowerPolar::calculatePAndQAtSlackBus() {
 
     CPS::Complex S = sol_Vcx(node_idx) * conj(I);
 
-    // Generator/source power: S_gen = S_inj + S_load
-    CPS::Complex Sgen = S;
-    for (auto comp : mSystem.mComponentsAtNode[topoNode]) {
-      if (auto loadPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
-        Sgen += CPS::Complex(**(loadPtr->mActivePowerPerUnit),
-                             **(loadPtr->mReactivePowerPerUnit));
-      }
-    }
+    // Generator/source power: S_gen = S_inj - S_nonregulating
+    CPS::Complex Sgen = S - scheduledPowerPerUnit(topoNode);
 
     // Update connected VD source/generator with actual generated power
     for (auto comp : mSystem.mComponentsAtNode[topoNode]) {
@@ -497,14 +477,8 @@ void PFSolverPowerPolar::calculateQAtPVBuses() {
 
     CPS::Complex S = sol_Vcx(node_idx) * conj(I);
 
-    // Generator power: S_gen = S_inj + S_load
-    CPS::Complex Sgen = S;
-    for (auto comp : mSystem.mComponentsAtNode[topoNode]) {
-      if (auto loadPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
-        Sgen += CPS::Complex(**(loadPtr->mActivePowerPerUnit),
-                             **(loadPtr->mReactivePowerPerUnit));
-      }
-    }
+    // Generator power: S_gen = S_inj - S_nonregulating
+    CPS::Complex Sgen = S - scheduledPowerPerUnit(topoNode);
 
     // Update PV generator with actual generator Q
     for (auto comp : mSystem.mComponentsAtNode[topoNode]) {
@@ -521,13 +495,24 @@ void PFSolverPowerPolar::calculateQAtPVBuses() {
   }
 }
 
-CPS::Real
-PFSolverPowerPolar::loadReactivePowerPerUnit(CPS::TopologicalNode::Ptr node) {
-  CPS::Real q = 0.0;
-  for (auto comp : mSystem.mComponentsAtNode[node])
-    if (auto load = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp))
-      q += load->attributeTyped<CPS::Real>("Q_pu")->get();
-  return q;
+CPS::Complex
+PFSolverPowerPolar::scheduledPowerPerUnit(CPS::TopologicalNode::Ptr node) {
+  CPS::Complex power(0.0, 0.0);
+  for (auto comp : mSystem.mComponentsAtNode[node]) {
+    if (auto load = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
+      power -= CPS::Complex(**(load->mActivePowerPerUnit),
+                            **(load->mReactivePowerPerUnit));
+    } else if (auto sst = std::dynamic_pointer_cast<
+                   CPS::SP::Ph1::SolidStateTransformer>(comp)) {
+      power -= sst->getNodalInjection(node);
+    } else if (auto vsi = std::dynamic_pointer_cast<
+                   CPS::SP::Ph1::AvVoltageSourceInverterDQ>(comp)) {
+      power += CPS::Complex(vsi->attributeTyped<CPS::Real>("P_ref")->get(),
+                            vsi->attributeTyped<CPS::Real>("Q_ref")->get()) /
+               mBaseApparentPower;
+    }
+  }
+  return power;
 }
 
 CPS::Real PFSolverPowerPolar::generatorReactivePowerPerUnit(
@@ -536,9 +521,9 @@ CPS::Real PFSolverPowerPolar::generatorReactivePowerPerUnit(
   CPS::Complex I(0.0, 0.0);
   for (UInt j = 0; j < mSystem.mNodes.size(); ++j)
     I += mY.coeff(k, j) * sol_Vcx(j);
-  // Net nodal injection S = generator - load; add load back for generator Q.
+  // Net nodal injection S = generator + non-regulating; remove the latter.
   CPS::Complex S = sol_Vcx(k) * conj(I);
-  return S.imag() + loadReactivePowerPerUnit(node);
+  return S.imag() - scheduledPowerPerUnit(node).imag();
 }
 
 CPS::Bool PFSolverPowerPolar::enforceReactiveLimits() {
@@ -614,7 +599,7 @@ CPS::Bool PFSolverPowerPolar::enforceReactiveLimits() {
                    mPVBuses.end());
     mPQBuses.push_back(node);
     UInt idx = node->matrixNodeIndex();
-    Qesp(idx) = qLimPU - loadReactivePowerPerUnit(node);
+    Qesp(idx) = qLimPU + scheduledPowerPerUnit(node).imag();
     sol_Q(idx) = Qesp(idx);
     mQLimitConvertedAtMax[node] = atMax;
     if (++mQLimitSwitchCount[node] >= mMaxQLimitSwitchesPerBus)
