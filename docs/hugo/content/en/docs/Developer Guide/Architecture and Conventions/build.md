@@ -178,7 +178,7 @@ Cloning, building and installing then work exactly as in the container section a
 ## CMake for Windows
 
 Windows is built in CI on `windows-latest`, so the recipe below mirrors what
-`.github/workflows/build_test_windows.yaml` runs. You need Visual Studio with the C++ desktop
+the `Build Windows` jobs of `.github/workflows/ci.yaml` run. You need Visual Studio with the C++ desktop
 development workload, [CMake](https://cmake.org/) and
 [Git for Windows](https://git-scm.com/download/win). For Python support, install Python 3 and
 add it to your PATH. Let CMake pick the default generator rather than naming a Visual Studio
