@@ -206,10 +206,9 @@ jobs:
   packaging-python:
     name: Packaging
     needs: [setup, prepare]
-    if: ${{ !cancelled() && needs.setup.result == 'success' && needs.prepare.result != 'failure' }}
+    if: ${{ !cancelled() && github.event_name != 'push' && needs.setup.result == 'success' && needs.prepare.result != 'failure' }}
     permissions:
       contents: read
-      id-token: write
     uses: ./.github/workflows/packaging-python.yaml
     with:
       image: ${{ needs.setup.outputs.image_dev }}
