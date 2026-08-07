@@ -21,6 +21,7 @@ on:
         options:
           - all
           - dev
+          - dev-vscode
           - dev-rocky
           - dev-minimal
           - manylinux
@@ -88,12 +89,13 @@ jobs:
           }
 
           queue() {
-            jq -nc --argjson acc "$1" --arg image "$2" --arg file "$3" '$acc + [{image: $image, file: $file}]'
+            jq -nc --argjson acc "$1" --arg image "$2" --arg file "$3" --arg target "${4-}" '$acc + [{image: $image, file: $file, target: $target}]'
           }
 
           base='[]'
           derived='[]'
           if wanted dev "$DEV"; then base=$(queue "$base" dev packaging/Docker/Dockerfile.dev); fi
+          if wanted dev-vscode "$DEV"; then base=$(queue "$base" dev-vscode packaging/Docker/Dockerfile.dev dev-vscode); fi
           if wanted dev-rocky "$ROCKY"; then base=$(queue "$base" dev-rocky packaging/Docker/Dockerfile.dev-rocky); fi
           if wanted dev-minimal "$MINIMAL"; then base=$(queue "$base" dev-minimal packaging/Docker/Dockerfile.dev-minimal); fi
           if wanted manylinux "$MANYLINUX"; then base=$(queue "$base" manylinux packaging/Docker/Dockerfile.manylinux); fi
@@ -129,6 +131,7 @@ jobs:
         with:
           context: .
           file: ${{ matrix.file }}
+          target: ${{ matrix.target }}
           push: true
           tags: sogno/dpsim:${{ matrix.image }}
 
@@ -156,6 +159,7 @@ jobs:
         with:
           context: .
           file: ${{ matrix.file }}
+          target: ${{ matrix.target }}
           push: true
           build-args: |
             BASE_IMAGE=sogno/dpsim:dev
