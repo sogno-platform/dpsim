@@ -2527,29 +2527,32 @@ Everything under &lt;code>packaging/Shell/&lt;/code> counts towards every image.
 &lt;p>An image whose definition did not change is used as published on Docker Hub. One
 whose definition did change is rebuilt by &lt;code>prepare-images.yaml&lt;/code> and pushed to
 &lt;code>ghcr.io/&amp;lt;owner&amp;gt;/dpsim/&amp;lt;image&amp;gt;&lt;/code> under two tags, the commit SHA and the slugified
-ref name, and the run then builds against the SHA tag. This needs a token that
-may write packages, so it happens on pushes to &lt;code>master&lt;/code> and on pull requests from
-a branch of this repository; a pull request from a fork is covered below.&lt;/p>
+ref name, and the run then builds against the SHA tag.&lt;/p>
 &lt;p>Manual dispatch takes a &lt;code>rebuild_images&lt;/code> input that forces every image to be
 rebuilt.&lt;/p>
-&lt;h2 id="images-for-pull-requests-from-forks">Images for pull requests from forks&lt;/h2>
-&lt;p>A fork pull request gets a read-only token, so it cannot publish the images it
-would need in order to be tested against its own changes.
-&lt;code>prepare-images-fork.yaml&lt;/code> closes that gap. It triggers on &lt;code>pull_request_target&lt;/code>,
-restricted to the image definition paths, and its first job carries the &lt;code>fork-pr&lt;/code>
-environment. That environment has required reviewers, and the approval is the
-only thing standing in front of a privileged run of code that came from a fork,
-so it should not be granted without reading the change.&lt;/p>
-&lt;p>The gate job resolves the head revision and nothing else; the image build runs
-behind it. No repository secret is passed into that workflow, so the only
-credential in reach is a &lt;code>GITHUB_TOKEN&lt;/code> limited to reading contents and writing
-packages.&lt;/p>
-&lt;p>The main &lt;code>CI&lt;/code> run does not wait for that approval. It probes the registry for
-the images, falls back to Docker Hub when they are not published yet, and logs a
-notice. Approve the &lt;code>Prepare Images (fork)&lt;/code> run and re-run &lt;code>CI&lt;/code> to have the
-pull request tested against its own images.&lt;/p>
-&lt;p>The probe reads the registry anonymously, so the packages under
-&lt;code>ghcr.io/&amp;lt;owner&amp;gt;/dpsim/&lt;/code> have to be public.&lt;/p>
+&lt;h2 id="pull-requests-from-forks">Pull requests from forks&lt;/h2>
+&lt;p>Rebuilding an image needs a token that may write packages, and a fork pull
+request gets a read-only one. &lt;code>CI&lt;/code> therefore listens on two events and lets
+exactly one of them through: a pull request from a branch of this repository runs
+on &lt;code>pull_request&lt;/code>, and one from a fork runs on &lt;code>pull_request_target&lt;/code>. The &lt;code>setup&lt;/code>
+job carries the condition, every other job depends on it, so the run that does
+not apply skips in its entirety.&lt;/p>
+&lt;p>On the &lt;code>pull_request_target&lt;/code> path &lt;code>setup&lt;/code> also carries the &lt;code>fork-pr&lt;/code> environment.
+That environment has required reviewers, and because the whole pipeline hangs off
+&lt;code>setup&lt;/code>, the approval is the single gate in front of a privileged run of code that
+came from a fork. It should not be granted without reading the change. Approving
+means the fork&amp;rsquo;s code builds and runs with a token that may write packages, and
+with the repository secrets that the test and documentation jobs inherit.&lt;/p>
+&lt;p>Both paths build their images inside the same run that consumes them, so a pull
+request is always tested against the images its own diff produces, and there is
+nothing to re-run by hand.&lt;/p>
+&lt;p>Because &lt;code>GITHUB_SHA&lt;/code> and &lt;code>GITHUB_REF_NAME&lt;/code> point at the base branch under
+&lt;code>pull_request_target&lt;/code>, &lt;code>setup&lt;/code> resolves the revision under test explicitly and
+passes it to every job, each of which checks out that revision rather than the
+default one.&lt;/p>
+&lt;p>The required check is the &lt;code>all&lt;/code> barrier job, which fails if any job it depends on
+failed or was cancelled. It renames itself on the path that does not apply, so
+only the real run claims the protected name.&lt;/p>
 &lt;h2 id="publishing-to-docker-hub">Publishing to Docker Hub&lt;/h2>
 &lt;p>&lt;code>publish-images.yaml&lt;/code> is what refreshes the &lt;code>sogno/dpsim&lt;/code> images that the
 documentation and the outside world consume. It runs on the self-hosted runner,
