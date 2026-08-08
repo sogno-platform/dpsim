@@ -67,8 +67,8 @@ jobs:
           context: .
           file: ${{ matrix.file }}
           push: true
-          cache-from: type=gha,scope=${{ matrix.image }}
-          cache-to: type=gha,mode=min,scope=${{ matrix.image }}
+          cache-from: type=registry,ref=${{ inputs.image_prefix }}/${{ matrix.image }}:buildcache
+          cache-to: ${{ github.event_name == 'push' && format('type=registry,ref={0}/{1}:buildcache,mode=max', inputs.image_prefix, matrix.image) || '' }}
           tags: |
             ${{ inputs.image_prefix }}/${{ matrix.image }}:${{ inputs.ref }}
             ${{ inputs.image_prefix }}/${{ matrix.image }}:${{ inputs.tag }}
@@ -107,8 +107,8 @@ jobs:
           push: true
           build-args: |
             BASE_IMAGE=${{ inputs.base_image }}
-          cache-from: type=gha,scope=${{ matrix.image }}
-          cache-to: type=gha,mode=min,scope=${{ matrix.image }}
+          cache-from: type=registry,ref=${{ inputs.image_prefix }}/${{ matrix.image }}:buildcache
+          cache-to: ${{ github.event_name == 'push' && format('type=registry,ref={0}/{1}:buildcache,mode=max', inputs.image_prefix, matrix.image) || '' }}
           tags: |
             ${{ inputs.image_prefix }}/${{ matrix.image }}:${{ inputs.ref }}
             ${{ inputs.image_prefix }}/${{ matrix.image }}:${{ inputs.tag }}
