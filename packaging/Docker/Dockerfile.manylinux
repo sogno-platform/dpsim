@@ -106,7 +106,7 @@ RUN cd /tmp && \
 	git clone --recurse-submodules https://github.com/VILLASframework/node.git villas-node && \
 	cd villas-node && \
 	git checkout ${VILLAS_VERSION} && \
-	DEPS_SKIP=criterion,ethercat \
+	DEPS_SKIP=criterion,ethercat,libxil \
 	MAKE_OPTS="" \
 	CMAKE_OPTS=-DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
 	NINJA=/usr/bin/ninja-build \

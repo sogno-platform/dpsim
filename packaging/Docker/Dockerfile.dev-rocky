@@ -83,7 +83,7 @@ RUN dnf install -y \
 	rpcgen texinfo bison flex
 
 ENV LD_LIBRARY_PATH="/usr/local/lib:/usr/local/lib64:${LD_LIBRARY_PATH}"
-RUN git clone --branch 3.0 --recurse-submodules --depth 1 https://git.rwth-aachen.de/acs/public/virtualization/cricket.git && \
+RUN git clone --branch 3.0 --recurse-submodules --depth 1 https://github.com/RWTH-ACS/cricket.git && \
 	cd cricket && \
 	make ${MAKE_OPTS} libtirpc && \
 	make ${MAKE_OPTS} bin/libtirpc.so && \
