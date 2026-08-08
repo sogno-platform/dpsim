@@ -329,6 +329,10 @@ CPS::Real PFSolver::componentBaseVoltage(CPS::TopologicalPowerComp::Ptr comp,
     return extnet->getBaseVoltage();
   if (auto shunt = std::dynamic_pointer_cast<CPS::SP::Ph1::Shunt>(comp))
     return shunt->getBaseVoltage();
+  // An SVC takes its base voltage from the resolved zone instead of contributing one,
+  // so it is not a missing case and must not warn.
+  if (std::dynamic_pointer_cast<CPS::SP::Ph1::SVC>(comp))
+    return 0;
   SPDLOG_LOGGER_WARN(mSLog, "Unable to get base voltage at {}", node->name());
   return 0;
 }
@@ -447,6 +451,17 @@ void PFSolver::propagateAndVerifyBaseVoltage() {
                             load->attributeTyped<CPS::Real>("Q")->get(),
                             entry.second);
     }
+  }
+
+  // An SVC is a compensator, not a voltage source: derive its base voltage
+  // from the node's resolved zone value so its per-unit setpoint stays consistent.
+  for (auto node : mSystem.mNodes) {
+    CPS::Real vBase = mBaseVoltageAtNode[node];
+    if (std::abs(vBase) < 1e-6)
+      continue;
+    for (auto comp : mSystem.mComponentsAtNode[node])
+      if (auto svc = std::dynamic_pointer_cast<CPS::SP::Ph1::SVC>(comp))
+        svc->setBaseVoltage(vBase);
   }
 
   UInt numMissing = 0;
