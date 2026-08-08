@@ -49,6 +49,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           ref: ${{ inputs.ref }}
+          allow-unsafe-pr-checkout: true
 
       - name: Setup Buildx
         uses: docker/setup-buildx-action@v3
@@ -86,6 +87,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           ref: ${{ inputs.ref }}
+          allow-unsafe-pr-checkout: true
 
       - name: Setup Buildx
         uses: docker/setup-buildx-action@v3
