@@ -3,6 +3,10 @@ name: Run a VILLASnode example using multiple containers
 on:
   workflow_call:
     inputs:
+      ref:
+        description: 'Revision under test'
+        required: true
+        type: string
       compose_file_path:
         description: 'Path to the multi-container compose file'
         required: true
@@ -24,6 +28,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.ref }}
+          allow-unsafe-pr-checkout: true
 
       - name: Restore build archive
         uses: actions/download-artifact@v8

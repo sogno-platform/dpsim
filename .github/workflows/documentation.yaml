@@ -6,6 +6,10 @@ name: Build & Deploy Documentation
 on:
   workflow_call:
     inputs:
+      ref:
+        description: 'Revision under test'
+        required: true
+        type: string
       image:
         description: 'Development image the reference documentation is built in'
         required: true
@@ -27,6 +31,9 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v6
+      with:
+        ref: ${{ inputs.ref }}
+        allow-unsafe-pr-checkout: true
 
     - name: Create Build Environment
       run: mkdir build
@@ -67,6 +74,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
+      with:
+        ref: ${{ inputs.ref }}
+        allow-unsafe-pr-checkout: true
 
     - name: Setup Hugo
       uses: peaceiris/actions-hugo@v3.2.1
@@ -118,6 +128,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
+      with:
+        ref: ${{ inputs.ref }}
+        allow-unsafe-pr-checkout: true
 
     - name: Setup Hugo
       uses: peaceiris/actions-hugo@v3.2.1

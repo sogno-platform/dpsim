@@ -6,6 +6,10 @@ name: Checks
 on:
   workflow_call:
     inputs:
+      ref:
+        description: 'Revision under test'
+        required: true
+        type: string
       image:
         description: 'Development image the source scan runs in'
         required: true
@@ -20,6 +24,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.ref }}
+          allow-unsafe-pr-checkout: true
       - uses: actions/setup-python@v6
         with:
           python-version: '3.x'
@@ -27,11 +34,13 @@ jobs:
 
   clean-notebook-outputs:
     name: Notebooks have no saved outputs
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' || github.event_name == 'pull_request_target'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
         with:
+          ref: ${{ inputs.ref }}
+          allow-unsafe-pr-checkout: true
           fetch-depth: 0
 
       - name: Fail if a notebook changed by this pull request has saved outputs
@@ -80,6 +89,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.ref }}
+          allow-unsafe-pr-checkout: true
 
       - name: Install uv
         uses: astral-sh/setup-uv@v9.0.0
@@ -103,6 +115,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.ref }}
+          allow-unsafe-pr-checkout: true
 
       - name: Run cppcheck
         working-directory: ${{ github.workspace }}

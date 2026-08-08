@@ -49,35 +49,39 @@ Everything under `packaging/Shell/` counts towards every image.
 An image whose definition did not change is used as published on Docker Hub. One
 whose definition did change is rebuilt by `prepare-images.yaml` and pushed to
 `ghcr.io/<owner>/dpsim/<image>` under two tags, the commit SHA and the slugified
-ref name, and the run then builds against the SHA tag. This needs a token that
-may write packages, so it happens on pushes to `master` and on pull requests from
-a branch of this repository; a pull request from a fork is covered below.
+ref name, and the run then builds against the SHA tag.
 
 Manual dispatch takes a `rebuild_images` input that forces every image to be
 rebuilt.
 
-## Images for pull requests from forks
+## Pull requests from forks
 
-A fork pull request gets a read-only token, so it cannot publish the images it
-would need in order to be tested against its own changes.
-`prepare-images-fork.yaml` closes that gap. It triggers on `pull_request_target`,
-restricted to the image definition paths, and its first job carries the `fork-pr`
-environment. That environment has required reviewers, and the approval is the
-only thing standing in front of a privileged run of code that came from a fork,
-so it should not be granted without reading the change.
+Rebuilding an image needs a token that may write packages, and a fork pull
+request gets a read-only one. `CI` therefore listens on two events and lets
+exactly one of them through: a pull request from a branch of this repository runs
+on `pull_request`, and one from a fork runs on `pull_request_target`. The `setup`
+job carries the condition, every other job depends on it, so the run that does
+not apply skips in its entirety.
 
-The gate job resolves the head revision and nothing else; the image build runs
-behind it. No repository secret is passed into that workflow, so the only
-credential in reach is a `GITHUB_TOKEN` limited to reading contents and writing
-packages.
+On the `pull_request_target` path `setup` also carries the `fork-pr` environment.
+That environment has required reviewers, and because the whole pipeline hangs off
+`setup`, the approval is the single gate in front of a privileged run of code that
+came from a fork. It should not be granted without reading the change. Approving
+means the fork's code builds and runs with a token that may write packages, and
+with the repository secrets that the test and documentation jobs inherit.
 
-The main `CI` run does not wait for that approval. It probes the registry for
-the images, falls back to Docker Hub when they are not published yet, and logs a
-notice. Approve the `Prepare Images (fork)` run and re-run `CI` to have the
-pull request tested against its own images.
+Both paths build their images inside the same run that consumes them, so a pull
+request is always tested against the images its own diff produces, and there is
+nothing to re-run by hand.
 
-The probe reads the registry anonymously, so the packages under
-`ghcr.io/<owner>/dpsim/` have to be public.
+Because `GITHUB_SHA` and `GITHUB_REF_NAME` point at the base branch under
+`pull_request_target`, `setup` resolves the revision under test explicitly and
+passes it to every job, each of which checks out that revision rather than the
+default one.
+
+The required check is the `all` barrier job, which fails if any job it depends on
+failed or was cancelled. It renames itself on the path that does not apply, so
+only the real run claims the protected name.
 
 ## Publishing to Docker Hub
 

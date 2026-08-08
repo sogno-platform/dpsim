@@ -6,6 +6,10 @@ name: Test Linux
 on:
   workflow_call:
     inputs:
+      ref:
+        description: 'Revision under test'
+        required: true
+        type: string
       image:
         description: 'Development image the tests run in'
         required: true
@@ -22,6 +26,9 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v6
+      with:
+        ref: ${{ inputs.ref }}
+        allow-unsafe-pr-checkout: true
 
     - name: Restore build archive
       uses: actions/download-artifact@v8
