@@ -103,6 +103,7 @@ template <typename VarType>
 void MNASimPowerComp<VarType>::mnaApplySystemMatrixStampHarm(
     SparseMatrixRow &systemMatrix, Int freqIdx) {
   this->mnaCompApplySystemMatrixStampHarm(systemMatrix, freqIdx);
+  systemMatrix.makeCompressed();
 };
 
 template <typename VarType>
@@ -115,6 +116,17 @@ template <typename VarType>
 void MNASimPowerComp<VarType>::mnaApplyRightSideVectorStampHarm(
     Matrix &sourceVector, Int freqIdx) {
   this->mnaCompApplyRightSideVectorStampHarm(sourceVector, freqIdx);
+};
+
+template <typename VarType>
+void MNASimPowerComp<VarType>::mnaUpdateVoltageHarm(const Matrix &leftVector,
+                                                    Int freqIdx) {
+  this->mnaCompUpdateVoltageHarm(leftVector, freqIdx);
+};
+
+template <typename VarType>
+void MNASimPowerComp<VarType>::mnaUpdateCurrentHarm(Int freqIdx) {
+  this->mnaCompUpdateCurrentHarm(freqIdx);
 };
 
 template <typename VarType>
@@ -194,6 +206,17 @@ void MNASimPowerComp<VarType>::mnaCompApplyRightSideVectorStampHarm(
 template <typename VarType>
 void MNASimPowerComp<VarType>::mnaCompApplyRightSideVectorStampHarm(
     Matrix &sourceVector, Int freqIdx) {
+  // Empty default implementation. Can be overridden by child classes if desired.
+}
+
+template <typename VarType>
+void MNASimPowerComp<VarType>::mnaCompUpdateVoltageHarm(
+    const Matrix &leftVector, Int freqIdx) {
+  // Empty default implementation. Can be overridden by child classes if desired.
+}
+
+template <typename VarType>
+void MNASimPowerComp<VarType>::mnaCompUpdateCurrentHarm(Int freqIdx) {
   // Empty default implementation. Can be overridden by child classes if desired.
 }
 
