@@ -101,6 +101,14 @@ RUN dnf install -y \
 	subversion-perl \
 	perl-Memoize
 
+# Install libxil from source, VILLASnode links it for fpga support
+RUN cd /tmp && \
+	git clone --branch master --depth 1 https://github.com/VILLASframework/libxil.git && \
+	mkdir -p libxil/build && cd libxil/build && \
+	cmake ${CMAKE_OPTS} .. && \
+	make ${MAKE_OPTS} install && \
+	rm -rf /tmp/libxil
+
 # Install VILLASnode from source
 RUN cd /tmp && \
 	git clone --recurse-submodules https://github.com/VILLASframework/node.git villas-node && \
