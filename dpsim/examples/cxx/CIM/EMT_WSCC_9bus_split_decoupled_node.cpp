@@ -1,10 +1,10 @@
 // SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
 // SPDX-License-Identifier: MPL-2.0
 
+#include "dpsim-models/EMT/EMT_Ph1_DecouplingIdealTransformer.h"
 #include "dpsim-models/EMT/EMT_Ph3_PiLine.h"
 #include "dpsim-models/EMT/EMT_Ph3_RXLoad.h"
 #include "dpsim-models/IdentifiedObject.h"
-#include "dpsim-models/Signal/DecouplingIdealTransformer_EMT_Ph1.h"
 #include <list>
 
 #include <DPsim.h>
@@ -91,7 +91,7 @@ void decoupleNode(SystemTopology &sys, const String &nodeName,
   Matrix i_0(1, 1);
   i_0(0, 0) = 0;
 
-  auto idealTrafo = Signal::DecouplingIdealTransformer_EMT_Ph1::make(
+  auto idealTrafo = CPS::EMT::Ph1::DecouplingIdealTransformer::make(
       "itm_" + nodeName, Logger::Level::debug);
   idealTrafo->connect({nodeCopy1, nodeCopy2});
   idealTrafo->setParameters(0.001, i_0, 0);

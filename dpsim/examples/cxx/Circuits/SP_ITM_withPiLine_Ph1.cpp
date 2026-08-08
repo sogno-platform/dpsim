@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include "dpsim-models/Definitions.h"
+#include "dpsim-models/SP/SP_Ph1_DecouplingIdealTransformer.h"
 #include "dpsim-models/SP/SP_Ph1_PiLine.h"
 #include "dpsim-models/SP/SP_Ph1_Resistor.h"
 #include "dpsim-models/SP/SP_Ph1_VoltageSource.h"
-#include "dpsim-models/Signal/DecouplingIdealTransformer_SP_Ph1.h"
 #include "dpsim-models/SimNode.h"
 #include "dpsim/Definitions.h"
 #include <DPsim.h>
@@ -115,7 +115,7 @@ void simITM_SP_Ph1() {
   auto line = PiLine::make("line", Logger::Level::debug);
   line->setParameters(resistance, inductance, capacitance, conductance);
 
-  auto itm = CPS::Signal::DecouplingIdealTransformer_SP_Ph1::make(
+  auto itm = CPS::SP::Ph1::DecouplingIdealTransformer::make(
       "itm", Logger::Level::debug);
   itm->setParameters(0, Matrix::Zero(1, 1), Complex(0, 0),
                      CPS::CouplingMethod::DELAY);

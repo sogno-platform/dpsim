@@ -88,6 +88,8 @@ list(APPEND MODELS_SOURCES
 	DP/DP_Ph3_SSN_Full_Serial_RLC.cpp
 	DP/DP_Ph3_GenericTwoTerminalVTypeSSN.cpp
 	DP/DP_Ph3_GenericTwoTerminalITypeSSN.cpp
+	DP/DP_Ph1_DecouplingIdealTransformer.cpp
+	DP/DP_Ph1_DecouplingLine.cpp
 
 	EMT/EMT_SSNComp.cpp
 	EMT/EMT_VTypeSSNComp.cpp
@@ -163,6 +165,10 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph3_FourTerminalVTypeSSNComp.cpp
 	EMT/EMT_Ph3_PiecewiseLinearInductor.cpp
 	EMT/EMT_Ph3_VSIVoltageControlVCO.cpp
+	EMT/EMT_Ph1_DecouplingIdealTransformer.cpp
+	EMT/EMT_Ph3_DecouplingIdealTransformer.cpp
+	EMT/EMT_Ph3_DecouplingLine.cpp
+	EMT/EMT_Ph1_DecouplingLine.cpp
 
 	SP/SP_Ph1_ControlledCurrentSource.cpp
 	SP/SP_Ph1_VoltageSource.cpp
@@ -199,14 +205,8 @@ list(APPEND MODELS_SOURCES
 	SP/SP_Ph3_Inductor.cpp
 	SP/SP_Ph3_Resistor.cpp
 	SP/SP_Ph3_VoltageSource.cpp
+	SP/SP_Ph1_DecouplingIdealTransformer.cpp
 
-	Signal/DecouplingLine.cpp
-	Signal/DecouplingLineEMT.cpp
-	Signal/DecouplingLineEMT_Ph3.cpp
-	Signal/DecouplingIdealTransformer_SP_Ph1.cpp
-	Signal/DecouplingIdealTransformer_EMT_Ph1.cpp
-	Signal/DecouplingIdealTransformer_EMT_Ph3.cpp
-	Signal/DecouplingIdealTransformer_DP_Ph1.cpp
 	Signal/ExciterDC1.cpp
 	Signal/ExciterDC1Simp.cpp
 	Signal/ExciterST1Simp.cpp

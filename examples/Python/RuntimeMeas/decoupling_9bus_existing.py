@@ -20,7 +20,7 @@ def decouple_line(sys, line, node1, node2):
     L_line = orig_line.attr("L_series").get()
     C_line = orig_line.attr("C_parallel").get()
 
-    line = dpsimpy.signal.DecouplingLine(
+    line = dpsimpy.dp.ph1.DecouplingLine(
         "dline_" + node1 + "_" + node2, dpsimpy.LogLevel.info
     )
     line.connect([sys.node(node1), sys.node(node2)])

@@ -3,8 +3,8 @@
 
 #include "dpsim-models/Definitions.h"
 #include "dpsim-models/EMT/EMT_Ph3_Capacitor.h"
+#include "dpsim-models/EMT/EMT_Ph3_DecouplingIdealTransformer.h"
 #include "dpsim-models/EMT/EMT_Ph3_Resistor.h"
-#include "dpsim-models/Signal/DecouplingIdealTransformer_EMT_Ph3.h"
 #include "dpsim-models/SimNode.h"
 #include <iostream>
 
@@ -98,7 +98,7 @@ void decoupleNode(SystemTopology &sys, const String &nodeName,
   for (auto comp : newComponents)
     sys.addComponent(comp);
 
-  auto idealTrafo = Signal::DecouplingIdealTransformer_EMT_Ph3::make(
+  auto idealTrafo = CPS::EMT::Ph3::DecouplingIdealTransformer::make(
       "itm_" + nodeName, Logger::Level::debug);
   idealTrafo->connect({nodeCopy1, nodeCopy2});
   idealTrafo->setParameters(ITMDelay, irLine_0.real(), i_inf_0, cosimMethod);
@@ -122,19 +122,19 @@ void doSim(String &name, SystemTopology &sys, Int threads, Real ts,
                          sys.node<EMT::SimNode>("n2_2")->attribute("v"));
     logger->logAttribute(
         "i_intf",
-        sys.component<Signal::DecouplingIdealTransformer_EMT_Ph3>("itm_n2")
+        sys.component<CPS::EMT::Ph3::DecouplingIdealTransformer>("itm_n2")
             ->attribute("i_src_intf"));
     logger->logAttribute(
         "i_ref",
-        sys.component<Signal::DecouplingIdealTransformer_EMT_Ph3>("itm_n2")
+        sys.component<CPS::EMT::Ph3::DecouplingIdealTransformer>("itm_n2")
             ->attribute("i_ref"));
     logger->logAttribute(
         "v_intf",
-        sys.component<Signal::DecouplingIdealTransformer_EMT_Ph3>("itm_n2")
+        sys.component<CPS::EMT::Ph3::DecouplingIdealTransformer>("itm_n2")
             ->attribute("v_src_intf"));
     logger->logAttribute(
         "v_ref",
-        sys.component<Signal::DecouplingIdealTransformer_EMT_Ph3>("itm_n2")
+        sys.component<CPS::EMT::Ph3::DecouplingIdealTransformer>("itm_n2")
             ->attribute("v_ref"));
   } else {
     logger->logAttribute("v_2", sys.node<EMT::SimNode>("n2")->attribute("v"));

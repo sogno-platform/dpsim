@@ -47,6 +47,27 @@ void addDPComponents(py::module_ mDP) {
 }
 
 void addDPPh1Components(py::module_ mDPPh1) {
+  py::class_<CPS::DP::Ph1::DecouplingLine,
+             std::shared_ptr<CPS::DP::Ph1::DecouplingLine>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "DecouplingLine",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::DP::Ph1::DecouplingLine::setParameters,
+           "resistance"_a, "inductance"_a, "capacitance"_a)
+      .def("connect", &CPS::DP::Ph1::DecouplingLine::connect);
+
+  py::class_<CPS::DP::Ph1::DecouplingIdealTransformer,
+             std::shared_ptr<CPS::DP::Ph1::DecouplingIdealTransformer>,
+             CPS::SimPowerComp<CPS::Complex>>(
+      mDPPh1, "DecouplingIdealTransformer", py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters",
+           &CPS::DP::Ph1::DecouplingIdealTransformer::setParameters, "delay"_a,
+           "v_src_intf_cur"_a, "cur1_extrap_0"_a, "coupling_method"_a)
+      .def("connect", &CPS::DP::Ph1::DecouplingIdealTransformer::connect);
+
   py::class_<CPS::DP::Ph1::VoltageSource,
              std::shared_ptr<CPS::DP::Ph1::VoltageSource>,
              CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "VoltageSource",

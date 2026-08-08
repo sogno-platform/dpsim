@@ -8,40 +8,43 @@
 
 #pragma once
 
+#include "dpsim-models/Definitions.h"
+#include "dpsim-models/EMT/EMT_Ph3_ControlledCurrentSource.h"
 #include <vector>
 
 #include <dpsim-models/CompositePowerComp.h>
-#include <dpsim-models/DP/DP_Ph1_CurrentSource.h>
-#include <dpsim-models/DP/DP_Ph1_Resistor.h>
+#include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
 
 namespace CPS {
-namespace Signal {
-class DecouplingLine : public CompositePowerComp<Complex>,
+namespace EMT {
+namespace Ph3 {
+class DecouplingLine : public CompositePowerComp<Real>,
                        public SharedFactory<DecouplingLine> {
 protected:
   Real mDelay;
-  Real mResistance;
-  Real mInductance, mCapacitance;
-  Real mSurgeImpedance;
+  Matrix mResistance = Matrix::Zero(3, 3);
+  Matrix mInductance = Matrix::Zero(3, 3);
+  Matrix mCapacitance = Matrix::Zero(3, 3);
+  Matrix mSurgeImpedance;
 
-  std::shared_ptr<DP::Ph1::Resistor> mRes1, mRes2;
-  std::shared_ptr<DP::Ph1::CurrentSource> mSrc1, mSrc2;
-  Attribute<Complex>::Ptr mSrcCur1, mSrcCur2;
+  std::shared_ptr<EMT::Ph3::Resistor> mRes1, mRes2;
+  std::shared_ptr<EMT::Ph3::ControlledCurrentSource> mSrc1, mSrc2;
+  Attribute<Matrix>::Ptr mSrcCur1, mSrcCur2;
 
   // Ringbuffers for the values of previous timesteps
   // TODO make these matrix attributes
-  std::vector<Complex> mVolt1, mVolt2, mCur1, mCur2;
+  Matrix mVolt1, mVolt2, mCur1, mCur2;
   UInt mBufIdx = 0;
   UInt mBufSize;
   Real mAlpha;
 
-  Complex interpolate(std::vector<Complex> &data);
+  Matrix interpolate(Matrix &data);
 
 public:
   typedef std::shared_ptr<DecouplingLine> Ptr;
 
-  const Attribute<Complex>::Ptr mSrcCur1Ref;
-  const Attribute<Complex>::Ptr mSrcCur2Ref;
+  const Attribute<Matrix>::Ptr mSrcCur1Ref;
+  const Attribute<Matrix>::Ptr mSrcCur2Ref;
 
   ///FIXME: workaround for dependency analysis as long as the states aren't attributes
   const Attribute<Matrix>::Ptr mStates;
@@ -51,7 +54,7 @@ public:
   DecouplingLine(String name, Logger::Level logLevel = Logger::Level::info)
       : DecouplingLine(name, name, logLevel) {}
 
-  void setParameters(Real resistance, Real inductance, Real capacitance);
+  void setParameters(Matrix resistance, Matrix inductance, Matrix capacitance);
   void step(Real time, Int timeStepCount);
   void postStep();
 
@@ -77,5 +80,6 @@ public:
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;
 };
-} // namespace Signal
+} // namespace Ph3
+} // namespace EMT
 } // namespace CPS
