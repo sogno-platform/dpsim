@@ -5,6 +5,11 @@ name: Build with Nix
 
 on:
   workflow_call:
+    inputs:
+      ref:
+        description: 'Revision under test'
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -17,6 +22,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
+          ref: ${{ inputs.ref }}
+          allow-unsafe-pr-checkout: true
           submodules: recursive
 
       - name: Install Nix

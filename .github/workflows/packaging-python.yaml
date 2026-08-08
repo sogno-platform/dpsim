@@ -6,6 +6,10 @@ name: Packaging (Python)
 on:
   workflow_call:
     inputs:
+      ref:
+        description: 'Revision under test'
+        required: true
+        type: string
       image:
         description: 'Development image the source distribution is built in'
         required: true
@@ -23,6 +27,8 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v6
       with:
+        ref: ${{ inputs.ref }}
+        allow-unsafe-pr-checkout: true
         submodules: recursive
 
     - name: Set development version for Test PyPI
@@ -57,6 +63,8 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v6
       with:
+        ref: ${{ inputs.ref }}
+        allow-unsafe-pr-checkout: true
         submodules: recursive
 
     - name: Set up Python

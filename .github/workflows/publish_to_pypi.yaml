@@ -22,6 +22,7 @@ jobs:
     name: Packaging
     uses: ./.github/workflows/packaging-python.yaml
     with:
+      ref: ${{ github.sha }}
       image: sogno/dpsim:dev
 
   publish-testpypi:

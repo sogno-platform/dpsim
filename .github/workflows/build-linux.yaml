@@ -6,6 +6,10 @@ name: Build Linux
 on:
   workflow_call:
     inputs:
+      ref:
+        description: 'Revision under test'
+        required: true
+        type: string
       image_dev:
         description: 'Fedora development image'
         required: true
@@ -68,6 +72,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
+          ref: ${{ inputs.ref }}
+          allow-unsafe-pr-checkout: true
           submodules: recursive
 
       - name: Create Build Environment
