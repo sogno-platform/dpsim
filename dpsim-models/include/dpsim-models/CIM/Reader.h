@@ -47,6 +47,8 @@ class ExternalNetworkInjection;
 class EnergyConsumer;
 class PowerTransformer;
 class EquivalentShunt;
+class LinearShuntCompensator;
+class StaticVarCompensator;
 class TopologicalNode;
 class ConductingEquipment;
 class Disconnector;
@@ -177,6 +179,12 @@ private:
   TopologicalPowerComp::Ptr mapDisconnector(CIMPP::Disconnector *disc);
   /// Returns a switch
   TopologicalPowerComp::Ptr mapBreaker(CIMPP::Breaker *cb);
+  /// Returns a shunt
+  TopologicalPowerComp::Ptr
+  mapLinearShuntCompensator(CIMPP::LinearShuntCompensator *shunt);
+  /// Returns a shunt
+  TopologicalPowerComp::Ptr
+  mapStaticVarCompensator(CIMPP::StaticVarCompensator *svc);
 
   // #### Helper Functions ####
   /// Determine base voltage associated with object
