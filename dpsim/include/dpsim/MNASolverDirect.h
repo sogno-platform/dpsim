@@ -27,15 +27,6 @@
 #ifdef WITH_KLU
 #include <dpsim/KLUAdapter.h>
 #endif
-#ifdef WITH_CUDA
-#include <dpsim/GpuDenseAdapter.h>
-#ifdef WITH_CUDA_SPARSE
-#include <dpsim/GpuSparseAdapter.h>
-#endif
-#ifdef WITH_MAGMA
-#include <dpsim/GpuMagmaAdapter.h>
-#endif
-#endif
 #include <dpsim-models/AttributeList.h>
 #include <dpsim-models/SimPowerComp.h>
 #include <dpsim-models/SimSignalComp.h>
@@ -45,16 +36,7 @@
 
 namespace DPsim {
 
-enum DirectLinearSolverImpl {
-  Undef = 0,
-  KLU,
-  SparseLU,
-  DenseLU,
-  CUDADense,
-  CUDASparse,
-  CUDAMagma,
-  Plugin
-};
+enum DirectLinearSolverImpl { Undef = 0, KLU, SparseLU, DenseLU, Plugin };
 
 /// Solver class using Modified Nodal Analysis (MNA).
 template <typename VarType> class MnaSolverDirect : public MnaSolver<VarType> {

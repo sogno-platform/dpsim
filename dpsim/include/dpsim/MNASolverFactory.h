@@ -19,15 +19,6 @@
 #ifdef WITH_KLU
 #include <dpsim/KLUAdapter.h>
 #endif
-#ifdef WITH_CUDA
-#include <dpsim/GpuDenseAdapter.h>
-#ifdef WITH_CUDA_SPARSE
-#include <dpsim/GpuSparseAdapter.h>
-#endif
-#ifdef WITH_MAGMA
-#include <dpsim/GpuMagmaAdapter.h>
-#endif
-#endif
 #ifdef WITH_MNASOLVERPLUGIN
 #include <dpsim/MNASolverPlugin.h>
 #endif
@@ -42,15 +33,6 @@ public:
 #ifdef WITH_MNASOLVERPLUGIN
         DirectLinearSolverImpl::Plugin,
 #endif //WITH_MNASOLVERPLUGIN
-#ifdef WITH_CUDA
-        DirectLinearSolverImpl::CUDADense,
-#ifdef WITH_CUDA_SPARSE
-#endif // WITH_CUDA_SPARSE
-        DirectLinearSolverImpl::CUDASparse,
-#ifdef WITH_MAGMA
-        DirectLinearSolverImpl::CUDAMagma,
-#endif // WITH_MAGMA
-#endif // WITH_CUDA
         DirectLinearSolverImpl::DenseLU,
 #ifdef WITH_SPARSE
         DirectLinearSolverImpl::SparseLU,
@@ -112,37 +94,6 @@ public:
           DirectLinearSolverImpl::KLU);
       return kluSolver;
     }
-#endif
-#ifdef WITH_CUDA
-    case DirectLinearSolverImpl::CUDADense: {
-      SPDLOG_LOGGER_INFO(log, "creating GpuDenseAdapter solver implementation");
-      std::shared_ptr<MnaSolverDirect<VarType>> gpuDenseSolver =
-          std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
-      gpuDenseSolver->setDirectLinearSolverImplementation(
-          DirectLinearSolverImpl::CUDADense);
-      return gpuDenseSolver;
-    }
-#ifdef WITH_CUDA_SPARSE
-    case DirectLinearSolverImpl::CUDASparse: {
-      SPDLOG_LOGGER_INFO(log,
-                         "creating GpuSparseAdapter solver implementation");
-      std::shared_ptr<MnaSolverDirect<VarType>> gpuSparseSolver =
-          std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
-      gpuSparseSolver->setDirectLinearSolverImplementation(
-          DirectLinearSolverImpl::CUDASparse);
-      return gpuSparseSolver;
-    }
-#endif
-#ifdef WITH_MAGMA
-    case DirectLinearSolverImpl::CUDAMagma: {
-      SPDLOG_LOGGER_INFO(log, "creating GpuMagmaAdapter solver implementation");
-      std::shared_ptr<MnaSolverDirect<VarType>> gpuMagmaSolver =
-          std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
-      gpuMagmaSolver->setDirectLinearSolverImplementation(
-          DirectLinearSolverImpl::CUDAMagma);
-      return gpuMagmaSolver;
-    }
-#endif
 #endif
 #ifdef WITH_MNASOLVERPLUGIN
     case DirectLinearSolverImpl::Plugin:

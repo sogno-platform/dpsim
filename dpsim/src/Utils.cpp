@@ -50,7 +50,7 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[], String nm, Real dt,
           {"solver-type", required_argument, 0, 'T', "(NRP|MNA)",
            "Type of solver"},
           {"linear-solver-impl", required_argument, 0, 'U',
-           "(DenseLU|SparseLU|KLU|CUDADense|CUDASparse)",
+           "(DenseLU|SparseLU|KLU|Plugin)",
            "Type of direct linear solver implementation"},
           {"option", required_argument, 0, 'o', "KEY=VALUE",
            "User-definable options"},
@@ -91,7 +91,7 @@ CommandLineArgs::CommandLineArgs(String nm, Real dt, Real d, Real sf, Int s,
           {"solver-type", required_argument, 0, 'T', "(NRP|MNA)",
            "Type of solver"},
           {"linear-solver-impl", required_argument, 0, 'U',
-           "(DenseLU|SparseLU|KLU|CUDADense|CUDASparse)",
+           "(DenseLU|SparseLU|KLU|Plugin)",
            "Type of direct linear solver implementation"},
           {"option", required_argument, 0, 'o', "KEY=VALUE",
            "User-definable options"},
@@ -215,12 +215,6 @@ void CommandLineArgs::parseArguments(int argc, char *argv[]) {
         directImpl = DirectLinearSolverImpl::SparseLU;
       } else if (arg == "KLU") {
         directImpl = DirectLinearSolverImpl::KLU;
-      } else if (arg == "CUDADense") {
-        directImpl = DirectLinearSolverImpl::CUDADense;
-      } else if (arg == "CUDASparse") {
-        directImpl = DirectLinearSolverImpl::CUDASparse;
-      } else if (arg == "CUDAMagma") {
-        directImpl = DirectLinearSolverImpl::CUDAMagma;
       } else if (arg == "Plugin") {
         directImpl = DirectLinearSolverImpl::Plugin;
       } else {

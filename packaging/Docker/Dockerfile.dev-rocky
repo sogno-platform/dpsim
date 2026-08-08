@@ -19,14 +19,6 @@ RUN dnf -y update && \
 	dnf config-manager --set-enabled crb && \
 	dnf config-manager --set-enabled remi
 
-# CUDA dependencies
-RUN dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-rhel9.repo && \
-	dnf --refresh -y install cuda-compiler-11-7 cuda-libraries-devel-11-7 cuda-nvprof-11-7 && \
-	ln -s cuda-11.7 /usr/local/cuda
-
-ENV PATH="/usr/local/cuda/bin:${PATH}"
-ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
-
 # Toolchain
 RUN dnf -y install \
 	git clang gdb ccache \
@@ -75,23 +67,12 @@ RUN dnf -y install \
 	nanomsg-devel \
 	git-svn
 
-# CUDARPC and dependencies
+# Build dependencies for the sources compiled below
 RUN dnf install -y \
 	make bash git gcc autoconf libtool automake \
-	ncurses-devel zlib-devel binutils-devel mesa-libGL-devel \
-	libvdpau-devel mesa-libEGL-devel openssl-devel rpcbind \
-	rpcgen texinfo bison flex
+	ncurses-devel binutils-devel texinfo bison flex
 
 ENV LD_LIBRARY_PATH="/usr/local/lib:/usr/local/lib64:${LD_LIBRARY_PATH}"
-RUN git clone --branch 3.0 --recurse-submodules --depth 1 https://git.rwth-aachen.de/acs/public/virtualization/cricket.git && \
-	cd cricket && \
-	make ${MAKE_OPTS} libtirpc && \
-	make ${MAKE_OPTS} bin/libtirpc.so && \
-	make ${MAKE_OPTS} bin/libtirpc.so.3 && \
-	make ${MAKE_OPTS} bin/cricket-client.so LOG=INFO
-
-ENV PATH="$PWD/cricket/bin:${PATH}"
-ENV LD_LIBRARY_PATH="$PWD/cricket/bin:${LD_LIBRARY_PATH}"
 
 # Profiling dependencies
 RUN dnf -y install \
@@ -124,23 +105,7 @@ RUN cd /tmp && \
 	make ${MAKE_OPTS} install && \
 	rm -rf /tmp/libcimpp
 
-# Install MAGMA from source
-RUN cd /tmp && \
-	wget http://icl.utk.edu/projectsfiles/magma/downloads/magma-2.6.0.tar.gz && \
-	tar -xvzf magma-2.6.0.tar.gz && \
-	mkdir -p magma-2.6.0/build && cd magma-2.6.0/build && \
-	cmake ${CMAKE_OPTS} .. \
-		-DMAGMA_ENABLE_CUDA=ON \
-		-DCMAKE_INSTALL_PREFIX=/ \
-		-DGPU_TARGET='Pascal Turing Ampere' \
-		-DBUILD_SHARED_LIBS=on && \
-	make ${MAKE_OPTS} install && rm -rf /tmp/magma-2.6.0
-
 # Install VILLASnode and deps from source
-ENV CMAKE_OPTS="${CMAKE_OPTS} \
-		-DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc \
-		-DCMAKE_CUDA_ARCHITECTURES=60;61;70;75"
-
 RUN cd /tmp && \
 		git clone --recurse-submodules https://github.com/VILLASframework/node.git villas-node && \
 		cd villas-node && \
@@ -150,8 +115,7 @@ RUN cd /tmp && \
 		mkdir -p build && cd build && \
 		cmake ${CMAKE_OPTS} .. \
 			-DCMAKE_CXX_FLAGS="$CMAKE_CXX_FLAGS -fpermissive" \
-			-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 \
-			-DCMAKE_CUDA_FLAGS="-Xcompiler=-Wall,-Werror" && \
+			-DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 && \
 		make ${MAKE_OPTS} install && \
 		rm -rf /tmp/villas-node
 
