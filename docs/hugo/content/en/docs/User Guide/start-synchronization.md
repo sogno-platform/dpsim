@@ -86,6 +86,23 @@ hosts, and an external real-time target can join the same rendezvous.
 Both calls release the Python GIL while they block, so a leader and its followers can be driven from
 threads of one interpreter, and unrelated Python threads keep running through the wait.
 
+## Starting the simulation on it
+
+`RealTimeSimulation.run_at` takes the instant the rendezvous produced and blocks until it arrives
+before stepping:
+
+```python
+sim = dpsimpy.RealTimeSimulation("follower")
+sim.set_system(system)
+sim.set_time_step(time_step_ns / 1e9)
+sim.set_final_time(duration_ns / 1e9)
+sim.run_at(start_time_ns)
+```
+
+It takes nanoseconds rather than a `datetime`, which is only microsecond-resolution and would
+discard the precision the exchange was built to preserve. `run` remains the relative form: it starts
+a given number of seconds from now, which is per-process and therefore not a rendezvous.
+
 ## On the wire
 
 The exchange is three fixed-size messages, so a peer that is not DPsim can implement it. All fields
