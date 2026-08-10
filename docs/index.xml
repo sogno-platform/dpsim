@@ -1551,6 +1551,19 @@ comments only to lines present in the diff.&lt;/p>
 &lt;p>The prompts encode DPsim&amp;rsquo;s documented conventions (see
 &lt;a href="https://sogno.energy/dpsim/docs/contributing/">Guidelines&lt;/a>) and the recurring points raised in
 past reviews, so the feedback stays specific to this project rather than generic.&lt;/p>
+&lt;h2 id="what-gets-posted">What gets posted&lt;/h2>
+&lt;p>Not every finding the passes raise reaches the pull request.&lt;/p>
+&lt;p>&lt;strong>Tentative findings are not posted.&lt;/strong> A finding that verification could not
+confirm against the source, or that carries a confidence below 50 %, is written
+to the workflow log only. Over the review history of a merged pull request this
+was the large majority of everything raised, and effectively none of it was
+actionable; posting it buried the findings that were.&lt;/p>
+&lt;p>&lt;strong>A run with nothing to say does not post a second review.&lt;/strong> The runner reviews
+again on every push. When a run has nothing left after the rule above, it edits
+its previous review instead, appending a line recording that the head commit was
+re-checked and nothing new was found. Editing a review body sends no
+notification, so those runs are visible on the pull request but silent in your
+inbox; only a run with something to say posts, and only that one mails you.&lt;/p>
 &lt;h2 id="configuration">Configuration&lt;/h2>
 &lt;p>The workflow requires one repository secret:&lt;/p>
 &lt;ul>
