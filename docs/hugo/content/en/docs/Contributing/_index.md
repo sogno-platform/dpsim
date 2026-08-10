@@ -100,14 +100,16 @@ A new version of DPsim has to be indicated as follows:
 - Update `version` in `pyproject.toml`
 - Update `VERSION` in the top level `CMakeLists.txt`
 - Update `sonar.projectVersion` in `sonar-project.properties`
+- Update `version` in `CITATION.cff` and the version noted on the citation page
 - Update `CHANGELOG.md` and include all the unreleased changes in the list
+- Update `CONTRIBUTORS.md` with the contributors added since the last release, as listed by `git shortlog -sne`
 - Create a new tag with an increased version number, which can be done during the release in GitHub
 
 ### Python Packages
 
 Due to the creation of a new tag, a new PyPi package will be deployed automatically.
 
-Only Linux packages are currently available, other platforms will be supported in the future.
+Linux and Windows wheels are currently available, other platforms will be supported in the future.
 
 ### Container Images
 

@@ -3,6 +3,138 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [v1.3.0] - 2026-08-14
+
+### Added
+
+- Generalized linear two terminal State Space Nodal component models (#406)
+- Add generic EMT 3-phase two-terminal V-type SSN component (#472)
+- Add variable SSN base and EMT 3-phase piecewise-linear inductor (#474)
+- Add EMT::SSN ITypeSSNComps and classes for I-Type SSN (#489)
+- Add FourTerminal_SSN classes (#500), also fixing the matpower.py import and the PF solver
+- Generic Ph1 two-terminal linear SSN components for SP domain (#587)
+- DP/SFA SSN: base classes and single-phase serial RLC component (#515)
+- DP/SFA SSN: generic two-terminal V/I-type components (#516), adding single-phase validation and accuracy notebooks and a concept page for State-Space Nodal in dynamic phasors (#517)
+- Add DP_Ph3 SSN base and generic components with examples (#541), adding notebooks, docs and base component pybind bindings (#542)
+- DP: add Ph1 variable-SSN base for mixed real+complex state components (#544)
+- Add DP::Ph3 mixed variable-SSN base (#578)
+- Add automatic system matrix recomputation mode (#576)
+- Add MNA state-space extraction and modal analysis (#478), supporting variable two-terminal SSN components (#488)
+- Add GlobalDQ0 frame for state-space modal analysis (#497)
+- Add state-space extraction for DP Ph1 components (#564) and for DP mixed variable SSN components (#571)
+- Support EMT Ph3 and DP Ph1 composite components (#573) and switches (#574) in state-space extraction
+- Add participation factors to state-space modal analysis (#537), adding right and left eigenvectors and named state metadata and exposing the modal participation results to Python
+- Added Grid-forming Inverter, VCO and VoltageController (#560)
+- EMT Ph3 SSN grid-forming inverter and automatic GFM controller derivation (#570), also making the CIM reader more robust
+- Grid-connected grid-forming SSN inverter and IEEE 9-bus mixed example (#577)
+- Feature: Added EMT classes GFL, refactored SSN_GFL and SSN_GFL_Split (#683), adding a common benchmark against the averaged-VSI state-space inverter
+- DP: add averaged-VSI state-space inverter component (#545), adding a cxx example (#546) and a cross-domain validation notebook (#547)
+- Add DP::Ph3::AvVoltSourceInverterStateSpace (#579), adding negative-sequence current control (#592) and unbalanced single-line-to-ground validation (#586)
+- Feature: New exciter models (#402)
+- Feature: New PSS (#486)
+- Feature: steam turbine governor and base governor and turbine (#491), and hydro turbine governor (#492)
+- feat: integrate TurbineGovernorType1 with SynchronGenerator and add Python bindings (#490)
+- Feature: sg controllers validation and tests notebook (#494)
+- SP SynchronGenerator: add reactive-power limits Qmin and Qmax (#535)
+- DP_Ph3_PiLine, EMT_Ph1_PiLine and Ph3 diakoptics functionality (#436)
+- Add DP_Ph1_Shunt and EMT_Ph3_Shunt components (#550)
+- DP_Ph3: add CurrentSource (#538), taking an independent per-phase reference in VoltageSource and CurrentSource instead of a single value rotated by a hardcoded 120 degrees
+- Add DP::Ph3::Switch three-phase matrix switch (#583)
+- Feat: Add Scalar EMT DC Components (#630)
+- Decoupling ITM (#423)
+- feat: sparse-Jacobian powerflow solver with KLU refactorization reuse for large grids (#514)
+- PFSolver: enforce generator Q-limits via a PV to PQ outer loop (#536)
+- feat: configurable PFSolver base-power fallback and working max-iterations setter (#552)
+- Diakoptics development: KLU-based subnet solving with localized system matrices (#513)
+- feat: opt-in filter for out-of-service equipment and isolated buses in matpower reader (#553)
+- Feat: Add option to map synchronous machine to ideal voltage source in matpower (#601)
+- Implement functions for mapDisconnector and mapBreaker (#556)
+- Add IEEE 9-bus 4th-order SG examples in SP, DP and EMT (#575)
+- Build and publish Windows wheels (#633)
+- Feature: auto-generate .pyi stub files for dpsimpy via pybind11-stubgen (#495)
+- docs: add CONTRIBUTING.md and a notebook output compliance check (#509)
+- Add attribute usage guidelines (#503)
+- docs: document MNA solver and component initialization (#505)
+- Document the DP::Ph1 (#549) and DP::Ph3 (#591) averaged-VSI state-space inverters
+- Add code owners for state-space source files (#481)
+- ci: add multi-stage LLM PR reviewer (#594), tiering the models across finders and escalating verify gates (#595)
+- ci: enforce conventional commits for commit messages (#607), checked by CI and by a commit-msg hook
+- add: run binder container test by running examples/villas/dpsim-file.py (#645)
+
+### Changed
+
+- Refactor EMT 3-phase state-space inverter to variable SSN (#477)
+- PFSolver: zone-based base voltage verification, configurable tolerances, and matpower Q-limit fixes (#543)
+- Refactor: remove duplicate initialize(mFrequencies) calls and migrate SVC to CompositePowerComp (#511)
+- refactor: shared elementwise complex-product helper (#584)
+- SystemTopology: derive mComponentsAtNode instead of hand-maintaining it (#638)
+- Migrate Python project config to pyproject.toml (#485)
+- chore: strip saved outputs and backfill cell ids across all notebooks (#605)
+- docs: restructure the documentation and close the coverage gaps (#619)
+- docs: expand task scheduling page (#506)
+- update: improve .gitignore coverage (#483)
+- Changed where the container workflow runs to a private runner (#465)
+- Fix: Bumped CI to node 24 actions (#484)
+- ci: cancel superseded workflow runs via concurrency groups (#534), so a re-push cancels the in-progress run
+- ci: patch and dev suffix for Test PyPI publishes (#565)
+- Analyze fork PRs with SonarCloud without exposing secrets (#593)
+- ci: run every workflow from a single CI entry point (#661), and run fork pull requests through the same pipeline as the rest (#674)
+- ci: cache the container images in the registry instead of the Actions cache (#672)
+- ci: resolve pyproject extras with uv instead of pip-tools (#650), and resolve Python dependencies with uv in the Rocky container (#651) and in the remaining images and scripts (#670)
+- build(python): drop 3.9 and build wheels for 3.14 (#681), documenting the supported version matrix and the Windows wheel limits on the install page
+- CODEOWNERS: update for the next release (#637), applying the removal and ownership requests collected from the maintainers and repointing the paths that moved
+- fix(ci): drop the build-time Python dependency layer from the manylinux image (#648)
+- test(examples): skip WSCC 9-bus switch notebook while its reference URL is dead (#665)
+- ci(llm-review): stop repeating findings on every push (#676)
+- Scope cpp:S5184 out of the pybind bindings in the Sonar configuration (#678), since it targets unnamed RAII temporaries and the py::class_ registration idiom holds no resource
+- Bump picomatch and postcss in /docs/hugo (#464, #471, #599)
+
+### Removed
+
+- Remove outdated roadmap (#463)
+
+### Fixed
+
+- Fix EMT 3Ph Switch behaviour for Matrix Recomputation (#419)
+- Fix angle conversion in Math::polarDeg (#473)
+- Fix pybind on windows builds (#470)
+- Fix Windows build with std::filesystem (#480)
+- fix: TurbineGovernorType1 initialization attributes (#493)
+- fix: virtual node ordering for composite components (#496)
+- Bugfix for 2 minor issues in DiakopticsSolver (#507), and fixing collectVirtualNodes to recurse into subcomponent virtual nodes (#523)
+- fix: PF Newton-Raphson globalization and matpower reader and notebook CI fixes (#512)
+- fix: correct N0.V filter in DP_CIGRE_MV_withDG_withLoadStep notebook (#510)
+- fix: SP::Ph1::Capacitor produces NaN admittance for zero capacitance (#519)
+- fix: guard PF convergence check against non-finite mismatch (#520)
+- fix: refresh matrix-node-index cache after terminal swap in SP Transformer PF (#521)
+- SP power-flow: remove dead isinf guards and unused capacitor fields (#525), rerouting them through Math::isFinite, which survives the -Ofast build, and through the logger instead of std::cout
+- SP transformer: fix snubber NaN from missing or invalid rated power (#532), sizing the matpower transformer rated power from the branch rateA
+- fix: add missing Shunt branch to PFSolver::determineNodeBaseVoltages() (#551)
+- fix: exclude MNA fallback shunt from standalone PiLine powerflow stamp (#555)
+- feat: restore EnergyConsumer SSH-derived P/Q reading in CIM reader (#554)
+- fix: CIM reader PQ-generator mapping and slack voltage unit bug (#558)
+- fix: ExternalNetworkInjection voltage target unit disambiguation (#562)
+- DP: fix double carrier-shift in MixedVTypeVariableSSNComp init (#567)
+- fix(models): linearize the SSN grid-forming inverter analytically (#642)
+- fix: re-pivot fully when no variable matrix entries are declared (#644)
+- SystemTopology::removeNode: remove connected components too (#621), and removeComponent: drop the component from mComponentsAtNode too (#634)
+- pybind: restore SystemTopology.add as a deprecated alias (#622)
+- fix(cmake): stop passing GCC optimization flags to MSVC (#641)
+- fix(build): pin the wheel build to the target interpreter for pybind11 (#649)
+- fix(docker): build libcimpp from source on ARM64/macOS (#610)
+- fix: missing links related to suitesparse (#482)
+- fix(test): unbreak notebook collection and pre-commit on master (#652)
+- fix(ci): publish sogno/dpsim:dev-vscode and use it for the devcontainer (#659)
+- ci: LLM reviewer verify stage keeps missing-SPDX findings (#596), and handles oversized diffs and unresolvable inline lines (#597)
+- ci: fix Sonar scan metadata resolution for fork PRs (#598)
+- fix(ci): let the approved fork gate check out fork pull requests (#671)
+- fix(ci): stop building the images against the RWTH GitLab (#673)
+- fix(ci): install libxil in the manylinux image from GitHub (#675)
+- Zero-initialize the turbine governor parameters (#678)
+- Move instead of forward the by-value attribute dependencies (#678)
+- Drop the spaces around the LABEL assignments in the shmem image (#678), which collapsed all four labels into a single one carrying the rest of the block as its value
+- restore github hosted runners in workflows (#682)
+
 ## [v1.2.1] - 2025-12-10
 
 Note: this version only includes a fix to the publishing workflow. See v1.2.0 for relevant changes since the last v1.1.1

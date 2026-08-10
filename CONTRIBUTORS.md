@@ -23,6 +23,7 @@ For a complete, automatically updated list use the command `git shortlog -sne`.
 
 - Anas Bahr
 - Andrés Acosta
+- Baris Mutlu
 - Bettina Schäfer
 - Christoph Wirtz
 - Daniel Döhring
@@ -32,6 +33,7 @@ For a complete, automatically updated list use the command `git shortlog -sne`.
 - Henri Lubjuhn
 - Leonardo Carreras
 - Marvin Tollnitsch
+- Matthias Mees
 - Petra Raussi
 - Philipp Fensch
 - Philipp Jungkamp
@@ -39,3 +41,4 @@ For a complete, automatically updated list use the command `git shortlog -sne`.
 - Ruben Sander
 - Shikhin Dah
 - Stefan Lankes
+- Youssef Nakti

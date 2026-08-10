@@ -42,7 +42,7 @@ To make a result reproducible, cite the version you ran alongside the paper:
   title  = {DPsim},
   author = {{The DPsim Authors}},
   url    = {https://github.com/sogno-platform/dpsim},
-  note   = {Version 1.2.1}
+  note   = {Version 1.3.0}
 }
 ```
 
