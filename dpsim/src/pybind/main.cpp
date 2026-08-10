@@ -19,6 +19,10 @@
 
 #include <DPsimPy.h>
 
+#include <dpsim/SequentialScheduler.h>
+#include <dpsim/ThreadLevelScheduler.h>
+#include <dpsim/ThreadListScheduler.h>
+
 PYBIND11_DECLARE_HOLDER_TYPE(T, CPS::AttributePointer<T>);
 
 namespace py = pybind11;
@@ -227,13 +231,52 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("get_state_names", &DPsim::StateSpaceModalAnalysis::getStateNames,
            py::return_value_policy::reference_internal);
 
+  // Named, because Sonar S5184 reads a bare py::class_ temporary as a bug
+  py::class_<DPsim::Scheduler, std::shared_ptr<DPsim::Scheduler>> scheduler(
+      m, "Scheduler");
+
+  py::class_<DPsim::SequentialScheduler, DPsim::Scheduler,
+             std::shared_ptr<DPsim::SequentialScheduler>>(m,
+                                                          "SequentialScheduler")
+      .def(py::init<CPS::String, CPS::Logger::Level>(),
+           "out_measurement_file"_a = CPS::String(),
+           "loglevel"_a = CPS::Logger::Level::info);
+
+  py::class_<DPsim::ThreadLevelScheduler, DPsim::Scheduler,
+             std::shared_ptr<DPsim::ThreadLevelScheduler>>(
+      m, "ThreadLevelScheduler")
+      .def(py::init<CPS::Int, CPS::String, CPS::String, CPS::Bool, CPS::Bool>(),
+           "threads"_a = 1, "out_measurement_file"_a = CPS::String(),
+           "in_measurement_file"_a = CPS::String(),
+           // cppcheck-suppress assignBoolToPointer
+           "use_condition_variables"_a = false,
+           // cppcheck-suppress assignBoolToPointer
+           "sort_task_types"_a = false);
+
+  py::class_<DPsim::ThreadListScheduler, DPsim::Scheduler,
+             std::shared_ptr<DPsim::ThreadListScheduler>>(m,
+                                                          "ThreadListScheduler")
+      .def(py::init<CPS::Int, CPS::String, CPS::String, CPS::Bool>(),
+           "threads"_a = 1, "out_measurement_file"_a = CPS::String(),
+           "in_measurement_file"_a = CPS::String(),
+           // cppcheck-suppress assignBoolToPointer
+           "use_condition_variables"_a = false);
+
+#ifdef WITH_OPENMP
+  py::class_<DPsim::OpenMPLevelScheduler, DPsim::Scheduler,
+             std::shared_ptr<DPsim::OpenMPLevelScheduler>>(
+      m, "OpenMPLevelScheduler")
+      .def(py::init<CPS::Int, CPS::String>(), "threads"_a = -1,
+           "out_measurement_file"_a = CPS::String());
+#endif
+
   py::class_<DPsim::Simulation>(m, "Simulation")
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
            "loglevel"_a = CPS::Logger::Level::off)
       .def("name", &DPsim::Simulation::name)
       .def("set_time_step", &DPsim::Simulation::setTimeStep)
       .def("set_final_time", &DPsim::Simulation::setFinalTime)
-      .def("add_logger", &DPsim::Simulation::addLogger)
+      .def("add_logger", &DPsim::Simulation::addLogger, "logger"_a)
       .def("set_system", &DPsim::Simulation::setSystem)
       .def("run", &DPsim::Simulation::run)
       .def("set_solver", &DPsim::Simulation::setSolverType)
@@ -273,29 +316,31 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("log_attribute", &DPsim::Simulation::logAttribute, "name"_a,
            "attr"_a)
       .def("do_init_from_nodes_and_terminals",
-           &DPsim::Simulation::doInitFromNodesAndTerminals)
+           &DPsim::Simulation::doInitFromNodesAndTerminals, "enable"_a)
       .def("set_system_matrix_recomputation_mode",
            &DPsim::Simulation::setSystemMatrixRecomputationMode, "mode"_a)
       .def("do_system_matrix_recomputation",
-           &DPsim::Simulation::doSystemMatrixRecomputation)
+           &DPsim::Simulation::doSystemMatrixRecomputation, "enable"_a)
       .def("do_state_space_extraction",
            &DPsim::Simulation::doStateSpaceExtraction,
            py::arg_v("value", true, "True"))
       .def("get_state_space_extractor",
            &DPsim::Simulation::getStateSpaceExtractor, "solver_index"_a = 0,
            py::return_value_policy::reference_internal)
-      .def("do_steady_state_init", &DPsim::Simulation::doSteadyStateInit)
+      .def("do_steady_state_init", &DPsim::Simulation::doSteadyStateInit,
+           "enable"_a)
       .def("do_frequency_parallelization",
-           &DPsim::Simulation::doFrequencyParallelization)
-      .def("do_split_subnets", &DPsim::Simulation::doSplitSubnets)
+           &DPsim::Simulation::doFrequencyParallelization, "enable"_a)
+      .def("do_split_subnets", &DPsim::Simulation::doSplitSubnets, "enable"_a)
       .def("set_tearing_components", &DPsim::Simulation::setTearingComponents)
-      .def("add_event", &DPsim::Simulation::addEvent)
+      .def("add_event", &DPsim::Simulation::addEvent, "event"_a)
       .def("set_solver_component_behaviour",
            &DPsim::Simulation::setSolverAndComponentBehaviour)
       .def("set_direct_solver_implementation",
            &DPsim::Simulation::setDirectLinearSolverImplementation)
       .def("set_direct_linear_solver_configuration",
            &DPsim::Simulation::setDirectLinearSolverConfiguration)
+      .def("set_scheduler", &DPsim::Simulation::setScheduler, "scheduler"_a)
       .def("log_lu_times", &DPsim::Simulation::logLUTimes);
 
 #ifdef WITH_RT
@@ -306,7 +351,7 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("name", &DPsim::RealTimeSimulation::name)
       .def("set_time_step", &DPsim::RealTimeSimulation::setTimeStep)
       .def("set_final_time", &DPsim::RealTimeSimulation::setFinalTime)
-      .def("add_logger", &DPsim::RealTimeSimulation::addLogger)
+      .def("add_logger", &DPsim::RealTimeSimulation::addLogger, "logger"_a)
       .def("set_system", &DPsim::RealTimeSimulation::setSystem)
       .def("run",
            static_cast<void (DPsim::RealTimeSimulation::*)(CPS::Int startIn)>(
@@ -322,7 +367,7 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def(py::init<CPS::Real, CPS::Matrix, CPS::TopologicalNode::List,
                     CPS::IdentifiedObject::List>())
       .def(py::init<CPS::Real>())
-      .def("add_component", &DPsim::SystemTopology::addComponent)
+      .def("add_component", &DPsim::SystemTopology::addComponent, "component"_a)
       .def("add_component", &DPsim::SystemTopology::addComponents)
       .def("add_node", &DPsim::SystemTopology::addNode)
       // Deprecated alias for add_component/add_node, kept so that scripts
@@ -377,7 +422,8 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("list_idobjects", &DPsim::SystemTopology::listIdObjects)
       .def("init_with_powerflow", &DPsim::SystemTopology::initWithPowerflow,
            "systemPF"_a, "domain"_a)
-      .def("add_components", &DPsim::SystemTopology::addComponents)
+      .def("add_components", &DPsim::SystemTopology::addComponents,
+           "components"_a)
       .def("remove_component", &DPsim::SystemTopology::removeComponent)
       .def("remove_node", &DPsim::SystemTopology::removeNode);
 
@@ -408,7 +454,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 
   py::class_<DPsim::DataLogger, DPsim::DataLoggerInterface,
              std::shared_ptr<DPsim::DataLogger>>(m, "Logger")
-      .def(py::init<std::string>())
+      .def(py::init<std::string>(), "name"_a)
       .def_static("set_log_dir", &CPS::Logger::setLogDir)
       .def_static("get_log_dir", &CPS::Logger::logDir)
       .def("log_attribute",
@@ -536,17 +582,21 @@ PYBIND11_MODULE(dpsimpy, m) {
   py::class_<CPS::SimPowerComp<CPS::Complex>,
              std::shared_ptr<CPS::SimPowerComp<CPS::Complex>>,
              CPS::TopologicalPowerComp>(m, "SimPowerCompComplex")
-      .def("connect", &CPS::SimPowerComp<CPS::Complex>::connect)
-      .def("set_intf_current", &CPS::SimPowerComp<CPS::Complex>::setIntfCurrent)
-      .def("set_intf_voltage", &CPS::SimPowerComp<CPS::Complex>::setIntfVoltage)
+      .def("connect", &CPS::SimPowerComp<CPS::Complex>::connect, "nodes"_a)
+      .def("set_intf_current", &CPS::SimPowerComp<CPS::Complex>::setIntfCurrent,
+           "current"_a)
+      .def("set_intf_voltage", &CPS::SimPowerComp<CPS::Complex>::setIntfVoltage,
+           "voltage"_a)
       .def("get_terminal", &CPS::SimPowerComp<CPS::Complex>::terminal,
            "index"_a);
   py::class_<CPS::SimPowerComp<CPS::Real>,
              std::shared_ptr<CPS::SimPowerComp<CPS::Real>>,
              CPS::TopologicalPowerComp>(m, "SimPowerCompReal")
-      .def("connect", &CPS::SimPowerComp<CPS::Real>::connect)
-      .def("set_intf_current", &CPS::SimPowerComp<CPS::Real>::setIntfCurrent)
-      .def("set_intf_voltage", &CPS::SimPowerComp<CPS::Real>::setIntfVoltage)
+      .def("connect", &CPS::SimPowerComp<CPS::Real>::connect, "nodes"_a)
+      .def("set_intf_current", &CPS::SimPowerComp<CPS::Real>::setIntfCurrent,
+           "current"_a)
+      .def("set_intf_voltage", &CPS::SimPowerComp<CPS::Real>::setIntfVoltage,
+           "voltage"_a)
       .def("get_terminal", &CPS::SimPowerComp<CPS::Real>::terminal, "index"_a);
   py::class_<CPS::TopologicalNode, std::shared_ptr<CPS::TopologicalNode>,
              CPS::IdentifiedObject>(m, "TopologicalNode")

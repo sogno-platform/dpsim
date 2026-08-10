@@ -34,13 +34,14 @@ void addSPPh1Components(py::module_ mSPPh1) {
              std::shared_ptr<CPS::SP::Ph1::VoltageSource>,
              CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "VoltageSource",
                                               py::multiple_inheritance())
-      .def(py::init<std::string>())
-      .def(py::init<std::string, CPS::Logger::Level>())
+      .def(py::init<std::string>(), "name"_a)
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters",
            py::overload_cast<CPS::Complex, CPS::Real>(
                &CPS::SP::Ph1::VoltageSource::setParameters),
            "V_ref"_a, "f_src"_a = 0)
-      .def("connect", &CPS::SP::Ph1::VoltageSource::connect)
+      .def("connect", &CPS::SP::Ph1::VoltageSource::connect, "nodes"_a)
       .def_property("V_ref", createAttributeGetter<CPS::Complex>("V_ref"),
                     createAttributeSetter<CPS::Complex>("V_ref"))
       .def_property("f_src", createAttributeGetter<CPS::Real>("f_src"),
@@ -49,30 +50,33 @@ void addSPPh1Components(py::module_ mSPPh1) {
   py::class_<CPS::SP::Ph1::Resistor, std::shared_ptr<CPS::SP::Ph1::Resistor>,
              CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "Resistor",
                                               py::multiple_inheritance())
-      .def(py::init<std::string>())
-      .def(py::init<std::string, CPS::Logger::Level>())
+      .def(py::init<std::string>(), "name"_a)
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::SP::Ph1::Resistor::setParameters, "R"_a)
-      .def("connect", &CPS::SP::Ph1::Resistor::connect)
+      .def("connect", &CPS::SP::Ph1::Resistor::connect, "nodes"_a)
       .def_property("R", createAttributeGetter<CPS::Real>("R"),
                     createAttributeSetter<CPS::Complex>("R"));
 
   py::class_<CPS::SP::Ph1::Capacitor, std::shared_ptr<CPS::SP::Ph1::Capacitor>,
              CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "Capacitor",
                                               py::multiple_inheritance())
-      .def(py::init<std::string>())
-      .def(py::init<std::string, CPS::Logger::Level>())
+      .def(py::init<std::string>(), "name"_a)
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::SP::Ph1::Capacitor::setParameters, "C"_a)
-      .def("connect", &CPS::SP::Ph1::Capacitor::connect)
+      .def("connect", &CPS::SP::Ph1::Capacitor::connect, "nodes"_a)
       .def_property("C", createAttributeGetter<CPS::Real>("C"),
                     createAttributeSetter<CPS::Real>("C"));
 
   py::class_<CPS::SP::Ph1::Inductor, std::shared_ptr<CPS::SP::Ph1::Inductor>,
              CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "Inductor",
                                               py::multiple_inheritance())
-      .def(py::init<std::string>())
-      .def(py::init<std::string, CPS::Logger::Level>())
+      .def(py::init<std::string>(), "name"_a)
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::SP::Ph1::Inductor::setParameters, "L"_a)
-      .def("connect", &CPS::SP::Ph1::Inductor::connect)
+      .def("connect", &CPS::SP::Ph1::Inductor::connect, "nodes"_a)
       .def_property("L", createAttributeGetter<CPS::Real>("L"),
                     createAttributeSetter<CPS::Real>("L"));
 
@@ -92,7 +96,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
            "V_ref"_a, "f_src"_a = 0)
       .def("set_base_voltage", &CPS::SP::Ph1::NetworkInjection::setBaseVoltage,
            "base_voltage"_a)
-      .def("connect", &CPS::SP::Ph1::NetworkInjection::connect)
+      .def("connect", &CPS::SP::Ph1::NetworkInjection::connect, "nodes"_a)
       .def("modify_power_flow_bus_type",
            &CPS::SP::Ph1::NetworkInjection::modifyPowerFlowBusType,
            "bus_type"_a);
@@ -106,7 +110,80 @@ void addSPPh1Components(py::module_ mSPPh1) {
            "C"_a = -1, "G"_a = -1)
       .def("set_base_voltage", &CPS::SP::Ph1::PiLine::setBaseVoltage,
            "base_voltage"_a)
-      .def("connect", &CPS::SP::Ph1::PiLine::connect);
+      .def("connect", &CPS::SP::Ph1::PiLine::connect, "nodes"_a);
+
+  py::class_<CPS::SP::Ph1::RXLine, std::shared_ptr<CPS::SP::Ph1::RXLine>,
+             CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "RXLine",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def(py::init<std::string, std::string, CPS::Real, CPS::Real, CPS::Real,
+                    CPS::Logger::Level>(),
+           "uid"_a, "name"_a, "base_voltage"_a, "resistance"_a, "inductance"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::SP::Ph1::RXLine::setParameters,
+           "series_resistance"_a, "series_inductance"_a,
+           "parallel_capacitance"_a = 0, "parallel_conductance"_a = 0)
+      .def("set_per_unit_system", &CPS::SP::Ph1::RXLine::setPerUnitSystem,
+           "base_apparent_power"_a, "base_omega"_a)
+      .def("get_base_voltage", &CPS::SP::Ph1::RXLine::getBaseVoltage)
+      .def("connect", &CPS::SP::Ph1::RXLine::connect, "nodes"_a);
+
+  py::class_<CPS::SP::Ph1::ControlledCurrentSource,
+             std::shared_ptr<CPS::SP::Ph1::ControlledCurrentSource>,
+             CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "ControlledCurrentSource",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def(py::init<std::string, CPS::Complex, CPS::Logger::Level>(), "name"_a,
+           "current"_a, "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters",
+           &CPS::SP::Ph1::ControlledCurrentSource::setParameters,
+           "current_ref"_a)
+      .def("connect", &CPS::SP::Ph1::ControlledCurrentSource::connect,
+           "nodes"_a);
+
+  py::class_<CPS::SP::Ph1::ControlledVoltageSource,
+             std::shared_ptr<CPS::SP::Ph1::ControlledVoltageSource>,
+             CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "ControlledVoltageSource",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters",
+           &CPS::SP::Ph1::ControlledVoltageSource::setParameters,
+           "voltage_ref"_a)
+      .def("connect", &CPS::SP::Ph1::ControlledVoltageSource::connect,
+           "nodes"_a);
+
+  py::class_<CPS::SP::Ph1::SolidStateTransformer,
+             std::shared_ptr<CPS::SP::Ph1::SolidStateTransformer>,
+             CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "SolidStateTransformer",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters",
+           &CPS::SP::Ph1::SolidStateTransformer::setParameters, "nom_v1"_a,
+           "nom_v2"_a, "p_ref"_a, "q1_ref"_a, "q2_ref"_a)
+      .def("connect", &CPS::SP::Ph1::SolidStateTransformer::connect, "nodes"_a);
+
+  py::class_<CPS::SP::Ph1::VoltageSourceInverter,
+             std::shared_ptr<CPS::SP::Ph1::VoltageSourceInverter>,
+             CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "VoltageSourceInverter",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, std::string, CPS::PowerflowBusType,
+                    CPS::Logger::Level>(),
+           "uid"_a, "name"_a,
+           "powerflow_bus_type"_a = CPS::PowerflowBusType::PQ,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def(py::init<std::string, std::string, CPS::Real, CPS::Real,
+                    CPS::PowerflowBusType, CPS::Logger::Level>(),
+           "uid"_a, "name"_a, "power"_a, "reactive_power"_a,
+           "powerflow_bus_type"_a = CPS::PowerflowBusType::PQ,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("modify_power_flow_bus_type",
+           &CPS::SP::Ph1::VoltageSourceInverter::modifyPowerFlowBusType,
+           "bus_type"_a)
+      .def("connect", &CPS::SP::Ph1::VoltageSourceInverter::connect, "nodes"_a);
 
   py::class_<CPS::SP::Ph1::Shunt, std::shared_ptr<CPS::SP::Ph1::Shunt>,
              CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "Shunt",
@@ -116,7 +193,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
       .def("set_parameters", &CPS::SP::Ph1::Shunt::setParameters, "G"_a, "B"_a)
       .def("set_base_voltage", &CPS::SP::Ph1::Shunt::setBaseVoltage,
            "base_voltage"_a)
-      .def("connect", &CPS::SP::Ph1::Shunt::connect);
+      .def("connect", &CPS::SP::Ph1::Shunt::connect, "nodes"_a);
 
   py::class_<CPS::SP::Ph1::Load, std::shared_ptr<CPS::SP::Ph1::Load>,
              CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "Load",
@@ -127,7 +204,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
            "active_power"_a, "reactive_power"_a, "nominal_voltage"_a)
       .def("modify_power_flow_bus_type",
            &CPS::SP::Ph1::Load::modifyPowerFlowBusType, "bus_type"_a)
-      .def("connect", &CPS::SP::Ph1::Load::connect);
+      .def("connect", &CPS::SP::Ph1::Load::connect, "nodes"_a);
 
   py::class_<CPS::SP::Ph1::Switch, std::shared_ptr<CPS::SP::Ph1::Switch>,
              CPS::SimPowerComp<CPS::Complex>, CPS::Base::Ph1::Switch>(
@@ -140,7 +217,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
            "closed"_a = false)
       .def("open", &CPS::SP::Ph1::Switch::open)
       .def("close", &CPS::SP::Ph1::Switch::close)
-      .def("connect", &CPS::SP::Ph1::Switch::connect);
+      .def("connect", &CPS::SP::Ph1::Switch::connect, "nodes"_a);
 
   py::class_<CPS::SP::Ph1::SynchronGenerator,
              std::shared_ptr<CPS::SP::Ph1::SynchronGenerator>,
@@ -156,7 +233,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
            "q_limit_min"_a = -std::numeric_limits<double>::infinity())
       .def("set_base_voltage", &CPS::SP::Ph1::SynchronGenerator::setBaseVoltage,
            "base_voltage"_a)
-      .def("connect", &CPS::SP::Ph1::SynchronGenerator::connect)
+      .def("connect", &CPS::SP::Ph1::SynchronGenerator::connect, "nodes"_a)
       .def("modify_power_flow_bus_type",
            &CPS::SP::Ph1::SynchronGenerator::modifyPowerFlowBusType,
            "bus_type"_a)
@@ -177,7 +254,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
       .def("close", &CPS::SP::Ph1::varResSwitch::close)
       .def("set_init_parameters",
            &CPS::SP::Ph1::varResSwitch::setInitParameters, "time_step"_a)
-      .def("connect", &CPS::SP::Ph1::varResSwitch::connect);
+      .def("connect", &CPS::SP::Ph1::varResSwitch::connect, "nodes"_a);
 
   py::class_<CPS::SP::Ph1::SynchronGeneratorTrStab,
              std::shared_ptr<CPS::SP::Ph1::SynchronGeneratorTrStab>,
@@ -189,10 +266,19 @@ void addSPPh1Components(py::module_ mSPPh1) {
            &CPS::SP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU,
            "nom_power"_a, "nom_volt"_a, "nom_freq"_a, "Xpd"_a, "inertia"_a,
            "Rs"_a = 0, "D"_a = 0)
+      .def("set_standard_parameters_SI",
+           &CPS::SP::Ph1::SynchronGeneratorTrStab::setStandardParametersSI,
+           "nom_power"_a, "nom_volt"_a, "nom_freq"_a, "pole_pair_number"_a,
+           "Rs"_a, "Lpd"_a, "inertia_J"_a, "Kd"_a = 0)
+      .def("set_fundamental_parameters_PU",
+           &CPS::SP::Ph1::SynchronGeneratorTrStab::setFundamentalParametersPU,
+           "nom_power"_a, "nom_volt"_a, "nom_freq"_a, "Ll"_a, "Lmd"_a, "Llfd"_a,
+           "inertia"_a, "D"_a = 0)
       .def("set_initial_values",
            &CPS::SP::Ph1::SynchronGeneratorTrStab::setInitialValues,
            "elec_power"_a, "mech_power"_a)
-      .def("connect", &CPS::SP::Ph1::SynchronGeneratorTrStab::connect)
+      .def("connect", &CPS::SP::Ph1::SynchronGeneratorTrStab::connect,
+           "nodes"_a)
       .def("set_model_flags",
            &CPS::SP::Ph1::SynchronGeneratorTrStab::setModelFlags,
            "convert_with_omega_mech"_a)
@@ -228,7 +314,8 @@ void addSPPh1Components(py::module_ mSPPh1) {
                    setOperationalParametersPerUnit),
            "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
            "Lq"_a, "L0"_a, "Ld_t"_a, "Td0_t"_a)
-      .def("connect", &CPS::SP::Ph1::SynchronGenerator3OrderVBR::connect);
+      .def("connect", &CPS::SP::Ph1::SynchronGenerator3OrderVBR::connect,
+           "nodes"_a);
 
   py::class_<CPS::SP::Ph1::SynchronGenerator4OrderVBR,
              std::shared_ptr<CPS::SP::Ph1::SynchronGenerator4OrderVBR>,
@@ -244,7 +331,8 @@ void addSPPh1Components(py::module_ mSPPh1) {
                    setOperationalParametersPerUnit),
            "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
            "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a)
-      .def("connect", &CPS::SP::Ph1::SynchronGenerator4OrderVBR::connect);
+      .def("connect", &CPS::SP::Ph1::SynchronGenerator4OrderVBR::connect,
+           "nodes"_a);
 
   py::class_<CPS::SP::Ph1::SynchronGenerator5OrderVBR,
              std::shared_ptr<CPS::SP::Ph1::SynchronGenerator5OrderVBR>,
@@ -262,7 +350,8 @@ void addSPPh1Components(py::module_ mSPPh1) {
            "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
            "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a, "Ld_s"_a,
            "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a)
-      .def("connect", &CPS::SP::Ph1::SynchronGenerator5OrderVBR::connect);
+      .def("connect", &CPS::SP::Ph1::SynchronGenerator5OrderVBR::connect,
+           "nodes"_a);
 
   py::class_<CPS::SP::Ph1::SynchronGenerator6aOrderVBR,
              std::shared_ptr<CPS::SP::Ph1::SynchronGenerator6aOrderVBR>,
@@ -280,7 +369,8 @@ void addSPPh1Components(py::module_ mSPPh1) {
            "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
            "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a, "Ld_s"_a,
            "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a)
-      .def("connect", &CPS::SP::Ph1::SynchronGenerator6aOrderVBR::connect);
+      .def("connect", &CPS::SP::Ph1::SynchronGenerator6aOrderVBR::connect,
+           "nodes"_a);
 
   py::class_<CPS::SP::Ph1::SynchronGenerator6bOrderVBR,
              std::shared_ptr<CPS::SP::Ph1::SynchronGenerator6bOrderVBR>,
@@ -298,7 +388,8 @@ void addSPPh1Components(py::module_ mSPPh1) {
            "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
            "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a, "Ld_s"_a,
            "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a = 0)
-      .def("connect", &CPS::SP::Ph1::SynchronGenerator6bOrderVBR::connect);
+      .def("connect", &CPS::SP::Ph1::SynchronGenerator6bOrderVBR::connect,
+           "nodes"_a);
 
   py::class_<CPS::SP::Ph1::AvVoltageSourceInverterDQ,
              std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ>,
@@ -329,8 +420,10 @@ void addSPPh1Components(py::module_ mSPPh1) {
            "p_init"_a, "q_init"_a, "phi_d_init"_a, "phi_q_init"_a,
            "gamma_d_init"_a, "gamma_q_init"_a)
       .def("with_control",
-           &CPS::SP::Ph1::AvVoltageSourceInverterDQ::withControl)
-      .def("connect", &CPS::SP::Ph1::AvVoltageSourceInverterDQ::connect);
+           &CPS::SP::Ph1::AvVoltageSourceInverterDQ::withControl,
+           "control_on"_a)
+      .def("connect", &CPS::SP::Ph1::AvVoltageSourceInverterDQ::connect,
+           "nodes"_a);
 
   py::class_<CPS::SP::Ph1::Transformer,
              std::shared_ptr<CPS::SP::Ph1::Transformer>,
@@ -356,7 +449,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
            "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a)
       .def("set_base_voltage", &CPS::SP::Ph1::Transformer::setBaseVoltage,
            "base_voltage"_a)
-      .def("connect", &CPS::SP::Ph1::Transformer::connect);
+      .def("connect", &CPS::SP::Ph1::Transformer::connect, "nodes"_a);
 }
 
 void addSPPh3Components(py::module_ mSPPh3) {
@@ -364,11 +457,12 @@ void addSPPh3Components(py::module_ mSPPh3) {
              std::shared_ptr<CPS::SP::Ph3::VoltageSource>,
              CPS::SimPowerComp<CPS::Complex>>(mSPPh3, "VoltageSource",
                                               py::multiple_inheritance())
-      .def(py::init<std::string>())
-      .def(py::init<std::string, CPS::Logger::Level>())
+      .def(py::init<std::string>(), "name"_a)
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::SP::Ph3::VoltageSource::setParameters,
            "V_ref"_a)
-      .def("connect", &CPS::SP::Ph3::VoltageSource::connect)
+      .def("connect", &CPS::SP::Ph3::VoltageSource::connect, "nodes"_a)
       .def_property("V_ref", createAttributeGetter<CPS::MatrixComp>("V_ref"),
                     createAttributeSetter<CPS::MatrixComp>("V_ref"))
       .def_property("f_src", createAttributeGetter<CPS::Real>("f_src"),
@@ -377,24 +471,27 @@ void addSPPh3Components(py::module_ mSPPh3) {
   py::class_<CPS::SP::Ph3::Resistor, std::shared_ptr<CPS::SP::Ph3::Resistor>,
              CPS::SimPowerComp<CPS::Complex>>(mSPPh3, "Resistor",
                                               py::multiple_inheritance())
-      .def(py::init<std::string>())
-      .def(py::init<std::string, CPS::Logger::Level>())
+      .def(py::init<std::string>(), "name"_a)
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::SP::Ph3::Resistor::setParameters, "R"_a)
-      .def("connect", &CPS::SP::Ph3::Resistor::connect);
+      .def("connect", &CPS::SP::Ph3::Resistor::connect, "nodes"_a);
 
   py::class_<CPS::SP::Ph3::Capacitor, std::shared_ptr<CPS::SP::Ph3::Capacitor>,
              CPS::SimPowerComp<CPS::Complex>>(mSPPh3, "Capacitor",
                                               py::multiple_inheritance())
-      .def(py::init<std::string>())
-      .def(py::init<std::string, CPS::Logger::Level>())
+      .def(py::init<std::string>(), "name"_a)
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::SP::Ph3::Capacitor::setParameters, "C"_a)
-      .def("connect", &CPS::SP::Ph3::Capacitor::connect);
+      .def("connect", &CPS::SP::Ph3::Capacitor::connect, "nodes"_a);
 
   py::class_<CPS::SP::Ph3::Inductor, std::shared_ptr<CPS::SP::Ph3::Inductor>,
              CPS::SimPowerComp<CPS::Complex>>(mSPPh3, "Inductor",
                                               py::multiple_inheritance())
-      .def(py::init<std::string>())
-      .def(py::init<std::string, CPS::Logger::Level>())
+      .def(py::init<std::string>(), "name"_a)
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
       .def("set_parameters", &CPS::SP::Ph3::Inductor::setParameters, "L"_a)
-      .def("connect", &CPS::SP::Ph3::Inductor::connect);
+      .def("connect", &CPS::SP::Ph3::Inductor::connect, "nodes"_a);
 }

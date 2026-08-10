@@ -18,6 +18,8 @@ EMT::Ph3::VoltageSourceNorton::VoltageSourceNorton(String uid, String name,
     : MNASimPowerComp<Real>(uid, name, true, true, logLevel),
       Base::Ph1::VoltageSource(mAttributes),
       mResistance(mAttributes->create<Real>("R")) {
+  // Without this, SimPowerComp::initialize sizes the interface matrices to one row
+  mPhaseType = PhaseType::ABC;
   setTerminalNumber(2);
   **mIntfVoltage = Matrix::Zero(3, 1);
   **mIntfCurrent = Matrix::Zero(3, 1);

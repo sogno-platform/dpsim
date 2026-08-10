@@ -25,6 +25,7 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 
   setTerminalNumber(2);
 
+  mBaseVoltage = baseVoltage;
   **mSeriesRes = resistance;
   **mInductance = inductance;
 

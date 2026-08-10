@@ -32,7 +32,7 @@ void addAttributes(py::module_ m) {
              CPS::AttributePointer<CPS::Attribute<CPS::Real>>,
              CPS::AttributeBase>(m, "AttributeReal")
       .def("get", &CPS::Attribute<CPS::Real>::get)
-      .def("set", &CPS::Attribute<CPS::Real>::set)
+      .def("set", &CPS::Attribute<CPS::Real>::set, "value"_a)
       .def("derive_scaled",
            py::overload_cast<CPS::Real>(
                &CPS::Attribute<CPS::Real>::template deriveScaled<CPS::Real>));
@@ -43,13 +43,14 @@ void addAttributes(py::module_ m) {
   py::class_<CPS::AttributeDynamic<CPS::Real>,
              CPS::AttributePointer<CPS::AttributeDynamic<CPS::Real>>,
              CPS::Attribute<CPS::Real>>(m, "AttributeRealDyn")
-      .def("set_reference", &CPS::AttributeDynamic<CPS::Real>::setReference);
+      .def("set_reference", &CPS::AttributeDynamic<CPS::Real>::setReference,
+           "reference"_a);
 
   py::class_<CPS::Attribute<CPS::Complex>,
              CPS::AttributePointer<CPS::Attribute<CPS::Complex>>,
              CPS::AttributeBase>(m, "AttributeComplex")
       .def("get", &CPS::Attribute<CPS::Complex>::get)
-      .def("set", &CPS::Attribute<CPS::Complex>::set)
+      .def("set", &CPS::Attribute<CPS::Complex>::set, "value"_a)
       .def("derive_real",
            py::overload_cast<>(
                &CPS::Attribute<CPS::Complex>::template deriveReal<>))
@@ -73,13 +74,14 @@ void addAttributes(py::module_ m) {
   py::class_<CPS::AttributeDynamic<CPS::Complex>,
              CPS::AttributePointer<CPS::AttributeDynamic<CPS::Complex>>,
              CPS::Attribute<CPS::Complex>>(m, "AttributeComplexDyn")
-      .def("set_reference", &CPS::AttributeDynamic<CPS::Complex>::setReference);
+      .def("set_reference", &CPS::AttributeDynamic<CPS::Complex>::setReference,
+           "reference"_a);
 
   py::class_<CPS::Attribute<CPS::Matrix>,
              CPS::AttributePointer<CPS::Attribute<CPS::Matrix>>,
              CPS::AttributeBase>(m, "AttributeMatrix")
       .def("get", &CPS::Attribute<CPS::Matrix>::get)
-      .def("set", &CPS::Attribute<CPS::Matrix>::set)
+      .def("set", &CPS::Attribute<CPS::Matrix>::set, "value"_a)
       .def("derive_coeff",
            &CPS::Attribute<CPS::Matrix>::deriveCoeff<CPS::Real>);
 
@@ -89,13 +91,14 @@ void addAttributes(py::module_ m) {
   py::class_<CPS::AttributeDynamic<CPS::Matrix>,
              CPS::AttributePointer<CPS::AttributeDynamic<CPS::Matrix>>,
              CPS::Attribute<CPS::Matrix>>(m, "AttributeMatrixDyn")
-      .def("set_reference", &CPS::AttributeDynamic<CPS::Matrix>::setReference);
+      .def("set_reference", &CPS::AttributeDynamic<CPS::Matrix>::setReference,
+           "reference"_a);
 
   py::class_<CPS::Attribute<CPS::MatrixComp>,
              CPS::AttributePointer<CPS::Attribute<CPS::MatrixComp>>,
              CPS::AttributeBase>(m, "AttributeMatrixComp")
       .def("get", &CPS::Attribute<CPS::MatrixComp>::get)
-      .def("set", &CPS::Attribute<CPS::MatrixComp>::set)
+      .def("set", &CPS::Attribute<CPS::MatrixComp>::set, "value"_a)
       .def("derive_coeff",
            &CPS::Attribute<CPS::MatrixComp>::deriveCoeff<CPS::Complex>);
 
@@ -106,13 +109,14 @@ void addAttributes(py::module_ m) {
              CPS::AttributePointer<CPS::AttributeDynamic<CPS::MatrixComp>>,
              CPS::Attribute<CPS::MatrixComp>>(m, "AttributeMatrixCompDyn")
       .def("set_reference",
-           &CPS::AttributeDynamic<CPS::MatrixComp>::setReference);
+           &CPS::AttributeDynamic<CPS::MatrixComp>::setReference,
+           "reference"_a);
 
   py::class_<CPS::Attribute<CPS::String>,
              CPS::AttributePointer<CPS::Attribute<CPS::String>>,
              CPS::AttributeBase>(m, "AttributeString")
       .def("get", &CPS::Attribute<CPS::String>::get)
-      .def("set", &CPS::Attribute<CPS::String>::set);
+      .def("set", &CPS::Attribute<CPS::String>::set, "value"_a);
 
   py::class_<CPS::AttributeStatic<CPS::String>,
              CPS::AttributePointer<CPS::AttributeStatic<CPS::String>>,
@@ -120,5 +124,6 @@ void addAttributes(py::module_ m) {
   py::class_<CPS::AttributeDynamic<CPS::String>,
              CPS::AttributePointer<CPS::AttributeDynamic<CPS::String>>,
              CPS::Attribute<CPS::String>>(m, "AttributeStringDyn")
-      .def("set_reference", &CPS::AttributeDynamic<CPS::String>::setReference);
+      .def("set_reference", &CPS::AttributeDynamic<CPS::String>::setReference,
+           "reference"_a);
 }

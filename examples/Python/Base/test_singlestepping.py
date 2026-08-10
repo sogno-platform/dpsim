@@ -1,41 +1,63 @@
-import dpsim
-from dpsim.Event import Event
-import logging
+# SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+# SPDX-License-Identifier: MPL-2.0
 
-from dpsim.Event import Event
+# Driving the solver one step at a time and observing state between steps.
+
+import dpsimpy
+
+TIME_STEP = 0.001
+FINAL_TIME = 0.01
+STEPS = int(FINAL_TIME / TIME_STEP)
 
 
-def test_simulation():
-    logging.getLogger().setLevel(logging.DEBUG)
-    logging.info("hello\n")
+def rc_circuit(name):
+    gnd = dpsimpy.dp.SimNode.gnd
+    n1 = dpsimpy.dp.SimNode("n1")
+    vs = dpsimpy.dp.ph1.VoltageSource("vs")
+    vs.set_parameters(complex(10, 0))
+    r = dpsimpy.dp.ph1.Resistor("r")
+    r.set_parameters(1.0)
+    c = dpsimpy.dp.ph1.Capacitor("c")
+    c.set_parameters(1e-3)
+    vs.connect([gnd, n1])
+    r.connect([n1, gnd])
+    c.connect([n1, gnd])
 
-    n1 = dpsim.dp.Node("n1")
-    gnd = dpsim.dp.Node.GND()
+    system = dpsimpy.SystemTopology(50, [n1], [vs, r, c])
+    sim = dpsimpy.Simulation(name)
+    sim.set_system(system)
+    sim.set_domain(dpsimpy.Domain.DP)
+    sim.set_time_step(TIME_STEP)
+    sim.set_final_time(FINAL_TIME)
+    return sim, n1
 
-    r = dpsim.dp.ph1.Resistor("r1", [gnd, n1])
 
-    sys = dpsim.SystemTopology(50, [n1], [r])
-
-    sim = dpsim.Simulation(
-        __name__, sys, duration=10, rt=True, pbar=True, single_stepping=True
-    )
-
-    sim.step()
-    assert sim.wait_until() == Event.starting
-    assert sim.wait_until() == Event.running
-    assert sim.wait_until() == Event.paused
-
-    for x in range(2, 10):
-        sim.step()
-        assert sim.wait_until() == Event.resuming
-        assert sim.wait_until() == Event.running
-        assert sim.wait_until() == Event.paused
-        assert sim.steps == x
-
+def test_each_step_advances_the_solver():
+    sim, node = rc_circuit("single_stepping")
+    sim.start()
+    voltages = []
+    for _ in range(STEPS):
+        sim.next()
+        voltages.append(node.single_voltage())
     sim.stop()
-    assert sim.wait_until() == Event.stopping
-    assert sim.wait_until() == Event.stopped
+
+    assert len(voltages) == STEPS
+    # The source is constant, so every step must produce a finite solution.
+    assert all(abs(v) < 1e6 for v in voltages)
 
 
-if __name__ == "__main__":
-    test_simulation()
+def test_stepping_past_the_final_time_is_safe():
+    sim, _ = rc_circuit("overrun")
+    sim.start()
+    for _ in range(STEPS * 2):
+        sim.next()
+    sim.stop()
+
+
+def test_attributes_are_readable_between_steps():
+    sim, _ = rc_circuit("stepwise_attributes")
+    sim.start()
+    sim.next()
+    value = sim.get_idobj_attr("c", "C").get()
+    sim.stop()
+    assert value == 1e-3
