@@ -210,8 +210,7 @@ protected:
 public:
   AttributeUpdateTask(UpdateTaskKind kind, Actor &actorFunction,
                       typename Attribute<DependencyTypes>::Ptr... dependencies)
-      : mDependencies(std::forward<typename Attribute<DependencyTypes>::Ptr>(
-            dependencies)...),
+      : mDependencies(std::move(dependencies)...),
         mActorFunction(actorFunction), mKind(kind) {}
 
   virtual void
