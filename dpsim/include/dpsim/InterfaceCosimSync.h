@@ -28,13 +28,17 @@ public:
 
   ~InterfaceCosimSync() override {
     if (mOpened)
-      close();
+      InterfaceCosimSync::close();
   }
 
   void open() override;
   void close() override;
-  void syncExports() override {}
-  void syncImports() override {}
+  void syncExports() override {
+    // one-shot start rendezvous only, the per-step data plane runs over VILLAS
+  }
+  void syncImports() override {
+    // one-shot start rendezvous only, the per-step data plane runs over VILLAS
+  }
   CPS::Task::List getTasks() override { return CPS::Task::List(); }
 
   static constexpr uint64_t DEFAULT_TIMEOUT_MS = 60000;
@@ -64,11 +68,12 @@ private:
   static constexpr uint32_t GO = 0x44474F21;
 
   void openListener();
+  int connectOnce(uint64_t deadlineMs, bool forever);
   int connectToLeader(uint64_t timeoutMs);
-  int acceptFollower(uint64_t deadlineMs, bool forever);
+  int acceptFollower(uint64_t deadlineMs, bool forever) const;
   static bool armRecvTimeout(int fd, uint64_t deadlineMs, bool forever);
-  static bool sendAll(int fd, const void *buf, size_t len);
-  static bool recvAll(int fd, void *buf, size_t len);
+  static bool sendAll(int fd, const uint8_t *buf, size_t len);
+  static bool recvAll(int fd, uint8_t *buf, size_t len);
 };
 
 } // namespace DPsim

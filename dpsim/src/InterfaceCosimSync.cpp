@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
 // SPDX-License-Identifier: MPL-2.0
 
+#include <array>
 #include <cerrno>
 #include <cstdint>
 #include <cstring>
@@ -67,6 +68,46 @@ bool remainingTv(uint64_t deadlineMs, timeval &tv) {
   tv.tv_usec = static_cast<suseconds_t>((rem % 1000) * 1000);
   return true;
 }
+
+int connectOne(const addrinfo *ai, uint64_t deadlineMs, bool forever) {
+  int fd = ::socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
+  if (fd < 0)
+    return -1;
+  setNonBlocking(fd, true);
+
+  if (::connect(fd, ai->ai_addr, ai->ai_addrlen) == 0) {
+    setNonBlocking(fd, false);
+    return fd;
+  }
+  if (errno != EINPROGRESS) {
+    ::close(fd);
+    return -1;
+  }
+
+  timeval tv{};
+  timeval *ptv = nullptr;
+  if (!forever) {
+    if (!remainingTv(deadlineMs, tv)) {
+      ::close(fd);
+      return -1;
+    }
+    ptv = &tv;
+  }
+
+  fd_set wfds;
+  FD_ZERO(&wfds);
+  FD_SET(fd, &wfds);
+  int soErr = 0;
+  socklen_t len = sizeof(soErr);
+  if (::select(fd + 1, nullptr, &wfds, nullptr, ptv) > 0 &&
+      ::getsockopt(fd, SOL_SOCKET, SO_ERROR, &soErr, &len) == 0 && soErr == 0) {
+    setNonBlocking(fd, false);
+    return fd;
+  }
+
+  ::close(fd);
+  return -1;
+}
 } // namespace
 
 void InterfaceCosimSync::open() {
@@ -123,79 +164,55 @@ void InterfaceCosimSync::openListener() {
   mListenFd = fd;
 }
 
-int InterfaceCosimSync::connectToLeader(uint64_t timeoutMs) {
-  bool forever = (timeoutMs == 0);
-  uint64_t deadline = forever ? 0 : nowMs() + timeoutMs;
-
+int InterfaceCosimSync::connectOnce(uint64_t deadlineMs, bool forever) {
   addrinfo hints{};
   hints.ai_family = AF_INET;
   hints.ai_socktype = SOCK_STREAM;
-  std::string portStr = std::to_string(mPort);
+
+  addrinfo *res = nullptr;
+  const std::string portStr = std::to_string(mPort);
+  if (int gai = ::getaddrinfo(mHost.c_str(), portStr.c_str(), &hints, &res);
+      gai != 0) {
+    SPDLOG_LOGGER_WARN(mLog, "CosimSync: getaddrinfo({}) failed: {}", mHost,
+                       ::gai_strerror(gai));
+    return -1;
+  }
+
+  int fd = -1;
+  for (const addrinfo *ai = res; ai != nullptr; ai = ai->ai_next) {
+    fd = connectOne(ai, deadlineMs, forever);
+    if (fd >= 0)
+      break;
+  }
+
+  ::freeaddrinfo(res);
+  return fd;
+}
+
+int InterfaceCosimSync::connectToLeader(uint64_t timeoutMs) {
+  const bool forever = (timeoutMs == 0);
+  const uint64_t deadline = forever ? 0 : nowMs() + timeoutMs;
 
   for (;;) {
-    addrinfo *res = nullptr;
-    int gai = ::getaddrinfo(mHost.c_str(), portStr.c_str(), &hints, &res);
-    if (gai == 0) {
-      for (addrinfo *ai = res; ai != nullptr; ai = ai->ai_next) {
-        int fd = ::socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
-        if (fd < 0)
-          continue;
-        setNonBlocking(fd, true);
+    int fd = connectOnce(deadline, forever);
+    if (fd >= 0)
+      return fd;
 
-        int rc = ::connect(fd, ai->ai_addr, ai->ai_addrlen);
-        if (rc == 0) {
-          setNonBlocking(fd, false);
-          ::freeaddrinfo(res);
-          return fd;
-        }
-        if (errno == EINPROGRESS) {
-          timeval tv{};
-          timeval *ptv = nullptr;
-          if (!forever) {
-            if (!remainingTv(deadline, tv)) {
-              ::close(fd);
-              ::freeaddrinfo(res);
-              return -1;
-            }
-            ptv = &tv;
-          }
-          fd_set wfds;
-          FD_ZERO(&wfds);
-          FD_SET(fd, &wfds);
-          int r = ::select(fd + 1, nullptr, &wfds, nullptr, ptv);
-          if (r > 0) {
-            int soErr = 0;
-            socklen_t len = sizeof(soErr);
-            if (::getsockopt(fd, SOL_SOCKET, SO_ERROR, &soErr, &len) == 0 &&
-                soErr == 0) {
-              setNonBlocking(fd, false);
-              ::freeaddrinfo(res);
-              return fd;
-            }
-          }
-        }
-        ::close(fd);
-      }
-      ::freeaddrinfo(res);
-    } else {
-      SPDLOG_LOGGER_WARN(mLog, "CosimSync: getaddrinfo({}) failed: {}", mHost,
-                         ::gai_strerror(gai));
-    }
-
-    if (!forever) {
-      uint64_t now = nowMs();
-      if (now >= deadline)
-        return -1;
-      uint64_t rem = deadline - now;
-      std::this_thread::sleep_for(
-          std::chrono::milliseconds(rem < 50 ? rem : 50));
-    } else {
+    if (forever) {
       std::this_thread::sleep_for(std::chrono::milliseconds(50));
+      continue;
     }
+
+    uint64_t now = nowMs();
+    if (now >= deadline)
+      return -1;
+    uint64_t rem = deadline - now;
+    std::this_thread::sleep_for(std::chrono::milliseconds(rem < 50 ? rem : 50));
   }
 }
 
-int InterfaceCosimSync::acceptFollower(uint64_t deadlineMs, bool forever) {
+int InterfaceCosimSync::acceptFollower(uint64_t deadlineMs,
+                                       bool forever) const {
   for (;;) {
     timeval tv{};
     timeval *ptv = nullptr;
@@ -218,8 +235,7 @@ int InterfaceCosimSync::acceptFollower(uint64_t deadlineMs, bool forever) {
     if (r == 0)
       return -1;
 
-    int cfd = ::accept(mListenFd, nullptr, nullptr);
-    if (cfd >= 0)
+    if (int cfd = ::accept(mListenFd, nullptr, nullptr); cfd >= 0)
       return cfd;
     if (errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK ||
         errno == ECONNABORTED)
@@ -241,11 +257,10 @@ bool InterfaceCosimSync::armRecvTimeout(int fd, uint64_t deadlineMs,
   return true;
 }
 
-bool InterfaceCosimSync::sendAll(int fd, const void *buf, size_t len) {
-  const uint8_t *p = static_cast<const uint8_t *>(buf);
+bool InterfaceCosimSync::sendAll(int fd, const uint8_t *buf, size_t len) {
   size_t sent = 0;
   while (sent < len) {
-    ssize_t n = ::send(fd, p + sent, len - sent, MSG_NOSIGNAL);
+    ssize_t n = ::send(fd, buf + sent, len - sent, MSG_NOSIGNAL);
     if (n < 0) {
       if (errno == EINTR)
         continue;
@@ -256,11 +271,10 @@ bool InterfaceCosimSync::sendAll(int fd, const void *buf, size_t len) {
   return true;
 }
 
-bool InterfaceCosimSync::recvAll(int fd, void *buf, size_t len) {
-  uint8_t *p = static_cast<uint8_t *>(buf);
+bool InterfaceCosimSync::recvAll(int fd, uint8_t *buf, size_t len) {
   size_t got = 0;
   while (got < len) {
-    ssize_t n = ::recv(fd, p + got, len - got, 0);
+    ssize_t n = ::recv(fd, buf + got, len - got, 0);
     if (n == 0)
       return false;
     if (n < 0) {
@@ -283,8 +297,8 @@ bool InterfaceCosimSync::publishConfig(
   if (expectedFollowers == 0)
     throw SystemError("CosimSync: at least one follower is required");
 
-  auto delta = startAt - std::chrono::system_clock::now();
-  if (delta > std::chrono::hours(1) || delta < -std::chrono::hours(1)) {
+  if (auto delta = startAt - std::chrono::system_clock::now();
+      delta > std::chrono::hours(1) || delta < -std::chrono::hours(1)) {
     double secs =
         std::chrono::duration_cast<std::chrono::duration<double>>(delta)
             .count();
@@ -293,12 +307,12 @@ bool InterfaceCosimSync::publishConfig(
   }
 
   static_assert(WIRE_SIZE == 32, "wire layout is 4+4+8+8+8 bytes");
-  uint8_t wire[WIRE_SIZE];
-  packU32(wire + 0, MAGIC);
-  packU32(wire + 4, VERSION);
-  packU64(wire + 8, toEpochNs(startAt));
-  packU64(wire + 16, timeStepNs);
-  packU64(wire + 24, durationNs);
+  std::array<uint8_t, WIRE_SIZE> wire{};
+  packU32(wire.data() + 0, MAGIC);
+  packU32(wire.data() + 4, VERSION);
+  packU64(wire.data() + 8, toEpochNs(startAt));
+  packU64(wire.data() + 16, timeStepNs);
+  packU64(wire.data() + 24, durationNs);
 
   bool forever = (timeoutMs == 0);
   uint64_t deadline = forever ? 0 : nowMs() + timeoutMs;
@@ -307,7 +321,7 @@ bool InterfaceCosimSync::publishConfig(
   followerFds.reserve(expectedFollowers);
   bool ok = true;
 
-  for (uint32_t i = 0; i < expectedFollowers && ok; i++) {
+  for (uint32_t i = 0; i < expectedFollowers; i++) {
     int cfd = acceptFollower(deadline, forever);
     if (cfd < 0) {
       SPDLOG_LOGGER_WARN(mLog, "CosimSync: follower {} did not connect.", i);
@@ -319,20 +333,22 @@ bool InterfaceCosimSync::publishConfig(
     int one = 1;
     ::setsockopt(cfd, IPPROTO_TCP, TCP_NODELAY, &one, sizeof(one));
 
-    uint8_t ack[4];
+    std::array<uint8_t, 4> ack{};
     ok = armRecvTimeout(cfd, deadline, forever) &&
-         sendAll(cfd, wire, WIRE_SIZE) && recvAll(cfd, ack, sizeof(ack)) &&
-         unpackU32(ack) == ACK;
-    if (!ok)
+         sendAll(cfd, wire.data(), wire.size()) &&
+         recvAll(cfd, ack.data(), ack.size()) && unpackU32(ack.data()) == ACK;
+    if (!ok) {
       SPDLOG_LOGGER_WARN(
           mLog, "CosimSync: follower {} did not acknowledge the config.", i);
+      break;
+    }
   }
 
   if (ok) {
-    uint8_t go[4];
-    packU32(go, GO);
+    std::array<uint8_t, 4> go{};
+    packU32(go.data(), GO);
     for (size_t i = 0; i < followerFds.size(); i++) {
-      if (!sendAll(followerFds[i], go, sizeof(go))) {
+      if (!sendAll(followerFds[i], go.data(), go.size())) {
         SPDLOG_LOGGER_WARN(mLog, "CosimSync: failed to release follower {}.",
                            i);
         ok = false;
@@ -372,25 +388,25 @@ bool InterfaceCosimSync::waitForConfig(ConfigNs &outCfg, uint64_t timeoutMs) {
     return false;
   }
 
-  uint8_t wire[WIRE_SIZE];
-  if (!recvAll(fd, wire, WIRE_SIZE)) {
+  std::array<uint8_t, WIRE_SIZE> wire{};
+  if (!recvAll(fd, wire.data(), wire.size())) {
     ::close(fd);
     SPDLOG_LOGGER_ERROR(mLog, "CosimSync: incomplete config from leader.");
     return false;
   }
 
-  uint32_t magic = unpackU32(wire + 0);
-  uint32_t version = unpackU32(wire + 4);
-  if (magic != MAGIC || version != VERSION) {
+  if (uint32_t magic = unpackU32(wire.data() + 0),
+      version = unpackU32(wire.data() + 4);
+      magic != MAGIC || version != VERSION) {
     ::close(fd);
     SPDLOG_LOGGER_ERROR(mLog,
                         "CosimSync: invalid header (magic=0x{:x}, version={}).",
                         magic, version);
     return false;
   }
-  outCfg.start_time_ns = unpackU64(wire + 8);
-  outCfg.time_step_ns = unpackU64(wire + 16);
-  outCfg.duration_ns = unpackU64(wire + 24);
+  outCfg.start_time_ns = unpackU64(wire.data() + 8);
+  outCfg.time_step_ns = unpackU64(wire.data() + 16);
+  outCfg.duration_ns = unpackU64(wire.data() + 24);
 
   if (outCfg.time_step_ns == 0 ||
       outCfg.start_time_ns > static_cast<uint64_t>(INT64_MAX)) {
@@ -402,26 +418,27 @@ bool InterfaceCosimSync::waitForConfig(ConfigNs &outCfg, uint64_t timeoutMs) {
     return false;
   }
 
-  uint8_t ack[4];
-  packU32(ack, ACK);
-  if (!sendAll(fd, ack, sizeof(ack))) {
+  std::array<uint8_t, 4> ack{};
+  packU32(ack.data(), ACK);
+  if (!sendAll(fd, ack.data(), ack.size())) {
     ::close(fd);
     SPDLOG_LOGGER_ERROR(mLog, "CosimSync: failed to acknowledge config.");
     return false;
   }
 
-  uint8_t go[4];
+  std::array<uint8_t, 4> go{};
   bool released = armRecvTimeout(fd, deadline, forever) &&
-                  recvAll(fd, go, sizeof(go)) && unpackU32(go) == GO;
+                  recvAll(fd, go.data(), go.size()) &&
+                  unpackU32(go.data()) == GO;
   ::close(fd);
   if (!released) {
     SPDLOG_LOGGER_ERROR(mLog, "CosimSync: leader did not release the group.");
     return false;
   }
 
-  auto delta =
-      toTimePoint(outCfg.start_time_ns) - std::chrono::system_clock::now();
-  if (delta > std::chrono::hours(1) || delta < -std::chrono::hours(1)) {
+  if (auto delta =
+          toTimePoint(outCfg.start_time_ns) - std::chrono::system_clock::now();
+      delta > std::chrono::hours(1) || delta < -std::chrono::hours(1)) {
     double secs =
         std::chrono::duration_cast<std::chrono::duration<double>>(delta)
             .count();

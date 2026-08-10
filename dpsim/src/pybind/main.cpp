@@ -321,7 +321,7 @@ PYBIND11_MODULE(dpsimpy, m) {
                        uint16_t port, const std::string &role) {
              if (role != "leader" && role != "follower")
                throw std::invalid_argument(
-                   "role must be \"leader\" or \"follower\", got \"" + role +
+                   R"(role must be "leader" or "follower", got ")" + role +
                    "\"");
              auto r = (role == "leader")
                           ? DPsim::InterfaceCosimSync::Role::Leader
