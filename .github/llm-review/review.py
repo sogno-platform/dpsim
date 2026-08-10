@@ -53,6 +53,7 @@ SEV_RANK = {"critical": 0, "high": 1, "medium": 2, "low": 3}
 # a bad run cannot carpet a PR.
 SUGGESTION_MIN_CONF = 80
 MAX_INLINE = 8
+MAX_REFUTED_SHOWN = 5
 
 # Finder calls run serially by default: the gateway caps concurrent requests per
 # key (429 too_many_concurrent_requests), so parallelism isn't reliably available.
@@ -986,11 +987,10 @@ def render_body(f):
 
 # Severity buckets for the summary body, in display order. Critical/high always
 # land in the top bucket regardless of confidence; among the rest, a low-
-# confidence finding is a tentative "worth a glance" rather than an action item.
+# confidence finding is tentative and is not posted at all, only logged.
 SECTIONS = [
     ("critical", "\U0001f534 Critical & high"),
     ("suggestion", "\U0001f7e1 Suggestions"),
-    ("optional", "\U0001f535 Optional / low-confidence"),
 ]
 
 
@@ -1068,9 +1068,14 @@ def methodology_block(stats, claim=None):
     refuted = stats.get("refuted_list") or []
     if refuted:
         out += ["", "Refuted by verification:"]
-        for r in refuted:
+        for r in refuted[:MAX_REFUTED_SHOWN]:
             loc = f" ({r['file']})" if r.get("file") else ""
             out.append(f"- {r.get('title', '')}{loc}: {r.get('note', '')}")
+        if len(refuted) > MAX_REFUTED_SHOWN:
+            out.append(
+                f"- ... and {len(refuted) - MAX_REFUTED_SHOWN} more, in the "
+                "workflow log."
+            )
     out.append("</details>")
     return out
 
@@ -1083,7 +1088,16 @@ def build_review(
     Body: a one-line TL;DR, a claim-vs-code note, a severity tally, findings
     grouped into buckets, and a collapsible methodology note. Findings that
     anchor to a diff line are also emitted as inline comments with the detail.
+    Tentative findings are counted, not printed: they go to the workflow log.
     """
+    tentative = [f for f in findings if bucket(f) == "optional"]
+    findings = [f for f in findings if bucket(f) != "optional"]
+    for f in tentative:
+        print(
+            f"tentative, not posted: {f.get('file')}:{f.get('line')} "
+            f"{f.get('title', '')} [{confidence_display(f) or '?'}]",
+            file=sys.stderr,
+        )
     findings.sort(
         key=lambda f: (SEV_RANK.get(f.get("severity"), 9), confidence_sort_key(f))
     )
@@ -1148,19 +1162,15 @@ def build_review(
             items = [f for f in findings if bucket(f) == key]
             if not items:
                 continue
-            # Collapse the tentative bucket into a compact, foldable block so it
-            # does not crowd the actionable findings.
-            if key == "optional":
-                lines += [
-                    "",
-                    f"<details><summary>{header} ({len(items)})</summary>",
-                    "",
-                ]
-                lines += [summary_line(f, f["_anchored"], compact=True) for f in items]
-                lines += ["", "</details>"]
-            else:
-                lines += ["", f"#### {header}"]
-                lines += [summary_line(f, f["_anchored"]) for f in items]
+            lines += ["", f"#### {header}"]
+            lines += [summary_line(f, f["_anchored"]) for f in items]
+
+    if tentative:
+        lines += [
+            "",
+            f"<sub>Not shown: {len(tentative)} tentative. All are in the "
+            "workflow log.</sub>",
+        ]
 
     lines += methodology_block(stats, claim)
     finders = [os.environ.get("LLM_MODEL", "LLM")]
@@ -1304,6 +1314,11 @@ def main():
         vstats = merge_vstats(vstats, vstats2)
 
     overview, findings = synthesize(verified, pr_ctx, model=verify_model)
+    for r in (vstats or {}).get("refuted_list") or []:
+        print(
+            f"refuted: {r.get('file')} {r.get('title', '')}: {r.get('note', '')}",
+            file=sys.stderr,
+        )
     payload = build_review(
         findings, head_sha, valid_files, overview, vstats, claim, diff=diff
     )
@@ -1315,6 +1330,13 @@ def main():
         for c in payload["comments"]:
             print(f"\n--- {c['path']}:{c['line']} ---")
             print(c["body"])
+        return
+
+    if not [f for f in findings if bucket(f) != "optional"]:
+        print(
+            "nothing worth posting; leaving the pull request alone",
+            file=sys.stderr,
+        )
         return
 
     gh_post_review(pr_number, payload)

@@ -40,6 +40,22 @@ The prompts encode DPsim's documented conventions (see
 [Guidelines]({{< ref "/docs/Contributing" >}})) and the recurring points raised in
 past reviews, so the feedback stays specific to this project rather than generic.
 
+## What gets posted
+
+Not every finding the passes raise reaches the pull request.
+
+**Tentative findings are not posted.** A finding that verification could not
+confirm against the source, or that carries a confidence below 50 %, is written
+to the workflow log only. Over the review history of a merged pull request this
+was the large majority of everything raised, and effectively none of it was
+actionable; posting it buried the findings that were.
+
+**A run with nothing to say posts nothing at all.** The runner reviews again on
+every push, and a run whose findings are all tentative leaves the pull request
+untouched rather than adding an empty review. The workflow log records what it
+found either way, so a silent run is a run that found nothing worth your time,
+not a run that failed.
+
 ## Configuration
 
 The workflow requires one repository secret:
