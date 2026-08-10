@@ -32,6 +32,41 @@ jobs:
           python-version: '3.x'
       - uses: pre-commit/action@v3.0.1
 
+  conventional-commits:
+    name: Commit messages are conventional commits
+    if: github.event_name == 'pull_request' || github.event_name == 'pull_request_target'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.ref }}
+          allow-unsafe-pr-checkout: true
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+
+      - name: Install commitlint
+        run: npm install --no-save @commitlint/cli @commitlint/config-conventional@19.8.1
+
+      - name: Fail if a commit in this pull request is not a conventional commit
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if ! npx commitlint --from "$BASE_SHA" --to "$HEAD_SHA" --verbose; then
+            echo ""
+            echo "Rewrite the offending commit messages, then force-push:"
+            echo ""
+            echo "  git rebase -i $BASE_SHA"
+            echo "  git push --force-with-lease"
+            echo ""
+            echo "Or install the pre-commit hooks (see CONTRIBUTING.md) to catch this locally."
+            exit 1
+          fi
+
   clean-notebook-outputs:
     name: Notebooks have no saved outputs
     if: github.event_name == 'pull_request' || github.event_name == 'pull_request_target'
