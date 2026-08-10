@@ -50,11 +50,12 @@ to the workflow log only. Over the review history of a merged pull request this
 was the large majority of everything raised, and effectively none of it was
 actionable; posting it buried the findings that were.
 
-**A run with nothing to say posts nothing at all.** The runner reviews again on
-every push, and a run whose findings are all tentative leaves the pull request
-untouched rather than adding an empty review. The workflow log records what it
-found either way, so a silent run is a run that found nothing worth your time,
-not a run that failed.
+**A run with nothing to say does not post a second review.** The runner reviews
+again on every push. When a run has nothing left after the rule above, it edits
+its previous review instead, appending a line recording that the head commit was
+re-checked and nothing new was found. Editing a review body sends no
+notification, so those runs are visible on the pull request but silent in your
+inbox; only a run with something to say posts, and only that one mails you.
 
 ## Configuration
 
