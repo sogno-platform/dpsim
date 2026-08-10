@@ -308,7 +308,7 @@ CPS::Real PFSolver::componentBaseVoltage(CPS::TopologicalPowerComp::Ptr comp,
           std::dynamic_pointer_cast<CPS::SP::Ph1::AvVoltageSourceInverterDQ>(
               comp))
     return vsi->getBaseVoltage();
-  if (auto rxline = std::dynamic_pointer_cast<CPS::SP::Ph1::RXLine>(comp))
+  if (auto rxline = std::dynamic_pointer_cast<CPS::SP::Ph1::RxLine>(comp))
     return rxline->getBaseVoltage();
   if (auto line = std::dynamic_pointer_cast<CPS::SP::Ph1::PiLine>(comp))
     return line->getBaseVoltage();
@@ -359,7 +359,7 @@ void PFSolver::propagateAndVerifyBaseVoltage() {
       uniteZones(line->node(0)->matrixNodeIndex(),
                  line->node(1)->matrixNodeIndex());
     else if (auto rxline =
-                 std::dynamic_pointer_cast<CPS::SP::Ph1::RXLine>(comp))
+                 std::dynamic_pointer_cast<CPS::SP::Ph1::RxLine>(comp))
       uniteZones(rxline->node(0)->matrixNodeIndex(),
                  rxline->node(1)->matrixNodeIndex());
   }
