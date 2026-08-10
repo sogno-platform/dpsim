@@ -311,6 +311,20 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("run",
            static_cast<void (DPsim::RealTimeSimulation::*)(CPS::Int startIn)>(
                &DPsim::RealTimeSimulation::run))
+      .def(
+          "run_at",
+          [](DPsim::RealTimeSimulation &self, uint64_t start_time_ns) {
+            if (start_time_ns > static_cast<uint64_t>(INT64_MAX))
+              throw std::invalid_argument(
+                  "start_time_ns is too large to represent as a time point");
+            auto startAt = std::chrono::time_point_cast<
+                DPsim::Timer::StartClock::duration>(
+                DPsim::Timer::StartTimePoint(
+                    std::chrono::nanoseconds(start_time_ns)));
+            py::gil_scoped_release unlock;
+            self.run(startAt);
+          },
+          "start_time_ns"_a)
       .def("set_solver", &DPsim::RealTimeSimulation::setSolverType)
       .def("set_domain", &DPsim::RealTimeSimulation::setDomain);
 
