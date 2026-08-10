@@ -55,6 +55,9 @@ SUGGESTION_MIN_CONF = 80
 MAX_INLINE = 8
 MAX_REFUTED_SHOWN = 5
 
+REVIEW_HEADING = "### DPsim LLM review"
+RECHECK_RE = re.compile(r"^<sub>Re-checked at .*$\n?", re.M)
+
 # Finder calls run serially by default: the gateway caps concurrent requests per
 # key (429 too_many_concurrent_requests), so parallelism isn't reliably available.
 # Raise LLM_FINDER_CONCURRENCY if your gateway allows it; 429s back off and retry.
@@ -1198,6 +1201,51 @@ def build_review(
     return payload
 
 
+def latest_own_review(pr_number):
+    """The runner's most recent review on this PR, as (id, body), so a run with
+    nothing new can refresh it instead of posting again. (None, "") if there is
+    none, or if it cannot be read."""
+    repo = os.environ.get("GITHUB_REPOSITORY")
+    token = os.environ.get("GITHUB_TOKEN")
+    if not (repo and token):
+        return None, ""
+    url = f"https://api.github.com/repos/{repo}/pulls/{pr_number}/reviews?per_page=100"
+    try:
+        reviews = gh_get_json(url, token)
+    except (urllib.error.URLError, ValueError) as e:
+        print(f"could not read earlier reviews: {e}", file=sys.stderr)
+        return None, ""
+    found = (None, "")
+    for r in reviews if isinstance(reviews, list) else []:
+        body = r.get("body") or ""
+        if REVIEW_HEADING in body:
+            found = (r.get("id"), body)
+    return found
+
+
+def refreshed_body(body, head_sha):
+    note = f"<sub>Re-checked at {head_sha[:7]}: nothing new.</sub>"
+    return f"{RECHECK_RE.sub('', body).rstrip()}\n\n{note}"
+
+
+def gh_update_review(pr_number, review_id, body):
+    repo = env("GITHUB_REPOSITORY", required=True)
+    token = env("GITHUB_TOKEN", required=True)
+    url = f"https://api.github.com/repos/{repo}/pulls/{pr_number}/reviews/{review_id}"
+    req = urllib.request.Request(
+        url,
+        data=json.dumps({"body": body}).encode(),
+        method="PUT",
+        headers={
+            "Authorization": "Bearer " + token,
+            "Accept": "application/vnd.github+json",
+            "Content-Type": "application/json",
+        },
+    )
+    with urllib.request.urlopen(req, timeout=60) as resp:
+        return resp.status
+
+
 def gh_post_review(pr_number, payload):
     repo = env("GITHUB_REPOSITORY", required=True)
     token = env("GITHUB_TOKEN", required=True)
@@ -1333,11 +1381,24 @@ def main():
         return
 
     if not [f for f in findings if bucket(f) != "optional"]:
-        print(
-            "nothing worth posting; leaving the pull request alone",
-            file=sys.stderr,
-        )
-        return
+        review_id, body = latest_own_review(pr_number)
+        if review_id:
+            try:
+                status = gh_update_review(
+                    pr_number, review_id, refreshed_body(body, head_sha)
+                )
+                print(
+                    f"nothing new; refreshed review {review_id} in place, "
+                    f"HTTP {status}",
+                    file=sys.stderr,
+                )
+                return
+            except urllib.error.HTTPError as e:
+                print(
+                    f"could not refresh review {review_id}, HTTP {e.code}: "
+                    f"{e.read().decode(errors='replace')[:200]}",
+                    file=sys.stderr,
+                )
 
     gh_post_review(pr_number, payload)
 
