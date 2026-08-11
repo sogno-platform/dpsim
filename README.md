@@ -1,8 +1,13 @@
+<!--
+SPDX-FileCopyrightText: 2016-2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+SPDX-License-Identifier: MPL-2.0
+-->
+
 # <img src="docs/images/dpsim.png" width=40 /> DPsim
 
 [![CI](https://github.com/sogno-platform/dpsim/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/sogno-platform/dpsim/actions/workflows/ci.yaml)
 
-[![License: MPL 2.0](https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
+[![License: MPL 2.0 AND Apache 2.0](https://img.shields.io/badge/License-MPL%202.0%20AND%20Apache%202.0-brightgreen.svg)](LICENSES/)
 [![codecov](https://codecov.io/gh/sogno-platform/dpsim/graph/badge.svg?token=FLUOQ8U7MH)](https://codecov.io/gh/sogno-platform/dpsim)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/4887/badge)](https://www.bestpractices.dev/projects/4887)
 
@@ -38,7 +43,7 @@ The [documentation](https://sogno.energy/dpsim/) has build / installation instru
 
 ## License
 
-The project is released under the terms of the [MPL 2.0](https://mozilla.org/MPL/2.0/).
+The project is released under the terms of the [MPL 2.0](https://mozilla.org/MPL/2.0/), except for a number of files contributed under the [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0) license, which carry that identifier in their header. Every file states its own license following the [REUSE specification](https://reuse.software/); the license texts are in [LICENSES/](LICENSES/).
 
 For email inquiries regarding other licensing options, please contact the Institute for Automation of Complex Power Systems (ACS), which coordinates DPsim development: [post_acs@eonerc.rwth-aachen.de](mailto:post_acs@eonerc.rwth-aachen.de).
 
