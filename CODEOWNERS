@@ -9,15 +9,12 @@
 # modifies the following files, only the following members
 # and not the global owner(s) will be requested for a review.
 
-/.clang-format @stv0g
-/.devcontainer @stv0g
-/.dockerignore @stv0g
-/.editorconfig @stv0g
-/.git-blame-ignore-revs @stv0g
-/.github @leonardocarreras @stv0g
-/.gitignore @stv0g
-/cmake @stv0g
+/.github @leonardocarreras
+/.github/workflows/build-nix.yaml @stv0g
+/.github/workflows/run_villas_example.yaml @stv0g
+/cmake/FetchVILLASnode.cmake @stv0g
 /cmake/FindMAGMA.cmake @n-eiling
+/cmake/FindVILLASnode.cmake @stv0g
 /configs/shmem_cosim/ @stv0g
 /dpsim-models/include/dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h @martinmoraga
 /dpsim-models/include/dpsim-models/CIM/Reader.h @gnakti
@@ -119,7 +116,6 @@
 /dpsim/src/MNASolverPlugin.cpp @n-eiling
 /dpsim/src/PFSolver.cpp @gnakti
 /dpsim/src/PFSolverPowerPolar.cpp @gnakti
-/dpsim/src/pybind @stv0g
 /dpsim/src/SolverPlugins @n-eiling
 /dpsim/src/Utils.h @n-eiling
 /examples/Notebooks/Circuits @gnakti
@@ -127,13 +123,9 @@
 /examples/Notebooks/Grids @gnakti
 /examples/villas @stv0g @pipeacosta
 /examples/villas-deprecated @stv0g
-/gitlab-ci.yml @stv0g
-/packaging/Docker @stv0g
+/flake.lock @stv0g
+/flake.nix @stv0g
 /packaging/Docker/Dockerfile.dev-rocky @n-eiling
-/pyproject.toml @stv0g
-/pytest.ini @stv0g
-/python @gnakti @stv0g
+/packaging/Nix @stv0g
+/python @gnakti
 /requirements-manylinux.txt @dinkelbachjan
-/requirements.txt @stv0g
-/setup.cfg @stv0g
-/setup.py @stv0g
