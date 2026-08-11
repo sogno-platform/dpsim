@@ -106,8 +106,8 @@ succeeds and simply gives you stale behaviour. Either rebuild and rely on `PYTHO
 or reinstall the package after every C++ change.
 
 To summarise the three ways to get DPsim, in increasing order of involvement: `pip install dpsim`
-for a released Linux wheel, a native build plus `PYTHONPATH` for development, and `make install`
-to place a build system wide.
+for a released Linux or Windows wheel, a native build plus `PYTHONPATH` for development, and
+`make install` to place a build system wide.
 
 If you develop inside a conda environment, the equivalent is to register the same two
 directories from within the active environment. This needs `conda-build` installed:
@@ -234,8 +234,13 @@ libcimpp, see [issue #609](https://github.com/sogno-platform/dpsim/issues/609). 
 
 ## Python package
 
-Wheels are produced by cibuildwheel in the `publish_to_pypi` workflow, currently for
-manylinux x86_64 and CPython 3.9 through 3.13. To build a source distribution locally:
+Wheels are produced by cibuildwheel in the `packaging-python` workflow, currently for
+manylinux x86_64 and Windows x86-64, CPython 3.10 through 3.14. The Windows wheel is the
+reduced one described in [install]({{< ref "/docs/User Guide/install.md" >}}), which also
+carries the full matrix. The set of versions lives in the `tool.cibuildwheel` sections of
+`pyproject.toml` and in the `python` matrix of `.github/workflows/packaging-python.yaml`, and
+both have to be changed together.
+To build a source distribution locally:
 
 ```shell
 python3 -m build --sdist

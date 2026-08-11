@@ -44,15 +44,48 @@ pip install dpsim
 
 {{% alert title="Published wheels cover Linux and Windows" color="info" %}}
 Three limitations are worth knowing before you start.
-Wheels are published for Linux and Windows on x86-64, for CPython 3.9 through 3.13, so on macOS
-you have to build from source for now.
-The Windows wheel is built without VILLASnode, real-time support and Sundials, so it has no
-`dpsimpyvillas` module, no `RealTimeSimulation` and `RealTimeDataLogger`, and no
-`SynchronGeneratorDQODE` in `dpsimpy.dp.ph3` and `dpsimpy.emt.ph3`; the solvers, the models and
-the CIM/CGMES reader are all available.
+Wheels are published for Linux and Windows on x86-64 only, so on macOS you have to build from
+source for now.
+The Windows wheel is a reduced build and does not carry every feature; see
+[supported versions](#supported-versions) below.
 The package also contains only the simulation core; the example notebooks additionally need
 plotting and data handling packages, which are listed in the import section of each notebook.
 {{% /alert %}}
+
+## Supported versions
+
+DPsim needs CPython 3.10 or newer, both for the wheels and for a source build. One wheel is
+published per platform and CPython version:
+
+| Platform | Architecture | CPython | Modules in the wheel |
+| --- | --- | --- | --- |
+| Linux, `manylinux_2_28` | x86-64 | 3.10, 3.11, 3.12, 3.13, 3.14 | `dpsim`, `dpsimpy`, `dpsimpyvillas` |
+| Windows | x86-64 | 3.10, 3.11, 3.12, 3.13, 3.14 | `dpsim`, `dpsimpy` |
+| macOS | any | none | build from source |
+
+Free-threaded interpreters (`cp3XXt`) and PyPy are not built, and neither are 32-bit or Arm
+wheels. Older DPsim releases additionally ship CPython 3.9 wheels.
+
+The two wheels are not equivalent. The Windows one is built without VILLASnode, real-time
+support and Sundials, because those do not build there, so co-simulation, real-time execution
+and the ODE-based generator are missing from it:
+
+| Feature | Linux wheel | Windows wheel |
+| --- | --- | --- |
+| MNA, power flow and SSN solvers | yes | yes |
+| CIM/CGMES reader | yes | yes |
+| Component models | all | all but `SynchronGeneratorDQODE` in `dpsimpy.dp.ph3` and `dpsimpy.emt.ph3` |
+| `dpsimpyvillas`, VILLASnode co-simulation | yes | no |
+| `RealTimeSimulation`, `RealTimeDataLogger` | yes | no |
+| MNA solver plugins | yes | no |
+
+Do not build from source to close that gap; on Windows there are two easier routes to the full
+package. Either run the Linux wheel inside
+[WSL2](https://learn.microsoft.com/windows/wsl/install), where a plain `pip install dpsim` gives
+you everything, or use the `sogno/dpsim` container described below, which ships the same
+complete build.
+
+The wheel pulls in NumPy 2.0 or newer, pandas 2.0 or newer and SciPy 1.10 or newer.
 
 If you prefer conda, the equivalent is:
 
