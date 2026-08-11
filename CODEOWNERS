@@ -98,7 +98,7 @@
 /dpsim/include/dpsim/MNASolverPlugin.h @n-eiling
 /dpsim/include/dpsim/PFSolver.h @gnakti
 /dpsim/include/dpsim/PFSolverPowerPolar.h @gnakti
-/dpsim/include/Utils.h @n-eiling
+/dpsim/include/dpsim/Utils.h @n-eiling @georgii-tishenin @leonardocarreras
 /dpsim/src/MNAStateSpaceContributor.cpp @georgii-tishenin
 /dpsim/src/MNAStateSpaceExtractor.cpp @georgii-tishenin
 /dpsim/src/StateSpaceModalAnalysis.cpp @georgii-tishenin
@@ -109,7 +109,7 @@
 /dpsim/src/PFSolver.cpp @gnakti
 /dpsim/src/PFSolverPowerPolar.cpp @gnakti
 /dpsim/src/SolverPlugins @n-eiling
-/dpsim/src/Utils.h @n-eiling
+/dpsim/src/Utils.cpp @n-eiling @georgii-tishenin @leonardocarreras
 /examples/Notebooks/Circuits @gnakti
 /examples/Notebooks/Circuits/SP_Validation_ReducedOrderSG_VBR_SMIB_Fault_withPSAT.ipynb @martinmoraga
 /examples/Notebooks/Grids @gnakti
@@ -120,7 +120,6 @@
 /packaging/Docker/Dockerfile.dev-rocky @n-eiling
 /packaging/Nix @stv0g
 /python @gnakti
-/requirements-manylinux.txt @dinkelbachjan
 
 # SSN components and state-space extraction.
 /dpsim-models/**/*SSN* @georgii-tishenin
