@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=42", "wheel", "pybind11>=2.10.3", "pybind11-stubgen>=2.5", "numpy>=2.0.0"]
+requires = ["setuptools>=42", "wheel", "pybind11>=3.0.0", "pybind11-stubgen>=2.5", "numpy>=2.0.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -13,8 +13,13 @@ readme = {file = "README.md", content-type = "text/markdown"}
 license = "MPL-2.0"
 classifiers = [
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "numpy>=2.0.0",
     "pandas>=2.0.0",
@@ -67,12 +72,12 @@ build-verbosity = 3
 test-command = "python -c \"import dpsimpy; import dpsim\""
 
 [tool.cibuildwheel.linux]
-build = "cp3{9,10,11,12,13}-manylinux_x86_64"
+build = "cp3{10,11,12,13,14}-manylinux_x86_64"
 manylinux-x86_64-image = "sogno/dpsim:manylinux"
 test-command = "python -c \"import dpsimpy; import dpsimpyvillas; import dpsim\""
 
 [tool.cibuildwheel.windows]
-build = "cp3{9,10,11,12,13}-win_amd64"
+build = "cp3{10,11,12,13,14}-win_amd64"
 before-build = "pip install delvewheel"
 repair-wheel-command = "delvewheel repair -w {dest_dir} {wheel}"
 
