@@ -89,8 +89,8 @@ whatever binary was built at install time. The failure is silent, since the impo
 succeeds and simply gives you stale behaviour. Either rebuild and rely on &lt;code>PYTHONPATH&lt;/code> as above,
 or reinstall the package after every C++ change.&lt;/p>
 &lt;p>To summarise the three ways to get DPsim, in increasing order of involvement: &lt;code>pip install dpsim&lt;/code>
-for a released Linux wheel, a native build plus &lt;code>PYTHONPATH&lt;/code> for development, and &lt;code>make install&lt;/code>
-to place a build system wide.&lt;/p>
+for a released Linux or Windows wheel, a native build plus &lt;code>PYTHONPATH&lt;/code> for development, and
+&lt;code>make install&lt;/code> to place a build system wide.&lt;/p>
 &lt;p>If you develop inside a conda environment, the equivalent is to register the same two
 directories from within the active environment. This needs &lt;code>conda-build&lt;/code> installed:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> /dpsim/build
@@ -169,8 +169,13 @@ Install the dependencies with Homebrew:&lt;/p>
 libcimpp, see &lt;a href="https://github.com/sogno-platform/dpsim/issues/609">issue #609&lt;/a>. Configure with
 &lt;code>-DWITH_CIM=OFF&lt;/code> if you do not need the CIM reader.&lt;/p>
 &lt;h2 id="python-package">Python package&lt;/h2>
-&lt;p>Wheels are produced by cibuildwheel in the &lt;code>publish_to_pypi&lt;/code> workflow, currently for
-manylinux x86_64 and CPython 3.9 through 3.13. To build a source distribution locally:&lt;/p>
+&lt;p>Wheels are produced by cibuildwheel in the &lt;code>packaging-python&lt;/code> workflow, currently for
+manylinux x86_64 and Windows x86-64, CPython 3.10 through 3.14. The Windows wheel is the
+reduced one described in &lt;a href="https://sogno.energy/dpsim/docs/user-guide/install/">install&lt;/a>, which also
+carries the full matrix. The set of versions lives in the &lt;code>tool.cibuildwheel&lt;/code> sections of
+&lt;code>pyproject.toml&lt;/code> and in the &lt;code>python&lt;/code> matrix of &lt;code>.github/workflows/packaging-python.yaml&lt;/code>, and
+both have to be changed together.
+To build a source distribution locally:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>python3 -m build --sdist
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="nix">Nix&lt;/h3>
 &lt;p>DPsim can be built using &lt;a href="https://nixos.org/">Nix&lt;/a>, a declarative package manager for
