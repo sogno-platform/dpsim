@@ -1,8 +1,8 @@
 # These owners will be the default owners for everything in
 # the repo. Unless a later match takes precedence,
-# @dinkelbachjan and @georgii-tishenin will be requested for
+# @dinkelbachjan, @georgii-tishenin and @leonardocarreras will be requested for
 # review when someone opens a pull request.
-* @dinkelbachjan @georgii-tishenin
+* @dinkelbachjan @georgii-tishenin @leonardocarreras
 
 # Order is important; the last matching pattern takes the most
 # precedence. When someone opens a pull request that only
@@ -25,10 +25,6 @@
 /dpsim-models/include/dpsim-models/DP/DP_Ph1_SynchronGenerator6bOrderVBR.h @martinmoraga
 /dpsim-models/include/dpsim-models/DP/DP_Ph1_SynchronGeneratorTrStab.h @gnakti
 /dpsim-models/include/dpsim-models/DP/DP_Ph1_varResSwitch.h @gnakti
-/dpsim-models/include/dpsim-models/DP/DP_Ph1_TwoTerminalVTypeSSNComp.h @leonardocarreras
-/dpsim-models/include/dpsim-models/DP/DP_Ph1_SSN_Full_Serial_RLC.h @leonardocarreras
-/dpsim-models/include/dpsim-models/DP/DP_Ph1_MixedVTypeVariableSSNComp.h @leonardocarreras
-/dpsim-models/include/dpsim-models/DP/DP_Ph1_SSN_Variable_Serial_RLC.h @leonardocarreras
 /dpsim-models/include/dpsim-models/EMT/EMT_SSNComp.h @georgii-tishenin
 /dpsim-models/include/dpsim-models/EMT/EMT_VTypeSSNComp.h @georgii-tishenin
 /dpsim-models/include/dpsim-models/EMT/EMT_VTypeVariableSSNComp.h @georgii-tishenin
@@ -58,10 +54,6 @@
 /dpsim-models/src/DP/DP_Ph1_SynchronGenerator6bOrderVBR.cpp @martinmoraga
 /dpsim-models/src/DP/DP_Ph1_SynchronGeneratorTrStab.cpp @gnakti
 /dpsim-models/src/DP/DP_Ph1_varResSwitch.cpp @gnakti
-/dpsim-models/src/DP/DP_Ph1_TwoTerminalVTypeSSNComp.cpp @leonardocarreras
-/dpsim-models/src/DP/DP_Ph1_SSN_Full_Serial_RLC.cpp @leonardocarreras
-/dpsim-models/src/DP/DP_Ph1_MixedVTypeVariableSSNComp.cpp @leonardocarreras
-/dpsim-models/src/DP/DP_Ph1_SSN_Variable_Serial_RLC.cpp @leonardocarreras
 /dpsim-models/src/EMT/EMT_SSNComp.cpp @georgii-tishenin
 /dpsim-models/src/EMT/EMT_VTypeSSNComp.cpp @georgii-tishenin
 /dpsim-models/src/EMT/EMT_VTypeVariableSSNComp.cpp @georgii-tishenin
@@ -148,3 +140,13 @@
 /dpsim-models/**/Signal/VCO.* @matthiasmees
 /dpsim-models/**/Signal/VoltageControllerVSI.* @matthiasmees
 /dpsim/examples/cxx/Components/EMT_Ph3_GFM_Test.cpp @matthiasmees
+
+# DP SSN components, shared with the SSN owner.
+/dpsim-models/include/dpsim-models/DP/DP_Ph1_TwoTerminalVTypeSSNComp.h @georgii-tishenin @leonardocarreras
+/dpsim-models/include/dpsim-models/DP/DP_Ph1_SSN_Full_Serial_RLC.h @georgii-tishenin @leonardocarreras
+/dpsim-models/include/dpsim-models/DP/DP_Ph1_MixedVTypeVariableSSNComp.h @georgii-tishenin @leonardocarreras
+/dpsim-models/include/dpsim-models/DP/DP_Ph1_SSN_Variable_Serial_RLC.h @georgii-tishenin @leonardocarreras
+/dpsim-models/src/DP/DP_Ph1_TwoTerminalVTypeSSNComp.cpp @georgii-tishenin @leonardocarreras
+/dpsim-models/src/DP/DP_Ph1_SSN_Full_Serial_RLC.cpp @georgii-tishenin @leonardocarreras
+/dpsim-models/src/DP/DP_Ph1_MixedVTypeVariableSSNComp.cpp @georgii-tishenin @leonardocarreras
+/dpsim-models/src/DP/DP_Ph1_SSN_Variable_Serial_RLC.cpp @georgii-tishenin @leonardocarreras
