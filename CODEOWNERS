@@ -1,8 +1,8 @@
 # These owners will be the default owners for everything in
 # the repo. Unless a later match takes precedence,
-# @dinkelbachjan will be requested for
+# @dinkelbachjan and @georgii-tishenin will be requested for
 # review when someone opens a pull request.
-* @dinkelbachjan
+* @dinkelbachjan @georgii-tishenin
 
 # Order is important; the last matching pattern takes the most
 # precedence. When someone opens a pull request that only
@@ -129,3 +129,12 @@
 /packaging/Nix @stv0g
 /python @gnakti
 /requirements-manylinux.txt @dinkelbachjan
+
+# SSN components and state-space extraction.
+/dpsim-models/**/*SSN* @georgii-tishenin
+/dpsim-models/**/*StateSpace* @georgii-tishenin
+/dpsim/include/dpsim/MNAStateSpace* @georgii-tishenin
+/dpsim/src/MNAStateSpace* @georgii-tishenin
+/dpsim/include/dpsim/StateSpaceModalAnalysis.h @georgii-tishenin
+/dpsim/src/StateSpaceModalAnalysis.cpp @georgii-tishenin
+/dpsim/examples/cxx/StateSpace/ @georgii-tishenin
