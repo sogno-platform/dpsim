@@ -24,13 +24,19 @@ Click the badge below to explore the interactive Jupyter notebooks in your brows
 
 [![Binder](https://2i2c.mybinder.org/badge_logo.svg)](https://2i2c.mybinder.org/v2/gh/sogno-platform/dpsim/HEAD?urlpath=%2Fdoc%2Ftree%2Fexamples%2FIndex.ipynb)
 
-### Using Python on Linux
+### Using Python on Linux and Windows
 
-Install DPsim on Linux using the command
+Install DPsim using the command
 
 ```shell
 pip install dpsim
 ```
+
+Wheels are published for CPython 3.10 through 3.14 on Linux and Windows x86-64. The Windows
+wheel is built without VILLASnode, real-time support and Sundials; use WSL2 or the `sogno/dpsim`
+container if you need those. See the
+[installation instructions](https://sogno.energy/dpsim/docs/user-guide/install/) for the full
+matrix.
 
 ## Documentation
 
