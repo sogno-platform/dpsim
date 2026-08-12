@@ -154,6 +154,7 @@ Components/DP_Ph1_AvVoltSourceInverterStateSpace.cpp
 Components/DP_Ph3_AvVoltSourceInverterStateSpace.cpp
 Components/EMT_SSN_GFM_Test.cpp
 Components/EMT_Ph3_SSN_GFM_JacobianCheck.cpp
+Components/EMT_Ph3_GFL_Comparison.cpp
 )
 
 set(STATE_SPACE_SOURCES
