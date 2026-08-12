@@ -111,7 +111,7 @@ jobs:
     name: Publish sogno/dpsim:${{ matrix.image }}
     needs: [changes]
     if: needs.changes.outputs.base != '[]'
-    runs-on: sogno-platform-dpsim-runner
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -139,7 +139,7 @@ jobs:
     name: Publish sogno/dpsim:${{ matrix.image }}
     needs: [changes, base]
     if: ${{ always() && needs.base.result != 'failure' && needs.changes.outputs.derived != '[]' }}
-    runs-on: sogno-platform-dpsim-runner
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
