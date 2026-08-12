@@ -145,6 +145,7 @@
 #include <dpsim-models/EMT/EMT_Ph3_ControlledVoltageSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_CurrentSource.h>
 #include <dpsim-models/EMT/EMT_Ph3_FourTerminalVTypeSSNComp.h>
+#include <dpsim-models/EMT/EMT_Ph3_GFL.h>
 #include <dpsim-models/EMT/EMT_Ph3_GenericFourTerminalVTypeSSN.h>
 #include <dpsim-models/EMT/EMT_Ph3_GenericTwoTerminalITypeSSN.h>
 #include <dpsim-models/EMT/EMT_Ph3_GenericTwoTerminalVTypeSSN.h>
@@ -153,6 +154,8 @@
 #include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
 #include <dpsim-models/EMT/EMT_Ph3_SSN_Capacitor.h>
 #include <dpsim-models/EMT/EMT_Ph3_SSN_Full_Serial_RLC.h>
+#include <dpsim-models/EMT/EMT_Ph3_SSN_GFL.h>
+#include <dpsim-models/EMT/EMT_Ph3_SSN_GFL_Split.h>
 #include <dpsim-models/EMT/EMT_Ph3_SSN_GFM.h>
 #include <dpsim-models/EMT/EMT_Ph3_SSN_Inductor.h>
 #include <dpsim-models/EMT/EMT_Ph3_SeriesResistor.h>
