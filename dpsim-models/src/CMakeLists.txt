@@ -164,6 +164,7 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph3_TwoTerminalITypeSSNComp.cpp
 	EMT/EMT_Ph3_TwoTerminalVTypeVariableSSNComp.cpp
 	EMT/EMT_Ph3_FourTerminalVTypeSSNComp.cpp
+	EMT/EMT_Ph3_SSN_InductionMotor.cpp
 	EMT/EMT_Ph3_PiecewiseLinearInductor.cpp
 	EMT/EMT_Ph3_VSIVoltageControlVCO.cpp
 
