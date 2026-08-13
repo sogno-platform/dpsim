@@ -1,7 +1,11 @@
+// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+// SPDX-License-Identifier: MPL-2.0
+
 #include <cmath>
 #include <stdexcept>
 
 #include <dpsim-models/EMT/EMT_Ph3_GFL.h>
+#include <dpsim-models/MathUtils.h>
 
 using namespace CPS;
 
@@ -24,13 +28,7 @@ EMT::Ph3::GFL::GFL(String uid, String name, Logger::Level logLevel)
 
   mPhaseType = PhaseType::ABC;
 
-  // Only two internal electrical nodes are required:
-  //
-  //   virtual 0: controlled-source output / resistor input
-  //   virtual 1: resistor output / inductor input
-  //
-  // The inductor output and capacitor are connected directly to the external
-  // PCC terminal.
+  // Two internal nodes are used for source, resistor, and inductor connection.
   setVirtualNodeNumber(2);
   setTerminalNumber(1);
 
@@ -118,6 +116,10 @@ SimPowerComp<Real>::Ptr EMT::Ph3::GFL::clone(String name) {
 void EMT::Ph3::GFL::setParameters(Real sysOmega, Real sysVoltNom, Real pRef,
                                   Real qRef) {
 
+  if (!Math::isFinite(sysOmega) || !Math::isFinite(sysVoltNom) ||
+      !Math::isFinite(pRef) || !Math::isFinite(qRef))
+    throw std::invalid_argument("GFL parameters must be finite.");
+
   if (sysOmega <= 0.0)
     throw std::invalid_argument(
         "GFL nominal angular frequency must be positive.");
@@ -151,6 +153,12 @@ void EMT::Ph3::GFL::setControllerParameters(Real kpPLL, Real kiPLL,
   if (!mParametersSet)
     throw std::logic_error("GFL::setParameters() must be called before "
                            "setControllerParameters().");
+
+  if (!Math::isFinite(kpPLL) || !Math::isFinite(kiPLL) ||
+      !Math::isFinite(kpPowerCtrl) || !Math::isFinite(kiPowerCtrl) ||
+      !Math::isFinite(kpCurrCtrl) || !Math::isFinite(kiCurrCtrl) ||
+      !Math::isFinite(omegaCutoff))
+    throw std::invalid_argument("GFL controller parameters must be finite.");
 
   if (kiPLL == 0.0)
     throw std::invalid_argument("GFL PLL integral gain must be non-zero.");
@@ -191,6 +199,9 @@ void EMT::Ph3::GFL::setControllerParameters(Real kpPLL, Real kiPLL,
 
 void EMT::Ph3::GFL::setFilterParameters(Real lf, Real cf, Real rf) {
 
+  if (!Math::isFinite(lf) || !Math::isFinite(cf) || !Math::isFinite(rf))
+    throw std::invalid_argument("GFL filter parameters must be finite.");
+
   if (lf <= 0.0)
     throw std::invalid_argument("GFL filter inductance Lf must be positive.");
 
@@ -225,6 +236,11 @@ void EMT::Ph3::GFL::setFilterParameters(Real lf, Real cf, Real rf) {
 void EMT::Ph3::GFL::setInitialStateValues(Real pInit, Real qInit, Real phiDInit,
                                           Real phiQInit, Real gammaDInit,
                                           Real gammaQInit) {
+
+  if (!Math::isFinite(pInit) || !Math::isFinite(qInit) ||
+      !Math::isFinite(phiDInit) || !Math::isFinite(phiQInit) ||
+      !Math::isFinite(gammaDInit) || !Math::isFinite(gammaQInit))
+    throw std::invalid_argument("GFL initial state values must be finite.");
 
   mPInitManual = pInit;
   mQInitManual = qInit;
@@ -365,13 +381,7 @@ void EMT::Ph3::GFL::initializeParentFromNodesAndTerminals(Real frequency) {
   iGrid(1, 0) = iGridA * SHIFT_TO_PHASE_B;
   iGrid(2, 0) = iGridA * SHIFT_TO_PHASE_C;
 
-  // -------------------------------------------------------------------------
-  // Filter steady state
-  //
-  //   iF = iGrid + iCf
-  //   vL_in = vPcc + j*w*Lf*iF
-  //   vSource = vL_in + Rf*iF
-  // -------------------------------------------------------------------------
+  // Filter steady state.
   const MatrixComp iCf = j * omega * mCf * vPcc;
 
   const MatrixComp iF = iGrid + iCf;
@@ -397,13 +407,6 @@ void EMT::Ph3::GFL::initializeParentFromNodesAndTerminals(Real frequency) {
   mSubControlledVoltageSource->setParameters(mVirtualNodes[0]->initialVoltage(),
                                              0.0);
 
-  // Electrical topology:
-  //
-  //   GND -- source -- v0 -- Rf -- v1 -- Lf -- PCC
-  //                                         |
-  //                                         Cf
-  //                                         |
-  //                                        GND
   mSubControlledVoltageSource->connect({SimNode::GND, mVirtualNodes[0]});
 
   mSubResistorF->connect({mVirtualNodes[0], mVirtualNodes[1]});
@@ -412,9 +415,7 @@ void EMT::Ph3::GFL::initializeParentFromNodesAndTerminals(Real frequency) {
 
   mSubCapacitorF->connect({mTerminals[0]->node(), SimNode::GND});
 
-  // Do not initialize subcomponents manually here.
-  // CompositePowerComp::initializeFromNodesAndTerminals() performs the
-  // recursive subcomponent initialization after this parent hook returns.
+  // Subcomponents are initialized recursively by CompositePowerComp.
 
   // -------------------------------------------------------------------------
   // Controller steady-state initialization
@@ -482,9 +483,7 @@ void EMT::Ph3::GFL::initializeParentFromNodesAndTerminals(Real frequency) {
                                                gammaDInit, gammaQInit);
   }
 
-  // Critical startup fix:
-  // initialize the abc controlled-source command before the very first
-  // mnaParentPreStep() so it cannot overwrite the steady-state source with 0.
+  // Avoid a zero source command before the first mnaParentPreStep().
   **mVsref = vSourceAbc0;
 
   updatePowerAndFrequencyAttributes();
@@ -523,10 +522,7 @@ void EMT::Ph3::GFL::mnaParentInitialize(Real omega, Real timeStep,
 
   mPLL->setSimulationParameters(timeStep);
 
-  // Keep the exact PF-derived source-voltage command that was calculated in
-  // initializeParentFromNodesAndTerminals().  Reconstructing mVsref here from
-  // controller states can introduce a first-step discontinuity even when the
-  // electrical network is initialized exactly at its periodic operating point.
+  // Keep the PF-derived source-voltage command from initialization.
   updatePowerAndFrequencyAttributes();
 
   mMnaTasks.push_back(std::make_shared<ControlPreStep>(*this));
@@ -558,13 +554,7 @@ void EMT::Ph3::GFL::addControlStepDependencies(
     AttributeBase::List &attributeDependencies,
     AttributeBase::List &modifiedAttributes) {
 
-  // Follow the proven AvVoltageSourceInverterDQ scheduler pattern.
-  //
-  // The measurement attributes mVcd/mVcq/mIgridD/mIgridQ are updated
-  // internally inside controlStep() immediately before the PLL and power
-  // controller are stepped. They must NOT be declared as scheduler outputs of
-  // this same task, because the signal components consume them through dynamic
-  // references and this creates a circular dependency.
+  // Measurements are updated inside controlStep() to avoid scheduler cycles.
   mPLL->signalAddStepDependencies(prevStepDependencies, attributeDependencies,
                                   modifiedAttributes);
 
@@ -583,22 +573,7 @@ void EMT::Ph3::GFL::addControlStepDependencies(
 
 void EMT::Ph3::GFL::controlStep(Real time, Int timeStepCount) {
 
-  // -----------------------------------------------------------------------
-  // Time alignment of the PLL angle
-  // -----------------------------------------------------------------------
-  //
-  // mIntfVoltage/mIntfCurrent represent the newly solved EMT sample, while
-  // mPLL->mOutputPrev contains the PLL state from the previous sample.
-  //
-  // Using theta_prev directly therefore creates an artificial phase error of
-  //
-  //     Delta theta ~= omega * dt
-  //
-  // even in a perfectly synchronized 50-Hz steady state.  For dt=100 us this
-  // is ~1.8 deg and, with the present PLL gains, produces the ~0.5-Hz startup
-  // frequency jump seen in the benchmark.
-  //
-  // Predict theta to the measurement instant using the previous PLL frequency.
+  // Predict PLL angle to the measurement instant.
   Real thetaMeasurement = mPLL->mOutputPrev->get()(0, 0);
 
   if (timeStepCount > 0) {
@@ -616,14 +591,7 @@ void EMT::Ph3::GFL::controlStep(Real time, Int timeStepCount) {
 
   mPowerControllerVSI->signalStep(time, timeStepCount);
 
-  // -----------------------------------------------------------------------
-  // Time alignment of the controlled-source command
-  // -----------------------------------------------------------------------
-  //
-  // mVsref is a prevStep dependency of the MNA pre-step, hence the value
-  // generated here is applied at the NEXT EMT sample.  Rotate the dq command
-  // with a one-step-ahead angle so a constant dq voltage remains a correct
-  // 50-Hz abc waveform rather than being delayed by omega*dt.
+  // Rotate the command to the next EMT sample.
   const Real thetaPLL = (**mPllOutput)(0, 0);
 
   const Real phiPLL = (**mPllOutput)(1, 0);
@@ -695,27 +663,7 @@ void EMT::Ph3::GFL::mnaParentPostStep(Real time, Int timeStepCount,
 
 void EMT::Ph3::GFL::mnaCompUpdateCurrent(const Matrix &leftVector) {
 
-  // The external PCC current is the NET current entering the complete
-  // converter component, not the filter-inductor current alone.
-  //
-  // Connections:
-  //
-  //   inductor  : {internal node, PCC}
-  //   capacitor : {PCC, GND}
-  //
-  // With DPsim's two-terminal convention:
-  //
-  //   i_ind = -i_f
-  //   i_cap = -i_cf
-  //
-  // Hence the parent interface current is
-  //
-  //   i_intf = i_ind - i_cap
-  //          = -i_f + i_cf
-  //          = -i_grid
-  //
-  // so -mIntfCurrent is exactly the positive converter-to-grid current used
-  // by the controller.
+  // Net current entering the complete converter component.
   **mIntfCurrent =
       mSubInductorF->mIntfCurrent->get() - mSubCapacitorF->mIntfCurrent->get();
 }
