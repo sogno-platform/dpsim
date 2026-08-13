@@ -5,6 +5,7 @@
 #include <stdexcept>
 
 #include <dpsim-models/EMT/EMT_Ph3_SSN_GFL.h>
+#include <dpsim-models/MathUtils.h>
 
 using namespace CPS;
 
@@ -55,6 +56,15 @@ void EMT::Ph3::SSN_GFL::setParameters(Real lf, Real cf, Real rf, Real rc,
                                       Real omegaCutoff, Real pRef, Real qRef,
                                       Real kpPowerCtrl, Real kiPowerCtrl,
                                       Real kpCurrCtrl, Real kiCurrCtrl) {
+  if (!Math::isFinite(lf) || !Math::isFinite(cf) || !Math::isFinite(rf) ||
+      !Math::isFinite(rc) || !Math::isFinite(omegaN) ||
+      !Math::isFinite(kpPLL) || !Math::isFinite(kiPLL) ||
+      !Math::isFinite(omegaCutoff) || !Math::isFinite(pRef) ||
+      !Math::isFinite(qRef) || !Math::isFinite(kpPowerCtrl) ||
+      !Math::isFinite(kiPowerCtrl) || !Math::isFinite(kpCurrCtrl) ||
+      !Math::isFinite(kiCurrCtrl))
+    throw std::invalid_argument("SSN_GFL parameters must be finite.");
+
   if (lf <= 0.0)
     throw std::invalid_argument("Filter inductance lf must be positive.");
 
@@ -487,10 +497,7 @@ void EMT::Ph3::SSN_GFL::initializeFromNodesAndTerminals(Real frequency) {
     throw std::logic_error("setParameters() must be called before "
                            "initializeFromNodesAndTerminals().");
 
-  // The generic SSN phasor initialization is not used because this component
-  // mixes EMT abc electrical states with dq-frame controller states. The
-  // filter states are initialized from balanced phasors; controller states are
-  // initialized algebraically from the corresponding dq operating point.
+  // Initialize EMT abc filter states and dq-frame controller states.
   const Real omega = 2.0 * PI * frequency;
   const Complex imaginaryUnit(0.0, 1.0);
   const Complex powerReference(mPRef, mQRef);
@@ -586,9 +593,7 @@ void EMT::Ph3::SSN_GFL::initializeFromNodesAndTerminals(Real frequency) {
   **mIntfVoltage = uPhasor.real();
   **mIntfCurrent = ((uPhasor - vcPhasor) / mRc).real();
 
-  // Keep the reference model's initialization sequence unchanged. The local
-  // continuous-time matrices are updated here; the normal SSN update path
-  // recomputes the discrete equivalent for simulation.
+  // Update local continuous-time matrices at the initialized operating point.
   updateComponentParameters();
   updateLogAttributes(**mIntfVoltage);
 

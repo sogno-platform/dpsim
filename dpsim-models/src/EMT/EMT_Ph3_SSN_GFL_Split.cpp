@@ -78,6 +78,15 @@ void EMT::Ph3::SSN_GFL_Split::setParameters(Real lf, Real cf, Real rf, Real rc,
                                             Real kiPowerCtrl, Real kpCurrCtrl,
                                             Real kiCurrCtrl) {
 
+  if (!Math::isFinite(lf) || !Math::isFinite(cf) || !Math::isFinite(rf) ||
+      !Math::isFinite(rc) || !Math::isFinite(omegaN) ||
+      !Math::isFinite(kpPLL) || !Math::isFinite(kiPLL) ||
+      !Math::isFinite(omegaCutoff) || !Math::isFinite(pRef) ||
+      !Math::isFinite(qRef) || !Math::isFinite(kpPowerCtrl) ||
+      !Math::isFinite(kiPowerCtrl) || !Math::isFinite(kpCurrCtrl) ||
+      !Math::isFinite(kiCurrCtrl))
+    throw std::invalid_argument("SSN_GFL_Split parameters must be finite.");
+
   if (lf <= 0.0)
     throw std::invalid_argument("Filter inductance lf must be positive.");
 
@@ -128,14 +137,7 @@ void EMT::Ph3::SSN_GFL_Split::setParameters(Real lf, Real cf, Real rf, Real rc,
 
   const Matrix identity3 = Matrix::Identity(3, 3);
 
-  // -----------------------------------------------------------------------
-  // Constant electrical plant
-  //
-  // x_n = [v_c,abc; i_f,abc]
-  //
-  // x_n_dot = A_n x_n + B_u u + B_v v_inv_delayed
-  // y       = C_n x_n + D_u u
-  // -----------------------------------------------------------------------
+  // Constant electrical plant.
   Matrix aNetwork = Matrix::Zero(mNetworkStateSize, mNetworkStateSize);
   Matrix bTerminal = Matrix::Zero(mNetworkStateSize, mTerminalInputSize);
   Matrix cNetwork = Matrix::Zero(mOutputSize, mNetworkStateSize);
@@ -155,8 +157,7 @@ void EMT::Ph3::SSN_GFL_Split::setParameters(Real lf, Real cf, Real rf, Real rc,
   cNetwork.block(0, VcA, 3, 3) = -1.0 / mRc * identity3;
   dTerminal = 1.0 / mRc * identity3;
 
-  // This is a fixed SSN component. These matrices are never changed again
-  // after setParameters().
+  // This fixed SSN plant is not changed after setParameters().
   SSNComp::setParameters(aNetwork, bTerminal, cNetwork, dTerminal);
 
   mControllerState.setZero();
@@ -493,26 +494,10 @@ void EMT::Ph3::SSN_GFL_Split::recomputeControllerDiscreteModel() {
 }
 
 void EMT::Ph3::SSN_GFL_Split::recomputeDiscreteModel() {
-  // -----------------------------------------------------------------------
-  // 1. Fixed electrical plant
-  //
-  // This is the only place where the Norton conductance is formed. Because
-  // mA/mB/mC/mD never change after setParameters(), mW is constant.
-  // -----------------------------------------------------------------------
+  // Fixed electrical plant.
   SSNComp::recomputeDiscreteModel();
 
-  // Additional trapezoidal input matrix for the known converter voltage.
-  //
-  // For
-  //
-  //   x_dot = A x + B_u u + B_v v_inv
-  //
-  // trapezoidal discretization yields
-  //
-  //   B_d,v = (I - h/2 A)^-1 (h/2 B_v).
-  //
-  // The delayed converter command is modeled with a zero-order hold over one
-  // simulation interval, therefore its contribution is 2*B_d,v*v_delayed.
+  // Additional trapezoidal input matrix for the delayed converter command.
   const Matrix identity =
       Matrix::Identity(mNetworkStateSize, mNetworkStateSize);
   const Matrix lhs = identity - 0.5 * mTimeStep * mA;
@@ -524,40 +509,23 @@ void EMT::Ph3::SSN_GFL_Split::recomputeDiscreteModel() {
 }
 
 Matrix EMT::Ph3::SSN_GFL_Split::calculateHistoryVector() const {
-  // The terminal-voltage part follows the normal fixed SSN formulation:
-  //
-  //   y[k] = W u[k] + y_hist[k]
-  //   W    = C B_d,u + D
-  //
-  // The delayed converter voltage is known before the nodal solve and only
-  // enters y_hist. Hence it never changes W.
-  //
-  // A zero-order hold is used for the delayed controller command during the
-  // complete current interval, giving the factor 2 in the trapezoidal term.
+  // The delayed converter voltage only enters the history vector.
   return mC * (mdA * (**mX) + mdB * (**mIntfVoltage) +
                2.0 * mdBConverter * mConverterVoltageDelayed);
 }
 
 void EMT::Ph3::SSN_GFL_Split::updateState(const Matrix &uOld,
                                           const Matrix &uNew) {
-  // -----------------------------------------------------------------------
-  // 1. Update the constant electrical plant using the converter command that
-  // was available BEFORE this network solve.
-  // -----------------------------------------------------------------------
+  // Use the converter command available before this network solve.
   const Matrix delayedVoltageUsedThisStep = mConverterVoltageDelayed;
 
   **mX = mdA * (**mX) + mdB * (uNew + uOld) +
          2.0 * mdBConverter * delayedVoltageUsedThisStep;
 
-  // -----------------------------------------------------------------------
-  // 2. Form new measurements from the solved network state.
-  // -----------------------------------------------------------------------
+  // Form new measurements from the solved network state.
   const Matrix measurementNew = buildControllerMeasurement(**mX, uNew);
 
-  // -----------------------------------------------------------------------
-  // 3. Advance the controller with its local affine model from the previous
-  // operating point.
-  // -----------------------------------------------------------------------
+  // Advance the controller with the previous local affine model.
   mControllerState =
       mControllerAd * mControllerState +
       mControllerBd * (measurementNew + mControllerMeasurementOld) +
@@ -565,30 +533,18 @@ void EMT::Ph3::SSN_GFL_Split::updateState(const Matrix &uOld,
 
   mControllerMeasurementOld = measurementNew;
 
-  // -----------------------------------------------------------------------
-  // 4. Re-linearize ONLY the controller at the new operating point.
-  //
-  // None of these matrices is stamped into the MNA system matrix.
-  // -----------------------------------------------------------------------
+  // Re-linearize only the controller at the new operating point.
   buildControllerStateSpaceModel(mControllerState, measurementNew, mControllerA,
                                  mControllerB, mControllerC, mControllerD,
                                  mControllerE, mControllerF);
 
   recomputeControllerDiscreteModel();
 
-  // -----------------------------------------------------------------------
-  // 5. Calculate controller output at sample k.
-  // -----------------------------------------------------------------------
+  // Calculate controller output at sample k.
   evaluateControllerOutput(mControllerState, measurementNew,
                            mConverterVoltageReference);
 
-  // -----------------------------------------------------------------------
-  // 6. z^-1
-  //
-  // The value produced now is not part of the already completed network
-  // solve. It becomes the known converter-voltage forcing of the NEXT
-  // simulation interval.
-  // -----------------------------------------------------------------------
+  // Store the command for the next simulation interval.
   mConverterVoltageDelayed = mConverterVoltageReference;
 }
 
@@ -623,9 +579,7 @@ void EMT::Ph3::SSN_GFL_Split::initializeFromNodesAndTerminals(Real frequency) {
     throw std::logic_error("setParameters() must be called before "
                            "initializeFromNodesAndTerminals().");
 
-  // Initialization intentionally mirrors the existing monolithic SSN_GFL:
-  // electrical states are obtained from balanced phasors and controller
-  // integrators are initialized algebraically at the same operating point.
+  // Initialize electrical and controller states at the same operating point.
   const Real omega = 2.0 * PI * frequency;
   const Complex imaginaryUnit(0.0, 1.0);
   const Complex powerReference(mPRef, mQRef);
@@ -743,8 +697,7 @@ void EMT::Ph3::SSN_GFL_Split::initializeFromNodesAndTerminals(Real frequency) {
 
   mControllerMeasurementOld = buildControllerMeasurement(**mX, **mIntfVoltage);
 
-  // Initialize both sides of z^-1 to the steady-state converter voltage. This
-  // avoids an artificial one-step zero command at t = 0.
+  // Avoid an artificial one-step zero command at t = 0.
   mConverterVoltageReference = converterVoltageReferenceAbc0;
   mConverterVoltageDelayed = converterVoltageReferenceAbc0;
 
