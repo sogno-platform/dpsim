@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.4.0](https://github.com/sogno-platform/dpsim/compare/v1.3.0...v1.4.0) (2026-08-14)
+
+
+### Added
+
+* **models:** add an EMT::Ph3::SSN::InductionMotor with a test circuit ([fc512e4](https://github.com/sogno-platform/dpsim/commit/fc512e46c8b542cd049921459587d8cfea33d0e6))
+* **models:** add more logging for motor ([6d5a86a](https://github.com/sogno-platform/dpsim/commit/6d5a86a7463deb7243c7d18298d1e84d5e14672f))
+
+
+### Changed
+
+* manage releases and version bumps with release-please ([29f1693](https://github.com/sogno-platform/dpsim/commit/29f16937d2e469d0807bf9f9e494e534c6de2e64))
+
 ## [v1.3.0] - 2026-08-14
 
 ### Added
