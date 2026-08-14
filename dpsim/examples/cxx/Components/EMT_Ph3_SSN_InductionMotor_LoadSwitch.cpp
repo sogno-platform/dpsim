@@ -29,11 +29,13 @@ private:
   static constexpr Real Lr_dash =
       Lm + Llr; // total rotor inductance, referred to stator [H]
 
-  static constexpr Real rotorInertia = 0.05;      // [kg m^2]
-  static constexpr Real mechanicalDamping = 0.01; // [N m s/rad]
-
   static constexpr Real we = 2.0 * PI * nominalFrequency;
   static constexpr Real synchronousSpeed = we / static_cast<Real>(polePairs);
+  static constexpr Real nominalMechanicalTorque = 1.0; // [N m]
+
+  static constexpr Real rotorInertia = 0.05; // [kg m^2]
+  static constexpr Real mechanicalDamping =
+      nominalMechanicalTorque / synchronousSpeed; // Tload = Tnom * wm / wm_nom
 
   static constexpr Real Vamp =
       325.0; // peak phase voltage [V] (~230 V RMS line-to-neutral)
@@ -42,7 +44,7 @@ private:
   static constexpr Real finalTime = 2.5;
   static constexpr Real switchTime = 1.0;
   static constexpr Real switchOpenRes = 1e6;
-  static constexpr Real switchClosedRes = 0.01;
+  static constexpr Real switchClosedRes = 1e-4;
 };
 
 void EMT_Ph3_SSN_InductionMotor_Circuits::ColdStart_LoadSwitch() {
@@ -50,7 +52,8 @@ void EMT_Ph3_SSN_InductionMotor_Circuits::ColdStart_LoadSwitch() {
   //Comps and nodes
   auto motor = EMT::Ph3::SSN_InductionMotor::make("motor_coldStart");
   motor->setParameters(nominalFrequency, polePairs, Rs, Rr, Ls, Lr_dash, Lm,
-                       rotorInertia, mechanicalDamping, -1.0, 0.0, false);
+                       rotorInertia, mechanicalDamping,
+                       -nominalMechanicalTorque, 0.0, false);
 
   auto vs = EMT::Ph3::VoltageSource::make("Vs");
   vs->setParameters(Math::singlePhaseVariableToThreePhase(Complex(Vamp, 0.0)));
@@ -59,7 +62,7 @@ void EMT_Ph3_SSN_InductionMotor_Circuits::ColdStart_LoadSwitch() {
   r_v->setParameters(0.05 * Matrix::Identity(3, 3));
 
   auto load1 = EMT::Ph3::Shunt::make("load");
-  load1->setParameters(1e6, 0.0);
+  load1->setParameters(1e9, 0.0);
 
   auto load2 = EMT::Ph3::Shunt::make("load");
   load2->setParameters(10, 0.0);
@@ -100,12 +103,28 @@ void EMT_Ph3_SSN_InductionMotor_Circuits::ColdStart_LoadSwitch() {
   auto logger = DataLogger::make(simName_coldStart);
   logger->logAttribute("mechanical_speed",
                        motor->attribute("mechanical_speed"));
+  logger->logAttribute("mechanical_speed_pu",
+                       motor->attribute("mechanical_speed_pu"));
+  logger->logAttribute("slip", motor->attribute("slip"));
+  logger->logAttribute("electrical_power",
+                       motor->attribute("electrical_power"));
+  logger->logAttribute("reactive_power", motor->attribute("reactive_power"));
   logger->logAttribute("electrical_torque",
                        motor->attribute("electrical_torque"));
+  logger->logAttribute("mechanical_load_torque",
+                       motor->attribute("mechanical_load_torque"));
   logger->logAttribute("stator_current_d",
                        motor->attribute("stator_current_d"));
   logger->logAttribute("stator_current_q",
                        motor->attribute("stator_current_q"));
+  logger->logAttribute("stator_current_magnitude",
+                       motor->attribute("stator_current_magnitude"));
+  logger->logAttribute("stator_voltage_d",
+                       motor->attribute("stator_voltage_d"));
+  logger->logAttribute("stator_voltage_q",
+                       motor->attribute("stator_voltage_q"));
+  logger->logAttribute("stator_voltage_magnitude",
+                       motor->attribute("stator_voltage_magnitude"));
 
   //simulation setup
   Simulation sim(simName_coldStart, Logger::Level::info);
