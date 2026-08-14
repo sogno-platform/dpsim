@@ -28,25 +28,40 @@ EMT::Ph3::SSN_InductionMotor::SSN_InductionMotor(String uid, String name,
           Matrix::Zero(mElectricalStateSize, mElectricalStateSize)),
       mJacobianRelativeStep(1e-6), mJacobianAbsoluteStep(1e-8),
       mElectricalPower(mAttributes->create<Real>("electrical_power")),
+      mReactivePower(mAttributes->create<Real>("reactive_power")),
       mElectricalTorque(mAttributes->create<Real>("electrical_torque")),
+      mMechanicalLoadTorque(
+          mAttributes->create<Real>("mechanical_load_torque")),
       mMechanicalSpeedLog(mAttributes->create<Real>("mechanical_speed")),
+      mMechanicalSpeedPu(mAttributes->create<Real>("mechanical_speed_pu")),
       mElectricalAngleLog(mAttributes->create<Real>("electrical_angle")),
+      mSlip(mAttributes->create<Real>("slip")),
       mStatorCurrentD(mAttributes->create<Real>("stator_current_d")),
       mStatorCurrentQ(mAttributes->create<Real>("stator_current_q")),
       mStatorVoltageD(mAttributes->create<Real>("stator_voltage_d")),
-      mStatorVoltageQ(mAttributes->create<Real>("stator_voltage_q")) {
+      mStatorVoltageQ(mAttributes->create<Real>("stator_voltage_q")),
+      mStatorCurrentMagnitude(
+          mAttributes->create<Real>("stator_current_magnitude")),
+      mStatorVoltageMagnitude(
+          mAttributes->create<Real>("stator_voltage_magnitude")) {
 
   **mIntfVoltage = Matrix::Zero(mInputSize, 1);
   **mIntfCurrent = Matrix::Zero(mOutputSize, 1);
 
   **mElectricalPower = 0.0;
+  **mReactivePower = 0.0;
   **mElectricalTorque = 0.0;
+  **mMechanicalLoadTorque = 0.0;
   **mMechanicalSpeedLog = 0.0;
+  **mMechanicalSpeedPu = 0.0;
   **mElectricalAngleLog = 0.0;
+  **mSlip = 0.0;
   **mStatorCurrentD = 0.0;
   **mStatorCurrentQ = 0.0;
   **mStatorVoltageD = 0.0;
   **mStatorVoltageQ = 0.0;
+  **mStatorCurrentMagnitude = 0.0;
+  **mStatorVoltageMagnitude = 0.0;
 }
 
 std::vector<String> EMT::Ph3::SSN_InductionMotor::getLocalStateNames() const {
@@ -68,6 +83,8 @@ void EMT::Ph3::SSN_InductionMotor::setParameters(
 
   if (statorResistance < 0.0)
     throw std::invalid_argument("Stator resistance is invalid.");
+  if (rotorResistance < 0.0)
+    throw std::invalid_argument("Rotor resistance is invalid.");
 
   if (statorInductance <= 0.0 || rotorInductance <= 0.0 ||
       mutualInductance <= 0.0)
@@ -363,15 +380,27 @@ void EMT::Ph3::SSN_InductionMotor::updateLogAttributes(const Matrix &u) const {
 
   const Real electricalPower = voltageDq(0, 0) * statorCurrentDq(0, 0) +
                                voltageDq(1, 0) * statorCurrentDq(1, 0);
+  const Real reactivePower = voltageDq(1, 0) * statorCurrentDq(0, 0) -
+                             voltageDq(0, 0) * statorCurrentDq(1, 0);
+  const Real mechanicalLoadTorque =
+      -mMechanicalTorque +
+      mMechanicalDamping * (x(MechanicalSpeed, 0) - mNominalMechanicalSpeed);
 
   **mElectricalPower = electricalPower;
+  **mReactivePower = reactivePower;
   **mElectricalTorque = electricalTorque;
+  **mMechanicalLoadTorque = mechanicalLoadTorque;
   **mMechanicalSpeedLog = x(MechanicalSpeed, 0);
+  **mMechanicalSpeedPu = x(MechanicalSpeed, 0) / mNominalMechanicalSpeed;
   **mElectricalAngleLog = std::remainder(x(ElectricalAngle, 0), 2.0 * PI);
+  **mSlip = (mNominalMechanicalSpeed - x(MechanicalSpeed, 0)) /
+            mNominalMechanicalSpeed;
   **mStatorCurrentD = current(0, 0);
   **mStatorCurrentQ = current(1, 0);
   **mStatorVoltageD = voltageDq(0, 0);
   **mStatorVoltageQ = voltageDq(1, 0);
+  **mStatorCurrentMagnitude = statorCurrentDq.norm();
+  **mStatorVoltageMagnitude = voltageDq.norm();
 }
 
 void EMT::Ph3::SSN_InductionMotor::initializeFromNodesAndTerminals(

@@ -82,13 +82,19 @@ protected:
   Real mJacobianAbsoluteStep;
 
   Attribute<Real>::Ptr mElectricalPower;
+  Attribute<Real>::Ptr mReactivePower;
   Attribute<Real>::Ptr mElectricalTorque;
+  Attribute<Real>::Ptr mMechanicalLoadTorque;
   Attribute<Real>::Ptr mMechanicalSpeedLog;
+  Attribute<Real>::Ptr mMechanicalSpeedPu;
   Attribute<Real>::Ptr mElectricalAngleLog;
+  Attribute<Real>::Ptr mSlip;
   Attribute<Real>::Ptr mStatorCurrentD;
   Attribute<Real>::Ptr mStatorCurrentQ;
   Attribute<Real>::Ptr mStatorVoltageD;
   Attribute<Real>::Ptr mStatorVoltageQ;
+  Attribute<Real>::Ptr mStatorCurrentMagnitude;
+  Attribute<Real>::Ptr mStatorVoltageMagnitude;
 
   Matrix getParkTransformMatrix(Real electricalAngle) const;
   Matrix getInverseParkTransformMatrix(Real electricalAngle) const;
