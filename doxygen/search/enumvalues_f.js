@@ -18,7 +18,8 @@ var searchData=
   ['single_15',['Single',['../namespace_c_p_s.html#a077ababc38cbf7a0d8c175260b129a6ca66ba162102bbf6ae31b522aec561735e',1,'CPS']]],
   ['sp_16',['SP',['../namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9a674769e3326f8cf937af4282f2815c02',1,'CPS']]],
   ['sparselu_17',['SparseLU',['../namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a9a5e6eae6a80915040abf06ff0e5cfc0',1,'DPsim']]],
-  ['statorreferred_18',['statorReferred',['../class_c_p_s_1_1_base_1_1_synchron_generator.html#a0716ca991740493ac99954d156ff664dad8cc503a7736fa4496a7da90d747efe0',1,'CPS::Base::SynchronGenerator::statorReferred'],['../class_c_p_s_1_1_base_1_1_synchron_generator.html#a65017fe1b3466b9d514d76300ecb936ead8cc503a7736fa4496a7da90d747efe0',1,'CPS::Base::SynchronGenerator::statorReferred']]],
-  ['stopped_19',['stopped',['../class_d_psim_1_1_timer.html#a9fef844c9b066326a4d4bd201bd3494aa1586dd2f1501ea2d92546bd6cfffcdb0',1,'DPsim::Timer']]],
-  ['sum_5fscaling_20',['SUM_SCALING',['../namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408ab858a94fe00a0f083a74e2b1df8c951f',1,'DPsim']]]
+  ['statecount_18',['StateCount',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___induction_motor.html#a39c8a46a4be70f9c12f14c915266f670a49e833f8c95cb0c925945df6c935a3ff',1,'CPS::EMT::Ph3::SSN_InductionMotor']]],
+  ['statorreferred_19',['statorReferred',['../class_c_p_s_1_1_base_1_1_synchron_generator.html#a0716ca991740493ac99954d156ff664dad8cc503a7736fa4496a7da90d747efe0',1,'CPS::Base::SynchronGenerator::statorReferred'],['../class_c_p_s_1_1_base_1_1_synchron_generator.html#a65017fe1b3466b9d514d76300ecb936ead8cc503a7736fa4496a7da90d747efe0',1,'CPS::Base::SynchronGenerator::statorReferred']]],
+  ['stopped_20',['stopped',['../class_d_psim_1_1_timer.html#a9fef844c9b066326a4d4bd201bd3494aa1586dd2f1501ea2d92546bd6cfffcdb0',1,'DPsim::Timer']]],
+  ['sum_5fscaling_21',['SUM_SCALING',['../namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408ab858a94fe00a0f083a74e2b1df8c951f',1,'DPsim']]]
 ];

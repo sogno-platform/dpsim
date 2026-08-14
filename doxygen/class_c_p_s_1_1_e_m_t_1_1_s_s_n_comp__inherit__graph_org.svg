@@ -179,8 +179,8 @@
 <g id="Node000007" class="node">
 <title>Node7</title>
 <g id="a_Node000007"><a xlink:href="class_c_p_s_1_1_m_n_a_interface.html" target="_top" xlink:title="Interface to be implemented by all models used by the MNA solver.">
-<polygon fill="white" stroke="#666666" points="448.62,-345.38 342.62,-345.38 342.62,-323.12 448.62,-323.12 448.62,-345.38"/>
-<text text-anchor="middle" x="395.62" y="-331.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::MNAInterface</text>
+<polygon fill="white" stroke="#666666" points="448.62,-344.38 342.62,-344.38 342.62,-322.12 448.62,-322.12 448.62,-344.38"/>
+<text text-anchor="middle" x="395.62" y="-330.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::MNAInterface</text>
 </a>
 </g>
 </g>
@@ -188,8 +188,8 @@
 <g id="edge7_Node000002_Node000007" class="edge">
 <title>Node7&#45;&gt;Node2</title>
 <g id="a_edge7_Node000002_Node000007"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M460.23,-331.63C514.75,-329 595.33,-324.17 665.25,-316.25 690.41,-313.4 696.61,-311.87 721.5,-307.25 727.28,-306.18 733.28,-305.01 739.28,-303.81"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="460.34,-328.13 450.51,-332.09 460.67,-335.12 460.34,-328.13"/>
+<path fill="none" stroke="#63b8ff" d="M460.23,-330.94C514.75,-328.54 595.33,-324.04 665.25,-316.25 690.41,-313.45 696.61,-311.87 721.5,-307.25 727.28,-306.18 733.28,-305.01 739.28,-303.81"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="460.36,-327.43 450.52,-331.35 460.66,-334.42 460.36,-327.43"/>
 </a>
 </g>
 </g>
@@ -207,8 +207,8 @@
 <g id="edge11_Node000008_Node000007" class="edge">
 <title>Node7&#45;&gt;Node8</title>
 <g id="a_edge11_Node000008_Node000007"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M459,-320.19C481.18,-315.19 506.24,-309.54 528.82,-304.45"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="458.5,-316.72 449.51,-322.33 460.03,-323.54 458.5,-316.72"/>
+<path fill="none" stroke="#63b8ff" d="M460.28,-319.22C482.23,-314.38 506.88,-308.95 529.1,-304.05"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="459.56,-315.79 450.55,-321.36 461.07,-322.63 459.56,-315.79"/>
 </a>
 </g>
 </g>
@@ -554,9 +554,9 @@
 <g id="Node000029" class="node">
 <title>Node29</title>
 <g id="a_Node000029"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="1781.75,-248.5 1631.5,-248.5 1631.5,-212 1781.75,-212 1781.75,-248.5"/>
-<text text-anchor="start" x="1639.5" y="-235" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::AvVoltSource</text>
-<text text-anchor="middle" x="1706.62" y="-220.75" font-family="Helvetica,sans-Serif" font-size="10.00">InverterStateSpace</text>
+<polygon fill="white" stroke="#666666" points="1781.75,-272.5 1631.5,-272.5 1631.5,-236 1781.75,-236 1781.75,-272.5"/>
+<text text-anchor="start" x="1639.5" y="-259" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::AvVoltSource</text>
+<text text-anchor="middle" x="1706.62" y="-244.75" font-family="Helvetica,sans-Serif" font-size="10.00">InverterStateSpace</text>
 </a>
 </g>
 </g>
@@ -564,8 +564,8 @@
 <g id="edge31_Node000028_Node000029" class="edge">
 <title>Node28&#45;&gt;Node29</title>
 <g id="a_edge31_Node000028_Node000029"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1583.85,-175.32C1587.48,-176.93 1591.05,-178.58 1594.5,-180.25 1611.71,-188.61 1614.26,-193.95 1631.5,-202.25 1638.32,-205.53 1645.63,-208.7 1652.9,-211.64"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1585.48,-172.22 1574.91,-171.52 1582.74,-178.66 1585.48,-172.22"/>
+<path fill="none" stroke="#63b8ff" d="M1588.91,-176.46C1590.83,-177.67 1592.7,-178.94 1594.5,-180.25 1615.69,-195.72 1610.26,-210.85 1631.5,-226.25 1636.29,-229.72 1641.56,-232.82 1647.02,-235.57"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1590.67,-173.44 1580.24,-171.58 1587.24,-179.54 1590.67,-173.44"/>
 </a>
 </g>
 </g>
@@ -573,9 +573,9 @@
 <g id="Node000030" class="node">
 <title>Node30</title>
 <g id="a_Node000030"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_piecewise_linear_inductor.html" target="_top" xlink:title="Three&#45;phase, two&#45;terminal, piecewise&#45;linear flux&#45;state inductor.">
-<polygon fill="white" stroke="#666666" points="1773.12,-193.5 1640.12,-193.5 1640.12,-157 1773.12,-157 1773.12,-193.5"/>
-<text text-anchor="start" x="1648.12" y="-180" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::Piecewise</text>
-<text text-anchor="middle" x="1706.62" y="-165.75" font-family="Helvetica,sans-Serif" font-size="10.00">LinearInductor</text>
+<polygon fill="white" stroke="#666666" points="1773.12,-217.5 1640.12,-217.5 1640.12,-181 1773.12,-181 1773.12,-217.5"/>
+<text text-anchor="start" x="1648.12" y="-204" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::Piecewise</text>
+<text text-anchor="middle" x="1706.62" y="-189.75" font-family="Helvetica,sans-Serif" font-size="10.00">LinearInductor</text>
 </a>
 </g>
 </g>
@@ -583,8 +583,8 @@
 <g id="edge32_Node000028_Node000030" class="edge">
 <title>Node28&#45;&gt;Node30</title>
 <g id="a_edge32_Node000028_Node000030"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1605.99,-162.78C1617.29,-164.19 1628.75,-165.63 1639.68,-167"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1606.62,-159.33 1596.26,-161.56 1605.75,-166.28 1606.62,-159.33"/>
+<path fill="none" stroke="#63b8ff" d="M1605.63,-173.67C1617.05,-176.59 1628.64,-179.56 1639.68,-182.38"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1606.78,-170.36 1596.23,-171.27 1605.05,-177.14 1606.78,-170.36"/>
 </a>
 </g>
 </g>
@@ -592,8 +592,8 @@
 <g id="Node000031" class="node">
 <title>Node31</title>
 <g id="a_Node000031"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_l.html" target="_top" xlink:title="Three&#45;phase grid&#45;following inverter represented by a locally linearized affine state&#45;space model.">
-<polygon fill="white" stroke="#666666" points="1771.25,-139.38 1642,-139.38 1642,-117.12 1771.25,-117.12 1771.25,-139.38"/>
-<text text-anchor="middle" x="1706.62" y="-125.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::SSN_GFL</text>
+<polygon fill="white" stroke="#666666" points="1771.25,-163.38 1642,-163.38 1642,-141.12 1771.25,-141.12 1771.25,-163.38"/>
+<text text-anchor="middle" x="1706.62" y="-149.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::SSN_GFL</text>
 </a>
 </g>
 </g>
@@ -601,8 +601,8 @@
 <g id="edge33_Node000028_Node000031" class="edge">
 <title>Node28&#45;&gt;Node31</title>
 <g id="a_edge33_Node000028_Node000031"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1606.15,-141.24C1618.12,-139.68 1630.25,-138.09 1641.74,-136.59"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1605.73,-137.77 1596.26,-142.53 1606.63,-144.71 1605.73,-137.77"/>
+<path fill="none" stroke="#63b8ff" d="M1606.15,-152.25C1618.12,-152.25 1630.25,-152.25 1641.74,-152.25"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1606.28,-148.75 1596.28,-152.25 1606.28,-155.75 1606.28,-148.75"/>
 </a>
 </g>
 </g>
@@ -610,8 +610,8 @@
 <g id="Node000032" class="node">
 <title>Node32</title>
 <g id="a_Node000032"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_m.html" target="_top" xlink:title="Three&#45;phase grid&#45;forming inverter represented by a locally linearized affine state&#45;space model.">
-<polygon fill="white" stroke="#666666" points="1773.12,-99.38 1640.12,-99.38 1640.12,-77.12 1773.12,-77.12 1773.12,-99.38"/>
-<text text-anchor="middle" x="1706.62" y="-85.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::SSN_GFM</text>
+<polygon fill="white" stroke="#666666" points="1773.12,-123.38 1640.12,-123.38 1640.12,-101.12 1773.12,-101.12 1773.12,-123.38"/>
+<text text-anchor="middle" x="1706.62" y="-109.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::SSN_GFM</text>
 </a>
 </g>
 </g>
@@ -619,8 +619,27 @@
 <g id="edge34_Node000028_Node000032" class="edge">
 <title>Node28&#45;&gt;Node32</title>
 <g id="a_edge34_Node000028_Node000032"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1584.19,-129.43C1587.69,-128.04 1591.15,-126.64 1594.5,-125.25 1611.22,-118.31 1614.48,-114.41 1631.5,-108.25 1640.02,-105.17 1649.25,-102.31 1658.2,-99.78"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1583.09,-126.1 1575.05,-133 1585.64,-132.62 1583.09,-126.1"/>
+<path fill="none" stroke="#63b8ff" d="M1605.68,-134.01C1621.56,-130.55 1637.77,-127.02 1652.38,-123.84"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1605.27,-130.51 1596.24,-136.06 1606.76,-137.35 1605.27,-130.51"/>
+</a>
+</g>
+</g>
+<!-- Node33 -->
+<g id="Node000033" class="node">
+<title>Node33</title>
+<g id="a_Node000033"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___induction_motor.html" target="_top" xlink:title="Induction machine model formulated as a variable V&#45;type SSN component.">
+<polygon fill="white" stroke="#666666" points="1760,-83.5 1653.25,-83.5 1653.25,-47 1760,-47 1760,-83.5"/>
+<text text-anchor="start" x="1661.25" y="-70" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::SSN</text>
+<text text-anchor="middle" x="1706.62" y="-55.75" font-family="Helvetica,sans-Serif" font-size="10.00">_InductionMotor</text>
+</a>
+</g>
+</g>
+<!-- Node28&#45;&gt;Node33 -->
+<g id="edge35_Node000028_Node000033" class="edge">
+<title>Node28&#45;&gt;Node33</title>
+<g id="a_edge35_Node000028_Node000033"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1588.64,-128.58C1590.64,-127.5 1592.6,-126.4 1594.5,-125.25 1613.38,-113.88 1612.59,-103.56 1631.5,-92.25 1638.2,-88.24 1645.59,-84.68 1653.03,-81.57"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1587.14,-125.42 1579.73,-132.98 1590.24,-131.69 1587.14,-125.42"/>
 </a>
 </g>
 </g>

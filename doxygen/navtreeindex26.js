@@ -1,5 +1,9 @@
 var NAVTREEINDEX26 =
 {
+"class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_reduced_order_synchron_generator_v_b_r.html":[2,0,0,3,2,16],
+"class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_reduced_order_synchron_generator_v_b_r.html#a05e6bd44b16147250b2b757ad2fe72e5":[1,0,0,3,2,16,3],
+"class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_reduced_order_synchron_generator_v_b_r.html#a05e6bd44b16147250b2b757ad2fe72e5":[2,0,0,3,2,16,3],
+"class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_reduced_order_synchron_generator_v_b_r.html#a0b918274d8a7935a53826e00329674a1":[1,0,0,3,2,16,10],
 "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_reduced_order_synchron_generator_v_b_r.html#a0b918274d8a7935a53826e00329674a1":[2,0,0,3,2,16,10],
 "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_reduced_order_synchron_generator_v_b_r.html#a2acb8c6525a86cb476c51249773b40a4":[1,0,0,3,2,16,7],
 "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_reduced_order_synchron_generator_v_b_r.html#a2acb8c6525a86cb476c51249773b40a4":[2,0,0,3,2,16,7],
@@ -241,13 +245,9 @@ var NAVTREEINDEX26 =
 "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_m.html#af5eea341dcaf029b435e2cc2e2e143d4":[2,0,0,3,2,25,10],
 "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_m.html#af8d850284b399090efedbfc314f6e241":[1,0,0,3,2,25,1],
 "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_m.html#af8d850284b399090efedbfc314f6e241":[2,0,0,3,2,25,1],
-"class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_series_resistor.html":[1,0,0,3,2,20],
-"class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_series_resistor.html":[2,0,0,3,2,20],
-"class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_series_resistor.html#a18bcdc540e6036c76935cd0b0ecae104":[1,0,0,3,2,20,8],
-"class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_series_resistor.html#a18bcdc540e6036c76935cd0b0ecae104":[2,0,0,3,2,20,8],
-"class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_series_resistor.html#a196e85982295f995860020129ebb7922":[1,0,0,3,2,20,6],
-"class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_series_resistor.html#a196e85982295f995860020129ebb7922":[2,0,0,3,2,20,6],
-"class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_series_resistor.html#a1e2011723472906ddfe0825f5fa5fb38":[1,0,0,3,2,20,4],
-"class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_series_resistor.html#a1e2011723472906ddfe0825f5fa5fb38":[2,0,0,3,2,20,4],
-"class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_series_resistor.html#a3292d01894ec03871aa419cc8d5a8b56":[1,0,0,3,2,20,2]
+"class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___induction_motor.html":[1,0,0,3,2,26],
+"class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___induction_motor.html":[2,0,0,3,2,26],
+"class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___induction_motor.html#a05c0ec183d9601e123a193034cd7b5fb":[1,0,0,3,2,26,36],
+"class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___induction_motor.html#a05c0ec183d9601e123a193034cd7b5fb":[2,0,0,3,2,26,36],
+"class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___induction_motor.html#a05cc4d6dea2acc6ac8c6a8126da75aef":[1,0,0,3,2,26,48]
 };

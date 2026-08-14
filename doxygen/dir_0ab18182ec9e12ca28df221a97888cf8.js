@@ -48,6 +48,7 @@ var dir_0ab18182ec9e12ca28df221a97888cf8 =
     [ "EMT_Ph3_SSN_GFL.h", "_e_m_t___ph3___s_s_n___g_f_l_8h.html", "_e_m_t___ph3___s_s_n___g_f_l_8h" ],
     [ "EMT_Ph3_SSN_GFL_Split.h", "_e_m_t___ph3___s_s_n___g_f_l___split_8h.html", "_e_m_t___ph3___s_s_n___g_f_l___split_8h" ],
     [ "EMT_Ph3_SSN_GFM.h", "_e_m_t___ph3___s_s_n___g_f_m_8h.html", "_e_m_t___ph3___s_s_n___g_f_m_8h" ],
+    [ "EMT_Ph3_SSN_InductionMotor.h", "_e_m_t___ph3___s_s_n___induction_motor_8h.html", "_e_m_t___ph3___s_s_n___induction_motor_8h" ],
     [ "EMT_Ph3_SSN_Inductor.h", "_e_m_t___ph3___s_s_n___inductor_8h.html", "_e_m_t___ph3___s_s_n___inductor_8h" ],
     [ "EMT_Ph3_Switch.h", "_e_m_t___ph3___switch_8h.html", "_e_m_t___ph3___switch_8h" ],
     [ "EMT_Ph3_SynchronGenerator3OrderVBR.h", "_e_m_t___ph3___synchron_generator3_order_v_b_r_8h.html", "_e_m_t___ph3___synchron_generator3_order_v_b_r_8h" ],

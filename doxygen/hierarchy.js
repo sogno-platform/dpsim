@@ -362,7 +362,8 @@ var hierarchy =
                     [ "CPS::EMT::Ph3::AvVoltSourceInverterStateSpace", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html", null ],
                     [ "CPS::EMT::Ph3::PiecewiseLinearInductor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_piecewise_linear_inductor.html", null ],
                     [ "CPS::EMT::Ph3::SSN_GFL", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_l.html", null ],
-                    [ "CPS::EMT::Ph3::SSN_GFM", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_m.html", null ]
+                    [ "CPS::EMT::Ph3::SSN_GFM", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_m.html", null ],
+                    [ "CPS::EMT::Ph3::SSN_InductionMotor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___induction_motor.html", null ]
                   ] ]
                 ] ]
               ] ]

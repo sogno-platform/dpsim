@@ -1,5 +1,9 @@
 var NAVTREEINDEX3 =
 {
+"_exciter_d_c1_8h.html":[3,0,2,0,0,4,9],
+"_exciter_d_c1_8h_source.html":[3,0,2,0,0,4,9],
+"_exciter_d_c1_simp_8cpp.html":[3,0,2,1,4,10],
+"_exciter_d_c1_simp_8cpp_source.html":[3,0,2,1,4,10],
 "_exciter_d_c1_simp_8h.html":[3,0,2,0,0,4,10],
 "_exciter_d_c1_simp_8h_source.html":[3,0,2,0,0,4,10],
 "_exciter_s_t1_simp_8cpp.html":[3,0,2,1,4,11],
@@ -245,9 +249,5 @@ var NAVTREEINDEX3 =
 "_s_p___ph1___reduced_order_synchron_generator_v_b_r_8h_source.html":[3,0,2,0,0,6,10],
 "_s_p___ph1___resistor_8cpp.html":[3,0,2,1,5,11],
 "_s_p___ph1___resistor_8cpp_source.html":[3,0,2,1,5,11],
-"_s_p___ph1___resistor_8h.html":[3,0,2,0,0,6,11],
-"_s_p___ph1___resistor_8h_source.html":[3,0,2,0,0,6,11],
-"_s_p___ph1___s_s_n_type_i2_t_8cpp.html":[3,0,2,1,5,15],
-"_s_p___ph1___s_s_n_type_i2_t_8cpp_source.html":[3,0,2,1,5,15],
-"_s_p___ph1___s_s_n_type_i2_t_8h.html":[3,0,2,0,0,6,15]
+"_s_p___ph1___resistor_8h.html":[3,0,2,0,0,6,11]
 };
