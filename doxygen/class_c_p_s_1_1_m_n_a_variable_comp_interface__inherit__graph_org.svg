@@ -291,49 +291,31 @@
 </a>
 </g>
 </g>
-<!-- Node34 -->
-<g id="Node000034" class="node">
-<title>Node34</title>
-<g id="a_Node000034"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_reduced_order_synchron_generator_v_b_r.html" target="_top" xlink:title="Base class for SP VBR synchronous generator model single phase.">
+<!-- Node35 -->
+<g id="Node000035" class="node">
+<title>Node35</title>
+<g id="a_Node000035"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_reduced_order_synchron_generator_v_b_r.html" target="_top" xlink:title="Base class for SP VBR synchronous generator model single phase.">
 <polygon fill="white" stroke="#666666" points="379.62,-224.5 230.88,-224.5 230.88,-188 379.62,-188 379.62,-224.5"/>
 <text text-anchor="start" x="238.88" y="-211" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::ReducedOrder</text>
 <text text-anchor="middle" x="305.25" y="-196.75" font-family="Helvetica,sans-Serif" font-size="10.00">SynchronGeneratorVBR</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node34 -->
-<g id="edge33_Node000001_Node000034" class="edge">
-<title>Node1&#45;&gt;Node34</title>
-<g id="a_edge33_Node000001_Node000034"><a xlink:title=" ">
+<!-- Node1&#45;&gt;Node35 -->
+<g id="edge34_Node000001_Node000035" class="edge">
+<title>Node1&#45;&gt;Node35</title>
+<g id="a_edge34_Node000001_Node000035"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M91.36,-490.67C104.01,-442.68 139.37,-329.22 205.75,-259.25 219.45,-244.81 237.97,-233.44 255.25,-224.99"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="88.01,-489.62 88.94,-500.18 94.79,-491.35 88.01,-489.62"/>
-</a>
-</g>
-</g>
-<!-- Node40 -->
-<g id="Node000040" class="node">
-<title>Node40</title>
-<g id="a_Node000040"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_switch.html" target="_top" xlink:title="Dynamic phasor switch.">
-<polygon fill="white" stroke="#666666" points="360.12,-170.38 250.38,-170.38 250.38,-148.12 360.12,-148.12 360.12,-170.38"/>
-<text text-anchor="middle" x="305.25" y="-156.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::Switch</text>
-</a>
-</g>
-</g>
-<!-- Node1&#45;&gt;Node40 -->
-<g id="edge39_Node000001_Node000040" class="edge">
-<title>Node1&#45;&gt;Node40</title>
-<g id="a_edge39_Node000001_Node000040"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M86.76,-490.62C90.41,-429.99 109.19,-262.8 205.75,-179.25 217.96,-168.69 234.2,-163.15 249.97,-160.38"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="83.27,-490.2 86.26,-500.36 90.26,-490.56 83.27,-490.2"/>
 </a>
 </g>
 </g>
 <!-- Node41 -->
 <g id="Node000041" class="node">
 <title>Node41</title>
-<g id="a_Node000041"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1var_res_switch.html" target="_top" xlink:title="Switch with variable resistance to avoid numerical oscillations, when an inductive current is suddenl...">
-<polygon fill="white" stroke="#666666" points="375.88,-130.38 234.62,-130.38 234.62,-108.12 375.88,-108.12 375.88,-130.38"/>
-<text text-anchor="middle" x="305.25" y="-116.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::varResSwitch</text>
+<g id="a_Node000041"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_switch.html" target="_top" xlink:title="Dynamic phasor switch.">
+<polygon fill="white" stroke="#666666" points="360.12,-170.38 250.38,-170.38 250.38,-148.12 360.12,-148.12 360.12,-170.38"/>
+<text text-anchor="middle" x="305.25" y="-156.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::Switch</text>
 </a>
 </g>
 </g>
@@ -341,6 +323,24 @@
 <g id="edge40_Node000001_Node000041" class="edge">
 <title>Node1&#45;&gt;Node41</title>
 <g id="a_edge40_Node000001_Node000041"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M86.76,-490.62C90.41,-429.99 109.19,-262.8 205.75,-179.25 217.96,-168.69 234.2,-163.15 249.97,-160.38"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="83.27,-490.2 86.26,-500.36 90.26,-490.56 83.27,-490.2"/>
+</a>
+</g>
+</g>
+<!-- Node42 -->
+<g id="Node000042" class="node">
+<title>Node42</title>
+<g id="a_Node000042"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1var_res_switch.html" target="_top" xlink:title="Switch with variable resistance to avoid numerical oscillations, when an inductive current is suddenl...">
+<polygon fill="white" stroke="#666666" points="375.88,-130.38 234.62,-130.38 234.62,-108.12 375.88,-108.12 375.88,-130.38"/>
+<text text-anchor="middle" x="305.25" y="-116.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::varResSwitch</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node42 -->
+<g id="edge41_Node000001_Node000042" class="edge">
+<title>Node1&#45;&gt;Node42</title>
+<g id="a_edge41_Node000001_Node000042"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M85.76,-490.62C86.76,-425.25 99.1,-234.79 205.75,-139.25 213.81,-132.03 223.74,-127.14 234.17,-123.86"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="82.27,-490.42 85.7,-500.44 89.27,-490.47 82.27,-490.42"/>
 </a>
@@ -616,9 +616,9 @@
 <g id="Node000031" class="node">
 <title>Node31</title>
 <g id="a_Node000031"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="819.25,-366.5 669,-366.5 669,-330 819.25,-330 819.25,-366.5"/>
-<text text-anchor="start" x="677" y="-353" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::AvVoltSource</text>
-<text text-anchor="middle" x="744.12" y="-338.75" font-family="Helvetica,sans-Serif" font-size="10.00">InverterStateSpace</text>
+<polygon fill="white" stroke="#666666" points="819.25,-389.5 669,-389.5 669,-353 819.25,-353 819.25,-389.5"/>
+<text text-anchor="start" x="677" y="-376" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::AvVoltSource</text>
+<text text-anchor="middle" x="744.12" y="-361.75" font-family="Helvetica,sans-Serif" font-size="10.00">InverterStateSpace</text>
 </a>
 </g>
 </g>
@@ -626,8 +626,8 @@
 <g id="edge30_Node000030_Node000031" class="edge">
 <title>Node30&#45;&gt;Node31</title>
 <g id="a_edge30_Node000030_Node000031"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M618.72,-314.91C636.73,-319.74 655.67,-324.82 673.19,-329.51"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="619.68,-311.55 609.11,-312.34 617.86,-318.31 619.68,-311.55"/>
+<path fill="none" stroke="#63b8ff" d="M619.71,-315.8C624.25,-317.53 628.71,-319.35 633,-321.25 650.14,-328.85 652.16,-335.01 669,-343.25 675.67,-346.51 682.83,-349.65 689.97,-352.56"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="621.03,-312.56 610.43,-312.46 618.65,-319.14 621.03,-312.56"/>
 </a>
 </g>
 </g>
@@ -635,9 +635,9 @@
 <g id="Node000032" class="node">
 <title>Node32</title>
 <g id="a_Node000032"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_piecewise_linear_inductor.html" target="_top" xlink:title="Three&#45;phase, two&#45;terminal, piecewise&#45;linear flux&#45;state inductor.">
-<polygon fill="white" stroke="#666666" points="810.62,-311.5 677.62,-311.5 677.62,-275 810.62,-275 810.62,-311.5"/>
-<text text-anchor="start" x="685.62" y="-298" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::Piecewise</text>
-<text text-anchor="middle" x="744.12" y="-283.75" font-family="Helvetica,sans-Serif" font-size="10.00">LinearInductor</text>
+<polygon fill="white" stroke="#666666" points="810.62,-334.5 677.62,-334.5 677.62,-298 810.62,-298 810.62,-334.5"/>
+<text text-anchor="start" x="685.62" y="-321" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::Piecewise</text>
+<text text-anchor="middle" x="744.12" y="-306.75" font-family="Helvetica,sans-Serif" font-size="10.00">LinearInductor</text>
 </a>
 </g>
 </g>
@@ -645,17 +645,17 @@
 <g id="edge31_Node000030_Node000032" class="edge">
 <title>Node30&#45;&gt;Node32</title>
 <g id="a_edge31_Node000030_Node000032"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M622.13,-293.25C640.52,-293.25 659.71,-293.25 677.26,-293.25"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="622.33,-289.75 612.33,-293.25 622.33,-296.75 622.33,-289.75"/>
+<path fill="none" stroke="#63b8ff" d="M622.13,-302.69C640.52,-304.75 659.71,-306.9 677.26,-308.87"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="622.65,-299.23 612.32,-301.59 621.87,-306.18 622.65,-299.23"/>
 </a>
 </g>
 </g>
 <!-- Node33 -->
 <g id="Node000033" class="node">
 <title>Node33</title>
-<g id="a_Node000033"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_m.html" target="_top" xlink:title="Three&#45;phase grid&#45;forming inverter represented by a locally linearized affine state&#45;space model.">
-<polygon fill="white" stroke="#666666" points="810.62,-257.38 677.62,-257.38 677.62,-235.12 810.62,-235.12 810.62,-257.38"/>
-<text text-anchor="middle" x="744.12" y="-243.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::SSN_GFM</text>
+<g id="a_Node000033"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_l.html" target="_top" xlink:title="Three&#45;phase grid&#45;following inverter represented by a locally linearized affine state&#45;space model.">
+<polygon fill="white" stroke="#666666" points="808.75,-280.38 679.5,-280.38 679.5,-258.12 808.75,-258.12 808.75,-280.38"/>
+<text text-anchor="middle" x="744.12" y="-266.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::SSN_GFL</text>
 </a>
 </g>
 </g>
@@ -663,101 +663,119 @@
 <g id="edge32_Node000030_Node000033" class="edge">
 <title>Node30&#45;&gt;Node33</title>
 <g id="a_edge32_Node000030_Node000033"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M621.74,-274.04C645.79,-268.54 671.26,-262.71 692.63,-257.81"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="621.26,-270.57 612.29,-276.21 622.82,-277.39 621.26,-270.57"/>
+<path fill="none" stroke="#63b8ff" d="M622.23,-283.39C641.29,-281.16 661.22,-278.83 679.28,-276.72"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="621.85,-279.91 612.32,-284.55 622.66,-286.86 621.85,-279.91"/>
 </a>
 </g>
 </g>
-<!-- Node35 -->
-<g id="Node000035" class="node">
-<title>Node35</title>
-<g id="a_Node000035"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator3_order_v_b_r.html" target="_top" xlink:title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 3rd order synchronous generator model.">
-<polygon fill="white" stroke="#666666" points="625.88,-256.5 447.88,-256.5 447.88,-220 625.88,-220 625.88,-256.5"/>
-<text text-anchor="start" x="455.88" y="-243" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::SynchronGenerator3</text>
-<text text-anchor="middle" x="536.88" y="-228.75" font-family="Helvetica,sans-Serif" font-size="10.00">OrderVBR</text>
+<!-- Node34 -->
+<g id="Node000034" class="node">
+<title>Node34</title>
+<g id="a_Node000034"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_m.html" target="_top" xlink:title="Three&#45;phase grid&#45;forming inverter represented by a locally linearized affine state&#45;space model.">
+<polygon fill="white" stroke="#666666" points="810.62,-240.38 677.62,-240.38 677.62,-218.12 810.62,-218.12 810.62,-240.38"/>
+<text text-anchor="middle" x="744.12" y="-226.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::SSN_GFM</text>
 </a>
 </g>
 </g>
-<!-- Node34&#45;&gt;Node35 -->
-<g id="edge34_Node000034_Node000035" class="edge">
-<title>Node34&#45;&gt;Node35</title>
-<g id="a_edge34_Node000034_Node000035"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M391.12,-218.08C409.48,-220.64 428.94,-223.35 447.44,-225.93"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="391.74,-214.63 381.35,-216.72 390.77,-221.56 391.74,-214.63"/>
+<!-- Node30&#45;&gt;Node34 -->
+<g id="edge33_Node000030_Node000034" class="edge">
+<title>Node30&#45;&gt;Node34</title>
+<g id="a_edge33_Node000030_Node000034"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M616.42,-271.02C622.06,-269.15 627.63,-267.22 633,-265.25 649.43,-259.21 652.5,-255.1 669,-249.25 677.54,-246.22 686.78,-243.39 695.73,-240.86"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="615.42,-267.67 606.97,-274.07 617.57,-274.33 615.42,-267.67"/>
 </a>
 </g>
 </g>
 <!-- Node36 -->
 <g id="Node000036" class="node">
 <title>Node36</title>
-<g id="a_Node000036"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator4_order_v_b_r.html" target="_top" xlink:title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 4th order synchronous generator model.">
-<polygon fill="white" stroke="#666666" points="625.88,-201.5 447.88,-201.5 447.88,-165 625.88,-165 625.88,-201.5"/>
-<text text-anchor="start" x="455.88" y="-188" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::SynchronGenerator4</text>
-<text text-anchor="middle" x="536.88" y="-173.75" font-family="Helvetica,sans-Serif" font-size="10.00">OrderVBR</text>
+<g id="a_Node000036"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator3_order_v_b_r.html" target="_top" xlink:title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 3rd order synchronous generator model.">
+<polygon fill="white" stroke="#666666" points="625.88,-256.5 447.88,-256.5 447.88,-220 625.88,-220 625.88,-256.5"/>
+<text text-anchor="start" x="455.88" y="-243" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::SynchronGenerator3</text>
+<text text-anchor="middle" x="536.88" y="-228.75" font-family="Helvetica,sans-Serif" font-size="10.00">OrderVBR</text>
 </a>
 </g>
 </g>
-<!-- Node34&#45;&gt;Node36 -->
-<g id="edge35_Node000034_Node000036" class="edge">
-<title>Node34&#45;&gt;Node36</title>
-<g id="a_edge35_Node000034_Node000036"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M391.12,-197.75C409.48,-195.91 428.94,-193.96 447.44,-192.11"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="390.96,-194.25 381.36,-198.73 391.66,-201.21 390.96,-194.25"/>
+<!-- Node35&#45;&gt;Node36 -->
+<g id="edge35_Node000035_Node000036" class="edge">
+<title>Node35&#45;&gt;Node36</title>
+<g id="a_edge35_Node000035_Node000036"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M391.12,-218.08C409.48,-220.64 428.94,-223.35 447.44,-225.93"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="391.74,-214.63 381.35,-216.72 390.77,-221.56 391.74,-214.63"/>
 </a>
 </g>
 </g>
 <!-- Node37 -->
 <g id="Node000037" class="node">
 <title>Node37</title>
-<g id="a_Node000037"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator5_order_v_b_r.html" target="_top" xlink:title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 5th type 2 order synchronous generator model Ref: Mi...">
-<polygon fill="white" stroke="#666666" points="625.88,-146.5 447.88,-146.5 447.88,-110 625.88,-110 625.88,-146.5"/>
-<text text-anchor="start" x="455.88" y="-133" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::SynchronGenerator5</text>
-<text text-anchor="middle" x="536.88" y="-118.75" font-family="Helvetica,sans-Serif" font-size="10.00">OrderVBR</text>
+<g id="a_Node000037"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator4_order_v_b_r.html" target="_top" xlink:title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 4th order synchronous generator model.">
+<polygon fill="white" stroke="#666666" points="625.88,-201.5 447.88,-201.5 447.88,-165 625.88,-165 625.88,-201.5"/>
+<text text-anchor="start" x="455.88" y="-188" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::SynchronGenerator4</text>
+<text text-anchor="middle" x="536.88" y="-173.75" font-family="Helvetica,sans-Serif" font-size="10.00">OrderVBR</text>
 </a>
 </g>
 </g>
-<!-- Node34&#45;&gt;Node37 -->
-<g id="edge36_Node000034_Node000037" class="edge">
-<title>Node34&#45;&gt;Node37</title>
-<g id="a_edge36_Node000034_Node000037"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M390.66,-184.95C395.48,-183.17 400.21,-181.27 404.75,-179.25 422.1,-171.54 423.47,-164.12 440.75,-156.25 448.19,-152.86 456.15,-149.76 464.17,-146.97"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="389.71,-181.57 381.42,-188.17 392.02,-188.18 389.71,-181.57"/>
+<!-- Node35&#45;&gt;Node37 -->
+<g id="edge36_Node000035_Node000037" class="edge">
+<title>Node35&#45;&gt;Node37</title>
+<g id="a_edge36_Node000035_Node000037"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M391.12,-197.75C409.48,-195.91 428.94,-193.96 447.44,-192.11"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="390.96,-194.25 381.36,-198.73 391.66,-201.21 390.96,-194.25"/>
 </a>
 </g>
 </g>
 <!-- Node38 -->
 <g id="Node000038" class="node">
 <title>Node38</title>
-<g id="a_Node000038"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator6a_order_v_b_r.html" target="_top" xlink:title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 6th order synchronous generator model Marconato&#39;s mo...">
-<polygon fill="white" stroke="#666666" points="628.5,-91.5 445.25,-91.5 445.25,-55 628.5,-55 628.5,-91.5"/>
-<text text-anchor="start" x="453.25" y="-78" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::SynchronGenerator6a</text>
-<text text-anchor="middle" x="536.88" y="-63.75" font-family="Helvetica,sans-Serif" font-size="10.00">OrderVBR</text>
+<g id="a_Node000038"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator5_order_v_b_r.html" target="_top" xlink:title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 5th type 2 order synchronous generator model Ref: Mi...">
+<polygon fill="white" stroke="#666666" points="625.88,-146.5 447.88,-146.5 447.88,-110 625.88,-110 625.88,-146.5"/>
+<text text-anchor="start" x="455.88" y="-133" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::SynchronGenerator5</text>
+<text text-anchor="middle" x="536.88" y="-118.75" font-family="Helvetica,sans-Serif" font-size="10.00">OrderVBR</text>
 </a>
 </g>
 </g>
-<!-- Node34&#45;&gt;Node38 -->
-<g id="edge37_Node000034_Node000038" class="edge">
-<title>Node34&#45;&gt;Node38</title>
-<g id="a_edge37_Node000034_Node000038"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M390.29,-188.99C395.46,-186.21 400.34,-182.99 404.75,-179.25 433.88,-154.57 411.85,-126.2 440.75,-101.25 444.92,-97.65 449.53,-94.51 454.41,-91.78"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="388.98,-185.74 381.43,-193.16 391.96,-192.07 388.98,-185.74"/>
+<!-- Node35&#45;&gt;Node38 -->
+<g id="edge37_Node000035_Node000038" class="edge">
+<title>Node35&#45;&gt;Node38</title>
+<g id="a_edge37_Node000035_Node000038"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M390.66,-184.95C395.48,-183.17 400.21,-181.27 404.75,-179.25 422.1,-171.54 423.47,-164.12 440.75,-156.25 448.19,-152.86 456.15,-149.76 464.17,-146.97"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="389.71,-181.57 381.42,-188.17 392.02,-188.18 389.71,-181.57"/>
 </a>
 </g>
 </g>
 <!-- Node39 -->
 <g id="Node000039" class="node">
 <title>Node39</title>
-<g id="a_Node000039"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator6b_order_v_b_r.html" target="_top" xlink:title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 6th order synchronous generator model Anderson&#45;Fouad...">
+<g id="a_Node000039"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator6a_order_v_b_r.html" target="_top" xlink:title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 6th order synchronous generator model Marconato&#39;s mo...">
+<polygon fill="white" stroke="#666666" points="628.5,-91.5 445.25,-91.5 445.25,-55 628.5,-55 628.5,-91.5"/>
+<text text-anchor="start" x="453.25" y="-78" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::SynchronGenerator6a</text>
+<text text-anchor="middle" x="536.88" y="-63.75" font-family="Helvetica,sans-Serif" font-size="10.00">OrderVBR</text>
+</a>
+</g>
+</g>
+<!-- Node35&#45;&gt;Node39 -->
+<g id="edge38_Node000035_Node000039" class="edge">
+<title>Node35&#45;&gt;Node39</title>
+<g id="a_edge38_Node000035_Node000039"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M390.29,-188.99C395.46,-186.21 400.34,-182.99 404.75,-179.25 433.88,-154.57 411.85,-126.2 440.75,-101.25 444.92,-97.65 449.53,-94.51 454.41,-91.78"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="388.98,-185.74 381.43,-193.16 391.96,-192.07 388.98,-185.74"/>
+</a>
+</g>
+</g>
+<!-- Node40 -->
+<g id="Node000040" class="node">
+<title>Node40</title>
+<g id="a_Node000040"><a xlink:href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator6b_order_v_b_r.html" target="_top" xlink:title="Voltage&#45;Behind&#45;Reactance (VBR) implementation of 6th order synchronous generator model Anderson&#45;Fouad...">
 <polygon fill="white" stroke="#666666" points="628.88,-36.5 444.88,-36.5 444.88,0 628.88,0 628.88,-36.5"/>
 <text text-anchor="start" x="452.88" y="-23" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::SP::Ph1::SynchronGenerator6b</text>
 <text text-anchor="middle" x="536.88" y="-8.75" font-family="Helvetica,sans-Serif" font-size="10.00">OrderVBR</text>
 </a>
 </g>
 </g>
-<!-- Node34&#45;&gt;Node39 -->
-<g id="edge38_Node000034_Node000039" class="edge">
-<title>Node34&#45;&gt;Node39</title>
-<g id="a_edge38_Node000034_Node000039"><a xlink:title=" ">
+<!-- Node35&#45;&gt;Node40 -->
+<g id="edge39_Node000035_Node000040" class="edge">
+<title>Node35&#45;&gt;Node40</title>
+<g id="a_edge39_Node000035_Node000040"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M389.93,-190.45C395.34,-187.34 400.37,-183.65 404.75,-179.25 447.98,-135.88 397.93,-90.02 440.75,-46.25 444.24,-42.68 448.16,-39.56 452.37,-36.84"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="388.61,-187.2 381.19,-194.77 391.71,-193.48 388.61,-187.2"/>
 </a>

@@ -438,6 +438,8 @@
 </li>
         <li><a href="reference/dp.html#dpsimpy.dp.ph1.GenericTwoTerminalVTypeSSN.connect">(GenericTwoTerminalVTypeSSN method)</a>, <a href="reference/dp.html#dpsimpy.dp.ph3.GenericTwoTerminalVTypeSSN.connect">[1]</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.GenericTwoTerminalVTypeSSN.connect">[2]</a>
 </li>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.GFL.connect">(GFL method)</a>
+</li>
         <li><a href="reference/dp.html#dpsimpy.dp.ph1.Inductor.connect">(Inductor method)</a>, <a href="reference/dp.html#dpsimpy.dp.ph3.Inductor.connect">[1]</a>, <a href="reference/emt.html#dpsimpy.emt.ph1.Inductor.connect">[2]</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.Inductor.connect">[3]</a>, <a href="reference/sp.html#dpsimpy.sp.ph1.Inductor.connect">[4]</a>, <a href="reference/sp.html#dpsimpy.sp.ph3.Inductor.connect">[5]</a>
 </li>
         <li><a href="reference/dp.html#dpsimpy.dp.ph1.Inverter.connect">(Inverter method)</a>
@@ -465,6 +467,10 @@
         <li><a href="reference/core.html#dpsimpy.SimPowerCompReal.connect">(SimPowerCompReal method)</a>
 </li>
         <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_Capacitor.connect">(SSN_Capacitor method)</a>
+</li>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL.connect">(SSN_GFL method)</a>
+</li>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.connect">(SSN_GFL_Split method)</a>
 </li>
         <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM.connect">(SSN_GFM method)</a>
 </li>
@@ -857,18 +863,50 @@
       </ul></li>
       <li><a href="reference/core.html#dpsimpy.StateSpaceModalAnalysis.get_continuous_eigenvalues">get_continuous_eigenvalues() (StateSpaceModalAnalysis method)</a>
 </li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.get_controller_A">get_controller_A() (SSN_GFL_Split method)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.get_controller_B">get_controller_B() (SSN_GFL_Split method)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.get_controller_C">get_controller_C() (SSN_GFL_Split method)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.get_controller_D">get_controller_D() (SSN_GFL_Split method)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.get_controller_E">get_controller_E() (SSN_GFL_Split method)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.get_controller_F">get_controller_F() (SSN_GFL_Split method)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.get_controller_state">get_controller_state() (SSN_GFL_Split method)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.get_converter_voltage_reference">get_converter_voltage_reference() (SSN_GFL_Split method)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.get_delayed_converter_voltage">get_delayed_converter_voltage() (SSN_GFL_Split method)</a>
+</li>
       <li><a href="reference/core.html#dpsimpy.StateSpaceModalAnalysis.get_discrete_eigenvalues">get_discrete_eigenvalues() (StateSpaceModalAnalysis method)</a>
 </li>
       <li><a href="reference/core.html#dpsimpy.MNAStateSpaceExtractor.get_discrete_state_matrix">get_discrete_state_matrix() (MNAStateSpaceExtractor method)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.get_equivalent_conductance">get_equivalent_conductance() (SSN_GFL_Split method)</a>
 </li>
       <li><a href="reference/core.html#dpsimpy.DirectLinearSolverConfiguration.get_fill_in_reduction_method">get_fill_in_reduction_method() (DirectLinearSolverConfiguration method)</a>
 </li>
       <li><a href="reference/core.html#dpsimpy.Simulation.get_idobj_attr">get_idobj_attr() (Simulation method)</a>
 </li>
-      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM.get_interface_current">get_interface_current() (SSN_GFM method)</a>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL.get_interface_current">get_interface_current() (SSN_GFL method)</a>
+
+      <ul>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.get_interface_current">(SSN_GFL_Split method)</a>
 </li>
-      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM.get_interface_voltage">get_interface_voltage() (SSN_GFM method)</a>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM.get_interface_current">(SSN_GFM method)</a>
 </li>
+      </ul></li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL.get_interface_voltage">get_interface_voltage() (SSN_GFL method)</a>
+
+      <ul>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.get_interface_voltage">(SSN_GFL_Split method)</a>
+</li>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM.get_interface_voltage">(SSN_GFM method)</a>
+</li>
+      </ul></li>
       <li><a href="reference/core.html#dpsimpy.StateSpaceModalAnalysis.get_left_eigenvectors">get_left_eigenvectors() (StateSpaceModalAnalysis method)</a>
 </li>
       <li><a href="reference/signal.html#dpsimpy.signal.DecouplingLine.get_line_components">get_line_components() (DecouplingLine method)</a>
@@ -882,6 +920,18 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/core.html#dpsimpy.Logger.get_log_dir">get_log_dir() (Logger static method)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.get_network_A">get_network_A() (SSN_GFL_Split method)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.get_network_B">get_network_B() (SSN_GFL_Split method)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.get_network_C">get_network_C() (SSN_GFL_Split method)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.get_network_D">get_network_D() (SSN_GFL_Split method)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.get_network_state">get_network_state() (SSN_GFL_Split method)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.get_network_state_names">get_network_state_names() (SSN_GFL_Split method)</a>
 </li>
       <li><a href="reference/core.html#dpsimpy.DirectLinearSolverConfiguration.get_partial_refactorization_method">get_partial_refactorization_method() (DirectLinearSolverConfiguration method)</a>
 </li>
@@ -905,15 +955,29 @@
 </li>
       <li><a href="reference/core.html#dpsimpy.DirectLinearSolverConfiguration.get_scaling_method">get_scaling_method() (DirectLinearSolverConfiguration method)</a>
 </li>
-      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM.get_state">get_state() (SSN_GFM method)</a>
-</li>
-      <li><a href="reference/core.html#dpsimpy.MNAStateSpaceExtractor.get_state_count">get_state_count() (MNAStateSpaceExtractor method)</a>
-</li>
-      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM.get_state_derivative">get_state_derivative() (SSN_GFM method)</a>
-</li>
-      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM.get_state_names">get_state_names() (SSN_GFM method)</a>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL.get_state">get_state() (SSN_GFL method)</a>
 
       <ul>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.get_state">(SSN_GFL_Split method)</a>
+</li>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM.get_state">(SSN_GFM method)</a>
+</li>
+      </ul></li>
+      <li><a href="reference/core.html#dpsimpy.MNAStateSpaceExtractor.get_state_count">get_state_count() (MNAStateSpaceExtractor method)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL.get_state_derivative">get_state_derivative() (SSN_GFL method)</a>
+
+      <ul>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.get_state_derivative">(SSN_GFL_Split method)</a>
+</li>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM.get_state_derivative">(SSN_GFM method)</a>
+</li>
+      </ul></li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL.get_state_names">get_state_names() (SSN_GFL method)</a>
+
+      <ul>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM.get_state_names">(SSN_GFM method)</a>
+</li>
         <li><a href="reference/core.html#dpsimpy.StateSpaceModalAnalysis.get_state_names">(StateSpaceModalAnalysis method)</a>
 </li>
       </ul></li>
@@ -935,6 +999,8 @@
         <li><a href="reference/signal.html#dpsimpy.signal.DecouplingIdealTransformer_SP_Ph1.get_virtual_node">(DecouplingIdealTransformer_SP_Ph1 method)</a>
 </li>
       </ul></li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.GFL">GFL (class in dpsimpy.emt.ph3)</a>
+</li>
       <li><a href="reference/core.html#dpsimpy.StateSpaceAnalysisFrame.GlobalDQ0">GlobalDQ0 (StateSpaceAnalysisFrame attribute)</a>
 </li>
       <li><a href="reference/dp.html#dpsimpy.dp.SimNode.gnd">gnd (SimNode attribute)</a>, <a href="reference/emt.html#dpsimpy.emt.SimNode.gnd">[1]</a>
@@ -983,6 +1049,10 @@
 </li>
       <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM.if_q">if_q (SSN_GFM property)</a>
 </li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.GFL.igrid_d">igrid_d (GFL property)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.GFL.igrid_q">igrid_q (GFL property)</a>
+</li>
       <li><a href="reference/cosimulation.html#dpsimpyvillas.InterfaceVillas.import_attribute">import_attribute() (InterfaceVillas method)</a>
 </li>
       <li><a href="reference/dp.html#dpsimpy.dp.ph1.Inductor">Inductor (class in dpsimpy.dp.ph1)</a>
@@ -1001,10 +1071,10 @@
       </ul></li>
       <li><a href="reference/core.html#dpsimpy.LogLevel.info">info (LogLevel attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/core.html#dpsimpy.SystemTopology.init_with_powerflow">init_with_powerflow() (SystemTopology method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/core.html#dpsimpy.TopologicalNode.initial_single_voltage">initial_single_voltage() (TopologicalNode method)</a>
 </li>
       <li><a href="reference/core.html#dpsimpy.SolverBehaviour.Initialization">Initialization (SolverBehaviour attribute)</a>
@@ -1028,13 +1098,25 @@
       <li><a href="reference/dp.html#dpsimpy.dp.ph1.Inverter">Inverter (class in dpsimpy.dp.ph1)</a>
 </li>
       <li><a href="reference/dp.html#dpsimpy.dp.ph1.AvVoltSourceInverterStateSpace.irc_d">irc_d (AvVoltSourceInverterStateSpace property)</a>, <a href="reference/dp.html#dpsimpy.dp.ph3.AvVoltSourceInverterStateSpace.irc_d">[1]</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.AvVoltSourceInverterStateSpace.irc_d">[2]</a>
+
+      <ul>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL.irc_d">(SSN_GFL property)</a>
 </li>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.irc_d">(SSN_GFL_Split property)</a>
+</li>
+      </ul></li>
       <li><a href="reference/dp.html#dpsimpy.dp.ph3.AvVoltSourceInverterStateSpace.irc_n_d">irc_n_d (AvVoltSourceInverterStateSpace property)</a>
 </li>
       <li><a href="reference/dp.html#dpsimpy.dp.ph3.AvVoltSourceInverterStateSpace.irc_n_q">irc_n_q (AvVoltSourceInverterStateSpace property)</a>
 </li>
       <li><a href="reference/dp.html#dpsimpy.dp.ph1.AvVoltSourceInverterStateSpace.irc_q">irc_q (AvVoltSourceInverterStateSpace property)</a>, <a href="reference/dp.html#dpsimpy.dp.ph3.AvVoltSourceInverterStateSpace.irc_q">[1]</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.AvVoltSourceInverterStateSpace.irc_q">[2]</a>
+
+      <ul>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL.irc_q">(SSN_GFL property)</a>
 </li>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.irc_q">(SSN_GFL_Split property)</a>
+</li>
+      </ul></li>
       <li><a href="reference/core.html#dpsimpy.MNAStateSpaceExtractor.is_initialized">is_initialized() (MNAStateSpaceExtractor method)</a>
 </li>
   </ul></td>
@@ -1307,15 +1389,23 @@
       <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM.omega_gfm">omega_gfm (SSN_GFM property)</a>
 </li>
       <li><a href="reference/dp.html#dpsimpy.dp.ph1.AvVoltSourceInverterStateSpace.omega_pll">omega_pll (AvVoltSourceInverterStateSpace property)</a>, <a href="reference/dp.html#dpsimpy.dp.ph3.AvVoltSourceInverterStateSpace.omega_pll">[1]</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.AvVoltSourceInverterStateSpace.omega_pll">[2]</a>
+
+      <ul>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.GFL.omega_pll">(GFL property)</a>
 </li>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL.omega_pll">(SSN_GFL property)</a>
+</li>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.omega_pll">(SSN_GFL_Split property)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/signal.html#dpsimpy.signal.HydroGovernorParameters.OmRef">OmRef (HydroGovernorParameters property)</a>
 
       <ul>
         <li><a href="reference/signal.html#dpsimpy.signal.SteamGovernorParameters.OmRef">(SteamGovernorParameters property)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/dp.html#dpsimpy.dp.ph3.SeriesSwitch.open">open() (SeriesSwitch method)</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.SeriesSwitch.open">[1]</a>
 
       <ul>
@@ -1333,6 +1423,12 @@
       <li><a href="reference/dp.html#dpsimpy.dp.ph1.AvVoltSourceInverterStateSpace.p_inst">p_inst (AvVoltSourceInverterStateSpace property)</a>, <a href="reference/dp.html#dpsimpy.dp.ph3.AvVoltSourceInverterStateSpace.p_inst">[1]</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.AvVoltSourceInverterStateSpace.p_inst">[2]</a>
 
       <ul>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.GFL.p_inst">(GFL property)</a>
+</li>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL.p_inst">(SSN_GFL property)</a>
+</li>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.p_inst">(SSN_GFL_Split property)</a>
+</li>
         <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM.p_inst">(SSN_GFM property)</a>
 </li>
       </ul></li>
@@ -1354,6 +1450,8 @@
         <li><a href="reference/sp.html#dpsimpy.sp.ph1.PiLine">(class in dpsimpy.sp.ph1)</a>
 </li>
       </ul></li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.GFL.pll_output">pll_output (GFL property)</a>
+</li>
       <li><a href="reference/signal.html#dpsimpy.signal.HydroGovernorParameters.Pmax">Pmax (HydroGovernorParameters property)</a>
 
       <ul>
@@ -1368,6 +1466,12 @@
         <li><a href="reference/signal.html#dpsimpy.signal.SteamGovernorParameters.Pmin">(SteamGovernorParameters property)</a>
 </li>
       </ul></li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.GFL.powerctrl_inputs">powerctrl_inputs (GFL property)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.GFL.powerctrl_outputs">powerctrl_outputs (GFL property)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.GFL.powerctrl_states">powerctrl_states (GFL property)</a>
+</li>
       <li><a href="reference/core.html#dpsimpy.PowerflowBusType">PowerflowBusType (class in dpsimpy)</a>
 </li>
       <li><a href="reference/core.html#dpsimpy.PowerflowBusType.PQ">PQ (PowerflowBusType attribute)</a>
@@ -1397,6 +1501,12 @@
       <li><a href="reference/dp.html#dpsimpy.dp.ph1.AvVoltSourceInverterStateSpace.q_inst">q_inst (AvVoltSourceInverterStateSpace property)</a>, <a href="reference/dp.html#dpsimpy.dp.ph3.AvVoltSourceInverterStateSpace.q_inst">[1]</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.AvVoltSourceInverterStateSpace.q_inst">[2]</a>
 
       <ul>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.GFL.q_inst">(GFL property)</a>
+</li>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL.q_inst">(SSN_GFL property)</a>
+</li>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.q_inst">(SSN_GFL_Split property)</a>
+</li>
         <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM.q_inst">(SSN_GFM property)</a>
 </li>
       </ul></li>
@@ -1533,6 +1643,8 @@
       <li><a href="reference/dp.html#dpsimpy.dp.ph1.AvVoltageSourceInverterDQ.set_controller_parameters">set_controller_parameters() (AvVoltageSourceInverterDQ method)</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.AvVoltageSourceInverterDQ.set_controller_parameters">[1]</a>, <a href="reference/sp.html#dpsimpy.sp.ph1.AvVoltageSourceInverterDQ.set_controller_parameters">[2]</a>
 
       <ul>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.GFL.set_controller_parameters">(GFL method)</a>
+</li>
         <li><a href="reference/emt.html#dpsimpy.emt.ph3.VSIVoltageControlVCO.set_controller_parameters">(VSIVoltageControlVCO method)</a>
 </li>
       </ul></li>
@@ -1553,6 +1665,8 @@
       <li><a href="reference/dp.html#dpsimpy.dp.ph1.AvVoltageSourceInverterDQ.set_filter_parameters">set_filter_parameters() (AvVoltageSourceInverterDQ method)</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.AvVoltageSourceInverterDQ.set_filter_parameters">[1]</a>, <a href="reference/sp.html#dpsimpy.sp.ph1.AvVoltageSourceInverterDQ.set_filter_parameters">[2]</a>
 
       <ul>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.GFL.set_filter_parameters">(GFL method)</a>
+</li>
         <li><a href="reference/emt.html#dpsimpy.emt.ph3.VSIVoltageControlVCO.set_filter_parameters">(VSIVoltageControlVCO method)</a>
 </li>
       </ul></li>
@@ -1573,6 +1687,8 @@
       <li><a href="reference/dp.html#dpsimpy.dp.ph1.AvVoltageSourceInverterDQ.set_initial_state_values">set_initial_state_values() (AvVoltageSourceInverterDQ method)</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.AvVoltageSourceInverterDQ.set_initial_state_values">[1]</a>, <a href="reference/sp.html#dpsimpy.sp.ph1.AvVoltageSourceInverterDQ.set_initial_state_values">[2]</a>
 
       <ul>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.GFL.set_initial_state_values">(GFL method)</a>
+</li>
         <li><a href="reference/emt.html#dpsimpy.emt.ph3.VSIVoltageControlVCO.set_initial_state_values">(VSIVoltageControlVCO method)</a>
 </li>
       </ul></li>
@@ -1675,6 +1791,8 @@
 </li>
         <li><a href="reference/dp.html#dpsimpy.dp.ph1.GenericTwoTerminalVTypeSSN.set_parameters">(GenericTwoTerminalVTypeSSN method)</a>, <a href="reference/dp.html#dpsimpy.dp.ph3.GenericTwoTerminalVTypeSSN.set_parameters">[1]</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.GenericTwoTerminalVTypeSSN.set_parameters">[2]</a>
 </li>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.GFL.set_parameters">(GFL method)</a>
+</li>
         <li><a href="reference/signal.html#dpsimpy.signal.HydroTurbine.set_parameters">(HydroTurbine method)</a>
 </li>
         <li><a href="reference/signal.html#dpsimpy.signal.HydroTurbineGovernor.set_parameters">(HydroTurbineGovernor method)</a>
@@ -1704,6 +1822,10 @@
         <li><a href="reference/dp.html#dpsimpy.dp.ph1.Shunt.set_parameters">(Shunt method)</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.Shunt.set_parameters">[1]</a>, <a href="reference/sp.html#dpsimpy.sp.ph1.Shunt.set_parameters">[2]</a>
 </li>
         <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_Capacitor.set_parameters">(SSN_Capacitor method)</a>
+</li>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL.set_parameters">(SSN_GFL method)</a>
+</li>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.set_parameters">(SSN_GFL_Split method)</a>
 </li>
         <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM.set_parameters">(SSN_GFM method)</a>
 </li>
@@ -1877,6 +1999,10 @@
       <li><a href="reference/core.html#dpsimpy.DirectLinearSolverImpl.SparseLU">SparseLU (DirectLinearSolverImpl attribute)</a>
 </li>
       <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_Capacitor">SSN_Capacitor (class in dpsimpy.emt.ph3)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL">SSN_GFL (class in dpsimpy.emt.ph3)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split">SSN_GFL_Split (class in dpsimpy.emt.ph3)</a>
 </li>
       <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM">SSN_GFM (class in dpsimpy.emt.ph3)</a>
 </li>
@@ -2182,8 +2308,6 @@
         <li><a href="reference/core.html#dpsimpy.use_btf.value">(use_btf property)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/dp.html#dpsimpy.dp.ph1.varResSwitch">varResSwitch (class in dpsimpy.dp.ph1)</a>
 
       <ul>
@@ -2193,16 +2317,36 @@
       <li><a href="reference/dp.html#dpsimpy.dp.ph1.AvVoltSourceInverterStateSpace.vc_d">vc_d (AvVoltSourceInverterStateSpace property)</a>, <a href="reference/dp.html#dpsimpy.dp.ph3.AvVoltSourceInverterStateSpace.vc_d">[1]</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.AvVoltSourceInverterStateSpace.vc_d">[2]</a>
 
       <ul>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.GFL.vc_d">(GFL property)</a>
+</li>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL.vc_d">(SSN_GFL property)</a>
+</li>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.vc_d">(SSN_GFL_Split property)</a>
+</li>
         <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM.vc_d">(SSN_GFM property)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/dp.html#dpsimpy.dp.ph1.AvVoltSourceInverterStateSpace.vc_q">vc_q (AvVoltSourceInverterStateSpace property)</a>, <a href="reference/dp.html#dpsimpy.dp.ph3.AvVoltSourceInverterStateSpace.vc_q">[1]</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.AvVoltSourceInverterStateSpace.vc_q">[2]</a>
 
       <ul>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.GFL.vc_q">(GFL property)</a>
+</li>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL.vc_q">(SSN_GFL property)</a>
+</li>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.vc_q">(SSN_GFL_Split property)</a>
+</li>
         <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM.vc_q">(SSN_GFM property)</a>
 </li>
       </ul></li>
       <li><a href="reference/core.html#dpsimpy.PowerflowBusType.VD">VD (PowerflowBusType attribute)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.vinv_ref_a">vinv_ref_a (SSN_GFL_Split property)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.vinv_ref_b">vinv_ref_b (SSN_GFL_Split property)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFL_Split.vinv_ref_c">vinv_ref_c (SSN_GFL_Split property)</a>
 </li>
       <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM.voltage_magnitude_gfm">voltage_magnitude_gfm (SSN_GFM property)</a>
 </li>
@@ -2222,9 +2366,13 @@
       </ul></li>
       <li><a href="reference/dp.html#dpsimpy.dp.ph1.VoltageSourceNorton">VoltageSourceNorton (class in dpsimpy.dp.ph1)</a>
 </li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.GFL.vs">vs (GFL property)</a>
+</li>
       <li><a href="reference/signal.html#dpsimpy.signal.PSS1AParameters.Vs_max">Vs_max (PSS1AParameters property)</a>
 </li>
       <li><a href="reference/signal.html#dpsimpy.signal.PSS1AParameters.Vs_min">Vs_min (PSS1AParameters property)</a>
+</li>
+      <li><a href="reference/emt.html#dpsimpy.emt.ph3.GFL.vs_ref">vs_ref (GFL property)</a>
 </li>
       <li><a href="reference/emt.html#dpsimpy.emt.ph3.VSIVoltageControlVCO">VSIVoltageControlVCO (class in dpsimpy.emt.ph3)</a>
 </li>
@@ -2236,11 +2384,11 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/core.html#dpsimpy.LogLevel.warn">warn (LogLevel attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/dp.html#dpsimpy.dp.ph1.AvVoltageSourceInverterDQ.with_control">with_control() (AvVoltageSourceInverterDQ method)</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.AvVoltageSourceInverterDQ.with_control">[1]</a>, <a href="reference/sp.html#dpsimpy.sp.ph1.AvVoltageSourceInverterDQ.with_control">[2]</a>
 
       <ul>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.GFL.with_control">(GFL method)</a>
+</li>
         <li><a href="reference/emt.html#dpsimpy.emt.ph3.VSIVoltageControlVCO.with_control">(VSIVoltageControlVCO method)</a>
 </li>
       </ul></li>

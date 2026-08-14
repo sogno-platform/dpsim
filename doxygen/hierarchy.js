@@ -294,6 +294,7 @@ var hierarchy =
               [ "CPS::EMT::Ph1::PiLine", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_pi_line.html", null ],
               [ "CPS::EMT::Ph1::VoltageSourceRamp", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_ramp.html", null ],
               [ "CPS::EMT::Ph3::AvVoltageSourceInverterDQ", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q.html", null ],
+              [ "CPS::EMT::Ph3::GFL", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_g_f_l.html", null ],
               [ "CPS::EMT::Ph3::NetworkInjection", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_network_injection.html", null ],
               [ "CPS::EMT::Ph3::PiLine", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html", null ],
               [ "CPS::EMT::Ph3::RXLoad", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_r_x_load.html", null ],
@@ -353,12 +354,14 @@ var hierarchy =
                 [ "CPS::EMT::Ph3::TwoTerminalVTypeSSNComp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html", [
                   [ "CPS::EMT::Ph3::GenericTwoTerminalVTypeSSN", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_generic_two_terminal_v_type_s_s_n.html", null ],
                   [ "CPS::EMT::Ph3::SSN::Full_Serial_RLC", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html", null ],
-                  [ "CPS::EMT::Ph3::SSN::Inductor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_inductor.html", null ]
+                  [ "CPS::EMT::Ph3::SSN::Inductor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_inductor.html", null ],
+                  [ "CPS::EMT::Ph3::SSN_GFL_Split", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_l___split.html", null ]
                 ] ],
                 [ "CPS::EMT::VTypeVariableSSNComp", "class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html", [
                   [ "CPS::EMT::Ph3::TwoTerminalVTypeVariableSSNComp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_variable_s_s_n_comp.html", [
                     [ "CPS::EMT::Ph3::AvVoltSourceInverterStateSpace", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html", null ],
                     [ "CPS::EMT::Ph3::PiecewiseLinearInductor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_piecewise_linear_inductor.html", null ],
+                    [ "CPS::EMT::Ph3::SSN_GFL", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_l.html", null ],
                     [ "CPS::EMT::Ph3::SSN_GFM", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_m.html", null ]
                   ] ]
                 ] ]
@@ -718,6 +721,9 @@ var hierarchy =
       [ "CPS::DP::Ph3::GenericTwoTerminalVTypeSSN", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_generic_two_terminal_v_type_s_s_n.html", null ],
       [ "CPS::EMT::Ph3::GenericTwoTerminalVTypeSSN", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_generic_two_terminal_v_type_s_s_n.html", null ]
     ] ],
+    [ "SharedFactory< GFL >", "class_shared_factory.html", [
+      [ "CPS::EMT::Ph3::GFL", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_g_f_l.html", null ]
+    ] ],
     [ "SharedFactory< HydroGovernorParameters >", "class_shared_factory.html", [
       [ "CPS::Signal::HydroGovernorParameters", "class_c_p_s_1_1_signal_1_1_hydro_governor_parameters.html", null ]
     ] ],
@@ -872,6 +878,12 @@ var hierarchy =
     ] ],
     [ "SharedFactory< SolidStateTransformer >", "class_shared_factory.html", [
       [ "CPS::SP::Ph1::SolidStateTransformer", "class_c_p_s_1_1_s_p_1_1_ph1_1_1_solid_state_transformer.html", null ]
+    ] ],
+    [ "SharedFactory< SSN_GFL >", "class_shared_factory.html", [
+      [ "CPS::EMT::Ph3::SSN_GFL", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_l.html", null ]
+    ] ],
+    [ "SharedFactory< SSN_GFL_Split >", "class_shared_factory.html", [
+      [ "CPS::EMT::Ph3::SSN_GFL_Split", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_l___split.html", null ]
     ] ],
     [ "SharedFactory< SSN_GFM >", "class_shared_factory.html", [
       [ "CPS::EMT::Ph3::SSN_GFM", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_m.html", null ]
@@ -1089,6 +1101,8 @@ var hierarchy =
       [ "CPS::DP::Ph3::SynchronGeneratorDQODE::ODEPreStep", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q_o_d_e_1_1_o_d_e_pre_step.html", null ],
       [ "CPS::EMT::Ph3::AvVoltageSourceInverterDQ::ControlPreStep", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q_1_1_control_pre_step.html", null ],
       [ "CPS::EMT::Ph3::AvVoltageSourceInverterDQ::ControlStep", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q_1_1_control_step.html", null ],
+      [ "CPS::EMT::Ph3::GFL::ControlPreStep", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_g_f_l_1_1_control_pre_step.html", null ],
+      [ "CPS::EMT::Ph3::GFL::ControlStep", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_g_f_l_1_1_control_step.html", null ],
       [ "CPS::EMT::Ph3::SynchronGeneratorDQODE::ODEPreStep", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_d_q_o_d_e_1_1_o_d_e_pre_step.html", null ],
       [ "CPS::EMT::Ph3::SynchronGeneratorTrStab::AddBStep", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_tr_stab_1_1_add_b_step.html", null ],
       [ "CPS::EMT::Ph3::VSIVoltageControlVCO::ControlPreStep", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_v_s_i_voltage_control_v_c_o_1_1_control_pre_step.html", null ],

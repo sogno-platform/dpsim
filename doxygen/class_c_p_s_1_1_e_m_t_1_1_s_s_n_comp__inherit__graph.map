@@ -1,64 +1,68 @@
 <map id="CPS::EMT::SSNComp" name="CPS::EMT::SSNComp">
-<area shape="rect" id="Node000001" title="Abstract base class for EMT state&#45;space nodal (SSN) components." alt="" coords="1222,289,1368,319"/>
+<area shape="rect" id="Node000001" title="Abstract base class for EMT state&#45;space nodal (SSN) components." alt="" coords="1222,325,1368,355"/>
 <area shape="rect" id="Node000010" href="$class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html" title="Abstract base class for EMT I&#45;type SSN components." alt="" coords="1419,111,1600,140"/>
-<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="1324,277,1489,139,1492,143,1328,281"/>
-<area shape="rect" id="Node000016" href="$class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html" title="Abstract base class for EMT V&#45;type SSN components." alt="" coords="1418,435,1602,464"/>
-<area shape="poly" id="edge18_Node000001_Node000016" title=" " alt="" coords="1333,326,1488,432,1485,437,1330,330"/>
-<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="991,280,1173,328"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1188,302,1221,302,1221,307,1188,307"/>
-<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="722,353,881,402"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="896,350,990,325,992,330,897,355"/>
-<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="208,356,404,386"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="420,370,722,374,722,379,420,375"/>
-<area shape="rect" id="Node000006" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="454,408,612,456"/>
-<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="380,388,454,408,453,413,378,393"/>
-<area shape="rect" id="Node000009" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="454,285,612,334"/>
-<area shape="poly" id="edge10_Node000009_Node000004" title=" " alt="" coords="378,349,453,328,454,333,380,354"/>
-<area shape="rect" id="Node000005" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="5,356,159,386"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="174,368,208,368,208,374,174,374"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="627,417,686,406,721,398,723,403,688,411,628,422"/>
-<area shape="rect" id="Node000007" href="$class_c_p_s_1_1_m_n_a_interface.html" title="Interface to be implemented by all models used by the MNA solver." alt="" coords="462,229,604,259"/>
-<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="619,245,748,253,893,266,968,278,992,282,991,287,967,283,892,271,748,258,619,250"/>
-<area shape="rect" id="Node000008" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title="Base class for all MNA components that are transmitting power." alt="" coords="711,280,892,328"/>
-<area shape="poly" id="edge11_Node000008_Node000007" title=" " alt="" coords="618,260,711,281,710,287,617,266"/>
-<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="908,302,991,302,991,307,908,307"/>
-<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="628,305,711,303,711,309,628,310"/>
+<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="1320,312,1491,139,1495,143,1324,316"/>
+<area shape="rect" id="Node000016" href="$class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html" title="Abstract base class for EMT V&#45;type SSN components." alt="" coords="1418,508,1602,538"/>
+<area shape="poly" id="edge18_Node000001_Node000016" title=" " alt="" coords="1327,363,1493,506,1489,510,1324,367"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="991,316,1173,364"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1188,338,1221,338,1221,343,1188,343"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="722,389,881,438"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="896,386,990,361,992,366,897,391"/>
+<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="208,392,404,422"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="420,406,722,410,722,415,420,411"/>
+<area shape="rect" id="Node000006" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="454,444,612,492"/>
+<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="380,424,454,444,453,449,378,429"/>
+<area shape="rect" id="Node000009" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="454,321,612,370"/>
+<area shape="poly" id="edge10_Node000009_Node000004" title=" " alt="" coords="378,385,453,364,454,369,380,390"/>
+<area shape="rect" id="Node000005" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="5,392,159,422"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="174,404,208,404,208,410,174,410"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="627,453,686,442,721,434,723,439,688,447,628,458"/>
+<area shape="rect" id="Node000007" href="$class_c_p_s_1_1_m_n_a_interface.html" title="Interface to be implemented by all models used by the MNA solver." alt="" coords="462,265,604,295"/>
+<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="619,281,748,289,893,302,968,314,992,318,991,323,967,319,892,307,748,294,619,286"/>
+<area shape="rect" id="Node000008" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title="Base class for all MNA components that are transmitting power." alt="" coords="711,316,892,364"/>
+<area shape="poly" id="edge11_Node000008_Node000007" title=" " alt="" coords="618,296,711,317,710,323,617,302"/>
+<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="908,338,991,338,991,343,908,343"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="628,341,711,339,711,345,628,346"/>
 <area shape="rect" id="Node000011" href="$class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_two_terminal_i_type_s_s_n_comp.html" title=" " alt="" coords="1673,12,1864,60"/>
 <area shape="poly" id="edge13_Node000010_Node000011" title=" " alt="" coords="1569,103,1695,59,1697,64,1570,108"/>
 <area shape="rect" id="Node000013" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_i_type_s_s_n_comp.html" title="Abstract base class for three&#45;phase, two&#45;terminal, I&#45;type SSN components." alt="" coords="1670,101,1867,150"/>
 <area shape="poly" id="edge15_Node000010_Node000013" title=" " alt="" coords="1616,123,1670,123,1670,128,1616,128"/>
 <area shape="rect" id="Node000012" href="$class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_capacitor.html" title="Scalar DC capacitor represented as a one&#45;state I&#45;type SSN component." alt="" coords="1948,5,2118,35"/>
 <area shape="poly" id="edge14_Node000011_Node000012" title=" " alt="" coords="1879,27,1947,23,1948,28,1879,32"/>
-<area shape="rect" id="Node000014" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_generic_two_terminal_i_type_s_s_n.html" title="Concrete generic three&#45;phase, two&#45;terminal I&#45;type SSN component." alt="" coords="1937,58,2129,107"/>
-<area shape="poly" id="edge16_Node000013_Node000014" title=" " alt="" coords="1882,105,1936,96,1937,101,1883,110"/>
-<area shape="rect" id="Node000015" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_capacitor.html" title=" " alt="" coords="1962,132,2104,180"/>
-<area shape="poly" id="edge17_Node000013_Node000015" title=" " alt="" coords="1883,136,1962,145,1961,151,1882,141"/>
-<area shape="rect" id="Node000017" href="$class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_two_terminal_v_type_s_s_n_comp.html" title=" " alt="" coords="1673,488,1864,536"/>
-<area shape="poly" id="edge19_Node000016_Node000017" title=" " alt="" coords="1590,466,1673,486,1672,492,1588,471"/>
-<area shape="rect" id="Node000020" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_four_terminal_v_type_s_s_n_comp.html" title=" " alt="" coords="1668,582,1869,631"/>
-<area shape="poly" id="edge22_Node000016_Node000020" title=" " alt="" coords="1545,472,1595,508,1653,546,1716,580,1713,584,1650,550,1592,512,1542,476"/>
-<area shape="rect" id="Node000022" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html" title="Abstract base class for three&#45;phase, two&#45;terminal, V&#45;type SSN components." alt="" coords="1670,314,1867,363"/>
-<area shape="poly" id="edge24_Node000016_Node000022" title=" " alt="" coords="1559,426,1709,361,1711,366,1562,431"/>
-<area shape="rect" id="Node000026" href="$class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html" title="Abstract base class for variable EMT V&#45;type SSN components." alt="" coords="1651,435,1886,464"/>
-<area shape="poly" id="edge28_Node000016_Node000026" title=" " alt="" coords="1618,447,1651,447,1651,452,1618,452"/>
-<area shape="rect" id="Node000018" href="$class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_inductor.html" title="Scalar DC inductor represented as a one&#45;state V&#45;type SSN component." alt="" coords="1950,497,2116,527"/>
-<area shape="poly" id="edge20_Node000017_Node000018" title=" " alt="" coords="1879,510,1950,510,1950,515,1879,515"/>
-<area shape="rect" id="Node000019" href="$class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_resistor.html" title="Scalar DC resistor represented as a stateless V&#45;type SSN component." alt="" coords="1952,551,2114,580"/>
-<area shape="poly" id="edge21_Node000017_Node000019" title=" " alt="" coords="1879,532,1957,547,1956,553,1878,537"/>
-<area shape="rect" id="Node000021" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_generic_four_terminal_v_type_s_s_n.html" title=" " alt="" coords="1935,604,2131,652"/>
-<area shape="poly" id="edge23_Node000020_Node000021" title=" " alt="" coords="1885,614,1935,618,1934,623,1884,619"/>
-<area shape="rect" id="Node000023" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_generic_two_terminal_v_type_s_s_n.html" title="Concrete generic three&#45;phase, two&#45;terminal V&#45;type SSN component." alt="" coords="1937,278,2129,327"/>
-<area shape="poly" id="edge25_Node000022_Node000023" title=" " alt="" coords="1882,321,1936,313,1937,319,1882,326"/>
-<area shape="rect" id="Node000024" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html" title="Full_Serial_RLC." alt="" coords="1962,352,2104,400"/>
-<area shape="poly" id="edge26_Node000022_Node000024" title=" " alt="" coords="1882,352,1962,363,1961,369,1881,357"/>
-<area shape="rect" id="Node000025" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_inductor.html" title="Inductor." alt="" coords="1962,205,2104,254"/>
-<area shape="poly" id="edge27_Node000022_Node000025" title=" " alt="" coords="1838,305,1934,264,1965,252,1967,257,1936,269,1840,310"/>
-<area shape="rect" id="Node000027" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_variable_s_s_n_comp.html" title="Abstract base class for three&#45;phase, two&#45;terminal, variable V&#45;type SSN components." alt="" coords="1935,425,2131,474"/>
-<area shape="poly" id="edge29_Node000026_Node000027" title=" " alt="" coords="1901,447,1935,447,1935,452,1901,452"/>
-<area shape="rect" id="Node000028" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html" title=" " alt="" coords="2181,352,2381,400"/>
-<area shape="poly" id="edge30_Node000027_Node000028" title=" " alt="" coords="2131,418,2195,399,2197,404,2133,423"/>
-<area shape="rect" id="Node000029" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_piecewise_linear_inductor.html" title="Three&#45;phase, two&#45;terminal, piecewise&#45;linear flux&#45;state inductor." alt="" coords="2192,425,2370,474"/>
-<area shape="poly" id="edge31_Node000027_Node000029" title=" " alt="" coords="2147,447,2192,447,2192,452,2147,452"/>
-<area shape="rect" id="Node000030" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_m.html" title="Three&#45;phase grid&#45;forming inverter represented by a locally linearized affine state&#45;space model." alt="" coords="2192,497,2370,527"/>
-<area shape="poly" id="edge32_Node000027_Node000030" title=" " alt="" coords="2147,476,2220,494,2218,499,2146,481"/>
+<area shape="rect" id="Node000014" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_generic_two_terminal_i_type_s_s_n.html" title="Concrete generic three&#45;phase, two&#45;terminal I&#45;type SSN component." alt="" coords="1937,132,2129,180"/>
+<area shape="poly" id="edge16_Node000013_Node000014" title=" " alt="" coords="1882,136,1937,142,1936,148,1882,141"/>
+<area shape="rect" id="Node000015" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_capacitor.html" title=" " alt="" coords="1962,58,2104,107"/>
+<area shape="poly" id="edge17_Node000013_Node000015" title=" " alt="" coords="1881,105,1961,92,1962,97,1882,110"/>
+<area shape="rect" id="Node000017" href="$class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_two_terminal_v_type_s_s_n_comp.html" title=" " alt="" coords="1673,561,1864,610"/>
+<area shape="poly" id="edge19_Node000016_Node000017" title=" " alt="" coords="1590,539,1673,560,1672,565,1588,545"/>
+<area shape="rect" id="Node000020" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_four_terminal_v_type_s_s_n_comp.html" title=" " alt="" coords="1668,656,1869,704"/>
+<area shape="poly" id="edge22_Node000016_Node000020" title=" " alt="" coords="1545,545,1595,581,1653,619,1716,653,1713,658,1650,624,1592,586,1542,549"/>
+<area shape="rect" id="Node000022" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html" title="Abstract base class for three&#45;phase, two&#45;terminal, V&#45;type SSN components." alt="" coords="1670,352,1867,400"/>
+<area shape="poly" id="edge24_Node000016_Node000022" title=" " alt="" coords="1550,498,1722,399,1725,403,1552,502"/>
+<area shape="rect" id="Node000027" href="$class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html" title="Abstract base class for variable EMT V&#45;type SSN components." alt="" coords="1651,508,1886,538"/>
+<area shape="poly" id="edge29_Node000016_Node000027" title=" " alt="" coords="1618,520,1651,520,1651,526,1618,526"/>
+<area shape="rect" id="Node000018" href="$class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_inductor.html" title="Scalar DC inductor represented as a one&#45;state V&#45;type SSN component." alt="" coords="1950,571,2116,600"/>
+<area shape="poly" id="edge20_Node000017_Node000018" title=" " alt="" coords="1879,583,1950,583,1950,588,1879,588"/>
+<area shape="rect" id="Node000019" href="$class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_resistor.html" title="Scalar DC resistor represented as a stateless V&#45;type SSN component." alt="" coords="1952,624,2114,654"/>
+<area shape="poly" id="edge21_Node000017_Node000019" title=" " alt="" coords="1879,605,1957,621,1956,626,1878,610"/>
+<area shape="rect" id="Node000021" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_generic_four_terminal_v_type_s_s_n.html" title=" " alt="" coords="1935,677,2131,726"/>
+<area shape="poly" id="edge23_Node000020_Node000021" title=" " alt="" coords="1885,687,1935,691,1934,696,1884,692"/>
+<area shape="rect" id="Node000023" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_generic_two_terminal_v_type_s_s_n.html" title="Concrete generic three&#45;phase, two&#45;terminal V&#45;type SSN component." alt="" coords="1937,425,2129,474"/>
+<area shape="poly" id="edge25_Node000022_Node000023" title=" " alt="" coords="1874,403,1943,422,1942,427,1873,408"/>
+<area shape="rect" id="Node000024" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html" title="Full_Serial_RLC." alt="" coords="1962,205,2104,254"/>
+<area shape="poly" id="edge26_Node000022_Node000024" title=" " alt="" coords="1813,340,1870,302,1934,264,1961,252,1963,257,1936,269,1872,306,1816,345"/>
+<area shape="rect" id="Node000025" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_inductor.html" title="Inductor." alt="" coords="1962,278,2104,327"/>
+<area shape="poly" id="edge27_Node000022_Node000025" title=" " alt="" coords="1873,345,1961,320,1962,325,1874,350"/>
+<area shape="rect" id="Node000026" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_l___split.html" title="Partitioned three&#45;phase grid&#45;following inverter." alt="" coords="1962,352,2104,400"/>
+<area shape="poly" id="edge28_Node000022_Node000026" title=" " alt="" coords="1882,374,1961,374,1961,379,1882,379"/>
+<area shape="rect" id="Node000028" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_variable_s_s_n_comp.html" title="Abstract base class for three&#45;phase, two&#45;terminal, variable V&#45;type SSN components." alt="" coords="1935,498,2131,547"/>
+<area shape="poly" id="edge30_Node000027_Node000028" title=" " alt="" coords="1901,520,1935,520,1935,526,1901,526"/>
+<area shape="rect" id="Node000029" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html" title=" " alt="" coords="2181,394,2381,443"/>
+<area shape="poly" id="edge31_Node000028_Node000029" title=" " alt="" coords="2116,490,2130,483,2179,454,2208,441,2210,446,2182,459,2133,488,2118,494"/>
+<area shape="rect" id="Node000030" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_piecewise_linear_inductor.html" title="Three&#45;phase, two&#45;terminal, piecewise&#45;linear flux&#45;state inductor." alt="" coords="2192,468,2370,516"/>
+<area shape="poly" id="edge32_Node000028_Node000030" title=" " alt="" coords="2146,506,2191,501,2192,506,2147,511"/>
+<area shape="rect" id="Node000031" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_l.html" title="Three&#45;phase grid&#45;following inverter represented by a locally linearized affine state&#45;space model." alt="" coords="2195,540,2367,570"/>
+<area shape="poly" id="edge33_Node000028_Node000031" title=" " alt="" coords="2147,535,2195,541,2194,546,2147,540"/>
+<area shape="rect" id="Node000032" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_m.html" title="Three&#45;phase grid&#45;forming inverter represented by a locally linearized affine state&#45;space model." alt="" coords="2192,593,2370,623"/>
+<area shape="poly" id="edge34_Node000028_Node000032" title=" " alt="" coords="2119,551,2132,556,2182,579,2217,590,2215,595,2180,584,2130,561,2117,556"/>
 </map>

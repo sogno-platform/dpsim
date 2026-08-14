@@ -1,5 +1,17 @@
 var NAVTREEINDEX3 =
 {
+"_exciter_d_c1_simp_8h.html":[3,0,2,0,0,4,10],
+"_exciter_d_c1_simp_8h_source.html":[3,0,2,0,0,4,10],
+"_exciter_s_t1_simp_8cpp.html":[3,0,2,1,4,11],
+"_exciter_s_t1_simp_8cpp_source.html":[3,0,2,1,4,11],
+"_exciter_s_t1_simp_8h.html":[3,0,2,0,0,4,11],
+"_exciter_s_t1_simp_8h_source.html":[3,0,2,0,0,4,11],
+"_exciter_static_8cpp.html":[3,0,2,1,4,12],
+"_exciter_static_8cpp_source.html":[3,0,2,1,4,12],
+"_exciter_static_8h.html":[3,0,2,0,0,4,12],
+"_exciter_static_8h_source.html":[3,0,2,0,0,4,12],
+"_f_i_r_filter_8cpp.html":[3,0,2,1,4,13],
+"_f_i_r_filter_8cpp_source.html":[3,0,2,1,4,13],
 "_f_i_r_filter_8h.html":[3,0,2,0,0,4,13],
 "_f_i_r_filter_8h_source.html":[3,0,2,0,0,4,13],
 "_factory_8h.html":[3,0,2,0,0,13],
@@ -237,17 +249,5 @@ var NAVTREEINDEX3 =
 "_s_p___ph1___resistor_8h_source.html":[3,0,2,0,0,6,11],
 "_s_p___ph1___s_s_n_type_i2_t_8cpp.html":[3,0,2,1,5,15],
 "_s_p___ph1___s_s_n_type_i2_t_8cpp_source.html":[3,0,2,1,5,15],
-"_s_p___ph1___s_s_n_type_i2_t_8h.html":[3,0,2,0,0,6,15],
-"_s_p___ph1___s_s_n_type_i2_t_8h_source.html":[3,0,2,0,0,6,15],
-"_s_p___ph1___s_s_n_type_v2_t_8cpp.html":[3,0,2,1,5,16],
-"_s_p___ph1___s_s_n_type_v2_t_8cpp_source.html":[3,0,2,1,5,16],
-"_s_p___ph1___s_s_n_type_v2_t_8h.html":[3,0,2,0,0,6,16],
-"_s_p___ph1___s_s_n_type_v2_t_8h_source.html":[3,0,2,0,0,6,16],
-"_s_p___ph1___shunt_8cpp.html":[3,0,2,1,5,13],
-"_s_p___ph1___shunt_8cpp_source.html":[3,0,2,1,5,13],
-"_s_p___ph1___shunt_8h.html":[3,0,2,0,0,6,13],
-"_s_p___ph1___shunt_8h_source.html":[3,0,2,0,0,6,13],
-"_s_p___ph1___solid_state_transformer_8cpp.html":[3,0,2,1,5,14],
-"_s_p___ph1___solid_state_transformer_8cpp_source.html":[3,0,2,1,5,14],
-"_s_p___ph1___solid_state_transformer_8h.html":[3,0,2,0,0,6,14]
+"_s_p___ph1___s_s_n_type_i2_t_8h.html":[3,0,2,0,0,6,15]
 };
