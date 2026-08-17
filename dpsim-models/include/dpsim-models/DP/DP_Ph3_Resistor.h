@@ -17,48 +17,51 @@
 namespace CPS {
 namespace DP {
 namespace Ph3 {
+
+/// \brief Three-phase dynamic-phasor resistor.
 ///
+/// Three-phase DP interface quantities use phase-peak complex envelopes.
+/// Power-flow node voltages are converted from line-line RMS to phase peak
+/// during initialization.
 class Resistor : public MNASimPowerComp<Complex>,
                  public Base::Ph3::Resistor,
                  public MNATearInterface,
                  public SharedFactory<Resistor> {
-
 public:
-  /// Defines UID, name and logging level
   Resistor(String uid, String name,
            Logger::Level logLevel = Logger::Level::off);
-  /// Defines name and logging level
+
   Resistor(String name, Logger::Level logLevel = Logger::Level::off)
       : Resistor(name, name, logLevel) {}
 
   SimPowerComp<Complex>::Ptr clone(String name) override;
 
   // #### General ####
-  /// Initializes component from power flow data
+  /// Initialize DP phase-peak envelopes from line-line RMS PF node voltages.
   void initializeFromNodesAndTerminals(Real frequency) override;
+
   // #### MNA section ####
-  ///
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override;
-  /// Stamps system matrix
+
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
-  ///
+
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
-  ///
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;
 
-  /// Add MNA post step dependencies
   void
   mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
                                  AttributeBase::List &attributeDependencies,
                                  AttributeBase::List &modifiedAttributes,
                                  Attribute<Matrix>::Ptr &leftVector) override;
+
   void mnaCompPostStep(Real time, Int timeStepCount,
                        Attribute<Matrix>::Ptr &leftVector) override;
 
   // #### MNA Tear Section ####
   void mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) override;
 };
+
 } // namespace Ph3
 } // namespace DP
 } // namespace CPS
