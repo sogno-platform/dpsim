@@ -14,7 +14,8 @@ EMT::Ph3::Transformer::Transformer(String uid, String name,
                                    Logger::Level logLevel,
                                    Bool withResistiveLosses)
     : Base::Ph3::Transformer(mAttributes),
-      CompositePowerComp<Real>(uid, name, true, true, logLevel) {
+      CompositePowerComp<Real>(uid, name, true, true, logLevel),
+      mImpedanceVoltage(mAttributes->create<Matrix>("v_impedance")) {
   mPhaseType = PhaseType::ABC;
   if (withResistiveLosses)
     setVirtualNodeNumber(3);
@@ -26,6 +27,7 @@ EMT::Ph3::Transformer::Transformer(String uid, String name,
   SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
   **mIntfVoltage = Matrix::Zero(3, 1);
   **mIntfCurrent = Matrix::Zero(1, 1);
+  **mImpedanceVoltage = Matrix::Zero(3, 1);
 }
 
 /// DEPRECATED: Delete method
@@ -199,9 +201,16 @@ void EMT::Ph3::Transformer::initializeParentFromNodesAndTerminals(
   vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
   vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
 
+  MatrixComp vTerminalABC = MatrixComp::Zero(3, 1);
+  vTerminalABC(0, 0) =
+      RMS3PH_TO_PEAK1PH * (initialSingleVoltage(1) - initialSingleVoltage(0));
+  vTerminalABC(1, 0) = vTerminalABC(0, 0) * SHIFT_TO_PHASE_B;
+  vTerminalABC(2, 0) = vTerminalABC(0, 0) * SHIFT_TO_PHASE_C;
+
   MatrixComp iInit = impedance.inverse() * vInitABC;
   **mIntfCurrent = iInit.real();
-  **mIntfVoltage = vInitABC.real();
+  **mIntfVoltage = vTerminalABC.real();
+  **mImpedanceVoltage = vInitABC.real();
 
   if (mNumVirtualNodes == 3)
     mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(0));
@@ -391,4 +400,14 @@ void EMT::Ph3::Transformer::mnaCompUpdateVoltage(const Matrix &leftVector) {
         (**mIntfVoltage)(2, 0) -
         Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
   }
+
+  const PhaseType phases[3] = {PhaseType::A, PhaseType::B, PhaseType::C};
+  for (Int phase = 0; phase < 3; phase++)
+    (**mImpedanceVoltage)(phase, 0) = Math::realFromVectorElement(
+        leftVector, mVirtualNodes[0]->matrixNodeIndex(phases[phase]));
+  if (terminalNotGrounded(0))
+    for (Int phase = 0; phase < 3; phase++)
+      (**mImpedanceVoltage)(phase, 0) =
+          (**mImpedanceVoltage)(phase, 0) -
+          Math::realFromVectorElement(leftVector, matrixNodeIndex(0, phase));
 }

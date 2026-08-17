@@ -99,6 +99,9 @@ public:
   /// base voltage [V]
   const Attribute<Real>::Ptr mBaseVoltage;
 
+  /// Voltage across the series impedance, referred to the terminal 0 side [V]
+  const Attribute<MatrixComp>::Ptr mImpedanceVoltage;
+
   // #### Power flow results ####
   /// branch Current flow [A], coef(0) has data from node 0, coef(1) from node 1.
   const Attribute<MatrixComp>::Ptr mCurrent;
