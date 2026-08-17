@@ -277,6 +277,13 @@ public:
     StateSpaceExtractionTask(MnaSolverDirect<VarType> &solver)
         : Task(solver.mName + ".StateSpaceExtraction"), mSolver(solver) {
       mAttributeDependencies.push_back(solver.mLeftSideVector);
+      if (solver.mStateSpaceExtractor) {
+        // Some contributors update their matrices in post-step;
+        // these dependencies prevent extraction from reading not updated matrices.
+        for (const auto &dependency :
+             solver.mStateSpaceExtractor->getAttributeDependencies())
+          mAttributeDependencies.push_back(dependency);
+      }
       mModifiedAttributes.push_back(Scheduler::external);
     }
 

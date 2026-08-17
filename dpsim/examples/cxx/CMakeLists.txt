@@ -163,6 +163,7 @@ set(STATE_SPACE_SOURCES
 StateSpace/EMT_Ph3_RLC_StateSpaceExtraction.cpp
 StateSpace/EMT_Ph3_Composite_StateSpaceExtraction.cpp
 StateSpace/EMT_Ph3_Switch_StateSpaceExtraction.cpp
+StateSpace/EMT_Ph3_GFL_Split_StateSpaceExtraction.cpp
 StateSpace/DP_Ph1_RLC_StateSpaceExtraction.cpp
 StateSpace/DP_Ph1_Inverter_StateSpaceExtraction.cpp
 StateSpace/DP_Ph1_Composite_StateSpaceExtraction.cpp

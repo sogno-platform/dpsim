@@ -53,8 +53,16 @@ public:
   /// Number of local extraction states contributed by this component.
   virtual UInt getStateCount() const = 0;
 
-  /// Returns true if the local matrices may change during simulation.
-  virtual Bool isVariable() const { return false; }
+  /// Whether this contributor belongs to the updated matrix group.
+  virtual Bool contributesToUpdatedMatrices() const { return false; }
+
+  /// Whether this contributor requests its matrices to be refreshed.
+  virtual Bool requiresUpdate() const { return false; }
+
+  /// Attributes that must be up to date before this contribution is stamped.
+  virtual CPS::AttributeBase::List getAttributeDependencies() const {
+    return {};
+  }
 
   /// Stamp this component's current local state-space contribution.
   virtual void stamp(Matrix &AdLocal, Matrix &BdMna, Matrix &CdMna,
