@@ -50,10 +50,22 @@ private:
   /// Boolean for considering resistive losses with sub resistor
   Bool mWithResistiveLosses;
 
-public:
-  /// Voltage across the series impedance, referred to the terminal 0 side [V]
-  const Attribute<Matrix>::Ptr mImpedanceVoltage;
+  /// Terminal index carrying the higher-voltage winding
+  UInt mHVSide = 0;
+  /// Terminal index carrying the lower-voltage winding
+  UInt mLVSide = 1;
+  /// Turns ratio oriented from the higher- to the lower-voltage winding
+  Complex mRatioHVToLV;
+  /// +1 when the higher-voltage winding is at terminal 0, -1 otherwise
+  Real mOrientationSign = 1.;
+  /// Nominal voltage of the higher-voltage winding [V]
+  Real mNominalVoltageHV;
+  /// Nominal voltage of the lower-voltage winding [V]
+  Real mNominalVoltageLV;
+  /// Resolves which terminal carries the higher-voltage winding
+  void resolveWindingOrientation();
 
+public:
   /// Defines UID, name and logging level
   Transformer(String uid, String name,
               Logger::Level logLevel = Logger::Level::off,
