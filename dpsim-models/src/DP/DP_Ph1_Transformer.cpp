@@ -14,8 +14,7 @@ DP::Ph1::Transformer::Transformer(String uid, String name,
                                   Logger::Level logLevel,
                                   Bool withResistiveLosses)
     : Base::Ph1::Transformer(mAttributes),
-      CompositePowerComp<Complex>(uid, name, true, true, logLevel),
-      mImpedanceVoltage(mAttributes->create<MatrixComp>("v_impedance")) {
+      CompositePowerComp<Complex>(uid, name, true, true, logLevel) {
   if (withResistiveLosses)
     setVirtualNodeNumber(3);
   else
@@ -26,7 +25,6 @@ DP::Ph1::Transformer::Transformer(String uid, String name,
   SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
   **mIntfVoltage = MatrixComp::Zero(1, 1);
   **mIntfCurrent = MatrixComp::Zero(1, 1);
-  **mImpedanceVoltage = MatrixComp::Zero(1, 1);
 }
 
 /// DEPRECATED: Delete method
@@ -74,7 +72,7 @@ void DP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
 }
 
 void DP::Ph1::Transformer::resolveWindingOrientation() {
-  mHVSide = (Math::abs(**mRatio) >= 1.) ? 0 : 1;
+  mHVSide = (mNominalVoltageEnd1 >= mNominalVoltageEnd2) ? 0 : 1;
   mLVSide = 1 - mHVSide;
   mRatioHVToLV = (mHVSide == 0) ? **mRatio : 1. / **mRatio;
   mOrientationSign = (mHVSide == 0) ? 1. : -1.;
@@ -83,14 +81,15 @@ void DP::Ph1::Transformer::resolveWindingOrientation() {
   mNominalVoltageLV =
       (mHVSide == 0) ? mNominalVoltageEnd2 : mNominalVoltageEnd1;
 
-  if (mNominalVoltageHV < mNominalVoltageLV)
+  if ((mHVSide == 0) != (Math::abs(**mRatio) >= 1.) &&
+      Math::abs(Math::abs(**mRatio) - 1.) > 1e-9)
     SPDLOG_LOGGER_WARN(
         mSLog,
-        "Turns ratio {} puts the higher-voltage winding at terminal {}, but "
-        "that terminal's nominal voltage {} [V] is below the other's {} [V]; "
-        "check the order of the arguments to setParameters()",
-        Logger::complexToString(**mRatio), mHVSide, mNominalVoltageHV,
-        mNominalVoltageLV);
+        "Nominal voltages put the higher-voltage winding at terminal {} ({} "
+        "[V] against {} [V]) but the turns ratio {} points the other way; "
+        "check the argument order of setParameters()",
+        mHVSide, mNominalVoltageHV, mNominalVoltageLV,
+        Logger::complexToString(**mRatio));
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "Higher-voltage winding at terminal {} ({} [V]), "
@@ -186,11 +185,11 @@ void DP::Ph1::Transformer::initializeParentFromNodesAndTerminals(
   Complex impedance = {**mResistance, omega * **mInductance};
   SPDLOG_LOGGER_INFO(mSLog, "Reactance={} [Ohm] (referred to primary side)",
                      omega * **mInductance);
-  (**mImpedanceVoltage)(0, 0) =
+  Complex impedanceVoltage =
       mOrientationSign * (mVirtualNodes[0]->initialSingleVoltage() -
                           initialSingleVoltage(mHVSide));
   (**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
-  (**mIntfCurrent)(0, 0) = (**mImpedanceVoltage)(0, 0) / impedance;
+  (**mIntfCurrent)(0, 0) = impedanceVoltage / impedance;
 
   SPDLOG_LOGGER_INFO(
       mSLog,
@@ -231,7 +230,8 @@ void DP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(
   }
   if (terminalNotGrounded(mLVSide)) {
     Math::setMatrixElement(systemMatrix, matrixNodeIndex(mLVSide),
-                           mVirtualNodes[1]->matrixNodeIndex(), mRatioHVToLV);
+                           mVirtualNodes[1]->matrixNodeIndex(),
+                           std::conj(mRatioHVToLV));
     Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(),
                            matrixNodeIndex(mLVSide), -mRatioHVToLV);
   }
@@ -306,14 +306,6 @@ void DP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix &leftVector) {
     (**mIntfVoltage)(0, 0) =
         (**mIntfVoltage)(0, 0) -
         Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
-
-  (**mImpedanceVoltage)(0, 0) = Math::complexFromVectorElement(
-      leftVector, mVirtualNodes[0]->matrixNodeIndex());
-  if (terminalNotGrounded(mHVSide))
-    (**mImpedanceVoltage)(0, 0) =
-        (**mImpedanceVoltage)(0, 0) -
-        Math::complexFromVectorElement(leftVector, matrixNodeIndex(mHVSide));
-  (**mImpedanceVoltage)(0, 0) *= mOrientationSign;
 
   SPDLOG_LOGGER_DEBUG(mSLog, "Voltage {:s}",
                       Logger::phasorToString((**mIntfVoltage)(0, 0)));

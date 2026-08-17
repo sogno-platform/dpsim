@@ -14,8 +14,7 @@ EMT::Ph3::Transformer::Transformer(String uid, String name,
                                    Logger::Level logLevel,
                                    Bool withResistiveLosses)
     : Base::Ph3::Transformer(mAttributes),
-      CompositePowerComp<Real>(uid, name, true, true, logLevel),
-      mImpedanceVoltage(mAttributes->create<Matrix>("v_impedance")) {
+      CompositePowerComp<Real>(uid, name, true, true, logLevel) {
   mPhaseType = PhaseType::ABC;
   if (withResistiveLosses)
     setVirtualNodeNumber(3);
@@ -27,7 +26,6 @@ EMT::Ph3::Transformer::Transformer(String uid, String name,
   SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
   **mIntfVoltage = Matrix::Zero(3, 1);
   **mIntfCurrent = Matrix::Zero(1, 1);
-  **mImpedanceVoltage = Matrix::Zero(3, 1);
 }
 
 /// DEPRECATED: Delete method
@@ -59,28 +57,38 @@ void EMT::Ph3::Transformer::setParameters(Real nomVoltageEnd1,
   mParametersSet = true;
 }
 
+void EMT::Ph3::Transformer::resolveWindingOrientation() {
+  mHVSide = (mNominalVoltageEnd1 >= mNominalVoltageEnd2) ? 0 : 1;
+  mLVSide = 1 - mHVSide;
+  mRatioHVToLV = (mHVSide == 0) ? **mRatio : 1. / **mRatio;
+  mOrientationSign = (mHVSide == 0) ? 1. : -1.;
+  mNominalVoltageHV =
+      (mHVSide == 0) ? mNominalVoltageEnd1 : mNominalVoltageEnd2;
+  mNominalVoltageLV =
+      (mHVSide == 0) ? mNominalVoltageEnd2 : mNominalVoltageEnd1;
+
+  // EMT::Ph3 stamps a real per-phase turns ratio, so a complex ratio would be
+  // silently modelled as |a|*cos(theta). A winding phase shift needs a
+  // connection model with cross-phase coupling, which this component does not
+  // implement; refuse it rather than return a rescaled ratio.
+  if (Math::abs(std::arg(mRatioHVToLV)) > 1e-9) {
+    SPDLOG_LOGGER_ERROR(mSLog,
+                        "Turns ratio {} has a phase shift of {} rad. "
+                        "EMT::Ph3::Transformer models in-phase turns ratios "
+                        "only; a phase-shifting winding connection is not "
+                        "implemented.",
+                        Logger::complexToString(mRatioHVToLV),
+                        std::arg(mRatioHVToLV));
+    throw InvalidArgumentException();
+  }
+}
+
 void EMT::Ph3::Transformer::createSubComponents() {
   if (mSubCompCreated)
     return;
   mSubCompCreated = true;
 
-  // Switch terminals so terminal 0 is always the higher-voltage side.
-  if (Math::abs(**mRatio) < 1.) {
-    **mRatio = 1. / **mRatio;
-    std::shared_ptr<SimTerminal<Real>> tmp = mTerminals[0];
-    mTerminals[0] = mTerminals[1];
-    mTerminals[1] = tmp;
-    Real tmpVolt = mNominalVoltageEnd1;
-    mNominalVoltageEnd1 = mNominalVoltageEnd2;
-    mNominalVoltageEnd2 = tmpVolt;
-    SPDLOG_LOGGER_INFO(mSLog, "Switching terminals to have first terminal at "
-                              "higher voltage side. Updated parameters: ");
-    SPDLOG_LOGGER_INFO(
-        mSLog, "Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]",
-        mNominalVoltageEnd1, mNominalVoltageEnd2);
-    SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio = {} [ ] Phase Shift = {} [deg]",
-                       std::abs(**mRatio), std::arg(**mRatio));
-  }
+  resolveWindingOrientation();
 
   // Create series sub components
   mSubInductor =
@@ -95,43 +103,43 @@ void EMT::Ph3::Transformer::createSubComponents() {
     addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
     mSubResistor->setParameters(mResistance);
-    mSubResistor->connect({node(0), mVirtualNodes[2]});
+    mSubResistor->connect({node(mHVSide), mVirtualNodes[2]});
     mSubInductor->connect({mVirtualNodes[2], mVirtualNodes[0]});
   } else {
-    mSubInductor->connect({node(0), mVirtualNodes[0]});
+    mSubInductor->connect({node(mHVSide), mVirtualNodes[0]});
   }
 
   // Create parallel sub components (three-phase power)
   Real pSnub = P_SNUB_TRANSFORMER * mRatedPower;
 
   // A snubber conductance is added on the higher voltage side
-  Real snubberResistance1 = std::pow(std::abs(mNominalVoltageEnd1), 2) / pSnub;
+  Real snubberResistance1 = std::pow(std::abs(mNominalVoltageHV), 2) / pSnub;
   mSnubberResistance1 =
       Math::singlePhaseParameterToThreePhase(snubberResistance1);
   mSubSnubResistor1 =
       std::make_shared<EMT::Ph3::Resistor>(**mName + "_snub_res1", mLogLevel);
   mSubSnubResistor1->setParameters(mSnubberResistance1);
-  mSubSnubResistor1->connect({node(0), EMT::SimNode::GND});
+  mSubSnubResistor1->connect({node(mHVSide), EMT::SimNode::GND});
   SPDLOG_LOGGER_INFO(
       mSLog,
       "Snubber Resistance 1 (connected to higher voltage side {}) = {} [Ohm]",
-      node(0)->name(), Logger::matrixToString(mSnubberResistance1));
+      node(mHVSide)->name(), Logger::matrixToString(mSnubberResistance1));
   addMNASubComponent(mSubSnubResistor1,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
   // A snubber conductance is added on the lower voltage side
-  Real snubberResistance2 = std::pow(std::abs(mNominalVoltageEnd2), 2) / pSnub;
+  Real snubberResistance2 = std::pow(std::abs(mNominalVoltageLV), 2) / pSnub;
   mSnubberResistance2 =
       Math::singlePhaseParameterToThreePhase(snubberResistance2);
   mSubSnubResistor2 =
       std::make_shared<EMT::Ph3::Resistor>(**mName + "_snub_res2", mLogLevel);
   mSubSnubResistor2->setParameters(mSnubberResistance2);
-  mSubSnubResistor2->connect({node(1), EMT::SimNode::GND});
+  mSubSnubResistor2->connect({node(mLVSide), EMT::SimNode::GND});
   SPDLOG_LOGGER_INFO(
       mSLog,
       "Snubber Resistance 2 (connected to lower voltage side {}) = {} [Ohm]",
-      node(1)->name(), Logger::matrixToString(mSnubberResistance2));
+      node(mLVSide)->name(), Logger::matrixToString(mSnubberResistance2));
   addMNASubComponent(mSubSnubResistor2,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
@@ -139,7 +147,7 @@ void EMT::Ph3::Transformer::createSubComponents() {
   // LV-side snubber capacitor created here; its omega-dependent value is set in initializeParentFromNodesAndTerminals().
   mSubSnubCapacitor2 =
       std::make_shared<EMT::Ph3::Capacitor>(**mName + "_snub_cap2", mLogLevel);
-  mSubSnubCapacitor2->connect({node(1), EMT::SimNode::GND});
+  mSubSnubCapacitor2->connect({node(mLVSide), EMT::SimNode::GND});
   addMNASubComponent(mSubSnubCapacitor2,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
@@ -148,7 +156,8 @@ void EMT::Ph3::Transformer::createSubComponents() {
 void EMT::Ph3::Transformer::initializeParentFromNodesAndTerminals(
     Real frequency) {
   // Set initial voltage of virtual node in between
-  mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(1) * **mRatio);
+  mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(mLVSide) *
+                                      mRatioHVToLV);
 
   // Static calculations from load flow data
   Real omega = 2. * PI * frequency;
@@ -165,14 +174,14 @@ void EMT::Ph3::Transformer::initializeParentFromNodesAndTerminals(
   // mSubComponents.push_back(mSubSnubCapacitor1);
 
   Real snubberCapacitance2 =
-      qSnub / std::pow(std::abs(mNominalVoltageEnd2), 2) / omega;
+      qSnub / std::pow(std::abs(mNominalVoltageLV), 2) / omega;
   mSnubberCapacitance2 =
       Math::singlePhaseParameterToThreePhase(snubberCapacitance2);
   mSubSnubCapacitor2->setParameters(mSnubberCapacitance2);
   SPDLOG_LOGGER_INFO(
       mSLog,
       "Snubber Capacitance 2 (connected to lower voltage side {}) = {} [F]",
-      node(1)->name(), Logger::matrixToString(mSnubberCapacitance2));
+      node(mLVSide)->name(), Logger::matrixToString(mSnubberCapacitance2));
   MatrixComp impedance = MatrixComp::Zero(3, 3);
   impedance << Complex(mResistance(0, 0), omega * mInductance(0, 0)),
       Complex(mResistance(0, 1), omega * mInductance(0, 1)),
@@ -196,8 +205,8 @@ void EMT::Ph3::Transformer::initializeParentFromNodesAndTerminals(
 
   MatrixComp vInitABC = MatrixComp::Zero(3, 1);
   vInitABC(0, 0) =
-      RMS3PH_TO_PEAK1PH *
-      (mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0));
+      RMS3PH_TO_PEAK1PH * (mVirtualNodes[0]->initialSingleVoltage() -
+                           initialSingleVoltage(mHVSide));
   vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
   vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
 
@@ -210,10 +219,9 @@ void EMT::Ph3::Transformer::initializeParentFromNodesAndTerminals(
   MatrixComp iInit = impedance.inverse() * vInitABC;
   **mIntfCurrent = iInit.real();
   **mIntfVoltage = vTerminalABC.real();
-  **mImpedanceVoltage = vInitABC.real();
 
   if (mNumVirtualNodes == 3)
-    mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(0));
+    mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(mHVSide));
 
   SPDLOG_LOGGER_INFO(
       mSLog,
@@ -245,7 +253,7 @@ void EMT::Ph3::Transformer::mnaParentInitialize(
 void EMT::Ph3::Transformer::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
   // Ideal transformer equations
-  if (terminalNotGrounded(0)) {
+  if (terminalNotGrounded(mHVSide)) {
     Math::setMatrixElement(
         systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A),
         mVirtualNodes[1]->matrixNodeIndex(PhaseType::A), -1.);
@@ -266,25 +274,25 @@ void EMT::Ph3::Transformer::mnaCompApplySystemMatrixStamp(
                            mVirtualNodes[1]->matrixNodeIndex(PhaseType::C),
                            mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), 1.);
   }
-  if (terminalNotGrounded(1)) {
-    Math::setMatrixElement(systemMatrix, matrixNodeIndex(1, 0),
+  if (terminalNotGrounded(mLVSide)) {
+    Math::setMatrixElement(systemMatrix, matrixNodeIndex(mLVSide, 0),
                            mVirtualNodes[1]->matrixNodeIndex(PhaseType::A),
-                           (**mRatio).real());
-    Math::setMatrixElement(systemMatrix, matrixNodeIndex(1, 1),
+                           mRatioHVToLV.real());
+    Math::setMatrixElement(systemMatrix, matrixNodeIndex(mLVSide, 1),
                            mVirtualNodes[1]->matrixNodeIndex(PhaseType::B),
-                           (**mRatio).real());
-    Math::setMatrixElement(systemMatrix, matrixNodeIndex(1, 2),
+                           mRatioHVToLV.real());
+    Math::setMatrixElement(systemMatrix, matrixNodeIndex(mLVSide, 2),
                            mVirtualNodes[1]->matrixNodeIndex(PhaseType::C),
-                           (**mRatio).real());
+                           mRatioHVToLV.real());
     Math::setMatrixElement(systemMatrix,
                            mVirtualNodes[1]->matrixNodeIndex(PhaseType::A),
-                           matrixNodeIndex(1, 0), -(**mRatio).real());
+                           matrixNodeIndex(mLVSide, 0), -mRatioHVToLV.real());
     Math::setMatrixElement(systemMatrix,
                            mVirtualNodes[1]->matrixNodeIndex(PhaseType::B),
-                           matrixNodeIndex(1, 1), -(**mRatio).real());
+                           matrixNodeIndex(mLVSide, 1), -mRatioHVToLV.real());
     Math::setMatrixElement(systemMatrix,
                            mVirtualNodes[1]->matrixNodeIndex(PhaseType::C),
-                           matrixNodeIndex(1, 2), -(**mRatio).real());
+                           matrixNodeIndex(mLVSide, 2), -mRatioHVToLV.real());
   }
 
   // Add subcomps to system matrix
@@ -375,7 +383,7 @@ void EMT::Ph3::Transformer::mnaParentPostStep(
 }
 
 void EMT::Ph3::Transformer::mnaCompUpdateCurrent(const Matrix &leftVector) {
-  **mIntfCurrent = mSubInductor->intfCurrent();
+  **mIntfCurrent = mOrientationSign * mSubInductor->intfCurrent();
 }
 
 void EMT::Ph3::Transformer::mnaCompUpdateVoltage(const Matrix &leftVector) {
@@ -400,14 +408,4 @@ void EMT::Ph3::Transformer::mnaCompUpdateVoltage(const Matrix &leftVector) {
         (**mIntfVoltage)(2, 0) -
         Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
   }
-
-  const PhaseType phases[3] = {PhaseType::A, PhaseType::B, PhaseType::C};
-  for (Int phase = 0; phase < 3; phase++)
-    (**mImpedanceVoltage)(phase, 0) = Math::realFromVectorElement(
-        leftVector, mVirtualNodes[0]->matrixNodeIndex(phases[phase]));
-  if (terminalNotGrounded(0))
-    for (Int phase = 0; phase < 3; phase++)
-      (**mImpedanceVoltage)(phase, 0) =
-          (**mImpedanceVoltage)(phase, 0) -
-          Math::realFromVectorElement(leftVector, matrixNodeIndex(0, phase));
 }
