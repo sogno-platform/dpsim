@@ -71,6 +71,8 @@ public:
   void mnaApplyRightSideVectorStampHarm(Matrix &sourceVector) final;
   void mnaApplyRightSideVectorStampHarm(Matrix &sourceVector,
                                         Int freqIdx) final;
+  void mnaUpdateVoltageHarm(const Matrix &leftVector, Int freqIdx) final;
+  void mnaUpdateCurrentHarm(Int freqIdx) final;
 
   // MNA Interface methods that can be overridden by components
   virtual void mnaCompInitialize(Real omega, Real timeStep,
@@ -99,6 +101,8 @@ public:
   virtual void mnaCompApplyRightSideVectorStampHarm(Matrix &sourceVector);
   virtual void mnaCompApplyRightSideVectorStampHarm(Matrix &sourceVector,
                                                     Int freqIdx);
+  virtual void mnaCompUpdateVoltageHarm(const Matrix &leftVector, Int freqIdx);
+  virtual void mnaCompUpdateCurrentHarm(Int freqIdx);
 
   const Task::List &mnaTasks() const final;
   Attribute<Matrix>::Ptr getRightVector() const final;
