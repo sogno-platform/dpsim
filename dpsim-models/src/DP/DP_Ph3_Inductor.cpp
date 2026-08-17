@@ -15,6 +15,7 @@ DP::Ph3::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
       Base::Ph3::Inductor(mAttributes) {
   mPhaseType = PhaseType::ABC;
   setTerminalNumber(2);
+
   mEquivCurrent = MatrixComp::Zero(3, 1);
   **mIntfVoltage = MatrixComp::Zero(3, 1);
   **mIntfCurrent = MatrixComp::Zero(3, 1);
@@ -27,57 +28,83 @@ SimPowerComp<Complex>::Ptr DP::Ph3::Inductor::clone(String name) {
 }
 
 void DP::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
-
-  Real omega = 2 * PI * frequency;
+  const Real omega = 2.0 * PI * frequency;
 
   MatrixComp reactance = MatrixComp::Zero(3, 3);
-  reactance << Complex(0, omega * (**mInductance)(0, 0)),
-      Complex(0, omega * (**mInductance)(0, 1)),
-      Complex(0, omega * (**mInductance)(0, 2)),
-      Complex(0, omega * (**mInductance)(1, 0)),
-      Complex(0, omega * (**mInductance)(1, 1)),
-      Complex(0, omega * (**mInductance)(1, 2)),
-      Complex(0, omega * (**mInductance)(2, 0)),
-      Complex(0, omega * (**mInductance)(2, 1)),
-      Complex(0, omega * (**mInductance)(2, 2));
-  MatrixComp susceptance = reactance.inverse();
-  // IntfVoltage initialization for each phase
-  (**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
-  Real voltMag = Math::abs((**mIntfVoltage)(0, 0));
-  Real voltPhase = Math::phase((**mIntfVoltage)(0, 0));
-  (**mIntfVoltage)(1, 0) = Complex(voltMag * cos(voltPhase - 2. / 3. * M_PI),
-                                   voltMag * sin(voltPhase - 2. / 3. * M_PI));
-  (**mIntfVoltage)(2, 0) = Complex(voltMag * cos(voltPhase + 2. / 3. * M_PI),
-                                   voltMag * sin(voltPhase + 2. / 3. * M_PI));
 
-  **mIntfCurrent = susceptance * **mIntfVoltage;
+  for (UInt row = 0; row < 3; ++row) {
+    for (UInt col = 0; col < 3; ++col) {
+      reactance(row, col) = Complex(0.0, omega * (**mInductance)(row, col));
+    }
+  }
 
-  //TODO
-  SPDLOG_LOGGER_INFO(mSLog, "--- Initialize according to power flow ---");
+  // ---------------------------------------------------------------------------
+  // IMPORTANT DP / PF CONVENTION CONVERSION
+  // ---------------------------------------------------------------------------
+  // Power-flow node voltages are line-line RMS phasors.
+  // DP::Ph3 electrical states use phase-peak complex envelopes.
+  //
+  // This conversion is already used by DP::Ph3::PiLine and must also be used
+  // by the primitive inductor. The previous implementation omitted the
+  // RMS3PH_TO_PEAK1PH factor here, which initialized the inductor state too
+  // small by sqrt(3/2) and produced a startup transient after PF initialization.
+  // ---------------------------------------------------------------------------
+
+  MatrixComp vInitABC = MatrixComp::Zero(3, 1);
+
+  vInitABC(0, 0) =
+      RMS3PH_TO_PEAK1PH * (initialSingleVoltage(1) - initialSingleVoltage(0));
+
+  vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
+
+  vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
+
+  **mIntfVoltage = vInitABC;
+  **mIntfCurrent = reactance.inverse() * vInitABC;
+
+  SPDLOG_LOGGER_INFO(
+      mSLog,
+      "\n--- Initialization from powerflow ---"
+      "\nDP convention: phase-peak complex envelopes"
+      "\nVoltage across:"
+      "\n{:s}"
+      "\nCurrent:"
+      "\n{:s}"
+      "\nTerminal 0 PF voltage converted to phase peak: {:s}"
+      "\nTerminal 1 PF voltage converted to phase peak: {:s}"
+      "\n--- Initialization from powerflow finished ---",
+      Logger::matrixCompToString(**mIntfVoltage),
+      Logger::matrixCompToString(**mIntfCurrent),
+      Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)),
+      Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)));
 }
 
 void DP::Ph3::Inductor::initVars(Real omega, Real timeStep) {
-  Matrix a = timeStep / 2. * (**mInductance).inverse();
-  Real b = timeStep * omega / 2.;
+  Matrix a = timeStep / 2.0 * (**mInductance).inverse();
 
-  Matrix equivCondReal = a / (1. + b * b);
-  Matrix equivCondImag = -a * b / (Real(1.) + b * b);
+  const Real b = timeStep * omega / 2.0;
+
+  Matrix equivCondReal = a / (1.0 + b * b);
+
+  Matrix equivCondImag = -a * b / (1.0 + b * b);
+
   mEquivCond = MatrixComp::Zero(3, 3);
-  mEquivCond << Complex(equivCondReal(0, 0), equivCondImag(0, 0)),
-      Complex(equivCondReal(0, 1), equivCondImag(0, 1)),
-      Complex(equivCondReal(0, 2), equivCondImag(0, 2)),
-      Complex(equivCondReal(1, 0), equivCondImag(1, 0)),
-      Complex(equivCondReal(1, 1), equivCondImag(1, 1)),
-      Complex(equivCondReal(1, 2), equivCondImag(1, 2)),
-      Complex(equivCondReal(2, 0), equivCondImag(2, 0)),
-      Complex(equivCondReal(2, 1), equivCondImag(2, 1)),
-      Complex(equivCondReal(2, 2), equivCondImag(2, 2));
 
-  Real preCurrFracReal = (1. - b * b) / (1. + b * b);
-  Real preCurrFracImag = (-2. * b) / (1. + b * b);
+  for (UInt row = 0; row < 3; ++row) {
+    for (UInt col = 0; col < 3; ++col) {
+      mEquivCond(row, col) =
+          Complex(equivCondReal(row, col), equivCondImag(row, col));
+    }
+  }
+
+  const Real preCurrFracReal = (1.0 - b * b) / (1.0 + b * b);
+
+  const Real preCurrFracImag = (-2.0 * b) / (1.0 + b * b);
+
   mPrevCurrFac = Complex(preCurrFracReal, preCurrFracImag);
 
-  // TODO: check if this is correct or if it should be only computed before the step
+  // Initialize the history source consistently with the initialized
+  // phase-peak DP voltage/current envelopes.
   mEquivCurrent = mEquivCond * **mIntfVoltage + mPrevCurrFac * **mIntfCurrent;
 }
 
@@ -86,8 +113,13 @@ void DP::Ph3::Inductor::mnaCompInitialize(Real omega, Real timeStep,
   updateMatrixNodeIndices();
   initVars(omega, timeStep);
 
-  SPDLOG_LOGGER_INFO(mSLog, "Initial voltage {}",
-                     Math::abs((**mIntfVoltage)(0, 0)));
+  SPDLOG_LOGGER_INFO(mSLog, "Initial phase-A DP voltage envelope: {} < {} rad",
+                     Math::abs((**mIntfVoltage)(0, 0)),
+                     Math::phase((**mIntfVoltage)(0, 0)));
+
+  SPDLOG_LOGGER_INFO(mSLog, "Initial phase-A DP current envelope: {} < {} rad",
+                     Math::abs((**mIntfCurrent)(0, 0)),
+                     Math::phase((**mIntfCurrent)(0, 0)));
 }
 
 void DP::Ph3::Inductor::mnaCompApplySystemMatrixStamp(
@@ -98,23 +130,27 @@ void DP::Ph3::Inductor::mnaCompApplySystemMatrixStamp(
 }
 
 void DP::Ph3::Inductor::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {
-
-  // Calculate equivalent current source for next time step
+  // Companion-model history source for the next time step.
   mEquivCurrent = mEquivCond * **mIntfVoltage + mPrevCurrFac * **mIntfCurrent;
 
   if (terminalNotGrounded(0)) {
     Math::setVectorElement(rightVector, matrixNodeIndex(0, 0),
                            mEquivCurrent(0, 0));
+
     Math::setVectorElement(rightVector, matrixNodeIndex(0, 1),
                            mEquivCurrent(1, 0));
+
     Math::setVectorElement(rightVector, matrixNodeIndex(0, 2),
                            mEquivCurrent(2, 0));
   }
+
   if (terminalNotGrounded(1)) {
     Math::setVectorElement(rightVector, matrixNodeIndex(1, 0),
                            -mEquivCurrent(0, 0));
+
     Math::setVectorElement(rightVector, matrixNodeIndex(1, 1),
                            -mEquivCurrent(1, 0));
+
     Math::setVectorElement(rightVector, matrixNodeIndex(1, 2),
                            -mEquivCurrent(2, 0));
   }
@@ -124,7 +160,6 @@ void DP::Ph3::Inductor::mnaCompAddPreStepDependencies(
     AttributeBase::List &prevStepDependencies,
     AttributeBase::List &attributeDependencies,
     AttributeBase::List &modifiedAttributes) {
-  // actually depends on L, but then we'd have to modify the system matrix anyway
   modifiedAttributes.push_back(mRightVector);
   prevStepDependencies.push_back(mIntfVoltage);
   prevStepDependencies.push_back(mIntfCurrent);
@@ -151,25 +186,27 @@ void DP::Ph3::Inductor::mnaCompPostStep(Real time, Int timeStepCount,
 }
 
 void DP::Ph3::Inductor::mnaCompUpdateVoltage(const Matrix &leftVector) {
-  // v1 - v0
-  **mIntfVoltage = Matrix::Zero(3, 1);
+  **mIntfVoltage = MatrixComp::Zero(3, 1);
+
   if (terminalNotGrounded(1)) {
     (**mIntfVoltage)(0, 0) =
         Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 0));
+
     (**mIntfVoltage)(1, 0) =
         Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 1));
+
     (**mIntfVoltage)(2, 0) =
         Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 2));
   }
+
   if (terminalNotGrounded(0)) {
-    (**mIntfVoltage)(0, 0) =
-        (**mIntfVoltage)(0, 0) -
+    (**mIntfVoltage)(0, 0) -=
         Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
-    (**mIntfVoltage)(1, 0) =
-        (**mIntfVoltage)(1, 0) -
+
+    (**mIntfVoltage)(1, 0) -=
         Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 1));
-    (**mIntfVoltage)(2, 0) =
-        (**mIntfVoltage)(2, 0) -
+
+    (**mIntfVoltage)(2, 0) -=
         Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 2));
   }
 }
@@ -179,33 +216,37 @@ void DP::Ph3::Inductor::mnaCompUpdateCurrent(const Matrix &leftVector) {
 }
 
 // #### Tear Methods ####
+
 void DP::Ph3::Inductor::mnaTearInitialize(Real omega, Real timeStep) {
   initVars(omega, timeStep);
 }
 
 void DP::Ph3::Inductor::mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) {
-  // Set diagonal entries
   Math::addToMatrixElement(tearMatrix, mTearIdx * 3, mTearIdx * 3,
-                           1. / mEquivCond(0, 0)); // 1 /
+                           1.0 / mEquivCond(0, 0));
+
   Math::addToMatrixElement(tearMatrix, mTearIdx * 3 + 1, mTearIdx * 3 + 1,
-                           1. / mEquivCond(1, 1));
+                           1.0 / mEquivCond(1, 1));
+
   Math::addToMatrixElement(tearMatrix, mTearIdx * 3 + 2, mTearIdx * 3 + 2,
-                           1. / mEquivCond(2, 2));
+                           1.0 / mEquivCond(2, 2));
 }
 
 void DP::Ph3::Inductor::mnaTearApplyVoltageStamp(Matrix &voltageVector) {
-  mEquivCurrent =
-      mEquivCond * (**mIntfVoltage) + mPrevCurrFac * (**mIntfCurrent);
+  mEquivCurrent = mEquivCond * **mIntfVoltage + mPrevCurrFac * **mIntfCurrent;
+
   Math::addToVectorElement(voltageVector, mTearIdx * 3,
                            mEquivCurrent(0, 0) / mEquivCond(0, 0));
+
   Math::addToVectorElement(voltageVector, mTearIdx * 3 + 1,
                            mEquivCurrent(1, 0) / mEquivCond(1, 1));
+
   Math::addToVectorElement(voltageVector, mTearIdx * 3 + 2,
                            mEquivCurrent(2, 0) / mEquivCond(2, 2));
 }
 
 void DP::Ph3::Inductor::mnaTearPostStep(MatrixComp voltage,
                                         MatrixComp current) {
-  (**mIntfVoltage) = voltage;
-  (**mIntfCurrent) = mEquivCond * voltage + mEquivCurrent;
+  **mIntfVoltage = voltage;
+  **mIntfCurrent = mEquivCond * voltage + mEquivCurrent;
 }
