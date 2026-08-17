@@ -36,8 +36,12 @@ void MNAStateSpaceExtractor::initialize(
 
     nextStateOffset += localStateCount;
 
-    if (contributor->isVariable())
-      mHasVariableContributors = true;
+    if (contributor->contributesToUpdatedMatrices())
+      mHasUpdatedContributors = true;
+
+    const auto dependencies = contributor->getAttributeDependencies();
+    mAttributeDependencies.insert(mAttributeDependencies.end(),
+                                  dependencies.begin(), dependencies.end());
   }
 
   mStateCount = nextStateOffset;
@@ -45,8 +49,8 @@ void MNAStateSpaceExtractor::initialize(
   allocateMatrices();
   collectMetadata();
 
-  stampStaticMatrices();
-  restampVariableMatrices();
+  stampConstantMatrices();
+  restampUpdatedMatrices();
   rebuildCombinedMatrices();
 
   mStateMatrixValid = false;
@@ -60,21 +64,22 @@ void MNAStateSpaceExtractor::reset() {
   mStateCount = 0;
   mTimeStep = 0.0;
 
-  mHasVariableContributors = false;
+  mHasUpdatedContributors = false;
   mStateMatrixValid = false;
   mMetadata = StateSpaceMetadata{};
   mLastExtractionTime = 0.0;
   mHasExtractionTime = false;
 
   mContributorEntries.clear();
+  mAttributeDependencies.clear();
 
-  mAdLocalStatic.resize(0, 0);
-  mBdMnaStatic.resize(0, 0);
-  mCdMnaStatic.resize(0, 0);
+  mAdLocalConstant.resize(0, 0);
+  mBdMnaConstant.resize(0, 0);
+  mCdMnaConstant.resize(0, 0);
 
-  mAdLocalVariable.resize(0, 0);
-  mBdMnaVariable.resize(0, 0);
-  mCdMnaVariable.resize(0, 0);
+  mAdLocalUpdated.resize(0, 0);
+  mBdMnaUpdated.resize(0, 0);
+  mCdMnaUpdated.resize(0, 0);
 
   mAdLocal.resize(0, 0);
   mBdMna.resize(0, 0);
@@ -98,8 +103,20 @@ void MNAStateSpaceExtractor::extract(DirectLinearSolver &linearSolver,
     return;
   }
 
-  if (variableModelChanged && mHasVariableContributors) {
-    restampVariableMatrices();
+  Bool updatedMatricesChanged = variableModelChanged;
+
+  if (!updatedMatricesChanged) {
+    for (const auto &entry : mContributorEntries) {
+      if (entry.contributor->contributesToUpdatedMatrices() &&
+          entry.contributor->requiresUpdate()) {
+        updatedMatricesChanged = true;
+        break;
+      }
+    }
+  }
+
+  if (updatedMatricesChanged && mHasUpdatedContributors) {
+    restampUpdatedMatrices();
     rebuildCombinedMatrices();
     mStateMatrixValid = false;
   }
@@ -112,13 +129,13 @@ void MNAStateSpaceExtractor::extract(DirectLinearSolver &linearSolver,
 }
 
 void MNAStateSpaceExtractor::allocateMatrices() {
-  mAdLocalStatic = Matrix::Zero(mStateCount, mStateCount);
-  mBdMnaStatic = Matrix::Zero(mStateCount, mMnaVectorSize);
-  mCdMnaStatic = Matrix::Zero(mMnaVectorSize, mStateCount);
+  mAdLocalConstant = Matrix::Zero(mStateCount, mStateCount);
+  mBdMnaConstant = Matrix::Zero(mStateCount, mMnaVectorSize);
+  mCdMnaConstant = Matrix::Zero(mMnaVectorSize, mStateCount);
 
-  mAdLocalVariable = Matrix::Zero(mStateCount, mStateCount);
-  mBdMnaVariable = Matrix::Zero(mStateCount, mMnaVectorSize);
-  mCdMnaVariable = Matrix::Zero(mMnaVectorSize, mStateCount);
+  mAdLocalUpdated = Matrix::Zero(mStateCount, mStateCount);
+  mBdMnaUpdated = Matrix::Zero(mStateCount, mMnaVectorSize);
+  mCdMnaUpdated = Matrix::Zero(mMnaVectorSize, mStateCount);
 
   mAdLocal = Matrix::Zero(mStateCount, mStateCount);
   mBdMna = Matrix::Zero(mStateCount, mMnaVectorSize);
@@ -156,36 +173,36 @@ void MNAStateSpaceExtractor::collectMetadata() {
   }
 }
 
-void MNAStateSpaceExtractor::stampStaticMatrices() {
-  mAdLocalStatic.setZero();
-  mBdMnaStatic.setZero();
-  mCdMnaStatic.setZero();
+void MNAStateSpaceExtractor::stampConstantMatrices() {
+  mAdLocalConstant.setZero();
+  mBdMnaConstant.setZero();
+  mCdMnaConstant.setZero();
 
   for (const auto &entry : mContributorEntries) {
-    if (!entry.contributor->isVariable()) {
-      entry.contributor->stamp(mAdLocalStatic, mBdMnaStatic, mCdMnaStatic,
+    if (!entry.contributor->contributesToUpdatedMatrices()) {
+      entry.contributor->stamp(mAdLocalConstant, mBdMnaConstant, mCdMnaConstant,
                                entry.stateOffset, mMnaVectorSize);
     }
   }
 }
 
-void MNAStateSpaceExtractor::restampVariableMatrices() {
-  mAdLocalVariable.setZero();
-  mBdMnaVariable.setZero();
-  mCdMnaVariable.setZero();
+void MNAStateSpaceExtractor::restampUpdatedMatrices() {
+  mAdLocalUpdated.setZero();
+  mBdMnaUpdated.setZero();
+  mCdMnaUpdated.setZero();
 
   for (const auto &entry : mContributorEntries) {
-    if (entry.contributor->isVariable()) {
-      entry.contributor->stamp(mAdLocalVariable, mBdMnaVariable, mCdMnaVariable,
+    if (entry.contributor->contributesToUpdatedMatrices()) {
+      entry.contributor->stamp(mAdLocalUpdated, mBdMnaUpdated, mCdMnaUpdated,
                                entry.stateOffset, mMnaVectorSize);
     }
   }
 }
 
 void MNAStateSpaceExtractor::rebuildCombinedMatrices() {
-  mAdLocal = mAdLocalStatic + mAdLocalVariable;
-  mBdMna = mBdMnaStatic + mBdMnaVariable;
-  mCdMna = mCdMnaStatic + mCdMnaVariable;
+  mAdLocal = mAdLocalConstant + mAdLocalUpdated;
+  mBdMna = mBdMnaConstant + mBdMnaUpdated;
+  mCdMna = mCdMnaConstant + mCdMnaUpdated;
 }
 
 void MNAStateSpaceExtractor::computeStateMatrix(

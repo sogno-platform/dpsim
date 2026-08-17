@@ -47,6 +47,10 @@ public:
 
   const StateSpaceMetadata &getMetadata() const { return mMetadata; }
 
+  const CPS::AttributeBase::List &getAttributeDependencies() const {
+    return mAttributeDependencies;
+  }
+
   Bool hasExtractionTime() const { return mHasExtractionTime; }
 
   Real getLastExtractionTime() const { return mLastExtractionTime; }
@@ -63,9 +67,9 @@ private:
 
   void collectMetadata();
 
-  void stampStaticMatrices();
+  void stampConstantMatrices();
 
-  void restampVariableMatrices();
+  void restampUpdatedMatrices();
 
   void rebuildCombinedMatrices();
 
@@ -79,7 +83,7 @@ private:
 
   Real mTimeStep = 0.0;
 
-  Bool mHasVariableContributors = false;
+  Bool mHasUpdatedContributors = false;
 
   Bool mStateMatrixValid = false;
 
@@ -91,13 +95,15 @@ private:
 
   std::vector<ContributorEntry> mContributorEntries;
 
-  Matrix mAdLocalStatic;
-  Matrix mBdMnaStatic;
-  Matrix mCdMnaStatic;
+  CPS::AttributeBase::List mAttributeDependencies;
 
-  Matrix mAdLocalVariable;
-  Matrix mBdMnaVariable;
-  Matrix mCdMnaVariable;
+  Matrix mAdLocalConstant;
+  Matrix mBdMnaConstant;
+  Matrix mCdMnaConstant;
+
+  Matrix mAdLocalUpdated;
+  Matrix mBdMnaUpdated;
+  Matrix mCdMnaUpdated;
 
   Matrix mAdLocal;
   Matrix mBdMna;

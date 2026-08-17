@@ -14,13 +14,21 @@ enum class StateSpaceAnalysisFrame {
   GlobalDQ0,
 };
 
+enum class StateSpacePoleMapping {
+  /// Inverse trapezoidal (bilinear) mapping. Use when the complete model was
+  /// discretized with the trapezoidal rule and contains no explicit delays.
+  Bilinear,
+
+  /// Sampled-data mapping lambda = log(z) / dt. Use for models containing
+  /// explicit discrete delays or other non-trapezoidal update operations.
+  Logarithmic,
+};
+
 /// Performs modal analysis of an extracted discrete-time state-space model.
 ///
 /// The analysis uses the state matrix provided by MNAStateSpaceExtractor and
 /// maps discrete-time eigenvalues to continuous-time equivalent eigenvalues
-/// with the trapezoidal-rule relation:
-///
-///   lambda = 2 / dt * (z - 1) / (z + 1)
+/// using a selectable pole mapping.
 class StateSpaceModalAnalysis {
 public:
   explicit StateSpaceModalAnalysis(const MNAStateSpaceExtractor &extractor);
@@ -42,6 +50,8 @@ public:
     mGlobalTheta0 = theta0;
   }
 
+  void setPoleMapping(StateSpacePoleMapping mapping) { mPoleMapping = mapping; }
+
   /// Update modal quantities from the current extracted state matrix.
   void update();
 
@@ -50,7 +60,8 @@ public:
     return mDiscreteEigenvalues;
   }
 
-  /// Continuous-time equivalent eigenvalues reconstructed from discrete eigenvalues.
+  /// Continuous-time equivalent eigenvalues reconstructed with the selected
+  /// pole mapping.
   const CPS::VectorComp &getContinuousEigenvalues() const {
     return mContinuousEigenvalues;
   }
@@ -100,6 +111,8 @@ private:
   const MNAStateSpaceExtractor &mExtractor;
 
   StateSpaceAnalysisFrame mAnalysisFrame = StateSpaceAnalysisFrame::Native;
+
+  StateSpacePoleMapping mPoleMapping = StateSpacePoleMapping::Bilinear;
 
   Real mGlobalOmega = 0.0;
 

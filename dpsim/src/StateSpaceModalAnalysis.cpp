@@ -190,6 +190,9 @@ StateSpaceModalAnalysis::buildStateNamesInAnalysisFrame() const {
 
 CPS::Complex
 StateSpaceModalAnalysis::mapDiscreteToContinuous(const CPS::Complex &z) const {
+  if (mPoleMapping == StateSpacePoleMapping::Logarithmic)
+    return std::log(z) / mExtractor.getTimeStep();
+
   const CPS::Complex one(1.0, 0.0);
   const CPS::Complex denominator = z + one;
 

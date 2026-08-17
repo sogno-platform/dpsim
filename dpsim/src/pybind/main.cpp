@@ -164,6 +164,10 @@ PYBIND11_MODULE(dpsimpy, m) {
       .value("Native", DPsim::StateSpaceAnalysisFrame::Native)
       .value("GlobalDQ0", DPsim::StateSpaceAnalysisFrame::GlobalDQ0);
 
+  py::enum_<DPsim::StateSpacePoleMapping>(m, "StateSpacePoleMapping")
+      .value("Bilinear", DPsim::StateSpacePoleMapping::Bilinear)
+      .value("Logarithmic", DPsim::StateSpacePoleMapping::Logarithmic);
+
   m.attr("RMS3PH_TO_PEAK1PH") = RMS3PH_TO_PEAK1PH;
   m.attr("PEAK1PH_TO_RMS3PH") = PEAK1PH_TO_RMS3PH;
   m.attr("P_SNUB_TRANSFORMER") = P_SNUB_TRANSFORMER;
@@ -208,6 +212,7 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("set_global_dq0_frame",
            &DPsim::StateSpaceModalAnalysis::setGlobalDq0Frame, "omega"_a,
            "theta0"_a = 0.0)
+      .def("set_pole_mapping", &DPsim::StateSpaceModalAnalysis::setPoleMapping)
       .def("update", &DPsim::StateSpaceModalAnalysis::update)
       .def("get_discrete_eigenvalues",
            &DPsim::StateSpaceModalAnalysis::getDiscreteEigenvalues,
