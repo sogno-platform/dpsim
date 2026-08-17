@@ -16,4 +16,5 @@
 namespace py = pybind11;
 using namespace pybind11::literals;
 
+void addSignalComponentBases(py::module_ mSignal);
 void addSignalComponents(py::module_ mSignal);
