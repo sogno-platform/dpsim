@@ -135,6 +135,7 @@ set(SYNCGEN_SOURCES
 	Components/DP_SP_SynGenTrStab_testModels_doubleLine.cpp
 	Components/EMT_SynchronGenerator9OrderDCIM_LoadStep_TurbineGovernor_Exciter.cpp
 	Components/EMT_SynchronGenerator9OrderVBR_LoadStep_TurbineGovernor_Exciter.cpp
+	Components/EMT_DP_Ph3_Switch_3Mode_Benchmark.cpp
 )
 
 set(INVERTER_SOURCES

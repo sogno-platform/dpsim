@@ -48,6 +48,9 @@ public:
     } else if (auto attrInt = std::dynamic_pointer_cast<CPS::Attribute<Int>>(
                    attr.getPtr())) {
       mAttributes[name] = attrInt;
+    } else if (auto attrBool = std::dynamic_pointer_cast<CPS::Attribute<Bool>>(
+                   attr.getPtr())) {
+      mAttributes[name] = attrBool;
     } else if (auto attrMatrix =
                    std::dynamic_pointer_cast<CPS::Attribute<Matrix>>(
                        attr.getPtr())) {
