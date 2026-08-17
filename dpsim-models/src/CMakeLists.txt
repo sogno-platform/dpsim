@@ -91,6 +91,7 @@ list(APPEND MODELS_SOURCES
 
 	EMT/EMT_SSNComp.cpp
 	EMT/EMT_VTypeSSNComp.cpp
+	EMT/EMT_VTypeSplitSSNComp.cpp
 	EMT/EMT_VTypeVariableSSNComp.cpp
 	EMT/EMT_ITypeSSNComp.cpp
 
@@ -162,6 +163,7 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph3_GenericFourTerminalVTypeSSN.cpp
 	EMT/EMT_Ph3_TwoTerminalVTypeSSNComp.cpp
 	EMT/EMT_Ph3_TwoTerminalITypeSSNComp.cpp
+	EMT/EMT_Ph3_TwoTerminalVTypeSplitSSNComp.cpp
 	EMT/EMT_Ph3_TwoTerminalVTypeVariableSSNComp.cpp
 	EMT/EMT_Ph3_FourTerminalVTypeSSNComp.cpp
 	EMT/EMT_Ph3_SSN_InductionMotor.cpp

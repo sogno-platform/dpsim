@@ -11,25 +11,12 @@ using namespace CPS;
 
 EMT::Ph3::SSN_GFL_Split::SSN_GFL_Split(String uid, String name,
                                        Logger::Level logLevel)
-    : TwoTerminalVTypeSSNComp(uid, name, logLevel), mLf(0.0), mCf(0.0),
-      mRf(0.0), mRc(0.0), mOmegaN(0.0), mKpPLL(0.0), mKiPLL(0.0),
-      mOmegaCutoff(0.0), mPRef(0.0), mQRef(0.0), mKpPowerCtrl(0.0),
+    : TwoTerminalVTypeSplitSSNComp(uid, name, mControllerStateSize,
+                                   mControllerInputSize, mControllerOutputSize,
+                                   logLevel),
+      mLf(0.0), mCf(0.0), mRf(0.0), mRc(0.0), mOmegaN(0.0), mKpPLL(0.0),
+      mKiPLL(0.0), mOmegaCutoff(0.0), mPRef(0.0), mQRef(0.0), mKpPowerCtrl(0.0),
       mKiPowerCtrl(0.0), mKpCurrCtrl(0.0), mKiCurrCtrl(0.0),
-      mBConverter(Matrix::Zero(mNetworkStateSize, 3)),
-      mdBConverter(Matrix::Zero(mNetworkStateSize, 3)),
-      mControllerState(Matrix::Zero(mControllerStateSize, 1)),
-      mControllerMeasurementOld(Matrix::Zero(mControllerInputSize, 1)),
-      mControllerA(Matrix::Zero(mControllerStateSize, mControllerStateSize)),
-      mControllerB(Matrix::Zero(mControllerStateSize, mControllerInputSize)),
-      mControllerC(Matrix::Zero(mControllerOutputSize, mControllerStateSize)),
-      mControllerD(Matrix::Zero(mControllerOutputSize, mControllerInputSize)),
-      mControllerE(Matrix::Zero(mControllerStateSize, 1)),
-      mControllerF(Matrix::Zero(mControllerOutputSize, 1)),
-      mControllerAd(Matrix::Zero(mControllerStateSize, mControllerStateSize)),
-      mControllerBd(Matrix::Zero(mControllerStateSize, mControllerInputSize)),
-      mControllerEd(Matrix::Zero(mControllerStateSize, 1)),
-      mConverterVoltageReference(Matrix::Zero(3, 1)),
-      mConverterVoltageDelayed(Matrix::Zero(3, 1)),
       mVcD(mAttributes->create<Real>("vc_d")),
       mVcQ(mAttributes->create<Real>("vc_q")),
       mIrcD(mAttributes->create<Real>("irc_d")),
@@ -68,6 +55,32 @@ EMT::Ph3::SSN_GFL_Split::getLocalAbcStateBlocks() const {
        "vc"},
       {{static_cast<UInt>(IfA), static_cast<UInt>(IfB), static_cast<UInt>(IfC)},
        "if"},
+  };
+}
+
+std::vector<String> EMT::Ph3::SSN_GFL_Split::getSplitLocalStateNames() const {
+  return {"theta_pll",    "phi_pll", "p_filtered",    "q_filtered",
+          "phi_d",        "phi_q",   "gamma_d",       "gamma_q",
+          "vc_a",         "vc_b",    "vc_c",          "if_a",
+          "if_b",         "if_c",    "v_inv_delay_a", "v_inv_delay_b",
+          "v_inv_delay_c"};
+}
+
+std::vector<EMT::SSNComp::LocalAbcStateBlock>
+EMT::Ph3::SSN_GFL_Split::getSplitLocalAbcStateBlocks() const {
+  const UInt networkOffset = static_cast<UInt>(mControllerStateSize);
+  const UInt delayOffset = networkOffset + static_cast<UInt>(mNetworkStateSize);
+
+  return {
+      {{networkOffset + static_cast<UInt>(VcA),
+        networkOffset + static_cast<UInt>(VcB),
+        networkOffset + static_cast<UInt>(VcC)},
+       "vc"},
+      {{networkOffset + static_cast<UInt>(IfA),
+        networkOffset + static_cast<UInt>(IfB),
+        networkOffset + static_cast<UInt>(IfC)},
+       "if"},
+      {{delayOffset, delayOffset + 1, delayOffset + 2}, "v_inv_delay"},
   };
 }
 
@@ -151,24 +164,24 @@ void EMT::Ph3::SSN_GFL_Split::setParameters(Real lf, Real cf, Real rf, Real rc,
 
   bTerminal.block(VcA, 0, 3, 3) = 1.0 / (mCf * mRc) * identity3;
 
-  mBConverter.setZero(mNetworkStateSize, 3);
-  mBConverter.block(IfA, 0, 3, 3) = 1.0 / mLf * identity3;
+  Matrix bControllerOutput = Matrix::Zero(mNetworkStateSize, 3);
+  bControllerOutput.block(IfA, 0, 3, 3) = 1.0 / mLf * identity3;
 
   cNetwork.block(0, VcA, 3, 3) = -1.0 / mRc * identity3;
   dTerminal = 1.0 / mRc * identity3;
 
-  // This fixed SSN plant is not changed after setParameters().
-  SSNComp::setParameters(aNetwork, bTerminal, cNetwork, dTerminal);
+  Matrix measurementState =
+      Matrix::Zero(mControllerInputSize, mNetworkStateSize);
+  measurementState.block(0, VcA, 3, 3) = identity3;
+  measurementState.block(3, VcA, 3, 3) = (1.0 / mRc) * identity3;
 
-  mControllerState.setZero();
-  mControllerMeasurementOld.setZero();
-  mConverterVoltageReference.setZero();
-  mConverterVoltageDelayed.setZero();
+  Matrix measurementTerminal =
+      Matrix::Zero(mControllerInputSize, mTerminalInputSize);
+  measurementTerminal.block(3, 0, 3, 3) = (-1.0 / mRc) * identity3;
 
-  // Initialize controller matrix dimensions and a valid operating-point model.
-  buildControllerStateSpaceModel(mControllerState, mControllerMeasurementOld,
-                                 mControllerA, mControllerB, mControllerC,
-                                 mControllerD, mControllerE, mControllerF);
+  // The fixed network stamp is not changed by controller re-linearization.
+  setSplitParameters(aNetwork, bTerminal, cNetwork, dTerminal,
+                     bControllerOutput, measurementState, measurementTerminal);
 }
 
 Matrix EMT::Ph3::SSN_GFL_Split::getParkTransformMatrix(Real theta) const {
@@ -198,30 +211,6 @@ EMT::Ph3::SSN_GFL_Split::getInverseParkTransformMatrix(Real theta) const {
       -scale * std::sin(theta + 2.0 * PI / 3.0);
 
   return transform;
-}
-
-Matrix EMT::Ph3::SSN_GFL_Split::buildControllerMeasurement(
-    const Matrix &networkState, const Matrix &terminalVoltage) const {
-
-  if (networkState.rows() != mNetworkStateSize || networkState.cols() != 1)
-    throw std::invalid_argument(
-        "SSN_GFL_Split network state has an invalid dimension.");
-
-  if (terminalVoltage.rows() != mTerminalInputSize ||
-      terminalVoltage.cols() != 1)
-    throw std::invalid_argument(
-        "SSN_GFL_Split terminal voltage has an invalid dimension.");
-
-  const Matrix vcAbc = networkState.block(VcA, 0, 3, 1);
-
-  // Positive current is physical inverter injection into the grid.
-  const Matrix iGridAbc = (vcAbc - terminalVoltage) / mRc;
-
-  Matrix measurement = Matrix::Zero(mControllerInputSize, 1);
-  measurement.block(0, 0, 3, 1) = vcAbc;
-  measurement.block(3, 0, 3, 1) = iGridAbc;
-
-  return measurement;
 }
 
 void EMT::Ph3::SSN_GFL_Split::evaluateControllerStateDerivative(
@@ -484,70 +473,6 @@ void EMT::Ph3::SSN_GFL_Split::buildControllerStateSpaceModel(
   F = output - C * xController - D * measurement;
 }
 
-void EMT::Ph3::SSN_GFL_Split::recomputeControllerDiscreteModel() {
-  if (mTimeStep <= 0.0)
-    return;
-
-  Math::calculateStateSpaceTrapezoidalMatrices(
-      mControllerA, mControllerB, mControllerE, mTimeStep, mControllerAd,
-      mControllerBd, mControllerEd);
-}
-
-void EMT::Ph3::SSN_GFL_Split::recomputeDiscreteModel() {
-  // Fixed electrical plant.
-  SSNComp::recomputeDiscreteModel();
-
-  // Additional trapezoidal input matrix for the delayed converter command.
-  const Matrix identity =
-      Matrix::Identity(mNetworkStateSize, mNetworkStateSize);
-  const Matrix lhs = identity - 0.5 * mTimeStep * mA;
-
-  mdBConverter = lhs.fullPivLu().solve(0.5 * mTimeStep * mBConverter);
-
-  // The controller is the only time-varying local subsystem.
-  recomputeControllerDiscreteModel();
-}
-
-Matrix EMT::Ph3::SSN_GFL_Split::calculateHistoryVector() const {
-  // The delayed converter voltage only enters the history vector.
-  return mC * (mdA * (**mX) + mdB * (**mIntfVoltage) +
-               2.0 * mdBConverter * mConverterVoltageDelayed);
-}
-
-void EMT::Ph3::SSN_GFL_Split::updateState(const Matrix &uOld,
-                                          const Matrix &uNew) {
-  // Use the converter command available before this network solve.
-  const Matrix delayedVoltageUsedThisStep = mConverterVoltageDelayed;
-
-  **mX = mdA * (**mX) + mdB * (uNew + uOld) +
-         2.0 * mdBConverter * delayedVoltageUsedThisStep;
-
-  // Form new measurements from the solved network state.
-  const Matrix measurementNew = buildControllerMeasurement(**mX, uNew);
-
-  // Advance the controller with the previous local affine model.
-  mControllerState =
-      mControllerAd * mControllerState +
-      mControllerBd * (measurementNew + mControllerMeasurementOld) +
-      mControllerEd;
-
-  mControllerMeasurementOld = measurementNew;
-
-  // Re-linearize only the controller at the new operating point.
-  buildControllerStateSpaceModel(mControllerState, measurementNew, mControllerA,
-                                 mControllerB, mControllerC, mControllerD,
-                                 mControllerE, mControllerF);
-
-  recomputeControllerDiscreteModel();
-
-  // Calculate controller output at sample k.
-  evaluateControllerOutput(mControllerState, measurementNew,
-                           mConverterVoltageReference);
-
-  // Store the command for the next simulation interval.
-  mConverterVoltageDelayed = mConverterVoltageReference;
-}
-
 void EMT::Ph3::SSN_GFL_Split::updateLogAttributes(const Matrix &u) const {
   const Matrix measurement = buildControllerMeasurement(**mX, u);
 
@@ -568,9 +493,9 @@ void EMT::Ph3::SSN_GFL_Split::updateLogAttributes(const Matrix &u) const {
   **mOmegaPLL =
       mOmegaN + mKpPLL * **mVcQ + mKiPLL * mControllerState(PhiPLL, 0);
 
-  **mVInvRefA = mConverterVoltageReference(0, 0);
-  **mVInvRefB = mConverterVoltageReference(1, 0);
-  **mVInvRefC = mConverterVoltageReference(2, 0);
+  **mVInvRefA = mControllerOutput(0, 0);
+  **mVInvRefB = mControllerOutput(1, 0);
+  **mVInvRefC = mControllerOutput(2, 0);
 }
 
 void EMT::Ph3::SSN_GFL_Split::initializeFromNodesAndTerminals(Real frequency) {
@@ -698,8 +623,8 @@ void EMT::Ph3::SSN_GFL_Split::initializeFromNodesAndTerminals(Real frequency) {
   mControllerMeasurementOld = buildControllerMeasurement(**mX, **mIntfVoltage);
 
   // Avoid an artificial one-step zero command at t = 0.
-  mConverterVoltageReference = converterVoltageReferenceAbc0;
-  mConverterVoltageDelayed = converterVoltageReferenceAbc0;
+  mControllerOutput = converterVoltageReferenceAbc0;
+  mDelayedControllerOutput = converterVoltageReferenceAbc0;
 
   // Build the controller model at the initialized operating point.
   buildControllerStateSpaceModel(mControllerState, mControllerMeasurementOld,
@@ -710,7 +635,7 @@ void EMT::Ph3::SSN_GFL_Split::initializeFromNodesAndTerminals(Real frequency) {
   // recomputeDiscreteModel(). This also makes re-initialization robust if a
   // timestep is already known.
   if (mTimeStep > 0.0)
-    recomputeControllerDiscreteModel();
+    recomputeDiscreteModel();
 
   updateLogAttributes(**mIntfVoltage);
 
@@ -729,7 +654,7 @@ void EMT::Ph3::SSN_GFL_Split::initializeFromNodesAndTerminals(Real frequency) {
       Logger::matrixToString(**mIntfVoltage),
       Logger::matrixToString(**mIntfCurrent), Logger::matrixToString(**mX),
       Logger::matrixToString(mControllerState), pInitial, qInitial, vcD0, vcQ0,
-      iGridD0, iGridQ0, Logger::matrixToString(mConverterVoltageDelayed));
+      iGridD0, iGridQ0, Logger::matrixToString(mDelayedControllerOutput));
 }
 
 Matrix EMT::Ph3::SSN_GFL_Split::getState() const {
@@ -754,8 +679,9 @@ Matrix EMT::Ph3::SSN_GFL_Split::getStateDerivative() const {
   evaluateControllerStateDerivative(mControllerState, measurement,
                                     controllerDerivative);
 
-  const Matrix networkDerivative = mA * (**mX) + mB * (**mIntfVoltage) +
-                                   mBConverter * mConverterVoltageDelayed;
+  const Matrix networkDerivative =
+      mA * (**mX) + mB * (**mIntfVoltage) +
+      mBControllerOutput * mDelayedControllerOutput;
 
   Matrix derivative = Matrix::Zero(mControllerStateSize + mNetworkStateSize, 1);
 
@@ -775,11 +701,11 @@ Matrix EMT::Ph3::SSN_GFL_Split::getInterfaceCurrent() const {
 }
 
 Matrix EMT::Ph3::SSN_GFL_Split::getConverterVoltageReference() const {
-  return mConverterVoltageReference;
+  return mControllerOutput;
 }
 
 Matrix EMT::Ph3::SSN_GFL_Split::getDelayedConverterVoltage() const {
-  return mConverterVoltageDelayed;
+  return mDelayedControllerOutput;
 }
 
 Matrix EMT::Ph3::SSN_GFL_Split::getControllerA() const { return mControllerA; }
@@ -800,7 +726,7 @@ Matrix EMT::Ph3::SSN_GFL_Split::getNetworkB() const {
   Matrix bFull = Matrix::Zero(mNetworkStateSize, 6);
 
   bFull.block(0, 0, mNetworkStateSize, 3) = mB;
-  bFull.block(0, 3, mNetworkStateSize, 3) = mBConverter;
+  bFull.block(0, 3, mNetworkStateSize, 3) = mBControllerOutput;
 
   return bFull;
 }
