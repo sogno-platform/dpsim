@@ -115,6 +115,10 @@ set(CIRCUIT_SOURCES
 
 	# DC
 	Circuits/EMT_DC_PiLine_SourceStep.cpp
+
+	# KRK Two Area System
+	Circuits/SP_SynGenTrStab_KRK_TwoArea_SteadyState.cpp
+	Circuits/SP_SynGenTrStab_KRK_TwoAreaTrafo_SteadyState.cpp
 )
 
 if(WITH_JSON)
