@@ -175,7 +175,7 @@ list(APPEND MODELS_SOURCES
 	SP/SP_Ph1_Inductor.cpp
 	SP/SP_Ph1_Resistor.cpp
 	SP/SP_Ph1_AvVoltageSourceInverterDQ.cpp
-	SP/SP_Ph1_RXLine.cpp
+	SP/SP_Ph1_RxLine.cpp
 	SP/SP_Ph1_VoltageSourceInverter.cpp
 	SP/SP_Ph1_PiLine.cpp
 	SP/SP_Ph1_Load.cpp

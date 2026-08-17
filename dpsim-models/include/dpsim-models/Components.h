@@ -18,8 +18,8 @@
 #include <dpsim-models/SP/SP_Ph1_PQNode.h>
 #include <dpsim-models/SP/SP_Ph1_PVNode.h>
 #include <dpsim-models/SP/SP_Ph1_PiLine.h>
-#include <dpsim-models/SP/SP_Ph1_RXLine.h>
 #include <dpsim-models/SP/SP_Ph1_ReducedOrderSynchronGeneratorVBR.h>
+#include <dpsim-models/SP/SP_Ph1_RxLine.h>
 #include <dpsim-models/SP/SP_Ph1_SSNTypeI2T.h>
 #include <dpsim-models/SP/SP_Ph1_SSNTypeV2T.h>
 #include <dpsim-models/SP/SP_Ph1_Shunt.h>
