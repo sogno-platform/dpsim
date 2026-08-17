@@ -1,5 +1,5 @@
 <map id="CPS::DP::Ph3::Resistor" name="CPS::DP::Ph3::Resistor">
-<area shape="rect" id="Node000001" title=" " alt="" coords="1277,214,1437,243"/>
+<area shape="rect" id="Node000001" title="Three&#45;phase dynamic&#45;phasor resistor." alt="" coords="1277,214,1437,243"/>
 <area shape="rect" id="Node000002" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="1046,115,1227,163"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1215,167,1229,173,1320,211,1318,215,1227,177,1213,172"/>
 <area shape="rect" id="Node000003" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="750,53,908,102"/>

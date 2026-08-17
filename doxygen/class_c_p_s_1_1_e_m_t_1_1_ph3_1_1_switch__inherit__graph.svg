@@ -58,7 +58,7 @@ var sectionId = 'dynsection-0';
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Dynamic phasor switch.">
+<g id="a_Node000001"><a xlink:title="Three&#45;phase EMT switch / circuit breaker.">
 <polygon fill="#999999" stroke="#666666" points="1074,-102.25 956,-102.25 956,-80 1074,-80 1074,-102.25"/>
 <text text-anchor="middle" x="1015" y="-88.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::Switch</text>
 </a>
@@ -245,7 +245,7 @@ var sectionId = 'dynsection-0';
 <!-- Node10 -->
 <g id="Node000010" class="node">
 <title>Node10</title>
-<g id="a_Node000010"><a xlink:href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html" target="_top" xlink:title="Dynamic Phasor Three&#45;Phase Switch.">
+<g id="a_Node000010"><a xlink:href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html" target="_top" xlink:title="Common base for three&#45;phase switches.">
 <polygon fill="white" stroke="#666666" points="894.62,-142.25 773.62,-142.25 773.62,-120 894.62,-120 894.62,-142.25"/>
 <text text-anchor="middle" x="834.12" y="-128.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Base::Ph3::Switch</text>
 </a>

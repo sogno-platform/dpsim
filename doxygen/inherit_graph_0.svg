@@ -1659,7 +1659,7 @@
 <!-- Node101 -->
 <g id="Node000101" class="node">
 <title>Node101</title>
-<g id="a_Node000101"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html" target="_top" xlink:title="Inductor.">
+<g id="a_Node000101"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html" target="_top" xlink:title="Three&#45;phase dynamic&#45;phasor inductor.">
 <polygon fill="white" stroke="#666666" points="1183.88,-6339.38 1060.62,-6339.38 1060.62,-6317.12 1183.88,-6317.12 1183.88,-6339.38"/>
 <text text-anchor="middle" x="1122.25" y="-6325.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph3::Inductor</text>
 </a>
@@ -1696,7 +1696,7 @@
 <!-- Node117 -->
 <g id="Node000117" class="node">
 <title>Node117</title>
-<g id="a_Node000117"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_resistor.html" target="_top" xlink:title=" ">
+<g id="a_Node000117"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_resistor.html" target="_top" xlink:title="Three&#45;phase dynamic&#45;phasor resistor.">
 <polygon fill="white" stroke="#666666" points="1182.38,-6021.38 1062.12,-6021.38 1062.12,-5999.12 1182.38,-5999.12 1182.38,-6021.38"/>
 <text text-anchor="middle" x="1122.25" y="-6007.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph3::Resistor</text>
 </a>
@@ -1750,7 +1750,7 @@
 <!-- Node208 -->
 <g id="Node000208" class="node">
 <title>Node208</title>
-<g id="a_Node000208"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html" target="_top" xlink:title="Dynamic phasor three&#45;phase switch with per&#45;phase resistance.">
+<g id="a_Node000208"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="945.5,-7395.38 833.5,-7395.38 833.5,-7373.12 945.5,-7373.12 945.5,-7395.38"/>
 <text text-anchor="middle" x="889.5" y="-7381.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph3::Switch</text>
 </a>
@@ -3375,7 +3375,7 @@
 <!-- Node210 -->
 <g id="Node000210" class="node">
 <title>Node210</title>
-<g id="a_Node000210"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch.html" target="_top" xlink:title="Dynamic phasor switch.">
+<g id="a_Node000210"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch.html" target="_top" xlink:title="Three&#45;phase EMT switch / circuit breaker.">
 <polygon fill="white" stroke="#666666" points="948.5,-7191.38 830.5,-7191.38 830.5,-7169.12 948.5,-7169.12 948.5,-7191.38"/>
 <text text-anchor="middle" x="889.5" y="-7177.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::Switch</text>
 </a>
@@ -8639,7 +8639,7 @@
 <!-- Node209 -->
 <g id="Node000209" class="node">
 <title>Node209</title>
-<g id="a_Node000209"><a xlink:href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html" target="_top" xlink:title="Dynamic Phasor Three&#45;Phase Switch.">
+<g id="a_Node000209"><a xlink:href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html" target="_top" xlink:title="Common base for three&#45;phase switches.">
 <polygon fill="white" stroke="#666666" points="718,-7191.38 597,-7191.38 597,-7169.12 718,-7169.12 718,-7191.38"/>
 <text text-anchor="middle" x="657.5" y="-7177.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::Base::Ph3::Switch</text>
 </a>

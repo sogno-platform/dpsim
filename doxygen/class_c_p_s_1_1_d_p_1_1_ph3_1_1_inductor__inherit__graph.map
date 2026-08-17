@@ -1,5 +1,5 @@
 <map id="CPS::DP::Ph3::Inductor" name="CPS::DP::Ph3::Inductor">
-<area shape="rect" id="Node000001" title="Inductor." alt="" coords="1282,214,1446,243"/>
+<area shape="rect" id="Node000001" title="Three&#45;phase dynamic&#45;phasor inductor." alt="" coords="1282,214,1446,243"/>
 <area shape="rect" id="Node000002" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="1049,115,1230,163"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1220,167,1234,173,1327,211,1325,215,1232,177,1218,172"/>
 <area shape="rect" id="Node000003" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="750,53,908,102"/>

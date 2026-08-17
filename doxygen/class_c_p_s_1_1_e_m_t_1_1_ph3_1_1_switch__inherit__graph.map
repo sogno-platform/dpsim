@@ -1,5 +1,5 @@
 <map id="CPS::EMT::Ph3::Switch" name="CPS::EMT::Ph3::Switch">
-<area shape="rect" id="Node000001" title="Dynamic phasor switch." alt="" coords="1280,246,1437,275"/>
+<area shape="rect" id="Node000001" title="Three&#45;phase EMT switch / circuit breaker." alt="" coords="1280,246,1437,275"/>
 <area shape="rect" id="Node000002" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="1027,116,1208,165"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1211,168,1232,178,1290,211,1338,243,1335,247,1287,216,1229,183,1208,173"/>
 <area shape="rect" id="Node000003" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="722,53,881,102"/>
@@ -19,7 +19,7 @@
 <area shape="poly" id="edge11_Node000008_Node000007" title=" " alt="" coords="620,159,711,178,710,184,618,164"/>
 <area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="907,186,980,174,1029,163,1030,168,981,179,908,191"/>
 <area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="628,201,711,199,711,205,628,206"/>
-<area shape="rect" id="Node000010" href="$class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html" title="Dynamic Phasor Three&#45;Phase Switch." alt="" coords="1037,192,1198,222"/>
+<area shape="rect" id="Node000010" href="$class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html" title="Common base for three&#45;phase switches." alt="" coords="1037,192,1198,222"/>
 <area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="1203,223,1289,242,1288,247,1202,228"/>
 <area shape="rect" id="Node000011" href="$class_shared_factory.html" title=" " alt="" coords="1032,246,1203,275"/>
 <area shape="poly" id="edge13_Node000001_Node000011" title=" " alt="" coords="1219,258,1280,258,1280,263,1219,263"/>

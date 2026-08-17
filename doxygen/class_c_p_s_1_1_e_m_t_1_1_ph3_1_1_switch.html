@@ -97,13 +97,15 @@ $(function(){initNavTree('class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch.html',''); in
 
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">CPS::EMT::Ph3::Switch Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Dynamic phasor switch.  
+<p>Three-phase <a class="el" href="namespace_c_p_s_1_1_e_m_t.html">EMT</a> switch / circuit breaker.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>&gt;</code></p>
@@ -118,44 +120,111 @@ Collaboration diagram for CPS::EMT::Ph3::Switch:</div>
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch__coll__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a721400da15edac06ab402e7bd94d913a" id="r_a721400da15edac06ab402e7bd94d913a"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a721400da15edac06ab402e7bd94d913a">SwitchingMode</a> { <a class="el" href="#a721400da15edac06ab402e7bd94d913aa22b7c2abfb7dcf0f672899fb2b6f1670">Ideal</a> = 0
+, <a class="el" href="#a721400da15edac06ab402e7bd94d913aa58bf16a3dd76f6d6e47569657c8a4b1b">CurrentZero</a> = 1
+, <a class="el" href="#a721400da15edac06ab402e7bd94d913aae62734bb2ec692abb9594492c86e587f">ExponentialZCSEmulation</a> = 2
+ }</td></tr>
+<tr class="separator:a721400da15edac06ab402e7bd94d913a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_types_class_c_p_s_1_1_m_n_a_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_class_c_p_s_1_1_m_n_a_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Real &gt;</a></td></tr>
+<tr class="memitem:a1dba155e613421ab4506288ba0d1923e inherit pub_types_class_c_p_s_1_1_m_n_a_sim_power_comp" id="r_a1dba155e613421ab4506288ba0d1923e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a1dba155e613421ab4506288ba0d1923e">Type</a></td></tr>
+<tr class="separator:a1dba155e613421ab4506288ba0d1923e inherit pub_types_class_c_p_s_1_1_m_n_a_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab0bf0401a097ee2b253a9a6fc328101 inherit pub_types_class_c_p_s_1_1_m_n_a_sim_power_comp" id="r_aab0bf0401a097ee2b253a9a6fc328101"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#aab0bf0401a097ee2b253a9a6fc328101">Ptr</a></td></tr>
+<tr class="separator:aab0bf0401a097ee2b253a9a6fc328101 inherit pub_types_class_c_p_s_1_1_m_n_a_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b2ef98b8377d258d5cc02bdee5dec9e inherit pub_types_class_c_p_s_1_1_m_n_a_sim_power_comp" id="r_a3b2ef98b8377d258d5cc02bdee5dec9e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a3b2ef98b8377d258d5cc02bdee5dec9e">List</a></td></tr>
+<tr class="separator:a3b2ef98b8377d258d5cc02bdee5dec9e inherit pub_types_class_c_p_s_1_1_m_n_a_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_types_class_c_p_s_1_1_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_class_c_p_s_1_1_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt; Real &gt;</a></td></tr>
+<tr class="memitem:a4b29d68ae7350d8f29ef7d69ca6f0590 inherit pub_types_class_c_p_s_1_1_sim_power_comp" id="r_a4b29d68ae7350d8f29ef7d69ca6f0590"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a4b29d68ae7350d8f29ef7d69ca6f0590">Type</a></td></tr>
+<tr class="separator:a4b29d68ae7350d8f29ef7d69ca6f0590 inherit pub_types_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5946ceeb6894fb6b04ab9d4788ec600 inherit pub_types_class_c_p_s_1_1_sim_power_comp" id="r_aa5946ceeb6894fb6b04ab9d4788ec600"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aa5946ceeb6894fb6b04ab9d4788ec600">Ptr</a></td></tr>
+<tr class="separator:aa5946ceeb6894fb6b04ab9d4788ec600 inherit pub_types_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a820b19d65a66e64d40ac2b1b94831b1c inherit pub_types_class_c_p_s_1_1_sim_power_comp" id="r_a820b19d65a66e64d40ac2b1b94831b1c"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aa5946ceeb6894fb6b04ab9d4788ec600">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a820b19d65a66e64d40ac2b1b94831b1c">List</a></td></tr>
+<tr class="separator:a820b19d65a66e64d40ac2b1b94831b1c inherit pub_types_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_types_class_c_p_s_1_1_topological_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_class_c_p_s_1_1_topological_power_comp')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="class_c_p_s_1_1_topological_power_comp.html">CPS::TopologicalPowerComp</a></td></tr>
+<tr class="memitem:ab9d4f348a42dc1f2617102595eba1f47 inherit pub_types_class_c_p_s_1_1_topological_power_comp" id="r_ab9d4f348a42dc1f2617102595eba1f47"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_power_comp.html#ab9d4f348a42dc1f2617102595eba1f47">Behaviour</a> { <a class="el" href="class_c_p_s_1_1_topological_power_comp.html#ab9d4f348a42dc1f2617102595eba1f47a531b046a59009a355f2813e055ccaebf">Initialization</a>
+, <a class="el" href="class_c_p_s_1_1_topological_power_comp.html#ab9d4f348a42dc1f2617102595eba1f47af4eb5556f9895ef310759e306b91fcca">MNASimulation</a>
+, <a class="el" href="class_c_p_s_1_1_topological_power_comp.html#ab9d4f348a42dc1f2617102595eba1f47a32e930e7e625fd0aa552ca69c6ab27cf">PFSimulation</a>
+ }</td></tr>
+<tr class="separator:ab9d4f348a42dc1f2617102595eba1f47 inherit pub_types_class_c_p_s_1_1_topological_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab92768bb51c7160c9151d81038eebd90 inherit pub_types_class_c_p_s_1_1_topological_power_comp" id="r_ab92768bb51c7160c9151d81038eebd90"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_topological_power_comp.html">TopologicalPowerComp</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_power_comp.html#ab92768bb51c7160c9151d81038eebd90">Ptr</a></td></tr>
+<tr class="separator:ab92768bb51c7160c9151d81038eebd90 inherit pub_types_class_c_p_s_1_1_topological_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d64157d6fda3ae34c8eb88585f8c343 inherit pub_types_class_c_p_s_1_1_topological_power_comp" id="r_a5d64157d6fda3ae34c8eb88585f8c343"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="class_c_p_s_1_1_topological_power_comp.html#ab92768bb51c7160c9151d81038eebd90">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_power_comp.html#a5d64157d6fda3ae34c8eb88585f8c343">List</a></td></tr>
+<tr class="separator:a5d64157d6fda3ae34c8eb88585f8c343 inherit pub_types_class_c_p_s_1_1_topological_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_types_class_c_p_s_1_1_identified_object"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_class_c_p_s_1_1_identified_object')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="class_c_p_s_1_1_identified_object.html">CPS::IdentifiedObject</a></td></tr>
+<tr class="memitem:a45edcbbe8a23ba53d17473f08d7adf95 inherit pub_types_class_c_p_s_1_1_identified_object" id="r_a45edcbbe8a23ba53d17473f08d7adf95"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_identified_object.html">IdentifiedObject</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a45edcbbe8a23ba53d17473f08d7adf95">Ptr</a></td></tr>
+<tr class="separator:a45edcbbe8a23ba53d17473f08d7adf95 inherit pub_types_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a981a607f5a619bbc40c916fcf7048a24 inherit pub_types_class_c_p_s_1_1_identified_object" id="r_a981a607f5a619bbc40c916fcf7048a24"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="class_c_p_s_1_1_identified_object.html#a45edcbbe8a23ba53d17473f08d7adf95">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a981a607f5a619bbc40c916fcf7048a24">List</a></td></tr>
+<tr class="separator:a981a607f5a619bbc40c916fcf7048a24 inherit pub_types_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_types_class_c_p_s_1_1_m_n_a_interface"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_class_c_p_s_1_1_m_n_a_interface')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html">CPS::MNAInterface</a></td></tr>
+<tr class="memitem:ae0ae005f7e53b1d5c27f508149a0da2e inherit pub_types_class_c_p_s_1_1_m_n_a_interface" id="r_ae0ae005f7e53b1d5c27f508149a0da2e"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html">MNAInterface</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#ae0ae005f7e53b1d5c27f508149a0da2e">Ptr</a></td></tr>
+<tr class="separator:ae0ae005f7e53b1d5c27f508149a0da2e inherit pub_types_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99daa13babcb894a6f878fc889faa0a7 inherit pub_types_class_c_p_s_1_1_m_n_a_interface" id="r_a99daa13babcb894a6f878fc889faa0a7"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#ae0ae005f7e53b1d5c27f508149a0da2e">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a99daa13babcb894a6f878fc889faa0a7">List</a></td></tr>
+<tr class="separator:a99daa13babcb894a6f878fc889faa0a7 inherit pub_types_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_types_class_c_p_s_1_1_m_n_a_variable_comp_interface"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_class_c_p_s_1_1_m_n_a_variable_comp_interface')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_variable_comp_interface.html">CPS::MNAVariableCompInterface</a></td></tr>
+<tr class="memitem:aa67f7e7b0da77a611fb6be0d2b4820c8 inherit pub_types_class_c_p_s_1_1_m_n_a_variable_comp_interface" id="r_aa67f7e7b0da77a611fb6be0d2b4820c8"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_m_n_a_variable_comp_interface.html">MNAVariableCompInterface</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_variable_comp_interface.html#aa67f7e7b0da77a611fb6be0d2b4820c8">Ptr</a></td></tr>
+<tr class="separator:aa67f7e7b0da77a611fb6be0d2b4820c8 inherit pub_types_class_c_p_s_1_1_m_n_a_variable_comp_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0656efd4ef9e2add757244a76f50989 inherit pub_types_class_c_p_s_1_1_m_n_a_variable_comp_interface" id="r_ab0656efd4ef9e2add757244a76f50989"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="class_c_p_s_1_1_m_n_a_variable_comp_interface.html#aa67f7e7b0da77a611fb6be0d2b4820c8">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_variable_comp_interface.html#ab0656efd4ef9e2add757244a76f50989">List</a></td></tr>
+<tr class="separator:ab0656efd4ef9e2add757244a76f50989 inherit pub_types_class_c_p_s_1_1_m_n_a_variable_comp_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_types_class_c_p_s_1_1_m_n_a_switch_interface"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_class_c_p_s_1_1_m_n_a_switch_interface')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html">CPS::MNASwitchInterface</a></td></tr>
+<tr class="memitem:a1278b7378718ca0053e0579ab0c1de25 inherit pub_types_class_c_p_s_1_1_m_n_a_switch_interface" id="r_a1278b7378718ca0053e0579ab0c1de25"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html">MNASwitchInterface</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">Ptr</a></td></tr>
+<tr class="separator:a1278b7378718ca0053e0579ab0c1de25 inherit pub_types_class_c_p_s_1_1_m_n_a_switch_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9bbee0656cd4d4e76d5e0ea3bb0646b2 inherit pub_types_class_c_p_s_1_1_m_n_a_switch_interface" id="r_a9bbee0656cd4d4e76d5e0ea3bb0646b2"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a9bbee0656cd4d4e76d5e0ea3bb0646b2">List</a></td></tr>
+<tr class="separator:a9bbee0656cd4d4e76d5e0ea3bb0646b2 inherit pub_types_class_c_p_s_1_1_m_n_a_switch_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6f4d3d025273d4904d0c2efd69071d12" id="r_a6f4d3d025273d4904d0c2efd69071d12"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6f4d3d025273d4904d0c2efd69071d12">Switch</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> loglevel=Logger::Level::off)</td></tr>
-<tr class="memdesc:a6f4d3d025273d4904d0c2efd69071d12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines UID, name, component parameters and logging level.  <br /></td></tr>
-<tr class="separator:a6f4d3d025273d4904d0c2efd69071d12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bba6974388cab74fad7ee45c5fde893" id="r_a6bba6974388cab74fad7ee45c5fde893"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6bba6974388cab74fad7ee45c5fde893">Switch</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel=Logger::Level::off)</td></tr>
+<tr class="separator:a6bba6974388cab74fad7ee45c5fde893"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8da7977cd9fdd07c65eed4f70248f5d" id="r_ad8da7977cd9fdd07c65eed4f70248f5d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad8da7977cd9fdd07c65eed4f70248f5d">Switch</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel=Logger::Level::off)</td></tr>
-<tr class="memdesc:ad8da7977cd9fdd07c65eed4f70248f5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines name, component parameters and logging level.  <br /></td></tr>
 <tr class="separator:ad8da7977cd9fdd07c65eed4f70248f5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27c6d55d6822eea6fa225739897f8ea2" id="r_a27c6d55d6822eea6fa225739897f8ea2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a27c6d55d6822eea6fa225739897f8ea2">clone</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>) override</td></tr>
 <tr class="memdesc:a27c6d55d6822eea6fa225739897f8ea2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a modified copy of the component with the given suffix added to the name and without.  <br /></td></tr>
 <tr class="separator:a27c6d55d6822eea6fa225739897f8ea2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0854f200f387df71a7a7484cc7238be6" id="r_a0854f200f387df71a7a7484cc7238be6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0854f200f387df71a7a7484cc7238be6">setSwitchingMode</a> (<a class="el" href="#a721400da15edac06ab402e7bd94d913a">SwitchingMode</a> mode)</td></tr>
+<tr class="memdesc:a0854f200f387df71a7a7484cc7238be6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Select switching model. Configure before simulation initialization.  <br /></td></tr>
+<tr class="separator:a0854f200f387df71a7a7484cc7238be6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1f6d53dab62631f8caf220a05e2384e" id="r_ab1f6d53dab62631f8caf220a05e2384e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a721400da15edac06ab402e7bd94d913a">SwitchingMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab1f6d53dab62631f8caf220a05e2384e">switchingMode</a> () const</td></tr>
+<tr class="separator:ab1f6d53dab62631f8caf220a05e2384e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1eb3513cba9263c75ff7c1f83209126" id="r_ac1eb3513cba9263c75ff7c1f83209126"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac1eb3513cba9263c75ff7c1f83209126">setZeroCrossingTolerance</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> tolerance)</td></tr>
+<tr class="memdesc:ac1eb3513cba9263c75ff7c1f83209126"><td class="mdescLeft">&#160;</td><td class="mdescRight">Absolute current tolerance used by CurrentZero mode [A].  <br /></td></tr>
+<tr class="separator:ac1eb3513cba9263c75ff7c1f83209126"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8592302b6b82ebc7ddaf8ff7684a7c95" id="r_a8592302b6b82ebc7ddaf8ff7684a7c95"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8592302b6b82ebc7ddaf8ff7684a7c95">zeroCrossingTolerance</a> () const</td></tr>
+<tr class="separator:a8592302b6b82ebc7ddaf8ff7684a7c95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70e953561438681e8ef2eb54736aecf9" id="r_a70e953561438681e8ef2eb54736aecf9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a70e953561438681e8ef2eb54736aecf9">setExponentialSwitchingTime</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> switchingTime)</td></tr>
+<tr class="memdesc:a70e953561438681e8ef2eb54736aecf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set total opening transition time for ExponentialZCSEmulation [s].  <br /></td></tr>
+<tr class="separator:a70e953561438681e8ef2eb54736aecf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5da2cdef0927d0398e043023234a6deb" id="r_a5da2cdef0927d0398e043023234a6deb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5da2cdef0927d0398e043023234a6deb">exponentialSwitchingTime</a> () const</td></tr>
+<tr class="separator:a5da2cdef0927d0398e043023234a6deb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa765d1f0279fcb705a68ce03aee673c7" id="r_aa765d1f0279fcb705a68ce03aee673c7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa765d1f0279fcb705a68ce03aee673c7">openSwitch</a> () override</td></tr>
+<tr class="separator:aa765d1f0279fcb705a68ce03aee673c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a470be96e9232effa4c09634c97fe463e" id="r_a470be96e9232effa4c09634c97fe463e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a470be96e9232effa4c09634c97fe463e">closeSwitch</a> () override</td></tr>
+<tr class="memdesc:a470be96e9232effa4c09634c97fe463e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Closing is instantaneous for all modes in this implementation.  <br /></td></tr>
+<tr class="separator:a470be96e9232effa4c09634c97fe463e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95f19b6f99196a1113355a0ac4cad832" id="r_a95f19b6f99196a1113355a0ac4cad832"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a95f19b6f99196a1113355a0ac4cad832">initializeFromNodesAndTerminals</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> frequency) override</td></tr>
-<tr class="memdesc:a95f19b6f99196a1113355a0ac4cad832"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data.  <br /></td></tr>
+<tr class="memdesc:a95f19b6f99196a1113355a0ac4cad832"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes Component variables according to power flow data stored in Nodes.  <br /></td></tr>
 <tr class="separator:a95f19b6f99196a1113355a0ac4cad832"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93bf1ec6f16fc3108b81103c017df97e" id="r_a93bf1ec6f16fc3108b81103c017df97e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a93bf1ec6f16fc3108b81103c017df97e">mnaCompInitialize</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> omega, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a> leftVector) override</td></tr>
 <tr class="separator:a93bf1ec6f16fc3108b81103c017df97e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0dd02faf76c5d5b08826c7bcbfa733d" id="r_ac0dd02faf76c5d5b08826c7bcbfa733d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac0dd02faf76c5d5b08826c7bcbfa733d">mnaCompApplySystemMatrixStamp</a> (<a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;systemMatrix) override</td></tr>
-<tr class="memdesc:ac0dd02faf76c5d5b08826c7bcbfa733d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix.  <br /></td></tr>
 <tr class="separator:ac0dd02faf76c5d5b08826c7bcbfa733d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae072243361f0ae0f741a61d723ce33ac" id="r_ae072243361f0ae0f741a61d723ce33ac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae072243361f0ae0f741a61d723ce33ac">mnaCompApplyRightSideVectorStamp</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;rightVector) override</td></tr>
-<tr class="memdesc:ae072243361f0ae0f741a61d723ce33ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps right side (source) vector.  <br /></td></tr>
 <tr class="separator:ae072243361f0ae0f741a61d723ce33ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88ae97f2001ee2adf7a81cd8e123b733" id="r_a88ae97f2001ee2adf7a81cd8e123b733"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a88ae97f2001ee2adf7a81cd8e123b733">mnaCompUpdateVoltage</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;leftVector) override</td></tr>
-<tr class="memdesc:a88ae97f2001ee2adf7a81cd8e123b733"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update interface voltage from MNA system result.  <br /></td></tr>
 <tr class="separator:a88ae97f2001ee2adf7a81cd8e123b733"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0730b0f446f8bb604cc55e4c0ab0e0ef" id="r_a0730b0f446f8bb604cc55e4c0ab0e0ef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0730b0f446f8bb604cc55e4c0ab0e0ef">mnaCompUpdateCurrent</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;leftVector) override</td></tr>
-<tr class="memdesc:a0730b0f446f8bb604cc55e4c0ab0e0ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update interface current from MNA system result.  <br /></td></tr>
 <tr class="separator:a0730b0f446f8bb604cc55e4c0ab0e0ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea0671c6c6e166b42d8ee9cbd52b45a0" id="r_aea0671c6c6e166b42d8ee9cbd52b45a0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aea0671c6c6e166b42d8ee9cbd52b45a0">mnaIsClosed</a> () override</td></tr>
 <tr class="memdesc:aea0671c6c6e166b42d8ee9cbd52b45a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if switch is closed.  <br /></td></tr>
 <tr class="separator:aea0671c6c6e166b42d8ee9cbd52b45a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c7751ebd18d82adc7ba92bd34d9c880" id="r_a9c7751ebd18d82adc7ba92bd34d9c880"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c7751ebd18d82adc7ba92bd34d9c880">supportsPrecomputedSystemMatrices</a> () const override</td></tr>
+<tr class="memdesc:a9c7751ebd18d82adc7ba92bd34d9c880"><td class="mdescLeft">&#160;</td><td class="mdescRight">Only Ideal is representable by the conventional two precomputed matrices.  <br /></td></tr>
+<tr class="separator:a9c7751ebd18d82adc7ba92bd34d9c880"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a39d28c3c73a8569c0e09735b9212a1f1" id="r_a39d28c3c73a8569c0e09735b9212a1f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a39d28c3c73a8569c0e09735b9212a1f1">mnaCompApplySwitchSystemMatrixStamp</a> (<a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> closed, <a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;systemMatrix, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> freqIdx) override</td></tr>
-<tr class="memdesc:a39d28c3c73a8569c0e09735b9212a1f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix considering the defined switch position.  <br /></td></tr>
 <tr class="separator:a39d28c3c73a8569c0e09735b9212a1f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a8cd6021ee1b02698d7a2346a2afb65" id="r_a4a8cd6021ee1b02698d7a2346a2afb65"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4a8cd6021ee1b02698d7a2346a2afb65">mnaCompPostStep</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> time, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> timeStepCount, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a> &amp;leftVector) override</td></tr>
 <tr class="separator:a4a8cd6021ee1b02698d7a2346a2afb65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc3673b3d5f8c7aa2a9c0f43e8617e96" id="r_adc3673b3d5f8c7aa2a9c0f43e8617e96"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adc3673b3d5f8c7aa2a9c0f43e8617e96">mnaCompAddPostStepDependencies</a> (<a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">AttributeBase::List</a> &amp;prevStepDependencies, <a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">AttributeBase::List</a> &amp;attributeDependencies, <a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">AttributeBase::List</a> &amp;modifiedAttributes, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a> &amp;leftVector) override</td></tr>
-<tr class="memdesc:adc3673b3d5f8c7aa2a9c0f43e8617e96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add MNA post step dependencies.  <br /></td></tr>
 <tr class="separator:adc3673b3d5f8c7aa2a9c0f43e8617e96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a21a6c112f850b907b5d94d92d9347e0a" id="r_a21a6c112f850b907b5d94d92d9347e0a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a21a6c112f850b907b5d94d92d9347e0a">hasParameterChanged</a> () override</td></tr>
 <tr class="memdesc:a21a6c112f850b907b5d94d92d9347e0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if one of the element paramters has changed.  <br /></td></tr>
@@ -392,73 +461,54 @@ Public Member Functions</h2></td></tr>
 <tr class="inherit_header pub_methods_class_c_p_s_1_1_base_1_1_ph3_1_1_switch"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_c_p_s_1_1_base_1_1_ph3_1_1_switch')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html">CPS::Base::Ph3::Switch</a></td></tr>
 <tr class="memitem:a84fbcd8c6998046238bf81eb4b6a65d3 inherit pub_methods_class_c_p_s_1_1_base_1_1_ph3_1_1_switch" id="r_a84fbcd8c6998046238bf81eb4b6a65d3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html#a84fbcd8c6998046238bf81eb4b6a65d3">Switch</a> (<a class="el" href="class_c_p_s_1_1_attribute_list.html#a49ff97075315610f2b8c923084bcd7d2">CPS::AttributeList::Ptr</a> attributeList)</td></tr>
 <tr class="separator:a84fbcd8c6998046238bf81eb4b6a65d3 inherit pub_methods_class_c_p_s_1_1_base_1_1_ph3_1_1_switch"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8a6a0c325f2ebb9f0f07185840107b4 inherit pub_methods_class_c_p_s_1_1_base_1_1_ph3_1_1_switch" id="r_ad8a6a0c325f2ebb9f0f07185840107b4"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html#ad8a6a0c325f2ebb9f0f07185840107b4">~Switch</a> ()=default</td></tr>
+<tr class="separator:ad8a6a0c325f2ebb9f0f07185840107b4 inherit pub_methods_class_c_p_s_1_1_base_1_1_ph3_1_1_switch"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf2cf0550239633cfec1111efe592832 inherit pub_methods_class_c_p_s_1_1_base_1_1_ph3_1_1_switch" id="r_abf2cf0550239633cfec1111efe592832"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html#abf2cf0550239633cfec1111efe592832">setParameters</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> openResistance, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> closedResistance, <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> closed=false)</td></tr>
 <tr class="separator:abf2cf0550239633cfec1111efe592832 inherit pub_methods_class_c_p_s_1_1_base_1_1_ph3_1_1_switch"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a51d83197c457140a3ac6c993fd0ebafd inherit pub_methods_class_c_p_s_1_1_base_1_1_ph3_1_1_switch" id="r_a51d83197c457140a3ac6c993fd0ebafd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html#a51d83197c457140a3ac6c993fd0ebafd">closeSwitch</a> ()</td></tr>
-<tr class="separator:a51d83197c457140a3ac6c993fd0ebafd inherit pub_methods_class_c_p_s_1_1_base_1_1_ph3_1_1_switch"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1a0784d7c6bf0888e897d2ca151c1b0 inherit pub_methods_class_c_p_s_1_1_base_1_1_ph3_1_1_switch" id="r_ae1a0784d7c6bf0888e897d2ca151c1b0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html#ae1a0784d7c6bf0888e897d2ca151c1b0">openSwitch</a> ()</td></tr>
-<tr class="separator:ae1a0784d7c6bf0888e897d2ca151c1b0 inherit pub_methods_class_c_p_s_1_1_base_1_1_ph3_1_1_switch"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af08602c4ecfecdb47762ffa5a4adc79e inherit pub_methods_class_c_p_s_1_1_base_1_1_ph3_1_1_switch" id="r_af08602c4ecfecdb47762ffa5a4adc79e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html#af08602c4ecfecdb47762ffa5a4adc79e">isClosed</a> ()</td></tr>
-<tr class="memdesc:af08602c4ecfecdb47762ffa5a4adc79e inherit pub_methods_class_c_p_s_1_1_base_1_1_ph3_1_1_switch"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if switch is closed.  <br /></td></tr>
+<tr class="memdesc:af08602c4ecfecdb47762ffa5a4adc79e inherit pub_methods_class_c_p_s_1_1_base_1_1_ph3_1_1_switch"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check commanded/global state.  <br /></td></tr>
 <tr class="separator:af08602c4ecfecdb47762ffa5a4adc79e inherit pub_methods_class_c_p_s_1_1_base_1_1_ph3_1_1_switch"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_c_p_s_1_1_m_n_a_switch_interface"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_c_p_s_1_1_m_n_a_switch_interface')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html">CPS::MNASwitchInterface</a></td></tr>
 <tr class="memitem:aee61950dc63bf8fabd729d15cb79e32c inherit pub_methods_class_c_p_s_1_1_m_n_a_switch_interface" id="r_aee61950dc63bf8fabd729d15cb79e32c"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#aee61950dc63bf8fabd729d15cb79e32c">~MNASwitchInterface</a> ()=default</td></tr>
 <tr class="separator:aee61950dc63bf8fabd729d15cb79e32c inherit pub_methods_class_c_p_s_1_1_m_n_a_switch_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a70de41f6affd7b87d044508e6f82c5cc inherit pub_methods_class_c_p_s_1_1_m_n_a_switch_interface" id="r_a70de41f6affd7b87d044508e6f82c5cc"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a70de41f6affd7b87d044508e6f82c5cc">supportsPrecomputedSystemMatrices</a> () const</td></tr>
-<tr class="separator:a70de41f6affd7b87d044508e6f82c5cc inherit pub_methods_class_c_p_s_1_1_m_n_a_switch_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7c66094feb32c6712f435f85a6640946 inherit pub_methods_class_c_p_s_1_1_m_n_a_switch_interface" id="r_a7c66094feb32c6712f435f85a6640946"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a7c66094feb32c6712f435f85a6640946">mnaApplySwitchSystemMatrixStamp</a> (<a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> closed, <a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;systemMatrix, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> freqIdx) final</td></tr>
 <tr class="memdesc:a7c66094feb32c6712f435f85a6640946 inherit pub_methods_class_c_p_s_1_1_m_n_a_switch_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix considering the defined switch position.  <br /></td></tr>
 <tr class="separator:a7c66094feb32c6712f435f85a6640946 inherit pub_methods_class_c_p_s_1_1_m_n_a_switch_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
-Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header pub_types_class_c_p_s_1_1_m_n_a_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_class_c_p_s_1_1_m_n_a_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Real &gt;</a></td></tr>
-<tr class="memitem:a1dba155e613421ab4506288ba0d1923e inherit pub_types_class_c_p_s_1_1_m_n_a_sim_power_comp" id="r_a1dba155e613421ab4506288ba0d1923e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a1dba155e613421ab4506288ba0d1923e">Type</a></td></tr>
-<tr class="separator:a1dba155e613421ab4506288ba0d1923e inherit pub_types_class_c_p_s_1_1_m_n_a_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab0bf0401a097ee2b253a9a6fc328101 inherit pub_types_class_c_p_s_1_1_m_n_a_sim_power_comp" id="r_aab0bf0401a097ee2b253a9a6fc328101"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#aab0bf0401a097ee2b253a9a6fc328101">Ptr</a></td></tr>
-<tr class="separator:aab0bf0401a097ee2b253a9a6fc328101 inherit pub_types_class_c_p_s_1_1_m_n_a_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b2ef98b8377d258d5cc02bdee5dec9e inherit pub_types_class_c_p_s_1_1_m_n_a_sim_power_comp" id="r_a3b2ef98b8377d258d5cc02bdee5dec9e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a3b2ef98b8377d258d5cc02bdee5dec9e">List</a></td></tr>
-<tr class="separator:a3b2ef98b8377d258d5cc02bdee5dec9e inherit pub_types_class_c_p_s_1_1_m_n_a_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_types_class_c_p_s_1_1_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_class_c_p_s_1_1_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt; Real &gt;</a></td></tr>
-<tr class="memitem:a4b29d68ae7350d8f29ef7d69ca6f0590 inherit pub_types_class_c_p_s_1_1_sim_power_comp" id="r_a4b29d68ae7350d8f29ef7d69ca6f0590"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a4b29d68ae7350d8f29ef7d69ca6f0590">Type</a></td></tr>
-<tr class="separator:a4b29d68ae7350d8f29ef7d69ca6f0590 inherit pub_types_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5946ceeb6894fb6b04ab9d4788ec600 inherit pub_types_class_c_p_s_1_1_sim_power_comp" id="r_aa5946ceeb6894fb6b04ab9d4788ec600"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aa5946ceeb6894fb6b04ab9d4788ec600">Ptr</a></td></tr>
-<tr class="separator:aa5946ceeb6894fb6b04ab9d4788ec600 inherit pub_types_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a820b19d65a66e64d40ac2b1b94831b1c inherit pub_types_class_c_p_s_1_1_sim_power_comp" id="r_a820b19d65a66e64d40ac2b1b94831b1c"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aa5946ceeb6894fb6b04ab9d4788ec600">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a820b19d65a66e64d40ac2b1b94831b1c">List</a></td></tr>
-<tr class="separator:a820b19d65a66e64d40ac2b1b94831b1c inherit pub_types_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_types_class_c_p_s_1_1_topological_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_class_c_p_s_1_1_topological_power_comp')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="class_c_p_s_1_1_topological_power_comp.html">CPS::TopologicalPowerComp</a></td></tr>
-<tr class="memitem:ab9d4f348a42dc1f2617102595eba1f47 inherit pub_types_class_c_p_s_1_1_topological_power_comp" id="r_ab9d4f348a42dc1f2617102595eba1f47"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_power_comp.html#ab9d4f348a42dc1f2617102595eba1f47">Behaviour</a> { <a class="el" href="class_c_p_s_1_1_topological_power_comp.html#ab9d4f348a42dc1f2617102595eba1f47a531b046a59009a355f2813e055ccaebf">Initialization</a>
-, <a class="el" href="class_c_p_s_1_1_topological_power_comp.html#ab9d4f348a42dc1f2617102595eba1f47af4eb5556f9895ef310759e306b91fcca">MNASimulation</a>
-, <a class="el" href="class_c_p_s_1_1_topological_power_comp.html#ab9d4f348a42dc1f2617102595eba1f47a32e930e7e625fd0aa552ca69c6ab27cf">PFSimulation</a>
- }</td></tr>
-<tr class="separator:ab9d4f348a42dc1f2617102595eba1f47 inherit pub_types_class_c_p_s_1_1_topological_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab92768bb51c7160c9151d81038eebd90 inherit pub_types_class_c_p_s_1_1_topological_power_comp" id="r_ab92768bb51c7160c9151d81038eebd90"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_topological_power_comp.html">TopologicalPowerComp</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_power_comp.html#ab92768bb51c7160c9151d81038eebd90">Ptr</a></td></tr>
-<tr class="separator:ab92768bb51c7160c9151d81038eebd90 inherit pub_types_class_c_p_s_1_1_topological_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d64157d6fda3ae34c8eb88585f8c343 inherit pub_types_class_c_p_s_1_1_topological_power_comp" id="r_a5d64157d6fda3ae34c8eb88585f8c343"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="class_c_p_s_1_1_topological_power_comp.html#ab92768bb51c7160c9151d81038eebd90">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_power_comp.html#a5d64157d6fda3ae34c8eb88585f8c343">List</a></td></tr>
-<tr class="separator:a5d64157d6fda3ae34c8eb88585f8c343 inherit pub_types_class_c_p_s_1_1_topological_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_types_class_c_p_s_1_1_identified_object"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_class_c_p_s_1_1_identified_object')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="class_c_p_s_1_1_identified_object.html">CPS::IdentifiedObject</a></td></tr>
-<tr class="memitem:a45edcbbe8a23ba53d17473f08d7adf95 inherit pub_types_class_c_p_s_1_1_identified_object" id="r_a45edcbbe8a23ba53d17473f08d7adf95"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_identified_object.html">IdentifiedObject</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a45edcbbe8a23ba53d17473f08d7adf95">Ptr</a></td></tr>
-<tr class="separator:a45edcbbe8a23ba53d17473f08d7adf95 inherit pub_types_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a981a607f5a619bbc40c916fcf7048a24 inherit pub_types_class_c_p_s_1_1_identified_object" id="r_a981a607f5a619bbc40c916fcf7048a24"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="class_c_p_s_1_1_identified_object.html#a45edcbbe8a23ba53d17473f08d7adf95">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#a981a607f5a619bbc40c916fcf7048a24">List</a></td></tr>
-<tr class="separator:a981a607f5a619bbc40c916fcf7048a24 inherit pub_types_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_types_class_c_p_s_1_1_m_n_a_interface"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_class_c_p_s_1_1_m_n_a_interface')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html">CPS::MNAInterface</a></td></tr>
-<tr class="memitem:ae0ae005f7e53b1d5c27f508149a0da2e inherit pub_types_class_c_p_s_1_1_m_n_a_interface" id="r_ae0ae005f7e53b1d5c27f508149a0da2e"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html">MNAInterface</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#ae0ae005f7e53b1d5c27f508149a0da2e">Ptr</a></td></tr>
-<tr class="separator:ae0ae005f7e53b1d5c27f508149a0da2e inherit pub_types_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99daa13babcb894a6f878fc889faa0a7 inherit pub_types_class_c_p_s_1_1_m_n_a_interface" id="r_a99daa13babcb894a6f878fc889faa0a7"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#ae0ae005f7e53b1d5c27f508149a0da2e">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a99daa13babcb894a6f878fc889faa0a7">List</a></td></tr>
-<tr class="separator:a99daa13babcb894a6f878fc889faa0a7 inherit pub_types_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_types_class_c_p_s_1_1_m_n_a_variable_comp_interface"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_class_c_p_s_1_1_m_n_a_variable_comp_interface')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_variable_comp_interface.html">CPS::MNAVariableCompInterface</a></td></tr>
-<tr class="memitem:aa67f7e7b0da77a611fb6be0d2b4820c8 inherit pub_types_class_c_p_s_1_1_m_n_a_variable_comp_interface" id="r_aa67f7e7b0da77a611fb6be0d2b4820c8"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_m_n_a_variable_comp_interface.html">MNAVariableCompInterface</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_variable_comp_interface.html#aa67f7e7b0da77a611fb6be0d2b4820c8">Ptr</a></td></tr>
-<tr class="separator:aa67f7e7b0da77a611fb6be0d2b4820c8 inherit pub_types_class_c_p_s_1_1_m_n_a_variable_comp_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab0656efd4ef9e2add757244a76f50989 inherit pub_types_class_c_p_s_1_1_m_n_a_variable_comp_interface" id="r_ab0656efd4ef9e2add757244a76f50989"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="class_c_p_s_1_1_m_n_a_variable_comp_interface.html#aa67f7e7b0da77a611fb6be0d2b4820c8">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_variable_comp_interface.html#ab0656efd4ef9e2add757244a76f50989">List</a></td></tr>
-<tr class="separator:ab0656efd4ef9e2add757244a76f50989 inherit pub_types_class_c_p_s_1_1_m_n_a_variable_comp_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_types_class_c_p_s_1_1_m_n_a_switch_interface"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_class_c_p_s_1_1_m_n_a_switch_interface')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html">CPS::MNASwitchInterface</a></td></tr>
-<tr class="memitem:a1278b7378718ca0053e0579ab0c1de25 inherit pub_types_class_c_p_s_1_1_m_n_a_switch_interface" id="r_a1278b7378718ca0053e0579ab0c1de25"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html">MNASwitchInterface</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">Ptr</a></td></tr>
-<tr class="separator:a1278b7378718ca0053e0579ab0c1de25 inherit pub_types_class_c_p_s_1_1_m_n_a_switch_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9bbee0656cd4d4e76d5e0ea3bb0646b2 inherit pub_types_class_c_p_s_1_1_m_n_a_switch_interface" id="r_a9bbee0656cd4d4e76d5e0ea3bb0646b2"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a9bbee0656cd4d4e76d5e0ea3bb0646b2">List</a></td></tr>
-<tr class="separator:a9bbee0656cd4d4e76d5e0ea3bb0646b2 inherit pub_types_class_c_p_s_1_1_m_n_a_switch_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_static_methods_class_shared_factory"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_static_methods_class_shared_factory')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="class_shared_factory.html">SharedFactory&lt; Switch &gt;</a></td></tr>
-<tr class="memitem:a2ffdfd3b547bb9cb777f33e1bf6ec7ef inherit pub_static_methods_class_shared_factory" id="r_a2ffdfd3b547bb9cb777f33e1bf6ec7ef"><td class="memItemLeft" align="right" valign="top">static std::shared_ptr&lt; Switch &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">make</a> (Args &amp;&amp;...args)</td></tr>
-<tr class="separator:a2ffdfd3b547bb9cb777f33e1bf6ec7ef inherit pub_static_methods_class_shared_factory"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a27da3c37c44e41081b24b0d64b10cddb" id="r_a27da3c37c44e41081b24b0d64b10cddb"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a27da3c37c44e41081b24b0d64b10cddb">mOpeningRequested</a></td></tr>
+<tr class="separator:a27da3c37c44e41081b24b0d64b10cddb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae09855cd23fd5e5853d33ec9b499a022" id="r_ae09855cd23fd5e5853d33ec9b499a022"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae09855cd23fd5e5853d33ec9b499a022">mPoleClosedA</a></td></tr>
+<tr class="memdesc:ae09855cd23fd5e5853d33ec9b499a022"><td class="mdescLeft">&#160;</td><td class="mdescRight">Physical pole states.  <br /></td></tr>
+<tr class="separator:ae09855cd23fd5e5853d33ec9b499a022"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07a03b2ec4f097067bf56362b7575e6e" id="r_a07a03b2ec4f097067bf56362b7575e6e"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a07a03b2ec4f097067bf56362b7575e6e">mPoleClosedB</a></td></tr>
+<tr class="separator:a07a03b2ec4f097067bf56362b7575e6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29f0d996c66cc8ea7736558b149a632f" id="r_a29f0d996c66cc8ea7736558b149a632f"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a29f0d996c66cc8ea7736558b149a632f">mPoleClosedC</a></td></tr>
+<tr class="separator:a29f0d996c66cc8ea7736558b149a632f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec17b04a0b378c5386ff843d1c341dcd" id="r_aec17b04a0b378c5386ff843d1c341dcd"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aec17b04a0b378c5386ff843d1c341dcd">mZeroCrossingTimeA</a></td></tr>
+<tr class="memdesc:aec17b04a0b378c5386ff843d1c341dcd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Estimated physical zero-crossing times [s], -1 if none has been detected.  <br /></td></tr>
+<tr class="separator:aec17b04a0b378c5386ff843d1c341dcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62a4ed8e63f88f18670e373320ca053e" id="r_a62a4ed8e63f88f18670e373320ca053e"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a62a4ed8e63f88f18670e373320ca053e">mZeroCrossingTimeB</a></td></tr>
+<tr class="separator:a62a4ed8e63f88f18670e373320ca053e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae881fdfc8c50db905da2615596a7a979" id="r_ae881fdfc8c50db905da2615596a7a979"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae881fdfc8c50db905da2615596a7a979">mZeroCrossingTimeC</a></td></tr>
+<tr class="separator:ae881fdfc8c50db905da2615596a7a979"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6f86164a103fdfc3d18e2b914ce9cbf" id="r_ad6f86164a103fdfc3d18e2b914ce9cbf"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad6f86164a103fdfc3d18e2b914ce9cbf">mExponentialTransitionActive</a></td></tr>
+<tr class="memdesc:ad6f86164a103fdfc3d18e2b914ce9cbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exponential-transition diagnostics.  <br /></td></tr>
+<tr class="separator:ad6f86164a103fdfc3d18e2b914ce9cbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2194f97ffc934c205cb2a6331f781fb4" id="r_a2194f97ffc934c205cb2a6331f781fb4"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2194f97ffc934c205cb2a6331f781fb4">mExponentialProgress</a></td></tr>
+<tr class="separator:a2194f97ffc934c205cb2a6331f781fb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0dea0aa53a11f2f8a282dd694b01dbc1" id="r_a0dea0aa53a11f2f8a282dd694b01dbc1"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0dea0aa53a11f2f8a282dd694b01dbc1">mExponentialTransitionStartTime</a></td></tr>
+<tr class="separator:a0dea0aa53a11f2f8a282dd694b01dbc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ef6ca504e9a1398cc07693130353a73" id="r_a2ef6ca504e9a1398cc07693130353a73"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2ef6ca504e9a1398cc07693130353a73">mExponentialTransitionEndTime</a></td></tr>
+<tr class="separator:a2ef6ca504e9a1398cc07693130353a73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad47362a3138d4c64bc222837f33d6a8b" id="r_ad47362a3138d4c64bc222837f33d6a8b"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad47362a3138d4c64bc222837f33d6a8b">mEffectiveResistanceA</a></td></tr>
+<tr class="memdesc:ad47362a3138d4c64bc222837f33d6a8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Effective phase resistances currently stamped into the MNA matrix [ohm].  <br /></td></tr>
+<tr class="separator:ad47362a3138d4c64bc222837f33d6a8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a5ef15cbf956e35c2ef9fb54402144b" id="r_a3a5ef15cbf956e35c2ef9fb54402144b"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3a5ef15cbf956e35c2ef9fb54402144b">mEffectiveResistanceB</a></td></tr>
+<tr class="separator:a3a5ef15cbf956e35c2ef9fb54402144b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26d4e9f86147df73e825ccac751070a4" id="r_a26d4e9f86147df73e825ccac751070a4"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a26d4e9f86147df73e825ccac751070a4">mEffectiveResistanceC</a></td></tr>
+<tr class="separator:a26d4e9f86147df73e825ccac751070a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Real &gt;</a></td></tr>
 <tr class="memitem:ac70d8c6733b49d5d5565ba21c28b372e inherit pub_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp" id="r_ac70d8c6733b49d5d5565ba21c28b372e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#aab0bf0401a097ee2b253a9a6fc328101">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#ac70d8c6733b49d5d5565ba21c28b372e">mRightVector</a></td></tr>
 <tr class="separator:ac70d8c6733b49d5d5565ba21c28b372e inherit pub_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -487,11 +537,17 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memdesc:a03e3aaeec70e7a57c23a1b4ff85f85f7 inherit pub_attribs_class_c_p_s_1_1_base_1_1_ph3_1_1_switch"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resistance if switch is closed [ohm].  <br /></td></tr>
 <tr class="separator:a03e3aaeec70e7a57c23a1b4ff85f85f7 inherit pub_attribs_class_c_p_s_1_1_base_1_1_ph3_1_1_switch"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1910acc67ad6e3d7f3bb65b340ce1c0 inherit pub_attribs_class_c_p_s_1_1_base_1_1_ph3_1_1_switch" id="r_ae1910acc67ad6e3d7f3bb65b340ce1c0"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> &gt;::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html#ae1910acc67ad6e3d7f3bb65b340ce1c0">mIsClosed</a></td></tr>
-<tr class="memdesc:ae1910acc67ad6e3d7f3bb65b340ce1c0 inherit pub_attribs_class_c_p_s_1_1_base_1_1_ph3_1_1_switch"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines if <a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html" title="Dynamic Phasor Three-Phase Switch.">Switch</a> is open or closed.  <br /></td></tr>
+<tr class="memdesc:ae1910acc67ad6e3d7f3bb65b340ce1c0 inherit pub_attribs_class_c_p_s_1_1_base_1_1_ph3_1_1_switch"><td class="mdescLeft">&#160;</td><td class="mdescRight">Commanded/global switch state.  <br /></td></tr>
 <tr class="separator:ae1910acc67ad6e3d7f3bb65b340ce1c0 inherit pub_attribs_class_c_p_s_1_1_base_1_1_ph3_1_1_switch"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_class_c_p_s_1_1_m_n_a_variable_comp_interface"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_attribs_class_c_p_s_1_1_m_n_a_variable_comp_interface')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_variable_comp_interface.html">CPS::MNAVariableCompInterface</a></td></tr>
 <tr class="memitem:ab8a87ec909e9be92dc8f71f1ea638116 inherit pub_attribs_class_c_p_s_1_1_m_n_a_variable_comp_interface" id="r_ab8a87ec909e9be92dc8f71f1ea638116"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::pair&lt; <a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a>, <a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_variable_comp_interface.html#ab8a87ec909e9be92dc8f71f1ea638116">mVariableSystemMatrixEntries</a></td></tr>
 <tr class="separator:ab8a87ec909e9be92dc8f71f1ea638116 inherit pub_attribs_class_c_p_s_1_1_m_n_a_variable_comp_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_static_methods_class_shared_factory"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_static_methods_class_shared_factory')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="class_shared_factory.html">SharedFactory&lt; Switch &gt;</a></td></tr>
+<tr class="memitem:a2ffdfd3b547bb9cb777f33e1bf6ec7ef inherit pub_static_methods_class_shared_factory" id="r_a2ffdfd3b547bb9cb777f33e1bf6ec7ef"><td class="memItemLeft" align="right" valign="top">static std::shared_ptr&lt; Switch &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">make</a> (Args &amp;&amp;...args)</td></tr>
+<tr class="separator:a2ffdfd3b547bb9cb777f33e1bf6ec7ef inherit pub_static_methods_class_shared_factory"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt; Real &gt;</a></td></tr>
 <tr class="memitem:a16fef50583bd2c58806acbf6185698cb inherit pro_attribs_class_c_p_s_1_1_sim_power_comp" id="r_a16fef50583bd2c58806acbf6185698cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_terminal.html">SimTerminal</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt;<a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a820b19d65a66e64d40ac2b1b94831b1c">::List</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a16fef50583bd2c58806acbf6185698cb">mTerminals</a></td></tr>
 <tr class="memdesc:a16fef50583bd2c58806acbf6185698cb inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a820b19d65a66e64d40ac2b1b94831b1c">List</a> of Terminals.  <br /></td></tr>
@@ -542,13 +598,50 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:af3bbe83af0843cf3455db6e3b2928fcd inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph3_1_1_switch"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Dynamic phasor switch. </p>
-<p>The switch can be opened and closed. Each state has a specific resistance value. </p>
+<div class="textblock"><p>Three-phase <a class="el" href="namespace_c_p_s_1_1_e_m_t.html">EMT</a> switch / circuit breaker. </p>
+<p>Switching modes:</p>
+<ul>
+<li>Ideal: Conventional binary <a class="el" href="namespace_d_psim.html">DPsim</a> switch. All three phases open immediately.</li>
+<li>CurrentZero: An opening command is armed and each physical pole remains conducting until its own instantaneous <a class="el" href="namespace_c_p_s_1_1_e_m_t.html">EMT</a> phase current reaches/crosses zero.</li>
+<li><p class="startli">ExponentialZCSEmulation: The phase resistance is increased continuously from R_closed to R_open according to an exponential trajectory over a prescribed switching time: </p><pre class="fragment">R(t) = R_closed * (R_open / R_closed)^alpha
+</pre><p class="startli">with alpha in [0,1]. This reproduces the variable-resistance ZCS emulation described by Wirtz et al. and is not an arc model. </p>
+</li>
+</ul>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00025">25</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a6f4d3d025273d4904d0c2efd69071d12" name="a6f4d3d025273d4904d0c2efd69071d12"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6f4d3d025273d4904d0c2efd69071d12">&#9670;&#160;</a></span>Switch() <span class="overload">[1/2]</span></h2>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00043">43</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+</div><h2 class="groupheader">Member Enumeration Documentation</h2>
+<a id="a721400da15edac06ab402e7bd94d913a" name="a721400da15edac06ab402e7bd94d913a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a721400da15edac06ab402e7bd94d913a">&#9670;&#160;</a></span>SwitchingMode</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="#a721400da15edac06ab402e7bd94d913a">CPS::EMT::Ph3::Switch::SwitchingMode</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a721400da15edac06ab402e7bd94d913aa22b7c2abfb7dcf0f672899fb2b6f1670" name="a721400da15edac06ab402e7bd94d913aa22b7c2abfb7dcf0f672899fb2b6f1670"></a>Ideal&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a721400da15edac06ab402e7bd94d913aa58bf16a3dd76f6d6e47569657c8a4b1b" name="a721400da15edac06ab402e7bd94d913aa58bf16a3dd76f6d6e47569657c8a4b1b"></a>CurrentZero&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a721400da15edac06ab402e7bd94d913aae62734bb2ec692abb9594492c86e587f" name="a721400da15edac06ab402e7bd94d913aae62734bb2ec692abb9594492c86e587f"></a>ExponentialZCSEmulation&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00049">49</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a6bba6974388cab74fad7ee45c5fde893" name="a6bba6974388cab74fad7ee45c5fde893"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6bba6974388cab74fad7ee45c5fde893">&#9670;&#160;</a></span>Switch() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -566,14 +659,12 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a></td>          <td class="paramname"><span class="paramname"><em>loglevel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Logger::Level::off</span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a></td>          <td class="paramname"><span class="paramname"><em>logLevel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Logger::Level::off</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Defines UID, name, component parameters and logging level. </p>
-
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00016">16</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00017">17</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -604,9 +695,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Defines name, component parameters and logging level. </p>
-
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00034">34</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00082">82</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -638,7 +727,65 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">CPS::SimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00024">24</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00062">62</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a470be96e9232effa4c09634c97fe463e" name="a470be96e9232effa4c09634c97fe463e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a470be96e9232effa4c09634c97fe463e">&#9670;&#160;</a></span>closeSwitch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void EMT::Ph3::Switch::closeSwitch </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Closing is instantaneous for all modes in this implementation. </p>
+
+<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html#a760f30b04072c0a96efe4833c3e89481">CPS::Base::Ph3::Switch</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00146">146</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a5da2cdef0927d0398e043023234a6deb" name="a5da2cdef0927d0398e043023234a6deb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5da2cdef0927d0398e043023234a6deb">&#9670;&#160;</a></span>exponentialSwitchingTime()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> CPS::EMT::Ph3::Switch::exponentialSwitchingTime </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00097">97</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -669,7 +816,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_c_p_s_1_1_m_n_a_variable_comp_interface.html#ac8fd7511faa929b522f7cff647634eab">CPS::MNAVariableCompInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00138">138</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00343">343</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -696,11 +843,11 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Initializes component from power flow data. </p>
+<p>Initializes Component variables according to power flow data stored in Nodes. </p>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a4401f844a3f389e07a37ef1716d84dcd">CPS::SimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00030">30</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00160">160</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -741,9 +888,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Add MNA post step dependencies. </p>
-
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00090">90</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00277">277</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -770,11 +915,9 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Stamps right side (source) vector. </p>
-
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#addaa4002352d62d655a76e2f203b11a0">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00088">88</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00275">275</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -810,11 +953,9 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Stamps system matrix considering the defined switch position. </p>
-
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a860dddb4b67c92cc365271518805e07b">CPS::MNASwitchInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00075">75</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00258">258</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -841,11 +982,9 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Stamps system matrix. </p>
-
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a6b9663a235e9de1dc1997513ae343353">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00061">61</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00246">246</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -881,7 +1020,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00053">53</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00199">199</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -917,7 +1056,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00100">100</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00304">304</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -944,11 +1083,9 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Update interface current from MNA system result. </p>
-
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a82fb36cf23e8e2eca8d52fc1f02ba473">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00130">130</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00339">339</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -975,11 +1112,9 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Update interface voltage from MNA system result. </p>
-
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a3e08c6d99dbfc258bf62d81a53e12776">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00106">106</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00316">316</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -1010,7 +1145,422 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a8d1053b0f6db7e8cf3ad6432b6dcd6d8">CPS::MNASwitchInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00059">59</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00235">235</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+
+</div>
+</div>
+<a id="aa765d1f0279fcb705a68ce03aee673c7" name="aa765d1f0279fcb705a68ce03aee673c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa765d1f0279fcb705a68ce03aee673c7">&#9670;&#160;</a></span>openSwitch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void EMT::Ph3::Switch::openSwitch </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Open command.</p>
+<p>Ideal: all poles open immediately.</p>
+<p>CurrentZero: wait for individual phase-current zeros.</p>
+<p>ExponentialZCSEmulation: arm a simultaneous three-phase exponential resistance increase. </p>
+
+<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html#aa1583662ef049452944e94d6141d7795">CPS::Base::Ph3::Switch</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00104">104</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a70e953561438681e8ef2eb54736aecf9" name="a70e953561438681e8ef2eb54736aecf9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70e953561438681e8ef2eb54736aecf9">&#9670;&#160;</a></span>setExponentialSwitchingTime()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void EMT::Ph3::Switch::setExponentialSwitchingTime </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>switchingTime</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set total opening transition time for ExponentialZCSEmulation [s]. </p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00095">95</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a0854f200f387df71a7a7484cc7238be6" name="a0854f200f387df71a7a7484cc7238be6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0854f200f387df71a7a7484cc7238be6">&#9670;&#160;</a></span>setSwitchingMode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void EMT::Ph3::Switch::setSwitchingMode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a721400da15edac06ab402e7bd94d913a">SwitchingMode</a></td>          <td class="paramname"><span class="paramname"><em>mode</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Select switching model. Configure before simulation initialization. </p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00071">71</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ac1eb3513cba9263c75ff7c1f83209126" name="ac1eb3513cba9263c75ff7c1f83209126"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1eb3513cba9263c75ff7c1f83209126">&#9670;&#160;</a></span>setZeroCrossingTolerance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void EMT::Ph3::Switch::setZeroCrossingTolerance </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>tolerance</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Absolute current tolerance used by CurrentZero mode [A]. </p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00086">86</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a9c7751ebd18d82adc7ba92bd34d9c880" name="a9c7751ebd18d82adc7ba92bd34d9c880"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c7751ebd18d82adc7ba92bd34d9c880">&#9670;&#160;</a></span>supportsPrecomputedSystemMatrices()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> EMT::Ph3::Switch::supportsPrecomputedSystemMatrices </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Only Ideal is representable by the conventional two precomputed matrices. </p>
+
+<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a70de41f6affd7b87d044508e6f82c5cc">CPS::MNASwitchInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00242">242</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ab1f6d53dab62631f8caf220a05e2384e" name="ab1f6d53dab62631f8caf220a05e2384e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1f6d53dab62631f8caf220a05e2384e">&#9670;&#160;</a></span>switchingMode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a721400da15edac06ab402e7bd94d913a">SwitchingMode</a> CPS::EMT::Ph3::Switch::switchingMode </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00089">89</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+
+</div>
+</div>
+<a id="a8592302b6b82ebc7ddaf8ff7684a7c95" name="a8592302b6b82ebc7ddaf8ff7684a7c95"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8592302b6b82ebc7ddaf8ff7684a7c95">&#9670;&#160;</a></span>zeroCrossingTolerance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> CPS::EMT::Ph3::Switch::zeroCrossingTolerance </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00093">93</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="ad47362a3138d4c64bc222837f33d6a8b" name="ad47362a3138d4c64bc222837f33d6a8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad47362a3138d4c64bc222837f33d6a8b">&#9670;&#160;</a></span>mEffectiveResistanceA</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a> CPS::EMT::Ph3::Switch::mEffectiveResistanceA</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Effective phase resistances currently stamped into the MNA matrix [ohm]. </p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00076">76</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+
+</div>
+</div>
+<a id="a3a5ef15cbf956e35c2ef9fb54402144b" name="a3a5ef15cbf956e35c2ef9fb54402144b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a5ef15cbf956e35c2ef9fb54402144b">&#9670;&#160;</a></span>mEffectiveResistanceB</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a> CPS::EMT::Ph3::Switch::mEffectiveResistanceB</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00077">77</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+
+</div>
+</div>
+<a id="a26d4e9f86147df73e825ccac751070a4" name="a26d4e9f86147df73e825ccac751070a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26d4e9f86147df73e825ccac751070a4">&#9670;&#160;</a></span>mEffectiveResistanceC</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a> CPS::EMT::Ph3::Switch::mEffectiveResistanceC</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00078">78</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+
+</div>
+</div>
+<a id="a2194f97ffc934c205cb2a6331f781fb4" name="a2194f97ffc934c205cb2a6331f781fb4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2194f97ffc934c205cb2a6331f781fb4">&#9670;&#160;</a></span>mExponentialProgress</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a> CPS::EMT::Ph3::Switch::mExponentialProgress</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00071">71</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+
+</div>
+</div>
+<a id="ad6f86164a103fdfc3d18e2b914ce9cbf" name="ad6f86164a103fdfc3d18e2b914ce9cbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6f86164a103fdfc3d18e2b914ce9cbf">&#9670;&#160;</a></span>mExponentialTransitionActive</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a> CPS::EMT::Ph3::Switch::mExponentialTransitionActive</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Exponential-transition diagnostics. </p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00070">70</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+
+</div>
+</div>
+<a id="a2ef6ca504e9a1398cc07693130353a73" name="a2ef6ca504e9a1398cc07693130353a73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ef6ca504e9a1398cc07693130353a73">&#9670;&#160;</a></span>mExponentialTransitionEndTime</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a> CPS::EMT::Ph3::Switch::mExponentialTransitionEndTime</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00073">73</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+
+</div>
+</div>
+<a id="a0dea0aa53a11f2f8a282dd694b01dbc1" name="a0dea0aa53a11f2f8a282dd694b01dbc1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0dea0aa53a11f2f8a282dd694b01dbc1">&#9670;&#160;</a></span>mExponentialTransitionStartTime</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a> CPS::EMT::Ph3::Switch::mExponentialTransitionStartTime</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00072">72</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+
+</div>
+</div>
+<a id="a27da3c37c44e41081b24b0d64b10cddb" name="a27da3c37c44e41081b24b0d64b10cddb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27da3c37c44e41081b24b0d64b10cddb">&#9670;&#160;</a></span>mOpeningRequested</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a> CPS::EMT::Ph3::Switch::mOpeningRequested</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Opening request is active while a CurrentZero or exponential opening process has not yet completed. </p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00057">57</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+
+</div>
+</div>
+<a id="ae09855cd23fd5e5853d33ec9b499a022" name="ae09855cd23fd5e5853d33ec9b499a022"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae09855cd23fd5e5853d33ec9b499a022">&#9670;&#160;</a></span>mPoleClosedA</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a> CPS::EMT::Ph3::Switch::mPoleClosedA</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Physical pole states. </p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00060">60</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+
+</div>
+</div>
+<a id="a07a03b2ec4f097067bf56362b7575e6e" name="a07a03b2ec4f097067bf56362b7575e6e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07a03b2ec4f097067bf56362b7575e6e">&#9670;&#160;</a></span>mPoleClosedB</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a> CPS::EMT::Ph3::Switch::mPoleClosedB</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00061">61</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+
+</div>
+</div>
+<a id="a29f0d996c66cc8ea7736558b149a632f" name="a29f0d996c66cc8ea7736558b149a632f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29f0d996c66cc8ea7736558b149a632f">&#9670;&#160;</a></span>mPoleClosedC</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a> CPS::EMT::Ph3::Switch::mPoleClosedC</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00062">62</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+
+</div>
+</div>
+<a id="aec17b04a0b378c5386ff843d1c341dcd" name="aec17b04a0b378c5386ff843d1c341dcd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec17b04a0b378c5386ff843d1c341dcd">&#9670;&#160;</a></span>mZeroCrossingTimeA</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a> CPS::EMT::Ph3::Switch::mZeroCrossingTimeA</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Estimated physical zero-crossing times [s], -1 if none has been detected. </p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00065">65</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+
+</div>
+</div>
+<a id="a62a4ed8e63f88f18670e373320ca053e" name="a62a4ed8e63f88f18670e373320ca053e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62a4ed8e63f88f18670e373320ca053e">&#9670;&#160;</a></span>mZeroCrossingTimeB</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a> CPS::EMT::Ph3::Switch::mZeroCrossingTimeB</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00066">66</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+
+</div>
+</div>
+<a id="ae881fdfc8c50db905da2615596a7a979" name="ae881fdfc8c50db905da2615596a7a979"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae881fdfc8c50db905da2615596a7a979">&#9670;&#160;</a></span>mZeroCrossingTimeC</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a> CPS::EMT::Ph3::Switch::mZeroCrossingTimeC</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00067">67</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>

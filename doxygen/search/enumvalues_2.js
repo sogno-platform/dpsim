@@ -4,5 +4,6 @@ var searchData=
   ['colamd_1',['COLAMD',['../namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74a7f1645ee49907cca43e375548d257a77',1,'DPsim']]],
   ['cudadense_2',['CUDADense',['../namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457aebe110fb34545ecd37c1cf88bc96688d',1,'DPsim']]],
   ['cudamagma_3',['CUDAMagma',['../namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a81cc7f376aa3d27f27553ff770fd04be',1,'DPsim']]],
-  ['cudasparse_4',['CUDASparse',['../namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a533f9ea55a14b93c55fe398df9746ef4',1,'DPsim']]]
+  ['cudasparse_4',['CUDASparse',['../namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a533f9ea55a14b93c55fe398df9746ef4',1,'DPsim']]],
+  ['currentzero_5',['CurrentZero',['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a797650d52f9073fdb7353dedd6fdc862a58bf16a3dd76f6d6e47569657c8a4b1b',1,'CPS::DP::Ph3::Switch::CurrentZero'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch.html#a721400da15edac06ab402e7bd94d913aa58bf16a3dd76f6d6e47569657c8a4b1b',1,'CPS::EMT::Ph3::Switch::CurrentZero']]]
 ];

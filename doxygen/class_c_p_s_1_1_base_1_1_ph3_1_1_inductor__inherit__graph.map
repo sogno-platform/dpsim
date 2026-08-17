@@ -1,6 +1,6 @@
 <map id="CPS::Base::Ph3::Inductor" name="CPS::Base::Ph3::Inductor">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,163,182,192"/>
-<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html" title="Inductor." alt="" coords="234,5,398,35"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html" title="Three&#45;phase dynamic&#45;phasor inductor." alt="" coords="234,5,398,35"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="114,149,163,96,194,68,228,45,252,33,254,38,231,49,197,73,167,100,118,152"/>
 <area shape="rect" id="Node000003" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html" title="Series RLC one&#45;port as a three&#45;phase DP V&#45;type SSN component." alt="" coords="245,58,387,107"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="143,154,229,116,255,105,257,110,231,121,145,159"/>

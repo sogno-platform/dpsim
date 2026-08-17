@@ -1,6 +1,6 @@
 <map id="CPS::Base::Ph3::Resistor" name="CPS::Base::Ph3::Resistor">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,131,178,160"/>
-<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_resistor.html" title=" " alt="" coords="230,5,390,35"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_resistor.html" title="Three&#45;phase dynamic&#45;phasor resistor." alt="" coords="230,5,390,35"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,118,167,81,224,44,251,33,253,38,227,49,170,85,123,122"/>
 <area shape="rect" id="Node000003" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html" title="Series RLC one&#45;port as a three&#45;phase DP V&#45;type SSN component." alt="" coords="239,58,381,107"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="160,123,238,101,239,106,161,128"/>

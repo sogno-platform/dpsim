@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Inductor.">
+<g id="a_Node000001"><a xlink:title="Three&#45;phase dynamic&#45;phasor inductor.">
 <polygon fill="#999999" stroke="#666666" points="1080.75,-82.25 957.5,-82.25 957.5,-60 1080.75,-60 1080.75,-82.25"/>
 <text text-anchor="middle" x="1019.12" y="-68.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph3::Inductor</text>
 </a>

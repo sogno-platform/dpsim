@@ -8,13 +8,13 @@
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="122,232,171,191,232,151,260,140,262,145,235,156,174,195,125,236"/>
 <area shape="rect" id="Node000005" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html" title="Dynamic phasor three&#45;phase switch." alt="" coords="238,165,425,195"/>
 <area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="146,237,233,204,270,193,271,198,235,209,148,242"/>
-<area shape="rect" id="Node000006" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html" title="Dynamic phasor three&#45;phase switch with per&#45;phase resistance." alt="" coords="257,219,406,248"/>
+<area shape="rect" id="Node000006" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html" title=" " alt="" coords="257,219,406,248"/>
 <area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="201,246,256,239,257,245,201,251"/>
 <area shape="rect" id="Node000007" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_switch.html" title="One phase EMT switch." alt="" coords="253,272,410,302"/>
 <area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="202,269,252,275,252,281,201,275"/>
 <area shape="rect" id="Node000008" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_series_switch.html" title="EMT three&#45;phase switch." alt="" coords="234,325,429,355"/>
 <area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="148,279,235,311,271,322,270,327,233,316,146,284"/>
-<area shape="rect" id="Node000009" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch.html" title="Dynamic phasor switch." alt="" coords="253,379,410,408"/>
+<area shape="rect" id="Node000009" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch.html" title="Three&#45;phase EMT switch / circuit breaker." alt="" coords="253,379,410,408"/>
 <area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="125,284,174,325,235,364,262,376,260,381,232,369,171,330,122,288"/>
 <area shape="rect" id="Node000010" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_switch.html" title="Dynamic phasor switch." alt="" coords="258,432,404,462"/>
 <area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="116,287,164,353,197,388,235,418,259,430,257,434,232,422,194,392,160,357,111,290"/>

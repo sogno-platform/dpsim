@@ -21,7 +21,7 @@ var searchData=
   ['openmplevelscheduler_18',['OpenMPLevelScheduler',['../class_d_psim_1_1_open_m_p_level_scheduler.html',1,'DPsim::OpenMPLevelScheduler'],['../class_d_psim_1_1_open_m_p_level_scheduler.html#adf1ff7094ef15356b031002619e86c7b',1,'DPsim::OpenMPLevelScheduler::OpenMPLevelScheduler()']]],
   ['openmplevelscheduler_2ecpp_19',['OpenMPLevelScheduler.cpp',['../_open_m_p_level_scheduler_8cpp.html',1,'']]],
   ['openmplevelscheduler_2eh_20',['OpenMPLevelScheduler.h',['../_open_m_p_level_scheduler_8h.html',1,'']]],
-  ['openswitch_21',['openSwitch',['../class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html#ae1a0784d7c6bf0888e897d2ca151c1b0',1,'CPS::Base::Ph3::Switch']]],
+  ['openswitch_21',['openSwitch',['../class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html#aa1583662ef049452944e94d6141d7795',1,'CPS::Base::Ph3::Switch::openSwitch()'],['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#aa618559c4434fd0e742bfae800d64ff3',1,'CPS::DP::Ph3::Switch::openSwitch()'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch.html#aa765d1f0279fcb705a68ce03aee673c7',1,'CPS::EMT::Ph3::Switch::openSwitch()']]],
   ['operational_22',['operational',['../class_c_p_s_1_1_base_1_1_synchron_generator.html#a65017fe1b3466b9d514d76300ecb936eab0293108cc2a2aa7c88738c2215b1a05',1,'CPS::Base::SynchronGenerator']]],
   ['operator_20const_20t_20_26_23',['operator const T &amp;',['../class_c_p_s_1_1_attribute.html#a54f5609f916a9dc53321193ed3c723f9',1,'CPS::Attribute']]],
   ['operator_21_3d_24',['operator!=',['../class_d_psim_1_1cuda_1_1_vector_1_1iterator.html#aaed00dc3ce6ada5cd57d20c7c7bd6081',1,'DPsim::cuda::Vector::iterator::operator!=()'],['../class_c_p_s_1_1_c_s_v_reader_iterator.html#ac3b9f1b71ca7786dcfbce311945a5502',1,'CPS::CSVReaderIterator::operator!=()']]],

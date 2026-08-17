@@ -1,8 +1,15 @@
 var class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch =
 [
+    [ "SwitchingMode", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a797650d52f9073fdb7353dedd6fdc862", [
+      [ "Ideal", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a797650d52f9073fdb7353dedd6fdc862a22b7c2abfb7dcf0f672899fb2b6f1670", null ],
+      [ "CurrentZero", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a797650d52f9073fdb7353dedd6fdc862a58bf16a3dd76f6d6e47569657c8a4b1b", null ],
+      [ "ExponentialZCSEmulation", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a797650d52f9073fdb7353dedd6fdc862ae62734bb2ec692abb9594492c86e587f", null ]
+    ] ],
     [ "Switch", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a83f54b04dc8236ffb49157588f82305c", null ],
     [ "Switch", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a9141aa52672a594b27f1e7523dc5e7c3", null ],
     [ "clone", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#aaf97536867d2ad435a349598c4bb2b97", null ],
+    [ "closeSwitch", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a2aee61567dafa87aaeddb9352f94250b", null ],
+    [ "exponentialSwitchingTime", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a799e20c46ce6892f47f33ddf32de08bf", null ],
     [ "hasParameterChanged", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a221e98ca5597481e27ec3066e7edbf24", null ],
     [ "initializeFromNodesAndTerminals", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#adc4a436516c7706f32d8bc5b83017353", null ],
     [ "mnaCompAddPostStepDependencies", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#af476e293862a8a4196a12a0e96af524e", null ],
@@ -12,5 +19,28 @@ var class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch =
     [ "mnaCompPostStep", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#ab284184e6cde4c0d5f2960a70fdb8a0a", null ],
     [ "mnaCompUpdateCurrent", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a4bcf346a72a0c1b6925dcbc40cf13bce", null ],
     [ "mnaCompUpdateVoltage", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a7b7ab95f0b2d429bb6f934f53159aba8", null ],
-    [ "mnaIsClosed", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a8e9a941fe3324a5f05f0f2c05b558404", null ]
+    [ "mnaIsClosed", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a8e9a941fe3324a5f05f0f2c05b558404", null ],
+    [ "openSwitch", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#aa618559c4434fd0e742bfae800d64ff3", null ],
+    [ "setExponentialSwitchingTime", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a6188505eb53d24ec7bfe3158234146ab", null ],
+    [ "setSwitchingMode", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a957fdc6f4db8599b711311fdc37c9fcb", null ],
+    [ "setZeroCrossingTolerance", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a541886ca2d0a4b4a6ec4440a63ecf9d6", null ],
+    [ "supportsPrecomputedSystemMatrices", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#aa8a9cf95b4893be0c62edab4dbdea954", null ],
+    [ "switchingMode", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a95bd5409c33095a06be7a62dbe2adf33", null ],
+    [ "mEffectiveResistanceA", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a723a29a7edb0e23654ae909b5c8355c3", null ],
+    [ "mEffectiveResistanceB", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#ad9208617c5701c8a1e15da3e2b9c8f82", null ],
+    [ "mEffectiveResistanceC", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#af4d33dedb1637b9a0bd3125fe0dad1ec", null ],
+    [ "mExponentialProgress", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#af581634ddc93aa041daa00f6ab0bb7f1", null ],
+    [ "mExponentialTransitionActive", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a65d5ff3de44dc1ca3a2cee402dc1cae5", null ],
+    [ "mExponentialTransitionEndTime", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a98b0e454e049e8d32c97ce29c0336f3d", null ],
+    [ "mExponentialTransitionStartTime", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a771c4543bc5e540ead1115cb2808941b", null ],
+    [ "mInstantCurrentA", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a42f14c2896f497ab430ca7ac9740174f", null ],
+    [ "mInstantCurrentB", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#ada064f68513c1b68262c8560b2f13a0e", null ],
+    [ "mInstantCurrentC", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#ac9033f4bcdac23f6a24b207c0f5a65fd", null ],
+    [ "mOpeningRequested", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#aeb0e8f2b1766186ab63ba3ae77a81929", null ],
+    [ "mPoleClosedA", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a13c8892f462f8ee4a366c0f06aac26f5", null ],
+    [ "mPoleClosedB", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a3dcbded1b87132a3f50370b94591bd74", null ],
+    [ "mPoleClosedC", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#aa5748d2632769f2996f6ee8eb2806052", null ],
+    [ "mZeroCrossingTimeA", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#aa2b6c6f9f601a6be4dddfdccf682852d", null ],
+    [ "mZeroCrossingTimeB", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#a88460c6bb8016de98632d3f47984ed9f", null ],
+    [ "mZeroCrossingTimeC", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html#af6cfce84f64cc3de460213dbabb0eeb9", null ]
 ];

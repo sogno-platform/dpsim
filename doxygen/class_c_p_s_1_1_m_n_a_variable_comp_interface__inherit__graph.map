@@ -16,7 +16,7 @@
 <area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="149,668,207,626,279,586,318,571,319,576,281,591,210,631,152,672"/>
 <area shape="rect" id="Node000017" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html" title="Dynamic phasor three&#45;phase switch." alt="" coords="319,600,506,630"/>
 <area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="175,672,279,639,326,628,328,633,280,644,177,677"/>
-<area shape="rect" id="Node000018" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html" title="Dynamic phasor three&#45;phase switch with per&#45;phase resistance." alt="" coords="338,654,487,683"/>
+<area shape="rect" id="Node000018" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html" title=" " alt="" coords="338,654,487,683"/>
 <area shape="poly" id="edge17_Node000001_Node000018" title=" " alt="" coords="247,681,337,672,337,678,247,686"/>
 <area shape="rect" id="Node000019" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_switch.html" title="One phase EMT switch." alt="" coords="334,707,491,736"/>
 <area shape="poly" id="edge18_Node000001_Node000019" title=" " alt="" coords="247,704,333,712,333,717,247,709"/>
@@ -24,7 +24,7 @@
 <area shape="poly" id="edge19_Node000001_Node000020" title=" " alt="" coords="179,713,280,746,318,757,317,762,279,751,177,718"/>
 <area shape="rect" id="Node000026" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_series_switch.html" title="EMT three&#45;phase switch." alt="" coords="315,832,510,862"/>
 <area shape="poly" id="edge25_Node000001_Node000026" title=" " alt="" coords="146,719,205,770,241,796,281,818,315,830,313,835,279,823,239,801,201,774,143,723"/>
-<area shape="rect" id="Node000027" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch.html" title="Dynamic phasor switch." alt="" coords="334,886,491,915"/>
+<area shape="rect" id="Node000027" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch.html" title="Three&#45;phase EMT switch / circuit breaker." alt="" coords="334,886,491,915"/>
 <area shape="poly" id="edge26_Node000001_Node000027" title=" " alt="" coords="139,722,163,757,195,798,235,838,281,871,306,883,334,890,332,896,305,888,278,876,232,842,191,801,158,760,134,725"/>
 <area shape="rect" id="Node000028" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html" title=" " alt="" coords="280,939,545,968"/>
 <area shape="poly" id="edge27_Node000001_Node000028" title=" " alt="" coords="134,723,155,769,187,824,229,879,254,904,281,925,303,936,300,941,278,929,250,908,225,883,182,827,150,771,129,725"/>

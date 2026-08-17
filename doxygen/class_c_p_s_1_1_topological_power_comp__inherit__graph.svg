@@ -619,7 +619,7 @@ var sectionId = 'dynsection-0';
 <!-- Node64 -->
 <g id="Node000064" class="node">
 <title>Node64</title>
-<g id="a_Node000064"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html" target="_top" xlink:title="Inductor.">
+<g id="a_Node000064"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html" target="_top" xlink:title="Three&#45;phase dynamic&#45;phasor inductor.">
 <polygon fill="white" stroke="#666666" points="1166.25,-665.25 1043,-665.25 1043,-643 1166.25,-643 1166.25,-665.25"/>
 <text text-anchor="middle" x="1104.62" y="-651.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph3::Inductor</text>
 </a>
@@ -656,7 +656,7 @@ var sectionId = 'dynsection-0';
 <!-- Node67 -->
 <g id="Node000067" class="node">
 <title>Node67</title>
-<g id="a_Node000067"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_resistor.html" target="_top" xlink:title=" ">
+<g id="a_Node000067"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_resistor.html" target="_top" xlink:title="Three&#45;phase dynamic&#45;phasor resistor.">
 <polygon fill="white" stroke="#666666" points="1164.75,-571.25 1044.5,-571.25 1044.5,-549 1164.75,-549 1164.75,-571.25"/>
 <text text-anchor="middle" x="1104.62" y="-557.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph3::Resistor</text>
 </a>
@@ -710,7 +710,7 @@ var sectionId = 'dynsection-0';
 <!-- Node70 -->
 <g id="Node000070" class="node">
 <title>Node70</title>
-<g id="a_Node000070"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html" target="_top" xlink:title="Dynamic phasor three&#45;phase switch with per&#45;phase resistance.">
+<g id="a_Node000070"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="1160.62,-451.25 1048.62,-451.25 1048.62,-429 1160.62,-429 1160.62,-451.25"/>
 <text text-anchor="middle" x="1104.62" y="-437.75" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph3::Switch</text>
 </a>
