@@ -137,6 +137,14 @@ public:
                                                      const Matrix &B,
                                                      const Real &dt, Matrix &Ad,
                                                      Matrix &Bd);
+  /// Calculate the steady-state transfer C (jw I - A)^-1 B + D, throws if jw is an eigenvalue of A
+  static MatrixComp steadyStateTransfer(const MatrixComp &A,
+                                        const MatrixComp &B,
+                                        const MatrixComp &C,
+                                        const MatrixComp &D, Real omega);
+  static MatrixComp steadyStateTransfer(const Matrix &A, const Matrix &B,
+                                        const Matrix &C, const Matrix &D,
+                                        Real omega);
   /// Apply the trapezoidal based state space matrices Ad, Bd, Cd to get the states at the current time step
   static Matrix applyStateSpaceTrapezoidalMatrices(const Matrix &Ad,
                                                    const Matrix &Bd,

@@ -66,24 +66,22 @@ SimPowerComp<Complex>::Ptr SP::Ph1::SSNTypeI2T::clone(String name) {
   return copy;
 }
 
-void SP::Ph1::SSNTypeI2T::calculateAdmittance(Real omega) {
+Complex SP::Ph1::SSNTypeI2T::computeAdmittance(Real omega) const {
+  if (!mParametersSet)
+    throw std::logic_error("setParameters() must be called before "
+                           "the admittance can be calculated.");
 
-  MatrixComp H_inv =
-      omega * Complex(0, 1.) * Matrix::Identity(mA.rows(), mA.cols()) - mA;
+  // I-type: y = V, u = I, so the transfer is an impedance and has to be inverted.
+  Complex impedance = Math::steadyStateTransfer(mA, mB, mC, mD, omega).value();
 
-  MatrixComp H = MatrixComp(H_inv.rows(), H_inv.cols());
+  if (std::abs(impedance) < DOUBLE_EPSILON)
+    throw std::invalid_argument("computeAdmittance: impedance is near zero.");
 
-  H = H_inv.inverse().eval();
+  return 1. / impedance;
+}
 
-  Complex denom = ((mC.eval() * H * mB.eval() + mD.eval()).value());
-
-  if (!Math::isFinite(denom) || std::abs(denom) < DOUBLE_EPSILON)
-    throw std::invalid_argument(
-        "calculateAdmittance: denominator is near zero or infinite.");
-
-  mAdmittance =
-      1. /
-      denom; //I-type: y=V, x=I ->Matrix factor is Impedance, not Admittance
+Complex SP::Ph1::SSNTypeI2T::steadyStateAdmittance(Real frequency) const {
+  return computeAdmittance(2. * PI * frequency);
 }
 
 void SP::Ph1::SSNTypeI2T::initializeFromNodesAndTerminals(Real frequency) {
@@ -93,9 +91,7 @@ void SP::Ph1::SSNTypeI2T::initializeFromNodesAndTerminals(Real frequency) {
   if (!mParametersSet)
     throw std::logic_error("Not initialized.");
 
-  Real omega = 2 * PI * frequency;
-
-  calculateAdmittance(omega);
+  mAdmittance = steadyStateAdmittance(frequency);
 
   (**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
   **mIntfCurrent = mAdmittance * **mIntfVoltage;
@@ -128,7 +124,7 @@ void SP::Ph1::SSNTypeI2T::mnaCompInitialize(Real omega, Real timeStep,
 
   updateMatrixNodeIndices();
 
-  calculateAdmittance(omega);
+  mAdmittance = computeAdmittance(omega);
 
   SPDLOG_LOGGER_INFO(mSLog, "\nImpedance [Ohm]: {:s}",
                      Logger::complexToString(1. / mAdmittance));
