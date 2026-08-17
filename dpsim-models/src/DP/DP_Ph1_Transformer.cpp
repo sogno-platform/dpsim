@@ -14,7 +14,8 @@ DP::Ph1::Transformer::Transformer(String uid, String name,
                                   Logger::Level logLevel,
                                   Bool withResistiveLosses)
     : Base::Ph1::Transformer(mAttributes),
-      CompositePowerComp<Complex>(uid, name, true, true, logLevel) {
+      CompositePowerComp<Complex>(uid, name, true, true, logLevel),
+      mImpedanceVoltage(mAttributes->create<MatrixComp>("v_impedance")) {
   if (withResistiveLosses)
     setVirtualNodeNumber(3);
   else
@@ -25,6 +26,7 @@ DP::Ph1::Transformer::Transformer(String uid, String name,
   SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
   **mIntfVoltage = MatrixComp::Zero(1, 1);
   **mIntfCurrent = MatrixComp::Zero(1, 1);
+  **mImpedanceVoltage = MatrixComp::Zero(1, 1);
 }
 
 /// DEPRECATED: Delete method
@@ -173,9 +175,10 @@ void DP::Ph1::Transformer::initializeParentFromNodesAndTerminals(
   Complex impedance = {**mResistance, omega * **mInductance};
   SPDLOG_LOGGER_INFO(mSLog, "Reactance={} [Ohm] (referred to primary side)",
                      omega * **mInductance);
-  (**mIntfVoltage)(0, 0) =
+  (**mImpedanceVoltage)(0, 0) =
       mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0);
-  (**mIntfCurrent)(0, 0) = (**mIntfVoltage)(0, 0) / impedance;
+  (**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
+  (**mIntfCurrent)(0, 0) = (**mImpedanceVoltage)(0, 0) / impedance;
 
   SPDLOG_LOGGER_INFO(
       mSLog,
@@ -282,11 +285,21 @@ void DP::Ph1::Transformer::mnaCompUpdateCurrent(const Matrix &leftVector) {
 void DP::Ph1::Transformer::mnaCompUpdateVoltage(const Matrix &leftVector) {
   // v1 - v0
   (**mIntfVoltage)(0, 0) = 0;
-  (**mIntfVoltage)(0, 0) =
-      Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
-  (**mIntfVoltage)(0, 0) = (**mIntfVoltage)(0, 0) -
-                           Math::complexFromVectorElement(
-                               leftVector, mVirtualNodes[0]->matrixNodeIndex());
+  if (terminalNotGrounded(1))
+    (**mIntfVoltage)(0, 0) =
+        Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
+  if (terminalNotGrounded(0))
+    (**mIntfVoltage)(0, 0) =
+        (**mIntfVoltage)(0, 0) -
+        Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+
+  (**mImpedanceVoltage)(0, 0) = Math::complexFromVectorElement(
+      leftVector, mVirtualNodes[0]->matrixNodeIndex());
+  if (terminalNotGrounded(0))
+    (**mImpedanceVoltage)(0, 0) =
+        (**mImpedanceVoltage)(0, 0) -
+        Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+
   SPDLOG_LOGGER_DEBUG(mSLog, "Voltage {:s}",
                       Logger::phasorToString((**mIntfVoltage)(0, 0)));
 }

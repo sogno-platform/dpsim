@@ -51,6 +51,9 @@ private:
   Bool mWithResistiveLosses;
 
 public:
+  /// Voltage across the series impedance, referred to the terminal 0 side [V]
+  const Attribute<Matrix>::Ptr mImpedanceVoltage;
+
   /// Defines UID, name and logging level
   Transformer(String uid, String name,
               Logger::Level logLevel = Logger::Level::off,

@@ -51,6 +51,9 @@ private:
   /// True after createSubComponents() runs; prevents double-construction.
 
 public:
+  /// Voltage across the series impedance, referred to the terminal 0 side [V]
+  const Attribute<MatrixComp>::Ptr mImpedanceVoltage;
+
   /// Defines UID, name and logging level
   Transformer(String uid, String name,
               Logger::Level logLevel = Logger::Level::off,
