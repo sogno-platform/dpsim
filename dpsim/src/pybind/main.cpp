@@ -311,8 +311,70 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("run",
            static_cast<void (DPsim::RealTimeSimulation::*)(CPS::Int startIn)>(
                &DPsim::RealTimeSimulation::run))
+      .def(
+          "run_at",
+          [](DPsim::RealTimeSimulation &self, uint64_t start_time_ns) {
+            if (start_time_ns > static_cast<uint64_t>(INT64_MAX))
+              throw std::invalid_argument(
+                  "start_time_ns is too large to represent as a time point");
+            auto startAt = std::chrono::time_point_cast<
+                DPsim::Timer::StartClock::duration>(
+                DPsim::Timer::StartTimePoint(
+                    std::chrono::nanoseconds(start_time_ns)));
+            py::gil_scoped_release unlock;
+            self.run(startAt);
+          },
+          "start_time_ns"_a)
       .def("set_solver", &DPsim::RealTimeSimulation::setSolverType)
       .def("set_domain", &DPsim::RealTimeSimulation::setDomain);
+
+  py::class_<DPsim::InterfaceCosimSync,
+             std::shared_ptr<DPsim::InterfaceCosimSync>>(m,
+                                                         "InterfaceCosimSync")
+      .def(py::init([](const std::string &name, const std::string &host,
+                       uint16_t port, const std::string &role) {
+             if (role != "leader" && role != "follower")
+               throw std::invalid_argument(
+                   R"(role must be "leader" or "follower", got ")" + role +
+                   "\"");
+             auto r = (role == "leader")
+                          ? DPsim::InterfaceCosimSync::Role::Leader
+                          : DPsim::InterfaceCosimSync::Role::Follower;
+             return std::make_shared<DPsim::InterfaceCosimSync>(name, host,
+                                                                port, r);
+           }),
+           "name"_a, "host"_a, "port"_a, "role"_a)
+      .def("open", &DPsim::InterfaceCosimSync::open)
+      .def("close", &DPsim::InterfaceCosimSync::close)
+      .def(
+          "publish_config",
+          [](DPsim::InterfaceCosimSync &self, uint64_t start_time_ns,
+             uint64_t dt_ns, uint64_t duration_ns, uint32_t expected_followers,
+             uint64_t timeout_ms) {
+            if (start_time_ns > static_cast<uint64_t>(INT64_MAX))
+              throw std::invalid_argument(
+                  "start_time_ns is too large to represent as a time point");
+            auto tp = DPsim::InterfaceCosimSync::toTimePoint(start_time_ns);
+            py::gil_scoped_release unlock;
+            return self.publishConfig(tp, dt_ns, duration_ns,
+                                      expected_followers, timeout_ms);
+          },
+          "start_time_ns"_a, "time_step_ns"_a, "duration_ns"_a,
+          "expected_followers"_a = 1,
+          "timeout_ms"_a = DPsim::InterfaceCosimSync::DEFAULT_TIMEOUT_MS)
+      .def(
+          "wait_for_config",
+          [](DPsim::InterfaceCosimSync &self, uint64_t timeout_ms) {
+            DPsim::InterfaceCosimSync::ConfigNs cfg{};
+            bool ok;
+            {
+              py::gil_scoped_release unlock;
+              ok = self.waitForConfig(cfg, timeout_ms);
+            }
+            return py::make_tuple(ok, cfg.start_time_ns, cfg.time_step_ns,
+                                  cfg.duration_ns);
+          },
+          "timeout_ms"_a = DPsim::InterfaceCosimSync::DEFAULT_TIMEOUT_MS);
 #endif
 
   py::class_<CPS::SystemTopology, std::shared_ptr<CPS::SystemTopology>>(
