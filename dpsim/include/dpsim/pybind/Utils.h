@@ -30,6 +30,8 @@ py::cpp_function createAttributeGetter(const std::string name) {
   };
 }
 
+py::arg_v logLevelArg(CPS::Logger::Level level, const char *name = "loglevel");
+
 CPS::Matrix zeroMatrix(int dim);
 
 std::string getAttributeList(CPS::IdentifiedObject &obj);
