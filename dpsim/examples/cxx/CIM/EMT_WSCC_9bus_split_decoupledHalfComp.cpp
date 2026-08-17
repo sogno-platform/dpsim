@@ -1,0 +1,120 @@
+// SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+// SPDX-License-Identifier: MPL-2.0
+
+#include <fstream>
+#include <iostream>
+#include <list>
+
+#include <DPsim.h>
+#include <dpsim/ThreadLevelScheduler.h>
+
+using namespace DPsim;
+using namespace CPS;
+
+void decoupleLine(SystemTopology &sys, const String &lineName,
+                  const String &node1, const String &node2) {
+  auto origLine = sys.component<EMT::Ph3::PiLine>(lineName);
+  Matrix Rline = origLine->attributeTyped<Matrix>("R_series")->get();
+  Matrix Lline = origLine->attributeTyped<Matrix>("L_series")->get();
+  Matrix Cline = origLine->attributeTyped<Matrix>("C_parallel")->get();
+
+  sys.removeComponent(lineName);
+
+  String nameDLineA = "dlineA_" + node1 + "_" + node2;
+  String nameDLineB = "dlineB_" + node2 + "_" + node1;
+
+  auto halfLineA =
+      EMT::Ph3::HalfDecouplingLine::make(nameDLineA, Logger::Level::debug);
+  auto halfLineB =
+      EMT::Ph3::HalfDecouplingLine::make(nameDLineB, Logger::Level::debug);
+
+  halfLineA->connect({sys.node<CPS::SimNode<Real>>(node1)});
+  halfLineA->setParameters(Rline, Lline, Cline);
+  halfLineA->setCouplingSource(halfLineB->mSendingVolt, halfLineB->mSendingCur);
+
+  halfLineB->connect({sys.node<CPS::SimNode<Real>>(node2)});
+  halfLineB->setParameters(Rline, Lline, Cline);
+  halfLineB->setCouplingSource(halfLineA->mSendingVolt, halfLineA->mSendingCur);
+
+  sys.addComponent(halfLineA);
+  sys.addComponent(halfLineB);
+}
+
+void doSim(String &name, SystemTopology &sys, Int threads) {
+
+  // Logging
+  auto logger = DataLogger::make(name);
+  for (Int bus = 1; bus <= 9; bus++) {
+    String attrName = "v" + std::to_string(bus);
+    String nodeName = "BUS" + std::to_string(bus);
+    logger->logAttribute(attrName,
+                         sys.node<EMT::SimNode>(nodeName)->attribute("v"));
+  }
+
+  Simulation sim(name, Logger::Level::debug);
+  sim.setSystem(sys);
+  sim.setTimeStep(0.0001);
+  sim.setFinalTime(0.5);
+  sim.setDomain(Domain::EMT);
+  sim.doSplitSubnets(true);
+  sim.doInitFromNodesAndTerminals(true);
+  sim.addLogger(logger);
+  if (threads > 0)
+    sim.setScheduler(std::make_shared<OpenMPLevelScheduler>(threads));
+
+  //std::ofstream of1("topology_graph.svg");
+  //sys.topologyGraph().render(of1));
+
+  sim.run();
+  sim.logStepTimes(name + "_step_times");
+}
+
+int main(int argc, char *argv[]) {
+  CommandLineArgs args(argc, argv);
+
+  std::list<fs::path> filenames;
+  filenames = DPsim::Utils::findFiles(
+      {"WSCC-09_DI.xml", "WSCC-09_EQ.xml", "WSCC-09_SV.xml", "WSCC-09_TP.xml"},
+      "build/_deps/cim-data-src/WSCC-09/WSCC-09", "CIMPATH");
+
+  Int numThreads = 0;
+  Int numSeq = 0;
+
+  if (args.options.find("threads") != args.options.end())
+    numThreads = args.getOptionInt("threads");
+  if (args.options.find("seq") != args.options.end())
+    numSeq = args.getOptionInt("seq");
+
+  std::cout << "Simulate with " << numThreads << " threads, sequence number "
+            << numSeq << std::endl;
+
+  // Monolithic Simulation
+  ///TODO: Is this needed? Already done in "EMT_WSCC_9bus_split_decoupled.cpp"
+  String simNameMonolithic = "WSCC-9bus_monolithic_EMT";
+  Logger::setLogDir("logs/" + simNameMonolithic);
+  CIM::Reader readerMonolithic(simNameMonolithic, Logger::Level::debug,
+                               Logger::Level::debug);
+  SystemTopology systemMonolithic =
+      readerMonolithic.loadCIM(60, filenames, Domain::EMT, PhaseType::ABC,
+                               CPS::GeneratorType::IdealVoltageSource);
+
+  doSim(simNameMonolithic, systemMonolithic, 0);
+
+  // Decoupled Simulation
+  String simNameDecoupledHalf = "WSCC_9bus_split_decoupledHalfComp_EMT_" +
+                                std::to_string(numThreads) + "_" +
+                                std::to_string(numSeq);
+  Logger::setLogDir("logs/" + simNameDecoupledHalf);
+  CIM::Reader readerDecoupled(simNameDecoupledHalf, Logger::Level::debug,
+                              Logger::Level::debug);
+  SystemTopology systemDecoupled =
+      readerDecoupled.loadCIM(60, filenames, Domain::EMT, PhaseType::ABC,
+                              CPS::GeneratorType::IdealVoltageSource);
+
+  decoupleLine(systemDecoupled, "LINE75", "BUS7", "BUS5");
+  // decouple_line(system, "LINE78", "BUS7", "BUS8");
+  decoupleLine(systemDecoupled, "LINE64", "BUS6", "BUS4");
+  decoupleLine(systemDecoupled, "LINE89", "BUS8", "BUS9");
+
+  doSim(simNameDecoupledHalf, systemDecoupled, numThreads);
+}

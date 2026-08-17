@@ -167,6 +167,7 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph3_SSN_InductionMotor.cpp
 	EMT/EMT_Ph3_PiecewiseLinearInductor.cpp
 	EMT/EMT_Ph3_VSIVoltageControlVCO.cpp
+	EMT/EMT_Ph3_HalfDecouplingLine.cpp
 
 	SP/SP_Ph1_ControlledCurrentSource.cpp
 	SP/SP_Ph1_VoltageSource.cpp
