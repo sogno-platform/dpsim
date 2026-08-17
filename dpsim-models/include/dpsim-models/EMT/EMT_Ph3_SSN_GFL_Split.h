@@ -5,7 +5,7 @@
 
 #include <vector>
 
-#include <dpsim-models/EMT/EMT_Ph3_TwoTerminalVTypeSSNComp.h>
+#include <dpsim-models/EMT/EMT_Ph3_TwoTerminalVTypeSplitSSNComp.h>
 
 namespace CPS {
 namespace EMT {
@@ -44,7 +44,7 @@ namespace Ph3 {
 /// known forcing term and therefore contributes only to the SSN history
 /// current. Consequently, the Norton conductance mW remains constant for the
 /// complete simulation.
-class SSN_GFL_Split final : public TwoTerminalVTypeSSNComp,
+class SSN_GFL_Split final : public TwoTerminalVTypeSplitSSNComp,
                             public SharedFactory<SSN_GFL_Split> {
 private:
   static constexpr Int mNetworkStateSize = 6;
@@ -99,40 +99,6 @@ private:
   Real mKiCurrCtrl;
 
   // -------------------------------------------------------------------------
-  // Fixed electrical plant
-  //
-  // The inherited matrices mA, mB, mC, mD contain the SSN-facing plant with
-  // terminal voltage u as the only nodal input.
-  //
-  // mBConverter contains the additional known converter-voltage input:
-  //
-  //   x_n_dot = mA x_n + mB u + mBConverter v_inv_delayed
-  // -------------------------------------------------------------------------
-  Matrix mBConverter;
-  Matrix mdBConverter;
-
-  // -------------------------------------------------------------------------
-  // Time-varying controller subsystem
-  // -------------------------------------------------------------------------
-  Matrix mControllerState;
-  Matrix mControllerMeasurementOld;
-
-  Matrix mControllerA;
-  Matrix mControllerB;
-  Matrix mControllerC;
-  Matrix mControllerD;
-  Matrix mControllerE;
-  Matrix mControllerF;
-
-  Matrix mControllerAd;
-  Matrix mControllerBd;
-  Matrix mControllerEd;
-
-  // Controller output and z^-1 output.
-  Matrix mConverterVoltageReference;
-  Matrix mConverterVoltageDelayed;
-
-  // -------------------------------------------------------------------------
   // Logging attributes
   // -------------------------------------------------------------------------
   const Attribute<Real>::Ptr mVcD;
@@ -162,7 +128,7 @@ private:
 
   void evaluateControllerOutput(const Matrix &xController,
                                 const Matrix &measurement,
-                                Matrix &output) const;
+                                Matrix &output) const override final;
 
   void calculateControllerAnalyticalJacobians(const Matrix &xController,
                                               const Matrix &measurement,
@@ -172,30 +138,8 @@ private:
   void buildControllerStateSpaceModel(const Matrix &xController,
                                       const Matrix &measurement, Matrix &A,
                                       Matrix &B, Matrix &C, Matrix &D,
-                                      Matrix &E, Matrix &F) const;
-
-  void recomputeControllerDiscreteModel();
-
-  Matrix buildControllerMeasurement(const Matrix &networkState,
-                                    const Matrix &terminalVoltage) const;
-
-  // -------------------------------------------------------------------------
-  // Fixed SSN plant hooks
-  // -------------------------------------------------------------------------
-
-  /// \brief Add the delayed converter-voltage forcing to the Norton history
-  /// current while leaving mW unchanged.
-  Matrix calculateHistoryVector() const override final;
-
-  /// \brief Update the fixed plant state and then the separate controller.
-  ///
-  /// The newly calculated converter reference is stored in the z^-1 buffer and
-  /// is therefore used only during the following simulation step.
-  void updateState(const Matrix &uOld, const Matrix &uNew) override final;
-
-  /// \brief Discretize the fixed plant once and form the constant Norton
-  /// conductance. Also initializes the controller discretization.
-  void recomputeDiscreteModel() override final;
+                                      Matrix &E,
+                                      Matrix &F) const override final;
 
   void updateLogAttributes(const Matrix &u) const override final;
 
@@ -212,6 +156,11 @@ public:
 
   std::vector<SSNComp::LocalAbcStateBlock>
   getLocalAbcStateBlocks() const override final;
+
+  std::vector<String> getSplitLocalStateNames() const override final;
+
+  std::vector<SSNComp::LocalAbcStateBlock>
+  getSplitLocalAbcStateBlocks() const override final;
 
   /// \brief Configure the filter, PLL, power controller and current controller.
   ///
