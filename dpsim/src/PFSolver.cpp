@@ -54,7 +54,9 @@ void PFSolver::initialize() {
                  std::dynamic_pointer_cast<
                      CPS::SP::Ph1::AvVoltageSourceInverterDQ>(comp)) {
       mAverageVoltageSourceInverters.push_back(vsi);
-    }
+    } else if (std::shared_ptr<CPS::SP::Ph1::SVC> svc =
+                   std::dynamic_pointer_cast<CPS::SP::Ph1::SVC>(comp))
+      mSVCs.push_back(svc);
   }
 
   setBaseApparentPower();
@@ -62,6 +64,9 @@ void PFSolver::initialize() {
   initializeComponents();
   determinePFBusType();
   propagateAndVerifyBaseVoltage();
+  // An SVC gets its base voltage from the propagation above, so convert it after
+  for (auto svc : mSVCs)
+    svc->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
   composeAdmittanceMatrix();
 
   setUpJacobianStorage();
@@ -631,26 +636,30 @@ Bool PFSolver::runNewtonRaphson() {
 Bool PFSolver::solvePowerflow() {
   Bool converged = runNewtonRaphson();
 
-  if (!mEnforceReactiveLimits)
+  if (!mEnforceReactiveLimits && !mEnforceSvcControl)
     return converged;
 
-  // Outer loop: switch PV<->PQ on Q-limit violations, re-solve until no bus switches.
+  // Outer loop: apply Q-limit PV<->PQ switching and/or SVC voltage control, then
+  // re-solve, until neither pass changes anything (both settled).
   Bool settled = false;
   for (CPS::UInt outer = 0; converged && outer < mMaxOuterIterations; ++outer) {
-    if (!enforceReactiveLimits()) {
+    Bool qLimitChanged = mEnforceReactiveLimits && enforceReactiveLimits();
+    Bool svcChanged = mEnforceSvcControl && enforceSvcVoltageControl();
+    if (!qLimitChanged && !svcChanged) {
       settled = true;
-      break; // all generators within their reactive limits
+      break; // all generators within limits and all SVCs on setpoint
     }
-    reclassifyBuses();
+    if (qLimitChanged)
+      reclassifyBuses();
     converged = runNewtonRaphson();
   }
 
   if (converged && !settled) {
-    // Unsettled PV/PQ classification must not look converged to setSolution().
+    // Unsettled classification/SVC control must not look converged to setSolution().
     SPDLOG_LOGGER_WARN(
         mSLog,
-        "Q-limit outer loop did not settle within {} iterations; "
-        "PV/PQ classification may still be oscillating",
+        "PF outer loop did not settle within {} iterations; Q-limit "
+        "classification or SVC control may still be oscillating",
         mMaxOuterIterations);
     isConverged = false;
     converged = false;

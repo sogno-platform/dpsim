@@ -59,6 +59,10 @@ public:
   /// switching. Default false; opt in via setPFSolverEnforceReactiveLimits(true).
   const CPS::Attribute<Bool>::Ptr mPFEnforceReactiveLimits;
 
+  /// Hold each SVC bus at its voltage setpoint in the powerflow via a reactive-
+  /// injection outer loop. Default false; opt in via setPFSolverEnforceSvcControl(true).
+  const CPS::Attribute<Bool>::Ptr mPFEnforceSvcControl;
+
   /// Loose tolerance for a zone's Load base-voltage vs. its rating; default 0.1
   const CPS::Attribute<Real>::Ptr mPFBaseVoltageLooseTolerance;
 
@@ -283,6 +287,10 @@ public:
   void setPFSolverEnforceReactiveLimits(Bool value);
 
   Bool getPFSolverEnforceReactiveLimits() const;
+
+  void setPFSolverEnforceSvcControl(Bool value);
+
+  Bool getPFSolverEnforceSvcControl() const;
 
   void setPFSolverBaseVoltageLooseTolerance(Real tolerance);
 
