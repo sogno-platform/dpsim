@@ -65,12 +65,14 @@ var dir_0ab18182ec9e12ca28df221a97888cf8 =
     [ "EMT_Ph3_SynchronGeneratorVBR.h", "_e_m_t___ph3___synchron_generator_v_b_r_8h.html", "_e_m_t___ph3___synchron_generator_v_b_r_8h" ],
     [ "EMT_Ph3_Transformer.h", "_e_m_t___ph3___transformer_8h.html", "_e_m_t___ph3___transformer_8h" ],
     [ "EMT_Ph3_TwoTerminalITypeSSNComp.h", "_e_m_t___ph3___two_terminal_i_type_s_s_n_comp_8h.html", "_e_m_t___ph3___two_terminal_i_type_s_s_n_comp_8h" ],
+    [ "EMT_Ph3_TwoTerminalVTypeSplitSSNComp.h", "_e_m_t___ph3___two_terminal_v_type_split_s_s_n_comp_8h.html", "_e_m_t___ph3___two_terminal_v_type_split_s_s_n_comp_8h" ],
     [ "EMT_Ph3_TwoTerminalVTypeSSNComp.h", "_e_m_t___ph3___two_terminal_v_type_s_s_n_comp_8h.html", "_e_m_t___ph3___two_terminal_v_type_s_s_n_comp_8h" ],
     [ "EMT_Ph3_TwoTerminalVTypeVariableSSNComp.h", "_e_m_t___ph3___two_terminal_v_type_variable_s_s_n_comp_8h.html", "_e_m_t___ph3___two_terminal_v_type_variable_s_s_n_comp_8h" ],
     [ "EMT_Ph3_VoltageSource.h", "_e_m_t___ph3___voltage_source_8h.html", "_e_m_t___ph3___voltage_source_8h" ],
     [ "EMT_Ph3_VoltageSourceNorton.h", "_e_m_t___ph3___voltage_source_norton_8h.html", "_e_m_t___ph3___voltage_source_norton_8h" ],
     [ "EMT_Ph3_VSIVoltageControlVCO.h", "_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h.html", "_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h" ],
     [ "EMT_SSNComp.h", "_e_m_t___s_s_n_comp_8h.html", "_e_m_t___s_s_n_comp_8h" ],
+    [ "EMT_VTypeSplitSSNComp.h", "_e_m_t___v_type_split_s_s_n_comp_8h.html", "_e_m_t___v_type_split_s_s_n_comp_8h" ],
     [ "EMT_VTypeSSNComp.h", "_e_m_t___v_type_s_s_n_comp_8h.html", "_e_m_t___v_type_s_s_n_comp_8h" ],
     [ "EMT_VTypeVariableSSNComp.h", "_e_m_t___v_type_variable_s_s_n_comp_8h.html", "_e_m_t___v_type_variable_s_s_n_comp_8h" ]
 ];

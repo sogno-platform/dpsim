@@ -65,12 +65,14 @@ var dir_ae95efbb9d0e2c3db498e7cf294ca207 =
     [ "EMT_Ph3_SynchronGeneratorVBR.cpp", "_e_m_t___ph3___synchron_generator_v_b_r_8cpp.html", null ],
     [ "EMT_Ph3_Transformer.cpp", "_e_m_t___ph3___transformer_8cpp.html", null ],
     [ "EMT_Ph3_TwoTerminalITypeSSNComp.cpp", "_e_m_t___ph3___two_terminal_i_type_s_s_n_comp_8cpp.html", null ],
+    [ "EMT_Ph3_TwoTerminalVTypeSplitSSNComp.cpp", "_e_m_t___ph3___two_terminal_v_type_split_s_s_n_comp_8cpp.html", null ],
     [ "EMT_Ph3_TwoTerminalVTypeSSNComp.cpp", "_e_m_t___ph3___two_terminal_v_type_s_s_n_comp_8cpp.html", null ],
     [ "EMT_Ph3_TwoTerminalVTypeVariableSSNComp.cpp", "_e_m_t___ph3___two_terminal_v_type_variable_s_s_n_comp_8cpp.html", null ],
     [ "EMT_Ph3_VoltageSource.cpp", "_e_m_t___ph3___voltage_source_8cpp.html", null ],
     [ "EMT_Ph3_VoltageSourceNorton.cpp", "_e_m_t___ph3___voltage_source_norton_8cpp.html", null ],
     [ "EMT_Ph3_VSIVoltageControlVCO.cpp", "_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp.html", null ],
     [ "EMT_SSNComp.cpp", "_e_m_t___s_s_n_comp_8cpp.html", null ],
+    [ "EMT_VTypeSplitSSNComp.cpp", "_e_m_t___v_type_split_s_s_n_comp_8cpp.html", null ],
     [ "EMT_VTypeSSNComp.cpp", "_e_m_t___v_type_s_s_n_comp_8cpp.html", null ],
     [ "EMT_VTypeVariableSSNComp.cpp", "_e_m_t___v_type_variable_s_s_n_comp_8cpp.html", null ]
 ];

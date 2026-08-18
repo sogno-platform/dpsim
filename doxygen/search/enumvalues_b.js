@@ -1,11 +1,9 @@
 var searchData=
 [
-  ['native_0',['Native',['../namespace_d_psim.html#a4c517ef9d32e7ec0604ce0f8a4fa2dd8a925641e0b76c28cc940e8f3ca178d826',1,'DPsim']]],
-  ['no_5fargument_1',['no_argument',['../getopt_8h.html#a06fef0bea9a9dac2b240e244d6933d2fac5bf117fca352609d0e6cd02ddb3a008',1,'getopt.h']]],
-  ['no_5fbtf_2',['NO_BTF',['../namespace_d_psim.html#a69fee78420eca0273fbc1bb935a999adabf32c05a299b622cab394809ca4102d9',1,'DPsim']]],
-  ['no_5fpartial_5frefactorization_3',['NO_PARTIAL_REFACTORIZATION',['../namespace_d_psim.html#a62ee66cb7d49fe8ab3480d0d0146482aa51aefb8422e44dbd3890332a0ed58251',1,'DPsim']]],
-  ['no_5fscaling_4',['NO_SCALING',['../namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408acea7253c96ba812305c09a9530842ffd',1,'DPsim']]],
-  ['no_5ftask_5',['NO_TASK',['../namespace_c_p_s.html#a4897abf57d5233edab587ea9cd685f26abf7bdc16679f8e9f063a69a21cc2a590',1,'CPS']]],
-  ['none_6',['None',['../namespace_c_p_s.html#a04a0a86fce7b8a74447274655a5fcfaba6adf97f83acf6453d4a6a4b1070f3754',1,'CPS::None'],['../namespace_c_p_s.html#ada17f6a04d29355cd45243f13e7078f8a6adf97f83acf6453d4a6a4b1070f3754',1,'CPS::None']]],
-  ['nrp_7',['NRP',['../class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919eacc4ebb23bd3d777fd82cb86283c1de28',1,'DPsim::Solver']]]
+  ['manual_0',['MANUAL',['../class_c_p_s_1_1_c_s_v_reader.html#a07ab85b64411bd9e48d7a2e4a6df6b18aa60a6a471c0681e5a49c4f5d00f6bc5a',1,'CPS::CSVReader']]],
+  ['max_5fscaling_1',['MAX_SCALING',['../namespace_d_psim.html#a1a29b9e3bd92795ee5dafd0697248408a6fcfc46a3bb86c91718223faa150eee3',1,'DPsim']]],
+  ['mechanicalspeed_2',['MechanicalSpeed',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___induction_motor.html#a39c8a46a4be70f9c12f14c915266f670af7fed6f94fea1cb016e4d0263c0e5620',1,'CPS::EMT::Ph3::SSN_InductionMotor']]],
+  ['minutes_3',['MINUTES',['../class_c_p_s_1_1_c_s_v_reader.html#a71c248f331cd2c1fd63db4f171b6ea7da7ffb9cea885bcba59e55574d54f819c2',1,'CPS::CSVReader']]],
+  ['mna_4',['MNA',['../class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919eaf125e1a54049f4b74b5cbe6e6d7abac6',1,'DPsim::Solver']]],
+  ['mnasimulation_5',['MNASimulation',['../class_c_p_s_1_1_topological_power_comp.html#ab9d4f348a42dc1f2617102595eba1f47af4eb5556f9895ef310759e306b91fcca',1,'CPS::TopologicalPowerComp']]]
 ];

@@ -324,6 +324,10 @@ Enumerations</h2></td></tr>
 , <a class="el" href="#a4c517ef9d32e7ec0604ce0f8a4fa2dd8a5680b2c54295a358195d05496e48ea41">GlobalDQ0</a>
  }</td></tr>
 <tr class="separator:a4c517ef9d32e7ec0604ce0f8a4fa2dd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8dd8a1ae95009e271deab70829457585" id="r_a8dd8a1ae95009e271deab70829457585"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8dd8a1ae95009e271deab70829457585">StateSpacePoleMapping</a> { <a class="el" href="#a8dd8a1ae95009e271deab70829457585aaf17c98bbd83c27d6426d2ff3fa81d7f">Bilinear</a>
+, <a class="el" href="#a8dd8a1ae95009e271deab70829457585a2f8e38ec1a5832670c5011a71603c929">Logarithmic</a>
+ }</td></tr>
+<tr class="separator:a8dd8a1ae95009e271deab70829457585"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -769,6 +773,36 @@ template&lt;typename T&gt; </div>
 </table>
 
 <p class="definition">Definition at line <a class="el" href="_state_space_modal_analysis_8h_source.html#l00012">12</a> of file <a class="el" href="_state_space_modal_analysis_8h_source.html">StateSpaceModalAnalysis.h</a>.</p>
+
+</div>
+</div>
+<a id="a8dd8a1ae95009e271deab70829457585" name="a8dd8a1ae95009e271deab70829457585"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8dd8a1ae95009e271deab70829457585">&#9670;&#160;</a></span>StateSpacePoleMapping</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="#a8dd8a1ae95009e271deab70829457585">DPsim::StateSpacePoleMapping</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a8dd8a1ae95009e271deab70829457585aaf17c98bbd83c27d6426d2ff3fa81d7f" name="a8dd8a1ae95009e271deab70829457585aaf17c98bbd83c27d6426d2ff3fa81d7f"></a>Bilinear&#160;</td><td class="fielddoc"><p>Inverse trapezoidal (bilinear) mapping. Use when the complete model was discretized with the trapezoidal rule and contains no explicit delays. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a8dd8a1ae95009e271deab70829457585a2f8e38ec1a5832670c5011a71603c929" name="a8dd8a1ae95009e271deab70829457585a2f8e38ec1a5832670c5011a71603c929"></a>Logarithmic&#160;</td><td class="fielddoc"><p>Sampled-data mapping lambda = log(z) / dt. Use for models containing explicit discrete delays or other non-trapezoidal update operations. </p>
+</td></tr>
+</table>
+
+<p class="definition">Definition at line <a class="el" href="_state_space_modal_analysis_8h_source.html#l00017">17</a> of file <a class="el" href="_state_space_modal_analysis_8h_source.html">StateSpaceModalAnalysis.h</a>.</p>
 
 </div>
 </div>

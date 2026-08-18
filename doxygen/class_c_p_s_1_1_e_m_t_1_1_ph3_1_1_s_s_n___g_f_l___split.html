@@ -128,6 +128,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a8844930ab64e16fb0449e2e1924d0314"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af12a36dba30f5bf23b258a8274a68d49" id="r_af12a36dba30f5bf23b258a8274a68d49"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="struct_c_p_s_1_1_e_m_t_1_1_s_s_n_comp_1_1_local_abc_state_block.html">SSNComp::LocalAbcStateBlock</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af12a36dba30f5bf23b258a8274a68d49">getLocalAbcStateBlocks</a> () const override final</td></tr>
 <tr class="separator:af12a36dba30f5bf23b258a8274a68d49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68da91f5463f07f78b92f914894100c4" id="r_a68da91f5463f07f78b92f914894100c4"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a68da91f5463f07f78b92f914894100c4">getSplitLocalStateNames</a> () const override final</td></tr>
+<tr class="memdesc:a68da91f5463f07f78b92f914894100c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Local names in augmented controller/plant/delay state order.  <br /></td></tr>
+<tr class="separator:a68da91f5463f07f78b92f914894100c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cc881cb52910f6a1cfea8ab7797abeb" id="r_a0cc881cb52910f6a1cfea8ab7797abeb"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="struct_c_p_s_1_1_e_m_t_1_1_s_s_n_comp_1_1_local_abc_state_block.html">SSNComp::LocalAbcStateBlock</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0cc881cb52910f6a1cfea8ab7797abeb">getSplitLocalAbcStateBlocks</a> () const override final</td></tr>
+<tr class="memdesc:a0cc881cb52910f6a1cfea8ab7797abeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Local abc blocks in augmented controller/plant/delay state order.  <br /></td></tr>
+<tr class="separator:a0cc881cb52910f6a1cfea8ab7797abeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa28509df241d103b4d60eeef2e4dca19" id="r_aa28509df241d103b4d60eeef2e4dca19"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa28509df241d103b4d60eeef2e4dca19">setParameters</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> lf, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> cf, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> rf, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> rc, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> omegaN, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> kpPLL, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> kiPLL, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> omegaCutoff, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> pRef, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> qRef, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> kpPowerCtrl, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> kiPowerCtrl, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> kpCurrCtrl, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> kiCurrCtrl)</td></tr>
 <tr class="memdesc:aa28509df241d103b4d60eeef2e4dca19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the filter, PLL, power controller and current controller.  <br /></td></tr>
 <tr class="separator:aa28509df241d103b4d60eeef2e4dca19"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -174,13 +180,40 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5156ac7ddd3edce03915e56c459e17e5" id="r_a5156ac7ddd3edce03915e56c459e17e5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5156ac7ddd3edce03915e56c459e17e5">getEquivalentConductance</a> () const</td></tr>
 <tr class="memdesc:a5156ac7ddd3edce03915e56c459e17e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constant <a class="el" href="namespace_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n.html">SSN</a> Norton conductance G = mW.  <br /></td></tr>
 <tr class="separator:a5156ac7ddd3edce03915e56c459e17e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html">CPS::EMT::Ph3::TwoTerminalVTypeSSNComp</a></td></tr>
-<tr class="memitem:a1f42526729492ec0a627fdc42e432f06 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp" id="r_a1f42526729492ec0a627fdc42e432f06"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html#a1f42526729492ec0a627fdc42e432f06">mnaCompApplySystemMatrixStamp</a> (<a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;systemMatrix) override final</td></tr>
-<tr class="separator:a1f42526729492ec0a627fdc42e432f06 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa238cec24357a9f4daf7ed723461b910 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp" id="r_aa238cec24357a9f4daf7ed723461b910"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html#aa238cec24357a9f4daf7ed723461b910">mnaCompApplyRightSideVectorStamp</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;rightVector) override final</td></tr>
-<tr class="separator:aa238cec24357a9f4daf7ed723461b910 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a650c560385cf42a2c38ff3cbd711715b inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp" id="r_a650c560385cf42a2c38ff3cbd711715b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html#a650c560385cf42a2c38ff3cbd711715b">mnaCompUpdateVoltage</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;leftVector) override final</td></tr>
-<tr class="separator:a650c560385cf42a2c38ff3cbd711715b inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_split_s_s_n_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_split_s_s_n_comp')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_split_s_s_n_comp.html">CPS::EMT::Ph3::TwoTerminalVTypeSplitSSNComp</a></td></tr>
+<tr class="memitem:ad0e375ed8b1990a3695fc06076ff84d7 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_split_s_s_n_comp" id="r_ad0e375ed8b1990a3695fc06076ff84d7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_split_s_s_n_comp.html#ad0e375ed8b1990a3695fc06076ff84d7">mnaCompApplySystemMatrixStamp</a> (<a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;systemMatrix) override final</td></tr>
+<tr class="separator:ad0e375ed8b1990a3695fc06076ff84d7 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae37f8f2aa2b42297a67e1eb87dbc472a inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_split_s_s_n_comp" id="r_ae37f8f2aa2b42297a67e1eb87dbc472a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_split_s_s_n_comp.html#ae37f8f2aa2b42297a67e1eb87dbc472a">mnaCompApplyRightSideVectorStamp</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;rightVector) override final</td></tr>
+<tr class="separator:ae37f8f2aa2b42297a67e1eb87dbc472a inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed50a8e174d55d21ad85d6c78d228a95 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_split_s_s_n_comp" id="r_aed50a8e174d55d21ad85d6c78d228a95"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_split_s_s_n_comp.html#aed50a8e174d55d21ad85d6c78d228a95">mnaCompUpdateVoltage</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;leftVector) override final</td></tr>
+<tr class="separator:aed50a8e174d55d21ad85d6c78d228a95 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html">CPS::EMT::VTypeSplitSSNComp</a></td></tr>
+<tr class="memitem:a64dc51fca1c3e0a14447dc7e4dc7e89e inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_a64dc51fca1c3e0a14447dc7e4dc7e89e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a64dc51fca1c3e0a14447dc7e4dc7e89e">getSplitStateCount</a> () const</td></tr>
+<tr class="memdesc:a64dc51fca1c3e0a14447dc7e4dc7e89e inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of states in the augmented controller/plant/delay model.  <br /></td></tr>
+<tr class="separator:a64dc51fca1c3e0a14447dc7e4dc7e89e inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa3d043ec0cab92a6c95b5e7c4a27b70 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_aaa3d043ec0cab92a6c95b5e7c4a27b70"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#aaa3d043ec0cab92a6c95b5e7c4a27b70">getSplitDiscreteA</a> () const</td></tr>
+<tr class="memdesc:aaa3d043ec0cab92a6c95b5e7c4a27b70 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Augmented local transition matrix for the completed simulation step.  <br /></td></tr>
+<tr class="separator:aaa3d043ec0cab92a6c95b5e7c4a27b70 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a501419250ed8f5a84d5f379eca0c3020 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_a501419250ed8f5a84d5f379eca0c3020"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a501419250ed8f5a84d5f379eca0c3020">getSplitDiscreteB</a> () const</td></tr>
+<tr class="memdesc:a501419250ed8f5a84d5f379eca0c3020 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Augmented local input matrix for the terminal-voltage input.  <br /></td></tr>
+<tr class="separator:a501419250ed8f5a84d5f379eca0c3020 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62e2336cf41af28a75f10b37f2f94d48 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_a62e2336cf41af28a75f10b37f2f94d48"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a62e2336cf41af28a75f10b37f2f94d48">getSplitHistoryC</a> () const</td></tr>
+<tr class="memdesc:a62e2336cf41af28a75f10b37f2f94d48 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map from augmented states to the Norton history current.  <br /></td></tr>
+<tr class="separator:a62e2336cf41af28a75f10b37f2f94d48 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf9376415437beb8e2009b7d24e2d57c inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_adf9376415437beb8e2009b7d24e2d57c"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#adf9376415437beb8e2009b7d24e2d57c">getControllerDiscreteA</a> () const</td></tr>
+<tr class="separator:adf9376415437beb8e2009b7d24e2d57c inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a44b9cf3b31b7336c8b590d9fc9adee inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_a0a44b9cf3b31b7336c8b590d9fc9adee"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a0a44b9cf3b31b7336c8b590d9fc9adee">getControllerDiscreteB</a> () const</td></tr>
+<tr class="separator:a0a44b9cf3b31b7336c8b590d9fc9adee inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff46f7ecca90c360a7850835b97d5d89 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_aff46f7ecca90c360a7850835b97d5d89"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#aff46f7ecca90c360a7850835b97d5d89">getControllerDiscreteBUsed</a> () const</td></tr>
+<tr class="separator:aff46f7ecca90c360a7850835b97d5d89 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5dbbff33069caca8b5fd5abcfb788b61 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_a5dbbff33069caca8b5fd5abcfb788b61"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a5dbbff33069caca8b5fd5abcfb788b61">getDiscreteControllerOutputB</a> () const</td></tr>
+<tr class="separator:a5dbbff33069caca8b5fd5abcfb788b61 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6c99a1a6eb2be678ef0b935f20de41a inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_af6c99a1a6eb2be678ef0b935f20de41a"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#af6c99a1a6eb2be678ef0b935f20de41a">requiresStateSpaceMatrixUpdate</a> () const</td></tr>
+<tr class="memdesc:af6c99a1a6eb2be678ef0b935f20de41a inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the local matrices exposed for extraction change at each step.  <br /></td></tr>
+<tr class="separator:af6c99a1a6eb2be678ef0b935f20de41a inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43c9fb59f359fafd3f03ff0057c95c47 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_a43c9fb59f359fafd3f03ff0057c95c47"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#aab0bf0401a097ee2b253a9a6fc328101">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a43c9fb59f359fafd3f03ff0057c95c47">getSplitStateAttribute</a> () const</td></tr>
+<tr class="memdesc:a43c9fb59f359fafd3f03ff0057c95c47 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">State attribute updated by the component post-step task.  <br /></td></tr>
+<tr class="separator:a43c9fb59f359fafd3f03ff0057c95c47 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html">CPS::EMT::VTypeSSNComp</a></td></tr>
 <tr class="memitem:a6caea111f850de191efe8fb837bbbde4 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp" id="r_a6caea111f850de191efe8fb837bbbde4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html#a6caea111f850de191efe8fb837bbbde4">initializeFromNodesAndTerminals</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> frequency) override</td></tr>
 <tr class="memdesc:a6caea111f850de191efe8fb837bbbde4 inherit pub_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes Component variables according to power flow data stored in Nodes.  <br /></td></tr>
@@ -500,11 +533,24 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:ad143c517fdb9d0deca573f15169e97e8 inherit pub_attribs_class_c_p_s_1_1_identified_object" id="r_ad143c517fdb9d0deca573f15169e97e8"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &gt;<a class="el" href="class_c_p_s_1_1_identified_object.html#a45edcbbe8a23ba53d17473f08d7adf95">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_identified_object.html#ad143c517fdb9d0deca573f15169e97e8">mUID</a></td></tr>
 <tr class="memdesc:ad143c517fdb9d0deca573f15169e97e8 inherit pub_attribs_class_c_p_s_1_1_identified_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unique identifier.  <br /></td></tr>
 <tr class="separator:ad143c517fdb9d0deca573f15169e97e8 inherit pub_attribs_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pro_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html">CPS::EMT::Ph3::TwoTerminalVTypeSSNComp</a></td></tr>
-<tr class="memitem:a9021c38720407a105858076df12e5df5 inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp" id="r_a9021c38720407a105858076df12e5df5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html#a9021c38720407a105858076df12e5df5">TwoTerminalVTypeSSNComp</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel=Logger::Level::off)</td></tr>
-<tr class="separator:a9021c38720407a105858076df12e5df5 inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae910e99c9704bcd15e8233d9f1a76c3e inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp" id="r_ae910e99c9704bcd15e8233d9f1a76c3e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html#ae910e99c9704bcd15e8233d9f1a76c3e">buildInitialInputFromNodes</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> frequency) override final</td></tr>
-<tr class="separator:ae910e99c9704bcd15e8233d9f1a76c3e inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_split_s_s_n_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_split_s_s_n_comp')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_split_s_s_n_comp.html">CPS::EMT::Ph3::TwoTerminalVTypeSplitSSNComp</a></td></tr>
+<tr class="memitem:a93aa2ebc4206c17a0c94c8059b522664 inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_split_s_s_n_comp" id="r_a93aa2ebc4206c17a0c94c8059b522664"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_split_s_s_n_comp.html#a93aa2ebc4206c17a0c94c8059b522664">TwoTerminalVTypeSplitSSNComp</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> controllerStateSize, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> controllerInputSize, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> controllerOutputSize, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel=Logger::Level::off)</td></tr>
+<tr class="separator:a93aa2ebc4206c17a0c94c8059b522664 inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e8ce226d12a6b61c4cd7bd6d5899d66 inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_split_s_s_n_comp" id="r_a2e8ce226d12a6b61c4cd7bd6d5899d66"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_split_s_s_n_comp.html#a2e8ce226d12a6b61c4cd7bd6d5899d66">buildInitialInputFromNodes</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> frequency) override final</td></tr>
+<tr class="separator:a2e8ce226d12a6b61c4cd7bd6d5899d66 inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html">CPS::EMT::VTypeSplitSSNComp</a></td></tr>
+<tr class="memitem:a7742f381e76869f4abf4f8ba81dbe43f inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_a7742f381e76869f4abf4f8ba81dbe43f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a7742f381e76869f4abf4f8ba81dbe43f">VTypeSplitSSNComp</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> inputSize, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> outputSize, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> controllerStateSize, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> controllerInputSize, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> controllerOutputSize, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel=Logger::Level::off)</td></tr>
+<tr class="separator:a7742f381e76869f4abf4f8ba81dbe43f inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae26a12bd645b07466becc95535b81a10 inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_ae26a12bd645b07466becc95535b81a10"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#ae26a12bd645b07466becc95535b81a10">setSplitParameters</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;plantA, const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;plantB, const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;plantC, const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;plantD, const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;controllerOutputB, const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;measurementState, const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;measurementTerminal)</td></tr>
+<tr class="separator:ae26a12bd645b07466becc95535b81a10 inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20f448e02f5066719d1dd24fec3f589b inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_a20f448e02f5066719d1dd24fec3f589b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a20f448e02f5066719d1dd24fec3f589b">buildControllerMeasurement</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;plantState, const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;terminalVoltage) const</td></tr>
+<tr class="separator:a20f448e02f5066719d1dd24fec3f589b inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc4ed49811d491745c2e492060190708 inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_adc4ed49811d491745c2e492060190708"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#adc4ed49811d491745c2e492060190708">calculateHistoryVector</a> () const override final</td></tr>
+<tr class="separator:adc4ed49811d491745c2e492060190708 inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae78ad04b1284c0c75b149c23bfae713f inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_ae78ad04b1284c0c75b149c23bfae713f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#ae78ad04b1284c0c75b149c23bfae713f">updateState</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;uOld, const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;uNew) override final</td></tr>
+<tr class="separator:ae78ad04b1284c0c75b149c23bfae713f inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7325b108b36d38c1ed250af016472fc6 inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_a7325b108b36d38c1ed250af016472fc6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a7325b108b36d38c1ed250af016472fc6">recomputeDiscreteModel</a> () override final</td></tr>
+<tr class="separator:a7325b108b36d38c1ed250af016472fc6 inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html">CPS::EMT::VTypeSSNComp</a></td></tr>
 <tr class="memitem:a3302fb62bea571ffbefca7d1d81fbb8e inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp" id="r_a3302fb62bea571ffbefca7d1d81fbb8e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html#a3302fb62bea571ffbefca7d1d81fbb8e">VTypeSSNComp</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> inputSize, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> outputSize, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel=Logger::Level::off)</td></tr>
 <tr class="separator:a3302fb62bea571ffbefca7d1d81fbb8e inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -522,6 +568,37 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:a9724afa03c40d7f38b47990a81aa1805 inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp" id="r_a9724afa03c40d7f38b47990a81aa1805"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a9724afa03c40d7f38b47990a81aa1805">updateStateSpaceModel</a> ()</td></tr>
 <tr class="memdesc:a9724afa03c40d7f38b47990a81aa1805 inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hook for variable/time-varying SSN components.  <br /></td></tr>
 <tr class="separator:a9724afa03c40d7f38b47990a81aa1805 inherit pro_methods_class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html">CPS::EMT::VTypeSplitSSNComp</a></td></tr>
+<tr class="memitem:a53aa8f78b3eb1c2a2dadec1d32438deb inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_a53aa8f78b3eb1c2a2dadec1d32438deb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a53aa8f78b3eb1c2a2dadec1d32438deb">mBControllerOutput</a></td></tr>
+<tr class="separator:a53aa8f78b3eb1c2a2dadec1d32438deb inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1e3c4c022ce1297b136ef09842b7f8c inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_af1e3c4c022ce1297b136ef09842b7f8c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#af1e3c4c022ce1297b136ef09842b7f8c">mdBControllerOutput</a></td></tr>
+<tr class="separator:af1e3c4c022ce1297b136ef09842b7f8c inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5426a8be7138706e4c1fd030c029763d inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_a5426a8be7138706e4c1fd030c029763d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a5426a8be7138706e4c1fd030c029763d">mControllerState</a></td></tr>
+<tr class="separator:a5426a8be7138706e4c1fd030c029763d inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3058855367f8fafa3daf08956e9287db inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_a3058855367f8fafa3daf08956e9287db"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a3058855367f8fafa3daf08956e9287db">mControllerMeasurementOld</a></td></tr>
+<tr class="separator:a3058855367f8fafa3daf08956e9287db inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4dc19d76f0ecf6db533d02ac450aa62a inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_a4dc19d76f0ecf6db533d02ac450aa62a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a4dc19d76f0ecf6db533d02ac450aa62a">mControllerA</a></td></tr>
+<tr class="separator:a4dc19d76f0ecf6db533d02ac450aa62a inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4bd1f72ef294d9a1fd260a4987aa5b8 inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_ae4bd1f72ef294d9a1fd260a4987aa5b8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#ae4bd1f72ef294d9a1fd260a4987aa5b8">mControllerB</a></td></tr>
+<tr class="separator:ae4bd1f72ef294d9a1fd260a4987aa5b8 inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07dc6b3e4f3ab91410da330116b6a5d9 inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_a07dc6b3e4f3ab91410da330116b6a5d9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a07dc6b3e4f3ab91410da330116b6a5d9">mControllerC</a></td></tr>
+<tr class="separator:a07dc6b3e4f3ab91410da330116b6a5d9 inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cb7412e37206e70d5c74b2e9386d80a inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_a0cb7412e37206e70d5c74b2e9386d80a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a0cb7412e37206e70d5c74b2e9386d80a">mControllerD</a></td></tr>
+<tr class="separator:a0cb7412e37206e70d5c74b2e9386d80a inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a511f7bc3b9debeef7ec4e767c3f31fde inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_a511f7bc3b9debeef7ec4e767c3f31fde"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a511f7bc3b9debeef7ec4e767c3f31fde">mControllerE</a></td></tr>
+<tr class="separator:a511f7bc3b9debeef7ec4e767c3f31fde inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66c70aa0600caa9dc6be6fbac3058a19 inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_a66c70aa0600caa9dc6be6fbac3058a19"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a66c70aa0600caa9dc6be6fbac3058a19">mControllerF</a></td></tr>
+<tr class="separator:a66c70aa0600caa9dc6be6fbac3058a19 inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5299ba4523226857af12acca6707edd inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_ac5299ba4523226857af12acca6707edd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#ac5299ba4523226857af12acca6707edd">mControllerAd</a></td></tr>
+<tr class="separator:ac5299ba4523226857af12acca6707edd inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a235ffe7aed113d78cb5964f59e34a901 inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_a235ffe7aed113d78cb5964f59e34a901"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a235ffe7aed113d78cb5964f59e34a901">mControllerBd</a></td></tr>
+<tr class="separator:a235ffe7aed113d78cb5964f59e34a901 inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf34fbacb137ac8609ac0775733be472 inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_acf34fbacb137ac8609ac0775733be472"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#acf34fbacb137ac8609ac0775733be472">mControllerEd</a></td></tr>
+<tr class="separator:acf34fbacb137ac8609ac0775733be472 inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9869f6b983ca16c69b7c55a5c0553060 inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_a9869f6b983ca16c69b7c55a5c0553060"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a9869f6b983ca16c69b7c55a5c0553060">mControllerOutput</a></td></tr>
+<tr class="separator:a9869f6b983ca16c69b7c55a5c0553060 inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e60a7a8cdfbcec3190a5c366e5b6355 inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" id="r_a2e60a7a8cdfbcec3190a5c366e5b6355"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a2e60a7a8cdfbcec3190a5c366e5b6355">mDelayedControllerOutput</a></td></tr>
+<tr class="separator:a2e60a7a8cdfbcec3190a5c366e5b6355 inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html">CPS::EMT::SSNComp</a></td></tr>
 <tr class="memitem:a72dc8c3cbad8b613c12fd5d44f6e17f7 inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp" id="r_a72dc8c3cbad8b613c12fd5d44f6e17f7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a72dc8c3cbad8b613c12fd5d44f6e17f7">mTimeStep</a></td></tr>
 <tr class="separator:a72dc8c3cbad8b613c12fd5d44f6e17f7 inherit pro_attribs_class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -660,7 +737,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8h_source.html#l00208">208</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8h_source.html">EMT_Ph3_SSN_GFL_Split.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8h_source.html#l00152">152</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8h_source.html">EMT_Ph3_SSN_GFL_Split.h</a>.</p>
 
 </div>
 </div>
@@ -680,7 +757,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00785">785</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00711">711</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
 
 </div>
 </div>
@@ -699,7 +776,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00787">787</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00713">713</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
 
 </div>
 </div>
@@ -718,7 +795,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00789">789</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00715">715</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
 
 </div>
 </div>
@@ -737,7 +814,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00791">791</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00717">717</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
 
 </div>
 </div>
@@ -756,7 +833,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00793">793</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00719">719</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
 
 </div>
 </div>
@@ -775,7 +852,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00795">795</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00721">721</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
 
 </div>
 </div>
@@ -794,7 +871,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00744">744</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00669">669</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
 
 </div>
 </div>
@@ -813,7 +890,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00777">777</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00703">703</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
 
 </div>
 </div>
@@ -832,7 +909,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00781">781</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00707">707</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
 
 </div>
 </div>
@@ -853,7 +930,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Constant <a class="el" href="namespace_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n.html">SSN</a> Norton conductance G = mW. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00818">818</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00744">744</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
 
 </div>
 </div>
@@ -872,7 +949,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00773">773</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00699">699</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
 
 </div>
 </div>
@@ -891,7 +968,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00769">769</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00695">695</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
 
 </div>
 </div>
@@ -922,7 +999,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#abb142067488f8644db36725e9aed3e6f">CPS::EMT::SSNComp</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00065">65</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00052">52</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
 
 </div>
 </div>
@@ -954,7 +1031,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#a2bad652e725bb37fbc6472f333da9aa6">CPS::EMT::SSNComp</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00059">59</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00046">46</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
 
 </div>
 </div>
@@ -973,7 +1050,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00797">797</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00723">723</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
 
 </div>
 </div>
@@ -992,7 +1069,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00799">799</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00725">725</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
 
 </div>
 </div>
@@ -1011,7 +1088,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00808">808</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00734">734</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
 
 </div>
 </div>
@@ -1030,7 +1107,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00810">810</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00736">736</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
 
 </div>
 </div>
@@ -1049,7 +1126,69 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00748">748</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00673">673</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a0cc881cb52910f6a1cfea8ab7797abeb" name="a0cc881cb52910f6a1cfea8ab7797abeb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0cc881cb52910f6a1cfea8ab7797abeb">&#9670;&#160;</a></span>getSplitLocalAbcStateBlocks()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; <a class="el" href="struct_c_p_s_1_1_e_m_t_1_1_s_s_n_comp_1_1_local_abc_state_block.html">EMT::SSNComp::LocalAbcStateBlock</a> &gt; EMT::Ph3::SSN_GFL_Split::getSplitLocalAbcStateBlocks </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel final">final</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Local abc blocks in augmented controller/plant/delay state order. </p>
+
+<p>Implements <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#ad4a5282c7d0b19579c35a594ca40c345">CPS::EMT::VTypeSplitSSNComp</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00070">70</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a68da91f5463f07f78b92f914894100c4" name="a68da91f5463f07f78b92f914894100c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a68da91f5463f07f78b92f914894100c4">&#9670;&#160;</a></span>getSplitLocalStateNames()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> &gt; EMT::Ph3::SSN_GFL_Split::getSplitLocalStateNames </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel final">final</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Local names in augmented controller/plant/delay state order. </p>
+
+<p>Implements <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a94b03facbd56bb310cdb6fd2b38d420b">CPS::EMT::VTypeSplitSSNComp</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00061">61</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
 
 </div>
 </div>
@@ -1070,7 +1209,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Combined state in the same logical order as the former monolithic <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_g_f_l.html" title="Grid-following voltage-source inverter with explicit EMT filter.">GFL</a>: 8 controller states followed by 6 electrical states. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00735">735</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00660">660</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
 
 </div>
 </div>
@@ -1089,7 +1228,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00750">750</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00675">675</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
 
 </div>
 </div>
@@ -1120,7 +1259,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a4401f844a3f389e07a37ef1716d84dcd">CPS::SimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00576">576</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00501">501</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
 
 </div>
 </div>
@@ -1206,7 +1345,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Configure the filter, PLL, power controller and current controller. </p>
 <p>The signature intentionally matches <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_l.html" title="Three-phase grid-following inverter represented by a locally linearized affine state-space model.">SSN_GFL</a> / the former <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html">AvVoltSourceInverterStateSpace</a> model. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00074">74</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html#l00087">87</a> of file <a class="el" href="_e_m_t___ph3___s_s_n___g_f_l___split_8cpp_source.html">EMT_Ph3_SSN_GFL_Split.cpp</a>.</p>
 
 </div>
 </div>

@@ -21,6 +21,8 @@ var class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_l___split =
     [ "getNetworkC", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_l___split.html#af2e1c0606339040551d9ed35eff01ac5", null ],
     [ "getNetworkD", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_l___split.html#a7a0bed58c9f72313e497fc588a37b6bd", null ],
     [ "getNetworkState", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_l___split.html#a6f068b1f2770f9ea63303116549e419f", null ],
+    [ "getSplitLocalAbcStateBlocks", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_l___split.html#a0cc881cb52910f6a1cfea8ab7797abeb", null ],
+    [ "getSplitLocalStateNames", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_l___split.html#a68da91f5463f07f78b92f914894100c4", null ],
     [ "getState", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_l___split.html#a18eb45931314b86a277e69d2cf04b59a", null ],
     [ "getStateDerivative", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_l___split.html#ad4ca386d2a2c10af2236ab7fc959ce86", null ],
     [ "initializeFromNodesAndTerminals", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_l___split.html#a1c083c98ca17119780d87f017141f46d", null ],

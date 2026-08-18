@@ -120,9 +120,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a62351e94364d2808cecf4eab7f4cf2c3" id="r_a62351e94364d2808cecf4eab7f4cf2c3"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a62351e94364d2808cecf4eab7f4cf2c3">getStateCount</a> () const =0</td></tr>
 <tr class="memdesc:a62351e94364d2808cecf4eab7f4cf2c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of local extraction states contributed by this component.  <br /></td></tr>
 <tr class="separator:a62351e94364d2808cecf4eab7f4cf2c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a344ac3a6fdacbdf041fda92835cf49c3" id="r_a344ac3a6fdacbdf041fda92835cf49c3"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a344ac3a6fdacbdf041fda92835cf49c3">isVariable</a> () const</td></tr>
-<tr class="memdesc:a344ac3a6fdacbdf041fda92835cf49c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the local matrices may change during simulation.  <br /></td></tr>
-<tr class="separator:a344ac3a6fdacbdf041fda92835cf49c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ff6bec9b4501414af65d0d659f41a24" id="r_a9ff6bec9b4501414af65d0d659f41a24"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9ff6bec9b4501414af65d0d659f41a24">contributesToUpdatedMatrices</a> () const</td></tr>
+<tr class="memdesc:a9ff6bec9b4501414af65d0d659f41a24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether this contributor belongs to the updated matrix group.  <br /></td></tr>
+<tr class="separator:a9ff6bec9b4501414af65d0d659f41a24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3aa0c067ac69114446b2dccc7d63183f" id="r_a3aa0c067ac69114446b2dccc7d63183f"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3aa0c067ac69114446b2dccc7d63183f">requiresUpdate</a> () const</td></tr>
+<tr class="memdesc:a3aa0c067ac69114446b2dccc7d63183f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether this contributor requests its matrices to be refreshed.  <br /></td></tr>
+<tr class="separator:a3aa0c067ac69114446b2dccc7d63183f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a8d335dda8d1e654979b8f73eb310c3" id="r_a7a8d335dda8d1e654979b8f73eb310c3"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">CPS::AttributeBase::List</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7a8d335dda8d1e654979b8f73eb310c3">getAttributeDependencies</a> () const</td></tr>
+<tr class="memdesc:a7a8d335dda8d1e654979b8f73eb310c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attributes that must be up to date before this contribution is stamped.  <br /></td></tr>
+<tr class="separator:a7a8d335dda8d1e654979b8f73eb310c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b8a1b895d35affdc1559fcbdc870c6a" id="r_a7b8a1b895d35affdc1559fcbdc870c6a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7b8a1b895d35affdc1559fcbdc870c6a">stamp</a> (<a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;AdLocal, <a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;BdMna, <a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;CdMna, <a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> stateOffset, <a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> mnaVectorSize) const =0</td></tr>
 <tr class="memdesc:a7b8a1b895d35affdc1559fcbdc870c6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamp this component's current local state-space contribution.  <br /></td></tr>
 <tr class="separator:a7b8a1b895d35affdc1559fcbdc870c6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -225,7 +231,65 @@ Public Member Functions</h2></td></tr>
 <p>Contribute metadata for this component's extracted states.</p>
 <p>stateOffset is the first global extracted-state index of this contributor. The default implementation contributes no metadata. </p>
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_contributor_8h_source.html#l00067">67</a> of file <a class="el" href="_m_n_a_state_space_contributor_8h_source.html">MNAStateSpaceContributor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_contributor_8h_source.html#l00075">75</a> of file <a class="el" href="_m_n_a_state_space_contributor_8h_source.html">MNAStateSpaceContributor.h</a>.</p>
+
+</div>
+</div>
+<a id="a9ff6bec9b4501414af65d0d659f41a24" name="a9ff6bec9b4501414af65d0d659f41a24"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ff6bec9b4501414af65d0d659f41a24">&#9670;&#160;</a></span>contributesToUpdatedMatrices()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> DPsim::MNAStateSpaceContributor::contributesToUpdatedMatrices </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Whether this contributor belongs to the updated matrix group. </p>
+
+<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_contributor_8h_source.html#l00057">57</a> of file <a class="el" href="_m_n_a_state_space_contributor_8h_source.html">MNAStateSpaceContributor.h</a>.</p>
+
+</div>
+</div>
+<a id="a7a8d335dda8d1e654979b8f73eb310c3" name="a7a8d335dda8d1e654979b8f73eb310c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a8d335dda8d1e654979b8f73eb310c3">&#9670;&#160;</a></span>getAttributeDependencies()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">CPS::AttributeBase::List</a> DPsim::MNAStateSpaceContributor::getAttributeDependencies </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Attributes that must be up to date before this contribution is stamped. </p>
+
+<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_contributor_8h_source.html#l00063">63</a> of file <a class="el" href="_m_n_a_state_space_contributor_8h_source.html">MNAStateSpaceContributor.h</a>.</p>
 
 </div>
 </div>
@@ -256,8 +320,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a344ac3a6fdacbdf041fda92835cf49c3" name="a344ac3a6fdacbdf041fda92835cf49c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a344ac3a6fdacbdf041fda92835cf49c3">&#9670;&#160;</a></span>isVariable()</h2>
+<a id="a3aa0c067ac69114446b2dccc7d63183f" name="a3aa0c067ac69114446b2dccc7d63183f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3aa0c067ac69114446b2dccc7d63183f">&#9670;&#160;</a></span>requiresUpdate()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -266,7 +330,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> DPsim::MNAStateSpaceContributor::isVariable </td>
+          <td class="memname">virtual <a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> DPsim::MNAStateSpaceContributor::requiresUpdate </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -279,9 +343,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns true if the local matrices may change during simulation. </p>
+<p>Whether this contributor requests its matrices to be refreshed. </p>
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_contributor_8h_source.html#l00057">57</a> of file <a class="el" href="_m_n_a_state_space_contributor_8h_source.html">MNAStateSpaceContributor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_state_space_contributor_8h_source.html#l00060">60</a> of file <a class="el" href="_m_n_a_state_space_contributor_8h_source.html">MNAStateSpaceContributor.h</a>.</p>
 
 </div>
 </div>

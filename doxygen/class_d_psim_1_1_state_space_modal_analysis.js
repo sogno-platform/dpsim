@@ -9,5 +9,6 @@ var class_d_psim_1_1_state_space_modal_analysis =
     [ "getStateNames", "class_d_psim_1_1_state_space_modal_analysis.html#a193bf972b0707dabeeca360d3172f738", null ],
     [ "setAnalysisFrame", "class_d_psim_1_1_state_space_modal_analysis.html#a0b76c281eee46b8cdefbd3a3cf6a0f9c", null ],
     [ "setGlobalDq0Frame", "class_d_psim_1_1_state_space_modal_analysis.html#a66c9dc6b730a09bffd2347ad1f2664e3", null ],
+    [ "setPoleMapping", "class_d_psim_1_1_state_space_modal_analysis.html#a4594cf18f88643213d3d13ad797e43e7", null ],
     [ "update", "class_d_psim_1_1_state_space_modal_analysis.html#a540ac62a141517589f583409afbbf354", null ]
 ];

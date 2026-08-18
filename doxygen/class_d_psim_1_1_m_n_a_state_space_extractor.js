@@ -3,6 +3,7 @@ var class_d_psim_1_1_m_n_a_state_space_extractor =
     [ "Ptr", "class_d_psim_1_1_m_n_a_state_space_extractor.html#a62deee047d569150dba037bcb5fc6f2e", null ],
     [ "MNAStateSpaceExtractor", "class_d_psim_1_1_m_n_a_state_space_extractor.html#a63257dacd76bf8952ad4b9923b4e49e8", null ],
     [ "extract", "class_d_psim_1_1_m_n_a_state_space_extractor.html#a83dba1f2a8468df523b878c05b9ff437", null ],
+    [ "getAttributeDependencies", "class_d_psim_1_1_m_n_a_state_space_extractor.html#a0cc9108631a76f01e62fb10f71d50a7f", null ],
     [ "getDiscreteStateMatrix", "class_d_psim_1_1_m_n_a_state_space_extractor.html#a6668f307d935de225c541be2301bdcf2", null ],
     [ "getLastExtractionTime", "class_d_psim_1_1_m_n_a_state_space_extractor.html#a01e50ec6162fa83b5cbf4f32d51223cd", null ],
     [ "getMetadata", "class_d_psim_1_1_m_n_a_state_space_extractor.html#adcd2db840a547bb380233556fc2c40fe", null ],

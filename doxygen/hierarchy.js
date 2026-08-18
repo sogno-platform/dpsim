@@ -354,8 +354,12 @@ var hierarchy =
                 [ "CPS::EMT::Ph3::TwoTerminalVTypeSSNComp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html", [
                   [ "CPS::EMT::Ph3::GenericTwoTerminalVTypeSSN", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_generic_two_terminal_v_type_s_s_n.html", null ],
                   [ "CPS::EMT::Ph3::SSN::Full_Serial_RLC", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html", null ],
-                  [ "CPS::EMT::Ph3::SSN::Inductor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_inductor.html", null ],
-                  [ "CPS::EMT::Ph3::SSN_GFL_Split", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_l___split.html", null ]
+                  [ "CPS::EMT::Ph3::SSN::Inductor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_inductor.html", null ]
+                ] ],
+                [ "CPS::EMT::VTypeSplitSSNComp", "class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html", [
+                  [ "CPS::EMT::Ph3::TwoTerminalVTypeSplitSSNComp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_split_s_s_n_comp.html", [
+                    [ "CPS::EMT::Ph3::SSN_GFL_Split", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_l___split.html", null ]
+                  ] ]
                 ] ],
                 [ "CPS::EMT::VTypeVariableSSNComp", "class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html", [
                   [ "CPS::EMT::Ph3::TwoTerminalVTypeVariableSSNComp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_variable_s_s_n_comp.html", [

@@ -92,6 +92,7 @@
 <li class="toctree-l3"><a class="reference internal" href="reference/core.html#dpsimpy.SolverBehaviour"><code class="docutils literal notranslate"><span class="pre">SolverBehaviour</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="reference/core.html#dpsimpy.StateSpaceAnalysisFrame"><code class="docutils literal notranslate"><span class="pre">StateSpaceAnalysisFrame</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="reference/core.html#dpsimpy.StateSpaceModalAnalysis"><code class="docutils literal notranslate"><span class="pre">StateSpaceModalAnalysis</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/core.html#dpsimpy.StateSpacePoleMapping"><code class="docutils literal notranslate"><span class="pre">StateSpacePoleMapping</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="reference/core.html#dpsimpy.SystemMatrixRecomputationMode"><code class="docutils literal notranslate"><span class="pre">SystemMatrixRecomputationMode</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="reference/core.html#dpsimpy.SystemTopology"><code class="docutils literal notranslate"><span class="pre">SystemTopology</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="reference/core.html#dpsimpy.TopologicalNode"><code class="docutils literal notranslate"><span class="pre">TopologicalNode</span></code></a></li>
@@ -361,14 +362,16 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/core.html#dpsimpy.PhaseType.B">B (PhaseType attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/signal.html#dpsimpy.signal.ExciterDC1Parameters.Bef">Bef (ExciterDC1Parameters property)</a>
 
       <ul>
         <li><a href="reference/signal.html#dpsimpy.signal.ExciterDC1SimpParameters.Bef">(ExciterDC1SimpParameters property)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/core.html#dpsimpy.StateSpacePoleMapping.Bilinear">Bilinear (StateSpacePoleMapping attribute)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -1197,6 +1200,8 @@
 </li>
       <li><a href="reference/core.html#dpsimpy.Simulation.log_lu_times">log_lu_times() (Simulation method)</a>
 </li>
+      <li><a href="reference/core.html#dpsimpy.StateSpacePoleMapping.Logarithmic">Logarithmic (StateSpacePoleMapping attribute)</a>
+</li>
       <li><a href="reference/core.html#dpsimpy.Logger">Logger (class in dpsimpy)</a>
 </li>
       <li><a href="reference/core.html#dpsimpy.LogLevel">LogLevel (class in dpsimpy)</a>
@@ -1884,6 +1889,8 @@
 </li>
       <li><a href="reference/core.html#dpsimpy.Simulation.set_pf_solver_use_sparse">set_pf_solver_use_sparse() (Simulation method)</a>
 </li>
+      <li><a href="reference/core.html#dpsimpy.StateSpaceModalAnalysis.set_pole_mapping">set_pole_mapping() (StateSpaceModalAnalysis method)</a>
+</li>
       <li><a href="reference/core.html#dpsimpy.TopologicalTerminal.set_power">set_power() (TopologicalTerminal method)</a>
 </li>
       <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM.set_reactive_power_droop">set_reactive_power_droop() (SSN_GFM method)</a>
@@ -2015,6 +2022,8 @@
       <li><a href="reference/core.html#dpsimpy.StateSpaceAnalysisFrame">StateSpaceAnalysisFrame (class in dpsimpy)</a>
 </li>
       <li><a href="reference/core.html#dpsimpy.StateSpaceModalAnalysis">StateSpaceModalAnalysis (class in dpsimpy)</a>
+</li>
+      <li><a href="reference/core.html#dpsimpy.StateSpacePoleMapping">StateSpacePoleMapping (class in dpsimpy)</a>
 </li>
       <li><a href="reference/signal.html#dpsimpy.signal.SteamGovernorParameters">SteamGovernorParameters (class in dpsimpy.signal)</a>
 </li>
@@ -2302,6 +2311,8 @@
         <li><a href="reference/core.html#dpsimpy.SolverBehaviour.value">(SolverBehaviour property)</a>
 </li>
         <li><a href="reference/core.html#dpsimpy.StateSpaceAnalysisFrame.value">(StateSpaceAnalysisFrame property)</a>
+</li>
+        <li><a href="reference/core.html#dpsimpy.StateSpacePoleMapping.value">(StateSpacePoleMapping property)</a>
 </li>
         <li><a href="reference/core.html#dpsimpy.SystemMatrixRecomputationMode.value">(SystemMatrixRecomputationMode property)</a>
 </li>

@@ -194,6 +194,7 @@ var annotated_dup =
           [ "SynchronGeneratorVBR", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r" ],
           [ "Transformer", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer" ],
           [ "TwoTerminalITypeSSNComp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_i_type_s_s_n_comp.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_i_type_s_s_n_comp" ],
+          [ "TwoTerminalVTypeSplitSSNComp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_split_s_s_n_comp.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_split_s_s_n_comp" ],
           [ "TwoTerminalVTypeSSNComp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp" ],
           [ "TwoTerminalVTypeVariableSSNComp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_variable_s_s_n_comp.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_variable_s_s_n_comp" ],
           [ "VoltageSource", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source" ],
@@ -202,6 +203,7 @@ var annotated_dup =
         ] ],
         [ "ITypeSSNComp", "class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html", "class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp" ],
         [ "SSNComp", "class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html", "class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp" ],
+        [ "VTypeSplitSSNComp", "class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html", "class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp" ],
         [ "VTypeSSNComp", "class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp.html", "class_c_p_s_1_1_e_m_t_1_1_v_type_s_s_n_comp" ],
         [ "VTypeVariableSSNComp", "class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html", "class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp" ]
       ] ],
