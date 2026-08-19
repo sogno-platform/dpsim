@@ -32,6 +32,8 @@ public:
         mClosedResistance(attributeList->create<Real>("R_closed")),
         mIsClosed(attributeList->create<Bool>("is_closed")){};
 
+  virtual ~Switch() = default;
+
   ///
   void setParameters(Real openResistance, Real closedResistance,
                      Bool closed = false) {
@@ -40,10 +42,22 @@ public:
     **mIsClosed = closed;
   }
 
+  /// Close command.
+  ///
+  /// Virtual so domain-specific breaker models can distinguish commanded
+  /// state from the physical pole state.
+  virtual void closeSwitch() { **mIsClosed = true; }
+
+  /// Open command.
+  ///
+  /// Virtual so current-zero breakers can remain physically conducting after
+  /// the command until the current reaches zero.
+  virtual void openSwitch() { **mIsClosed = false; }
+
   /// Close switch
-  void close() { **mIsClosed = true; }
+  void close() { closeSwitch(); }
   /// Open switch
-  void open() { **mIsClosed = false; }
+  void open() { openSwitch(); }
   /// Check if switch is closed
   Bool isClosed() { return **mIsClosed; }
 };

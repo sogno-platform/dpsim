@@ -13,6 +13,7 @@
 #include <vector>
 
 #include <DPsim.h>
+#include <dpsim-models/DP/DP_Ph1_Switch.h>
 #include <dpsim-models/DP/DP_Ph3_Switch.h>
 #include <dpsim-models/EMT/EMT_Ph3_Switch.h>
 #include <dpsim-models/Filesystem.h>
@@ -136,7 +137,7 @@ Real commandTime(const Parameters &p, SwitchingDirection direction) {
 }
 
 Int expectedMatrixRecomputations(const Parameters &p, BenchmarkMode mode,
-                                 SwitchingDirection direction) {
+                                 SwitchingDirection direction, Int poleCount) {
   if (mode == BenchmarkMode::Ideal) {
     return 0;
   }
@@ -146,7 +147,8 @@ Int expectedMatrixRecomputations(const Parameters &p, BenchmarkMode mode,
   }
 
   if (mode == BenchmarkMode::CurrentZero) {
-    return 3;
+    // One recomputation per pole, since the poles clear at their own zeros.
+    return poleCount;
   }
 
   return static_cast<Int>(std::ceil(p.exponentialSwitchingTime / p.timeStep)) +
@@ -217,7 +219,7 @@ String makeRunTimestamp() {
 
 String makeResultsDirectory() {
   return "logs/"
-         "EMT_DP_Ph3_Switch_3Mode_Bidirectional_Benchmark_results_" +
+         "EMT_DP_Switch_3Mode_Bidirectional_Benchmark_results_" +
          makeRunTimestamp();
 }
 
@@ -287,7 +289,7 @@ SystemTopology runPowerFlow(const Parameters &p, Bool breakerClosed) {
   const String stateName = breakerClosed ? "Closed" : "Open";
 
   const String simName =
-      "EMT_DP_Ph3_Switch_3Mode_Bidirectional_Benchmark_PF_" + stateName;
+      "EMT_DP_Switch_3Mode_Bidirectional_Benchmark_PF_" + stateName;
 
   auto n1 = SimNode<Complex>::make("n1", PhaseType::Single);
 
@@ -408,9 +410,8 @@ RunResult runEMT(const Parameters &p, const SystemTopology &systemPF,
 
   const Real eventTime = commandTime(p, direction);
 
-  const String simName =
-      "EMT_DP_Ph3_Switch_3Mode_Bidirectional_Benchmark_EMT_" + modeName(mode) +
-      "_" + directionName(direction);
+  const String simName = "EMT_DP_Switch_3Mode_Bidirectional_Benchmark_EMT_" +
+                         modeName(mode) + "_" + directionName(direction);
 
   auto n1 = SimNode<Real>::make("n1", PhaseType::ABC);
 
@@ -622,7 +623,7 @@ RunResult runEMT(const Parameters &p, const SystemTopology &systemPF,
   result.finalPoleC = **breaker->attributeTyped<Bool>("pole_closed_c");
 
   result.expectedMatrixRecomputations =
-      expectedMatrixRecomputations(p, mode, direction);
+      expectedMatrixRecomputations(p, mode, direction, 3);
 
   evaluateRunResult(p, result);
 
@@ -652,7 +653,7 @@ RunResult runDP(const Parameters &p, const SystemTopology &systemPF,
 
   const Real eventTime = commandTime(p, direction);
 
-  const String simName = "EMT_DP_Ph3_Switch_3Mode_Bidirectional_Benchmark_DP_" +
+  const String simName = "EMT_DP_Switch_3Mode_Bidirectional_Benchmark_DP_" +
                          modeName(mode) + "_" + directionName(direction);
 
   auto n1 = DP::SimNode::make("n1", PhaseType::ABC);
@@ -899,7 +900,236 @@ RunResult runDP(const Parameters &p, const SystemTopology &systemPF,
   result.finalPoleC = **breaker->attributeTyped<Bool>("pole_closed_c");
 
   result.expectedMatrixRecomputations =
-      expectedMatrixRecomputations(p, mode, direction);
+      expectedMatrixRecomputations(p, mode, direction, 3);
+
+  evaluateRunResult(p, result);
+
+  return result;
+}
+
+DP::Ph1::Switch::SwitchingMode toDPPh1Mode(BenchmarkMode mode) {
+  switch (mode) {
+  case BenchmarkMode::Ideal:
+    return DP::Ph1::Switch::SwitchingMode::Ideal;
+
+  case BenchmarkMode::CurrentZero:
+    return DP::Ph1::Switch::SwitchingMode::CurrentZero;
+
+  case BenchmarkMode::ExponentialZCSEmulation:
+    return DP::Ph1::Switch::SwitchingMode::ExponentialZCSEmulation;
+  }
+
+  return DP::Ph1::Switch::SwitchingMode::Ideal;
+}
+
+RunResult runDPPh1(const Parameters &p, const SystemTopology &systemPF,
+                   BenchmarkMode mode, SwitchingDirection direction) {
+  const Bool startsClosed = initialClosed(direction);
+
+  const Bool endsClosed = targetClosed(direction);
+
+  const Real eventTime = commandTime(p, direction);
+
+  const String simName = "EMT_DP_Switch_3Mode_Bidirectional_Benchmark_DP1Ph_" +
+                         modeName(mode) + "_" + directionName(direction);
+
+  auto n1 = DP::SimNode::make("n1", PhaseType::Single);
+
+  auto n2 = DP::SimNode::make("n2", PhaseType::Single);
+
+  auto n3 = DP::SimNode::make("n3", PhaseType::Single);
+
+  auto slack = DP::Ph1::NetworkInjection::make("Slack", Logger::Level::info);
+
+  auto pathA = DP::Ph1::PiLine::make("PathA", Logger::Level::info);
+
+  pathA->setParameters(p.pathAResistance, p.pathAInductance, 0.0, 0.0);
+
+  auto pathB = DP::Ph1::PiLine::make("PathB", Logger::Level::info);
+
+  pathB->setParameters(p.pathBResistance, p.pathBInductance, 0.0, 0.0);
+
+  auto breaker = DP::Ph1::Switch::make("Breaker", Logger::Level::info);
+
+  breaker->setParameters(p.switchOpenResistance, p.switchClosedResistance,
+                         startsClosed);
+
+  breaker->setSwitchingMode(toDPPh1Mode(mode));
+
+  breaker->setZeroCrossingTolerance(p.zeroCrossingTolerance);
+
+  breaker->setExponentialSwitchingTime(p.exponentialSwitchingTime);
+
+  const Real denominator = p.loadP * p.loadP + p.loadQ * p.loadQ;
+
+  const Real loadResistance =
+      p.nominalVoltage * p.nominalVoltage * p.loadP / denominator;
+
+  const Real loadReactance =
+      p.nominalVoltage * p.nominalVoltage * p.loadQ / denominator;
+
+  const Real loadInductance = loadReactance / (2.0 * PI * p.frequency);
+
+  auto load = DP::Ph1::PiLine::make("Load", Logger::Level::info);
+
+  load->setParameters(loadResistance, loadInductance, 0.0, 0.0);
+
+  slack->connect({n1});
+  pathA->connect({n1, n2});
+  breaker->connect({n2, n3});
+  pathB->connect({n1, n3});
+
+  load->connect({
+      DP::SimNode::GND,
+      n3,
+  });
+
+  auto system = SystemTopology(p.frequency,
+                               SystemNodeList{
+                                   n1,
+                                   n2,
+                                   n3,
+                               },
+                               SystemComponentList{
+                                   slack,
+                                   pathA,
+                                   breaker,
+                                   pathB,
+                                   load,
+                               });
+
+  system.initWithPowerflow(systemPF, Domain::DP);
+
+  // DP::Ph1 envelopes keep the power-flow amplitude scaling, so unlike the
+  // DP::Ph3 runner no RMS3PH_TO_PEAK1PH conversion is applied here.
+  slack->setParameters(n1->initialSingleVoltage(), 0.0);
+
+  auto logger = DataLogger::make(simName);
+
+  const auto breakerCurrent = breaker->attributeTyped<MatrixComp>("i_intf");
+
+  logger->logAttribute("i_breaker_env",
+                       breakerCurrent->deriveCoeff<Complex>(0, 0));
+
+  logger->logAttribute("i_instantaneous",
+                       breaker->attribute("i_instantaneous"));
+
+  const auto breakerVoltage = breaker->attributeTyped<MatrixComp>("v_intf");
+
+  logger->logAttribute("v_breaker_env",
+                       breakerVoltage->deriveCoeff<Complex>(0, 0));
+
+  logger->logAttribute("v_n3_env", n3->attribute("v"));
+
+  logger->logAttribute("commanded_closed", breaker->attribute("is_closed"));
+
+  logger->logAttribute("opening_requested",
+                       breaker->attribute("opening_requested"));
+
+  logger->logAttribute("pole_closed", breaker->attribute("pole_closed"));
+
+  logger->logAttribute("zero_crossing_time",
+                       breaker->attribute("zero_crossing_time"));
+
+  logger->logAttribute("exponential_transition_active",
+                       breaker->attribute("exponential_transition_active"));
+
+  logger->logAttribute("exponential_progress",
+                       breaker->attribute("exponential_progress"));
+
+  logger->logAttribute("exponential_transition_start_time",
+                       breaker->attribute("exponential_transition_start_time"));
+
+  logger->logAttribute("exponential_transition_end_time",
+                       breaker->attribute("exponential_transition_end_time"));
+
+  logger->logAttribute("effective_resistance",
+                       breaker->attribute("effective_resistance"));
+
+  Simulation sim(simName, Logger::Level::info);
+
+  sim.setSystem(system);
+
+  sim.setTimeStep(p.timeStep);
+
+  sim.setFinalTime(p.finalTime);
+
+  sim.setDomain(Domain::DP);
+
+  sim.setSolverType(Solver::Type::MNA);
+
+  sim.addLogger(logger);
+
+  auto event = SwitchEvent::make(eventTime, breaker, endsClosed);
+
+  sim.addEvent(event);
+
+  const auto wallStart = std::chrono::steady_clock::now();
+
+  sim.run();
+
+  const auto wallEnd = std::chrono::steady_clock::now();
+
+  RunResult result;
+
+  result.domain = "DP1Ph";
+
+  result.mode = modeName(mode);
+
+  result.direction = directionName(direction);
+
+  result.initialClosed = startsClosed;
+
+  result.targetClosed = endsClosed;
+
+  result.commandTime = eventTime;
+
+  result.runtimeSeconds =
+      std::chrono::duration<Real>(wallEnd - wallStart).count();
+
+  // The single-phase breaker has one pole. Its state is replicated across the
+  // three result columns so that the shared evaluation and CSV layout apply.
+  const Real zeroTime = **breaker->attributeTyped<Real>("zero_crossing_time");
+
+  result.zeroA = zeroTime;
+
+  result.zeroB = zeroTime;
+
+  result.zeroC = zeroTime;
+
+  result.exponentialStart =
+      **breaker->attributeTyped<Real>("exponential_transition_start_time");
+
+  result.exponentialEnd =
+      **breaker->attributeTyped<Real>("exponential_transition_end_time");
+
+  result.exponentialProgress =
+      **breaker->attributeTyped<Real>("exponential_progress");
+
+  result.exponentialActiveFinal =
+      **breaker->attributeTyped<Bool>("exponential_transition_active");
+
+  const Real finalResistance =
+      **breaker->attributeTyped<Real>("effective_resistance");
+
+  result.finalResistanceA = finalResistance;
+
+  result.finalResistanceB = finalResistance;
+
+  result.finalResistanceC = finalResistance;
+
+  result.finalCommandedClosed = **breaker->attributeTyped<Bool>("is_closed");
+
+  const Bool finalPole = **breaker->attributeTyped<Bool>("pole_closed");
+
+  result.finalPoleA = finalPole;
+
+  result.finalPoleB = finalPole;
+
+  result.finalPoleC = finalPole;
+
+  result.expectedMatrixRecomputations =
+      expectedMatrixRecomputations(p, mode, direction, 1);
 
   evaluateRunResult(p, result);
 
@@ -931,7 +1161,7 @@ int main() {
   };
 
   std::vector<RunResult> results;
-  results.reserve(12);
+  results.reserve(18);
 
   for (const auto mode : modes) {
     for (const auto direction : directions) {
@@ -950,6 +1180,16 @@ int main() {
           initialClosed(direction) ? systemPFClosed : systemPFOpen;
 
       results.push_back(runDP(p, systemPF, mode, direction));
+    }
+  }
+
+  for (const auto mode : modes) {
+    for (const auto direction : directions) {
+
+      const auto &systemPF =
+          initialClosed(direction) ? systemPFClosed : systemPFOpen;
+
+      results.push_back(runDPPh1(p, systemPF, mode, direction));
     }
   }
 
