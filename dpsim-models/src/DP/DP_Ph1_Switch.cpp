@@ -23,6 +23,8 @@ DP::Ph1::Switch::Switch(String uid, String name, Logger::Level logLevel)
       mZeroCrossingTime(mAttributes->create<Real>("zero_crossing_time")),
       mExponentialTransitionActive(
           mAttributes->create<Bool>("exponential_transition_active")),
+      mExponentialTransitionClosing(
+          mAttributes->create<Bool>("exponential_transition_closing")),
       mExponentialProgress(mAttributes->create<Real>("exponential_progress")),
       mExponentialTransitionStartTime(
           mAttributes->create<Real>("exponential_transition_start_time")),
@@ -41,6 +43,7 @@ DP::Ph1::Switch::Switch(String uid, String name, Logger::Level logLevel)
   resetZeroCrossingTime();
 
   **mExponentialTransitionActive = false;
+  **mExponentialTransitionClosing = false;
   **mExponentialProgress = 0.0;
   **mExponentialTransitionStartTime = -1.0;
   **mExponentialTransitionEndTime = -1.0;
@@ -91,6 +94,20 @@ void DP::Ph1::Switch::setExponentialSwitchingTime(Real switchingTime) {
 void DP::Ph1::Switch::openSwitch() {
   Base::Ph1::Switch::openSwitch();
 
+  // An opening command during a closing ramp abandons that ramp. The pole is
+  // still open at that point, so the switch simply stays open.
+  if (**mExponentialTransitionActive && **mExponentialTransitionClosing) {
+    resetExponentialTransition();
+    **mPoleClosed = false;
+    synchronizeEffectiveResistance(false);
+    **mOpeningRequested = false;
+
+    SPDLOG_LOGGER_INFO(mSLog,
+                       "DP opening command received during an exponential "
+                       "closing transition. Transition abandoned.");
+    return;
+  }
+
   if (mSwitchingMode == SwitchingMode::Ideal) {
     **mOpeningRequested = false;
     **mPoleClosed = false;
@@ -135,14 +152,40 @@ void DP::Ph1::Switch::closeSwitch() {
   Base::Ph1::Switch::closeSwitch();
 
   **mOpeningRequested = false;
-  **mPoleClosed = true;
   resetZeroCrossingTime();
   mResetZeroCrossingHistory = false;
 
-  resetExponentialTransition();
-  synchronizeEffectiveResistance(true);
+  if (mSwitchingMode != SwitchingMode::ExponentialZCSEmulation) {
+    **mPoleClosed = true;
+    resetExponentialTransition();
+    synchronizeEffectiveResistance(true);
 
-  SPDLOG_LOGGER_INFO(mSLog, "DP switch closing command: pole closed.");
+    SPDLOG_LOGGER_INFO(mSLog, "DP switch closing command: pole closed.");
+    return;
+  }
+
+  if (**mPoleClosed && !**mExponentialTransitionActive) {
+    resetExponentialTransition();
+    synchronizeEffectiveResistance(true);
+    return;
+  }
+
+  // Energising a branch is the mirror image of interrupting it: the same
+  // resistance path is traversed from R_open towards R_closed. The DP envelope
+  // cannot represent the voltage step across a capacitance any more than it can
+  // represent an interrupted inductive current, so closing is ramped as well.
+  validateExponentialResistanceParameters();
+  resetExponentialTransition();
+  **mExponentialTransitionActive = true;
+  **mExponentialTransitionClosing = true;
+  **mExponentialProgress = 1.0;
+  synchronizeEffectiveResistance(false);
+  **mPoleClosed = false;
+
+  SPDLOG_LOGGER_INFO(mSLog,
+                     "DP exponential ZCS-emulation closing command received. "
+                     "Switching duration={:.6e}s.",
+                     mExponentialSwitchingTime);
 }
 
 void DP::Ph1::Switch::initializeFromNodesAndTerminals(Real frequency) {
@@ -272,6 +315,7 @@ void DP::Ph1::Switch::mnaCompAddPostStepDependencies(
   modifiedAttributes.push_back(mZeroCrossingTime);
 
   modifiedAttributes.push_back(mExponentialTransitionActive);
+  modifiedAttributes.push_back(mExponentialTransitionClosing);
   modifiedAttributes.push_back(mExponentialProgress);
   modifiedAttributes.push_back(mExponentialTransitionStartTime);
   modifiedAttributes.push_back(mExponentialTransitionEndTime);
@@ -337,6 +381,7 @@ void DP::Ph1::Switch::synchronizeEffectiveResistance(Bool closed) {
 
 void DP::Ph1::Switch::resetExponentialTransition() {
   **mExponentialTransitionActive = false;
+  **mExponentialTransitionClosing = false;
   **mExponentialProgress = 0.0;
   **mExponentialTransitionStartTime = -1.0;
   **mExponentialTransitionEndTime = -1.0;
@@ -375,25 +420,31 @@ void DP::Ph1::Switch::updateExponentialTransition(Real time) {
   }
 
   const Real targetTime = time + mTimeStep;
-  const Real alpha = (targetTime - **mExponentialTransitionStartTime) /
-                     mExponentialSwitchingTime;
-  const Real boundedAlpha = std::max(0.0, std::min(1.0, alpha));
+  const Real elapsed = (targetTime - **mExponentialTransitionStartTime) /
+                       mExponentialSwitchingTime;
+  const Real boundedElapsed = std::max(0.0, std::min(1.0, elapsed));
 
-  **mExponentialProgress = boundedAlpha;
-  **mEffectiveResistance = exponentialResistance(boundedAlpha);
+  const Bool closing = **mExponentialTransitionClosing;
 
-  if (boundedAlpha >= 1.0) {
-    synchronizeEffectiveResistance(false);
-    **mPoleClosed = false;
+  // alpha is the position on the resistance path: 0 at R_closed, 1 at R_open.
+  const Real alpha = closing ? 1.0 - boundedElapsed : boundedElapsed;
+
+  **mExponentialProgress = alpha;
+  **mEffectiveResistance = exponentialResistance(alpha);
+
+  if (boundedElapsed >= 1.0) {
+    synchronizeEffectiveResistance(closing);
+    **mPoleClosed = closing;
     **mOpeningRequested = false;
     **mExponentialTransitionActive = false;
+    **mExponentialTransitionClosing = false;
 
     SPDLOG_LOGGER_INFO(
         mSLog,
-        "DP exponential ZCS-emulation opening completed: start={:.9f}s, "
+        "DP exponential ZCS-emulation {:s} completed: start={:.9f}s, "
         "end={:.9f}s, duration={:.6e}s.",
-        **mExponentialTransitionStartTime, **mExponentialTransitionEndTime,
-        mExponentialSwitchingTime);
+        closing ? "closing" : "opening", **mExponentialTransitionStartTime,
+        **mExponentialTransitionEndTime, mExponentialSwitchingTime);
   }
 }
 

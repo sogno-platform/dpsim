@@ -68,6 +68,10 @@ public:
 
   /// Exponential-transition diagnostics.
   const Attribute<Bool>::Ptr mExponentialTransitionActive;
+  /// True while the active exponential transition is a closing transition.
+  const Attribute<Bool>::Ptr mExponentialTransitionClosing;
+  /// Position on the resistance path, 0 at R_closed and 1 at R_open. Runs
+  /// 0 -> 1 while opening and 1 -> 0 while closing.
   const Attribute<Real>::Ptr mExponentialProgress;
   const Attribute<Real>::Ptr mExponentialTransitionStartTime;
   const Attribute<Real>::Ptr mExponentialTransitionEndTime;
@@ -92,7 +96,7 @@ public:
   void setZeroCrossingTolerance(Real tolerance);
   Real zeroCrossingTolerance() const { return mZeroCrossingTolerance; }
 
-  /// Set total opening transition time for ExponentialZCSEmulation [s].
+  /// Set total transition time for ExponentialZCSEmulation [s].
   void setExponentialSwitchingTime(Real switchingTime);
   Real exponentialSwitchingTime() const { return mExponentialSwitchingTime; }
 
@@ -108,7 +112,14 @@ public:
   ///   arm a simultaneous three-phase exponential resistance increase.
   void openSwitch() override;
 
-  /// Closing is instantaneous for all modes in this implementation.
+  /// Close command.
+  ///
+  /// Ideal and CurrentZero:
+  ///   all poles close immediately. There is no current zero to wait for when
+  ///   energising a branch.
+  ///
+  /// ExponentialZCSEmulation:
+  ///   arm a simultaneous three-phase exponential resistance decrease.
   void closeSwitch() override;
 
   // #### General ####

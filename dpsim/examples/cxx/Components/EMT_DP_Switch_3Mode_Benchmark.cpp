@@ -1,6 +1,13 @@
 // SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
 // SPDX-License-Identifier: MPL-2.0
 
+// Runs every switching mode in both directions across EMT::Ph3, DP::Ph3 and
+// DP::Ph1 and checks the terminal state of each run.
+//
+// The opening cases interrupt inductive current. The closing cases energise the
+// switched bus, which carries a shunt capacitance: without it
+// there is no closing discontinuity and every mode would look the same.
+
 #include <algorithm>
 #include <chrono>
 #include <cmath>
@@ -38,6 +45,8 @@ struct Parameters {
 
   Real loadP = 1.0e6;
   Real loadQ = 0.3e6;
+
+  Real loadCapacitance = 1.0e-6;
 
   Real pathAResistance = 0.20;
   Real pathAInductance = 1.0e-3;
@@ -142,17 +151,21 @@ Int expectedMatrixRecomputations(const Parameters &p, BenchmarkMode mode,
     return 0;
   }
 
+  const Int exponentialSteps =
+      static_cast<Int>(std::ceil(p.exponentialSwitchingTime / p.timeStep)) + 1;
+
+  if (mode == BenchmarkMode::ExponentialZCSEmulation) {
+    // Both directions traverse the same resistance path step by step.
+    return exponentialSteps;
+  }
+
   if (direction == SwitchingDirection::OpenToClose) {
+    // CurrentZero closes immediately: there is no current zero to wait for.
     return 1;
   }
 
-  if (mode == BenchmarkMode::CurrentZero) {
-    // One recomputation per pole, since the poles clear at their own zeros.
-    return poleCount;
-  }
-
-  return static_cast<Int>(std::ceil(p.exponentialSwitchingTime / p.timeStep)) +
-         1;
+  // One recomputation per pole, since the poles clear at their own zeros.
+  return poleCount;
 }
 
 Bool nearlyEqual(Real a, Real b, Real relTol = 1e-9, Real absTol = 1e-12) {
@@ -180,9 +193,13 @@ void evaluateRunResult(const Parameters &p, RunResult &result) {
 
   if (result.mode == "ExponentialZCSEmulation") {
     if (expectedClosed) {
+      // Closing traverses the same path in the opposite direction, so the
+      // progress ends at 0 (R_closed) and the ramp must have run.
       result.passTransitionState =
           !result.exponentialActiveFinal &&
-          nearlyEqual(result.exponentialProgress, 0.0, 0.0, 1e-12);
+          nearlyEqual(result.exponentialProgress, 0.0, 0.0, 1e-12) &&
+          result.exponentialStart >= 0.0 &&
+          result.exponentialEnd >= result.exponentialStart;
     } else {
       result.passTransitionState =
           !result.exponentialActiveFinal &&
@@ -320,7 +337,8 @@ SystemTopology runPowerFlow(const Parameters &p, Bool breakerClosed) {
   auto load = SP::Ph1::Shunt::make("LoadPF", Logger::Level::info);
 
   load->setParameters(p.loadP / std::pow(p.nominalVoltage, 2),
-                      -p.loadQ / std::pow(p.nominalVoltage, 2));
+                      -p.loadQ / std::pow(p.nominalVoltage, 2) +
+                          2.0 * PI * p.frequency * p.loadCapacitance);
 
   load->setBaseVoltage(p.nominalVoltage);
 
@@ -457,11 +475,17 @@ RunResult runEMT(const Parameters &p, const SystemTopology &systemPF,
                       Math::singlePhasePowerToThreePhase(p.loadQ),
                       p.nominalVoltage);
 
+  auto loadCap = EMT::Ph3::Capacitor::make("LoadCap", Logger::Level::info);
+
+  loadCap->setParameters(
+      Math::singlePhaseParameterToThreePhase(p.loadCapacitance));
+
   slack->connect({n1});
   pathA->connect({n1, n2});
   breaker->connect({n2, n3});
   pathB->connect({n1, n3});
   load->connect({n3});
+  loadCap->connect({n3, SimNode<Real>::GND});
 
   auto system = SystemTopology(p.frequency,
                                SystemNodeList{
@@ -475,6 +499,7 @@ RunResult runEMT(const Parameters &p, const SystemTopology &systemPF,
                                    breaker,
                                    pathB,
                                    load,
+                                   loadCap,
                                });
 
   system.initWithPowerflow(systemPF, Domain::EMT);
@@ -527,6 +552,9 @@ RunResult runEMT(const Parameters &p, const SystemTopology &systemPF,
 
   logger->logAttribute("exponential_transition_active",
                        breaker->attribute("exponential_transition_active"));
+
+  logger->logAttribute("exponential_transition_closing",
+                       breaker->attribute("exponential_transition_closing"));
 
   logger->logAttribute("exponential_progress",
                        breaker->attribute("exponential_progress"));
@@ -707,6 +735,11 @@ RunResult runDP(const Parameters &p, const SystemTopology &systemPF,
                       Math::singlePhaseParameterToThreePhase(loadInductance),
                       Matrix::Zero(3, 3), Matrix::Zero(3, 3));
 
+  auto loadCap = DP::Ph3::Capacitor::make("LoadCap", Logger::Level::info);
+
+  loadCap->setParameters(
+      Math::singlePhaseParameterToThreePhase(p.loadCapacitance));
+
   slack->connect({n1});
   pathA->connect({n1, n2});
   breaker->connect({n2, n3});
@@ -715,6 +748,11 @@ RunResult runDP(const Parameters &p, const SystemTopology &systemPF,
   load->connect({
       DP::SimNode::GND,
       n3,
+  });
+
+  loadCap->connect({
+      n3,
+      DP::SimNode::GND,
   });
 
   auto system = SystemTopology(p.frequency,
@@ -729,6 +767,7 @@ RunResult runDP(const Parameters &p, const SystemTopology &systemPF,
                                    breaker,
                                    pathB,
                                    load,
+                                   loadCap,
                                });
 
   system.initWithPowerflow(systemPF, Domain::DP);
@@ -804,6 +843,9 @@ RunResult runDP(const Parameters &p, const SystemTopology &systemPF,
 
   logger->logAttribute("exponential_transition_active",
                        breaker->attribute("exponential_transition_active"));
+
+  logger->logAttribute("exponential_transition_closing",
+                       breaker->attribute("exponential_transition_closing"));
 
   logger->logAttribute("exponential_progress",
                        breaker->attribute("exponential_progress"));
@@ -974,6 +1016,10 @@ RunResult runDPPh1(const Parameters &p, const SystemTopology &systemPF,
 
   load->setParameters(loadResistance, loadInductance, 0.0, 0.0);
 
+  auto loadCap = DP::Ph1::Capacitor::make("LoadCap", Logger::Level::info);
+
+  loadCap->setParameters(p.loadCapacitance);
+
   slack->connect({n1});
   pathA->connect({n1, n2});
   breaker->connect({n2, n3});
@@ -982,6 +1028,11 @@ RunResult runDPPh1(const Parameters &p, const SystemTopology &systemPF,
   load->connect({
       DP::SimNode::GND,
       n3,
+  });
+
+  loadCap->connect({
+      n3,
+      DP::SimNode::GND,
   });
 
   auto system = SystemTopology(p.frequency,
@@ -996,6 +1047,7 @@ RunResult runDPPh1(const Parameters &p, const SystemTopology &systemPF,
                                    breaker,
                                    pathB,
                                    load,
+                                   loadCap,
                                });
 
   system.initWithPowerflow(systemPF, Domain::DP);
@@ -1033,6 +1085,9 @@ RunResult runDPPh1(const Parameters &p, const SystemTopology &systemPF,
 
   logger->logAttribute("exponential_transition_active",
                        breaker->attribute("exponential_transition_active"));
+
+  logger->logAttribute("exponential_transition_closing",
+                       breaker->attribute("exponential_transition_closing"));
 
   logger->logAttribute("exponential_progress",
                        breaker->attribute("exponential_progress"));

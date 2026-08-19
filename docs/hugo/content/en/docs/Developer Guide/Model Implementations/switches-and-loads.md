@@ -14,11 +14,47 @@ code. Availability per domain is in
 
 ## Switches
 
-`Switch` implements `Base::Ph1::Switch` and stamps one admittance chosen by `mIsClosed`, using
-`MNAStampUtils::stampAdmittance` so the grounded-terminal cases are handled centrally.
-`SeriesSwitch` folds a series resistance into the same branch.
+`Switch` implements `Base::Ph1::Switch` (or `Base::Ph3::Switch`) and stamps one admittance chosen by
+`mIsClosed`, using `MNAStampUtils::stampAdmittance` so the grounded-terminal cases are handled
+centrally. `SeriesSwitch` folds a series resistance into the same branch.
 
-`varResSwitch` additionally implements `MNAVariableCompInterface`, which is what allows it to change
+### Switching modes
+
+`EMT::Ph3::Switch`, `DP::Ph3::Switch` and `DP::Ph1::Switch` carry a `SwitchingMode` enum — `Ideal`,
+`CurrentZero`, `ExponentialZCSEmulation` — set through `setSwitchingMode()`, with
+`setZeroCrossingTolerance()` and `setExponentialSwitchingTime()` for the two non-ideal modes. The
+behaviour behind them is derived under [switches]({{< ref "/docs/Concepts/Models/switches.md" >}}).
+
+The distinction that runs through the implementation is **commanded state versus physical state**.
+`mIsClosed` is what the command asked for; `pole_closed_a/b/c` (`pole_closed` in `DP::Ph1`) is what
+the poles are actually doing, and `mnaIsClosed()` reports the commanded state only in `Ideal` mode
+and the pole state otherwise. `Base::Ph{1,3}::Switch::closeSwitch()` / `openSwitch()` are virtual for
+exactly this reason: the override records the command and lets the post-step decide when the poles
+follow. `Base::Ph1::Switch::close()` / `open()` are non-virtual delegates to them, so `SwitchEvent`
+and the Python bindings need no change.
+
+The non-ideal modes return `supportsPrecomputedSystemMatrices() == false` and drive the matrix
+through `MNAVariableCompInterface::hasParameterChanged()` instead — per pole in `CurrentZero`, per
+resistance value in `ExponentialZCSEmulation`, which means one refactorisation per step of the ramp.
+`effective_resistance_*` is the value actually stamped and is the attribute to log when debugging a
+transition; `exponential_progress`, `exponential_transition_active` and the start/end times are the
+rest of the diagnostics.
+
+{{% alert title="Watch out: the stamped resistance is one step ahead" color="warning" %}}
+`updateExponentialTransition()` evaluates the ramp at `time + mTimeStep`, because the resistance it
+writes is the one the *next* solve uses. `mTimeStep` is captured in `mnaCompInitialize`, so a switch
+that never went through MNA initialisation would ramp against a zero step size.
+{{% /alert %}}
+
+In DP, `reconstructInstantaneousCurrent()` restores the carrier removed by the DP formulation. Note
+the scaling asymmetry between the two DP variants: `DP::Ph3` envelopes are phase-peak and are built
+from power flow with `RMS3PH_TO_PEAK1PH`, while `DP::Ph1` keeps the power-flow scaling, so the
+reconstructed `i_instantaneous` of `DP::Ph1` is in envelope scaling. The zero-crossing instant does
+not depend on it, which is why the detection is shared.
+
+### varResSwitch
+
+`varResSwitch` also implements `MNAVariableCompInterface`, which is what allows it to change
 the system matrix during a run. Its `hasParameterChanged` is called each step and drives the
 transition:
 
@@ -37,6 +73,9 @@ wrong for any other.
 {{% /alert %}}
 
 Its `initializeFromNodesAndTerminals` carries a comment saying it is not used.
+
+New models should prefer `ExponentialZCSEmulation` on the plain `Switch`, which covers the same
+ground with a parameterised duration and without rewriting its own resistance attributes.
 
 ## Loads
 
