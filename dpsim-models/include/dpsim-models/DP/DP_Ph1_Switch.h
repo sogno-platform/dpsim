@@ -40,7 +40,9 @@ namespace Ph1 {
 ///
 ///       R(t) = R_closed * (R_open/R_closed)^alpha,
 ///
-///   alpha in [0,1], over a user-defined switching duration. This is the
+///   alpha in [0,1], over a user-defined switching duration. Opening runs
+///   alpha from 0 to 1, closing runs it from 1 to 0, since the envelope
+///   cannot represent a discontinuity in either direction. This is the
 ///   variable-resistance ZCS-emulation approach and is not an arc model.
 class Switch : public MNASimPowerComp<Complex>,
                public Base::Ph1::Switch,
@@ -65,6 +67,10 @@ public:
 
   /// Exponential-transition diagnostics.
   const Attribute<Bool>::Ptr mExponentialTransitionActive;
+  /// True while the active exponential transition is a closing transition.
+  const Attribute<Bool>::Ptr mExponentialTransitionClosing;
+  /// Position on the resistance path, 0 at R_closed and 1 at R_open. Runs
+  /// 0 -> 1 while opening and 1 -> 0 while closing.
   const Attribute<Real>::Ptr mExponentialProgress;
   const Attribute<Real>::Ptr mExponentialTransitionStartTime;
   const Attribute<Real>::Ptr mExponentialTransitionEndTime;
