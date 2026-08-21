@@ -3,11 +3,12 @@
 #include <DPsim.h>
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <iostream>
 #include <limits>
 #include <memory>
-#include <vector>
+#include <utility>
 
 using namespace DPsim;
 using namespace CPS::DP;
@@ -38,28 +39,6 @@ struct SteadyState {
   Matrix inverterState;
 };
 
-void printEigenvalues(const String &title, const CPS::VectorComp &eigenvalues) {
-  std::cout << "\n" << title << "\n";
-  for (Eigen::Index idx = 0; idx < eigenvalues.rows(); ++idx)
-    std::cout << "  [" << idx << "] " << eigenvalues(idx) << "\n";
-}
-
-CPS::VectorComp finiteEigenvalues(const CPS::VectorComp &eigenvalues) {
-  std::vector<Complex> finiteValues;
-
-  for (Eigen::Index idx = 0; idx < eigenvalues.rows(); ++idx) {
-    const Complex value = eigenvalues(idx);
-    if (std::isfinite(value.real()) && std::isfinite(value.imag()))
-      finiteValues.push_back(value);
-  }
-
-  CPS::VectorComp result(finiteValues.size());
-  for (Eigen::Index idx = 0; idx < result.rows(); ++idx)
-    result(idx) = finiteValues[static_cast<std::size_t>(idx)];
-
-  return result;
-}
-
 Real maxNearestDistance(const CPS::VectorComp &reference,
                         const CPS::VectorComp &actual) {
   Real maxDistance = 0.0;
@@ -78,24 +57,23 @@ Real maxNearestDistance(const CPS::VectorComp &reference,
   return maxDistance;
 }
 
-Complex mapContinuousToDiscrete(const Complex &lambda, Real timeStep) {
-  const Complex two(2.0, 0.0);
-  return (two + timeStep * lambda) / (two - timeStep * lambda);
+Real maxEigenvalueDistance(const CPS::VectorComp &first,
+                           const CPS::VectorComp &second) {
+  return std::max(maxNearestDistance(first, second),
+                  maxNearestDistance(second, first));
 }
 
-CPS::VectorComp mapContinuousToDiscrete(const CPS::VectorComp &lambda,
-                                        Real timeStep) {
-  CPS::VectorComp result(lambda.rows());
-
-  for (Eigen::Index idx = 0; idx < lambda.rows(); ++idx)
-    result(idx) = mapContinuousToDiscrete(lambda(idx), timeStep);
-
-  return result;
-}
-
-CPS::VectorComp continuousEigenvalues(const Matrix &aMatrix) {
-  Eigen::EigenSolver<Matrix> eigenSolver(aMatrix);
+CPS::VectorComp eigenvalues(const Matrix &matrix) {
+  Eigen::EigenSolver<Matrix> eigenSolver(matrix);
   return eigenSolver.eigenvalues();
+}
+
+Matrix trapezoidalStateMatrix(const Matrix &continuousA, Real timeStep) {
+  const Matrix identity =
+      Matrix::Identity(continuousA.rows(), continuousA.cols());
+  return (identity - 0.5 * timeStep * continuousA)
+      .partialPivLu()
+      .solve(identity + 0.5 * timeStep * continuousA);
 }
 
 } // namespace
@@ -103,8 +81,7 @@ CPS::VectorComp continuousEigenvalues(const Matrix &aMatrix) {
 class DPPh1InverterStateSpaceExtractionExample {
 public:
   DPPh1InverterStateSpaceExtractionExample()
-      : mTimeStep(100e-6), mFinalTime(1e-3), mFrequency(50.0),
-        mOmega(2.0 * PI * mFrequency),
+      : mFinalTime(1e-3), mFrequency(50.0), mOmega(2.0 * PI * mFrequency),
         mSourceVoltage(RMS3PH_TO_PEAK1PH * 400.0, 0.0), mGridResistance(0.3),
         mGridInductance(0.1e-3), mLf(2e-3), mCf(10e-6), mRf(0.2), mRc(0.2),
         mKpPLL(0.25), mKiPLL(0.2), mOmegaCutoff(mOmega), mPRef(10000.0),
@@ -113,10 +90,39 @@ public:
 
   void run() const {
     const SteadyState steadyState = calculateSteadyState();
+    const Matrix analyticalNativeA = buildAnalyticalStateMatrix(steadyState);
+    const Matrix analyticalDqA =
+        buildAnalyticalDqStateMatrix(steadyState, analyticalNativeA);
 
-    const String simName = "DP_Ph1_Inverter_StateSpaceExtraction";
+    const std::array<std::pair<Real, String>, 4> timeSteps = {{
+        {1e-6, "1us"},
+        {10e-6, "10us"},
+        {100e-6, "100us"},
+        {1e-3, "1ms"},
+    }};
+
+    std::cout
+        << "\n============================================================\n";
+    std::cout << "DP Ph1 inverter state-space extraction comparison\n";
+    std::cout
+        << "============================================================\n";
+    std::cout << "Topology: ideal DP source -> R/L grid -> averaged inverter\n";
+    std::cout << "Analysis frame: native DP/global synchronous dq\n";
+    std::cout << "Reference: independently assembled continuous-time dq model, "
+                 "trapezoidal discretization\n";
+    std::cout << "Time steps: 1 us, 10 us, 100 us, 1 ms\n";
+
+    for (const auto &[timeStep, label] : timeSteps)
+      runCase(steadyState, analyticalDqA, timeStep, label);
+  }
+
+private:
+  void runCase(const SteadyState &steadyState, const Matrix &analyticalDqA,
+               Real timeStep, const String &timeStepLabel) const {
+    const String simName =
+        "DP_Ph1_Inverter_StateSpaceExtraction_dt_" + timeStepLabel;
+
     Logger::setLogDir("logs/" + simName);
-
     auto logger = DataLogger::make(simName);
 
     Simulation sim(simName, Logger::Level::warn);
@@ -124,7 +130,7 @@ public:
     sim.addLogger(logger);
     sim.setDomain(Domain::DP);
     sim.setSolverType(Solver::Type::MNA);
-    sim.setTimeStep(mTimeStep);
+    sim.setTimeStep(timeStep);
     sim.setFinalTime(mFinalTime);
     sim.doStateSpaceExtraction(true);
     sim.doSystemMatrixRecomputation(true);
@@ -136,71 +142,15 @@ public:
     modalAnalysis.update();
 
     const CPS::VectorComp extractedZ = modalAnalysis.getDiscreteEigenvalues();
-    const CPS::VectorComp extractedLambda =
-        modalAnalysis.getContinuousEigenvalues();
-    const CPS::VectorComp extractedFiniteLambda =
-        finiteEigenvalues(extractedLambda);
-
-    const Matrix analyticalNativeA = buildAnalyticalStateMatrix(steadyState);
-    const Matrix analyticalDqA =
-        buildAnalyticalDqStateMatrix(steadyState, analyticalNativeA);
-
-    const CPS::VectorComp analyticalNativeLambda =
-        continuousEigenvalues(analyticalNativeA);
-    const CPS::VectorComp analyticalDqLambda =
-        continuousEigenvalues(analyticalDqA);
     const CPS::VectorComp analyticalDqZ =
-        mapContinuousToDiscrete(analyticalDqLambda, mTimeStep);
+        eigenvalues(trapezoidalStateMatrix(analyticalDqA, timeStep));
 
-    std::cout
-        << "\n============================================================\n";
-    std::cout << "DP Ph1 inverter state-space extraction\n";
-    std::cout
-        << "============================================================\n";
-    std::cout << "Topology: ideal DP voltage source -> R/L grid branch -> "
-                 "DP Ph1 averaged inverter\n";
-    std::cout << "Number of extraction states: " << extractor.getStateCount()
-              << "\n";
-    std::cout << "Simulation log written to logs/" << simName << "/" << simName
-              << ".csv\n";
-
-    std::cout << "\nOperating point:\n";
-    std::cout << "  source voltage = " << steadyState.sourceVoltage << "\n";
-    std::cout << "  PCC voltage    = " << steadyState.pccVoltage << "\n";
-    std::cout << "  filter voltage = " << steadyState.filterVoltage << "\n";
-    std::cout << "  grid current   = " << steadyState.gridCurrent << "\n";
-
-    printEigenvalues("Extracted discrete-time eigenvalues z:", extractedZ);
-    printEigenvalues("Extracted continuous-time native DP eigenvalues lambda:",
-                     extractedLambda);
-    printEigenvalues(
-        "Analytical continuous-time native DP/mixed-frame eigenvalues lambda:",
-        analyticalNativeLambda);
-    printEigenvalues("Analytical continuous-time dq-frame eigenvalues lambda:",
-                     analyticalDqLambda);
-    printEigenvalues(
-        "Analytical dq-frame trapezoidal discrete-time eigenvalues z:",
-        analyticalDqZ);
-
-    std::cout << "\nMaximum nearest-neighbour difference between extracted "
-                 "finite lambda and analytical native DP/mixed-frame lambda: "
-              << maxNearestDistance(analyticalNativeLambda,
-                                    extractedFiniteLambda)
-              << "\n";
-    std::cout << "Maximum nearest-neighbour difference between extracted "
-                 "finite lambda and analytical dq-frame lambda: "
-              << maxNearestDistance(analyticalDqLambda, extractedFiniteLambda)
-              << "\n";
-    std::cout << "Maximum nearest-neighbour difference between analytical "
-                 "native DP/mixed-frame lambda and analytical dq-frame lambda: "
-              << maxNearestDistance(analyticalNativeLambda, analyticalDqLambda)
-              << "\n";
-    std::cout << "Maximum nearest-neighbour difference between extracted z "
-                 "and analytical dq-frame z: "
-              << maxNearestDistance(analyticalDqZ, extractedZ) << "\n";
+    std::cout << "\nDelta t = " << timeStepLabel << "\n";
+    std::cout << "  extraction states: " << extractor.getStateCount() << "\n";
+    std::cout << "  extracted vs analytical discrete eigenvalue max error: "
+              << maxEigenvalueDistance(analyticalDqZ, extractedZ) << "\n";
   }
 
-private:
   SystemTopology createSystem(const SteadyState &steadyState,
                               std::shared_ptr<DataLogger> logger) const {
     auto nGrid = SimNode::make("nGrid");
@@ -570,7 +520,6 @@ private:
     B(IfIm, 1) = dVRefEnvIm(dVRefDByUIm, dVRefQByUIm) / mLf;
   }
 
-  Real mTimeStep;
   Real mFinalTime;
   Real mFrequency;
   Real mOmega;

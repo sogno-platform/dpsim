@@ -12,8 +12,9 @@ DP::Ph1::MixedVTypeVariableSSNComp::MixedVTypeVariableSSNComp(
     Logger::Level logLevel)
     : MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
       mParameterChanged(false), mRealStateCount(realStateCount),
-      mComplexStateCount(complexStateCount), mTimeStep(0.0), mW(0.0, 0.0),
-      mYHist(0.0, 0.0), mX(mAttributes->create<Matrix>("x")) {
+      mComplexStateCount(complexStateCount), mTimeStep(0.0),
+      mW(Matrix::Zero(2, 2)), mYHist(0.0, 0.0),
+      mX(mAttributes->create<Matrix>("x")) {
   mPhaseType = PhaseType::Single;
   setTerminalNumber(2);
 
@@ -114,7 +115,7 @@ void DP::Ph1::MixedVTypeVariableSSNComp::setParameters(
   mdB = Matrix::Zero(n, 2);
   mdE = Matrix::Zero(n, 1);
 
-  mW = Complex(0.0, 0.0);
+  mW = Matrix::Zero(2, 2);
   mYHist = Complex(0.0, 0.0);
 
   mParametersSet = true;
@@ -158,10 +159,7 @@ void DP::Ph1::MixedVTypeVariableSSNComp::recomputeDiscreteModel() {
   Math::calculateStateSpaceTrapezoidalMatrices(mA, mB, mE, mTimeStep, mdA, mdB,
                                                mdE);
 
-  // Fold the 2x2 real u->y block into a complex admittance; requires it to
-  // have the [[a,-b],[b,a]] complex-multiplication structure.
-  const Matrix wReal = mC * mdB + mD;
-  mW = Complex(wReal(0, 0), wReal(1, 0));
+  mW = mC * mdB + mD;
 }
 
 void DP::Ph1::MixedVTypeVariableSSNComp::updateStateSpaceModel() {
@@ -318,7 +316,8 @@ void DP::Ph1::MixedVTypeVariableSSNComp::mnaCompUpdateVoltage(
 }
 
 void DP::Ph1::MixedVTypeVariableSSNComp::mnaCompUpdateCurrent(const Matrix &) {
-  (**mIntfCurrent)(0, 0) = mW * (**mIntfVoltage)(0, 0) + mYHist;
+  (**mIntfCurrent)(0, 0) =
+      unpackComplex(mW * packComplex((**mIntfVoltage)(0, 0))) + mYHist;
 }
 
 void DP::Ph1::MixedVTypeVariableSSNComp::mnaCompPostStep(

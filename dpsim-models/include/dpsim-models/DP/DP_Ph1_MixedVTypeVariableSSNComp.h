@@ -32,8 +32,8 @@ protected:
   /// Discretized (trapezoidal) real operators.
   Matrix mdA, mdB, mdE;
 
-  /// Complex Norton admittance / history current stamped into the network.
-  Complex mW;
+  /// Packed real 2x2 Norton admittance and complex history current.
+  Matrix mW;
   Complex mYHist;
 
   /// Packed real state: [realStates..., Re(cplxState0), Im(cplxState0), ...].
