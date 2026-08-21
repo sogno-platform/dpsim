@@ -136,6 +136,7 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph3_Transformer.cpp
 	EMT/EMT_Ph3_Shunt.cpp
 	EMT/EMT_Ph3_Switch.cpp
+	EMT/EMT_Ph3_PQLoad.cpp
 	EMT/EMT_Ph3_ReducedOrderSynchronGeneratorVBR.cpp
 	EMT/EMT_Ph3_SynchronGenerator3OrderVBR.cpp
 	EMT/EMT_Ph3_SynchronGenerator4OrderVBR.cpp
