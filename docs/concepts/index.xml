@@ -388,13 +388,16 @@ $\frac{d}{dt} + j\omega_s$, so what is discretised is $\mathbf{A} - j\omega_s\ma
 $\mathbf{A}$, and splitting the envelope into real and imaginary parts turns that into a real system
 of twice the size. This is derived in full under
 &lt;a href="https://sogno.energy/dpsim/docs/concepts/ssn-domain-formulation/">SSN across domains&lt;/a>, together with why the equivalent
-admittance is complex in an envelope domain and real in an instantaneous one.&lt;/p>
+admittance is represented differently in envelope and instantaneous domains.&lt;/p>
 &lt;p>The real-augmented form matches how the rest of the dynamic phasor system is already assembled: a
 complex admittance $g = g_r + j g_i$ is stamped as the real block
 $\left[\begin{smallmatrix} g_r &amp;amp; -g_i \ g_i &amp;amp; g_r \end{smallmatrix}\right]$, with real and
-imaginary node parts in separate halves of a real-valued system. The SSN component therefore needs
-no complex assembly of its own, and the trapezoidal discretisation used by the instantaneous models
-applies unchanged.&lt;/p>
+imaginary node parts in separate halves of a real-valued system. This complex-scalar representation
+is sufficient when the component is complex-linear. A mixed real/envelope model, such as a
+controlled converter, may instead produce a general real $2 \times 2$ block because its $d$- and
+$q$-axis responses differ. That block must be retained when it is stamped into the same
+real-augmented system. In both cases, the trapezoidal discretisation used by the instantaneous
+models applies unchanged.&lt;/p>
 &lt;h2 id="components">Components&lt;/h2>
 &lt;p>The single-phase dynamic-phasor SSN models are:&lt;/p>
 &lt;ul>
@@ -482,13 +485,15 @@ shifted operator becomes a real system of twice the size,&lt;/p>
 \begin{bmatrix} \boldsymbol{u}_{re} \\ \boldsymbol{u}_{im} \end{bmatrix}.$$&lt;/div>&lt;p>The off-diagonal $\pm\omega_s \boldsymbol{I}$ blocks are the carrier rotation, and the block
 structure $\begin{bmatrix} P &amp;amp; -Q \ Q &amp;amp; P \end{bmatrix}$ is the real representation of the complex
 number $P + jQ$. Discretising this real system with the same trapezoidal rule and recombining the
-blocks recovers the complex discrete pair, from which the equivalent admittance and the history term
-follow exactly as in the instantaneous case.&lt;/p>
-&lt;p>Two things follow. The equivalent admittance is complex in an envelope domain and real in an
-instantaneous one, so the same component stamps differently. And setting $\omega_s = 0$ collapses
-the augmented system back to the instantaneous one, which is the general statement about the
-envelope transform applied here: the instantaneous formulation is the zero-carrier special case, not
-a separate method.&lt;/p>
+blocks recovers the complex discrete pair for a complex-linear component, from which the equivalent
+admittance and the history term follow exactly as in the instantaneous case.&lt;/p>
+&lt;p>For a complex-linear envelope model, the resulting real block can be folded into one complex
+admittance. A model that mixes real control states with complex-envelope states need not preserve
+the $\begin{bmatrix} P &amp;amp; -Q \ Q &amp;amp; P \end{bmatrix}$ structure. Its equivalent admittance must then
+remain a full real block rather than being reduced to a complex scalar. Setting $\omega_s = 0$
+still collapses the carrier-shifted state equations back to the instantaneous formulation; the
+difference in the Norton representation comes from the component&amp;rsquo;s axis coupling, not from a
+different integration method.&lt;/p>
 &lt;h2 id="why-this-matters-for-accuracy">Why this matters for accuracy&lt;/h2>
 &lt;p>The carrier rotation is handled analytically, inside $\boldsymbol{A}$, rather than numerically by
 resolving the oscillation with small steps. For a component whose envelope varies slowly against a

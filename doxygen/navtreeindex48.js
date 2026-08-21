@@ -1,5 +1,7 @@
 var NAVTREEINDEX48 =
 {
+"class_d_psim_1_1_d_a_e_solver.html#a0631888e2f108db71b08c2ed0006a297":[1,0,1,7,13],
+"class_d_psim_1_1_d_a_e_solver.html#a0631888e2f108db71b08c2ed0006a297":[2,0,1,6,13],
 "class_d_psim_1_1_d_a_e_solver.html#a1bf8f9d55bfaac779b39d141a06e53b6":[1,0,1,7,23],
 "class_d_psim_1_1_d_a_e_solver.html#a1bf8f9d55bfaac779b39d141a06e53b6":[2,0,1,6,23],
 "class_d_psim_1_1_d_a_e_solver.html#a26f0b859a687c1b54acc13da4d378341":[1,0,1,7,9],
@@ -247,7 +249,5 @@ var NAVTREEINDEX48 =
 "class_d_psim_1_1_direct_linear_solver_configuration.html#a8634bad2f85b0543856e6c39d87433a0":[1,0,1,13,5],
 "class_d_psim_1_1_direct_linear_solver_configuration.html#a8634bad2f85b0543856e6c39d87433a0":[2,0,1,12,5],
 "class_d_psim_1_1_direct_linear_solver_configuration.html#a9690061c0f0aad4de91ef6b693d29c6f":[1,0,1,13,7],
-"class_d_psim_1_1_direct_linear_solver_configuration.html#a9690061c0f0aad4de91ef6b693d29c6f":[2,0,1,12,7],
-"class_d_psim_1_1_direct_linear_solver_configuration.html#afd06e461c13870ad0d2950a208147e23":[1,0,1,13,3],
-"class_d_psim_1_1_direct_linear_solver_configuration.html#afd06e461c13870ad0d2950a208147e23":[2,0,1,12,3]
+"class_d_psim_1_1_direct_linear_solver_configuration.html#a9690061c0f0aad4de91ef6b693d29c6f":[2,0,1,12,7]
 };

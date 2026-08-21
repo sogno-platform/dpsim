@@ -1,5 +1,7 @@
 var NAVTREEINDEX45 =
 {
+"class_c_p_s_1_1_signal_1_1_turbine_governor.html#af18a4b56f45e70c2c8820ad71045a5ac":[2,0,0,5,34,26],
+"class_c_p_s_1_1_signal_1_1_turbine_governor.html#af38ae623671ed8b50b2e4f6f5104e389":[1,0,0,5,34,25],
 "class_c_p_s_1_1_signal_1_1_turbine_governor.html#af38ae623671ed8b50b2e4f6f5104e389":[2,0,0,5,34,25],
 "class_c_p_s_1_1_signal_1_1_turbine_governor.html#afa6ee67abab1708ec25ec5e6bdb7f0ce":[1,0,0,5,34,3],
 "class_c_p_s_1_1_signal_1_1_turbine_governor.html#afa6ee67abab1708ec25ec5e6bdb7f0ce":[2,0,0,5,34,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX45 =
 "class_c_p_s_1_1_sim_power_comp.html#a16fef50583bd2c58806acbf6185698cb":[2,0,0,44,52],
 "class_c_p_s_1_1_sim_power_comp.html#a1c7cd78fb5f094615a30cf16701af7d8":[1,0,0,44,17],
 "class_c_p_s_1_1_sim_power_comp.html#a1c7cd78fb5f094615a30cf16701af7d8":[2,0,0,44,17],
-"class_c_p_s_1_1_sim_power_comp.html#a1d87236258cf42b4b7d4f1df30954f64":[1,0,0,44,11],
-"class_c_p_s_1_1_sim_power_comp.html#a1d87236258cf42b4b7d4f1df30954f64":[2,0,0,44,11],
-"class_c_p_s_1_1_sim_power_comp.html#a25a262fe9867ddbea21ccca38a33b723":[1,0,0,44,47]
+"class_c_p_s_1_1_sim_power_comp.html#a1d87236258cf42b4b7d4f1df30954f64":[1,0,0,44,11]
 };

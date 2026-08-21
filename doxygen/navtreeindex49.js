@@ -1,5 +1,7 @@
 var NAVTREEINDEX49 =
 {
+"class_d_psim_1_1_direct_linear_solver_configuration.html#afd06e461c13870ad0d2950a208147e23":[1,0,1,13,3],
+"class_d_psim_1_1_direct_linear_solver_configuration.html#afd06e461c13870ad0d2950a208147e23":[2,0,1,12,3],
 "class_d_psim_1_1_event.html":[1,0,1,14],
 "class_d_psim_1_1_event.html":[2,0,1,13],
 "class_d_psim_1_1_event.html#a1e1c82857c4ab015b832ecb0078fdb4a":[1,0,1,14,4],
@@ -247,7 +249,5 @@ var NAVTREEINDEX49 =
 "class_d_psim_1_1_interface_queued_1_1_pre_step.html":[1,0,1,21,1],
 "class_d_psim_1_1_interface_queued_1_1_pre_step.html":[2,0,1,20,1],
 "class_d_psim_1_1_interface_queued_1_1_pre_step.html#a1441e46df7b2223834defcd07164d2b5":[1,0,1,21,1,1],
-"class_d_psim_1_1_interface_queued_1_1_pre_step.html#a1441e46df7b2223834defcd07164d2b5":[2,0,1,20,1,1],
-"class_d_psim_1_1_interface_queued_1_1_pre_step.html#a511ec9b3ce6a9d8e8ea44db0962eeb24":[1,0,1,21,1,0],
-"class_d_psim_1_1_interface_queued_1_1_pre_step.html#a511ec9b3ce6a9d8e8ea44db0962eeb24":[2,0,1,20,1,0]
+"class_d_psim_1_1_interface_queued_1_1_pre_step.html#a1441e46df7b2223834defcd07164d2b5":[2,0,1,20,1,1]
 };
