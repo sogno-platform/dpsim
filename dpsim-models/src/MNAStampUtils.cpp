@@ -30,6 +30,24 @@ void MNAStampUtils::stampAdmittance(Complex admittance, SparseMatrixRow &mat,
   SPDLOG_LOGGER_DEBUG(mSLog, "Stamping completed.");
 }
 
+void MNAStampUtils::stampAdmittance(
+    const Matrix &admittance, SparseMatrixRow &mat, UInt node1Index,
+    UInt node2Index, Bool isTerminal1NotGrounded, Bool isTerminal2NotGrounded,
+    const Logger::Log &mSLog, Int maxFreq, Int freqIdx) {
+  if (admittance.rows() != 2 || admittance.cols() != 2)
+    throw InvalidArgumentException();
+
+  SPDLOG_LOGGER_DEBUG(
+      mSLog,
+      "Start stamping packed real admittance for frequency index {:d}...",
+      freqIdx);
+
+  stampValue(admittance, mat, node1Index, node2Index, isTerminal1NotGrounded,
+             isTerminal2NotGrounded, maxFreq, freqIdx, mSLog);
+
+  SPDLOG_LOGGER_DEBUG(mSLog, "Stamping completed.");
+}
+
 void MNAStampUtils::stampConductanceMatrix(const Matrix &conductanceMat,
                                            SparseMatrixRow &mat,
                                            UInt node1Index, UInt node2Index,
@@ -234,6 +252,18 @@ void MNAStampUtils::addToMatrixElement(SparseMatrixRow &mat, Matrix::Index row,
   SPDLOG_LOGGER_DEBUG(mSLog,
                       "- Adding {:s} to system matrix element ({:d},{:d})",
                       Logger::complexToString(value), row, column);
+
+  Math::addToMatrixElement(mat, row, column, value, maxFreq, freqIdx);
+}
+
+void MNAStampUtils::addToMatrixElement(SparseMatrixRow &mat, Matrix::Index row,
+                                       Matrix::Index column,
+                                       const Matrix &value, Int maxFreq,
+                                       Int freqIdx, const Logger::Log &mSLog) {
+  SPDLOG_LOGGER_DEBUG(
+      mSLog,
+      "- Adding packed real 2x2 block to system matrix element ({:d},{:d})",
+      row, column);
 
   Math::addToMatrixElement(mat, row, column, value, maxFreq, freqIdx);
 }
