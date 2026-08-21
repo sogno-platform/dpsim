@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.5.0](https://github.com/sogno-platform/dpsim/compare/v1.4.0...v1.5.0) (2026-08-21)
+
+
+### Added
+
+* **models:** add switch modes to EMT and DP switches ([efde609](https://github.com/sogno-platform/dpsim/commit/efde609f2de09f51a85da627df5b8c5a406817f3))
+* **models:** add switching modes to DP::Ph1::Switch ([a5c983a](https://github.com/sogno-platform/dpsim/commit/a5c983a64f4097851aecd0c8b36d0b53f4f3485d))
+* **models:** ramp the resistance on closing in exponential ZCS mode ([e7b59bf](https://github.com/sogno-platform/dpsim/commit/e7b59bf0df4206ba1fa8740dd21998e0dd05b75c))
+* **statespace:** support split SSN contributors ([58a2253](https://github.com/sogno-platform/dpsim/commit/58a2253329f7fb82061bc9074cba172d42df5f29))
+
+
+### Changed
+
+* **models:** clarify switch model description ([567fce8](https://github.com/sogno-platform/dpsim/commit/567fce83676466fb7480bb0ff877d32cdddf0928))
+* **models:** extract common split SSN component logic ([096d19e](https://github.com/sogno-platform/dpsim/commit/096d19e89da94fcb70a0b4dbfaf14f44876c7ad9))
+* **ssn:** clarify Norton stamping for mixed DP models ([752b1a0](https://github.com/sogno-platform/dpsim/commit/752b1a03b3f77cf416ef32f44eb1614a65a7766d))
+
+
+### Fixed
+
+* **dp:** preserve full Norton matrix for mixed Ph1 SSN components ([c25369c](https://github.com/sogno-platform/dpsim/commit/c25369c189aa5a9893f64332c182eb4d679718fa))
+* **models:** correct DP Ph3 capacitor initialization ([7eb721b](https://github.com/sogno-platform/dpsim/commit/7eb721bb35a8a81344ec5c05d11363bdcabb3938))
+* **models:** correct DP Ph3 inductor resistor initialization ([2efee22](https://github.com/sogno-platform/dpsim/commit/2efee228721c70612a6fd2791625be0954e1324f))
+
 ## [1.4.0](https://github.com/sogno-platform/dpsim/compare/v1.3.0...v1.4.0) (2026-08-14)
 
 
