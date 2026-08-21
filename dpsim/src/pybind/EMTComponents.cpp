@@ -396,6 +396,28 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "reactance_in_series"_a = false)
       .def("connect", &CPS::EMT::Ph3::RXLoad::connect);
 
+  py::class_<CPS::EMT::Ph3::PQLoad, std::shared_ptr<CPS::EMT::Ph3::PQLoad>,
+             CPS::SimPowerComp<CPS::Real>, CPS::MNASyncGenInterface>(
+      mEMTPh3, "PQLoad", py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::EMT::Ph3::PQLoad::setParameters,
+           "active_power"_a, "reactive_power"_a, "nominal_voltage"_a,
+           "minimum_voltage_per_unit"_a = 0.1)
+      .def("connect", &CPS::EMT::Ph3::PQLoad::connect)
+      .def_property("P", createAttributeGetter<CPS::Real>("P"),
+                    createAttributeSetter<CPS::Real>("P"))
+      .def_property("Q", createAttributeGetter<CPS::Real>("Q"),
+                    createAttributeSetter<CPS::Real>("Q"))
+      .def_property("V_nom", createAttributeGetter<CPS::Real>("V_nom"),
+                    createAttributeSetter<CPS::Real>("V_nom"))
+      .def_property("V_min_pu", createAttributeGetter<CPS::Real>("V_min_pu"),
+                    createAttributeSetter<CPS::Real>("V_min_pu"))
+      .def_property_readonly("p_inst",
+                             createAttributeGetter<CPS::Real>("p_inst"))
+      .def_property_readonly("q_inst",
+                             createAttributeGetter<CPS::Real>("q_inst"));
+
   py::class_<CPS::EMT::Ph3::Shunt, std::shared_ptr<CPS::EMT::Ph3::Shunt>,
              CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "Shunt",
                                            py::multiple_inheritance())
