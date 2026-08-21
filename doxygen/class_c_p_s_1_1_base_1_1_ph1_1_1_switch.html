@@ -124,8 +124,14 @@ Collaboration diagram for CPS::Base::Ph1::Switch:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a20da3db861d80a72ee86495089fcceca" id="r_a20da3db861d80a72ee86495089fcceca"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a20da3db861d80a72ee86495089fcceca">Switch</a> (<a class="el" href="class_c_p_s_1_1_attribute_list.html#a49ff97075315610f2b8c923084bcd7d2">CPS::AttributeList::Ptr</a> attributeList)</td></tr>
 <tr class="separator:a20da3db861d80a72ee86495089fcceca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0af2f1cc85b181b0092c9b4b3d65929" id="r_ab0af2f1cc85b181b0092c9b4b3d65929"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab0af2f1cc85b181b0092c9b4b3d65929">~Switch</a> ()=default</td></tr>
+<tr class="separator:ab0af2f1cc85b181b0092c9b4b3d65929"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9db31a66c121bae1a03138eedf08d4da" id="r_a9db31a66c121bae1a03138eedf08d4da"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9db31a66c121bae1a03138eedf08d4da">setParameters</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> openResistance, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> closedResistance, <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> closed=false)</td></tr>
 <tr class="separator:a9db31a66c121bae1a03138eedf08d4da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a717caa846c1b3d049137378c2b4f945a" id="r_a717caa846c1b3d049137378c2b4f945a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a717caa846c1b3d049137378c2b4f945a">closeSwitch</a> ()</td></tr>
+<tr class="separator:a717caa846c1b3d049137378c2b4f945a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71abca450f76b1c38b3549761075bc9f" id="r_a71abca450f76b1c38b3549761075bc9f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a71abca450f76b1c38b3549761075bc9f">openSwitch</a> ()</td></tr>
+<tr class="separator:a71abca450f76b1c38b3549761075bc9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0355057b8f0947b7f4759930aadee023" id="r_a0355057b8f0947b7f4759930aadee023"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0355057b8f0947b7f4759930aadee023">close</a> ()</td></tr>
 <tr class="memdesc:a0355057b8f0947b7f4759930aadee023"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close switch.  <br /></td></tr>
 <tr class="separator:a0355057b8f0947b7f4759930aadee023"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -185,6 +191,31 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ab0af2f1cc85b181b0092c9b4b3d65929" name="ab0af2f1cc85b181b0092c9b4b3d65929"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0af2f1cc85b181b0092c9b4b3d65929">&#9670;&#160;</a></span>~Switch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual CPS::Base::Ph1::Switch::~Switch </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel virtual">virtual</span><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a0355057b8f0947b7f4759930aadee023" name="a0355057b8f0947b7f4759930aadee023"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0355057b8f0947b7f4759930aadee023">&#9670;&#160;</a></span>close()</h2>
@@ -211,7 +242,38 @@ Protected Attributes</h2></td></tr>
 
 <p>Close switch. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___ph1___switch_8h_source.html#l00044">44</a> of file <a class="el" href="_base___ph1___switch_8h_source.html">Base_Ph1_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___ph1___switch_8h_source.html#l00058">58</a> of file <a class="el" href="_base___ph1___switch_8h_source.html">Base_Ph1_Switch.h</a>.</p>
+
+</div>
+</div>
+<a id="a717caa846c1b3d049137378c2b4f945a" name="a717caa846c1b3d049137378c2b4f945a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a717caa846c1b3d049137378c2b4f945a">&#9670;&#160;</a></span>closeSwitch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void CPS::Base::Ph1::Switch::closeSwitch </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Close command.</p>
+<p>Virtual so domain-specific breaker models can distinguish commanded state from the physical pole state. </p>
+
+<p>Reimplemented in <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_switch.html#a21e36b28707fd4dcab41e744d844209c">CPS::DP::Ph1::Switch</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_base___ph1___switch_8h_source.html#l00049">49</a> of file <a class="el" href="_base___ph1___switch_8h_source.html">Base_Ph1_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -240,7 +302,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Check if switch is closed. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___ph1___switch_8h_source.html#l00048">48</a> of file <a class="el" href="_base___ph1___switch_8h_source.html">Base_Ph1_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___ph1___switch_8h_source.html#l00062">62</a> of file <a class="el" href="_base___ph1___switch_8h_source.html">Base_Ph1_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -269,7 +331,38 @@ Protected Attributes</h2></td></tr>
 
 <p>Open switch. </p>
 
-<p class="definition">Definition at line <a class="el" href="_base___ph1___switch_8h_source.html#l00046">46</a> of file <a class="el" href="_base___ph1___switch_8h_source.html">Base_Ph1_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___ph1___switch_8h_source.html#l00060">60</a> of file <a class="el" href="_base___ph1___switch_8h_source.html">Base_Ph1_Switch.h</a>.</p>
+
+</div>
+</div>
+<a id="a71abca450f76b1c38b3549761075bc9f" name="a71abca450f76b1c38b3549761075bc9f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71abca450f76b1c38b3549761075bc9f">&#9670;&#160;</a></span>openSwitch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void CPS::Base::Ph1::Switch::openSwitch </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Open command.</p>
+<p>Virtual so current-zero breakers can remain physically conducting after the command until the current reaches zero. </p>
+
+<p>Reimplemented in <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_switch.html#ad7c9d4c22f1eb65b447c7aac77429447">CPS::DP::Ph1::Switch</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_base___ph1___switch_8h_source.html#l00055">55</a> of file <a class="el" href="_base___ph1___switch_8h_source.html">Base_Ph1_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -305,7 +398,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_base___ph1___switch_8h_source.html#l00036">36</a> of file <a class="el" href="_base___ph1___switch_8h_source.html">Base_Ph1_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_base___ph1___switch_8h_source.html#l00038">38</a> of file <a class="el" href="_base___ph1___switch_8h_source.html">Base_Ph1_Switch.h</a>.</p>
 
 </div>
 </div>

@@ -47,7 +47,7 @@ var searchData=
   ['_7esimulation_44',['~Simulation',['../class_d_psim_1_1_simulation.html#a9339463ecdce19fe26bf6096145b63aa',1,'DPsim::Simulation']]],
   ['_7esolver_45',['~Solver',['../class_d_psim_1_1_solver.html#ae4f0e215033efa8e18e567c148488836',1,'DPsim::Solver']]],
   ['_7esparseluadapter_46',['~SparseLUAdapter',['../class_d_psim_1_1_sparse_l_u_adapter.html#a396959c82d21dc4c33f5b1e1241ea727',1,'DPsim::SparseLUAdapter']]],
-  ['_7eswitch_47',['~Switch',['../class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html#ad8a6a0c325f2ebb9f0f07185840107b4',1,'CPS::Base::Ph3::Switch']]],
+  ['_7eswitch_47',['~Switch',['../class_c_p_s_1_1_base_1_1_ph1_1_1_switch.html#ab0af2f1cc85b181b0092c9b4b3d65929',1,'CPS::Base::Ph1::Switch::~Switch()'],['../class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html#ad8a6a0c325f2ebb9f0f07185840107b4',1,'CPS::Base::Ph3::Switch::~Switch()']]],
   ['_7esynchrongenerator_48',['~SynchronGenerator',['../class_c_p_s_1_1_base_1_1_synchron_generator.html#ac6e1cdc082a49b5d09a9f81e4e1276a0',1,'CPS::Base::SynchronGenerator']]],
   ['_7esynchrongeneratordq_49',['~SynchronGeneratorDQ',['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q.html#adf5999de9b802fc03831461bbad78784',1,'CPS::DP::Ph3::SynchronGeneratorDQ::~SynchronGeneratorDQ()'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_d_q.html#a1aaf6174cb40b2bc1b3ef0a451b57369',1,'CPS::EMT::Ph3::SynchronGeneratorDQ::~SynchronGeneratorDQ()']]],
   ['_7esynchrongeneratoriter_50',['~SynchronGeneratorIter',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_iter.html#a28b625a6a7cfc53edc4980c0c72c627b',1,'CPS::DP::Ph1::SynchronGeneratorIter']]],

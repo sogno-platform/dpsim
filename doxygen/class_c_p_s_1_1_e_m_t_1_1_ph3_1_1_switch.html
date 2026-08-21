@@ -192,14 +192,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8592302b6b82ebc7ddaf8ff7684a7c95" id="r_a8592302b6b82ebc7ddaf8ff7684a7c95"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8592302b6b82ebc7ddaf8ff7684a7c95">zeroCrossingTolerance</a> () const</td></tr>
 <tr class="separator:a8592302b6b82ebc7ddaf8ff7684a7c95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70e953561438681e8ef2eb54736aecf9" id="r_a70e953561438681e8ef2eb54736aecf9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a70e953561438681e8ef2eb54736aecf9">setExponentialSwitchingTime</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> switchingTime)</td></tr>
-<tr class="memdesc:a70e953561438681e8ef2eb54736aecf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set total opening transition time for ExponentialZCSEmulation [s].  <br /></td></tr>
+<tr class="memdesc:a70e953561438681e8ef2eb54736aecf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set total transition time for ExponentialZCSEmulation [s].  <br /></td></tr>
 <tr class="separator:a70e953561438681e8ef2eb54736aecf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5da2cdef0927d0398e043023234a6deb" id="r_a5da2cdef0927d0398e043023234a6deb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5da2cdef0927d0398e043023234a6deb">exponentialSwitchingTime</a> () const</td></tr>
 <tr class="separator:a5da2cdef0927d0398e043023234a6deb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa765d1f0279fcb705a68ce03aee673c7" id="r_aa765d1f0279fcb705a68ce03aee673c7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa765d1f0279fcb705a68ce03aee673c7">openSwitch</a> () override</td></tr>
 <tr class="separator:aa765d1f0279fcb705a68ce03aee673c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a470be96e9232effa4c09634c97fe463e" id="r_a470be96e9232effa4c09634c97fe463e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a470be96e9232effa4c09634c97fe463e">closeSwitch</a> () override</td></tr>
-<tr class="memdesc:a470be96e9232effa4c09634c97fe463e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Closing is instantaneous for all modes in this implementation.  <br /></td></tr>
 <tr class="separator:a470be96e9232effa4c09634c97fe463e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95f19b6f99196a1113355a0ac4cad832" id="r_a95f19b6f99196a1113355a0ac4cad832"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a95f19b6f99196a1113355a0ac4cad832">initializeFromNodesAndTerminals</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> frequency) override</td></tr>
 <tr class="memdesc:a95f19b6f99196a1113355a0ac4cad832"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes Component variables according to power flow data stored in Nodes.  <br /></td></tr>
@@ -496,6 +495,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ad6f86164a103fdfc3d18e2b914ce9cbf" id="r_ad6f86164a103fdfc3d18e2b914ce9cbf"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad6f86164a103fdfc3d18e2b914ce9cbf">mExponentialTransitionActive</a></td></tr>
 <tr class="memdesc:ad6f86164a103fdfc3d18e2b914ce9cbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exponential-transition diagnostics.  <br /></td></tr>
 <tr class="separator:ad6f86164a103fdfc3d18e2b914ce9cbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab62773f50e1c1ed43769cbf451bf85e1" id="r_ab62773f50e1c1ed43769cbf451bf85e1"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab62773f50e1c1ed43769cbf451bf85e1">mExponentialTransitionClosing</a></td></tr>
+<tr class="memdesc:ab62773f50e1c1ed43769cbf451bf85e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">True while the active exponential transition is a closing transition.  <br /></td></tr>
+<tr class="separator:ab62773f50e1c1ed43769cbf451bf85e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2194f97ffc934c205cb2a6331f781fb4" id="r_a2194f97ffc934c205cb2a6331f781fb4"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2194f97ffc934c205cb2a6331f781fb4">mExponentialProgress</a></td></tr>
 <tr class="separator:a2194f97ffc934c205cb2a6331f781fb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0dea0aa53a11f2f8a282dd694b01dbc1" id="r_a0dea0aa53a11f2f8a282dd694b01dbc1"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0dea0aa53a11f2f8a282dd694b01dbc1">mExponentialTransitionStartTime</a></td></tr>
@@ -695,7 +697,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00082">82</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00086">86</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -727,7 +729,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">CPS::SimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00062">62</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00065">65</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -753,12 +755,13 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Closing is instantaneous for all modes in this implementation. </p>
+<p>Close command.</p>
+<p>Ideal and CurrentZero: all poles close immediately. There is no current zero to wait for when energising a branch.</p>
+<p>ExponentialZCSEmulation: arm a simultaneous three-phase exponential resistance decrease. </p>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html#a760f30b04072c0a96efe4833c3e89481">CPS::Base::Ph3::Switch</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00146">146</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00162">162</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -785,7 +788,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00097">97</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00101">101</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -816,7 +819,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_c_p_s_1_1_m_n_a_variable_comp_interface.html#ac8fd7511faa929b522f7cff647634eab">CPS::MNAVariableCompInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00343">343</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00386">386</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -847,7 +850,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a4401f844a3f389e07a37ef1716d84dcd">CPS::SimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00160">160</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00202">202</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -888,7 +891,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00277">277</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00319">319</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -917,7 +920,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#addaa4002352d62d655a76e2f203b11a0">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00275">275</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00317">317</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -955,7 +958,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a860dddb4b67c92cc365271518805e07b">CPS::MNASwitchInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00258">258</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00300">300</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -984,7 +987,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a6b9663a235e9de1dc1997513ae343353">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00246">246</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00288">288</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -1020,7 +1023,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00199">199</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00241">241</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -1056,7 +1059,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00304">304</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00347">347</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -1085,7 +1088,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a82fb36cf23e8e2eca8d52fc1f02ba473">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00339">339</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00382">382</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -1114,7 +1117,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a3e08c6d99dbfc258bf62d81a53e12776">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00316">316</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00359">359</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -1145,7 +1148,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a8d1053b0f6db7e8cf3ad6432b6dcd6d8">CPS::MNASwitchInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00235">235</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00277">277</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -1178,7 +1181,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html#aa1583662ef049452944e94d6141d7795">CPS::Base::Ph3::Switch</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00104">104</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00107">107</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -1197,9 +1200,9 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Set total opening transition time for ExponentialZCSEmulation [s]. </p>
+<p>Set total transition time for ExponentialZCSEmulation [s]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00095">95</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00098">98</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -1220,7 +1223,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Select switching model. Configure before simulation initialization. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00071">71</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00074">74</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -1241,7 +1244,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Absolute current tolerance used by CurrentZero mode [A]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00086">86</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00089">89</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -1272,7 +1275,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a70de41f6affd7b87d044508e6f82c5cc">CPS::MNASwitchInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00242">242</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html#l00284">284</a> of file <a class="el" href="_e_m_t___ph3___switch_8cpp_source.html">EMT_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -1299,7 +1302,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00089">89</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00093">93</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -1326,7 +1329,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00093">93</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00097">97</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -1345,7 +1348,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Effective phase resistances currently stamped into the MNA matrix [ohm]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00076">76</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00080">80</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -1361,7 +1364,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00077">77</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00081">81</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -1377,7 +1380,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00078">78</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00082">82</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -1392,8 +1395,9 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Position on the resistance path, 0 at R_closed and 1 at R_open. Runs 0 -&gt; 1 while opening and 1 -&gt; 0 while closing. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00071">71</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00075">75</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -1415,6 +1419,24 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="ab62773f50e1c1ed43769cbf451bf85e1" name="ab62773f50e1c1ed43769cbf451bf85e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab62773f50e1c1ed43769cbf451bf85e1">&#9670;&#160;</a></span>mExponentialTransitionClosing</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a> CPS::EMT::Ph3::Switch::mExponentialTransitionClosing</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>True while the active exponential transition is a closing transition. </p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00072">72</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+
+</div>
+</div>
 <a id="a2ef6ca504e9a1398cc07693130353a73" name="a2ef6ca504e9a1398cc07693130353a73"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2ef6ca504e9a1398cc07693130353a73">&#9670;&#160;</a></span>mExponentialTransitionEndTime</h2>
 
@@ -1427,7 +1449,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00073">73</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00077">77</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -1443,7 +1465,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00072">72</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___switch_8h_source.html#l00076">76</a> of file <a class="el" href="_e_m_t___ph3___switch_8h_source.html">EMT_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>

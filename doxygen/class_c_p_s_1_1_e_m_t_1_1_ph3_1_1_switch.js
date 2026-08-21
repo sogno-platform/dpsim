@@ -33,6 +33,7 @@ var class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch =
     [ "mEffectiveResistanceC", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch.html#a26d4e9f86147df73e825ccac751070a4", null ],
     [ "mExponentialProgress", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch.html#a2194f97ffc934c205cb2a6331f781fb4", null ],
     [ "mExponentialTransitionActive", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch.html#ad6f86164a103fdfc3d18e2b914ce9cbf", null ],
+    [ "mExponentialTransitionClosing", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch.html#ab62773f50e1c1ed43769cbf451bf85e1", null ],
     [ "mExponentialTransitionEndTime", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch.html#a2ef6ca504e9a1398cc07693130353a73", null ],
     [ "mExponentialTransitionStartTime", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch.html#a0dea0aa53a11f2f8a282dd694b01dbc1", null ],
     [ "mOpeningRequested", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch.html#a27da3c37c44e41081b24b0d64b10cddb", null ],

@@ -94,10 +94,40 @@ turbine, so the order of the calls in &lt;code>mnaCompPreStep&lt;/code> is load 
 code. Availability per domain is in
 &lt;a href="https://sogno.energy/dpsim/docs/reference/model-availability/">model availability&lt;/a>.&lt;/p>
 &lt;h2 id="switches">Switches&lt;/h2>
-&lt;p>&lt;code>Switch&lt;/code> implements &lt;code>Base::Ph1::Switch&lt;/code> and stamps one admittance chosen by &lt;code>mIsClosed&lt;/code>, using
-&lt;code>MNAStampUtils::stampAdmittance&lt;/code> so the grounded-terminal cases are handled centrally.
-&lt;code>SeriesSwitch&lt;/code> folds a series resistance into the same branch.&lt;/p>
-&lt;p>&lt;code>varResSwitch&lt;/code> additionally implements &lt;code>MNAVariableCompInterface&lt;/code>, which is what allows it to change
+&lt;p>&lt;code>Switch&lt;/code> implements &lt;code>Base::Ph1::Switch&lt;/code> (or &lt;code>Base::Ph3::Switch&lt;/code>) and stamps one admittance chosen by
+&lt;code>mIsClosed&lt;/code>, using &lt;code>MNAStampUtils::stampAdmittance&lt;/code> so the grounded-terminal cases are handled
+centrally. &lt;code>SeriesSwitch&lt;/code> folds a series resistance into the same branch.&lt;/p>
+&lt;h3 id="switching-modes">Switching modes&lt;/h3>
+&lt;p>&lt;code>EMT::Ph3::Switch&lt;/code>, &lt;code>DP::Ph3::Switch&lt;/code> and &lt;code>DP::Ph1::Switch&lt;/code> carry a &lt;code>SwitchingMode&lt;/code> enum — &lt;code>Ideal&lt;/code>,
+&lt;code>CurrentZero&lt;/code>, &lt;code>ExponentialZCSEmulation&lt;/code> — set through &lt;code>setSwitchingMode()&lt;/code>, with
+&lt;code>setZeroCrossingTolerance()&lt;/code> and &lt;code>setExponentialSwitchingTime()&lt;/code> for the two non-ideal modes. The
+behaviour behind them is derived under &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/switches/">switches&lt;/a>.&lt;/p>
+&lt;p>The distinction that runs through the implementation is &lt;strong>commanded state versus physical state&lt;/strong>.
+&lt;code>mIsClosed&lt;/code> is what the command asked for; &lt;code>pole_closed_a/b/c&lt;/code> (&lt;code>pole_closed&lt;/code> in &lt;code>DP::Ph1&lt;/code>) is what
+the poles are actually doing, and &lt;code>mnaIsClosed()&lt;/code> reports the commanded state only in &lt;code>Ideal&lt;/code> mode
+and the pole state otherwise. &lt;code>Base::Ph{1,3}::Switch::closeSwitch()&lt;/code> / &lt;code>openSwitch()&lt;/code> are virtual for
+exactly this reason: the override records the command and lets the post-step decide when the poles
+follow. &lt;code>Base::Ph1::Switch::close()&lt;/code> / &lt;code>open()&lt;/code> are non-virtual delegates to them, so &lt;code>SwitchEvent&lt;/code>
+and the Python bindings need no change.&lt;/p>
+&lt;p>The non-ideal modes return &lt;code>supportsPrecomputedSystemMatrices() == false&lt;/code> and drive the matrix
+through &lt;code>MNAVariableCompInterface::hasParameterChanged()&lt;/code> instead — per pole in &lt;code>CurrentZero&lt;/code>, per
+resistance value in &lt;code>ExponentialZCSEmulation&lt;/code>, which means one refactorisation per step of the ramp.
+&lt;code>effective_resistance_*&lt;/code> is the value actually stamped and is the attribute to log when debugging a
+transition; &lt;code>exponential_progress&lt;/code>, &lt;code>exponential_transition_active&lt;/code> and the start/end times are the
+rest of the diagnostics.&lt;/p>
+&lt;div class="alert alert-warning" role="alert">
+&lt;h4 class="alert-heading">Watch out: the stamped resistance is one step ahead&lt;/h4>
+&lt;code>updateExponentialTransition()&lt;/code> evaluates the ramp at &lt;code>time + mTimeStep&lt;/code>, because the resistance it
+writes is the one the &lt;em>next&lt;/em> solve uses. &lt;code>mTimeStep&lt;/code> is captured in &lt;code>mnaCompInitialize&lt;/code>, so a switch
+that never went through MNA initialisation would ramp against a zero step size.
+&lt;/div>
+&lt;p>In DP, &lt;code>reconstructInstantaneousCurrent()&lt;/code> restores the carrier removed by the DP formulation. Note
+the scaling asymmetry between the two DP variants: &lt;code>DP::Ph3&lt;/code> envelopes are phase-peak and are built
+from power flow with &lt;code>RMS3PH_TO_PEAK1PH&lt;/code>, while &lt;code>DP::Ph1&lt;/code> keeps the power-flow scaling, so the
+reconstructed &lt;code>i_instantaneous&lt;/code> of &lt;code>DP::Ph1&lt;/code> is in envelope scaling. The zero-crossing instant does
+not depend on it, which is why the detection is shared.&lt;/p>
+&lt;h3 id="varresswitch">varResSwitch&lt;/h3>
+&lt;p>&lt;code>varResSwitch&lt;/code> also implements &lt;code>MNAVariableCompInterface&lt;/code>, which is what allows it to change
 the system matrix during a run. Its &lt;code>hasParameterChanged&lt;/code> is called each step and drives the
 transition:&lt;/p>
 &lt;ul>
@@ -116,6 +146,8 @@ it is not called, &lt;code>mDeltaResOpen&lt;/code> keeps its default of &lt;code
 wrong for any other.
 &lt;/div>
 &lt;p>Its &lt;code>initializeFromNodesAndTerminals&lt;/code> carries a comment saying it is not used.&lt;/p>
+&lt;p>New models should prefer &lt;code>ExponentialZCSEmulation&lt;/code> on the plain &lt;code>Switch&lt;/code>, which covers the same
+ground with a parameterised duration and without rewriting its own resistance attributes.&lt;/p>
 &lt;h2 id="loads">Loads&lt;/h2>
 &lt;p>&lt;code>RXLoad&lt;/code> is a &lt;code>CompositePowerComp&lt;/code>. In &lt;code>initializeFromNodesAndTerminals&lt;/code> it converts the powers to
 element values and builds sub-components:&lt;/p>

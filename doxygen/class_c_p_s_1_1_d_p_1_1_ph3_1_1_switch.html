@@ -491,6 +491,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a65d5ff3de44dc1ca3a2cee402dc1cae5" id="r_a65d5ff3de44dc1ca3a2cee402dc1cae5"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a65d5ff3de44dc1ca3a2cee402dc1cae5">mExponentialTransitionActive</a></td></tr>
 <tr class="memdesc:a65d5ff3de44dc1ca3a2cee402dc1cae5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exponential-transition diagnostics.  <br /></td></tr>
 <tr class="separator:a65d5ff3de44dc1ca3a2cee402dc1cae5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a67ef950b3acb54488cf6635c558685" id="r_a7a67ef950b3acb54488cf6635c558685"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7a67ef950b3acb54488cf6635c558685">mExponentialTransitionClosing</a></td></tr>
+<tr class="memdesc:a7a67ef950b3acb54488cf6635c558685"><td class="mdescLeft">&#160;</td><td class="mdescRight">True while the active exponential transition is a closing transition.  <br /></td></tr>
+<tr class="separator:a7a67ef950b3acb54488cf6635c558685"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af581634ddc93aa041daa00f6ab0bb7f1" id="r_af581634ddc93aa041daa00f6ab0bb7f1"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af581634ddc93aa041daa00f6ab0bb7f1">mExponentialProgress</a></td></tr>
 <tr class="separator:af581634ddc93aa041daa00f6ab0bb7f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a771c4543bc5e540ead1115cb2808941b" id="r_a771c4543bc5e540ead1115cb2808941b"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a771c4543bc5e540ead1115cb2808941b">mExponentialTransitionStartTime</a></td></tr>
@@ -601,11 +604,11 @@ Additional Inherited Members</h2></td></tr>
 </pre><p class="startli">and open each physical pole at its own current zero.</p>
 </li>
 <li><p class="startli">ExponentialZCSEmulation: increase the switch resistance continuously according to </p><pre class="fragment">R(t) = R_closed * (R_open/R_closed)^alpha,
-</pre><p class="startli">alpha in [0,1], over a user-defined switching duration. This is the variable-resistance ZCS-emulation approach and is not an arc model. </p>
+</pre><p class="startli">alpha in [0,1], over a user-defined switching duration. Opening runs alpha from 0 to 1, closing runs it from 1 to 0, since the envelope cannot represent a discontinuity in either direction. This is the variable-resistance ZCS-emulation approach and is not an arc model. </p>
 </li>
 </ul>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00041">41</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00043">43</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
 </div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="a797650d52f9073fdb7353dedd6fdc862" name="a797650d52f9073fdb7353dedd6fdc862"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a797650d52f9073fdb7353dedd6fdc862">&#9670;&#160;</a></span>SwitchingMode</h2>
@@ -632,7 +635,7 @@ Additional Inherited Members</h2></td></tr>
 <tr><td class="fieldname"><a id="a797650d52f9073fdb7353dedd6fdc862ae62734bb2ec692abb9594492c86e587f" name="a797650d52f9073fdb7353dedd6fdc862ae62734bb2ec692abb9594492c86e587f"></a>ExponentialZCSEmulation&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00047">47</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00049">49</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -692,7 +695,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00081">81</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00087">87</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -724,7 +727,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">CPS::SimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00062">62</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00065">65</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -755,7 +758,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html#a760f30b04072c0a96efe4833c3e89481">CPS::Base::Ph3::Switch</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00146">146</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00163">163</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -782,7 +785,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00092">92</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00098">98</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -813,7 +816,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_c_p_s_1_1_m_n_a_variable_comp_interface.html#ac8fd7511faa929b522f7cff647634eab">CPS::MNAVariableCompInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00356">356</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00400">400</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -844,7 +847,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a4401f844a3f389e07a37ef1716d84dcd">CPS::SimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00161">161</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00204">204</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -885,7 +888,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00282">282</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00325">325</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -923,7 +926,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a860dddb4b67c92cc365271518805e07b">CPS::MNASwitchInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00268">268</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00311">311</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -952,7 +955,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a6b9663a235e9de1dc1997513ae343353">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00259">259</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00302">302</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -988,7 +991,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00210">210</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00253">253</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -1024,7 +1027,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00314">314</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00358">358</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -1053,7 +1056,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a82fb36cf23e8e2eca8d52fc1f02ba473">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00352">352</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00396">396</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -1082,7 +1085,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a3e08c6d99dbfc258bf62d81a53e12776">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00330">330</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00374">374</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -1113,7 +1116,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a8d1053b0f6db7e8cf3ad6432b6dcd6d8">CPS::MNASwitchInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00248">248</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00291">291</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -1144,7 +1147,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_base_1_1_ph3_1_1_switch.html#aa1583662ef049452944e94d6141d7795">CPS::Base::Ph3::Switch</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00103">103</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00106">106</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -1163,7 +1166,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00094">94</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00097">97</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -1182,7 +1185,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00071">71</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00074">74</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -1201,7 +1204,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00085">85</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00088">88</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -1231,7 +1234,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a70de41f6affd7b87d044508e6f82c5cc">CPS::MNASwitchInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00255">255</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8cpp_source.html#l00298">298</a> of file <a class="el" href="_d_p___ph3___switch_8cpp_source.html">DP_Ph3_Switch.cpp</a>.</p>
 
 </div>
 </div>
@@ -1258,7 +1261,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00087">87</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00093">93</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -1277,7 +1280,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Effective phase resistances currently stamped into the MNA matrix [ohm]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00075">75</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00081">81</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -1293,7 +1296,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00076">76</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00082">82</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -1309,7 +1312,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00077">77</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00083">83</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -1324,8 +1327,9 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Position on the resistance path, 0 at R_closed and 1 at R_open. Runs 0 -&gt; 1 while opening and 1 -&gt; 0 while closing. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00070">70</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00076">76</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -1343,7 +1347,25 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Exponential-transition diagnostics. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00069">69</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00071">71</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
+
+</div>
+</div>
+<a id="a7a67ef950b3acb54488cf6635c558685" name="a7a67ef950b3acb54488cf6635c558685"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a67ef950b3acb54488cf6635c558685">&#9670;&#160;</a></span>mExponentialTransitionClosing</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt;<a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&gt;<a class="el" href="class_c_p_s_1_1_m_n_a_switch_interface.html#a1278b7378718ca0053e0579ab0c1de25">::Ptr</a> CPS::DP::Ph3::Switch::mExponentialTransitionClosing</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>True while the active exponential transition is a closing transition. </p>
+
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00073">73</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -1359,7 +1381,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00072">72</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00078">78</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -1375,7 +1397,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00071">71</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00077">77</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -1393,7 +1415,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reconstructed physical instantaneous currents [A]. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00060">60</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00062">62</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -1409,7 +1431,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00061">61</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00063">63</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -1425,7 +1447,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00062">62</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00064">64</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -1441,7 +1463,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00053">53</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00055">55</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -1457,7 +1479,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00055">55</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00057">57</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -1473,7 +1495,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00056">56</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00058">58</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -1489,7 +1511,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00057">57</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00059">59</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -1505,7 +1527,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00064">64</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00066">66</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -1521,7 +1543,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00065">65</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00067">67</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
@@ -1537,7 +1559,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00066">66</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___switch_8h_source.html#l00068">68</a> of file <a class="el" href="_d_p___ph3___switch_8h_source.html">DP_Ph3_Switch.h</a>.</p>
 
 </div>
 </div>
