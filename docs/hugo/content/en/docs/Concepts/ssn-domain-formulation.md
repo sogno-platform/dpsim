@@ -58,14 +58,16 @@ shifted operator becomes a real system of twice the size,
 The off-diagonal $\pm\omega_s \boldsymbol{I}$ blocks are the carrier rotation, and the block
 structure $\begin{bmatrix} P & -Q \\ Q & P \end{bmatrix}$ is the real representation of the complex
 number $P + jQ$. Discretising this real system with the same trapezoidal rule and recombining the
-blocks recovers the complex discrete pair, from which the equivalent admittance and the history term
-follow exactly as in the instantaneous case.
+blocks recovers the complex discrete pair for a complex-linear component, from which the equivalent
+admittance and the history term follow exactly as in the instantaneous case.
 
-Two things follow. The equivalent admittance is complex in an envelope domain and real in an
-instantaneous one, so the same component stamps differently. And setting $\omega_s = 0$ collapses
-the augmented system back to the instantaneous one, which is the general statement about the
-envelope transform applied here: the instantaneous formulation is the zero-carrier special case, not
-a separate method.
+For a complex-linear envelope model, the resulting real block can be folded into one complex
+admittance. A model that mixes real control states with complex-envelope states need not preserve
+the $\begin{bmatrix} P & -Q \\ Q & P \end{bmatrix}$ structure. Its equivalent admittance must then
+remain a full real block rather than being reduced to a complex scalar. Setting $\omega_s = 0$
+still collapses the carrier-shifted state equations back to the instantaneous formulation; the
+difference in the Norton representation comes from the component's axis coupling, not from a
+different integration method.
 
 ## Why this matters for accuracy
 

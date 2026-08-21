@@ -39,14 +39,17 @@ $\frac{d}{dt} + j\omega_s$, so what is discretised is $\mathbf{A} - j\omega_s\ma
 $\mathbf{A}$, and splitting the envelope into real and imaginary parts turns that into a real system
 of twice the size. This is derived in full under
 [SSN across domains]({{< ref "ssn-domain-formulation.md" >}}), together with why the equivalent
-admittance is complex in an envelope domain and real in an instantaneous one.
+admittance is represented differently in envelope and instantaneous domains.
 
 The real-augmented form matches how the rest of the dynamic phasor system is already assembled: a
 complex admittance $g = g_r + j g_i$ is stamped as the real block
 $\left[\begin{smallmatrix} g_r & -g_i \\ g_i & g_r \end{smallmatrix}\right]$, with real and
-imaginary node parts in separate halves of a real-valued system. The SSN component therefore needs
-no complex assembly of its own, and the trapezoidal discretisation used by the instantaneous models
-applies unchanged.
+imaginary node parts in separate halves of a real-valued system. This complex-scalar representation
+is sufficient when the component is complex-linear. A mixed real/envelope model, such as a
+controlled converter, may instead produce a general real $2 \times 2$ block because its $d$- and
+$q$-axis responses differ. That block must be retained when it is stamped into the same
+real-augmented system. In both cases, the trapezoidal discretisation used by the instantaneous
+models applies unchanged.
 
 ## Components
 

@@ -70,7 +70,9 @@ One base does not follow this pattern. `MixedVTypeVariableSSNComp` does **not** 
 it requires the derived component to hand it a state matrix that is already carrier shifted, because
 its steady-state solve assumes so. Supplying an unshifted matrix there initializes to the wrong
 operating point rather than failing, and it is the single easiest mistake to make when porting a
-component from EMT to DP.
+component from EMT to DP. Its discrete Norton admittance is also retained as the full packed-real
+`2 x 2` block `C * Bd + D`. Mixed real/envelope controls do not generally have the
+`[[P, -Q], [Q, P]]` structure required to fold that block into one complex scalar.
 {{% /alert %}}
 
 ## Frame metadata
