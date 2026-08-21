@@ -48,8 +48,9 @@ asks the network to move the capacitor voltage discontinuously, and the trapezoi
 of the capacitor answers with the same alternating error.
 
 This is a property of the discretisation, not of the physical circuit. A real breaker interrupts at a
-current zero and closes at a voltage zero, and the arc across real contacts dissipates what is left;
-a two-valued resistance switched at an arbitrary instant has neither mechanism.
+current zero, while controlled switching can aim to close at a favourable voltage instant. The arc
+across real contacts dissipates what is left; a two-valued resistance switched at an arbitrary
+instant has neither mechanism.
 
 ## What a current zero means per domain
 
@@ -58,7 +59,8 @@ Whether that is available depends on what the domain represents.
 
 In EMT the state variables are instantaneous quantities, so the current zero is directly visible.
 Waiting for it means the interrupted current is zero to within one time step and there is nothing
-left for the companion model to disagree about. This is physically and numerically correct.
+left for the companion model to disagree about. This is consistent with the intended ideal
+current-zero interruption model.
 
 In DP the state variables are complex envelopes of a carrier at the reference frequency
 $\omega_s$, and the instantaneous current can be reconstructed from them,
@@ -104,14 +106,14 @@ physical arc voltage, no energy balance and no reignition. The parameter to choo
 it should be long enough that the ramp covers several time steps and short enough to stay
 insignificant on the timescale being studied.
 
-The cost is that the system matrix changes on every step of the transition rather than once, so each
+The cost is that the system matrix changes at every step of the transition rather than once, so each
 of those steps requires a refactorisation. Both non-ideal modes therefore report
 `supportsPrecomputedSystemMatrices() == false` and take the variable-component path through the
 solver, while `Ideal` keeps the cheap precomputed two-state path.
 
-On closing, DP ZCS suppresses unrealistic transients, also based on companion models history
-terms. This also suppresses physically real closing inrush, so we still have only an
-approximation. EMT closing inrush is real, not an artifact.
+On closing, DP ZCS suppresses unrealistic transients that are also related to companion-model history
+terms. This can also suppress physically real closing inrush, so the result is still only an
+approximation. EMT closing inrush is real, not an artefact.
 
 ## Choosing a mode
 
@@ -122,7 +124,7 @@ approximation. EMT closing inrush is real, not an artifact.
 | `ExponentialZCSEmulation` | ramped over $T_{sw}$ | ramped over $T_{sw}$ | the transient has to be absent, in particular for DP in either direction |
 
 The modes are available in `EMT::Ph3::Switch`, `DP::Ph3::Switch` and `DP::Ph1::Switch`. Every switch
-defaults to `Ideal`
+defaults to `Ideal`.
 
 ## The variable-resistance switch
 
