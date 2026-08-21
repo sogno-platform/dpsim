@@ -33,6 +33,7 @@ set(CIRCUIT_SOURCES
 	#Circuits/EMT_ResVS_RL_Switch.cpp
 	Circuits/EMT_VSI.cpp
 	Circuits/EMT_PiLine.cpp
+	Circuits/EMT_Ph3_PQLoad.cpp
 	Circuits/EMT_DecouplingLine_Ph3.cpp
 	Circuits/EMT_Diakoptics.cpp
 	Circuits/EMT_Ph3_R3C1L1CS1_RC_vs_SSN.cpp
@@ -112,9 +113,6 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_SynGenTrStab_3Bus_SteadyState.cpp
 	Circuits/DP_SynGenTrStab_3Bus_Fault.cpp
 	Circuits/SP_SynGenTrStab_3Bus_Fault.cpp
-
-	# DC
-	Circuits/EMT_DC_PiLine_SourceStep.cpp
 )
 
 if(WITH_JSON)
@@ -153,8 +151,6 @@ Components/DP_Ph1_MixedVariableSSN_vs_FixedSSN.cpp
 Components/DP_Ph1_AvVoltSourceInverterStateSpace.cpp
 Components/DP_Ph3_AvVoltSourceInverterStateSpace.cpp
 Components/EMT_SSN_GFM_Test.cpp
-Components/EMT_Ph3_SSN_GFM_JacobianCheck.cpp
-Components/EMT_Ph3_GFL_Comparison.cpp
 )
 
 set(STATE_SPACE_SOURCES
@@ -197,7 +193,6 @@ list(APPEND TEST_SOURCES
 	Circuits/EMT_Ph1_General2TerminalSSN.cpp
 	Circuits/SP_ITM_withPiLine_Ph1.cpp
 	Circuits/SP_Ph1_General2TerminalSSN.cpp
-	Circuits/EMT_DC_PiLine_SourceStep.cpp
 )
 
 if(WITH_SUNDIALS)

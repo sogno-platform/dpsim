@@ -8,15 +8,6 @@
 
 #include <DPsim.h>
 #include <dpsim-models/CSVReader.h>
-#include <dpsim-models/EMT/EMT_DC_Capacitor.h>
-#include <dpsim-models/EMT/EMT_DC_CurrentSource.h>
-#include <dpsim-models/EMT/EMT_DC_Inductor.h>
-#include <dpsim-models/EMT/EMT_DC_PiLine.h>
-#include <dpsim-models/EMT/EMT_DC_Resistor.h>
-#include <dpsim-models/EMT/EMT_DC_VoltageSource.h>
-#include <dpsim-models/EMT/EMT_Ph3_GFL.h>
-#include <dpsim-models/EMT/EMT_Ph3_SSN_GFL.h>
-#include <dpsim-models/EMT/EMT_Ph3_SSN_GFL_Split.h>
 #include <dpsim-models/IdentifiedObject.h>
 #include <dpsim/RealTimeSimulation.h>
 #include <dpsim/Simulation.h>
@@ -30,91 +21,6 @@ using json = nlohmann::json;
 
 namespace py = pybind11;
 using namespace pybind11::literals;
-
-namespace {
-
-void addEMTDCComponents(py::module_ mEMTDC) {
-  py::class_<CPS::EMT::DC::VoltageSource,
-             std::shared_ptr<CPS::EMT::DC::VoltageSource>,
-             CPS::SimPowerComp<CPS::Real>>(mEMTDC, "VoltageSource",
-                                           py::multiple_inheritance())
-      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
-      .def("set_parameters", &CPS::EMT::DC::VoltageSource::setParameters,
-           "voltage"_a)
-      .def("connect", &CPS::EMT::DC::VoltageSource::connect)
-      .def_property_readonly("V_ref",
-                             createAttributeGetter<CPS::Real>("V_ref"));
-
-  py::class_<CPS::EMT::DC::CurrentSource,
-             std::shared_ptr<CPS::EMT::DC::CurrentSource>,
-             CPS::SimPowerComp<CPS::Real>>(mEMTDC, "CurrentSource",
-                                           py::multiple_inheritance())
-      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
-      .def("set_parameters", &CPS::EMT::DC::CurrentSource::setParameters,
-           "current"_a)
-      .def("connect", &CPS::EMT::DC::CurrentSource::connect)
-      .def_property_readonly("I_ref",
-                             createAttributeGetter<CPS::Real>("I_ref"));
-
-  py::class_<CPS::EMT::DC::Resistor, std::shared_ptr<CPS::EMT::DC::Resistor>,
-             CPS::SimPowerComp<CPS::Real>>(mEMTDC, "Resistor",
-                                           py::multiple_inheritance())
-      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
-      .def("set_parameters", &CPS::EMT::DC::Resistor::setParameters,
-           "resistance"_a)
-      .def("connect", &CPS::EMT::DC::Resistor::connect)
-      .def_property_readonly("R", createAttributeGetter<CPS::Real>("R"));
-
-  py::class_<CPS::EMT::DC::Capacitor, std::shared_ptr<CPS::EMT::DC::Capacitor>,
-             CPS::SimPowerComp<CPS::Real>>(mEMTDC, "Capacitor",
-                                           py::multiple_inheritance())
-      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
-      .def("set_parameters", &CPS::EMT::DC::Capacitor::setParameters,
-           "capacitance"_a)
-      .def("connect", &CPS::EMT::DC::Capacitor::connect)
-      .def_property_readonly("C", createAttributeGetter<CPS::Real>("C"))
-      .def_property_readonly("x", createAttributeGetter<CPS::Matrix>("x"));
-
-  py::class_<CPS::EMT::DC::Inductor, std::shared_ptr<CPS::EMT::DC::Inductor>,
-             CPS::SimPowerComp<CPS::Real>>(mEMTDC, "Inductor",
-                                           py::multiple_inheritance())
-      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
-      .def("set_parameters", &CPS::EMT::DC::Inductor::setParameters,
-           "inductance"_a, "initial_current"_a = 0.0)
-      .def("connect", &CPS::EMT::DC::Inductor::connect)
-      .def_property_readonly("L", createAttributeGetter<CPS::Real>("L"))
-      .def_property_readonly("initial_current",
-                             createAttributeGetter<CPS::Real>("i_init"))
-      .def_property_readonly("x", createAttributeGetter<CPS::Matrix>("x"));
-
-  py::class_<CPS::EMT::DC::PiLine, std::shared_ptr<CPS::EMT::DC::PiLine>,
-             CPS::SimPowerComp<CPS::Real>>(mEMTDC, "PiLine",
-                                           py::multiple_inheritance())
-      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
-      .def("set_parameters", &CPS::EMT::DC::PiLine::setParameters,
-           "series_resistance"_a, "series_inductance"_a,
-           "parallel_capacitance"_a = 0.0, "parallel_conductance"_a = 0.0,
-           "initial_current"_a = 0.0)
-      .def("connect", &CPS::EMT::DC::PiLine::connect)
-      .def_property_readonly("series_resistance",
-                             createAttributeGetter<CPS::Real>("R_series"))
-      .def_property_readonly("series_inductance",
-                             createAttributeGetter<CPS::Real>("L_series"))
-      .def_property_readonly("parallel_capacitance",
-                             createAttributeGetter<CPS::Real>("C_parallel"))
-      .def_property_readonly("parallel_conductance",
-                             createAttributeGetter<CPS::Real>("G_parallel"))
-      .def_property_readonly("initial_current",
-                             createAttributeGetter<CPS::Real>("i_init"));
-}
-
-} // namespace
 
 void addEMTComponents(py::module_ mEMT) {
   py::class_<CPS::EMT::SimNode, std::shared_ptr<CPS::EMT::SimNode>,
@@ -133,10 +39,6 @@ void addEMTComponents(py::module_ mEMT) {
            py::overload_cast<CPS::Complex, int>(
                &CPS::EMT::SimNode::setInitialVoltage, py::const_))
       .def_readonly_static("gnd", &CPS::EMT::SimNode::GND);
-
-  py::module_ mEMTDC =
-      mEMT.def_submodule("dc", "scalar electromagnetic-transient DC models");
-  addEMTDCComponents(mEMTDC);
 
   py::module mEMTPh1 = mEMT.def_submodule(
       "ph1", "single phase electromagnetic-transient models");
@@ -395,6 +297,28 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            // cppcheck-suppress assignBoolToPointer
            "reactance_in_series"_a = false)
       .def("connect", &CPS::EMT::Ph3::RXLoad::connect);
+
+  py::class_<CPS::EMT::Ph3::PQLoad, std::shared_ptr<CPS::EMT::Ph3::PQLoad>,
+             CPS::SimPowerComp<CPS::Real>, CPS::MNASyncGenInterface>(
+      mEMTPh3, "PQLoad", py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::EMT::Ph3::PQLoad::setParameters,
+           "active_power"_a, "reactive_power"_a, "nominal_voltage"_a,
+           "minimum_voltage_per_unit"_a = 0.1)
+      .def("connect", &CPS::EMT::Ph3::PQLoad::connect)
+      .def_property("P", createAttributeGetter<CPS::Real>("P"),
+                    createAttributeSetter<CPS::Real>("P"))
+      .def_property("Q", createAttributeGetter<CPS::Real>("Q"),
+                    createAttributeSetter<CPS::Real>("Q"))
+      .def_property("V_nom", createAttributeGetter<CPS::Real>("V_nom"),
+                    createAttributeSetter<CPS::Real>("V_nom"))
+      .def_property("V_min_pu", createAttributeGetter<CPS::Real>("V_min_pu"),
+                    createAttributeSetter<CPS::Real>("V_min_pu"))
+      .def_property_readonly("p_inst",
+                             createAttributeGetter<CPS::Real>("p_inst"))
+      .def_property_readonly("q_inst",
+                             createAttributeGetter<CPS::Real>("q_inst"));
 
   py::class_<CPS::EMT::Ph3::Shunt, std::shared_ptr<CPS::EMT::Ph3::Shunt>,
              CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "Shunt",
@@ -748,153 +672,6 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "flux_breakpoints"_a, "current_breakpoints"_a)
       .def("connect", &CPS::EMT::Ph3::PiecewiseLinearInductor::connect)
       .def_property_readonly("x", createAttributeGetter<CPS::Matrix>("x"));
-
-  // -----------------------------------------------------------------------
-  // Grid-following converter models
-  // -----------------------------------------------------------------------
-
-  py::class_<CPS::EMT::Ph3::GFL, std::shared_ptr<CPS::EMT::Ph3::GFL>,
-             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "GFL",
-                                           py::multiple_inheritance())
-      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
-      .def(py::init<std::string, std::string, CPS::Logger::Level>(), "uid"_a,
-           "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-      .def("set_parameters", &CPS::EMT::Ph3::GFL::setParameters, "sys_omega"_a,
-           "sys_volt_nom"_a, "p_ref"_a, "q_ref"_a)
-      .def("set_controller_parameters",
-           &CPS::EMT::Ph3::GFL::setControllerParameters, "kp_pll"_a, "ki_pll"_a,
-           "kp_power_ctrl"_a, "ki_power_ctrl"_a, "kp_curr_ctrl"_a,
-           "ki_curr_ctrl"_a, "omega_cutoff"_a)
-      .def("set_filter_parameters", &CPS::EMT::Ph3::GFL::setFilterParameters,
-           "lf"_a, "cf"_a, "rf"_a)
-      .def("set_initial_state_values",
-           &CPS::EMT::Ph3::GFL::setInitialStateValues, "p_init"_a, "q_init"_a,
-           "phi_d_init"_a, "phi_q_init"_a, "gamma_d_init"_a, "gamma_q_init"_a)
-      .def("with_control", &CPS::EMT::Ph3::GFL::withControl, "control_on"_a)
-      .def("connect", &CPS::EMT::Ph3::GFL::connect)
-      .def_property_readonly("vc_d", createAttributeGetter<CPS::Real>("vc_d"))
-      .def_property_readonly("vc_q", createAttributeGetter<CPS::Real>("vc_q"))
-      .def_property_readonly("igrid_d",
-                             createAttributeGetter<CPS::Real>("igrid_d"))
-      .def_property_readonly("igrid_q",
-                             createAttributeGetter<CPS::Real>("igrid_q"))
-      .def_property_readonly("p_inst",
-                             createAttributeGetter<CPS::Real>("p_inst"))
-      .def_property_readonly("q_inst",
-                             createAttributeGetter<CPS::Real>("q_inst"))
-      .def_property_readonly("omega_pll",
-                             createAttributeGetter<CPS::Real>("omega_pll"))
-      .def_property_readonly("vs_ref",
-                             createAttributeGetter<CPS::Matrix>("vs_ref"))
-      .def_property_readonly("vs", createAttributeGetter<CPS::Matrix>("vs"))
-      .def_property_readonly("pll_output",
-                             createAttributeGetter<CPS::Matrix>("pll_output"))
-      .def_property_readonly(
-          "powerctrl_inputs",
-          createAttributeGetter<CPS::Matrix>("powerctrl_inputs"))
-      .def_property_readonly(
-          "powerctrl_states",
-          createAttributeGetter<CPS::Matrix>("powerctrl_states"))
-      .def_property_readonly(
-          "powerctrl_outputs",
-          createAttributeGetter<CPS::Matrix>("powerctrl_outputs"));
-
-  py::class_<CPS::EMT::Ph3::SSN_GFL, std::shared_ptr<CPS::EMT::Ph3::SSN_GFL>,
-             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SSN_GFL",
-                                           py::multiple_inheritance())
-      .def(py::init<std::string, std::string, CPS::Logger::Level>(), "uid"_a,
-           "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-      .def("set_parameters", &CPS::EMT::Ph3::SSN_GFL::setParameters, "lf"_a,
-           "cf"_a, "rf"_a, "rc"_a, "omega_n"_a, "kp_pll"_a, "ki_pll"_a,
-           "omega_cutoff"_a, "p_ref"_a, "q_ref"_a, "kp_power_ctrl"_a,
-           "ki_power_ctrl"_a, "kp_curr_ctrl"_a, "ki_curr_ctrl"_a)
-      .def("connect", &CPS::EMT::Ph3::SSN_GFL::connect)
-      .def("get_state_names", &CPS::EMT::Ph3::SSN_GFL::getLocalStateNames)
-      .def("get_state", &CPS::EMT::Ph3::SSN_GFL::getState)
-      .def("get_state_derivative", &CPS::EMT::Ph3::SSN_GFL::getStateDerivative)
-      .def("get_interface_voltage",
-           &CPS::EMT::Ph3::SSN_GFL::getInterfaceVoltage)
-      .def("get_interface_current",
-           &CPS::EMT::Ph3::SSN_GFL::getInterfaceCurrent)
-      .def_property_readonly("vc_d", createAttributeGetter<CPS::Real>("vc_d"))
-      .def_property_readonly("vc_q", createAttributeGetter<CPS::Real>("vc_q"))
-      .def_property_readonly("irc_d", createAttributeGetter<CPS::Real>("irc_d"))
-      .def_property_readonly("irc_q", createAttributeGetter<CPS::Real>("irc_q"))
-      .def_property_readonly("p_inst",
-                             createAttributeGetter<CPS::Real>("p_inst"))
-      .def_property_readonly("q_inst",
-                             createAttributeGetter<CPS::Real>("q_inst"))
-      .def_property_readonly("omega_pll",
-                             createAttributeGetter<CPS::Real>("omega_pll"));
-
-  py::class_<CPS::EMT::Ph3::SSN_GFL_Split,
-             std::shared_ptr<CPS::EMT::Ph3::SSN_GFL_Split>,
-             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SSN_GFL_Split",
-                                           py::multiple_inheritance())
-      .def(py::init<std::string, std::string, CPS::Logger::Level>(), "uid"_a,
-           "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-      .def("set_parameters", &CPS::EMT::Ph3::SSN_GFL_Split::setParameters,
-           "lf"_a, "cf"_a, "rf"_a, "rc"_a, "omega_n"_a, "kp_pll"_a, "ki_pll"_a,
-           "omega_cutoff"_a, "p_ref"_a, "q_ref"_a, "kp_power_ctrl"_a,
-           "ki_power_ctrl"_a, "kp_curr_ctrl"_a, "ki_curr_ctrl"_a)
-      .def("connect", &CPS::EMT::Ph3::SSN_GFL_Split::connect)
-
-      // Combined controller + network state.
-      .def("get_state", &CPS::EMT::Ph3::SSN_GFL_Split::getState)
-      .def("get_state_derivative",
-           &CPS::EMT::Ph3::SSN_GFL_Split::getStateDerivative)
-
-      // Split state access.
-      .def("get_controller_state",
-           &CPS::EMT::Ph3::SSN_GFL_Split::getControllerState)
-      .def("get_network_state", &CPS::EMT::Ph3::SSN_GFL_Split::getNetworkState)
-      .def("get_network_state_names",
-           &CPS::EMT::Ph3::SSN_GFL_Split::getLocalStateNames)
-
-      // Electrical interface / delayed forcing.
-      .def("get_interface_voltage",
-           &CPS::EMT::Ph3::SSN_GFL_Split::getInterfaceVoltage)
-      .def("get_interface_current",
-           &CPS::EMT::Ph3::SSN_GFL_Split::getInterfaceCurrent)
-      .def("get_converter_voltage_reference",
-           &CPS::EMT::Ph3::SSN_GFL_Split::getConverterVoltageReference)
-      .def("get_delayed_converter_voltage",
-           &CPS::EMT::Ph3::SSN_GFL_Split::getDelayedConverterVoltage)
-
-      // Controller affine model.
-      .def("get_controller_A", &CPS::EMT::Ph3::SSN_GFL_Split::getControllerA)
-      .def("get_controller_B", &CPS::EMT::Ph3::SSN_GFL_Split::getControllerB)
-      .def("get_controller_C", &CPS::EMT::Ph3::SSN_GFL_Split::getControllerC)
-      .def("get_controller_D", &CPS::EMT::Ph3::SSN_GFL_Split::getControllerD)
-      .def("get_controller_E", &CPS::EMT::Ph3::SSN_GFL_Split::getControllerE)
-      .def("get_controller_F", &CPS::EMT::Ph3::SSN_GFL_Split::getControllerF)
-
-      // Fixed electrical SSN plant.
-      .def("get_network_A", &CPS::EMT::Ph3::SSN_GFL_Split::getNetworkA)
-      .def("get_network_B", &CPS::EMT::Ph3::SSN_GFL_Split::getNetworkB)
-      .def("get_network_C", &CPS::EMT::Ph3::SSN_GFL_Split::getNetworkC)
-      .def("get_network_D", &CPS::EMT::Ph3::SSN_GFL_Split::getNetworkD)
-      .def("get_equivalent_conductance",
-           &CPS::EMT::Ph3::SSN_GFL_Split::getEquivalentConductance)
-
-      // Logged scalar quantities.
-      .def_property_readonly("vc_d", createAttributeGetter<CPS::Real>("vc_d"))
-      .def_property_readonly("vc_q", createAttributeGetter<CPS::Real>("vc_q"))
-      .def_property_readonly("irc_d", createAttributeGetter<CPS::Real>("irc_d"))
-      .def_property_readonly("irc_q", createAttributeGetter<CPS::Real>("irc_q"))
-      .def_property_readonly("p_inst",
-                             createAttributeGetter<CPS::Real>("p_inst"))
-      .def_property_readonly("q_inst",
-                             createAttributeGetter<CPS::Real>("q_inst"))
-      .def_property_readonly("omega_pll",
-                             createAttributeGetter<CPS::Real>("omega_pll"))
-      .def_property_readonly("vinv_ref_a",
-                             createAttributeGetter<CPS::Real>("vinv_ref_a"))
-      .def_property_readonly("vinv_ref_b",
-                             createAttributeGetter<CPS::Real>("vinv_ref_b"))
-      .def_property_readonly("vinv_ref_c",
-                             createAttributeGetter<CPS::Real>("vinv_ref_c"));
 
   py::class_<CPS::EMT::Ph3::AvVoltSourceInverterStateSpace,
              std::shared_ptr<CPS::EMT::Ph3::AvVoltSourceInverterStateSpace>,
