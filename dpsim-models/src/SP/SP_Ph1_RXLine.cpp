@@ -119,6 +119,11 @@ SimPowerComp<Complex>::Ptr SP::Ph1::RXLine::clone(String name) {
   return copy;
 }
 
+void SP::Ph1::RXLine::validateParameters(ParameterCheck &check) {
+  check(mSeriesRes, {Constraint::Finite, Constraint::Positive});
+  check(mSeriesInd, {Constraint::Finite, Constraint::NonNegative});
+}
+
 void SP::Ph1::RXLine::createSubComponents() {
   if (mSubCompCreated)
     return;

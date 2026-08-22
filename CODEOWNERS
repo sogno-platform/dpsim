@@ -45,7 +45,9 @@
 /dpsim-models/include/dpsim-models/SP/SP_Ph1_SynchronGenerator6bOrderVBR.h @martinmoraga
 /dpsim-models/include/dpsim-models/SP/SP_Ph1_SynchronGeneratorTrStab.h @gnakti
 /dpsim-models/include/dpsim-models/SP/SP_Ph1_varResSwitch.h @gnakti
+/dpsim-models/include/dpsim-models/ParameterCheck.h @leonardocarreras
 /dpsim-models/src/Base/Base_ReducedOrderSynchronGenerator.cpp @martinmoraga
+/dpsim-models/src/ParameterCheck.cpp @leonardocarreras
 /dpsim-models/src/CIM/Reader.cpp @gnakti
 /dpsim-models/src/DP/DP_Ph1_SynchronGenerator3OrderVBR.cpp @martinmoraga
 /dpsim-models/src/DP/DP_Ph1_SynchronGenerator4OrderVBR.cpp @martinmoraga

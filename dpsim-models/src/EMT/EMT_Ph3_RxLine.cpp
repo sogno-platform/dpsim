@@ -34,6 +34,11 @@ SimPowerComp<Real>::Ptr EMT::Ph3::RxLine::clone(String name) {
   return copy;
 }
 
+void EMT::Ph3::RxLine::validateParameters(ParameterCheck &check) {
+  check(mSeriesRes, {Constraint::Finite, Constraint::Invertible});
+  check(mSeriesInd, {Constraint::Finite, Constraint::Invertible});
+}
+
 void EMT::Ph3::RxLine::createSubComponents() {
   if (mSubCompCreated)
     return;
