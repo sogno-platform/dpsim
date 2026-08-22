@@ -6,38 +6,37 @@
 #include <vector>
 
 #include "dpsim-models/Definitions.h"
-#include "dpsim-models/EMT/EMT_Ph3_ControlledVoltageSource.h"
-#include "dpsim-models/MathUtils.h"
+#include "dpsim-models/SP/SP_Ph1_ControlledVoltageSource.h"
+#include "dpsim-models/SimNode.h"
+#include "dpsim-models/TopologicalNode.h"
 #include <dpsim-models/CompositePowerComp.h>
-#include <dpsim-models/EMT/EMT_Ph3_ControlledCurrentSource.h>
-#include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
+#include <dpsim-models/SP/SP_Ph1_ControlledCurrentSource.h>
+#include <dpsim-models/SP/SP_Ph1_Resistor.h>
 
 namespace CPS {
-namespace Signal {
-
-class DecouplingIdealTransformer_EMT_Ph3
-    : public CompositePowerComp<Real>,
-      public SharedFactory<DecouplingIdealTransformer_EMT_Ph3> {
+namespace SP {
+namespace Ph1 {
+class DecouplingIdealTransformer
+    : public CompositePowerComp<Complex>,
+      public SharedFactory<DecouplingIdealTransformer> {
 protected:
   Real mDelay;
-  Matrix mInternalSeriesResistance =
-      CPS::Math::singlePhaseParameterToThreePhase(1e-6);
-  Matrix mInternalParallelResistance =
-      CPS::Math::singlePhaseParameterToThreePhase(1e6);
+  Real mInternalSeriesResistance = 1e-6;
+  Real mInternalParallelResistance = 1e6;
 
-  std::shared_ptr<EMT::Ph3::Resistor> mRes1, mRes2;
-  std::shared_ptr<EMT::Ph3::ControlledCurrentSource> mCurrentSrc;
-  std::shared_ptr<EMT::Ph3::ControlledVoltageSource> mVoltageSrc;
-  Attribute<Matrix>::Ptr mSrcCurrent, mSrcVoltage;
+  std::shared_ptr<SP::Ph1::Resistor> mRes1, mRes2;
+  std::shared_ptr<SP::Ph1::ControlledCurrentSource> mCurrentSrc;
+  std::shared_ptr<SP::Ph1::ControlledVoltageSource> mVoltageSrc;
+  Attribute<Complex>::Ptr mSrcCurrent, mSrcVoltage;
 
   // Ringbuffers for the values of previous timesteps
   // TODO make these matrix attributes
-  Matrix mCur1, mVol2;
+  std::vector<Complex> mCur1, mVol2;
 
   // Copy of the most recent elements of the ring buffers
   // They are used to perform extrapolation
-  Matrix mCur1Extrap, mVol2Extrap;
-  MatrixComp mCurrent1Extrap0;
+  std::vector<Complex> mCur1Extrap, mVol2Extrap;
+  Complex mCurrent1Extrap0;
 
   UInt mBufIdx = 0;
   UInt mMacroBufIdx = 0;
@@ -48,30 +47,30 @@ protected:
   Matrix mVoltageSrcIntfCurr;
 
   // Get an approximate value of the signal in between steps when the delay is not an integer multiple of the step size
-  Matrix interpolate(Matrix &data);
+  Complex interpolate(std::vector<Complex> &data);
 
   // Estimates the value of the input signal in the next step
-  Matrix extrapolate(Matrix &data);
+  Complex extrapolate(std::vector<Complex> &data);
 
 public:
-  typedef std::shared_ptr<DecouplingIdealTransformer_EMT_Ph3> Ptr;
+  typedef std::shared_ptr<DecouplingIdealTransformer> Ptr;
 
-  const Attribute<Matrix>::Ptr mSourceVoltageIntfVoltage;
-  const Attribute<Matrix>::Ptr mSourceVoltageIntfCurrent;
-  const Attribute<Matrix>::Ptr mSrcCurrentRef;
-  const Attribute<Matrix>::Ptr mSrcVoltageRef;
+  const Attribute<Complex>::Ptr mSourceVoltageIntfVoltage;
+  const Attribute<Complex>::Ptr mSourceVoltageIntfCurrent;
+  const Attribute<Complex>::Ptr mSrcCurrentRef;
+  const Attribute<Complex>::Ptr mSrcVoltageRef;
 
   ///FIXME: workaround for dependency analysis as long as the states aren't attributes
   const Attribute<Matrix>::Ptr mStates;
 
-  DecouplingIdealTransformer_EMT_Ph3(
-      String uid, String name, Logger::Level logLevel = Logger::Level::info);
-  DecouplingIdealTransformer_EMT_Ph3(
-      String name, Logger::Level logLevel = Logger::Level::info)
-      : DecouplingIdealTransformer_EMT_Ph3(name, name, logLevel) {}
+  DecouplingIdealTransformer(String uid, String name,
+                             Logger::Level logLevel = Logger::Level::info);
+  DecouplingIdealTransformer(String name,
+                             Logger::Level logLevel = Logger::Level::info)
+      : DecouplingIdealTransformer(name, name, logLevel) {}
 
   void setParameters(Real delay, Matrix voltageSrcIntfCurr,
-                     Matrix current1Extrap0,
+                     Complex current1Extrap0,
                      CouplingMethod method = CouplingMethod::DELAY);
   void step(Real time, Int timeStepCount);
   void postStep();
@@ -98,5 +97,6 @@ public:
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;
 };
-} // namespace Signal
+} // namespace Ph1
+} // namespace SP
 } // namespace CPS

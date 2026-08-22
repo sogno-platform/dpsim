@@ -8,53 +8,51 @@
 
 #pragma once
 
-#include "dpsim-models/Definitions.h"
-#include "dpsim-models/EMT/EMT_Ph3_ControlledCurrentSource.h"
 #include <vector>
 
 #include <dpsim-models/CompositePowerComp.h>
-#include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
+#include <dpsim-models/DP/DP_Ph1_CurrentSource.h>
+#include <dpsim-models/DP/DP_Ph1_Resistor.h>
 
 namespace CPS {
-namespace Signal {
-class DecouplingLineEMT_Ph3 : public CompositePowerComp<Real>,
-                              public SharedFactory<DecouplingLineEMT_Ph3> {
+namespace DP {
+namespace Ph1 {
+class DecouplingLine : public CompositePowerComp<Complex>,
+                       public SharedFactory<DecouplingLine> {
 protected:
   Real mDelay;
-  Matrix mResistance = Matrix::Zero(3, 3);
-  Matrix mInductance = Matrix::Zero(3, 3);
-  Matrix mCapacitance = Matrix::Zero(3, 3);
-  Matrix mSurgeImpedance;
+  Real mResistance;
+  Real mInductance, mCapacitance;
+  Real mSurgeImpedance;
 
-  std::shared_ptr<EMT::Ph3::Resistor> mRes1, mRes2;
-  std::shared_ptr<EMT::Ph3::ControlledCurrentSource> mSrc1, mSrc2;
-  Attribute<Matrix>::Ptr mSrcCur1, mSrcCur2;
+  std::shared_ptr<DP::Ph1::Resistor> mRes1, mRes2;
+  std::shared_ptr<DP::Ph1::CurrentSource> mSrc1, mSrc2;
+  Attribute<Complex>::Ptr mSrcCur1, mSrcCur2;
 
   // Ringbuffers for the values of previous timesteps
   // TODO make these matrix attributes
-  Matrix mVolt1, mVolt2, mCur1, mCur2;
+  std::vector<Complex> mVolt1, mVolt2, mCur1, mCur2;
   UInt mBufIdx = 0;
   UInt mBufSize;
   Real mAlpha;
 
-  Matrix interpolate(Matrix &data);
+  Complex interpolate(std::vector<Complex> &data);
 
 public:
-  typedef std::shared_ptr<DecouplingLineEMT_Ph3> Ptr;
+  typedef std::shared_ptr<DecouplingLine> Ptr;
 
-  const Attribute<Matrix>::Ptr mSrcCur1Ref;
-  const Attribute<Matrix>::Ptr mSrcCur2Ref;
+  const Attribute<Complex>::Ptr mSrcCur1Ref;
+  const Attribute<Complex>::Ptr mSrcCur2Ref;
 
   ///FIXME: workaround for dependency analysis as long as the states aren't attributes
   const Attribute<Matrix>::Ptr mStates;
 
-  DecouplingLineEMT_Ph3(String uid, String name,
-                        Logger::Level logLevel = Logger::Level::info);
-  DecouplingLineEMT_Ph3(String name,
-                        Logger::Level logLevel = Logger::Level::info)
-      : DecouplingLineEMT_Ph3(name, name, logLevel) {}
+  DecouplingLine(String uid, String name,
+                 Logger::Level logLevel = Logger::Level::info);
+  DecouplingLine(String name, Logger::Level logLevel = Logger::Level::info)
+      : DecouplingLine(name, name, logLevel) {}
 
-  void setParameters(Matrix resistance, Matrix inductance, Matrix capacitance);
+  void setParameters(Real resistance, Real inductance, Real capacitance);
   void step(Real time, Int timeStepCount);
   void postStep();
 
@@ -80,5 +78,6 @@ public:
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;
 };
-} // namespace Signal
+} // namespace Ph1
+} // namespace DP
 } // namespace CPS

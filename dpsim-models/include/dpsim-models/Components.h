@@ -13,6 +13,7 @@
 #include <dpsim-models/SP/SP_Ph1_AvVoltageSourceInverterDQ.h>
 #include <dpsim-models/SP/SP_Ph1_ControlledCurrentSource.h>
 #include <dpsim-models/SP/SP_Ph1_ControlledVoltageSource.h>
+#include <dpsim-models/SP/SP_Ph1_DecouplingIdealTransformer.h>
 #include <dpsim-models/SP/SP_Ph1_Load.h>
 #include <dpsim-models/SP/SP_Ph1_NetworkInjection.h>
 #include <dpsim-models/SP/SP_Ph1_PQNode.h>
@@ -46,6 +47,8 @@
 #include <dpsim-models/DP/DP_Ph1_AvVoltageSourceInverterDQ.h>
 #include <dpsim-models/DP/DP_Ph1_Capacitor.h>
 #include <dpsim-models/DP/DP_Ph1_CurrentSource.h>
+#include <dpsim-models/DP/DP_Ph1_DecouplingIdealTransformer.h>
+#include <dpsim-models/DP/DP_Ph1_DecouplingLine.h>
 #include <dpsim-models/DP/DP_Ph1_Inductor.h>
 #include <dpsim-models/DP/DP_Ph1_Inverter.h>
 #include <dpsim-models/DP/DP_Ph1_NetworkInjection.h>
@@ -121,6 +124,10 @@
 #include <dpsim-models/EMT/EMT_DC_TwoTerminalVTypeSSNComp.h>
 #include <dpsim-models/EMT/EMT_DC_VoltageSource.h>
 #include <dpsim-models/EMT/EMT_ITypeSSNComp.h>
+#include <dpsim-models/EMT/EMT_Ph1_DecouplingIdealTransformer.h>
+#include <dpsim-models/EMT/EMT_Ph1_DecouplingLine.h>
+#include <dpsim-models/EMT/EMT_Ph3_DecouplingIdealTransformer.h>
+#include <dpsim-models/EMT/EMT_Ph3_DecouplingLine.h>
 #include <dpsim-models/EMT/EMT_SSNComp.h>
 #include <dpsim-models/EMT/EMT_VTypeSSNComp.h>
 #include <dpsim-models/EMT/EMT_VTypeSplitSSNComp.h>
@@ -193,13 +200,6 @@
 #include <dpsim-models/EMT/EMT_Ph3_VSIVoltageControlVCO.h>
 
 #include <dpsim-models/Signal/CosineFMGenerator.h>
-#include <dpsim-models/Signal/DecouplingIdealTransformer_DP_Ph1.h>
-#include <dpsim-models/Signal/DecouplingIdealTransformer_EMT_Ph1.h>
-#include <dpsim-models/Signal/DecouplingIdealTransformer_EMT_Ph3.h>
-#include <dpsim-models/Signal/DecouplingIdealTransformer_SP_Ph1.h>
-#include <dpsim-models/Signal/DecouplingLine.h>
-#include <dpsim-models/Signal/DecouplingLineEMT.h>
-#include <dpsim-models/Signal/DecouplingLineEMT_Ph3.h>
 #include <dpsim-models/Signal/ExciterDC1.h>
 #include <dpsim-models/Signal/ExciterDC1Simp.h>
 #include <dpsim-models/Signal/ExciterST1Simp.h>

@@ -8,14 +8,13 @@
 
 #include "dpsim-models/MathUtils.h"
 #include <Eigen/src/Core/Array.h>
-#include <dpsim-models/Signal/DecouplingLineEMT_Ph3.h>
+#include <dpsim-models/EMT/EMT_Ph3_DecouplingLine.h>
 
 using namespace CPS;
 using namespace CPS::EMT::Ph3;
-using namespace CPS::Signal;
 
-DecouplingLineEMT_Ph3::DecouplingLineEMT_Ph3(String uid, String name,
-                                             Logger::Level logLevel)
+EMT::Ph3::DecouplingLine::DecouplingLine(String uid, String name,
+                                         Logger::Level logLevel)
     : CompositePowerComp<Real>(uid, name, true, true, logLevel),
       mStates(mAttributes->create<Matrix>("states")),
       mSrcCur1Ref(mAttributes->create<Matrix>("i_src1", Matrix::Zero(3, 1))),
@@ -27,8 +26,9 @@ DecouplingLineEMT_Ph3::DecouplingLineEMT_Ph3(String uid, String name,
   **mIntfCurrent = Matrix::Zero(3, 1);
 }
 
-void DecouplingLineEMT_Ph3::setParameters(Matrix resistance, Matrix inductance,
-                                          Matrix capacitance) {
+void EMT::Ph3::DecouplingLine::setParameters(Matrix resistance,
+                                             Matrix inductance,
+                                             Matrix capacitance) {
 
   mResistance = resistance;
   mInductance = inductance;
@@ -42,7 +42,7 @@ void DecouplingLineEMT_Ph3::setParameters(Matrix resistance, Matrix inductance,
   mParametersSet = true;
 }
 
-void DecouplingLineEMT_Ph3::createSubComponents() {
+void EMT::Ph3::DecouplingLine::createSubComponents() {
   if (mSubCompCreated)
     return;
   mSubCompCreated = true;
@@ -79,12 +79,12 @@ void DecouplingLineEMT_Ph3::createSubComponents() {
   mSrcCur2 = mSrc2->mCurrentRef;
 }
 
-void DecouplingLineEMT_Ph3::initializeParentFromNodesAndTerminals(
+void EMT::Ph3::DecouplingLine::initializeParentFromNodesAndTerminals(
     Real frequency) {
   **mIntfVoltage = (initialVoltage(1) - initialVoltage(0)).real();
 }
 
-void DecouplingLineEMT_Ph3::mnaParentInitialize(
+void EMT::Ph3::DecouplingLine::mnaParentInitialize(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
   if (mDelay < timeStep)
     throw SystemError("Timestep too large for decoupling");
@@ -119,14 +119,14 @@ void DecouplingLineEMT_Ph3::mnaParentInitialize(
   mCur2 = cur2.real().transpose().replicate(mBufSize, 1);
 }
 
-Matrix DecouplingLineEMT_Ph3::interpolate(Matrix &data) {
+Matrix EMT::Ph3::DecouplingLine::interpolate(Matrix &data) {
   // linear interpolation of the nearest values
   Matrix c1 = data.row(mBufIdx);
   Matrix c2 = mBufIdx == mBufSize - 1 ? data.row(0) : data.row(mBufIdx + 1);
   return (mAlpha * c1 + (1 - mAlpha) * c2).transpose();
 }
 
-void DecouplingLineEMT_Ph3::step(Real time, Int timeStepCount) {
+void EMT::Ph3::DecouplingLine::step(Real time, Int timeStepCount) {
   Matrix volt1 = interpolate(mVolt1);
   Matrix volt2 = interpolate(mVolt2);
   Matrix cur1 = interpolate(mCur1);
@@ -155,7 +155,7 @@ void DecouplingLineEMT_Ph3::step(Real time, Int timeStepCount) {
   mSrcCur2->set(**mSrcCur2Ref);
 }
 
-void DecouplingLineEMT_Ph3::postStep() {
+void EMT::Ph3::DecouplingLine::postStep() {
   // Update ringbuffers with new values
   mVolt1.row(mBufIdx) = -mRes1->intfVoltage().transpose();
   mVolt2.row(mBufIdx) = -mRes2->intfVoltage().transpose();
@@ -169,29 +169,29 @@ void DecouplingLineEMT_Ph3::postStep() {
     mBufIdx = 0;
 }
 
-void DecouplingLineEMT_Ph3::mnaParentPreStep(Real time, Int timeStepCount) {
+void EMT::Ph3::DecouplingLine::mnaParentPreStep(Real time, Int timeStepCount) {
   step(time, timeStepCount);
   mSrc1->mnaPreStep(time, timeStepCount);
   mSrc2->mnaPreStep(time, timeStepCount);
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
-void DecouplingLineEMT_Ph3::mnaParentPostStep(
+void EMT::Ph3::DecouplingLine::mnaParentPostStep(
     Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
   mnaCompUpdateVoltage(**leftVector);
   mnaCompUpdateCurrent(**leftVector);
   postStep();
 }
 
-void DecouplingLineEMT_Ph3::mnaCompUpdateVoltage(const Matrix &leftVector) {
+void EMT::Ph3::DecouplingLine::mnaCompUpdateVoltage(const Matrix &leftVector) {
   **mIntfVoltage = -mRes2->intfVoltage() + mRes1->intfVoltage();
 }
 
-void DecouplingLineEMT_Ph3::mnaCompUpdateCurrent(const Matrix &leftVector) {
+void EMT::Ph3::DecouplingLine::mnaCompUpdateCurrent(const Matrix &leftVector) {
   **mIntfCurrent = -mRes1->intfCurrent() + mSrcCur1->get().real();
 }
 
-void DecouplingLineEMT_Ph3::mnaParentAddPreStepDependencies(
+void EMT::Ph3::DecouplingLine::mnaParentAddPreStepDependencies(
     AttributeBase::List &prevStepDependencies,
     AttributeBase::List &attributeDependencies,
     AttributeBase::List &modifiedAttributes) {
@@ -199,7 +199,7 @@ void DecouplingLineEMT_Ph3::mnaParentAddPreStepDependencies(
   modifiedAttributes.push_back(mRightVector);
 }
 
-void DecouplingLineEMT_Ph3::mnaParentAddPostStepDependencies(
+void EMT::Ph3::DecouplingLine::mnaParentAddPostStepDependencies(
     AttributeBase::List &prevStepDependencies,
     AttributeBase::List &attributeDependencies,
     AttributeBase::List &modifiedAttributes,
