@@ -152,97 +152,84 @@ void addSignalComponents(py::module_ mSignal) {
           "parameters"_a);
 
   py::class_<CPS::Signal::DecouplingLine,
-             std::shared_ptr<CPS::Signal::DecouplingLine>, CPS::SimSignalComp>(
-      mSignal, "DecouplingLine", py::multiple_inheritance())
+             std::shared_ptr<CPS::Signal::DecouplingLine>,
+             CPS::SimPowerComp<CPS::Complex>>(mSignal, "DecouplingLine",
+                                              py::multiple_inheritance())
       .def(py::init<std::string>())
       .def(py::init<std::string, CPS::Logger::Level>())
       .def("set_parameters", &CPS::Signal::DecouplingLine::setParameters,
-           "node_1"_a, "node_2"_a, "resistance"_a, "inductance"_a,
-           "capacitance"_a)
-      .def("get_line_components",
-           &CPS::Signal::DecouplingLine::getLineComponents);
+           "resistance"_a, "inductance"_a, "capacitance"_a)
+      .def("connect", &CPS::Signal::DecouplingLine::connect);
 
   py::class_<CPS::Signal::DecouplingLineEMT,
              std::shared_ptr<CPS::Signal::DecouplingLineEMT>,
-             CPS::SimSignalComp>(mSignal, "DecouplingLineEMT",
-                                 py::multiple_inheritance())
+             CPS::SimPowerComp<CPS::Real>>(mSignal, "DecouplingLineEMT",
+                                           py::multiple_inheritance())
       .def(py::init<std::string>())
       .def(py::init<std::string, CPS::Logger::Level>())
       .def("set_parameters", &CPS::Signal::DecouplingLineEMT::setParameters,
-           "node_1"_a, "node_2"_a, "resistance"_a, "inductance"_a,
-           "capacitance"_a)
-      .def("get_line_components",
-           &CPS::Signal::DecouplingLineEMT::getLineComponents);
+           "resistance"_a, "inductance"_a, "capacitance"_a)
+      .def("connect", &CPS::Signal::DecouplingLineEMT::connect);
 
   py::class_<CPS::Signal::DecouplingLineEMT_Ph3,
              std::shared_ptr<CPS::Signal::DecouplingLineEMT_Ph3>,
-             CPS::SimSignalComp>(mSignal, "DecouplingLineEMT_Ph3",
-                                 py::multiple_inheritance())
+             CPS::SimPowerComp<CPS::Real>>(mSignal, "DecouplingLineEMT_Ph3",
+                                           py::multiple_inheritance())
       .def(py::init<std::string>())
       .def(py::init<std::string, CPS::Logger::Level>())
       .def("set_parameters", &CPS::Signal::DecouplingLineEMT_Ph3::setParameters,
-           "node_1"_a, "node_2"_a, "resistance"_a, "inductance"_a,
-           "capacitance"_a)
-      .def("get_line_components",
-           &CPS::Signal::DecouplingLineEMT_Ph3::getLineComponents);
+           "resistance"_a, "inductance"_a, "capacitance"_a)
+      .def("connect", &CPS::Signal::DecouplingLineEMT_Ph3::connect);
 
   py::class_<CPS::Signal::DecouplingIdealTransformer_SP_Ph1,
              std::shared_ptr<CPS::Signal::DecouplingIdealTransformer_SP_Ph1>,
-             CPS::SimSignalComp>(mSignal, "DecouplingIdealTransformer_SP_Ph1",
-                                 py::multiple_inheritance())
+             CPS::SimPowerComp<CPS::Complex>>(
+      mSignal, "DecouplingIdealTransformer_SP_Ph1", py::multiple_inheritance())
       .def(py::init<std::string>())
       .def(py::init<std::string, CPS::Logger::Level>())
       .def("set_parameters",
            &CPS::Signal::DecouplingIdealTransformer_SP_Ph1::setParameters,
-           "node_1"_a, "node_2"_a, "delay"_a, "v_src_intf_cur"_a,
-           "cur1_extrap_0"_a, "coupling_method"_a)
-      .def("get_components",
-           &CPS::Signal::DecouplingIdealTransformer_SP_Ph1::getComponents)
-      .def("get_virtual_node",
-           &CPS::Signal::DecouplingIdealTransformer_SP_Ph1::getVirtualNode);
+           "delay"_a, "v_src_intf_cur"_a, "cur1_extrap_0"_a,
+           "coupling_method"_a)
+      .def("connect", &CPS::Signal::DecouplingIdealTransformer_SP_Ph1::connect);
 
   py::class_<CPS::Signal::DecouplingIdealTransformer_EMT_Ph1,
              std::shared_ptr<CPS::Signal::DecouplingIdealTransformer_EMT_Ph1>,
-             CPS::SimSignalComp>(mSignal, "DecouplingIdealTransformer_EMT_Ph1",
-                                 py::multiple_inheritance())
+             CPS::SimPowerComp<CPS::Real>>(
+      mSignal, "DecouplingIdealTransformer_EMT_Ph1", py::multiple_inheritance())
       .def(py::init<std::string>())
       .def(py::init<std::string, CPS::Logger::Level>())
       .def("set_parameters",
            &CPS::Signal::DecouplingIdealTransformer_EMT_Ph1::setParameters,
-           "node_1"_a, "node_2"_a, "delay"_a, "v_src_intf_cur"_a,
-           "cur1_extrap_0"_a, "coupling_method"_a)
-      .def("get_components",
-           &CPS::Signal::DecouplingIdealTransformer_EMT_Ph1::getComponents);
+           "delay"_a, "v_src_intf_cur"_a, "cur1_extrap_0"_a,
+           "coupling_method"_a)
+      .def("connect",
+           &CPS::Signal::DecouplingIdealTransformer_EMT_Ph1::connect);
 
   py::class_<CPS::Signal::DecouplingIdealTransformer_EMT_Ph3,
              std::shared_ptr<CPS::Signal::DecouplingIdealTransformer_EMT_Ph3>,
-             CPS::SimSignalComp>(mSignal, "DecouplingIdealTransformer_EMT_Ph3",
-                                 py::multiple_inheritance())
+             CPS::SimPowerComp<CPS::Real>>(
+      mSignal, "DecouplingIdealTransformer_EMT_Ph3", py::multiple_inheritance())
       .def(py::init<std::string>())
       .def(py::init<std::string, CPS::Logger::Level>())
       .def("set_parameters",
            &CPS::Signal::DecouplingIdealTransformer_EMT_Ph3::setParameters,
-           "node_1"_a, "node_2"_a, "delay"_a, "v_src_intf_cur"_a,
-           "cur1_extrap_0"_a, "coupling_method"_a)
-      .def("get_components",
-           &CPS::Signal::DecouplingIdealTransformer_EMT_Ph3::getComponents)
-      .def("get_virtual_node",
-           &CPS::Signal::DecouplingIdealTransformer_EMT_Ph3::getVirtualNode);
+           "delay"_a, "v_src_intf_cur"_a, "cur1_extrap_0"_a,
+           "coupling_method"_a)
+      .def("connect",
+           &CPS::Signal::DecouplingIdealTransformer_EMT_Ph3::connect);
 
   py::class_<CPS::Signal::DecouplingIdealTransformer_DP_Ph1,
              std::shared_ptr<CPS::Signal::DecouplingIdealTransformer_DP_Ph1>,
-             CPS::SimSignalComp>(mSignal, "DecouplingIdealTransformer_DP_Ph1",
-                                 py::multiple_inheritance())
+             CPS::SimPowerComp<CPS::Complex>>(
+      mSignal, "DecouplingIdealTransformer_DP_Ph1", py::multiple_inheritance())
       .def(py::init<std::string>())
       .def(py::init<std::string, CPS::Logger::Level>())
       .def("set_parameters",
            &CPS::Signal::DecouplingIdealTransformer_DP_Ph1::setParameters,
-           "node_1"_a, "node_2"_a, "delay"_a, "v_src_intf_cur"_a,
-           "cur1_extrap_0"_a, "coupling_method"_a)
-      .def("get_components",
-           &CPS::Signal::DecouplingIdealTransformer_DP_Ph1::getComponents)
-      .def("get_virtual_node",
-           &CPS::Signal::DecouplingIdealTransformer_DP_Ph1::getVirtualNode);
+           "delay"_a, "v_src_intf_cur"_a, "cur1_extrap_0"_a,
+           "coupling_method"_a)
+      .def("connect", &CPS::Signal::DecouplingIdealTransformer_DP_Ph1::connect);
 
   py::class_<CPS::Base::PSSParameters,
              std::shared_ptr<CPS::Base::PSSParameters>>(mSignal,

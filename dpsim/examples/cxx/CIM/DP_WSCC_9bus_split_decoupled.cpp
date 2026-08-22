@@ -27,11 +27,11 @@ String decoupleLine(SystemTopology &sys, const String &lineName,
 
   String dline_name = "dline_" + node1 + "_" + node2;
 
-  auto line = Signal::DecouplingLine::make(
-      "dline_" + node1 + "_" + node2, sys.node<DP::SimNode>(node1),
-      sys.node<DP::SimNode>(node2), Rline, Lline, Cline, Logger::Level::debug);
+  auto line = Signal::DecouplingLine::make("dline_" + node1 + "_" + node2,
+                                           Logger::Level::debug);
+  line->connect({sys.node<DP::SimNode>(node1), sys.node<DP::SimNode>(node2)});
+  line->setParameters(Rline, Lline, Cline);
   sys.addComponent(line);
-  sys.addComponents(line->getLineComponents());
 
   return dline_name;
 }
