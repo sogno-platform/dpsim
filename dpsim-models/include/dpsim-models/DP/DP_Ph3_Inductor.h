@@ -48,6 +48,9 @@ public:
 
   SimPowerComp<Complex>::Ptr clone(String name) override;
 
+  const MatrixComp &getMNAConductance() const { return mEquivCond; }
+  Complex getPreviousCurrentFactor() const { return mPrevCurrFac; }
+
   // #### General ####
   /// Initialize DP phase-peak envelopes from line-line RMS PF node voltages.
   void initializeFromNodesAndTerminals(Real frequency) override;
