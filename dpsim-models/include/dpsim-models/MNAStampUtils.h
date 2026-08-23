@@ -49,6 +49,16 @@ public:
       UInt node2Index, Bool isTerminal1NotGrounded, Bool isTerminal2NotGrounded,
       const Logger::Log &mSLog, Int maxFreq = 1, Int freqIdx = 0);
 
+  /// Stamp a packed real admittance matrix whose 2x2 blocks map complex phase
+  /// voltages [Re(v), Im(v)] to complex phase currents [Re(i), Im(i)].
+  static void stampAdmittanceMatrix(const Matrix &admittanceMat,
+                                    UInt phaseCount, SparseMatrixRow &mat,
+                                    UInt node1Index, UInt node2Index,
+                                    Bool isTerminal1NotGrounded,
+                                    Bool isTerminal2NotGrounded,
+                                    const Logger::Log &mSLog, Int maxFreq = 1,
+                                    Int freqIdx = 0);
+
   /// Stamps conductance as a 3x3 scalar matrix (a diagonal matrix, where all diagonal elements are equal to conductance).
   static void stampConductanceAs3x3ScalarMatrix(
       Real conductance, SparseMatrixRow &mat, UInt node1Index, UInt node2Index,
