@@ -15,13 +15,12 @@ namespace Ph3 {
 /// real + per-phase complex-envelope state, packed as one real vector.
 ///
 /// Ph3 analogue of DP::Ph1::MixedVTypeVariableSSNComp: the input/output are
-/// three complex phase envelopes (not one), so mW is a 3x3 complex Norton
-/// admittance and mYHist a 3x1 history current, stamped with
-/// MNAStampUtils::stampAdmittanceMatrix exactly as the fixed-parameter
-/// DP::Ph3::TwoTerminalVTypeSSNComp does. Each phase's complex self term is
-/// shifted by the same single carrier (A - jw_N I per phase); the per-phase
-/// coupling and any envelope shift are the derived component's own A/B, baked
-/// in pre-shifted (do not double-shift, [[reference-mixedvtype-ssn-preshifted-a]]).
+/// three complex phase envelopes (not one), so mW is a packed real 6x6 Norton
+/// admittance and mYHist a 3x1 complex history current. Each phase's complex
+/// self term is shifted by the same single carrier (A - jw_N I per phase); the
+/// per-phase coupling and any envelope shift are the derived component's own
+/// A/B, baked in pre-shifted (do not double-shift,
+/// [[reference-mixedvtype-ssn-preshifted-a]]).
 class MixedVTypeVariableSSNComp : public MNASimPowerComp<Complex>,
                                   public MNAVariableCompInterface {
 private:
@@ -44,8 +43,8 @@ protected:
   /// Discretized (trapezoidal) real operators.
   Matrix mdA, mdB, mdE;
 
-  /// Complex Norton admittance / history current stamped into the network.
-  MatrixComp mW;
+  /// Packed real Norton admittance and complex history current.
+  Matrix mW;
   MatrixComp mYHist;
 
   /// Packed real state of size stateSize(), each envelope taking a [Re,Im]
@@ -63,9 +62,6 @@ protected:
   static Matrix packComplex(const MatrixComp &c);
   /// Inverse of packComplex.
   static MatrixComp unpackComplex(const Matrix &v);
-  /// Fold a 2m x 2m real block-[[a,-b],[b,a]] matrix into an m x m complex map.
-  static MatrixComp foldComplexMatrix(const Matrix &real);
-
   Attribute<MatrixComp>::Ptr inputAttribute() const;
   Attribute<MatrixComp>::Ptr outputAttribute() const;
 
