@@ -16,8 +16,9 @@ DP::Ph3::TwoTerminalVTypeSSNComp::TwoTerminalVTypeSSNComp(
 MatrixComp DP::Ph3::TwoTerminalVTypeSSNComp::buildInitialInputFromNodes(Real) {
   MatrixComp vInit = MatrixComp::Zero(3, 1);
 
-  // v = v_terminal1 - v_terminal0 (DP envelope phasor), balanced default.
-  vInit(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
+  // PF node voltages are line-line RMS; DP::Ph3 uses phase-peak envelopes.
+  vInit(0, 0) =
+      RMS3PH_TO_PEAK1PH * (initialSingleVoltage(1) - initialSingleVoltage(0));
   vInit(1, 0) = vInit(0, 0) * SHIFT_TO_PHASE_B;
   vInit(2, 0) = vInit(0, 0) * SHIFT_TO_PHASE_C;
 

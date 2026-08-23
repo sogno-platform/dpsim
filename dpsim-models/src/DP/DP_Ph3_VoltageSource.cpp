@@ -50,7 +50,8 @@ void DP::Ph3::VoltageSource::setParameters(MatrixComp voltageRef,
 void DP::Ph3::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
   if ((**mVoltageRef).isZero())
     **mVoltageRef = CPS::Math::singlePhaseVariableToThreePhase(
-        initialSingleVoltage(1) - initialSingleVoltage(0));
+        RMS3PH_TO_PEAK1PH *
+        (initialSingleVoltage(1) - initialSingleVoltage(0)));
 }
 
 void DP::Ph3::VoltageSource::mnaCompInitialize(
