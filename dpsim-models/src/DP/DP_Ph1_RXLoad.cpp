@@ -27,7 +27,8 @@ DP::Ph1::RXLoad::RXLoad(String name, Logger::Level logLevel)
 
 SimPowerComp<Complex>::Ptr DP::Ph1::RXLoad::clone(String name) {
   auto copy = RXLoad::make(name, mLogLevel);
-  copy->setParameters(**mActivePower, **mReactivePower, **mNomVoltage);
+  if (mParametersSet)
+    copy->setParameters(**mActivePower, **mReactivePower, **mNomVoltage);
   return copy;
 }
 
@@ -85,8 +86,11 @@ void DP::Ph1::RXLoad::initializeParentFromNodesAndTerminals(Real frequency) {
   }
 
   (**mIntfVoltage)(0, 0) = mTerminals[0]->initialSingleVoltage();
-  (**mIntfCurrent)(0, 0) = std::conj(Complex(**mActivePower, **mReactivePower) /
-                                     (**mIntfVoltage)(0, 0));
+  (**mIntfCurrent)(0, 0) =
+      (std::abs((**mIntfVoltage)(0, 0)) > 0)
+          ? std::conj(Complex(**mActivePower, **mReactivePower) /
+                      (**mIntfVoltage)(0, 0))
+          : Complex(0, 0);
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"
