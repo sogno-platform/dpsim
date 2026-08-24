@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph3::RXLoad::RXLoad(String uid, String name, Logger::Level logLevel)
-    : CompositePowerComp<Real>(uid, name, true, true, Logger::Level::trace),
+    : CompositePowerComp<Real>(uid, name, true, true, logLevel),
       mActivePower(mAttributes->create<Matrix>("P")),
       mReactivePower(mAttributes->create<Matrix>("Q")),
       mNomVoltage(mAttributes->create<Real>("V_nom")),
