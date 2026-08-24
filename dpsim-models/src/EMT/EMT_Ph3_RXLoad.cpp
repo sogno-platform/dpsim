@@ -196,16 +196,17 @@ void EMT::Ph3::RXLoad::initializeParentFromNodesAndTerminals(Real frequency) {
         Complex(mResistance(2, 0), mReactance(2, 0)),
         Complex(mResistance(2, 1), mReactance(2, 1)),
         Complex(mResistance(2, 2), mReactance(2, 2));
-    **mIntfCurrent = (impedance.inverse() * vInitABC).real();
+    MatrixComp iInit = impedance.inverse() * vInitABC;
+    **mIntfCurrent = iInit.real();
 
     // Initialization of virtual node
     // Initial voltage of phase B,C is set after A
     MatrixComp vInitTerm0 = MatrixComp::Zero(3, 1);
-    vInitTerm0(0, 0) = initialSingleVoltage(0);
+    vInitTerm0(0, 0) = RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
     vInitTerm0(1, 0) = vInitTerm0(0, 0) * SHIFT_TO_PHASE_B;
     vInitTerm0(2, 0) = vInitTerm0(0, 0) * SHIFT_TO_PHASE_C;
-    mVirtualNodes[0]->setInitialVoltage(vInitTerm0 +
-                                        mResistance * **mIntfCurrent);
+    mVirtualNodes[0]->setInitialVoltage(PEAK1PH_TO_RMS3PH *
+                                        (vInitTerm0 - mResistance * iInit));
   }
 
   if ((**mActivePower)(0, 0) != 0) {
