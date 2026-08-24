@@ -19,6 +19,10 @@
 
 #include <DPsimPy.h>
 
+#include <dpsim/SequentialScheduler.h>
+#include <dpsim/ThreadLevelScheduler.h>
+#include <dpsim/ThreadListScheduler.h>
+
 PYBIND11_DECLARE_HOLDER_TYPE(T, CPS::AttributePointer<T>);
 
 namespace py = pybind11;
@@ -232,6 +236,45 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("get_state_names", &DPsim::StateSpaceModalAnalysis::getStateNames,
            py::return_value_policy::reference_internal);
 
+  // Named, because Sonar S5184 reads a bare py::class_ temporary as a bug
+  py::class_<DPsim::Scheduler, std::shared_ptr<DPsim::Scheduler>> scheduler(
+      m, "Scheduler");
+
+  py::class_<DPsim::SequentialScheduler, DPsim::Scheduler,
+             std::shared_ptr<DPsim::SequentialScheduler>>(m,
+                                                          "SequentialScheduler")
+      .def(py::init<CPS::String, CPS::Logger::Level>(),
+           "out_measurement_file"_a = CPS::String(),
+           "loglevel"_a = CPS::Logger::Level::info);
+
+  py::class_<DPsim::ThreadLevelScheduler, DPsim::Scheduler,
+             std::shared_ptr<DPsim::ThreadLevelScheduler>>(
+      m, "ThreadLevelScheduler")
+      .def(py::init<CPS::Int, CPS::String, CPS::String, CPS::Bool, CPS::Bool>(),
+           "threads"_a = 1, "out_measurement_file"_a = CPS::String(),
+           "in_measurement_file"_a = CPS::String(),
+           // cppcheck-suppress assignBoolToPointer
+           "use_condition_variables"_a = false,
+           // cppcheck-suppress assignBoolToPointer
+           "sort_task_types"_a = false);
+
+  py::class_<DPsim::ThreadListScheduler, DPsim::Scheduler,
+             std::shared_ptr<DPsim::ThreadListScheduler>>(m,
+                                                          "ThreadListScheduler")
+      .def(py::init<CPS::Int, CPS::String, CPS::String, CPS::Bool>(),
+           "threads"_a = 1, "out_measurement_file"_a = CPS::String(),
+           "in_measurement_file"_a = CPS::String(),
+           // cppcheck-suppress assignBoolToPointer
+           "use_condition_variables"_a = false);
+
+#ifdef WITH_OPENMP
+  py::class_<DPsim::OpenMPLevelScheduler, DPsim::Scheduler,
+             std::shared_ptr<DPsim::OpenMPLevelScheduler>>(
+      m, "OpenMPLevelScheduler")
+      .def(py::init<CPS::Int, CPS::String>(), "threads"_a = -1,
+           "out_measurement_file"_a = CPS::String());
+#endif
+
   py::class_<DPsim::Simulation>(m, "Simulation")
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
            "loglevel"_a = CPS::Logger::Level::off)
@@ -301,6 +344,7 @@ PYBIND11_MODULE(dpsimpy, m) {
            &DPsim::Simulation::setDirectLinearSolverImplementation)
       .def("set_direct_linear_solver_configuration",
            &DPsim::Simulation::setDirectLinearSolverConfiguration)
+      .def("set_scheduler", &DPsim::Simulation::setScheduler, "scheduler"_a)
       .def("log_lu_times", &DPsim::Simulation::logLUTimes);
 
 #ifdef WITH_RT

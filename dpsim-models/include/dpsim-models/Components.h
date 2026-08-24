@@ -67,6 +67,7 @@
 #include <dpsim-models/DP/DP_Ph1_MixedVTypeVariableSSNComp.h>
 #include <dpsim-models/DP/DP_Ph1_RxLine.h>
 #include <dpsim-models/DP/DP_Ph1_SSN_Full_Serial_RLC.h>
+#include <dpsim-models/DP/DP_Ph1_SSN_Variable_Serial_RLC.h>
 #include <dpsim-models/DP/DP_Ph1_SVC.h>
 #include <dpsim-models/DP/DP_Ph1_Shunt.h>
 #include <dpsim-models/DP/DP_Ph1_Switch.h>
