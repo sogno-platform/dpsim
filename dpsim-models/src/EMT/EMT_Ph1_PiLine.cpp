@@ -102,12 +102,13 @@ void EMT::Ph1::PiLine::initializeParentFromNodesAndTerminals(Real frequency) {
   Complex impedance = {**mSeriesRes, omega * **mSeriesInd};
   Complex voltage =
       RMS3PH_TO_PEAK1PH * (initialSingleVoltage(1) - initialSingleVoltage(0));
+  Complex current = voltage / impedance;
   (**mIntfVoltage)(0, 0) = voltage.real();
-  (**mIntfCurrent)(0, 0) = (voltage / impedance).real();
+  (**mIntfCurrent)(0, 0) = current.real();
 
   // Initialization of virtual node
-  mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0) +
-                                      (**mIntfCurrent)(0, 0) * **mSeriesRes);
+  mVirtualNodes[0]->setInitialVoltage(
+      initialSingleVoltage(0) + PEAK1PH_TO_RMS3PH * current * **mSeriesRes);
 
   SPDLOG_LOGGER_DEBUG(mSLog,
                       "\n--debug--"
