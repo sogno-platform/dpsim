@@ -30,18 +30,14 @@ void DP::Ph3::SeriesResistor::initializeFromNodesAndTerminals(Real frequency) {
   mTerminals[0]->setPhaseType(PhaseType::ABC);
   mTerminals[1]->setPhaseType(PhaseType::ABC);
 
-  Matrix impedance = Matrix::Zero(3, 1);
-  impedance << **mResistance, **mResistance, **mResistance;
-  (**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
+  MatrixComp vInitABC = MatrixComp::Zero(3, 1);
+  vInitABC(0, 0) =
+      RMS3PH_TO_PEAK1PH * (initialSingleVoltage(1) - initialSingleVoltage(0));
+  vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
+  vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
 
-  Real voltMag = Math::abs((**mIntfVoltage)(0, 0));
-  Real voltPhase = Math::phase((**mIntfVoltage)(0, 0));
-  (**mIntfVoltage)(1, 0) = Complex(voltMag * cos(voltPhase - 2. / 3. * PI),
-                                   voltMag * sin(voltPhase - 2. / 3. * PI));
-  (**mIntfVoltage)(2, 0) = Complex(voltMag * cos(voltPhase + 2. / 3. * PI),
-                                   voltMag * sin(voltPhase + 2. / 3. * PI));
-
-  **mIntfCurrent = impedance.cwiseInverse().cwiseProduct(**mIntfVoltage);
+  **mIntfVoltage = vInitABC;
+  **mIntfCurrent = **mIntfVoltage / **mResistance;
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"
