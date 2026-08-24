@@ -19,6 +19,7 @@
 #include <dpsim-models/DP/DP_Ph3_Inductor.h>
 #include <dpsim-models/DP/DP_Ph3_MixedVTypeVariableSSNComp.h>
 #include <dpsim-models/DP/DP_Ph3_Resistor.h>
+#include <dpsim-models/DP/DP_Ph3_TwoTerminalVTypeSplitSSNComp.h>
 #include <dpsim-models/DP/DP_Ph3_VoltageSource.h>
 #include <dpsim-models/DP/DP_VTypeSSNComp.h>
 #include <dpsim-models/EMT/EMT_Ph3_Capacitor.h>
@@ -794,6 +795,64 @@ private:
   std::shared_ptr<DP::Ph3::MixedVTypeVariableSSNComp> mComponent;
 };
 
+class DPPh3TwoTerminalVTypeSplitSSNStateSpaceContributor final
+    : public MNAStateSpaceContributor {
+public:
+  explicit DPPh3TwoTerminalVTypeSplitSSNStateSpaceContributor(
+      std::shared_ptr<DP::Ph3::TwoTerminalVTypeSplitSSNComp> component)
+      : mComponent(std::move(component)) {}
+
+  UInt getStateCount() const override {
+    return mComponent->getSplitStateCount();
+  }
+
+  Bool contributesToUpdatedMatrices() const override {
+    return mComponent->requiresStateSpaceMatrixUpdate();
+  }
+
+  Bool requiresUpdate() const override {
+    return mComponent->requiresStateSpaceMatrixUpdate();
+  }
+
+  CPS::AttributeBase::List getAttributeDependencies() const override {
+    return requiresUpdate()
+               ? CPS::AttributeBase::List{mComponent->getSplitStateAttribute()}
+               : CPS::AttributeBase::List{};
+  }
+
+  void stamp(Matrix &AdLocal, Matrix &BdMna, Matrix &CdMna, UInt stateOffset,
+             UInt mnaVectorSize) const override {
+    const UInt count = getStateCount();
+    const Matrix K = buildThreePhaseComplexInterfaceVoltageMapping(
+        *mComponent, mnaVectorSize);
+    AdLocal.block(stateOffset, stateOffset, count, count) +=
+        mComponent->getSplitDiscreteA();
+    BdMna.block(stateOffset, 0, count, mnaVectorSize) +=
+        mComponent->getSplitDiscreteB() * K;
+    stampTwoTerminalCurrentInjectionMapping(K, CdMna, stateOffset,
+                                            mComponent->getSplitHistoryC());
+  }
+
+  void contributeMetadata(StateSpaceMetadata &metadata,
+                          UInt stateOffset) const override {
+    const auto names = mComponent->getSplitLocalStateNames();
+    if (!names.empty() && names.size() != getStateCount())
+      throw std::runtime_error(
+          "DP split SSN component returned an invalid number of state names.");
+    for (UInt idx = 0; idx < names.size(); ++idx)
+      setStateName(metadata, stateOffset + idx,
+                   mComponent->name() + "." + names[idx]);
+
+    // DP phase envelopes are already expressed in the global synchronous
+    // frame. Do not register EMT-style abc blocks here: GlobalDQ0 modal
+    // metadata applies a time-varying Park transform, which would rotate the
+    // envelopes a second time.
+  }
+
+private:
+  std::shared_ptr<DP::Ph3::TwoTerminalVTypeSplitSSNComp> mComponent;
+};
+
 } // namespace
 
 MNAStateSpaceContributor::Ptr
@@ -872,6 +931,13 @@ MNAStateSpaceContributorFactory::create(const MNAInterface::Ptr &component) {
 
   if (auto inductor = std::dynamic_pointer_cast<DP::Ph3::Inductor>(component)) {
     return std::make_shared<DPPh3InductorStateSpaceContributor>(inductor);
+  }
+
+  if (auto splitSsn =
+          std::dynamic_pointer_cast<DP::Ph3::TwoTerminalVTypeSplitSSNComp>(
+              component)) {
+    return std::make_shared<DPPh3TwoTerminalVTypeSplitSSNStateSpaceContributor>(
+        splitSsn);
   }
 
   if (auto mixedVariableSsn =
