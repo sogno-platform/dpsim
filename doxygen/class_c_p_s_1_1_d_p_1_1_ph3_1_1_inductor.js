@@ -4,6 +4,8 @@ var class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor =
     [ "Inductor", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html#a7eb6b194b795bc5af298f250b1665dac", null ],
     [ "Inductor", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html#adf655529134807b19a5a74e09eea825c", null ],
     [ "clone", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html#abb3c58bad23b4952745d0e110eeab204", null ],
+    [ "getMNAConductance", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html#ac068bef1c10362daa43690f3735626e4", null ],
+    [ "getPreviousCurrentFactor", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html#ac1fc1a6dfab7ad1171747bce8d5b0b90", null ],
     [ "initializeFromNodesAndTerminals", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html#a149d46de58a9040ae045467e06d1bc4c", null ],
     [ "initVars", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html#aa12870bce4ba0df06163faca505147fd", null ],
     [ "mnaCompAddPostStepDependencies", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html#ac4712eb25cfb2697aa1510933ea30a32", null ],

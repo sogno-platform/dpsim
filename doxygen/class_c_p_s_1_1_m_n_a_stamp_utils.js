@@ -5,6 +5,7 @@ var class_c_p_s_1_1_m_n_a_stamp_utils =
     [ "stampAdmittance", "class_c_p_s_1_1_m_n_a_stamp_utils.html#aa3962ad403e8b6393ca44aae4d9b7898", null ],
     [ "stampAdmittance", "class_c_p_s_1_1_m_n_a_stamp_utils.html#a2d7dc015f5d94bdff8217212f6ffaae5", null ],
     [ "stampAdmittanceAs3x3ScalarMatrix", "class_c_p_s_1_1_m_n_a_stamp_utils.html#a86d96a3b312e96d0370f58319c7e5ec5", null ],
+    [ "stampAdmittanceMatrix", "class_c_p_s_1_1_m_n_a_stamp_utils.html#a935cd8152d5c70934f9bec50ddcf2564", null ],
     [ "stampAdmittanceMatrix", "class_c_p_s_1_1_m_n_a_stamp_utils.html#a64075d133f4a6dc826facbe6fea17eba", null ],
     [ "stampConductance", "class_c_p_s_1_1_m_n_a_stamp_utils.html#a0c6ce1025f667dddf4daf9a45d8baa1f", null ],
     [ "stampConductanceAs3x3ScalarMatrix", "class_c_p_s_1_1_m_n_a_stamp_utils.html#a0216a290a88eec817301a9141e0d465d", null ],

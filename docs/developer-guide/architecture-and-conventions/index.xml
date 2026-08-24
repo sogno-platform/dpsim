@@ -220,13 +220,13 @@ the documentation workflow, since the theme does not build with arbitrary versio
 &lt;p>Voltage quantities are expressed either as phase-to-phase RMS values (denominated as &lt;code>RMS3PH&lt;/code>) or as phase-to-ground peak values (denominated as &lt;code>PEAK1PH&lt;/code>):&lt;/p>
 &lt;ul>
 &lt;li>Initialisation quantities (e.g. &lt;code>initialSingleVoltage&lt;/code> of &lt;code>SimPowerComp&lt;/code>) as &lt;code>RMS3PH&lt;/code> values&lt;/li>
-&lt;li>Simulation quantities in both &lt;code>SP&lt;/code> and &lt;code>DP&lt;/code> domain (e.g. &lt;code>mIntfVoltage&lt;/code> of &lt;code>DP::Ph1::PiLine&lt;/code>) as &lt;code>RMS3PH values&lt;/code>&lt;/li>
-&lt;li>Simulation quantities in the &lt;code>EMT&lt;/code> domain (e.g. &lt;code>mIntfVoltage&lt;/code> of &lt;code>EMT::Ph3::Transformer&lt;/code>) as &lt;code>PEAK1PH&lt;/code> values&lt;/li>
+&lt;li>Simulation quantities in the &lt;code>SP&lt;/code> and &lt;code>DP::Ph1&lt;/code> domains (e.g. &lt;code>mIntfVoltage&lt;/code> of &lt;code>DP::Ph1::PiLine&lt;/code>) as &lt;code>RMS3PH&lt;/code> values&lt;/li>
+&lt;li>Simulation quantities in the &lt;code>DP::Ph3&lt;/code> and &lt;code>EMT&lt;/code> domains (e.g. &lt;code>mIntfVoltage&lt;/code> of &lt;code>DP::Ph3::PiLine&lt;/code> or &lt;code>EMT::Ph3::Transformer&lt;/code>) as &lt;code>PEAK1PH&lt;/code> values&lt;/li>
 &lt;/ul>
 &lt;p>Current quantities are expressed either as &lt;code>RMS&lt;/code> or as &lt;code>PEAK&lt;/code> values:&lt;/p>
 &lt;ul>
-&lt;li>Simulation quantities in both &lt;code>SP&lt;/code> and &lt;code>DP&lt;/code> domain (e.g. &lt;code>mIntfCurrent&lt;/code> of &lt;code>DP::Ph1::PiLine&lt;/code>) as &lt;code>RMS&lt;/code> values&lt;/li>
-&lt;li>Simulation quantities in the &lt;code>EMT&lt;/code> domain (e.g. &lt;code>mIntfCurrent&lt;/code> of &lt;code>EMT::Ph3::Transformer&lt;/code>) as &lt;code>PEAK&lt;/code> values&lt;/li>
+&lt;li>Simulation quantities in the &lt;code>SP&lt;/code> and &lt;code>DP::Ph1&lt;/code> domains (e.g. &lt;code>mIntfCurrent&lt;/code> of &lt;code>DP::Ph1::PiLine&lt;/code>) as &lt;code>RMS&lt;/code> values&lt;/li>
+&lt;li>Simulation quantities in the &lt;code>DP::Ph3&lt;/code> and &lt;code>EMT&lt;/code> domains (e.g. &lt;code>mIntfCurrent&lt;/code> of &lt;code>DP::Ph3::PiLine&lt;/code> or &lt;code>EMT::Ph3::Transformer&lt;/code>) as &lt;code>PEAK&lt;/code> values&lt;/li>
 &lt;/ul>
 &lt;h2 id="logging">Logging&lt;/h2>
 &lt;p>Debug or trace should be the default log level for information that might be nice to have but not necessary for every simulation case.&lt;/p>

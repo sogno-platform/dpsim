@@ -3,7 +3,6 @@ var class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp =
     [ "MixedVTypeVariableSSNComp", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#ae9725811fac14e811c13f1fcbb8e612e", null ],
     [ "buildInitialInputFromNodes", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#a98016ad3166b5ce5ca1826d0888d9f70", null ],
     [ "calculateHistoryVectorReal", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#a339ad30bc4efc9e94577445ced163cd8", null ],
-    [ "foldComplexMatrix", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#a800626be520f609f1005721dd56ac86c", null ],
     [ "getC", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#a9fd9f4edf1b085696e3d630bfb4c1800", null ],
     [ "getDiscreteA", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#a27fcb477b6c743898bb429db62498f6e", null ],
     [ "getDiscreteB", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#a81c5d257feff9f6f60745d86915fa5fc", null ],
@@ -50,7 +49,7 @@ var class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp =
     [ "mPhaseCount", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#ac19b16f3b15922bc78f95ee39f1df76e", null ],
     [ "mRealStateCount", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#a314c420db1a3d178bc631c98c9f29f20", null ],
     [ "mTimeStep", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#a3f3dfbac9a27caf19b8e6415c16e8fc3", null ],
-    [ "mW", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#ad21f76a6ba953cff4b94608313c8aa76", null ],
+    [ "mW", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#a4204e0a43a8efa4ff3aacbc202941407", null ],
     [ "mX", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#a1a7efaac3246dbdefc86dd281beb2baa", null ],
     [ "mYHist", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html#abb996e6dc3a62044a4fcfcaac1516e61", null ]
 ];

@@ -131,6 +131,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abb3c58bad23b4952745d0e110eeab204" id="r_abb3c58bad23b4952745d0e110eeab204"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#aab0bf0401a097ee2b253a9a6fc328101">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb3c58bad23b4952745d0e110eeab204">clone</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>) override</td></tr>
 <tr class="memdesc:abb3c58bad23b4952745d0e110eeab204"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a modified copy of the component with the given suffix added to the name and without.  <br /></td></tr>
 <tr class="separator:abb3c58bad23b4952745d0e110eeab204"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac068bef1c10362daa43690f3735626e4" id="r_ac068bef1c10362daa43690f3735626e4"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac068bef1c10362daa43690f3735626e4">getMNAConductance</a> () const</td></tr>
+<tr class="separator:ac068bef1c10362daa43690f3735626e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1fc1a6dfab7ad1171747bce8d5b0b90" id="r_ac1fc1a6dfab7ad1171747bce8d5b0b90"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac1fc1a6dfab7ad1171747bce8d5b0b90">getPreviousCurrentFactor</a> () const</td></tr>
+<tr class="separator:ac1fc1a6dfab7ad1171747bce8d5b0b90"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a149d46de58a9040ae045467e06d1bc4c" id="r_a149d46de58a9040ae045467e06d1bc4c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a149d46de58a9040ae045467e06d1bc4c">initializeFromNodesAndTerminals</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> frequency) override</td></tr>
 <tr class="memdesc:a149d46de58a9040ae045467e06d1bc4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize <a class="el" href="namespace_c_p_s_1_1_d_p.html">DP</a> phase-peak envelopes from line-line RMS PF node voltages.  <br /></td></tr>
 <tr class="separator:a149d46de58a9040ae045467e06d1bc4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -648,6 +652,60 @@ Additional Inherited Members</h2></td></tr>
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">CPS::SimPowerComp&lt; Complex &gt;</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="_d_p___ph3___inductor_8cpp_source.html#l00024">24</a> of file <a class="el" href="_d_p___ph3___inductor_8cpp_source.html">DP_Ph3_Inductor.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ac068bef1c10362daa43690f3735626e4" name="ac068bef1c10362daa43690f3735626e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac068bef1c10362daa43690f3735626e4">&#9670;&#160;</a></span>getMNAConductance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a> &amp; CPS::DP::Ph3::Inductor::getMNAConductance </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___inductor_8h_source.html#l00051">51</a> of file <a class="el" href="_d_p___ph3___inductor_8h_source.html">DP_Ph3_Inductor.h</a>.</p>
+
+</div>
+</div>
+<a id="ac1fc1a6dfab7ad1171747bce8d5b0b90" name="ac1fc1a6dfab7ad1171747bce8d5b0b90"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1fc1a6dfab7ad1171747bce8d5b0b90">&#9670;&#160;</a></span>getPreviousCurrentFactor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> CPS::DP::Ph3::Inductor::getPreviousCurrentFactor </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_d_p___ph3___inductor_8h_source.html#l00052">52</a> of file <a class="el" href="_d_p___ph3___inductor_8h_source.html">DP_Ph3_Inductor.h</a>.</p>
 
 </div>
 </div>

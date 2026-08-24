@@ -121,6 +121,8 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:ae60ee532e1a2d70cfbe19f686ba680ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a64075d133f4a6dc826facbe6fea17eba" id="r_a64075d133f4a6dc826facbe6fea17eba"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a64075d133f4a6dc826facbe6fea17eba">stampAdmittanceMatrix</a> (const <a class="el" href="namespace_c_p_s.html#ab73adea852da41581c8fb6965d891567">MatrixComp</a> &amp;admittanceMat, <a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;mat, <a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> node1Index, <a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> node2Index, <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> isTerminal1NotGrounded, <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> isTerminal2NotGrounded, const <a class="el" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">Logger::Log</a> &amp;mSLog, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> maxFreq=1, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> freqIdx=0)</td></tr>
 <tr class="separator:a64075d133f4a6dc826facbe6fea17eba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a935cd8152d5c70934f9bec50ddcf2564" id="r_a935cd8152d5c70934f9bec50ddcf2564"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a935cd8152d5c70934f9bec50ddcf2564">stampAdmittanceMatrix</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;admittanceMat, <a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> phaseCount, <a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;mat, <a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> node1Index, <a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> node2Index, <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> isTerminal1NotGrounded, <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> isTerminal2NotGrounded, const <a class="el" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">Logger::Log</a> &amp;mSLog, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> maxFreq=1, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> freqIdx=0)</td></tr>
+<tr class="separator:a935cd8152d5c70934f9bec50ddcf2564"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0216a290a88eec817301a9141e0d465d" id="r_a0216a290a88eec817301a9141e0d465d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0216a290a88eec817301a9141e0d465d">stampConductanceAs3x3ScalarMatrix</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> conductance, <a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;mat, <a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> node1Index, <a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> node2Index, <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> isTerminal1NotGrounded, <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> isTerminal2NotGrounded, const <a class="el" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">Logger::Log</a> &amp;mSLog)</td></tr>
 <tr class="memdesc:a0216a290a88eec817301a9141e0d465d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps conductance as a 3x3 scalar matrix (a diagonal matrix, where all diagonal elements are equal to conductance).  <br /></td></tr>
 <tr class="separator:a0216a290a88eec817301a9141e0d465d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -416,12 +418,84 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Stamps admittance as a 3x3 scalar matrix (a diagonal matrix, where all diagonal elements are equal to admittance). </p>
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_stamp_utils_8cpp_source.html#l00117">117</a> of file <a class="el" href="_m_n_a_stamp_utils_8cpp_source.html">MNAStampUtils.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_stamp_utils_8cpp_source.html#l00154">154</a> of file <a class="el" href="_m_n_a_stamp_utils_8cpp_source.html">MNAStampUtils.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a935cd8152d5c70934f9bec50ddcf2564" name="a935cd8152d5c70934f9bec50ddcf2564"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a935cd8152d5c70934f9bec50ddcf2564">&#9670;&#160;</a></span>stampAdmittanceMatrix() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MNAStampUtils::stampAdmittanceMatrix </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>admittanceMat</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a></td>          <td class="paramname"><span class="paramname"><em>phaseCount</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>mat</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a></td>          <td class="paramname"><span class="paramname"><em>node1Index</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a></td>          <td class="paramname"><span class="paramname"><em>node2Index</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a></td>          <td class="paramname"><span class="paramname"><em>isTerminal1NotGrounded</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a></td>          <td class="paramname"><span class="paramname"><em>isTerminal2NotGrounded</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="class_c_p_s_1_1_logger.html#a1dd42a2424f56886f0eec500a7851423">Logger::Log</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>mSLog</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a></td>          <td class="paramname"><span class="paramname"><em>maxFreq</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a></td>          <td class="paramname"><span class="paramname"><em>freqIdx</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Stamp a packed real admittance matrix whose 2x2 blocks map complex phase voltages [Re(v), Im(v)] to complex phase currents [Re(i), Im(i)]. </p>
+
+<p class="definition">Definition at line <a class="el" href="_m_n_a_stamp_utils_8cpp_source.html#l00103">103</a> of file <a class="el" href="_m_n_a_stamp_utils_8cpp_source.html">MNAStampUtils.cpp</a>.</p>
 
 </div>
 </div>
 <a id="a64075d133f4a6dc826facbe6fea17eba" name="a64075d133f4a6dc826facbe6fea17eba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a64075d133f4a6dc826facbe6fea17eba">&#9670;&#160;</a></span>stampAdmittanceMatrix()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a64075d133f4a6dc826facbe6fea17eba">&#9670;&#160;</a></span>stampAdmittanceMatrix() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -596,7 +670,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Stamps conductance as a 3x3 scalar matrix (a diagonal matrix, where all diagonal elements are equal to conductance). </p>
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_stamp_utils_8cpp_source.html#l00103">103</a> of file <a class="el" href="_m_n_a_stamp_utils_8cpp_source.html">MNAStampUtils.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_stamp_utils_8cpp_source.html#l00140">140</a> of file <a class="el" href="_m_n_a_stamp_utils_8cpp_source.html">MNAStampUtils.cpp</a>.</p>
 
 </div>
 </div>
