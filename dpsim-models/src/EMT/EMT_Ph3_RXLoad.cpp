@@ -125,10 +125,12 @@ void EMT::Ph3::RXLoad::initializeParentFromNodesAndTerminals(Real frequency) {
 
   // Compute derived impedance values and create+parametrize sub-components
   // now that power and voltage are guaranteed to be known.
-  if ((**mActivePower)(0, 0) != 0) {
+  if ((**mActivePower)(0, 0) != 0)
     mResistance =
         std::pow(**mNomVoltage / sqrt(3), 2) * (**mActivePower).inverse();
-  }
+  else
+    mResistance = Matrix::Zero(3, 3);
+
   if ((**mReactivePower)(0, 0) != 0)
     mReactance =
         std::pow(**mNomVoltage / sqrt(3), 2) * (**mReactivePower).inverse();
@@ -182,17 +184,6 @@ void EMT::Ph3::RXLoad::initializeParentFromNodesAndTerminals(Real frequency) {
   vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
   vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
   **mIntfVoltage = vInitABC.real();
-
-  if ((**mActivePower)(0, 0) != 0) {
-    mResistance =
-        std::pow(**mNomVoltage / sqrt(3), 2) * (**mActivePower).inverse();
-  }
-
-  if ((**mReactivePower)(0, 0) != 0)
-    mReactance =
-        std::pow(**mNomVoltage / sqrt(3), 2) * (**mReactivePower).inverse();
-  else
-    mReactance = Matrix::Zero(1, 1);
 
   if (mReactanceInSeries) {
     MatrixComp impedance = MatrixComp::Zero(3, 3);
