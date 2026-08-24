@@ -105,10 +105,14 @@ void SystemTopology::initWithPowerflow(const SystemTopology &systemPF,
             compPF)) {
       if (domain == CPS::Domain::DP || domain == CPS::Domain::SP) {
         auto comp = this->component<SimPowerComp<Complex>>(compPF->name());
+        if (!comp)
+          continue;
         auto terminal = comp->terminals()[0];
         terminal->setPower(-genPF->getApparentPower());
       } else if (domain == CPS::Domain::EMT) {
         auto comp = this->component<SimPowerComp<Real>>(compPF->name());
+        if (!comp)
+          continue;
         auto terminal = comp->terminals()[0];
         terminal->setPower(-genPF->getApparentPower());
       }
