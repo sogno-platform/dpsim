@@ -58,9 +58,6 @@ void EMT::Ph3::HalfDecouplingLine::createSubComponents() {
 
   mSubRes = EMT::Ph3::Resistor::make(**mName + "_r", mLogLevel);
   mSubRes->setParameters(**mSrcRes);
-  /* As in DecouplingLineEMT_Ph3, the terminating resistor is connected from
-     GND to the terminal, since the Ph3 resistor has the opposite sign
-     convention for voltage and current compared to its Ph1 counterpart. */
   mSubRes->connect({SimNode::GND, mTerminals[0]->node()});
   addMNASubComponent(mSubRes, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
@@ -79,9 +76,6 @@ void EMT::Ph3::HalfDecouplingLine::initializeParentFromNodesAndTerminals(
   **mIntfVoltage = initialVoltage(0).real();
   **mIntfCurrent = Matrix::Zero(3, 1);
 
-  // The sending quantities follow the internal sign convention of
-  // DecouplingLineEMT_Ph3, in which the recorded voltage is the negated
-  // terminal voltage.
   **mSendingVolt = -(**mIntfVoltage);
   **mSendingCur = Matrix::Zero(3, 1);
 }
@@ -95,9 +89,6 @@ void EMT::Ph3::HalfDecouplingLine::mnaParentInitialize(
   mAlpha = 1 - (mBufSize - mDelay / timeStep);
   SPDLOG_LOGGER_INFO(mSLog, "bufsize {} alpha {}", mBufSize, mAlpha);
 
-  // Initialization based on static PI-line model. The far end voltage is read
-  // from the coupling source, which the other half published during its own
-  // initializeParentFromNodesAndTerminals.
   MatrixComp voltNear = -initialVoltage(0);
   MatrixComp voltFar = (**mReceivingVolt).cast<Complex>();
 
@@ -110,7 +101,6 @@ void EMT::Ph3::HalfDecouplingLine::mnaParentInitialize(
   SPDLOG_LOGGER_INFO(mSLog, "initial voltage: v_k {}", voltNear);
   SPDLOG_LOGGER_INFO(mSLog, "initial current: i_k {}", curNear);
 
-  // Resize ring buffers and initialize
   mVoltBuf = voltNear.real().transpose().replicate(mBufSize, 1);
   mCurBuf = curNear.real().transpose().replicate(mBufSize, 1);
 
@@ -119,7 +109,6 @@ void EMT::Ph3::HalfDecouplingLine::mnaParentInitialize(
 }
 
 Matrix EMT::Ph3::HalfDecouplingLine::interpolate(Matrix &data) {
-  // linear interpolation of the nearest values
   Matrix c1 = data.row(mBufIdx);
   Matrix c2 = mBufIdx == mBufSize - 1 ? data.row(0) : data.row(mBufIdx + 1);
   return (mAlpha * c1 + (1 - mAlpha) * c2).transpose();
@@ -157,9 +146,6 @@ void EMT::Ph3::HalfDecouplingLine::postStep() {
   if (mBufIdx == mBufSize)
     mBufIdx = 0;
 
-  // Publish this end's quantities as of one travel time ago. Doing it here
-  // rather than in the pre-step is what keeps the two halves free of any
-  // same-step dependency on each other, so they can be solved separately.
   **mSendingVolt = interpolate(mVoltBuf);
   **mSendingCur = interpolate(mCurBuf);
 }

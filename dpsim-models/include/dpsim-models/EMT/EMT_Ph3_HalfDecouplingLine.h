@@ -10,18 +10,19 @@
 namespace CPS {
 namespace EMT {
 namespace Ph3 {
-/// One end of a Bergeron travelling-wave line. Two of these replace a single
-/// DecouplingLineEMT_Ph3 and can live in different systems or different
-/// simulators, since each only ever reads far-end quantities that are one
-/// travel time old.
-
+/// @brief One end of a Bergeron travelling-wave line. Two of these replace a
+/// single Signal::DecouplingLineEMT_Ph3 and can live in different systems or
+/// different simulators, since each only ever reads far-end quantities that are
+/// one travel time old.
 class HalfDecouplingLine : public CompositePowerComp<Real>,
                            public SharedFactory<HalfDecouplingLine> {
 protected:
+  /// Travel time of the whole line
   Real mDelay;
   Matrix mResistance = Matrix::Zero(3, 3);
   Matrix mInductance = Matrix::Zero(3, 3);
   Matrix mCapacitance = Matrix::Zero(3, 3);
+  /// Surge impedance, sqrt(L/C)
   Matrix mSurgeImpedance = Matrix::Zero(3, 3);
 
   // ### Electrical Subcomponents ###
@@ -30,18 +31,21 @@ protected:
   /// Terminating impedance calculated from line parameters
   std::shared_ptr<EMT::Ph3::Resistor> mSubRes;
 
-  // Ringbuffers for the values of previous timesteps, one row per stored step
+  /// Ring buffers for the values of previous timesteps, one row per stored step
   Matrix mVoltBuf, mCurBuf;
   UInt mBufIdx = 0;
   UInt mBufSize;
   Real mAlpha;
 
+  /// Reads a ring buffer one travel time back
   Matrix interpolate(Matrix &data);
 
 public:
   typedef std::shared_ptr<HalfDecouplingLine> Ptr;
 
+  /// History current fed into the controlled current source
   const Attribute<Matrix>::Ptr mSrcCtrledCurrent;
+  /// Terminating resistance
   const Attribute<Matrix>::Ptr mSrcRes;
   /// Far-end voltage one travel time ago, supplied by the other half
   const Attribute<Matrix>::Ptr mReceivingVolt;
@@ -52,9 +56,10 @@ public:
   /// This end's current one travel time ago, for the other half to read
   const Attribute<Matrix>::Ptr mSendingCur;
 
-  /// Defines UID, name and logging level
+  /// Defines name and logging level
   HalfDecouplingLine(String name, Logger::Level logLevel = Logger::Level::off)
       : HalfDecouplingLine(name, name, logLevel) {}
+  /// Defines UID, name and logging level
   HalfDecouplingLine(String uid, String name,
                      Logger::Level logLevel = Logger::Level::off);
 
@@ -65,13 +70,18 @@ public:
   /// attributes in the same process, or an Interface in a co-simulation.
   void setCouplingSource(Attribute<Matrix>::Ptr receivingVolt,
                          Attribute<Matrix>::Ptr receivingCur);
+  /// Creates the terminating resistor and the history current source
   void createSubComponents() override;
+  /// Seeds the interface quantities and the sending attributes
   void initializeParentFromNodesAndTerminals(Real frequency) override;
 
+  /// Updates the history current from the exchanged quantities
   void step(Real time, Int timeStepCount);
+  /// Records this end's quantities and publishes them one travel time delayed
   void postStep();
 
   // #### MNA section ####
+  /// Sizes the ring buffers and seeds them from the steady state
   void mnaParentInitialize(Real omega, Real timeStep,
                            Attribute<Matrix>::Ptr leftVector) override;
   /// Updates internal current variable of the component
