@@ -101,6 +101,7 @@
 #include <dpsim-models/DP/DP_Ph3_PiLine.h>
 #include <dpsim-models/DP/DP_Ph3_Resistor.h>
 #include <dpsim-models/DP/DP_Ph3_SSN_Full_Serial_RLC.h>
+#include <dpsim-models/DP/DP_Ph3_SSN_GFL_Split.h>
 #include <dpsim-models/DP/DP_Ph3_SeriesResistor.h>
 #include <dpsim-models/DP/DP_Ph3_SeriesSwitch.h>
 #include <dpsim-models/DP/DP_Ph3_Switch.h>
