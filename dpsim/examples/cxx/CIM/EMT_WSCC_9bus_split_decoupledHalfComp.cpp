@@ -42,7 +42,6 @@ void decoupleLine(SystemTopology &sys, const String &lineName,
 
 void doSim(String &name, SystemTopology &sys, Int threads) {
 
-  // Logging
   auto logger = DataLogger::make(name);
   for (Int bus = 1; bus <= 9; bus++) {
     String attrName = "v" + std::to_string(bus);
@@ -61,9 +60,6 @@ void doSim(String &name, SystemTopology &sys, Int threads) {
   sim.addLogger(logger);
   if (threads > 0)
     sim.setScheduler(std::make_shared<OpenMPLevelScheduler>(threads));
-
-  //std::ofstream of1("topology_graph.svg");
-  //sys.topologyGraph().render(of1));
 
   sim.run();
   sim.logStepTimes(name + "_step_times");
@@ -88,7 +84,6 @@ int main(int argc, char *argv[]) {
   std::cout << "Simulate with " << numThreads << " threads, sequence number "
             << numSeq << std::endl;
 
-  // Monolithic Simulation
   ///TODO: Is this needed? Already done in "EMT_WSCC_9bus_split_decoupled.cpp"
   String simNameMonolithic = "WSCC-9bus_monolithic_EMT";
   Logger::setLogDir("logs/" + simNameMonolithic);
@@ -100,7 +95,6 @@ int main(int argc, char *argv[]) {
 
   doSim(simNameMonolithic, systemMonolithic, 0);
 
-  // Decoupled Simulation
   String simNameDecoupledHalf = "WSCC_9bus_split_decoupledHalfComp_EMT_" +
                                 std::to_string(numThreads) + "_" +
                                 std::to_string(numSeq);
@@ -112,7 +106,6 @@ int main(int argc, char *argv[]) {
                               CPS::GeneratorType::IdealVoltageSource);
 
   decoupleLine(systemDecoupled, "LINE75", "BUS7", "BUS5");
-  // decouple_line(system, "LINE78", "BUS7", "BUS8");
   decoupleLine(systemDecoupled, "LINE64", "BUS6", "BUS4");
   decoupleLine(systemDecoupled, "LINE89", "BUS8", "BUS9");
 
