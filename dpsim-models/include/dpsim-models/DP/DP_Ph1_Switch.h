@@ -102,6 +102,14 @@ public:
   void initializeFromNodesAndTerminals(Real frequency) override;
 
   // #### General MNA section ####
+  /// mTimeStep is the lookahead the exponential ramp is evaluated at.
+  bool mnaUpdateTimeStep(Real timeStep) override {
+    if (timeStep <= 0)
+      return false;
+
+    mTimeStep = timeStep;
+    return true;
+  }
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override;
   /// Stamps system matrix

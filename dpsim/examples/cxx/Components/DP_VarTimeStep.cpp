@@ -9,7 +9,8 @@
 //       Any deviation is produced by the conversion itself.
 //   [2] Changing from a coarse to a fine step must stay close to a run held at
 //       the fine step throughout.
-//   [3] The return value must count the components that did not convert.
+//   [3] The return value must count the components that did not convert. A
+//       PiLine converts, a varResSwitch does not.
 
 #include <algorithm>
 #include <cmath>
@@ -143,9 +144,10 @@ Real deviationAfter(const Trace &test, const Trace &reference, Real from) {
   return scale > 0 ? worst / scale : worst;
 }
 
-/// A PiLine is a CompositePowerComp whose parent hook does not convert.
-UInt countUnconverted(const Parameters &p) {
-  const String simName = "DP_VarTimeStep_Composite";
+/// Source - extra - load, two steps with a change between them.
+UInt unconvertedWith(const Parameters &p, const String &name,
+                     SimPowerComp<Complex>::Ptr extra) {
+  const String simName = "DP_VarTimeStep_" + name;
   Logger::setLogDir("logs/" + simName);
 
   auto n1 = SimNode<Complex>::make("n1", PhaseType::Single);
@@ -156,18 +158,15 @@ UInt countUnconverted(const Parameters &p) {
   auto vs = DP::Ph1::VoltageSource::make("vs", Logger::Level::off);
   vs->setParameters(Complex(p.sourceVoltage, 0.0));
 
-  auto line = DP::Ph1::PiLine::make("line", Logger::Level::off);
-  line->setParameters(p.sourceResistance, p.inductance, p.capacitance, 0.0);
-
   auto load = DP::Ph1::Resistor::make("R_load", Logger::Level::off);
   load->setParameters(p.loadResistance);
 
   vs->connect({SimNode<Complex>::GND, n1});
-  line->connect({n1, n2});
+  extra->connect({n1, n2});
   load->connect({n2, SimNode<Complex>::GND});
 
   auto system = SystemTopology(p.frequency, SystemNodeList{n1, n2},
-                               SystemComponentList{vs, line, load});
+                               SystemComponentList{vs, extra, load});
 
   Simulation sim(simName, Logger::Level::info);
   sim.setSystem(system);
@@ -196,14 +195,23 @@ int main(int argc, char *argv[]) {
   const Trace sameStep = run(p, "SameStep", p.coarseStep, p.coarseStep);
   const Trace refined = run(p, "Refined", p.coarseStep, p.fineStep);
 
+  auto line = DP::Ph1::PiLine::make("line", Logger::Level::off);
+  line->setParameters(p.sourceResistance, p.inductance, p.capacitance, 0.0);
+
+  auto varSwitch = DP::Ph1::varResSwitch::make("switch", Logger::Level::off);
+  varSwitch->setParameters(1e6, 1e-3, true);
+  varSwitch->setInitParameters(p.coarseStep);
+
   const Real window = p.changeTime + 1e-3;
   const Real sameDeviation = deviationAfter(sameStep, coarse, window);
   const Real refinedDeviation = deviationAfter(refined, fine, window);
-  const UInt unconverted = countUnconverted(p);
+  const UInt withLine = unconvertedWith(p, "PiLine", line);
+  const UInt withSwitch = unconvertedWith(p, "VarResSwitch", varSwitch);
 
   const Bool passSame = sameDeviation < 1e-9;
   const Bool passRefined = refinedDeviation < 1e-2;
-  const Bool passCount = sameStep.unconverted == 0 && unconverted == 1;
+  const Bool passCount =
+      sameStep.unconverted == 0 && withLine == 0 && withSwitch == 1;
 
   std::cout << std::scientific << std::setprecision(6);
   std::cout << "Same step is a no-op: " << (passSame ? "PASS" : "FAIL")
@@ -213,8 +221,8 @@ int main(int argc, char *argv[]) {
             << refinedDeviation << ")" << std::endl;
   std::cout << "Unconverted components counted: "
             << (passCount ? "PASS" : "FAIL") << " (passive "
-            << sameStep.unconverted << ", with a PiLine " << unconverted << ")"
-            << std::endl;
+            << sameStep.unconverted << ", with a PiLine " << withLine
+            << ", with a varResSwitch " << withSwitch << ")" << std::endl;
 
   const Bool passed = passSame && passRefined && passCount;
   std::cout << "Variable time step: " << (passed ? "3/3" : "failed")
