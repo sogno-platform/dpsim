@@ -336,10 +336,8 @@ public:
     mEvents.addEvent(e);
   }
 
-  /// Uses fineTimeStep from leadTime before a scheduled event until followTime
-  /// after it, and the step set by setTimeStep() outside. fineTimeStep <= 0
-  /// disables it. Only components that implement mnaUpdateTimeStep() follow the
-  /// change; the solver names those that do not.
+  /// Fine step from leadTime before a scheduled event to followTime after it,
+  /// the step from setTimeStep() outside. fineTimeStep <= 0 disables it.
   void setEventRefinement(Real fineTimeStep, Real leadTime, Real followTime) {
     mRefineTimeStep = fineTimeStep;
     mRefineLeadTime = leadTime;

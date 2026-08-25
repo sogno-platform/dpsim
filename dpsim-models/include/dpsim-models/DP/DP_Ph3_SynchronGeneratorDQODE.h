@@ -44,6 +44,8 @@ public:
                          Logger::Level loglevel = Logger::Level::off);
 
   // #### MNA Section ####
+  /// The ODE solver holds its own step-dependent state.
+  bool mnaUpdateTimeStep(Real timeStep) override { return false; }
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override;
 

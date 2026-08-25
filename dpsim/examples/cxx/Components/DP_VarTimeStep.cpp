@@ -3,17 +3,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-// Checks Simulation::updateTimeStep() on a network of DP passive elements.
-//
-//   [1] Changing to the step already in use must reproduce the undisturbed run.
-//       Any deviation is produced by the conversion itself.
-//   [2] Changing from a coarse to a fine step must stay close to a run held at
-//       the fine step throughout.
-//   [3] The return value must count the components that did not convert. A
-//       PiLine and a varResSwitch convert, a ramped source does not.
-//   [4] Refining around a switching event must recover the transient that the
-//       base step alone misses.
-//   [5] A Ph3 network must convert as completely as the Ph1 one.
+// Checks updateTimeStep() and setEventRefinement() on DP networks: a change to
+// the step already in use is a no-op, a coarse-to-fine change matches a run held
+// fine, unconverted components are counted, a refined window recovers a
+// switching transient, Ph3 converts, and a machine keeps its rotor angle.
 
 #include <algorithm>
 #include <cmath>
@@ -21,6 +14,7 @@
 #include <iostream>
 #include <vector>
 
+#include "../Examples.h"
 #include <DPsim.h>
 #include <dpsim-models/DP/DP_Ph1_Switch.h>
 
@@ -41,6 +35,11 @@ struct Parameters {
   Real fineStep = 50e-6;
   Real changeTime = 0.1;
   Real finalTime = 0.2;
+
+  Real machineStep = 1e-3;
+  Real machineFineStep = 1e-4;
+  Real machineChangeTime = 1.0;
+  Real machineFinalTime = 1.2;
 
   Real switchResistance = 20.0;
   Real leadTime = 1e-3;
@@ -191,6 +190,145 @@ UInt unconvertedWith(const Parameters &p, const String &name,
   sim.stop();
 
   return unconverted;
+}
+
+/// SMIB with a 4th order VBR machine. Largest relative deviation of the terminal
+/// voltage after the change, against a run held at the fine step.
+Real machineDeviation(const Parameters &p) {
+  using namespace CPS::CIM::Examples::Grids::SMIB::
+      ReducedOrderSynchronGenerator;
+  Scenario6::GridParams grid;
+  CPS::CIM::Examples::Components::SynchronousGeneratorKundur::MachineParameters
+      machine;
+
+  // ----- power flow, for the machine's initial operating point -----
+  Logger::setLogDir("logs/DP_VarTimeStep_MachinePF");
+
+  auto n1PF = SimNode<Complex>::make("n1", PhaseType::Single);
+  auto n2PF = SimNode<Complex>::make("n2", PhaseType::Single);
+
+  auto genPF = SP::Ph1::SynchronGenerator::make("gen", Logger::Level::off);
+  genPF->setParameters(machine.nomPower, grid.VnomMV, grid.setPointActivePower,
+                       grid.setPointVoltage, PowerflowBusType::PV);
+  genPF->setBaseVoltage(grid.VnomMV);
+
+  auto slackPF = SP::Ph1::NetworkInjection::make("slack", Logger::Level::off);
+  slackPF->setParameters(grid.VnomMV);
+  slackPF->setBaseVoltage(grid.VnomMV);
+  slackPF->modifyPowerFlowBusType(PowerflowBusType::VD);
+
+  auto linePF = SP::Ph1::PiLine::make("line", Logger::Level::off);
+  linePF->setParameters(grid.lineResistance, grid.lineInductance,
+                        grid.lineCapacitance, grid.lineConductance);
+  linePF->setBaseVoltage(grid.VnomMV);
+
+  genPF->connect({n1PF});
+  linePF->connect({n1PF, n2PF});
+  slackPF->connect({n2PF});
+
+  auto systemPF = SystemTopology(grid.nomFreq, SystemNodeList{n1PF, n2PF},
+                                 SystemComponentList{genPF, linePF, slackPF});
+
+  Simulation simPF("DP_VarTimeStep_MachinePF", Logger::Level::off);
+  simPF.setSystem(systemPF);
+  simPF.setTimeStep(0.1);
+  simPF.setFinalTime(0.1);
+  simPF.setDomain(Domain::SP);
+  simPF.setSolverType(Solver::Type::NRP);
+  simPF.setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
+  simPF.doInitFromNodesAndTerminals(false);
+  simPF.run();
+
+  const Complex initPower(genPF->getApparentPower().real(),
+                          genPF->getApparentPower().imag());
+  const Real initMechPower = genPF->getApparentPower().real();
+  const Complex initTerminal = n1PF->voltage()(0, 0);
+  const Complex initSlack = n2PF->voltage()(0, 0);
+
+  // ----- the two dynamic runs -----
+  auto runMachine = [&](const String &name, Real baseStep,
+                        Real changeTo) -> std::vector<std::pair<Real, Real>> {
+    const String simName = "DP_VarTimeStep_" + name;
+    Logger::setLogDir("logs/" + simName);
+
+    auto n1 = SimNode<Complex>::make("n1", PhaseType::Single,
+                                     std::vector<Complex>{initTerminal});
+    auto n2 = SimNode<Complex>::make("n2", PhaseType::Single,
+                                     std::vector<Complex>{initSlack});
+
+    auto gen =
+        DP::Ph1::SynchronGenerator4OrderVBR::make("gen", Logger::Level::off);
+    gen->setOperationalParametersPerUnit(
+        machine.nomPower, machine.nomVoltage, machine.nomFreq, machine.H,
+        machine.Ld, machine.Lq, machine.Ll, machine.Ld_t, machine.Lq_t,
+        machine.Td0_t, machine.Tq0_t);
+    gen->setInitialValues(initPower, initMechPower, initTerminal);
+
+    auto slack = DP::Ph1::NetworkInjection::make("slack", Logger::Level::off);
+    slack->setParameters(grid.VnomMV);
+
+    auto line = DP::Ph1::PiLine::make("line", Logger::Level::off);
+    line->setParameters(grid.lineResistance, grid.lineInductance,
+                        grid.lineCapacitance, grid.lineConductance);
+
+    gen->connect({n1});
+    line->connect({n1, n2});
+    slack->connect({n2});
+
+    auto system = SystemTopology(grid.nomFreq, SystemNodeList{n1, n2},
+                                 SystemComponentList{gen, line, slack});
+
+    Simulation sim(simName, Logger::Level::info);
+    sim.setSystem(system);
+    sim.setDomain(Domain::DP);
+    sim.setSolverType(Solver::Type::MNA);
+    sim.setTimeStep(baseStep);
+    sim.setFinalTime(p.machineFinalTime);
+    sim.doSystemMatrixRecomputation(true);
+
+    std::vector<std::pair<Real, Real>> trace;
+    Bool changed = changeTo <= 0;
+
+    sim.start();
+
+    while (sim.time() < p.machineFinalTime + DOUBLE_EPSILON) {
+      if (!changed && sim.time() >= p.machineChangeTime - DOUBLE_EPSILON) {
+        sim.updateTimeStep(changeTo);
+        changed = true;
+      }
+
+      sim.next();
+      trace.emplace_back(
+          sim.time(),
+          std::abs(n1->attributeTyped<MatrixComp>("v")->get()(0, 0)));
+    }
+
+    sim.stop();
+
+    return trace;
+  };
+
+  const auto fine = runMachine("MachineFine", p.machineFineStep, -1.0);
+  const auto refined =
+      runMachine("MachineRefined", p.machineStep, p.machineFineStep);
+
+  Real scale = 0.0;
+  for (const auto &sample : fine)
+    scale = std::max(scale, sample.second);
+
+  Real worst = 0.0;
+  for (const auto &sample : refined) {
+    if (sample.first < p.machineChangeTime)
+      continue;
+    for (const auto &reference : fine) {
+      if (std::abs(reference.first - sample.first) > 1e-12)
+        continue;
+      worst = std::max(worst, std::abs(sample.second - reference.second));
+      break;
+    }
+  }
+
+  return scale > 0 ? worst / scale : worst;
 }
 
 /// Ph3 source, R, L, C and a PiLine, one step and a change.
@@ -362,6 +500,8 @@ int main(int argc, char *argv[]) {
   const Bool passWindow = windowError < 0.5 * coarseError;
   const UInt ph3 = ph3Unconverted(p);
   const Bool passPh3 = ph3 == 0;
+  const Real machine = machineDeviation(p);
+  const Bool passMachine = machine < 1e-2;
 
   std::cout << std::scientific << std::setprecision(6);
   std::cout << "Same step is a no-op: " << (passSame ? "PASS" : "FAIL")
@@ -382,9 +522,12 @@ int main(int argc, char *argv[]) {
   std::cout << "Ph3 network converts: " << (passPh3 ? "PASS" : "FAIL")
             << " (unconverted " << ph3 << ")" << std::endl;
 
-  const Bool passed =
-      passSame && passRefined && passCount && passWindow && passPh3;
-  std::cout << "Variable time step: " << (passed ? "5/5" : "failed")
+  std::cout << "Machine follows the change: " << (passMachine ? "PASS" : "FAIL")
+            << " (terminal voltage deviation " << machine << ")" << std::endl;
+
+  const Bool passed = passSame && passRefined && passCount && passWindow &&
+                      passPh3 && passMachine;
+  std::cout << "Variable time step: " << (passed ? "6/6" : "failed")
             << std::endl;
 
   return passed ? EXIT_SUCCESS : EXIT_FAILURE;

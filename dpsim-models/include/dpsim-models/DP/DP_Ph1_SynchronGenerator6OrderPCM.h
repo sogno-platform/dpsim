@@ -57,6 +57,17 @@ public:
 
   // #### MNA Functions ####
   ///
+  /// Rebuilds the state space and re-anchors the rotor angle.
+  bool mnaUpdateTimeStep(Real timeStep) override {
+    if (timeStep <= 0)
+      return false;
+
+    const Real oldTimeStep = mTimeStep;
+    mTimeStep = timeStep;
+    **mThetaMech += mBase_OmMech * (oldTimeStep - timeStep);
+    calculateStateSpaceMatrices();
+    return true;
+  }
   void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) final;
   ///
   void mnaCompPostStep(const Matrix &leftVector) final;
