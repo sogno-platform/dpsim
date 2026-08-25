@@ -122,6 +122,14 @@ protected:
   /// Enable extraction of the MNA-coupled discrete-time state matrix.
   Bool mStateSpaceExtraction = false;
 
+  /// Scheduled event times, for the refinement windows
+  std::vector<Real> mEventTimes;
+  Real mRefineTimeStep = -1.0;
+  Real mRefineLeadTime = 0.0;
+  Real mRefineFollowTime = 0.0;
+  Real mRefineBaseTimeStep = -1.0;
+  Bool mRefineInWindow = false;
+
   /// If tearing components exist, the Diakoptics
   /// solver is selected automatically.
   CPS::IdentifiedObject::List mTearComponents = CPS::IdentifiedObject::List();
@@ -315,13 +323,28 @@ public:
   void run();
   /// Solve system A * x = z for x and current time
   virtual Real step();
+  /// Selects the fine or the base step for the coming step
+  UInt applyEventRefinement();
   /// Synchronize simulation with remotes by exchanging intial state over interfaces
   void sync() const;
   /// Create the schedule for the independent tasks
   void schedule();
 
   /// Schedule an event in the simulation
-  void addEvent(Event::Ptr e) { mEvents.addEvent(e); }
+  void addEvent(Event::Ptr e) {
+    mEventTimes.push_back(e->time());
+    mEvents.addEvent(e);
+  }
+
+  /// Uses fineTimeStep from leadTime before a scheduled event until followTime
+  /// after it, and the step set by setTimeStep() outside. fineTimeStep <= 0
+  /// disables it. Only components that implement mnaUpdateTimeStep() follow the
+  /// change; the solver names those that do not.
+  void setEventRefinement(Real fineTimeStep, Real leadTime, Real followTime) {
+    mRefineTimeStep = fineTimeStep;
+    mRefineLeadTime = leadTime;
+    mRefineFollowTime = followTime;
+  }
   /// Add a new data logger
   void addLogger(DataLoggerInterface::Ptr logger) {
     mLoggers.push_back(logger);

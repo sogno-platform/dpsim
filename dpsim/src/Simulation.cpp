@@ -472,11 +472,45 @@ void Simulation::run() {
   stop();
 }
 
+UInt Simulation::applyEventRefinement() {
+  if (mRefineTimeStep <= 0)
+    return 0;
+
+  if (mRefineBaseTimeStep <= 0)
+    mRefineBaseTimeStep = **mTimeStep;
+
+  Bool wantFine = false;
+  for (Real eventTime : mEventTimes)
+    if (mTime >= eventTime - mRefineLeadTime &&
+        mTime <= eventTime + mRefineFollowTime)
+      wantFine = true;
+
+  if (wantFine == mRefineInWindow)
+    return 0;
+
+  const Real wanted = wantFine ? mRefineTimeStep : mRefineBaseTimeStep;
+  const UInt unhandled = updateTimeStep(wanted);
+
+  mRefineInWindow = wantFine;
+  SPDLOG_LOGGER_INFO(mLog, "t = {:e}s: time step {:e}s, {:s} refinement window",
+                     mTime, wanted, wantFine ? "entering" : "leaving");
+
+  if (unhandled > 0)
+    SPDLOG_LOGGER_WARN(mLog,
+                       "{:d} component(s) did not follow the change at "
+                       "t = {:e}s and keep their old discretisation.",
+                       unhandled, mTime);
+
+  return unhandled;
+}
+
 Real Simulation::step() {
   std::chrono::steady_clock::time_point start;
   if (mLogStepTimes) {
     start = std::chrono::steady_clock::now();
   }
+
+  applyEventRefinement();
 
   mEvents.handleEvents(mTime);
   mScheduler->step(mTime, mTimeStepCount);

@@ -11,6 +11,8 @@
 //       the fine step throughout.
 //   [3] The return value must count the components that did not convert. A
 //       PiLine converts, a varResSwitch does not.
+//   [4] Refining around a switching event must recover the transient that the
+//       base step alone misses.
 
 #include <algorithm>
 #include <cmath>
@@ -19,6 +21,7 @@
 #include <vector>
 
 #include <DPsim.h>
+#include <dpsim-models/DP/DP_Ph1_Switch.h>
 
 using namespace DPsim;
 using namespace CPS;
@@ -37,6 +40,10 @@ struct Parameters {
   Real fineStep = 50e-6;
   Real changeTime = 0.1;
   Real finalTime = 0.2;
+
+  Real switchResistance = 20.0;
+  Real leadTime = 1e-3;
+  Real followTime = 5e-3;
 };
 
 /// Source - R - L - probe, with C and a load resistor from probe to ground.
@@ -185,6 +192,76 @@ UInt unconvertedWith(const Parameters &p, const String &name,
   return unconverted;
 }
 
+/// The load branch is interrupted at changeTime, which rings the L-C pair. With
+/// refinement the fine step covers the event window only.
+Real switchedPeak(const Parameters &p, const String &name, Real baseStep,
+                  Real fineStep) {
+  const String simName = "DP_VarTimeStep_" + name;
+  Logger::setLogDir("logs/" + simName);
+
+  auto n1 = SimNode<Complex>::make("n1", PhaseType::Single);
+  auto n2 = SimNode<Complex>::make("n2", PhaseType::Single);
+  auto n3 = SimNode<Complex>::make("n3", PhaseType::Single);
+
+  n1->setInitialVoltage(Complex(p.sourceVoltage, 0.0));
+
+  auto vs = DP::Ph1::VoltageSource::make("vs", Logger::Level::off);
+  vs->setParameters(Complex(p.sourceVoltage, 0.0));
+
+  auto res = DP::Ph1::Resistor::make("R_src", Logger::Level::off);
+  res->setParameters(p.sourceResistance);
+
+  auto ind = DP::Ph1::Inductor::make("L", Logger::Level::off);
+  ind->setParameters(p.inductance);
+
+  auto cap = DP::Ph1::Capacitor::make("C", Logger::Level::off);
+  cap->setParameters(p.capacitance);
+
+  auto breaker = DP::Ph1::Switch::make("breaker", Logger::Level::off);
+  breaker->setParameters(1e9, 1e-3, true);
+
+  auto load = DP::Ph1::Resistor::make("R_load", Logger::Level::off);
+  load->setParameters(p.switchResistance);
+
+  vs->connect({SimNode<Complex>::GND, n1});
+  res->connect({n1, n2});
+  ind->connect({n2, SimNode<Complex>::GND});
+  cap->connect({n2, SimNode<Complex>::GND});
+  breaker->connect({n2, n3});
+  load->connect({n3, SimNode<Complex>::GND});
+
+  auto system =
+      SystemTopology(p.frequency, SystemNodeList{n1, n2, n3},
+                     SystemComponentList{vs, res, ind, cap, breaker, load});
+
+  Simulation sim(simName, Logger::Level::info);
+  sim.setSystem(system);
+  sim.setDomain(Domain::DP);
+  sim.setSolverType(Solver::Type::MNA);
+  sim.setTimeStep(baseStep);
+  sim.setFinalTime(p.finalTime);
+  sim.doSystemMatrixRecomputation(true);
+  sim.addEvent(SwitchEvent::make(p.changeTime, breaker, false));
+
+  if (fineStep > 0)
+    sim.setEventRefinement(fineStep, p.leadTime, p.followTime);
+
+  Real peak = 0.0;
+
+  sim.start();
+
+  while (sim.time() < p.finalTime + DOUBLE_EPSILON) {
+    sim.next();
+    if (sim.time() >= p.changeTime && sim.time() <= p.changeTime + p.followTime)
+      peak = std::max(
+          peak, std::abs(n2->attributeTyped<MatrixComp>("v")->get()(0, 0)));
+  }
+
+  sim.stop();
+
+  return peak;
+}
+
 } // namespace
 
 int main(int argc, char *argv[]) {
@@ -208,10 +285,19 @@ int main(int argc, char *argv[]) {
   const UInt withLine = unconvertedWith(p, "PiLine", line);
   const UInt withSwitch = unconvertedWith(p, "VarResSwitch", varSwitch);
 
+  const Real peakFine = switchedPeak(p, "SwitchFine", p.fineStep, -1.0);
+  const Real peakCoarse = switchedPeak(p, "SwitchCoarse", p.coarseStep, -1.0);
+  const Real peakWindow =
+      switchedPeak(p, "SwitchRefined", p.coarseStep, p.fineStep);
+
+  const Real coarseError = std::abs(peakCoarse - peakFine) / peakFine;
+  const Real windowError = std::abs(peakWindow - peakFine) / peakFine;
+
   const Bool passSame = sameDeviation < 1e-9;
   const Bool passRefined = refinedDeviation < 1e-2;
   const Bool passCount =
       sameStep.unconverted == 0 && withLine == 0 && withSwitch == 1;
+  const Bool passWindow = windowError < 0.5 * coarseError;
 
   std::cout << std::scientific << std::setprecision(6);
   std::cout << "Same step is a no-op: " << (passSame ? "PASS" : "FAIL")
@@ -224,8 +310,12 @@ int main(int argc, char *argv[]) {
             << sameStep.unconverted << ", with a PiLine " << withLine
             << ", with a varResSwitch " << withSwitch << ")" << std::endl;
 
-  const Bool passed = passSame && passRefined && passCount;
-  std::cout << "Variable time step: " << (passed ? "3/3" : "failed")
+  std::cout << "Refined window recovers the transient: "
+            << (passWindow ? "PASS" : "FAIL") << " (peak error, base step "
+            << coarseError << ", refined " << windowError << ")" << std::endl;
+
+  const Bool passed = passSame && passRefined && passCount && passWindow;
+  std::cout << "Variable time step: " << (passed ? "4/4" : "failed")
             << std::endl;
 
   return passed ? EXIT_SUCCESS : EXIT_FAILURE;
