@@ -127,6 +127,7 @@ endif()
 set(SYNCGEN_SOURCES
 	Components/DP_SynGenDq7odTrapez_SteadyState.cpp
 	Components/DP_SynGenDq7odTrapez_ThreePhFault.cpp
+	Components/DP_VarTimeStep.cpp
 	Components/DP_SynGenTrStab_SteadyState.cpp
 	Components/DP_SynGenTrStab_LoadStep.cpp
 	Components/DP_EMT_SynGenDq7odTrapez_SteadyState.cpp

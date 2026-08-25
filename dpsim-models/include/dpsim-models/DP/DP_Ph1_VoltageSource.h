@@ -89,6 +89,8 @@ public:
   /// Initializes internal variables of the component
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override;
+  /// Nothing here depends on the timestep.
+  bool mnaUpdateTimeStep(Real timeStep) override { return timeStep > 0; }
   void mnaCompInitializeHarm(
       Real omega, Real timeStep,
       std::vector<Attribute<Matrix>::Ptr> leftVectors) override;
