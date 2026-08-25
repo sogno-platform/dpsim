@@ -192,6 +192,16 @@ public:
   void setSystem(const CPS::SystemTopology &system) { mSystem = system; }
   ///
   void setTimeStep(Real timeStep) { **mTimeStep = timeStep; }
+
+  /// Changes the timestep mid-run, unlike setTimeStep. Returns the number of
+  /// components that could not follow.
+  UInt updateTimeStep(Real timeStep) {
+    **mTimeStep = timeStep;
+    UInt unhandled = 0;
+    for (auto &solver : mSolvers)
+      unhandled += solver->updateTimeStep(timeStep);
+    return unhandled;
+  }
   ///
   void setFinalTime(Real finalTime) { **mFinalTime = finalTime; }
   ///

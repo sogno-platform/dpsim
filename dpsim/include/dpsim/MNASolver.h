@@ -237,5 +237,14 @@ public:
 
   /// Read-only access to the MNA state-space extractor.
   const MNAStateSpaceExtractor &getStateSpaceExtractor() const;
+
+  /// Asks every component to re-derive its discretisation. Declining types are
+  /// named in the log, since a stale discretisation still looks plausible.
+  UInt updateTimeStep(Real timeStep) override;
+
+protected:
+  /// Re-stamps what a timestep change invalidates without a variable component
+  /// reporting it.
+  virtual void refreshStaticMatrixStamp() {}
 };
 } // namespace DPsim
