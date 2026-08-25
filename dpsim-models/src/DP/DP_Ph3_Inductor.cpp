@@ -80,6 +80,8 @@ void DP::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 }
 
 void DP::Ph3::Inductor::initVars(Real omega, Real timeStep) {
+  mOmega = omega;
+
   Matrix a = timeStep / 2.0 * (**mInductance).inverse();
 
   const Real b = timeStep * omega / 2.0;

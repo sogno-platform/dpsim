@@ -13,6 +13,7 @@
 //       PiLine converts, a varResSwitch does not.
 //   [4] Refining around a switching event must recover the transient that the
 //       base step alone misses.
+//   [5] A Ph3 network must convert as completely as the Ph1 one.
 
 #include <algorithm>
 #include <cmath>
@@ -192,6 +193,62 @@ UInt unconvertedWith(const Parameters &p, const String &name,
   return unconverted;
 }
 
+/// Ph3 source, R, L, C and a PiLine, one step and a change.
+UInt ph3Unconverted(const Parameters &p) {
+  const String simName = "DP_VarTimeStep_Ph3";
+  Logger::setLogDir("logs/" + simName);
+
+  auto n1 = SimNode<Complex>::make("n1", PhaseType::ABC);
+  auto n2 = SimNode<Complex>::make("n2", PhaseType::ABC);
+  auto n3 = SimNode<Complex>::make("n3", PhaseType::ABC);
+
+  const Complex phase(p.sourceVoltage, 0.0);
+  n1->setInitialVoltage(Math::singlePhaseVariableToThreePhase(phase));
+
+  auto vs = DP::Ph3::VoltageSource::make("vs", Logger::Level::off);
+  vs->setParameters(Math::singlePhaseVariableToThreePhase(phase), p.frequency);
+
+  auto line = DP::Ph3::PiLine::make("line", Logger::Level::off);
+  line->setParameters(
+      Math::singlePhaseParameterToThreePhase(p.sourceResistance),
+      Math::singlePhaseParameterToThreePhase(p.inductance),
+      Math::singlePhaseParameterToThreePhase(p.capacitance));
+
+  auto ind = DP::Ph3::Inductor::make("L", Logger::Level::off);
+  ind->setParameters(Math::singlePhaseParameterToThreePhase(p.inductance));
+
+  auto cap = DP::Ph3::Capacitor::make("C", Logger::Level::off);
+  cap->setParameters(Math::singlePhaseParameterToThreePhase(p.capacitance));
+
+  auto load = DP::Ph3::Resistor::make("R_load", Logger::Level::off);
+  load->setParameters(Math::singlePhaseParameterToThreePhase(p.loadResistance));
+
+  vs->connect({SimNode<Complex>::GND, n1});
+  line->connect({n1, n2});
+  ind->connect({n2, n3});
+  cap->connect({n3, SimNode<Complex>::GND});
+  load->connect({n3, SimNode<Complex>::GND});
+
+  auto system = SystemTopology(p.frequency, SystemNodeList{n1, n2, n3},
+                               SystemComponentList{vs, line, ind, cap, load});
+
+  Simulation sim(simName, Logger::Level::info);
+  sim.setSystem(system);
+  sim.setDomain(Domain::DP);
+  sim.setSolverType(Solver::Type::MNA);
+  sim.setTimeStep(p.coarseStep);
+  sim.setFinalTime(2.0 * p.coarseStep);
+  sim.doSystemMatrixRecomputation(true);
+
+  sim.start();
+  sim.next();
+  const UInt unconverted = sim.updateTimeStep(p.fineStep);
+  sim.next();
+  sim.stop();
+
+  return unconverted;
+}
+
 /// The load branch is interrupted at changeTime, which rings the L-C pair. With
 /// refinement the fine step covers the event window only.
 Real switchedPeak(const Parameters &p, const String &name, Real baseStep,
@@ -298,6 +355,8 @@ int main(int argc, char *argv[]) {
   const Bool passCount =
       sameStep.unconverted == 0 && withLine == 0 && withSwitch == 1;
   const Bool passWindow = windowError < 0.5 * coarseError;
+  const UInt ph3 = ph3Unconverted(p);
+  const Bool passPh3 = ph3 == 0;
 
   std::cout << std::scientific << std::setprecision(6);
   std::cout << "Same step is a no-op: " << (passSame ? "PASS" : "FAIL")
@@ -314,8 +373,12 @@ int main(int argc, char *argv[]) {
             << (passWindow ? "PASS" : "FAIL") << " (peak error, base step "
             << coarseError << ", refined " << windowError << ")" << std::endl;
 
-  const Bool passed = passSame && passRefined && passCount && passWindow;
-  std::cout << "Variable time step: " << (passed ? "4/4" : "failed")
+  std::cout << "Ph3 network converts: " << (passPh3 ? "PASS" : "FAIL")
+            << " (unconverted " << ph3 << ")" << std::endl;
+
+  const Bool passed =
+      passSame && passRefined && passCount && passWindow && passPh3;
+  std::cout << "Variable time step: " << (passed ? "5/5" : "failed")
             << std::endl;
 
   return passed ? EXIT_SUCCESS : EXIT_FAILURE;
