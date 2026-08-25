@@ -36,6 +36,7 @@ var dir_0ab18182ec9e12ca28df221a97888cf8 =
     [ "EMT_Ph3_NetworkInjection.h", "_e_m_t___ph3___network_injection_8h.html", "_e_m_t___ph3___network_injection_8h" ],
     [ "EMT_Ph3_PiecewiseLinearInductor.h", "_e_m_t___ph3___piecewise_linear_inductor_8h.html", "_e_m_t___ph3___piecewise_linear_inductor_8h" ],
     [ "EMT_Ph3_PiLine.h", "_e_m_t___ph3___pi_line_8h.html", "_e_m_t___ph3___pi_line_8h" ],
+    [ "EMT_Ph3_PQLoad.h", "_e_m_t___ph3___p_q_load_8h.html", "_e_m_t___ph3___p_q_load_8h" ],
     [ "EMT_Ph3_ReducedOrderSynchronGeneratorVBR.h", "_e_m_t___ph3___reduced_order_synchron_generator_v_b_r_8h.html", "_e_m_t___ph3___reduced_order_synchron_generator_v_b_r_8h" ],
     [ "EMT_Ph3_Resistor.h", "_e_m_t___ph3___resistor_8h.html", "_e_m_t___ph3___resistor_8h" ],
     [ "EMT_Ph3_RxLine.h", "_e_m_t___ph3___rx_line_8h.html", "_e_m_t___ph3___rx_line_8h" ],

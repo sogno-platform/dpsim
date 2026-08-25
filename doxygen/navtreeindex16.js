@@ -1,5 +1,9 @@
 var NAVTREEINDEX16 =
 {
+"class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_ideal.html#a72735714680a75212c0df2525a02d875":[2,0,0,2,0,34,8],
+"class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_ideal.html#a75720706c5c6882b3411ccf5316031a3":[1,0,0,2,0,34,4],
+"class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_ideal.html#a75720706c5c6882b3411ccf5316031a3":[2,0,0,2,0,34,4],
+"class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_ideal.html#a77505ab084faa4c4a4e925bdf0599ced":[1,0,0,2,0,34,10],
 "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_ideal.html#a77505ab084faa4c4a4e925bdf0599ced":[2,0,0,2,0,34,10],
 "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_ideal.html#a7804571ffd167d2a3a5957b427a4da7d":[1,0,0,2,0,34,2],
 "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_ideal.html#a7804571ffd167d2a3a5957b427a4da7d":[2,0,0,2,0,34,2],
@@ -245,9 +249,5 @@ var NAVTREEINDEX16 =
 "class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_norton.html#a0c31566c47b9a05cadaee5e8f0cc3388":[2,0,0,2,0,42,15],
 "class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_norton.html#a0e24c167661ae62134704b5a5f11346a":[1,0,0,2,0,42,1],
 "class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_norton.html#a0e24c167661ae62134704b5a5f11346a":[2,0,0,2,0,42,1],
-"class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_norton.html#a22d8ef88b789f426fe5b371706dd09be":[1,0,0,2,0,42,3],
-"class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_norton.html#a22d8ef88b789f426fe5b371706dd09be":[2,0,0,2,0,42,3],
-"class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_norton.html#a29f7a0a7292ceae66d118f10cf3db5be":[1,0,0,2,0,42,14],
-"class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_norton.html#a29f7a0a7292ceae66d118f10cf3db5be":[2,0,0,2,0,42,14],
-"class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_norton.html#a408a67e598a4c879d7c27f12e9587634":[1,0,0,2,0,42,6]
+"class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_norton.html#a22d8ef88b789f426fe5b371706dd09be":[1,0,0,2,0,42,3]
 };

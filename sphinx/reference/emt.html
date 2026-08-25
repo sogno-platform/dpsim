@@ -902,6 +902,52 @@
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="dpsimpy.emt.ph3.PQLoad">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">PQLoad</span></span><a class="headerlink" href="#dpsimpy.emt.ph3.PQLoad" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="core.html#dpsimpy.SimPowerCompReal" title="dpsimpy.SimPowerCompReal"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimPowerCompReal</span></code></a>, <a class="reference internal" href="core.html#dpsimpy.base.MNASyncGenInterface" title="dpsimpy.base.MNASyncGenInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">MNASyncGenInterface</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.emt.ph3.PQLoad.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.emt.ph3.PQLoad" title="dpsimpy.emt.ph3.PQLoad"><span class="pre">PQLoad</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#dpsimpy.emt.SimNode" title="dpsimpy.emt.SimNode"><span class="pre">SimNode</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.emt.ph3.PQLoad.connect" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dpsimpy.emt.ph3.PQLoad.set_parameters">
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dpsimpy.emt.ph3.PQLoad" title="dpsimpy.emt.ph3.PQLoad"><span class="pre">PQLoad</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_power</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reactive_power</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nominal_voltage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum_voltage_per_unit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsIndex</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core.html#dpsimpy.PowerflowBusType.None" title="dpsimpy.PowerflowBusType.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#dpsimpy.emt.ph3.PQLoad.set_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.emt.ph3.PQLoad.P">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">P</span></span><a class="headerlink" href="#dpsimpy.emt.ph3.PQLoad.P" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.emt.ph3.PQLoad.Q">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Q</span></span><a class="headerlink" href="#dpsimpy.emt.ph3.PQLoad.Q" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.emt.ph3.PQLoad.V_min_pu">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">V_min_pu</span></span><a class="headerlink" href="#dpsimpy.emt.ph3.PQLoad.V_min_pu" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.emt.ph3.PQLoad.V_nom">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">V_nom</span></span><a class="headerlink" href="#dpsimpy.emt.ph3.PQLoad.V_nom" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.emt.ph3.PQLoad.p_inst">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">p_inst</span></span><a class="headerlink" href="#dpsimpy.emt.ph3.PQLoad.p_inst" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="dpsimpy.emt.ph3.PQLoad.q_inst">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">q_inst</span></span><a class="headerlink" href="#dpsimpy.emt.ph3.PQLoad.q_inst" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="dpsimpy.emt.ph3.PiLine">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">PiLine</span></span><a class="headerlink" href="#dpsimpy.emt.ph3.PiLine" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="core.html#dpsimpy.SimPowerCompReal" title="dpsimpy.SimPowerCompReal"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimPowerCompReal</span></code></a></p>

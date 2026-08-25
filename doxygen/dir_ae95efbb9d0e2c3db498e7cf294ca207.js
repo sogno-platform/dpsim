@@ -36,6 +36,7 @@ var dir_ae95efbb9d0e2c3db498e7cf294ca207 =
     [ "EMT_Ph3_NetworkInjection.cpp", "_e_m_t___ph3___network_injection_8cpp.html", null ],
     [ "EMT_Ph3_PiecewiseLinearInductor.cpp", "_e_m_t___ph3___piecewise_linear_inductor_8cpp.html", null ],
     [ "EMT_Ph3_PiLine.cpp", "_e_m_t___ph3___pi_line_8cpp.html", null ],
+    [ "EMT_Ph3_PQLoad.cpp", "_e_m_t___ph3___p_q_load_8cpp.html", null ],
     [ "EMT_Ph3_ReducedOrderSynchronGeneratorVBR.cpp", "_e_m_t___ph3___reduced_order_synchron_generator_v_b_r_8cpp.html", null ],
     [ "EMT_Ph3_Resistor.cpp", "_e_m_t___ph3___resistor_8cpp.html", null ],
     [ "EMT_Ph3_RxLine.cpp", "_e_m_t___ph3___rx_line_8cpp.html", null ],

@@ -58,7 +58,7 @@ var searchData=
   ['derivescaled_55',['deriveScaled',['../class_c_p_s_1_1_attribute.html#a1b315aa92740b84440e34b394f9d4a77',1,'CPS::Attribute']]],
   ['desc_56',['desc',['../struct_d_psim_1_1_command_line_args_1_1_argument.html#adc94feeda6c4b5b63e591b3b7377b49c',1,'DPsim::CommandLineArgs::Argument']]],
   ['descr_57',['descr',['../class_c_p_s_1_1_system_error.html#a0a8ce1552576be980c5d067de6e3581c',1,'CPS::SystemError::descr()'],['../class_system_error.html#a0a8ce1552576be980c5d067de6e3581c',1,'SystemError::descr()']]],
-  ['description_58',['description',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_r_x_load.html#ae4016733017a86baa96b1820e4e7aa47',1,'CPS::EMT::Ph3::RXLoad::description()'],['../class_c_p_s_1_1_identified_object.html#ae08800e327db6af9a7249cabefe4ba2f',1,'CPS::IdentifiedObject::description()']]],
+  ['description_58',['description',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_p_q_load.html#ab7806fc29b9a3e02b7b41d4273fa4b6b',1,'CPS::EMT::Ph3::PQLoad::description()'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_r_x_load.html#ae4016733017a86baa96b1820e4e7aa47',1,'CPS::EMT::Ph3::RXLoad::description()'],['../class_c_p_s_1_1_identified_object.html#ae08800e327db6af9a7249cabefe4ba2f',1,'CPS::IdentifiedObject::description()']]],
   ['determinepfbustype_59',['determinePFBusType',['../class_d_psim_1_1_p_f_solver.html#a04e7df8788a2b2a4dad951b501f20bc4',1,'DPsim::PFSolver']]],
   ['developer_20documentation_60',['DPsim C++ Developer Documentation',['../index.html',1,'']]],
   ['diakopticssolver_61',['DiakopticsSolver',['../class_d_psim_1_1_diakoptics_solver.html',1,'DPsim::DiakopticsSolver&lt; VarType &gt;'],['../class_d_psim_1_1_diakoptics_solver.html#a38e065509cac49b8f674ca0b853ae83b',1,'DPsim::DiakopticsSolver::DiakopticsSolver()']]],

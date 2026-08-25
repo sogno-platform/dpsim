@@ -322,6 +322,7 @@ var hierarchy =
             [ "CPS::EMT::Ph3::ControlledVoltageSource", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_controlled_voltage_source.html", null ],
             [ "CPS::EMT::Ph3::CurrentSource", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_current_source.html", null ],
             [ "CPS::EMT::Ph3::Inductor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor.html", null ],
+            [ "CPS::EMT::Ph3::PQLoad", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_p_q_load.html", null ],
             [ "CPS::EMT::Ph3::Resistor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_resistor.html", null ],
             [ "CPS::EMT::Ph3::SeriesResistor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_series_resistor.html", null ],
             [ "CPS::EMT::Ph3::SeriesSwitch", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_series_switch.html", null ],
@@ -475,6 +476,7 @@ var hierarchy =
       [ "CPS::DP::Ph1::SynchronGenerator4OrderTPM", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_t_p_m.html", null ],
       [ "CPS::DP::Ph1::SynchronGenerator6OrderPCM", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6_order_p_c_m.html", null ],
       [ "CPS::DP::Ph1::SynchronGeneratorIter", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_iter.html", null ],
+      [ "CPS::EMT::Ph3::PQLoad", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_p_q_load.html", null ],
       [ "CPS::EMT::Ph3::SynchronGenerator4OrderPCM", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html", null ]
     ] ],
     [ "CPS::MNATearInterface", "class_c_p_s_1_1_m_n_a_tear_interface.html", [
@@ -804,6 +806,9 @@ var hierarchy =
     ] ],
     [ "SharedFactory< PowerControllerVSI >", "class_shared_factory.html", [
       [ "CPS::Signal::PowerControllerVSI", "class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html", null ]
+    ] ],
+    [ "SharedFactory< PQLoad >", "class_shared_factory.html", [
+      [ "CPS::EMT::Ph3::PQLoad", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_p_q_load.html", null ]
     ] ],
     [ "SharedFactory< PQLoadCS >", "class_shared_factory.html", [
       [ "CPS::DP::Ph1::PQLoadCS", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html", null ]

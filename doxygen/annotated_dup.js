@@ -168,6 +168,7 @@ var annotated_dup =
           [ "NetworkInjection", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_network_injection.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_network_injection" ],
           [ "PiecewiseLinearInductor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_piecewise_linear_inductor.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_piecewise_linear_inductor" ],
           [ "PiLine", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line" ],
+          [ "PQLoad", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_p_q_load.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_p_q_load" ],
           [ "ReducedOrderSynchronGeneratorVBR", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_reduced_order_synchron_generator_v_b_r.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_reduced_order_synchron_generator_v_b_r" ],
           [ "Resistor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_resistor.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_resistor" ],
           [ "RxLine", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line" ],
