@@ -32,6 +32,7 @@ var dir_0ab18182ec9e12ca28df221a97888cf8 =
     [ "EMT_Ph3_GenericTwoTerminalITypeSSN.h", "_e_m_t___ph3___generic_two_terminal_i_type_s_s_n_8h.html", "_e_m_t___ph3___generic_two_terminal_i_type_s_s_n_8h" ],
     [ "EMT_Ph3_GenericTwoTerminalVTypeSSN.h", "_e_m_t___ph3___generic_two_terminal_v_type_s_s_n_8h.html", "_e_m_t___ph3___generic_two_terminal_v_type_s_s_n_8h" ],
     [ "EMT_Ph3_GFL.h", "_e_m_t___ph3___g_f_l_8h.html", "_e_m_t___ph3___g_f_l_8h" ],
+    [ "EMT_Ph3_HalfDecouplingLine.h", "_e_m_t___ph3___half_decoupling_line_8h.html", "_e_m_t___ph3___half_decoupling_line_8h" ],
     [ "EMT_Ph3_Inductor.h", "_e_m_t___ph3___inductor_8h.html", "_e_m_t___ph3___inductor_8h" ],
     [ "EMT_Ph3_NetworkInjection.h", "_e_m_t___ph3___network_injection_8h.html", "_e_m_t___ph3___network_injection_8h" ],
     [ "EMT_Ph3_PiecewiseLinearInductor.h", "_e_m_t___ph3___piecewise_linear_inductor_8h.html", "_e_m_t___ph3___piecewise_linear_inductor_8h" ],

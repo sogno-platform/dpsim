@@ -164,6 +164,7 @@ var annotated_dup =
           [ "GenericTwoTerminalITypeSSN", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_generic_two_terminal_i_type_s_s_n.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_generic_two_terminal_i_type_s_s_n" ],
           [ "GenericTwoTerminalVTypeSSN", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_generic_two_terminal_v_type_s_s_n.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_generic_two_terminal_v_type_s_s_n" ],
           [ "GFL", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_g_f_l.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_g_f_l" ],
+          [ "HalfDecouplingLine", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_half_decoupling_line.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_half_decoupling_line" ],
           [ "Inductor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor" ],
           [ "NetworkInjection", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_network_injection.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_network_injection" ],
           [ "PiecewiseLinearInductor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_piecewise_linear_inductor.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_piecewise_linear_inductor" ],

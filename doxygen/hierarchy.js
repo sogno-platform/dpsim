@@ -295,6 +295,7 @@ var hierarchy =
               [ "CPS::EMT::Ph1::VoltageSourceRamp", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_voltage_source_ramp.html", null ],
               [ "CPS::EMT::Ph3::AvVoltageSourceInverterDQ", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q.html", null ],
               [ "CPS::EMT::Ph3::GFL", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_g_f_l.html", null ],
+              [ "CPS::EMT::Ph3::HalfDecouplingLine", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_half_decoupling_line.html", null ],
               [ "CPS::EMT::Ph3::NetworkInjection", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_network_injection.html", null ],
               [ "CPS::EMT::Ph3::PiLine", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html", null ],
               [ "CPS::EMT::Ph3::RXLoad", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_r_x_load.html", null ],
@@ -730,6 +731,9 @@ var hierarchy =
     ] ],
     [ "SharedFactory< GFL >", "class_shared_factory.html", [
       [ "CPS::EMT::Ph3::GFL", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_g_f_l.html", null ]
+    ] ],
+    [ "SharedFactory< HalfDecouplingLine >", "class_shared_factory.html", [
+      [ "CPS::EMT::Ph3::HalfDecouplingLine", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_half_decoupling_line.html", null ]
     ] ],
     [ "SharedFactory< HydroGovernorParameters >", "class_shared_factory.html", [
       [ "CPS::Signal::HydroGovernorParameters", "class_c_p_s_1_1_signal_1_1_hydro_governor_parameters.html", null ]

@@ -12,11 +12,11 @@
 <g id="Node000001" class="node">
 <title>Node1</title>
 <g id="a_Node000001"><a xlink:title=" ">
-<polygon fill="#999999" stroke="#666666" points="1064.75,-672.25 890.5,-672.25 890.5,-607.25 1064.75,-607.25 1064.75,-672.25"/>
-<text text-anchor="start" x="898.5" y="-658.75" font-family="Helvetica,sans-Serif" font-size="10.00">/__w/dpsim/dpsim/dpsim</text>
-<text text-anchor="start" x="898.5" y="-644.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;models/include/dpsim</text>
-<text text-anchor="start" x="898.5" y="-630.25" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;models/EMT/EMT_Ph3_Controlled</text>
-<text text-anchor="middle" x="977.62" y="-616" font-family="Helvetica,sans-Serif" font-size="10.00">CurrentSource.h</text>
+<polygon fill="#999999" stroke="#666666" points="1108.75,-672.25 934.5,-672.25 934.5,-607.25 1108.75,-607.25 1108.75,-672.25"/>
+<text text-anchor="start" x="942.5" y="-658.75" font-family="Helvetica,sans-Serif" font-size="10.00">/__w/dpsim/dpsim/dpsim</text>
+<text text-anchor="start" x="942.5" y="-644.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;models/include/dpsim</text>
+<text text-anchor="start" x="942.5" y="-630.25" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;models/EMT/EMT_Ph3_Controlled</text>
+<text text-anchor="middle" x="1021.62" y="-616" font-family="Helvetica,sans-Serif" font-size="10.00">CurrentSource.h</text>
 </a>
 </g>
 </g>
@@ -35,20 +35,20 @@
 <g id="edge1_Node000001_Node000002" class="edge">
 <title>Node1&#45;&gt;Node2</title>
 <g id="a_edge1_Node000001_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M944.52,-597.44C939.16,-589.14 934.2,-580.21 930.62,-571.25 917.34,-537.92 913.27,-496.2 912.06,-470.29"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="941.57,-599.32 950.1,-605.6 947.35,-595.37 941.57,-599.32"/>
+<path fill="none" stroke="#63b8ff" d="M956.67,-599.94C946.99,-591.58 938.1,-581.99 931.62,-571.25 912.84,-540.11 909.96,-497.03 910.29,-470.33"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="954.19,-602.43 964.16,-606 958.59,-596.99 954.19,-602.43"/>
 </a>
 </g>
 </g>
 <!-- Node25 -->
 <g id="Node000025" class="node">
 <title>Node25</title>
-<g id="a_Node000025"><a xlink:href="_decoupling_ideal_transformer___e_m_t___ph3_8h.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="883.12,-571.25 720.12,-571.25 720.12,-506.25 883.12,-506.25 883.12,-571.25"/>
-<text text-anchor="start" x="728.12" y="-557.75" font-family="Helvetica,sans-Serif" font-size="10.00">/__w/dpsim/dpsim/dpsim</text>
-<text text-anchor="start" x="728.12" y="-543.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;models/include/dpsim</text>
-<text text-anchor="start" x="728.12" y="-529.25" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;models/Signal/DecouplingIdeal</text>
-<text text-anchor="middle" x="801.62" y="-515" font-family="Helvetica,sans-Serif" font-size="10.00">Transformer_EMT_Ph3.h</text>
+<g id="a_Node000025"><a xlink:href="_e_m_t___ph3___half_decoupling_line_8h.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="883.37,-571.25 685.87,-571.25 685.87,-506.25 883.37,-506.25 883.37,-571.25"/>
+<text text-anchor="start" x="693.87" y="-557.75" font-family="Helvetica,sans-Serif" font-size="10.00">/__w/dpsim/dpsim/dpsim</text>
+<text text-anchor="start" x="693.87" y="-543.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;models/include/dpsim</text>
+<text text-anchor="start" x="693.87" y="-529.25" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;models/EMT/EMT_Ph3_HalfDecoupling</text>
+<text text-anchor="middle" x="784.62" y="-515" font-family="Helvetica,sans-Serif" font-size="10.00">Line.h</text>
 </a>
 </g>
 </g>
@@ -56,19 +56,20 @@
 <g id="edge34_Node000001_Node000025" class="edge">
 <title>Node1&#45;&gt;Node25</title>
 <g id="a_edge34_Node000001_Node000025"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M910.95,-601.24C893.66,-591.52 875.2,-581.14 858.47,-571.73"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="909.22,-604.29 919.65,-606.14 912.65,-598.19 909.22,-604.29"/>
+<path fill="none" stroke="#63b8ff" d="M934.76,-602.47C910.65,-592.4 884.65,-581.54 861.18,-571.73"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="933.36,-605.67 943.93,-606.3 936.05,-599.21 933.36,-605.67"/>
 </a>
 </g>
 </g>
 <!-- Node27 -->
 <g id="Node000027" class="node">
 <title>Node27</title>
-<g id="a_Node000027"><a xlink:href="_decoupling_line_e_m_t___ph3_8h.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="1149.75,-564.12 939.5,-564.12 939.5,-513.38 1149.75,-513.38 1149.75,-564.12"/>
-<text text-anchor="start" x="947.5" y="-550.62" font-family="Helvetica,sans-Serif" font-size="10.00">/__w/dpsim/dpsim/dpsim</text>
-<text text-anchor="start" x="947.5" y="-536.38" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;models/include/dpsim</text>
-<text text-anchor="middle" x="1044.62" y="-522.12" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;models/Signal/DecouplingLineEMT_Ph3.h</text>
+<g id="a_Node000027"><a xlink:href="_decoupling_ideal_transformer___e_m_t___ph3_8h.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="1103.12,-571.25 940.12,-571.25 940.12,-506.25 1103.12,-506.25 1103.12,-571.25"/>
+<text text-anchor="start" x="948.12" y="-557.75" font-family="Helvetica,sans-Serif" font-size="10.00">/__w/dpsim/dpsim/dpsim</text>
+<text text-anchor="start" x="948.12" y="-543.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;models/include/dpsim</text>
+<text text-anchor="start" x="948.12" y="-529.25" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;models/Signal/DecouplingIdeal</text>
+<text text-anchor="middle" x="1021.62" y="-515" font-family="Helvetica,sans-Serif" font-size="10.00">Transformer_EMT_Ph3.h</text>
 </a>
 </g>
 </g>
@@ -76,19 +77,19 @@
 <g id="edge37_Node000001_Node000027" class="edge">
 <title>Node1&#45;&gt;Node27</title>
 <g id="a_edge37_Node000001_Node000027"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1005.48,-597.58C1013.13,-586.28 1021.18,-574.38 1027.98,-564.34"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1002.75,-595.38 1000.04,-605.63 1008.54,-599.31 1002.75,-595.38"/>
+<path fill="none" stroke="#63b8ff" d="M1021.62,-595.4C1021.62,-587.38 1021.62,-579.15 1021.62,-571.56"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1018.12,-595.37 1021.62,-605.37 1025.12,-595.37 1018.12,-595.37"/>
 </a>
 </g>
 </g>
 <!-- Node29 -->
 <g id="Node000029" class="node">
 <title>Node29</title>
-<g id="a_Node000029"><a xlink:href="_e_m_t___ph3___controlled_current_source_8cpp.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="1323.37,-564.12 1167.87,-564.12 1167.87,-513.38 1323.37,-513.38 1323.37,-564.12"/>
-<text text-anchor="start" x="1175.87" y="-550.62" font-family="Helvetica,sans-Serif" font-size="10.00">/__w/dpsim/dpsim/dpsim</text>
-<text text-anchor="start" x="1175.87" y="-536.38" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;models/src/EMT/EMT_Ph3</text>
-<text text-anchor="middle" x="1245.62" y="-522.12" font-family="Helvetica,sans-Serif" font-size="10.00">_ControlledCurrentSource.cpp</text>
+<g id="a_Node000029"><a xlink:href="_decoupling_line_e_m_t___ph3_8h.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="1331.75,-564.12 1121.5,-564.12 1121.5,-513.38 1331.75,-513.38 1331.75,-564.12"/>
+<text text-anchor="start" x="1129.5" y="-550.62" font-family="Helvetica,sans-Serif" font-size="10.00">/__w/dpsim/dpsim/dpsim</text>
+<text text-anchor="start" x="1129.5" y="-536.38" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;models/include/dpsim</text>
+<text text-anchor="middle" x="1226.62" y="-522.12" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;models/Signal/DecouplingLineEMT_Ph3.h</text>
 </a>
 </g>
 </g>
@@ -96,8 +97,28 @@
 <g id="edge40_Node000001_Node000029" class="edge">
 <title>Node1&#45;&gt;Node29</title>
 <g id="a_edge40_Node000001_Node000029"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1074.49,-602.97C1109.04,-590.21 1147.16,-576.12 1178.64,-564.5"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1073.48,-599.61 1065.31,-606.36 1075.91,-606.17 1073.48,-599.61"/>
+<path fill="none" stroke="#63b8ff" d="M1097.77,-601.97C1123.65,-589.48 1151.93,-575.82 1175.38,-564.5"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1096.46,-598.72 1088.98,-606.22 1099.5,-605.03 1096.46,-598.72"/>
+</a>
+</g>
+</g>
+<!-- Node31 -->
+<g id="Node000031" class="node">
+<title>Node31</title>
+<g id="a_Node000031"><a xlink:href="_e_m_t___ph3___controlled_current_source_8cpp.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="1505.37,-564.12 1349.87,-564.12 1349.87,-513.38 1505.37,-513.38 1505.37,-564.12"/>
+<text text-anchor="start" x="1357.87" y="-550.62" font-family="Helvetica,sans-Serif" font-size="10.00">/__w/dpsim/dpsim/dpsim</text>
+<text text-anchor="start" x="1357.87" y="-536.38" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;models/src/EMT/EMT_Ph3</text>
+<text text-anchor="middle" x="1427.62" y="-522.12" font-family="Helvetica,sans-Serif" font-size="10.00">_ControlledCurrentSource.cpp</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node31 -->
+<g id="edge43_Node000001_Node000031" class="edge">
+<title>Node1&#45;&gt;Node31</title>
+<g id="a_edge43_Node000001_Node000031"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1120.28,-621.54C1183.75,-609.57 1267.7,-592.06 1340.62,-571.25 1347.73,-569.22 1355.09,-566.91 1362.38,-564.47"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1119.75,-618.08 1110.56,-623.36 1121.03,-624.96 1119.75,-618.08"/>
 </a>
 </g>
 </g>
@@ -154,8 +175,8 @@
 <g id="edge22_Node000002_Node000016" class="edge">
 <title>Node2&#45;&gt;Node16</title>
 <g id="a_edge22_Node000002_Node000016"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M988.27,-419.33C1135.05,-387.14 1297.03,-371.1 1386.51,-363.92"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="987.76,-415.85 978.76,-421.44 989.28,-422.69 987.76,-415.85"/>
+<path fill="none" stroke="#63b8ff" d="M988.16,-419.1C1134.51,-386.77 1297.13,-370.85 1386.74,-363.79"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="987.68,-415.62 978.68,-421.22 989.21,-422.45 987.68,-415.62"/>
 </a>
 </g>
 </g>
@@ -618,19 +639,19 @@
 <g id="edge35_Node000025_Node000002" class="edge">
 <title>Node25&#45;&gt;Node2</title>
 <g id="a_edge35_Node000025_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M848.34,-498.73C859.69,-489.25 871.53,-479.36 881.85,-470.74"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="846.38,-495.81 840.95,-504.9 850.87,-501.18 846.38,-495.81"/>
+<path fill="none" stroke="#63b8ff" d="M837.79,-499.29C851.13,-489.64 865.1,-479.53 877.25,-470.74"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="835.96,-496.29 829.91,-504.99 840.06,-501.96 835.96,-496.29"/>
 </a>
 </g>
 </g>
 <!-- Node26 -->
 <g id="Node000026" class="node">
 <title>Node26</title>
-<g id="a_Node000026"><a xlink:href="_decoupling_ideal_transformer___e_m_t___ph3_8cpp.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="828.5,-470.25 664.75,-470.25 664.75,-419.5 828.5,-419.5 828.5,-470.25"/>
-<text text-anchor="start" x="672.75" y="-456.75" font-family="Helvetica,sans-Serif" font-size="10.00">/__w/dpsim/dpsim/dpsim</text>
-<text text-anchor="start" x="672.75" y="-442.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;models/src/Signal/Decoupling</text>
-<text text-anchor="middle" x="746.62" y="-428.25" font-family="Helvetica,sans-Serif" font-size="10.00">IdealTransformer_EMT_Ph3.cpp</text>
+<g id="a_Node000026"><a xlink:href="_e_m_t___ph3___half_decoupling_line_8cpp.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="827.75,-470.25 689.5,-470.25 689.5,-419.5 827.75,-419.5 827.75,-470.25"/>
+<text text-anchor="start" x="697.5" y="-456.75" font-family="Helvetica,sans-Serif" font-size="10.00">/__w/dpsim/dpsim/dpsim</text>
+<text text-anchor="start" x="697.5" y="-442.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;models/src/EMT/EMT_Ph3</text>
+<text text-anchor="middle" x="758.62" y="-428.25" font-family="Helvetica,sans-Serif" font-size="10.00">_HalfDecouplingLine.cpp</text>
 </a>
 </g>
 </g>
@@ -638,8 +659,8 @@
 <g id="edge36_Node000025_Node000026" class="edge">
 <title>Node25&#45;&gt;Node26</title>
 <g id="a_edge36_Node000025_Node000026"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M776.76,-496.21C771.55,-487.51 766.21,-478.6 761.51,-470.74"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="773.62,-497.79 781.76,-504.58 779.63,-494.2 773.62,-497.79"/>
+<path fill="none" stroke="#63b8ff" d="M772.47,-494.81C770.14,-486.56 767.76,-478.18 765.66,-470.74"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="769.1,-495.75 775.19,-504.42 775.83,-493.84 769.1,-495.75"/>
 </a>
 </g>
 </g>
@@ -647,19 +668,19 @@
 <g id="edge38_Node000027_Node000002" class="edge">
 <title>Node27&#45;&gt;Node2</title>
 <g id="a_edge38_Node000027_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M999.41,-506.52C982.36,-494.74 963.23,-481.52 947.18,-470.44"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="997.17,-509.22 1007.39,-512.03 1001.15,-503.46 997.17,-509.22"/>
+<path fill="none" stroke="#63b8ff" d="M974.9,-498.73C963.55,-489.25 951.72,-479.36 941.4,-470.74"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="972.38,-501.18 982.3,-504.9 976.87,-495.81 972.38,-501.18"/>
 </a>
 </g>
 </g>
 <!-- Node28 -->
 <g id="Node000028" class="node">
 <title>Node28</title>
-<g id="a_Node000028"><a xlink:href="_decoupling_line_e_m_t___ph3_8cpp.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="1151.75,-470.25 995.5,-470.25 995.5,-419.5 1151.75,-419.5 1151.75,-470.25"/>
-<text text-anchor="start" x="1003.5" y="-456.75" font-family="Helvetica,sans-Serif" font-size="10.00">/__w/dpsim/dpsim/dpsim</text>
-<text text-anchor="start" x="1003.5" y="-442.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;models/src/Signal/Decoupling</text>
-<text text-anchor="middle" x="1073.62" y="-428.25" font-family="Helvetica,sans-Serif" font-size="10.00">LineEMT_Ph3.cpp</text>
+<g id="a_Node000028"><a xlink:href="_decoupling_ideal_transformer___e_m_t___ph3_8cpp.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="1158.5,-470.25 994.75,-470.25 994.75,-419.5 1158.5,-419.5 1158.5,-470.25"/>
+<text text-anchor="start" x="1002.75" y="-456.75" font-family="Helvetica,sans-Serif" font-size="10.00">/__w/dpsim/dpsim/dpsim</text>
+<text text-anchor="start" x="1002.75" y="-442.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;models/src/Signal/Decoupling</text>
+<text text-anchor="middle" x="1076.62" y="-428.25" font-family="Helvetica,sans-Serif" font-size="10.00">IdealTransformer_EMT_Ph3.cpp</text>
 </a>
 </g>
 </g>
@@ -667,8 +688,37 @@
 <g id="edge39_Node000027_Node000028" class="edge">
 <title>Node27&#45;&gt;Node28</title>
 <g id="a_edge39_Node000027_Node000028"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1055.77,-502.44C1059.13,-491.8 1062.74,-480.35 1065.83,-470.56"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1052.52,-501.1 1052.85,-511.69 1059.2,-503.2 1052.52,-501.1"/>
+<path fill="none" stroke="#63b8ff" d="M1046.49,-496.21C1051.7,-487.51 1057.03,-478.6 1061.74,-470.74"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1043.62,-494.2 1041.48,-504.58 1049.62,-497.79 1043.62,-494.2"/>
+</a>
+</g>
+</g>
+<!-- Node29&#45;&gt;Node2 -->
+<g id="edge41_Node000029_Node000002" class="edge">
+<title>Node29&#45;&gt;Node2</title>
+<g id="a_edge41_Node000029_Node000002"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1126.14,-509.84C1066.46,-493.21 999.71,-474.54 985.62,-470.25 982.91,-469.42 980.14,-468.57 977.34,-467.69"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1125.16,-513.2 1135.73,-512.51 1127.04,-506.45 1125.16,-513.2"/>
+</a>
+</g>
+</g>
+<!-- Node30 -->
+<g id="Node000030" class="node">
+<title>Node30</title>
+<g id="a_Node000030"><a xlink:href="_decoupling_line_e_m_t___ph3_8cpp.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="1332.75,-470.25 1176.5,-470.25 1176.5,-419.5 1332.75,-419.5 1332.75,-470.25"/>
+<text text-anchor="start" x="1184.5" y="-456.75" font-family="Helvetica,sans-Serif" font-size="10.00">/__w/dpsim/dpsim/dpsim</text>
+<text text-anchor="start" x="1184.5" y="-442.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;models/src/Signal/Decoupling</text>
+<text text-anchor="middle" x="1254.62" y="-428.25" font-family="Helvetica,sans-Serif" font-size="10.00">LineEMT_Ph3.cpp</text>
+</a>
+</g>
+</g>
+<!-- Node29&#45;&gt;Node30 -->
+<g id="edge42_Node000029_Node000030" class="edge">
+<title>Node29&#45;&gt;Node30</title>
+<g id="a_edge42_Node000029_Node000030"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1237.38,-502.44C1240.63,-491.8 1244.11,-480.35 1247.1,-470.56"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1234.13,-501.1 1234.57,-511.68 1240.83,-503.14 1234.13,-501.1"/>
 </a>
 </g>
 </g>
