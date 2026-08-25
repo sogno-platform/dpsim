@@ -10,7 +10,7 @@
 //   [2] Changing from a coarse to a fine step must stay close to a run held at
 //       the fine step throughout.
 //   [3] The return value must count the components that did not convert. A
-//       PiLine converts, a varResSwitch does not.
+//       PiLine and a varResSwitch convert, a ramped source does not.
 //   [4] Refining around a switching event must recover the transient that the
 //       base step alone misses.
 //   [5] A Ph3 network must convert as completely as the Ph1 one.
@@ -336,11 +336,16 @@ int main(int argc, char *argv[]) {
   varSwitch->setParameters(1e6, 1e-3, true);
   varSwitch->setInitParameters(p.coarseStep);
 
+  auto ramp = DP::Ph1::VoltageSourceRamp::make("ramp", Logger::Level::off);
+  ramp->setParameters(Complex(p.sourceVoltage, 0.0), Complex(0.0, 0.0),
+                      p.frequency, 0.0, p.finalTime, 0.0);
+
   const Real window = p.changeTime + 1e-3;
   const Real sameDeviation = deviationAfter(sameStep, coarse, window);
   const Real refinedDeviation = deviationAfter(refined, fine, window);
   const UInt withLine = unconvertedWith(p, "PiLine", line);
   const UInt withSwitch = unconvertedWith(p, "VarResSwitch", varSwitch);
+  const UInt withRamp = unconvertedWith(p, "RampSource", ramp);
 
   const Real peakFine = switchedPeak(p, "SwitchFine", p.fineStep, -1.0);
   const Real peakCoarse = switchedPeak(p, "SwitchCoarse", p.coarseStep, -1.0);
@@ -352,8 +357,8 @@ int main(int argc, char *argv[]) {
 
   const Bool passSame = sameDeviation < 1e-9;
   const Bool passRefined = refinedDeviation < 1e-2;
-  const Bool passCount =
-      sameStep.unconverted == 0 && withLine == 0 && withSwitch == 1;
+  const Bool passCount = sameStep.unconverted == 0 && withLine == 0 &&
+                         withSwitch == 0 && withRamp == 1;
   const Bool passWindow = windowError < 0.5 * coarseError;
   const UInt ph3 = ph3Unconverted(p);
   const Bool passPh3 = ph3 == 0;
@@ -366,8 +371,9 @@ int main(int argc, char *argv[]) {
             << refinedDeviation << ")" << std::endl;
   std::cout << "Unconverted components counted: "
             << (passCount ? "PASS" : "FAIL") << " (passive "
-            << sameStep.unconverted << ", with a PiLine " << withLine
-            << ", with a varResSwitch " << withSwitch << ")" << std::endl;
+            << sameStep.unconverted << ", PiLine " << withLine
+            << ", varResSwitch " << withSwitch << ", ramped source " << withRamp
+            << ")" << std::endl;
 
   std::cout << "Refined window recovers the transient: "
             << (passWindow ? "PASS" : "FAIL") << " (peak error, base step "
