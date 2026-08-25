@@ -58,6 +58,17 @@ public:
   /// Initializes MNA specific variables
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override;
+  /// initVars() rebuilds the factors and the history term, and overwrites
+  /// mIntfCurrent, which is kept here.
+  bool mnaUpdateTimeStep(Real timeStep) override {
+    if (timeStep <= 0)
+      return false;
+
+    const MatrixComp current = **mIntfCurrent;
+    initVars(timeStep);
+    **mIntfCurrent = current;
+    return true;
+  }
   void mnaCompInitializeHarm(
       Real omega, Real timeStep,
       std::vector<Attribute<Matrix>::Ptr> leftVectors) override;

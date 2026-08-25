@@ -67,6 +67,29 @@ void DP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
   mSLog->flush();
 }
 
+bool DP::Ph1::Capacitor::mnaUpdateTimeStep(Real timeStep) {
+  if (timeStep <= 0)
+    return false;
+
+  // As mnaCompInitialize(), without the mIntfCurrent overwrite. Only the real
+  // parts of the factors carry the timestep.
+  Real equivCondReal = 2.0 * **mCapacitance / timeStep;
+  Real prevVoltCoeffReal = 2.0 * **mCapacitance / timeStep;
+
+  for (UInt freq = 0; freq < mNumFreqs; freq++) {
+    Real equivCondImag = 2. * PI * mFrequencies(freq, 0) * **mCapacitance;
+    mEquivCond(freq, 0) = {equivCondReal, equivCondImag};
+    Real prevVoltCoeffImag = -2. * PI * mFrequencies(freq, 0) * **mCapacitance;
+    mPrevVoltCoeff(freq, 0) = {prevVoltCoeffReal, prevVoltCoeffImag};
+
+    mEquivCurrent(freq, 0) =
+        -(**mIntfCurrent)(0, freq) +
+        -mPrevVoltCoeff(freq, 0) * (**mIntfVoltage)(0, freq);
+  }
+
+  return true;
+}
+
 void DP::Ph1::Capacitor::mnaCompInitialize(Real omega, Real timeStep,
                                            Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
