@@ -55,6 +55,7 @@ list(APPEND MODELS_SOURCES
 
 	DP/DP_SSNComp.cpp
 	DP/DP_VTypeSSNComp.cpp
+	DP/DP_VTypeSplitSSNComp.cpp
 	DP/DP_ITypeSSNComp.cpp
 	DP/DP_Ph1_TwoTerminalVTypeSSNComp.cpp
 	DP/DP_Ph1_TwoTerminalITypeSSNComp.cpp
@@ -82,8 +83,10 @@ list(APPEND MODELS_SOURCES
 	# DP/DP_Ph3_SynchronGeneratorVBRStandalone.cpp
 
 	DP/DP_Ph3_TwoTerminalVTypeSSNComp.cpp
+	DP/DP_Ph3_TwoTerminalVTypeSplitSSNComp.cpp
 	DP/DP_Ph3_MixedVTypeVariableSSNComp.cpp
 	DP/DP_Ph3_AvVoltSourceInverterStateSpace.cpp
+	DP/DP_Ph3_SSN_GFL_Split.cpp
 	DP/DP_Ph3_TwoTerminalITypeSSNComp.cpp
 	DP/DP_Ph3_SSN_Full_Serial_RLC.cpp
 	DP/DP_Ph3_GenericTwoTerminalVTypeSSN.cpp
