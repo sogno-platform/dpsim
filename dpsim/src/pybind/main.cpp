@@ -237,6 +237,8 @@ PYBIND11_MODULE(dpsimpy, m) {
            "loglevel"_a = CPS::Logger::Level::off)
       .def("name", &DPsim::Simulation::name)
       .def("set_time_step", &DPsim::Simulation::setTimeStep)
+      .def("update_time_step", &DPsim::Simulation::updateTimeStep)
+      .def("set_event_refinement", &DPsim::Simulation::setEventRefinement)
       .def("set_final_time", &DPsim::Simulation::setFinalTime)
       .def("add_logger", &DPsim::Simulation::addLogger)
       .def("set_system", &DPsim::Simulation::setSystem)

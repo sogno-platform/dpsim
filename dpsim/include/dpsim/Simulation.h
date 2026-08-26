@@ -130,6 +130,9 @@ protected:
   Real mRefineBaseTimeStep = -1.0;
   Bool mRefineInWindow = false;
 
+  /// Selects the fine or the base step for the coming step
+  UInt applyEventRefinement();
+
   /// If tearing components exist, the Diakoptics
   /// solver is selected automatically.
   CPS::IdentifiedObject::List mTearComponents = CPS::IdentifiedObject::List();
@@ -323,8 +326,6 @@ public:
   void run();
   /// Solve system A * x = z for x and current time
   virtual Real step();
-  /// Selects the fine or the base step for the coming step
-  UInt applyEventRefinement();
   /// Synchronize simulation with remotes by exchanging intial state over interfaces
   void sync() const;
   /// Create the schedule for the independent tasks

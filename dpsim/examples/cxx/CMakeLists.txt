@@ -127,7 +127,6 @@ endif()
 set(SYNCGEN_SOURCES
 	Components/DP_SynGenDq7odTrapez_SteadyState.cpp
 	Components/DP_SynGenDq7odTrapez_ThreePhFault.cpp
-	Components/DP_VarTimeStep.cpp
 	Components/DP_SynGenTrStab_SteadyState.cpp
 	Components/DP_SynGenTrStab_LoadStep.cpp
 	Components/DP_EMT_SynGenDq7odTrapez_SteadyState.cpp
@@ -159,6 +158,10 @@ Components/EMT_SSN_GFM_Test.cpp
 Components/EMT_Ph3_SSN_GFM_JacobianCheck.cpp
 Components/EMT_Ph3_GFL_Comparison.cpp
 Components/EMT_Ph3_SSN_InductionMotor_LoadSwitch.cpp
+)
+
+set(VAR_TIME_STEP_SOURCES
+	Components/DP_VarTimeStep.cpp
 )
 
 set(STATE_SPACE_SOURCES
@@ -312,6 +315,7 @@ foreach(SOURCE
 		${DAE_SOURCES}
 		${INVERTER_SOURCES}
 		${SSN_SOURCES}
+		${VAR_TIME_STEP_SOURCES}
 		${STATE_SPACE_SOURCES})
 	get_filename_component(TARGET ${SOURCE} NAME_WE)
 
