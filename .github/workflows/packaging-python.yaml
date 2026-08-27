@@ -10,6 +10,11 @@ on:
         description: 'Revision under test'
         required: true
         type: string
+      version:
+        description: 'Version to set in the pyproject.toml'
+        required: false
+        type: string
+        default: ''
       image:
         description: 'Development image the source distribution is built in'
         required: true
@@ -32,9 +37,9 @@ jobs:
         submodules: recursive
 
     - name: Set development version for Test PyPI
-      if: "!startsWith(github.ref, 'refs/tags')"
+      if: inputs.version != ''
       shell: bash
-      run: python3 scripts/set_dev_version.py pyproject.toml ${{ github.run_number }}
+      run: python3 scripts/set_dev_version.py pyproject.toml ${{ inputs.version }}
 
     - name: Build DPsim source distribution
       shell: bash

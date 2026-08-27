@@ -5,11 +5,8 @@ name: Publish to PyPI
 
 on:
   push:
-    branches:
-      - master
     tags:
       - '*'
-  # Release Please dispatches this at the new tag; a tag it pushes starts no run by itself.
   workflow_dispatch:
 
 permissions:
@@ -20,11 +17,35 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  version:
+    name: Resolve Version
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine version string
+        id: get_version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            LATEST_TAG=$(git describe --tags --abbrev=0)
+            VERSION="${LATEST_TAG}.dev${{ github.run_number }}"
+          else
+            VERSION="${{ github.ref_name }}"
+          fi
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+
   build:
     name: Packaging
+    needs: [version]
     uses: ./.github/workflows/packaging-python.yaml
     with:
       ref: ${{ github.sha }}
+      version: ${{ needs.version.outputs.version }}
       image: sogno/dpsim:dev
 
   publish-testpypi:
@@ -32,8 +53,8 @@ jobs:
     runs-on: ubuntu-24.04
     permissions:
       id-token: write
-    needs: [build]
-
+    needs: [version,build]
+    if: github.event_name == 'workflow_dispatch' || contains(github.ref_name, '-rc')
     steps:
     - name: Download wheels from build jobs
       uses: actions/download-artifact@v8
