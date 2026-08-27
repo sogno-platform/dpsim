@@ -80,15 +80,24 @@ public:
                            Attribute<Matrix>::Ptr leftVector) override;
   /// Stamps system matrix
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  /// Stamps system matrix for a single frequency index
+  void mnaCompApplySystemMatrixStampHarm(SparseMatrixRow &systemMatrix,
+                                         Int freqIdx) override;
   /// Updates internal current variable of the component
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;
+  void mnaCompUpdateCurrentHarm(Int freqIdx) override;
   /// Updates internal voltage variable of the component
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
+  void mnaCompUpdateVoltageHarm(const Matrix &leftVector, Int freqIdx) override;
   /// MNA pre step operations
   void mnaParentPreStep(Real time, Int timeStepCount) override;
+  void mnaParentPreStepHarm(Real time, Int timeStepCount) override;
   /// MNA post step operations
   void mnaParentPostStep(Real time, Int timeStepCount,
                          Attribute<Matrix>::Ptr &leftVector) override;
+  void mnaParentPostStepHarm(
+      Real time, Int timeStepCount,
+      std::vector<Attribute<Matrix>::Ptr> &leftVectors) override;
   /// Add MNA pre step dependencies
   void mnaParentAddPreStepDependencies(
       AttributeBase::List &prevStepDependencies,
