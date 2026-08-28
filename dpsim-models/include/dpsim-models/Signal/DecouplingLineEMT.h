@@ -10,14 +10,13 @@
 
 #include <vector>
 
+#include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/EMT/EMT_Ph1_CurrentSource.h>
 #include <dpsim-models/EMT/EMT_Ph1_Resistor.h>
-#include <dpsim-models/SimSignalComp.h>
-#include <dpsim-models/Task.h>
 
 namespace CPS {
 namespace Signal {
-class DecouplingLineEMT : public SimSignalComp,
+class DecouplingLineEMT : public CompositePowerComp<Real>,
                           public SharedFactory<DecouplingLineEMT> {
 protected:
   Real mDelay;
@@ -26,7 +25,6 @@ protected:
   Real mCapacitance;
   Real mSurgeImpedance;
 
-  std::shared_ptr<EMT::SimNode> mNode1, mNode2;
   std::shared_ptr<EMT::Ph1::Resistor> mRes1, mRes2;
   std::shared_ptr<EMT::Ph1::CurrentSource> mSrc1, mSrc2;
   Attribute<Complex>::Ptr mSrcCur1, mSrcCur2;
@@ -49,47 +47,36 @@ public:
   ///FIXME: workaround for dependency analysis as long as the states aren't attributes
   const Attribute<Matrix>::Ptr mStates;
 
-  DecouplingLineEMT(String name, Logger::Level logLevel = Logger::Level::info);
+  DecouplingLineEMT(String uid, String name,
+                    Logger::Level logLevel = Logger::Level::info);
+  DecouplingLineEMT(String name, Logger::Level logLevel = Logger::Level::info)
+      : DecouplingLineEMT(name, name, logLevel) {}
 
-  void setParameters(SimNode<Real>::Ptr node1, SimNode<Real>::Ptr node2,
-                     Real resistance, Real inductance, Real capacitance);
-  void initialize(Real omega, Real timeStep);
+  void setParameters(Real resistance, Real inductance, Real capacitance);
   void step(Real time, Int timeStepCount);
   void postStep();
-  Task::List getTasks();
-  IdentifiedObject::List getLineComponents();
 
-  class PreStep : public Task {
-  public:
-    PreStep(DecouplingLineEMT &line)
-        : Task(**line.mName + ".MnaPreStep"), mLine(line) {
-      mPrevStepDependencies.push_back(mLine.mStates);
-      mModifiedAttributes.push_back(mLine.mSrc1->mCurrentRef);
-      mModifiedAttributes.push_back(mLine.mSrc2->mCurrentRef);
-    }
+  // #### General ####
+  void createSubComponents() override;
+  void initializeParentFromNodesAndTerminals(Real frequency) override;
 
-    void execute(Real time, Int timeStepCount);
-
-  private:
-    DecouplingLineEMT &mLine;
-  };
-
-  class PostStep : public Task {
-  public:
-    PostStep(DecouplingLineEMT &line)
-        : Task(**line.mName + ".PostStep"), mLine(line) {
-      mAttributeDependencies.push_back(mLine.mRes1->mIntfVoltage);
-      mAttributeDependencies.push_back(mLine.mRes1->mIntfCurrent);
-      mAttributeDependencies.push_back(mLine.mRes2->mIntfVoltage);
-      mAttributeDependencies.push_back(mLine.mRes2->mIntfCurrent);
-      mModifiedAttributes.push_back(mLine.mStates);
-    }
-
-    void execute(Real time, Int timeStepCount);
-
-  private:
-    DecouplingLineEMT &mLine;
-  };
+  // #### MNA section ####
+  void mnaParentInitialize(Real omega, Real timeStep,
+                           Attribute<Matrix>::Ptr leftVector) override;
+  void mnaParentPreStep(Real time, Int timeStepCount) override;
+  void mnaParentPostStep(Real time, Int timeStepCount,
+                         Attribute<Matrix>::Ptr &leftVector) override;
+  void mnaParentAddPreStepDependencies(
+      AttributeBase::List &prevStepDependencies,
+      AttributeBase::List &attributeDependencies,
+      AttributeBase::List &modifiedAttributes) override;
+  void
+  mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
+                                   AttributeBase::List &attributeDependencies,
+                                   AttributeBase::List &modifiedAttributes,
+                                   Attribute<Matrix>::Ptr &leftVector) override;
+  void mnaCompUpdateVoltage(const Matrix &leftVector) override;
+  void mnaCompUpdateCurrent(const Matrix &leftVector) override;
 };
 } // namespace Signal
 } // namespace CPS

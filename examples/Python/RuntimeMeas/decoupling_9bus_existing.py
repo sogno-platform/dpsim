@@ -23,13 +23,13 @@ def decouple_line(sys, line, node1, node2):
     line = dpsimpy.signal.DecouplingLine(
         "dline_" + node1 + "_" + node2, dpsimpy.LogLevel.info
     )
-    line.set_parameters(sys.node(node1), sys.node(node2), R_line, L_line, C_line)
+    line.connect([sys.node(node1), sys.node(node2)])
+    line.set_parameters(R_line, L_line, C_line)
 
     # TODO: Probably interestingn to add the line this way
     # sys.add_decoupling_line(line, node1, node2, R_line, L_line, C_line)
 
     sys.add_component(line)
-    sys.add_components(line.get_line_components())
 
 
 def do_sim(name, system):

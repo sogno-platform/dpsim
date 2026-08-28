@@ -34,12 +34,11 @@ void multiply_decoupled(SystemTopology &sys, int copies, Real resistance,
 
     for (int i = 0; i < nlines; i++) {
       auto line = Signal::DecouplingLine::make(
-          "dline_" + orig_node + "_" + std::to_string(i),
-          sys.node<DP::SimNode>(nodeNames[i]),
-          sys.node<DP::SimNode>(nodeNames[i + 1]), resistance, inductance,
-          capacitance, Logger::Level::info);
+          "dline_" + orig_node + "_" + std::to_string(i), Logger::Level::info);
+      line->connect({sys.node<DP::SimNode>(nodeNames[i]),
+                     sys.node<DP::SimNode>(nodeNames[i + 1])});
+      line->setParameters(resistance, inductance, capacitance);
       sys.addComponent(line);
-      sys.addComponents(line->getLineComponents());
     }
   }
 }
