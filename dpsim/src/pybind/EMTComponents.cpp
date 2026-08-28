@@ -41,7 +41,7 @@ void addEMTDCComponents(py::module_ mEMTDC) {
              CPS::SimPowerComp<CPS::Real>>(mEMTDC, "VoltageSource",
                                            py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_parameters", &CPS::EMT::DC::VoltageSource::setParameters,
            "voltage"_a)
       .def("connect", &CPS::EMT::DC::VoltageSource::connect)
@@ -53,7 +53,7 @@ void addEMTDCComponents(py::module_ mEMTDC) {
              CPS::SimPowerComp<CPS::Real>>(mEMTDC, "CurrentSource",
                                            py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_parameters", &CPS::EMT::DC::CurrentSource::setParameters,
            "current"_a)
       .def("connect", &CPS::EMT::DC::CurrentSource::connect)
@@ -64,7 +64,7 @@ void addEMTDCComponents(py::module_ mEMTDC) {
              CPS::SimPowerComp<CPS::Real>>(mEMTDC, "Resistor",
                                            py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_parameters", &CPS::EMT::DC::Resistor::setParameters,
            "resistance"_a)
       .def("connect", &CPS::EMT::DC::Resistor::connect)
@@ -74,7 +74,7 @@ void addEMTDCComponents(py::module_ mEMTDC) {
              CPS::SimPowerComp<CPS::Real>>(mEMTDC, "Capacitor",
                                            py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_parameters", &CPS::EMT::DC::Capacitor::setParameters,
            "capacitance"_a)
       .def("connect", &CPS::EMT::DC::Capacitor::connect)
@@ -85,7 +85,7 @@ void addEMTDCComponents(py::module_ mEMTDC) {
              CPS::SimPowerComp<CPS::Real>>(mEMTDC, "Inductor",
                                            py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_parameters", &CPS::EMT::DC::Inductor::setParameters,
            "inductance"_a, "initial_current"_a = 0.0)
       .def("connect", &CPS::EMT::DC::Inductor::connect)
@@ -98,7 +98,7 @@ void addEMTDCComponents(py::module_ mEMTDC) {
              CPS::SimPowerComp<CPS::Real>>(mEMTDC, "PiLine",
                                            py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_parameters", &CPS::EMT::DC::PiLine::setParameters,
            "series_resistance"_a, "series_inductance"_a,
            "parallel_capacitance"_a = 0.0, "parallel_conductance"_a = 0.0,
@@ -212,7 +212,7 @@ void addEMTPh1Components(py::module_ mEMTPh1) {
              CPS::SimPowerComp<CPS::Real>, CPS::Base::Ph1::Switch>(
       mEMTPh1, "Switch", py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_parameters", &CPS::EMT::Ph1::Switch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
            "closed"_a = false) // cppcheck-suppress assignBoolToPointer
@@ -369,7 +369,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
              CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "NetworkInjection",
                                            py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_parameters",
            py::overload_cast<CPS::MatrixComp, CPS::Real>(
                &CPS::EMT::Ph3::NetworkInjection::setParameters),
@@ -380,7 +380,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
              CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "PiLine",
                                            py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_parameters", &CPS::EMT::Ph3::PiLine::setParameters,
            "series_resistance"_a, "series_inductance"_a,
            "parallel_capacitance"_a = zeroMatrix(3),
@@ -404,7 +404,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
              CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "RXLoad",
                                            py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_parameters", &CPS::EMT::Ph3::RXLoad::setParameters,
            "active_power"_a, "reactive_power"_a, "volt"_a,
            // cppcheck-suppress assignBoolToPointer
@@ -437,7 +437,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
              CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "Shunt",
                                            py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_parameters",
            static_cast<void (CPS::EMT::Ph3::Shunt::*)(CPS::Real, CPS::Real)>(
                &CPS::EMT::Ph3::Shunt::setParameters),
@@ -448,7 +448,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
              CPS::SimPowerComp<CPS::Real>, CPS::Base::Ph3::Switch>(
       mEMTPh3, "Switch", py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_parameters", &CPS::EMT::Ph3::Switch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
            // cppcheck-suppress assignBoolToPointer
@@ -462,7 +462,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
              CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SynchronGeneratorIdeal",
                                            py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("connect", &CPS::EMT::Ph3::SynchronGeneratorIdeal::connect);
 
   py::class_<CPS::EMT::Ph3::SynchronGeneratorDQTrapez,
@@ -470,7 +470,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
              CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SynchronGeneratorDQTrapez",
                                            py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_parameters_operational_per_unit",
            &CPS::EMT::Ph3::SynchronGeneratorDQTrapez::
                setParametersOperationalPerUnit,
@@ -507,7 +507,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
       .def(py::init<std::string>())
       .def(py::init<std::string, CPS::Logger::Level>())
       .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
-           "uid"_a, "name"_a, "log_level"_a = CPS::Logger::Level::off,
+           "uid"_a, "name"_a, logLevelArg(CPS::Logger::Level::off, "log_level"),
            py::arg("with_trafo") = false)
       .def("set_parameters",
            &CPS::EMT::Ph3::VSIVoltageControlVCO::setParameters, "sys_omega"_a,
@@ -541,7 +541,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
              CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR>(
       mEMTPh3, "SynchronGenerator3OrderVBR", py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_operational_parameters_per_unit",
            py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
                              CPS::Real, CPS::Real, CPS::Real, CPS::Real,
@@ -557,7 +557,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
              CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR>(
       mEMTPh3, "SynchronGenerator4OrderVBR", py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_operational_parameters_per_unit",
            py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
                              CPS::Real, CPS::Real, CPS::Real, CPS::Real,
@@ -573,7 +573,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
              CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR>(
       mEMTPh3, "SynchronGenerator5OrderVBR", py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_operational_parameters_per_unit",
            py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
                              CPS::Real, CPS::Real, CPS::Real, CPS::Real,
@@ -591,7 +591,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
              CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR>(
       mEMTPh3, "SynchronGenerator6aOrderVBR", py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_operational_parameters_per_unit",
            py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
                              CPS::Real, CPS::Real, CPS::Real, CPS::Real,
@@ -609,7 +609,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
              CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR>(
       mEMTPh3, "SynchronGenerator6bOrderVBR", py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_operational_parameters_per_unit",
            py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
                              CPS::Real, CPS::Real, CPS::Real, CPS::Real,
@@ -629,7 +629,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
              CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SynchronGeneratorDQODE",
                                            py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_parameters_operational_per_unit",
            &CPS::EMT::Ph3::SynchronGeneratorDQODE::
                setParametersOperationalPerUnit,
@@ -666,9 +666,9 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
              CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "AvVoltageSourceInverterDQ",
                                            py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
-           "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
+           "uid"_a, "name"_a, logLevelArg(CPS::Logger::Level::off),
            // cppcheck-suppress assignBoolToPointer
            "with_trafo"_a = false)
       .def("set_parameters",
@@ -699,9 +699,9 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
              CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "Transformer",
                                            py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
-           "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
+           "uid"_a, "name"_a, logLevelArg(CPS::Logger::Level::off),
            // cppcheck-suppress assignBoolToPointer
            "with_resistive_losses"_a = false)
       .def("set_parameters", &CPS::EMT::Ph3::Transformer::setParameters,
@@ -724,7 +724,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
              CPS::SimPowerComp<CPS::Real>, CPS::Base::Ph1::Switch>(
       mEMTPh3, "SeriesSwitch", py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def("set_parameters", &CPS::EMT::Ph3::SeriesSwitch::setParameters,
            "open_resistance"_a, "closed_resistance"_a,
            // cppcheck-suppress assignBoolToPointer
@@ -938,9 +938,9 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
              CPS::SimPowerComp<CPS::Real>>(
       mEMTPh3, "AvVoltSourceInverterStateSpace", py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
+           logLevelArg(CPS::Logger::Level::off))
       .def(py::init<std::string, std::string, CPS::Logger::Level>(), "uid"_a,
-           "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+           "name"_a, logLevelArg(CPS::Logger::Level::off))
       .def("set_parameters",
            &CPS::EMT::Ph3::AvVoltSourceInverterStateSpace::setParameters,
            "Lf"_a, "Cf"_a, "Rf"_a, "Rc"_a, "omega_n"_a, "Kp_pll"_a, "Ki_pll"_a,
@@ -963,7 +963,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
              CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SSN_GFM",
                                            py::multiple_inheritance())
       .def(py::init<std::string, std::string, CPS::Logger::Level>(), "uid"_a,
-           "name"_a, "log_level"_a = CPS::Logger::Level::off)
+           "name"_a, logLevelArg(CPS::Logger::Level::off, "log_level"))
       .def("set_parameters", &CPS::EMT::Ph3::SSN_GFM::setParameters, "lf"_a,
            "cf"_a, "rf"_a, "rc"_a, "nominal_voltage"_a, "omega_nominal"_a,
            "p_ref"_a, "q_ref"_a, "virtual_inertia"_a, "damping_coefficient"_a,
