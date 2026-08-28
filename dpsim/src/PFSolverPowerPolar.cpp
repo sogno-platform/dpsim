@@ -293,9 +293,10 @@ void PFSolverPowerPolar::calculateJacobian() {
 void PFSolverPowerPolar::updateSolution() {
   UInt npqpv = mNumPQBuses + mNumPVBuses;
 
-  // Scale the whole step by one factor to bound the max change without altering direction.
-  const double maxDVpu = 0.1;      // max |dV| per step [pu]
-  const double maxDThetaRad = 0.2; // max |dTheta| per step [rad]
+  // Scale the whole Newton step by one factor (=1 near solution) to bound the
+  // max voltage/angle change without altering the search direction.
+  const double maxDVpu = mMaxDVoltagePerUnitPerStep;
+  const double maxDThetaRad = mMaxDThetaRadPerStep;
 
   // mX: [0,npqpv) angle incr (PQ+PV), then rel. voltage dV/V (PQ only).
   double scale = 1.0;
