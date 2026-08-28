@@ -80,6 +80,14 @@ EMT::SSNComp::calculateSteadyStateStateFromInput(const MatrixComp &u,
   return h.inverse() * mB.cast<Complex>() * u;
 }
 
+MatrixComp EMT::SSNComp::steadyStateTransfer(Real frequency) const {
+  if (!mParametersSet)
+    throw std::logic_error(
+        "setParameters() must be called before steadyStateTransfer().");
+
+  return Math::steadyStateTransfer(mA, mB, mC, mD, 2.0 * PI * frequency);
+}
+
 MatrixComp
 EMT::SSNComp::calculateSteadyStateOutputFromInput(const MatrixComp &x,
                                                   const MatrixComp &u) const {

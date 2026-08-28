@@ -105,6 +105,9 @@ public:
   /// Get continuous-time output matrix of the SSN model.
   const Matrix &getC() const;
 
+  /// Get the continuous steady-state transfer C (jw I - A)^-1 B + D: admittance for V-type, impedance for I-type
+  MatrixComp steadyStateTransfer(Real frequency) const;
+
   void setParameters(const Matrix &A, const Matrix &B, const Matrix &C,
                      const Matrix &D);
 
