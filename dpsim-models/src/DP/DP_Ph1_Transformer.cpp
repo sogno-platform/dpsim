@@ -216,14 +216,29 @@ void DP::Ph1::Transformer::initializeParentFromNodesAndTerminals(
   mVirtualNodes[0]->setInitialVoltage(
       initialSingleVoltage(nonReferenceTerminal()) * mRatioFromReference);
 
-  Complex midpointVoltage = 0.5 * (initialSingleVoltage(mReferenceTerminal) +
-                                   mVirtualNodes[0]->initialSingleVoltage());
+  Complex halfImpedance =
+      Complex(**mResistance / 2., omega * **mInductance / 2.);
+  Complex magnetizingAdmittance = Complex(0, 0);
+  if (mSubMagnetizingInductor)
+    magnetizingAdmittance = 1. / mMagnetizingResistance +
+                            1. / Complex(0, omega * mMagnetizingInductance);
+
+  Complex referenceVoltage = initialSingleVoltage(mReferenceTerminal);
+  Complex midpointVoltage =
+      (referenceVoltage + mVirtualNodes[0]->initialSingleVoltage()) /
+      (2. + halfImpedance * magnetizingAdmittance);
   mVirtualNodes[2]->setInitialVoltage(midpointVoltage);
 
   if (mNumVirtualNodes == 5) {
-    mVirtualNodes[3]->setInitialVoltage(
-        initialSingleVoltage(mReferenceTerminal));
-    mVirtualNodes[4]->setInitialVoltage(midpointVoltage);
+    Complex referenceCurrent =
+        (referenceVoltage - midpointVoltage) / halfImpedance;
+    Complex nonReferenceCurrent =
+        (midpointVoltage - mVirtualNodes[0]->initialSingleVoltage()) /
+        halfImpedance;
+    mVirtualNodes[3]->setInitialVoltage(referenceVoltage -
+                                        referenceCurrent * **mResistance / 2.);
+    mVirtualNodes[4]->setInitialVoltage(
+        midpointVoltage - nonReferenceCurrent * **mResistance / 2.);
   }
 
   // Static calculations from load flow data
