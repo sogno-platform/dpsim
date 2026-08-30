@@ -16,9 +16,9 @@ DP::Ph1::Transformer::Transformer(String uid, String name,
     : Base::Ph1::Transformer(mAttributes),
       CompositePowerComp<Complex>(uid, name, true, true, logLevel) {
   if (withResistiveLosses)
-    setVirtualNodeNumber(3);
+    setVirtualNodeNumber(5);
   else
-    setVirtualNodeNumber(2);
+    setVirtualNodeNumber(3);
 
   setTerminalNumber(2);
 
@@ -125,62 +125,76 @@ void DP::Ph1::Transformer::createSubComponents() {
 
   resolveWindingRoles();
 
+  auto midpoint = mVirtualNodes[2];
+
   mSubInductor =
       std::make_shared<DP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
-  mSubInductor->setParameters(**mInductance);
+  mSubInductor->setParameters(**mInductance / 2.);
   addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
-  if (mNumVirtualNodes == 3) {
+  mSubInductor2 =
+      std::make_shared<DP::Ph1::Inductor>(**mName + "_ind2", mLogLevel);
+  mSubInductor2->setParameters(**mInductance / 2.);
+  addMNASubComponent(mSubInductor2, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+
+  if (mNumVirtualNodes == 5) {
     mSubResistor =
         std::make_shared<DP::Ph1::Resistor>(**mName + "_res", mLogLevel);
-    mSubResistor->setParameters(**mResistance);
-    mSubResistor->connect({node(mReferenceTerminal), mVirtualNodes[2]});
-    mSubInductor->connect({mVirtualNodes[2], mVirtualNodes[0]});
+    mSubResistor->setParameters(**mResistance / 2.);
+    mSubResistor->connect({node(mReferenceTerminal), mVirtualNodes[3]});
+    mSubInductor->connect({mVirtualNodes[3], midpoint});
     addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+
+    mSubResistor2 =
+        std::make_shared<DP::Ph1::Resistor>(**mName + "_res2", mLogLevel);
+    mSubResistor2->setParameters(**mResistance / 2.);
+    mSubResistor2->connect({midpoint, mVirtualNodes[4]});
+    mSubInductor2->connect({mVirtualNodes[4], mVirtualNodes[0]});
+    addMNASubComponent(mSubResistor2,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
   } else {
-    mSubInductor->connect({node(mReferenceTerminal), mVirtualNodes[0]});
+    mSubInductor->connect({node(mReferenceTerminal), midpoint});
+    mSubInductor2->connect({midpoint, mVirtualNodes[0]});
   }
 
-  Real pSnub = P_SNUB_TRANSFORMER * **mRatedPower;
-  Real qSnub = Q_SNUB_TRANSFORMER * **mRatedPower;
+  if (**mRatedPower <= 0) {
+    SPDLOG_LOGGER_WARN(mSLog,
+                       "Transformer {}: rated power is {} [VA], so the "
+                       "magnetizing branch cannot be sized and is omitted",
+                       this->name(), **mRatedPower);
+    return;
+  }
 
-  mSnubberResistance1 =
-      std::pow(std::abs(nominalVoltageAt(mReferenceTerminal)), 2) / pSnub;
-  mSubSnubResistor1 =
-      std::make_shared<DP::Ph1::Resistor>(**mName + "_snub_res1", mLogLevel);
-  mSubSnubResistor1->setParameters(mSnubberResistance1);
-  mSubSnubResistor1->connect({node(mReferenceTerminal), DP::SimNode::GND});
-  SPDLOG_LOGGER_INFO(
-      mSLog,
-      "Snubber Resistance 1 (connected to higher voltage side {}) = {} [Ohm]",
-      node(mReferenceTerminal)->name(),
-      Logger::realToString(mSnubberResistance1));
-  addMNASubComponent(mSubSnubResistor1,
+  if (mNoLoadCurrent <= mNoLoadLoss) {
+    SPDLOG_LOGGER_ERROR(mSLog,
+                        "Transformer {}: no-load current {} must exceed the "
+                        "no-load loss {}; the magnetizing branch has no "
+                        "reactive part otherwise",
+                        this->name(), mNoLoadCurrent, mNoLoadLoss);
+    throw InvalidArgumentException();
+  }
+
+  mMagnetizingResistance = std::pow(nominalVoltageAt(mReferenceTerminal), 2) /
+                           (mNoLoadLoss * **mRatedPower);
+  mSubMagnetizingResistor =
+      std::make_shared<DP::Ph1::Resistor>(**mName + "_mag_res", mLogLevel);
+  mSubMagnetizingResistor->setParameters(mMagnetizingResistance);
+  mSubMagnetizingResistor->connect({midpoint, DP::SimNode::GND});
+  SPDLOG_LOGGER_INFO(mSLog,
+                     "Magnetizing resistance = {} [Ohm] at the T midpoint",
+                     Logger::realToString(mMagnetizingResistance));
+  addMNASubComponent(mSubMagnetizingResistor,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
-  mSnubberResistance2 =
-      std::pow(std::abs(nominalVoltageAt(nonReferenceTerminal())), 2) / pSnub;
-  mSubSnubResistor2 =
-      std::make_shared<DP::Ph1::Resistor>(**mName + "_snub_res2", mLogLevel);
-  mSubSnubResistor2->setParameters(mSnubberResistance2);
-  mSubSnubResistor2->connect({node(nonReferenceTerminal()), DP::SimNode::GND});
-  SPDLOG_LOGGER_INFO(
-      mSLog,
-      "Snubber Resistance 2 (connected to lower voltage side {}) = {} [Ohm]",
-      node(nonReferenceTerminal())->name(),
-      Logger::realToString(mSnubberResistance2));
-  addMNASubComponent(mSubSnubResistor2,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-
-  // Capacitor created here; its omega-dependent value is set in initializeParentFromNodesAndTerminals().
-  mSubSnubCapacitor2 =
-      std::make_shared<DP::Ph1::Capacitor>(**mName + "_snub_cap2", mLogLevel);
-  mSubSnubCapacitor2->connect({node(nonReferenceTerminal()), DP::SimNode::GND});
-  addMNASubComponent(mSubSnubCapacitor2,
+  mSubMagnetizingInductor =
+      std::make_shared<DP::Ph1::Inductor>(**mName + "_mag_ind", mLogLevel);
+  mSubMagnetizingInductor->connect({midpoint, DP::SimNode::GND});
+  addMNASubComponent(mSubMagnetizingInductor,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 }
@@ -188,24 +202,29 @@ void DP::Ph1::Transformer::createSubComponents() {
 void DP::Ph1::Transformer::initializeParentFromNodesAndTerminals(
     Real frequency) {
   Real omega = 2. * PI * frequency;
-  Real qSnub = Q_SNUB_TRANSFORMER * **mRatedPower;
-  mSnubberCapacitance2 =
-      qSnub / std::pow(std::abs(nominalVoltageAt(nonReferenceTerminal())), 2) /
-      omega;
-  mSubSnubCapacitor2->setParameters(mSnubberCapacitance2);
-  SPDLOG_LOGGER_INFO(
-      mSLog,
-      "Snubber Capacitance 2 (connected to lower voltage side {}) = {} [F]",
-      node(nonReferenceTerminal())->name(),
-      Logger::realToString(mSnubberCapacitance2));
+  if (mSubMagnetizingInductor) {
+    Real magnetizingSusceptance =
+        std::sqrt(std::pow(mNoLoadCurrent, 2) - std::pow(mNoLoadLoss, 2)) *
+        **mRatedPower / std::pow(nominalVoltageAt(mReferenceTerminal), 2);
+    mMagnetizingInductance = 1. / (omega * magnetizingSusceptance);
+    mSubMagnetizingInductor->setParameters(mMagnetizingInductance);
+    SPDLOG_LOGGER_INFO(mSLog, "Magnetizing inductance = {} [H]",
+                       Logger::realToString(mMagnetizingInductance));
+  }
 
   // Set initial voltage of virtual node in between
   mVirtualNodes[0]->setInitialVoltage(
       initialSingleVoltage(nonReferenceTerminal()) * mRatioFromReference);
 
-  if (mNumVirtualNodes == 3)
-    mVirtualNodes[2]->setInitialVoltage(
+  Complex midpointVoltage = 0.5 * (initialSingleVoltage(mReferenceTerminal) +
+                                   mVirtualNodes[0]->initialSingleVoltage());
+  mVirtualNodes[2]->setInitialVoltage(midpointVoltage);
+
+  if (mNumVirtualNodes == 5) {
+    mVirtualNodes[3]->setInitialVoltage(
         initialSingleVoltage(mReferenceTerminal));
+    mVirtualNodes[4]->setInitialVoltage(midpointVoltage);
+  }
 
   // Static calculations from load flow data
   Complex impedance = {**mResistance, omega * **mInductance};
