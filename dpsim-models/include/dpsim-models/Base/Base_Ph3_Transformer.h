@@ -28,6 +28,11 @@ protected:
   Matrix mInductance;
 
 public:
+  /// Nominal voltage of the winding at the given terminal
+  Real nominalVoltageAt(UInt terminal) const {
+    return terminal == 0 ? mNominalVoltagePrimary : mNominalVoltageSecondary;
+  }
+
   ///Transformer ratio
   const Attribute<Complex>::Ptr mRatio;
 

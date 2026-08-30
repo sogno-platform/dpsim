@@ -22,6 +22,11 @@ protected:
   Real mNominalVoltageSecondary;
 
 public:
+  /// Nominal voltage of the winding at the given terminal
+  Real nominalVoltageAt(UInt terminal) const {
+    return terminal == 0 ? mNominalVoltagePrimary : mNominalVoltageSecondary;
+  }
+
   /// Rated Apparent Power [VA]
   const Attribute<Real>::Ptr mRatedPower;
   /// Complex transformer ratio

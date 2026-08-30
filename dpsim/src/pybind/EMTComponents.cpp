@@ -708,16 +708,18 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "nom_voltage_primary"_a, "nom_voltage_secondary"_a, "rated_power"_a,
            "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a)
       .def("connect", &CPS::EMT::Ph3::Transformer::connect);
+  .def("set_reference_winding",
+       &CPS::EMT::Ph3::Transformer::setReferenceWinding, "reference_winding"_a)
 
-  py::class_<CPS::EMT::Ph3::SeriesResistor,
-             std::shared_ptr<CPS::EMT::Ph3::SeriesResistor>,
-             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SeriesResistor",
-                                           py::multiple_inheritance())
-      .def(py::init<std::string>())
-      .def(py::init<std::string, CPS::Logger::Level>())
-      .def("set_parameters", &CPS::EMT::Ph3::SeriesResistor::setParameters,
-           "R"_a)
-      .def("connect", &CPS::EMT::Ph3::SeriesResistor::connect);
+      py::class_<CPS::EMT::Ph3::SeriesResistor,
+                 std::shared_ptr<CPS::EMT::Ph3::SeriesResistor>,
+                 CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SeriesResistor",
+                                               py::multiple_inheritance())
+          .def(py::init<std::string>())
+          .def(py::init<std::string, CPS::Logger::Level>())
+          .def("set_parameters", &CPS::EMT::Ph3::SeriesResistor::setParameters,
+               "R"_a)
+          .def("connect", &CPS::EMT::Ph3::SeriesResistor::connect);
 
   py::class_<CPS::EMT::Ph3::SeriesSwitch,
              std::shared_ptr<CPS::EMT::Ph3::SeriesSwitch>,

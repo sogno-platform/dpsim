@@ -503,6 +503,8 @@ void addDPPh1Components(py::module_ mDPPh1) {
            "nom_voltage_primary"_a, "nom_voltage_secondary"_a, "rated_power"_a,
            "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a)
       .def("connect", &CPS::DP::Ph1::Transformer::connect);
+  .def("set_reference_winding", &CPS::DP::Ph1::Transformer::setReferenceWinding,
+       "reference_winding"_a)
 }
 
 void addDPPh3Components(py::module_ mDPPh3) {

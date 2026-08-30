@@ -73,32 +73,49 @@ void DP::Ph1::Transformer::setParameters(Real nomVoltagePrimary,
                                       inductance);
 }
 
-void DP::Ph1::Transformer::resolveWindingOrientation() {
-  mHVSide = (mNominalVoltagePrimary >= mNominalVoltageSecondary) ? 0 : 1;
-  mLVSide = 1 - mHVSide;
-  mRatioHVToLV = (mHVSide == 0) ? **mRatio : 1. / **mRatio;
-  mOrientationSign = (mHVSide == 0) ? 1. : -1.;
-  mNominalVoltageHV =
-      (mHVSide == 0) ? mNominalVoltagePrimary : mNominalVoltageSecondary;
-  mNominalVoltageLV =
-      (mHVSide == 0) ? mNominalVoltageSecondary : mNominalVoltagePrimary;
+void DP::Ph1::Transformer::resolveWindingRoles() {
+  switch (mReferenceWinding) {
+  case WindingReference::Primary:
+    mReferenceTerminal = 0;
+    break;
+  case WindingReference::Secondary:
+    mReferenceTerminal = 1;
+    break;
+  case WindingReference::Tertiary:
+    SPDLOG_LOGGER_ERROR(mSLog,
+                        "Transformer {}: three-winding transformers are "
+                        "not implemented",
+                        this->name());
+    throw InvalidArgumentException();
+  case WindingReference::Auto:
+    mReferenceTerminal =
+        (mNominalVoltagePrimary >= mNominalVoltageSecondary) ? 0 : 1;
+    break;
+  }
 
-  if ((mHVSide == 0) != (Math::abs(**mRatio) >= 1.) &&
-      Math::abs(Math::abs(**mRatio) - 1.) > 1e-9)
-    SPDLOG_LOGGER_WARN(
-        mSLog,
-        "Nominal voltages put the higher-voltage winding at terminal {} ({} "
-        "[V] against {} [V]) but the turns ratio {} points the other way; "
-        "check the argument order of setParameters()",
-        mHVSide, mNominalVoltageHV, mNominalVoltageLV,
-        Logger::complexToString(**mRatio));
+  mRatioFromReference = (mReferenceTerminal == 0) ? **mRatio : 1. / **mRatio;
+  mOrientationSign = (mReferenceTerminal == 0) ? 1. : -1.;
 
-  SPDLOG_LOGGER_INFO(mSLog,
-                     "Higher-voltage winding at terminal {} ({} [V]), "
-                     "lower-voltage winding at terminal {} ({} [V]), "
-                     "ratio HV->LV = {}",
-                     mHVSide, mNominalVoltageHV, mLVSide, mNominalVoltageLV,
-                     Logger::complexToString(mRatioHVToLV));
+  if (mReferenceWinding == WindingReference::Auto &&
+      std::abs(mNominalVoltagePrimary - mNominalVoltageSecondary) <=
+          DOUBLE_EPSILON * mNominalVoltagePrimary)
+    SPDLOG_LOGGER_WARN(mSLog,
+                       "Transformer {}: both windings are nominally {} [V], so "
+                       "the reference winding cannot be resolved from the "
+                       "nominal voltages; winding 1 assumed. Pass an explicit "
+                       "WindingReference to remove the ambiguity.",
+                       this->name(), mNominalVoltagePrimary);
+
+  SPDLOG_LOGGER_INFO(
+      mSLog,
+      "Impedance referred to winding {} ({} [V]) {}, remaining "
+      "winding at terminal {} ({} [V]), ratio = {}",
+      mReferenceTerminal + 1, nominalVoltageAt(mReferenceTerminal),
+      mReferenceWinding == WindingReference::Auto
+          ? "(resolved from the nominal voltages)"
+          : "(set explicitly)",
+      nonReferenceTerminal(), nominalVoltageAt(nonReferenceTerminal()),
+      Logger::complexToString(mRatioFromReference));
 }
 
 void DP::Ph1::Transformer::createSubComponents() {
@@ -106,7 +123,7 @@ void DP::Ph1::Transformer::createSubComponents() {
     return;
   mSubCompCreated = true;
 
-  resolveWindingOrientation();
+  resolveWindingRoles();
 
   mSubInductor =
       std::make_shared<DP::Ph1::Inductor>(**mName + "_ind", mLogLevel);
@@ -118,39 +135,43 @@ void DP::Ph1::Transformer::createSubComponents() {
     mSubResistor =
         std::make_shared<DP::Ph1::Resistor>(**mName + "_res", mLogLevel);
     mSubResistor->setParameters(**mResistance);
-    mSubResistor->connect({node(mHVSide), mVirtualNodes[2]});
+    mSubResistor->connect({node(mReferenceTerminal), mVirtualNodes[2]});
     mSubInductor->connect({mVirtualNodes[2], mVirtualNodes[0]});
     addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
   } else {
-    mSubInductor->connect({node(mHVSide), mVirtualNodes[0]});
+    mSubInductor->connect({node(mReferenceTerminal), mVirtualNodes[0]});
   }
 
   Real pSnub = P_SNUB_TRANSFORMER * **mRatedPower;
   Real qSnub = Q_SNUB_TRANSFORMER * **mRatedPower;
 
-  mSnubberResistance1 = std::pow(std::abs(mNominalVoltageHV), 2) / pSnub;
+  mSnubberResistance1 =
+      std::pow(std::abs(nominalVoltageAt(mReferenceTerminal)), 2) / pSnub;
   mSubSnubResistor1 =
       std::make_shared<DP::Ph1::Resistor>(**mName + "_snub_res1", mLogLevel);
   mSubSnubResistor1->setParameters(mSnubberResistance1);
-  mSubSnubResistor1->connect({node(mHVSide), DP::SimNode::GND});
+  mSubSnubResistor1->connect({node(mReferenceTerminal), DP::SimNode::GND});
   SPDLOG_LOGGER_INFO(
       mSLog,
       "Snubber Resistance 1 (connected to higher voltage side {}) = {} [Ohm]",
-      node(mHVSide)->name(), Logger::realToString(mSnubberResistance1));
+      node(mReferenceTerminal)->name(),
+      Logger::realToString(mSnubberResistance1));
   addMNASubComponent(mSubSnubResistor1,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
-  mSnubberResistance2 = std::pow(std::abs(mNominalVoltageLV), 2) / pSnub;
+  mSnubberResistance2 =
+      std::pow(std::abs(nominalVoltageAt(nonReferenceTerminal())), 2) / pSnub;
   mSubSnubResistor2 =
       std::make_shared<DP::Ph1::Resistor>(**mName + "_snub_res2", mLogLevel);
   mSubSnubResistor2->setParameters(mSnubberResistance2);
-  mSubSnubResistor2->connect({node(mLVSide), DP::SimNode::GND});
+  mSubSnubResistor2->connect({node(nonReferenceTerminal()), DP::SimNode::GND});
   SPDLOG_LOGGER_INFO(
       mSLog,
       "Snubber Resistance 2 (connected to lower voltage side {}) = {} [Ohm]",
-      node(mLVSide)->name(), Logger::realToString(mSnubberResistance2));
+      node(nonReferenceTerminal())->name(),
+      Logger::realToString(mSnubberResistance2));
   addMNASubComponent(mSubSnubResistor2,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
@@ -158,7 +179,7 @@ void DP::Ph1::Transformer::createSubComponents() {
   // Capacitor created here; its omega-dependent value is set in initializeParentFromNodesAndTerminals().
   mSubSnubCapacitor2 =
       std::make_shared<DP::Ph1::Capacitor>(**mName + "_snub_cap2", mLogLevel);
-  mSubSnubCapacitor2->connect({node(mLVSide), DP::SimNode::GND});
+  mSubSnubCapacitor2->connect({node(nonReferenceTerminal()), DP::SimNode::GND});
   addMNASubComponent(mSubSnubCapacitor2,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
@@ -169,19 +190,22 @@ void DP::Ph1::Transformer::initializeParentFromNodesAndTerminals(
   Real omega = 2. * PI * frequency;
   Real qSnub = Q_SNUB_TRANSFORMER * **mRatedPower;
   mSnubberCapacitance2 =
-      qSnub / std::pow(std::abs(mNominalVoltageLV), 2) / omega;
+      qSnub / std::pow(std::abs(nominalVoltageAt(nonReferenceTerminal())), 2) /
+      omega;
   mSubSnubCapacitor2->setParameters(mSnubberCapacitance2);
   SPDLOG_LOGGER_INFO(
       mSLog,
       "Snubber Capacitance 2 (connected to lower voltage side {}) = {} [F]",
-      node(mLVSide)->name(), Logger::realToString(mSnubberCapacitance2));
+      node(nonReferenceTerminal())->name(),
+      Logger::realToString(mSnubberCapacitance2));
 
   // Set initial voltage of virtual node in between
-  mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(mLVSide) *
-                                      mRatioHVToLV);
+  mVirtualNodes[0]->setInitialVoltage(
+      initialSingleVoltage(nonReferenceTerminal()) * mRatioFromReference);
 
   if (mNumVirtualNodes == 3)
-    mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(mHVSide));
+    mVirtualNodes[2]->setInitialVoltage(
+        initialSingleVoltage(mReferenceTerminal));
 
   // Static calculations from load flow data
   Complex impedance = {**mResistance, omega * **mInductance};
@@ -189,7 +213,7 @@ void DP::Ph1::Transformer::initializeParentFromNodesAndTerminals(
                      omega * **mInductance);
   Complex impedanceVoltage =
       mOrientationSign * (mVirtualNodes[0]->initialSingleVoltage() -
-                          initialSingleVoltage(mHVSide));
+                          initialSingleVoltage(mReferenceTerminal));
   (**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
   (**mIntfCurrent)(0, 0) = impedanceVoltage / impedance;
 
@@ -222,7 +246,7 @@ void DP::Ph1::Transformer::mnaParentInitialize(
 void DP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
   // Ideal transformer equations
-  if (terminalNotGrounded(mHVSide)) {
+  if (terminalNotGrounded(mReferenceTerminal)) {
     Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(),
                            mVirtualNodes[1]->matrixNodeIndex(),
                            Complex(-1.0, 0));
@@ -230,12 +254,13 @@ void DP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(
                            mVirtualNodes[0]->matrixNodeIndex(),
                            Complex(1.0, 0));
   }
-  if (terminalNotGrounded(mLVSide)) {
-    Math::setMatrixElement(systemMatrix, matrixNodeIndex(mLVSide),
-                           mVirtualNodes[1]->matrixNodeIndex(),
-                           std::conj(mRatioHVToLV));
+  if (terminalNotGrounded(nonReferenceTerminal())) {
+    Math::setMatrixElement(
+        systemMatrix, matrixNodeIndex(nonReferenceTerminal()),
+        mVirtualNodes[1]->matrixNodeIndex(), std::conj(mRatioFromReference));
     Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(),
-                           matrixNodeIndex(mLVSide), -mRatioHVToLV);
+                           matrixNodeIndex(nonReferenceTerminal()),
+                           -mRatioFromReference);
   }
 
   // Add subcomps to system matrix
@@ -243,7 +268,7 @@ void DP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(
     if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
       mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
 
-  if (terminalNotGrounded(mHVSide)) {
+  if (terminalNotGrounded(mReferenceTerminal)) {
     SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
                        Logger::complexToString(Complex(-1.0, 0)),
                        mVirtualNodes[0]->matrixNodeIndex(),
@@ -253,15 +278,15 @@ void DP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(
                        mVirtualNodes[1]->matrixNodeIndex(),
                        mVirtualNodes[0]->matrixNodeIndex());
   }
-  if (terminalNotGrounded(mLVSide)) {
+  if (terminalNotGrounded(nonReferenceTerminal())) {
     SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(mRatioHVToLV),
-                       matrixNodeIndex(mLVSide),
+                       Logger::complexToString(mRatioFromReference),
+                       matrixNodeIndex(nonReferenceTerminal()),
                        mVirtualNodes[1]->matrixNodeIndex());
     SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(-mRatioHVToLV),
+                       Logger::complexToString(-mRatioFromReference),
                        mVirtualNodes[1]->matrixNodeIndex(),
-                       matrixNodeIndex(mLVSide));
+                       matrixNodeIndex(nonReferenceTerminal()));
   }
 }
 
