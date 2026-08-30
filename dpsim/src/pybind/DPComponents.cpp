@@ -502,12 +502,37 @@ void addDPPh1Components(py::module_ mDPPh1) {
                &CPS::DP::Ph1::Transformer::setParameters),
            "nom_voltage_primary"_a, "nom_voltage_secondary"_a, "rated_power"_a,
            "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a)
+      .def("set_reference_winding",
+           &CPS::DP::Ph1::Transformer::setReferenceWinding,
+           "reference_winding"_a)
+      .def("set_magnetizing_branch",
+           &CPS::DP::Ph1::Transformer::setMagnetizingBranch,
+           "no_load_current"_a, "no_load_loss"_a)
       .def("connect", &CPS::DP::Ph1::Transformer::connect);
-  .def("set_reference_winding", &CPS::DP::Ph1::Transformer::setReferenceWinding,
-       "reference_winding"_a)
 }
 
 void addDPPh3Components(py::module_ mDPPh3) {
+  py::class_<CPS::DP::Ph3::Transformer,
+             std::shared_ptr<CPS::DP::Ph3::Transformer>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh3, "Transformer",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(),
+           "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off,
+           // cppcheck-suppress assignBoolToPointer
+           "with_resistive_losses"_a = false)
+      .def("set_parameters", &CPS::DP::Ph3::Transformer::setParameters,
+           "nom_voltage_primary"_a, "nom_voltage_secondary"_a, "rated_power"_a,
+           "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a)
+      .def("set_reference_winding",
+           &CPS::DP::Ph3::Transformer::setReferenceWinding,
+           "reference_winding"_a)
+      .def("set_magnetizing_branch",
+           &CPS::DP::Ph3::Transformer::setMagnetizingBranch,
+           "no_load_current"_a, "no_load_loss"_a)
+      .def("connect", &CPS::DP::Ph3::Transformer::connect);
+
   py::class_<CPS::DP::Ph3::VoltageSource,
              std::shared_ptr<CPS::DP::Ph3::VoltageSource>,
              CPS::SimPowerComp<CPS::Complex>>(mDPPh3, "VoltageSource",
