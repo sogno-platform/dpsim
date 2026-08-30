@@ -74,6 +74,10 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_DP_SP_Trafo.cpp
 	Circuits/EMT_DP_SP_Slack_PiLine_PQLoad_FrequencyRamp_CosineFM.cpp
 
+	# Transformer no-load and short-circuit tests
+	Circuits/DP_Ph1_Transformer_OpenShortCircuit.cpp
+	Circuits/DP_Ph1_Transformer_OpenSecondaryStepSweep.cpp
+
 	# IEEE 9-bus, 4th-order synchronous generators (PF-initialized)
 	Circuits/SP_Ph1_IEEE9_4Order.cpp
 	Circuits/DP_Ph1_IEEE9_4Order.cpp
@@ -174,6 +178,8 @@ StateSpace/DP_Ph1_Switch_StateSpaceExtraction.cpp
 # Targets required for tests in the Jupyter Notebooks. This list is only for grouping the (already configured) targets, so every entry
 # also has to appear in another list in this file.
 list(APPEND TEST_SOURCES
+	Circuits/DP_Ph1_Transformer_OpenShortCircuit.cpp
+	Circuits/DP_Ph1_Transformer_OpenSecondaryStepSweep.cpp
 	Circuits/SP_Ph1_IEEE9_4Order.cpp
 	Circuits/DP_Ph1_IEEE9_4Order.cpp
 	Circuits/EMT_Ph3_IEEE9_4Order.cpp
