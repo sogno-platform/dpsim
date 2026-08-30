@@ -17,9 +17,9 @@ namespace Ph3 {
 class Transformer {
 protected:
   /// Nominal voltage of primary side
-  Real mNominalVoltageEnd1;
+  Real mNominalVoltagePrimary;
   /// Nominal voltage of secondary side
-  Real mNominalVoltageEnd2;
+  Real mNominalVoltageSecondary;
   /// Rated Apparent Power [VA]
   Real mRatedPower;
   /// Resistance [Ohm]
@@ -35,11 +35,11 @@ public:
       : mRatio(attributeList->create<Complex>("ratio")){};
 
   ///
-  void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower,
-                     Real ratioAbs, Real ratioPhase, Matrix resistance,
-                     Matrix inductance) {
-    mNominalVoltageEnd1 = nomVoltageEnd1;
-    mNominalVoltageEnd2 = nomVoltageEnd2;
+  void setParameters(Real nomVoltagePrimary, Real nomVoltageSecondary,
+                     Real ratedPower, Real ratioAbs, Real ratioPhase,
+                     Matrix resistance, Matrix inductance) {
+    mNominalVoltagePrimary = nomVoltagePrimary;
+    mNominalVoltageSecondary = nomVoltageSecondary;
     mRatedPower = ratedPower;
     **mRatio = std::polar<Real>(ratioAbs, ratioPhase);
     mResistance = resistance;

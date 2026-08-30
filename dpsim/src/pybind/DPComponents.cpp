@@ -460,7 +460,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
            "Kp_curr_ctrl"_a, "Ki_curr_ctrl"_a, "omega_cutoff"_a)
       .def("set_transformer_parameters",
            &CPS::DP::Ph1::AvVoltageSourceInverterDQ::setTransformerParameters,
-           "nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "rated_power"_a,
+           "nom_voltage_primary"_a, "nom_voltage_secondary"_a, "rated_power"_a,
            "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a)
       .def("set_initial_state_values",
            &CPS::DP::Ph1::AvVoltageSourceInverterDQ::setInitialStateValues,
@@ -494,13 +494,13 @@ void addDPPh1Components(py::module_ mDPPh1) {
            py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
                              CPS::Real, CPS::Real>(
                &CPS::DP::Ph1::Transformer::setParameters),
-           "nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "ratio_abs"_a,
+           "nom_voltage_primary"_a, "nom_voltage_secondary"_a, "ratio_abs"_a,
            "ratio_phase"_a, "resistance"_a, "inductance"_a)
       .def("set_parameters",
            py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
                              CPS::Real, CPS::Real, CPS::Real>(
                &CPS::DP::Ph1::Transformer::setParameters),
-           "nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "rated_power"_a,
+           "nom_voltage_primary"_a, "nom_voltage_secondary"_a, "rated_power"_a,
            "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a)
       .def("connect", &CPS::DP::Ph1::Transformer::connect);
 }

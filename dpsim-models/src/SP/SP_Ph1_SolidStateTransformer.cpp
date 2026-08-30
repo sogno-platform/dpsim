@@ -33,8 +33,8 @@ SimPowerComp<Complex>::Ptr SP::Ph1::SolidStateTransformer::clone(String name) {
 void SP::Ph1::SolidStateTransformer::setParameters(Real nomV1, Real nomV2,
                                                    Real Pref, Real Q1ref,
                                                    Real Q2ref) {
-  mNominalVoltageEnd1 = nomV1;
-  mNominalVoltageEnd2 = nomV2;
+  mNominalVoltagePrimary = nomV1;
+  mNominalVoltageSecondary = nomV2;
   **mPref = Pref;
   **mQ1ref = Q1ref;
   **mQ2ref = Q2ref;
@@ -61,8 +61,8 @@ void SP::Ph1::SolidStateTransformer::initializeParentFromNodesAndTerminals(
     Real frequency) {
 
   // Parametrize the sub-loads before the recursive sub-init runs, else each Load wrongly reads its own terminal.
-  mSubLoadSide1->setParameters(**mPref, **mQ1ref, mNominalVoltageEnd1);
-  mSubLoadSide2->setParameters(mP2, **mQ2ref, mNominalVoltageEnd2);
+  mSubLoadSide1->setParameters(**mPref, **mQ1ref, mNominalVoltagePrimary);
+  mSubLoadSide2->setParameters(mP2, **mQ2ref, mNominalVoltageSecondary);
 
   if (!Math::isFinite(mP2)) {
     SPDLOG_LOGGER_ERROR(mSLog,

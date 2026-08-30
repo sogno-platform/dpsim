@@ -78,9 +78,9 @@ public:
 
   // #### General ####
   /// Defines component parameters
-  void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower,
-                     Real ratioAbs, Real ratioPhase, Matrix resistance,
-                     Matrix inductance);
+  void setParameters(Real nomVoltagePrimary, Real nomVoltageSecondary,
+                     Real ratedPower, Real ratioAbs, Real ratioPhase,
+                     Matrix resistance, Matrix inductance);
   /// Constructs and registers MNA subcomponents; idempotent.
   void createSubComponents() override;
   /// Initializes component from power flow data

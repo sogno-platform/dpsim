@@ -142,12 +142,13 @@ public:
 
   // #### General ####
   /// Set transformer specific parameters (without rated power)
-  void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs,
-                     Real ratioPhase, Real resistance, Real inductance);
-  /// Set transformer specific parameters
-  void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower,
+  void setParameters(Real nomVoltagePrimary, Real nomVoltageSecondary,
                      Real ratioAbs, Real ratioPhase, Real resistance,
                      Real inductance);
+  /// Set transformer specific parameters
+  void setParameters(Real nomVoltagePrimary, Real nomVoltageSecondary,
+                     Real ratedPower, Real ratioAbs, Real ratioPhase,
+                     Real resistance, Real inductance);
   /// Constructs and registers MNA subcomponents; idempotent.
   void createSubComponents() override;
   /// Initializes component from power flow data
@@ -155,9 +156,9 @@ public:
 
   // #### Powerflow section ####
   /// Get nominal voltage at end 1
-  Real getNominalVoltageEnd1() const;
+  Real getNominalVoltagePrimary() const;
   /// Get nominal voltage at end 2
-  Real getNominalVoltageEnd2() const;
+  Real getNominalVoltageSecondary() const;
   void setBaseVoltage(Real baseVoltage);
   /// Initializes component from power flow data
   void calculatePerUnitParameters(Real baseApparentPower, Real baseOmega);
