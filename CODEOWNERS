@@ -152,3 +152,7 @@
 
 # Half decoupling line.
 /dpsim-models/**/*HalfDecouplingLine* @leonardocarreras
+
+# Three-phase transformer models.
+/dpsim-models/**/DP_Ph3_Transformer* @leonardocarreras
+/dpsim-models/**/SP_Ph3_Transformer* @leonardocarreras

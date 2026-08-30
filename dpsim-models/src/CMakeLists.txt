@@ -72,6 +72,7 @@ list(APPEND MODELS_SOURCES
 	DP/DP_Ph3_Resistor.cpp
 	DP/DP_Ph3_NetworkInjection.cpp
 	DP/DP_Ph3_PiLine.cpp
+	DP/DP_Ph3_Transformer.cpp
 	DP/DP_Ph3_SeriesResistor.cpp
 	DP/DP_Ph3_SeriesSwitch.cpp
 	DP/DP_Ph3_Switch.cpp
@@ -206,6 +207,7 @@ list(APPEND MODELS_SOURCES
 	SP/SP_Ph3_Capacitor.cpp
 	SP/SP_Ph3_Inductor.cpp
 	SP/SP_Ph3_Resistor.cpp
+	SP/SP_Ph3_Transformer.cpp
 	SP/SP_Ph3_VoltageSource.cpp
 
 	Signal/DecouplingLine.cpp

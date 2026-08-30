@@ -41,6 +41,7 @@
 #include <dpsim-models/SP/SP_Ph3_Capacitor.h>
 #include <dpsim-models/SP/SP_Ph3_Inductor.h>
 #include <dpsim-models/SP/SP_Ph3_Resistor.h>
+#include <dpsim-models/SP/SP_Ph3_Transformer.h>
 #include <dpsim-models/SP/SP_Ph3_VoltageSource.h>
 
 #include <dpsim-models/DP/DP_Ph1_AvVoltageSourceInverterDQ.h>
@@ -105,6 +106,7 @@
 #include <dpsim-models/DP/DP_Ph3_SeriesSwitch.h>
 #include <dpsim-models/DP/DP_Ph3_Switch.h>
 #include <dpsim-models/DP/DP_Ph3_SynchronGeneratorDQTrapez.h>
+#include <dpsim-models/DP/DP_Ph3_Transformer.h>
 #include <dpsim-models/DP/DP_Ph3_TwoTerminalITypeSSNComp.h>
 #include <dpsim-models/DP/DP_Ph3_TwoTerminalVTypeSSNComp.h>
 #include <dpsim-models/DP/DP_Ph3_VoltageSource.h>
