@@ -17,9 +17,9 @@ EMT::Ph3::Transformer::Transformer(String uid, String name,
       CompositePowerComp<Real>(uid, name, true, true, logLevel) {
   mPhaseType = PhaseType::ABC;
   if (withResistiveLosses)
-    setVirtualNodeNumber(3);
+    setVirtualNodeNumber(5);
   else
-    setVirtualNodeNumber(2);
+    setVirtualNodeNumber(3);
 
   setTerminalNumber(2);
 
@@ -99,70 +99,75 @@ void EMT::Ph3::Transformer::createSubComponents() {
 
   resolveWindingRoles();
 
-  // Create series sub components
+  auto midpoint = mVirtualNodes[2];
+
   mSubInductor =
       std::make_shared<EMT::Ph3::Inductor>(**mName + "_ind", mLogLevel);
-  mSubInductor->setParameters(mInductance);
+  mSubInductor->setParameters(mInductance / 2.);
   addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
-  if (mNumVirtualNodes == 3) {
+  mSubInductor2 =
+      std::make_shared<EMT::Ph3::Inductor>(**mName + "_ind2", mLogLevel);
+  mSubInductor2->setParameters(mInductance / 2.);
+  addMNASubComponent(mSubInductor2, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+
+  if (mNumVirtualNodes == 5) {
     mSubResistor =
         std::make_shared<EMT::Ph3::Resistor>(**mName + "_res", mLogLevel);
+    mSubResistor->setParameters(mResistance / 2.);
+    mSubResistor->connect({node(mReferenceTerminal), mVirtualNodes[3]});
+    mSubInductor->connect({mVirtualNodes[3], midpoint});
     addMNASubComponent(mSubResistor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-    mSubResistor->setParameters(mResistance);
-    mSubResistor->connect({node(mReferenceTerminal), mVirtualNodes[2]});
-    mSubInductor->connect({mVirtualNodes[2], mVirtualNodes[0]});
+
+    mSubResistor2 =
+        std::make_shared<EMT::Ph3::Resistor>(**mName + "_res2", mLogLevel);
+    mSubResistor2->setParameters(mResistance / 2.);
+    mSubResistor2->connect({midpoint, mVirtualNodes[4]});
+    mSubInductor2->connect({mVirtualNodes[4], mVirtualNodes[0]});
+    addMNASubComponent(mSubResistor2,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
   } else {
-    mSubInductor->connect({node(mReferenceTerminal), mVirtualNodes[0]});
+    mSubInductor->connect({node(mReferenceTerminal), midpoint});
+    mSubInductor2->connect({midpoint, mVirtualNodes[0]});
   }
 
-  // Create parallel sub components (three-phase power)
-  Real pSnub = P_SNUB_TRANSFORMER * mRatedPower;
+  if (mRatedPower <= 0) {
+    SPDLOG_LOGGER_WARN(mSLog,
+                       "Transformer {}: rated power is {} [VA], so the "
+                       "magnetizing branch cannot be sized and is omitted",
+                       this->name(), mRatedPower);
+    return;
+  }
 
-  // A snubber conductance is added on the higher voltage side
-  Real snubberResistance1 =
-      std::pow(std::abs(nominalVoltageAt(mReferenceTerminal)), 2) / pSnub;
-  mSnubberResistance1 =
-      Math::singlePhaseParameterToThreePhase(snubberResistance1);
-  mSubSnubResistor1 =
-      std::make_shared<EMT::Ph3::Resistor>(**mName + "_snub_res1", mLogLevel);
-  mSubSnubResistor1->setParameters(mSnubberResistance1);
-  mSubSnubResistor1->connect({node(mReferenceTerminal), EMT::SimNode::GND});
-  SPDLOG_LOGGER_INFO(
-      mSLog,
-      "Snubber Resistance 1 (connected to higher voltage side {}) = {} [Ohm]",
-      node(mReferenceTerminal)->name(),
-      Logger::matrixToString(mSnubberResistance1));
-  addMNASubComponent(mSubSnubResistor1,
+  if (mNoLoadCurrent <= mNoLoadLoss) {
+    SPDLOG_LOGGER_ERROR(mSLog,
+                        "Transformer {}: no-load current {} must exceed the "
+                        "no-load loss {}",
+                        this->name(), mNoLoadCurrent, mNoLoadLoss);
+    throw InvalidArgumentException();
+  }
+
+  Real magnetizingResistance =
+      std::pow(nominalVoltageAt(mReferenceTerminal), 2) /
+      (mNoLoadLoss * mRatedPower);
+  mMagnetizingResistance =
+      Math::singlePhaseParameterToThreePhase(magnetizingResistance);
+  mSubMagnetizingResistor =
+      std::make_shared<EMT::Ph3::Resistor>(**mName + "_mag_res", mLogLevel);
+  mSubMagnetizingResistor->setParameters(mMagnetizingResistance);
+  mSubMagnetizingResistor->connect({midpoint, EMT::SimNode::GND});
+  addMNASubComponent(mSubMagnetizingResistor,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 
-  // A snubber conductance is added on the lower voltage side
-  Real snubberResistance2 =
-      std::pow(std::abs(nominalVoltageAt(nonReferenceTerminal())), 2) / pSnub;
-  mSnubberResistance2 =
-      Math::singlePhaseParameterToThreePhase(snubberResistance2);
-  mSubSnubResistor2 =
-      std::make_shared<EMT::Ph3::Resistor>(**mName + "_snub_res2", mLogLevel);
-  mSubSnubResistor2->setParameters(mSnubberResistance2);
-  mSubSnubResistor2->connect({node(nonReferenceTerminal()), EMT::SimNode::GND});
-  SPDLOG_LOGGER_INFO(
-      mSLog,
-      "Snubber Resistance 2 (connected to lower voltage side {}) = {} [Ohm]",
-      node(nonReferenceTerminal())->name(),
-      Logger::matrixToString(mSnubberResistance2));
-  addMNASubComponent(mSubSnubResistor2,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-
-  // LV-side snubber capacitor created here; its omega-dependent value is set in initializeParentFromNodesAndTerminals().
-  mSubSnubCapacitor2 =
-      std::make_shared<EMT::Ph3::Capacitor>(**mName + "_snub_cap2", mLogLevel);
-  mSubSnubCapacitor2->connect(
-      {node(nonReferenceTerminal()), EMT::SimNode::GND});
-  addMNASubComponent(mSubSnubCapacitor2,
+  mSubMagnetizingInductor =
+      std::make_shared<EMT::Ph3::Inductor>(**mName + "_mag_ind", mLogLevel);
+  mSubMagnetizingInductor->connect({midpoint, EMT::SimNode::GND});
+  addMNASubComponent(mSubMagnetizingInductor,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 }
@@ -176,28 +181,18 @@ void EMT::Ph3::Transformer::initializeParentFromNodesAndTerminals(
   // Static calculations from load flow data
   Real omega = 2. * PI * frequency;
 
-  Real qSnub = Q_SNUB_TRANSFORMER * mRatedPower;
+  if (mSubMagnetizingInductor) {
+    Real magnetizingSusceptance =
+        std::sqrt(std::pow(mNoLoadCurrent, 2) - std::pow(mNoLoadLoss, 2)) *
+        mRatedPower / std::pow(nominalVoltageAt(mReferenceTerminal), 2);
+    Real magnetizingInductance = 1. / (omega * magnetizingSusceptance);
+    mMagnetizingInductance =
+        Math::singlePhaseParameterToThreePhase(magnetizingInductance);
+    mSubMagnetizingInductor->setParameters(mMagnetizingInductance);
+    SPDLOG_LOGGER_INFO(mSLog, "Magnetizing inductance = {} [H]",
+                       Logger::matrixToString(mMagnetizingInductance));
+  }
 
-  // // A snubber capacitance is added to higher voltage side (not used as capacitor at high voltage side made it worse)
-  // Real snubberCapacitance1 = qSnub / std::pow(std::abs(mNominalVoltagePrimary),2) / omega;
-  // mSnubberCapacitance1 = Math::singlePhaseParameterToThreePhase*(snubberCapacitance1);
-  // mSubSnubCapacitor1 = std::make_shared<EMT::Ph3::Capacitor>(**mName + "_snub_cap1", mLogLevel);
-  // mSubSnubCapacitor1->setParameters(mSnubberCapacitance1);
-  // mSubSnubCapacitor1->connect({ node(0), EMT::SimNode::GND });
-  // SPDLOG_LOGGER_INFO(mSLog, "Snubber Capacitance 1 (connected to higher voltage side {}) = \n{} [F] \n ", node(0)->name(), Logger::matrixToString(mSnubberCapacitance1));
-  // mSubComponents.push_back(mSubSnubCapacitor1);
-
-  Real snubberCapacitance2 =
-      qSnub / std::pow(std::abs(nominalVoltageAt(nonReferenceTerminal())), 2) /
-      omega;
-  mSnubberCapacitance2 =
-      Math::singlePhaseParameterToThreePhase(snubberCapacitance2);
-  mSubSnubCapacitor2->setParameters(mSnubberCapacitance2);
-  SPDLOG_LOGGER_INFO(
-      mSLog,
-      "Snubber Capacitance 2 (connected to lower voltage side {}) = {} [F]",
-      node(nonReferenceTerminal())->name(),
-      Logger::matrixToString(mSnubberCapacitance2));
   MatrixComp impedance = MatrixComp::Zero(3, 3);
   impedance << Complex(mResistance(0, 0), omega * mInductance(0, 0)),
       Complex(mResistance(0, 1), omega * mInductance(0, 1)),
