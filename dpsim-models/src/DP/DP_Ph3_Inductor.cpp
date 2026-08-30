@@ -38,18 +38,6 @@ void DP::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
     }
   }
 
-  // ---------------------------------------------------------------------------
-  // IMPORTANT DP / PF CONVENTION CONVERSION
-  // ---------------------------------------------------------------------------
-  // Power-flow node voltages are line-line RMS phasors.
-  // DP::Ph3 electrical states use phase-peak complex envelopes.
-  //
-  // This conversion is already used by DP::Ph3::PiLine and must also be used
-  // by the primitive inductor. The previous implementation omitted the
-  // RMS3PH_TO_PEAK1PH factor here, which initialized the inductor state too
-  // small by sqrt(3/2) and produced a startup transient after PF initialization.
-  // ---------------------------------------------------------------------------
-
   MatrixComp vInitABC = MatrixComp::Zero(3, 1);
 
   vInitABC(0, 0) =
