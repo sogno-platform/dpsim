@@ -32,9 +32,9 @@ private:
   /// Active power at secondary side [watt]
   Real mP2 = std::numeric_limits<double>::infinity();
   /// Nominal voltage of primary side [V]
-  Real mNominalVoltageEnd1;
+  Real mNominalVoltagePrimary;
   /// Nominal voltage of secondary side [V]
-  Real mNominalVoltageEnd2;
+  Real mNominalVoltageSecondary;
   // Per Unit values
   /// Active power at primary side [p.u.]
   Real mPref_perUnit;

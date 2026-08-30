@@ -17,9 +17,9 @@ namespace Ph1 {
 class Transformer {
 protected:
   /// Nominal voltage of primary side
-  Real mNominalVoltageEnd1;
+  Real mNominalVoltagePrimary;
   /// Nominal voltage of secondary side
-  Real mNominalVoltageEnd2;
+  Real mNominalVoltageSecondary;
 
 public:
   /// Rated Apparent Power [VA]
@@ -38,10 +38,11 @@ public:
         mInductance(attributeList->create<Real>("L")){};
 
   ///
-  void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs,
-                     Real ratioPhase, Real resistance, Real inductance) {
-    mNominalVoltageEnd1 = nomVoltageEnd1;
-    mNominalVoltageEnd2 = nomVoltageEnd2;
+  void setParameters(Real nomVoltagePrimary, Real nomVoltageSecondary,
+                     Real ratioAbs, Real ratioPhase, Real resistance,
+                     Real inductance) {
+    mNominalVoltagePrimary = nomVoltagePrimary;
+    mNominalVoltageSecondary = nomVoltageSecondary;
     **mRatio = std::polar<Real>(ratioAbs, ratioPhase);
     **mResistance = resistance;
     **mInductance = inductance;

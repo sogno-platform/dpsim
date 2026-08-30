@@ -30,24 +30,24 @@ DP::Ph1::Transformer::Transformer(String uid, String name,
 /// DEPRECATED: Delete method
 SimPowerComp<Complex>::Ptr DP::Ph1::Transformer::clone(String name) {
   auto copy = Transformer::make(name, mLogLevel);
-  copy->setParameters(mNominalVoltageEnd1, mNominalVoltageEnd2,
+  copy->setParameters(mNominalVoltagePrimary, mNominalVoltageSecondary,
                       std::abs(**mRatio), std::arg(**mRatio), **mResistance,
                       **mInductance);
   return copy;
 }
 
-void DP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
-                                         Real nomVoltageEnd2, Real ratioAbs,
-                                         Real ratioPhase, Real resistance,
-                                         Real inductance) {
+void DP::Ph1::Transformer::setParameters(Real nomVoltagePrimary,
+                                         Real nomVoltageSecondary,
+                                         Real ratioAbs, Real ratioPhase,
+                                         Real resistance, Real inductance) {
 
-  Base::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2,
+  Base::Ph1::Transformer::setParameters(nomVoltagePrimary, nomVoltageSecondary,
                                         ratioAbs, ratioPhase, resistance,
                                         inductance);
 
   SPDLOG_LOGGER_INFO(
-      mSLog, "Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]",
-      mNominalVoltageEnd1, mNominalVoltageEnd2);
+      mSLog, "Nominal Voltage Primary={} [V] Nominal Voltage Secondary={} [V]",
+      mNominalVoltagePrimary, mNominalVoltageSecondary);
   SPDLOG_LOGGER_INFO(
       mSLog,
       "Resistance={} [Ohm] Inductance={} [Ohm] (referred to primary side)",
@@ -59,27 +59,29 @@ void DP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
   mParametersSet = true;
 }
 
-void DP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
-                                         Real nomVoltageEnd2, Real ratedPower,
-                                         Real ratioAbs, Real ratioPhase,
-                                         Real resistance, Real inductance) {
+void DP::Ph1::Transformer::setParameters(Real nomVoltagePrimary,
+                                         Real nomVoltageSecondary,
+                                         Real ratedPower, Real ratioAbs,
+                                         Real ratioPhase, Real resistance,
+                                         Real inductance) {
 
   **mRatedPower = ratedPower;
   SPDLOG_LOGGER_INFO(mSLog, "Rated Power ={} [W]", **mRatedPower);
 
-  DP::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratioAbs,
-                                      ratioPhase, resistance, inductance);
+  DP::Ph1::Transformer::setParameters(nomVoltagePrimary, nomVoltageSecondary,
+                                      ratioAbs, ratioPhase, resistance,
+                                      inductance);
 }
 
 void DP::Ph1::Transformer::resolveWindingOrientation() {
-  mHVSide = (mNominalVoltageEnd1 >= mNominalVoltageEnd2) ? 0 : 1;
+  mHVSide = (mNominalVoltagePrimary >= mNominalVoltageSecondary) ? 0 : 1;
   mLVSide = 1 - mHVSide;
   mRatioHVToLV = (mHVSide == 0) ? **mRatio : 1. / **mRatio;
   mOrientationSign = (mHVSide == 0) ? 1. : -1.;
   mNominalVoltageHV =
-      (mHVSide == 0) ? mNominalVoltageEnd1 : mNominalVoltageEnd2;
+      (mHVSide == 0) ? mNominalVoltagePrimary : mNominalVoltageSecondary;
   mNominalVoltageLV =
-      (mHVSide == 0) ? mNominalVoltageEnd2 : mNominalVoltageEnd1;
+      (mHVSide == 0) ? mNominalVoltageSecondary : mNominalVoltagePrimary;
 
   if ((mHVSide == 0) != (Math::abs(**mRatio) >= 1.) &&
       Math::abs(Math::abs(**mRatio) - 1.) > 1e-9)

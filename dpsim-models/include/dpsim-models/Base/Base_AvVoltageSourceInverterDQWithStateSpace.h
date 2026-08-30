@@ -95,9 +95,10 @@ public:
   /// Setter for filter parameters
   void setFilterParameters(Real Lf, Real Cf, Real Rf, Real Rc);
   /// Setter for optional connection transformer
-  void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2,
-                                Real ratedPower, Real ratioAbs, Real ratioPhase,
-                                Real resistance, Real inductance, Real omega);
+  void setTransformerParameters(Real nomVoltagePrimary,
+                                Real nomVoltageSecondary, Real ratedPower,
+                                Real ratioAbs, Real ratioPhase, Real resistance,
+                                Real inductance, Real omega);
   /// Setter for initial state values
   void setInitialStateValues(Real thetaPLLInit, Real phiPLLInit, Real pInit,
                              Real qInit, Real phi_dInit, Real phi_qInit,

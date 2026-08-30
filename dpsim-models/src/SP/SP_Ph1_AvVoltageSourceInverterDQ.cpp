@@ -112,17 +112,17 @@ void SP::Ph1::AvVoltageSourceInverterDQ::setParameters(Real sysOmega,
 }
 
 void SP::Ph1::AvVoltageSourceInverterDQ::setTransformerParameters(
-    Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs,
-    Real ratioPhase, Real resistance, Real inductance) {
+    Real nomVoltagePrimary, Real nomVoltageSecondary, Real ratedPower,
+    Real ratioAbs, Real ratioPhase, Real resistance, Real inductance) {
 
   Base::AvVoltageSourceInverterDQ::setTransformerParameters(
-      nomVoltageEnd1, nomVoltageEnd2, ratedPower, ratioAbs, ratioPhase,
+      nomVoltagePrimary, nomVoltageSecondary, ratedPower, ratioAbs, ratioPhase,
       resistance, inductance);
 
   SPDLOG_LOGGER_INFO(mSLog, "Connection Transformer Parameters:");
   SPDLOG_LOGGER_INFO(
-      mSLog, "Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]",
-      mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2);
+      mSLog, "Nominal Voltage Primary={} [V] Nominal Voltage Secondary={} [V]",
+      mTransformerNominalVoltagePrimary, mTransformerNominalVoltageSecondary);
   SPDLOG_LOGGER_INFO(mSLog, "Rated Apparent Power = {} [VA]",
                      mTransformerRatedPower);
   SPDLOG_LOGGER_INFO(mSLog, "Resistance={} [Ohm] Inductance={} [H]",
@@ -133,7 +133,7 @@ void SP::Ph1::AvVoltageSourceInverterDQ::setTransformerParameters(
   if (mWithConnectionTransformer)
     // TODO: resistive losses neglected so far (mWithResistiveLosses=false)
     mConnectionTransformer->setParameters(
-        mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2,
+        mTransformerNominalVoltagePrimary, mTransformerNominalVoltageSecondary,
         mTransformerRatedPower, mTransformerRatioAbs, mTransformerRatioPhase,
         mTransformerResistance, mTransformerInductance);
 }
@@ -299,7 +299,7 @@ Real SP::Ph1::AvVoltageSourceInverterDQ::getNomVoltage() const { return mVnom; }
 Real SP::Ph1::AvVoltageSourceInverterDQ::getBaseVoltage() const {
   // With a connection transformer, the terminal sits on its grid-side (end 1);
   // mVnom is the converter-side voltage and does not apply to the network node.
-  return mWithConnectionTransformer ? mTransformerNominalVoltageEnd1 : mVnom;
+  return mWithConnectionTransformer ? mTransformerNominalVoltagePrimary : mVnom;
 }
 
 void SP::Ph1::AvVoltageSourceInverterDQ::mnaParentInitialize(

@@ -38,19 +38,19 @@ SP::Ph1::Transformer::Transformer(String uid, String name,
   **mReactivePowerBranch = Matrix::Zero(2, 1);
 }
 
-void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
-                                         Real nomVoltageEnd2, Real ratioAbs,
-                                         Real ratioPhase, Real resistance,
-                                         Real inductance) {
+void SP::Ph1::Transformer::setParameters(Real nomVoltagePrimary,
+                                         Real nomVoltageSecondary,
+                                         Real ratioAbs, Real ratioPhase,
+                                         Real resistance, Real inductance) {
 
   // Note: to be consistent impedance values must be referred to high voltage side (and base voltage set to higher voltage)
-  Base::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2,
+  Base::Ph1::Transformer::setParameters(nomVoltagePrimary, nomVoltageSecondary,
                                         ratioAbs, ratioPhase, resistance,
                                         inductance);
 
   SPDLOG_LOGGER_INFO(
-      mSLog, "Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]",
-      mNominalVoltageEnd1, mNominalVoltageEnd2);
+      mSLog, "Nominal Voltage Primary={} [V] Nominal Voltage Secondary={} [V]",
+      mNominalVoltagePrimary, mNominalVoltageSecondary);
   SPDLOG_LOGGER_INFO(
       mSLog, "Resistance={} [Ohm] Inductance={} [H] (referred to primary side)",
       **mResistance, **mInductance);
@@ -64,10 +64,11 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
   mParametersSet = true;
 }
 
-void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
-                                         Real nomVoltageEnd2, Real ratedPower,
-                                         Real ratioAbs, Real ratioPhase,
-                                         Real resistance, Real inductance) {
+void SP::Ph1::Transformer::setParameters(Real nomVoltagePrimary,
+                                         Real nomVoltageSecondary,
+                                         Real ratedPower, Real ratioAbs,
+                                         Real ratioPhase, Real resistance,
+                                         Real inductance) {
 
   // Rated power is the nameplate apparent-power magnitude |S|, so it cannot be
   // negative (a negative value is a caller error, not the unset default of 0).
@@ -80,28 +81,29 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1,
   **mRatedPower = ratedPower;
   SPDLOG_LOGGER_INFO(mSLog, "Rated Power ={} [VA]", **mRatedPower);
 
-  SP::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratioAbs,
-                                      ratioPhase, resistance, inductance);
+  SP::Ph1::Transformer::setParameters(nomVoltagePrimary, nomVoltageSecondary,
+                                      ratioAbs, ratioPhase, resistance,
+                                      inductance);
 }
 
 /// DEPRECATED: Delete method
 SimPowerComp<Complex>::Ptr SP::Ph1::Transformer::clone(String name) {
   auto copy = Transformer::make(name, mLogLevel);
-  copy->setParameters(mNominalVoltageEnd1, mNominalVoltageEnd2, **mRatedPower,
-                      std::abs(**mRatio), std::arg(**mRatio), **mResistance,
-                      **mInductance);
+  copy->setParameters(mNominalVoltagePrimary, mNominalVoltageSecondary,
+                      **mRatedPower, std::abs(**mRatio), std::arg(**mRatio),
+                      **mResistance, **mInductance);
   return copy;
 }
 
 void SP::Ph1::Transformer::resolveWindingOrientation() {
-  mHVSide = (mNominalVoltageEnd1 >= mNominalVoltageEnd2) ? 0 : 1;
+  mHVSide = (mNominalVoltagePrimary >= mNominalVoltageSecondary) ? 0 : 1;
   mLVSide = 1 - mHVSide;
   mRatioHVToLV = (mHVSide == 0) ? **mRatio : 1. / **mRatio;
   mOrientationSign = (mHVSide == 0) ? 1. : -1.;
   mNominalVoltageHV =
-      (mHVSide == 0) ? mNominalVoltageEnd1 : mNominalVoltageEnd2;
+      (mHVSide == 0) ? mNominalVoltagePrimary : mNominalVoltageSecondary;
   mNominalVoltageLV =
-      (mHVSide == 0) ? mNominalVoltageEnd2 : mNominalVoltageEnd1;
+      (mHVSide == 0) ? mNominalVoltageSecondary : mNominalVoltagePrimary;
 
   if ((mHVSide == 0) != (Math::abs(**mRatio) >= 1.) &&
       Math::abs(Math::abs(**mRatio) - 1.) > 1e-9)
@@ -209,12 +211,12 @@ void SP::Ph1::Transformer::initializeParentFromNodesAndTerminals(
     mSubSnubResistor2->setBaseVoltage(mNominalVoltageLV);
 
     // // A snubber capacitance is added to higher voltage side (not used as capacitor at high voltage side made it worse)
-    // mSnubberCapacitance1 = qSnub / std::pow(std::abs(mNominalVoltageEnd1),2) / mNominalOmega;
+    // mSnubberCapacitance1 = qSnub / std::pow(std::abs(mNominalVoltagePrimary),2) / mNominalOmega;
     // mSubSnubCapacitor1 = std::make_shared<SP::Ph1::Capacitor>(**mName + "_snub_cap1", mLogLevel);
     // mSubSnubCapacitor1->setParameters(mSnubberCapacitance1);
     // mSubSnubCapacitor1->connect({ node(0), SP::SimNode::GND });
     // SPDLOG_LOGGER_INFO(mSLog, "Snubber Capacitance 1 (connected to higher voltage side {}) = \n{} [F] \n ", node(0)->name(), Logger::realToString(mSnubberCapacitance1));
-    // mSubSnubCapacitor1->setBaseVoltage(mNominalVoltageEnd1);
+    // mSubSnubCapacitor1->setBaseVoltage(mNominalVoltagePrimary);
     // mSubComponents.push_back(mSubSnubCapacitor1);
 
     // A snubber capacitance is added to lower voltage side
@@ -261,12 +263,12 @@ void SP::Ph1::Transformer::initializeParentFromNodesAndTerminals(
 
 // #### Powerflow section ####
 
-Real SP::Ph1::Transformer::getNominalVoltageEnd1() const {
-  return mNominalVoltageEnd1;
+Real SP::Ph1::Transformer::getNominalVoltagePrimary() const {
+  return mNominalVoltagePrimary;
 }
 
-Real SP::Ph1::Transformer::getNominalVoltageEnd2() const {
-  return mNominalVoltageEnd2;
+Real SP::Ph1::Transformer::getNominalVoltageSecondary() const {
+  return mNominalVoltageSecondary;
 }
 
 void SP::Ph1::Transformer::setBaseVoltage(Real baseVoltage) {
@@ -304,7 +306,8 @@ void SP::Ph1::Transformer::calculatePerUnitParameters(Real baseApparentPower,
   SPDLOG_LOGGER_INFO(mSLog, "Leakage Impedance={} [pu] ", mLeakagePerUnit);
 
   resolveWindingOrientation();
-  mRatioAbsPerUnit = mRatioAbs / mNominalVoltageEnd1 * mNominalVoltageEnd2;
+  mRatioAbsPerUnit =
+      mRatioAbs / mNominalVoltagePrimary * mNominalVoltageSecondary;
   mRatioPerUnit =
       mRatioHVToLV / Complex(mNominalVoltageHV / mNominalVoltageLV, 0.);
   SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio={} [pu]", mRatioAbsPerUnit);

@@ -683,7 +683,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "Kp_curr_ctrl"_a, "Ki_curr_ctrl"_a, "omega_cutoff"_a)
       .def("set_transformer_parameters",
            &CPS::EMT::Ph3::AvVoltageSourceInverterDQ::setTransformerParameters,
-           "nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "rated_power"_a,
+           "nom_voltage_primary"_a, "nom_voltage_secondary"_a, "rated_power"_a,
            "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a,
            "omega"_a)
       .def("set_initial_state_values",
@@ -705,7 +705,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            // cppcheck-suppress assignBoolToPointer
            "with_resistive_losses"_a = false)
       .def("set_parameters", &CPS::EMT::Ph3::Transformer::setParameters,
-           "nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "rated_power"_a,
+           "nom_voltage_primary"_a, "nom_voltage_secondary"_a, "rated_power"_a,
            "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a)
       .def("connect", &CPS::EMT::Ph3::Transformer::connect);
 

@@ -11,8 +11,9 @@
 using namespace CPS;
 
 void Base::AvVoltageSourceInverterDQWithStateSpace::setTransformerParameters(
-    Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs,
-    Real ratioPhase, Real resistance, Real inductance, Real omega) {
+    Real nomVoltagePrimary, Real nomVoltageSecondary, Real ratedPower,
+    Real ratioAbs, Real ratioPhase, Real resistance, Real inductance,
+    Real omega) {
 
   mTransformerResistance = resistance;
   mTransformerInductance = inductance;

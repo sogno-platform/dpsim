@@ -31,25 +31,26 @@ EMT::Ph3::Transformer::Transformer(String uid, String name,
 /// DEPRECATED: Delete method
 SimPowerComp<Real>::Ptr EMT::Ph3::Transformer::clone(String name) {
   auto copy = Transformer::make(name, mLogLevel);
-  copy->setParameters(mNominalVoltageEnd1, mNominalVoltageEnd2, mRatedPower,
-                      std::abs(**mRatio), std::arg(**mRatio), mResistance,
-                      mInductance);
+  copy->setParameters(mNominalVoltagePrimary, mNominalVoltageSecondary,
+                      mRatedPower, std::abs(**mRatio), std::arg(**mRatio),
+                      mResistance, mInductance);
   return copy;
 }
 
-void EMT::Ph3::Transformer::setParameters(Real nomVoltageEnd1,
-                                          Real nomVoltageEnd2, Real ratedPower,
-                                          Real ratioAbs, Real ratioPhase,
-                                          Matrix resistance,
+void EMT::Ph3::Transformer::setParameters(Real nomVoltagePrimary,
+                                          Real nomVoltageSecondary,
+                                          Real ratedPower, Real ratioAbs,
+                                          Real ratioPhase, Matrix resistance,
                                           Matrix inductance) {
 
-  Base::Ph3::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2,
+  Base::Ph3::Transformer::setParameters(nomVoltagePrimary, nomVoltageSecondary,
                                         ratedPower, ratioAbs, ratioPhase,
                                         resistance, inductance);
 
   SPDLOG_LOGGER_INFO(
-      mSLog, "Nominal Voltage End 1 = {} [V] Nominal Voltage End 2 = {} [V]",
-      mNominalVoltageEnd1, mNominalVoltageEnd2);
+      mSLog,
+      "Nominal Voltage Primary = {} [V] Nominal Voltage Secondary = {} [V]",
+      mNominalVoltagePrimary, mNominalVoltageSecondary);
   SPDLOG_LOGGER_INFO(mSLog, "Rated Apparent Power  = {} [VA]", mRatedPower);
   SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio = {} [ ] Phase Shift = {} [deg]",
                      std::abs(**mRatio), std::arg(**mRatio));
@@ -58,14 +59,14 @@ void EMT::Ph3::Transformer::setParameters(Real nomVoltageEnd1,
 }
 
 void EMT::Ph3::Transformer::resolveWindingOrientation() {
-  mHVSide = (mNominalVoltageEnd1 >= mNominalVoltageEnd2) ? 0 : 1;
+  mHVSide = (mNominalVoltagePrimary >= mNominalVoltageSecondary) ? 0 : 1;
   mLVSide = 1 - mHVSide;
   mRatioHVToLV = (mHVSide == 0) ? **mRatio : 1. / **mRatio;
   mOrientationSign = (mHVSide == 0) ? 1. : -1.;
   mNominalVoltageHV =
-      (mHVSide == 0) ? mNominalVoltageEnd1 : mNominalVoltageEnd2;
+      (mHVSide == 0) ? mNominalVoltagePrimary : mNominalVoltageSecondary;
   mNominalVoltageLV =
-      (mHVSide == 0) ? mNominalVoltageEnd2 : mNominalVoltageEnd1;
+      (mHVSide == 0) ? mNominalVoltageSecondary : mNominalVoltagePrimary;
 
   // EMT::Ph3 stamps a real per-phase turns ratio, so a complex ratio would be
   // silently modelled as |a|*cos(theta). A winding phase shift needs a
@@ -165,7 +166,7 @@ void EMT::Ph3::Transformer::initializeParentFromNodesAndTerminals(
   Real qSnub = Q_SNUB_TRANSFORMER * mRatedPower;
 
   // // A snubber capacitance is added to higher voltage side (not used as capacitor at high voltage side made it worse)
-  // Real snubberCapacitance1 = qSnub / std::pow(std::abs(mNominalVoltageEnd1),2) / omega;
+  // Real snubberCapacitance1 = qSnub / std::pow(std::abs(mNominalVoltagePrimary),2) / omega;
   // mSnubberCapacitance1 = Math::singlePhaseParameterToThreePhase*(snubberCapacitance1);
   // mSubSnubCapacitor1 = std::make_shared<EMT::Ph3::Capacitor>(**mName + "_snub_cap1", mLogLevel);
   // mSubSnubCapacitor1->setParameters(mSnubberCapacitance1);

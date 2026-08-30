@@ -79,12 +79,13 @@ public:
 
   // #### General ####
   /// Defines component parameters
-  void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs,
-                     Real ratioPhase, Real resistance, Real inductance);
-  /// Set transformer specific parameters
-  void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower,
+  void setParameters(Real nomVoltagePrimary, Real nomVoltageSecondary,
                      Real ratioAbs, Real ratioPhase, Real resistance,
                      Real inductance);
+  /// Set transformer specific parameters
+  void setParameters(Real nomVoltagePrimary, Real nomVoltageSecondary,
+                     Real ratedPower, Real ratioAbs, Real ratioPhase,
+                     Real resistance, Real inductance);
   /// Constructs and registers MNA subcomponents (incl. terminal swap); idempotent.
   void createSubComponents() override;
   /// Initializes component from power flow data

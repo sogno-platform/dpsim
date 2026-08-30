@@ -113,17 +113,17 @@ void DP::Ph1::AvVoltageSourceInverterDQ::setParameters(Real sysOmega,
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::setTransformerParameters(
-    Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs,
-    Real ratioPhase, Real resistance, Real inductance) {
+    Real nomVoltagePrimary, Real nomVoltageSecondary, Real ratedPower,
+    Real ratioAbs, Real ratioPhase, Real resistance, Real inductance) {
 
   Base::AvVoltageSourceInverterDQ::setTransformerParameters(
-      nomVoltageEnd1, nomVoltageEnd2, ratedPower, ratioAbs, ratioPhase,
+      nomVoltagePrimary, nomVoltageSecondary, ratedPower, ratioAbs, ratioPhase,
       resistance, inductance);
 
   SPDLOG_LOGGER_INFO(mSLog, "Connection Transformer Parameters:");
   SPDLOG_LOGGER_INFO(
-      mSLog, "Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]",
-      mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2);
+      mSLog, "Nominal Voltage Primary={} [V] Nominal Voltage Secondary={} [V]",
+      mTransformerNominalVoltagePrimary, mTransformerNominalVoltageSecondary);
   SPDLOG_LOGGER_INFO(mSLog, "Rated Apparent Power = {} [VA]",
                      mTransformerRatedPower);
   SPDLOG_LOGGER_INFO(mSLog, "Resistance={} [Ohm] Inductance={} [H]",
@@ -134,7 +134,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::setTransformerParameters(
   if (mWithConnectionTransformer)
     // TODO: resistive losses neglected so far (mWithResistiveLosses=false)
     mConnectionTransformer->setParameters(
-        mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2,
+        mTransformerNominalVoltagePrimary, mTransformerNominalVoltageSecondary,
         mTransformerRatedPower, mTransformerRatioAbs, mTransformerRatioPhase,
         mTransformerResistance, mTransformerInductance);
 }
