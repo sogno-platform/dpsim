@@ -619,6 +619,41 @@ Reader::mapPowerTransformer(CIMPP::PowerTransformer *trans) {
     resistance = end1->r.value / std::pow(ratioAbsNominal, 2);
   }
 
+  CIMPP::PowerTransformerEnd *referenceEnd =
+      (voltageNode1 >= voltageNode2) ? end1 : end2;
+  Real referenceVoltage = std::max(voltageNode1, voltageNode2);
+  Real magnetizingConductance = referenceEnd->g.value;
+  Real magnetizingSusceptance = referenceEnd->b.value;
+  Real noLoadCurrent = 0;
+  Real noLoadLoss = 0;
+  Bool magnetizingFromFile = false;
+
+  if (ratedPower > 0 && (std::abs(magnetizingConductance) > 1e-12 ||
+                         std::abs(magnetizingSusceptance) > 1e-12)) {
+    Real base = std::pow(referenceVoltage, 2) / ratedPower;
+    noLoadCurrent =
+        std::hypot(magnetizingConductance, magnetizingSusceptance) * base;
+    noLoadLoss = magnetizingConductance * base;
+    magnetizingFromFile = noLoadLoss > 0 && noLoadCurrent > noLoadLoss;
+    if (magnetizingFromFile)
+      SPDLOG_LOGGER_INFO(
+          mSLog, "    {}: magnetizing branch from the file, i0={} P0={}",
+          cimString(trans->name), noLoadCurrent, noLoadLoss);
+    else
+      SPDLOG_LOGGER_WARN(
+          mSLog,
+          "    {}: magnetizing data g={} [S] b={} [S] gives i0={} P0={}, which "
+          "is not a valid exciting branch; using the built-in default",
+          cimString(trans->name), magnetizingConductance,
+          magnetizingSusceptance, noLoadCurrent, noLoadLoss);
+  } else {
+    SPDLOG_LOGGER_WARN(mSLog,
+                       "    {}: no magnetizing data on PowerTransformerEnd "
+                       "(b={} [S], g={} [S]); using the built-in default",
+                       cimString(trans->name), magnetizingSusceptance,
+                       magnetizingConductance);
+  }
+
   if (mDomain == Domain::EMT) {
     if (mPhase == PhaseType::ABC) {
       Matrix resistance_3ph =
@@ -632,6 +667,8 @@ Reader::mapPowerTransformer(CIMPP::PowerTransformer *trans) {
       transformer->setParameters(voltageNode1, voltageNode2, ratedPower,
                                  ratioAbs, ratioPhase, resistance_3ph,
                                  inductance_3ph);
+      if (magnetizingFromFile)
+        transformer->setMagnetizingBranch(noLoadCurrent, noLoadLoss);
       return transformer;
     } else {
       SPDLOG_LOGGER_INFO(mSLog, "    Transformer for EMT not implemented yet");
@@ -642,6 +679,8 @@ Reader::mapPowerTransformer(CIMPP::PowerTransformer *trans) {
         transRid, cimString(trans->name), mComponentLogLevel);
     transformer->setParameters(voltageNode1, voltageNode2, ratedPower, ratioAbs,
                                ratioPhase, resistance, inductance);
+    if (magnetizingFromFile)
+      transformer->setMagnetizingBranch(noLoadCurrent, noLoadLoss);
     Real baseVolt = voltageNode1 >= voltageNode2 ? voltageNode1 : voltageNode2;
     transformer->setBaseVoltage(baseVolt);
     return transformer;
@@ -652,6 +691,8 @@ Reader::mapPowerTransformer(CIMPP::PowerTransformer *trans) {
         withResistiveLosses);
     transformer->setParameters(voltageNode1, voltageNode2, ratedPower, ratioAbs,
                                ratioPhase, resistance, inductance);
+    if (magnetizingFromFile)
+      transformer->setMagnetizingBranch(noLoadCurrent, noLoadLoss);
     return transformer;
   }
 }
