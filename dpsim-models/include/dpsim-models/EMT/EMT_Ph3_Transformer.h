@@ -29,44 +29,46 @@ private:
   /// Internal inductor to model losses
   std::shared_ptr<EMT::Ph3::Inductor> mSubInductor;
 
-  /// Internal parallel resistance 1 as snubber
-  std::shared_ptr<EMT::Ph3::Resistor> mSubSnubResistor1;
-  /// Internal parallel resistance 2 as snubber
-  std::shared_ptr<EMT::Ph3::Resistor> mSubSnubResistor2;
-  /// Internal parallel capacitance 1 as snubber
-  std::shared_ptr<EMT::Ph3::Capacitor> mSubSnubCapacitor1;
-  /// Internal parallel capacitance 2 as snubber
-  std::shared_ptr<EMT::Ph3::Capacitor> mSubSnubCapacitor2;
+  /// Second half of the leakage resistance
+  std::shared_ptr<EMT::Ph3::Resistor> mSubResistor2;
+  /// Second half of the leakage inductance
+  std::shared_ptr<EMT::Ph3::Inductor> mSubInductor2;
+  /// Core-loss resistance of the magnetizing branch
+  std::shared_ptr<EMT::Ph3::Resistor> mSubMagnetizingResistor;
+  /// Magnetizing inductance of the magnetizing branch
+  std::shared_ptr<EMT::Ph3::Inductor> mSubMagnetizingInductor;
 
-  /// Snubber resistance 1
-  Matrix mSnubberResistance1;
-  /// Snubber resistance 2
-  Matrix mSnubberResistance2;
-  /// Snubber capacitance 1
-  Matrix mSnubberCapacitance1;
-  /// Snubber capacitance 2
-  Matrix mSnubberCapacitance2;
+  /// Magnetizing resistance [Ohm]
+  Matrix mMagnetizingResistance;
+  /// Magnetizing inductance [H]
+  Matrix mMagnetizingInductance;
+  /// No-load current as a fraction of rated current (IEC 60076 i0)
+  Real mNoLoadCurrent = 0.01;
+  /// No-load loss as a fraction of rated power (IEC 60076 P0)
+  Real mNoLoadLoss = 1e-3;
 
   /// Boolean for considering resistive losses with sub resistor
   Bool mWithResistiveLosses;
 
-  /// Terminal index carrying the reference winding, the one the nameplate
-  /// impedance is referred to
+  /// Terminal carrying the reference winding
   UInt mReferenceTerminal = 0;
-  /// Terminal whose winding the impedance is not referred to.
-  /// Two-winding only; a third winding needs iteration instead.
+  /// Terminal carrying the non-reference winding
   UInt nonReferenceTerminal() const { return 1 - mReferenceTerminal; }
   /// Turns ratio out of the reference winding
   Complex mRatioFromReference;
-  /// +1 when the reference winding is at terminal 0, -1 otherwise
+  /// Sign carrying series quantities into the terminal 1 to 0 direction
   Real mOrientationSign = 1.;
-  /// Winding the nameplate impedance is referred to; Auto resolves it to
-  /// the highest-voltage winding
+  /// Winding the nameplate impedance is referred to
   WindingReference mReferenceWinding = WindingReference::Auto;
-  /// Resolves which terminal carries the reference winding
+  /// Resolves the reference winding
   void resolveWindingRoles();
 
 public:
+  /// Sets the magnetizing branch from the no-load test quantities
+  void setMagnetizingBranch(Real noLoadCurrent, Real noLoadLoss) {
+    mNoLoadCurrent = noLoadCurrent;
+    mNoLoadLoss = noLoadLoss;
+  }
   /// Selects the winding the nameplate impedance is referred to
   void setReferenceWinding(WindingReference referenceWinding) {
     mReferenceWinding = referenceWinding;
