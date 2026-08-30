@@ -112,6 +112,9 @@ static const Complex jComp(0.0, 1.0);
 enum class NumericalMethod { Euler, Trapezoidal };
 enum class PhaseType { A, B, C, ABC, Single, DC };
 enum class Domain { SP, DP, EMT };
+/// Winding a transformer's nameplate impedance is referred to.
+/// Auto resolves it to the highest-voltage winding.
+enum class WindingReference { Auto, Primary, Secondary, Tertiary };
 enum class PowerflowBusType { PV, PQ, VD, None };
 enum class GeneratorType {
   PVNode,

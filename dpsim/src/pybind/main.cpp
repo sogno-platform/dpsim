@@ -168,6 +168,12 @@ PYBIND11_MODULE(dpsimpy, m) {
       .value("Bilinear", DPsim::StateSpacePoleMapping::Bilinear)
       .value("Logarithmic", DPsim::StateSpacePoleMapping::Logarithmic);
 
+  py::enum_<CPS::WindingReference>(m, "WindingReference")
+      .value("Auto", CPS::WindingReference::Auto)
+      .value("Primary", CPS::WindingReference::Primary)
+      .value("Secondary", CPS::WindingReference::Secondary)
+      .value("Tertiary", CPS::WindingReference::Tertiary);
+
   m.attr("RMS3PH_TO_PEAK1PH") = RMS3PH_TO_PEAK1PH;
   m.attr("PEAK1PH_TO_RMS3PH") = PEAK1PH_TO_RMS3PH;
   m.attr("P_SNUB_TRANSFORMER") = P_SNUB_TRANSFORMER;

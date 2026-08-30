@@ -357,6 +357,8 @@ void addSPPh1Components(py::module_ mSPPh1) {
       .def("set_base_voltage", &CPS::SP::Ph1::Transformer::setBaseVoltage,
            "base_voltage"_a)
       .def("connect", &CPS::SP::Ph1::Transformer::connect);
+  .def("set_reference_winding", &CPS::SP::Ph1::Transformer::setReferenceWinding,
+       "reference_winding"_a)
 }
 
 void addSPPh3Components(py::module_ mSPPh3) {
