@@ -77,6 +77,8 @@
 /dpsim-villas/ @n-eiling @stv0g
 /dpsim/examples/cxx/CIM @gnakti
 /dpsim/examples/cxx/Circuits @gnakti
+/dpsim/examples/cxx/Circuits/DP_Ph1_Transformer_OpenShortCircuit.cpp @leonardocarreras
+/dpsim/examples/cxx/Circuits/DP_Ph1_Transformer_OpenSecondaryStepSweep.cpp @leonardocarreras
 /dpsim/examples/cxx/Circuits/DP_ReducedOrderSG_SMIB_Fault.cpp @martinmoraga
 /dpsim/examples/cxx/Circuits/DP_ReducedOrderSG_VBR_Load_Fault.cpp @martinmoraga
 /dpsim/examples/cxx/Circuits/DP_SMIB_ReducedOrderSG_LoadStep.cpp @martinmoraga
