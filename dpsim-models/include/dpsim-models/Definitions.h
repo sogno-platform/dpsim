@@ -50,8 +50,6 @@
 #define RMS3PH_TO_PEAK1PH sqrt(2. / 3.)
 #define PEAK1PH_TO_RMS3PH sqrt(3. / 2.)
 
-#define P_SNUB_TRANSFORMER 1e-3 // 0.1% of rated power
-#define Q_SNUB_TRANSFORMER 5e-4 // 0.05% of rated power
 #define DOUBLE_EPSILON 1E-12
 
 namespace CPS {
