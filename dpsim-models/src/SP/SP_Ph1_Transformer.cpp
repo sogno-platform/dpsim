@@ -339,8 +339,10 @@ void SP::Ph1::Transformer::calculatePerUnitParameters(Real baseApparentPower,
   SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio={} [pu]", mRatioAbsPerUnit);
 
   // Calculate per unit parameters of subcomps
-  if (mSubMagnetizingResistor && **mRatedPower > 0 &&
-      mNoLoadCurrent > mNoLoadLoss)
+  bool magnetizingEnabled =
+      (mBehaviour == TopologicalPowerComp::Behaviour::Initialization ||
+       mBehaviour == TopologicalPowerComp::Behaviour::MNASimulation);
+  if (magnetizingEnabled && **mRatedPower > 0 && mNoLoadCurrent > mNoLoadLoss)
     mMagnetizingPerUnit =
         Complex(mNoLoadLoss, -std::sqrt(std::pow(mNoLoadCurrent, 2) -
                                         std::pow(mNoLoadLoss, 2))) *
