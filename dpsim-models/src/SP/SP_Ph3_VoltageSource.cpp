@@ -162,9 +162,9 @@ void SP::Ph3::VoltageSource::mnaCompPostStep(
 void SP::Ph3::VoltageSource::mnaCompUpdateCurrent(const Matrix &leftVector) {
   (**mIntfCurrent)(0, 0) = Math::complexFromVectorElement(
       leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A));
-  (**mIntfCurrent)(1, 0) = Math::realFromVectorElement(
+  (**mIntfCurrent)(1, 0) = Math::complexFromVectorElement(
       leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B));
-  (**mIntfCurrent)(2, 0) = Math::realFromVectorElement(
+  (**mIntfCurrent)(2, 0) = Math::complexFromVectorElement(
       leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C));
 }
 
