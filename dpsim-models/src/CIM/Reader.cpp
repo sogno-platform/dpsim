@@ -628,30 +628,48 @@ Reader::mapPowerTransformer(CIMPP::PowerTransformer *trans) {
   Real noLoadLoss = 0;
   Bool magnetizingFromFile = false;
 
-  if (ratedPower > 0 && (std::abs(magnetizingConductance) > 1e-12 ||
-                         std::abs(magnetizingSusceptance) > 1e-12)) {
+  if (ratedPower > 0) {
     Real base = std::pow(referenceVoltage, 2) / ratedPower;
-    noLoadCurrent =
-        std::hypot(magnetizingConductance, magnetizingSusceptance) * base;
-    noLoadLoss = magnetizingConductance * base;
-    magnetizingFromFile = noLoadLoss > 0 && noLoadCurrent > noLoadLoss;
-    if (magnetizingFromFile)
-      SPDLOG_LOGGER_INFO(
-          mSLog, "    {}: magnetizing branch from the file, i0={} P0={}",
-          cimString(trans->name), noLoadCurrent, noLoadLoss);
-    else
+    Real defaultNoLoadCurrent = 0.01;
+    Real defaultNoLoadLoss = 1e-3;
+    Real defaultSusceptancePerUnit = std::sqrt(
+        std::pow(defaultNoLoadCurrent, 2) - std::pow(defaultNoLoadLoss, 2));
+
+    Bool lossFromFile = magnetizingConductance > DOUBLE_EPSILON;
+    Bool susceptanceFromFile = magnetizingSusceptance < -DOUBLE_EPSILON;
+
+    if (magnetizingSusceptance > DOUBLE_EPSILON)
       SPDLOG_LOGGER_WARN(
           mSLog,
-          "    {}: magnetizing data g={} [S] b={} [S] gives i0={} P0={}, which "
-          "is not a valid exciting branch; using the built-in default",
-          cimString(trans->name), magnetizingConductance,
-          magnetizingSusceptance, noLoadCurrent, noLoadLoss);
+          "    {}: PowerTransformerEnd.b={} [S] is capacitive; the magnetizing "
+          "branch is inductive, so the default susceptance is used instead",
+          cimString(trans->name), magnetizingSusceptance);
+
+    noLoadLoss =
+        lossFromFile ? magnetizingConductance * base : defaultNoLoadLoss;
+    Real susceptancePerUnit = susceptanceFromFile
+                                  ? std::abs(magnetizingSusceptance) * base
+                                  : defaultSusceptancePerUnit;
+    noLoadCurrent = std::hypot(susceptancePerUnit, noLoadLoss);
+    magnetizingFromFile = lossFromFile || susceptanceFromFile;
+
+    if (magnetizingFromFile)
+      SPDLOG_LOGGER_INFO(
+          mSLog, "    {}: magnetizing branch i0={} ({}) P0={} ({})",
+          cimString(trans->name), noLoadCurrent,
+          susceptanceFromFile ? "from the file" : "default susceptance",
+          noLoadLoss, lossFromFile ? "from the file" : "default loss");
+    else
+      SPDLOG_LOGGER_WARN(mSLog,
+                         "    {}: no magnetizing data on PowerTransformerEnd "
+                         "(b={} [S], g={} [S]); using the built-in default",
+                         cimString(trans->name), magnetizingSusceptance,
+                         magnetizingConductance);
   } else {
     SPDLOG_LOGGER_WARN(mSLog,
-                       "    {}: no magnetizing data on PowerTransformerEnd "
-                       "(b={} [S], g={} [S]); using the built-in default",
-                       cimString(trans->name), magnetizingSusceptance,
-                       magnetizingConductance);
+                       "    {}: rated power is {} [VA], so the magnetizing "
+                       "branch cannot be sized from the file",
+                       cimString(trans->name), ratedPower);
   }
 
   if (mDomain == Domain::EMT) {
