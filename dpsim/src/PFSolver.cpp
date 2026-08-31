@@ -234,6 +234,12 @@ void PFSolver::determinePFBusType() {
           mSLog, "{}: VD and PV type component connect -> set as VD bus",
           node->name());
       mVDBuses.push_back(node);
+    } // VD and PQ type component connected -> set as VD bus
+    else if (!connectedPV && connectedPQ && connectedVD) {
+      SPDLOG_LOGGER_INFO(
+          mSLog, "{}: VD and PQ type component connected -> set as VD bus",
+          node->name());
+      mVDBuses.push_back(node);
     } // VD, PV and PQ type component connect -> set as VD bus
     else if (connectedPV && connectedPQ && connectedVD) {
       SPDLOG_LOGGER_INFO(
