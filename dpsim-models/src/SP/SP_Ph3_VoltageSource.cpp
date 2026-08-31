@@ -76,7 +76,7 @@ void SP::Ph3::VoltageSource::mnaCompApplySystemMatrixStamp(
                              Complex(-1, 0));
     Math::addToMatrixElement(systemMatrix,
                              mVirtualNodes[0]->matrixNodeIndex(PhaseType::C),
-                             matrixNodeIndex(0, 2), -Complex(-1, 0));
+                             matrixNodeIndex(0, 2), Complex(-1, 0));
   }
   if (terminalNotGrounded(1)) {
     Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0),
