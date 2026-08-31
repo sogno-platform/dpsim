@@ -29,6 +29,11 @@ struct SwitchConfiguration {
 /// Base class for more specific solvers such as MNA, ODE or IDA.
 class Solver {
 public:
+  /// Default steady state initialization time limit
+  static constexpr Real DEFAULT_STEAD_ST_INI_TIME_LIMIT = 10;
+  /// Default steady state initialization accuracy limit
+  static constexpr Real DEFAULT_STEAD_ST_INI_ACC_LIMIT = 1e-8;
+
   typedef std::shared_ptr<Solver> Ptr;
   typedef std::vector<Ptr> List;
 
@@ -60,9 +65,9 @@ protected:
 
   // #### Initialization ####
   /// steady state initialization time limit
-  Real mSteadStIniTimeLimit = 10;
+  Real mSteadStIniTimeLimit = DEFAULT_STEAD_ST_INI_TIME_LIMIT;
   /// steady state initialization accuracy limit
-  Real mSteadStIniAccLimit = 0.0001;
+  Real mSteadStIniAccLimit = DEFAULT_STEAD_ST_INI_ACC_LIMIT;
   /// Activates steady state initialization
   Bool mSteadyStateInit = false;
   /// Determines if solver is in initialization phase, which requires different behavior
