@@ -290,6 +290,10 @@ PYBIND11_MODULE(dpsimpy, m) {
            &DPsim::Simulation::getStateSpaceExtractor, "solver_index"_a = 0,
            py::return_value_policy::reference_internal)
       .def("do_steady_state_init", &DPsim::Simulation::doSteadyStateInit)
+      .def("set_steady_state_init_acc_limit",
+           &DPsim::Simulation::setSteadStIniAccLimit)
+      .def("set_steady_state_init_time_limit",
+           &DPsim::Simulation::setSteadStIniTimeLimit)
       .def("do_frequency_parallelization",
            &DPsim::Simulation::doFrequencyParallelization)
       .def("do_split_subnets", &DPsim::Simulation::doSplitSubnets)
