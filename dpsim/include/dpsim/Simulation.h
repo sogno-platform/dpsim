@@ -136,9 +136,9 @@ protected:
 
   // #### Initialization ####
   /// steady state initialization time limit
-  Real mSteadStIniTimeLimit = 10;
+  Real mSteadStIniTimeLimit = Solver::DEFAULT_STEAD_ST_INI_TIME_LIMIT;
   /// steady state initialization accuracy limit
-  Real mSteadStIniAccLimit = 0.0001;
+  Real mSteadStIniAccLimit = Solver::DEFAULT_STEAD_ST_INI_ACC_LIMIT;
 
   // #### Task dependencies und scheduling ####
   /// Scheduler used for task scheduling
