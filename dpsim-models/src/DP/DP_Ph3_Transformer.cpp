@@ -63,6 +63,7 @@ void DP::Ph3::Transformer::resolveWindingRoles() {
   }
 
   mRatioFromReference = (mReferenceTerminal == 0) ? **mRatio : 1. / **mRatio;
+  mOrientationSign = (mReferenceTerminal == 0) ? 1. : -1.;
 
   SPDLOG_LOGGER_INFO(
       mSLog,
@@ -204,19 +205,13 @@ void DP::Ph3::Transformer::initializeParentFromNodesAndTerminals(
           Complex(mResistance(row, col), omega * mInductance(row, col));
 
   MatrixComp impedanceVoltage =
-      mVirtualNodes[0]->initialVoltage() - initialVoltage(mReferenceTerminal);
+      mOrientationSign *
+      (mVirtualNodes[0]->initialVoltage() - initialVoltage(mReferenceTerminal));
   **mIntfCurrent = impedance.inverse() * impedanceVoltage;
 }
 
 void DP::Ph3::Transformer::mnaParentApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
-  if (mSubMagnetizingInductor)
-    SPDLOG_LOGGER_INFO(mSLog, "SEEDCHECK Imag={} Vmid={}",
-                       Logger::complexToString(
-                           (**mSubMagnetizingInductor->mIntfCurrent)(0, 0)),
-                       Logger::complexToString(
-                           (**mSubMagnetizingInductor->mIntfVoltage)(0, 0)));
-
   if (terminalNotGrounded(mReferenceTerminal)) {
     for (UInt phase = 0; phase < 3; phase++) {
       Math::setMatrixElement(
@@ -288,8 +283,5 @@ void DP::Ph3::Transformer::mnaCompUpdateVoltage(const Matrix &leftVector) {
 }
 
 void DP::Ph3::Transformer::mnaCompUpdateCurrent(const Matrix &leftVector) {
-  for (UInt phase = 0; phase < 3; phase++)
-    (**mIntfCurrent)(phase, 0) = Math::complexFromVectorElement(
-        leftVector,
-        mVirtualNodes[1]->matrixNodeIndex(static_cast<PhaseType>(phase)));
+  **mIntfCurrent = mOrientationSign * mSubInductor->intfCurrent();
 }
