@@ -1,5 +1,9 @@
 var NAVTREEINDEX56 =
 {
+"class_d_psim_1_1_switch_event3_ph.html":[2,0,1,53],
+"class_d_psim_1_1_switch_event3_ph.html#a4f961d8f71e51ca27082b208a107c1be":[1,0,1,54,1],
+"class_d_psim_1_1_switch_event3_ph.html#a4f961d8f71e51ca27082b208a107c1be":[2,0,1,53,1],
+"class_d_psim_1_1_switch_event3_ph.html#a8bc8fd63e3e247337f1d95353bdb289a":[1,0,1,54,2],
 "class_d_psim_1_1_switch_event3_ph.html#a8bc8fd63e3e247337f1d95353bdb289a":[2,0,1,53,2],
 "class_d_psim_1_1_switch_event3_ph.html#ad2e66c8f2a6cb092c6b546a1b8879b50":[1,0,1,54,3],
 "class_d_psim_1_1_switch_event3_ph.html#ad2e66c8f2a6cb092c6b546a1b8879b50":[2,0,1,53,3],
@@ -245,9 +249,5 @@ var NAVTREEINDEX56 =
 "functions_e.html":[2,3,0,4],
 "functions_enum.html":[2,3,4],
 "functions_eval.html":[2,3,5],
-"functions_f.html":[2,3,0,5],
-"functions_func.html":[2,3,1],
-"functions_func.html":[2,3,1,0],
-"functions_func_b.html":[2,3,1,1],
-"functions_func_c.html":[2,3,1,2]
+"functions_f.html":[2,3,0,5]
 };

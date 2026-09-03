@@ -35,6 +35,8 @@ var class_d_psim_1_1_solver =
     [ "setSystem", "class_d_psim_1_1_solver.html#a55d0b0fd08980de35d936ea167bf8a86", null ],
     [ "setSystemMatrixRecomputationMode", "class_d_psim_1_1_solver.html#af333a4dee89c17bbf902ef0fb2d68d52", null ],
     [ "setTimeStep", "class_d_psim_1_1_solver.html#a6ec0c84fef733b967c37fad1835e2b6f", null ],
+    [ "DEFAULT_STEAD_ST_INI_ACC_LIMIT", "class_d_psim_1_1_solver.html#a7c775c3ecde362dd767d816fc9e17d14", null ],
+    [ "DEFAULT_STEAD_ST_INI_TIME_LIMIT", "class_d_psim_1_1_solver.html#a35211a11eab0eb4a5223138467f0efcb", null ],
     [ "mBehaviour", "class_d_psim_1_1_solver.html#a2978a74153340b65c3f3efd0a0617dda", null ],
     [ "mFrequencyParallel", "class_d_psim_1_1_solver.html#a7af67b5b35f20665e0c2050433d69e45", null ],
     [ "mInitFromNodesAndTerminals", "class_d_psim_1_1_solver.html#a66d6160868a4ffe137ec6def456026b1", null ],

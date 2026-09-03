@@ -122,9 +122,9 @@ var NAVTREEINDEX =
 "class_d_psim_1_1_p_f_solver.html#a15351c77d8eea59d5429bf4d38281fe8",
 "class_d_psim_1_1_p_f_solver_power_polar_sparse.html#abeb4b7c3e23546ffc66f8052d52fe382",
 "class_d_psim_1_1_simulation.html#a9b603759650d6438f86702d5b5234f2e",
-"class_d_psim_1_1_switch_event3_ph.html#a8bc8fd63e3e247337f1d95353bdb289a",
-"functions_func_d.html",
-"namespace_d_psim.html#a52dcbc3a0896b912333104eb61a7b29b"
+"class_d_psim_1_1_switch_event3_ph.html",
+"functions_func.html",
+"namespace_d_psim.html#a2b20704b5715a96db8d095eb5c86bd16"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';
