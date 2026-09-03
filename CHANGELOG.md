@@ -3,6 +3,82 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.5.0](https://github.com/sogno-platform/dpsim/compare/v1.4.0...v1.5.0) (2026-09-03)
+
+
+### Added
+
+* **cim:** read the transformer magnetizing branch from PowerTransformerEnd ([bb73a4e](https://github.com/sogno-platform/dpsim/commit/bb73a4e3cb9c9f3b9a695e7875dc38d9f1e5e699))
+* **examples:** add DP Ph3 inverter modal comparison ([f1065f4](https://github.com/sogno-platform/dpsim/commit/f1065f4fff0130840575b989f5cc05cbd94d5375))
+* **models:** add EMT Ph3 PQLoad ([e088744](https://github.com/sogno-platform/dpsim/commit/e0887442bed1dd9831e17585b87a18bdfcb843ed))
+* **models:** add switch modes to EMT and DP switches ([efde609](https://github.com/sogno-platform/dpsim/commit/efde609f2de09f51a85da627df5b8c5a406817f3))
+* **models:** add switching modes to DP::Ph1::Switch ([a5c983a](https://github.com/sogno-platform/dpsim/commit/a5c983a64f4097851aecd0c8b36d0b53f4f3485d))
+* **models:** add the EMT::Ph3 half decoupling line and its test example ([b9dce6c](https://github.com/sogno-platform/dpsim/commit/b9dce6cafd99ac9be0d271bce4ed2696bfcadc9e))
+* **models:** add the SP::Ph3 and DP::Ph3 transformer models ([78a924c](https://github.com/sogno-platform/dpsim/commit/78a924c803b8fd92aad424baebab7a242941bb9b))
+* **models:** give the EMT_Ph3 half decoupling line its travel-time delay ([0789116](https://github.com/sogno-platform/dpsim/commit/07891162af8d26f2bd7e6da06c0fb16a9116664f))
+* **models:** give the EMT::Ph3 transformer a magnetizing branch instead of snubbers ([909a87f](https://github.com/sogno-platform/dpsim/commit/909a87f49f07a2dacdaf7157e83362d87b9a6950))
+* **models:** give the Ph1 transformers a magnetizing branch instead of snubbers ([1054df7](https://github.com/sogno-platform/dpsim/commit/1054df781337a1de436dd98a0eaa0240ee574db8))
+* **models:** implement the half decoupling line initialisation and step ([f8c5cb7](https://github.com/sogno-platform/dpsim/commit/f8c5cb79d39c3d89448bbd815b0e431237fe7b8d))
+* **models:** let the transformer reference winding be chosen explicitly ([a3b15bd](https://github.com/sogno-platform/dpsim/commit/a3b15bd2e7e71bfbe8a2a460cbd9ad5468b7ec6c))
+* **models:** ramp the resistance on closing in exponential ZCS mode ([e7b59bf](https://github.com/sogno-platform/dpsim/commit/e7b59bf0df4206ba1fa8740dd21998e0dd05b75c))
+* **pybind:** expose the EMT::Ph3 half decoupling line to Python ([337b36d](https://github.com/sogno-platform/dpsim/commit/337b36d7d12299693c305fdbf0113e239311a359))
+* **pybind:** expose the steady-state initialization limits ([40d7051](https://github.com/sogno-platform/dpsim/commit/40d7051d2197ded824506b66cbe3668ee2f9ea11))
+* **pybind:** expose the transformer magnetizing branch and the new Ph3 models ([f7b4167](https://github.com/sogno-platform/dpsim/commit/f7b4167e6a6f98ce62e3396e78c1e5729495490b))
+* **statespace:** support DP Ph3 state-space extraction ([b8ecb8a](https://github.com/sogno-platform/dpsim/commit/b8ecb8af76e4e808571636a500bdddc69d6689e0))
+* **statespace:** support split SSN contributors ([58a2253](https://github.com/sogno-platform/dpsim/commit/58a2253329f7fb82061bc9074cba172d42df5f29))
+
+
+### Changed
+
+* **conventions:** document DP Ph3 peak-envelope scaling ([ff2529e](https://github.com/sogno-platform/dpsim/commit/ff2529e1e1cbf75e3a7b67bed0a320a571120be7))
+* **deps-dev:** bump browserslist from 4.21.4 to 4.28.8 in /docs/hugo ([e462da2](https://github.com/sogno-platform/dpsim/commit/e462da21f211735ba0d35aec0134b743db57ce1d))
+* **examples:** add the transformer nameplate and open-secondary step sweep tests ([da272bd](https://github.com/sogno-platform/dpsim/commit/da272bdd1c6688eb80775365b238b8f048d511e3))
+* **examples:** re-derive the hand-built transformer reference as a T-equivalent ([89f456a](https://github.com/sogno-platform/dpsim/commit/89f456aa333bbdb828be6efb58874b147fda6150))
+* **examples:** update the half decoupling line test example ([e8ac690](https://github.com/sogno-platform/dpsim/commit/e8ac690810db12f81ed522ec57d2950da5cb661e))
+* **models:** add SPDX headers and CODEOWNERS entries for the half decoupling line ([95b9023](https://github.com/sogno-platform/dpsim/commit/95b90235f38ac3cb31f6d9c4304644ef222dcc40))
+* **models:** clarify switch model description ([567fce8](https://github.com/sogno-platform/dpsim/commit/567fce83676466fb7480bb0ff877d32cdddf0928))
+* **models:** document the EMT::Ph3 half decoupling line ([6628ac1](https://github.com/sogno-platform/dpsim/commit/6628ac1e0c31b9ee2b2891fc61cc2dca3255cec6))
+* **models:** document the transformer T-equivalent and the domain scaling conventions ([9250135](https://github.com/sogno-platform/dpsim/commit/925013514df6fcf979821d4148d6593262121e7f))
+* **models:** drop the transformer snubber constants ([b7ff2b0](https://github.com/sogno-platform/dpsim/commit/b7ff2b04bb42991bfa7a7fd320dfc2330ea7cb40))
+* **models:** extract common split SSN component logic ([096d19e](https://github.com/sogno-platform/dpsim/commit/096d19e89da94fcb70a0b4dbfaf14f44876c7ad9))
+* **models:** name the windings in the transformer nominal voltage getters ([584df01](https://github.com/sogno-platform/dpsim/commit/584df01a19ed1f2f89554d1aaef0092c0da9fe1c))
+* **models:** rename transformer nominal voltage End1/End2 to Primary/Secondary ([102ed11](https://github.com/sogno-platform/dpsim/commit/102ed11b36d438d030a647b0d3cbd8b8ec6dc7bc))
+* **models:** resolve DP transformer winding orientation without swapping terminals ([f7f431a](https://github.com/sogno-platform/dpsim/commit/f7f431aaaaf9932f61db9a5c9528348285127cf9))
+* **models:** resolve SP and EMT transformer winding orientation without swapping terminals ([32f82d8](https://github.com/sogno-platform/dpsim/commit/32f82d8cd336c511bd6fe3a68a1d8fec95c85b28))
+* **notebooks:** build the transformer reference circuits as T-equivalents ([6911b90](https://github.com/sogno-platform/dpsim/commit/6911b902e0f47adce3ce8bf46464dea4901e5e89))
+* **notebooks:** compare the WSCC9 steady-state drift by magnitude ([edaa825](https://github.com/sogno-platform/dpsim/commit/edaa825122bcde3ee38663fbf18210f1054afa4d))
+* **notebooks:** compare the WSCC9 transient-stability drift by relative angle ([89d6838](https://github.com/sogno-platform/dpsim/commit/89d683838ab5019bd3dd9cbb6e045a00a8284a38))
+* **notebooks:** run the VSI ramp in all three domains against a generated reference ([f2ce8c1](https://github.com/sogno-platform/dpsim/commit/f2ce8c16aef1c4af676263f04b7d76263b25b9de))
+* **notebooks:** skip slow notebook tests in CI ([aae182c](https://github.com/sogno-platform/dpsim/commit/aae182cacfb96106d158ffa07c93c5c691ce6572))
+* **ssn:** clarify Norton stamping for mixed DP models ([752b1a0](https://github.com/sogno-platform/dpsim/commit/752b1a03b3f77cf416ef32f44eb1614a65a7766d))
+
+
+### Fixed
+
+* **cim:** honour whichever transformer magnetizing value the file provides ([df7e852](https://github.com/sogno-platform/dpsim/commit/df7e8523ed28f7a0667572fbfdd247747c47a19c))
+* **dp:** align DP Ph3 Series Resistor initialization scaling ([4602202](https://github.com/sogno-platform/dpsim/commit/4602202f4f3e5797f6d658065d8a628345719887))
+* **dp:** correct Ph3 power-flow initialization scaling ([dfde80c](https://github.com/sogno-platform/dpsim/commit/dfde80cea209717ae1a91fde22397465ddda4ef0))
+* **dp:** fix DP Ph3 mixed SSN Norton stamping and initialization ([d50ac8e](https://github.com/sogno-platform/dpsim/commit/d50ac8e3cdd627394ea3d1fc832495e0148c95f1))
+* **dp:** preserve full Norton matrix for mixed Ph1 SSN components ([c25369c](https://github.com/sogno-platform/dpsim/commit/c25369c189aa5a9893f64332c182eb4d679718fa))
+* **examples:** align DP Ph3 inverter checks with peak scaling ([e162b95](https://github.com/sogno-platform/dpsim/commit/e162b95cc0847bc46cf0a44508bbe9c55369b07a))
+* **models:** compute the EMT Ph3 RX load impedances once ([facc0ee](https://github.com/sogno-platform/dpsim/commit/facc0eef6644ef7d1952fc5bdc39ad320393500d))
+* **models:** correct DP Ph3 capacitor initialization ([7eb721b](https://github.com/sogno-platform/dpsim/commit/7eb721bb35a8a81344ec5c05d11363bdcabb3938))
+* **models:** correct DP Ph3 inductor resistor initialization ([2efee22](https://github.com/sogno-platform/dpsim/commit/2efee228721c70612a6fd2791625be0954e1324f))
+* **models:** correct the EMT Ph3 RX load series-mode virtual node seed ([9fbfe4b](https://github.com/sogno-platform/dpsim/commit/9fbfe4b6816cc8bda622cf080e6b0ae8a051a082))
+* **models:** correct the phase C sign in the SP::Ph3 voltage source stamp ([ee03ba0](https://github.com/sogno-platform/dpsim/commit/ee03ba041f575602480d5f3563fdde795146c6e8))
+* **models:** guard the DP Ph1 RX load initial current and clone ([bad9450](https://github.com/sogno-platform/dpsim/commit/bad9450810a74e547837577976a99a336fb57e73))
+* **models:** guard the generator lookup in initWithPowerflow ([8aac114](https://github.com/sogno-platform/dpsim/commit/8aac1147b59fb1d7285d0efe620315aa65d47b1a))
+* **models:** honour the log level argument in the EMT Ph3 RX load ([4b45c4f](https://github.com/sogno-platform/dpsim/commit/4b45c4f597b37a9a777393907fe1bd127d5eae68))
+* **models:** include the transformer magnetizing branch in the powerflow stamp ([a57dbee](https://github.com/sogno-platform/dpsim/commit/a57dbee40c2a52066f3db821bf919586a72b12f4))
+* **models:** read the SP::Ph3 voltage source current as complex in all three phases ([dec9a9c](https://github.com/sogno-platform/dpsim/commit/dec9a9cfb6d5597025f70173c8d8783a90d7e29f))
+* **models:** report transformer v_intf across the terminals and add v_impedance ([1ab82ad](https://github.com/sogno-platform/dpsim/commit/1ab82ade8a24da946892da745a84d16f603b6710))
+* **models:** seed the EMT Ph1 pi line virtual node in node units ([2a6fecb](https://github.com/sogno-platform/dpsim/commit/2a6fecb85b930240792755f435b77eed6921d0a9))
+* **models:** seed the transformer midpoint from the exact steady state ([1ccc93a](https://github.com/sogno-platform/dpsim/commit/1ccc93ac9dd8baeb884a40f734ea2a182e49f625))
+* **models:** take the SP and DP Ph3 transformer current from the reference winding ([f86b05d](https://github.com/sogno-platform/dpsim/commit/f86b05d28aab1d5c5a181451628f40cef628a3a0))
+* **notebooks:** select the CIM files each WSCC-09 notebook downloads ([f367a3b](https://github.com/sogno-platform/dpsim/commit/f367a3bc0f2de18a75f113bee70014811f01dbb2))
+* **solver:** assign a VD bus type when a load sits at the slack bus ([4573db0](https://github.com/sogno-platform/dpsim/commit/4573db0869a8c83c9698114c65d909c2f55b4a6e))
+* **solver:** tighten the default steady-state initialization accuracy limit ([4522b04](https://github.com/sogno-platform/dpsim/commit/4522b04bca20a20d72ad8f7b3e8deaab98eec4dc))
+
 ## [1.4.0](https://github.com/sogno-platform/dpsim/compare/v1.3.0...v1.4.0) (2026-08-14)
 
 
