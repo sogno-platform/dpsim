@@ -42,6 +42,8 @@ private:
   UInt nonReferenceTerminal() const { return 1 - mReferenceTerminal; }
   /// Turns ratio out of the reference winding
   Complex mRatioFromReference;
+  /// Sign carrying series quantities into the terminal 1 to 0 direction
+  Real mOrientationSign = 1.;
   /// Winding the nameplate impedance is referred to
   WindingReference mReferenceWinding = WindingReference::Auto;
   /// Resolves the reference winding
