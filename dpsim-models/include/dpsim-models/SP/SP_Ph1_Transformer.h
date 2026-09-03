@@ -162,9 +162,9 @@ public:
   void initializeParentFromNodesAndTerminals(Real frequency) override;
 
   // #### Powerflow section ####
-  /// Get nominal voltage at end 1
+  /// Get nominal voltage of the primary winding
   Real getNominalVoltagePrimary() const;
-  /// Get nominal voltage at end 2
+  /// Get nominal voltage of the secondary winding
   Real getNominalVoltageSecondary() const;
   void setBaseVoltage(Real baseVoltage);
   /// Initializes component from power flow data
