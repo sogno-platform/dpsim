@@ -64,6 +64,7 @@ var dir_88adc964ffa02c1923288cb07a48abab =
     [ "DP_Ph3_SynchronGeneratorDQODE.h", "_d_p___ph3___synchron_generator_d_q_o_d_e_8h.html", "_d_p___ph3___synchron_generator_d_q_o_d_e_8h" ],
     [ "DP_Ph3_SynchronGeneratorDQTrapez.h", "_d_p___ph3___synchron_generator_d_q_trapez_8h.html", "_d_p___ph3___synchron_generator_d_q_trapez_8h" ],
     [ "DP_Ph3_SynchronGeneratorVBR_Deprecated.h", "_d_p___ph3___synchron_generator_v_b_r___deprecated_8h.html", "_d_p___ph3___synchron_generator_v_b_r___deprecated_8h" ],
+    [ "DP_Ph3_Transformer.h", "_d_p___ph3___transformer_8h.html", "_d_p___ph3___transformer_8h" ],
     [ "DP_Ph3_TwoTerminalITypeSSNComp.h", "_d_p___ph3___two_terminal_i_type_s_s_n_comp_8h.html", "_d_p___ph3___two_terminal_i_type_s_s_n_comp_8h" ],
     [ "DP_Ph3_TwoTerminalVTypeSSNComp.h", "_d_p___ph3___two_terminal_v_type_s_s_n_comp_8h.html", "_d_p___ph3___two_terminal_v_type_s_s_n_comp_8h" ],
     [ "DP_Ph3_VoltageSource.h", "_d_p___ph3___voltage_source_8h.html", "_d_p___ph3___voltage_source_8h" ],

@@ -6,5 +6,6 @@ var searchData=
   ['node_3',['Node',['../class_c_p_s_1_1_graph_1_1_node.html#ad0fa66e23f248e16e6c4edf26db4316a',1,'CPS::Graph::Node']]],
   ['node_4',['node',['../class_c_p_s_1_1_graph_1_1_graph.html#ab08cbdbf7d49ffd6be04d2de22f66f32',1,'CPS::Graph::Graph::node()'],['../class_c_p_s_1_1_sim_power_comp.html#a583f557ad546edfd118cad07977884bf',1,'CPS::SimPowerComp::node()'],['../class_c_p_s_1_1_sim_terminal.html#a132b18d0610dfd39031fce014d53d7b7',1,'CPS::SimTerminal::node()'],['../class_c_p_s_1_1_system_topology.html#a2d02f947373f1d98893ae53f30dae6a3',1,'CPS::SystemTopology::node(UInt index)'],['../class_c_p_s_1_1_system_topology.html#a44c192d3e54a2f510dea3beef28a7ce9',1,'CPS::SystemTopology::node(std::string_view name)']]],
   ['nodenumber_5',['nodeNumber',['../class_c_p_s_1_1_sim_power_comp.html#a4fb36bf405e2d90626a123e017abc5f4',1,'CPS::SimPowerComp']]],
-  ['num_5fstates_6',['num_states',['../class_c_p_s_1_1_o_d_eint_interface.html#a3a84fb4843481e296c946298c574649a',1,'CPS::ODEintInterface']]]
+  ['nominalvoltageat_6',['nominalVoltageAt',['../class_c_p_s_1_1_base_1_1_ph1_1_1_transformer.html#abf7dcacacbb527e2e9977b9a492e2d6a',1,'CPS::Base::Ph1::Transformer::nominalVoltageAt()'],['../class_c_p_s_1_1_base_1_1_ph3_1_1_transformer.html#a974990c7c14ef9e8fb3eed54620dbdb3',1,'CPS::Base::Ph3::Transformer::nominalVoltageAt()']]],
+  ['num_5fstates_7',['num_states',['../class_c_p_s_1_1_o_d_eint_interface.html#a3a84fb4843481e296c946298c574649a',1,'CPS::ODEintInterface']]]
 ];

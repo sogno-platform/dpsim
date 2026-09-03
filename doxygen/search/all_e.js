@@ -14,11 +14,12 @@ var searchData=
   ['node_11',['Node',['../class_c_p_s_1_1_graph_1_1_node.html',1,'CPS::Graph::Node'],['../class_c_p_s_1_1_graph_1_1_node.html#ad0fa66e23f248e16e6c4edf26db4316a',1,'CPS::Graph::Node::Node()']]],
   ['node_12',['node',['../class_c_p_s_1_1_graph_1_1_graph.html#ab08cbdbf7d49ffd6be04d2de22f66f32',1,'CPS::Graph::Graph::node()'],['../class_c_p_s_1_1_sim_power_comp.html#a583f557ad546edfd118cad07977884bf',1,'CPS::SimPowerComp::node()'],['../class_c_p_s_1_1_sim_terminal.html#a132b18d0610dfd39031fce014d53d7b7',1,'CPS::SimTerminal::node()'],['../class_c_p_s_1_1_system_topology.html#a2d02f947373f1d98893ae53f30dae6a3',1,'CPS::SystemTopology::node(UInt index)'],['../class_c_p_s_1_1_system_topology.html#a44c192d3e54a2f510dea3beef28a7ce9',1,'CPS::SystemTopology::node(std::string_view name)']]],
   ['nodenumber_13',['nodeNumber',['../class_c_p_s_1_1_sim_power_comp.html#a4fb36bf405e2d90626a123e017abc5f4',1,'CPS::SimPowerComp']]],
-  ['non_5fzero_14',['non_zero',['../struct_d_psim_1_1cuda_1_1_cuda_matrix.html#a9502048a7c4521f5860d4142d72f160e',1,'DPsim::cuda::CudaMatrix']]],
-  ['none_15',['None',['../namespace_c_p_s.html#a04a0a86fce7b8a74447274655a5fcfaba6adf97f83acf6453d4a6a4b1070f3754',1,'CPS::None'],['../namespace_c_p_s.html#ada17f6a04d29355cd45243f13e7078f8a6adf97f83acf6453d4a6a4b1070f3754',1,'CPS::None']]],
-  ['nonopt_5fend_16',['nonopt_end',['../getopt_8h.html#a91a70adb23f329d93d16503991ae4b11',1,'getopt.h']]],
-  ['nonopt_5fstart_17',['nonopt_start',['../getopt_8h.html#a75f896093f2e8b7e7bb1a6bd797133e5',1,'getopt.h']]],
-  ['nrp_18',['NRP',['../class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919eacc4ebb23bd3d777fd82cb86283c1de28',1,'DPsim::Solver']]],
-  ['num_5fstates_19',['num_states',['../class_c_p_s_1_1_o_d_eint_interface.html#a3a84fb4843481e296c946298c574649a',1,'CPS::ODEintInterface']]],
-  ['numericalmethod_20',['NumericalMethod',['../namespace_c_p_s.html#aede69954f98efd491d85e45d09c184c1',1,'CPS']]]
+  ['nominalvoltageat_14',['nominalVoltageAt',['../class_c_p_s_1_1_base_1_1_ph1_1_1_transformer.html#abf7dcacacbb527e2e9977b9a492e2d6a',1,'CPS::Base::Ph1::Transformer::nominalVoltageAt()'],['../class_c_p_s_1_1_base_1_1_ph3_1_1_transformer.html#a974990c7c14ef9e8fb3eed54620dbdb3',1,'CPS::Base::Ph3::Transformer::nominalVoltageAt()']]],
+  ['non_5fzero_15',['non_zero',['../struct_d_psim_1_1cuda_1_1_cuda_matrix.html#a9502048a7c4521f5860d4142d72f160e',1,'DPsim::cuda::CudaMatrix']]],
+  ['none_16',['None',['../namespace_c_p_s.html#a04a0a86fce7b8a74447274655a5fcfaba6adf97f83acf6453d4a6a4b1070f3754',1,'CPS::None'],['../namespace_c_p_s.html#ada17f6a04d29355cd45243f13e7078f8a6adf97f83acf6453d4a6a4b1070f3754',1,'CPS::None']]],
+  ['nonopt_5fend_17',['nonopt_end',['../getopt_8h.html#a91a70adb23f329d93d16503991ae4b11',1,'getopt.h']]],
+  ['nonopt_5fstart_18',['nonopt_start',['../getopt_8h.html#a75f896093f2e8b7e7bb1a6bd797133e5',1,'getopt.h']]],
+  ['nrp_19',['NRP',['../class_d_psim_1_1_solver.html#abc3b0db5925f348e9a41093c1759919eacc4ebb23bd3d777fd82cb86283c1de28',1,'DPsim::Solver']]],
+  ['num_5fstates_20',['num_states',['../class_c_p_s_1_1_o_d_eint_interface.html#a3a84fb4843481e296c946298c574649a',1,'CPS::ODEintInterface']]],
+  ['numericalmethod_21',['NumericalMethod',['../namespace_c_p_s.html#aede69954f98efd491d85e45d09c184c1',1,'CPS']]]
 ];

@@ -2183,17 +2183,44 @@ applying one: a fault, using a switch.&lt;/p>
 the loads and lines used here under &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/loads/">loads&lt;/a> and
 &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/branches/">branches&lt;/a>.&lt;/p></description></item><item><title>Docs: Transformer</title><link>https://sogno.energy/dpsim/docs/concepts/models/transformer/</link><pubDate>Thu, 22 Jul 2021 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/concepts/models/transformer/</guid><description>
 &lt;h2 id="2-winding-transformer">2-Winding Transformer&lt;/h2>
-&lt;p>The transformer model is composed of an RL-segment and an ideal transformer.
-The single line diagram is depicted in the figure below.&lt;/p>
+&lt;p>The transformer is a T-equivalent: the winding resistance and leakage inductance are split evenly
+between the two windings, a magnetizing branch is connected from the midpoint of that split to
+ground, and an ideal transformer carries the ratio. The single line diagram is depicted in the
+figure below.&lt;/p>
 &lt;p>&lt;img src="electrical_transformer.svg" alt="Transformer">&lt;/p>
-&lt;p>If node reduction is not applied, two virtual nodes are created to stamp this model into the system matrix.&lt;/p>
-&lt;p>Furthermore, the ideal transformer has an additional equation, which requires an extension of the system matrix.
-The complete matrix stamp for the ideal transformer is&lt;/p>
+&lt;p>Writing the total leakage impedance referred to the primary as $z = R + j \omega L$, the two series
+segments are $z/2$ each and the magnetizing branch is a resistance in parallel with an inductance,&lt;/p>
+&lt;div class="math">$$y_m = \frac{1}{R_m} + \frac{1}{j \omega L_m} .$$&lt;/div>&lt;p>The model creates virtual nodes for the midpoint and for the ideal part, and two more when the
+winding resistance is included, so a transformer with resistive losses occupies five virtual nodes
+and one without occupies three.&lt;/p>
+&lt;h2 id="magnetizing-parameters">Magnetizing parameters&lt;/h2>
+&lt;p>The branch is sized from the two no-load quantities a nameplate carries under IEC 60076, both given
+per unit of the rated power $S_r$: the no-load current $i_0$ and the no-load loss $P_0$. With the
+nominal voltage of the winding the impedance is referred to, $V_p$,&lt;/p>
+&lt;div class="math">$$R_m = \frac{V_p^2}{P_0 S_r} , \qquad
+B_m = \frac{\sqrt{i_0^2 - P_0^2} \, S_r}{V_p^2} , \qquad
+L_m = \frac{1}{\omega B_m} .$$&lt;/div>&lt;p>The defaults are $i_0 = 0.01$ and $P_0 = 0.001$, and &lt;code>setMagnetizingBranch(i0, P0)&lt;/code> overrides them.
+Two conditions are checked rather than assumed. The rated power must be positive, because it is the
+only scale the branch can be sized against; a transformer without one is built with no magnetizing
+branch and says so in the log. And $i_0$ must exceed $P_0$, because otherwise the square root above
+has no real value and the branch has no reactive part at all, which is not a transformer. That case
+raises rather than silently producing a purely resistive shunt.&lt;/p>
+&lt;p>This is why the rating is a required parameter rather than documentation, and the same is true of
+the nominal voltages: the branch is referred to one winding, and which one is decided by the
+reference winding.&lt;/p>
+&lt;h2 id="the-ideal-part-and-its-extra-equation">The ideal part and its extra equation&lt;/h2>
+&lt;p>The ideal transformer imposes two constraints at once: the voltages are in a fixed ratio and the
+powers on the two sides are equal, which makes the currents inversely proportional to the same
+ratio,&lt;/p>
+&lt;div class="math">$$\frac{v_j}{v_k} = T, \qquad i_k = -T \, i_j .$$&lt;/div>&lt;p>Neither is a current balance at a node, so neither can be written as an admittance. This is the same
+situation as an ideal voltage source described under &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/sources/">sources&lt;/a>: the
+system is extended with the branch current as an unknown, the constraint occupies the added row, and
+the added diagonal entry is zero. The complete matrix stamp is&lt;/p>
 &lt;div class="math">$$\begin{array}{c|c c c}
 ~ &amp; j &amp; k &amp; l \cr
 \hline
 j &amp; &amp; &amp; -1 \cr
-k &amp; &amp; &amp; T \cr
+k &amp; &amp; &amp; \overline{T} \cr
 l &amp; 1 &amp; -T &amp; 0
 \end{array}
 \begin{pmatrix}
@@ -2206,40 +2233,71 @@ i_{l} \cr
 \cr
 \cr
 0\cr
-\end{pmatrix}$$&lt;/div>&lt;p>The variable $j$ denotes the high voltage node while $k$ is the low voltage node.
-$l$ indicates the inserted row and column to accommodate the relation between the two voltages at the ends of the transformer.
-The transformer ratio is defined as $T = V_{j} / V_{k}$.
-A phase shift can be introduced if $T$ is considered as a complex number.&lt;/p>
-&lt;h2 id="why-the-ideal-part-needs-an-extra-equation">Why the ideal part needs an extra equation&lt;/h2>
-&lt;p>The ideal transformer imposes two constraints at once: the voltages are in a fixed ratio and the
-powers on the two sides are equal, which makes the currents inversely proportional to the same ratio,&lt;/p>
-&lt;div class="math">$$\frac{v_j}{v_k} = T, \qquad i_k = -T \, i_j .$$&lt;/div>&lt;p>Neither is a current balance at a node, so neither can be written as an admittance. This is the same
-situation as an ideal voltage source described under &lt;a href="https://sogno.energy/dpsim/docs/concepts/models/sources/">sources&lt;/a>: the
-system is extended with the branch current as an unknown, the constraint occupies the added row, and
-the added diagonal entry is zero. The asymmetry of the stamp, $-1$ against $T$ in the added column
-and $1$ against $-T$ in the added row, is exactly the statement that voltage scales by $T$ while
-current scales by $1/T$ with opposite sign.&lt;/p>
-&lt;p>Making $T$ complex adds a phase shift, which is how a delta-wye connection is represented without
-modelling the windings. The magnitude and the angle then carry the tap ratio and the vector group
-respectively.&lt;/p>
-&lt;h2 id="series-impedance-and-the-direction-of-the-ratio">Series impedance and the direction of the ratio&lt;/h2>
-&lt;p>The winding resistance and leakage inductance are lumped into one series branch on one side of the
-ideal part rather than split between the two sides. Referring an impedance across an ideal
-transformer scales it by $T^2$, so the choice of side is a choice of reference, not an
+\end{pmatrix}$$&lt;/div>&lt;p>The variable $j$ denotes the high voltage node while $k$ is the low voltage node, and $l$ indicates
+the inserted row and column. The transformer ratio is $T = V_{j} / V_{k}$. The asymmetry of the
+stamp, $-1$ against $\overline{T}$ in the added column and $1$ against $-T$ in the added row, is
+exactly the statement that voltage scales by $T$ while current scales by $1/T$ with opposite sign.&lt;/p>
+&lt;p>A complex $T$ adds a phase shift, which is how a delta-wye connection is represented without
+modelling the windings: the magnitude carries the tap ratio and the angle carries the vector group.
+The conjugate on the low voltage row is what makes the phase shift preserve power rather than create
+it. The three-phase representation in &lt;code>SP::Ph3&lt;/code> and &lt;code>DP::Ph3&lt;/code> carries this, and &lt;code>EMT::Ph3&lt;/code> cannot,
+because a phase shift is a rotation in the complex plane and the EMT state is real.&lt;/p>
+&lt;h2 id="the-direction-of-the-ratio">The direction of the ratio&lt;/h2>
+&lt;p>The reference winding decides which side the impedance is referred to. Referring an impedance across
+an ideal transformer scales it by $T^2$, so the choice of side is a choice of reference, not an
 approximation, and the parameters have to be given consistently with it.&lt;/p>
-&lt;p>The ratio is defined greater than one, from high voltage to low. Supplying it the other way round
-describes the same physical device but with the two ends exchanged, so a transformer given an
-inverted ratio has to have its terminal assignment inverted with it to remain the same transformer.&lt;/p>
-&lt;h2 id="numerical-damping">Numerical damping&lt;/h2>
-&lt;p>Connecting an inductive branch between two nodes that have no other path to ground leaves those
-nodes weakly defined, and the resulting matrix can be poorly conditioned or singular. Small shunt
-elements at each terminal remove that, at the cost of a negligible current that would not exist in
-the physical device.&lt;/p>
-&lt;p>Those elements are sized from the transformer&amp;rsquo;s rated power, which makes the rating a required
-parameter rather than documentation. Without a positive rating there is no scale to size them
-against, and the natural result is an infinite resistance and a zero capacitance whose admittance is
-not a number. A single such entry propagates through the factorisation and destroys the whole
-solution, not merely the transformer, so the rating cannot be treated as optional.&lt;/p></description></item><item><title>Docs: Attributes</title><link>https://sogno.energy/dpsim/docs/developer-guide/attributes-and-scheduling/attributes/</link><pubDate>Fri, 01 May 2020 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/attributes-and-scheduling/attributes/</guid><description>
+&lt;p>By default the reference is resolved from the nominal voltages, taking the higher one, and the ratio
+is then greater than one, from high voltage to low. Passing a &lt;code>WindingReference&lt;/code> explicitly overrides
+that: &lt;code>Primary&lt;/code>, &lt;code>Secondary&lt;/code> or &lt;code>Tertiary&lt;/code> name the winding, and &lt;code>Auto&lt;/code> restores the resolution from
+nominal voltages. If both windings are nominally equal the resolution is ambiguous, the primary is
+assumed and the model warns; an explicit reference removes the ambiguity.&lt;/p>
+&lt;p>Three-winding transformers are not implemented, so &lt;code>Tertiary&lt;/code> raises rather than silently modelling
+something else.&lt;/p>
+&lt;h2 id="power-flow-and-the-behaviour-gate">Power flow and the behaviour gate&lt;/h2>
+&lt;p>For power flow the T is reduced to a two-port, which is a Kron reduction eliminating the midpoint
+node. With the half-leakage $z_h = z/2$ and $\Delta = z + z_h^2 y_m$,&lt;/p>
+&lt;div class="math">$$y_{\text{shunt}} = \frac{1 + z_h y_m}{\Delta} , \qquad
+y_{\text{series}} = \frac{1}{\Delta} ,$$&lt;/div>
+&lt;div class="math">$$Y =
+\begin{pmatrix}
+y_{\text{shunt}} &amp; -y_{\text{series}} T \cr
+-y_{\text{series}} \overline{T} &amp; y_{\text{shunt}} |T|^2
+\end{pmatrix} .$$&lt;/div>&lt;p>At $y_m = 0$ this degenerates exactly to the series admittance $1/z$, so the reduction is the
+textbook pi-with-tap plus a correction, not a different model.&lt;/p>
+&lt;p>Whether $y_m$ is present at all is decided by the component behaviour. Under
+&lt;code>Behaviour::Simulation&lt;/code> the magnetizing branch is left out, so a plain load flow matches the
+textbook pi-with-tap that a user comparing against hand calculations expects. Under
+&lt;code>Behaviour::Initialization&lt;/code> and &lt;code>Behaviour::MNASimulation&lt;/code> it is included, so that the power flow
+solution seeds a time-domain run of the same circuit and the admittance the power flow sees is the
+limit of the MNA conductance as the step grows.&lt;/p>
+&lt;h2 id="scaling-conventions-across-the-domains">Scaling conventions across the domains&lt;/h2>
+&lt;p>The domains do not agree on what a voltage or a current means, and the transformer touches all of
+them, so the conventions are collected here.&lt;/p>
+&lt;p>Power flow node voltages are line-line RMS. The &lt;code>DP::Ph3&lt;/code> and &lt;code>EMT::Ph3&lt;/code> states are phase-peak
+envelopes instead, so seeding one from the other needs the factor &lt;code>RMS3PH_TO_PEAK1PH&lt;/code>, which is
+$\sqrt{2/3}$. Omitting it initializes a state $\sqrt{3/2}$ too small and produces a startup
+transient after an otherwise correct power flow initialization, which reads as a model defect and is
+not one. &lt;code>SP::Ph3&lt;/code> keeps the line-line RMS convention in every phase, so each phase entry carries
+the whole-transformer quantity rather than a third of it.&lt;/p>
+&lt;p>The sources are not uniform either. &lt;code>EMT::Ph3::VoltageSource&lt;/code> is the only source class that scales
+its own reference, so it takes line-line RMS directly, while every other source takes the working
+unit of its own domain. Driving a &lt;code>DP::Ph3&lt;/code> circuit with a raw line-line value therefore places the
+operating point $\sqrt{3/2}$ above what the initialization assumed, and the model rings.&lt;/p>
+&lt;p>The power formula follows from the same split. In &lt;code>DP::Ph3&lt;/code> and &lt;code>EMT::Ph3&lt;/code>, where the quantities are
+phase-peak,&lt;/p>
+&lt;div class="math">$$P = \tfrac{3}{2} \, \mathrm{Re}\{ V \overline{I} \} ,$$&lt;/div>&lt;p>while in &lt;code>DP::Ph1&lt;/code>, &lt;code>SP::Ph1&lt;/code> and &lt;code>SP::Ph3&lt;/code> it is $\mathrm{Re}{ V \overline{I} }$ from a single
+entry. Applying the second form to a phase-peak domain gives exactly two thirds of the right answer.&lt;/p>
+&lt;h2 id="verification">Verification&lt;/h2>
+&lt;p>&lt;code>dpsim/examples/cxx/Circuits/DP_Ph1_Transformer_OpenShortCircuit.cpp&lt;/code> runs three units through the
+open-circuit and short-circuit tests in all five domains. Every unit recovers its nameplate: the
+no-load current and loss from the open-circuit test, and the short-circuit voltage $u_k$ from the
+short-circuit test, each to within the discretization error of the step used.&lt;/p>
+&lt;p>One reading of the open-circuit test needs care in EMT. The magnetizing loop has no resistive path
+that damps a DC component, so an offset left by energization decays with a time constant of the
+order of $L_m$ over the winding resistance, which is minutes rather than cycles. An RMS taken over a
+window at one second still contains it. Extracting the fundamental with a one-cycle Fourier
+component rejects it and returns the nameplate value; the phasor domains do not show the effect at
+all, because they do not represent DC.&lt;/p></description></item><item><title>Docs: Attributes</title><link>https://sogno.energy/dpsim/docs/developer-guide/attributes-and-scheduling/attributes/</link><pubDate>Fri, 01 May 2020 00:00:00 +0000</pubDate><guid>https://sogno.energy/dpsim/docs/developer-guide/attributes-and-scheduling/attributes/</guid><description>
 &lt;p>In DPsim, an attribute is a special kind of variable which usually stores a scalar or matrix value used in the simulation.
 Examples for attributes are the voltage of a node, the reference current of a current source, or the left and right vectors of the MNA matrix system.
 In general, attributes are instances of the &lt;code>Attribute&amp;lt;T&amp;gt;&lt;/code> class, but they are usually stored and accessed through a custom smart pointer of type

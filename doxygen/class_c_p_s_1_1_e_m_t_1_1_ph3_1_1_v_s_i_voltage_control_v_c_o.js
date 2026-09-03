@@ -20,7 +20,7 @@ var class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_v_s_i_voltage_control_v_c_o =
     [ "setFilterParameters", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_v_s_i_voltage_control_v_c_o.html#a4addc16a100b20d677b1e046b936b32b", null ],
     [ "setInitialStateValues", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_v_s_i_voltage_control_v_c_o.html#a7d5663093b6b07732dc2dfd6fd860d78", null ],
     [ "setParameters", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_v_s_i_voltage_control_v_c_o.html#a29d1f70c9a2f49f7cc54365f91c8d1e3", null ],
-    [ "setTransformerParameters", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_v_s_i_voltage_control_v_c_o.html#acd74cf01a04c5d78296666860abfc225", null ],
+    [ "setTransformerParameters", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_v_s_i_voltage_control_v_c_o.html#a48f61a3680fbdb14783b776d8ba7e1db", null ],
     [ "withControl", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_v_s_i_voltage_control_v_c_o.html#a034cd2dacc7d7e0be2d5c04df69319fd", null ],
     [ "mConnectionTransformer", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_v_s_i_voltage_control_v_c_o.html#ac9cf4f2a3a711fef4e529686f928ac88", null ],
     [ "mElecActivePower", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_v_s_i_voltage_control_v_c_o.html#a211cb51f4252a195157b9e487a0ff2de", null ],

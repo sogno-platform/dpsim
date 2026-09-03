@@ -4,7 +4,7 @@ var class_c_p_s_1_1_base_1_1_av_voltage_source_inverter_d_q_with_state_space =
     [ "setFilterParameters", "class_c_p_s_1_1_base_1_1_av_voltage_source_inverter_d_q_with_state_space.html#aeb4b1ee7669f6b8fc223509c4c5bbf2d", null ],
     [ "setInitialStateValues", "class_c_p_s_1_1_base_1_1_av_voltage_source_inverter_d_q_with_state_space.html#aa4aeed99cdb1b7155be13111d4509493", null ],
     [ "setParameters", "class_c_p_s_1_1_base_1_1_av_voltage_source_inverter_d_q_with_state_space.html#ae6a1c4561438292f7c241590db008ff9", null ],
-    [ "setTransformerParameters", "class_c_p_s_1_1_base_1_1_av_voltage_source_inverter_d_q_with_state_space.html#a16f0e228b313854b403782dcce4ed26c", null ],
+    [ "setTransformerParameters", "class_c_p_s_1_1_base_1_1_av_voltage_source_inverter_d_q_with_state_space.html#a3a0eeb8727aec32551aff79b11a42806", null ],
     [ "mA", "class_c_p_s_1_1_base_1_1_av_voltage_source_inverter_d_q_with_state_space.html#a00baf635d1cda42052b5fc852cb9c495", null ],
     [ "mB", "class_c_p_s_1_1_base_1_1_av_voltage_source_inverter_d_q_with_state_space.html#a65b691b0f82df7bc4545d07f0e8ab903", null ],
     [ "mC", "class_c_p_s_1_1_base_1_1_av_voltage_source_inverter_d_q_with_state_space.html#a6f8e3f0598ac838b262a7f30adbecd70", null ],

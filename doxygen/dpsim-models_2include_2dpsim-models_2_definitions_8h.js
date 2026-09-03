@@ -9,11 +9,9 @@ var dpsim_models_2include_2dpsim_models_2_definitions_8h =
     [ "DOUBLE_EPSILON", "dpsim-models_2include_2dpsim-models_2_definitions_8h.html#a61aed733f8e5502628b6a87e51ca4e4f", null ],
     [ "DPS_PI", "dpsim-models_2include_2dpsim-models_2_definitions_8h.html#ae5242b45d72f6052d5ef2cdbcc14853a", null ],
     [ "M_PI", "dpsim-models_2include_2dpsim-models_2_definitions_8h.html#ae71449b1cc6e6250b91f539153a7a0d3", null ],
-    [ "P_SNUB_TRANSFORMER", "dpsim-models_2include_2dpsim-models_2_definitions_8h.html#aaf4f697ba0813f04b19f31d553e7247b", null ],
     [ "PEAK1PH_TO_RMS3PH", "dpsim-models_2include_2dpsim-models_2_definitions_8h.html#af330c95d1ba5b05ce196dec41a59600d", null ],
     [ "PEAK_TO_RMS", "dpsim-models_2include_2dpsim-models_2_definitions_8h.html#a685f63ff2b9140eb6bc00c9e954cb4dd", null ],
     [ "PI", "dpsim-models_2include_2dpsim-models_2_definitions_8h.html#a598a3330b3c21701223ee0ca14316eca", null ],
-    [ "Q_SNUB_TRANSFORMER", "dpsim-models_2include_2dpsim-models_2_definitions_8h.html#a003e052a8b620f411924e33fd8d11f42", null ],
     [ "RMS3PH_TO_PEAK1PH", "dpsim-models_2include_2dpsim-models_2_definitions_8h.html#aa5875d8fed80e50b7ea9bb4cd401adee", null ],
     [ "RMS_TO_PEAK", "dpsim-models_2include_2dpsim-models_2_definitions_8h.html#ac24ae161523eadceef352918d1ebb0c8", null ],
     [ "SHIFT_TO_PHASE_B", "dpsim-models_2include_2dpsim-models_2_definitions_8h.html#af53729e0c08cdad4ea70fbd74a0da043", null ],
@@ -90,5 +88,11 @@ var dpsim_models_2include_2dpsim_models_2_definitions_8h =
       [ "CPS::SGOrder::SG5Order", "namespace_c_p_s.html#a9f15b9d68713cbaafa1deec678c08ef5aefb324f72055f56c20ed6aec23b0c94c", null ],
       [ "CPS::SGOrder::SG6aOrder", "namespace_c_p_s.html#a9f15b9d68713cbaafa1deec678c08ef5ab46da257db3c657a44ee54268a3dec77", null ],
       [ "CPS::SGOrder::SG6bOrder", "namespace_c_p_s.html#a9f15b9d68713cbaafa1deec678c08ef5ab46e10c2e937bf6d4f7e75a7772edf1f", null ]
+    ] ],
+    [ "CPS::WindingReference", "namespace_c_p_s.html#aaf7be55b085bd7caf823bc32044e975c", [
+      [ "CPS::WindingReference::Auto", "namespace_c_p_s.html#aaf7be55b085bd7caf823bc32044e975ca06b9281e396db002010bde1de57262eb", null ],
+      [ "CPS::WindingReference::Primary", "namespace_c_p_s.html#aaf7be55b085bd7caf823bc32044e975ca074de7e7c226d5c60f8af14c20725352", null ],
+      [ "CPS::WindingReference::Secondary", "namespace_c_p_s.html#aaf7be55b085bd7caf823bc32044e975ca0c7d6cf19426e01dcfa32434828ed266", null ],
+      [ "CPS::WindingReference::Tertiary", "namespace_c_p_s.html#aaf7be55b085bd7caf823bc32044e975ca0521727bc2cea17905e963461d5a0f19", null ]
     ] ]
 ];

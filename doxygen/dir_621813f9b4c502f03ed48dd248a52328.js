@@ -63,6 +63,7 @@ var dir_621813f9b4c502f03ed48dd248a52328 =
     [ "DP_Ph3_SynchronGeneratorDQODE.cpp", "_d_p___ph3___synchron_generator_d_q_o_d_e_8cpp.html", null ],
     [ "DP_Ph3_SynchronGeneratorDQTrapez.cpp", "_d_p___ph3___synchron_generator_d_q_trapez_8cpp.html", null ],
     [ "DP_Ph3_SynchronGeneratorVBR_Deprecated.cpp", "_d_p___ph3___synchron_generator_v_b_r___deprecated_8cpp.html", null ],
+    [ "DP_Ph3_Transformer.cpp", "_d_p___ph3___transformer_8cpp.html", null ],
     [ "DP_Ph3_TwoTerminalITypeSSNComp.cpp", "_d_p___ph3___two_terminal_i_type_s_s_n_comp_8cpp.html", null ],
     [ "DP_Ph3_TwoTerminalVTypeSSNComp.cpp", "_d_p___ph3___two_terminal_v_type_s_s_n_comp_8cpp.html", null ],
     [ "DP_Ph3_VoltageSource.cpp", "_d_p___ph3___voltage_source_8cpp.html", null ],

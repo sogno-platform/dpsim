@@ -34,5 +34,6 @@ var dir_a4d0ec1c07aed1343cf30f65cecac41f =
     [ "SP_Ph3_Inductor.cpp", "_s_p___ph3___inductor_8cpp.html", null ],
     [ "SP_Ph3_PiLine.cpp", "_s_p___ph3___pi_line_8cpp.html", null ],
     [ "SP_Ph3_Resistor.cpp", "_s_p___ph3___resistor_8cpp.html", null ],
+    [ "SP_Ph3_Transformer.cpp", "_s_p___ph3___transformer_8cpp.html", null ],
     [ "SP_Ph3_VoltageSource.cpp", "_s_p___ph3___voltage_source_8cpp.html", null ]
 ];

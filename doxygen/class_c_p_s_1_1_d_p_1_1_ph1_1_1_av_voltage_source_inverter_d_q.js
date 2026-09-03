@@ -20,7 +20,7 @@ var class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q =
     [ "setFilterParameters", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html#a800fc2ffbc40952ad4cbc9f559d2594c", null ],
     [ "setInitialStateValues", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html#a3c7a61c2c06b1df61c9f28e2578bd2a5", null ],
     [ "setParameters", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html#a2a2aa233a09fe70c9a5fa3e1c45680d3", null ],
-    [ "setTransformerParameters", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html#a64603f84d8e6d34cdac2f529028d9884", null ],
+    [ "setTransformerParameters", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html#a05de780ce540e8774185d271adf7ea80", null ],
     [ "withControl", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html#a76ee7f47cc4b97631c039adfc11e70da", null ],
     [ "mConnectionTransformer", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html#a4bf977bfb7fa5aaa9cff6fdbce813abc", null ],
     [ "mIrcd", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html#aea2b1d66221cd5d7dbe38966a01e142e", null ],

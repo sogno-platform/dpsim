@@ -1,5 +1,9 @@
 var NAVTREEINDEX4 =
 {
+"_s_p___ph1___p_q_node_8h.html":[3,0,2,0,0,6,8],
+"_s_p___ph1___p_q_node_8h_source.html":[3,0,2,0,0,6,8],
+"_s_p___ph1___p_v_node_8cpp.html":[3,0,2,1,5,9],
+"_s_p___ph1___p_v_node_8cpp_source.html":[3,0,2,1,5,9],
 "_s_p___ph1___p_v_node_8h.html":[3,0,2,0,0,6,9],
 "_s_p___ph1___p_v_node_8h_source.html":[3,0,2,0,0,6,9],
 "_s_p___ph1___pi_line_8cpp.html":[3,0,2,1,5,7],
@@ -102,10 +106,14 @@ var NAVTREEINDEX4 =
 "_s_p___ph3___resistor_8h_source.html":[3,0,2,0,0,6,32],
 "_s_p___ph3___rx_line_8h.html":[3,0,2,0,0,6,33],
 "_s_p___ph3___rx_line_8h_source.html":[3,0,2,0,0,6,33],
-"_s_p___ph3___voltage_source_8cpp.html":[3,0,2,1,5,34],
-"_s_p___ph3___voltage_source_8cpp_source.html":[3,0,2,1,5,34],
-"_s_p___ph3___voltage_source_8h.html":[3,0,2,0,0,6,34],
-"_s_p___ph3___voltage_source_8h_source.html":[3,0,2,0,0,6,34],
+"_s_p___ph3___transformer_8cpp.html":[3,0,2,1,5,34],
+"_s_p___ph3___transformer_8cpp_source.html":[3,0,2,1,5,34],
+"_s_p___ph3___transformer_8h.html":[3,0,2,0,0,6,34],
+"_s_p___ph3___transformer_8h_source.html":[3,0,2,0,0,6,34],
+"_s_p___ph3___voltage_source_8cpp.html":[3,0,2,1,5,35],
+"_s_p___ph3___voltage_source_8cpp_source.html":[3,0,2,1,5,35],
+"_s_p___ph3___voltage_source_8h.html":[3,0,2,0,0,6,35],
+"_s_p___ph3___voltage_source_8h_source.html":[3,0,2,0,0,6,35],
 "_s_p_components_8cpp.html":[3,0,1,1,0,6],
 "_s_p_components_8cpp.html#a80dbba658f6e24a68406150888d42f24":[3,0,1,1,0,6,2],
 "_s_p_components_8cpp.html#ab3fe0df4aab528ca13aea053ae0db59c":[3,0,1,1,0,6,1],
@@ -241,13 +249,5 @@ var NAVTREEINDEX4 =
 "class_c_p_s_1_1_attribute.html#a202fa49158c4b5d8bb94aee1ff07fb11":[1,0,0,9,2],
 "class_c_p_s_1_1_attribute.html#a202fa49158c4b5d8bb94aee1ff07fb11":[2,0,0,9,2],
 "class_c_p_s_1_1_attribute.html#a300d11c09db31b1723df9036d95ae50c":[1,0,0,9,8],
-"class_c_p_s_1_1_attribute.html#a300d11c09db31b1723df9036d95ae50c":[2,0,0,9,8],
-"class_c_p_s_1_1_attribute.html#a421bf7428537cc353addb39d3c72da0e":[1,0,0,9,10],
-"class_c_p_s_1_1_attribute.html#a421bf7428537cc353addb39d3c72da0e":[2,0,0,9,10],
-"class_c_p_s_1_1_attribute.html#a506d9cb00168e494fdb855978ca9a3e4":[1,0,0,9,7],
-"class_c_p_s_1_1_attribute.html#a506d9cb00168e494fdb855978ca9a3e4":[2,0,0,9,7],
-"class_c_p_s_1_1_attribute.html#a54f5609f916a9dc53321193ed3c723f9":[1,0,0,9,15],
-"class_c_p_s_1_1_attribute.html#a54f5609f916a9dc53321193ed3c723f9":[2,0,0,9,15],
-"class_c_p_s_1_1_attribute.html#a5b33beb625bf79a8a868e6d0019e63e1":[1,0,0,9,3],
-"class_c_p_s_1_1_attribute.html#a5b33beb625bf79a8a868e6d0019e63e1":[2,0,0,9,3]
+"class_c_p_s_1_1_attribute.html#a300d11c09db31b1723df9036d95ae50c":[2,0,0,9,8]
 };

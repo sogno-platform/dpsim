@@ -2,100 +2,100 @@
 <area shape="rect" id="Node000001" title="Interface to be implemented by all models used by the MNA solver." alt="" coords="5,1593,147,1623"/>
 <area shape="rect" id="Node000002" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="579,1250,761,1299"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,1583,195,1538,623,1297,626,1302,197,1542,118,1588"/>
-<area shape="rect" id="Node000100" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="579,2384,761,2432"/>
-<area shape="poly" id="edge43_Node000001_Node000100" title=" " alt="" coords="100,1634,652,2382,648,2385,96,1637"/>
-<area shape="rect" id="Node000181" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html" title=" " alt="" coords="196,1624,453,1654"/>
-<area shape="poly" id="edge47_Node000001_Node000181" title=" " alt="" coords="162,1616,200,1621,199,1626,162,1621"/>
-<area shape="rect" id="Node000182" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title="Base class for all MNA components that are transmitting power." alt="" coords="234,1552,415,1600"/>
-<area shape="poly" id="edge48_Node000001_Node000182" title=" " alt="" coords="162,1595,233,1585,234,1590,162,1600"/>
+<area shape="rect" id="Node000102" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="579,2384,761,2432"/>
+<area shape="poly" id="edge43_Node000001_Node000102" title=" " alt="" coords="100,1634,652,2382,648,2385,96,1637"/>
+<area shape="rect" id="Node000183" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html" title=" " alt="" coords="196,1624,453,1654"/>
+<area shape="poly" id="edge47_Node000001_Node000183" title=" " alt="" coords="162,1616,200,1621,199,1626,162,1621"/>
+<area shape="rect" id="Node000184" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title="Base class for all MNA components that are transmitting power." alt="" coords="234,1552,415,1600"/>
+<area shape="poly" id="edge48_Node000001_Node000184" title=" " alt="" coords="162,1595,233,1585,234,1590,162,1600"/>
 <area shape="rect" id="Node000003" href="$class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html" title=" " alt="" coords="817,165,1055,214"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="668,1235,671,1026,677,881,687,724,704,568,729,425,745,362,763,307,784,260,808,225,822,212,826,216,812,229,789,263,768,308,750,363,734,426,710,569,693,724,682,881,676,1026,674,1235"/>
 <area shape="rect" id="Node000020" href="$class_c_p_s_1_1_composite_power_comp.html" title=" " alt="" coords="839,238,1033,287"/>
 <area shape="poly" id="edge3_Node000002_Node000020" title=" " alt="" coords="673,1234,712,898,744,661,782,420,785,384,784,354,789,326,808,297,837,276,840,281,812,301,794,328,789,354,790,384,787,420,750,662,718,899,678,1235"/>
-<area shape="rect" id="Node000044" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_capacitor.html" title="Capacitor model." alt="" coords="852,311,1020,340"/>
-<area shape="poly" id="edge4_Node000002_Node000044" title=" " alt="" coords="672,1235,708,907,740,677,782,442,786,392,792,371,808,350,828,336,850,328,852,333,831,341,812,354,797,374,792,393,787,443,745,677,713,907,677,1235"/>
-<area shape="rect" id="Node000045" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_controlled_current_source.html" title="Dynamic phasor ideal current source." alt="" coords="849,364,1023,412"/>
-<area shape="poly" id="edge5_Node000002_Node000045" title=" " alt="" coords="670,1235,677,1062,686,944,698,819,716,694,740,581,770,488,788,451,808,424,826,409,847,398,850,403,829,413,812,427,792,454,775,490,745,582,721,695,704,819,691,945,683,1062,675,1235"/>
-<area shape="rect" id="Node000046" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_controlled_voltage_source.html" title="Controlled Ideal Voltage source model." alt="" coords="849,437,1023,486"/>
-<area shape="poly" id="edge6_Node000002_Node000046" title=" " alt="" coords="672,1235,685,1119,706,953,739,760,782,565,789,527,795,512,808,496,827,482,848,472,850,477,829,487,812,499,800,514,794,529,787,566,744,761,712,953,690,1120,678,1235"/>
-<area shape="rect" id="Node000047" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_current_source.html" title="Dynamic phasor ideal current source." alt="" coords="836,509,1036,539"/>
-<area shape="poly" id="edge7_Node000002_Node000047" title=" " alt="" coords="670,1235,681,1083,704,877,722,773,745,678,773,601,790,571,808,549,834,532,837,536,812,553,794,574,778,603,750,680,727,774,710,878,686,1084,676,1235"/>
-<area shape="rect" id="Node000048" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor.html" title="Inductor." alt="" coords="854,563,1018,592"/>
-<area shape="poly" id="edge8_Node000002_Node000048" title=" " alt="" coords="674,1235,711,996,742,834,782,672,789,634,795,618,808,602,829,589,853,580,854,585,832,593,812,606,799,621,794,635,787,673,748,835,716,996,679,1236"/>
-<area shape="rect" id="Node000049" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html" title="Single phase inverter model." alt="" coords="854,616,1018,646"/>
-<area shape="poly" id="edge9_Node000002_Node000049" title=" " alt="" coords="672,1234,686,1103,712,929,730,842,752,763,778,699,792,674,808,656,829,641,853,632,855,637,832,646,812,659,797,677,783,701,757,765,735,843,717,930,691,1104,677,1235"/>
-<area shape="rect" id="Node000050" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_mixed_v_type_variable_s_s_n_comp.html" title=" " alt="" coords="843,669,1029,718"/>
-<area shape="poly" id="edge10_Node000002_Node000050" title=" " alt="" coords="674,1235,691,1118,719,967,737,892,758,823,782,767,808,729,824,716,842,707,844,712,827,721,812,733,786,770,763,825,742,893,724,968,696,1119,679,1235"/>
-<area shape="rect" id="Node000053" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_profile_voltage_source.html" title=" " alt="" coords="838,742,1035,791"/>
-<area shape="poly" id="edge11_Node000002_Node000053" title=" " alt="" coords="675,1235,693,1132,722,1001,741,937,761,879,784,832,808,801,836,783,838,788,812,805,788,835,766,881,746,939,728,1003,698,1133,680,1236"/>
-<area shape="rect" id="Node000054" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_res_ind_series.html" title="resistor inductor series element" alt="" coords="840,815,1032,844"/>
-<area shape="poly" id="edge12_Node000002_Node000054" title=" " alt="" coords="669,1235,675,1153,683,1103,695,1049,713,995,737,943,768,895,808,854,839,837,842,842,812,858,772,898,741,945,717,997,700,1050,688,1104,680,1154,674,1235"/>
-<area shape="rect" id="Node000055" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_resistor.html" title="Dynamic phasor resistor model." alt="" coords="856,868,1016,898"/>
-<area shape="poly" id="edge13_Node000002_Node000055" title=" " alt="" coords="671,1234,681,1163,704,1074,722,1028,745,983,773,943,808,907,830,894,855,885,857,891,833,899,812,912,777,946,749,986,727,1030,709,1076,687,1164,677,1235"/>
-<area shape="rect" id="Node000056" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_switch.html" title="Dynamic phasor switch." alt="" coords="862,921,1011,951"/>
-<area shape="poly" id="edge14_Node000002_Node000056" title=" " alt="" coords="675,1235,688,1174,713,1099,731,1061,752,1024,778,990,808,961,833,946,860,938,862,943,835,951,812,965,782,994,757,1027,736,1063,718,1101,693,1175,680,1236"/>
-<area shape="rect" id="Node000057" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="836,975,1036,1004"/>
-<area shape="poly" id="edge15_Node000002_Node000057" title=" " alt="" coords="679,1235,695,1184,722,1124,759,1064,782,1037,808,1014,835,999,838,1004,812,1018,786,1041,763,1067,726,1126,700,1186,684,1236"/>
-<area shape="rect" id="Node000058" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_norton.html" title="Resistive dynamic phasor voltage source." alt="" coords="836,1028,1036,1076"/>
-<area shape="poly" id="edge16_Node000002_Node000058" title=" " alt="" coords="688,1236,708,1200,735,1159,769,1120,808,1086,835,1072,837,1076,812,1090,773,1124,740,1163,713,1203,692,1238"/>
-<area shape="rect" id="Node000059" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1var_res_switch.html" title="Switch with variable resistance to avoid numerical oscillations, when an inductive current is suddenl..." alt="" coords="840,1100,1032,1130"/>
-<area shape="poly" id="edge17_Node000002_Node000059" title=" " alt="" coords="698,1236,746,1185,776,1160,809,1139,839,1127,841,1132,811,1144,779,1164,749,1189,702,1240"/>
-<area shape="rect" id="Node000060" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html" title="Capacitor model." alt="" coords="852,1153,1020,1183"/>
-<area shape="poly" id="edge18_Node000002_Node000060" title=" " alt="" coords="718,1240,761,1214,809,1192,851,1180,853,1185,811,1197,764,1219,721,1244"/>
-<area shape="rect" id="Node000061" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_current_source.html" title="Ideal current source model." alt="" coords="836,1207,1036,1236"/>
-<area shape="poly" id="edge19_Node000002_Node000061" title=" " alt="" coords="776,1251,858,1234,859,1240,777,1256"/>
-<area shape="rect" id="Node000062" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html" title="Three&#45;phase dynamic&#45;phasor inductor." alt="" coords="854,1260,1018,1290"/>
-<area shape="poly" id="edge20_Node000002_Node000062" title=" " alt="" coords="777,1272,854,1272,854,1278,777,1278"/>
-<area shape="rect" id="Node000063" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html" title=" " alt="" coords="843,1313,1029,1362"/>
-<area shape="poly" id="edge21_Node000002_Node000063" title=" " alt="" coords="776,1297,843,1313,842,1318,775,1302"/>
-<area shape="rect" id="Node000065" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_resistor.html" title="Three&#45;phase dynamic&#45;phasor resistor." alt="" coords="856,1385,1016,1415"/>
-<area shape="poly" id="edge22_Node000002_Node000065" title=" " alt="" coords="712,1307,758,1341,811,1371,856,1386,855,1391,809,1376,755,1346,709,1312"/>
-<area shape="rect" id="Node000066" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_resistor.html" title=" " alt="" coords="837,1439,1035,1468"/>
-<area shape="poly" id="edge23_Node000002_Node000066" title=" " alt="" coords="697,1311,745,1370,777,1400,811,1425,838,1436,835,1441,809,1429,773,1404,742,1374,693,1314"/>
-<area shape="rect" id="Node000067" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html" title="Dynamic phasor three&#45;phase switch." alt="" coords="842,1492,1030,1522"/>
-<area shape="poly" id="edge24_Node000002_Node000067" title=" " alt="" coords="689,1313,708,1353,735,1398,770,1442,811,1478,843,1493,841,1498,809,1482,766,1445,731,1401,704,1355,684,1315"/>
-<area shape="rect" id="Node000068" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html" title=" " alt="" coords="862,1545,1011,1575"/>
-<area shape="poly" id="edge25_Node000002_Node000068" title=" " alt="" coords="684,1313,700,1364,726,1423,763,1482,786,1509,812,1531,835,1545,862,1553,860,1558,833,1549,808,1536,782,1512,759,1486,722,1426,695,1366,679,1315"/>
-<area shape="rect" id="Node000069" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q.html" title="Synchronous generator model in dq&#45;reference frame." alt="" coords="810,1599,1062,1628"/>
-<area shape="poly" id="edge26_Node000002_Node000069" title=" " alt="" coords="680,1314,693,1375,718,1448,736,1486,757,1523,782,1556,812,1585,829,1596,827,1600,808,1589,778,1559,752,1526,731,1489,713,1450,688,1376,675,1315"/>
-<area shape="rect" id="Node000072" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="836,1652,1036,1682"/>
-<area shape="poly" id="edge27_Node000002_Node000072" title=" " alt="" coords="677,1315,688,1385,710,1473,728,1519,750,1563,778,1603,812,1638,838,1654,835,1658,808,1642,774,1607,746,1565,723,1521,705,1475,682,1386,672,1315"/>
-<area shape="rect" id="Node000073" href="$class_c_p_s_1_1_d_p_1_1_s_s_n_comp.html" title="Abstract base class for DP/SFA state&#45;space nodal (SSN) components." alt="" coords="867,1705,1005,1735"/>
-<area shape="poly" id="edge28_Node000002_Node000073" title=" " alt="" coords="675,1315,682,1395,690,1445,702,1498,720,1551,743,1603,774,1650,812,1691,838,1707,868,1716,866,1721,836,1712,808,1696,770,1654,739,1605,715,1553,697,1499,685,1446,676,1396,669,1315"/>
-<area shape="rect" id="Node000086" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_capacitor.html" title=" " alt="" coords="854,1759,1019,1788"/>
-<area shape="poly" id="edge29_Node000002_Node000086" title=" " alt="" coords="680,1314,699,1417,728,1547,746,1611,766,1668,788,1714,812,1745,831,1758,854,1766,852,1771,829,1763,808,1749,784,1717,761,1670,741,1612,723,1548,693,1418,675,1315"/>
-<area shape="rect" id="Node000087" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_controlled_current_source.html" title="Ideal Current source model." alt="" coords="850,1812,1022,1860"/>
-<area shape="poly" id="edge30_Node000002_Node000087" title=" " alt="" coords="679,1314,697,1427,725,1572,743,1645,764,1710,787,1763,812,1798,830,1812,851,1822,849,1826,827,1816,808,1802,782,1765,759,1712,738,1646,720,1573,691,1428,674,1315"/>
-<area shape="rect" id="Node000088" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_controlled_voltage_source.html" title="Ideal Voltage source model." alt="" coords="850,1885,1022,1934"/>
-<area shape="poly" id="edge31_Node000002_Node000088" title=" " alt="" coords="678,1315,694,1441,721,1608,739,1691,760,1767,785,1829,812,1870,830,1885,851,1895,849,1900,827,1889,808,1874,780,1831,755,1768,734,1692,716,1609,688,1442,673,1315"/>
-<area shape="rect" id="Node000089" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_inductor.html" title="Static phasor inductor model." alt="" coords="856,1957,1017,1987"/>
-<area shape="poly" id="edge32_Node000002_Node000089" title=" " alt="" coords="677,1315,689,1456,714,1645,732,1741,754,1827,781,1897,796,1924,812,1944,832,1958,856,1966,854,1971,830,1962,808,1947,791,1927,776,1899,749,1829,727,1742,708,1646,683,1456,671,1315"/>
-<area shape="rect" id="Node000090" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_resistor.html" title="Static phasor resistor model." alt="" coords="858,2011,1015,2040"/>
-<area shape="poly" id="edge33_Node000002_Node000090" title=" " alt="" coords="676,1314,685,1466,708,1673,726,1777,749,1871,777,1947,794,1976,812,1997,833,2011,858,2019,856,2024,831,2016,808,2001,789,1979,773,1949,744,1873,721,1778,703,1674,680,1467,670,1315"/>
-<area shape="rect" id="Node000091" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_s_s_n_type_i2_t.html" title="SSNTypeI2T Model for a one phase, two terminal I&#45;type SSN component which can be represented using a ..." alt="" coords="846,2064,1027,2094"/>
-<area shape="poly" id="edge34_Node000002_Node000091" title=" " alt="" coords="678,1314,715,1591,747,1780,787,1972,793,2016,798,2033,812,2050,828,2061,846,2069,844,2074,825,2066,808,2054,793,2035,788,2017,782,1973,742,1781,710,1592,673,1315"/>
-<area shape="rect" id="Node000092" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_s_s_n_type_v2_t.html" title="SSNTypeV2T Model for a one phase, two terminal V&#45;type SSN component which can be represented using a ..." alt="" coords="844,2117,1028,2147"/>
-<area shape="poly" id="edge35_Node000002_Node000092" title=" " alt="" coords="675,1315,682,1485,690,1601,703,1723,720,1844,744,1954,774,2044,792,2078,812,2104,827,2115,845,2123,843,2128,824,2120,808,2107,788,2081,769,2046,739,1956,715,1845,698,1724,685,1601,677,1486,669,1315"/>
-<area shape="rect" id="Node000093" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_switch.html" title="Dynamic phasor switch." alt="" coords="863,2171,1009,2200"/>
-<area shape="poly" id="edge36_Node000002_Node000093" title=" " alt="" coords="677,1314,690,1443,712,1632,744,1853,787,2077,793,2122,798,2139,812,2157,836,2172,864,2181,862,2186,833,2177,808,2161,793,2142,787,2123,782,2078,739,1853,707,1632,684,1443,672,1315"/>
-<area shape="rect" id="Node000094" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="838,2224,1034,2254"/>
-<area shape="poly" id="edge37_Node000002_Node000094" title=" " alt="" coords="674,1314,678,1505,684,1635,695,1775,712,1914,737,2040,752,2094,770,2142,790,2181,812,2210,839,2228,836,2232,808,2214,785,2184,765,2144,747,2096,732,2041,707,1914,690,1776,679,1636,672,1505,669,1315"/>
-<area shape="rect" id="Node000095" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1var_res_switch.html" title="Switch with variable resistance to avoid numerical oscillations, when an inductive current is suddenl..." alt="" coords="842,2277,1030,2307"/>
-<area shape="poly" id="edge38_Node000002_Node000095" title=" " alt="" coords="676,1315,687,1458,708,1673,741,1926,762,2056,787,2184,792,2229,798,2246,812,2263,843,2282,840,2286,808,2268,793,2248,787,2230,782,2185,757,2057,736,1927,703,1673,682,1458,671,1315"/>
-<area shape="rect" id="Node000096" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_capacitor.html" title="Capacitor model." alt="" coords="854,2331,1019,2360"/>
-<area shape="poly" id="edge39_Node000002_Node000096" title=" " alt="" coords="678,1314,716,1676,748,1933,787,2196,790,2233,789,2263,793,2290,812,2317,831,2331,854,2340,852,2345,829,2336,808,2321,788,2292,783,2263,784,2233,782,2196,743,1934,711,1677,672,1315"/>
-<area shape="rect" id="Node000097" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html" title="Inductor." alt="" coords="856,5,1017,35"/>
-<area shape="poly" id="edge40_Node000002_Node000097" title=" " alt="" coords="671,1235,706,804,739,490,782,169,784,133,783,102,788,74,808,45,830,30,854,21,856,26,832,34,812,49,793,76,788,103,789,133,787,170,744,491,712,804,677,1235"/>
-<area shape="rect" id="Node000098" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_resistor.html" title=" " alt="" coords="858,59,1015,88"/>
-<area shape="poly" id="edge41_Node000002_Node000098" title=" " alt="" coords="672,1235,708,823,740,527,782,223,784,186,783,155,788,127,808,98,831,82,856,73,858,79,833,87,812,102,793,129,789,156,789,186,787,223,746,527,713,824,677,1235"/>
-<area shape="rect" id="Node000099" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="838,112,1034,142"/>
-<area shape="poly" id="edge42_Node000002_Node000099" title=" " alt="" coords="671,1235,681,1075,702,831,735,541,757,391,782,245,786,194,792,173,808,152,836,134,839,139,812,155,797,175,791,195,787,246,762,392,740,542,707,831,687,1076,676,1235"/>
-<area shape="rect" id="Node000101" href="$class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html" title=" " alt="" coords="817,2509,1055,2558"/>
-<area shape="poly" id="edge44_Node000100_Node000101" title=" " alt="" coords="718,2440,762,2469,811,2495,839,2506,837,2511,809,2500,759,2473,715,2444"/>
-<area shape="rect" id="Node000109" href="$class_c_p_s_1_1_composite_power_comp.html" title=" " alt="" coords="839,2384,1033,2432"/>
-<area shape="poly" id="edge45_Node000100_Node000109" title=" " alt="" coords="776,2406,839,2406,839,2411,776,2411"/>
-<area shape="rect" id="Node000125" href="$class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_current_source.html" title=" " alt="" coords="835,2456,1037,2486"/>
-<area shape="poly" id="edge46_Node000100_Node000125" title=" " alt="" coords="776,2433,811,2442,861,2453,860,2458,809,2447,775,2438"/>
-<area shape="poly" id="edge49_Node000182_Node000002" title=" " alt="" coords="430,1569,495,1553,526,1540,554,1521,578,1497,599,1469,631,1407,651,1347,662,1299,667,1300,656,1348,636,1409,604,1472,582,1501,557,1525,528,1544,497,1558,431,1574"/>
-<area shape="poly" id="edge50_Node000182_Node000100" title=" " alt="" coords="430,1593,455,1610,477,1636,498,1671,536,1762,570,1872,600,1993,645,2226,668,2383,663,2384,639,2227,595,1994,565,1874,531,1763,493,1674,473,1639,452,1614,427,1598"/>
+<area shape="rect" id="Node000046" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_capacitor.html" title="Capacitor model." alt="" coords="852,311,1020,340"/>
+<area shape="poly" id="edge4_Node000002_Node000046" title=" " alt="" coords="672,1235,708,907,740,677,782,442,786,392,792,371,808,350,828,336,850,328,852,333,831,341,812,354,797,374,792,393,787,443,745,677,713,907,677,1235"/>
+<area shape="rect" id="Node000047" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_controlled_current_source.html" title="Dynamic phasor ideal current source." alt="" coords="849,364,1023,412"/>
+<area shape="poly" id="edge5_Node000002_Node000047" title=" " alt="" coords="670,1235,677,1062,686,944,698,819,716,694,740,581,770,488,788,451,808,424,826,409,847,398,850,403,829,413,812,427,792,454,775,490,745,582,721,695,704,819,691,945,683,1062,675,1235"/>
+<area shape="rect" id="Node000048" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_controlled_voltage_source.html" title="Controlled Ideal Voltage source model." alt="" coords="849,437,1023,486"/>
+<area shape="poly" id="edge6_Node000002_Node000048" title=" " alt="" coords="672,1235,685,1119,706,953,739,760,782,565,789,527,795,512,808,496,827,482,848,472,850,477,829,487,812,499,800,514,794,529,787,566,744,761,712,953,690,1120,678,1235"/>
+<area shape="rect" id="Node000049" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_current_source.html" title="Dynamic phasor ideal current source." alt="" coords="836,509,1036,539"/>
+<area shape="poly" id="edge7_Node000002_Node000049" title=" " alt="" coords="670,1235,681,1083,704,877,722,773,745,678,773,601,790,571,808,549,834,532,837,536,812,553,794,574,778,603,750,680,727,774,710,878,686,1084,676,1235"/>
+<area shape="rect" id="Node000050" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor.html" title="Inductor." alt="" coords="854,563,1018,592"/>
+<area shape="poly" id="edge8_Node000002_Node000050" title=" " alt="" coords="674,1235,711,996,742,834,782,672,789,634,795,618,808,602,829,589,853,580,854,585,832,593,812,606,799,621,794,635,787,673,748,835,716,996,679,1236"/>
+<area shape="rect" id="Node000051" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html" title="Single phase inverter model." alt="" coords="854,616,1018,646"/>
+<area shape="poly" id="edge9_Node000002_Node000051" title=" " alt="" coords="672,1234,686,1103,712,929,730,842,752,763,778,699,792,674,808,656,829,641,853,632,855,637,832,646,812,659,797,677,783,701,757,765,735,843,717,930,691,1104,677,1235"/>
+<area shape="rect" id="Node000052" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_mixed_v_type_variable_s_s_n_comp.html" title=" " alt="" coords="843,669,1029,718"/>
+<area shape="poly" id="edge10_Node000002_Node000052" title=" " alt="" coords="674,1235,691,1118,719,967,737,892,758,823,782,767,808,729,824,716,842,707,844,712,827,721,812,733,786,770,763,825,742,893,724,968,696,1119,679,1235"/>
+<area shape="rect" id="Node000055" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_profile_voltage_source.html" title=" " alt="" coords="838,742,1035,791"/>
+<area shape="poly" id="edge11_Node000002_Node000055" title=" " alt="" coords="675,1235,693,1132,722,1001,741,937,761,879,784,832,808,801,836,783,838,788,812,805,788,835,766,881,746,939,728,1003,698,1133,680,1236"/>
+<area shape="rect" id="Node000056" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_res_ind_series.html" title="resistor inductor series element" alt="" coords="840,815,1032,844"/>
+<area shape="poly" id="edge12_Node000002_Node000056" title=" " alt="" coords="669,1235,675,1153,683,1103,695,1049,713,995,737,943,768,895,808,854,839,837,842,842,812,858,772,898,741,945,717,997,700,1050,688,1104,680,1154,674,1235"/>
+<area shape="rect" id="Node000057" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_resistor.html" title="Dynamic phasor resistor model." alt="" coords="856,868,1016,898"/>
+<area shape="poly" id="edge13_Node000002_Node000057" title=" " alt="" coords="671,1234,681,1163,704,1074,722,1028,745,983,773,943,808,907,830,894,855,885,857,891,833,899,812,912,777,946,749,986,727,1030,709,1076,687,1164,677,1235"/>
+<area shape="rect" id="Node000058" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_switch.html" title="Dynamic phasor switch." alt="" coords="862,921,1011,951"/>
+<area shape="poly" id="edge14_Node000002_Node000058" title=" " alt="" coords="675,1235,688,1174,713,1099,731,1061,752,1024,778,990,808,961,833,946,860,938,862,943,835,951,812,965,782,994,757,1027,736,1063,718,1101,693,1175,680,1236"/>
+<area shape="rect" id="Node000059" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="836,975,1036,1004"/>
+<area shape="poly" id="edge15_Node000002_Node000059" title=" " alt="" coords="679,1235,695,1184,722,1124,759,1064,782,1037,808,1014,835,999,838,1004,812,1018,786,1041,763,1067,726,1126,700,1186,684,1236"/>
+<area shape="rect" id="Node000060" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_norton.html" title="Resistive dynamic phasor voltage source." alt="" coords="836,1028,1036,1076"/>
+<area shape="poly" id="edge16_Node000002_Node000060" title=" " alt="" coords="688,1236,708,1200,735,1159,769,1120,808,1086,835,1072,837,1076,812,1090,773,1124,740,1163,713,1203,692,1238"/>
+<area shape="rect" id="Node000061" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1var_res_switch.html" title="Switch with variable resistance to avoid numerical oscillations, when an inductive current is suddenl..." alt="" coords="840,1100,1032,1130"/>
+<area shape="poly" id="edge17_Node000002_Node000061" title=" " alt="" coords="698,1236,746,1185,776,1160,809,1139,839,1127,841,1132,811,1144,779,1164,749,1189,702,1240"/>
+<area shape="rect" id="Node000062" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html" title="Capacitor model." alt="" coords="852,1153,1020,1183"/>
+<area shape="poly" id="edge18_Node000002_Node000062" title=" " alt="" coords="718,1240,761,1214,809,1192,851,1180,853,1185,811,1197,764,1219,721,1244"/>
+<area shape="rect" id="Node000063" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_current_source.html" title="Ideal current source model." alt="" coords="836,1207,1036,1236"/>
+<area shape="poly" id="edge19_Node000002_Node000063" title=" " alt="" coords="776,1251,858,1234,859,1240,777,1256"/>
+<area shape="rect" id="Node000064" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html" title="Three&#45;phase dynamic&#45;phasor inductor." alt="" coords="854,1260,1018,1290"/>
+<area shape="poly" id="edge20_Node000002_Node000064" title=" " alt="" coords="777,1272,854,1272,854,1278,777,1278"/>
+<area shape="rect" id="Node000065" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html" title=" " alt="" coords="843,1313,1029,1362"/>
+<area shape="poly" id="edge21_Node000002_Node000065" title=" " alt="" coords="776,1297,843,1313,842,1318,775,1302"/>
+<area shape="rect" id="Node000067" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_resistor.html" title="Three&#45;phase dynamic&#45;phasor resistor." alt="" coords="856,1385,1016,1415"/>
+<area shape="poly" id="edge22_Node000002_Node000067" title=" " alt="" coords="712,1307,758,1341,811,1371,856,1386,855,1391,809,1376,755,1346,709,1312"/>
+<area shape="rect" id="Node000068" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_resistor.html" title=" " alt="" coords="837,1439,1035,1468"/>
+<area shape="poly" id="edge23_Node000002_Node000068" title=" " alt="" coords="697,1311,745,1370,777,1400,811,1425,838,1436,835,1441,809,1429,773,1404,742,1374,693,1314"/>
+<area shape="rect" id="Node000069" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html" title="Dynamic phasor three&#45;phase switch." alt="" coords="842,1492,1030,1522"/>
+<area shape="poly" id="edge24_Node000002_Node000069" title=" " alt="" coords="689,1313,708,1353,735,1398,770,1442,811,1478,843,1493,841,1498,809,1482,766,1445,731,1401,704,1355,684,1315"/>
+<area shape="rect" id="Node000070" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html" title=" " alt="" coords="862,1545,1011,1575"/>
+<area shape="poly" id="edge25_Node000002_Node000070" title=" " alt="" coords="684,1313,700,1364,726,1423,763,1482,786,1509,812,1531,835,1545,862,1553,860,1558,833,1549,808,1536,782,1512,759,1486,722,1426,695,1366,679,1315"/>
+<area shape="rect" id="Node000071" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q.html" title="Synchronous generator model in dq&#45;reference frame." alt="" coords="810,1599,1062,1628"/>
+<area shape="poly" id="edge26_Node000002_Node000071" title=" " alt="" coords="680,1314,693,1375,718,1448,736,1486,757,1523,782,1556,812,1585,829,1596,827,1600,808,1589,778,1559,752,1526,731,1489,713,1450,688,1376,675,1315"/>
+<area shape="rect" id="Node000074" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="836,1652,1036,1682"/>
+<area shape="poly" id="edge27_Node000002_Node000074" title=" " alt="" coords="677,1315,688,1385,710,1473,728,1519,750,1563,778,1603,812,1638,838,1654,835,1658,808,1642,774,1607,746,1565,723,1521,705,1475,682,1386,672,1315"/>
+<area shape="rect" id="Node000075" href="$class_c_p_s_1_1_d_p_1_1_s_s_n_comp.html" title="Abstract base class for DP/SFA state&#45;space nodal (SSN) components." alt="" coords="867,1705,1005,1735"/>
+<area shape="poly" id="edge28_Node000002_Node000075" title=" " alt="" coords="675,1315,682,1395,690,1445,702,1498,720,1551,743,1603,774,1650,812,1691,838,1707,868,1716,866,1721,836,1712,808,1696,770,1654,739,1605,715,1553,697,1499,685,1446,676,1396,669,1315"/>
+<area shape="rect" id="Node000088" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_capacitor.html" title=" " alt="" coords="854,1759,1019,1788"/>
+<area shape="poly" id="edge29_Node000002_Node000088" title=" " alt="" coords="680,1314,699,1417,728,1547,746,1611,766,1668,788,1714,812,1745,831,1758,854,1766,852,1771,829,1763,808,1749,784,1717,761,1670,741,1612,723,1548,693,1418,675,1315"/>
+<area shape="rect" id="Node000089" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_controlled_current_source.html" title="Ideal Current source model." alt="" coords="850,1812,1022,1860"/>
+<area shape="poly" id="edge30_Node000002_Node000089" title=" " alt="" coords="679,1314,697,1427,725,1572,743,1645,764,1710,787,1763,812,1798,830,1812,851,1822,849,1826,827,1816,808,1802,782,1765,759,1712,738,1646,720,1573,691,1428,674,1315"/>
+<area shape="rect" id="Node000090" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_controlled_voltage_source.html" title="Ideal Voltage source model." alt="" coords="850,1885,1022,1934"/>
+<area shape="poly" id="edge31_Node000002_Node000090" title=" " alt="" coords="678,1315,694,1441,721,1608,739,1691,760,1767,785,1829,812,1870,830,1885,851,1895,849,1900,827,1889,808,1874,780,1831,755,1768,734,1692,716,1609,688,1442,673,1315"/>
+<area shape="rect" id="Node000091" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_inductor.html" title="Static phasor inductor model." alt="" coords="856,1957,1017,1987"/>
+<area shape="poly" id="edge32_Node000002_Node000091" title=" " alt="" coords="677,1315,689,1456,714,1645,732,1741,754,1827,781,1897,796,1924,812,1944,832,1958,856,1966,854,1971,830,1962,808,1947,791,1927,776,1899,749,1829,727,1742,708,1646,683,1456,671,1315"/>
+<area shape="rect" id="Node000092" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_resistor.html" title="Static phasor resistor model." alt="" coords="858,2011,1015,2040"/>
+<area shape="poly" id="edge33_Node000002_Node000092" title=" " alt="" coords="676,1314,685,1466,708,1673,726,1777,749,1871,777,1947,794,1976,812,1997,833,2011,858,2019,856,2024,831,2016,808,2001,789,1979,773,1949,744,1873,721,1778,703,1674,680,1467,670,1315"/>
+<area shape="rect" id="Node000093" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_s_s_n_type_i2_t.html" title="SSNTypeI2T Model for a one phase, two terminal I&#45;type SSN component which can be represented using a ..." alt="" coords="846,2064,1027,2094"/>
+<area shape="poly" id="edge34_Node000002_Node000093" title=" " alt="" coords="678,1314,715,1591,747,1780,787,1972,793,2016,798,2033,812,2050,828,2061,846,2069,844,2074,825,2066,808,2054,793,2035,788,2017,782,1973,742,1781,710,1592,673,1315"/>
+<area shape="rect" id="Node000094" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_s_s_n_type_v2_t.html" title="SSNTypeV2T Model for a one phase, two terminal V&#45;type SSN component which can be represented using a ..." alt="" coords="844,2117,1028,2147"/>
+<area shape="poly" id="edge35_Node000002_Node000094" title=" " alt="" coords="675,1315,682,1485,690,1601,703,1723,720,1844,744,1954,774,2044,792,2078,812,2104,827,2115,845,2123,843,2128,824,2120,808,2107,788,2081,769,2046,739,1956,715,1845,698,1724,685,1601,677,1486,669,1315"/>
+<area shape="rect" id="Node000095" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_switch.html" title="Dynamic phasor switch." alt="" coords="863,2171,1009,2200"/>
+<area shape="poly" id="edge36_Node000002_Node000095" title=" " alt="" coords="677,1314,690,1443,712,1632,744,1853,787,2077,793,2122,798,2139,812,2157,836,2172,864,2181,862,2186,833,2177,808,2161,793,2142,787,2123,782,2078,739,1853,707,1632,684,1443,672,1315"/>
+<area shape="rect" id="Node000096" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="838,2224,1034,2254"/>
+<area shape="poly" id="edge37_Node000002_Node000096" title=" " alt="" coords="674,1314,678,1505,684,1635,695,1775,712,1914,737,2040,752,2094,770,2142,790,2181,812,2210,839,2228,836,2232,808,2214,785,2184,765,2144,747,2096,732,2041,707,1914,690,1776,679,1636,672,1505,669,1315"/>
+<area shape="rect" id="Node000097" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1var_res_switch.html" title="Switch with variable resistance to avoid numerical oscillations, when an inductive current is suddenl..." alt="" coords="842,2277,1030,2307"/>
+<area shape="poly" id="edge38_Node000002_Node000097" title=" " alt="" coords="676,1315,687,1458,708,1673,741,1926,762,2056,787,2184,792,2229,798,2246,812,2263,843,2282,840,2286,808,2268,793,2248,787,2230,782,2185,757,2057,736,1927,703,1673,682,1458,671,1315"/>
+<area shape="rect" id="Node000098" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_capacitor.html" title="Capacitor model." alt="" coords="854,2331,1019,2360"/>
+<area shape="poly" id="edge39_Node000002_Node000098" title=" " alt="" coords="678,1314,716,1676,748,1933,787,2196,790,2233,789,2263,793,2290,812,2317,831,2331,854,2340,852,2345,829,2336,808,2321,788,2292,783,2263,784,2233,782,2196,743,1934,711,1677,672,1315"/>
+<area shape="rect" id="Node000099" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html" title="Inductor." alt="" coords="856,5,1017,35"/>
+<area shape="poly" id="edge40_Node000002_Node000099" title=" " alt="" coords="671,1235,706,804,739,490,782,169,784,133,783,102,788,74,808,45,830,30,854,21,856,26,832,34,812,49,793,76,788,103,789,133,787,170,744,491,712,804,677,1235"/>
+<area shape="rect" id="Node000100" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_resistor.html" title=" " alt="" coords="858,59,1015,88"/>
+<area shape="poly" id="edge41_Node000002_Node000100" title=" " alt="" coords="672,1235,708,823,740,527,782,223,784,186,783,155,788,127,808,98,831,82,856,73,858,79,833,87,812,102,793,129,789,156,789,186,787,223,746,527,713,824,677,1235"/>
+<area shape="rect" id="Node000101" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_voltage_source.html" title="Ideal Voltage source model." alt="" coords="838,112,1034,142"/>
+<area shape="poly" id="edge42_Node000002_Node000101" title=" " alt="" coords="671,1235,681,1075,702,831,735,541,757,391,782,245,786,194,792,173,808,152,836,134,839,139,812,155,797,175,791,195,787,246,762,392,740,542,707,831,687,1076,676,1235"/>
+<area shape="rect" id="Node000103" href="$class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html" title=" " alt="" coords="817,2509,1055,2558"/>
+<area shape="poly" id="edge44_Node000102_Node000103" title=" " alt="" coords="718,2440,762,2469,811,2495,839,2506,837,2511,809,2500,759,2473,715,2444"/>
+<area shape="rect" id="Node000111" href="$class_c_p_s_1_1_composite_power_comp.html" title=" " alt="" coords="839,2384,1033,2432"/>
+<area shape="poly" id="edge45_Node000102_Node000111" title=" " alt="" coords="776,2406,839,2406,839,2411,776,2411"/>
+<area shape="rect" id="Node000127" href="$class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_current_source.html" title=" " alt="" coords="835,2456,1037,2486"/>
+<area shape="poly" id="edge46_Node000102_Node000127" title=" " alt="" coords="776,2433,811,2442,861,2453,860,2458,809,2447,775,2438"/>
+<area shape="poly" id="edge49_Node000184_Node000002" title=" " alt="" coords="430,1569,495,1553,526,1540,554,1521,578,1497,599,1469,631,1407,651,1347,662,1299,667,1300,656,1348,636,1409,604,1472,582,1501,557,1525,528,1544,497,1558,431,1574"/>
+<area shape="poly" id="edge50_Node000184_Node000102" title=" " alt="" coords="430,1593,455,1610,477,1636,498,1671,536,1762,570,1872,600,1993,645,2226,668,2383,663,2384,639,2227,595,1994,565,1874,531,1763,493,1674,473,1639,452,1614,427,1598"/>
 </map>

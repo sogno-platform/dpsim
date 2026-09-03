@@ -139,5 +139,11 @@ var namespace_c_p_s =
       [ "UPDATE_ON_SET", "namespace_c_p_s.html#a8e443e562cabd6ba1553da3c6a37823cae0c33593873a8c8a242e5bd49021373b", null ],
       [ "UPDATE_ON_SIMULATION_STEP", "namespace_c_p_s.html#a8e443e562cabd6ba1553da3c6a37823ca64b0880a0211b419e539f2692cd4aa43", null ]
     ] ],
+    [ "WindingReference", "namespace_c_p_s.html#aaf7be55b085bd7caf823bc32044e975c", [
+      [ "Auto", "namespace_c_p_s.html#aaf7be55b085bd7caf823bc32044e975ca06b9281e396db002010bde1de57262eb", null ],
+      [ "Primary", "namespace_c_p_s.html#aaf7be55b085bd7caf823bc32044e975ca074de7e7c226d5c60f8af14c20725352", null ],
+      [ "Secondary", "namespace_c_p_s.html#aaf7be55b085bd7caf823bc32044e975ca0c7d6cf19426e01dcfa32434828ed266", null ],
+      [ "Tertiary", "namespace_c_p_s.html#aaf7be55b085bd7caf823bc32044e975ca0521727bc2cea17905e963461d5a0f19", null ]
+    ] ],
     [ "SimNode< VarType >::GND", "namespace_c_p_s.html#ad464b80af14fdd9f09946df7cdaaa672", null ]
 ];

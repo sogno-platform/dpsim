@@ -34,5 +34,6 @@ var dir_f1aa5ad90a32925ab029214aac6a40f0 =
     [ "SP_Ph3_Inductor.h", "_s_p___ph3___inductor_8h.html", "_s_p___ph3___inductor_8h" ],
     [ "SP_Ph3_Resistor.h", "_s_p___ph3___resistor_8h.html", "_s_p___ph3___resistor_8h" ],
     [ "SP_Ph3_RxLine.h", "_s_p___ph3___rx_line_8h.html", "_s_p___ph3___rx_line_8h" ],
+    [ "SP_Ph3_Transformer.h", "_s_p___ph3___transformer_8h.html", "_s_p___ph3___transformer_8h" ],
     [ "SP_Ph3_VoltageSource.h", "_s_p___ph3___voltage_source_8h.html", "_s_p___ph3___voltage_source_8h" ]
 ];

@@ -98,6 +98,7 @@
 <li class="toctree-l3"><a class="reference internal" href="reference/core.html#dpsimpy.TopologicalNode"><code class="docutils literal notranslate"><span class="pre">TopologicalNode</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="reference/core.html#dpsimpy.TopologicalPowerComp"><code class="docutils literal notranslate"><span class="pre">TopologicalPowerComp</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="reference/core.html#dpsimpy.TopologicalTerminal"><code class="docutils literal notranslate"><span class="pre">TopologicalTerminal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/core.html#dpsimpy.WindingReference"><code class="docutils literal notranslate"><span class="pre">WindingReference</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="reference/core.html#dpsimpy.fill_in_reduction_method"><code class="docutils literal notranslate"><span class="pre">fill_in_reduction_method</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="reference/core.html#dpsimpy.partial_refactorization_method"><code class="docutils literal notranslate"><span class="pre">partial_refactorization_method</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="reference/core.html#dpsimpy.scaling_method"><code class="docutils literal notranslate"><span class="pre">scaling_method</span></code></a></li>
@@ -337,7 +338,11 @@
       <li><a href="reference/core.html#dpsimpy.CSVReaderMode.AUTO">AUTO (CSVReaderMode attribute)</a>
 </li>
       <li><a href="reference/core.html#dpsimpy.SystemMatrixRecomputationMode.Auto">Auto (SystemMatrixRecomputationMode attribute)</a>
+
+      <ul>
+        <li><a href="reference/core.html#dpsimpy.WindingReference.Auto">(WindingReference attribute)</a>
 </li>
+      </ul></li>
       <li><a href="reference/dp.html#dpsimpy.dp.ph1.AvVoltageSourceInverterDQ">AvVoltageSourceInverterDQ (class in dpsimpy.dp.ph1)</a>
 
       <ul>
@@ -513,7 +518,7 @@
 </li>
         <li><a href="reference/dp.html#dpsimpy.dp.ph1.SynchronGeneratorTrStab.connect">(SynchronGeneratorTrStab method)</a>, <a href="reference/sp.html#dpsimpy.sp.ph1.SynchronGeneratorTrStab.connect">[1]</a>
 </li>
-        <li><a href="reference/dp.html#dpsimpy.dp.ph1.Transformer.connect">(Transformer method)</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.Transformer.connect">[1]</a>, <a href="reference/sp.html#dpsimpy.sp.ph1.Transformer.connect">[2]</a>
+        <li><a href="reference/dp.html#dpsimpy.dp.ph1.Transformer.connect">(Transformer method)</a>, <a href="reference/dp.html#dpsimpy.dp.ph3.Transformer.connect">[1]</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.Transformer.connect">[2]</a>, <a href="reference/sp.html#dpsimpy.sp.ph1.Transformer.connect">[3]</a>, <a href="reference/sp.html#dpsimpy.sp.ph3.Transformer.connect">[4]</a>
 </li>
         <li><a href="reference/dp.html#dpsimpy.dp.ph1.varResSwitch.connect">(varResSwitch method)</a>, <a href="reference/sp.html#dpsimpy.sp.ph1.varResSwitch.connect">[1]</a>
 </li>
@@ -1493,6 +1498,8 @@
 </li>
       <li><a href="reference/emt.html#dpsimpy.emt.ph3.PQLoad">PQLoad (class in dpsimpy.emt.ph3)</a>
 </li>
+      <li><a href="reference/core.html#dpsimpy.WindingReference.Primary">Primary (WindingReference attribute)</a>
+</li>
       <li><a href="reference/core.html#dpsimpy.IdentifiedObject.print_attribute">print_attribute() (IdentifiedObject method)</a>
 </li>
       <li><a href="reference/core.html#dpsimpy.IdentifiedObject.print_attribute_list">print_attribute_list() (IdentifiedObject method)</a>
@@ -1612,6 +1619,8 @@
 </li>
       </ul></li>
       <li><a href="reference/core.html#dpsimpy.scaling_method">scaling_method (class in dpsimpy)</a>
+</li>
+      <li><a href="reference/core.html#dpsimpy.WindingReference.Secondary">Secondary (WindingReference attribute)</a>
 </li>
       <li><a href="reference/core.html#dpsimpy.CSVReaderFormat.SECONDS">SECONDS (CSVReaderFormat attribute)</a>
 </li>
@@ -1743,6 +1752,8 @@
       </ul></li>
       <li><a href="reference/core.html#dpsimpy.Logger.set_log_dir">set_log_dir() (Logger static method)</a>
 </li>
+      <li><a href="reference/dp.html#dpsimpy.dp.ph1.Transformer.set_magnetizing_branch">set_magnetizing_branch() (Transformer method)</a>, <a href="reference/dp.html#dpsimpy.dp.ph3.Transformer.set_magnetizing_branch">[1]</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.Transformer.set_magnetizing_branch">[2]</a>, <a href="reference/sp.html#dpsimpy.sp.ph1.Transformer.set_magnetizing_branch">[3]</a>, <a href="reference/sp.html#dpsimpy.sp.ph3.Transformer.set_magnetizing_branch">[4]</a>
+</li>
       <li><a href="reference/core.html#dpsimpy.base.MNASyncGenInterface.set_max_iterations">set_max_iterations() (MNASyncGenInterface method)</a>
 </li>
       <li><a href="reference/core.html#dpsimpy.base.ReducedOrderSynchronGeneratorComplex.set_model_as_norton_source">set_model_as_norton_source() (ReducedOrderSynchronGeneratorComplex method)</a>
@@ -1868,7 +1879,7 @@
 </li>
         <li><a href="reference/sp.html#dpsimpy.sp.ph1.SynchronGenerator.set_parameters">(SynchronGenerator method)</a>
 </li>
-        <li><a href="reference/dp.html#dpsimpy.dp.ph1.Transformer.set_parameters">(Transformer method)</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.Transformer.set_parameters">[1]</a>, <a href="reference/sp.html#dpsimpy.sp.ph1.Transformer.set_parameters">[2]</a>
+        <li><a href="reference/dp.html#dpsimpy.dp.ph1.Transformer.set_parameters">(Transformer method)</a>, <a href="reference/dp.html#dpsimpy.dp.ph3.Transformer.set_parameters">[1]</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.Transformer.set_parameters">[2]</a>, <a href="reference/sp.html#dpsimpy.sp.ph1.Transformer.set_parameters">[3]</a>, <a href="reference/sp.html#dpsimpy.sp.ph3.Transformer.set_parameters">[4]</a>
 </li>
         <li><a href="reference/signal.html#dpsimpy.signal.TurbineGovernorType1.set_parameters">(TurbineGovernorType1 method)</a>
 </li>
@@ -1930,6 +1941,8 @@
 </li>
       </ul></li>
       <li><a href="reference/dp.html#dpsimpy.dp.ph1.SynchronGeneratorTrStab.set_reference_omega">set_reference_omega() (SynchronGeneratorTrStab method)</a>, <a href="reference/sp.html#dpsimpy.sp.ph1.SynchronGeneratorTrStab.set_reference_omega">[1]</a>
+</li>
+      <li><a href="reference/dp.html#dpsimpy.dp.ph1.Transformer.set_reference_winding">set_reference_winding() (Transformer method)</a>, <a href="reference/dp.html#dpsimpy.dp.ph3.Transformer.set_reference_winding">[1]</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.Transformer.set_reference_winding">[2]</a>, <a href="reference/sp.html#dpsimpy.sp.ph1.Transformer.set_reference_winding">[3]</a>, <a href="reference/sp.html#dpsimpy.sp.ph3.Transformer.set_reference_winding">[4]</a>
 </li>
       <li><a href="reference/core.html#dpsimpy.DirectLinearSolverConfiguration.set_scaling_method">set_scaling_method() (DirectLinearSolverConfiguration method)</a>
 </li>
@@ -2221,6 +2234,8 @@
         <li><a href="reference/signal.html#dpsimpy.signal.ExciterDC1SimpParameters.Tef">(ExciterDC1SimpParameters property)</a>
 </li>
       </ul></li>
+      <li><a href="reference/core.html#dpsimpy.WindingReference.Tertiary">Tertiary (WindingReference attribute)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/signal.html#dpsimpy.signal.ExciterDC1Parameters.Tf">Tf (ExciterDC1Parameters property)</a>
@@ -2254,9 +2269,13 @@
       <li><a href="reference/dp.html#dpsimpy.dp.ph1.Transformer">Transformer (class in dpsimpy.dp.ph1)</a>
 
       <ul>
+        <li><a href="reference/dp.html#dpsimpy.dp.ph3.Transformer">(class in dpsimpy.dp.ph3)</a>
+</li>
         <li><a href="reference/emt.html#dpsimpy.emt.ph3.Transformer">(class in dpsimpy.emt.ph3)</a>
 </li>
         <li><a href="reference/sp.html#dpsimpy.sp.ph1.Transformer">(class in dpsimpy.sp.ph1)</a>
+</li>
+        <li><a href="reference/sp.html#dpsimpy.sp.ph3.Transformer">(class in dpsimpy.sp.ph3)</a>
 </li>
       </ul></li>
       <li><a href="reference/core.html#dpsimpy.GeneratorType.TransientStability">TransientStability (GeneratorType attribute)</a>
@@ -2348,6 +2367,8 @@
 </li>
         <li><a href="reference/core.html#dpsimpy.use_btf.value">(use_btf property)</a>
 </li>
+        <li><a href="reference/core.html#dpsimpy.WindingReference.value">(WindingReference property)</a>
+</li>
       </ul></li>
       <li><a href="reference/dp.html#dpsimpy.dp.ph1.varResSwitch">varResSwitch (class in dpsimpy.dp.ph1)</a>
 
@@ -2425,6 +2446,10 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/core.html#dpsimpy.LogLevel.warn">warn (LogLevel attribute)</a>
 </li>
+      <li><a href="reference/core.html#dpsimpy.WindingReference">WindingReference (class in dpsimpy)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/dp.html#dpsimpy.dp.ph1.AvVoltageSourceInverterDQ.with_control">with_control() (AvVoltageSourceInverterDQ method)</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.AvVoltageSourceInverterDQ.with_control">[1]</a>, <a href="reference/sp.html#dpsimpy.sp.ph1.AvVoltageSourceInverterDQ.with_control">[2]</a>
 
       <ul>

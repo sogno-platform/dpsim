@@ -7,10 +7,11 @@ var searchData=
   ['pfsimulation_4',['PFSimulation',['../class_c_p_s_1_1_topological_power_comp.html#ab9d4f348a42dc1f2617102595eba1f47a32e930e7e625fd0aa552ca69c6ab27cf',1,'CPS::TopologicalPowerComp']]],
   ['plugin_5',['Plugin',['../namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457af57a10e73c2af24c85f3d8f5c233a201',1,'DPsim']]],
   ['pq_6',['PQ',['../namespace_c_p_s.html#a04a0a86fce7b8a74447274655a5fcfaba08d6d8834ad9ec87b1dc7ec8148e7a1f',1,'CPS']]],
-  ['psirotord_7',['PsiRotorD',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___induction_motor.html#a39c8a46a4be70f9c12f14c915266f670a989f76f86252057a113ac53a5578f74b',1,'CPS::EMT::Ph3::SSN_InductionMotor']]],
-  ['psirotorq_8',['PsiRotorQ',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___induction_motor.html#a39c8a46a4be70f9c12f14c915266f670a9a4e8f092e92affe6ccac00b7a6dd4d0',1,'CPS::EMT::Ph3::SSN_InductionMotor']]],
-  ['psisd_9',['PsiSd',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___induction_motor.html#a39c8a46a4be70f9c12f14c915266f670a045693b738e935fe0345cff5a4388767',1,'CPS::EMT::Ph3::SSN_InductionMotor']]],
-  ['psisq_10',['PsiSq',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___induction_motor.html#a39c8a46a4be70f9c12f14c915266f670a914d5425102e0e2953ac8f5659663e38',1,'CPS::EMT::Ph3::SSN_InductionMotor']]],
-  ['pv_11',['PV',['../namespace_c_p_s.html#a04a0a86fce7b8a74447274655a5fcfabaa565153df227b0510b1c789d5cdc39ec',1,'CPS']]],
-  ['pvnode_12',['PVNode',['../namespace_c_p_s.html#ada17f6a04d29355cd45243f13e7078f8ada4fc43c1a880345ac0fab3bc73d62c8',1,'CPS']]]
+  ['primary_7',['Primary',['../namespace_c_p_s.html#aaf7be55b085bd7caf823bc32044e975ca074de7e7c226d5c60f8af14c20725352',1,'CPS']]],
+  ['psirotord_8',['PsiRotorD',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___induction_motor.html#a39c8a46a4be70f9c12f14c915266f670a989f76f86252057a113ac53a5578f74b',1,'CPS::EMT::Ph3::SSN_InductionMotor']]],
+  ['psirotorq_9',['PsiRotorQ',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___induction_motor.html#a39c8a46a4be70f9c12f14c915266f670a9a4e8f092e92affe6ccac00b7a6dd4d0',1,'CPS::EMT::Ph3::SSN_InductionMotor']]],
+  ['psisd_10',['PsiSd',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___induction_motor.html#a39c8a46a4be70f9c12f14c915266f670a045693b738e935fe0345cff5a4388767',1,'CPS::EMT::Ph3::SSN_InductionMotor']]],
+  ['psisq_11',['PsiSq',['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___induction_motor.html#a39c8a46a4be70f9c12f14c915266f670a914d5425102e0e2953ac8f5659663e38',1,'CPS::EMT::Ph3::SSN_InductionMotor']]],
+  ['pv_12',['PV',['../namespace_c_p_s.html#a04a0a86fce7b8a74447274655a5fcfabaa565153df227b0510b1c789d5cdc39ec',1,'CPS']]],
+  ['pvnode_13',['PVNode',['../namespace_c_p_s.html#ada17f6a04d29355cd45243f13e7078f8ada4fc43c1a880345ac0fab3bc73d62c8',1,'CPS']]]
 ];

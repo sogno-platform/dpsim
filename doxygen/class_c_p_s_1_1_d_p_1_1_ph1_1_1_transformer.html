@@ -120,8 +120,14 @@ Collaboration diagram for CPS::DP::Ph1::Transformer:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a73d127123abbb485ab5815c670694380" id="r_a73d127123abbb485ab5815c670694380"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a73d127123abbb485ab5815c670694380">setMagnetizingBranch</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> noLoadCurrent, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> noLoadLoss)</td></tr>
+<tr class="memdesc:a73d127123abbb485ab5815c670694380"><td class="mdescLeft">&#160;</td><td class="mdescRight">True after <a class="el" href="#a679284758a4f9b9f84914c638e946057" title="Constructs and registers MNA subcomponents (incl. terminal swap); idempotent.">createSubComponents()</a> runs; prevents double-construction.  <br /></td></tr>
+<tr class="separator:a73d127123abbb485ab5815c670694380"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32e24256272a83fcb35074a80fdc3a8d" id="r_a32e24256272a83fcb35074a80fdc3a8d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a32e24256272a83fcb35074a80fdc3a8d">setReferenceWinding</a> (<a class="el" href="namespace_c_p_s.html#aaf7be55b085bd7caf823bc32044e975c">WindingReference</a> referenceWinding)</td></tr>
+<tr class="memdesc:a32e24256272a83fcb35074a80fdc3a8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects the winding the nameplate impedance is referred to.  <br /></td></tr>
+<tr class="separator:a32e24256272a83fcb35074a80fdc3a8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b4fdfa87b379b567b0f0d180bc04c25" id="r_a5b4fdfa87b379b567b0f0d180bc04c25"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b4fdfa87b379b567b0f0d180bc04c25">Transformer</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel=Logger::Level::off, <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> withResistiveLosses=false)</td></tr>
-<tr class="memdesc:a5b4fdfa87b379b567b0f0d180bc04c25"><td class="mdescLeft">&#160;</td><td class="mdescRight">True after <a class="el" href="#a679284758a4f9b9f84914c638e946057" title="Constructs and registers MNA subcomponents (incl. terminal swap); idempotent.">createSubComponents()</a> runs; prevents double-construction.  <br /></td></tr>
+<tr class="memdesc:a5b4fdfa87b379b567b0f0d180bc04c25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines UID, name and logging level.  <br /></td></tr>
 <tr class="separator:a5b4fdfa87b379b567b0f0d180bc04c25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b9760b965cc1b7a6b44e4f4118c58fa" id="r_a3b9760b965cc1b7a6b44e4f4118c58fa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3b9760b965cc1b7a6b44e4f4118c58fa">Transformer</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel=Logger::Level::off)</td></tr>
 <tr class="memdesc:a3b9760b965cc1b7a6b44e4f4118c58fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines name and logging level.  <br /></td></tr>
@@ -129,12 +135,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab16bbf8f15d45cba88e3a145c6cac4b8" id="r_ab16bbf8f15d45cba88e3a145c6cac4b8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html">SimPowerComp</a>&lt; <a class="el" href="namespace_c_p_s.html#aaed6ab259d5cbd0d6709102c47391a7a">Complex</a> &gt;<a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a707ca832f3ea093c4cb430c5466cc823">::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab16bbf8f15d45cba88e3a145c6cac4b8">clone</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>) override</td></tr>
 <tr class="memdesc:ab16bbf8f15d45cba88e3a145c6cac4b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">DEPRECATED: Delete method.  <br /></td></tr>
 <tr class="separator:ab16bbf8f15d45cba88e3a145c6cac4b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a26a48f32c47df359fc007f06d71838cd" id="r_a26a48f32c47df359fc007f06d71838cd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a26a48f32c47df359fc007f06d71838cd">setParameters</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> nomVoltageEnd1, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> nomVoltageEnd2, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> ratioAbs, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> ratioPhase, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> resistance, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> inductance)</td></tr>
-<tr class="memdesc:a26a48f32c47df359fc007f06d71838cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines component parameters.  <br /></td></tr>
-<tr class="separator:a26a48f32c47df359fc007f06d71838cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50e2a8a68a5a3e376f19f64f1659a4d7" id="r_a50e2a8a68a5a3e376f19f64f1659a4d7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a50e2a8a68a5a3e376f19f64f1659a4d7">setParameters</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> nomVoltageEnd1, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> nomVoltageEnd2, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> ratedPower, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> ratioAbs, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> ratioPhase, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> resistance, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> inductance)</td></tr>
-<tr class="memdesc:a50e2a8a68a5a3e376f19f64f1659a4d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set transformer specific parameters.  <br /></td></tr>
-<tr class="separator:a50e2a8a68a5a3e376f19f64f1659a4d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60e2ce65f0f6e1721ae52d8c5219e551" id="r_a60e2ce65f0f6e1721ae52d8c5219e551"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a60e2ce65f0f6e1721ae52d8c5219e551">setParameters</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> nomVoltagePrimary, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> nomVoltageSecondary, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> ratioAbs, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> ratioPhase, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> resistance, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> inductance)</td></tr>
+<tr class="memdesc:a60e2ce65f0f6e1721ae52d8c5219e551"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines component parameters.  <br /></td></tr>
+<tr class="separator:a60e2ce65f0f6e1721ae52d8c5219e551"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1bb602d639ee3a7684e3756ab8a545a0" id="r_a1bb602d639ee3a7684e3756ab8a545a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1bb602d639ee3a7684e3756ab8a545a0">setParameters</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> nomVoltagePrimary, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> nomVoltageSecondary, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> ratedPower, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> ratioAbs, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> ratioPhase, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> resistance, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> inductance)</td></tr>
+<tr class="memdesc:a1bb602d639ee3a7684e3756ab8a545a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set transformer specific parameters.  <br /></td></tr>
+<tr class="separator:a1bb602d639ee3a7684e3756ab8a545a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a679284758a4f9b9f84914c638e946057" id="r_a679284758a4f9b9f84914c638e946057"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a679284758a4f9b9f84914c638e946057">createSubComponents</a> () override</td></tr>
 <tr class="memdesc:a679284758a4f9b9f84914c638e946057"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs and registers MNA subcomponents (incl. terminal swap); idempotent.  <br /></td></tr>
 <tr class="separator:a679284758a4f9b9f84914c638e946057"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -433,10 +439,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aca665eb0006e91958366aefca2863ee0 inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes variables of components.  <br /></td></tr>
 <tr class="separator:aca665eb0006e91958366aefca2863ee0 inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_transformer.html">CPS::Base::Ph1::Transformer</a></td></tr>
+<tr class="memitem:abf7dcacacbb527e2e9977b9a492e2d6a inherit pub_methods_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer" id="r_abf7dcacacbb527e2e9977b9a492e2d6a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_transformer.html#abf7dcacacbb527e2e9977b9a492e2d6a">nominalVoltageAt</a> (<a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> terminal) const</td></tr>
+<tr class="memdesc:abf7dcacacbb527e2e9977b9a492e2d6a inherit pub_methods_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Nominal voltage of the winding at the given terminal.  <br /></td></tr>
+<tr class="separator:abf7dcacacbb527e2e9977b9a492e2d6a inherit pub_methods_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50fb13526b1aed18e905865013488270 inherit pub_methods_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer" id="r_a50fb13526b1aed18e905865013488270"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_transformer.html#a50fb13526b1aed18e905865013488270">Transformer</a> (<a class="el" href="class_c_p_s_1_1_attribute_list.html#a49ff97075315610f2b8c923084bcd7d2">CPS::AttributeList::Ptr</a> attributeList)</td></tr>
 <tr class="separator:a50fb13526b1aed18e905865013488270 inherit pub_methods_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a713500c34593ee93dafacecdab68666e inherit pub_methods_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer" id="r_a713500c34593ee93dafacecdab68666e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_transformer.html#a713500c34593ee93dafacecdab68666e">setParameters</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> nomVoltageEnd1, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> nomVoltageEnd2, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> ratioAbs, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> ratioPhase, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> resistance, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> inductance)</td></tr>
-<tr class="separator:a713500c34593ee93dafacecdab68666e inherit pub_methods_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5698dc615f4198ad188850e386e53377 inherit pub_methods_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer" id="r_a5698dc615f4198ad188850e386e53377"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_transformer.html#a5698dc615f4198ad188850e386e53377">setParameters</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> nomVoltagePrimary, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> nomVoltageSecondary, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> ratioAbs, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> ratioPhase, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> resistance, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> inductance)</td></tr>
+<tr class="separator:a5698dc615f4198ad188850e386e53377 inherit pub_methods_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -566,12 +575,12 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memdesc:af7497f9b94a45040b1601ac58f5e3d97 inherit pro_attribs_class_c_p_s_1_1_identified_object"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a981a607f5a619bbc40c916fcf7048a24">List</a>.  <br /></td></tr>
 <tr class="separator:af7497f9b94a45040b1601ac58f5e3d97 inherit pro_attribs_class_c_p_s_1_1_identified_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_transformer.html">CPS::Base::Ph1::Transformer</a></td></tr>
-<tr class="memitem:a51d4dd30849b41c9aad1229018e1195f inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer" id="r_a51d4dd30849b41c9aad1229018e1195f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_transformer.html#a51d4dd30849b41c9aad1229018e1195f">mNominalVoltageEnd1</a></td></tr>
-<tr class="memdesc:a51d4dd30849b41c9aad1229018e1195f inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Nominal voltage of primary side.  <br /></td></tr>
-<tr class="separator:a51d4dd30849b41c9aad1229018e1195f inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4cc4a16c87a314af669c6a00838948a6 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer" id="r_a4cc4a16c87a314af669c6a00838948a6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_transformer.html#a4cc4a16c87a314af669c6a00838948a6">mNominalVoltageEnd2</a></td></tr>
-<tr class="memdesc:a4cc4a16c87a314af669c6a00838948a6 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Nominal voltage of secondary side.  <br /></td></tr>
-<tr class="separator:a4cc4a16c87a314af669c6a00838948a6 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa921ce7c8d5f7f714cba0c8289e1566 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer" id="r_aaa921ce7c8d5f7f714cba0c8289e1566"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_transformer.html#aaa921ce7c8d5f7f714cba0c8289e1566">mNominalVoltagePrimary</a></td></tr>
+<tr class="memdesc:aaa921ce7c8d5f7f714cba0c8289e1566 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Nominal voltage of primary side.  <br /></td></tr>
+<tr class="separator:aaa921ce7c8d5f7f714cba0c8289e1566 inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4d7b5934cd0a52247e43cedff848e9f inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer" id="r_aa4d7b5934cd0a52247e43cedff848e9f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_ph1_1_1_transformer.html#aa4d7b5934cd0a52247e43cedff848e9f">mNominalVoltageSecondary</a></td></tr>
+<tr class="memdesc:aa4d7b5934cd0a52247e43cedff848e9f inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Nominal voltage of secondary side.  <br /></td></tr>
+<tr class="separator:aa4d7b5934cd0a52247e43cedff848e9f inherit pro_attribs_class_c_p_s_1_1_base_1_1_ph1_1_1_transformer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html" title="Transformer that includes an inductance and resistance.">Transformer</a> that includes an inductance and resistance. </p>
@@ -607,8 +616,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>True after <a class="el" href="#a679284758a4f9b9f84914c638e946057" title="Constructs and registers MNA subcomponents (incl. terminal swap); idempotent.">createSubComponents()</a> runs; prevents double-construction. </p>
-<p>Defines UID, name and logging level </p>
+<p>Defines UID, name and logging level. </p>
 
 <p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00013">13</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
 
@@ -643,7 +651,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Defines name and logging level. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8h_source.html#l00059">59</a> of file <a class="el" href="_d_p___ph1___transformer_8h_source.html">DP_Ph1_Transformer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8h_source.html#l00081">81</a> of file <a class="el" href="_d_p___ph1___transformer_8h_source.html">DP_Ph1_Transformer.h</a>.</p>
 
 </div>
 </div>
@@ -706,7 +714,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a780dfe2d2caa891938f3e4e9796cca1d">CPS::MNAInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00074">74</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00121">121</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
 
 </div>
 </div>
@@ -737,7 +745,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a49dac74f4584c6f7c5061647a1fa1d22">CPS::CompositePowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00154">154</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00202">202</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
 
 </div>
 </div>
@@ -768,7 +776,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#aa41b67cc103b1371b42e21cfc8d9611d">CPS::CompositePowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00206">206</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00280">280</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
 
 </div>
 </div>
@@ -799,7 +807,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a82fb36cf23e8e2eca8d52fc1f02ba473">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00278">278</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00356">356</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
 
 </div>
 </div>
@@ -830,7 +838,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a3e08c6d99dbfc258bf62d81a53e12776">CPS::MNASimPowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00282">282</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00360">360</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
 
 </div>
 </div>
@@ -873,7 +881,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Add MNA post step dependencies. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00262">262</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00340">340</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
 
 </div>
 </div>
@@ -913,7 +921,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#aa3cc1211506b167aedb230a39b5f29fb">CPS::CompositePowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00249">249</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00327">327</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
 
 </div>
 </div>
@@ -951,7 +959,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Initializes internal variables of the component. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00196">196</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00270">270</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
 
 </div>
 </div>
@@ -989,7 +997,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>MNA post step operations. </p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00272">272</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00350">350</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
 
 </div>
 </div>
@@ -1024,12 +1032,46 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#aec0167e51c7ef78899a86b0c7f3746cc">CPS::CompositePowerComp&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00258">258</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00336">336</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a50e2a8a68a5a3e376f19f64f1659a4d7" name="a50e2a8a68a5a3e376f19f64f1659a4d7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a50e2a8a68a5a3e376f19f64f1659a4d7">&#9670;&#160;</a></span>setParameters() <span class="overload">[1/2]</span></h2>
+<a id="a73d127123abbb485ab5815c670694380" name="a73d127123abbb485ab5815c670694380"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73d127123abbb485ab5815c670694380">&#9670;&#160;</a></span>setMagnetizingBranch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CPS::DP::Ph1::Transformer::setMagnetizingBranch </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>noLoadCurrent</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>noLoadLoss</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>True after <a class="el" href="#a679284758a4f9b9f84914c638e946057" title="Constructs and registers MNA subcomponents (incl. terminal swap); idempotent.">createSubComponents()</a> runs; prevents double-construction. </p>
+<p>Sets the magnetizing branch from the no-load test quantities </p>
+
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8h_source.html#l00068">68</a> of file <a class="el" href="_d_p___ph1___transformer_8h_source.html">DP_Ph1_Transformer.h</a>.</p>
+
+</div>
+</div>
+<a id="a1bb602d639ee3a7684e3756ab8a545a0" name="a1bb602d639ee3a7684e3756ab8a545a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1bb602d639ee3a7684e3756ab8a545a0">&#9670;&#160;</a></span>setParameters() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1037,12 +1079,12 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void DP::Ph1::Transformer::setParameters </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>nomVoltageEnd1</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>nomVoltagePrimary</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>nomVoltageEnd2</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>nomVoltageSecondary</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1078,8 +1120,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a26a48f32c47df359fc007f06d71838cd" name="a26a48f32c47df359fc007f06d71838cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a26a48f32c47df359fc007f06d71838cd">&#9670;&#160;</a></span>setParameters() <span class="overload">[2/2]</span></h2>
+<a id="a60e2ce65f0f6e1721ae52d8c5219e551" name="a60e2ce65f0f6e1721ae52d8c5219e551"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60e2ce65f0f6e1721ae52d8c5219e551">&#9670;&#160;</a></span>setParameters() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1087,12 +1129,12 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void DP::Ph1::Transformer::setParameters </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>nomVoltageEnd1</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>nomVoltagePrimary</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>nomVoltageEnd2</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>nomVoltageSecondary</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1120,6 +1162,35 @@ Additional Inherited Members</h2></td></tr>
 <p>Defines component parameters. </p>
 
 <p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8cpp_source.html#l00039">39</a> of file <a class="el" href="_d_p___ph1___transformer_8cpp_source.html">DP_Ph1_Transformer.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a32e24256272a83fcb35074a80fdc3a8d" name="a32e24256272a83fcb35074a80fdc3a8d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32e24256272a83fcb35074a80fdc3a8d">&#9670;&#160;</a></span>setReferenceWinding()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CPS::DP::Ph1::Transformer::setReferenceWinding </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aaf7be55b085bd7caf823bc32044e975c">WindingReference</a></td>          <td class="paramname"><span class="paramname"><em>referenceWinding</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Selects the winding the nameplate impedance is referred to. </p>
+
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___transformer_8h_source.html#l00073">73</a> of file <a class="el" href="_d_p___ph1___transformer_8h_source.html">DP_Ph1_Transformer.h</a>.</p>
 
 </div>
 </div>

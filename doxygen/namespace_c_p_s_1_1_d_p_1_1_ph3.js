@@ -18,6 +18,7 @@ var namespace_c_p_s_1_1_d_p_1_1_ph3 =
     [ "SynchronGeneratorDQODE", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q_o_d_e.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q_o_d_e" ],
     [ "SynchronGeneratorDQTrapez", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q_trapez.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q_trapez" ],
     [ "SynchronGeneratorVBR", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r" ],
+    [ "Transformer", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_transformer.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_transformer" ],
     [ "TwoTerminalITypeSSNComp", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_two_terminal_i_type_s_s_n_comp.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_two_terminal_i_type_s_s_n_comp" ],
     [ "TwoTerminalVTypeSSNComp", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp" ],
     [ "VoltageSource", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source" ]

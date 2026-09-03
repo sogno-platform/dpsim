@@ -13,5 +13,7 @@ var class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer =
     [ "mnaParentInitialize", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html#ae35c6887c643f5168b26c333aad35bc9", null ],
     [ "mnaParentPostStep", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html#a59b9cbfb8a9512e62784582a4a33e895", null ],
     [ "mnaParentPreStep", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html#aa3e24b9f4b029e63c5c1bfd7ff90e5c5", null ],
-    [ "setParameters", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html#ad8f626568dbe49e051d35294e08fad71", null ]
+    [ "setMagnetizingBranch", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html#a06c8206efe43a07131f3f6e06d9f1a08", null ],
+    [ "setParameters", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html#a9e583be9bd881f8be0ba7463fb0f9150", null ],
+    [ "setReferenceWinding", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html#a2d13c0efd813865d6fbdcb825b0829f5", null ]
 ];

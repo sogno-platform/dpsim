@@ -162,10 +162,6 @@ Macros</h2></td></tr>
 <tr class="separator:aa5875d8fed80e50b7ea9bb4cd401adee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af330c95d1ba5b05ce196dec41a59600d" id="r_af330c95d1ba5b05ce196dec41a59600d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af330c95d1ba5b05ce196dec41a59600d">PEAK1PH_TO_RMS3PH</a>&#160;&#160;&#160;sqrt(3. / 2.)</td></tr>
 <tr class="separator:af330c95d1ba5b05ce196dec41a59600d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaf4f697ba0813f04b19f31d553e7247b" id="r_aaf4f697ba0813f04b19f31d553e7247b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaf4f697ba0813f04b19f31d553e7247b">P_SNUB_TRANSFORMER</a>&#160;&#160;&#160;1e-3</td></tr>
-<tr class="separator:aaf4f697ba0813f04b19f31d553e7247b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a003e052a8b620f411924e33fd8d11f42" id="r_a003e052a8b620f411924e33fd8d11f42"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a003e052a8b620f411924e33fd8d11f42">Q_SNUB_TRANSFORMER</a>&#160;&#160;&#160;5e-4</td></tr>
-<tr class="separator:a003e052a8b620f411924e33fd8d11f42"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61aed733f8e5502628b6a87e51ca4e4f" id="r_a61aed733f8e5502628b6a87e51ca4e4f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a61aed733f8e5502628b6a87e51ca4e4f">DOUBLE_EPSILON</a>&#160;&#160;&#160;1E-12</td></tr>
 <tr class="separator:a61aed733f8e5502628b6a87e51ca4e4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -250,6 +246,12 @@ Enumerations</h2></td></tr>
 , <a class="el" href="namespace_c_p_s.html#a710c4a8c0fce7ae7e20dc314a913f6c9a043a87d3c77eef398c11f7ac3e13cbb9">CPS::EMT</a>
  }</td></tr>
 <tr class="separator:a710c4a8c0fce7ae7e20dc314a913f6c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf7be55b085bd7caf823bc32044e975c" id="r_aaf7be55b085bd7caf823bc32044e975c"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_c_p_s.html#aaf7be55b085bd7caf823bc32044e975c">CPS::WindingReference</a> { <a class="el" href="namespace_c_p_s.html#aaf7be55b085bd7caf823bc32044e975ca06b9281e396db002010bde1de57262eb">CPS::Auto</a>
+, <a class="el" href="namespace_c_p_s.html#aaf7be55b085bd7caf823bc32044e975ca074de7e7c226d5c60f8af14c20725352">CPS::Primary</a>
+, <a class="el" href="namespace_c_p_s.html#aaf7be55b085bd7caf823bc32044e975ca0c7d6cf19426e01dcfa32434828ed266">CPS::Secondary</a>
+, <a class="el" href="namespace_c_p_s.html#aaf7be55b085bd7caf823bc32044e975ca0521727bc2cea17905e963461d5a0f19">CPS::Tertiary</a>
+ }</td></tr>
+<tr class="separator:aaf7be55b085bd7caf823bc32044e975c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a04a0a86fce7b8a74447274655a5fcfab" id="r_a04a0a86fce7b8a74447274655a5fcfab"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_c_p_s.html#a04a0a86fce7b8a74447274655a5fcfab">CPS::PowerflowBusType</a> { <a class="el" href="namespace_c_p_s.html#a04a0a86fce7b8a74447274655a5fcfabaa565153df227b0510b1c789d5cdc39ec">CPS::PV</a>
 , <a class="el" href="namespace_c_p_s.html#a04a0a86fce7b8a74447274655a5fcfaba08d6d8834ad9ec87b1dc7ec8148e7a1f">CPS::PQ</a>
 , <a class="el" href="namespace_c_p_s.html#a04a0a86fce7b8a74447274655a5fcfabae02bbe4f39f5396dd5d572be55ccf6b6">CPS::VD</a>
@@ -307,7 +309,7 @@ Enumerations</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00055">55</a> of file <a class="el" href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html">Definitions.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00053">53</a> of file <a class="el" href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html">Definitions.h</a>.</p>
 
 </div>
 </div>
@@ -340,22 +342,6 @@ Enumerations</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00041">41</a> of file <a class="el" href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html">Definitions.h</a>.</p>
-
-</div>
-</div>
-<a id="aaf4f697ba0813f04b19f31d553e7247b" name="aaf4f697ba0813f04b19f31d553e7247b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaf4f697ba0813f04b19f31d553e7247b">&#9670;&#160;</a></span>P_SNUB_TRANSFORMER</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define P_SNUB_TRANSFORMER&#160;&#160;&#160;1e-3</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00053">53</a> of file <a class="el" href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html">Definitions.h</a>.</p>
 
 </div>
 </div>
@@ -404,22 +390,6 @@ Enumerations</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00043">43</a> of file <a class="el" href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html">Definitions.h</a>.</p>
-
-</div>
-</div>
-<a id="a003e052a8b620f411924e33fd8d11f42" name="a003e052a8b620f411924e33fd8d11f42"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a003e052a8b620f411924e33fd8d11f42">&#9670;&#160;</a></span>Q_SNUB_TRANSFORMER</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define Q_SNUB_TRANSFORMER&#160;&#160;&#160;5e-4</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html#l00054">54</a> of file <a class="el" href="dpsim-models_2include_2dpsim-models_2_definitions_8h_source.html">Definitions.h</a>.</p>
 
 </div>
 </div>

@@ -13,6 +13,8 @@ var class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer =
     [ "mnaParentInitialize", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html#a9bce25816dbb1b344c37970838e6955f", null ],
     [ "mnaParentPostStep", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html#af3ae480f73bc6a686da47d413fe492d7", null ],
     [ "mnaParentPreStep", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html#a99d4e5aa6a7114d2d2641bf5149985bf", null ],
-    [ "setParameters", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html#a50e2a8a68a5a3e376f19f64f1659a4d7", null ],
-    [ "setParameters", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html#a26a48f32c47df359fc007f06d71838cd", null ]
+    [ "setMagnetizingBranch", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html#a73d127123abbb485ab5815c670694380", null ],
+    [ "setParameters", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html#a1bb602d639ee3a7684e3756ab8a545a0", null ],
+    [ "setParameters", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html#a60e2ce65f0f6e1721ae52d8c5219e551", null ],
+    [ "setReferenceWinding", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html#a32e24256272a83fcb35074a80fdc3a8d", null ]
 ];
