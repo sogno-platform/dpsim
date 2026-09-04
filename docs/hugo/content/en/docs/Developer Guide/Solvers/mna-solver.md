@@ -54,6 +54,10 @@ practice, since the enumeration grows as two to the power of that number.
 step and rebuilds and refactorises only when something reports a change, which is the expensive but
 general case used by variable components such as the SSN models.
 
+Both paths hold the time step fixed. Changing it during a run is covered under
+[variable time step]({{< ref "variable-time-step.md" >}}), which needs the recomputation path,
+since the precomputed factorisations carry the step they were built with.
+
 ## Iterative components
 
 After the solve, the solver checks whether any synchronous generator reports `requiresIteration`.

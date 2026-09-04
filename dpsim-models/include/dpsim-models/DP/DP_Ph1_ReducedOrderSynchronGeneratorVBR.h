@@ -54,6 +54,27 @@ protected:
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
   void mnaCompPostStep(const Matrix &leftVector) override;
+  /// Re-derives the companion and re-anchors the rotor angle: the dq transform
+  /// argument carries a w0*dt term that jumps when the step changes.
+  bool mnaUpdateTimeStep(Real timeStep) override {
+    if (timeStep <= 0)
+      return false;
+
+    const Real oldAd_t = this->mAd_t;
+    const Real oldAq_t = this->mAq_t;
+    const Real oldTimeStep = this->mTimeStep;
+
+    this->mTimeStep = timeStep;
+    **this->mThetaMech += this->mBase_OmMech * (oldTimeStep - timeStep);
+    this->calculateVBRconstants();
+    // The stamped conductance is rebuilt from mA and mB every step.
+    this->calculateResistanceMatrixConstants();
+    this->adjustVBRHistoryForNewTimeStep(oldAd_t, oldAq_t);
+    return true;
+  }
+
+  /// Corrects the history EMF for the new coefficients.
+  virtual void adjustVBRHistoryForNewTimeStep(Real oldAd_t, Real oldAq_t) {}
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override;
 

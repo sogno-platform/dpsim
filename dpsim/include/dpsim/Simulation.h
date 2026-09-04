@@ -122,6 +122,17 @@ protected:
   /// Enable extraction of the MNA-coupled discrete-time state matrix.
   Bool mStateSpaceExtraction = false;
 
+  /// Scheduled event times, for the refinement windows
+  std::vector<Real> mEventTimes;
+  Real mRefineTimeStep = -1.0;
+  Real mRefineLeadTime = 0.0;
+  Real mRefineFollowTime = 0.0;
+  Real mRefineBaseTimeStep = -1.0;
+  Bool mRefineInWindow = false;
+
+  /// Selects the fine or the base step for the coming step
+  UInt applyEventRefinement();
+
   /// If tearing components exist, the Diakoptics
   /// solver is selected automatically.
   CPS::IdentifiedObject::List mTearComponents = CPS::IdentifiedObject::List();
@@ -192,6 +203,16 @@ public:
   void setSystem(const CPS::SystemTopology &system) { mSystem = system; }
   ///
   void setTimeStep(Real timeStep) { **mTimeStep = timeStep; }
+
+  /// Changes the timestep mid-run, unlike setTimeStep. Returns the number of
+  /// components that could not follow.
+  UInt updateTimeStep(Real timeStep) {
+    **mTimeStep = timeStep;
+    UInt unhandled = 0;
+    for (auto &solver : mSolvers)
+      unhandled += solver->updateTimeStep(timeStep);
+    return unhandled;
+  }
   ///
   void setFinalTime(Real finalTime) { **mFinalTime = finalTime; }
   ///
@@ -311,7 +332,18 @@ public:
   void schedule();
 
   /// Schedule an event in the simulation
-  void addEvent(Event::Ptr e) { mEvents.addEvent(e); }
+  void addEvent(Event::Ptr e) {
+    mEventTimes.push_back(e->time());
+    mEvents.addEvent(e);
+  }
+
+  /// Fine step from leadTime before a scheduled event to followTime after it,
+  /// the step from setTimeStep() outside. fineTimeStep <= 0 disables it.
+  void setEventRefinement(Real fineTimeStep, Real leadTime, Real followTime) {
+    mRefineTimeStep = fineTimeStep;
+    mRefineLeadTime = leadTime;
+    mRefineFollowTime = followTime;
+  }
   /// Add a new data logger
   void addLogger(DataLoggerInterface::Ptr logger) {
     mLoggers.push_back(logger);

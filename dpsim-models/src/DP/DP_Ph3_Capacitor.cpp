@@ -72,6 +72,8 @@ void DP::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 }
 
 void DP::Ph3::Capacitor::initVars(Real omega, Real timeStep) {
+  mOmega = omega;
+
   Matrix a = timeStep / 2 * (**mCapacitance).inverse();
   Real b = timeStep * omega / 2.;
 

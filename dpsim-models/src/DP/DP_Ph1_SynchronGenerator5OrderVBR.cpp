@@ -59,6 +59,12 @@ void DP::Ph1::SynchronGenerator5OrderVBR::specificInitialization() {
   mSLog->flush();
 }
 
+void DP::Ph1::SynchronGenerator5OrderVBR::adjustVBRHistoryForNewTimeStep(
+    Real /*oldAd_t*/, Real oldAq_t) {
+  // No transient d-axis EMF in this model.
+  mEh_t(1, 0) += (oldAq_t - mAq_t) * (**mIdq)(0, 0);
+}
+
 void DP::Ph1::SynchronGenerator5OrderVBR::stepInPerUnit() {
   // update DP-DQ transforms
   mDomainInterface.updateDQToDPTransform(**mThetaMech, mSimTime);

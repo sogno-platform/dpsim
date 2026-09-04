@@ -47,6 +47,8 @@ public:
   ///
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override;
+  /// Nothing here depends on the timestep.
+  bool mnaUpdateTimeStep(Real timeStep) override { return timeStep > 0; }
   /// Stamps system matrix
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override {}
   /// Stamps right side (source) vector

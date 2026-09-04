@@ -137,6 +137,32 @@ void MnaSolverDirect<VarType>::solveWithSystemMatrixRecomputation(
 }
 
 template <typename VarType>
+void MnaSolverDirect<VarType>::refreshStaticMatrixStamp() {
+  if (!mSystemMatrixRecomputationEnabled) {
+    // The precomputed matrices were factorised with the old timestep.
+    SPDLOG_LOGGER_WARN(mSLog,
+                       "Time step changed while using precomputed switch "
+                       "matrices. They keep the factorisation of the old step; "
+                       "enable system matrix recomputation to change it.");
+    return;
+  }
+
+  // The base matrix holds the static components with the old timestep, and
+  // recomputeSystemMatrix() only runs when a variable component changes.
+  mBaseSystemMatrix.setZero();
+  for (auto comp : mMNAComponents)
+    comp->mnaApplySystemMatrixStamp(mBaseSystemMatrix);
+
+  mVariableSystemMatrix = mBaseSystemMatrix;
+  for (auto comp : mMNAIntfVariableComps)
+    comp->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
+
+  // Full factorisation: the static entries changed too, and the entry list
+  // partialRefactorize() works from covers only the variable components.
+  mDirectLinearSolverVariableSystemMatrix->factorize(mVariableSystemMatrix);
+}
+
+template <typename VarType>
 void MnaSolverDirect<VarType>::recomputeSystemMatrix(Real time) {
   // Start from base matrix
   mVariableSystemMatrix = mBaseSystemMatrix;

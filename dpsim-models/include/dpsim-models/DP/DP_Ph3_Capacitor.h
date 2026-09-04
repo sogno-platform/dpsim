@@ -34,6 +34,8 @@ protected:
   MatrixComp mPrevVoltCoeff;
   /// init resistive companion model of capacitor
   void initVars(Real omega, Real timeStep);
+  /// Reference frequency initVars() was last called with
+  Real mOmega = 0.0;
 
 public:
   /// Defines UID, name and logging level
@@ -50,6 +52,13 @@ public:
   void initializeFromNodesAndTerminals(Real frequency) override;
   // #### MNA section ####
   /// Initializes internal variables of the component
+  bool mnaUpdateTimeStep(Real timeStep) override {
+    if (timeStep <= 0)
+      return false;
+
+    initVars(mOmega, timeStep);
+    return true;
+  }
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override;
   /// Stamps system matrix

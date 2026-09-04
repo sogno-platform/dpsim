@@ -48,6 +48,8 @@ public:
   // #### MNA section ####
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;
+  /// Holds nothing derived from the timestep.
+  bool mnaParentUpdateTimeStep(Real timeStep) override { return true; }
   void mnaParentAddPreStepDependencies(
       AttributeBase::List &prevStepDependencies,
       AttributeBase::List &attributeDependencies,

@@ -73,6 +73,17 @@ void CompositePowerComp<VarType>::mnaCompInitialize(
 }
 
 template <typename VarType>
+bool CompositePowerComp<VarType>::mnaUpdateTimeStep(Real timeStep) {
+  // Every sub-component is asked, regardless of earlier results.
+  bool handled = true;
+  for (auto subComp : mSubcomponentsMNA) {
+    const bool subHandled = subComp->mnaUpdateTimeStep(timeStep);
+    handled = handled && subHandled;
+  }
+  return mnaParentUpdateTimeStep(timeStep) && handled;
+}
+
+template <typename VarType>
 void CompositePowerComp<VarType>::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
   for (auto subComp : mSubcomponentsMNA) {

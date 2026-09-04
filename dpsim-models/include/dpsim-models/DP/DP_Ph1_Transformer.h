@@ -99,6 +99,8 @@ public:
 
   // #### MNA section ####
   /// Initializes internal variables of the component
+  /// Holds nothing derived from the timestep.
+  bool mnaParentUpdateTimeStep(Real timeStep) override { return true; }
   void mnaParentInitialize(Real omega, Real timeStep,
                            Attribute<Matrix>::Ptr leftVector) override;
   /// Stamps system matrix

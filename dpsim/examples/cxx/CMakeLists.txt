@@ -164,6 +164,10 @@ Components/EMT_Ph3_GFL_Comparison.cpp
 Components/EMT_Ph3_SSN_InductionMotor_LoadSwitch.cpp
 )
 
+set(VAR_TIME_STEP_SOURCES
+	Components/DP_VarTimeStep.cpp
+)
+
 set(STATE_SPACE_SOURCES
 StateSpace/EMT_Ph3_RLC_StateSpaceExtraction.cpp
 StateSpace/EMT_Ph3_Composite_StateSpaceExtraction.cpp
@@ -318,6 +322,7 @@ foreach(SOURCE
 		${DAE_SOURCES}
 		${INVERTER_SOURCES}
 		${SSN_SOURCES}
+		${VAR_TIME_STEP_SOURCES}
 		${STATE_SPACE_SOURCES})
 	get_filename_component(TARGET ${SOURCE} NAME_WE)
 

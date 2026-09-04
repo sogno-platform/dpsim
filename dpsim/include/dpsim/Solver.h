@@ -98,6 +98,13 @@ public:
   enum class Type { MNA, DAE, NRP };
   ///
   void setTimeStep(Real timeStep) { mTimeStep = timeStep; }
+
+  /// Changes the timestep mid-run. Returns the number of components that could
+  /// not follow.
+  virtual UInt updateTimeStep(Real timeStep) {
+    mTimeStep = timeStep;
+    return 0;
+  }
   ///
   void doFrequencyParallelization(Bool freqParallel) {
     mFrequencyParallel = freqParallel;

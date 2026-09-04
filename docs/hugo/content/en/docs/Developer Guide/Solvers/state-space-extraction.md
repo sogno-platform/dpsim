@@ -5,7 +5,7 @@ linkTitle: "State-Space Extraction"
 date: 2026-05-28
 description: >
   Enabling extraction, and running modal analysis on what it produces.
-weight: 4
+weight: 5
 ---
 
 The method itself, what the extracted model means and where it is valid, is derived under

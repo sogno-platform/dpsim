@@ -1,7 +1,7 @@
 ---
 title: "Power Flow Solvers"
 linkTitle: "Power Flow Solvers"
-weight: 2
+weight: 3
 description: >
   The Newton-Raphson implementations DPsim ships and how they are configured.
 ---

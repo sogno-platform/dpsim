@@ -57,6 +57,15 @@ public:
 
   // #### MNA section ####
   /// Initializes MNA specific variables
+  /// The resistance growth per step is derived from the step, as in
+  /// setInitParameters().
+  bool mnaUpdateTimeStep(Real timeStep) override {
+    if (timeStep <= 0)
+      return false;
+
+    mDeltaResOpen = 0.5 * timeStep / 0.001 + 1;
+    return true;
+  }
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override;
 

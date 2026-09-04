@@ -44,6 +44,7 @@ public:
   /// Initializes component from power flow data
   void specificInitialization() final;
   ///
+  void adjustVBRHistoryForNewTimeStep(Real oldAd_t, Real oldAq_t) override;
   void stepInPerUnit() final;
 };
 } // namespace Ph1
