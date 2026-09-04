@@ -36,7 +36,7 @@ jobs:
         allow-unsafe-pr-checkout: true
         submodules: recursive
 
-    - name: Set development version for Test PyPI
+    - name: Set the version resolved by the caller
       if: inputs.version != ''
       shell: bash
       run: python3 scripts/set_dev_version.py pyproject.toml ${{ inputs.version }}
@@ -77,10 +77,10 @@ jobs:
       with:
         python-version: '3.13'
 
-    - name: Set development version for Test PyPI
+    - name: Set the version resolved by the caller
       if: "!startsWith(github.ref, 'refs/tags')"
       shell: bash
-      run: python scripts/set_dev_version.py pyproject.toml ${{ github.run_number }}
+      run: python scripts/set_dev_version.py pyproject.toml ${{ inputs.version }}
 
     - name: Build wheel
       uses: pypa/cibuildwheel@v3.4.1

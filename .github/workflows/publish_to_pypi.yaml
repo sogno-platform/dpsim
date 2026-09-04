@@ -32,12 +32,25 @@ jobs:
         id: get_version
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            LATEST_TAG=$(git describe --tags --abbrev=0)
-            VERSION="${LATEST_TAG}.dev${{ github.run_number }}"
+            if [ "${{ github.ref_type}}" = "branch" ]; then
+              TAG=$(git describe --tags --abbrev=0)
+            else
+              TAG="${{ github.ref_name }}"
+            fi
+
+            #safe remove dash anyway
+            #this has no effect on vx.y.z
+            TAG=$(echo "$TAG" | tr -d'-')
+
+            #if not rc, need modify string
+            #increase fix number by one, add .dev<run_number>
+            if [[ "$TAG" != *rc* ]]; then
+              TAG="$(echo $TAG | awk print -F . '{print $1"."$2"."$3+1}').dev${{ github.run_number }}"
+            fi
           else
-            VERSION="${{ github.ref_name }}"
+            TAG="${{ github.ref_name }}"
           fi
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "version=${TAG}" >> $GITHUB_OUTPUT
 
   build:
     name: Packaging
@@ -53,8 +66,8 @@ jobs:
     runs-on: ubuntu-24.04
     permissions:
       id-token: write
-    needs: [version,build]
-    if: github.event_name == 'workflow_dispatch' || contains(github.ref_name, '-rc')
+    needs: [version, build]
+    if: github.event_name == 'workflow_dispatch' || contains(github.ref, 'rc')
     steps:
     - name: Download wheels from build jobs
       uses: actions/download-artifact@v8
@@ -72,11 +85,11 @@ jobs:
   publish-pypi:
     name: Publish to PyPI
     runs-on: ubuntu-24.04
-    if: startsWith(github.ref, 'refs/tags') && !contains(github.ref, '-rc')
+    if: github.event_name != 'workflow_dispatch' && !contains(github.ref, 'rc')
     environment: pypi
     permissions:
       id-token: write
-    needs: [build]
+    needs: [version, build]
 
     steps:
     - name: Download wheels from build jobs
