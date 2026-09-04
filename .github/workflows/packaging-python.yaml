@@ -78,7 +78,7 @@ jobs:
         python-version: '3.13'
 
     - name: Set the version resolved by the caller
-      if: "!startsWith(github.ref, 'refs/tags')"
+      if: inputs.version != ''
       shell: bash
       run: python scripts/set_dev_version.py pyproject.toml ${{ inputs.version }}
 
