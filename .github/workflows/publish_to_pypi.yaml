@@ -5,11 +5,8 @@ name: Publish to PyPI
 
 on:
   push:
-    branches:
-      - master
     tags:
       - '*'
-  # Release Please dispatches this at the new tag; a tag it pushes starts no run by itself.
   workflow_dispatch:
 
 permissions:
@@ -20,11 +17,52 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  version:
+    name: Resolve Version
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine version string
+        id: get_version
+        run: |
+          REF_NAME="${{ github.ref_name }}"
+          #testpypi resolution if tag push contains rc or wf is dispatched
+          if [[ "${{ github.event_name }}" = "workflow_dispatch" || "$REF_NAME" == *rc* ]]; then
+            #this is dispatched over branch, fetch latest tag
+            if [ "${{ github.ref_type}}" = "branch" ]; then
+              TAG=$(git describe --tags --abbrev=0)
+            #otherwise use pushed tag
+            else
+              TAG="$REF_NAME"
+            fi
+
+            #remove dash in case it contains rc ( publish fails )
+            TAG=$(echo "$TAG" | tr -d'-')
+
+            #if not rc, need modify string
+            #increase fix number by one, add .dev<run_number>
+            if [[ "$TAG" != *rc* ]]; then
+              TAG="$(echo "$TAG" | awk -F. '{print $1"."$2"."$3+1}').dev${{ github.run_number }}"
+            fi
+          #tag push without rc
+          else
+            TAG="$REF_NAME"
+          fi
+          echo "version=${TAG}" >> $GITHUB_OUTPUT
+
   build:
     name: Packaging
+    needs: [version]
     uses: ./.github/workflows/packaging-python.yaml
     with:
       ref: ${{ github.sha }}
+      version: ${{ needs.version.outputs.version }}
       image: sogno/dpsim:dev
 
   publish-testpypi:
@@ -32,8 +70,8 @@ jobs:
     runs-on: ubuntu-24.04
     permissions:
       id-token: write
-    needs: [build]
-
+    needs: [version, build]
+    if: github.event_name == 'workflow_dispatch' || contains(github.ref, 'rc')
     steps:
     - name: Download wheels from build jobs
       uses: actions/download-artifact@v8
@@ -51,11 +89,11 @@ jobs:
   publish-pypi:
     name: Publish to PyPI
     runs-on: ubuntu-24.04
-    if: startsWith(github.ref, 'refs/tags') && !contains(github.ref, '-rc')
+    if: github.event_name != 'workflow_dispatch' && !contains(github.ref, 'rc')
     environment: pypi
     permissions:
       id-token: write
-    needs: [build]
+    needs: [version, build]
 
     steps:
     - name: Download wheels from build jobs

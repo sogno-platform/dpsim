@@ -10,6 +10,11 @@ on:
         description: 'Revision under test'
         required: true
         type: string
+      version:
+        description: 'Version to set in the pyproject.toml'
+        required: false
+        type: string
+        default: ''
       image:
         description: 'Development image the source distribution is built in'
         required: true
@@ -31,10 +36,10 @@ jobs:
         allow-unsafe-pr-checkout: true
         submodules: recursive
 
-    - name: Set development version for Test PyPI
-      if: "!startsWith(github.ref, 'refs/tags')"
+    - name: Set the version resolved by the caller
+      if: inputs.version != ''
       shell: bash
-      run: python3 scripts/set_dev_version.py pyproject.toml ${{ github.run_number }}
+      run: python3 scripts/set_dev_version.py pyproject.toml ${{ inputs.version }}
 
     - name: Build DPsim source distribution
       shell: bash
@@ -72,10 +77,10 @@ jobs:
       with:
         python-version: '3.13'
 
-    - name: Set development version for Test PyPI
-      if: "!startsWith(github.ref, 'refs/tags')"
+    - name: Set the version resolved by the caller
+      if: inputs.version != ''
       shell: bash
-      run: python scripts/set_dev_version.py pyproject.toml ${{ github.run_number }}
+      run: python scripts/set_dev_version.py pyproject.toml ${{ inputs.version }}
 
     - name: Build wheel
       uses: pypa/cibuildwheel@v3.4.1
