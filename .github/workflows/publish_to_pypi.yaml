@@ -33,7 +33,7 @@ jobs:
         run: |
           REF_NAME="${{ github.ref_name }}"
           #testpypi resolution if tag push contains rc or wf is dispatched
-if [[ "${{ github.event_name }}" = "workflow_dispatch" || "$REF_NAME" == *rc* ]]; then
+          if [[ "${{ github.event_name }}" = "workflow_dispatch" || "$REF_NAME" == *rc* ]]; then
             #this is dispatched over branch, fetch latest tag
             if [ "${{ github.ref_type}}" = "branch" ]; then
               TAG=$(git describe --tags --abbrev=0)
@@ -48,7 +48,7 @@ if [[ "${{ github.event_name }}" = "workflow_dispatch" || "$REF_NAME" == *rc* ]]
             #if not rc, need modify string
             #increase fix number by one, add .dev<run_number>
             if [[ "$TAG" != *rc* ]]; then
-TAG="$(echo "$TAG" | awk -F. '{print $1"."$2"."$3+1}').dev${{ github.run_number }}"
+              TAG="$(echo "$TAG" | awk -F. '{print $1"."$2"."$3+1}').dev${{ github.run_number }}"
             fi
           #tag push without rc
           else
