@@ -1,0 +1,23 @@
+# SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+#
+# SPDX-License-Identifier: MPL-2.0
+
+name: Push Main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  push-sha:
+    name: Build & Push SHA
+    uses: ./.github/workflows/ci-build.yaml
+    permissions:
+      contents: read
+      packages: write
+    with:
+      push: true
+      comparison_base: ${{ github.event.before }}
+      comparison_head: ${{ github.sha }}
+    secrets: inherit

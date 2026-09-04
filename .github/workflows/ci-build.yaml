@@ -1,0 +1,434 @@
+name: Build CI
+
+on:
+  workflow_call:
+    inputs:
+      push:
+        description: |
+          Controls publishing:
+          - false: do not push
+          - true: push tags to target registries
+        required: false
+        type: boolean
+        default: false
+
+      version:
+        description: "Release version tag (e.g. v1.2.3 or latest). If set, triggers release tagging."
+        required: false
+        type: string
+        default: ''
+
+      comparison_base:
+        description: Commit to compare against for change detection
+        required: true
+        type: string
+
+      comparison_head:
+        description: Commit to inspect for change detection
+        required: true
+        type: string
+
+      rebuild_images:
+        description: |
+          Controls image rebuild behavior:
+          - auto: Automatically rebuild all if non-Docker code changed, else rebuild specific Docker changes
+          - true: Force rebuild of all images
+          - false: Only build specifically changed Dockerfiles
+        required: false
+        type: string
+        default: 'auto'
+
+      registries:
+        description: JSON array of container registries to push to
+        required: false
+        type: string
+        default: '["docker.io"]'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  ORGANIZATION: soullessblob
+  LOCAL_REGISTRY: internal-registry:5000
+  IMAGE_SHA: ${{ github.sha }}
+  DEV_DEPENDENTS: '["dpsim", "dpsim-rpm", "dpsim-shmem"]'
+
+jobs:
+  setup:
+    name: Resolve images
+
+    runs-on: ubuntu-latest
+
+    outputs:
+      revision: ${{ steps.revision.outputs.revision }}
+      image_repos: ${{ steps.images.outputs.image_repos }}
+      has_dev: ${{ steps.images.outputs.has_dev }}
+      registries: ${{ steps.config.outputs.registries }}
+      version: ${{ steps.config.outputs.version }}
+      push: ${{ steps.config.outputs.push }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Resolve revision
+        id: revision
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "revision=${GITHUB_SHA}" >> "${GITHUB_OUTPUT}"
+
+      - name: Resolve configuration
+        id: config
+        shell: bash
+        env:
+          INPUT_REGISTRIES: ${{ inputs.registries }}
+          INPUT_REBUILD_IMAGES: ${{ inputs.rebuild_images }}
+          INPUT_PUSH: ${{ inputs.push }}
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+
+          # ---- validate registries as array of string ----
+          echo "${INPUT_REGISTRIES}" | jq -e '
+            type == "array"
+            and length > 0
+            and all(.[]; type == "string")
+          ' >/dev/null
+
+          # ---- validate rebuild_images ----
+          case "${INPUT_REBUILD_IMAGES}" in
+            true|false|auto) ;;
+            *)
+              echo "Invalid rebuild_images value: ${INPUT_REBUILD_IMAGES}. Expected true, false, or auto." >&2
+              exit 1
+              ;;
+          esac
+
+          # ---- validate push ----
+          case "${INPUT_PUSH}" in
+            true|false) ;;
+            *)
+              echo "Invalid push value: ${INPUT_PUSH}. Expected true or false." >&2
+              exit 1
+              ;;
+          esac
+
+          echo "registries=${INPUT_REGISTRIES}" >> "${GITHUB_OUTPUT}"
+          echo "push=${INPUT_PUSH}" >> "${GITHUB_OUTPUT}"
+          echo "version=${INPUT_VERSION}" >> "${GITHUB_OUTPUT}"
+
+      - name: Detect Docker image changes
+        id: paths
+        uses: dorny/paths-filter@v4
+        with:
+          list-files: json
+          base: ${{ inputs.comparison_base }}
+          ref: ${{ inputs.comparison_head }}
+          filters: |
+            docker:
+              - 'packaging/Docker/Dockerfile.*'
+            code_changed:
+              - '**'
+              - '!packaging/Docker/**'
+              - '!.github/**'
+              - '!**.md'
+              - '!.gitignore'
+              - '!LICENSE*'
+
+      - name: Resolve images
+        id: images
+        shell: bash
+        env:
+          DOCKER_FILES: ${{ steps.paths.outputs.docker_files }}
+          CODE_CHANGED: ${{ steps.paths.outputs.code_changed }}
+          REBUILD_IMAGES: ${{ inputs.rebuild_images }}
+          DEV_DEPENDENTS: ${{ env.DEV_DEPENDENTS }}
+        run: |
+          set -euo pipefail
+
+          if [[ "${REBUILD_IMAGES}" == "true" ]] || \
+             ([[ "${REBUILD_IMAGES}" == "auto" ]] && [[ "${CODE_CHANGED}" == "true" ]]); then
+            image_repos="$(
+              find packaging/Docker \
+                -maxdepth 1 \
+                -type f \
+                -name 'Dockerfile.*' \
+                -printf '%f\n' |
+              sed 's/^Dockerfile\.//' |
+              sort -u |
+              jq -R -s -c '
+                split("\n")
+                | map(select(length > 0))
+                | map(if . == "dpsim" then . else "dpsim-" + . end)
+              '
+            )"
+          else
+            image_repos="$(
+              jq -c '
+                map(
+                  sub("^packaging/Docker/Dockerfile\\."; "")
+                  | if . == "dpsim" then . else "dpsim-" + . end
+                )
+              ' <<< "${DOCKER_FILES}"
+            )"
+          fi
+
+          has_dev="$(jq -r 'contains(["dpsim-dev"])' <<< "${image_repos}")"
+
+          image_repos="$(
+            jq -c --argjson dependents "${DEV_DEPENDENTS}" '
+              (if contains(["dpsim-dev"]) then
+                (. + $dependents | unique) - ["dpsim-dev"]
+              else
+                .
+              end)
+              | map({
+                  repo: .,
+                  platform: (if . == "dpsim" then "dpsim" else sub("^dpsim-"; "") end)
+                })
+            ' <<< "${image_repos}"
+          )"
+
+          echo "has_dev=${has_dev}" >> "${GITHUB_OUTPUT}"
+          echo "Image Repositories: ${image_repos}"
+          echo "image_repos=${image_repos}" >> "${GITHUB_OUTPUT}"
+
+  build-dev:
+    name: Build & Cache dpsim-dev
+    needs: setup
+    if: needs.setup.outputs.has_dev == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.setup.outputs.revision }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Push Base Image to Local Registry
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: packaging/Docker/Dockerfile.dev
+          tags: ${{ env.LOCAL_REGISTRY }}/${{ env.ORGANIZATION }}/dpsim-dev:${{ env.IMAGE_SHA }}
+          push: true
+
+  build:
+    name: Build ${{ matrix.target.repo }}
+    needs:
+      - setup
+      - build-dev
+    if: |
+      !cancelled() &&
+      needs.setup.outputs.image_repos != '[]' &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled')
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: ${{ fromJSON(needs.setup.outputs.image_repos) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.setup.outputs.revision }}
+
+      - name: Build images
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: packaging/Docker/Dockerfile.${{ matrix.target.platform }}
+          build-args: |
+            BASE_IMAGE=${{ env.LOCAL_REGISTRY }}/${{ env.ORGANIZATION }}/dpsim-dev:${{ env.IMAGE_SHA }}
+          tags: |
+            ${{ env.LOCAL_REGISTRY }}/${{ env.ORGANIZATION }}/${{ matrix.target.repo }}:${{ env.IMAGE_SHA }}
+          push: ${{ needs.setup.outputs.push == 'true' }}
+
+  push-dev:
+    name: Promote and push dev image
+    needs:
+      - setup
+      - build-dev
+      - build
+    if: |
+      !cancelled() &&
+      needs.setup.outputs.has_dev == 'true' &&
+      needs.setup.outputs.push == 'true' &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log in to Docker Hub
+        if: contains(needs.setup.outputs.registries, 'docker.io')
+        uses: docker/login-action@v3
+        with:
+          registry: docker.io
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_SECRET }}
+
+      - name: Log in to GitHub Container Registry (GHCR)
+        if: contains(needs.setup.outputs.registries, 'ghcr.io')
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Resolve metadata (docker.io)
+        id: meta-dockerhub
+        if: contains(needs.setup.outputs.registries, 'docker.io')
+        uses: docker/metadata-action@v5
+        with:
+          images: docker.io/${{ env.ORGANIZATION }}/dpsim-dev
+          tags: |
+            type=raw,value=${{ env.IMAGE_SHA }}
+            type=raw,value=${{ needs.setup.outputs.version }},enable=${{ needs.setup.outputs.version != '' }}
+            type=raw,value=latest,enable=${{ needs.setup.outputs.version != '' }}
+
+      - name: Resolve legacy metadata (docker.io)
+        id: meta-dockerhub-legacy
+        if: contains(needs.setup.outputs.registries, 'docker.io') && needs.setup.outputs.version != ''
+        uses: docker/metadata-action@v5
+        with:
+          images: docker.io/${{ env.ORGANIZATION }}/dpsim
+          tags: |
+            type=raw,value=dev
+
+      - name: Resolve metadata (ghcr.io)
+        id: meta-ghcr
+        if: contains(needs.setup.outputs.registries, 'ghcr.io')
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ env.ORGANIZATION }}/dpsim-dev
+          tags: |
+            type=raw,value=${{ env.IMAGE_SHA }}
+            type=raw,value=${{ needs.setup.outputs.version }},enable=${{ needs.setup.outputs.version != '' }}
+            type=raw,value=latest,enable=${{ needs.setup.outputs.version != '' }}
+
+      - name: Resolve legacy metadata (ghcr.io)
+        id: meta-ghcr-legacy
+        if: contains(needs.setup.outputs.registries, 'ghcr.io') && needs.setup.outputs.version != ''
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ env.ORGANIZATION }}/dpsim
+          tags: |
+            type=raw,value=dev
+
+      - name: Pull from Local and Push to Target Registries
+        shell: bash
+        env:
+          TAGS: |
+            ${{ steps.meta-dockerhub.outputs.tags }}
+            ${{ steps.meta-dockerhub-legacy.outputs.tags }}
+            ${{ steps.meta-ghcr.outputs.tags }}
+            ${{ steps.meta-ghcr-legacy.outputs.tags }}
+        run: |
+          set -euo pipefail
+          local_image="${LOCAL_REGISTRY}/${ORGANIZATION}/dpsim-dev:${IMAGE_SHA}"
+          docker pull "${local_image}"
+
+          while IFS= read -r tag; do
+            [[ -z "${tag}" ]] && continue
+            docker tag "${local_image}" "${tag}"
+            docker push "${tag}"
+          done <<< "${TAGS}"
+
+  push:
+    name: Promote and push ${{ matrix.target.repo }}
+    needs:
+      - setup
+      - build
+    if: |
+      !cancelled() &&
+      needs.setup.outputs.image_repos != '[]' &&
+      needs.setup.outputs.push == 'true' &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled')
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: ${{ fromJSON(needs.setup.outputs.image_repos) }}
+    steps:
+      - name: Log in to Docker Hub
+        if: contains(needs.setup.outputs.registries, 'docker.io')
+        uses: docker/login-action@v3
+        with:
+          registry: docker.io
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_SECRET }}
+
+      - name: Log in to GitHub Container Registry (GHCR)
+        if: contains(needs.setup.outputs.registries, 'ghcr.io')
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Resolve metadata (docker.io)
+        id: meta-dockerhub
+        if: contains(needs.setup.outputs.registries, 'docker.io')
+        uses: docker/metadata-action@v5
+        with:
+          images: docker.io/${{ env.ORGANIZATION }}/${{ matrix.target.repo }}
+          tags: |
+            type=raw,value=${{ env.IMAGE_SHA }}
+            type=raw,value=${{ needs.setup.outputs.version }},enable=${{ needs.setup.outputs.version != '' }}
+            type=raw,value=latest,enable=${{ needs.setup.outputs.version != '' }}
+
+      - name: Resolve legacy transition metadata (docker.io)
+        id: meta-dockerhub-legacy
+        if: contains(needs.setup.outputs.registries, 'docker.io') && needs.setup.outputs.version != '' && matrix.target.repo != 'dpsim'
+        uses: docker/metadata-action@v5
+        with:
+          images: docker.io/${{ env.ORGANIZATION }}/dpsim
+          tags: |
+            type=raw,value=${{ matrix.target.platform }}
+
+      - name: Resolve metadata (ghcr.io)
+        id: meta-ghcr
+        if: contains(needs.setup.outputs.registries, 'ghcr.io')
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ env.ORGANIZATION }}/${{ matrix.target.repo }}
+          tags: |
+            type=raw,value=${{ env.IMAGE_SHA }}
+            type=raw,value=${{ needs.setup.outputs.version }},enable=${{ needs.setup.outputs.version != '' }}
+            type=raw,value=latest,enable=${{ needs.setup.outputs.version != '' }}
+
+      - name: Resolve legacy transition metadata (ghcr.io)
+        id: meta-ghcr-legacy
+        if: contains(needs.setup.outputs.registries, 'ghcr.io') && needs.setup.outputs.version != '' && matrix.target.repo != 'dpsim'
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ env.ORGANIZATION }}/dpsim
+          tags: |
+            type=raw,value=${{ matrix.target.platform }}
+
+      - name: Pull from Local and Push to Target Registries
+        shell: bash
+        env:
+          IMAGE_REPO: ${{ matrix.target.repo }}
+          TAGS: |
+            ${{ steps.meta-dockerhub.outputs.tags }}
+            ${{ steps.meta-dockerhub-legacy.outputs.tags }}
+            ${{ steps.meta-ghcr.outputs.tags }}
+            ${{ steps.meta-ghcr-legacy.outputs.tags }}
+        run: |
+          set -euo pipefail
+          local_image="${LOCAL_REGISTRY}/${ORGANIZATION}/${IMAGE_REPO}:${IMAGE_SHA}"
+          docker pull "${local_image}"
+
+          while IFS= read -r tag; do
+            [[ -z "${tag}" ]] && continue
+            docker tag "${local_image}" "${tag}"
+            docker push "${tag}"
+          done <<< "${TAGS}"

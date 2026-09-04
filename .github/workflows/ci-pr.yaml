@@ -1,0 +1,24 @@
+# SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+#
+# SPDX-License-Identifier: MPL-2.0
+
+name: Validate PR
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+
+jobs:
+  build-check:
+    name: Validate Container Build
+    uses: ./.github/workflows/ci-build.yaml
+    permissions:
+      contents: read
+      packages: read
+    with:
+      push: false
+      comparison_base: ${{ github.event.pull_request.base.sha }}
+      comparison_head: ${{ github.event.pull_request.head.sha }}
+    secrets: inherit
