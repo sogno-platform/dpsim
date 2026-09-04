@@ -48,7 +48,7 @@ jobs:
             #if not rc, need modify string
             #increase fix number by one, add .dev<run_number>
             if [[ "$TAG" != *rc* ]]; then
-              TAG="$(echo $TAG | awk print -F . '{print $1"."$2"."$3+1}').dev${{ github.run_number }}"
+TAG="$(echo "$TAG" | awk -F. '{print $1"."$2"."$3+1}').dev${{ github.run_number }}"
             fi
           #tag push without rc
           else
