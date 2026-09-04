@@ -31,15 +31,18 @@ jobs:
       - name: Determine version string
         id: get_version
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          REF_NAME="${{ github.ref_name }}"
+          #testpypi resolution if tag push contains rc or wf is dispatched
+          if [ "${{ github.event_name }}" = "workflow_dispatch" || "$REF_NAME" == *rc*]; then
+            #this is dispatched over branch, fetch latest tag
             if [ "${{ github.ref_type}}" = "branch" ]; then
               TAG=$(git describe --tags --abbrev=0)
+            #otherwise use pushed tag
             else
-              TAG="${{ github.ref_name }}"
+              TAG="$REF_NAME"
             fi
 
-            #safe remove dash anyway
-            #this has no effect on vx.y.z
+            #remove dash in case it contains rc ( publish fails )
             TAG=$(echo "$TAG" | tr -d'-')
 
             #if not rc, need modify string
@@ -47,8 +50,9 @@ jobs:
             if [[ "$TAG" != *rc* ]]; then
               TAG="$(echo $TAG | awk print -F . '{print $1"."$2"."$3+1}').dev${{ github.run_number }}"
             fi
+          #tag push without rc
           else
-            TAG="${{ github.ref_name }}"
+            TAG="$REF_NAME"
           fi
           echo "version=${TAG}" >> $GITHUB_OUTPUT
 
