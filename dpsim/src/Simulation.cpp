@@ -38,6 +38,8 @@ Simulation::Simulation(String name, Logger::Level logLevel)
       mPFKeepLastSolution(CPS::AttributeStatic<Bool>::make(false)),
       mPFBaseApparentPowerFallback(CPS::AttributeStatic<Real>::make(100e6)),
       mPFMaxIterations(CPS::AttributeStatic<CPS::UInt>::make(20)),
+      mPFMaxDVoltagePerUnitPerStep(CPS::AttributeStatic<Real>::make(0.1)),
+      mPFMaxDThetaRadPerStep(CPS::AttributeStatic<Real>::make(0.2)),
       mPFSolverUseSparse(CPS::AttributeStatic<Bool>::make(false)),
       mPFEnforceReactiveLimits(CPS::AttributeStatic<Bool>::make(false)),
       mPFBaseVoltageLooseTolerance(CPS::AttributeStatic<Real>::make(0.1)),
@@ -56,6 +58,8 @@ Simulation::Simulation(String name, CommandLineArgs &args)
       mPFKeepLastSolution(CPS::AttributeStatic<Bool>::make(false)),
       mPFBaseApparentPowerFallback(CPS::AttributeStatic<Real>::make(100e6)),
       mPFMaxIterations(CPS::AttributeStatic<CPS::UInt>::make(20)),
+      mPFMaxDVoltagePerUnitPerStep(CPS::AttributeStatic<Real>::make(0.1)),
+      mPFMaxDThetaRadPerStep(CPS::AttributeStatic<Real>::make(0.2)),
       mPFSolverUseSparse(CPS::AttributeStatic<Bool>::make(false)),
       mPFEnforceReactiveLimits(CPS::AttributeStatic<Bool>::make(false)),
       mPFBaseVoltageLooseTolerance(CPS::AttributeStatic<Real>::make(0.1)),
@@ -138,6 +142,8 @@ template <typename VarType> void Simulation::createSolvers() {
     pfSolver->setEnforceReactiveLimits(**mPFEnforceReactiveLimits);
     pfSolver->setBaseVoltageLooseTolerance(**mPFBaseVoltageLooseTolerance);
     pfSolver->setBaseVoltageStrictTolerance(**mPFBaseVoltageStrictTolerance);
+    pfSolver->setMaxStepPerIteration(**mPFMaxDVoltagePerUnitPerStep,
+                                     **mPFMaxDThetaRadPerStep);
 
     solver = pfSolver;
 
@@ -370,6 +376,20 @@ void Simulation::setPFMaxIterations(CPS::UInt value) {
 }
 
 CPS::UInt Simulation::getPFMaxIterations() const { return **mPFMaxIterations; }
+
+void Simulation::setPFSolverMaxStepPerIteration(Real maxDVoltagePerUnit,
+                                                Real maxDThetaRad) {
+  **mPFMaxDVoltagePerUnitPerStep = maxDVoltagePerUnit;
+  **mPFMaxDThetaRadPerStep = maxDThetaRad;
+}
+
+Real Simulation::getPFSolverMaxDVoltagePerUnitPerStep() const {
+  return **mPFMaxDVoltagePerUnitPerStep;
+}
+
+Real Simulation::getPFSolverMaxDThetaRadPerStep() const {
+  return **mPFMaxDThetaRadPerStep;
+}
 
 void Simulation::setPFSolverUseSparse(Bool value) {
   **mPFSolverUseSparse = value;
