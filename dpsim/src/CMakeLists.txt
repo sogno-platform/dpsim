@@ -39,6 +39,7 @@ if (WITH_RT)
 	list(APPEND DPSIM_SOURCES
 		RealTimeSimulation.cpp
 		RealTimeDataLogger.cpp
+		InterfaceCosimSync.cpp
 	)
 endif()
 
