@@ -77,6 +77,8 @@ protected:
   /// Vector of average voltage source inverters
   std::vector<std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ>>
       mAverageVoltageSourceInverters;
+  /// Vector of static VAR compensator components
+  std::vector<std::shared_ptr<CPS::SP::Ph1::SVC>> mSVCs;
   /// Map providing determined base voltages for each node
   std::map<CPS::TopologicalNode::Ptr, CPS::Real> mBaseVoltageAtNode;
 
@@ -92,6 +94,12 @@ protected:
   CPS::UInt mMaxOuterIterations = 10;
   /// Maximum number of PV<->PQ switches per bus before it is frozen (anti-oscillation)
   CPS::UInt mMaxQLimitSwitchesPerBus = 2;
+  /// Hold each SVC bus at its voltage setpoint via a reactive-injection outer loop
+  CPS::Bool mEnforceSvcControl = false;
+  /// Voltage tolerance [pu] at which an SVC bus is considered on setpoint
+  CPS::Real mSvcVoltageTolerance = 1e-7;
+  /// Damping applied to each SVC reactive-injection step (1.0 = full secant/Newton)
+  CPS::Real mSvcDamping = 1.0;
   /// Relative tolerance for non-authoritative (e.g. Load) base-voltage candidates vs. the zone's rating
   CPS::Real mBaseVoltageLooseTolerance = 0.1;
   /// Relative tolerance between authoritative base-voltage sources (generator/transformer/network-injection/VSI) within a zone
@@ -158,6 +166,8 @@ protected:
   Bool runNewtonRaphson();
   /// Switch generators violating their Q limits between PV/PQ; base impl is a no-op
   virtual CPS::Bool enforceReactiveLimits() { return false; }
+  /// Adjust SVC reactive injections to hold their voltage setpoints; base is a no-op
+  virtual CPS::Bool enforceSvcVoltageControl() { return false; }
   /// Allocate Jacobian storage; dense by default, sparse subclass overrides
   virtual void setUpJacobianStorage();
   /// Solve the linearized system mJ*mX = mF into mX; sparse subclass overrides
@@ -197,6 +207,9 @@ public:
   void setEnforceReactiveLimits(CPS::Bool value) {
     mEnforceReactiveLimits = value;
   }
+
+  /// Enable SVC voltage control (reactive-injection outer loop)
+  void setEnforceSvcControl(CPS::Bool value) { mEnforceSvcControl = value; }
 
   /// Raise for grids with legitimate large voltage drop (e.g. untapped feeders)
   void setBaseVoltageLooseTolerance(CPS::Real tolerance) {
