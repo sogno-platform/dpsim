@@ -182,6 +182,13 @@ void SP::Ph1::PiLine::storeNodalInjection(Complex powerInjection) {
 
 MatrixComp SP::Ph1::PiLine::Y_element() { return mY_element; }
 
+void SP::Ph1::PiLine::validateParameters(ParameterCheck &check) {
+  check(mSeriesRes, {Constraint::Finite, Constraint::Positive});
+  check(mSeriesInd, {Constraint::Finite, Constraint::NonNegative});
+  check(mParallelCap, {Constraint::Finite, Constraint::NonNegative});
+  check(mParallelCond, {Constraint::Finite});
+}
+
 void SP::Ph1::PiLine::createSubComponents() {
   if (mSubCompCreated)
     return;

@@ -83,6 +83,8 @@ public:
   /// Reset state of components
   void reset();
 
+  void checkParameters() const;
+
   // #### Add Objects to SystemTopology ####
 
   /// Adds node and initializes frequencies
