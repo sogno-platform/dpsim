@@ -26,11 +26,11 @@ modulation frequency for a modulated one. Which overload is called determines wh
 Because the source is ideal, adding an impedance to represent a finite short circuit level is the
 caller's job. Nothing in the component does it.
 
-## `SVC`
+## `SVC` in the time domain
 
-Not composite. It computes a susceptance each step and realises it by reconfiguring an internal
-reactive element, so it implements the variable-component interface and forces a refactorisation
-whenever the value changes.
+`DP::Ph1::SVC` is the dynamic model. Not composite. It computes a susceptance each step and realises
+it by reconfiguring an internal reactive element, so it implements the variable-component interface
+and forces a refactorisation whenever the value changes.
 
 `updateSusceptance` performs both lags with the trapezoidal rule, using precomputed constants
 `Fac1 = dt / (2 Tr)`, `Fac2 = dt Kr / (2 Tr)` and `Fac3 = dt / (2 Tm)`. The measurement lag is
@@ -55,6 +55,38 @@ magnitude of the complex envelope. For a dynamic phasor quantity those differ, a
 not negligible when the envelope has a significant imaginary part.
 {{% /alert %}}
 
+## `SVC` in the power flow
+
+`SP::Ph1::SVC` is a separate class with no code in common with the dynamic one. It is a
+`SimPowerComp<Complex>` and a `PFSolverInterfaceBus` with one terminal and no MNA interface, so it
+exists only for a power flow and takes no part in a time-domain solve.
+
+It stamps nothing into the admittance matrix. `setParameters(ratedApparentPower, ratedVoltage,
+setPointVoltage, qLimMax, qLimMin)` records the voltage set point and the reactive band and fixes
+`mPowerflowBusType` to `PQ`; the active power is identically zero. What the solver sees is therefore
+a reactive injection `Q_set` and a set point `V_set`, and `updateReactivePowerInjection` is the
+setter that moves the injection. Attribute names follow `SynchronGenerator`: `V_set`, `V_set_pu`,
+`Q_set`, `Q_set_pu`, `Q_max`, `Q_min` and their per-unit counterparts.
+
+`calculatePerUnitParameters(baseApparentPower, baseOmega)` divides the set point by the base voltage
+and the band by the base apparent power. Unset limits are $\pm\infty$ and stay $\pm\infty$ in per
+unit. The method throws `std::invalid_argument` if either base is still zero, rather than dividing
+and producing an infinite or undefined set point.
+
+{{% alert title="Watch out: the base voltage comes from the solver, not from the caller" color="warning" %}}
+`ratedVoltage` in `setParameters` is logged and otherwise unused. A compensator is not a voltage
+source and must not seed a zone's voltage level, so `PFSolver::propagateAndVerifyBaseVoltage`
+resolves the zone first and only then calls `setBaseVoltage` with the node's resolved value. A
+standalone `SVC` that never went through a solver has no base voltage, which is what the guard in
+`calculatePerUnitParameters` catches.
+{{% /alert %}}
+
+The regulation itself lives in the solver rather than in the component: something has to call
+`updateReactivePowerInjection` between Newton solves for the set point to be held. Until that outer
+loop exists, an `SVC` in a system is inert. `PFSolver::initialize` does not collect it into any of
+its component lists, `determinePFBusType` does not read its bus type, and its `Q_set` stays at zero,
+which is the same case as a node with nothing attached.
+
 ## `SolidStateTransformer`
 
 A `CompositePowerComp` that represents each side as a current source rather than as a coupled
@@ -70,6 +102,7 @@ representation the concept page describes and not an omission.
 
 - [`DP_Ph1_NetworkInjection`](https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/src/DP/DP_Ph1_NetworkInjection.cpp), and the SP and EMT variants alongside it
 - [`DP_Ph1_SVC`](https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/src/DP/DP_Ph1_SVC.cpp)
+- [`SP_Ph1_SVC`](https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/src/SP/SP_Ph1_SVC.cpp)
 - [`SP_Ph1_SolidStateTransformer`](https://github.com/sogno-platform/dpsim/blob/master/dpsim-models/src/SP/SP_Ph1_SolidStateTransformer.cpp)
 
 Availability per domain is in

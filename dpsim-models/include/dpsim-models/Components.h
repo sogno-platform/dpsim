@@ -22,6 +22,7 @@
 #include <dpsim-models/SP/SP_Ph1_ReducedOrderSynchronGeneratorVBR.h>
 #include <dpsim-models/SP/SP_Ph1_SSNTypeI2T.h>
 #include <dpsim-models/SP/SP_Ph1_SSNTypeV2T.h>
+#include <dpsim-models/SP/SP_Ph1_SVC.h>
 #include <dpsim-models/SP/SP_Ph1_Shunt.h>
 #include <dpsim-models/SP/SP_Ph1_SolidStateTransformer.h>
 #include <dpsim-models/SP/SP_Ph1_Switch.h>
