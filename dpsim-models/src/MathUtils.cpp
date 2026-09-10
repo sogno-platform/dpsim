@@ -392,6 +392,36 @@ void Math::calculateStateSpaceTrapezoidalMatrices(const Matrix &A,
   Bd = F2inv * (dt / 2.) * B;
 }
 
+MatrixComp Math::steadyStateTransfer(const MatrixComp &A, const MatrixComp &B,
+                                     const MatrixComp &C, const MatrixComp &D,
+                                     Real omega) {
+  MatrixComp h =
+      Complex(0., omega) * MatrixComp::Identity(A.rows(), A.cols()) - A;
+
+  MatrixComp transfer = C * h.inverse() * B + D;
+
+  // A singular (jw I - A) means jw is an eigenvalue of A, so there is no steady state there.
+  for (Matrix::Index row = 0; row < transfer.rows(); ++row)
+    for (Matrix::Index col = 0; col < transfer.cols(); ++col)
+      if (!Math::isFinite(transfer(row, col)))
+        throw std::invalid_argument(
+            "steadyStateTransfer: (jw I - A) is singular at the requested "
+            "frequency, the state-space model has no steady state there.");
+
+  return transfer;
+}
+
+MatrixComp Math::steadyStateTransfer(const Matrix &A, const Matrix &B,
+                                     const Matrix &C, const Matrix &D,
+                                     Real omega) {
+  const MatrixComp aComp = A.cast<Complex>();
+  const MatrixComp bComp = B.cast<Complex>();
+  const MatrixComp cComp = C.cast<Complex>();
+  const MatrixComp dComp = D.cast<Complex>();
+
+  return steadyStateTransfer(aComp, bComp, cComp, dComp, omega);
+}
+
 Matrix Math::applyStateSpaceTrapezoidalMatrices(const Matrix &Ad,
                                                 const Matrix &Bd,
                                                 const Matrix &Cd,

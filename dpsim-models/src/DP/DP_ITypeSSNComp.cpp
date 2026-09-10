@@ -25,9 +25,8 @@ void DP::ITypeSSNComp::initializeFromNodesAndTerminals(Real frequency) {
     throw std::logic_error("setParameters() must be called before "
                            "initializeFromNodesAndTerminals().");
 
-  Real omega = 2. * PI * frequency;
   MatrixComp uInit = buildInitialInputFromNodes(frequency);
-  MatrixComp xInit = calculateSteadyStateStateFromInput(uInit, omega);
+  MatrixComp xInit = calculateSteadyStateStateFromInput(uInit, frequency);
   MatrixComp yInit = calculateSteadyStateOutputFromInput(xInit, uInit);
 
   **mX = xInit;
@@ -44,8 +43,6 @@ void DP::ITypeSSNComp::initializeFromNodesAndTerminals(Real frequency) {
                      Logger::matrixCompToString(**mIntfVoltage),
                      Logger::matrixCompToString(**mX));
 }
-
-void DP::ITypeSSNComp::mnaCompUpdateVoltage(const Matrix &) {}
 
 void DP::ITypeSSNComp::mnaCompPostStep(Real, Int,
                                        Attribute<Matrix>::Ptr &leftVector) {

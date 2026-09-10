@@ -33,6 +33,9 @@ protected:
 
   Complex mAdmittance;
 
+  /// Same quantity as steadyStateAdmittance(), taking omega as handed down by the MNA hook
+  Complex computeAdmittance(Real omega) const;
+
 public:
   /// Defines UID, name, component parameters and logging level
   SSNTypeV2T(String uid, String name,
@@ -44,7 +47,8 @@ public:
   SimPowerComp<Complex>::Ptr clone(String name) override;
 
   // #### General ####
-  void calculateAdmittance(Real omega);
+  /// Get the steady-state Norton admittance of the group, stampable into a nodal matrix
+  Complex steadyStateAdmittance(Real frequency) const;
   void setParameters(const MatrixComp &A, const MatrixComp &B,
                      const MatrixComp &C, const MatrixComp &D);
   /// Initializes component from power flow data
