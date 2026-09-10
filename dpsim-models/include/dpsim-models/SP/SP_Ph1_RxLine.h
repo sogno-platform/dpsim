@@ -18,8 +18,8 @@ namespace CPS {
 namespace SP {
 namespace Ph1 {
 
-class RXLine : public CompositePowerComp<Complex>,
-               public SharedFactory<RXLine>,
+class RxLine : public CompositePowerComp<Complex>,
+               public SharedFactory<RxLine>,
                public PFSolverInterfaceBranch,
                public Base::Ph1::PiLine {
 private:
@@ -87,14 +87,14 @@ public:
   // power flow
 
   /// Defines UID, name, base voltage, component parameters and logging level
-  RXLine(String uid, String name, Real baseVoltage, Real resistance,
+  RxLine(String uid, String name, Real baseVoltage, Real resistance,
          Real inductance, Logger::Level logLevel = Logger::Level::off);
   // MNA
   /// Defines UID, name, logging level
-  RXLine(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+  RxLine(String uid, String name, Logger::Level logLevel = Logger::Level::off);
   /// Defines name, component parameters and logging level
-  RXLine(String name, Logger::Level logLevel = Logger::Level::off)
-      : RXLine(name, name, logLevel) {}
+  RxLine(String name, Logger::Level logLevel = Logger::Level::off)
+      : RxLine(name, name, logLevel) {}
 
   // #### General ####
   /// Specify per-unit system by base voltage, base apparent power and omega (rms value for voltage expected)

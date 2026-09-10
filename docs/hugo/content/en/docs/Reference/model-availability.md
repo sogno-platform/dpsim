@@ -39,10 +39,8 @@ model, so the table cannot fall behind the code. For the equations behind a mode
 | Model | SP::Ph1 | SP::Ph3 | DP::Ph1 | DP::Ph3 | EMT::Ph1 | EMT::Ph3 |
 | --- | :---: | :---: | :---: | :---: | :---: | :---: |
 | PiLine | &check; | &ndash; | &check; | &check; | &check; | &check; |
-| RxLine | &ndash; | &check; | &check; | &ndash; | &ndash; | &check; |
-| RXLine | &check; | &ndash; | &ndash; | &ndash; | &ndash; | &ndash; |
+| RxLine | &check; | &ndash; | &check; | &ndash; | &ndash; | &check; |
 | SeriesResistor | &ndash; | &ndash; | &ndash; | &check; | &ndash; | &check; |
-| ResIndSeries | &ndash; | &ndash; | &check; | &ndash; | &ndash; | &ndash; |
 | Transformer | &check; | &ndash; | &check; | &ndash; | &ndash; | &check; |
 | SolidStateTransformer | &check; | &ndash; | &ndash; | &ndash; | &ndash; | &ndash; |
 
