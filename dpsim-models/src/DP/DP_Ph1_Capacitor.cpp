@@ -294,11 +294,14 @@ void DP::Ph1::Capacitor::mnaCompUpdateCurrent(const Matrix &leftVector) {
 }
 
 void DP::Ph1::Capacitor::mnaCompUpdateCurrentHarm() {
-  for (UInt freq = 0; freq < mNumFreqs; freq++) {
-    (**mIntfCurrent)(0, freq) =
-        mEquivCond(freq, 0) * (**mIntfVoltage)(0, freq) +
-        mEquivCurrent(freq, 0);
-    SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}",
-                        Logger::phasorToString((**mIntfCurrent)(0, freq)));
-  }
+  for (UInt freq = 0; freq < mNumFreqs; freq++)
+    mnaCompUpdateCurrentHarm(freq);
+}
+
+void DP::Ph1::Capacitor::mnaCompUpdateCurrentHarm(Int freqIdx) {
+  (**mIntfCurrent)(0, freqIdx) =
+      mEquivCond(freqIdx, 0) * (**mIntfVoltage)(0, freqIdx) +
+      mEquivCurrent(freqIdx, 0);
+  SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}",
+                      Logger::phasorToString((**mIntfCurrent)(0, freqIdx)));
 }

@@ -60,6 +60,28 @@ void MnaSolverDirect<VarType>::switchedMatrixStamp(
 }
 
 template <typename VarType>
+void MnaSolverDirect<VarType>::switchedMatrixStamp(
+    std::size_t swIdx, Int freqIdx, CPS::MNAInterface::List &components,
+    CPS::MNASwitchInterface::List &switches) {
+  auto bit = std::bitset<SWITCH_NUM>(swIdx);
+  auto &sys = mSwitchedMatrices[bit][freqIdx];
+  for (auto component : components) {
+    component->mnaApplySystemMatrixStampHarm(sys, freqIdx);
+  }
+  for (UInt i = 0; i < switches.size(); ++i)
+    switches[i]->mnaApplySwitchSystemMatrixStamp(bit[i], sys, freqIdx);
+
+  // Compute LU-factorization for system matrix
+  mDirectLinearSolvers[bit][freqIdx]->preprocessing(
+      sys, mListVariableSystemMatrixEntries);
+  auto start = std::chrono::steady_clock::now();
+  mDirectLinearSolvers[bit][freqIdx]->factorize(sys);
+  auto end = std::chrono::steady_clock::now();
+  std::chrono::duration<Real> diff = end - start;
+  mFactorizeTimes.push_back(diff.count());
+}
+
+template <typename VarType>
 void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
 
   this->mDirectLinearSolverVariableSystemMatrix =
