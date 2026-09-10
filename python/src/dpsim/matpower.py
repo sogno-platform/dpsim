@@ -123,6 +123,9 @@ class Reader:
         self.mpc_gen_data["bus"] = self.mpc_gen_data["bus"].astype(int)
         self.mpc_gen_data["status"] = self.mpc_gen_data["status"].astype(int)
 
+        # offline generators must not inject power, dropped regardless of filter_out_of_service
+        self.mpc_gen_data = self.mpc_gen_data[self.mpc_gen_data["status"] == 1]
+
         #### Branches #####
         # extract only first 13 columns since following columns include results
         mpc_branch_raw = self.mpc_raw[self.mpc_name]["branch"][:, :13]
@@ -300,6 +303,7 @@ class Reader:
         with_tg=True,
         filter_out_of_service=False,
         generator_model=None,
+        map_pq_bus_generators=True,
     ):
         """
         Create dpsim objects with the data contained in the mpc files.
@@ -315,6 +319,8 @@ class Reader:
         @param generator_model: explicit generator model to use for dynamic
                                 simulations. Use `GenModel` values or raw integer
                                 values 1, 3, 4, 5, 6.
+        @param map_pq_bus_generators: if True, also map generators sitting on a bus
+                                      labelled PQ, as some MATPOWER exports do
         """
         self.log_level = log_level
         self.domain = domain
@@ -414,12 +420,25 @@ class Reader:
                 # shunts
                 self.map_shunt(index, bus_index)
 
+                # some exports put generators on a bus labelled PQ
+                if map_pq_bus_generators:
+                    self.map_generators_at_bus(
+                        index,
+                        bus_index,
+                        bus_type=dpsimpy.PowerflowBusType.PQ,
+                        with_pss=with_pss,
+                        with_tg=with_tg,
+                        with_avr=with_avr,
+                        gen_model=generator_model,
+                    )
+
             # Generators
             elif bus_type == 2:
                 # map SG
-                self.map_synchronous_machine(
+                self.map_generators_at_bus(
                     index,
                     bus_index,
+                    bus_type=dpsimpy.PowerflowBusType.PV,
                     with_pss=with_pss,
                     with_tg=with_tg,
                     with_avr=with_avr,
@@ -650,6 +669,16 @@ class Reader:
 
         return bus_name
 
+    def gen_data_at_bus(self, index):
+        return self.mpc_gen_data.loc[
+            self.mpc_gen_data["bus"] == self.mpc_bus_data.at[index, "bus_i"]
+        ]
+
+    def map_generators_at_bus(self, index, bus_index, **kwargs):
+        # the PF solver sums P/Q and the Q limits over all components at a node
+        for gen_i in range(self.gen_data_at_bus(index).shape[0]):
+            self.map_synchronous_machine(index, bus_index, gen_i=gen_i, **kwargs)
+
     def map_synchronous_machine(
         self,
         index,
@@ -659,16 +688,18 @@ class Reader:
         with_tg=True,
         with_avr=True,
         gen_model=None,
+        gen_i=0,
     ):
-        #
-        gen_name = "Gen_N" + str(bus_index)
+        # the first generator keeps its unsuffixed name, so single-gen grids are unaffected
+        gen_name = "Gen_N" + str(bus_index) + ("" if gen_i == 0 else "_" + str(gen_i))
 
         # relevant data from self.mpc_gen_data. Identification with bus number available in mpc_bus_data and mpc_gen_data
-        gen_data = self.mpc_gen_data.loc[
-            self.mpc_gen_data["bus"] == self.mpc_bus_data.at[index, "bus_i"]
-        ]
+        gen_data = self.gen_data_at_bus(index).iloc[[gen_i]]
+        # a MATPOWER mBase of 0 means "use the system baseMVA"
         gen_baseS = (
             gen_data["mBase"].values[0] * mw_w
+            if gen_data["mBase"].values[0] > 0
+            else self.mpc_base_power_MVA
         )  # gen base MVA default is mpc.baseMVA
         gen_baseV = self.mpc_bus_data.at[index, "baseKV"] * kv_v  # gen base kV
         gen_v = (
@@ -701,7 +732,9 @@ class Reader:
                 q_limit_min=gen_q_min,
             )
             gen.set_base_voltage(gen_baseV)
-            gen.modify_power_flow_bus_type(bus_type)
+            # modifyPowerFlowBusType throws for PQ, set_parameters already stored it
+            if bus_type != dpsimpy.PowerflowBusType.PQ:
+                gen.modify_power_flow_bus_type(bus_type)
         else:
             # get dynamic data of the generator
             gen_dyn_row_idx = self.mpc_dyn_gen_data.index[
@@ -1166,6 +1199,7 @@ class Reader:
         with_avr=True,
         with_tg=True,
         filter_out_of_service=False,
+        map_pq_bus_generators=True,
     ):
         """
         Read mpc files and create DPsim topology
@@ -1175,6 +1209,7 @@ class Reader:
         @param filter_out_of_service: if True, exclude out-of-service
                                       generators/branches and isolated buses
                                       instead of instantiating them
+        @param map_pq_bus_generators: see create_dpsim_objects
         """
         self.create_dpsim_objects(
             domain=domain,
@@ -1183,6 +1218,7 @@ class Reader:
             with_avr=with_avr,
             with_tg=with_tg,
             filter_out_of_service=filter_out_of_service,
+            map_pq_bus_generators=map_pq_bus_generators,
         )
         self.create_dpsim_topology()
 
@@ -1242,12 +1278,10 @@ class Reader:
             p_gen = 0
             q_gen = 0
             # if PV or Slack bus --> add gen power
-            gen_data = self.mpc_gen_data.loc[
-                self.mpc_gen_data["bus"] == self.mpc_bus_data.at[i, "bus_i"]
-            ]
+            gen_data = self.gen_data_at_bus(i)
             if gen_data.shape[0] > 0:
-                p_gen = gen_data["Pg"].values[0]
-                q_gen = gen_data["Qg"].values[0]
+                p_gen = gen_data["Pg"].sum()
+                q_gen = gen_data["Qg"].sum()
 
             pf_results.loc[i] = (
                 [node_name]

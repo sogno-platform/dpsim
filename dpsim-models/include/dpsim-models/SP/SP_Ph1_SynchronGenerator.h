@@ -26,6 +26,10 @@ private:
   Real mBaseVoltage;
   /// Base apparent power[VA]
   Real mBaseApparentPower;
+  /// Rated apparent power [VA], 0 means unknown and caps nothing
+  Real mRatedApparentPower = 0.;
+  /// Share of the bus power taken when co-located, 0 holds the set points instead
+  Real mSlackWeight = 1.;
 
 public:
   /// Active power set point of the machine [W]
@@ -68,6 +72,12 @@ public:
   Real getBaseVoltage() const;
   /// Set base voltage
   void setBaseVoltage(Real baseVoltage);
+  /// Rated apparent power [VA] as handed to setParameters
+  Real getRatedApparentPower() const;
+  /// Share of the bus power taken when several machines sit on one bus
+  Real getSlackWeight() const;
+  /// Set the share of the bus power taken, 0 to hold the set points instead
+  void setSlackWeight(Real slackWeight);
   /// Initializes component from power flow data
   void calculatePerUnitParameters(Real baseApparentPower, Real baseOmega);
   /// Modify powerflow bus type
