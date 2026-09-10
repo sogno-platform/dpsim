@@ -250,6 +250,13 @@ SystemTopology buildTopology(CommandLineArgs &args,
       ieee9.gen1.XdPrime, ieee9.gen1.XqPrime, ieee9.gen1.TdoPrime,
       ieee9.gen1.TqoPrime);
 
+  // Optional overrides for studying the tuning from a notebook.
+  auto opt = [&](const String &key, Real def) {
+    return args.options.find(key) != args.options.end()
+               ? args.getOptionReal(key)
+               : def;
+  };
+
   auto exciter1Params = std::make_shared<Signal::ExciterDC1SimpParameters>();
   exciter1Params->Ta = ieee9.exc1.TA;
   exciter1Params->Ka = ieee9.exc1.KA;
@@ -283,18 +290,19 @@ SystemTopology buildTopology(CommandLineArgs &args,
 
   gen1EMT->addGovernor(turbineGovernor1);
 
+  auto pss1Params =
+      std::make_shared<CPS::CIM::Examples::Components::PSS1A::Ieee9Gen1>();
+  pss1Params->Kw = opt("pss_kw", pss1Params->Kw);
+  if (pss1Params->Kw > 0.0)
+    gen1EMT->addPSS(Signal::PSS1A::make("Gen1_PSS", CPS::Logger::Level::off),
+                    pss1Params);
+
   const Real omegaN = 2.0 * PI * ieee9.nomFreq;
 
   // gen2 replaced by a grid-forming SSN inverter, keeping the GEN2 identity.
   // nominalVoltage is the peak phase target at the 1.025 pu PV setpoint.
   const Real gfmNominalVoltage = RMS3PH_TO_PEAK1PH * ieee9.gen2.InitialVoltage;
   GfmParams gfm;
-  // Optional overrides for studying the grid-forming tuning from a notebook.
-  auto opt = [&](const String &key, Real def) {
-    return args.options.find(key) != args.options.end()
-               ? args.getOptionReal(key)
-               : def;
-  };
   gfm.dampingCoefficient = opt("gfm_d", gfm.dampingCoefficient);
   gfm.KpVoltage = opt("gfm_kpv", gfm.KpVoltage);
   gfm.KiVoltage = opt("gfm_kiv", gfm.KiVoltage);
