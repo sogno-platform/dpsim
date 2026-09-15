@@ -74,6 +74,7 @@ test-command = "python -c \"import dpsimpy; import dpsim\""
 [tool.cibuildwheel.linux]
 build = "cp3{10,11,12,13,14}-manylinux_x86_64"
 manylinux-x86_64-image = "sogno/dpsim:manylinux"
+environment = { DPSIM_PYTHON_WITH_VILLAS = "1" }
 test-command = "python -c \"import dpsimpy; import dpsimpyvillas; import dpsim\""
 
 [tool.cibuildwheel.windows]
