@@ -1,26 +1,93 @@
+# SPDX-FileCopyrightText: 2026 The DPsim Authors
+# SPDX-License-Identifier: MPL-2.0
+
 import os
-import sys
 import platform
+import re
+import shlex
 import shutil
 import subprocess
+import sys
 import tempfile
+from pathlib import Path
 
 import pybind11
-from setuptools import setup, Extension
+from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
 
 
+def env_flag(name: str, default: bool = False) -> bool:
+    """Read a boolean environment variable."""
+    value = os.environ.get(name)
+
+    if value is None:
+        return default
+
+    value = value.strip().lower()
+
+    if value in ("1", "true", "yes", "on"):
+        return True
+
+    if value in ("0", "false", "no", "off"):
+        return False
+
+    raise RuntimeError(
+        f"Invalid value for {name}: {value!r}. "
+        "Use one of: 1/0, true/false, yes/no, on/off."
+    )
+
+
+# VILLAS support is optional for the Python package.
+#
+# Core DPsim:
+#   pip install .
+#
+# DPsim + VILLAS:
+#   DPSIM_PYTHON_WITH_VILLAS=1 pip install .
+#
+# This avoids assuming that VILLASnode exists simply because the platform
+# is Linux or macOS.
+WITH_VILLAS = env_flag("DPSIM_PYTHON_WITH_VILLAS", default=False)
+
+
 class CMakeExtension(Extension):
-    def __init__(self, name):
+    def __init__(self, name: str, cmake_target: str | None = None):
         super().__init__(name, sources=[])
+        self.cmake_target = cmake_target or name
 
 
 class CMakeBuild(build_ext):
+    def run(self):
+        self._cmake_configured = False
+        self._cmake_extdir = None
+        super().run()
+
     def build_extension(self, ext):
-        extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
+        extdir = Path(self.get_ext_fullpath(ext.name)).parent.resolve()
 
         cfg = "Debug" if self.debug else "Release"
-        print("building CMake extension in %s configuration" % cfg)
+
+        print(f"Building CMake extension {ext.name} in {cfg} configuration")
+
+        if not self._cmake_configured:
+            self._configure_cmake(extdir, cfg)
+            self._cmake_configured = True
+            self._cmake_extdir = extdir
+
+        elif extdir != self._cmake_extdir:
+            raise RuntimeError(
+                "All DPsim Python extensions must use the same output directory."
+            )
+
+        self._build_target(ext.cmake_target, cfg)
+
+        self._generate_stubs(extdir, ext.name)
+
+    def _configure_cmake(self, extdir: Path, cfg: str):
+        build_temp = Path(self.build_temp).resolve()
+        build_temp.mkdir(parents=True, exist_ok=True)
+
+        sourcedir = Path(__file__).resolve().parent
 
         cmake_args = [
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}",
@@ -31,96 +98,186 @@ class CMakeBuild(build_ext):
             f"-Dpybind11_DIR={pybind11.get_cmake_dir()}",
             f"-DCMAKE_BUILD_TYPE={cfg}",
             "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
+            # Python bindings are the purpose of this build.
+            "-DWITH_PYBIND=ON",
+            "-DFETCH_PYBIND=OFF",
+            # Keep Python package builds small.
+            "-DDPSIM_BUILD_EXAMPLES=OFF",
+            "-DDPSIM_BUILD_DOC=OFF",
+            # Reproducible dependencies for package builds.
+            "-DFETCH_SPDLOG=ON",
+            "-DFETCH_SUITESPARSE=ON",
+            # Eigen is supplied by the platform/development environment.
+            # Windows already fetches Eigen in the top-level CMake logic.
+            "-DFETCH_EIGEN=OFF",
+            # VILLAS is explicitly optional.
+            f"-DWITH_VILLAS={'ON' if WITH_VILLAS else 'OFF'}",
         ]
 
+        # ------------------------------------------------------------------
+        # Windows
+        # ------------------------------------------------------------------
+        #
+        # Do not hard-code x64. Support Win32, x64 and ARM64 Python builds.
         if platform.system() == "Windows":
-            cmake_args += ["-A", "x64"]
-            targets = ["dpsimpy"]
-            if self.parallel:
-                build_args = ["--config", cfg, "--parallel", str(self.parallel)]
-            else:
-                build_args = ["--config", cfg, "--parallel", "4"]
-        else:
-            targets = ["dpsimpy", "dpsimpyvillas"]
-            if self.parallel:
-                build_args = ["--", "-j" + str(self.parallel)]
-            else:
-                build_args = ["--", "-j4"]
+            generator = os.environ.get("CMAKE_GENERATOR", "")
 
-        if not os.path.exists(self.build_temp):
-            os.makedirs(self.build_temp)
+            single_config = any(name in generator for name in ("NMake", "Ninja"))
 
+            if not single_config:
+                platform_map = {
+                    "win32": "Win32",
+                    "win-amd64": "x64",
+                    "win-arm64": "ARM64",
+                }
+
+                architecture = platform_map.get(self.plat_name)
+
+                if architecture is not None:
+                    cmake_args += ["-A", architecture]
+
+        # ------------------------------------------------------------------
+        # macOS
+        # ------------------------------------------------------------------
+        #
+        # Respect ARCHFLAGS when pip/cibuildwheel requests a specific
+        # architecture or universal build.
+        if platform.system() == "Darwin":
+            archflags = os.environ.get("ARCHFLAGS", "")
+            architectures = re.findall(r"-arch\s+(\S+)", archflags)
+
+            if architectures:
+                cmake_args.append(
+                    "-DCMAKE_OSX_ARCHITECTURES=" + ";".join(architectures)
+                )
+
+        # ------------------------------------------------------------------
+        # User supplied CMake options
+        # ------------------------------------------------------------------
+        #
+        # CMAKE_ARGS is the preferred interface.
+        #
+        # CMAKE_OPTS is retained for compatibility with the existing DPsim
+        # setup.py behavior.
+        #
+        # User arguments are intentionally appended last so that explicit
+        # options can override the defaults above.
         env = os.environ.copy()
-        if env.get("CMAKE_OPTS"):
-            cmake_args += env.get("CMAKE_OPTS").split()
 
-        sourcedir = os.path.abspath(os.path.dirname(__file__))
-        print(" ".join(["cmake", sourcedir] + cmake_args))
+        for variable in ("CMAKE_ARGS", "CMAKE_OPTS"):
+            value = env.get(variable)
+
+            if value:
+                cmake_args.extend(shlex.split(value))
+
+        command = [
+            "cmake",
+            str(sourcedir),
+            *cmake_args,
+        ]
+
+        print(" ".join(command))
+
         subprocess.check_call(
-            ["cmake", sourcedir] + cmake_args,
-            cwd=self.build_temp,
+            command,
+            cwd=build_temp,
             env=env,
         )
 
-        for target in targets:
-            print(" ".join(["cmake", "--build", ".", "--target", target] + build_args))
-            subprocess.check_call(
-                ["cmake", "--build", ".", "--target", target] + build_args,
-                cwd=self.build_temp,
-            )
+    def _build_target(self, target: str, cfg: str):
+        build_temp = Path(self.build_temp).resolve()
 
-        if ext.name == targets[0]:
-            self._generate_stubs(extdir, targets)
+        jobs = self.parallel or os.cpu_count() or 4
 
-    def _generate_stubs(self, extdir, targets):
+        # This form works with Ninja, Makefiles and Visual Studio generators.
+        command = [
+            "cmake",
+            "--build",
+            ".",
+            "--target",
+            target,
+            "--config",
+            cfg,
+            "--parallel",
+            str(jobs),
+        ]
+
+        print(" ".join(command))
+
+        subprocess.check_call(
+            command,
+            cwd=build_temp,
+        )
+
+    def _generate_stubs(self, extdir: Path, module: str):
         stub_env = os.environ.copy()
-        stub_env["PYTHONPATH"] = extdir + os.pathsep + stub_env.get("PYTHONPATH", "")
+
+        stub_env["PYTHONPATH"] = (
+            str(extdir) + os.pathsep + stub_env.get("PYTHONPATH", "")
+        )
 
         with tempfile.TemporaryDirectory() as stub_tmp:
-            for module in targets:
-                print(f"generating stubs for {module}")
-                result = subprocess.run(
-                    [
-                        sys.executable,
-                        "-m",
-                        "pybind11_stubgen",
-                        module,
-                        "--output-dir",
-                        stub_tmp,
-                    ],
-                    env=stub_env,
+            stub_tmp_path = Path(stub_tmp)
+
+            print(f"Generating stubs for {module}")
+
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "-m",
+                    "pybind11_stubgen",
+                    module,
+                    "--output-dir",
+                    str(stub_tmp_path),
+                ],
+                env=stub_env,
+            )
+
+            if result.returncode != 0:
+                raise RuntimeError(
+                    f"Stub generation for {module} failed "
+                    f"(exit {result.returncode})"
                 )
-                if result.returncode != 0:
-                    raise RuntimeError(
-                        f"stub generation for {module} failed (exit {result.returncode})"
-                    )
 
-                src = os.path.join(stub_tmp, module)
-                dst = os.path.join(extdir, module)
-                if os.path.isdir(src):
-                    if os.path.exists(dst):
-                        shutil.rmtree(dst)
-                    shutil.copytree(src, dst)
-                    # PEP 561 marker so type checkers recognise the package as typed
-                    open(os.path.join(dst, "py.typed"), "w").close()
-                else:
-                    # flat .pyi file (no submodules)
-                    stub_file = src + ".pyi"
-                    if os.path.isfile(stub_file):
-                        shutil.copy2(stub_file, extdir)
-                    else:
-                        raise RuntimeError(
-                            f"stub generation for {module} succeeded but {stub_file} not found"
-                        )
+            src_dir = stub_tmp_path / module
+            dst_dir = extdir / module
+
+            if src_dir.is_dir():
+                if dst_dir.exists():
+                    shutil.rmtree(dst_dir)
+
+                shutil.copytree(src_dir, dst_dir)
+
+                # PEP 561 marker so type checkers recognise the package
+                # as typed.
+                (dst_dir / "py.typed").touch()
+
+                return
+
+            src_file = stub_tmp_path / f"{module}.pyi"
+
+            if src_file.is_file():
+                shutil.copy2(src_file, extdir)
+                return
+
+            raise RuntimeError(
+                f"Stub generation for {module} succeeded, "
+                "but no generated stub was found."
+            )
 
 
-ext_modules_list = [CMakeExtension("dpsimpy")]
-if platform.system() != "Windows":
-    ext_modules_list.append(CMakeExtension("dpsimpyvillas"))
+ext_modules = [
+    CMakeExtension("dpsimpy"),
+]
+
+if WITH_VILLAS:
+    ext_modules.append(CMakeExtension("dpsimpyvillas"))
 
 
 setup(
-    ext_modules=ext_modules_list,
-    cmdclass={"build_ext": CMakeBuild},
+    ext_modules=ext_modules,
+    cmdclass={
+        "build_ext": CMakeBuild,
+    },
     zip_safe=False,
 )

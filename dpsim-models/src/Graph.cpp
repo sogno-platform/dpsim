@@ -1,12 +1,12 @@
-/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *********************************************************************************/
+/*
+ * SPDX-FileCopyrightText: 2017-2021 Institute for Automation of Complex Power Systems,
+ *                         EONERC, RWTH Aachen University
+ * SPDX-License-Identifier: MPL-2.0
+ */
 
-#include <graphviz/gvc.h>
+#include <cstddef>
+
+#include <gvc.h>
 
 #include <dpsim-models/Graph.h>
 
@@ -20,6 +20,7 @@ CPS::Graph::Graph::Graph(const CPS::String &name, Type type, bool strict) {
   case Type::directed:
     desc = strict ? Agstrictdirected : Agdirected;
     break;
+
   case Type::undirected:
     desc = strict ? Agstrictundirected : Agundirected;
     break;
@@ -36,14 +37,19 @@ void CPS::Graph::Graph::render(std::ostream &os, const CPS::String &layout,
                                const CPS::String &format) {
   GVC_t *gvc;
   char *data;
-  unsigned len;
+
+#ifdef GRAPHVIZ_RENDERDATA_USES_SIZE_T
+  std::size_t len;
+#else
+  unsigned int len;
+#endif
 
   gvc = gvContext();
 
   gvLayout(gvc, mGraph, layout.c_str());
   gvRenderData(gvc, mGraph, format.c_str(), &data, &len);
 
-  os.write(data, len);
+  os.write(data, static_cast<std::streamsize>(len));
 
   gvFreeRenderData(data);
   gvFreeLayout(gvc, mGraph);
@@ -86,6 +92,7 @@ void CPS::Graph::Element::set(const CPS::String &key, const CPS::String &value,
 
 CPS::Graph::Node::Node(Graph *g, const String &name) {
   mNode = agnode(g->mGraph, (char *)name.c_str(), 1);
+
   mPtr = mNode;
   mKind = AGNODE;
 }
@@ -93,6 +100,7 @@ CPS::Graph::Node::Node(Graph *g, const String &name) {
 CPS::Graph::Edge::Edge(Graph *g, const CPS::String &name, Node *head,
                        Node *tail) {
   mEdge = agedge(g->mGraph, head->mNode, tail->mNode, (char *)name.c_str(), 1);
+
   mPtr = mEdge;
   mKind = AGEDGE;
 }

@@ -747,7 +747,7 @@ void MnaSolver<VarType>::steadyStateInitialization() {
     diff = prevLeftSideVector - **mLeftSideVector;
     prevLeftSideVector = **mLeftSideVector;
     maxDiff = diff.lpNorm<Eigen::Infinity>();
-    max = (**mLeftSideVector).lpNorm<Eigen::Infinity>();
+    max = (**mLeftSideVector).template lpNorm<Eigen::Infinity>();
     // If difference is smaller than some epsilon, break
     if ((maxDiff / max) < mSteadStIniAccLimit)
       break;

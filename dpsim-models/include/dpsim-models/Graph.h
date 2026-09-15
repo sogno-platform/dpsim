@@ -10,7 +10,7 @@
 
 #include <map>
 
-#include <graphviz/cgraph.h>
+#include <cgraph.h>
 
 #include <dpsim-models/Definitions.h>
 

@@ -1,45 +1,120 @@
-# Try to determine whether std::filesystem needs linking
-include(CheckCXXSourceCompiles)
+# SPDX-License-Identifier: MPL-2.0
 
-check_cxx_source_compiles("
+include(CheckCXXSourceCompiles)
+include(FindPackageHandleStandardArgs)
+
+set(_FILESYSTEM_TEST_SOURCE "
 	#include <filesystem>
+
 	int main() {
 		std::filesystem::path p{\".\"};
-		return 0;
+		return p.empty();
 	}
-" HAS_NATIVE_FILESYSTEM)
+")
 
-# Determine link library, if needed
-if(HAS_NATIVE_FILESYSTEM)
-	if(MSVC)
-		# MSVC has native support and doesn't require linking
-		set(FILESYSTEM_LIBRARY "")
-	else()
-		# GCC < 9 or Clang may need explicit -lstdc++fs
-		set(FILESYSTEM_LIBRARY stdc++fs)
-	endif()
-else()
-	# Not supported natively, suggest using ghc_filesystem
-	message(WARNING "std::filesystem not supported, consider enabling FETCH_FILESYSTEM")
+# First try std::filesystem without any additional library.
+# This is the normal case for:
+#   - modern GCC
+#   - modern Clang / AppleClang
+#   - modern MSVC
+set(CMAKE_REQUIRED_LIBRARIES "")
+check_cxx_source_compiles(
+	"${_FILESYSTEM_TEST_SOURCE}"
+	FILESYSTEM_HAS_NATIVE_SUPPORT
+)
+
+if(FILESYSTEM_HAS_NATIVE_SUPPORT)
+
 	set(FILESYSTEM_LIBRARY "")
+	set(FILESYSTEM_FOUND TRUE)
+
+else()
+
+	# GCC versions before GCC 9 may require -lstdc++fs.
+	set(CMAKE_REQUIRED_LIBRARIES stdc++fs)
+
+	check_cxx_source_compiles(
+		"${_FILESYSTEM_TEST_SOURCE}"
+		FILESYSTEM_HAS_STDCXXFS
+	)
+
+	if(FILESYSTEM_HAS_STDCXXFS)
+
+		set(FILESYSTEM_LIBRARY stdc++fs)
+		set(FILESYSTEM_FOUND TRUE)
+
+	else()
+
+		# Older libc++ / Clang versions may require -lc++fs.
+		set(CMAKE_REQUIRED_LIBRARIES c++fs)
+
+		check_cxx_source_compiles(
+			"${_FILESYSTEM_TEST_SOURCE}"
+			FILESYSTEM_HAS_CXXFS
+		)
+
+		if(FILESYSTEM_HAS_CXXFS)
+
+			set(FILESYSTEM_LIBRARY c++fs)
+			set(FILESYSTEM_FOUND TRUE)
+
+		else()
+
+			set(FILESYSTEM_LIBRARY "")
+			set(FILESYSTEM_FOUND FALSE)
+
+		endif()
+
+	endif()
+
 endif()
+
+# Do not leak test libraries into subsequent CMake checks.
+set(CMAKE_REQUIRED_LIBRARIES "")
 
 set(FILESYSTEM_LIBRARIES ${FILESYSTEM_LIBRARY})
 
-include(FindPackageHandleStandardArgs)
-if(NOT MSVC)
-	find_package_handle_standard_args(Filesystem REQUIRED_VARS FILESYSTEM_LIBRARIES)
+if(FILESYSTEM_FOUND)
+
+	if(FILESYSTEM_LIBRARY)
+		message(STATUS
+			"std::filesystem requires additional library: ${FILESYSTEM_LIBRARY}"
+		)
+	else()
+		message(STATUS
+			"std::filesystem is provided natively by the C++ standard library"
+		)
+	endif()
+
 else()
-	find_package_handle_standard_args(Filesystem DEFAULT_MSG)
+
+	message(WARNING
+		"std::filesystem is not available with the current compiler and standard library"
+	)
+
 endif()
 
-mark_as_advanced(FILESYSTEM_LIBRARY)
+find_package_handle_standard_args(
+	Filesystem
+	REQUIRED_VARS FILESYSTEM_FOUND
+)
+
+mark_as_advanced(
+	FILESYSTEM_LIBRARY
+)
 
 add_library(filesystem INTERFACE)
 
 if(FILESYSTEM_LIBRARY)
-	target_link_libraries(filesystem INTERFACE ${FILESYSTEM_LIBRARY})
+	target_link_libraries(
+		filesystem
+		INTERFACE
+			${FILESYSTEM_LIBRARY}
+	)
 endif()
 
-# Export as standard alias if used via find_package(Filesystem)
-add_library(Filesystem::filesystem ALIAS filesystem)
+add_library(
+	Filesystem::filesystem
+	ALIAS
+	filesystem
+)

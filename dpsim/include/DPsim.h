@@ -13,6 +13,9 @@
 
 #ifndef _MSC_VER
 #include <dpsim/RealTimeDataLogger.h>
+#endif
+
+#ifdef WITH_RT
 #include <dpsim/RealTimeSimulation.h>
 #endif
 
