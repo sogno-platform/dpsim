@@ -25,19 +25,24 @@
           # Required for old sundials version
           config.permittedInsecurePackages = [ "python-2.7.18.8" ];
           overlays = [
-            (final: prev: let
-            villasPkg = villas-node.packages.${system}.villas-node;
-            in {
-              readerwriterqueue = final.callPackage ./packaging/Nix/readerwriterqueue.nix { };
-              cimpp             = final.callPackage ./packaging/Nix/cimpp.nix { };
-              suitesparse-dpsim = prev.callPackage  ./packaging/Nix/suitesparse.nix { };
-              sundials321       = prev.callPackage  ./packaging/Nix/sundials.nix { };
-              dpsim             = final.callPackage ./packaging/Nix/dpsim.nix { villas-node=villasPkg; };
-              dpsimpy           = final.callPackage ./packaging/Nix/dpsimpy.nix { villas-node = villasPkg; };
-            })
+            (
+              final: prev:
+              let
+                villasPkg = villas-node.packages.${system}.villas-node;
+              in
+              {
+                readerwriterqueue = final.callPackage ./packaging/Nix/readerwriterqueue.nix { };
+                cimpp = final.callPackage ./packaging/Nix/cimpp.nix { };
+                suitesparse-dpsim = prev.callPackage ./packaging/Nix/suitesparse.nix { };
+                sundials321 = prev.callPackage ./packaging/Nix/sundials.nix { };
+                dpsim = final.callPackage ./packaging/Nix/dpsim.nix { villas-node = villasPkg; };
+                dpsimpy = final.callPackage ./packaging/Nix/dpsimpy.nix { villas-node = villasPkg; };
+              }
+            )
           ];
         };
-      in {
+      in
+      {
         packages = {
           default = pkgs.dpsim;
 

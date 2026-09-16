@@ -62,28 +62,27 @@ buildPythonPackage {
     scipy
   ];
 
-  buildInputs =
-    [
-      eigen
-      fmt
-      spdlog
-      nlohmann_json
-      readerwriterqueue
+  buildInputs = [
+    eigen
+    fmt
+    spdlog
+    nlohmann_json
+    readerwriterqueue
 
-      # TODO: Add these dependencies
-      # cudatoolkit
-      # magma
-    ]
-    ++ lib.optional withCIMpp cimpp
-    ++ lib.optional withVILLAS villas-node
-    ++ lib.optional withGSL gsl
-    ++ lib.optional withGraphviz graphviz
-    ++ lib.optional withSundials sundials321
-    ++ lib.optional withSuiteSparse suitesparse-dpsim
-    ++ lib.optionals withPybind [
-      python312
-      python312Packages.pybind11
-    ];
+    # TODO: Add these dependencies
+    # cudatoolkit
+    # magma
+  ]
+  ++ lib.optional withCIMpp cimpp
+  ++ lib.optional withVILLAS villas-node
+  ++ lib.optional withGSL gsl
+  ++ lib.optional withGraphviz graphviz
+  ++ lib.optional withSundials sundials321
+  ++ lib.optional withSuiteSparse suitesparse-dpsim
+  ++ lib.optionals withPybind [
+    python312
+    python312Packages.pybind11
+  ];
 
   enableParallelBuilding = true;
   dontUseCmakeConfigure = true;

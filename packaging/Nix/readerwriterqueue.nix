@@ -17,8 +17,4 @@ stdenv.mkDerivation {
   nativeBuildInputs = [ cmake ];
 
   cmakeFlags = [ "-DCMAKE_INSTALL_LIBDIR=lib" ];
-
-  # postInstall = ''
-  #   cmake --install . --prefix "''${!outputDev}" --component Devel
-  # '';
 }
