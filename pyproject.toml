@@ -10,7 +10,7 @@ authors = [
 ]
 description = "dynamic real-time power system simulator"
 readme = {file = "README.md", content-type = "text/markdown"}
-license = "MPL-2.0"
+license = {text = "MPL-2.0"}
 classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",

@@ -7,7 +7,7 @@ on:
   workflow_call:
     inputs:
       ref:
-        description: 'Revision under test'
+        description: "Revision under test"
         required: true
         type: string
 
@@ -39,3 +39,6 @@ jobs:
 
       - name: Build dpsim
         run: nix build .#dpsim
+
+      - name: Build dpsimpy
+        run: nix build .#dpsimpy

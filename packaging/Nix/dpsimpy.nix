@@ -1,5 +1,6 @@
 {
   lib,
+  stdenv,
 
   patchelf,
 
@@ -25,8 +26,8 @@
   # Options
   withAllExtras ? true,
   withOpenMP ? withAllExtras,
-  withCIMpp ? withAllExtras,
-  withVILLAS ? withAllExtras,
+  withCIMpp ? withAllExtras && !stdenv.hostPlatform.isDarwin,
+  withVILLAS ? withAllExtras && !stdenv.hostPlatform.isDarwin,
   withGSL ? withAllExtras,
   withGraphviz ? withAllExtras,
   withPybind ? withAllExtras,
@@ -49,9 +50,17 @@ buildPythonPackage {
   build-system = [
     setuptools
     setuptools-scm
+    wheel
+    pybind11
+    pybind11-stubgen
+    numpy
   ];
 
-  dependencies = [ pytest-runner ];
+  dependencies = [
+    numpy
+    pandas
+    scipy
+  ];
 
   buildInputs =
     [
@@ -79,8 +88,13 @@ buildPythonPackage {
   enableParallelBuilding = true;
   dontUseCmakeConfigure = true;
 
+  # Build-system requirements are already provided as Nix inputs; the
+  # dependency check runs pyproject-build's own bundled interpreter, which
+  # can't see them and reports false positives.
+  pypaBuildFlags = [ "--skip-dependency-check" ];
+
   preBuild = ''
-    pypaBuildFlags+="-C--global-option=build_ext -C--global-option=--parallel=$NIX_BUILD_CORES"
+    pypaBuildFlags+=("-C--global-option=build_ext" "-C--global-option=--parallel=$NIX_BUILD_CORES")
   '';
 
   env = {
@@ -111,8 +125,6 @@ buildPythonPackage {
       "-DFETCH_FILESYSTEM=OFF"
       "-DFETCH_JSON=OFF"
       "-DFETCH_READERWRITERQUEUE=OFF"
-
-      "-DCMAKE_SKIP_BUILD_RPATH=ON"
     ];
   };
 }

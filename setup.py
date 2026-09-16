@@ -41,7 +41,9 @@ class CMakeBuild(build_ext):
             else:
                 build_args = ["--config", cfg, "--parallel", "4"]
         else:
-            targets = ["dpsimpy", "dpsimpyvillas"]
+            targets = ["dpsimpy"]
+            if platform.system() == "Linux":
+                targets.append("dpsimpyvillas")
             if self.parallel:
                 build_args = ["--", "-j" + str(self.parallel)]
             else:
@@ -115,7 +117,7 @@ class CMakeBuild(build_ext):
 
 
 ext_modules_list = [CMakeExtension("dpsimpy")]
-if platform.system() != "Windows":
+if platform.system() == "Linux":
     ext_modules_list.append(CMakeExtension("dpsimpyvillas"))
 
 

@@ -33,7 +33,7 @@
               suitesparse-dpsim = prev.callPackage  ./packaging/Nix/suitesparse.nix { };
               sundials321       = prev.callPackage  ./packaging/Nix/sundials.nix { };
               dpsim             = final.callPackage ./packaging/Nix/dpsim.nix { villas-node=villasPkg; };
-              dpsimpy           = final.callPackage ./packaging/Nix/dpsimpy.nix { };
+              dpsimpy           = final.callPackage ./packaging/Nix/dpsimpy.nix { villas-node = villasPkg; };
             })
           ];
         };
