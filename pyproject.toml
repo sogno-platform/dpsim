@@ -1,16 +1,22 @@
 [build-system]
-requires = ["setuptools>=42", "wheel", "pybind11>=3.0.0", "pybind11-stubgen>=2.5", "numpy>=2.0.0"]
+requires = [
+    "setuptools>=42",
+    "wheel",
+    "pybind11>=3.0.0",
+    "pybind11-stubgen>=2.5",
+    "numpy>=2.0.0",
+]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "dpsim"
 version = "1.4.0"
 authors = [
-    {name = "The DPsim Authors", email = "post_acs@eonerc.rwth-aachen.de"},
+    { name = "The DPsim Authors", email = "post_acs@eonerc.rwth-aachen.de" },
 ]
 description = "dynamic real-time power system simulator"
-readme = {file = "README.md", content-type = "text/markdown"}
-license = "MPL-2.0"
+readme = { file = "README.md", content-type = "text/markdown" }
+license = { text = "MPL-2.0" }
 classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
@@ -20,11 +26,7 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
 ]
 requires-python = ">=3.10"
-dependencies = [
-    "numpy>=2.0.0",
-    "pandas>=2.0.0",
-    "scipy>=1.10.0",
-]
+dependencies = ["numpy>=2.0.0", "pandas>=2.0.0", "scipy>=1.10.0"]
 
 [project.urls]
 Homepage = "https://github.com/sogno-platform/dpsim"
@@ -53,15 +55,10 @@ manylinux = [
     "pybind11[global]",
 ]
 # Python test runner dependencies (from setup.py tests_require)
-test = [
-    "pytest",
-    "pyyaml",
-    "nbformat",
-    "nbconvert",
-]
+test = ["pytest", "pyyaml", "nbformat", "nbconvert"]
 
 [tool.setuptools]
-package-dir = {"dpsim" = "python/src/dpsim"}
+package-dir = { "dpsim" = "python/src/dpsim" }
 
 [tool.setuptools.packages.find]
 where = ["python/src"]

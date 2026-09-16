@@ -30,9 +30,9 @@
   withExamples ? false,
   withAllExtras ? true,
   withOpenMP ? withAllExtras,
-  withCIMpp ? withAllExtras,
+  withCIMpp ? withAllExtras && !stdenv.hostPlatform.isDarwin,
   withDocumentation ? withAllExtras,
-  withVILLAS ? withAllExtras,
+  withVILLAS ? withAllExtras && !stdenv.hostPlatform.isDarwin,
   withGSL ? withAllExtras,
   withGraphviz ? withAllExtras,
   withPybind ? withAllExtras,
@@ -44,39 +44,37 @@ stdenv.mkDerivation {
   name = "dpsim";
   src = ../..;
 
-  nativeBuildInputs =
-    [
-      cmake
-      pkg-config
-    ]
-    ++ lib.optionals withDocumentation [
-      doxygen
-      sphinx
-      python312Packages.sphinx-rtd-theme
-    ];
+  nativeBuildInputs = [
+    cmake
+    pkg-config
+  ]
+  ++ lib.optionals withDocumentation [
+    doxygen
+    sphinx
+    python312Packages.sphinx-rtd-theme
+  ];
 
-  buildInputs =
-    [
-      eigen
-      fmt
-      spdlog
-      nlohmann_json
-      readerwriterqueue
+  buildInputs = [
+    eigen
+    fmt
+    spdlog
+    nlohmann_json
+    readerwriterqueue
 
-      # TODO: Add these dependencies
-      # cudatoolkit
-      # magma
-    ]
-    ++ lib.optional withCIMpp cimpp
-    ++ lib.optional withVILLAS villas-node
-    ++ lib.optional withGSL gsl
-    ++ lib.optional withGraphviz graphviz
-    ++ lib.optional withSundials sundials321
-    ++ lib.optional withSuiteSparse suitesparse-dpsim
-    ++ lib.optionals withPybind [
-      python312
-      python312Packages.pybind11
-    ];
+    # TODO: Add these dependencies
+    # cudatoolkit
+    # magma
+  ]
+  ++ lib.optional withCIMpp cimpp
+  ++ lib.optional withVILLAS villas-node
+  ++ lib.optional withGSL gsl
+  ++ lib.optional withGraphviz graphviz
+  ++ lib.optional withSundials sundials321
+  ++ lib.optional withSuiteSparse suitesparse-dpsim
+  ++ lib.optionals withPybind [
+    python312
+    python312Packages.pybind11
+  ];
 
   enableParallelBuilding = true;
 
@@ -115,4 +113,11 @@ stdenv.mkDerivation {
   preBuild = ''
     export XDG_CACHE_HOME="$(mktemp -d)"
   '';
+
+  meta = {
+    description = "Dynamic real-time power system simulator";
+    license = lib.licenses.mpl20;
+    maintainers = with lib.maintainers; [ stv0g ];
+    platforms = with lib.platforms; (linux ++ darwin);
+  };
 }

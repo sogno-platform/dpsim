@@ -4,7 +4,7 @@
   python3,
   pre-commit,
   clang-tools,
-  ruby
+  ruby,
 }:
 mkShell {
   inputsFrom = [ dpsim ];

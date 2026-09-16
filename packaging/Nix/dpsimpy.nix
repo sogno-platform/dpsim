@@ -1,5 +1,6 @@
 {
   lib,
+  stdenv,
 
   patchelf,
 
@@ -25,8 +26,8 @@
   # Options
   withAllExtras ? true,
   withOpenMP ? withAllExtras,
-  withCIMpp ? withAllExtras,
-  withVILLAS ? withAllExtras,
+  withCIMpp ? withAllExtras && !stdenv.hostPlatform.isDarwin,
+  withVILLAS ? withAllExtras && !stdenv.hostPlatform.isDarwin,
   withGSL ? withAllExtras,
   withGraphviz ? withAllExtras,
   withPybind ? withAllExtras,
@@ -49,38 +50,50 @@ buildPythonPackage {
   build-system = [
     setuptools
     setuptools-scm
+    wheel
+    pybind11
+    pybind11-stubgen
+    numpy
   ];
 
-  dependencies = [ pytest-runner ];
+  dependencies = [
+    numpy
+    pandas
+    scipy
+  ];
 
-  buildInputs =
-    [
-      eigen
-      fmt
-      spdlog
-      nlohmann_json
-      readerwriterqueue
+  buildInputs = [
+    eigen
+    fmt
+    spdlog
+    nlohmann_json
+    readerwriterqueue
 
-      # TODO: Add these dependencies
-      # cudatoolkit
-      # magma
-    ]
-    ++ lib.optional withCIMpp cimpp
-    ++ lib.optional withVILLAS villas-node
-    ++ lib.optional withGSL gsl
-    ++ lib.optional withGraphviz graphviz
-    ++ lib.optional withSundials sundials321
-    ++ lib.optional withSuiteSparse suitesparse-dpsim
-    ++ lib.optionals withPybind [
-      python312
-      python312Packages.pybind11
-    ];
+    # TODO: Add these dependencies
+    # cudatoolkit
+    # magma
+  ]
+  ++ lib.optional withCIMpp cimpp
+  ++ lib.optional withVILLAS villas-node
+  ++ lib.optional withGSL gsl
+  ++ lib.optional withGraphviz graphviz
+  ++ lib.optional withSundials sundials321
+  ++ lib.optional withSuiteSparse suitesparse-dpsim
+  ++ lib.optionals withPybind [
+    python312
+    python312Packages.pybind11
+  ];
 
   enableParallelBuilding = true;
   dontUseCmakeConfigure = true;
 
+  # Build-system requirements are already provided as Nix inputs; the
+  # dependency check runs pyproject-build's own bundled interpreter, which
+  # can't see them and reports false positives.
+  pypaBuildFlags = [ "--skip-dependency-check" ];
+
   preBuild = ''
-    pypaBuildFlags+="-C--global-option=build_ext -C--global-option=--parallel=$NIX_BUILD_CORES"
+    pypaBuildFlags+=("-C--global-option=build_ext" "-C--global-option=--parallel=$NIX_BUILD_CORES")
   '';
 
   env = {
@@ -111,8 +124,13 @@ buildPythonPackage {
       "-DFETCH_FILESYSTEM=OFF"
       "-DFETCH_JSON=OFF"
       "-DFETCH_READERWRITERQUEUE=OFF"
-
-      "-DCMAKE_SKIP_BUILD_RPATH=ON"
     ];
+  };
+
+  meta = {
+    description = "Python bindings for the Dynamic real-time power system simulator";
+    license = lib.licenses.mpl20;
+    maintainers = with lib.maintainers; [ stv0g ];
+    platforms = with lib.platforms; (linux ++ darwin);
   };
 }
