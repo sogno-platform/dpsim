@@ -383,7 +383,11 @@ void InterfaceVillasQueueless::syncImports() {
   if (!needSync)
     return;
 
+  // The start-of-simulation read waits regardless of the per-step setting.
+  bool blockOnRead = mBlockOnRead;
+  mBlockOnRead = true;
   mSequenceToDpsim = this->readFromVillas();
+  mBlockOnRead = blockOnRead;
 }
 
 void InterfaceVillasQueueless::syncExports() {
