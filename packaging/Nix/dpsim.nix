@@ -113,4 +113,11 @@ stdenv.mkDerivation {
   preBuild = ''
     export XDG_CACHE_HOME="$(mktemp -d)"
   '';
+
+  meta = {
+    description = "Dynamic real-time power system simulator";
+    license = lib.licenses.mpl20;
+    maintainers = with lib.maintainers; [ stv0g ];
+    platforms = with lib.platforms; (linux ++ darwin);
+  };
 }
