@@ -134,6 +134,41 @@ which have `syncOnSimulationStart` set, the `Simulation::sync` will be called be
 
 Note that this setting operates independently of the `blockOnRead` flag. This means that with both flags set, the simulation will block again after the synchronization at the start of the first time step until another value is received for the attribute in question.
 
+`syncOnSimulationStart` defaults to `true` and `blockOnRead` to `false`, so an import added without
+either argument takes part in the start-of-simulation handshake but does not pace the run. An
+interface with no import marked `syncOnSimulationStart` skips the handshake entirely rather than
+performing a read nobody asked for.
+
+## What a missed read does
+
+`blockOnRead` is recorded per import, but the queueless interface applies it per interface: one
+`read()` fills the whole sample, so if any single import asks to block, every read on that interface
+blocks. There is no way to have one attribute of a sample wait and another not.
+
+With `blockOnRead` set, a read that returns no data is retried until one arrives. The wait is
+unbounded, which is the point when the far side is the pacing source, and a hazard when it can die.
+
+Without it, the read is attempted once. If nothing has arrived, the interface logs a warning, leaves
+every imported attribute holding the value from the previous step, and the simulation continues.
+A failed read is treated the same way instead of terminating the process.
+
+The start-of-simulation read is the exception: when any import is marked `syncOnSimulationStart`,
+that one read waits for a sample whatever `blockOnRead` says. Otherwise the handshake would consist
+of a read that finds nothing and a set of attributes still holding their initial values, which is
+the opposite of what asking to synchronize means.
+
+{{% alert title="Watch out: reusing a sample is silent in the results" color="warning" %}}
+Reuse keeps a real-time run going through a single late sample instead of stalling or aborting it,
+which is what you want when the wall clock is in charge. It also means a slow far side shows up as
+a held value rather than an error, so an offline run that is meant to be reproducible should set
+`blockOnRead` on at least one import and let the exchange pace the steps. Two runs of the same
+non-blocking configuration are not guaranteed to produce the same results.
+
+The interface additionally tracks how often the sequence number fails to advance by one and warns
+once a large number of such overruns accumulate, so persistent starvation is visible in the log
+even though an individual reuse is not.
+{{% /alert %}}
+
 ## The two tasks
 
 Adding an interface adds a `PreStep` and a `PostStep` task.
@@ -164,13 +199,19 @@ attribute can change which tasks run; see
 
 ## Task execution is not the moment of transfer
 
-When these tasks execute is not when the data actually crosses the boundary. The interface spawns a
-reader thread and a writer thread and communicates with them over a lock-free queue.
+For `InterfaceVillas`, when these tasks execute is not when the data actually crosses the boundary.
+The interface spawns a reader thread and a writer thread and communicates with them over a lock-free
+queue.
 
 The consequence is the useful part: a slow import or export does not block the solver. The simulation
 hands a value to the queue and continues. That is what makes an interface to a slow or unreliable
 far side usable at all, and it is also why a value read this step may have been produced some time
 ago.
 
-Blocking is opt-in through `blockOnRead` and `syncOnSimulationStart` on the import, described on the
-co-simulation page. Those are the only ways the exchange paces the simulation.
+Blocking is opt-in through `blockOnRead` and `syncOnSimulationStart` on the import. For the queued
+interface those are the only ways the exchange paces the simulation.
+
+`InterfaceVillasQueueless` has no such thread and no queue. `PreStep` calls `read()` and `PostStep`
+calls `write()` directly, on the simulation thread, so for this interface task execution *is* the
+moment of transfer. That is where its lower latency comes from, and it is also why the behaviour on
+a missed read matters so much here: with `blockOnRead` set, the solver itself is what waits.
