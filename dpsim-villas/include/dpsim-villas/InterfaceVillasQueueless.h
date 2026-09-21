@@ -75,6 +75,8 @@ protected:
   void createSignals();
   Int mSequenceToDpsim;
   Int mSequenceFromDpsim;
+  /// Set from the imports in open(): block until a sample arrives instead of reusing the previous one
+  bool mBlockOnRead = false;
 
 public:
   class PreStep : public CPS::Task {
