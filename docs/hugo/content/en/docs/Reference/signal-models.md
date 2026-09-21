@@ -81,6 +81,11 @@ Split a network into parts that can be solved separately, either across solvers 
 simulators in a co-simulation. See
 [co-simulation]({{< ref "/docs/User Guide/co-simulation.md" >}}).
 
+These are the one group here that is not a signal model. They derive from `CompositePowerComp`,
+so they own their internal sources, resistors and virtual nodes and register them themselves.
+Give the terminals with `connect()` like any other branch and add the single component to the
+system; there is nothing else to wire up.
+
 | Model | Domains |
 | --- | --- |
 | `DecouplingLine` | `DP::Ph1` |

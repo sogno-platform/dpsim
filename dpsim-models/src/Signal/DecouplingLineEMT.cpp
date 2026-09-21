@@ -12,47 +12,73 @@ using namespace CPS;
 using namespace CPS::EMT::Ph1;
 using namespace CPS::Signal;
 
-DecouplingLineEMT::DecouplingLineEMT(String name, Logger::Level logLevel)
-    : SimSignalComp(name, name, logLevel),
+DecouplingLineEMT::DecouplingLineEMT(String uid, String name,
+                                     Logger::Level logLevel)
+    : CompositePowerComp<Real>(uid, name, true, true, logLevel),
       mStates(mAttributes->create<Matrix>("states")),
       mSrcCur1Ref(mAttributes->create<Real>("i_src1")),
       mSrcCur2Ref(mAttributes->create<Real>("i_src2")) {
 
-  mRes1 = Resistor::make(name + "_r1", logLevel);
-  mRes2 = Resistor::make(name + "_r2", logLevel);
-  mSrc1 = CurrentSource::make(name + "_i1", logLevel);
-  mSrc2 = CurrentSource::make(name + "_i2", logLevel);
-
-  mSrcCur1 = mSrc1->mCurrentRef;
-  mSrcCur2 = mSrc2->mCurrentRef;
+  setTerminalNumber(2);
+  **mIntfVoltage = Matrix::Zero(1, 1);
+  **mIntfCurrent = Matrix::Zero(1, 1);
 }
 
-void DecouplingLineEMT::setParameters(SimNode<Real>::Ptr node1,
-                                      SimNode<Real>::Ptr node2, Real resistance,
-                                      Real inductance, Real capacitance) {
+void DecouplingLineEMT::setParameters(Real resistance, Real inductance,
+                                      Real capacitance) {
 
   mResistance = resistance;
   mInductance = inductance;
   mCapacitance = capacitance;
-  mNode1 = node1;
-  mNode2 = node2;
 
   mSurgeImpedance = sqrt(inductance / capacitance);
   mDelay = sqrt(inductance * capacitance);
   SPDLOG_LOGGER_INFO(mSLog, "surge impedance: {}", mSurgeImpedance);
   SPDLOG_LOGGER_INFO(mSLog, "delay: {}", mDelay);
 
-  mRes1->setParameters(mSurgeImpedance + mResistance / 4);
-  mRes1->connect({node1, SimNode<Real>::GND});
-  mRes2->setParameters(mSurgeImpedance + mResistance / 4);
-  mRes2->connect({node2, SimNode<Real>::GND});
-  mSrc1->setParameters(0);
-  mSrc1->connect({node1, SimNode<Real>::GND});
-  mSrc2->setParameters(0);
-  mSrc2->connect({node2, SimNode<Real>::GND});
+  mParametersSet = true;
 }
 
-void DecouplingLineEMT::initialize(Real omega, Real timeStep) {
+void DecouplingLineEMT::createSubComponents() {
+  if (mSubCompCreated)
+    return;
+  mSubCompCreated = true;
+
+  mRes1 = Resistor::make(**mName + "_r1", mLogLevel);
+  mRes1->setParameters(mSurgeImpedance + mResistance / 4);
+  mRes1->connect({mTerminals[0]->node(), EMT::SimNode::GND});
+  addMNASubComponent(mRes1, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+
+  mRes2 = Resistor::make(**mName + "_r2", mLogLevel);
+  mRes2->setParameters(mSurgeImpedance + mResistance / 4);
+  mRes2->connect({mTerminals[1]->node(), EMT::SimNode::GND});
+  addMNASubComponent(mRes2, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+
+  mSrc1 = CurrentSource::make(**mName + "_i1", mLogLevel);
+  mSrc1->setParameters(0);
+  mSrc1->connect({mTerminals[0]->node(), EMT::SimNode::GND});
+  addMNASubComponent(mSrc1, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+
+  mSrc2 = CurrentSource::make(**mName + "_i2", mLogLevel);
+  mSrc2->setParameters(0);
+  mSrc2->connect({mTerminals[1]->node(), EMT::SimNode::GND});
+  addMNASubComponent(mSrc2, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
+                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+
+  mSrcCur1 = mSrc1->mCurrentRef;
+  mSrcCur2 = mSrc2->mCurrentRef;
+}
+
+void DecouplingLineEMT::initializeParentFromNodesAndTerminals(Real frequency) {
+  (**mIntfVoltage)(0, 0) =
+      (initialSingleVoltage(1) - initialSingleVoltage(0)).real();
+}
+
+void DecouplingLineEMT::mnaParentInitialize(Real omega, Real timeStep,
+                                            Attribute<Matrix>::Ptr leftVector) {
   if (mDelay < timeStep)
     throw SystemError("Timestep too large for decoupling");
 
@@ -61,8 +87,8 @@ void DecouplingLineEMT::initialize(Real omega, Real timeStep) {
   SPDLOG_LOGGER_INFO(mSLog, "bufsize {} alpha {}", mBufSize, mAlpha);
 
   // Initialization based on static PI-line model
-  Complex volt1 = mNode1->initialSingleVoltage();
-  Complex volt2 = mNode2->initialSingleVoltage();
+  Complex volt1 = initialSingleVoltage(0);
+  Complex volt2 = initialSingleVoltage(1);
   Complex initAdmittance = 1. / Complex(mResistance, omega * mInductance) +
                            Complex(0, omega * mCapacitance / 2);
   Complex cur1 = volt1 * initAdmittance -
@@ -71,6 +97,8 @@ void DecouplingLineEMT::initialize(Real omega, Real timeStep) {
                  volt1 / Complex(mResistance, omega * mInductance);
   SPDLOG_LOGGER_INFO(mSLog, "initial voltages: v_k {} v_m {}", volt1, volt2);
   SPDLOG_LOGGER_INFO(mSLog, "initial currents: i_km {} i_mk {}", cur1, cur2);
+
+  (**mIntfCurrent)(0, 0) = cur1.real();
 
   // Resize ring buffers and initialize
   mVolt1.resize(mBufSize, volt1.real());
@@ -113,10 +141,6 @@ void DecouplingLineEMT::step(Real time, Int timeStepCount) {
   mSrcCur2->set(**mSrcCur2Ref);
 }
 
-void DecouplingLineEMT::PreStep::execute(Real time, Int timeStepCount) {
-  mLine.step(time, timeStepCount);
-}
-
 void DecouplingLineEMT::postStep() {
   // Update ringbuffers with new values
   mVolt1[mBufIdx] = -mRes1->intfVoltage()(0, 0);
@@ -129,15 +153,44 @@ void DecouplingLineEMT::postStep() {
     mBufIdx = 0;
 }
 
-void DecouplingLineEMT::PostStep::execute(Real time, Int timeStepCount) {
-  mLine.postStep();
+void DecouplingLineEMT::mnaParentPreStep(Real time, Int timeStepCount) {
+  step(time, timeStepCount);
+  mSrc1->mnaPreStep(time, timeStepCount);
+  mSrc2->mnaPreStep(time, timeStepCount);
+  mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
-Task::List DecouplingLineEMT::getTasks() {
-  return Task::List(
-      {std::make_shared<PreStep>(*this), std::make_shared<PostStep>(*this)});
+void DecouplingLineEMT::mnaParentPostStep(Real time, Int timeStepCount,
+                                          Attribute<Matrix>::Ptr &leftVector) {
+  mnaCompUpdateVoltage(**leftVector);
+  mnaCompUpdateCurrent(**leftVector);
+  postStep();
 }
 
-IdentifiedObject::List DecouplingLineEMT::getLineComponents() {
-  return IdentifiedObject::List({mRes1, mRes2, mSrc1, mSrc2});
+void DecouplingLineEMT::mnaCompUpdateVoltage(const Matrix &leftVector) {
+  (**mIntfVoltage)(0, 0) =
+      -mRes2->intfVoltage()(0, 0) + mRes1->intfVoltage()(0, 0);
+}
+
+void DecouplingLineEMT::mnaCompUpdateCurrent(const Matrix &leftVector) {
+  (**mIntfCurrent)(0, 0) = -mRes1->intfCurrent()(0, 0) + mSrcCur1->get().real();
+}
+
+void DecouplingLineEMT::mnaParentAddPreStepDependencies(
+    AttributeBase::List &prevStepDependencies,
+    AttributeBase::List &attributeDependencies,
+    AttributeBase::List &modifiedAttributes) {
+  prevStepDependencies.push_back(mStates);
+  modifiedAttributes.push_back(mRightVector);
+}
+
+void DecouplingLineEMT::mnaParentAddPostStepDependencies(
+    AttributeBase::List &prevStepDependencies,
+    AttributeBase::List &attributeDependencies,
+    AttributeBase::List &modifiedAttributes,
+    Attribute<Matrix>::Ptr &leftVector) {
+  attributeDependencies.push_back(leftVector);
+  modifiedAttributes.push_back(mIntfVoltage);
+  modifiedAttributes.push_back(mIntfCurrent);
+  modifiedAttributes.push_back(mStates);
 }

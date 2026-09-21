@@ -93,10 +93,9 @@ void decoupleNode(SystemTopology &sys, const String &nodeName,
 
   auto idealTrafo = Signal::DecouplingIdealTransformer_EMT_Ph1::make(
       "itm_" + nodeName, Logger::Level::debug);
-  idealTrafo->setParameters(nodeCopy1, nodeCopy2, 0.001, i_0, 0);
+  idealTrafo->connect({nodeCopy1, nodeCopy2});
+  idealTrafo->setParameters(0.001, i_0, 0);
   sys.addComponent(idealTrafo);
-  sys.addComponents(idealTrafo->getComponents());
-  sys.addNode(idealTrafo->getVirtualNode());
 }
 
 void doSim(String &name, SystemTopology &sys, Int threads,

@@ -117,7 +117,7 @@ void simITM_SP_Ph1() {
 
   auto itm = CPS::Signal::DecouplingIdealTransformer_SP_Ph1::make(
       "itm", Logger::Level::debug);
-  itm->setParameters(n1_1, n1_2, 0, Matrix::Zero(1, 1), Complex(0, 0),
+  itm->setParameters(0, Matrix::Zero(1, 1), Complex(0, 0),
                      CPS::CouplingMethod::DELAY);
 
   auto load = Resistor::make("R_load", Logger::Level::debug);
@@ -126,13 +126,12 @@ void simITM_SP_Ph1() {
   // Topology
   vs->connect({SimNode::GND, n0});
   R_1->connect({n0, n1_1});
+  itm->connect({n1_1, n1_2});
   line->connect({n1_2, n2});
   load->connect({n2, SimNode::GND});
 
   auto sys = SystemTopology(50, SystemNodeList{n0, n1_1, n1_2, n2},
                             SystemComponentList{vs, R_1, line, itm, load});
-  sys.addComponents(itm->getComponents());
-  sys.addNode(itm->getVirtualNode());
 
   // Logging
   auto logger = DataLogger::make(simName);
@@ -142,9 +141,9 @@ void simITM_SP_Ph1() {
   logger->logAttribute("v2", n2->attribute("v"));
   logger->logAttribute("iline", line->attribute("i_intf"));
   logger->logAttribute("iref_itm", itm->attribute("i_ref"));
-  logger->logAttribute("i_intf_itm", itm->attribute("i_intf"));
+  logger->logAttribute("i_intf_itm", itm->attribute("i_src_intf"));
   logger->logAttribute("vref_itm", itm->attribute("v_ref"));
-  logger->logAttribute("v_intf_itm", itm->attribute("v_intf"));
+  logger->logAttribute("v_intf_itm", itm->attribute("v_src_intf"));
   logger->logAttribute("iload", load->attribute("i_intf"));
 
   Simulation sim(simName, Logger::Level::debug);

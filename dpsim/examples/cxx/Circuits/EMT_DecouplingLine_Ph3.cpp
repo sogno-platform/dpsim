@@ -111,7 +111,7 @@ void simDecouplingLine_Ph3() {
 
   auto dline = DecouplingLineEMT_Ph3::make("dline", Logger::Level::debug);
   dline->setParameters(
-      n1, n2, CPS::Math::singlePhaseParameterToThreePhase(resistance),
+      CPS::Math::singlePhaseParameterToThreePhase(resistance),
       CPS::Math::singlePhaseParameterToThreePhase(inductance),
       CPS::Math::singlePhaseParameterToThreePhase(capacitance));
 
@@ -120,11 +120,11 @@ void simDecouplingLine_Ph3() {
 
   // Topology
   vs->connect({SimNode::GND, n1});
+  dline->connect({n1, n2});
   load->connect({n2, SimNode::GND});
 
   auto sys = SystemTopology(50, SystemNodeList{n1, n2},
                             SystemComponentList{vs, dline, load});
-  sys.addComponents(dline->getLineComponents());
 
   // Logging
   auto logger = DataLogger::make(simName);
