@@ -135,6 +135,18 @@ class CMakeBuild(build_ext):
                     "-DCMAKE_OSX_ARCHITECTURES=" + ";".join(architectures)
                 )
 
+        # Keep the extensions' RPATH relative to their own directory.
+        origin_token = {"Linux": "$ORIGIN", "Darwin": "@loader_path"}.get(
+            platform.system()
+        )
+
+        if origin_token:
+            cmake_args += [
+                "-DCMAKE_BUILD_WITH_INSTALL_RPATH=ON",
+                f"-DCMAKE_INSTALL_RPATH={origin_token}",
+                "-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON",
+            ]
+
         # ------------------------------------------------------------------
         # User supplied CMake options
         # ------------------------------------------------------------------
