@@ -70,8 +70,8 @@ Then clone DPsim and run the macOS setup script:
 git clone https://github.com/sogno-platform/dpsim.git
 cd dpsim
 
-chmod +x packaging/Shell/install-macos.sh
-./packaging/Shell/install-macos.sh
+chmod +x scripts/install-macos.sh
+./scripts/install-macos.sh
 ```
 
 The setup script prepares the complete native development environment. It installs the required Homebrew dependencies, creates a local Python virtual environment called `dpsim-python`, configures and builds DPsim with CMake, installs the Python package, and registers a `DPsim Python` Jupyter kernel.
@@ -112,7 +112,7 @@ The macOS-specific dependency paths and compiler settings are stored in the CMak
 To recreate the complete local environment and build tree from scratch, run:
 
 ```shell
-CLEAN=1 ./packaging/Shell/install-macos.sh
+CLEAN=1 ./scripts/install-macos.sh
 ```
 
 This removes the local DPsim build directory, Python environment and registered DPsim Jupyter kernel before recreating them.

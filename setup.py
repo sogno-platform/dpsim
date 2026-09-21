@@ -37,17 +37,9 @@ def env_flag(name: str, default: bool = False) -> bool:
     )
 
 
-# VILLAS support is optional for the Python package.
-#
-# Core DPsim:
-#   pip install .
-#
-# DPsim + VILLAS:
-#   DPSIM_PYTHON_WITH_VILLAS=1 pip install .
-#
-# This avoids assuming that VILLASnode exists simply because the platform
-# is Linux or macOS.
-WITH_VILLAS = env_flag("DPSIM_PYTHON_WITH_VILLAS", default=False)
+# VILLASnode is commonly available on Linux, not on macOS; Windows never
+# builds this extension. DPSIM_PYTHON_WITH_VILLAS overrides the default.
+WITH_VILLAS = env_flag("DPSIM_PYTHON_WITH_VILLAS", default=platform.system() == "Linux")
 
 
 class CMakeExtension(Extension):
@@ -98,20 +90,6 @@ class CMakeBuild(build_ext):
             f"-Dpybind11_DIR={pybind11.get_cmake_dir()}",
             f"-DCMAKE_BUILD_TYPE={cfg}",
             "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
-            # Python bindings are the purpose of this build.
-            "-DWITH_PYBIND=ON",
-            "-DFETCH_PYBIND=OFF",
-            # Keep Python package builds small.
-            "-DDPSIM_BUILD_EXAMPLES=OFF",
-            "-DDPSIM_BUILD_DOC=OFF",
-            # Reproducible dependencies for package builds.
-            "-DFETCH_SPDLOG=ON",
-            "-DFETCH_SUITESPARSE=ON",
-            # Eigen is supplied by the platform/development environment.
-            # Windows already fetches Eigen in the top-level CMake logic.
-            "-DFETCH_EIGEN=OFF",
-            # VILLAS is explicitly optional.
-            f"-DWITH_VILLAS={'ON' if WITH_VILLAS else 'OFF'}",
         ]
 
         # ------------------------------------------------------------------
