@@ -6,8 +6,9 @@
 
 #include <cstddef>
 
-#include <gvc.h>
+#include <graphviz/gvc.h>
 
+#include <dpsim-models/Config.h>
 #include <dpsim-models/Graph.h>
 
 using namespace CPS;

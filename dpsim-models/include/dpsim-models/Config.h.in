@@ -12,6 +12,7 @@
 #cmakedefine WITH_CIM
 #cmakedefine WITH_PYBIND
 #cmakedefine WITH_GRAPHVIZ
+#cmakedefine GRAPHVIZ_RENDERDATA_USES_SIZE_T
 #cmakedefine WITH_SUNDIALS
 #cmakedefine WITH_NUMPY
 #cmakedefine WITH_KLU

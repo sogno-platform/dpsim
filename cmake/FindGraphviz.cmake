@@ -12,21 +12,15 @@ find_library(GVC_LIBRARY
 		lib
 )
 
-# Find the directory that directly contains the Graphviz headers.
-#
-# Typical locations:
-#   Linux:   /usr/include/graphviz
-#   macOS:   /opt/homebrew/include/graphviz
-#   Windows: <Graphviz>/include/graphviz
-#
-# Some installations may place the headers directly in include/, so keep
-# that as a fallback.
+# Find the directory that contains the graphviz/ header directory, so
+# callers use the prefixed #include <graphviz/cgraph.h> form and this
+# directory does not leak unprefixed, generically-named Graphviz headers
+# (types.h, const.h, graph.h, color.h, ...) onto every consumer's include
+# path. Linux and Homebrew both install to <prefix>/include/graphviz/cgraph.h.
 find_path(GRAPHVIZ_INCLUDE_DIR
 	NAMES
-		cgraph.h
+		graphviz/cgraph.h
 	PATH_SUFFIXES
-		include/graphviz
-		graphviz
 		include
 )
 
@@ -77,7 +71,7 @@ if(Graphviz_FOUND)
 	check_cxx_source_compiles(
 		"
 		#include <cstddef>
-		#include <gvc.h>
+		#include <graphviz/gvc.h>
 
 		int main()
 		{
@@ -102,7 +96,6 @@ if(Graphviz_FOUND)
 
 	if(GRAPHVIZ_RENDERDATA_USES_SIZE_T)
 		message(STATUS "Graphviz gvRenderData uses size_t for output length")
-		add_compile_definitions(GRAPHVIZ_RENDERDATA_USES_SIZE_T)
 	else()
 		message(STATUS "Graphviz gvRenderData uses unsigned int for output length")
 	endif()

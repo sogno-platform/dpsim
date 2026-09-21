@@ -25,11 +25,11 @@
 #   - Jupyter kernel registration
 #
 # Usage:
-#   chmod +x packaging/Shell/install-macos.sh
-#   ./packaging/Shell/install-macos.sh
+#   chmod +x scripts/install-macos.sh
+#   ./scripts/install-macos.sh
 #
 # Clean project-local rebuild/retest:
-#   CLEAN=1 ./packaging/Shell/install-macos.sh
+#   CLEAN=1 ./scripts/install-macos.sh
 #
 # After setup, normal native rebuilds require no configure flags:
 #   source dpsim-python/bin/activate
@@ -203,8 +203,6 @@ grep -q 'template lpNorm<Eigen::Infinity>' dpsim/src/MNASolver.cpp \
     || die "The dependent-template lpNorm fix is missing from dpsim/src/MNASolver.cpp."
 grep -q 'DPSIM_PYTHON_WITH_VILLAS' setup.py \
     || die "The platform-neutral optional VILLAS Python packaging logic is missing from setup.py."
-grep -q 'FETCH_SPDLOG=ON' setup.py \
-    || die "The reproducible fetched-spdlog Python packaging configuration is missing from setup.py."
 grep -q 'shlex.split' setup.py \
     || die "Robust CMAKE_ARGS/CMAKE_OPTS parsing is missing from setup.py."
 
@@ -269,9 +267,10 @@ fi
 
 PYTHON="${VENV_PATH}/bin/python"
 
-PYTHON_MM="$("${PYTHON}" -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')"
-[[ "${PYTHON_MM}" == "3.14" ]] \
-    || die "${VENV_PATH} uses Python ${PYTHON_MM}; Python 3.14 is required. Remove the environment and rerun this script."
+PYTHON_MAJOR="$("${PYTHON}" -c 'import sys; print(sys.version_info.major)')"
+PYTHON_MINOR="$("${PYTHON}" -c 'import sys; print(sys.version_info.minor)')"
+(( PYTHON_MAJOR == 3 && PYTHON_MINOR >= 14 )) \
+    || die "${VENV_PATH} uses Python ${PYTHON_MAJOR}.${PYTHON_MINOR}; Python 3.14 or newer is required. Remove the environment and rerun this script."
 
 log "Upgrading Python packaging tools"
 "${PYTHON}" -m pip install --upgrade pip setuptools wheel
@@ -582,12 +581,12 @@ The macOS configure flags are stored in:
 
 For a completely clean project-local setup/build retest:
 
-  CLEAN=1 ./packaging/Shell/install-macos.sh
+  CLEAN=1 ./scripts/install-macos.sh
 
 If Python bindings/package files change, the installer is the reproducible way
 of rebuilding and reinstalling both the native tree and the Python package:
 
-  ./packaging/Shell/install-macos.sh
+  ./scripts/install-macos.sh
 
 Run all repository pre-commit checks manually with:
 

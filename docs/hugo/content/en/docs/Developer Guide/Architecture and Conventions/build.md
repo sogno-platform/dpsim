@@ -235,8 +235,8 @@ xcode-select --install
 Then run the macOS setup script from the root of the DPsim repository:
 
 ```shell
-chmod +x packaging/Shell/install-macos.sh
-./packaging/Shell/install-macos.sh
+chmod +x scripts/install-macos.sh
+./scripts/install-macos.sh
 ```
 
 If Homebrew is not already installed, the setup script installs it first. It then installs the
@@ -285,7 +285,7 @@ python -c "import dpsim, dpsimpy; print(dpsimpy.__file__)"
 For a completely clean rebuild of the local macOS development environment, run:
 
 ```shell
-CLEAN=1 ./packaging/Shell/install-macos.sh
+CLEAN=1 ./scripts/install-macos.sh
 ```
 
 This removes the local DPsim build directory, the `dpsim-python` virtual environment and the
