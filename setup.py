@@ -54,6 +54,12 @@ class CMakeBuild(build_ext):
         self._cmake_extdir = None
         super().run()
 
+    def build_extensions(self):
+        # All extensions share one CMake project; build them serially to
+        # avoid racing the shared configure step and each other's .so files.
+        for ext in self.extensions:
+            self.build_extension(ext)
+
     def build_extension(self, ext):
         extdir = Path(self.get_ext_fullpath(ext.name)).parent.resolve()
 
