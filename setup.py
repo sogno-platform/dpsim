@@ -54,6 +54,12 @@ class CMakeBuild(build_ext):
         self._cmake_extdir = None
         super().run()
 
+    def build_extensions(self):
+        # All extensions share one CMake project; build them serially to
+        # avoid racing the shared configure step and each other's .so files.
+        for ext in self.extensions:
+            self.build_extension(ext)
+
     def build_extension(self, ext):
         extdir = Path(self.get_ext_fullpath(ext.name)).parent.resolve()
 
@@ -128,6 +134,18 @@ class CMakeBuild(build_ext):
                 cmake_args.append(
                     "-DCMAKE_OSX_ARCHITECTURES=" + ";".join(architectures)
                 )
+
+        # Keep the extensions' RPATH relative to their own directory.
+        origin_token = {"Linux": "$ORIGIN", "Darwin": "@loader_path"}.get(
+            platform.system()
+        )
+
+        if origin_token:
+            cmake_args += [
+                "-DCMAKE_BUILD_WITH_INSTALL_RPATH=ON",
+                f"-DCMAKE_INSTALL_RPATH={origin_token}",
+                "-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON",
+            ]
 
         # ------------------------------------------------------------------
         # User supplied CMake options
