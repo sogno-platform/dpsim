@@ -888,7 +888,7 @@ $(function(){initNavTree('_m_n_a_solver_8cpp_source.html',''); initResizable(tru
 <div class="line"><a id="l00747" name="l00747"></a><span class="lineno">  747</span>    diff = prevLeftSideVector - **<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#ac7391680fc7fe4e66903ce6633fa7a26">mLeftSideVector</a>;</div>
 <div class="line"><a id="l00748" name="l00748"></a><span class="lineno">  748</span>    prevLeftSideVector = **<a class="code hl_variable" href="class_d_psim_1_1_mna_solver.html#ac7391680fc7fe4e66903ce6633fa7a26">mLeftSideVector</a>;</div>
 <div class="line"><a id="l00749" name="l00749"></a><span class="lineno">  749</span>    maxDiff = diff.lpNorm&lt;Eigen::Infinity&gt;();</div>
-<div class="line"><a id="l00750" name="l00750"></a><span class="lineno">  750</span>    max = (**mLeftSideVector).lpNorm&lt;Eigen::Infinity&gt;();</div>
+<div class="line"><a id="l00750" name="l00750"></a><span class="lineno">  750</span>    max = (**mLeftSideVector).template lpNorm&lt;Eigen::Infinity&gt;();</div>
 <div class="line"><a id="l00751" name="l00751"></a><span class="lineno">  751</span>    <span class="comment">// If difference is smaller than some epsilon, break</span></div>
 <div class="line"><a id="l00752" name="l00752"></a><span class="lineno">  752</span>    <span class="keywordflow">if</span> ((maxDiff / max) &lt; <a class="code hl_variable" href="class_d_psim_1_1_solver.html#a19567cb788c079090ad68cc8b1c2f348">mSteadStIniAccLimit</a>)</div>
 <div class="line"><a id="l00753" name="l00753"></a><span class="lineno">  753</span>      <span class="keywordflow">break</span>;</div>

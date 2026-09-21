@@ -29,6 +29,45 @@ The Windows wheel is a reduced build and does not carry every feature; see
 The package also contains only the simulation core; the example notebooks additionally need
 plotting and data handling packages, which are listed in the import section of each notebook.
 &lt;/div>
+&lt;h2 id="macos">macOS&lt;/h2>
+&lt;p>DPsim currently does not provide a pre-built macOS wheel. On macOS, install DPsim from source using the native setup script included in the repository.&lt;/p>
+&lt;p>The setup has been tested on Apple Silicon and uses the standard CMake build together with Homebrew-provided dependencies.&lt;/p>
+&lt;p>First make sure the Xcode Command Line Tools are installed:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>xcode-select --install
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then clone DPsim and run the macOS setup script:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>git clone https://github.com/sogno-platform/dpsim.git
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> dpsim
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>chmod +x scripts/install-macos.sh
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>./scripts/install-macos.sh
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The setup script prepares the complete native development environment. It installs the required Homebrew dependencies, creates a local Python virtual environment called &lt;code>dpsim-python&lt;/code>, configures and builds DPsim with CMake, installs the Python package, and registers a &lt;code>DPsim Python&lt;/code> Jupyter kernel.&lt;/p>
+&lt;p>The native build includes support for:&lt;/p>
+&lt;ul>
+&lt;li>Apple Silicon (&lt;code>arm64&lt;/code>) and Intel (&lt;code>x86_64&lt;/code>) macOS&lt;/li>
+&lt;li>CMake and Ninja&lt;/li>
+&lt;li>Eigen 3&lt;/li>
+&lt;li>SuiteSparse / KLU&lt;/li>
+&lt;li>Graphviz&lt;/li>
+&lt;li>OpenMP through Homebrew &lt;code>libomp&lt;/code>&lt;/li>
+&lt;li>Python bindings through pybind11&lt;/li>
+&lt;li>C++ examples&lt;/li>
+&lt;li>JupyterLab and the DPsim Python environment&lt;/li>
+&lt;/ul>
+&lt;p>After installation, activate the Python environment with:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">source&lt;/span> dpsim-python/bin/activate
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The Python package can then be used normally:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">import&lt;/span> &lt;span style="color:#000">dpsim&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">import&lt;/span> &lt;span style="color:#000">dpsimpy&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>For C++ development, the build directory created by the setup script is already configured with the required macOS-specific CMake settings. Normal rebuilds therefore only require:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cmake --build build --parallel &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>sysctl -n hw.ncpu&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The macOS-specific dependency paths and compiler settings are stored in the CMake build directory and do not have to be specified again for subsequent builds.&lt;/p>
+&lt;p>To recreate the complete local environment and build tree from scratch, run:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">CLEAN&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> ./scripts/install-macos.sh
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This removes the local DPsim build directory, Python environment and registered DPsim Jupyter kernel before recreating them.&lt;/p>
+&lt;p>The default macOS setup builds the DPsim simulation core, Python bindings, OpenMP support,
+Graphviz support and C++ examples.&lt;/p>
+&lt;p>Note: CIM/CGMES support and VILLASnode integration are not enabled by the default macOS setup script
+and require their respective native dependencies to be configured separately.&lt;/p>
 &lt;h2 id="supported-versions">Supported versions&lt;/h2>
 &lt;p>DPsim needs CPython 3.10 or newer, both for the wheels and for a source build. One wheel is
 published per platform and CPython version:&lt;/p>

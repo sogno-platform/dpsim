@@ -50,7 +50,9 @@ accepted from forks only and pushing needs an authenticated remote:&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">cd&lt;/span> dpsim
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git remote add upstream https://github.com/sogno-platform/dpsim.git
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The container route below is the most reproducible, because the image already carries every
-dependency at the version CI uses. The native routes need those dependencies installed by hand.&lt;/p>
+dependency at the version CI uses. The native Linux and Windows routes need their dependencies
+installed separately. On macOS, the repository provides a setup script that installs the required
+dependencies and configures the native development environment.&lt;/p>
 &lt;h2 id="container-based">Container based&lt;/h2>
 &lt;p>The commands below use &lt;code>docker&lt;/code>, but the images are ordinary OCI images, so &lt;code>podman&lt;/code> works as a
 drop-in replacement throughout. On Fedora and Rocky, &lt;code>podman&lt;/code> is usually the one already
@@ -161,13 +163,47 @@ not build there. &lt;code>WITH_VILLAS&lt;/code> therefore stays off and the &lt;
 so co-simulation examples cannot be built on Windows. The CIM reader is likewise not part of the
 CI Windows build, as libcimpp is not installed there.&lt;/p>
 &lt;h2 id="cmake-for-macos">CMake for macOS&lt;/h2>
-&lt;p>macOS is not covered by CI, so treat this as a starting point rather than a supported path.
-Install the dependencies with Homebrew:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>/bin/bash -c &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>brew install gcc git cmake graphviz python3 gsl eigen spdlog
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then build as in the container section. Building on Apple Silicon is known to fail while building
-libcimpp, see &lt;a href="https://github.com/sogno-platform/dpsim/issues/609">issue #609&lt;/a>. Configure with
-&lt;code>-DWITH_CIM=OFF&lt;/code> if you do not need the CIM reader.&lt;/p>
+&lt;p>DPsim can be built natively on macOS using the setup script provided in the repository. The setup
+has been tested on Apple Silicon (&lt;code>arm64&lt;/code>). macOS is currently not part of the DPsim CI matrix.&lt;/p>
+&lt;p>The Xcode Command Line Tools provide AppleClang and the macOS SDK. Install them first if they are
+not already available:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>xcode-select --install
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then run the macOS setup script from the root of the DPsim repository:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>chmod +x scripts/install-macos.sh
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>./scripts/install-macos.sh
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If Homebrew is not already installed, the setup script installs it first. It then installs the
+required native development dependencies, including CMake, Ninja, Eigen 3, Graphviz, OpenMP
+through Homebrew &lt;code>libomp&lt;/code>, Python and the dependencies required by the repository development
+tooling.&lt;/p>
+&lt;p>SuiteSparse and spdlog are fetched by the DPsim CMake configuration rather than installed
+globally.&lt;/p>
+&lt;p>The setup creates a repository-local Python virtual environment named &lt;code>dpsim-python&lt;/code> and
+configures the regular &lt;code>build&lt;/code> directory with the required macOS-specific dependency paths and
+compiler settings. It then builds DPsim, the Python bindings and the C++ examples.&lt;/p>
+&lt;p>The DPsim Python package and its notebook dependencies are installed into the same environment,
+and a &lt;code>DPsim Python&lt;/code> Jupyter kernel is registered.&lt;/p>
+&lt;p>After the setup has completed, activate the environment with:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">source&lt;/span> dpsim-python/bin/activate
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The build directory is already configured, so normal C++ development only requires:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cmake --build build --parallel &lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">$(&lt;/span>sysctl -n hw.ncpu&lt;span style="color:#204a87;font-weight:bold">)&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The required dependency paths and compiler settings are stored in the CMake build directory and
+do not need to be supplied again for subsequent builds.&lt;/p>
+&lt;p>If changes affect the Python bindings or Python package, reinstall the package into the active
+environment:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>python -m pip install .
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The installation can be verified with:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>python -c &lt;span style="color:#4e9a06">&amp;#34;import dpsim, dpsimpy; print(dpsimpy.__file__)&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>For a completely clean rebuild of the local macOS development environment, run:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">CLEAN&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> ./scripts/install-macos.sh
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This removes the local DPsim build directory, the &lt;code>dpsim-python&lt;/code> virtual environment and the
+registered DPsim Jupyter kernel before recreating them.&lt;/p>
+&lt;div class="alert alert-info" role="alert">
+&lt;h4 class="alert-heading">Optional DPsim features&lt;/h4>
+&lt;p>The default macOS setup builds the DPsim simulation core, Python bindings, OpenMP support,
+Graphviz support and C++ examples.&lt;/p>
+&lt;p>CIM/CGMES support and VILLASnode integration are not enabled by the default macOS setup and
+require their respective native dependencies to be configured separately.&lt;/p>
+&lt;/div>
 &lt;h2 id="python-package">Python package&lt;/h2>
 &lt;p>Wheels are produced by cibuildwheel in the &lt;code>packaging-python&lt;/code> workflow, currently for
 manylinux x86_64 and Windows x86-64, CPython 3.10 through 3.14. The Windows wheel is the
