@@ -4,7 +4,7 @@ linkTitle: "Alternative Solvers"
 date: 2026-07-31
 description: >
   The DAE, ODE and diakoptics solvers, and how the linear backend under MNA is chosen.
-weight: 3
+weight: 4
 ---
 
 The methods are derived under

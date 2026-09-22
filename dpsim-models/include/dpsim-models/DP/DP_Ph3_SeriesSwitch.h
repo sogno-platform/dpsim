@@ -46,6 +46,8 @@ public:
 
   // #### General MNA section ####
   ///
+  /// Nothing here depends on the timestep.
+  bool mnaUpdateTimeStep(Real timeStep) override { return timeStep > 0; }
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override;
   /// Stamps system matrix

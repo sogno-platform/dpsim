@@ -39,6 +39,9 @@ public:
 
   Event(CPS::Real t) : mTime(t) {}
 
+  /// Scheduled time
+  CPS::Real time() const { return mTime; }
+
   virtual ~Event() {}
 };
 

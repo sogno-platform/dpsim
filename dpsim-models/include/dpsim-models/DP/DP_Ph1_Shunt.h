@@ -42,8 +42,10 @@ public:
 
   // #### MNA section ####
   /// Initializes component from power flow data
-  void initializeParentFromNodesAndTerminals(Real frequency);
+  void initializeParentFromNodesAndTerminals(Real frequency) override;
   /// Add MNA pre step dependencies
+  /// Holds nothing derived from the timestep.
+  bool mnaParentUpdateTimeStep(Real timeStep) override { return true; }
   void mnaParentAddPreStepDependencies(
       AttributeBase::List &prevStepDependencies,
       AttributeBase::List &attributeDependencies,

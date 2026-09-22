@@ -59,6 +59,12 @@ void DP::Ph1::SynchronGenerator6bOrderVBR::specificInitialization() {
   mSLog->flush();
 }
 
+void DP::Ph1::SynchronGenerator6bOrderVBR::adjustVBRHistoryForNewTimeStep(
+    Real oldAd_t, Real oldAq_t) {
+  mEh_t(0, 0) += (oldAd_t - mAd_t) * (**mIdq)(1, 0);
+  mEh_t(1, 0) += (oldAq_t - mAq_t) * (**mIdq)(0, 0);
+}
+
 void DP::Ph1::SynchronGenerator6bOrderVBR::stepInPerUnit() {
 
   // update DP-DQ transforms

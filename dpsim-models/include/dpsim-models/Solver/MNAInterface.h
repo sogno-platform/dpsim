@@ -27,6 +27,9 @@ public:
   virtual void mnaInitialize(Real omega, Real timeStep) = 0;
   virtual void mnaInitialize(Real omega, Real timeStep,
                              Attribute<Matrix>::Ptr leftVector) = 0;
+  /// Re-derives the timestep-dependent quantities and converts the history
+  /// terms. False if the component cannot follow.
+  virtual bool mnaUpdateTimeStep(Real timeStep) { return false; }
   /// Stamps system matrix
   virtual void mnaApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) = 0;
   /// Stamps right side (source) vector

@@ -104,7 +104,11 @@ public:
                                  AttributeBase::List &modifiedAttributes,
                                  Attribute<Matrix>::Ptr &leftVector) override;
 
+  bool mnaUpdateTimeStep(Real timeStep) override final;
+
   // #### MNA Parent Functions ####
+  /// Converts parent-owned state to the new timestep. False means unconverted.
+  virtual bool mnaParentUpdateTimeStep(Real timeStep) { return false; }
   virtual void mnaParentInitialize(Real omega, Real timeStep,
                                    Attribute<Matrix>::Ptr leftVector){
       // By default, the parent has no custom initialization beyond what is done in CompositePowerComp::mnaCompInitialize

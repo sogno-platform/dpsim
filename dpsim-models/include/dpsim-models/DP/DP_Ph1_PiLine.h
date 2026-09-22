@@ -61,6 +61,8 @@ public:
   /// Updates internal voltage variable of the component
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
   /// MNA pre and post step operations
+  /// Holds nothing derived from the timestep.
+  bool mnaParentUpdateTimeStep(Real timeStep) override { return true; }
   void mnaParentPreStep(Real time, Int timeStepCount) override;
   void mnaParentPostStep(Real time, Int timeStepCount,
                          Attribute<Matrix>::Ptr &leftVector) override;

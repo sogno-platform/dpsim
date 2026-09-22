@@ -10,6 +10,7 @@
 #include <dpsim/MNASolver.h>
 #include <dpsim/SequentialScheduler.h>
 #include <functional>
+#include <map>
 #include <memory>
 #include <stdexcept>
 #include <type_traits>
@@ -39,6 +40,51 @@ void MnaSolver<VarType>::setSystem(const CPS::SystemTopology &system) {
 template <typename VarType>
 void MnaSolver<VarType>::doStateSpaceExtraction(Bool value) {
   mStateSpaceExtraction = value;
+}
+
+template <typename VarType>
+UInt MnaSolver<VarType>::updateTimeStep(Real timeStep) {
+  if (timeStep <= 0)
+    return 0;
+
+  mTimeStep = timeStep;
+  UInt unhandled = 0;
+  std::map<String, UInt> declinedByType;
+
+  auto ask = [&](auto &comp) {
+    if (comp->mnaUpdateTimeStep(timeStep))
+      return;
+    ++unhandled;
+    auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
+    ++declinedByType[idObj ? idObj->type() : "<unnamed>"];
+  };
+
+  for (auto &comp : mMNAComponents)
+    ask(comp);
+  for (auto &comp : mMNAIntfVariableComps)
+    ask(comp);
+
+  refreshStaticMatrixStamp();
+
+  if (unhandled == 0) {
+    SPDLOG_LOGGER_INFO(mSLog,
+                       "Time step changed to {:e}s, all components re-derived "
+                       "their discretisation.",
+                       timeStep);
+    return 0;
+  }
+
+  String types;
+  for (const auto &declined : declinedByType)
+    types += (types.empty() ? "" : ", ") + declined.first + " x" +
+             std::to_string(declined.second);
+
+  SPDLOG_LOGGER_WARN(mSLog,
+                     "Time step changed to {:e}s, but {:d} component(s) do not "
+                     "implement mnaUpdateTimeStep and keep their old "
+                     "discretisation: {:s}",
+                     timeStep, unhandled, types);
+  return unhandled;
 }
 
 template <typename VarType>

@@ -47,6 +47,8 @@ public:
 
   // #### MNA Section ####
   /// Stamps right side (source) vector
+  /// Holds nothing derived from the timestep.
+  bool mnaParentUpdateTimeStep(Real timeStep) override { return true; }
   void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
   /// Returns current through the component
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;

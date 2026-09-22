@@ -137,6 +137,8 @@ protected:
   std::shared_ptr<CPS::Task> createSolveTaskRecomp() override;
   /// Recomputes systems matrix
   virtual void recomputeSystemMatrix(Real time);
+  /// Rebuilds the base matrix and refactorises after a timestep change
+  void refreshStaticMatrixStamp() override;
   /// Runs state-space extraction using the active linear solver.
   void extractStateSpace(Real time);
 

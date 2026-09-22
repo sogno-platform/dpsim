@@ -33,6 +33,9 @@ virtual void mnaCompApplyRightSideVectorStampHarm(Matrix& sourceVector, Int freq
 
 `MNASimPowerComp` provides empty default implementations for all of these methods, so component classes are not forced to implement any of them.
 
+`MNAInterface` declares one further method, `mnaUpdateTimeStep(Real)`, which re-derives the quantities a component took from the time step in `mnaCompInitialize` and converts its history terms.
+It defaults to returning `false`, meaning the component cannot follow a change, so implementing it is only necessary for components that should support a [variable time step]({{< ref "../Solvers/variable-time-step.md" >}}).
+
 ## Controlling Common Base Class Behavior
 
 Child component classes can control the behavior of the base class through the constructor arguments of `MNASimPowerComp`.

@@ -68,6 +68,8 @@ public:
   /// Update interface voltage from MNA system result
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
   /// MNA pre step operations
+  /// Holds nothing derived from the timestep.
+  bool mnaParentUpdateTimeStep(Real timeStep) override { return true; }
   void mnaParentPreStep(Real time, Int timeStepCount) override;
   /// MNA post step operations
   void mnaParentPostStep(Real time, Int timeStepCount,

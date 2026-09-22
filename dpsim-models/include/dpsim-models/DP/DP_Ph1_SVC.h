@@ -84,6 +84,8 @@ public:
   /// Update interface current from MNA system results
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;
   /// MNA pre step operations (parent-specific)
+  /// The regulator uses the elapsed time between steps, not a stored one.
+  bool mnaParentUpdateTimeStep(Real timeStep) override { return true; }
   void mnaParentPreStep(Real time, Int timeStepCount) override;
   /// MNA post step operations (parent-specific)
   void mnaParentPostStep(Real time, Int timeStepCount,

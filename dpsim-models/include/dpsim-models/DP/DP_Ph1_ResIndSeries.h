@@ -50,6 +50,17 @@ public:
 
   // #### MNA section ####
   /// Initializes MNA specific variables
+  /// initVars() rebuilds the factors and the history term, and overwrites
+  /// mIntfCurrent, which is kept here.
+  bool mnaUpdateTimeStep(Real timeStep) override {
+    if (timeStep <= 0)
+      return false;
+
+    const MatrixComp current = **mIntfCurrent;
+    initVars(timeStep);
+    **mIntfCurrent = current;
+    return true;
+  }
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector);
   /// Stamps system matrix

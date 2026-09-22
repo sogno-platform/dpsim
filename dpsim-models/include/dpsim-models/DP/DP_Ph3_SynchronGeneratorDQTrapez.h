@@ -25,6 +25,13 @@ public:
   void setMultisamplingRate(Int rate);
 
   // #### MNA Section ####
+  bool mnaUpdateTimeStep(Real timeStep) override {
+    if (timeStep <= 0)
+      return false;
+
+    mTimeStep = timeStep;
+    return true;
+  }
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override;
 
