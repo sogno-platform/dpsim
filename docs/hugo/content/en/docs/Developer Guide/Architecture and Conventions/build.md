@@ -90,6 +90,19 @@ for example:
 cmake .. -DWITH_GSL=ON
 ```
 
+Log calls below `SPDLOG_ACTIVE_LEVEL` are removed at compile time. A `Debug` build keeps the
+`debug` calls and every other build type keeps `info` and above, so a component created with log
+level `debug` writes its debug lines only from a Debug build. `DPSIM_LOG_LEVEL` overrides that
+default for any build type, for example to keep the `trace` calls that log every simulation step:
+
+```shell
+cmake .. -DDPSIM_LOG_LEVEL=TRACE
+```
+
+For the Python package, pass it through `CMAKE_ARGS="-DDPSIM_LOG_LEVEL=DEBUG" pip install .`.
+`CPS::Logger::compiledLevel()` and `dpsimpy.Logger.compiled_level()` return the level a build was
+compiled with.
+
 To use the freshly built Python package without installing it, put both the compiled extension
 and the pure Python package on the path:
 

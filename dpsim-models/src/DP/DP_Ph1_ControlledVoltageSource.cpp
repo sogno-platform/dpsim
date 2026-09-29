@@ -124,7 +124,7 @@ void DP::Ph1::ControlledVoltageSource::updateVoltage(Real time) {
   (**mIntfVoltage)(0, 0) = **mVoltageRef;
 
   SPDLOG_LOGGER_DEBUG(mSLog, "\nUpdate Voltage: {:s}",
-                      Logger::matrixToString(**mIntfVoltage));
+                      Logger::matrixCompToString(**mIntfVoltage));
 }
 
 void DP::Ph1::ControlledVoltageSource::mnaCompAddPreStepDependencies(

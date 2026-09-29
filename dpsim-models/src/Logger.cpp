@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
+#include <algorithm>
 #include <iomanip>
 #include <memory>
 
@@ -181,5 +182,13 @@ Logger::Log Logger::create(const std::string &name, Level filelevel,
     ret = std::make_shared<spdlog::logger>(name, begin(sinks), end(sinks));
   }
 
+  // A new spdlog logger filters at info regardless of its sinks, so the
+  // requested levels only take effect once the logger itself lets them pass.
+  ret->set_level(std::min(filelevel, clilevel));
+
   return ret;
+}
+
+Logger::Level Logger::compiledLevel() {
+  return static_cast<Level>(SPDLOG_ACTIVE_LEVEL);
 }
