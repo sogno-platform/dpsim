@@ -10,7 +10,6 @@
 
 #include <memory>
 
-#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_INFO
 #include <spdlog/spdlog.h>
 
 #if defined(SPDLOG_VER_MAJOR) && SPDLOG_VER_MAJOR >= 1
@@ -44,6 +43,9 @@ public:
   static String prefix();
   static String logDir();
   static void setLogDir(String path);
+  /// Lowest level compiled into the library (SPDLOG_ACTIVE_LEVEL). Calls
+  /// below it are removed by the preprocessor, whatever level a logger has.
+  static Level compiledLevel();
 
   // #### SPD log wrapper ####
   ///

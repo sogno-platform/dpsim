@@ -115,8 +115,8 @@ void EMT::Ph1::PiLine::initializeParentFromNodesAndTerminals(Real frequency) {
                       "\n seriesRes: {:s}"
                       "\n seriesInd: {:s}"
                       "\n Impedance: {:s}",
-                      Logger::matrixToString(**mSeriesRes),
-                      Logger::matrixToString(**mSeriesInd),
+                      Logger::realToString(**mSeriesRes),
+                      Logger::realToString(**mSeriesInd),
                       Logger::complexToString(impedance));
 
   SPDLOG_LOGGER_INFO(

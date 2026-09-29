@@ -43,6 +43,10 @@ option(BUILD_SHARED_LIBS       "Build shared library" OFF)
 option(DPSIM_BUILD_EXAMPLES    "Build C++ examples" ON)
 option(DPSIM_BUILD_DOC         "Build documentation" ON)
 
+set(DPSIM_LOG_LEVEL "" CACHE STRING
+	"Lowest log level compiled in: TRACE, DEBUG, INFO, WARN, ERROR, CRITICAL or OFF. Empty selects DEBUG for Debug builds and INFO otherwise")
+set_property(CACHE DPSIM_LOG_LEVEL PROPERTY STRINGS "" TRACE DEBUG INFO WARN ERROR CRITICAL OFF)
+
 option(CGMES_BUILD             "Build with CGMES instead of CIMpp" OFF)
 
 

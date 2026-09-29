@@ -424,6 +424,9 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def(py::init<std::string>())
       .def_static("set_log_dir", &CPS::Logger::setLogDir)
       .def_static("get_log_dir", &CPS::Logger::logDir)
+      .def_static("compiled_level", &CPS::Logger::compiledLevel,
+                  "Lowest log level compiled into dpsimpy. Messages below it "
+                  "are removed at compile time, whatever level a logger has.")
       .def("log_attribute",
            py::overload_cast<const CPS::String &, CPS::AttributeBase::Ptr,
                              CPS::UInt, CPS::UInt>(

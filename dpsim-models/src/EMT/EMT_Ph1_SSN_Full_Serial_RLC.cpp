@@ -143,7 +143,7 @@ void EMT::Ph1::SSN::Full_Serial_RLC::mnaCompApplyRightSideVectorStamp(
   }
   SPDLOG_LOGGER_DEBUG(
       mSLog, "\nHistory current term (mnaCompApplyRightSideVectorStamp): {:s}",
-      Logger::matrixToString(mYHistory));
+      Logger::realToString(mYHistory));
 }
 
 void EMT::Ph1::SSN::Full_Serial_RLC::mnaCompAddPreStepDependencies(

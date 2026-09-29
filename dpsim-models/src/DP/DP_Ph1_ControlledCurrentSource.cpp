@@ -55,7 +55,7 @@ void DP::Ph1::ControlledCurrentSource::updateCurrent(Real time) {
   (**mIntfCurrent)(0, 0) = **mCurrentRef;
 
   SPDLOG_LOGGER_DEBUG(mSLog, "\nUpdate current: {:s}",
-                      Logger::matrixToString(**mIntfCurrent));
+                      Logger::matrixCompToString(**mIntfCurrent));
 }
 
 void DP::Ph1::ControlledCurrentSource::mnaCompAddPreStepDependencies(

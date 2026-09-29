@@ -272,3 +272,19 @@ target_link_libraries(dpsim-models PUBLIC ${MODELS_LIBRARIES})
 target_include_directories(dpsim-models PUBLIC ${MODELS_INCLUDE_DIRS})
 target_sources(dpsim-models PRIVATE ${MODELS_SOURCES})
 target_compile_options(dpsim-models PUBLIC ${MODELS_CXX_FLAGS})
+
+# SPDLOG_LOGGER_DEBUG and SPDLOG_LOGGER_TRACE calls below SPDLOG_ACTIVE_LEVEL are
+# removed by the preprocessor. Debug builds keep the debug calls and every other
+# configuration keeps info and above, unless DPSIM_LOG_LEVEL overrides it. The
+# definition is PUBLIC so that dpsim, the bindings and downstream projects
+# compile against the same ceiling as the library.
+if(DPSIM_LOG_LEVEL)
+	string(TOUPPER "${DPSIM_LOG_LEVEL}" DPSIM_LOG_LEVEL_UPPER)
+	if(NOT DPSIM_LOG_LEVEL_UPPER MATCHES "^(TRACE|DEBUG|INFO|WARN|ERROR|CRITICAL|OFF)$")
+		message(FATAL_ERROR "DPSIM_LOG_LEVEL must be one of TRACE, DEBUG, INFO, WARN, ERROR, CRITICAL or OFF, got '${DPSIM_LOG_LEVEL}'")
+	endif()
+	target_compile_definitions(dpsim-models PUBLIC SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_${DPSIM_LOG_LEVEL_UPPER})
+else()
+	target_compile_definitions(dpsim-models PUBLIC
+		SPDLOG_ACTIVE_LEVEL=$<IF:$<CONFIG:Debug>,SPDLOG_LEVEL_DEBUG,SPDLOG_LEVEL_INFO>)
+endif()
