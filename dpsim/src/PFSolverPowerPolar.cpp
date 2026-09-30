@@ -221,7 +221,7 @@ void PFSolverPowerPolar::calculateJacobian() {
   for (UInt a = 0; a < npqpv; ++a) { //rows
     k = mPQPVBusIndices[a];
     //diagonal
-    //std::cout << "J2D:" << (a + da) << "," << (a + db) << std::endl;
+    //SPDLOG_LOGGER_DEBUG(mSLog, "J2D: {}, ", a+da, a+db);
     if (a < mNumPQBuses)
       mJ.coeffRef(a + da, a + db) =
           P(k) + G(k, k) * sol_V.coeff(k) * sol_V.coeff(k);
@@ -234,7 +234,7 @@ void PFSolverPowerPolar::calculateJacobian() {
               (G(k, j) * cos(sol_D.coeff(k) - sol_D.coeff(j)) +
                B(k, j) * sin(sol_D.coeff(k) - sol_D.coeff(j)));
         //if (val != 0.0)
-        //std::cout << "J2ij:" << (a + da) << "," << (b + db) << std::endl;
+        //SPDLOG_LOGGER_DEBUG(mSLog, "J2ij: {}, {}", a+da, b+db);
         mJ.coeffRef(a + da, b + db) = val;
       }
     }
@@ -246,7 +246,7 @@ void PFSolverPowerPolar::calculateJacobian() {
   for (UInt a = 0; a < mNumPQBuses; ++a) { //rows
     k = mPQPVBusIndices[a];
     //diagonal
-    //std::cout << "J3:" << (a + da) << "," << (a + db) << std::endl;
+    //SPDLOG_LOGGER_DEBUG(mSLog, "J3: {}, {}", a+da, a+db);
     mJ.coeffRef(a + da, a + db) =
         P(k) - G(k, k) * sol_V.coeff(k) * sol_V.coeff(k);
 
@@ -258,7 +258,7 @@ void PFSolverPowerPolar::calculateJacobian() {
               (G(k, j) * cos(sol_D.coeff(k) - sol_D.coeff(j)) +
                B(k, j) * sin(sol_D.coeff(k) - sol_D.coeff(j)));
         //if (val != 0.0)
-        //std::cout << "J3:" << (a + da) << "," << (b + db) << std::endl;
+        //SPDLOG_LOGGER_DEBUG(mSLog, "J3: {}, {}", a+da, b+db);
         mJ.coeffRef(a + da, b + db) = -val;
       }
     }
@@ -270,7 +270,7 @@ void PFSolverPowerPolar::calculateJacobian() {
   for (UInt a = 0; a < mNumPQBuses; ++a) { //rows
     k = mPQPVBusIndices[a];
     //diagonal
-    //std::cout << "J4:" << (a + da) << "," << (a + db) << std::endl;
+    //SPDLOG_LOGGER_DEBUG(mSLog, "J4: {}, {}", a+da, a+db);
     mJ.coeffRef(a + da, a + db) =
         Q(k) - B(k, k) * sol_V.coeff(k) * sol_V.coeff(k);
 
@@ -282,7 +282,7 @@ void PFSolverPowerPolar::calculateJacobian() {
               (G(k, j) * sin(sol_D.coeff(k) - sol_D.coeff(j)) -
                B(k, j) * cos(sol_D.coeff(k) - sol_D.coeff(j)));
         if (val != 0.0) {
-          //std::cout << "J4:" << (a + da) << "," << (b + db) << std::endl;
+          //SPDLOG_LOGGER_DEBUG(mSLog, "J4: {}, {}", a+da, b+db);
           mJ.coeffRef(a + da, b + db) = val;
         }
       }

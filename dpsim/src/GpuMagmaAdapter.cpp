@@ -66,6 +66,7 @@ void GpuMagmaAdapter::performFactorization(SparseMatrix &systemMatrix) {
 
   // apply permutation
   //std::cout << "Before System Matrix:" << std::endl << hMat[0] << std::endl;
+  
   hMat = *mTransp * hMat;
   //std::cout << "permutation:" << std::endl << mTransp->toDenseMatrix() << std::endl;
   //std::cout << "inverse permutation:" << std::endl << mTransp->inverse().toDenseMatrix() << std::endl;

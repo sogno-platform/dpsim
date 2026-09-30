@@ -47,7 +47,7 @@ void GpuSparseAdapter::performFactorization(SparseMatrix &systemMatrix) {
   if ((cso_status = cusolverSpCreate(&mCusolverhandle)) !=
       CUSOLVER_STATUS_SUCCESS) {
     //SPDLOG_LOGGER_ERROR(mSLog, "cuSolver initialization failed: Error code {}", cso_status);
-    std::cout << "cso_status not success" << std::endl;
+    //std::cout << "cso_status not success" << std::endl;
     throw SolverException();
   }
 

@@ -91,7 +91,7 @@ CSVReader::CSVReader(CPS::String name, std::list<fs::path> paths,
   for (auto file : paths) {
     if (file.string().find(".csv") != std::string::npos) {
       mFileList.push_back(file);
-      std::cout << "add " << file << std::endl;
+      SPDLOG_LOGGER_INFO(mSLog, "add {}", file.filename().string());
     }
   }
 }
@@ -165,7 +165,7 @@ std::vector<PQData> CSVReader::readLoadProfileDP(fs::path file, Real start_time,
       break;
     presentTime = Int(presentTime) + 1;
   }
-  std::cout << "CSV loaded." << std::endl;
+  SPDLOG_LOGGER_INFO(mSLog, "CSV loaded.");
   return load_profileDP;
 }
 
@@ -277,7 +277,7 @@ std::vector<Real> CSVReader::readPQData(fs::path file, Real start_time,
       break;
     presentTime = Int(presentTime) + 1;
   }
-  std::cout << "CSV loaded." << std::endl;
+  SPDLOG_LOGGER_INFO(mSLog, "CSV loaded.");
   return p_data;
 }
 
@@ -332,7 +332,6 @@ void CSVReader::assignLoadProfile(CPS::SystemTopology &sys, Real start_time,
         std::map<String, String>::iterator file =
             mAssignPattern.find(load->name());
         if (file == mAssignPattern.end()) {
-          std::cout << load->name() << " has no profile given." << std::endl;
           SPDLOG_LOGGER_INFO(mSLog, "{} has no profile given.", load->name());
           LP_not_assigned_counter++;
           continue;
@@ -341,8 +340,6 @@ void CSVReader::assignLoadProfile(CPS::SystemTopology &sys, Real start_time,
             readLoadProfile(fs::path(mPath + file->second + ".csv"), start_time,
                             time_step, end_time);
         load->use_profile = true;
-        std::cout << " Assigned " << file->second << " to " << load->name()
-                  << std::endl;
         SPDLOG_LOGGER_INFO(mSLog, "Assigned {}.csv to {}", file->second,
                            load->name());
         LP_assigned_counter++;

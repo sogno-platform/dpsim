@@ -12,7 +12,7 @@ using namespace DPsim;
 
 ODEintSolver::ODEintSolver(String name, CPS::ODEintInterface::Ptr comp, Real dt,
                            Real t0)
-    : mComponent(comp), mTimestep(dt) {
+    : Solver(name, CPS::Logger::Level::info), mComponent(comp), mTimestep(dt) {
   times.push_back(t0);
   self = this; // sets static pointer to current object
   ProbDim = comp->num_states();
@@ -32,7 +32,7 @@ Real ODEintSolver::step(Real time) {
                      mComponent->state_vector() + ProbDim);
   Real NextTime = time + mTimestep;
 
-  std::cout << "Current Time " << NextTime << std::endl;
+  SPDLOG_LOGGER_DEBUG(mSLog, "Current Time {}", NextTime);
 
   stepper.do_step(
       &ODEintSolver::StateSpaceWrapper, curSolution, time,
