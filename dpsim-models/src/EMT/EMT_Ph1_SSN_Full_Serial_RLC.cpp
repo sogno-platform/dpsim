@@ -146,6 +146,16 @@ void EMT::Ph1::SSN::Full_Serial_RLC::mnaCompApplyRightSideVectorStamp(
       Logger::matrixToString(mYHistory));
 }
 
+Bool EMT::Ph1::SSN::Full_Serial_RLC::getRightVectorStampIndices(
+    std::vector<UInt> &indices) {
+  indices.clear();
+  if (terminalNotGrounded(0))
+    indices.push_back(matrixNodeIndex(0, 0));
+  if (terminalNotGrounded(1))
+    indices.push_back(matrixNodeIndex(1, 0));
+  return true;
+}
+
 void EMT::Ph1::SSN::Full_Serial_RLC::mnaCompAddPreStepDependencies(
     AttributeBase::List &prevStepDependencies,
     AttributeBase::List &attributeDependencies,

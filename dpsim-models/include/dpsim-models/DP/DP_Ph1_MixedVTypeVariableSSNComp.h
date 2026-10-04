@@ -105,6 +105,10 @@ public:
   void
   mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override final;
   void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override final;
+  Bool getRightVectorStampIndices(std::vector<UInt> &indices) override final {
+    appendTerminalRightVectorStampIndices(indices, 1);
+    return true;
+  }
   void mnaCompUpdateVoltage(const Matrix &leftVector) override final;
   void mnaCompUpdateCurrent(const Matrix &leftVector) override final;
   void mnaCompPostStep(Real time, Int timeStepCount,
