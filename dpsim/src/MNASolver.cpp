@@ -13,6 +13,7 @@
 #include <memory>
 #include <stdexcept>
 #include <type_traits>
+#include <utility>
 
 using namespace DPsim;
 using namespace CPS;
@@ -34,6 +35,41 @@ MnaSolver<VarType>::MnaSolver(String name, CPS::Domain domain,
 template <typename VarType>
 void MnaSolver<VarType>::setSystem(const CPS::SystemTopology &system) {
   mSystem = system;
+}
+
+template <typename VarType>
+void MnaSolver<VarType>::addRightVectorStamp(
+    const CPS::MNAInterface::Ptr &component) {
+  const Matrix &stamp = component->getRightVector()->get();
+  if (stamp.size() == 0)
+    return;
+
+  std::vector<UInt> indices;
+  const Bool hasIndices = component->getRightVectorStampIndices(indices);
+  mRightVectorStamps.push_back(&stamp);
+  mRightVectorStampIndices.push_back(std::move(indices));
+  mRightVectorStampUsesIndices.push_back(hasIndices);
+}
+
+template <typename VarType>
+void MnaSolver<VarType>::addRightVectorStamps(Matrix &rightVector,
+                                              Int stampColumn) const {
+  for (std::size_t stampIdx = 0; stampIdx < mRightVectorStamps.size();
+       ++stampIdx) {
+    const Matrix &stamp = *mRightVectorStamps[stampIdx];
+    if (mRightVectorStampUsesIndices[stampIdx]) {
+      for (UInt row : mRightVectorStampIndices[stampIdx]) {
+        if (stampColumn < 0)
+          rightVector(row) += stamp(row);
+        else
+          rightVector(row) += stamp(row, stampColumn);
+      }
+    } else if (stampColumn < 0) {
+      rightVector += stamp;
+    } else {
+      rightVector += stamp.col(stampColumn);
+    }
+  }
 }
 
 template <typename VarType>
@@ -201,10 +237,7 @@ template <> void MnaSolver<Real>::initializeComponents() {
   // Initialize MNA specific parts of components.
   for (auto comp : allMNAComps) {
     comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, mLeftSideVector);
-    const Matrix &stamp = comp->getRightVector()->get();
-    if (stamp.size() != 0) {
-      mRightVectorStamps.push_back(&stamp);
-    }
+    addRightVectorStamp(comp);
   }
 
   for (auto comp : mMNAIntfSwitches)
@@ -245,9 +278,7 @@ template <> void MnaSolver<Complex>::initializeComponents() {
       // Initialize MNA specific parts of components.
       comp->mnaInitializeHarm(mSystem.mSystemOmega, mTimeStep,
                               mLeftSideVectorHarm);
-      const Matrix &stamp = comp->getRightVector()->get();
-      if (stamp.size() != 0)
-        mRightVectorStamps.push_back(&stamp);
+      addRightVectorStamp(comp);
     }
     // Switch interfaces are stored separately from mMNAComponents, but their
     // matrix node indices and DP state must still be initialized before the
@@ -263,10 +294,7 @@ template <> void MnaSolver<Complex>::initializeComponents() {
     // Initialize MNA specific parts of components.
     for (auto comp : allMNAComps) {
       comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, mLeftSideVector);
-      const Matrix &stamp = comp->getRightVector()->get();
-      if (stamp.size() != 0) {
-        mRightVectorStamps.push_back(&stamp);
-      }
+      addRightVectorStamp(comp);
     }
 
     for (auto comp : mMNAIntfSwitches)

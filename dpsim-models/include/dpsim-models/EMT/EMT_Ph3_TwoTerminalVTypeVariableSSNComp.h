@@ -28,6 +28,10 @@ public:
   void
   mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override final;
   void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override final;
+  Bool getRightVectorStampIndices(std::vector<UInt> &indices) override final {
+    appendTerminalRightVectorStampIndices(indices, 3);
+    return true;
+  }
   void mnaCompUpdateVoltage(const Matrix &leftVector) override final;
 };
 

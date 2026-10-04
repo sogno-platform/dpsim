@@ -70,6 +70,10 @@ public:
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   /// Stamps right side (source) vector
   void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
+  Bool getRightVectorStampIndices(std::vector<UInt> &indices) override {
+    appendTerminalRightVectorStampIndices(indices, 1);
+    return true;
+  }
   /// Update interface voltage from MNA system result
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
   /// Update interface current from MNA system result
