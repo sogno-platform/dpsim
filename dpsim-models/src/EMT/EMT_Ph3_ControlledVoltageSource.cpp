@@ -32,9 +32,13 @@ void EMT::Ph3::ControlledVoltageSource::setParameters(Matrix voltageRef) {
 void EMT::Ph3::ControlledVoltageSource::initializeFromNodesAndTerminals(
     Real frequency) {
   SPDLOG_LOGGER_INFO(mSLog, "\n--- Initialization from node voltages ---");
-  // TODO: this approach currently overwrites voltage reference set from outside, when not using setParameters
   if (!mParametersSet) {
-    // initialize voltage reference as zeroes
+    const Complex voltage = initialSingleVoltage(1) - initialSingleVoltage(0);
+    const MatrixComp voltagePhasor =
+        CPS::Math::singlePhaseVariableToThreePhase(voltage);
+    **mVoltageRef = (RMS3PH_TO_PEAK1PH * voltagePhasor).real();
+    mParametersSet = true;
+
     SPDLOG_LOGGER_INFO(mSLog,
                        "\nReference voltage: {:s}"
                        "\nTerminal 0 voltage: {:s}"

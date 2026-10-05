@@ -47,6 +47,7 @@ protected:
   Real mPhi_qInit = 0;
   Real mGamma_dInit = 0;
   Real mGamma_qInit = 0;
+  Bool mInitialStatesExplicit = false;
 
   // state space matrices
   /// matrix A of state space model
@@ -92,6 +93,10 @@ public:
   void setInitialStateValues(Real pInit, Real qInit, Real phi_dInit,
                              Real phi_qInit, Real gamma_dInit,
                              Real gamma_qInit);
+  /// Derive controller integrator states for a steady operating point unless
+  /// the caller explicitly supplied initial states.
+  void initializeSteadyState(Real pRef, Real qRef, Real iD, Real iQ,
+                             Real vSourceD, Real vSourceQ);
 
   /// Initialize vectors of state space model
   void initializeStateSpaceModel(Real omega, Real timeStep,

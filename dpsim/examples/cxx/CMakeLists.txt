@@ -15,6 +15,10 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_PiLine.cpp
 	Circuits/DP_DecouplingLine.cpp
 	Circuits/DP_Diakoptics.cpp
+	Circuits/DP_Ph3_Diakoptics_MutualCoupling.cpp
+	Circuits/EMT_DP_Ph3_CurrentSource_PF_Init.cpp
+	Circuits/EMT_DP_Ph3_Passive_PF_Init.cpp
+	Circuits/DP_Ph1_Shunt_PF_Init.cpp
 	Circuits/DP_VSI.cpp
 
 	# DP examples with PF initialization
@@ -179,6 +183,9 @@ StateSpace/DP_Ph1_Switch_StateSpaceExtraction.cpp
 # also has to appear in another list in this file.
 list(APPEND TEST_SOURCES
 	Circuits/DP_Ph1_Transformer_OpenShortCircuit.cpp
+	Circuits/EMT_DP_Ph3_CurrentSource_PF_Init.cpp
+	Circuits/EMT_DP_Ph3_Passive_PF_Init.cpp
+	Circuits/DP_Ph1_Shunt_PF_Init.cpp
 	Circuits/DP_Ph1_Transformer_OpenSecondaryStepSweep.cpp
 	Circuits/SP_Ph1_IEEE9_4Order.cpp
 	Circuits/DP_Ph1_IEEE9_4Order.cpp

@@ -413,8 +413,87 @@ void EMT::Ph3::SSN_InductionMotor::initializeFromNodesAndTerminals(
   const Matrix initialVoltageAbc = initialVoltagePhasor.real();
 
   Matrix x0 = Matrix::Zero(mStateSize, 1);
-  x0(MechanicalSpeed, 0) = 0.0;
-  x0(ElectricalAngle, 0) = mInitialElectricalAngle;
+  const Complex terminalPower =
+      terminal(1)->singlePower() - terminal(0)->singlePower();
+  const MatrixComp voltageDq =
+      getParkTransformMatrix(0.0) * initialVoltagePhasor;
+  const Complex voltageSpacePhasor = voltageDq(0, 0);
+
+  if (mAutoInitializeMechanicalTorque) {
+    if (std::abs(voltageSpacePhasor) <= DOUBLE_EPSILON ||
+        !std::isfinite(terminalPower.real()) ||
+        !std::isfinite(terminalPower.imag()))
+      throw std::logic_error(
+          "Cannot derive induction-motor steady state from empty or invalid "
+          "power-flow data.");
+
+    // The orthonormal alpha-beta transform preserves three-phase complex
+    // power. The PF terminal powers are in the consumer convention here.
+    const Complex statorCurrentPhasor =
+        std::conj(terminalPower / voltageSpacePhasor);
+
+    // In the stationary frame, the stator flux equation at synchronous
+    // frequency is j*w*psi_s = v_s - Rs*i_s. The rotor is short-circuited;
+    // its steady-state equation determines slip from the same PF operating
+    // point and the configured rotor resistance.
+    const Real synchronousElectricalSpeed = 2.0 * PI * frequency;
+    const Complex statorFluxPhasor =
+        (voltageSpacePhasor - mStatorResistance * statorCurrentPhasor) /
+        Complex(0.0, synchronousElectricalSpeed);
+    const Complex rotorCurrentPhasor =
+        (statorFluxPhasor - mLs * statorCurrentPhasor) / mLm;
+    const Complex rotorFluxPhasor =
+        mLm * statorCurrentPhasor + mLr_dash * rotorCurrentPhasor;
+
+    if (std::abs(rotorFluxPhasor) <= DOUBLE_EPSILON)
+      throw std::logic_error(
+          "Cannot derive induction-motor slip: rotor flux is zero.");
+
+    // Minimize |Rr*ir + j*w_slip*psi_r| over real w_slip. A large residual
+    // means the PF P/Q point is incompatible with the configured motor data.
+    const Complex slipCoefficient = Complex(0.0, 1.0) * rotorFluxPhasor;
+    const Real slipElectricalSpeed =
+        -std::real(std::conj(slipCoefficient) *
+                   (mRotorResistance * rotorCurrentPhasor)) /
+        std::norm(slipCoefficient);
+    const Complex rotorEquationResidual =
+        mRotorResistance * rotorCurrentPhasor +
+        Complex(0.0, slipElectricalSpeed) * rotorFluxPhasor;
+    if (std::abs(rotorEquationResidual) >
+        1e-3 * std::max(1.0, std::abs(mRotorResistance * rotorCurrentPhasor)))
+      throw std::logic_error(
+          "Power-flow operating point is inconsistent with the configured "
+          "induction-motor parameters.");
+
+    const Real mechanicalSpeed =
+        (synchronousElectricalSpeed - slipElectricalSpeed) /
+        static_cast<Real>(mPolePairs);
+    if (!std::isfinite(mechanicalSpeed) || mechanicalSpeed <= 0.0)
+      throw std::logic_error(
+          "Power-flow operating point implies a non-positive induction-motor "
+          "speed.");
+
+    // A rotating complex space vector z = d + j*q has instantaneous initial
+    // state [real(z), imag(z)] at t=0 in this stationary reference frame.
+    x0(PsiSd, 0) = statorFluxPhasor.real();
+    x0(PsiSq, 0) = statorFluxPhasor.imag();
+    x0(PsiRotorD, 0) = rotorFluxPhasor.real();
+    x0(PsiRotorQ, 0) = rotorFluxPhasor.imag();
+    x0(MechanicalSpeed, 0) = mechanicalSpeed;
+    x0(ElectricalAngle, 0) = mInitialElectricalAngle;
+
+    const Matrix initialCurrent =
+        mInverseInductanceMatrix * x0.block(0, 0, mElectricalStateSize, 1);
+    const Real initialTorque =
+        static_cast<Real>(mPolePairs) * (x0(PsiSd, 0) * initialCurrent(1, 0) -
+                                         x0(PsiSq, 0) * initialCurrent(0, 0));
+    mMechanicalTorque =
+        -initialTorque +
+        mMechanicalDamping * (mechanicalSpeed - mNominalMechanicalSpeed);
+  } else {
+    x0(MechanicalSpeed, 0) = mNominalMechanicalSpeed;
+    x0(ElectricalAngle, 0) = mInitialElectricalAngle;
+  }
 
   **mX = x0;
   **mIntfVoltage = initialVoltageAbc;
@@ -424,8 +503,13 @@ void EMT::Ph3::SSN_InductionMotor::initializeFromNodesAndTerminals(
   **mIntfCurrent = mW * (**mIntfVoltage) + mYHist;
   updateLogAttributes(**mIntfVoltage);
 
-  SPDLOG_LOGGER_INFO(mSLog,
-                     "Cold-start initialization: standstill, zero flux.");
+  SPDLOG_LOGGER_INFO(
+      mSLog,
+      "Initialized induction motor at the PF operating point: "
+      "P={:.6g} W, Q={:.6g} var, speed={:.6g} rad/s, slip={:.6g}, "
+      "shaft torque={:.6g} Nm.",
+      terminalPower.real(), terminalPower.imag(), **mMechanicalSpeedLog,
+      **mSlip, mMechanicalTorque);
 }
 
 Matrix EMT::Ph3::SSN_InductionMotor::getState() const { return **mX; }

@@ -24,6 +24,8 @@ protected:
   Matrix mFrequencies;
   /// Number of harmonics
   UInt mNumFreqs = 0;
+  /// Optional conversion applied when a complex node initializes from PF.
+  Real mComplexInitialVoltageScale = 1.0;
   ///
   Task::List mMnaTasks;
 
@@ -68,6 +70,10 @@ public:
 
   /// Initialize mVoltage according to mInitialVoltage
   void initialize();
+  /// Set the scale applied to an ABC complex node's stored PF phasors at init.
+  void setComplexInitialVoltageScale(Real scale) {
+    mComplexInitialVoltageScale = scale;
+  }
   /// Initialize state matrices with size according to phase type and frequency number
   void initialize(Matrix frequencies);
   /// Returns matrix index for specified phase

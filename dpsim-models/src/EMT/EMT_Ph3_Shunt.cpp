@@ -8,6 +8,8 @@
 
 #include <dpsim-models/EMT/EMT_Ph3_Shunt.h>
 
+#include <stdexcept>
+
 using namespace CPS;
 
 EMT::Ph3::Shunt::Shunt(String uid, String name, Logger::Level logLevel)
@@ -36,6 +38,23 @@ void EMT::Ph3::Shunt::setParameters(Matrix conductance, Matrix susceptance) {
 /// MNA Section
 void EMT::Ph3::Shunt::initializeParentFromNodesAndTerminals(Real frequency) {
 
+  // If no dynamic-domain admittance was configured, derive it from the
+  // power-flow operating point copied to this terminal by
+  // SystemTopology::initWithPowerflow().  Terminal power uses the network
+  // injection sign here: a positive conductance consumes active power.
+  if (!mParametersSet) {
+    const Complex voltage = mTerminals[0]->initialSingleVoltage();
+    if (std::norm(voltage) <= 0.0)
+      throw std::invalid_argument(
+          "Shunt requires a non-zero terminal voltage when initialized from "
+          "power-flow data.");
+
+    const Complex terminalPower = mTerminals[0]->singlePower();
+    const Real conductance = -terminalPower.real() / std::norm(voltage);
+    const Real susceptance = terminalPower.imag() / std::norm(voltage);
+    setParameters(conductance, susceptance);
+  }
+
   // Static calculation
   Real omega = 2. * PI * frequency;
   MatrixComp admittance = Matrix::Zero(3, 3);
@@ -47,13 +66,16 @@ void EMT::Ph3::Shunt::initializeParentFromNodesAndTerminals(Real frequency) {
   vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
   vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
   **mIntfVoltage = vInitABC.real();
-  **mIntfCurrent = (admittance * vInitABC).real();
+  // The shunt interface current follows the component's terminal-current
+  // convention (positive into the component), opposite to the current from
+  // the network node into the shunt admittance.
+  **mIntfCurrent = -(admittance * vInitABC).real();
 
   // Create series rl sub component
   if (mConductance(0, 0) > 0) {
     mSubResistor =
         std::make_shared<EMT::Ph3::Resistor>(**mName + "_Res", mLogLevel);
-    mSubResistor->connect({SimNode::GND, mTerminals[0]->node()});
+    mSubResistor->connect({mTerminals[0]->node(), SimNode::GND});
     mSubResistor->setParameters(mConductance.inverse());
     mSubResistor->initialize(mFrequencies);
     mSubResistor->initializeFromNodesAndTerminals(frequency);
@@ -65,11 +87,22 @@ void EMT::Ph3::Shunt::initializeParentFromNodesAndTerminals(Real frequency) {
     mSubCapacitor =
         std::make_shared<EMT::Ph3::Capacitor>(**mName + "_cap", mLogLevel);
     mSubCapacitor->setParameters(mSusceptance * (1 / omega));
-    mSubCapacitor->connect({SimNode::GND, mTerminals[0]->node()});
+    mSubCapacitor->connect({mTerminals[0]->node(), SimNode::GND});
     mSubCapacitor->initialize(mFrequencies);
     mSubCapacitor->initializeFromNodesAndTerminals(frequency);
     addMNASubComponent(mSubCapacitor,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+  }
+
+  if (mSusceptance(0, 0) < 0) {
+    mSubInductor =
+        std::make_shared<EMT::Ph3::Inductor>(**mName + "_ind", mLogLevel);
+    mSubInductor->setParameters(-mSusceptance.inverse() * (1 / omega));
+    mSubInductor->connect({mTerminals[0]->node(), SimNode::GND});
+    mSubInductor->initialize(mFrequencies);
+    mSubInductor->initializeFromNodesAndTerminals(frequency);
+    addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
   }
 
@@ -127,4 +160,6 @@ void EMT::Ph3::Shunt::mnaCompUpdateCurrent(const Matrix &leftVector) {
     **mIntfCurrent += mSubResistor->intfCurrent();
   if (mSusceptance(0, 0) > 0)
     **mIntfCurrent += mSubCapacitor->intfCurrent();
+  if (mSusceptance(0, 0) < 0)
+    **mIntfCurrent += mSubInductor->intfCurrent();
 }

@@ -33,6 +33,8 @@ void addDPComponents(py::module_ mDP) {
       .def("set_initial_voltage",
            py::overload_cast<CPS::Complex, int>(
                &CPS::DP::SimNode::setInitialVoltage, py::const_))
+      .def("set_complex_initial_voltage_scale",
+           &CPS::DP::SimNode::setComplexInitialVoltageScale, "scale"_a)
       .def("single_voltage", &CPS::DP::SimNode::singleVoltage,
            "phase_type"_a = CPS::PhaseType::Single)
       .def_readonly_static("gnd", &CPS::DP::SimNode::GND);
@@ -505,6 +507,10 @@ void addDPPh1Components(py::module_ mDPPh1) {
       .def("set_reference_winding",
            &CPS::DP::Ph1::Transformer::setReferenceWinding,
            "reference_winding"_a)
+      .def("set_tap_ratio", &CPS::DP::Ph1::Transformer::setTapRatio,
+           "tap_ratio"_a)
+      .def_property("tap_ratio", &CPS::DP::Ph1::Transformer::tapRatio,
+                    &CPS::DP::Ph1::Transformer::setTapRatio)
       .def("set_magnetizing_branch",
            &CPS::DP::Ph1::Transformer::setMagnetizingBranch,
            "no_load_current"_a, "no_load_loss"_a)
@@ -528,6 +534,10 @@ void addDPPh3Components(py::module_ mDPPh3) {
       .def("set_reference_winding",
            &CPS::DP::Ph3::Transformer::setReferenceWinding,
            "reference_winding"_a)
+      .def("set_tap_ratio", &CPS::DP::Ph3::Transformer::setTapRatio,
+           "tap_ratio"_a)
+      .def_property("tap_ratio", &CPS::DP::Ph3::Transformer::tapRatio,
+                    &CPS::DP::Ph3::Transformer::setTapRatio)
       .def("set_magnetizing_branch",
            &CPS::DP::Ph3::Transformer::setMagnetizingBranch,
            "no_load_current"_a, "no_load_loss"_a)
@@ -633,6 +643,13 @@ void addDPPh3Components(py::module_ mDPPh3) {
       mDPPh3, "SynchronGeneratorDQTrapez", py::multiple_inheritance())
       .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
            "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_machine_parameters_fundamental_per_unit",
+           &CPS::DP::Ph3::SynchronGeneratorDQ::
+               setMachineParametersFundamentalPerUnit,
+           "nom_power"_a, "nom_volt"_a, "nom_freq"_a, "pole_number"_a,
+           "nom_field_cur"_a, "Rs"_a, "Ll"_a, "Lmd"_a, "Lmq"_a, "Rfd"_a,
+           "Llfd"_a, "Rkd"_a, "Llkd"_a, "Rkq1"_a, "Llkq1"_a, "Rkq2"_a,
+           "Llkq2"_a, "inertia"_a)
       .def("set_parameters_fundamental_per_unit",
            &CPS::DP::Ph3::SynchronGeneratorDQTrapez::
                setParametersFundamentalPerUnit,

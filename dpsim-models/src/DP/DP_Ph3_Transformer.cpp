@@ -28,6 +28,7 @@ SimPowerComp<Complex>::Ptr DP::Ph3::Transformer::clone(String name) {
   copy->setParameters(mNominalVoltagePrimary, mNominalVoltageSecondary,
                       mRatedPower, std::abs(**mRatio), std::arg(**mRatio),
                       mResistance, mInductance);
+  copy->setTapRatio(tapRatio());
   return copy;
 }
 
@@ -62,7 +63,8 @@ void DP::Ph3::Transformer::resolveWindingRoles() {
     break;
   }
 
-  mRatioFromReference = (mReferenceTerminal == 0) ? **mRatio : 1. / **mRatio;
+  mRatioFromReference =
+      (mReferenceTerminal == 0) ? effectiveRatio() : 1. / effectiveRatio();
   mOrientationSign = (mReferenceTerminal == 0) ? 1. : -1.;
 
   SPDLOG_LOGGER_INFO(
@@ -158,6 +160,12 @@ void DP::Ph3::Transformer::initializeParentFromNodesAndTerminals(
     Real frequency) {
   Real omega = 2. * PI * frequency;
 
+  // Keep the stored PF phasors on virtual nodes in RMS form so that the
+  // attached primitive components can apply their usual PF-to-DP conversion
+  // exactly once. Scale only the initialized node state itself.
+  for (auto &virtualNode : mVirtualNodes)
+    virtualNode->setComplexInitialVoltageScale(RMS3PH_TO_PEAK1PH);
+
   if (mSubMagnetizingInductor) {
     Real magnetizingSusceptance =
         std::sqrt(std::pow(mNoLoadCurrent, 2) - std::pow(mNoLoadLoss, 2)) *
@@ -168,6 +176,8 @@ void DP::Ph3::Transformer::initializeParentFromNodesAndTerminals(
     mSubMagnetizingInductor->setParameters(mMagnetizingInductance);
   }
 
+  // Power-flow voltages are line-line RMS phasors. Keep these initial values
+  // raw for child components; their initializers convert their own states.
   MatrixComp secondaryVoltage = initialVoltage(nonReferenceTerminal());
   mVirtualNodes[0]->setInitialVoltage(secondaryVoltage * mRatioFromReference);
 
@@ -196,7 +206,7 @@ void DP::Ph3::Transformer::initializeParentFromNodesAndTerminals(
         midpointVoltage - nonReferenceCurrent * mResistance(0, 0) / 2.);
   }
 
-  **mIntfVoltage = initialVoltage(1) - initialVoltage(0);
+  **mIntfVoltage = RMS3PH_TO_PEAK1PH * (initialVoltage(1) - initialVoltage(0));
 
   MatrixComp impedance = MatrixComp::Zero(3, 3);
   for (UInt row = 0; row < 3; row++)
@@ -205,8 +215,8 @@ void DP::Ph3::Transformer::initializeParentFromNodesAndTerminals(
           Complex(mResistance(row, col), omega * mInductance(row, col));
 
   MatrixComp impedanceVoltage =
-      mOrientationSign *
-      (mVirtualNodes[0]->initialVoltage() - initialVoltage(mReferenceTerminal));
+      mOrientationSign * RMS3PH_TO_PEAK1PH *
+      (mVirtualNodes[0]->initialVoltage() - referenceVoltage);
   **mIntfCurrent = impedance.inverse() * impedanceVoltage;
 }
 
