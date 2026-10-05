@@ -54,6 +54,13 @@ protected:
   Bool mWithConnectionTransformer = false;
   /// Flag for controller usage
   Bool mWithControl = true;
+  /// Preserve explicit controller-state values when supplied by the caller.
+  Bool mManualInitialStatesSet = false;
+  /// Controller gains used to derive the PF-consistent steady-state integrators.
+  Real mKpVoltageCtrl = 0.0;
+  Real mKiVoltageCtrl = 0.0;
+  Real mKpCurrCtrl = 0.0;
+  Real mKiCurrCtrl = 0.0;
 
   // #### solver ####
   ///

@@ -48,10 +48,12 @@ template <> void SimNode<Real>::initialize() {
 }
 
 template <> void SimNode<Complex>::initialize() {
-  (**mVoltage)(0, 0) = (**mInitialVoltage)(0, 0);
+  (**mVoltage)(0, 0) = mComplexInitialVoltageScale * (**mInitialVoltage)(0, 0);
   if (phaseType() == PhaseType::ABC) {
-    (**mVoltage)(1, 0) = (**mInitialVoltage)(1, 0);
-    (**mVoltage)(2, 0) = (**mInitialVoltage)(2, 0);
+    (**mVoltage)(1, 0) =
+        mComplexInitialVoltageScale * (**mInitialVoltage)(1, 0);
+    (**mVoltage)(2, 0) =
+        mComplexInitialVoltageScale * (**mInitialVoltage)(2, 0);
   }
 }
 
@@ -67,6 +69,7 @@ template <typename VarType>
 std::shared_ptr<TopologicalNode> SimNode<VarType>::clone(String name) {
   auto nodeCpy = SimNode<VarType>::make(name, phaseType());
   nodeCpy->setInitialVoltage(initialVoltage());
+  nodeCpy->setComplexInitialVoltageScale(mComplexInitialVoltageScale);
   return nodeCpy;
 }
 

@@ -238,12 +238,15 @@ void Base::SynchronGenerator::initPerUnitStates() {
   Real init_it_abs = init_S_abs / init_vt_abs;
   // Complex init_it = std::conj( init_S / init_vt );
   // Power factor
-  Real init_pf = acos(init_P / init_S_abs);
+  // Keep the sign of reactive power. acos(P / |S|) loses that information and
+  // initializes leading and lagging operating points with the same rotor
+  // current angle.
+  Real init_pf = atan2(init_Q, init_P);
   // Load angle
-  Real init_delta = atan(((mLmq + **mLl) * init_it_abs * cos(init_pf) -
-                          **mRs * init_it_abs * sin(init_pf)) /
-                         (init_vt_abs + **mRs * init_it_abs * cos(init_pf) +
-                          (mLmq + **mLl) * init_it_abs * sin(init_pf)));
+  Real init_delta = atan2((mLmq + **mLl) * init_it_abs * cos(init_pf) -
+                              **mRs * init_it_abs * sin(init_pf),
+                          init_vt_abs + **mRs * init_it_abs * cos(init_pf) +
+                              (mLmq + **mLl) * init_it_abs * sin(init_pf));
   // Real init_delta_deg = init_delta / PI * 180;
 
   // Electrical torque

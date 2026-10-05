@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <cmath>
 #include <dpsim-models/AttributeList.h>
 #include <dpsim-models/Definitions.h>
 
@@ -35,9 +36,25 @@ public:
 
   ///Transformer ratio
   const Attribute<Complex>::Ptr mRatio;
+  /// Per-unit tap adjustment applied to the nominal complex transformer ratio
+  const Attribute<Real>::Ptr mTapRatio;
 
   explicit Transformer(CPS::AttributeList::Ptr attributeList)
-      : mRatio(attributeList->create<Complex>("ratio")){};
+      : mRatio(attributeList->create<Complex>("ratio")),
+        mTapRatio(attributeList->create<Real>("tapRatio")) {
+    **mTapRatio = 1.;
+  }
+
+  /// Set a positive tap multiplier applied to the nominal complex ratio.
+  void setTapRatio(Real tapRatio) {
+    if (!std::isfinite(tapRatio) || tapRatio <= 0.)
+      throw InvalidArgumentException();
+    **mTapRatio = tapRatio;
+  }
+
+  Real tapRatio() const { return **mTapRatio; }
+
+  Complex effectiveRatio() const { return **mRatio * **mTapRatio; }
 
   ///
   void setParameters(Real nomVoltagePrimary, Real nomVoltageSecondary,

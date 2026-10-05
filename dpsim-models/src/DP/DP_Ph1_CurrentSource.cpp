@@ -8,6 +8,8 @@
 
 #include <dpsim-models/DP/DP_Ph1_CurrentSource.h>
 
+#include <limits>
+
 using namespace CPS;
 
 DP::Ph1::CurrentSource::CurrentSource(String uid, String name,
@@ -37,6 +39,22 @@ SimPowerComp<Complex>::Ptr DP::Ph1::CurrentSource::clone(String name) {
 }
 
 void DP::Ph1::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
+
+  // If the source reference was not configured explicitly, derive it from the
+  // connected power-flow terminal. This mirrors the DP Ph3 current source and
+  // lets a current-source load start from PF without a Python-side setParameters
+  // call. Terminal 0 is the source's positive terminal (v0 - v1).
+  if (!mParametersSet) {
+    const Complex voltage = initialSingleVoltage(0) - initialSingleVoltage(1);
+    if (std::abs(voltage) > std::numeric_limits<Real>::epsilon()) {
+      const Complex power =
+          terminal(0)->singlePower() - terminal(1)->singlePower();
+      // PF terminal power uses the injection sign convention, while a
+      // positive current reference in this model draws current from terminal
+      // 0. Flip the PF sign when mapping P/Q to the source reference.
+      **mCurrentRef = -std::conj(power / voltage);
+    }
+  }
 
   (**mIntfVoltage)(0, 0) = initialSingleVoltage(0) - initialSingleVoltage(1);
   (**mIntfCurrent)(0, 0) = **mCurrentRef;

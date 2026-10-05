@@ -98,6 +98,12 @@ The conjugate on the low voltage row is what makes the phase shift preserve powe
 it. The three-phase representation in `SP::Ph3` and `DP::Ph3` carries this, and `EMT::Ph3` cannot,
 because a phase shift is a rotation in the complex plane and the EMT state is real.
 
+The nominal turns ratio and the regulating tap are separate inputs. `setParameters(..., ratioAbs,
+ratioPhase, ...)` sets the nominal complex ratio; `setTapRatio(tapRatio)` applies a positive scalar
+multiplier to it. The effective ratio is `ratioAbs * tapRatio` with the configured phase angle. The
+tap defaults to 1.0, so existing models retain their previous behavior. CIM ratio tap changers are
+mapped through this explicit tap setting rather than being folded into the nominal turns ratio.
+
 ## The direction of the ratio
 
 The reference winding decides which side the impedance is referred to. Referring an impedance across

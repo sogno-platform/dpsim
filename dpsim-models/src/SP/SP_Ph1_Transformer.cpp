@@ -92,6 +92,7 @@ SimPowerComp<Complex>::Ptr SP::Ph1::Transformer::clone(String name) {
   copy->setParameters(mNominalVoltagePrimary, mNominalVoltageSecondary,
                       **mRatedPower, std::abs(**mRatio), std::arg(**mRatio),
                       **mResistance, **mInductance);
+  copy->setTapRatio(tapRatio());
   return copy;
 }
 
@@ -114,11 +115,12 @@ void SP::Ph1::Transformer::resolveWindingRoles() {
         (mNominalVoltagePrimary >= mNominalVoltageSecondary) ? 0 : 1;
     break;
   }
-  mRatioFromReference = (mReferenceTerminal == 0) ? **mRatio : 1. / **mRatio;
+  mRatioFromReference =
+      (mReferenceTerminal == 0) ? effectiveRatio() : 1. / effectiveRatio();
   mOrientationSign = (mReferenceTerminal == 0) ? 1. : -1.;
 
-  if ((mReferenceTerminal == 0) != (Math::abs(**mRatio) >= 1.) &&
-      Math::abs(Math::abs(**mRatio) - 1.) > 1e-9)
+  if ((mReferenceTerminal == 0) != (Math::abs(effectiveRatio()) >= 1.) &&
+      Math::abs(Math::abs(effectiveRatio()) - 1.) > 1e-9)
     SPDLOG_LOGGER_WARN(
         mSLog,
         "Nominal voltages put the higher-voltage winding at terminal {} ({} "
@@ -126,7 +128,7 @@ void SP::Ph1::Transformer::resolveWindingRoles() {
         "check the argument order of setParameters()",
         mReferenceTerminal, nominalVoltageAt(mReferenceTerminal),
         nominalVoltageAt(nonReferenceTerminal()),
-        Logger::complexToString(**mRatio));
+        Logger::complexToString(effectiveRatio()));
 }
 
 void SP::Ph1::Transformer::createSubComponents() {
@@ -330,8 +332,8 @@ void SP::Ph1::Transformer::calculatePerUnitParameters(Real baseApparentPower,
   mLeakagePerUnit = Complex(mResistancePerUnit, 1. * mInductancePerUnit);
   SPDLOG_LOGGER_INFO(mSLog, "Leakage Impedance={} [pu] ", mLeakagePerUnit);
 
-  mRatioAbsPerUnit =
-      mRatioAbs / mNominalVoltagePrimary * mNominalVoltageSecondary;
+  mRatioAbsPerUnit = std::abs(effectiveRatio()) / mNominalVoltagePrimary *
+                     mNominalVoltageSecondary;
   mRatioPerUnit = mRatioFromReference /
                   Complex(nominalVoltageAt(mReferenceTerminal) /
                               nominalVoltageAt(nonReferenceTerminal()),

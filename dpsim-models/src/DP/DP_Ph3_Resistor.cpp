@@ -142,16 +142,13 @@ void DP::Ph3::Resistor::mnaCompUpdateCurrent(const Matrix &leftVector) {
 // #### Tear Methods ####
 
 void DP::Ph3::Resistor::mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) {
-  MatrixFixedSizeComp<3, 3> conductance = MatrixFixedSizeComp<3, 3>::Zero();
-
-  conductance.real() = (**mResistance).inverse();
-
-  Math::addToMatrixElement(tearMatrix, mTearIdx * 3, mTearIdx * 3,
-                           1.0 / conductance(0, 0).real());
-
-  Math::addToMatrixElement(tearMatrix, mTearIdx * 3 + 1, mTearIdx * 3 + 1,
-                           1.0 / conductance(1, 1).real());
-
-  Math::addToMatrixElement(tearMatrix, mTearIdx * 3 + 2, mTearIdx * 3 + 2,
-                           1.0 / conductance(2, 2).real());
+  // Keep mutual phase coupling in the tear system. Stamping only the
+  // diagonal here disagrees with the full resistance matrix used by MNA.
+  for (UInt row = 0; row < 3; ++row) {
+    for (UInt col = 0; col < 3; ++col) {
+      Math::addToMatrixElement(tearMatrix, mTearIdx * 3 + row,
+                               mTearIdx * 3 + col,
+                               Complex((**mResistance)(row, col), 0.0));
+    }
+  }
 }
