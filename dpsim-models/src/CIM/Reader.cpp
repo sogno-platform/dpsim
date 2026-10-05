@@ -580,7 +580,7 @@ Reader::mapPowerTransformer(CIMPP::PowerTransformer *trans) {
   // primary winding multiplies V1/V2; a tap on the secondary winding divides
   // it. A solved SvTapStep position takes precedence over normalStep.
   // Use the tap changer attached to this end, not always PowerTransformerEnd_1.
-  auto tapMultiplierForEnd = [&](CIMPP::PowerTransformerEnd *end) {
+  auto tapMultiplierForEnd = [&](CIMPP::PowerTransformerEnd *end) -> Real {
     if (!end->RatioTapChanger)
       return Real(1.);
 
