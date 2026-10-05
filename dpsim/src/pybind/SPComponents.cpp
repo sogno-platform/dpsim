@@ -359,6 +359,10 @@ void addSPPh1Components(py::module_ mSPPh1) {
       .def("set_reference_winding",
            &CPS::SP::Ph1::Transformer::setReferenceWinding,
            "reference_winding"_a)
+      .def("set_tap_ratio", &CPS::SP::Ph1::Transformer::setTapRatio,
+           "tap_ratio"_a)
+      .def_property("tap_ratio", &CPS::SP::Ph1::Transformer::tapRatio,
+                    &CPS::SP::Ph1::Transformer::setTapRatio)
       .def("set_magnetizing_branch",
            &CPS::SP::Ph1::Transformer::setMagnetizingBranch,
            "no_load_current"_a, "no_load_loss"_a)
@@ -382,6 +386,10 @@ void addSPPh3Components(py::module_ mSPPh3) {
       .def("set_reference_winding",
            &CPS::SP::Ph3::Transformer::setReferenceWinding,
            "reference_winding"_a)
+      .def("set_tap_ratio", &CPS::SP::Ph3::Transformer::setTapRatio,
+           "tap_ratio"_a)
+      .def_property("tap_ratio", &CPS::SP::Ph3::Transformer::tapRatio,
+                    &CPS::SP::Ph3::Transformer::setTapRatio)
       .def("set_magnetizing_branch",
            &CPS::SP::Ph3::Transformer::setMagnetizingBranch,
            "no_load_current"_a, "no_load_loss"_a)

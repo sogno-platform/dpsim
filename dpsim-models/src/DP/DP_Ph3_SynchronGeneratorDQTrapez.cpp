@@ -23,6 +23,11 @@ void DP::Ph3::SynchronGeneratorDQTrapez::mnaCompInitialize(
   updateMatrixNodeIndices();
   mTimeStep = timeStep;
 
+  // The MNA solver invokes initializeFromNodesAndTerminals() before this
+  // point.  Build the machine's electrical states only now so they use the
+  // PF-derived terminal power and voltage rather than zero-valued defaults.
+  initializeMatrixAndStates();
+
   SPDLOG_LOGGER_INFO(mSLog,
                      "\nFluxStateSpaceMat: \n{}"
                      "\nOmegaFluxMat: \n{}"

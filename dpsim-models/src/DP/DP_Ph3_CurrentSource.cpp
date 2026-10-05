@@ -3,6 +3,8 @@
 
 #include <dpsim-models/DP/DP_Ph3_CurrentSource.h>
 
+#include <limits>
+
 using namespace CPS;
 
 DP::Ph3::CurrentSource::CurrentSource(String uid, String name,
@@ -43,6 +45,23 @@ void DP::Ph3::CurrentSource::setParameters(MatrixComp currentRef,
 }
 
 void DP::Ph3::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
+  // Match EMT::Ph3::CurrentSource when no explicit reference was supplied:
+  // derive the source current from the power-flow terminal voltage and power.
+  // The power-flow current is RMS, while DP::Ph3 sources use phase-peak
+  // complex envelopes.
+  if (!mParametersSet) {
+    const Complex voltage = initialSingleVoltage(1) - initialSingleVoltage(0);
+    if (std::abs(voltage) > std::numeric_limits<Real>::epsilon()) {
+      const Complex power =
+          terminal(1)->singlePower() - terminal(0)->singlePower();
+      const Complex rmsCurrent = std::conj(power / voltage / std::sqrt(3.));
+      **mCurrentRef =
+          CPS::Math::singlePhaseVariableToThreePhase(RMS_TO_PEAK * rmsCurrent);
+      if (mSrcSig != nullptr)
+        mSrcFreq->setReference(mSrcSig->mFreq);
+    }
+  }
+
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from node voltages and terminal ---"
                      "\nReference current: {:s}",

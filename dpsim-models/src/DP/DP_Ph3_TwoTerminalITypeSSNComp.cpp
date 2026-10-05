@@ -4,6 +4,8 @@
 #include <dpsim-models/DP/DP_Ph3_TwoTerminalITypeSSNComp.h>
 #include <dpsim-models/MNAStampUtils.h>
 
+#include <limits>
+
 using namespace CPS;
 
 DP::Ph3::TwoTerminalITypeSSNComp::TwoTerminalITypeSSNComp(
@@ -14,10 +16,19 @@ DP::Ph3::TwoTerminalITypeSSNComp::TwoTerminalITypeSSNComp(
 }
 
 MatrixComp DP::Ph3::TwoTerminalITypeSSNComp::buildInitialInputFromNodes(Real) {
-  // Interface current convention: positive current flows from terminal1 to
-  // terminal0. No initial terminal current is available here, so start at
-  // zero.
-  return MatrixComp::Zero(3, 1);
+  // PF stores line-line RMS voltage and terminal RMS power. Convert their
+  // operating point into the phase-peak complex-envelope input used by DP.
+  const Complex voltage = initialSingleVoltage(1) - initialSingleVoltage(0);
+  if (std::abs(voltage) <= std::numeric_limits<Real>::epsilon())
+    return MatrixComp::Zero(3, 1);
+
+  const Complex power = terminal(1)->singlePower() - terminal(0)->singlePower();
+  const Complex rmsCurrent = std::conj(power / voltage / std::sqrt(3.));
+  MatrixComp current = MatrixComp::Zero(3, 1);
+  current(0, 0) = RMS_TO_PEAK * rmsCurrent;
+  current(1, 0) = current(0, 0) * SHIFT_TO_PHASE_B;
+  current(2, 0) = current(0, 0) * SHIFT_TO_PHASE_C;
+  return current;
 }
 
 void DP::Ph3::TwoTerminalITypeSSNComp::mnaCompApplySystemMatrixStamp(

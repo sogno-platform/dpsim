@@ -46,6 +46,14 @@ void DP::Ph1::SynchronGeneratorIdeal::createSubComponents() {
 
 void DP::Ph1::SynchronGeneratorIdeal::initializeParentFromNodesAndTerminals(
     Real frequency) {
+  // This composite is an ideal voltage source whose positive terminal is
+  // connected directly to the PF bus.  The child VoltageSource does not have
+  // enough terminal information to infer this reference after its virtual
+  // node is aliased, so transfer the bus phasor to the shared reference here.
+  // This keeps init_with_powerflow self-contained for the composite model.
+  **mVoltageRef = initialSingleVoltage(0);
+  (**mIntfVoltage)(0, 0) = **mVoltageRef;
+
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"
                      "\nVoltage across: {:s}"

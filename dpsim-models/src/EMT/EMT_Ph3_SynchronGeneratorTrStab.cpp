@@ -51,7 +51,8 @@ EMT::Ph3::SynchronGeneratorTrStab::SynchronGeneratorTrStab(
 SimPowerComp<Real>::Ptr EMT::Ph3::SynchronGeneratorTrStab::clone(String name) {
   auto copy = SynchronGeneratorTrStab::make(name, mLogLevel);
   copy->setStandardParametersPU(mNomPower, mNomVolt, mNomFreq, mXpd / mBase_Z,
-                                **mInertia, **mRs, mKd);
+                                **mInertia, **mRs / mBase_Z,
+                                mKd * mNomOmega / mNomPower);
   return copy;
 }
 
@@ -119,7 +120,9 @@ void EMT::Ph3::SynchronGeneratorTrStab::setStandardParametersPU(
   mXpd = Xpd * mBase_Z;
   mLpd = Xpd * mBase_L;
 
-  **mRs = Rs;
+  // mImpedance is formed in SI units below, so the pu resistance must be
+  // converted to ohms just like the transient reactance.
+  **mRs = Rs * mBase_Z;
   //The units of D are per unit power divided by per unit speed deviation.
   // D is transformed to an absolute value to obtain Kd, which will be used in the swing equation
   mKd = D * mNomPower / mNomOmega;
@@ -166,15 +169,15 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeParentFromNodesAndTerminals(
   mInitElecPower = (mInitElecPower == Complex(0, 0))
                        ? -terminal(0)->singlePower()
                        : mInitElecPower;
-  mInitMechPower = (mInitElecPower == Complex(0, 0)) ? mInitElecPower.real()
-                                                     : mInitMechPower;
+  if (mInitMechPower == 0 && mInitElecPower != Complex(0, 0))
+    mInitMechPower = mInitElecPower.real();
 
   // use complex interface quantities for initialization calculations
   MatrixComp intfVoltageComplex = MatrixComp::Zero(3, 1);
   MatrixComp intfCurrentComplex = MatrixComp::Zero(3, 1);
-  // // derive complex threephase initialization from single phase initial values (only valid for balanced systems)
-  // intfVoltageComplex(0, 0) = RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
-  intfVoltageComplex(0, 0) = initialSingleVoltage(0);
+  // Power-flow voltages are phase-to-phase RMS; the EMT model works with
+  // phase-to-ground peak values.
+  intfVoltageComplex(0, 0) = RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
   intfVoltageComplex(1, 0) = intfVoltageComplex(0, 0) * SHIFT_TO_PHASE_B;
   intfVoltageComplex(2, 0) = intfVoltageComplex(0, 0) * SHIFT_TO_PHASE_C;
   intfCurrentComplex(0, 0) =
@@ -212,7 +215,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeParentFromNodesAndTerminals(
   mVirtualNodes[0]->setInitialVoltage(PEAK1PH_TO_RMS3PH * **mEp);
 
   MatrixComp vref = MatrixComp::Zero(3, 1);
-  vref = CPS::Math::singlePhaseVariableToThreePhase(**mEp);
+  vref = CPS::Math::singlePhaseVariableToThreePhase(PEAK1PH_TO_RMS3PH * **mEp);
 
   // Set emf on the already-created voltage source; the framework's generic
   // sub-init loop will initialize it after this hook returns.
@@ -241,10 +244,10 @@ void EMT::Ph3::SynchronGeneratorTrStab::step(Real time) {
   **mElecActivePower = -1. * (intfVoltageDQ(0, 0) * intfCurrentDQ(0, 0) +
                               intfVoltageDQ(1, 0) * intfCurrentDQ(1, 0));
 
-  // The damping factor Kd is adjusted to obtain a damping ratio of 0.3
-  // Real MaxElecActivePower= Math::abs(mEp) * Math::abs((**mIntfVoltage)(0,0)) / mXpd;
-  // mKd=4*0.3*sqrt(mNomOmega*mInertia*MaxElecActivePower*0.5);
-  mKd = 1 * mNomPower;
+  // Keep the damping coefficient established by the parameter setter.  It is
+  // already converted from pu power / pu speed to W / (rad/s); replacing it
+  // here with the nominal power both discarded the user parameter and changed
+  // its units.
 
   // #### Calculate state for time step k+1 ####
   // semi-implicit Euler or symplectic Euler method for mechanical equations

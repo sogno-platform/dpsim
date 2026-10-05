@@ -576,28 +576,24 @@ Reader::mapPowerTransformer(CIMPP::PowerTransformer *trans) {
 
   Real ratioAbsNominal = voltageNode1 / voltageNode2;
   Real ratioAbs = ratioAbsNominal;
+  // Keep the nameplate ratio separate from the regulating tap. A tap on the
+  // primary winding multiplies V1/V2; a tap on the secondary winding divides
+  // it. A solved SvTapStep position takes precedence over normalStep.
+  // Use the tap changer attached to this end, not always PowerTransformerEnd_1.
+  auto tapMultiplierForEnd = [&](CIMPP::PowerTransformerEnd *end) {
+    if (!end->RatioTapChanger)
+      return Real(1.);
 
-  // use normalStep from RatioTapChanger
-  if (end1->RatioTapChanger) {
-    ratioAbs =
-        voltageNode1 / voltageNode2 *
-        (1 + (end1->RatioTapChanger->normalStep -
-              end1->RatioTapChanger->neutralStep) *
-                 end1->RatioTapChanger->stepVoltageIncrement.value / 100);
-  }
-
-  // if corresponding SvTapStep available, use instead tap position from there
-  if (end1->RatioTapChanger) {
+    Real position = end->RatioTapChanger->normalStep;
     for (auto obj : mModel->Objects) {
       auto tapStep = dynamic_cast<CIMPP::SvTapStep *>(obj);
-      if (tapStep && tapStep->TapChanger == end1->RatioTapChanger) {
-        ratioAbs =
-            voltageNode1 / voltageNode2 *
-            (1 + (tapStep->position - end1->RatioTapChanger->neutralStep) *
-                     end1->RatioTapChanger->stepVoltageIncrement.value / 100);
-      }
+      if (tapStep && tapStep->TapChanger == end->RatioTapChanger)
+        position = tapStep->position;
     }
-  }
+    return 1 + (position - end->RatioTapChanger->neutralStep) *
+                   end->RatioTapChanger->stepVoltageIncrement.value / 100;
+  };
+  Real tapRatio = tapMultiplierForEnd(end1) / tapMultiplierForEnd(end2);
 
   // TODO: To be extracted from cim class
   Real ratioPhase = 0;
@@ -685,6 +681,7 @@ Reader::mapPowerTransformer(CIMPP::PowerTransformer *trans) {
       transformer->setParameters(voltageNode1, voltageNode2, ratedPower,
                                  ratioAbs, ratioPhase, resistance_3ph,
                                  inductance_3ph);
+      transformer->setTapRatio(tapRatio);
       if (magnetizingFromFile)
         transformer->setMagnetizingBranch(noLoadCurrent, noLoadLoss);
       return transformer;
@@ -697,6 +694,7 @@ Reader::mapPowerTransformer(CIMPP::PowerTransformer *trans) {
         transRid, cimString(trans->name), mComponentLogLevel);
     transformer->setParameters(voltageNode1, voltageNode2, ratedPower, ratioAbs,
                                ratioPhase, resistance, inductance);
+    transformer->setTapRatio(tapRatio);
     if (magnetizingFromFile)
       transformer->setMagnetizingBranch(noLoadCurrent, noLoadLoss);
     Real baseVolt = voltageNode1 >= voltageNode2 ? voltageNode1 : voltageNode2;
@@ -709,6 +707,7 @@ Reader::mapPowerTransformer(CIMPP::PowerTransformer *trans) {
         withResistiveLosses);
     transformer->setParameters(voltageNode1, voltageNode2, ratedPower, ratioAbs,
                                ratioPhase, resistance, inductance);
+    transformer->setTapRatio(tapRatio);
     if (magnetizingFromFile)
       transformer->setMagnetizingBranch(noLoadCurrent, noLoadLoss);
     return transformer;

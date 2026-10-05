@@ -28,6 +28,7 @@ SimPowerComp<Complex>::Ptr SP::Ph3::Transformer::clone(String name) {
   copy->setParameters(mNominalVoltagePrimary, mNominalVoltageSecondary,
                       mRatedPower, std::abs(**mRatio), std::arg(**mRatio),
                       mResistance, mInductance);
+  copy->setTapRatio(tapRatio());
   return copy;
 }
 
@@ -62,7 +63,8 @@ void SP::Ph3::Transformer::resolveWindingRoles() {
     break;
   }
 
-  mRatioFromReference = (mReferenceTerminal == 0) ? **mRatio : 1. / **mRatio;
+  mRatioFromReference =
+      (mReferenceTerminal == 0) ? effectiveRatio() : 1. / effectiveRatio();
   mOrientationSign = (mReferenceTerminal == 0) ? 1. : -1.;
 
   SPDLOG_LOGGER_INFO(

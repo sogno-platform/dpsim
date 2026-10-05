@@ -66,7 +66,10 @@ void EMT::Ph3::RxLine::createSubComponents() {
 }
 
 void EMT::Ph3::RxLine::initializeParentFromNodesAndTerminals(Real frequency) {
-  // Static calculation
+  // Match PiLine's RMS line-to-neutral power-flow phasors to the peak
+  // phase-to-ground values used by the EMT subcomponents. The virtual node is
+  // not initialized yet here, so deriving the branch voltage from it would
+  // start the inductor with an arbitrary (usually zero) voltage.
   Real omega = 2. * PI * frequency;
   MatrixComp impedance = MatrixComp::Zero(3, 3);
   impedance << Complex((**mSeriesRes)(0, 0), omega * (**mSeriesInd)(0, 0)),
@@ -81,21 +84,22 @@ void EMT::Ph3::RxLine::initializeParentFromNodesAndTerminals(Real frequency) {
 
   MatrixComp vInitABC = MatrixComp::Zero(3, 1);
   vInitABC(0, 0) =
-      mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0);
+      RMS3PH_TO_PEAK1PH * (initialSingleVoltage(1) - initialSingleVoltage(0));
   vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
   vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
 
-  **mIntfCurrent = (impedance.inverse() * vInitABC).real();
+  MatrixComp iInit = impedance.inverse() * vInitABC;
+  **mIntfCurrent = iInit.real();
   **mIntfVoltage = vInitABC.real();
   // Initialization of virtual node
   // Initial voltage of phase B,C is set after A
   MatrixComp vInitTerm0 = MatrixComp::Zero(3, 1);
-  vInitTerm0(0, 0) = initialSingleVoltage(0);
+  vInitTerm0(0, 0) = RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
   vInitTerm0(1, 0) = vInitTerm0(0, 0) * SHIFT_TO_PHASE_B;
   vInitTerm0(2, 0) = vInitTerm0(0, 0) * SHIFT_TO_PHASE_C;
 
-  mVirtualNodes[0]->setInitialVoltage(vInitTerm0 +
-                                      **mSeriesRes * **mIntfCurrent);
+  mVirtualNodes[0]->setInitialVoltage(PEAK1PH_TO_RMS3PH *
+                                      (vInitTerm0 + **mSeriesRes * iInit));
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"

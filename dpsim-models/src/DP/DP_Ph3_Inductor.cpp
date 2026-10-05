@@ -17,6 +17,7 @@ DP::Ph3::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
   setTerminalNumber(2);
 
   mEquivCurrent = MatrixComp::Zero(3, 1);
+  mEquivImpedance = MatrixComp::Zero(3, 3);
   **mIntfVoltage = MatrixComp::Zero(3, 1);
   **mIntfCurrent = MatrixComp::Zero(3, 1);
 }
@@ -93,6 +94,7 @@ void DP::Ph3::Inductor::initVars(Real omega, Real timeStep) {
 
   // Initialize the history source consistently with the initialized
   // phase-peak DP voltage/current envelopes.
+  mEquivImpedance = mEquivCond.inverse();
   mEquivCurrent = mEquivCond * **mIntfVoltage + mPrevCurrFac * **mIntfCurrent;
 }
 
@@ -210,27 +212,25 @@ void DP::Ph3::Inductor::mnaTearInitialize(Real omega, Real timeStep) {
 }
 
 void DP::Ph3::Inductor::mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) {
-  Math::addToMatrixElement(tearMatrix, mTearIdx * 3, mTearIdx * 3,
-                           1.0 / mEquivCond(0, 0));
-
-  Math::addToMatrixElement(tearMatrix, mTearIdx * 3 + 1, mTearIdx * 3 + 1,
-                           1.0 / mEquivCond(1, 1));
-
-  Math::addToMatrixElement(tearMatrix, mTearIdx * 3 + 2, mTearIdx * 3 + 2,
-                           1.0 / mEquivCond(2, 2));
+  // A three-phase inductor may have mutual inductances. The normal MNA stamp
+  // keeps those off-diagonal terms, so the tear-domain impedance stamp must
+  // retain the full inverse companion-admittance matrix as well.
+  for (UInt row = 0; row < 3; ++row) {
+    for (UInt col = 0; col < 3; ++col) {
+      Math::addToMatrixElement(tearMatrix, mTearIdx * 3 + row,
+                               mTearIdx * 3 + col, mEquivImpedance(row, col));
+    }
+  }
 }
 
 void DP::Ph3::Inductor::mnaTearApplyVoltageStamp(Matrix &voltageVector) {
   mEquivCurrent = mEquivCond * **mIntfVoltage + mPrevCurrFac * **mIntfCurrent;
+  const MatrixComp equivVoltage = mEquivImpedance * mEquivCurrent;
 
-  Math::addToVectorElement(voltageVector, mTearIdx * 3,
-                           mEquivCurrent(0, 0) / mEquivCond(0, 0));
-
-  Math::addToVectorElement(voltageVector, mTearIdx * 3 + 1,
-                           mEquivCurrent(1, 0) / mEquivCond(1, 1));
-
-  Math::addToVectorElement(voltageVector, mTearIdx * 3 + 2,
-                           mEquivCurrent(2, 0) / mEquivCond(2, 2));
+  for (UInt phase = 0; phase < 3; ++phase) {
+    Math::addToVectorElement(voltageVector, mTearIdx * 3 + phase,
+                             equivVoltage(phase, 0));
+  }
 }
 
 void DP::Ph3::Inductor::mnaTearPostStep(MatrixComp voltage,

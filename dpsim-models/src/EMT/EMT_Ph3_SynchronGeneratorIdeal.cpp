@@ -70,6 +70,17 @@ void EMT::Ph3::SynchronGeneratorIdeal::createSubComponents() {
 
 void EMT::Ph3::SynchronGeneratorIdeal::initializeParentFromNodesAndTerminals(
     Real frequency) {
+  // The voltage-source representation has its internal source node behind
+  // the ideal source.  Seed that node from the solved terminal voltage so the
+  // child VoltageSource can derive its reference phasor automatically.
+  // Without this, the virtual node stays at zero and the child source starts
+  // with a zero-voltage reference even though initWithPowerflow() populated
+  // the external terminal.
+  if (mSourceType == CPS::GeneratorType::IdealVoltageSource &&
+      !mVirtualNodes.empty() && mVirtualNodes[0]) {
+    mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0));
+  }
+
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"
                      "\nTerminal 0 voltage: {:s}"

@@ -31,6 +31,8 @@ protected:
   MatrixComp mEquivCurrent;
   /// Equivalent conductance [S]
   MatrixComp mEquivCond;
+  /// Inverse companion impedance [Ohm], cached for SSN tearing.
+  MatrixComp mEquivImpedance;
   /// Coefficient multiplying the previous current value
   Complex mPrevCurrFac;
 

@@ -157,6 +157,10 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setControllerParameters(
   // TODO: add and use Omega_nominal instead of Omega_cutoff
   mPLL->setParameters(Kp_pll, Ki_pll, Omega_cutoff);
   mPLL->composeStateSpaceMatrices();
+  mKpPowerCtrl = Kp_powerCtrl;
+  mKiPowerCtrl = Ki_powerCtrl;
+  mKpCurrCtrl = Kp_currCtrl;
+  mKiCurrCtrl = Ki_currCtrl;
   mPowerControllerVSI->setControllerParameters(
       Kp_powerCtrl, Ki_powerCtrl, Kp_currCtrl, Ki_currCtrl, Omega_cutoff);
 }
@@ -195,6 +199,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setInitialStateValues(
 
   mPowerControllerVSI->setInitialStateValues(pInit, qInit, phi_dInit, phi_qInit,
                                              gamma_dInit, gamma_qInit);
+  mManualInitialStatesSet = true;
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::initializeParentFromNodesAndTerminals(
@@ -275,7 +280,9 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeParentFromNodesAndTerminals(
   // Initialize control subcomponents
   // current and voltage inputs to PLL and power controller
   Matrix vcdq, ircdq;
-  Real theta = std::arg(mVirtualNodes[3]->initialSingleVoltage());
+  const UInt filterInterfaceNode = mWithConnectionTransformer ? 3 : 2;
+  Real theta =
+      std::arg(mVirtualNodes[filterInterfaceNode]->initialSingleVoltage());
   vcdq =
       parkTransformPowerInvariant(theta, filterInterfaceInitialVoltage.real());
   ircdq = parkTransformPowerInvariant(
@@ -286,11 +293,33 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeParentFromNodesAndTerminals(
   **mIrcd = ircdq(0, 0);
   **mIrcq = ircdq(1, 0);
 
+  // Derive the power-controller integrators from the PF operating point unless
+  // the caller deliberately supplied explicit state values.
+  if (mWithControl && !mManualInitialStatesSet) {
+    const Real pInit = **mVcd * **mIrcd + **mVcq * **mIrcq;
+    const Real qInit = -(**mVcd * **mIrcq) + **mVcq * **mIrcd;
+    const Real phiDInit =
+        (**mIrcd + mKpPowerCtrl * (pInit - **mPref)) / mKiPowerCtrl;
+    const Real phiQInit =
+        (**mIrcq - mKpPowerCtrl * (qInit - **mQref)) / mKiPowerCtrl;
+    const Real iRefD =
+        mKpPowerCtrl * (**mPref - pInit) + mKiPowerCtrl * phiDInit;
+    const Real iRefQ =
+        mKpPowerCtrl * (qInit - **mQref) + mKiPowerCtrl * phiQInit;
+    const Matrix sourceDq = parkTransformPowerInvariant(theta, vsInit.real());
+    const Real gammaDInit =
+        (sourceDq(0, 0) + mKpCurrCtrl * (**mIrcd - iRefD)) / mKiCurrCtrl;
+    const Real gammaQInit =
+        (sourceDq(1, 0) + mKpCurrCtrl * (**mIrcq - iRefQ)) / mKiCurrCtrl;
+    mPowerControllerVSI->setInitialStateValues(pInit, qInit, phiDInit, phiQInit,
+                                               gammaDInit, gammaQInit);
+  }
+
   // angle input
   Matrix matrixStateInit = Matrix::Zero(2, 1);
   Matrix matrixOutputInit = Matrix::Zero(2, 1);
-  matrixStateInit(0, 0) = std::arg(mVirtualNodes[3]->initialSingleVoltage());
-  matrixOutputInit(0, 0) = std::arg(mVirtualNodes[3]->initialSingleVoltage());
+  matrixStateInit(0, 0) = theta;
+  matrixOutputInit(0, 0) = theta;
   mPLL->setInitialValues(**mVcq, matrixStateInit, matrixOutputInit);
 
   SPDLOG_LOGGER_INFO(
@@ -411,7 +440,9 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::controlStep(Real time,
   // Transformation interface forward
   Matrix vcdq, ircdq;
   Real theta = mPLL->mOutputPrev->get()(0, 0);
-  vcdq = parkTransformPowerInvariant(theta, **mVirtualNodes[3]->mVoltage);
+  const UInt filterInterfaceNode = mWithConnectionTransformer ? 3 : 2;
+  vcdq = parkTransformPowerInvariant(
+      theta, **mVirtualNodes[filterInterfaceNode]->mVoltage);
   ircdq = parkTransformPowerInvariant(theta, -**mSubResistorC->mIntfCurrent);
 
   **mVcd = vcdq(0, 0);

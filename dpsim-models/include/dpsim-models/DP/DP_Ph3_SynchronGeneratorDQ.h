@@ -19,6 +19,9 @@ namespace Ph3 {
 class SynchronGeneratorDQ : public MNASimPowerComp<Complex>,
                             public Base::SynchronGenerator {
 protected:
+  /// Build the per-unit steady-state machine state after PF values are loaded.
+  void initializeMatrixAndStates();
+
   /// Compensation current source set point
   MatrixComp mCompensationCurrent;
 
@@ -47,6 +50,14 @@ protected:
 public:
   virtual ~SynchronGeneratorDQ();
 
+  /// Set machine data while leaving the electrical operating point to be
+  /// initialized from the connected power-flow solution.
+  void setMachineParametersFundamentalPerUnit(
+      Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber,
+      Real nomFieldCur, Real Rs, Real Ll, Real Lmd, Real Lmq, Real Rfd,
+      Real Llfd, Real Rkd, Real Llkd, Real Rkq1, Real Llkq1, Real Rkq2,
+      Real Llkq2, Real inertia);
+
   /// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or
   /// stator referred parameters depending on the setting of parameter type.
   /// The initialization mode depends on the setting of state type.
@@ -62,6 +73,8 @@ public:
   void initialize(Real omega, Real timeStep);
   ///
   void initialize(Matrix frequencies) override;
+  /// Initialize the operating point from a connected power-flow solution.
+  void initializeFromNodesAndTerminals(Real frequency) override;
   ///
   Real electricalTorque() const;
   ///

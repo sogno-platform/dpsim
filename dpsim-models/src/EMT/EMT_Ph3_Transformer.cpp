@@ -34,6 +34,7 @@ SimPowerComp<Real>::Ptr EMT::Ph3::Transformer::clone(String name) {
   copy->setParameters(mNominalVoltagePrimary, mNominalVoltageSecondary,
                       mRatedPower, std::abs(**mRatio), std::arg(**mRatio),
                       mResistance, mInductance);
+  copy->setTapRatio(tapRatio());
   return copy;
 }
 
@@ -53,7 +54,7 @@ void EMT::Ph3::Transformer::setParameters(Real nomVoltagePrimary,
       mNominalVoltagePrimary, mNominalVoltageSecondary);
   SPDLOG_LOGGER_INFO(mSLog, "Rated Apparent Power  = {} [VA]", mRatedPower);
   SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio = {} [ ] Phase Shift = {} [deg]",
-                     std::abs(**mRatio), std::arg(**mRatio));
+                     std::abs(effectiveRatio()), std::arg(effectiveRatio()));
 
   mParametersSet = true;
 }
@@ -77,7 +78,8 @@ void EMT::Ph3::Transformer::resolveWindingRoles() {
         (mNominalVoltagePrimary >= mNominalVoltageSecondary) ? 0 : 1;
     break;
   }
-  mRatioFromReference = (mReferenceTerminal == 0) ? **mRatio : 1. / **mRatio;
+  mRatioFromReference =
+      (mReferenceTerminal == 0) ? effectiveRatio() : 1. / effectiveRatio();
   mOrientationSign = (mReferenceTerminal == 0) ? 1. : -1.;
 
   if (Math::abs(std::arg(mRatioFromReference)) > 1e-9) {
@@ -369,25 +371,28 @@ void EMT::Ph3::Transformer::mnaCompApplySystemMatrixStamp(
   }
   if (terminalNotGrounded(1)) {
     SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(**mRatio), matrixNodeIndex(1, 0),
+                       Logger::complexToString(mRatioFromReference),
+                       matrixNodeIndex(1, 0),
                        mVirtualNodes[1]->matrixNodeIndex(PhaseType::A));
     SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(**mRatio), matrixNodeIndex(1, 1),
+                       Logger::complexToString(mRatioFromReference),
+                       matrixNodeIndex(1, 1),
                        mVirtualNodes[1]->matrixNodeIndex(PhaseType::B));
     SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(**mRatio), matrixNodeIndex(1, 2),
+                       Logger::complexToString(mRatioFromReference),
+                       matrixNodeIndex(1, 2),
                        mVirtualNodes[1]->matrixNodeIndex(PhaseType::C));
 
     SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(-**mRatio),
+                       Logger::complexToString(-mRatioFromReference),
                        mVirtualNodes[1]->matrixNodeIndex(PhaseType::A),
                        matrixNodeIndex(1, 0));
     SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(-**mRatio),
+                       Logger::complexToString(-mRatioFromReference),
                        mVirtualNodes[1]->matrixNodeIndex(PhaseType::B),
                        matrixNodeIndex(1, 1));
     SPDLOG_LOGGER_INFO(mSLog, "Add {:s} to system at ({:d},{:d})",
-                       Logger::complexToString(-**mRatio),
+                       Logger::complexToString(-mRatioFromReference),
                        mVirtualNodes[1]->matrixNodeIndex(PhaseType::C),
                        matrixNodeIndex(1, 2));
   }

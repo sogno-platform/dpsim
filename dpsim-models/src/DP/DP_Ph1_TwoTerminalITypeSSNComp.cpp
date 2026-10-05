@@ -4,6 +4,8 @@
 #include <dpsim-models/DP/DP_Ph1_TwoTerminalITypeSSNComp.h>
 #include <dpsim-models/MNAStampUtils.h>
 
+#include <limits>
+
 using namespace CPS;
 
 DP::Ph1::TwoTerminalITypeSSNComp::TwoTerminalITypeSSNComp(
@@ -14,9 +16,17 @@ DP::Ph1::TwoTerminalITypeSSNComp::TwoTerminalITypeSSNComp(
 }
 
 MatrixComp DP::Ph1::TwoTerminalITypeSSNComp::buildInitialInputFromNodes(Real) {
-  // Interface current convention: positive current flows from terminal1 to
-  // terminal0. No initial terminal current is available here, so start at zero.
-  return MatrixComp::Zero(1, 1);
+  // Recover the operating current from the power-flow data on the terminals.
+  // The I-type SSN input is oriented from terminal 1 to terminal 0, matching
+  // the voltage convention used by the port model (v1 - v0).
+  const Complex voltage = initialSingleVoltage(1) - initialSingleVoltage(0);
+  if (std::abs(voltage) <= std::numeric_limits<Real>::epsilon())
+    return MatrixComp::Zero(1, 1);
+
+  const Complex power = terminal(1)->singlePower() - terminal(0)->singlePower();
+  MatrixComp current = MatrixComp::Zero(1, 1);
+  current(0, 0) = std::conj(power / voltage);
+  return current;
 }
 
 void DP::Ph1::TwoTerminalITypeSSNComp::mnaCompApplySystemMatrixStamp(

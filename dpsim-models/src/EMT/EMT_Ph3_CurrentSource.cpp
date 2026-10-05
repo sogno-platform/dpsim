@@ -98,6 +98,10 @@ void EMT::Ph3::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
 void EMT::Ph3::CurrentSource::mnaCompInitialize(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
+  // Populate the interface value before the simulation's t=0 log sample.
+  // Otherwise a PF-derived source starts at zero and jumps to its operating
+  // current on the first time step.
+  updateCurrent(0.);
 }
 
 void EMT::Ph3::CurrentSource::mnaCompApplyRightSideVectorStamp(

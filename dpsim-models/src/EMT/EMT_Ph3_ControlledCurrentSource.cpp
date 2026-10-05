@@ -8,6 +8,9 @@
 
 #include <dpsim-models/EMT/EMT_Ph3_ControlledCurrentSource.h>
 
+#include <cmath>
+#include <stdexcept>
+
 using namespace CPS;
 
 EMT::Ph3::ControlledCurrentSource::ControlledCurrentSource(
@@ -38,7 +41,22 @@ void EMT::Ph3::ControlledCurrentSource::initializeFromNodesAndTerminals(
   SPDLOG_LOGGER_INFO(
       mSLog, "\n--- Initialization from node voltages and terminal ---");
   if (!mParametersSet) {
-    **mCurrentRef = Matrix::Zero(3, 1);
+    const Complex voltage = initialSingleVoltage(1) - initialSingleVoltage(0);
+    const Complex power =
+        terminal(1)->singlePower() - terminal(0)->singlePower();
+    if (std::abs(voltage) > 0.0) {
+      const Complex current = std::conj(power / voltage / std::sqrt(3.0));
+      **mCurrentRef =
+          RMS_TO_PEAK *
+          CPS::Math::singlePhaseVariableToThreePhase(current).real();
+    } else if (std::abs(power) > 0.0) {
+      throw std::invalid_argument(
+          "ControlledCurrentSource cannot infer a current from non-zero "
+          "power at zero terminal voltage.");
+    } else {
+      **mCurrentRef = Matrix::Zero(3, 1);
+    }
+    mParametersSet = true;
 
     SPDLOG_LOGGER_INFO(mSLog,
                        "\nTerminal 0 voltage: {:s}"
