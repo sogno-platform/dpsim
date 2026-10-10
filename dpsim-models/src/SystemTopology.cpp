@@ -48,6 +48,17 @@ void SystemTopology::addNodes(const TopologicalNode::List &topNodes) {
     addNode(topNode);
 }
 
+void SystemTopology::checkParameters() const {
+  ParameterCheck::Violations violations;
+
+  for (const auto &component : mComponents)
+    if (auto powerComp =
+            std::dynamic_pointer_cast<TopologicalPowerComp>(component))
+      powerComp->checkParameters(violations);
+
+  ParameterCheck::throwIfAny(violations);
+}
+
 void SystemTopology::addComponent(IdentifiedObject::Ptr component) {
   if (auto powerCompComplex =
           std::dynamic_pointer_cast<SimPowerComp<Complex>>(component))

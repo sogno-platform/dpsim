@@ -28,6 +28,11 @@ SimPowerComp<Complex>::Ptr DP::Ph1::RxLine::clone(String name) {
   return copy;
 }
 
+void DP::Ph1::RxLine::validateParameters(ParameterCheck &check) {
+  check(mSeriesRes, {Constraint::Finite, Constraint::Positive});
+  check(mSeriesInd, {Constraint::Finite, Constraint::Positive});
+}
+
 void DP::Ph1::RxLine::createSubComponents() {
   if (mSubCompCreated)
     return;

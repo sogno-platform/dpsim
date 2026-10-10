@@ -32,6 +32,13 @@ SimPowerComp<Real>::Ptr EMT::Ph3::PiLine::clone(String name) {
   return copy;
 }
 
+void EMT::Ph3::PiLine::validateParameters(ParameterCheck &check) {
+  check(mSeriesRes, {Constraint::Finite, Constraint::Invertible});
+  check(mSeriesInd, {Constraint::Finite, Constraint::Invertible});
+  check(mParallelCap, {Constraint::Finite});
+  check(mParallelCond, {Constraint::Finite});
+}
+
 void EMT::Ph3::PiLine::createSubComponents() {
   if (mSubCompCreated)
     return;

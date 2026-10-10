@@ -81,6 +81,8 @@ void Simulation::initialize() {
   if (mInitialized)
     return;
 
+  mSystem.checkParameters();
+
   mSolvers.clear();
 
   switch (mDomain) {

@@ -26,6 +26,13 @@ SimPowerComp<Complex>::Ptr DP::Ph1::PiLine::clone(String name) {
   return copy;
 }
 
+void DP::Ph1::PiLine::validateParameters(ParameterCheck &check) {
+  check(mSeriesRes, {Constraint::Finite, Constraint::Positive});
+  check(mSeriesInd, {Constraint::Finite, Constraint::Positive});
+  check(mParallelCap, {Constraint::Finite, Constraint::NonNegative});
+  check(mParallelCond, {Constraint::Finite});
+}
+
 void DP::Ph1::PiLine::createSubComponents() {
   if (mSubCompCreated)
     return;
