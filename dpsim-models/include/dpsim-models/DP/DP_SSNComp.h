@@ -54,9 +54,9 @@ protected:
 
   virtual MatrixComp calculateHistoryVector() const;
 
-  /// Steady-state envelope state X_ss = (j w I - A)^-1 B u.
+  /// Steady-state envelope state X_ss = (j w I - A)^-1 B u, w = 2 pi frequency.
   virtual MatrixComp calculateSteadyStateStateFromInput(const MatrixComp &u,
-                                                        Real omega) const;
+                                                        Real frequency) const;
   virtual MatrixComp
   calculateSteadyStateOutputFromInput(const MatrixComp &x,
                                       const MatrixComp &u) const;
@@ -79,6 +79,9 @@ public:
   const MatrixComp &getDiscreteB() const;
   /// Get the continuous-time output matrix of the SSN model.
   const Matrix &getC() const;
+
+  /// Get the continuous steady-state transfer C (jw I - A)^-1 B + D: admittance for V-type, impedance for I-type
+  MatrixComp steadyStateTransfer(Real frequency) const;
 
   void setParameters(const Matrix &A, const Matrix &B, const Matrix &C,
                      const Matrix &D);

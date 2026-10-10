@@ -46,8 +46,6 @@ void EMT::ITypeSSNComp::initializeFromNodesAndTerminals(Real frequency) {
       Logger::matrixToString(**mIntfVoltage), Logger::matrixToString(**mX));
 }
 
-void EMT::ITypeSSNComp::mnaCompUpdateVoltage(const Matrix &) {}
-
 void EMT::ITypeSSNComp::mnaCompPostStep(Real, Int,
                                         Attribute<Matrix>::Ptr &leftVector) {
   Matrix uOld = **mIntfCurrent;

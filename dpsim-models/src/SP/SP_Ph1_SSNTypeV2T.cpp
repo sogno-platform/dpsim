@@ -66,19 +66,21 @@ SimPowerComp<Complex>::Ptr SP::Ph1::SSNTypeV2T::clone(String name) {
   return copy;
 }
 
-void SP::Ph1::SSNTypeV2T::calculateAdmittance(Real omega) {
-  MatrixComp H_inv =
-      omega * Complex(0, 1.) * Matrix::Identity(mA.rows(), mA.cols()) - mA;
+Complex SP::Ph1::SSNTypeV2T::computeAdmittance(Real omega) const {
+  if (!mParametersSet)
+    throw std::logic_error("setParameters() must be called before "
+                           "the admittance can be calculated.");
 
-  MatrixComp H = MatrixComp(H_inv.rows(), H_inv.cols());
+  Complex admittance = Math::steadyStateTransfer(mA, mB, mC, mD, omega).value();
 
-  H = H_inv.inverse().eval();
+  if (std::abs(admittance) < DOUBLE_EPSILON)
+    throw std::invalid_argument("computeAdmittance: admittance is near zero.");
 
-  mAdmittance = (mC.eval() * H * mB.eval() + mD.eval()).value();
+  return admittance;
+}
 
-  if (!Math::isFinite(mAdmittance) || std::abs(mAdmittance) < DOUBLE_EPSILON)
-    throw std::invalid_argument(
-        "calculateAdmittance: Admittance is near zero or infinite.");
+Complex SP::Ph1::SSNTypeV2T::steadyStateAdmittance(Real frequency) const {
+  return computeAdmittance(2. * PI * frequency);
 }
 
 void SP::Ph1::SSNTypeV2T::initializeFromNodesAndTerminals(Real frequency) {
@@ -88,9 +90,7 @@ void SP::Ph1::SSNTypeV2T::initializeFromNodesAndTerminals(Real frequency) {
   if (!mParametersSet)
     throw std::logic_error("Not initialized.");
 
-  Real omega = 2 * PI * frequency;
-
-  calculateAdmittance(omega);
+  mAdmittance = steadyStateAdmittance(frequency);
 
   (**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
   **mIntfCurrent = mAdmittance * **mIntfVoltage;
@@ -123,7 +123,7 @@ void SP::Ph1::SSNTypeV2T::mnaCompInitialize(Real omega, Real timeStep,
 
   updateMatrixNodeIndices();
 
-  calculateAdmittance(omega);
+  mAdmittance = computeAdmittance(omega);
 
   SPDLOG_LOGGER_INFO(mSLog, "\nImpedance [Ohm]: {:s}",
                      Logger::complexToString(1. / mAdmittance));

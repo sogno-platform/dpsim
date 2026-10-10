@@ -33,7 +33,8 @@ protected:
 public:
   void initializeFromNodesAndTerminals(Real frequency) override;
 
-  void mnaCompUpdateVoltage(const Matrix &leftVector) override;
+  /// Reconstruct the output voltage from the MNA solution, every I-type component must define this
+  void mnaCompUpdateVoltage(const Matrix &leftVector) override = 0;
 
   void mnaCompPostStep(Real time, Int timeStepCount,
                        Attribute<Matrix>::Ptr &leftVector) override final;

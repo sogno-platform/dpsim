@@ -102,13 +102,23 @@ MatrixComp DP::SSNComp::calculateHistoryVector() const {
          (mDiscreteA * (**mX) + mDiscreteB * (**inputAttribute()));
 }
 
-MatrixComp DP::SSNComp::calculateSteadyStateStateFromInput(const MatrixComp &u,
-                                                           Real omega) const {
+MatrixComp
+DP::SSNComp::calculateSteadyStateStateFromInput(const MatrixComp &u,
+                                                Real frequency) const {
+  const Real omega = 2. * PI * frequency;
   MatrixComp h =
       Complex(0., omega) * MatrixComp::Identity(mA.rows(), mA.cols()) -
       mA.cast<Complex>();
 
   return h.inverse() * mB.cast<Complex>() * u;
+}
+
+MatrixComp DP::SSNComp::steadyStateTransfer(Real frequency) const {
+  if (!mParametersSet)
+    throw std::logic_error(
+        "setParameters() must be called before steadyStateTransfer().");
+
+  return Math::steadyStateTransfer(mA, mB, mC, mD, 2. * PI * frequency);
 }
 
 MatrixComp
