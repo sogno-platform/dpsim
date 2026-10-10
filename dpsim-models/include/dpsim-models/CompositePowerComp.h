@@ -103,6 +103,15 @@ public:
                                  AttributeBase::List &attributeDependencies,
                                  AttributeBase::List &modifiedAttributes,
                                  Attribute<Matrix>::Ptr &leftVector) override;
+  /// Initializes variables of components, harmonics domain
+  void mnaCompInitializeHarm(
+      Real omega, Real timeStep,
+      std::vector<Attribute<Matrix>::Ptr> leftVectors) override;
+  /// Stamps system matrix for a single frequency index
+  void mnaCompApplySystemMatrixStampHarm(SparseMatrixRow &systemMatrix,
+                                         Int freqIdx) override;
+  /// Stamps right side (source) vector, harmonics domain
+  void mnaCompApplyRightSideVectorStampHarm(Matrix &sourceVector) override;
 
   // #### MNA Parent Functions ####
   virtual void mnaParentInitialize(Real omega, Real timeStep,
@@ -135,5 +144,61 @@ public:
                                    Attribute<Matrix>::Ptr &leftVector){
       // By default, the parent has no custom post-step-dependencies, only the subcomponents' dependencies are added
   };
+
+  // #### MNA Parent Functions, harmonics domain ####
+  virtual void
+  mnaParentInitializeHarm(Real omega, Real timeStep,
+                          std::vector<Attribute<Matrix>::Ptr> leftVectors){};
+  virtual void
+  mnaParentApplySystemMatrixStampHarm(SparseMatrixRow &systemMatrix,
+                                      Int freqIdx){};
+  virtual void mnaParentApplyRightSideVectorStampHarm(Matrix &rightVector){};
+  virtual void mnaParentPreStepHarm(Real time, Int timeStepCount){};
+  virtual void
+  mnaParentPostStepHarm(Real time, Int timeStepCount,
+                        std::vector<Attribute<Matrix>::Ptr> &leftVectors){};
+
+  class MnaPreStepHarm : public Task {
+  public:
+    explicit MnaPreStepHarm(CompositePowerComp<VarType> &comp)
+        : Task(**comp.mName + ".MnaPreStepHarm"), mComp(comp) {
+      comp.mnaAddPreStepDependencies(
+          mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
+    }
+    void execute(Real time, Int timeStepCount) override {
+      mComp.mnaCompPreStepHarm(time, timeStepCount);
+    }
+
+  private:
+    CompositePowerComp<VarType> &mComp;
+  };
+
+  class MnaPostStepHarm : public Task {
+  public:
+    MnaPostStepHarm(CompositePowerComp<VarType> &comp,
+                    const std::vector<Attribute<Matrix>::Ptr> &leftVectors)
+        : Task(**comp.mName + ".MnaPostStepHarm"), mComp(comp),
+          mLeftVectors(leftVectors) {
+      comp.mnaAddPostStepDependencies(mPrevStepDependencies,
+                                      mAttributeDependencies,
+                                      mModifiedAttributes, mLeftVectors[0]);
+      for (UInt i = 1; i < mLeftVectors.size(); i++)
+        mAttributeDependencies.push_back(mLeftVectors[i]);
+    }
+    void execute(Real time, Int timeStepCount) override {
+      mComp.mnaCompPostStepHarm(time, timeStepCount, mLeftVectors);
+    }
+
+  private:
+    CompositePowerComp<VarType> &mComp;
+    std::vector<Attribute<Matrix>::Ptr> mLeftVectors;
+  };
+
+protected:
+  /// Refreshes subcomponents' right-vector contributions, then mnaParentPreStepHarm
+  void mnaCompPreStepHarm(Real time, Int timeStepCount);
+  /// Drives subcomponents' post-step update, then mnaParentPostStepHarm
+  void mnaCompPostStepHarm(Real time, Int timeStepCount,
+                           std::vector<Attribute<Matrix>::Ptr> &leftVectors);
 };
 } // namespace CPS

@@ -157,11 +157,14 @@ void DP::Ph1::Resistor::mnaCompUpdateVoltageHarm(const Matrix &leftVector,
 }
 
 void DP::Ph1::Resistor::mnaCompUpdateCurrentHarm() {
-  for (UInt freq = 0; freq < mNumFreqs; freq++) {
-    (**mIntfCurrent)(0, freq) = (**mIntfVoltage)(0, freq) / **mResistance;
-    SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}",
-                        Logger::phasorToString((**mIntfCurrent)(0, freq)));
-  }
+  for (UInt freq = 0; freq < mNumFreqs; freq++)
+    mnaCompUpdateCurrentHarm(freq);
+}
+
+void DP::Ph1::Resistor::mnaCompUpdateCurrentHarm(Int freqIdx) {
+  (**mIntfCurrent)(0, freqIdx) = (**mIntfVoltage)(0, freqIdx) / **mResistance;
+  SPDLOG_LOGGER_DEBUG(mSLog, "Current {:s}",
+                      Logger::phasorToString((**mIntfCurrent)(0, freqIdx)));
 }
 
 // #### Tear Methods ####

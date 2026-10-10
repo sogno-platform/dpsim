@@ -126,6 +126,10 @@ protected:
   void switchedMatrixStamp(
       std::size_t index,
       std::vector<std::shared_ptr<CPS::MNAInterface>> &comp) override;
+  /// Applies a component and switch stamp to the matrix with the given switch index and frequency index
+  void switchedMatrixStamp(std::size_t swIdx, Int freqIdx,
+                           CPS::MNAInterface::List &components,
+                           CPS::MNASwitchInterface::List &switches) override;
 
   // #### Methods for system recomputation over time ####
   /// Stamps components into the variable system matrix
@@ -225,9 +229,7 @@ public:
         if (it->getRightVector()->get().size() != 0)
           mAttributeDependencies.push_back(it->getRightVector());
       }
-      for (auto node : solver.mNodes) {
-        mModifiedAttributes.push_back(node->mVoltage);
-      }
+      // Unlike SolveTask, this doesn't modify node voltages (SimNode::MnaPostStepHarm does)
       for (auto leftVec : solver.mLeftSideVectorHarm) {
         mModifiedAttributes.push_back(leftVec);
       }
