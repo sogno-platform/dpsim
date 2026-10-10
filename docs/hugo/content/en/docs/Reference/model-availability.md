@@ -58,7 +58,7 @@ model, so the table cannot fall behind the code. For the equations behind a mode
 | PQLoadCS | &ndash; | &ndash; | &check; | &ndash; | &ndash; | &ndash; |
 | Load | &check; | &ndash; | &ndash; | &ndash; | &ndash; | &ndash; |
 | Shunt | &check; | &ndash; | &check; | &ndash; | &ndash; | &check; |
-| SVC | &ndash; | &ndash; | &check; | &ndash; | &ndash; | &ndash; |
+| SVC | &check; | &ndash; | &check; | &ndash; | &ndash; | &ndash; |
 
 ## Synchronous generators
 

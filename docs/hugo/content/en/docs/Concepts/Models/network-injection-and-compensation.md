@@ -58,6 +58,31 @@ merely a smoothing of the reported value; making it small to track faster couple
 noise, and making it large delays the response into a range where it can interact with nearby
 machine controls.
 
+## Compensation in the power flow
+
+Before any of that runs, the compensator has to appear in the power flow that sets the operating
+point. There it is not a differential equation but a boundary condition, and since the device
+exchanges no active power, the only question is what the reactive half of that condition states.
+
+Two statements are available. Fixing the voltage and letting the solution supply whatever reactive
+power holds it is the familiar voltage-controlled bus. It says what the compensator is for, but it
+says it without bound: the reactive power that comes out is whatever the network needs, and nothing
+in the formulation knows the device is rated. Where the requirement exceeds the rating, the result is
+a converged case that could not be built.
+
+Fixing the reactive power instead keeps the constant-power equations the rest of the network already
+uses, and moves the regulation outside the Newton iteration. An outer loop adjusts the injection
+until the bus reaches its reference, clamped to the installed band, and the clamped case is the same
+one the dynamic model reaches: the device sits at its limit and the voltage error persists. The
+inner solve stays a problem the solver is already good at, and the rating enters where it can be
+enforced.
+
+One property of the physical device does not survive the substitution. A susceptance delivers
+reactive power in proportion to $V^2$, while a specified injection does not vary with voltage at all.
+The two agree at the regulated voltage and diverge away from it, so a compensator that reached its
+reference hands over an operating point the time domain will recognise, and one pinned at a limit
+does not.
+
 ## Discrete compensation
 
 Where the compensation is switched rather than continuous, the control is a different kind. The
