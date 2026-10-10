@@ -6,12 +6,12 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include "dpsim-models/SP/SP_Ph1_RXLine.h"
+#include "dpsim-models/SP/SP_Ph1_RxLine.h"
 #include "dpsim-models/MathUtils.h"
 
 using namespace CPS;
 
-SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
+SP::Ph1::RxLine::RxLine(String uid, String name, Real baseVoltage,
                         Real resistance, Real inductance,
                         Logger::Level logLevel)
     : Base::Ph1::PiLine(mAttributes),
@@ -33,7 +33,7 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
   **mReactivePowerBranch = Matrix::Zero(2, 1);
 }
 
-SP::Ph1::RXLine::RXLine(String uid, String name, Logger::Level logLevel)
+SP::Ph1::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
     : Base::Ph1::PiLine(mAttributes),
       CompositePowerComp<Complex>(uid, name, true, true, logLevel),
       mInductance(mAttributes->create<Real>("L_series")),
@@ -49,7 +49,7 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Logger::Level logLevel)
   **mIntfCurrent = MatrixComp::Zero(1, 1);
 }
 
-void SP::Ph1::RXLine::setPerUnitSystem(Real baseApparentPower, Real baseOmega) {
+void SP::Ph1::RxLine::setPerUnitSystem(Real baseApparentPower, Real baseOmega) {
   mBaseApparentPower = baseApparentPower;
   mBaseOmega = baseOmega;
   mBaseImpedance = (mBaseVoltage * mBaseVoltage) / mBaseApparentPower;
@@ -61,9 +61,9 @@ void SP::Ph1::RXLine::setPerUnitSystem(Real baseApparentPower, Real baseOmega) {
   mSeriesIndPerUnit = **mInductance / mBaseInductance;
 }
 
-Real SP::Ph1::RXLine::getBaseVoltage() const { return mBaseVoltage; }
+Real SP::Ph1::RxLine::getBaseVoltage() const { return mBaseVoltage; }
 
-void SP::Ph1::RXLine::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow &Y) {
+void SP::Ph1::RxLine::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow &Y) {
   updateMatrixNodeIndices();
   int bus1 = this->matrixNodeIndex(0);
   int bus2 = this->matrixNodeIndex(1);
@@ -98,28 +98,28 @@ void SP::Ph1::RXLine::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow &Y) {
   Y.coeffRef(bus2, bus2) += mY_element.coeff(1, 1);
 }
 
-void SP::Ph1::RXLine::updateBranchFlow(VectorComp &current,
+void SP::Ph1::RxLine::updateBranchFlow(VectorComp &current,
                                        VectorComp &powerflow) {
   **mCurrent = current * mBaseCurrent;
   **mActivePowerBranch = powerflow.real() * mBaseApparentPower;
   **mReactivePowerBranch = powerflow.imag() * mBaseApparentPower;
 }
 
-void SP::Ph1::RXLine::storeNodalInjection(Complex powerInjection) {
+void SP::Ph1::RxLine::storeNodalInjection(Complex powerInjection) {
   **mActivePowerInjection = std::real(powerInjection) * mBaseApparentPower;
   **mReactivePowerInjection = std::imag(powerInjection) * mBaseApparentPower;
 }
 
-MatrixComp SP::Ph1::RXLine::Y_element() { return mY_element; }
+MatrixComp SP::Ph1::RxLine::Y_element() { return mY_element; }
 
 /// DEPRECATED: Delete method
-SimPowerComp<Complex>::Ptr SP::Ph1::RXLine::clone(String name) {
-  auto copy = RXLine::make(name, mLogLevel);
+SimPowerComp<Complex>::Ptr SP::Ph1::RxLine::clone(String name) {
+  auto copy = RxLine::make(name, mLogLevel);
   copy->setParameters(**mSeriesRes, **mSeriesInd);
   return copy;
 }
 
-void SP::Ph1::RXLine::createSubComponents() {
+void SP::Ph1::RxLine::createSubComponents() {
   if (mSubCompCreated)
     return;
   mSubCompCreated = true;
@@ -148,7 +148,7 @@ void SP::Ph1::RXLine::createSubComponents() {
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
 }
 
-void SP::Ph1::RXLine::initializeParentFromNodesAndTerminals(Real frequency) {
+void SP::Ph1::RxLine::initializeParentFromNodesAndTerminals(Real frequency) {
   (**mIntfVoltage)(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
   Complex impedance = {**mSeriesRes, **mSeriesInd * 2. * PI * frequency};
   (**mIntfCurrent)(0, 0) = (**mIntfVoltage)(0, 0) / impedance;
@@ -168,14 +168,14 @@ void SP::Ph1::RXLine::initializeParentFromNodesAndTerminals(Real frequency) {
                      Logger::phasorToString(initialSingleVoltage(1)));
 }
 
-void SP::Ph1::RXLine::mnaParentAddPreStepDependencies(
+void SP::Ph1::RxLine::mnaParentAddPreStepDependencies(
     AttributeBase::List &prevStepDependencies,
     AttributeBase::List &attributeDependencies,
     AttributeBase::List &modifiedAttributes) {
   modifiedAttributes.push_back(mRightVector);
 };
 
-void SP::Ph1::RXLine::mnaParentAddPostStepDependencies(
+void SP::Ph1::RxLine::mnaParentAddPostStepDependencies(
     AttributeBase::List &prevStepDependencies,
     AttributeBase::List &attributeDependencies,
     AttributeBase::List &modifiedAttributes,
@@ -185,17 +185,17 @@ void SP::Ph1::RXLine::mnaParentAddPostStepDependencies(
   modifiedAttributes.push_back(mIntfVoltage);
 };
 
-void SP::Ph1::RXLine::mnaParentPreStep(Real time, Int timeStepCount) {
+void SP::Ph1::RxLine::mnaParentPreStep(Real time, Int timeStepCount) {
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
-void SP::Ph1::RXLine::mnaParentPostStep(Real time, Int timeStepCount,
+void SP::Ph1::RxLine::mnaParentPostStep(Real time, Int timeStepCount,
                                         Attribute<Matrix>::Ptr &leftVector) {
   mnaCompUpdateVoltage(**leftVector);
   mnaCompUpdateCurrent(**leftVector);
 }
 
-void SP::Ph1::RXLine::mnaCompUpdateVoltage(const Matrix &leftVector) {
+void SP::Ph1::RxLine::mnaCompUpdateVoltage(const Matrix &leftVector) {
   (**mIntfVoltage)(0, 0) = 0;
   if (terminalNotGrounded(1))
     (**mIntfVoltage)(0, 0) =
@@ -206,6 +206,6 @@ void SP::Ph1::RXLine::mnaCompUpdateVoltage(const Matrix &leftVector) {
         Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
-void SP::Ph1::RXLine::mnaCompUpdateCurrent(const Matrix &leftVector) {
+void SP::Ph1::RxLine::mnaCompUpdateCurrent(const Matrix &leftVector) {
   (**mIntfCurrent)(0, 0) = mSubInductor->intfCurrent()(0, 0);
 }

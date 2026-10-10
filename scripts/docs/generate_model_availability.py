@@ -62,9 +62,7 @@ CATEGORIES = [
         [
             "PiLine",
             "RxLine",
-            "RXLine",
             "SeriesResistor",
-            "ResIndSeries",
             "Transformer",
             "SolidStateTransformer",
         ],
