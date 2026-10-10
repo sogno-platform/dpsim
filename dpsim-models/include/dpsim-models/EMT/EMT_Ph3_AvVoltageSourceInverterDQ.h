@@ -55,6 +55,12 @@ protected:
   std::shared_ptr<EMT::Ph3::Resistor> mSubResistorC;
   /// Optional connection transformer
   std::shared_ptr<EMT::Ph3::Transformer> mConnectionTransformer;
+  /// Node the control measures: the transformer's low-voltage virtual node
+  /// when a connection transformer is present, and the component's own
+  /// terminal when it is not. Without a transformer there is no virtual node 3
+  /// -- setVirtualNodeNumber(3) leaves indices 0..2 -- so the control cannot
+  /// name it. Resolved once during initialization and used by controlStep().
+  SimNode::Ptr mControlNode;
 
   /// Flag for connection transformer usage
   Bool mWithConnectionTransformer = false;
