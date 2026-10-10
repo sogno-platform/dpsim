@@ -40,6 +40,7 @@ Simulation::Simulation(String name, Logger::Level logLevel)
       mPFMaxIterations(CPS::AttributeStatic<CPS::UInt>::make(20)),
       mPFSolverUseSparse(CPS::AttributeStatic<Bool>::make(false)),
       mPFEnforceReactiveLimits(CPS::AttributeStatic<Bool>::make(false)),
+      mPFEnforceSvcControl(CPS::AttributeStatic<Bool>::make(false)),
       mPFBaseVoltageLooseTolerance(CPS::AttributeStatic<Real>::make(0.1)),
       mPFBaseVoltageStrictTolerance(CPS::AttributeStatic<Real>::make(0.01)),
       mSplitSubnets(AttributeStatic<Bool>::make(true)),
@@ -58,6 +59,7 @@ Simulation::Simulation(String name, CommandLineArgs &args)
       mPFMaxIterations(CPS::AttributeStatic<CPS::UInt>::make(20)),
       mPFSolverUseSparse(CPS::AttributeStatic<Bool>::make(false)),
       mPFEnforceReactiveLimits(CPS::AttributeStatic<Bool>::make(false)),
+      mPFEnforceSvcControl(CPS::AttributeStatic<Bool>::make(false)),
       mPFBaseVoltageLooseTolerance(CPS::AttributeStatic<Real>::make(0.1)),
       mPFBaseVoltageStrictTolerance(CPS::AttributeStatic<Real>::make(0.01)),
       mSplitSubnets(AttributeStatic<Bool>::make(true)),
@@ -136,6 +138,7 @@ template <typename VarType> void Simulation::createSolvers() {
     pfSolver->setBaseApparentPowerFallback(**mPFBaseApparentPowerFallback);
     pfSolver->setMaxIterations(**mPFMaxIterations);
     pfSolver->setEnforceReactiveLimits(**mPFEnforceReactiveLimits);
+    pfSolver->setEnforceSvcControl(**mPFEnforceSvcControl);
     pfSolver->setBaseVoltageLooseTolerance(**mPFBaseVoltageLooseTolerance);
     pfSolver->setBaseVoltageStrictTolerance(**mPFBaseVoltageStrictTolerance);
 
@@ -383,6 +386,14 @@ void Simulation::setPFSolverEnforceReactiveLimits(Bool value) {
 
 Bool Simulation::getPFSolverEnforceReactiveLimits() const {
   return **mPFEnforceReactiveLimits;
+}
+
+void Simulation::setPFSolverEnforceSvcControl(Bool value) {
+  **mPFEnforceSvcControl = value;
+}
+
+Bool Simulation::getPFSolverEnforceSvcControl() const {
+  return **mPFEnforceSvcControl;
 }
 
 void Simulation::setPFSolverBaseVoltageLooseTolerance(Real tolerance) {
