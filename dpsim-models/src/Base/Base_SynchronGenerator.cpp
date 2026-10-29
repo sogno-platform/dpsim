@@ -387,7 +387,9 @@ void Base::SynchronGenerator::calcStateSpaceMatrixDQ() {
 
 Real Base::SynchronGenerator::calcHfromJ(Real J, Real omegaNominal,
                                          Int polePairNumber) {
-  return J * 0.5 * omegaNominal * omegaNominal / polePairNumber;
+  // H = J omega_mech^2 / (2 S_nom), with omega_mech = omega / p
+  const Real omegaMech = omegaNominal / polePairNumber;
+  return J * 0.5 * omegaMech * omegaMech / mNomPower;
 }
 
 void CPS::Base::SynchronGenerator::addExciter(Real Ta, Real Ka, Real Te,
