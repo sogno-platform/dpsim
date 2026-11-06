@@ -16,14 +16,14 @@ DP::Ph1::TwoTerminalITypeSSNComp::TwoTerminalITypeSSNComp(
 }
 
 MatrixComp DP::Ph1::TwoTerminalITypeSSNComp::buildInitialInputFromNodes(Real) {
-  // Recover the operating current from the power-flow data on the terminals.
-  // The I-type SSN input is oriented from terminal 1 to terminal 0, matching
-  // the voltage convention used by the port model (v1 - v0).
-  const Complex voltage = initialSingleVoltage(1) - initialSingleVoltage(0);
+  // Recover branch current from terminal 1's own complex power and voltage.
+  // Subtracting the two terminal powers and dividing by the voltage drop
+  // incorrectly scales current when both buses have nonzero voltage.
+  const Complex voltage = initialSingleVoltage(1);
   if (std::abs(voltage) <= std::numeric_limits<Real>::epsilon())
     return MatrixComp::Zero(1, 1);
 
-  const Complex power = terminal(1)->singlePower() - terminal(0)->singlePower();
+  const Complex power = terminal(1)->singlePower();
   MatrixComp current = MatrixComp::Zero(1, 1);
   current(0, 0) = std::conj(power / voltage);
   return current;

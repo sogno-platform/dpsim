@@ -22,6 +22,10 @@ void DP::Ph3::SynchronGeneratorDQODE::mnaCompInitialize(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
 
+  // The DQ machine states depend on the PF operating point, which is loaded
+  // before the solver initializes this ODE wrapper.
+  initializeMatrixAndStates();
+
   mDim = mNumDampingWindings + 7;
   **mOdePreState = Matrix::Zero(mDim, 1);
   **mOdePostState = Matrix::Zero(mDim, 1);

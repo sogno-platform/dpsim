@@ -36,6 +36,8 @@ public:
                 Logger::Level logLevel = Logger::Level::off);
 
   void setParameters(Complex current);
+  /// Set the reference through the public attribute interface and mark it explicit.
+  void setCurrentRef(Complex current);
 
   SimPowerComp<Complex>::Ptr clone(String copySuffix) override;
 

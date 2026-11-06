@@ -94,7 +94,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
            "I_ref"_a)
       .def("connect", &CPS::DP::Ph1::CurrentSource::connect)
       .def_property("I_ref", createAttributeGetter<CPS::Complex>("I_ref"),
-                    createAttributeSetter<CPS::Complex>("I_ref"));
+                    &CPS::DP::Ph1::CurrentSource::setCurrentRef);
 
   py::class_<CPS::DP::Ph1::Resistor, std::shared_ptr<CPS::DP::Ph1::Resistor>,
              CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "Resistor",
@@ -588,7 +588,7 @@ void addDPPh3Components(py::module_ mDPPh3) {
            "I_ref"_a, "f_src"_a = 0.0)
       .def("connect", &CPS::DP::Ph3::CurrentSource::connect)
       .def_property("I_ref", createAttributeGetter<CPS::MatrixComp>("I_ref"),
-                    createAttributeSetter<CPS::MatrixComp>("I_ref"))
+                    &CPS::DP::Ph3::CurrentSource::setCurrentRef)
       .def_property("f_src", createAttributeGetter<CPS::Real>("f_src"),
                     createAttributeSetter<CPS::Real>("f_src"));
 

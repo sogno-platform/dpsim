@@ -39,6 +39,8 @@ public:
   void initializeFromNodesAndTerminals(Real frequency) override;
   /// Setter for reference current per phase and offset from the carrier
   void setParameters(MatrixComp currentRef, Real srcFreq = 0.0);
+  /// Set the reference through the public attribute interface and mark it explicit.
+  void setCurrentRef(MatrixComp currentRef);
 
   // #### MNA section ####
   /// Initializes internal variables of the component

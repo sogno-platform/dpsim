@@ -28,6 +28,10 @@ DP::Ph1::CurrentSource::CurrentSource(String name, Complex current,
 }
 
 void DP::Ph1::CurrentSource::setParameters(Complex current) {
+  setCurrentRef(current);
+}
+
+void DP::Ph1::CurrentSource::setCurrentRef(Complex current) {
   **mCurrentRef = current;
   mParametersSet = true;
 }
