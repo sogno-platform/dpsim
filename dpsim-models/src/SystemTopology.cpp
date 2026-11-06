@@ -12,6 +12,7 @@
 #include <unordered_map>
 
 #include <dpsim-models/DP/DP_Ph1_Shunt.h>
+#include <dpsim-models/EMT/EMT_Ph3_Shunt.h>
 #include <dpsim-models/SP/SP_Ph1_Load.h>
 #include <dpsim-models/SP/SP_Ph1_Shunt.h>
 #include <dpsim-models/SP/SP_Ph1_SynchronGenerator.h>
@@ -157,49 +158,69 @@ void SystemTopology::initWithPowerflow(const SystemTopology &systemPF,
         std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(pfPowerComp);
     const auto pfShunt =
         std::dynamic_pointer_cast<CPS::SP::Ph1::Shunt>(pfPowerComp);
+    const Bool targetIsEmtShunt =
+        realComp &&
+        static_cast<Bool>(std::dynamic_pointer_cast<EMT::Ph3::Shunt>(realComp));
     if (domain == CPS::Domain::DP && pfShunt && pfTerminals.size() == 1) {
       if (auto dpShunt = this->component<CPS::DP::Ph1::Shunt>(compPF->name()))
         dpShunt->setParameters(**pfShunt->mConductance,
                                **pfShunt->mSusceptance);
     }
-    const Bool mapsToGroundedTwoTerminalLoad = (pfLoad || pfShunt) &&
-                                               pfTerminals.size() == 1 &&
-                                               targetTerminalCount == 2;
+    UInt targetBusTerminalIdx = 0;
+    Bool targetHasGroundTerminal = false;
+    if (targetTerminalCount == 2) {
+      const auto findGroundTerminal = [](const auto &terminals) {
+        for (UInt terminalIdx = 0; terminalIdx < terminals.size();
+             ++terminalIdx)
+          if (terminals[terminalIdx]->node()->isGround())
+            return terminalIdx;
+        return static_cast<UInt>(terminals.size());
+      };
+      const UInt groundTerminalIdx =
+          complexComp ? findGroundTerminal(complexComp->terminals())
+                      : findGroundTerminal(realComp->terminals());
+      targetHasGroundTerminal = groundTerminalIdx < targetTerminalCount;
+      if (targetHasGroundTerminal)
+        targetBusTerminalIdx = 1 - groundTerminalIdx;
+    }
+    const Bool mapsToGroundedTwoTerminalLoad =
+        (pfLoad || pfShunt) && pfTerminals.size() == 1 &&
+        targetTerminalCount == 2 && targetHasGroundTerminal;
     if (targetTerminalCount != pfTerminals.size() &&
         !mapsToGroundedTwoTerminalLoad)
       continue;
 
     for (UInt terminalIdx = 0; terminalIdx < pfTerminals.size();
          ++terminalIdx) {
+      const UInt targetTerminalIdx =
+          mapsToGroundedTwoTerminalLoad ? targetBusTerminalIdx : terminalIdx;
       Complex terminalPower = pfTerminals[terminalIdx]->singlePower();
       if (pfLoad && pfTerminals.size() == 1) {
-        // A PF load stores its setpoint on the model; the PF terminal's
-        // measured power is not guaranteed to be populated. Keep consumer
-        // sign for a one-terminal load, and reverse it for two-terminal
-        // current-source equivalents whose current is positive into the
-        // component's network terminal.
+        // A PF load stores consumer-positive P/Q. EMT shunts consume power
+        // through their admittance stamp and therefore need network-injection
+        // sign; load and current-source equivalents use consumer-positive.
         const Complex loadPower(**pfLoad->mActivePower,
                                 **pfLoad->mReactivePower);
-        terminalPower =
-            targetTerminalCount == 1
-                ? loadPower
-                : (mapsToGroundedTwoTerminalLoad ? -loadPower : terminalPower);
+        terminalPower = targetIsEmtShunt ? -loadPower : loadPower;
       } else if (pfShunt && pfTerminals.size() == 1) {
-        // PF shunts stamp admittance directly and therefore also may have no
-        // terminal power recorded. Reconstruct the operating-point power
-        // using the shunt parameters and the already-copied target voltage.
+        // PF shunts stamp admittance directly and may have no terminal power
+        // recorded. Reconstruct power at the connected bus of a grounded
+        // two-terminal equivalent. Loads use consumer sign;
+        // an EMT shunt expects network-injection sign.
         const Complex voltage =
-            complexComp
-                ? complexComp->terminals()[terminalIdx]->initialSingleVoltage()
-                : realComp->terminals()[terminalIdx]->initialSingleVoltage();
-        terminalPower =
-            -std::norm(voltage) *
+            complexComp ? complexComp->terminals()[targetTerminalIdx]
+                              ->initialSingleVoltage()
+                        : realComp->terminals()[targetTerminalIdx]
+                              ->initialSingleVoltage();
+        const Complex consumerPower =
+            std::norm(voltage) *
             Complex(**pfShunt->mConductance, -(**pfShunt->mSusceptance));
+        terminalPower = targetIsEmtShunt ? -consumerPower : consumerPower;
       }
       if (complexComp)
-        complexComp->terminals()[terminalIdx]->setPower(terminalPower);
+        complexComp->terminals()[targetTerminalIdx]->setPower(terminalPower);
       else
-        realComp->terminals()[terminalIdx]->setPower(terminalPower);
+        realComp->terminals()[targetTerminalIdx]->setPower(terminalPower);
     }
   }
 }

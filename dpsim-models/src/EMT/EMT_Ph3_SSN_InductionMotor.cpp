@@ -491,7 +491,9 @@ void EMT::Ph3::SSN_InductionMotor::initializeFromNodesAndTerminals(
         -initialTorque +
         mMechanicalDamping * (mechanicalSpeed - mNominalMechanicalSpeed);
   } else {
-    x0(MechanicalSpeed, 0) = mNominalMechanicalSpeed;
+    // Preserve the historical cold-start operating point when automatic
+    // power-flow initialization is disabled.
+    x0(MechanicalSpeed, 0) = 0.0;
     x0(ElectricalAngle, 0) = mInitialElectricalAngle;
   }
 

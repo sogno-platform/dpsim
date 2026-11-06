@@ -33,14 +33,17 @@ void DP::Ph3::CurrentSource::setParameters(MatrixComp currentRef,
   mSrcSig = srcSigSine;
   mSrcFreq->setReference(mSrcSig->mFreq);
 
-  **mCurrentRef = currentRef;
+  setCurrentRef(currentRef);
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\nCurrent reference phasor [A]: {:s}"
                      "\nFrequency [Hz]: {:s}",
                      Logger::matrixCompToString(currentRef),
                      Logger::realToString(srcFreq));
+}
 
+void DP::Ph3::CurrentSource::setCurrentRef(MatrixComp currentRef) {
+  **mCurrentRef = currentRef;
   mParametersSet = true;
 }
 
