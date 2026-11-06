@@ -31,6 +31,36 @@ DP::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String name,
 
 DP::Ph3::SynchronGeneratorDQ::~SynchronGeneratorDQ() {}
 
+void DP::Ph3::SynchronGeneratorDQ::initializeFromNodesAndTerminals(
+    Real frequency) {
+  if (mInitialValuesSet)
+    return;
+
+  const Complex terminalPower = -terminal(0)->singlePower();
+  const Complex terminalVoltage = initialSingleVoltage(0);
+  const Real terminalVoltagePeak =
+      RMS3PH_TO_PEAK1PH * Math::abs(terminalVoltage);
+  Base::SynchronGenerator::setInitialValues(
+      terminalPower.real(), terminalPower.imag(), terminalVoltagePeak,
+      Math::phase(terminalVoltage), terminalPower.real());
+
+  SPDLOG_LOGGER_INFO(
+      mSLog,
+      "Initialized DP Ph3 synchronous generator from power flow: "
+      "P={} W, Q={} var, V_terminal_peak={} V, angle={} rad, f={} Hz",
+      terminalPower.real(), terminalPower.imag(), terminalVoltagePeak,
+      Math::phase(terminalVoltage), frequency);
+}
+
+void DP::Ph3::SynchronGeneratorDQ::setMachineParametersFundamentalPerUnit(
+    Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
+    Real Rs, Real Ll, Real Lmd, Real Lmq, Real Rfd, Real Llfd, Real Rkd,
+    Real Llkd, Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2, Real inertia) {
+  Base::SynchronGenerator::setBaseAndFundamentalPerUnitParameters(
+      nomPower, nomVolt, nomFreq, nomFieldCur, poleNumber, Rs, Ll, Lmd, Lmq,
+      Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
+}
+
 void DP::Ph3::SynchronGeneratorDQ::setParametersFundamentalPerUnit(
     Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
     Real Rs, Real Ll, Real Lmd, Real Lmq, Real Rfd, Real Llfd, Real Rkd,
@@ -49,7 +79,9 @@ void DP::Ph3::SynchronGeneratorDQ::setParametersFundamentalPerUnit(
 void DP::Ph3::SynchronGeneratorDQ::initialize(Matrix frequencies) {
   SimPowerComp<Complex>::initialize(frequencies);
   mSystemOmega = frequencies(0, 0);
+}
 
+void DP::Ph3::SynchronGeneratorDQ::initializeMatrixAndStates() {
   // #### Compensation ####
   mCompensationOn = false;
   mCompensationCurrent = MatrixComp::Zero(3, 1);

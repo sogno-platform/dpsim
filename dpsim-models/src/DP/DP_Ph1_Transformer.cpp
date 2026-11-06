@@ -33,6 +33,7 @@ SimPowerComp<Complex>::Ptr DP::Ph1::Transformer::clone(String name) {
   copy->setParameters(mNominalVoltagePrimary, mNominalVoltageSecondary,
                       std::abs(**mRatio), std::arg(**mRatio), **mResistance,
                       **mInductance);
+  copy->setTapRatio(tapRatio());
   return copy;
 }
 
@@ -53,7 +54,7 @@ void DP::Ph1::Transformer::setParameters(Real nomVoltagePrimary,
       "Resistance={} [Ohm] Inductance={} [Ohm] (referred to primary side)",
       **mResistance, **mInductance);
   SPDLOG_LOGGER_INFO(mSLog, "Tap Ratio={} [ ] Phase Shift={} [deg]",
-                     std::abs(**mRatio), std::arg(**mRatio));
+                     std::abs(effectiveRatio()), std::arg(effectiveRatio()));
   SPDLOG_LOGGER_INFO(mSLog, "Rated Power ={} [W]", **mRatedPower);
 
   mParametersSet = true;
@@ -93,7 +94,8 @@ void DP::Ph1::Transformer::resolveWindingRoles() {
     break;
   }
 
-  mRatioFromReference = (mReferenceTerminal == 0) ? **mRatio : 1. / **mRatio;
+  mRatioFromReference =
+      (mReferenceTerminal == 0) ? effectiveRatio() : 1. / effectiveRatio();
   mOrientationSign = (mReferenceTerminal == 0) ? 1. : -1.;
 
   if (mReferenceWinding == WindingReference::Auto &&

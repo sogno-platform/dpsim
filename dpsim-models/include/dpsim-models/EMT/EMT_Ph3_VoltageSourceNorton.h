@@ -44,8 +44,9 @@ public:
   void setVoltageRef(Complex voltage) const;
 
   SimPowerComp<Real>::Ptr clone(String name) override;
-  /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency) override {}
+  /// Initializes the source voltage from the solved terminal voltage when no
+  /// explicit voltage reference was provided.
+  void initializeFromNodesAndTerminals(Real frequency) override;
 
   // #### MNA section ####
   /// Initializes internal variables of the component

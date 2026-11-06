@@ -256,19 +256,25 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeParentFromNodesAndTerminals(
   // Initialize control subcomponents
   // current and voltage inputs to PLL and power controller
   Complex vcdq, ircdq;
-  vcdq = Math::rotatingFrame2to1(
-      mVirtualNodes[3]->initialSingleVoltage(),
-      std::arg(mVirtualNodes[3]->initialSingleVoltage()), 0);
-  ircdq = Math::rotatingFrame2to1(
-      -1. * (**mSubResistorC->mIntfCurrent)(0, 0),
-      std::arg(mVirtualNodes[3]->initialSingleVoltage()), 0);
+  // The filter-side virtual node is node 3 only when the optional connection
+  // transformer is present. Without it, use the filter interface quantities
+  // derived above; indexing virtual node 3 in that configuration is invalid.
+  const Complex pllVoltage = mWithConnectionTransformer
+                                 ? mVirtualNodes[3]->initialSingleVoltage()
+                                 : filterInterfaceInitialVoltage;
+  vcdq = Math::rotatingFrame2to1(pllVoltage, std::arg(pllVoltage), 0);
+  ircdq = Math::rotatingFrame2to1(-1. * (**mSubResistorC->mIntfCurrent)(0, 0),
+                                  std::arg(pllVoltage), 0);
   **mVcd = vcdq.real();
   **mVcq = vcdq.imag();
   **mIrcd = ircdq.real();
   **mIrcq = ircdq.imag();
+  const Complex vsdq = Math::rotatingFrame2to1(vsInit, std::arg(pllVoltage), 0);
+  mPowerControllerVSI->initializeSteadyState(**mPref, **mQref, **mIrcd, **mIrcq,
+                                             vsdq.real(), vsdq.imag());
   // angle input
   Matrix matrixStateInit = Matrix::Zero(2, 1);
-  matrixStateInit(0, 0) = std::arg(mVirtualNodes[3]->initialSingleVoltage());
+  matrixStateInit(0, 0) = std::arg(pllVoltage);
   mPLL->setInitialValues(**mVcq, matrixStateInit, Matrix::Zero(2, 1));
 
   SPDLOG_LOGGER_INFO(
@@ -345,9 +351,12 @@ void DP::Ph1::AvVoltageSourceInverterDQ::controlStep(Real time,
                                                      Int timeStepCount) {
   // Transformation interface forward
   Complex vcdq, ircdq;
+  const Complex pllVoltage = mWithConnectionTransformer
+                                 ? mVirtualNodes[3]->singleVoltage()
+                                 : (**mIntfVoltage)(0, 0);
   vcdq = Math::rotatingFrame2to1(
-      mVirtualNodes[3]->singleVoltage(),
-      mPLL->attributeTyped<Matrix>("output_prev")->get()(0, 0), mThetaN);
+      pllVoltage, mPLL->attributeTyped<Matrix>("output_prev")->get()(0, 0),
+      mThetaN);
   ircdq = Math::rotatingFrame2to1(
       -1. * (**mSubResistorC->mIntfCurrent)(0, 0),
       mPLL->attributeTyped<Matrix>("output_prev")->get()(0, 0), mThetaN);

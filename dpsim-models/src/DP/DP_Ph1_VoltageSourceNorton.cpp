@@ -83,7 +83,16 @@ void DP::Ph1::VoltageSourceNorton::mnaCompApplySystemMatrixStamp(
 }
 
 void DP::Ph1::VoltageSourceNorton::initializeFromNodesAndTerminals(
-    Real frequency) {}
+    Real frequency) {
+  // Like the ideal voltage-source model, derive an unspecified source phasor
+  // from its connected power-flow nodes. This also handles set_parameters(0)
+  // when the user wants the operating point to come from power flow.
+  if (**mVoltageRef == Complex(0, 0))
+    **mVoltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);
+
+  (**mIntfVoltage)(0, 0) = **mVoltageRef;
+  (void)frequency;
+}
 
 void DP::Ph1::VoltageSourceNorton::mnaCompApplyRightSideVectorStamp(
     Matrix &rightVector) {

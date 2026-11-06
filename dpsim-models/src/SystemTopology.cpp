@@ -11,6 +11,10 @@
 #include <iostream>
 #include <unordered_map>
 
+#include <dpsim-models/DP/DP_Ph1_Shunt.h>
+#include <dpsim-models/EMT/EMT_Ph3_Shunt.h>
+#include <dpsim-models/SP/SP_Ph1_Load.h>
+#include <dpsim-models/SP/SP_Ph1_Shunt.h>
 #include <dpsim-models/SP/SP_Ph1_SynchronGenerator.h>
 #include <dpsim-models/SystemTopology.h>
 
@@ -95,6 +99,11 @@ void SystemTopology::initWithPowerflow(const SystemTopology &systemPF,
       node->setInitialVoltage(
           std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(nodePF)
               ->singleVoltage());
+      if (domain == CPS::Domain::DP && node->phaseType() == PhaseType::ABC) {
+        if (auto dpNode =
+                std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node))
+          dpNode->setComplexInitialVoltageScale(RMS3PH_TO_PEAK1PH);
+      }
       //SPDLOG_LOGGER_INFO(mSLog, "Updated initial voltage: {}", node->initialSingleVoltage());
     }
   }
@@ -117,6 +126,101 @@ void SystemTopology::initWithPowerflow(const SystemTopology &systemPF,
         terminal->setPower(-genPF->getApparentPower());
       }
       //SPDLOG_LOGGER_INFO(mSLog, "Updated initial power of gen {}: {}", compPF->name(), genPF->getApparentPower());
+    }
+  }
+
+  // Carry terminal powers into matching dynamic components. Node voltages are
+  // already copied above, but several EMT/DP initializers (for example a
+  // current source) also need the PF terminal P/Q. Without this, their
+  // terminals remain at zero power even though the corresponding PF device
+  // has a non-zero operating point. Keep the dedicated synchronous-generator
+  // sign conversion above authoritative.
+  for (auto compPF : systemPF.mComponents) {
+    if (std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(compPF))
+      continue;
+
+    auto pfPowerComp = std::dynamic_pointer_cast<SimPowerComp<Complex>>(compPF);
+    if (!pfPowerComp)
+      continue;
+
+    SimPowerComp<Complex>::Ptr complexComp;
+    SimPowerComp<Real>::Ptr realComp;
+    if (domain == CPS::Domain::DP || domain == CPS::Domain::SP)
+      complexComp = this->component<SimPowerComp<Complex>>(compPF->name());
+    else if (domain == CPS::Domain::EMT)
+      realComp = this->component<SimPowerComp<Real>>(compPF->name());
+
+    const auto &pfTerminals = pfPowerComp->terminals();
+    const UInt targetTerminalCount =
+        complexComp ? complexComp->terminals().size()
+                    : (realComp ? realComp->terminals().size() : 0);
+    const auto pfLoad =
+        std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(pfPowerComp);
+    const auto pfShunt =
+        std::dynamic_pointer_cast<CPS::SP::Ph1::Shunt>(pfPowerComp);
+    const Bool targetIsEmtShunt =
+        realComp &&
+        static_cast<Bool>(std::dynamic_pointer_cast<EMT::Ph3::Shunt>(realComp));
+    if (domain == CPS::Domain::DP && pfShunt && pfTerminals.size() == 1) {
+      if (auto dpShunt = this->component<CPS::DP::Ph1::Shunt>(compPF->name()))
+        dpShunt->setParameters(**pfShunt->mConductance,
+                               **pfShunt->mSusceptance);
+    }
+    UInt targetBusTerminalIdx = 0;
+    Bool targetHasGroundTerminal = false;
+    if (targetTerminalCount == 2) {
+      const auto findGroundTerminal = [](const auto &terminals) {
+        for (UInt terminalIdx = 0; terminalIdx < terminals.size();
+             ++terminalIdx)
+          if (terminals[terminalIdx]->node()->isGround())
+            return terminalIdx;
+        return static_cast<UInt>(terminals.size());
+      };
+      const UInt groundTerminalIdx =
+          complexComp ? findGroundTerminal(complexComp->terminals())
+                      : findGroundTerminal(realComp->terminals());
+      targetHasGroundTerminal = groundTerminalIdx < targetTerminalCount;
+      if (targetHasGroundTerminal)
+        targetBusTerminalIdx = 1 - groundTerminalIdx;
+    }
+    const Bool mapsToGroundedTwoTerminalLoad =
+        (pfLoad || pfShunt) && pfTerminals.size() == 1 &&
+        targetTerminalCount == 2 && targetHasGroundTerminal;
+    if (targetTerminalCount != pfTerminals.size() &&
+        !mapsToGroundedTwoTerminalLoad)
+      continue;
+
+    for (UInt terminalIdx = 0; terminalIdx < pfTerminals.size();
+         ++terminalIdx) {
+      const UInt targetTerminalIdx =
+          mapsToGroundedTwoTerminalLoad ? targetBusTerminalIdx : terminalIdx;
+      Complex terminalPower = pfTerminals[terminalIdx]->singlePower();
+      if (pfLoad && pfTerminals.size() == 1) {
+        // A PF load stores consumer-positive P/Q. EMT shunts consume power
+        // through their admittance stamp and therefore need network-injection
+        // sign; load and current-source equivalents use consumer-positive.
+        const Complex loadPower(**pfLoad->mActivePower,
+                                **pfLoad->mReactivePower);
+        terminalPower = targetIsEmtShunt ? -loadPower : loadPower;
+      } else if (pfShunt && pfTerminals.size() == 1) {
+        // PF shunts stamp admittance directly and may have no terminal power
+        // recorded. Reconstruct power at the connected bus of a grounded
+        // two-terminal equivalent. Loads use consumer sign;
+        // an EMT shunt expects network-injection sign.
+        const Complex voltage =
+            complexComp ? complexComp->terminals()[targetTerminalIdx]
+                              ->initialSingleVoltage()
+                        : realComp->terminals()[targetTerminalIdx]
+                              ->initialSingleVoltage();
+        const Complex consumerPower =
+            std::norm(voltage) *
+            Complex(**pfShunt->mConductance, -(**pfShunt->mSusceptance));
+        terminalPower = targetIsEmtShunt ? -consumerPower : consumerPower;
+      }
+      if (complexComp)
+        complexComp->terminals()[targetTerminalIdx]->setPower(terminalPower);
+      else
+        realComp->terminals()[targetTerminalIdx]->setPower(terminalPower);
     }
   }
 }

@@ -10,9 +10,6 @@
 
 using namespace CPS;
 
-// !!! TODO: 	Adaptions to use in EMT_Ph3 models phase-to-ground peak variables
-// !!! 			with initialization from phase-to-phase RMS variables
-
 EMT::Ph3::VoltageSourceNorton::VoltageSourceNorton(String uid, String name,
                                                    Logger::Level logLevel)
     : MNASimPowerComp<Real>(uid, name, true, true, logLevel),
@@ -32,6 +29,23 @@ void EMT::Ph3::VoltageSourceNorton::setParameters(Complex voltageRef,
   mConductance = 1. / **mResistance;
 
   mParametersSet = true;
+}
+
+void EMT::Ph3::VoltageSourceNorton::initializeFromNodesAndTerminals(
+    Real frequency) {
+  // setParameters() uses phase-to-ground peak voltage, like the source's EMT
+  // waveform. Power-flow voltages are line-to-line RMS, so convert only the
+  // automatically inherited reference.
+  if (Math::abs(**mVoltageRef) == 0) {
+    **mVoltageRef =
+        RMS3PH_TO_PEAK1PH * (initialSingleVoltage(1) - initialSingleVoltage(0));
+  }
+  if (**mSrcFreq <= 0)
+    **mSrcFreq = frequency;
+  if (!(**mResistance > 0) || !std::isfinite(**mResistance))
+    throw std::logic_error(
+        "VoltageSourceNorton requires a positive finite source resistance.");
+  mConductance = 1. / **mResistance;
 }
 
 void EMT::Ph3::VoltageSourceNorton::setVoltageRef(Complex voltage) const {

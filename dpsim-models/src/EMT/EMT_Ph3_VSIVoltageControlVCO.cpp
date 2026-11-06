@@ -156,6 +156,10 @@ void EMT::Ph3::VSIVoltageControlVCO::setControllerParameters(
                      Ki_currCtrl);
 
   mVCO->setParameters(Omega_nominal);
+  mKpVoltageCtrl = Kp_voltageCtrl;
+  mKiVoltageCtrl = Ki_voltageCtrl;
+  mKpCurrCtrl = Kp_currCtrl;
+  mKiCurrCtrl = Ki_currCtrl;
   mVoltageControllerVSI->setControllerParameters(
       Kp_voltageCtrl, Ki_voltageCtrl, Kp_currCtrl, Ki_currCtrl, Omega_nominal);
 }
@@ -194,6 +198,7 @@ void EMT::Ph3::VSIVoltageControlVCO::setInitialStateValues(Real phi_dInit,
 
   mVoltageControllerVSI->setInitialStateValues(phi_dInit, phi_qInit,
                                                gamma_dInit, gamma_qInit);
+  mManualInitialStatesSet = true;
 }
 
 void EMT::Ph3::VSIVoltageControlVCO::initializeParentFromNodesAndTerminals(
@@ -288,7 +293,7 @@ void EMT::Ph3::VSIVoltageControlVCO::initializeParentFromNodesAndTerminals(
     vcdq = Math::parkTransformPowerInvariant(
         theta, filterInterfaceInitialVoltage.real());
     ircdq = Math::parkTransformPowerInvariant(
-        theta, -1 * filterInterfaceInitialCurrent.real());
+        theta, -1 * (filterInterfaceInitialCurrent - icfInit).real());
 
     **mVcd = vcdq(0, 0);
     **mVcq = vcdq(1, 0);
@@ -305,7 +310,7 @@ void EMT::Ph3::VSIVoltageControlVCO::initializeParentFromNodesAndTerminals(
     vcdq = Math::parkTransformPowerInvariant(
         theta, filterInterfaceInitialVoltage.real());
     ircdq = Math::parkTransformPowerInvariant(
-        theta, -1 * filterInterfaceInitialCurrent.real());
+        theta, -1 * (filterInterfaceInitialCurrent - icfInit).real());
 
     **mVcd = vcdq(0, 0);
     **mVcq = vcdq(1, 0);
@@ -315,6 +320,30 @@ void EMT::Ph3::VSIVoltageControlVCO::initializeParentFromNodesAndTerminals(
     // VCO start settings
     mVCO->setInitialValues(**mOmegaN, theta, theta);
   }
+  if (mWithControl && !mManualInitialStatesSet) {
+    const Real theta0 = std::arg(
+        mWithConnectionTransformer ? mVirtualNodes[3]->initialSingleVoltage()
+                                   : mVirtualNodes[2]->initialSingleVoltage());
+    const Matrix sourceDq =
+        Math::parkTransformPowerInvariant(theta0, vsInit.real());
+    const Real phiDInit =
+        (**mIrcd + mKpVoltageCtrl * (**mVcd - **mVdRef)) / mKiVoltageCtrl;
+    const Real phiQInit =
+        (**mIrcq + mKpVoltageCtrl * (**mVcq - **mVqRef)) / mKiVoltageCtrl;
+    const Real iRefD =
+        mKpVoltageCtrl * (**mVdRef - **mVcd) + mKiVoltageCtrl * phiDInit;
+    const Real iRefQ =
+        mKpVoltageCtrl * (**mVqRef - **mVcq) + mKiVoltageCtrl * phiQInit;
+    const Real gammaDInit =
+        (sourceDq(0, 0) - **mVcd + mKpCurrCtrl * (**mIrcd - iRefD)) /
+        mKiCurrCtrl;
+    const Real gammaQInit =
+        (sourceDq(1, 0) - **mVcq + mKpCurrCtrl * (**mIrcq - iRefQ)) /
+        mKiCurrCtrl;
+    mVoltageControllerVSI->setInitialStateValues(phiDInit, phiQInit, gammaDInit,
+                                                 gammaQInit);
+  }
+
   SPDLOG_LOGGER_INFO(
       mSLog,
       "\n--- Initialization from powerflow ---"

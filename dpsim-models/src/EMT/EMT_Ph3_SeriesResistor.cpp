@@ -10,9 +10,6 @@
 
 using namespace CPS;
 
-// !!! TODO: 	Adaptions to use in EMT_Ph3 models phase-to-ground peak variables
-// !!! 			with initialization from phase-to-phase RMS variables
-
 EMT::Ph3::SeriesResistor::SeriesResistor(String uid, String name,
                                          Logger::Level logLevel)
     : MNASimPowerComp<Real>(uid, name, false, true, logLevel),
@@ -30,13 +27,15 @@ SimPowerComp<Real>::Ptr EMT::Ph3::SeriesResistor::clone(String name) {
 
 void EMT::Ph3::SeriesResistor::initializeFromNodesAndTerminals(Real frequency) {
 
-  Complex phasorA = initialSingleVoltage(1) - initialSingleVoltage(0);
-  (**mIntfVoltage)(0, 0) = phasorA.real();
-  Complex alpha(cos(2. / 3. * PI), sin(2. / 3. * PI));
-  (**mIntfVoltage)(1, 0) = Complex(phasorA * pow(alpha, 2)).real();
-  (**mIntfVoltage)(2, 0) = Complex(phasorA * alpha).real();
-
-  **mIntfCurrent = **mIntfVoltage / **mResistance;
+  // Convert line-line RMS PF voltage to balanced phase-ground peak values,
+  // matching EMT::Ph3::Resistor and the time-domain signal convention.
+  MatrixComp vInitABC = MatrixComp::Zero(3, 1);
+  vInitABC(0, 0) =
+      RMS3PH_TO_PEAK1PH * (initialSingleVoltage(1) - initialSingleVoltage(0));
+  vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
+  vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
+  **mIntfVoltage = vInitABC.real();
+  **mIntfCurrent = (vInitABC / **mResistance).real();
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"

@@ -25,8 +25,14 @@ void DP::Ph3::SeriesSwitch::initializeFromNodesAndTerminals(Real frequency) {
   mTerminals[1]->setPhaseType(PhaseType::ABC);
 
   Real impedance = (**mIsClosed) ? **mClosedResistance : **mOpenResistance;
-  **mIntfVoltage = initialVoltage(1) - initialVoltage(0);
-  **mIntfCurrent = **mIntfVoltage / impedance;
+  MatrixComp vInitABC = MatrixComp::Zero(3, 1);
+  vInitABC(0, 0) =
+      RMS3PH_TO_PEAK1PH * (initialSingleVoltage(1) - initialSingleVoltage(0));
+  vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
+  vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
+
+  **mIntfVoltage = vInitABC;
+  **mIntfCurrent = vInitABC / impedance;
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"

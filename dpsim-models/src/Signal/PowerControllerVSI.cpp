@@ -8,6 +8,8 @@
 
 #include <dpsim-models/Signal/PowerControllerVSI.h>
 
+#include <limits>
+
 using namespace CPS;
 using namespace CPS::Signal;
 
@@ -100,6 +102,7 @@ void PowerControllerVSI::setInitialStateValues(Real pInit, Real qInit,
   mPhi_qInit = phi_qInit;
   mGamma_dInit = gamma_dInit;
   mGamma_qInit = gamma_qInit;
+  mInitialStatesExplicit = true;
 
   SPDLOG_LOGGER_INFO(mSLog, "Initial State Value Parameters:");
   SPDLOG_LOGGER_INFO(mSLog, "PInit = {}, QInit = {}", pInit, qInit);
@@ -107,6 +110,31 @@ void PowerControllerVSI::setInitialStateValues(Real pInit, Real qInit,
                      phi_qInit);
   SPDLOG_LOGGER_INFO(mSLog, "Gamma_dInit = {}, Gamma_qInit = {}", gamma_dInit,
                      gamma_qInit);
+}
+
+void PowerControllerVSI::initializeSteadyState(Real pRef, Real qRef, Real iD,
+                                               Real iQ, Real vSourceD,
+                                               Real vSourceQ) {
+  if (mInitialStatesExplicit)
+    return;
+
+  // At equilibrium the power states equal their references, the power-loop
+  // integrators cancel the measured d/q currents, and the current-loop
+  // integrators produce the required converter-side voltage.
+  mPInit = pRef;
+  mQInit = qRef;
+  mPhi_dInit = std::abs(mKiPowerCtrld) > std::numeric_limits<Real>::epsilon()
+                   ? iD / mKiPowerCtrld
+                   : 0.;
+  mPhi_qInit = std::abs(mKiPowerCtrlq) > std::numeric_limits<Real>::epsilon()
+                   ? iQ / mKiPowerCtrlq
+                   : 0.;
+  mGamma_dInit = std::abs(mKiCurrCtrld) > std::numeric_limits<Real>::epsilon()
+                     ? vSourceD / mKiCurrCtrld
+                     : 0.;
+  mGamma_qInit = std::abs(mKiCurrCtrlq) > std::numeric_limits<Real>::epsilon()
+                     ? vSourceQ / mKiCurrCtrlq
+                     : 0.;
 }
 
 void PowerControllerVSI::initializeStateSpaceModel(

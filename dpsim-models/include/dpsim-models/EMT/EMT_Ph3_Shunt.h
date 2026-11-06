@@ -10,6 +10,7 @@
 
 #include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/EMT/EMT_Ph3_Capacitor.h>
+#include <dpsim-models/EMT/EMT_Ph3_Inductor.h>
 #include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
@@ -26,6 +27,8 @@ private:
 
   /// Capacitor between terminal and ground
   std::shared_ptr<Capacitor> mSubCapacitor;
+  /// Inductor between terminal and ground
+  std::shared_ptr<Inductor> mSubInductor;
   /// Resistor between terminal and ground
   std::shared_ptr<Resistor> mSubResistor;
 
