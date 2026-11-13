@@ -977,8 +977,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "rotor_resistance"_a, "stator_inductance"_a, "rotor_inductance"_a,
            "mutual_inductance"_a, "rotor_inertia"_a, "mechanical_damping"_a,
            "mechanical_torque"_a, "initial_electrical_angle"_a = 0.0,
-           "auto_initialize_mechanical_torque"_a =
-               true) // cppcheck-suppress assignBoolToPointer
+           py::arg_v("auto_initialize_mechanical_torque", true, "True"))
       .def("set_mechanical_torque",
            &CPS::EMT::Ph3::SSN_InductionMotor::setMechanicalTorque)
       .def("connect", &CPS::EMT::Ph3::SSN_InductionMotor::connect)
