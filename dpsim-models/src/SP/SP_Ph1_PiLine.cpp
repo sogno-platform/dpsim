@@ -158,10 +158,10 @@ void SP::Ph1::PiLine::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow &Y) {
       }
 
   //set the circuit matrix values
-  Y.coeffRef(bus1, bus1) += mY_element.coeff(0, 0);
-  Y.coeffRef(bus1, bus2) += mY_element.coeff(0, 1);
-  Y.coeffRef(bus2, bus2) += mY_element.coeff(1, 1);
-  Y.coeffRef(bus2, bus1) += mY_element.coeff(1, 0);
+  Math::addToMatrixElement(Y, bus1, bus1, mY_element.coeff(0, 0));
+  Math::addToMatrixElement(Y, bus1, bus2, mY_element.coeff(0, 1));
+  Math::addToMatrixElement(Y, bus2, bus2, mY_element.coeff(1, 1));
+  Math::addToMatrixElement(Y, bus2, bus1, mY_element.coeff(1, 0));
 
   SPDLOG_LOGGER_INFO(mSLog, "#### PF Y matrix stamping #### ");
   SPDLOG_LOGGER_INFO(mSLog, "{}", mY_element);

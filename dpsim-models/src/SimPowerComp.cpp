@@ -15,7 +15,9 @@ SimPowerComp<VarType>::SimPowerComp(String uid, String name,
                                     Logger::Level logLevel)
     : TopologicalPowerComp(uid, name, logLevel),
       mIntfVoltage(mAttributes->create<MatrixVar<VarType>>("v_intf")),
-      mIntfCurrent(mAttributes->create<MatrixVar<VarType>>("i_intf")) {
+      mIntfCurrent(mAttributes->create<MatrixVar<VarType>>("i_intf")),
+      mIntfVoltageValue(&mIntfVoltage->get()),
+      mIntfCurrentValue(&mIntfCurrent->get()) {
   mTerminals.clear();
 }
 

@@ -359,7 +359,7 @@ void EMT::Ph3::Switch::mnaCompPostStep(Real time, Int timeStepCount,
 
 void EMT::Ph3::Switch::mnaCompUpdateVoltage(const Matrix &leftVector) {
   // Voltage across component is defined as V1 - V0.
-  **mIntfVoltage = Matrix::Zero(3, 1);
+  (**mIntfVoltage).setZero();
 
   if (terminalNotGrounded(1)) {
     (**mIntfVoltage)(0, 0) =
@@ -612,9 +612,21 @@ void EMT::Ph3::Switch::updateExponentialTransition(Real time) {
 
 MatrixFixedSize<3, 3> EMT::Ph3::Switch::currentConductanceMatrix() const {
   if (mSwitchingMode == SwitchingMode::Ideal) {
-    MatrixFixedSize<3, 3> conductance = (**mIsClosed)
-                                            ? (**mClosedResistance).inverse()
-                                            : (**mOpenResistance).inverse();
+    const Matrix &resistance =
+        **mIsClosed ? **mClosedResistance : **mOpenResistance;
+    MatrixFixedSize<3, 3> conductance = MatrixFixedSize<3, 3>::Zero();
+    // Per-phase diagonal resistance is the common ideal-switch case. Avoid a
+    // general dynamic 3x3 inverse in each post-step, retaining the inverse
+    // fallback for callers that configure mutual phase coupling.
+    if (resistance(0, 1) == 0.0 && resistance(0, 2) == 0.0 &&
+        resistance(1, 0) == 0.0 && resistance(1, 2) == 0.0 &&
+        resistance(2, 0) == 0.0 && resistance(2, 1) == 0.0) {
+      conductance(0, 0) = 1.0 / resistance(0, 0);
+      conductance(1, 1) = 1.0 / resistance(1, 1);
+      conductance(2, 2) = 1.0 / resistance(2, 2);
+    } else {
+      conductance = resistance.inverse();
+    }
     return conductance;
   }
 

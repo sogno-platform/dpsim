@@ -31,7 +31,9 @@ struct Csv {
 };
 
 Csv readCsv(const String &name) {
-  const String path = "logs/" + name + "/" + name + ".csv";
+  String path = "logs/" + name + "/" + name + ".csv";
+  if (!std::filesystem::exists(path))
+    path = "logs/" + name + ".csv";
   std::ifstream file(path);
   if (!file)
     throw std::runtime_error("Could not open validation output " + path);
@@ -152,6 +154,28 @@ int main() {
           expectedControlledCurrent, 1e-10)))
     throw std::runtime_error(
         "ControlledCurrentSource did not initialize from power-flow data.");
+
+  auto controlCurrentShunt = EMT::Ph3::Resistor::make("current_source_load");
+  controlCurrentShunt->setParameters(10. * Matrix::Identity(3, 3));
+  controlCurrentShunt->connect({controlCurrentBus, SimNode<Real>::GND});
+  SystemTopology controlCurrentSimulationSystem(
+      frequency, {controlCurrentBus},
+      {controlCurrentSource, controlCurrentShunt});
+  auto controlCurrentLogger =
+      DataLogger::make(String("EMT_ControlledCurrentSource_Runtime"));
+  controlCurrentLogger->logAttribute("v_bus",
+                                     controlCurrentBus->attribute("v"));
+  controlCurrentLogger->logAttribute("i_source",
+                                     controlCurrentSource->attribute("i_intf"));
+  Logger::setLogDir("logs/EMT_ControlledCurrentSource_Runtime");
+  Simulation controlCurrentSimulation("EMT_ControlledCurrentSource_Runtime",
+                                      Logger::Level::off);
+  controlCurrentSimulation.setSystem(controlCurrentSimulationSystem);
+  controlCurrentSimulation.setDomain(Domain::EMT);
+  controlCurrentSimulation.setTimeStep(timeStep);
+  controlCurrentSimulation.setFinalTime(finalTime);
+  controlCurrentSimulation.addLogger(controlCurrentLogger);
+  controlCurrentSimulation.run();
 
   auto idealGenerator = EMT::Ph3::SynchronGeneratorIdeal::make("Slack");
   auto idealGeneratorBus = SimNode<Real>::make("source_bus", PhaseType::ABC);

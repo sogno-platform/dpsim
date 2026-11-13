@@ -41,20 +41,24 @@ EMT::Ph3::FourTerminalVTypeSSNComp::terminalIncidenceMatrix() const {
 
 void EMT::Ph3::FourTerminalVTypeSSNComp::mnaCompUpdateVoltage(
     const Matrix &leftVector) {
+  for (UInt phase = 0; phase < 3; ++phase) {
+    Real v0 = 0.0;
+    Real v1 = 0.0;
+    Real v2 = 0.0;
+    Real v3 = 0.0;
 
-  Matrix vTerm = Matrix::Zero(12, 1);
+    if (terminalNotGrounded(0))
+      v0 = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, phase));
+    if (terminalNotGrounded(1))
+      v1 = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, phase));
+    if (terminalNotGrounded(2))
+      v2 = Math::realFromVectorElement(leftVector, matrixNodeIndex(2, phase));
+    if (terminalNotGrounded(3))
+      v3 = Math::realFromVectorElement(leftVector, matrixNodeIndex(3, phase));
 
-  for (UInt terminal = 0; terminal < 4; ++terminal) {
-    if (!terminalNotGrounded(terminal))
-      continue;
-
-    for (UInt phase = 0; phase < 3; ++phase) {
-      vTerm(3 * terminal + phase, 0) = Math::realFromVectorElement(
-          leftVector, matrixNodeIndex(terminal, phase));
-    }
+    (**mIntfVoltage)(phase, 0) = v2 - v0;
+    (**mIntfVoltage)(phase + 3, 0) = v3 - v1;
   }
-
-  **mIntfVoltage = mTerminalIncidence * vTerm;
 }
 
 MatrixComp
@@ -110,18 +114,20 @@ void EMT::Ph3::FourTerminalVTypeSSNComp::mnaCompApplySystemMatrixStamp(
 
 void EMT::Ph3::FourTerminalVTypeSSNComp::mnaCompApplyRightSideVectorStamp(
     Matrix &rightVector) {
+  for (UInt phase = 0; phase < 3; ++phase) {
+    if (terminalNotGrounded(0))
+      Math::setVectorElement(rightVector, matrixNodeIndex(0, phase),
+                             mYHist(phase, 0));
+    if (terminalNotGrounded(2))
+      Math::setVectorElement(rightVector, matrixNodeIndex(2, phase),
+                             -mYHist(phase, 0));
 
-  const Matrix iHistTerm = mTerminalIncidence.transpose() * mYHist;
-
-  for (UInt terminal = 0; terminal < 4; ++terminal) {
-    if (!terminalNotGrounded(terminal))
-      continue;
-
-    for (UInt phase = 0; phase < 3; ++phase) {
-      const UInt idx = 3 * terminal + phase;
-
-      Math::setVectorElement(rightVector, matrixNodeIndex(terminal, phase),
-                             -iHistTerm(idx, 0));
-    }
+    const UInt outputIndex = phase + 3;
+    if (terminalNotGrounded(1))
+      Math::setVectorElement(rightVector, matrixNodeIndex(1, phase),
+                             mYHist(outputIndex, 0));
+    if (terminalNotGrounded(3))
+      Math::setVectorElement(rightVector, matrixNodeIndex(3, phase),
+                             -mYHist(outputIndex, 0));
   }
 }

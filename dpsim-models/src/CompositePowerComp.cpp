@@ -2,6 +2,9 @@
 
 #include <dpsim-models/CompositePowerComp.h>
 
+#include <algorithm>
+#include <type_traits>
+
 using namespace CPS;
 
 template <typename VarType>
@@ -29,6 +32,7 @@ void CompositePowerComp<VarType>::addMNASubComponent(
 
     if (contributeToRightVector) {
       this->mRightVectorStamps.push_back(mnasubcomp->mRightVector);
+      this->mRightVectorStampComponents.push_back(subc);
     }
 
     switch (preStepOrder) {
@@ -69,6 +73,64 @@ void CompositePowerComp<VarType>::mnaCompInitialize(
 
   **this->mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 
+  // RHS stamps are dense vectors for historical reasons, but a subcomponent
+  // can only write at its connected terminal and virtual-node indices. Cache
+  // those locations once so the composite can aggregate the stamps without
+  // clearing and adding full network-sized vectors on every step.
+  const UInt vectorSize = static_cast<UInt>(leftVector->get().rows());
+  const UInt baseRowLimit = [&]() {
+    if constexpr (std::is_same_v<VarType, Complex>)
+      return vectorSize / (2 * this->mNumFreqs);
+    else
+      return vectorSize;
+  }();
+  auto appendNodeIndices = [baseRowLimit](SimPowerComp<VarType> &component,
+                                          std::vector<UInt> &indices) {
+    for (UInt terminal = 0; terminal < component.terminalNumberConnected();
+         ++terminal) {
+      if (component.node(terminal)->isGround())
+        continue;
+      for (UInt index : component.matrixNodeIndices(terminal)) {
+        if (index < baseRowLimit)
+          indices.push_back(index);
+      }
+    }
+    for (UInt virtualNode = 0; virtualNode < component.virtualNodesNumber();
+         ++virtualNode) {
+      for (UInt index : component.virtualMatrixNodeIndices(virtualNode)) {
+        if (index < baseRowLimit)
+          indices.push_back(index);
+      }
+    }
+    // A nested composite may contribute at its children's internal virtual
+    // nodes as well as at its own terminals. Its MNA initialization has
+    // already cached those rows before this parent is initialized.
+    if (auto nested = dynamic_cast<CompositePowerComp<VarType> *>(&component))
+      indices.insert(indices.end(), nested->mRightVectorAffectedIndices.begin(),
+                     nested->mRightVectorAffectedIndices.end());
+    std::sort(indices.begin(), indices.end());
+    indices.erase(std::unique(indices.begin(), indices.end()), indices.end());
+  };
+
+  mRightVectorStampIndices.clear();
+  mRightVectorStampIndices.reserve(mRightVectorStampComponents.size());
+  mRightVectorAffectedIndices.clear();
+  appendNodeIndices(*this, mRightVectorAffectedIndices);
+  for (const auto &component : mRightVectorStampComponents) {
+    std::vector<UInt> indices;
+    appendNodeIndices(*component, indices);
+    mRightVectorAffectedIndices.insert(mRightVectorAffectedIndices.end(),
+                                       indices.begin(), indices.end());
+    mRightVectorStampIndices.push_back(std::move(indices));
+  }
+  std::sort(mRightVectorAffectedIndices.begin(),
+            mRightVectorAffectedIndices.end());
+  mRightVectorAffectedIndices.erase(
+      std::unique(mRightVectorAffectedIndices.begin(),
+                  mRightVectorAffectedIndices.end()),
+      mRightVectorAffectedIndices.end());
+  mRightVectorStampIndicesInitialized = true;
+
   mnaParentInitialize(omega, timeStep, leftVector);
 }
 
@@ -84,22 +146,72 @@ void CompositePowerComp<VarType>::mnaCompApplySystemMatrixStamp(
 template <typename VarType>
 void CompositePowerComp<VarType>::mnaCompApplyRightSideVectorStamp(
     Matrix &rightVector) {
-  rightVector.setZero();
-  for (auto stamp : mRightVectorStamps) {
-    if ((**stamp).size() != 0) {
-      rightVector += **stamp;
+  if (!mRightVectorStampIndicesInitialized) {
+    rightVector.setZero();
+    for (const auto &stamp : mRightVectorStamps) {
+      if ((**stamp).size() != 0)
+        rightVector += **stamp;
+    }
+  } else {
+    if constexpr (std::is_same_v<VarType, Complex>) {
+      for (UInt freq = 0; freq < this->mNumFreqs; ++freq)
+        for (UInt index : mRightVectorAffectedIndices)
+          Math::setVectorElement(rightVector, index, Complex(0., 0.),
+                                 this->mNumFreqs, freq);
+    } else {
+      for (UInt index : mRightVectorAffectedIndices)
+        rightVector(index, 0) = 0.;
+    }
+    for (std::size_t stampIndex = 0; stampIndex < mRightVectorStamps.size();
+         ++stampIndex) {
+      const auto &stamp = mRightVectorStamps[stampIndex];
+      if ((**stamp).size() == 0)
+        continue;
+      if constexpr (std::is_same_v<VarType, Complex>) {
+        for (UInt freq = 0; freq < this->mNumFreqs; ++freq)
+          for (UInt index : mRightVectorStampIndices[stampIndex])
+            Math::addToVectorElement(rightVector, index,
+                                     Math::complexFromVectorElement(
+                                         **stamp, index, this->mNumFreqs, freq),
+                                     this->mNumFreqs, freq);
+      } else {
+        for (UInt index : mRightVectorStampIndices[stampIndex])
+          rightVector(index, 0) += (**stamp)(index, 0);
+      }
     }
   }
   mnaParentApplyRightSideVectorStamp(rightVector);
 }
 
 template <typename VarType>
+void CompositePowerComp<VarType>::mnaAddCompactRightSideVectorStamp(
+    Matrix &rightVector) {
+  if (!mRightVectorStampIndicesInitialized) {
+    rightVector += **this->mRightVector;
+    return;
+  }
+
+  const Matrix &stamp = **this->mRightVector;
+  if constexpr (std::is_same_v<VarType, Complex>) {
+    for (UInt freq = 0; freq < this->mNumFreqs; ++freq)
+      for (UInt index : mRightVectorAffectedIndices)
+        Math::addToVectorElement(
+            rightVector, index,
+            Math::complexFromVectorElement(stamp, index, this->mNumFreqs, freq),
+            this->mNumFreqs, freq);
+  } else {
+    for (UInt index : mRightVectorAffectedIndices)
+      rightVector(index, 0) += stamp(index, 0);
+  }
+}
+
+template <typename VarType>
 void CompositePowerComp<VarType>::mnaCompPreStep(Real time, Int timeStepCount) {
-  for (auto subComp : mSubcomponentsPreStepBeforeParent) {
+  for (const auto &subComp : mSubcomponentsPreStepBeforeParent) {
     subComp->mnaPreStep(time, timeStepCount);
   }
   mnaParentPreStep(time, timeStepCount);
-  for (auto subComp : mSubcomponentsPreStepAfterParent) {
+  for (const auto &subComp : mSubcomponentsPreStepAfterParent) {
     subComp->mnaPreStep(time, timeStepCount);
   }
 }
@@ -107,11 +219,11 @@ void CompositePowerComp<VarType>::mnaCompPreStep(Real time, Int timeStepCount) {
 template <typename VarType>
 void CompositePowerComp<VarType>::mnaCompPostStep(
     Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
-  for (auto subComp : mSubcomponentsPostStepBeforeParent) {
+  for (const auto &subComp : mSubcomponentsPostStepBeforeParent) {
     subComp->mnaPostStep(time, timeStepCount, leftVector);
   }
   mnaParentPostStep(time, timeStepCount, leftVector);
-  for (auto subComp : mSubcomponentsPostStepAfterParent) {
+  for (const auto &subComp : mSubcomponentsPostStepAfterParent) {
     subComp->mnaPostStep(time, timeStepCount, leftVector);
   }
 }

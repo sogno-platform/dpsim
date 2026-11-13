@@ -92,10 +92,10 @@ void SP::Ph1::RXLine::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow &Y) {
       }
 
   //set the circuit matrix values
-  Y.coeffRef(bus1, bus1) += mY_element.coeff(0, 0);
-  Y.coeffRef(bus1, bus2) += mY_element.coeff(0, 1);
-  Y.coeffRef(bus2, bus1) += mY_element.coeff(1, 0);
-  Y.coeffRef(bus2, bus2) += mY_element.coeff(1, 1);
+  Math::addToMatrixElement(Y, bus1, bus1, mY_element.coeff(0, 0));
+  Math::addToMatrixElement(Y, bus1, bus2, mY_element.coeff(0, 1));
+  Math::addToMatrixElement(Y, bus2, bus1, mY_element.coeff(1, 0));
+  Math::addToMatrixElement(Y, bus2, bus2, mY_element.coeff(1, 1));
 }
 
 void SP::Ph1::RXLine::updateBranchFlow(VectorComp &current,

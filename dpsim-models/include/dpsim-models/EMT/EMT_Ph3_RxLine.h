@@ -14,6 +14,8 @@
 #include <dpsim-models/EMT/EMT_Ph3_Resistor.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
+#include <array>
+
 namespace CPS {
 namespace EMT {
 namespace Ph3 {
@@ -22,6 +24,13 @@ class RxLine : public CompositePowerComp<Real>,
                public Base::Ph3::PiLine,
                public SharedFactory<RxLine> {
 protected:
+  Bool mUseSubcomponents = true;
+  Attribute<Matrix>::Ptr mDirectState;
+  Matrix mDirectInductorAdmittance = Matrix::Zero(3, 3);
+  Matrix mDirectHistory = Matrix::Zero(3, 1);
+  std::array<std::array<UInt, 3>, 2> mDirectTerminalIndices{};
+  std::array<UInt, 3> mDirectMidpointIndices{};
+  std::array<Bool, 2> mDirectTerminalConnected{};
   /// True after createSubComponents() runs; prevents double-construction.
   /// Inductance submodel
   std::shared_ptr<Inductor> mSubInductor;
@@ -33,6 +42,12 @@ protected:
 public:
   /// Defines UID, name, logging level
   RxLine(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+  /// Optional direct MNA path; the legacy constructor keeps child components.
+  RxLine(String uid, String name, Bool useSubcomponents,
+         Logger::Level logLevel = Logger::Level::off);
+  RxLine(String name, Bool useSubcomponents,
+         Logger::Level logLevel = Logger::Level::off)
+      : RxLine(name, name, useSubcomponents, logLevel) {}
   /// Defines name, component parameters and logging level
   RxLine(String name, Logger::Level logLevel = Logger::Level::off)
       : RxLine(name, name, logLevel) {}
@@ -42,6 +57,13 @@ public:
   // #### General ####
   /// Constructs and registers MNA subcomponents; idempotent.
   void createSubComponents() override;
+  void mnaParentInitialize(Real omega, Real timeStep,
+                           Attribute<Matrix>::Ptr leftVector) override;
+  void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void cacheDirectMatrixIndices();
+  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
+  Bool mnaHasCompactRightSideVectorStamp() const override;
+  void mnaAddCompactRightSideVectorStamp(Matrix &rightVector) override;
   /// Derives values from power flow data and pushes them to subcomponents
   void initializeParentFromNodesAndTerminals(Real frequency) override;
 

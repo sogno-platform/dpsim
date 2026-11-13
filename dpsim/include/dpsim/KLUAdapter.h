@@ -13,6 +13,7 @@ extern "C" {
 }
 
 #include <bitset>
+#include <cstdint>
 #include <fstream>
 #include <iostream>
 #include <list>
@@ -53,6 +54,14 @@ class KLUAdapter : public DirectLinearSolver {
   /// Temporary value to store the number of nonzeros
   Int nnz;
 
+  /// KLU operates natively on compressed-column storage. DPSim keeps the
+  /// stamping matrix row-major, so retain a column-major mirror and a stable
+  /// value-index map for coefficient-only updates.
+  CPS::SparseMatrix mKluMatrix;
+  std::vector<Int> mRowToKluValueIndex;
+
+  void syncKluValues(const SparseMatrix &systemMatrix);
+
 public:
   /// Destructor
   ~KLUAdapter() override;
@@ -81,6 +90,9 @@ public:
 
   /// solution function for a right hand side
   Matrix solve(Matrix &rightSideVector) override;
+
+  /// Solve into caller-owned storage to avoid per-step matrix allocation.
+  void solveInto(Matrix &rightSideVector, Matrix &solution) override;
 
 protected:
   /// Function to print matrix in MatrixMarket's coo format

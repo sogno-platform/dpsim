@@ -11,12 +11,21 @@
 #include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/DP/DP_Ph1_Capacitor.h>
 #include <dpsim-models/DP/DP_Ph1_Resistor.h>
+#include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
 namespace DP {
 namespace Ph1 {
 
 class Shunt : public CompositePowerComp<Complex>, public SharedFactory<Shunt> {
+private:
+  Bool mUseSubcomponents = true;
+  Real mDirectCapacitance = 0.;
+  MatrixComp mDirectEquivCond;
+  MatrixComp mDirectPrevVoltCoeff;
+  MatrixComp mDirectCapCurrent;
+  MatrixComp mDirectHistory;
+
 public:
   /// Conductance [S]
   const Attribute<Real>::Ptr mConductance;
@@ -31,10 +40,15 @@ public:
 public:
   /// Defines UID, name, component parameters and logging level
   Shunt(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+  Shunt(String uid, String name, Bool useSubcomponents,
+        Logger::Level logLevel = Logger::Level::off);
 
   /// Defines name and logging level
   Shunt(String name, Logger::Level logLevel = Logger::Level::off)
       : Shunt(name, name, logLevel) {}
+  Shunt(String name, Bool useSubcomponents,
+        Logger::Level logLevel = Logger::Level::off)
+      : Shunt(name, name, useSubcomponents, logLevel) {}
 
   // #### General ####
   /// Set shunt specific parameters
@@ -42,7 +56,11 @@ public:
 
   // #### MNA section ####
   /// Initializes component from power flow data
-  void initializeParentFromNodesAndTerminals(Real frequency);
+  void initializeParentFromNodesAndTerminals(Real frequency) override;
+  void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaParentInitialize(Real omega, Real timeStep,
+                           Attribute<Matrix>::Ptr leftVector) override;
   /// Add MNA pre step dependencies
   void mnaParentAddPreStepDependencies(
       AttributeBase::List &prevStepDependencies,

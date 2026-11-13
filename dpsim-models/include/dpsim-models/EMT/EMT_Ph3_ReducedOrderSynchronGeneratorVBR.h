@@ -27,15 +27,21 @@ public:
   Matrix mIvbr;
 
 protected:
+  Matrix *mVdq0Value = nullptr;
+  Matrix *mIdq0Value = nullptr;
+  Real *mEfValue = nullptr;
+
   /// Resistance matrix in dq0 reference frame
   MatrixFixedSize<3, 3> mResistanceMatrixDq0;
 
   /// Conductance matrix
   MatrixFixedSize<3, 3> mConductanceMatrix;
+  /// Fixed dq0 conductance; the abc conductance is obtained by rotation.
+  MatrixFixedSize<3, 3> mConductanceMatrixDq0;
 
   ///
-  Matrix mAbcToDq0;
-  Matrix mDq0ToAbc;
+  MatrixFixedSize<3, 3> mAbcToDq0;
+  MatrixFixedSize<3, 3> mDq0ToAbc;
 
   /// Constructor
   ReducedOrderSynchronGeneratorVBR(const String &uid, const String &name,
@@ -52,13 +58,18 @@ protected:
   ///
   void calculateResistanceMatrix();
   /// Park Transformation according to Kundur
-  Matrix get_parkTransformMatrix() const;
+  MatrixFixedSize<3, 3> get_parkTransformMatrix() const;
   /// Inverse Park Transformation according to Kundur
-  Matrix get_inverseParkTransformMatrix() const;
+  MatrixFixedSize<3, 3> get_inverseParkTransformMatrix() const;
+  /// Update both transforms while calculating each phase angle once.
+  void updateParkTransformMatrices();
 
   // ### MNA Section ###
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
+  /// Accumulate only the three source entries instead of its full-sized stamp.
+  Bool mnaHasCompactRightSideVectorStamp() const override { return true; }
+  void mnaAddCompactRightSideVectorStamp(Matrix &rightVector) override;
   void mnaCompPostStep(const Matrix &leftVector) override;
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override;
@@ -66,6 +77,7 @@ protected:
 public:
   /// Mark that parameter changes so that system matrix is updated
   Bool hasParameterChanged() override { return true; };
+  Bool hasContinuouslyChangingSystemMatrix() const override { return true; };
 };
 } // namespace Ph3
 } // namespace EMT

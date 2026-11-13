@@ -52,6 +52,7 @@ MnaSolver<VarType>::getStateSpaceExtractor() const {
 }
 
 template <typename VarType> void MnaSolver<VarType>::initialize() {
+  CPS::Math::ScopedZeroSkipping zeroSkippingScope(mZeroSkipping);
   // TODO: check that every system matrix has the same dimensions
   SPDLOG_LOGGER_INFO(mSLog, "---- Start initialization ----");
   mLeftVectorLog->start();
@@ -67,6 +68,7 @@ template <typename VarType> void MnaSolver<VarType>::initialize() {
     }
   } else {
     mLeftSideVector = AttributeStatic<Matrix>::make();
+    mLeftSideVectorValue = &mLeftSideVector->get();
   }
 
   SPDLOG_LOGGER_INFO(mSLog, "-- Process topology");
@@ -247,6 +249,12 @@ template <> void MnaSolver<Complex>::initializeComponents() {
       if (stamp.size() != 0)
         mRightVectorStamps.push_back(&stamp);
     }
+    // Switch interfaces are stored separately from mMNAComponents, but their
+    // matrix node indices and DP state must still be initialized before the
+    // solver builds the per-frequency matrices for each switch combination.
+    for (auto sw : mMNAIntfSwitches)
+      sw->mnaInitializeHarm(mSystem.mSystemOmega, mTimeStep,
+                            mLeftSideVectorHarm);
     // Initialize nodes
     for (UInt nodeIdx = 0; nodeIdx < mNodes.size(); ++nodeIdx) {
       mNodes[nodeIdx]->mnaInitializeHarm(mLeftSideVectorHarm);
@@ -401,8 +409,9 @@ void MnaSolver<VarType>::initializeStateSpaceExtractor() {
 
 template <typename VarType>
 Bool MnaSolver<VarType>::hasVariableComponentChanged() {
-  for (auto varElem : mVariableComps) {
-    if (varElem->hasParameterChanged()) {
+  for (UInt i = 0; i < mVariableComps.size(); ++i) {
+    auto &varElem = mVariableComps[i];
+    if (mVariableCompAlwaysDirty[i] || varElem->hasParameterChanged()) {
       auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(varElem);
       SPDLOG_LOGGER_DEBUG(
           mSLog, "Component ({:s} {:s}) value changed -> Update System Matrix",
@@ -457,6 +466,9 @@ void MnaSolver<VarType>::resolveSystemMatrixRecomputationMode() {
     break;
 
   case Mode::Disabled:
+    if (!mNonlinearComps.empty())
+      throw CPS::SystemError("Cannot disable matrix recomputation with "
+                             "nonlinear Newton components.");
     mSystemMatrixRecomputationEnabled = false;
 
     if (hasRecomputationComp) {
@@ -502,8 +514,18 @@ template <typename VarType> void MnaSolver<VarType>::identifyTopologyObjects() {
 
     auto varComp =
         std::dynamic_pointer_cast<CPS::MNAVariableCompInterface>(comp);
+    auto nonlinear =
+        std::dynamic_pointer_cast<CPS::MNANonlinearCompInterface>(comp);
+    if (nonlinear) {
+      if (!varComp || mDomain != CPS::Domain::EMT)
+        throw CPS::SystemError(
+            "Nonlinear Newton components require variable-matrix EMT MNA.");
+      mNonlinearComps.push_back(nonlinear);
+    }
     if (varComp) {
       mVariableComps.push_back(varComp);
+      mVariableCompAlwaysDirty.push_back(
+          varComp->hasContinuouslyChangingSystemMatrix());
       auto mnaComp = std::dynamic_pointer_cast<CPS::MNAInterface>(varComp);
       if (mnaComp)
         mMNAIntfVariableComps.push_back(mnaComp);
@@ -575,8 +597,9 @@ template <> void MnaSolver<Complex>::createEmptyVectors() {
     for (Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
       mRightSideVectorHarm.push_back(
           Matrix::Zero(2 * (mNumMatrixNodeIndices), 1));
-      mLeftSideVectorHarm.push_back(AttributeStatic<Matrix>::make(
-          Matrix::Zero(2 * (mNumMatrixNodeIndices), 1)));
+      if (mLeftSideVectorHarm.size() <= static_cast<std::size_t>(freq))
+        mLeftSideVectorHarm.push_back(AttributeStatic<Matrix>::make());
+      **mLeftSideVectorHarm[freq] = Matrix::Zero(2 * mNumMatrixNodeIndices, 1);
     }
   } else {
     mRightSideVector = Matrix::Zero(
@@ -779,12 +802,12 @@ template <typename VarType> Task::List MnaSolver<VarType>::getTasks() {
     for (auto task : node->mnaTasks())
       l.push_back(task);
   }
-  // TODO signal components should be moved out of MNA solver
   for (auto comp : mSimSignalComps) {
     for (auto task : comp->getTasks()) {
       l.push_back(task);
     }
   }
+
   if (mFrequencyParallel) {
     for (UInt i = 0; i < mSystem.mFrequencies.size(); ++i)
       l.push_back(createSolveTaskHarm(i));

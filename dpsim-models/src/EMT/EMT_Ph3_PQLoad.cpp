@@ -11,12 +11,10 @@ using namespace CPS;
 
 namespace {
 
-bool isFiniteMatrix(const Matrix &matrix) {
-  for (Matrix::Index idx = 0; idx < matrix.size(); ++idx) {
-    if (!Math::isFinite(matrix.data()[idx]))
-      return false;
-  }
-  return true;
+bool isFinitePhaseVector(const Matrix &matrix) {
+  return matrix.rows() == 3 && matrix.cols() == 1 &&
+         Math::isFinite(matrix(0, 0)) && Math::isFinite(matrix(1, 0)) &&
+         Math::isFinite(matrix(2, 0));
 }
 
 } // namespace
@@ -101,32 +99,56 @@ Matrix EMT::Ph3::PQLoad::quadratureVoltage(const Matrix &voltage) {
   return voltageQuadrature;
 }
 
-Matrix EMT::Ph3::PQLoad::calculateCurrent(const Matrix &voltage) const {
-  if (!isFiniteMatrix(voltage))
-    return Matrix::Zero(3, 1);
+MatrixFixedSize<3, 1>
+EMT::Ph3::PQLoad::calculateCurrent(const Matrix &voltage) const {
+  if (!isFinitePhaseVector(voltage))
+    return MatrixFixedSize<3, 1>::Zero();
 
-  Matrix voltageNoZeroSequence = voltage;
-  voltageNoZeroSequence.array() -= voltageNoZeroSequence.mean();
-
-  const Matrix voltageQuadrature = quadratureVoltage(voltageNoZeroSequence);
+  const Real phaseA = voltage(0, 0);
+  const Real phaseB = voltage(1, 0);
+  const Real phaseC = voltage(2, 0);
+  const Real meanVoltage = (phaseA + phaseB + phaseC) / 3.0;
+  const Real voltageA = phaseA - meanVoltage;
+  const Real voltageB = phaseB - meanVoltage;
+  const Real voltageC = phaseC - meanVoltage;
+  constexpr Real inverseSqrtThree = 0.57735026918962576451;
+  const Real quadratureA = (voltageB - voltageC) * inverseSqrtThree;
+  const Real quadratureB = (voltageC - voltageA) * inverseSqrtThree;
+  const Real quadratureC = (voltageA - voltageB) * inverseSqrtThree;
+  const Real activePower = **mActivePower;
+  const Real reactivePower = **mReactivePower;
   const Real minimumVoltage = **mMinimumVoltagePerUnit * **mNomVoltage;
-  const Real denominator = std::max(voltageNoZeroSequence.squaredNorm(),
-                                    minimumVoltage * minimumVoltage);
+  const Real denominator =
+      std::max(voltageA * voltageA + voltageB * voltageB + voltageC * voltageC,
+               minimumVoltage * minimumVoltage);
 
-  return (**mActivePower * voltageNoZeroSequence +
-          **mReactivePower * voltageQuadrature) /
-         denominator;
+  MatrixFixedSize<3, 1> current;
+  current(0, 0) =
+      (activePower * voltageA + reactivePower * quadratureA) / denominator;
+  current(1, 0) =
+      (activePower * voltageB + reactivePower * quadratureB) / denominator;
+  current(2, 0) =
+      (activePower * voltageC + reactivePower * quadratureC) / denominator;
+  return current;
 }
 
 void EMT::Ph3::PQLoad::updateMeasuredPower() {
-  Matrix voltageNoZeroSequence = **mIntfVoltage;
-  voltageNoZeroSequence.array() -= voltageNoZeroSequence.mean();
-  const Matrix voltageQuadrature = quadratureVoltage(voltageNoZeroSequence);
+  const Matrix &voltage = **mIntfVoltage;
+  const Matrix &current = **mIntfCurrent;
+  const Real meanVoltage = voltage.mean();
+  const Real voltageA = voltage(0, 0) - meanVoltage;
+  const Real voltageB = voltage(1, 0) - meanVoltage;
+  const Real voltageC = voltage(2, 0) - meanVoltage;
+  constexpr Real inverseSqrtThree = 0.57735026918962576451;
+  const Real quadratureA = (voltageB - voltageC) * inverseSqrtThree;
+  const Real quadratureB = (voltageC - voltageA) * inverseSqrtThree;
+  const Real quadratureC = (voltageA - voltageB) * inverseSqrtThree;
 
-  **mMeasuredActivePower =
-      voltageNoZeroSequence.cwiseProduct(**mIntfCurrent).sum();
-  **mMeasuredReactivePower =
-      voltageQuadrature.cwiseProduct(**mIntfCurrent).sum();
+  **mMeasuredActivePower = voltageA * current(0, 0) + voltageB * current(1, 0) +
+                           voltageC * current(2, 0);
+  **mMeasuredReactivePower = quadratureA * current(0, 0) +
+                             quadratureB * current(1, 0) +
+                             quadratureC * current(2, 0);
 }
 
 void EMT::Ph3::PQLoad::initializeFromNodesAndTerminals(Real frequency) {
@@ -187,8 +209,17 @@ void EMT::Ph3::PQLoad::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {
   }
 }
 
+void EMT::Ph3::PQLoad::mnaAddCompactRightSideVectorStamp(Matrix &rightVector) {
+  if (!terminalNotGrounded(0))
+    return;
+
+  for (UInt phase = 0; phase < 3; ++phase)
+    Math::addToVectorElement(rightVector, matrixNodeIndex(0, phase),
+                             -(**mIntfCurrent)(phase, 0));
+}
+
 void EMT::Ph3::PQLoad::mnaCompUpdateVoltage(const Matrix &leftVector) {
-  **mIntfVoltage = Matrix::Zero(3, 1);
+  (**mIntfVoltage).setZero();
   if (!terminalNotGrounded(0))
     return;
 
@@ -201,8 +232,6 @@ void EMT::Ph3::PQLoad::mnaCompUpdateVoltage(const Matrix &leftVector) {
 void EMT::Ph3::PQLoad::mnaCompPreStep(Real time, Int timeStepCount) {
   **mNumIter = 0;
   **mIntfCurrent = calculateCurrent(**mIntfVoltage);
-  (**mRightVector).setZero();
-  mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void EMT::Ph3::PQLoad::mnaCompPostStep(Real time, Int timeStepCount,
@@ -249,16 +278,21 @@ void EMT::Ph3::PQLoad::updateVoltage(const Matrix &leftVector) {
 }
 
 bool EMT::Ph3::PQLoad::requiresIteration() {
-  if (!isFiniteMatrix(**mIntfVoltage) || !isFiniteMatrix(**mIntfCurrent))
+  if (!isFinitePhaseVector(**mIntfVoltage) ||
+      !isFinitePhaseVector(**mIntfCurrent))
     return false;
 
-  const Matrix targetCurrent = calculateCurrent(**mIntfVoltage);
+  const MatrixFixedSize<3, 1> targetCurrent = calculateCurrent(**mIntfVoltage);
   const Real currentBase = std::hypot(**mActivePower, **mReactivePower) /
                            std::max(**mNomVoltage, 1.0);
   const Real currentScale =
       std::max({targetCurrent.norm(), currentBase, 1e-12});
-  const Real relativeError =
-      (targetCurrent - **mIntfCurrent).norm() / currentScale;
+  const Matrix &current = **mIntfCurrent;
+  const Real currentError =
+      std::hypot(targetCurrent(0, 0) - current(0, 0),
+                 std::hypot(targetCurrent(1, 0) - current(1, 0),
+                            targetCurrent(2, 0) - current(2, 0)));
+  const Real relativeError = currentError / currentScale;
 
   if (relativeError <= mTolerance)
     return false;

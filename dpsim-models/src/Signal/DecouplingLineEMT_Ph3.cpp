@@ -68,6 +68,15 @@ void DecouplingLineEMT_Ph3::initialize(Real omega, Real timeStep) {
   mAlpha = 1 - (mBufSize - mDelay / timeStep);
   SPDLOG_LOGGER_INFO(mSLog, "bufsize {} alpha {}", mBufSize, mAlpha);
 
+  const Matrix surgeResistiveImpedance = mSurgeImpedance + mResistance / 4.;
+  mSurgeResistiveImpedanceInverse = surgeResistiveImpedance.inverse();
+  mDenominatorInverse =
+      (surgeResistiveImpedance * surgeResistiveImpedance).inverse();
+  const Matrix resistanceQuarter = mResistance / 4.;
+  mSurgeMinusResistanceQuarter = mSurgeImpedance - resistanceQuarter;
+  mSurgeCurrentCoefficient = -mSurgeImpedance * mDenominatorInverse;
+  mResistanceCurrentCoefficient = -resistanceQuarter * mDenominatorInverse;
+
   // Initialization based on static PI-line model
   MatrixComp volt1 = -mNode1->initialVoltage();
   MatrixComp volt2 = -mNode2->initialVoltage();
@@ -92,37 +101,35 @@ void DecouplingLineEMT_Ph3::initialize(Real omega, Real timeStep) {
   mCur2 = cur2.real().transpose().replicate(mBufSize, 1);
 }
 
-Matrix DecouplingLineEMT_Ph3::interpolate(Matrix &data) {
+Eigen::Matrix<Real, 3, 1>
+DecouplingLineEMT_Ph3::interpolate(const Matrix &data) const {
   // linear interpolation of the nearest values
-  Matrix c1 = data.row(mBufIdx);
-  Matrix c2 = mBufIdx == mBufSize - 1 ? data.row(0) : data.row(mBufIdx + 1);
-  return (mAlpha * c1 + (1 - mAlpha) * c2).transpose();
+  const UInt nextIdx = mBufIdx == mBufSize - 1 ? 0 : mBufIdx + 1;
+  return (mAlpha * data.row(mBufIdx).transpose() +
+          (1 - mAlpha) * data.row(nextIdx).transpose())
+      .eval();
 }
 
 void DecouplingLineEMT_Ph3::step(Real time, Int timeStepCount) {
-  Matrix volt1 = interpolate(mVolt1);
-  Matrix volt2 = interpolate(mVolt2);
-  Matrix cur1 = interpolate(mCur1);
-  Matrix cur2 = interpolate(mCur2);
-  Matrix denom = (mSurgeImpedance + (mResistance / 4)) *
-                 (mSurgeImpedance + (mResistance / 4));
+  const Eigen::Matrix<Real, 3, 1> volt1 = interpolate(mVolt1);
+  const Eigen::Matrix<Real, 3, 1> volt2 = interpolate(mVolt2);
+  const Eigen::Matrix<Real, 3, 1> cur1 = interpolate(mCur1);
+  const Eigen::Matrix<Real, 3, 1> cur2 = interpolate(mCur2);
 
   if (timeStepCount == 0) {
     // initialization
-    **mSrcCur1Ref =
-        cur1 - (mSurgeImpedance + mResistance / 4).inverse() * volt1;
-    **mSrcCur2Ref =
-        cur2 - (mSurgeImpedance + mResistance / 4).inverse() * volt2;
+    **mSrcCur1Ref = cur1 - mSurgeResistiveImpedanceInverse * volt1;
+    **mSrcCur2Ref = cur2 - mSurgeResistiveImpedanceInverse * volt2;
   } else {
     // Update currents
-    **mSrcCur1Ref = -mSurgeImpedance * denom.inverse() *
-                        (volt2 + (mSurgeImpedance - mResistance / 4) * cur2) -
-                    mResistance / 4 * denom.inverse() *
-                        (volt1 + (mSurgeImpedance - mResistance / 4) * cur1);
-    **mSrcCur2Ref = -mSurgeImpedance * denom.inverse() *
-                        (volt1 + (mSurgeImpedance - mResistance / 4) * cur1) -
-                    mResistance / 4 * denom.inverse() *
-                        (volt2 + (mSurgeImpedance - mResistance / 4) * cur2);
+    **mSrcCur1Ref = mSurgeCurrentCoefficient *
+                        (volt2 + mSurgeMinusResistanceQuarter * cur2) +
+                    mResistanceCurrentCoefficient *
+                        (volt1 + mSurgeMinusResistanceQuarter * cur1);
+    **mSrcCur2Ref = mSurgeCurrentCoefficient *
+                        (volt1 + mSurgeMinusResistanceQuarter * cur1) +
+                    mResistanceCurrentCoefficient *
+                        (volt2 + mSurgeMinusResistanceQuarter * cur2);
   }
   mSrcCur1->set(**mSrcCur1Ref);
   mSrcCur2->set(**mSrcCur2Ref);

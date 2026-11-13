@@ -119,6 +119,8 @@ void VoltageControllerVSI::initializeStateSpaceModel(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 
   mTimeStep = timeStep;
+  Math::calculateStateSpaceTrapezoidalMatrices(mA, mB, mTimeStep, mDiscreteA,
+                                               mDiscreteB);
 
   // initialization of input --> [u]
   **mInputCurr << mVdRef, mVqRef, **mVc_d, **mVc_q, **mIrc_d, **mIrc_q;
@@ -174,8 +176,8 @@ void VoltageControllerVSI::signalStep(Real time, Int timeStepCount) {
       time, **mInputCurr, **mInputPrev, **mStatePrev);
 
   // calculate new states
-  **mStateCurr = Math::StateSpaceTrapezoidal(**mStatePrev, mA, mB, mTimeStep,
-                                             **mInputCurr, **mInputPrev);
+  mInputSum.noalias() = **mInputCurr + **mInputPrev;
+  (**mStateCurr).noalias() = mDiscreteA * **mStatePrev + mDiscreteB * mInputSum;
   SPDLOG_LOGGER_DEBUG(mSLog, "stateCurr = \n {}", **mStateCurr);
 
   // calculate new outputs

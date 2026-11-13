@@ -46,8 +46,36 @@ void KLUAdapter::preprocessing(
 
   const Int n = Eigen::internal::convert_index<Int>(systemMatrix.rows());
 
-  auto Ap = Eigen::internal::convert_index<Int *>(systemMatrix.outerIndexPtr());
-  auto Ai = Eigen::internal::convert_index<Int *>(systemMatrix.innerIndexPtr());
+  // Build the KLU-native CSC representation once for this sparse pattern.
+  // Runtime refactorizations only copy values through mRowToKluValueIndex.
+  mKluMatrix = systemMatrix;
+  mKluMatrix.makeCompressed();
+  std::unordered_map<std::uint64_t, Int> cscValueIndices;
+  cscValueIndices.reserve(mKluMatrix.nonZeros());
+  for (Int col = 0; col < mKluMatrix.outerSize(); ++col) {
+    for (CPS::SparseMatrix::InnerIterator it(mKluMatrix, col); it; ++it) {
+      const std::uint64_t key = (static_cast<std::uint64_t>(it.row()) << 32) |
+                                static_cast<std::uint64_t>(it.col());
+      cscValueIndices.emplace(
+          key, static_cast<Int>(&it.valueRef() - mKluMatrix.valuePtr()));
+    }
+  }
+  mRowToKluValueIndex.clear();
+  mRowToKluValueIndex.reserve(systemMatrix.nonZeros());
+  for (Int row = 0; row < systemMatrix.outerSize(); ++row) {
+    for (SparseMatrix::InnerIterator it(systemMatrix, row); it; ++it) {
+      const std::uint64_t key = (static_cast<std::uint64_t>(it.row()) << 32) |
+                                static_cast<std::uint64_t>(it.col());
+      const auto cscIt = cscValueIndices.find(key);
+      if (cscIt == cscValueIndices.end())
+        throw std::runtime_error("KLU CSC conversion lost a matrix entry");
+      mRowToKluValueIndex.push_back(cscIt->second);
+    }
+  }
+  syncKluValues(systemMatrix);
+
+  auto Ap = Eigen::internal::convert_index<Int *>(mKluMatrix.outerIndexPtr());
+  auto Ai = Eigen::internal::convert_index<Int *>(mKluMatrix.innerIndexPtr());
 
   mVaryingColumns.clear();
   mVaryingRows.clear();
@@ -90,9 +118,10 @@ void KLUAdapter::factorize(SparseMatrix &systemMatrix) {
     klu_free_numeric(&mNumeric, &mCommon);
   }
 
-  auto Ap = Eigen::internal::convert_index<Int *>(systemMatrix.outerIndexPtr());
-  auto Ai = Eigen::internal::convert_index<Int *>(systemMatrix.innerIndexPtr());
-  auto Ax = Eigen::internal::convert_index<Real *>(systemMatrix.valuePtr());
+  syncKluValues(systemMatrix);
+  auto Ap = Eigen::internal::convert_index<Int *>(mKluMatrix.outerIndexPtr());
+  auto Ai = Eigen::internal::convert_index<Int *>(mKluMatrix.innerIndexPtr());
+  auto Ax = Eigen::internal::convert_index<Real *>(mKluMatrix.valuePtr());
 
   mNumeric = klu_factor(Ap, Ai, Ax, mSymbolic, &mCommon);
 
@@ -122,11 +151,10 @@ void KLUAdapter::refactorize(SparseMatrix &systemMatrix) {
     preprocessing(systemMatrix, mChangedEntries);
     factorize(systemMatrix);
   } else {
-    auto Ap =
-        Eigen::internal::convert_index<Int *>(systemMatrix.outerIndexPtr());
-    auto Ai =
-        Eigen::internal::convert_index<Int *>(systemMatrix.innerIndexPtr());
-    auto Ax = Eigen::internal::convert_index<Real *>(systemMatrix.valuePtr());
+    syncKluValues(systemMatrix);
+    auto Ap = Eigen::internal::convert_index<Int *>(mKluMatrix.outerIndexPtr());
+    auto Ai = Eigen::internal::convert_index<Int *>(mKluMatrix.innerIndexPtr());
+    auto Ax = Eigen::internal::convert_index<Real *>(mKluMatrix.valuePtr());
     klu_refactor(Ap, Ai, Ax, mSymbolic, mNumeric, &mCommon);
   }
 }
@@ -142,11 +170,10 @@ void KLUAdapter::partialRefactorize(
              (mVaryingColumns.empty() || mVaryingRows.empty())) {
     factorize(systemMatrix);
   } else {
-    auto Ap =
-        Eigen::internal::convert_index<Int *>(systemMatrix.outerIndexPtr());
-    auto Ai =
-        Eigen::internal::convert_index<Int *>(systemMatrix.innerIndexPtr());
-    auto Ax = Eigen::internal::convert_index<Real *>(systemMatrix.valuePtr());
+    syncKluValues(systemMatrix);
+    auto Ap = Eigen::internal::convert_index<Int *>(mKluMatrix.outerIndexPtr());
+    auto Ai = Eigen::internal::convert_index<Int *>(mKluMatrix.innerIndexPtr());
+    auto Ax = Eigen::internal::convert_index<Real *>(mKluMatrix.valuePtr());
 
     if (mPartialRefactorizationMethod ==
         PARTIAL_REFACTORIZATION_METHOD::FACTORIZATION_PATH) {
@@ -168,9 +195,14 @@ void KLUAdapter::partialRefactorize(
 }
 
 Matrix KLUAdapter::solve(Matrix &rightSideVector) {
-  // TODO: this calls malloc, which is not allowed in the simulation loop
-  // We should preallocate this buffer.
-  Matrix x = rightSideVector;
+  Matrix solution = rightSideVector;
+  solveInto(rightSideVector, solution);
+  return solution;
+}
+
+void KLUAdapter::solveInto(Matrix &rightSideVector, Matrix &solution) {
+  if (&rightSideVector != &solution)
+    solution = rightSideVector;
 
   /* Number of right hands sides
    * usually one, KLU can handle multiple right hand sides.
@@ -180,14 +212,18 @@ Matrix KLUAdapter::solve(Matrix &rightSideVector) {
   // Leading dimension, also called "n".
   Int rhsRows = Eigen::internal::convert_index<Int>(rightSideVector.rows());
 
-  /* tsolve refers to transpose solve. Input matrix is stored in compressed row format,
-   * KLU operates on compressed column format. This way, the transpose of the matrix is factored.
-   * This has to be taken into account only here during right-hand solving.
-   */
-  klu_tsolve(mSymbolic, mNumeric, rhsRows, rhsCols,
-             x.const_cast_derived().data(), &mCommon);
+  klu_solve(mSymbolic, mNumeric, rhsRows, rhsCols, solution.data(), &mCommon);
+}
 
-  return x;
+void KLUAdapter::syncKluValues(const SparseMatrix &systemMatrix) {
+  if (static_cast<std::size_t>(systemMatrix.nonZeros()) !=
+      mRowToKluValueIndex.size())
+    throw std::runtime_error(
+        "KLU matrix pattern changed without preprocessing");
+  const Real *source = systemMatrix.valuePtr();
+  Real *destination = mKluMatrix.valuePtr();
+  for (std::size_t i = 0; i < mRowToKluValueIndex.size(); ++i)
+    destination[mRowToKluValueIndex[i]] = source[i];
 }
 
 void KLUAdapter::printMatrixMarket(SparseMatrix &matrix, int counter) const {

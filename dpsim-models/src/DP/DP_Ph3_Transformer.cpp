@@ -2,14 +2,21 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <dpsim-models/DP/DP_Ph3_Transformer.h>
+#include <dpsim-models/MNAStampUtils.h>
 
 using namespace CPS;
 
 DP::Ph3::Transformer::Transformer(String uid, String name,
                                   Logger::Level logLevel,
                                   Bool withResistiveLosses)
+    : Transformer(uid, name, true, logLevel, withResistiveLosses) {}
+
+DP::Ph3::Transformer::Transformer(String uid, String name,
+                                  Bool useSubcomponents, Logger::Level logLevel,
+                                  Bool withResistiveLosses)
     : Base::Ph3::Transformer(mAttributes),
-      CompositePowerComp<Complex>(uid, name, true, true, logLevel) {
+      CompositePowerComp<Complex>(uid, name, true, true, logLevel),
+      mUseSubcomponents(useSubcomponents) {
   mPhaseType = PhaseType::ABC;
   mWithResistiveLosses = withResistiveLosses;
   if (withResistiveLosses)
@@ -24,7 +31,8 @@ DP::Ph3::Transformer::Transformer(String uid, String name,
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph3::Transformer::clone(String name) {
-  auto copy = Transformer::make(name, mLogLevel);
+  auto copy = Transformer::make(name, mUseSubcomponents, mLogLevel,
+                                mNumVirtualNodes == 5);
   copy->setParameters(mNominalVoltagePrimary, mNominalVoltageSecondary,
                       mRatedPower, std::abs(**mRatio), std::arg(**mRatio),
                       mResistance, mInductance);
@@ -77,6 +85,8 @@ void DP::Ph3::Transformer::resolveWindingRoles() {
 }
 
 void DP::Ph3::Transformer::createSubComponents() {
+  if (!mUseSubcomponents)
+    return;
   if (mSubCompCreated)
     return;
   mSubCompCreated = true;
@@ -159,6 +169,8 @@ void DP::Ph3::Transformer::createSubComponents() {
 void DP::Ph3::Transformer::initializeParentFromNodesAndTerminals(
     Real frequency) {
   Real omega = 2. * PI * frequency;
+  if (!mUseSubcomponents)
+    resolveWindingRoles();
 
   // Keep the stored PF phasors on virtual nodes in RMS form so that the
   // attached primitive components can apply their usual PF-to-DP conversion
@@ -166,14 +178,25 @@ void DP::Ph3::Transformer::initializeParentFromNodesAndTerminals(
   for (auto &virtualNode : mVirtualNodes)
     virtualNode->setComplexInitialVoltageScale(RMS3PH_TO_PEAK1PH);
 
-  if (mSubMagnetizingInductor) {
+  if (mUseSubcomponents ? static_cast<Bool>(mSubMagnetizingInductor)
+                        : mRatedPower > 0.) {
+    if (!mUseSubcomponents) {
+      if (mNoLoadCurrent <= mNoLoadLoss)
+        throw InvalidArgumentException();
+      const Real resistance =
+          std::pow(nominalVoltageAt(mReferenceTerminal), 2) /
+          (mNoLoadLoss * mRatedPower);
+      mMagnetizingResistance =
+          Math::singlePhaseParameterToThreePhase(resistance);
+    }
     Real magnetizingSusceptance =
         std::sqrt(std::pow(mNoLoadCurrent, 2) - std::pow(mNoLoadLoss, 2)) *
         mRatedPower / std::pow(nominalVoltageAt(mReferenceTerminal), 2);
     Real magnetizingInductance = 1. / (omega * magnetizingSusceptance);
     mMagnetizingInductance =
         Math::singlePhaseParameterToThreePhase(magnetizingInductance);
-    mSubMagnetizingInductor->setParameters(mMagnetizingInductance);
+    if (mUseSubcomponents)
+      mSubMagnetizingInductor->setParameters(mMagnetizingInductance);
   }
 
   // Power-flow voltages are line-line RMS phasors. Keep these initial values
@@ -184,7 +207,8 @@ void DP::Ph3::Transformer::initializeParentFromNodesAndTerminals(
   Complex halfImpedance =
       Complex(mResistance(0, 0) / 2., omega * mInductance(0, 0) / 2.);
   Complex magnetizingAdmittance = Complex(0, 0);
-  if (mSubMagnetizingInductor)
+  if (mUseSubcomponents ? static_cast<Bool>(mSubMagnetizingInductor)
+                        : mRatedPower > 0.)
     magnetizingAdmittance =
         1. / mMagnetizingResistance(0, 0) +
         1. / Complex(0, omega * mMagnetizingInductance(0, 0));
@@ -220,6 +244,62 @@ void DP::Ph3::Transformer::initializeParentFromNodesAndTerminals(
   **mIntfCurrent = impedance.inverse() * impedanceVoltage;
 }
 
+void DP::Ph3::Transformer::mnaParentInitialize(
+    Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+  if (mUseSubcomponents)
+    return;
+  updateMatrixNodeIndices();
+  const Real b = timeStep * omega / 2.;
+  const Matrix halfInductance = mInductance / 2.;
+  const Matrix a = (timeStep / 2.) * halfInductance.inverse();
+  mDirectInductorAdmittance = MatrixComp::Zero(3, 3);
+  mDirectInductorAdmittance.real() = a / (1. + b * b);
+  mDirectInductorAdmittance.imag() = -a * b / (1. + b * b);
+  mDirectInductorPrevCurrentFactor =
+      Complex((1. - b * b) / (1. + b * b), -2. * b / (1. + b * b));
+  mDirectInductorCurrent0.setZero();
+  mDirectInductorCurrent1.setZero();
+  mDirectInductorVoltage0.setZero();
+  mDirectInductorVoltage1.setZero();
+  mDirectInductorHistory0.setZero();
+  mDirectInductorHistory1.setZero();
+  mDirectMagnetizingAdmittance.setZero();
+  mDirectMagnetizingCurrent.setZero();
+  mDirectMagnetizingVoltage.setZero();
+  mDirectMagnetizingHistory.setZero();
+  if (mRatedPower > 0.) {
+    const Matrix magA = (timeStep / 2.) * mMagnetizingInductance.inverse();
+    mDirectMagnetizingAdmittance.real() = magA / (1. + b * b);
+    mDirectMagnetizingAdmittance.imag() = -magA * b / (1. + b * b);
+    mDirectMagnetizingPrevCurrentFactor = mDirectInductorPrevCurrentFactor;
+  }
+
+  const MatrixComp midpoint = mVirtualNodes[2]->initialVoltage();
+  const MatrixComp ratioNode = mVirtualNodes[0]->initialVoltage();
+  const MatrixComp firstNode = mNumVirtualNodes == 5
+                                   ? mVirtualNodes[3]->initialVoltage()
+                                   : initialVoltage(mReferenceTerminal);
+  const MatrixComp secondNode =
+      mNumVirtualNodes == 5 ? mVirtualNodes[4]->initialVoltage() : midpoint;
+  // Virtual-node initial phasors are stored in RMS form. Match the primitive
+  // DP inductor initializers by converting them to phase-peak envelopes here.
+  mDirectInductorVoltage0 = RMS3PH_TO_PEAK1PH * (midpoint - firstNode);
+  mDirectInductorVoltage1 = RMS3PH_TO_PEAK1PH * (ratioNode - secondNode);
+  mDirectInductorCurrent0 =
+      (Complex(0., omega) * halfInductance.cast<Complex>()).inverse() *
+      mDirectInductorVoltage0;
+  mDirectInductorCurrent1 =
+      (Complex(0., omega) * halfInductance.cast<Complex>()).inverse() *
+      mDirectInductorVoltage1;
+  if (mRatedPower > 0.) {
+    mDirectMagnetizingVoltage = -RMS3PH_TO_PEAK1PH * midpoint;
+    mDirectMagnetizingCurrent =
+        (Complex(0., omega) * mMagnetizingInductance.cast<Complex>())
+            .inverse() *
+        mDirectMagnetizingVoltage;
+  }
+}
+
 void DP::Ph3::Transformer::mnaParentApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
   if (terminalNotGrounded(mReferenceTerminal)) {
@@ -247,6 +327,78 @@ void DP::Ph3::Transformer::mnaParentApplySystemMatrixStamp(
           mVirtualNodes[1]->matrixNodeIndex(static_cast<PhaseType>(phase)),
           matrixNodeIndex(nonReferenceTerminal(), phase), -mRatioFromReference);
     }
+  }
+  if (!mUseSubcomponents) {
+    const UInt midpoint = mVirtualNodes[2]->matrixNodeIndex(PhaseType::A);
+    const UInt ratioNode = mVirtualNodes[0]->matrixNodeIndex(PhaseType::A);
+    const UInt firstNode = mNumVirtualNodes == 5
+                               ? mVirtualNodes[3]->matrixNodeIndex(PhaseType::A)
+                               : matrixNodeIndex(mReferenceTerminal, 0);
+    const UInt secondNode =
+        mNumVirtualNodes == 5 ? mVirtualNodes[4]->matrixNodeIndex(PhaseType::A)
+                              : midpoint;
+    if (mNumVirtualNodes == 5) {
+      const MatrixComp resistorY = (mResistance / 2.).inverse().cast<Complex>();
+      MNAStampUtils::stampAdmittanceMatrix(
+          resistorY, systemMatrix, matrixNodeIndex(mReferenceTerminal, 0),
+          firstNode, terminalNotGrounded(mReferenceTerminal), true, mSLog);
+      MNAStampUtils::stampAdmittanceMatrix(resistorY, systemMatrix, midpoint,
+                                           secondNode, true, true, mSLog);
+    }
+    MNAStampUtils::stampAdmittanceMatrix(mDirectInductorAdmittance,
+                                         systemMatrix, firstNode, midpoint,
+                                         true, true, mSLog);
+    MNAStampUtils::stampAdmittanceMatrix(mDirectInductorAdmittance,
+                                         systemMatrix, secondNode, ratioNode,
+                                         true, true, mSLog);
+    if (mRatedPower > 0.) {
+      MNAStampUtils::stampAdmittanceMatrix(
+          mMagnetizingResistance.inverse().cast<Complex>(), systemMatrix,
+          midpoint, 0, true, false, mSLog);
+      MNAStampUtils::stampAdmittanceMatrix(mDirectMagnetizingAdmittance,
+                                           systemMatrix, midpoint, 0, true,
+                                           false, mSLog);
+    }
+  }
+}
+
+void DP::Ph3::Transformer::mnaParentApplyRightSideVectorStamp(
+    Matrix &rightVector) {
+  if (mUseSubcomponents)
+    return;
+  const UInt midpoint = mVirtualNodes[2]->matrixNodeIndex(PhaseType::A);
+  const UInt ratioNode = mVirtualNodes[0]->matrixNodeIndex(PhaseType::A);
+  const UInt firstNode = mNumVirtualNodes == 5
+                             ? mVirtualNodes[3]->matrixNodeIndex(PhaseType::A)
+                             : matrixNodeIndex(mReferenceTerminal, 0);
+  const UInt secondNode = mNumVirtualNodes == 5
+                              ? mVirtualNodes[4]->matrixNodeIndex(PhaseType::A)
+                              : midpoint;
+  mDirectInductorHistory0 =
+      mDirectInductorAdmittance * mDirectInductorVoltage0 +
+      mDirectInductorPrevCurrentFactor * mDirectInductorCurrent0;
+  mDirectInductorHistory1 =
+      mDirectInductorAdmittance * mDirectInductorVoltage1 +
+      mDirectInductorPrevCurrentFactor * mDirectInductorCurrent1;
+  if (mRatedPower > 0.)
+    mDirectMagnetizingHistory =
+        mDirectMagnetizingAdmittance * mDirectMagnetizingVoltage +
+        mDirectMagnetizingPrevCurrentFactor * mDirectMagnetizingCurrent;
+  for (UInt phase = 0; phase < 3; ++phase) {
+    if (mNumVirtualNodes == 5 || terminalNotGrounded(mReferenceTerminal))
+      Math::setVectorElement(rightVector, firstNode + phase,
+                             mDirectInductorHistory0(phase, 0));
+    Complex midpointHistory = -mDirectInductorHistory0(phase, 0);
+    if (mNumVirtualNodes == 5)
+      Math::setVectorElement(rightVector, secondNode + phase,
+                             mDirectInductorHistory1(phase, 0));
+    else
+      midpointHistory += mDirectInductorHistory1(phase, 0);
+    if (mRatedPower > 0.)
+      midpointHistory += mDirectMagnetizingHistory(phase, 0);
+    Math::setVectorElement(rightVector, midpoint + phase, midpointHistory);
+    Math::setVectorElement(rightVector, ratioNode + phase,
+                           -mDirectInductorHistory1(phase, 0));
   }
 }
 
@@ -280,7 +432,7 @@ void DP::Ph3::Transformer::mnaParentPostStep(
 }
 
 void DP::Ph3::Transformer::mnaCompUpdateVoltage(const Matrix &leftVector) {
-  **mIntfVoltage = MatrixComp::Zero(3, 1);
+  (**mIntfVoltage).setZero();
   for (UInt phase = 0; phase < 3; phase++) {
     if (terminalNotGrounded(1))
       (**mIntfVoltage)(phase, 0) =
@@ -293,5 +445,40 @@ void DP::Ph3::Transformer::mnaCompUpdateVoltage(const Matrix &leftVector) {
 }
 
 void DP::Ph3::Transformer::mnaCompUpdateCurrent(const Matrix &leftVector) {
-  **mIntfCurrent = mOrientationSign * mSubInductor->intfCurrent();
+  if (mUseSubcomponents) {
+    **mIntfCurrent = mOrientationSign * mSubInductor->intfCurrent();
+    return;
+  }
+  const UInt midpoint = mVirtualNodes[2]->matrixNodeIndex(PhaseType::A);
+  const UInt firstNode = mNumVirtualNodes == 5
+                             ? mVirtualNodes[3]->matrixNodeIndex(PhaseType::A)
+                             : matrixNodeIndex(mReferenceTerminal, 0);
+  const UInt secondNode = mNumVirtualNodes == 5
+                              ? mVirtualNodes[4]->matrixNodeIndex(PhaseType::A)
+                              : midpoint;
+  for (UInt phase = 0; phase < 3; ++phase) {
+    mDirectInductorVoltage0(phase, 0) =
+        Math::complexFromVectorElement(leftVector, midpoint + phase) -
+        (mNumVirtualNodes == 5 || terminalNotGrounded(mReferenceTerminal)
+             ? Math::complexFromVectorElement(leftVector, firstNode + phase)
+             : Complex(0., 0.));
+    mDirectInductorVoltage1(phase, 0) =
+        Math::complexFromVectorElement(
+            leftVector,
+            mVirtualNodes[0]->matrixNodeIndex(PhaseType::A) + phase) -
+        Math::complexFromVectorElement(leftVector, secondNode + phase);
+    mDirectMagnetizingVoltage(phase, 0) =
+        -Math::complexFromVectorElement(leftVector, midpoint + phase);
+  }
+  mDirectInductorCurrent0 =
+      mDirectInductorAdmittance * mDirectInductorVoltage0 +
+      mDirectInductorHistory0;
+  mDirectInductorCurrent1 =
+      mDirectInductorAdmittance * mDirectInductorVoltage1 +
+      mDirectInductorHistory1;
+  if (mRatedPower > 0.)
+    mDirectMagnetizingCurrent =
+        mDirectMagnetizingAdmittance * mDirectMagnetizingVoltage +
+        mDirectMagnetizingHistory;
+  **mIntfCurrent = mOrientationSign * mDirectInductorCurrent0;
 }

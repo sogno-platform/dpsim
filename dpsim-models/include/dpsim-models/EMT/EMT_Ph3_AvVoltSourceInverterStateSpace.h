@@ -60,6 +60,10 @@ private:
   const Attribute<Real>::Ptr mQInst;
   const Attribute<Real>::Ptr mOmegaPLL;
 
+  /// Reused affine offsets produced by the per-step nonlinear relinearization.
+  Matrix mParameterStateOffset;
+  Matrix mParameterOutputOffset;
+
   Matrix getParkTransformMatrix(Real theta) const;
   Matrix getInverseParkTransformMatrix(Real theta) const;
   void buildStateSpaceModel(const Matrix &x, const Matrix &u, Matrix &A,

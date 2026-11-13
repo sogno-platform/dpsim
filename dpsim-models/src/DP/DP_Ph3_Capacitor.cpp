@@ -139,6 +139,19 @@ void DP::Ph3::Capacitor::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {
   }
 }
 
+void DP::Ph3::Capacitor::mnaAddCompactRightSideVectorStamp(
+    Matrix &rightVector) {
+  const MatrixComp &history = mEquivCurrent;
+  if (terminalNotGrounded(0))
+    for (UInt phase = 0; phase < 3; ++phase)
+      Math::addToVectorElement(rightVector, matrixNodeIndex(0, phase),
+                               history(phase, 0));
+  if (terminalNotGrounded(1))
+    for (UInt phase = 0; phase < 3; ++phase)
+      Math::addToVectorElement(rightVector, matrixNodeIndex(1, phase),
+                               -history(phase, 0));
+}
+
 void DP::Ph3::Capacitor::mnaCompAddPreStepDependencies(
     AttributeBase::List &prevStepDependencies,
     AttributeBase::List &attributeDependencies,
@@ -171,28 +184,32 @@ void DP::Ph3::Capacitor::mnaCompPostStep(Real time, Int timeStepCount,
 
 void DP::Ph3::Capacitor::mnaCompUpdateVoltage(const Matrix &leftVector) {
   // v1 - v0
-  **mIntfVoltage = Matrix::Zero(3, 1);
-  if (terminalNotGrounded(1)) {
-    (**mIntfVoltage)(0, 0) =
-        Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 0));
-    (**mIntfVoltage)(1, 0) =
-        Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 1));
-    (**mIntfVoltage)(2, 0) =
-        Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 2));
-  }
-  if (terminalNotGrounded(0)) {
-    (**mIntfVoltage)(0, 0) =
-        (**mIntfVoltage)(0, 0) -
-        Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
-    (**mIntfVoltage)(1, 0) =
-        (**mIntfVoltage)(1, 0) -
-        Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 1));
-    (**mIntfVoltage)(2, 0) =
-        (**mIntfVoltage)(2, 0) -
-        Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 2));
+  const bool terminal0Connected = terminalNotGrounded(0);
+  const bool terminal1Connected = terminalNotGrounded(1);
+  const Matrix::Index imaginaryOffset = leftVector.rows() / 2;
+  for (UInt phase = 0; phase < 3; ++phase) {
+    Complex voltage(0., 0.);
+    if (terminal1Connected) {
+      const Matrix::Index row = matrixNodeIndex(1, phase);
+      voltage =
+          Complex(leftVector(row, 0), leftVector(row + imaginaryOffset, 0));
+    }
+    if (terminal0Connected) {
+      const Matrix::Index row = matrixNodeIndex(0, phase);
+      voltage -=
+          Complex(leftVector(row, 0), leftVector(row + imaginaryOffset, 0));
+    }
+    (**mIntfVoltage)(phase, 0) = voltage;
   }
 }
 
 void DP::Ph3::Capacitor::mnaCompUpdateCurrent(const Matrix &leftVector) {
-  **mIntfCurrent = mEquivCond * **mIntfVoltage + mEquivCurrent;
+  // Fuse the fixed-size matrix-vector product with the history term.
+  const MatrixComp &voltage = **mIntfVoltage;
+  MatrixComp &current = **mIntfCurrent;
+  for (Int phase = 0; phase < 3; ++phase)
+    current(phase, 0) = mEquivCond(phase, 0) * voltage(0, 0) +
+                        mEquivCond(phase, 1) * voltage(1, 0) +
+                        mEquivCond(phase, 2) * voltage(2, 0) +
+                        mEquivCurrent(phase, 0);
 }

@@ -61,6 +61,7 @@ private:
       Psi, PFiltered, QFiltered, PhiD, PhiQ, GammaD, GammaQ};
 
   Real mLf = 0.0;
+  Real mInvLf = 0.0;
   Real mCf = 0.0;
   Real mRf = 0.0;
   Real mRc = 0.0;
@@ -91,6 +92,10 @@ private:
   const Attribute<Real>::Ptr mOmegaPLL;
   const Attribute<Real>::Ptr mIrcNd;
   const Attribute<Real>::Ptr mIrcNq;
+
+  /// Reused affine offsets produced by the per-step nonlinear relinearization.
+  Matrix mParameterStateOffset;
+  Matrix mParameterOutputOffset;
 
   /// Negative-sequence measurement, bridge-voltage reference and the conj(vc_p) coefficients of the measurement.
   struct NegSeqTerms {

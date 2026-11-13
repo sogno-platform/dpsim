@@ -30,6 +30,7 @@ void DP::Ph1::Inverter::setParameters(const std::vector<Int> &carrierHarms,
   mVin = inputVoltage;
   mModIdx = ratio;
   mPhaseMod = phase;
+  mPhasorsDirty = true;
 
   mParametersSet = true;
 }
@@ -110,6 +111,7 @@ void DP::Ph1::Inverter::calculatePhasors() {
                       "\n{}"
                       "\n--- Phasor calculation end ---",
                       mPhasorMags, **mIntfVoltage);
+  mPhasorsDirty = false;
 }
 
 // #### MNA functions ####
@@ -218,12 +220,14 @@ void DP::Ph1::Inverter::mnaCompAddPreStepDependencies(
 }
 
 void DP::Ph1::Inverter::mnaCompPreStep(Real time, Int timeStepCount) {
-  calculatePhasors();
+  if (mPhasorsDirty)
+    calculatePhasors();
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::Inverter::MnaPreStepHarm::execute(Real time, Int timeStepCount) {
-  mInverter.calculatePhasors();
+  if (mInverter.mPhasorsDirty)
+    mInverter.calculatePhasors();
   mInverter.mnaCompApplyRightSideVectorStampHarm(**mInverter.mRightVector);
 }
 

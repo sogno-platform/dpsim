@@ -25,6 +25,12 @@ public:
   /// TODO performance improvements from a sparse representation, at least during copying / summation?
   Attribute<Matrix>::Ptr mRightVector;
 
+protected:
+  // Cached payload used by per-step component code. The Attribute remains
+  // available for dependency tracking and external inspection.
+  Matrix *mRightVectorValue;
+
+public:
   /// List of tasks that relate to using MNA for this component (usually pre-step and/or post-step)
   Task::List mMnaTasks;
 
@@ -34,7 +40,8 @@ public:
       : SimPowerComp<VarType>(uid, name, logLevel), mHasPreStep(hasPreStep),
         mHasPostStep(hasPostStep),
         mRightVector(IdentifiedObject::mAttributes->createDynamic<Matrix>(
-            "right_vector")){};
+            "right_vector")),
+        mRightVectorValue(&mRightVector->get()){};
 
   /// Basic constructor that takes name and log level and sets the UID to name as well
   explicit MNASimPowerComp(String name, Bool hasPreStep = true,
@@ -107,12 +114,16 @@ public:
   public:
     explicit MnaPreStep(MNASimPowerComp<VarType> &comp)
         : Task(**comp.mName + ".MnaPreStep"), mComp(comp) {
+      setFastExecutor<MnaPreStep, &MnaPreStep::executeFastImpl>(this);
       mComp.mnaAddPreStepDependencies(
           mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
     }
     void execute(Real time, Int timeStepCount) override {
       mComp.mnaPreStep(time, timeStepCount);
     };
+    void executeFastImpl(Real time, Int timeStepCount) {
+      mComp.mnaPreStep(time, timeStepCount);
+    }
 
   private:
     MNASimPowerComp<VarType> &mComp;
@@ -124,6 +135,7 @@ public:
                 Attribute<Matrix>::Ptr leftVector)
         : Task(**comp.mName + ".MnaPostStep"), mComp(comp),
           mLeftVector(leftVector) {
+      setFastExecutor<MnaPostStep, &MnaPostStep::executeFastImpl>(this);
       mComp.mnaAddPostStepDependencies(mPrevStepDependencies,
                                        mAttributeDependencies,
                                        mModifiedAttributes, mLeftVector);
@@ -131,6 +143,9 @@ public:
     void execute(Real time, Int timeStepCount) override {
       mComp.mnaPostStep(time, timeStepCount, mLeftVector);
     };
+    void executeFastImpl(Real time, Int timeStepCount) {
+      mComp.mnaPostStep(time, timeStepCount, mLeftVector);
+    }
 
   private:
     MNASimPowerComp<VarType> &mComp;

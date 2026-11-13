@@ -10,6 +10,48 @@
 
 using namespace CPS;
 
+namespace {
+MatrixFixedSize<3, 1> parkTransformFixed(Real theta, const Matrix &abcVector) {
+  MatrixFixedSize<3, 3> abcToDq0;
+  MatrixFixedSize<3, 1> abc;
+  abc << abcVector(0, 0), abcVector(1, 0), abcVector(2, 0);
+
+  const Real cosTheta = std::cos(theta);
+  const Real sinTheta = std::sin(theta);
+  constexpr Real sqrtThreeOverTwo = 0.86602540378443864676;
+  const Real cosMinus120 = -0.5 * cosTheta + sqrtThreeOverTwo * sinTheta;
+  const Real sinMinus120 = -0.5 * sinTheta - sqrtThreeOverTwo * cosTheta;
+  const Real cosPlus120 = -0.5 * cosTheta - sqrtThreeOverTwo * sinTheta;
+  const Real sinPlus120 = -0.5 * sinTheta + sqrtThreeOverTwo * cosTheta;
+
+  abcToDq0 << 2. / 3. * cosTheta, 2. / 3. * cosMinus120, 2. / 3. * cosPlus120,
+      -2. / 3. * sinTheta, -2. / 3. * sinMinus120, -2. / 3. * sinPlus120,
+      1. / 3., 1. / 3., 1. / 3.;
+
+  return abcToDq0 * abc;
+}
+
+MatrixFixedSize<3, 1> inverseParkTransformFixed(Real theta,
+                                                const Matrix &dq0Vector) {
+  MatrixFixedSize<3, 3> dq0ToAbc;
+  MatrixFixedSize<3, 1> dq0;
+  dq0 << dq0Vector(0, 0), dq0Vector(1, 0), dq0Vector(2, 0);
+
+  const Real cosTheta = std::cos(theta);
+  const Real sinTheta = std::sin(theta);
+  constexpr Real sqrtThreeOverTwo = 0.86602540378443864676;
+  const Real cosMinus120 = -0.5 * cosTheta + sqrtThreeOverTwo * sinTheta;
+  const Real sinMinus120 = -0.5 * sinTheta - sqrtThreeOverTwo * cosTheta;
+  const Real cosPlus120 = -0.5 * cosTheta - sqrtThreeOverTwo * sinTheta;
+  const Real sinPlus120 = -0.5 * sinTheta + sqrtThreeOverTwo * cosTheta;
+
+  dq0ToAbc << cosTheta, -sinTheta, 1., cosMinus120, -sinMinus120, 1.,
+      cosPlus120, -sinPlus120, 1.;
+
+  return dq0ToAbc * dq0;
+}
+} // namespace
+
 EMT::Ph3::SynchronGenerator4OrderPCM::SynchronGenerator4OrderPCM(
     const String &uid, const String &name, Logger::Level logLevel)
     : Base::ReducedOrderSynchronGenerator<Real>(uid, name, logLevel),
@@ -87,7 +129,7 @@ void EMT::Ph3::SynchronGenerator4OrderPCM::stepInPerUnit() {
   (**mIdq0)(2, 0) = 0.0;
 
   // convert currents into the abc domain
-  **mIntfCurrent = inverseParkTransform(**mThetaMech, **mIdq0);
+  **mIntfCurrent = inverseParkTransformFixed(**mThetaMech, **mIdq0);
   **mIntfCurrent = **mIntfCurrent * mBase_I;
 
   // The current equations have voltage Jacobian
@@ -161,7 +203,7 @@ void EMT::Ph3::SynchronGenerator4OrderPCM::correctorStep() {
   (**mIdq0)(1, 0) = ((**mVdq0)(0, 0) - (**mEdq0_t)(0, 0)) / mLq_t;
 
   // convert currents into the abc domain
-  **mIntfCurrent = inverseParkTransform(**mThetaMech, **mIdq0);
+  **mIntfCurrent = inverseParkTransformFixed(**mThetaMech, **mIdq0);
   **mIntfCurrent = **mIntfCurrent * mBase_I;
 
   // stamp currents
@@ -181,7 +223,7 @@ void EMT::Ph3::SynchronGenerator4OrderPCM::updateVoltage(
       Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 
   // convert Vdq into abc domain
-  **mVdq0 = parkTransform(**mThetaMech, **mIntfVoltage);
+  **mVdq0 = parkTransformFixed(**mThetaMech, **mIntfVoltage);
   **mVdq0 = **mVdq0 / mBase_V;
 }
 
@@ -195,9 +237,8 @@ bool EMT::Ph3::SynchronGenerator4OrderPCM::requiresIteration() {
     return true;
   } else {
     // check voltage convergence according to tolerance
-    Matrix voltageDifference = **mVdq0 - mVdq0PrevIter;
-    if (Math::abs(voltageDifference(0, 0)) > mTolerance ||
-        Math::abs(voltageDifference(1, 0)) > mTolerance)
+    if (Math::abs((**mVdq0)(0, 0) - mVdq0PrevIter(0, 0)) > mTolerance ||
+        Math::abs((**mVdq0)(1, 0) - mVdq0PrevIter(1, 0)) > mTolerance)
       return true;
     else
       return false;
@@ -210,31 +251,10 @@ void EMT::Ph3::SynchronGenerator4OrderPCM::mnaCompPostStep(
 Matrix
 EMT::Ph3::SynchronGenerator4OrderPCM::parkTransform(Real theta,
                                                     const Matrix &abcVector) {
-  Matrix dq0Vector(3, 1);
-  Matrix abcToDq0(3, 3);
-
-  // Park transform according to Kundur
-  abcToDq0 << 2. / 3. * cos(theta), 2. / 3. * cos(theta - 2. * PI / 3.),
-      2. / 3. * cos(theta + 2. * PI / 3.), -2. / 3. * sin(theta),
-      -2. / 3. * sin(theta - 2. * PI / 3.),
-      -2. / 3. * sin(theta + 2. * PI / 3.), 1. / 3., 1. / 3., 1. / 3.;
-
-  dq0Vector = abcToDq0 * abcVector;
-
-  return dq0Vector;
+  return Matrix(parkTransformFixed(theta, abcVector));
 }
 
 Matrix EMT::Ph3::SynchronGenerator4OrderPCM::inverseParkTransform(
     Real theta, const Matrix &dq0Vector) {
-  Matrix abcVector(3, 1);
-  Matrix dq0ToAbc(3, 3);
-
-  // Park transform according to Kundur
-  dq0ToAbc << cos(theta), -sin(theta), 1., cos(theta - 2. * PI / 3.),
-      -sin(theta - 2. * PI / 3.), 1., cos(theta + 2. * PI / 3.),
-      -sin(theta + 2. * PI / 3.), 1.;
-
-  abcVector = dq0ToAbc * dq0Vector;
-
-  return abcVector;
+  return Matrix(inverseParkTransformFixed(theta, dq0Vector));
 }

@@ -127,10 +127,11 @@ void EMT::Ph3::CurrentSource::mnaCompApplyRightSideVectorStamp(
 void EMT::Ph3::CurrentSource::updateCurrent(Real time) {
   if (mSrcSig != nullptr) {
     mSrcSig->step(time);
+    const Real signalPhase = Math::phase(mSrcSig->getSignal());
     for (int i = 0; i < 3; i++) {
-      (**mIntfCurrent)(i, 0) = RMS_TO_PEAK * Math::abs((**mCurrentRef)(i, 0)) *
-                               cos(Math::phase(mSrcSig->getSignal()) +
-                                   Math::phase((**mCurrentRef)(i, 0)));
+      (**mIntfCurrent)(i, 0) =
+          RMS_TO_PEAK * Math::abs((**mCurrentRef)(i, 0)) *
+          cos(signalPhase + Math::phase((**mCurrentRef)(i, 0)));
     }
   } else {
     **mIntfCurrent = RMS_TO_PEAK * (**mCurrentRef).real();
@@ -169,7 +170,7 @@ void EMT::Ph3::CurrentSource::mnaCompPostStep(
 
 void EMT::Ph3::CurrentSource::mnaCompUpdateVoltage(const Matrix &leftVector) {
   // v1 - v0
-  **mIntfVoltage = Matrix::Zero(3, 1);
+  (**mIntfVoltage).setZero();
   if (terminalNotGrounded(1)) {
     (**mIntfVoltage)(0, 0) =
         Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));

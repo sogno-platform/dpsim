@@ -118,17 +118,14 @@ void SP::Ph3::VoltageSource::mnaCompApplyRightSideVectorStamp(
 void SP::Ph3::VoltageSource::updateVoltage(Real time) {
   // can't we just do nothing??
   // TODO: remove updateVoltage
-  (**mIntfVoltage)(0, 0) = **mVoltageRef;
-  (**mIntfVoltage)(1, 0) =
-      Complex(Math::abs(**mVoltageRef) *
-                  cos(Math::phase(**mVoltageRef) - 2. / 3. * M_PI),
-              Math::abs(**mVoltageRef) *
-                  sin(Math::phase(**mVoltageRef) - 2. / 3. * M_PI));
-  (**mIntfVoltage)(2, 0) =
-      Complex(Math::abs(**mVoltageRef) *
-                  cos(Math::phase(**mVoltageRef) + 2. / 3. * M_PI),
-              Math::abs(**mVoltageRef) *
-                  sin(Math::phase(**mVoltageRef) + 2. / 3. * M_PI));
+  const Complex voltageRef = **mVoltageRef;
+  const Real magnitude = Math::abs(voltageRef);
+  const Real phase = Math::phase(voltageRef);
+  (**mIntfVoltage)(0, 0) = voltageRef;
+  (**mIntfVoltage)(1, 0) = Complex(magnitude * cos(phase - 2. / 3. * M_PI),
+                                   magnitude * sin(phase - 2. / 3. * M_PI));
+  (**mIntfVoltage)(2, 0) = Complex(magnitude * cos(phase + 2. / 3. * M_PI),
+                                   magnitude * sin(phase + 2. / 3. * M_PI));
 }
 
 void SP::Ph3::VoltageSource::mnaCompAddPreStepDependencies(

@@ -3,8 +3,10 @@
 
 #include <DPsim.h>
 
+#include <chrono>
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <sstream>
 #include <stdexcept>
 
@@ -190,6 +192,7 @@ SimPowerComp<Real>::Ptr makeEMTBranch(Kind kind) {
 }
 
 Csv readCsv(const String &name) {
+  // DataLogger writes each simulation CSV inside its per-simulation folder.
   const String path = "logs/" + name + "/" + name + ".csv";
   std::ifstream file(path);
   if (!file)
@@ -258,7 +261,8 @@ Matrix resistanceMatrix(Kind kind) {
   return resistance;
 }
 
-void runCase(const Case &test) {
+void runCase(const Case &test, Bool checkNetworkParity = true,
+             Real simulationFinalTime = finalTime) {
   const String suffix = test.label;
   const String pfName = "Ph3_Passive_PF_" + suffix;
   auto pfSourceNode = SimNode<Complex>::make("source_bus", PhaseType::Single);
@@ -324,7 +328,7 @@ void runCase(const Case &test) {
   simDP.setSystem(systemDP);
   simDP.setDomain(Domain::DP);
   simDP.setTimeStep(timeStep);
-  simDP.setFinalTime(finalTime);
+  simDP.setFinalTime(simulationFinalTime);
   simDP.addLogger(logDP);
   simDP.run();
 
@@ -363,9 +367,14 @@ void runCase(const Case &test) {
   simEMT.setSystem(systemEMT);
   simEMT.setDomain(Domain::EMT);
   simEMT.setTimeStep(timeStep);
-  simEMT.setFinalTime(finalTime);
+  simEMT.setFinalTime(simulationFinalTime);
   simEMT.addLogger(logEMT);
+  const auto emtStart = std::chrono::steady_clock::now();
   simEMT.run();
+  const auto emtElapsed = std::chrono::duration<double>(
+      std::chrono::steady_clock::now() - emtStart);
+  std::cout << " EMT " << suffix << " calculation time=" << emtElapsed.count()
+            << " s" << std::endl;
 
   const Csv dp = readCsv(dpName);
   const Csv emt = readCsv(emtName);
@@ -378,12 +387,13 @@ void runCase(const Case &test) {
   const Complex dpCurrent(dp.at(dp.rows.size() - 1, dpCurrentRealColumn),
                           dp.at(dp.rows.size() - 1, dpCurrentImagColumn));
   const Complex emtCurrent =
-      fundamental(emt, emtCurrentColumn, 0.02, finalTime);
+      fundamental(emt, emtCurrentColumn, 0.02, simulationFinalTime);
   const Real currentError =
       std::abs(dpCurrent - emtCurrent) / std::max(1e-12, std::abs(dpCurrent));
   const Complex dpLinkCurrent(dp.at(dp.rows.size() - 1, "i_link_0.re"),
                               dp.at(dp.rows.size() - 1, "i_link_0.im"));
-  const Complex emtLinkCurrent = fundamental(emt, "i_link_0", 0.02, finalTime);
+  const Complex emtLinkCurrent =
+      fundamental(emt, "i_link_0", 0.02, simulationFinalTime);
   const Real linkCurrentError = std::abs(dpLinkCurrent - emtLinkCurrent) /
                                 std::max(1e-12, std::abs(dpLinkCurrent));
   const Complex dpVoltage(dp.at(0, "v_bus_0.re"), dp.at(0, "v_bus_0.im"));
@@ -393,7 +403,8 @@ void runCase(const Case &test) {
       std::abs(dpVoltage - expectedVoltage) / std::abs(expectedVoltage);
   const Complex dpLoadVoltage(dp.at(dp.rows.size() - 1, "v_load_0.re"),
                               dp.at(dp.rows.size() - 1, "v_load_0.im"));
-  const Complex emtLoadVoltage = fundamental(emt, "v_load_0", 0.02, finalTime);
+  const Complex emtLoadVoltage =
+      fundamental(emt, "v_load_0", 0.02, simulationFinalTime);
   const Real loadVoltageError = std::abs(dpLoadVoltage - emtLoadVoltage) /
                                 std::max(1e-12, std::abs(dpLoadVoltage));
   Real firstCyclePeakError = 0.;
@@ -424,18 +435,28 @@ void runCase(const Case &test) {
             << ", first-cycle peak deviation=" << firstCyclePeakError << " A"
             << ", PiLine first-cycle peak deviation=" << firstCycleLinkPeakError
             << " A" << std::endl;
-  if (currentError > 1e-3 || linkCurrentError > 1e-2 ||
-      loadVoltageError > 1e-2 || initVoltageError > 1e-6 ||
-      firstCyclePeakError > errorLimit ||
-      firstCycleLinkPeakError > std::max(2e-5, 0.02 * std::abs(emtLinkCurrent)))
+  if (currentError > 1e-3 || firstCyclePeakError > errorLimit ||
+      (checkNetworkParity &&
+       (linkCurrentError > 1e-2 || loadVoltageError > 1e-2 ||
+        initVoltageError > 1e-6 ||
+        firstCycleLinkPeakError >
+            std::max(2e-5, 0.02 * std::abs(emtLinkCurrent)))))
     throw std::runtime_error("Ph3 passive PF parity failed for " + suffix);
 }
 } // namespace
 
-int main() {
+int main(int argc, char *argv[]) {
   const Real omega = 2. * PI * frequency;
   const Real capacitor = 15e-6;
   const Real inductor = 0.05;
+  if (argc == 2 && String(argv[1]) == "--series-only") {
+    // Focused component checks retain branch-current and waveform assertions;
+    // the unrelated cross-domain PiLine/load parity checks remain in the full
+    // suite and currently fail before these cases are reached.
+    runCase({Kind::SeriesResistor, "SeriesResistor", 1. / 10., 0.}, false, 0.2);
+    runCase({Kind::SeriesSwitch, "SeriesSwitch", 1. / 0.5, 0.}, false, 0.2);
+    return 0;
+  }
   runCase({Kind::Resistor, "Resistor", 1. / 10., 0.});
   runCase({Kind::MutualResistor, "MutualResistor", 1. / 8., 0.});
   runCase({Kind::SeriesResistor, "SeriesResistor", 1. / 10., 0.});

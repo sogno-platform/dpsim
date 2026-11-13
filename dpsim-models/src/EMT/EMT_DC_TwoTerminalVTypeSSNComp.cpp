@@ -12,6 +12,28 @@ EMT::DC::TwoTerminalVTypeSSNComp::TwoTerminalVTypeSSNComp(
   setTerminalNumber(2);
 }
 
+void EMT::DC::TwoTerminalVTypeSSNComp::calculateHistoryVector(
+    Matrix &history) const {
+  if (mA.rows() != 1) {
+    EMT::SSNComp::calculateHistoryVector(history);
+    return;
+  }
+
+  history(0, 0) = mC(0, 0) * (mdA(0, 0) * stateValue()(0, 0) +
+                              mdB(0, 0) * inputValue()(0, 0));
+}
+
+void EMT::DC::TwoTerminalVTypeSSNComp::updateState(const Matrix &uOld,
+                                                   const Matrix &uNew) {
+  if (mA.rows() != 1) {
+    EMT::SSNComp::updateState(uOld, uNew);
+    return;
+  }
+
+  (**mX)(0, 0) =
+      mdA(0, 0) * (**mX)(0, 0) + mdB(0, 0) * (uNew(0, 0) + uOld(0, 0));
+}
+
 void EMT::DC::TwoTerminalVTypeSSNComp::validateDCTerminals() const {
   for (UInt terminalIdx = 0; terminalIdx < 2; ++terminalIdx) {
     const auto terminalNode =

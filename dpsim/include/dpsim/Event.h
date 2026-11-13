@@ -115,5 +115,7 @@ public:
   void addEvent(Event::Ptr e);
   ///
   void handleEvents(CPS::Real currentTime);
+  /// Whether the queue contains events that require per-step CPU handling.
+  bool empty() const { return mEvents.empty(); }
 };
 } // namespace DPsim

@@ -7,13 +7,24 @@
  *********************************************************************************/
 
 #include <dpsim-models/EMT/EMT_Ph3_PiLine.h>
+#include <dpsim-models/MNAStampUtils.h>
 
 using namespace CPS;
 
 EMT::Ph3::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
+    : PiLine(uid, name, true, logLevel) {}
+
+EMT::Ph3::PiLine::PiLine(String uid, String name, Bool useSubcomponents,
+                         Logger::Level logLevel)
     : Base::Ph3::PiLine(mAttributes),
       CompositePowerComp<Real>(uid, name, true, true, logLevel) {
+  mUseSubcomponents = useSubcomponents;
+  mDirectState = mAttributes->create<Matrix>("direct_state");
+  **mDirectState = Matrix::Zero(18, 1);
   mPhaseType = PhaseType::ABC;
+  // The direct path still keeps the series midpoint as an MNA unknown. This
+  // preserves the exact conventional R-L companion equations while removing
+  // the separate child components and their scheduler tasks.
   setVirtualNodeNumber(1);
   setTerminalNumber(2);
 
@@ -26,7 +37,7 @@ EMT::Ph3::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
 
 /// DEPRECATED: Delete method
 SimPowerComp<Real>::Ptr EMT::Ph3::PiLine::clone(String name) {
-  auto copy = PiLine::make(name, mLogLevel);
+  auto copy = PiLine::make(name, mUseSubcomponents, mLogLevel);
   copy->setParameters(**mSeriesRes, **mSeriesInd, **mParallelCap,
                       **mParallelCond);
   return copy;
@@ -36,6 +47,14 @@ void EMT::Ph3::PiLine::createSubComponents() {
   if (mSubCompCreated)
     return;
   mSubCompCreated = true;
+
+  if (!mUseSubcomponents) {
+    if ((**mParallelCond)(0, 0) <= 0.) {
+      **mParallelCond = Matrix::Zero(3, 3);
+      (**mParallelCond).diagonal().setConstant(1e-6);
+    }
+    return;
+  }
 
   // By default there is always a small conductance to ground to
   // avoid problems with floating nodes.
@@ -102,6 +121,38 @@ void EMT::Ph3::PiLine::createSubComponents() {
 }
 
 void EMT::Ph3::PiLine::initializeParentFromNodesAndTerminals(Real frequency) {
+  if (!mUseSubcomponents) {
+    const Real omega = 2. * PI * frequency;
+    MatrixComp v0 = MatrixComp::Zero(3, 1), v1 = MatrixComp::Zero(3, 1);
+    v0(0) = RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
+    v1(0) = RMS3PH_TO_PEAK1PH * initialSingleVoltage(1);
+    v0(1) = v0(0) * SHIFT_TO_PHASE_B;
+    v0(2) = v0(0) * SHIFT_TO_PHASE_C;
+    v1(1) = v1(0) * SHIFT_TO_PHASE_B;
+    v1(2) = v1(0) * SHIFT_TO_PHASE_C;
+    const MatrixComp voltage = v1 - v0;
+    const MatrixComp impedance =
+        (**mSeriesRes).cast<Complex>() +
+        Complex(0., omega) * (**mSeriesInd).cast<Complex>();
+    const MatrixComp current = impedance.inverse() * voltage;
+    const MatrixComp halfCap = ((**mParallelCap) / 2.).cast<Complex>();
+    **mIntfVoltage = voltage.real();
+    **mIntfCurrent = current.real();
+    mVirtualNodes[0]->setInitialVoltage(
+        PEAK1PH_TO_RMS3PH *
+        (v0 + (**mSeriesRes).cast<Complex>() * current).real());
+    (**mDirectState).setZero();
+    (**mDirectState).block<3, 1>(0, 0) = current.real();
+    (**mDirectState).block<3, 1>(3, 0) =
+        (voltage - (**mSeriesRes).cast<Complex>() * current).real();
+    (**mDirectState).block<3, 1>(6, 0) = v0.real();
+    (**mDirectState).block<3, 1>(9, 0) =
+        (Complex(0., omega) * halfCap * v0).real();
+    (**mDirectState).block<3, 1>(12, 0) = v1.real();
+    (**mDirectState).block<3, 1>(15, 0) =
+        (Complex(0., omega) * halfCap * v1).real();
+    return;
+  }
   // Static calculation
   Real omega = 2. * PI * frequency;
   MatrixComp impedance = MatrixComp::Zero(3, 3);
@@ -164,16 +215,104 @@ void EMT::Ph3::PiLine::initializeParentFromNodesAndTerminals(Real frequency) {
   mSLog->flush();
 }
 
+void EMT::Ph3::PiLine::mnaParentInitialize(Real, Real timeStep,
+                                           Attribute<Matrix>::Ptr) {
+  if (mUseSubcomponents)
+    return;
+  mDirectResistanceConductance = (**mSeriesRes).inverse();
+  mDirectInductorAdmittance = (timeStep / 2.) * (**mSeriesInd).inverse();
+  mDirectCapAdmittance = (**mParallelCap) / timeStep;
+}
+
+void EMT::Ph3::PiLine::mnaParentApplySystemMatrixStamp(
+    SparseMatrixRow &systemMatrix) {
+  if (mUseSubcomponents)
+    return;
+  updateMatrixNodeIndices();
+  const UInt midpoint = mVirtualNodes[0]->matrixNodeIndex(PhaseType::A);
+  MNAStampUtils::stampConductanceMatrix(
+      mDirectResistanceConductance, systemMatrix, matrixNodeIndex(0), midpoint,
+      terminalNotGrounded(0), true, mSLog);
+  MNAStampUtils::stampConductanceMatrix(mDirectInductorAdmittance, systemMatrix,
+                                        midpoint, matrixNodeIndex(1), true,
+                                        terminalNotGrounded(1), mSLog);
+  const Matrix shunt = mDirectCapAdmittance + (**mParallelCond) / 2.;
+  for (UInt terminal = 0; terminal < 2; ++terminal)
+    MNAStampUtils::stampConductanceMatrix(
+        shunt, systemMatrix, matrixNodeIndex(terminal), 0,
+        terminalNotGrounded(terminal), false, mSLog);
+}
+
+void EMT::Ph3::PiLine::mnaParentApplyRightSideVectorStamp(Matrix &rightVector) {
+  if (mUseSubcomponents)
+    return;
+  const UInt midpoint = mVirtualNodes[0]->matrixNodeIndex(PhaseType::A);
+  for (UInt phase = 0; phase < 3; ++phase)
+    Math::setVectorElement(rightVector, midpoint + phase,
+                           mDirectSeriesHistory(phase));
+  if (terminalNotGrounded(1))
+    for (UInt phase = 0; phase < 3; ++phase)
+      Math::setVectorElement(rightVector, matrixNodeIndex(1, phase),
+                             -mDirectSeriesHistory(phase) -
+                                 mDirectCapHistory1(phase));
+  if (terminalNotGrounded(0))
+    for (UInt phase = 0; phase < 3; ++phase)
+      Math::setVectorElement(rightVector, matrixNodeIndex(0, phase),
+                             -mDirectCapHistory0(phase));
+}
+
+Bool EMT::Ph3::PiLine::mnaHasCompactRightSideVectorStamp() const {
+  return !mUseSubcomponents ||
+         CompositePowerComp<Real>::mnaHasCompactRightSideVectorStamp();
+}
+
+void EMT::Ph3::PiLine::mnaAddCompactRightSideVectorStamp(Matrix &rightVector) {
+  if (mUseSubcomponents) {
+    CompositePowerComp<Real>::mnaAddCompactRightSideVectorStamp(rightVector);
+    return;
+  }
+  const UInt midpoint = mVirtualNodes[0]->matrixNodeIndex(PhaseType::A);
+  for (UInt phase = 0; phase < 3; ++phase)
+    Math::addToVectorElement(
+        rightVector, midpoint + phase,
+        Math::realFromVectorElement(**mRightVector, midpoint + phase));
+  for (UInt terminal = 0; terminal < 2; ++terminal) {
+    if (!terminalNotGrounded(terminal))
+      continue;
+    for (UInt phase = 0; phase < 3; ++phase) {
+      const UInt idx = matrixNodeIndex(terminal, phase);
+      Math::addToVectorElement(
+          rightVector, idx, Math::realFromVectorElement(**mRightVector, idx));
+    }
+  }
+}
+
 void EMT::Ph3::PiLine::mnaParentAddPreStepDependencies(
     AttributeBase::List &prevStepDependencies,
     AttributeBase::List &attributeDependencies,
     AttributeBase::List &modifiedAttributes) {
-  prevStepDependencies.push_back(mIntfCurrent);
-  prevStepDependencies.push_back(mIntfVoltage);
+  if (!mUseSubcomponents)
+    prevStepDependencies.push_back(mDirectState);
+  else {
+    prevStepDependencies.push_back(mIntfCurrent);
+    prevStepDependencies.push_back(mIntfVoltage);
+  }
   modifiedAttributes.push_back(mRightVector);
 }
 
 void EMT::Ph3::PiLine::mnaParentPreStep(Real time, Int timeStepCount) {
+  if (!mUseSubcomponents) {
+    mDirectInductorHistory.noalias() =
+        mDirectInductorAdmittance * (**mDirectState).block<3, 1>(3, 0);
+    mDirectInductorHistory += (**mDirectState).block<3, 1>(0, 0);
+    mDirectSeriesHistory = mDirectInductorHistory;
+    mDirectCapHistory0 =
+        -(**mDirectState).block<3, 1>(9, 0) -
+        mDirectCapAdmittance * (**mDirectState).block<3, 1>(6, 0);
+    mDirectCapHistory1 =
+        -(**mDirectState).block<3, 1>(15, 0) -
+        mDirectCapAdmittance * (**mDirectState).block<3, 1>(12, 0);
+  }
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
@@ -185,17 +324,47 @@ void EMT::Ph3::PiLine::mnaParentAddPostStepDependencies(
   attributeDependencies.push_back(leftVector);
   modifiedAttributes.push_back(mIntfVoltage);
   modifiedAttributes.push_back(mIntfCurrent);
+  if (!mUseSubcomponents)
+    modifiedAttributes.push_back(mDirectState);
 }
 
 void EMT::Ph3::PiLine::mnaParentPostStep(Real time, Int timeStepCount,
                                          Attribute<Matrix>::Ptr &leftVector) {
+  if (!mUseSubcomponents) {
+    const auto voltage = [&](UInt terminal) {
+      Eigen::Matrix<Real, 3, 1> result = Eigen::Matrix<Real, 3, 1>::Zero();
+      if (terminalNotGrounded(terminal))
+        for (UInt phase = 0; phase < 3; ++phase)
+          result(phase) = Math::realFromVectorElement(
+              **leftVector, matrixNodeIndex(terminal, phase));
+      return result;
+    };
+    const auto v0 = voltage(0), v1 = voltage(1);
+    Eigen::Matrix<Real, 3, 1> vmid;
+    for (UInt phase = 0; phase < 3; ++phase)
+      vmid(phase) = Math::realFromVectorElement(
+          **leftVector,
+          mVirtualNodes[0]->matrixNodeIndex(static_cast<PhaseType>(phase)));
+    **mIntfVoltage = v1 - v0;
+    **mIntfCurrent =
+        mDirectInductorAdmittance * (v1 - vmid) + mDirectSeriesHistory;
+    (**mDirectState).block<3, 1>(0, 0) = **mIntfCurrent;
+    (**mDirectState).block<3, 1>(3, 0) = v1 - vmid;
+    (**mDirectState).block<3, 1>(6, 0) = v0;
+    (**mDirectState).block<3, 1>(9, 0) =
+        mDirectCapAdmittance * v0 + mDirectCapHistory0;
+    (**mDirectState).block<3, 1>(12, 0) = v1;
+    (**mDirectState).block<3, 1>(15, 0) =
+        mDirectCapAdmittance * v1 + mDirectCapHistory1;
+    return;
+  }
   mnaCompUpdateVoltage(**leftVector);
   mnaCompUpdateCurrent(**leftVector);
 }
 
 void EMT::Ph3::PiLine::mnaCompUpdateVoltage(const Matrix &leftVector) {
   // v1 - v0
-  **mIntfVoltage = Matrix::Zero(3, 1);
+  (**mIntfVoltage).setZero();
   if (terminalNotGrounded(1)) {
     (**mIntfVoltage)(0, 0) =
         Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
@@ -218,6 +387,21 @@ void EMT::Ph3::PiLine::mnaCompUpdateVoltage(const Matrix &leftVector) {
 }
 
 void EMT::Ph3::PiLine::mnaCompUpdateCurrent(const Matrix &leftVector) {
+  if (!mUseSubcomponents) {
+    Eigen::Matrix<Real, 3, 1> midpointVoltage;
+    for (UInt phase = 0; phase < 3; ++phase)
+      midpointVoltage(phase) = Math::realFromVectorElement(
+          leftVector,
+          mVirtualNodes[0]->matrixNodeIndex(static_cast<PhaseType>(phase)));
+    Eigen::Matrix<Real, 3, 1> terminal1 = Eigen::Matrix<Real, 3, 1>::Zero();
+    if (terminalNotGrounded(1))
+      for (UInt phase = 0; phase < 3; ++phase)
+        terminal1(phase) =
+            Math::realFromVectorElement(leftVector, matrixNodeIndex(1, phase));
+    **mIntfCurrent = mDirectInductorAdmittance * (terminal1 - midpointVoltage) +
+                     mDirectSeriesHistory;
+    return;
+  }
   **mIntfCurrent = mSubSeriesInductor->intfCurrent();
 }
 

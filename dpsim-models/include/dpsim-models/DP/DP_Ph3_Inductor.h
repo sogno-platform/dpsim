@@ -64,6 +64,8 @@ public:
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
 
   void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
+  Bool mnaHasCompactRightSideVectorStamp() const override { return true; }
+  void mnaAddCompactRightSideVectorStamp(Matrix &rightVector) override;
 
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;

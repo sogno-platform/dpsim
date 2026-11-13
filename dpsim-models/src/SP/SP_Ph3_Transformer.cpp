@@ -256,7 +256,7 @@ void SP::Ph3::Transformer::mnaParentPostStep(
 }
 
 void SP::Ph3::Transformer::mnaCompUpdateVoltage(const Matrix &leftVector) {
-  **mIntfVoltage = MatrixComp::Zero(3, 1);
+  (**mIntfVoltage).setZero();
   for (UInt phase = 0; phase < 3; phase++) {
     if (terminalNotGrounded(1))
       (**mIntfVoltage)(phase, 0) =

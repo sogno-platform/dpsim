@@ -11,7 +11,12 @@
 using namespace CPS;
 
 DP::Ph1::PQLoadCS::PQLoadCS(String uid, String name, Logger::Level logLevel)
+    : PQLoadCS(uid, name, true, logLevel) {}
+
+DP::Ph1::PQLoadCS::PQLoadCS(String uid, String name, Bool useSubcomponents,
+                            Logger::Level logLevel)
     : CompositePowerComp<Complex>(uid, name, true, true, logLevel),
+      mUseSubcomponents(useSubcomponents),
       mActivePower(mAttributes->create<Real>("P", 0)),
       mReactivePower(mAttributes->create<Real>("Q", 0)),
       mNomVoltage(mAttributes->create<Real>("V_nom")) {
@@ -45,12 +50,14 @@ void DP::Ph1::PQLoadCS::setParameters(Real activePower, Real reactivePower,
 
 ///DEPRECATED: Delete method
 SimPowerComp<Complex>::Ptr DP::Ph1::PQLoadCS::clone(String name) {
-  auto copy = PQLoadCS::make(name, mLogLevel);
+  auto copy = PQLoadCS::make(name, mUseSubcomponents, mLogLevel);
   copy->setParameters(**mActivePower, **mReactivePower, **mNomVoltage);
   return copy;
 }
 
 void DP::Ph1::PQLoadCS::createSubComponents() {
+  if (!mUseSubcomponents)
+    return;
   if (mSubCompCreated)
     return;
   mSubCompCreated = true;
@@ -74,10 +81,15 @@ void DP::Ph1::PQLoadCS::initializeParentFromNodesAndTerminals(Real frequency) {
   Complex power = Complex(**mActivePower, **mReactivePower);
   Complex current =
       (**mNomVoltage != 0) ? std::conj(power / **mNomVoltage) : Complex(0);
-  mSubCurrentSource->setParameters(current);
-
-  mSubCurrentSource->initializeFromNodesAndTerminals(frequency);
-  updateIntfValues();
+  mDirectCurrentRef = current;
+  if (mUseSubcomponents) {
+    mSubCurrentSource->setParameters(current);
+    mSubCurrentSource->initializeFromNodesAndTerminals(frequency);
+    updateIntfValues();
+  } else {
+    (**mIntfVoltage)(0, 0) = initialSingleVoltage(0);
+    (**mIntfCurrent)(0, 0) = mDirectCurrentRef;
+  }
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"
@@ -92,13 +104,33 @@ void DP::Ph1::PQLoadCS::initializeParentFromNodesAndTerminals(Real frequency) {
                      Logger::phasorToString(current));
 }
 
+void DP::Ph1::PQLoadCS::mnaParentInitialize(Real omega, Real timeStep,
+                                            Attribute<Matrix>::Ptr leftVector) {
+  if (!mUseSubcomponents)
+    updateMatrixNodeIndices();
+}
+
+void DP::Ph1::PQLoadCS::mnaParentApplySystemMatrixStamp(
+    SparseMatrixRow &systemMatrix) {
+  (void)systemMatrix;
+}
+
+void DP::Ph1::PQLoadCS::mnaParentApplyRightSideVectorStamp(
+    Matrix &rightVector) {
+  if (!mUseSubcomponents && terminalNotGrounded(0))
+    Math::setVectorElement(rightVector, matrixNodeIndex(0), -mDirectCurrentRef,
+                           mNumFreqs, 0);
+}
+
 void DP::Ph1::PQLoadCS::updateSetPoint() {
   // Calculate new current set point.
   Complex power = {**mActivePower, **mReactivePower};
   Complex current = power / **mNomVoltage;
   //Complex current = power / (**mIntfVoltage)(0,0);
 
-  **mSubCurrentSource->mCurrentRef = std::conj(current);
+  mDirectCurrentRef = std::conj(current);
+  if (mUseSubcomponents)
+    **mSubCurrentSource->mCurrentRef = mDirectCurrentRef;
   SPDLOG_LOGGER_DEBUG(mSLog,
                       "\n--- update set points ---"
                       "\npower: {:s}"
@@ -114,6 +146,8 @@ void DP::Ph1::PQLoadCS::mnaParentAddPreStepDependencies(
   attributeDependencies.push_back(mActivePower);
   attributeDependencies.push_back(mReactivePower);
   attributeDependencies.push_back(mNomVoltage);
+  if (!mUseSubcomponents)
+    modifiedAttributes.push_back(mRightVector);
 }
 
 void DP::Ph1::PQLoadCS::mnaParentAddPostStepDependencies(
@@ -121,6 +155,8 @@ void DP::Ph1::PQLoadCS::mnaParentAddPostStepDependencies(
     AttributeBase::List &attributeDependencies,
     AttributeBase::List &modifiedAttributes,
     Attribute<Matrix>::Ptr &leftVector) {
+  if (!mUseSubcomponents)
+    attributeDependencies.push_back(leftVector);
   modifiedAttributes.push_back(mIntfCurrent);
   modifiedAttributes.push_back(mIntfVoltage);
 }
@@ -131,11 +167,21 @@ void DP::Ph1::PQLoadCS::mnaParentPreStep(Real time, Int timeStepCount) {
 }
 
 void DP::Ph1::PQLoadCS::updateIntfValues() {
-  **mIntfCurrent = mSubCurrentSource->intfCurrent();
-  **mIntfVoltage = mSubCurrentSource->intfVoltage();
+  if (mUseSubcomponents) {
+    **mIntfCurrent = mSubCurrentSource->intfCurrent();
+    **mIntfVoltage = mSubCurrentSource->intfVoltage();
+  }
 }
 
 void DP::Ph1::PQLoadCS::mnaParentPostStep(Real time, Int timeStepCount,
                                           Attribute<Matrix>::Ptr &leftVector) {
   updateIntfValues();
+  if (!mUseSubcomponents) {
+    (**mIntfVoltage)(0, 0) =
+        terminalNotGrounded(0)
+            ? Math::complexFromVectorElement(**leftVector, matrixNodeIndex(0),
+                                             mNumFreqs, 0)
+            : Complex(0., 0.);
+    (**mIntfCurrent)(0, 0) = mDirectCurrentRef;
+  }
 }

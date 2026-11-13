@@ -7,6 +7,7 @@
  *********************************************************************************/
 
 #include <dpsim-models/EMT/EMT_Ph3_Shunt.h>
+#include <dpsim-models/MNAStampUtils.h>
 
 #include <stdexcept>
 
@@ -19,6 +20,12 @@ EMT::Ph3::Shunt::Shunt(String uid, String name, Logger::Level logLevel)
   mSusceptance = Matrix::Zero(3, 3);
   SPDLOG_LOGGER_INFO(mSLog, "Create {} of type {}", this->type(), name);
   setTerminalNumber(1);
+}
+
+EMT::Ph3::Shunt::Shunt(String uid, String name, Bool useSubcomponents,
+                       Logger::Level logLevel)
+    : Shunt(uid, name, logLevel) {
+  mUseSubcomponents = useSubcomponents;
 }
 
 void EMT::Ph3::Shunt::setParameters(Real conductance, Real susceptance) {
@@ -70,6 +77,16 @@ void EMT::Ph3::Shunt::initializeParentFromNodesAndTerminals(Real frequency) {
   // shunt: ground is terminal 0 and the live bus is terminal 1.
   **mIntfCurrent = (admittance * vInitABC).real();
 
+  if (!mUseSubcomponents) {
+    MatrixComp susceptiveAdmittance =
+        MatrixComp(Complex(0, 1) * mSusceptance) * vInitABC;
+    if (mSusceptance(0, 0) > 0)
+      mCapBranchCurrent = susceptiveAdmittance.real();
+    if (mSusceptance(0, 0) < 0)
+      mIndBranchCurrent = susceptiveAdmittance.real();
+    return;
+  }
+
   // Create series rl sub component
   if (mConductance(0, 0) > 0) {
     mSubResistor =
@@ -116,6 +133,42 @@ void EMT::Ph3::Shunt::initializeParentFromNodesAndTerminals(Real frequency) {
                      Logger::phasorToString(initialSingleVoltage(0)));
 }
 
+void EMT::Ph3::Shunt::mnaParentInitialize(Real omega, Real timeStep,
+                                          Attribute<Matrix>::Ptr leftVector) {
+  if (mUseSubcomponents)
+    return;
+
+  if (mSusceptance(0, 0) > 0)
+    mCapEquivalentConductance = (2.0 / (omega * timeStep)) * mSusceptance;
+  if (mSusceptance(0, 0) < 0)
+    mIndEquivalentConductance = (-0.5 * omega * timeStep) * mSusceptance;
+  mCapEquivalentCurrent =
+      -mCapBranchCurrent - mCapEquivalentConductance * **mIntfVoltage;
+  mIndEquivalentCurrent =
+      mIndEquivalentConductance * **mIntfVoltage + mIndBranchCurrent;
+}
+
+void EMT::Ph3::Shunt::mnaParentApplySystemMatrixStamp(
+    SparseMatrixRow &systemMatrix) {
+  if (mUseSubcomponents)
+    return;
+  const Matrix conductance =
+      mConductance + mCapEquivalentConductance + mIndEquivalentConductance;
+  MNAStampUtils::stampConductanceMatrix(conductance, systemMatrix,
+                                        matrixNodeIndex(0), 0,
+                                        terminalNotGrounded(0), false, mSLog);
+}
+
+void EMT::Ph3::Shunt::mnaParentApplyRightSideVectorStamp(Matrix &rightVector) {
+  if (mUseSubcomponents || !terminalNotGrounded(0))
+    return;
+  for (Int phase = 0; phase < 3; ++phase) {
+    Math::setVectorElement(rightVector, matrixNodeIndex(0, phase),
+                           mCapEquivalentCurrent(phase, 0) +
+                               mIndEquivalentCurrent(phase, 0));
+  }
+}
+
 void EMT::Ph3::Shunt::mnaParentAddPreStepDependencies(
     AttributeBase::List &prevStepDependencies,
     AttributeBase::List &attributeDependencies,
@@ -124,6 +177,12 @@ void EMT::Ph3::Shunt::mnaParentAddPreStepDependencies(
 }
 
 void EMT::Ph3::Shunt::mnaParentPreStep(Real time, Int timeStepCount) {
+  if (!mUseSubcomponents) {
+    mCapEquivalentCurrent =
+        -mCapBranchCurrent - mCapEquivalentConductance * **mIntfVoltage;
+    mIndEquivalentCurrent =
+        mIndEquivalentConductance * **mIntfVoltage + mIndBranchCurrent;
+  }
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
@@ -153,7 +212,18 @@ void EMT::Ph3::Shunt::mnaCompUpdateVoltage(const Matrix &leftVector) {
 }
 
 void EMT::Ph3::Shunt::mnaCompUpdateCurrent(const Matrix &leftVector) {
-  **mIntfCurrent = Matrix::Zero(3, 1);
+  if (!mUseSubcomponents) {
+    mCapBranchCurrent =
+        mCapEquivalentConductance * **mIntfVoltage + mCapEquivalentCurrent;
+    mIndBranchCurrent =
+        mIndEquivalentConductance * **mIntfVoltage + mIndEquivalentCurrent;
+    **mIntfCurrent = -(
+        (mConductance + mCapEquivalentConductance + mIndEquivalentConductance) *
+            **mIntfVoltage +
+        mCapEquivalentCurrent + mIndEquivalentCurrent);
+    return;
+  }
+  (**mIntfCurrent).setZero();
 
   if (mConductance(0, 0) > 0)
     **mIntfCurrent += mSubResistor->intfCurrent();

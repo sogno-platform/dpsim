@@ -130,8 +130,9 @@ void EMT::Ph3::SSN_GFL::setParameters(Real lf, Real cf, Real rf, Real rc,
                                       eVector, fVector);
 }
 
-Matrix EMT::Ph3::SSN_GFL::getParkTransformMatrix(Real theta) const {
-  Matrix transform(2, 3);
+MatrixFixedSize<2, 3>
+EMT::Ph3::SSN_GFL::getParkTransformMatrix(Real theta) const {
+  MatrixFixedSize<2, 3> transform;
   const Real scale = std::sqrt(2.0 / 3.0);
 
   transform.row(0) << scale * std::cos(theta),
@@ -145,8 +146,9 @@ Matrix EMT::Ph3::SSN_GFL::getParkTransformMatrix(Real theta) const {
   return transform;
 }
 
-Matrix EMT::Ph3::SSN_GFL::getInverseParkTransformMatrix(Real theta) const {
-  Matrix transform(3, 2);
+MatrixFixedSize<3, 2>
+EMT::Ph3::SSN_GFL::getInverseParkTransformMatrix(Real theta) const {
+  MatrixFixedSize<3, 2> transform;
   const Real scale = std::sqrt(2.0 / 3.0);
 
   transform << scale * std::cos(theta), -scale * std::sin(theta),
@@ -180,17 +182,18 @@ void EMT::Ph3::SSN_GFL::evaluateStateDerivative(const Matrix &x,
   const Real gammaD = x(GammaD, 0);
   const Real gammaQ = x(GammaQ, 0);
 
-  const Matrix vcAbc = x.block(VcA, 0, 3, 1);
-  const Matrix ifAbc = x.block(IfA, 0, 3, 1);
+  const MatrixFixedSize<3, 1> vcAbc = x.block(VcA, 0, 3, 1);
+  const MatrixFixedSize<3, 1> ifAbc = x.block(IfA, 0, 3, 1);
 
-  const Matrix parkTransform = getParkTransformMatrix(thetaPLL);
-  const Matrix inverseParkTransform = getInverseParkTransformMatrix(thetaPLL);
+  const MatrixFixedSize<2, 3> parkTransform = getParkTransformMatrix(thetaPLL);
+  const MatrixFixedSize<3, 2> inverseParkTransform =
+      getInverseParkTransformMatrix(thetaPLL);
 
   // Positive current is physical inverter injection into the grid.
-  const Matrix iGridAbc = (vcAbc - u) / mRc;
+  const MatrixFixedSize<3, 1> iGridAbc = (vcAbc - u) / mRc;
 
-  const Matrix vcDq = parkTransform * vcAbc;
-  const Matrix iGridDq = parkTransform * iGridAbc;
+  const MatrixFixedSize<2, 1> vcDq = parkTransform * vcAbc;
+  const MatrixFixedSize<2, 1> iGridDq = parkTransform * iGridAbc;
 
   const Real vcD = vcDq(0, 0);
   const Real vcQ = vcDq(1, 0);
@@ -239,18 +242,19 @@ void EMT::Ph3::SSN_GFL::evaluateStateDerivative(const Matrix &x,
   const Real converterVoltageReferenceQ =
       mKpCurrCtrl * currentErrorQ + mKiCurrCtrl * gammaQ;
 
-  Matrix converterVoltageReferenceDq(2, 1);
+  MatrixFixedSize<2, 1> converterVoltageReferenceDq;
   converterVoltageReferenceDq << converterVoltageReferenceD,
       converterVoltageReferenceQ;
 
-  const Matrix converterVoltageReferenceAbc =
+  const MatrixFixedSize<3, 1> converterVoltageReferenceAbc =
       inverseParkTransform * converterVoltageReferenceDq;
 
   // ----------------------------------------------------------------------
   // 5. Electrical filter plant
   // ----------------------------------------------------------------------
-  const Matrix vcDerivative = ifAbc / mCf + (u - vcAbc) / (mCf * mRc);
-  const Matrix ifDerivative =
+  const MatrixFixedSize<3, 1> vcDerivative =
+      ifAbc / mCf + (u - vcAbc) / (mCf * mRc);
+  const MatrixFixedSize<3, 1> ifDerivative =
       (converterVoltageReferenceAbc - vcAbc - mRf * ifAbc) / mLf;
 
   stateDerivative.block(VcA, 0, 3, 1) = vcDerivative;
@@ -293,38 +297,39 @@ void EMT::Ph3::SSN_GFL::calculateAnalyticalJacobians(const Matrix &x,
   const Real phiQ = x(PhiQ, 0);
   const Real gammaD = x(GammaD, 0);
   const Real gammaQ = x(GammaQ, 0);
-  const Matrix vcAbc = x.block(VcA, 0, 3, 1);
+  const MatrixFixedSize<3, 1> vcAbc = x.block(VcA, 0, 3, 1);
 
-  const Matrix identity3 = Matrix::Identity(3, 3);
+  const MatrixFixedSize<3, 3> identity3 = Matrix::Identity(3, 3);
 
-  const Matrix parkTransform = getParkTransformMatrix(thetaPLL);
-  const Matrix tD = parkTransform.row(0);
-  const Matrix tQ = parkTransform.row(1);
+  const MatrixFixedSize<2, 3> parkTransform = getParkTransformMatrix(thetaPLL);
+  const Eigen::Matrix<Real, 1, 3, Eigen::RowMajor> tD = parkTransform.row(0);
+  const Eigen::Matrix<Real, 1, 3, Eigen::RowMajor> tQ = parkTransform.row(1);
 
-  const Matrix inverseParkTransform = getInverseParkTransformMatrix(thetaPLL);
-  const Matrix sD = inverseParkTransform.col(0);
-  const Matrix sQ = inverseParkTransform.col(1);
+  const MatrixFixedSize<3, 2> inverseParkTransform =
+      getInverseParkTransformMatrix(thetaPLL);
+  const MatrixFixedSize<3, 1> sD = inverseParkTransform.col(0);
+  const MatrixFixedSize<3, 1> sQ = inverseParkTransform.col(1);
 
   // Exact derivatives of the orthonormal Park transformation used by the
   // reference model.
-  const Matrix dTdTheta = tQ;
-  const Matrix dTqTheta = -tD;
-  const Matrix dSdTheta = sQ;
-  const Matrix dSqTheta = -sD;
+  const Eigen::Matrix<Real, 1, 3, Eigen::RowMajor> dTdTheta = tQ;
+  const Eigen::Matrix<Real, 1, 3, Eigen::RowMajor> dTqTheta = -tD;
+  const MatrixFixedSize<3, 1> dSdTheta = sQ;
+  const MatrixFixedSize<3, 1> dSqTheta = -sD;
 
-  const Matrix iGridAbc = (vcAbc - u) / mRc;
+  const MatrixFixedSize<3, 1> iGridAbc = (vcAbc - u) / mRc;
 
   const Real vcD = (tD * vcAbc)(0, 0);
   const Real vcQ = (tQ * vcAbc)(0, 0);
   const Real iGridD = (tD * iGridAbc)(0, 0);
   const Real iGridQ = (tQ * iGridAbc)(0, 0);
 
-  const Matrix dVcDByVc = tD;
-  const Matrix dVcQByVc = tQ;
-  const Matrix dIGridDByVc = tD / mRc;
-  const Matrix dIGridQByVc = tQ / mRc;
-  const Matrix dIGridDByU = -tD / mRc;
-  const Matrix dIGridQByU = -tQ / mRc;
+  const Eigen::Matrix<Real, 1, 3, Eigen::RowMajor> dVcDByVc = tD;
+  const Eigen::Matrix<Real, 1, 3, Eigen::RowMajor> dVcQByVc = tQ;
+  const Eigen::Matrix<Real, 1, 3, Eigen::RowMajor> dIGridDByVc = tD / mRc;
+  const Eigen::Matrix<Real, 1, 3, Eigen::RowMajor> dIGridQByVc = tQ / mRc;
+  const Eigen::Matrix<Real, 1, 3, Eigen::RowMajor> dIGridDByU = -tD / mRc;
+  const Eigen::Matrix<Real, 1, 3, Eigen::RowMajor> dIGridQByU = -tQ / mRc;
 
   const Real dVcDByTheta = (dTdTheta * vcAbc)(0, 0);
   const Real dVcQByTheta = (dTqTheta * vcAbc)(0, 0);
@@ -334,16 +339,20 @@ void EMT::Ph3::SSN_GFL::calculateAnalyticalJacobians(const Matrix &x,
   // Instantaneous active-power Jacobian.
   const Real dPByTheta = iGridD * dVcDByTheta + vcD * dIGridDByTheta +
                          iGridQ * dVcQByTheta + vcQ * dIGridQByTheta;
-  const Matrix dPByVc = iGridD * dVcDByVc + vcD * dIGridDByVc +
-                        iGridQ * dVcQByVc + vcQ * dIGridQByVc;
-  const Matrix dPByU = vcD * dIGridDByU + vcQ * dIGridQByU;
+  const Eigen::Matrix<Real, 1, 3, Eigen::RowMajor> dPByVc =
+      iGridD * dVcDByVc + vcD * dIGridDByVc + iGridQ * dVcQByVc +
+      vcQ * dIGridQByVc;
+  const Eigen::Matrix<Real, 1, 3, Eigen::RowMajor> dPByU =
+      vcD * dIGridDByU + vcQ * dIGridQByU;
 
   // Instantaneous reactive-power Jacobian.
   const Real dQByTheta = -iGridQ * dVcDByTheta - vcD * dIGridQByTheta +
                          iGridD * dVcQByTheta + vcQ * dIGridDByTheta;
-  const Matrix dQByVc = -iGridQ * dVcDByVc - vcD * dIGridQByVc +
-                        iGridD * dVcQByVc + vcQ * dIGridDByVc;
-  const Matrix dQByU = -vcD * dIGridQByU + vcQ * dIGridDByU;
+  const Eigen::Matrix<Real, 1, 3, Eigen::RowMajor> dQByVc =
+      -iGridQ * dVcDByVc - vcD * dIGridQByVc + iGridD * dVcQByVc +
+      vcQ * dIGridDByVc;
+  const Eigen::Matrix<Real, 1, 3, Eigen::RowMajor> dQByU =
+      -vcD * dIGridQByU + vcQ * dIGridDByU;
 
   const Real currentReferenceD =
       -mKpPowerCtrl * pFiltered + mKiPowerCtrl * phiD + mKpPowerCtrl * mPRef;
@@ -358,15 +367,20 @@ void EMT::Ph3::SSN_GFL::calculateAnalyticalJacobians(const Matrix &x,
                                           mKpCurrCtrl * currentReferenceQ;
 
   const Real dVoltageReferenceDByTheta = -mKpCurrCtrl * dIGridDByTheta;
-  const Matrix dVoltageReferenceDByVc = -mKpCurrCtrl * dIGridDByVc;
-  const Matrix dVoltageReferenceDByU = -mKpCurrCtrl * dIGridDByU;
+  const Eigen::Matrix<Real, 1, 3, Eigen::RowMajor> dVoltageReferenceDByVc =
+      -mKpCurrCtrl * dIGridDByVc;
+  const Eigen::Matrix<Real, 1, 3, Eigen::RowMajor> dVoltageReferenceDByU =
+      -mKpCurrCtrl * dIGridDByU;
 
   const Real dVoltageReferenceQByTheta = -mKpCurrCtrl * dIGridQByTheta;
-  const Matrix dVoltageReferenceQByVc = -mKpCurrCtrl * dIGridQByVc;
-  const Matrix dVoltageReferenceQByU = -mKpCurrCtrl * dIGridQByU;
+  const Eigen::Matrix<Real, 1, 3, Eigen::RowMajor> dVoltageReferenceQByVc =
+      -mKpCurrCtrl * dIGridQByVc;
+  const Eigen::Matrix<Real, 1, 3, Eigen::RowMajor> dVoltageReferenceQByU =
+      -mKpCurrCtrl * dIGridQByU;
 
-  Matrix dConverterVoltageAbcByX = Matrix::Zero(3, mStateSize);
-  Matrix dConverterVoltageAbcByU = Matrix::Zero(3, mInputSize);
+  MatrixFixedSize<3, 14> dConverterVoltageAbcByX =
+      MatrixFixedSize<3, 14>::Zero();
+  MatrixFixedSize<3, 3> dConverterVoltageAbcByU = MatrixFixedSize<3, 3>::Zero();
 
   dConverterVoltageAbcByX.col(ThetaPLL) =
       dSdTheta * converterVoltageReferenceD +
@@ -445,29 +459,27 @@ void EMT::Ph3::SSN_GFL::calculateAnalyticalJacobians(const Matrix &x,
 
 void EMT::Ph3::SSN_GFL::buildStateSpaceModel(const Matrix &x, const Matrix &u,
                                              Matrix &A, Matrix &B, Matrix &C,
-                                             Matrix &D, Matrix &E,
-                                             Matrix &F) const {
+                                             Matrix &D, Matrix &E, Matrix &F) {
   calculateAnalyticalJacobians(x, u, A, B, C, D);
 
-  Matrix stateDerivative = Matrix::Zero(mStateSize, 1);
-  Matrix output = Matrix::Zero(mOutputSize, 1);
-
-  evaluateStateDerivative(x, u, stateDerivative);
-  evaluateOutput(x, u, output);
+  evaluateStateDerivative(x, u, mStateDerivativeScratch);
+  evaluateOutput(x, u, mOutputScratch);
 
   // Local affine offsets at the operating point.
-  E = stateDerivative - A * x - B * u;
-  F = output - C * x - D * u;
+  E = mStateDerivativeScratch;
+  E.noalias() -= A * x;
+  E.noalias() -= B * u;
+  F = mOutputScratch;
+  F.noalias() -= C * x;
+  F.noalias() -= D * u;
 }
 
 Bool EMT::Ph3::SSN_GFL::updateComponentParameters() {
-  Matrix eVector;
-  Matrix fVector;
+  buildStateSpaceModel(**mX, **mIntfVoltage, mA, mB, mC, mD,
+                       mStateOffsetScratch, mOutputOffsetScratch);
 
-  buildStateSpaceModel(**mX, **mIntfVoltage, mA, mB, mC, mD, eVector, fVector);
-
-  setStateOffset(eVector);
-  setOutputOffset(fVector);
+  setStateOffset(mStateOffsetScratch);
+  setOutputOffset(mOutputOffsetScratch);
 
   // The PLL and dq/abc transformations make the local affine state-space
   // model time varying. The SSN equivalent is therefore rebuilt every step.

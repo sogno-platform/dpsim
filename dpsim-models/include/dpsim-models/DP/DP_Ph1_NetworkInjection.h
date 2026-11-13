@@ -27,6 +27,9 @@ class NetworkInjection : public CompositePowerComp<Complex>,
                          public DAEInterface,
                          public SharedFactory<NetworkInjection> {
 private:
+  Bool mUseSubcomponents = true;
+  Signal::SignalGenerator::Ptr mDirectSignal;
+  Complex mDirectVoltage = 0.;
   // ### Electrical Subcomponents ###
   /// Voltage source
   std::shared_ptr<DP::Ph1::VoltageSource> mSubVoltageSource;
@@ -42,9 +45,14 @@ public:
   /// Defines UID, name and logging level
   NetworkInjection(String uid, String name,
                    Logger::Level loglevel = Logger::Level::off);
+  NetworkInjection(String uid, String name, Bool useSubcomponents,
+                   Logger::Level loglevel = Logger::Level::off);
   /// Defines name and logging level
   NetworkInjection(String name, Logger::Level logLevel = Logger::Level::off)
       : NetworkInjection(name, name, logLevel) {}
+  NetworkInjection(String name, Bool useSubcomponents,
+                   Logger::Level logLevel = Logger::Level::off)
+      : NetworkInjection(name, name, useSubcomponents, logLevel) {}
   /// Defines name, component parameters and logging level
   NetworkInjection(String name, Complex voltage,
                    Logger::Level logLevel = Logger::Level::off);
@@ -54,6 +62,7 @@ public:
   // #### General ####
   /// Initializes component from power flow data
   void initializeParentFromNodesAndTerminals(Real frequency) override;
+  void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   /// Setter for reference voltage and frequency with a sine wave generator
   /// This will initialize the values of mVoltageRef and mSrcFreq to match the given parameters
   /// However, the attributes can be modified during the simulation to dynamically change the magnitude, frequency, and phase of the sine wave.

@@ -15,6 +15,10 @@ using namespace CPS::DP::Ph1;
 
 int main(int argc, char *argv[]) {
   CommandLineArgs args(argc, argv);
+  const Bool logTrace =
+      args.options.count("trace") && args.options.at("trace") == "true";
+  const Bool testSwitch =
+      args.options.count("switch") && args.options.at("switch") == "true";
   std::cout << "Simulate with " << args.getOptionInt("threads")
             << " threads, sequence " << args.getOptionInt("seq") << std::endl;
 
@@ -23,7 +27,8 @@ int main(int argc, char *argv[]) {
   Real finalTime = 0.05;
   String simName = "DP_Inverter_Grid_Parallel_FreqSplit_t" +
                    std::to_string(args.getOptionInt("threads")) + "_s" +
-                   std::to_string(args.getOptionInt("seq"));
+                   std::to_string(args.getOptionInt("seq")) +
+                   (testSwitch ? "_switch" : "");
   Logger::setLogDir("logs/" + simName);
   Int threads = args.getOptionInt("threads");
 
@@ -71,6 +76,11 @@ int main(int argc, char *argv[]) {
   rc->setParameters(1e-6);
   auto grid = VoltageSource::make("grid", level);
   grid->setParameters(Complex(0, -311.1270));
+  std::shared_ptr<Switch> testSwitchComp;
+  if (testSwitch) {
+    testSwitchComp = Switch::make("test_switch", level);
+    testSwitchComp->setParameters(1e6, 0.1, false);
+  }
 
   // Topology
   inv->connect({n1});
@@ -81,11 +91,15 @@ int main(int argc, char *argv[]) {
   r2->connect({n3, n4});
   l2->connect({n4, n5});
   grid->connect({SimNode::GND, n5});
+  if (testSwitch)
+    testSwitchComp->connect({n3, SimNode::GND});
 
   // Define system topology
-  auto sys =
-      SystemTopology(50, frequencies, SystemNodeList{n1, n2, n3, n4, n5},
-                     SystemComponentList{inv, r1, l1, r2, l2, c1, rc, grid});
+  SystemComponentList components{inv, r1, l1, r2, l2, c1, rc, grid};
+  if (testSwitch)
+    components.push_back(testSwitchComp);
+  auto sys = SystemTopology(50, frequencies, SystemNodeList{n1, n2, n3, n4, n5},
+                            components);
 
   Simulation sim(simName, level);
   sim.setSystem(sys);
@@ -95,6 +109,25 @@ int main(int argc, char *argv[]) {
   if (threads > 0) {
     auto scheduler = std::make_shared<ThreadLevelScheduler>(threads);
     sim.setScheduler(scheduler);
+  }
+  if (testSwitch) {
+    sim.addEvent(SwitchEvent::make(0.02, testSwitchComp, true));
+    sim.addEvent(SwitchEvent::make(0.04, testSwitchComp, false));
+  }
+
+  if (logTrace) {
+    auto logger = DataLogger::make(simName);
+    logger->logAttribute("v1", n1->attribute("v"), 1, 9);
+    logger->logAttribute("v2", n2->attribute("v"), 1, 1);
+    if (testSwitch)
+      logger->logAttribute("test_switch_current",
+                           testSwitchComp->attribute("i_intf"), 1, 1);
+    logger->logAttribute("v3", n3->attribute("v"), 1, 9);
+    logger->logAttribute("v4", n4->attribute("v"), 1, 1);
+    logger->logAttribute("v5", n5->attribute("v"), 1, 1);
+    logger->logAttribute("i12", r1->attribute("i_intf"), 1, 1);
+    logger->logAttribute("i34", r2->attribute("i_intf"), 1, 1);
+    sim.addLogger(logger);
   }
 
   sim.run();

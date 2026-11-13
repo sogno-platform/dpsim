@@ -34,12 +34,13 @@ protected:
   /// @brief Park transform as described in Krause
   ///
   /// Balanced case because the zero sequence variable is ignored
-  Matrix abcToDq0Transform(Real theta, MatrixComp &abc);
+  MatrixFixedSize<3, 1> abcToDq0Transform(Real theta, MatrixComp &abc);
 
   /// @brief Inverse Park transform as described in Krause
   ///
   /// Balanced case because the zero sequence variable is ignored
-  MatrixComp dq0ToAbcTransform(Real theta, Matrix &dq0);
+  MatrixFixedSizeComp<3, 1>
+  dq0ToAbcTransform(Real theta, const Eigen::Ref<const Matrix> &dq0);
 
   // #### Deprecated ###
   /// calculate flux states using trapezoidal rule - depcrecated

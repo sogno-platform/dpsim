@@ -26,6 +26,8 @@ private:
   Matrix mE;
   Matrix mdE;
   Matrix mF;
+  /// Reused input-sum workspace for the per-step state recurrence.
+  Matrix mUpdateInput;
 
 protected:
   static constexpr Int mInitializationMaxIterations = 10;
@@ -34,7 +36,7 @@ protected:
   VTypeVariableSSNComp(String uid, String name, Int inputSize, Int outputSize,
                        Logger::Level logLevel = Logger::Level::off);
 
-  Matrix calculateHistoryVector() const override final;
+  void calculateHistoryVector(Matrix &history) const override final;
   MatrixComp calculateSteadyStateStateFromInput(const MatrixComp &u,
                                                 Real frequency) const override;
   MatrixComp

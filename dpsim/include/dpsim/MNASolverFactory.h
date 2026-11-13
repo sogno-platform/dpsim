@@ -12,6 +12,14 @@
 #include <dpsim/DenseLUAdapter.h>
 #include <dpsim/DirectLinearSolverConfiguration.h>
 #include <dpsim/MNASolver.h>
+#ifdef WITH_HIP
+#include <dpsim/HipDenseAdapter.h>
+#include <dpsim/HipSparseBiCGStabAdapter.h>
+#include <dpsim/HipSparseQrAdapter.h>
+#ifdef WITH_KLU
+#include <dpsim/HipSparseLURefactorAdapter.h>
+#endif
+#endif
 #include <dpsim/MNASolverDirect.h>
 #ifdef WITH_SPARSE
 #include <dpsim/SparseLUAdapter.h>
@@ -51,6 +59,18 @@ public:
         DirectLinearSolverImpl::CUDAMagma,
 #endif // WITH_MAGMA
 #endif // WITH_CUDA
+#ifdef WITH_METAL
+        DirectLinearSolverImpl::MetalDense,
+        DirectLinearSolverImpl::MetalSparseBiCGSTAB,
+#endif // WITH_METAL
+#ifdef WITH_HIP
+        DirectLinearSolverImpl::HIPDense,
+        DirectLinearSolverImpl::HIPSparseBiCGStab,
+        DirectLinearSolverImpl::HIPSparseQR,
+#ifdef WITH_KLU
+        DirectLinearSolverImpl::HIPSparseLURefactor,
+#endif
+#endif
         DirectLinearSolverImpl::DenseLU,
 #ifdef WITH_SPARSE
         DirectLinearSolverImpl::SparseLU,
@@ -143,6 +163,68 @@ public:
       return gpuMagmaSolver;
     }
 #endif
+#endif
+#ifdef WITH_METAL
+    case DirectLinearSolverImpl::MetalDense: {
+      SPDLOG_LOGGER_INFO(log,
+                         "creating MetalDenseAdapter solver implementation");
+      std::shared_ptr<MnaSolverDirect<VarType>> metalSolver =
+          std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
+      metalSolver->setDirectLinearSolverImplementation(
+          DirectLinearSolverImpl::MetalDense);
+      return metalSolver;
+    }
+    case DirectLinearSolverImpl::MetalSparseBiCGSTAB: {
+      SPDLOG_LOGGER_INFO(
+          log, "creating MetalSparseBiCGSTABAdapter solver implementation");
+      std::shared_ptr<MnaSolverDirect<VarType>> metalSolver =
+          std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
+      metalSolver->setDirectLinearSolverImplementation(
+          DirectLinearSolverImpl::MetalSparseBiCGSTAB);
+      return metalSolver;
+    }
+#endif
+#ifdef WITH_HIP
+    case DirectLinearSolverImpl::HIPSparseQR: {
+      SPDLOG_LOGGER_INFO(log,
+                         "creating HipSparseQrAdapter solver implementation");
+      std::shared_ptr<MnaSolverDirect<VarType>> hipSparseQrSolver =
+          std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
+      hipSparseQrSolver->setDirectLinearSolverImplementation(
+          DirectLinearSolverImpl::HIPSparseQR);
+      return hipSparseQrSolver;
+    }
+    case DirectLinearSolverImpl::HIPSparseBiCGStab: {
+      SPDLOG_LOGGER_INFO(
+          log, "creating HipSparseBiCGStabAdapter solver implementation");
+      std::shared_ptr<MnaSolverDirect<VarType>> hipSparseSolver =
+          std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
+      hipSparseSolver->setDirectLinearSolverImplementation(
+          DirectLinearSolverImpl::HIPSparseBiCGStab);
+      return hipSparseSolver;
+    }
+    case DirectLinearSolverImpl::HIPSparseLURefactor: {
+#ifdef WITH_KLU
+      SPDLOG_LOGGER_INFO(
+          log, "creating HipSparseLURefactorAdapter solver implementation");
+      std::shared_ptr<MnaSolverDirect<VarType>> hipSparseSolver =
+          std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
+      hipSparseSolver->setDirectLinearSolverImplementation(
+          DirectLinearSolverImpl::HIPSparseLURefactor);
+      return hipSparseSolver;
+#else
+      throw CPS::SystemError(
+          "HIP sparse LU refactorization requires the KLU seed solver");
+#endif
+    }
+    case DirectLinearSolverImpl::HIPDense: {
+      SPDLOG_LOGGER_INFO(log, "creating HipDenseAdapter solver implementation");
+      std::shared_ptr<MnaSolverDirect<VarType>> hipDenseSolver =
+          std::make_shared<MnaSolverDirect<VarType>>(name, domain, logLevel);
+      hipDenseSolver->setDirectLinearSolverImplementation(
+          DirectLinearSolverImpl::HIPDense);
+      return hipDenseSolver;
+    }
 #endif
 #ifdef WITH_MNASOLVERPLUGIN
     case DirectLinearSolverImpl::Plugin:

@@ -11,8 +11,13 @@ using namespace CPS;
 
 DP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(
     String uid, String name, Logger::Level logLevel)
+    : SynchronGeneratorTrStab(uid, name, true, logLevel) {}
+
+DP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(
+    String uid, String name, Bool useSubcomponents, Logger::Level logLevel)
     : Base::SynchronGenerator(mAttributes),
       CompositePowerComp<Complex>(uid, name, true, true, logLevel),
+      mUseSubcomponents(useSubcomponents),
       mEp(mAttributes->create<Complex>("Ep")),
       mEp_abs(mAttributes->create<Real>("Ep_mag")),
       mEp_phase(mAttributes->create<Real>("Ep_phase")),
@@ -29,7 +34,7 @@ DP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(
 
 SimPowerComp<Complex>::Ptr
 DP::Ph1::SynchronGeneratorTrStab::clone(String name) {
-  auto copy = SynchronGeneratorTrStab::make(name, mLogLevel);
+  auto copy = SynchronGeneratorTrStab::make(name, mUseSubcomponents, mLogLevel);
   copy->setStandardParametersPU(mNomPower, mNomVolt, mNomFreq, mXpd / mBase_Z,
                                 **mInertia, **mRs, mKd);
   return copy;
@@ -156,6 +161,8 @@ void DP::Ph1::SynchronGeneratorTrStab::setInitialValues(Complex elecPower,
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::createSubComponents() {
+  if (!mUseSubcomponents)
+    return;
   if (mSubCompCreated)
     return;
   mSubCompCreated = true;
@@ -219,7 +226,8 @@ void DP::Ph1::SynchronGeneratorTrStab::initializeParentFromNodesAndTerminals(
 
   // Set emf on the already-created voltage source; the framework's generic
   // sub-init loop will initialize it after this hook returns.
-  mSubVoltageSource->setParameters(**mEp);
+  if (mUseSubcomponents)
+    mSubVoltageSource->setParameters(**mEp);
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialize according to powerflow ---"
@@ -280,7 +288,66 @@ void DP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 void DP::Ph1::SynchronGeneratorTrStab::mnaParentInitialize(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
   mTimeStep = timeStep;
-  mMnaTasks.push_back(std::make_shared<AddBStep>(*this));
+  if (!mUseSubcomponents) {
+    mDirectAdmittance = MatrixComp::Zero(mNumFreqs, 1);
+    mDirectPreviousCurrentFactor = MatrixComp::Zero(mNumFreqs, 1);
+    mDirectHistory = MatrixComp::Zero(mNumFreqs, 1);
+    mDirectCurrent = MatrixComp::Zero(mNumFreqs, 1);
+    mDirectVoltage = MatrixComp::Zero(mNumFreqs, 1);
+    for (UInt freq = 0; freq < mNumFreqs; ++freq) {
+      const Real b = timeStep * 2. * PI * mFrequencies(freq, 0) / 2.;
+      const Real a = timeStep / (2. * mLpd);
+      mDirectAdmittance(freq, 0) =
+          Complex(a / (1. + b * b), -a * b / (1. + b * b));
+      mDirectPreviousCurrentFactor(freq, 0) =
+          Complex((1. - b * b) / (1. + b * b), -2. * b / (1. + b * b));
+      mDirectVoltage(freq, 0) = (**mIntfVoltage)(0, freq) - **mEp;
+      const Real harmonicOmega = 2. * PI * mFrequencies(freq, 0);
+      mDirectCurrent(freq, 0) =
+          harmonicOmega != 0.
+              ? mDirectVoltage(freq, 0) / Complex(0., harmonicOmega * mLpd)
+              : (**mIntfCurrent)(0, freq);
+    }
+  } else {
+    mMnaTasks.push_back(std::make_shared<AddBStep>(*this));
+  }
+}
+
+void DP::Ph1::SynchronGeneratorTrStab::mnaParentApplySystemMatrixStamp(
+    SparseMatrixRow &systemMatrix) {
+  if (mUseSubcomponents)
+    return;
+  const UInt emfNode = virtualNode(0)->matrixNodeIndex();
+  const UInt sourceCurrent = virtualNode(1)->matrixNodeIndex();
+  const UInt terminal = matrixNodeIndex(0);
+  for (UInt freq = 0; freq < mNumFreqs; ++freq) {
+    MNAStampUtils::stampAdmittance(
+        mDirectAdmittance(freq, 0), systemMatrix, emfNode, terminal, true,
+        terminalNotGrounded(0), mSLog, mNumFreqs, freq);
+    Math::setMatrixElement(systemMatrix, sourceCurrent, emfNode,
+                           Complex(1., 0.), mNumFreqs, freq);
+    Math::setMatrixElement(systemMatrix, emfNode, sourceCurrent,
+                           Complex(1., 0.), mNumFreqs, freq);
+  }
+}
+
+void DP::Ph1::SynchronGeneratorTrStab::mnaParentApplyRightSideVectorStamp(
+    Matrix &rightVector) {
+  if (mUseSubcomponents)
+    return;
+  const UInt emfNode = virtualNode(0)->matrixNodeIndex();
+  const UInt sourceCurrent = virtualNode(1)->matrixNodeIndex();
+  for (UInt freq = 0; freq < mNumFreqs; ++freq) {
+    mDirectHistory(freq, 0) =
+        mDirectAdmittance(freq, 0) * mDirectVoltage(freq, 0) +
+        mDirectPreviousCurrentFactor(freq, 0) * mDirectCurrent(freq, 0);
+    if (terminalNotGrounded(0))
+      Math::setVectorElement(rightVector, matrixNodeIndex(0),
+                             -mDirectHistory(freq, 0), mNumFreqs, freq);
+    Math::setVectorElement(rightVector, emfNode, mDirectHistory(freq, 0),
+                           mNumFreqs, freq);
+    Math::setVectorElement(rightVector, sourceCurrent, **mEp, mNumFreqs, freq);
+  }
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::mnaParentAddPreStepDependencies(
@@ -291,6 +358,10 @@ void DP::Ph1::SynchronGeneratorTrStab::mnaParentAddPreStepDependencies(
   // but aren't marked as writable anyway
   /// CHECK: Is the upper comment still relevant. Any attribute is writable now...
   prevStepDependencies.push_back(mIntfVoltage);
+  if (!mUseSubcomponents) {
+    prevStepDependencies.push_back(mIntfCurrent);
+    modifiedAttributes.push_back(mRightVector);
+  }
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::mnaParentAddPostStepDependencies(
@@ -300,13 +371,17 @@ void DP::Ph1::SynchronGeneratorTrStab::mnaParentAddPostStepDependencies(
     Attribute<Matrix>::Ptr &leftVector) {
   attributeDependencies.push_back(leftVector);
   modifiedAttributes.push_back(mIntfVoltage);
+  if (!mUseSubcomponents)
+    modifiedAttributes.push_back(mIntfCurrent);
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::mnaParentPreStep(Real time,
                                                         Int timeStepCount) {
   step(time);
-  //change V_ref of subvoltage source
-  mSubVoltageSource->mVoltageRef->set(**mEp);
+  if (mUseSubcomponents)
+    mSubVoltageSource->mVoltageRef->set(**mEp);
+  else
+    mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::AddBStep::execute(Real time,
@@ -326,13 +401,23 @@ void DP::Ph1::SynchronGeneratorTrStab::mnaCompUpdateVoltage(
   SPDLOG_LOGGER_DEBUG(mSLog, "Read voltage from {:d}", matrixNodeIndex(0));
   (**mIntfVoltage)(0, 0) =
       Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+  if (!mUseSubcomponents)
+    mDirectVoltage(0, 0) = (**mIntfVoltage)(0, 0) -
+                           Math::complexFromVectorElement(
+                               leftVector, virtualNode(0)->matrixNodeIndex());
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::mnaCompUpdateCurrent(
     const Matrix &leftVector) {
   SPDLOG_LOGGER_DEBUG(mSLog, "Read current from {:d}", matrixNodeIndex(0));
   //Current flowing out of component
-  **mIntfCurrent = mSubInductor->mIntfCurrent->get();
+  if (mUseSubcomponents) {
+    **mIntfCurrent = mSubInductor->mIntfCurrent->get();
+  } else {
+    mDirectCurrent(0, 0) =
+        mDirectAdmittance(0, 0) * mDirectVoltage(0, 0) + mDirectHistory(0, 0);
+    **mIntfCurrent = mDirectCurrent;
+  }
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::setReferenceOmega(

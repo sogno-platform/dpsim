@@ -92,7 +92,9 @@ void DP::Ph1::CurrentSource::mnaCompAddPreStepDependencies(
 }
 
 void DP::Ph1::CurrentSource::mnaCompPreStep(Real time, Int timeStepCount) {
-  mnaCompApplyRightSideVectorStamp(**mRightVector);
+  // Keep the public interface value current; the direct solver assembles the
+  // RHS from mCurrentRef via the compact callback and needs no dense staging.
+  (**mIntfCurrent)(0, 0) = **mCurrentRef;
 }
 
 void DP::Ph1::CurrentSource::mnaCompApplyRightSideVectorStamp(
@@ -105,6 +107,15 @@ void DP::Ph1::CurrentSource::mnaCompApplyRightSideVectorStamp(
   if (terminalNotGrounded(1))
     Math::setVectorElement(rightVector, matrixNodeIndex(1),
                            (**mIntfCurrent)(0, 0));
+}
+
+void DP::Ph1::CurrentSource::mnaAddCompactRightSideVectorStamp(
+    Matrix &rightVector) {
+  const Complex current = **mCurrentRef;
+  if (terminalNotGrounded(0))
+    Math::addToVectorElement(rightVector, matrixNodeIndex(0), -current);
+  if (terminalNotGrounded(1))
+    Math::addToVectorElement(rightVector, matrixNodeIndex(1), current);
 }
 
 void DP::Ph1::CurrentSource::mnaCompAddPostStepDependencies(

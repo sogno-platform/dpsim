@@ -54,10 +54,14 @@ private:
   const Attribute<Real>::Ptr mQInst;
   const Attribute<Real>::Ptr mOmegaPLL;
 
+  Matrix mStateDerivative = Matrix::Zero(12, 1);
+  Matrix mStateOffsetWorkspace = Matrix::Zero(12, 1);
+  Matrix mOutputOffsetWorkspace = Matrix::Zero(2, 1);
+
   /// Builds the affine real model (A,B,C,D,E,F) around (x,u): RHS + analytic Jacobian, E = f(x,u) - A*x - B*u.
   void buildStateSpaceModel(const Matrix &x, const Matrix &u, Matrix &A,
                             Matrix &B, Matrix &C, Matrix &D, Matrix &E,
-                            Matrix &F) const;
+                            Matrix &F);
 
 protected:
   Bool updateComponentParameters() override final;

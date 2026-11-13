@@ -49,5 +49,6 @@ public:
 
   /// solution function for a right hand side
   Matrix solve(Matrix &rightSideVector) override;
+  void solveInto(Matrix &rightSideVector, Matrix &solution) override;
 };
 } // namespace DPsim

@@ -111,7 +111,7 @@ void EMT::VTypeSplitSSNComp::recomputeControllerDiscreteModel() {
 }
 
 void EMT::VTypeSplitSSNComp::rebuildSplitDiscreteModel(
-    const Matrix &controllerBdUsed) {
+    const Matrix &controllerBdUsed) const {
   mControllerBdUsed = controllerBdUsed;
 
   const UInt controllerOffset = 0;
@@ -167,6 +167,12 @@ void EMT::VTypeSplitSSNComp::rebuildSplitDiscreteModel(
   mSplitHistoryC.block(0, plantOffset, mC.rows(), mC.cols()) = mC;
   mSplitHistoryC.block(0, delayOffset, mC.rows(), mControllerOutputSize) =
       2.0 * mC * mdBControllerOutput;
+  mSplitDiscreteModelDirty = false;
+}
+
+void EMT::VTypeSplitSSNComp::ensureSplitDiscreteModel() const {
+  if (mSplitDiscreteModelDirty)
+    rebuildSplitDiscreteModel(mControllerBdUsed);
 }
 
 void EMT::VTypeSplitSSNComp::recomputeDiscreteModel() {
@@ -181,18 +187,15 @@ void EMT::VTypeSplitSSNComp::recomputeDiscreteModel() {
   rebuildSplitDiscreteModel(mControllerBd);
 }
 
-Matrix EMT::VTypeSplitSSNComp::calculateHistoryVector() const {
-  return mC * (mdA * (**mX) + mdB * (**mIntfVoltage) +
-               2.0 * mdBControllerOutput * mDelayedControllerOutput);
+void EMT::VTypeSplitSSNComp::calculateHistoryVector(Matrix &history) const {
+  history = mC * (mdA * (**mX) + mdB * (**mIntfVoltage) +
+                  2.0 * mdBControllerOutput * mDelayedControllerOutput);
 }
 
 void EMT::VTypeSplitSSNComp::updateState(const Matrix &uOld,
                                          const Matrix &uNew) {
-  const Matrix delayedControllerOutputUsedThisStep = mDelayedControllerOutput;
-  const Matrix controllerBdUsedThisStep = mControllerBd;
-
   **mX = mdA * (**mX) + mdB * (uNew + uOld) +
-         2.0 * mdBControllerOutput * delayedControllerOutputUsedThisStep;
+         2.0 * mdBControllerOutput * mDelayedControllerOutput;
 
   const Matrix measurementNew = buildControllerMeasurement(**mX, uNew);
 
@@ -202,12 +205,19 @@ void EMT::VTypeSplitSSNComp::updateState(const Matrix &uOld,
       mControllerEd;
   mControllerMeasurementOld = measurementNew;
 
+  // Preserve the discrete controller input map used for this step directly
+  // in its already-sized public/extraction workspace before recomputation.
+  // This avoids allocating and then copying a per-step duplicate matrix.
+  mControllerBdUsed = mControllerBd;
   buildControllerStateSpaceModel(mControllerState, measurementNew, mControllerA,
                                  mControllerB, mControllerC, mControllerD,
                                  mControllerE, mControllerF);
   recomputeControllerDiscreteModel();
 
-  rebuildSplitDiscreteModel(controllerBdUsedThisStep);
+  // The augmented matrices are exposed for state-space extraction, but are
+  // not used by the simulation update. Defer their block products until an
+  // extractor actually requests them instead of rebuilding them every step.
+  mSplitDiscreteModelDirty = true;
 
   evaluateControllerOutput(mControllerState, measurementNew, mControllerOutput);
   mDelayedControllerOutput = mControllerOutput;
@@ -218,14 +228,17 @@ UInt EMT::VTypeSplitSSNComp::getSplitStateCount() const {
 }
 
 const Matrix &EMT::VTypeSplitSSNComp::getSplitDiscreteA() const {
+  ensureSplitDiscreteModel();
   return mSplitDiscreteA;
 }
 
 const Matrix &EMT::VTypeSplitSSNComp::getSplitDiscreteB() const {
+  ensureSplitDiscreteModel();
   return mSplitDiscreteB;
 }
 
 const Matrix &EMT::VTypeSplitSSNComp::getSplitHistoryC() const {
+  ensureSplitDiscreteModel();
   return mSplitHistoryC;
 }
 

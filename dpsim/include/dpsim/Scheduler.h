@@ -18,6 +18,7 @@
 #include <condition_variable>
 #include <deque>
 #include <mutex>
+#include <thread>
 #include <unordered_map>
 
 namespace DPsim {
@@ -49,6 +50,10 @@ public:
                               const Edges &inEdges, const Edges &outEdges) = 0;
   /// Performs a single simulation step
   virtual void step(Real time, Int timeStepCount) = 0;
+  /// Optionally execute an entire simulation interval without per-step calls
+  /// from Simulation::run(). Schedulers must return false without changing
+  /// state when they cannot safely own the whole interval.
+  virtual Bool runSimulation(Real, Int, UInt) { return false; }
   /// Called on simulation stop to reliably clean up e.g. running helper threads
   virtual void stop() {}
 
@@ -106,10 +111,14 @@ protected:
   CPS::Logger::Log mSLog;
 
 private:
-  // TODO more sophisticated measurement method might be necessary for
-  // longer simulations (risk of high memory requirements and integer
-  // overflow)
-  std::unordered_map<CPS::Task *, std::vector<TaskTime>> mMeasurements;
+  // Accumulate compact per-task statistics instead of retaining every sample.
+  struct TaskMeasurement {
+    TaskTime total{};
+    TaskTime minimum{};
+    TaskTime maximum{};
+    std::size_t count = 0;
+  };
+  std::unordered_map<CPS::Task *, TaskMeasurement> mMeasurements;
 };
 
 /// A barrier is used to synchronize threads. Threads running into the barrier
@@ -211,8 +220,11 @@ public:
   void inc() { mValue.fetch_add(1, std::memory_order_release); }
 
   void wait(Int value) {
-    while (mValue.load(std::memory_order_acquire) != value)
-      ;
+    for (Int spin = 0; mValue.load(std::memory_order_acquire) != value;
+         ++spin) {
+      if ((spin & 63) == 63)
+        std::this_thread::yield();
+    }
   }
 
 private:

@@ -41,6 +41,20 @@ private:
   Real mMagnetizingResistance;
   /// Magnetizing inductance [H]
   Real mMagnetizingInductance;
+  Bool mUseSubcomponents = true;
+  MatrixComp mDirectInductorAdmittance;
+  MatrixComp mDirectInductorPrevCurrentFactor;
+  MatrixComp mDirectInductorCurrent0;
+  MatrixComp mDirectInductorCurrent1;
+  MatrixComp mDirectInductorVoltage0;
+  MatrixComp mDirectInductorVoltage1;
+  MatrixComp mDirectInductorHistory0;
+  MatrixComp mDirectInductorHistory1;
+  MatrixComp mDirectMagnetizingAdmittance;
+  MatrixComp mDirectMagnetizingPrevCurrentFactor;
+  MatrixComp mDirectMagnetizingCurrent;
+  MatrixComp mDirectMagnetizingVoltage;
+  MatrixComp mDirectMagnetizingHistory;
   /// No-load current as a fraction of rated current (IEC 60076 i0)
   Real mNoLoadCurrent = 0.01;
   /// No-load loss as a fraction of rated power (IEC 60076 P0)
@@ -77,9 +91,17 @@ public:
   Transformer(String uid, String name,
               Logger::Level logLevel = Logger::Level::off,
               Bool withResistiveLosses = false);
+  Transformer(String uid, String name, Bool useSubcomponents,
+              Logger::Level logLevel = Logger::Level::off,
+              Bool withResistiveLosses = false);
   /// Defines name and logging level
   Transformer(String name, Logger::Level logLevel = Logger::Level::off)
       : Transformer(name, name, logLevel) {}
+  Transformer(String name, Bool useSubcomponents,
+              Logger::Level logLevel = Logger::Level::off,
+              Bool withResistiveLosses = false)
+      : Transformer(name, name, useSubcomponents, logLevel,
+                    withResistiveLosses) {}
 
   SimPowerComp<Complex>::Ptr clone(String name) override;
 
@@ -101,6 +123,7 @@ public:
   /// Initializes internal variables of the component
   void mnaParentInitialize(Real omega, Real timeStep,
                            Attribute<Matrix>::Ptr leftVector) override;
+  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
   /// Stamps system matrix
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   /// Updates internal current variable of the component

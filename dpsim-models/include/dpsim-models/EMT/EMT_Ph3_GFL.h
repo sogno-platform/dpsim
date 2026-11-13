@@ -67,6 +67,7 @@ protected:
   Bool mFilterParametersSet = false;
   Bool mControllerParametersSet = false;
   Bool mManualInitialStatesSet = false;
+  Bool mUseSubcomponents = true;
 
   Real mPInitManual = 0.0;
   Real mQInitManual = 0.0;
@@ -89,15 +90,27 @@ protected:
   std::shared_ptr<EMT::Ph3::Inductor> mSubInductorF;
   std::shared_ptr<EMT::Ph3::Capacitor> mSubCapacitorF;
 
+  Matrix mDirectResistorConductance = Matrix::Zero(3, 3);
+  Matrix mDirectInductorConductance = Matrix::Zero(3, 3);
+  Matrix mDirectCapacitorConductance = Matrix::Zero(3, 3);
+  Matrix mDirectInductorVoltage = Matrix::Zero(3, 1);
+  Matrix mDirectInductorCurrent = Matrix::Zero(3, 1);
+  Matrix mDirectInductorHistory = Matrix::Zero(3, 1);
+  Matrix mDirectCapacitorCurrent = Matrix::Zero(3, 1);
+  Matrix mDirectCapacitorHistory = Matrix::Zero(3, 1);
+  Matrix mDirectSourceVoltage = Matrix::Zero(3, 1);
+
   // -------------------------------------------------------------------------
   // Helpers
   // -------------------------------------------------------------------------
-  Matrix getParkTransformMatrixPowerInvariant(Real theta) const;
-  Matrix getInverseParkTransformMatrixPowerInvariant(Real theta) const;
+  MatrixFixedSize<2, 3> getParkTransformMatrixPowerInvariant(Real theta) const;
+  MatrixFixedSize<3, 2>
+  getInverseParkTransformMatrixPowerInvariant(Real theta) const;
 
-  Matrix parkTransformPowerInvariant(Real theta, const Matrix &fabc) const;
-  Matrix inverseParkTransformPowerInvariant(Real theta,
-                                            const Matrix &fdq) const;
+  MatrixFixedSize<2, 1> parkTransformPowerInvariant(Real theta,
+                                                    const Matrix &fabc) const;
+  MatrixFixedSize<3, 1>
+  inverseParkTransformPowerInvariant(Real theta, const Matrix &fdq) const;
 
   void updateMeasurementAttributes(Real theta);
   void updatePowerAndFrequencyAttributes();
@@ -129,6 +142,8 @@ public:
 
   /// Actual controlled source voltage.
   const Attribute<Matrix>::Ptr mVs;
+  /// Storage for the source voltage in direct mode, exposed through mVs.
+  const Attribute<Matrix>::Ptr mDirectSourceVoltageAttr;
 
   /// PLL output [theta, phi_pll].
   const Attribute<Matrix>::Ptr mPllOutput;
@@ -142,9 +157,15 @@ public:
   // Construction
   // -------------------------------------------------------------------------
   GFL(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+  /// Direct MNA filter implementation; legacy electrical children stay default.
+  GFL(String uid, String name, Bool useSubcomponents,
+      Logger::Level logLevel = Logger::Level::off);
 
   GFL(String name, Logger::Level logLevel = Logger::Level::off)
       : GFL(name, name, logLevel) {}
+  GFL(String name, Bool useSubcomponents,
+      Logger::Level logLevel = Logger::Level::off)
+      : GFL(name, name, useSubcomponents, logLevel) {}
 
   SimPowerComp<Real>::Ptr clone(String name) override;
 
@@ -182,6 +203,8 @@ public:
   // -------------------------------------------------------------------------
   void mnaParentInitialize(Real omega, Real timeStep,
                            Attribute<Matrix>::Ptr leftVector) override;
+  void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
 
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;

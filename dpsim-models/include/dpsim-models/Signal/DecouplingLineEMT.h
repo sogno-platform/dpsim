@@ -25,6 +25,10 @@ protected:
   Real mInductance;
   Real mCapacitance;
   Real mSurgeImpedance;
+  Real mSurgeMinusResistanceQuarter = 0.;
+  Real mInitialSourceImpedanceInverse = 0.;
+  Real mSurgeCurrentCoefficient = 0.;
+  Real mResistanceCurrentCoefficient = 0.;
 
   std::shared_ptr<EMT::SimNode> mNode1, mNode2;
   std::shared_ptr<EMT::Ph1::Resistor> mRes1, mRes2;

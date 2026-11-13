@@ -20,6 +20,27 @@ class RXLoadSwitch : public CompositePowerComp<Complex>,
                      public MNAVariableCompInterface,
                      public SharedFactory<RXLoadSwitch> {
 protected:
+  Bool mUseSubcomponents = true;
+  Bool mDirectParametersSet = false;
+  Bool mDirectSwitchClosed = true;
+  Bool mDirectSwitchChanged = false;
+  Bool mDirectUseInductor = false;
+  Bool mDirectUseCapacitor = false;
+  Real mDirectActivePower = 0.;
+  Real mDirectReactivePower = 0.;
+  Real mDirectNomVoltage = 0.;
+  Real mDirectOpenResistance = 1e9;
+  Real mDirectClosedResistance = 1e-9;
+  Real mDirectPreviousSwitchResistance = 1e-9;
+  Real mDirectConductance = 0.;
+  Real mDirectInductance = 0.;
+  Real mDirectCapacitance = 0.;
+  MatrixComp mDirectEquivalentConductance;
+  MatrixComp mDirectHistory;
+  MatrixComp mDirectPreviousCurrentFactor;
+  MatrixComp mDirectPreviousVoltageFactor;
+  MatrixComp mDirectBranchCurrent;
+  MatrixComp mDirectBranchVoltage;
   /// Internal RXLoad
   std::shared_ptr<DP::Ph1::RXLoad> mSubRXLoad;
   /// Internal protection switch
@@ -33,12 +54,20 @@ public:
   /// Defines UID, name and logging level
   RXLoadSwitch(String uid, String name,
                Logger::Level logLevel = Logger::Level::off);
+  RXLoadSwitch(String uid, String name, Bool useSubcomponents,
+               Logger::Level logLevel = Logger::Level::off);
   /// Defines name, component parameters and logging level
   RXLoadSwitch(String name, Logger::Level logLevel = Logger::Level::off);
+  RXLoadSwitch(String name, Bool useSubcomponents,
+               Logger::Level logLevel = Logger::Level::off)
+      : RXLoadSwitch(name, name, useSubcomponents, logLevel) {}
 
   // #### General ####
   /// Derives values from power flow data and pushes them to subcomponents
   void initializeParentFromNodesAndTerminals(Real frequency) override;
+  void mnaParentInitialize(Real omega, Real timeStep,
+                           Attribute<Matrix>::Ptr leftVector) override;
+  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
   /// Sets model specific parameters
   void setParameters(Real activePower, Real reactivePower, Real nomVolt,
                      Real openResistance, Real closedResistance,

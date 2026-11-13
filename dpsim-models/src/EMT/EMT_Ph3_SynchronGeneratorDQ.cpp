@@ -287,10 +287,11 @@ void EMT::Ph3::SynchronGeneratorDQ::mnaCompPostStep(
   mnaCompUpdateVoltage(**leftVector);
 }
 
-Matrix EMT::Ph3::SynchronGeneratorDQ::abcToDq0Transform(Real theta,
-                                                        Matrix &abcVector) {
-  Matrix dq0Vector(3, 1);
-  Matrix abcToDq0(3, 3);
+MatrixFixedSize<3, 1>
+EMT::Ph3::SynchronGeneratorDQ::abcToDq0Transform(Real theta,
+                                                 Matrix &abcVector) {
+  MatrixFixedSize<3, 1> dq0Vector;
+  MatrixFixedSize<3, 3> abcToDq0;
 
   // Park transform according to Kundur
   abcToDq0 << 2. / 3. * cos(theta), 2. / 3. * cos(theta - 2. * PI / 3.),
@@ -298,22 +299,22 @@ Matrix EMT::Ph3::SynchronGeneratorDQ::abcToDq0Transform(Real theta,
       -2. / 3. * sin(theta - 2. * PI / 3.),
       -2. / 3. * sin(theta + 2. * PI / 3.), 1. / 3., 1. / 3., 1. / 3.;
 
-  dq0Vector = abcToDq0 * abcVector;
+  dq0Vector.noalias() = abcToDq0 * abcVector;
 
   return dq0Vector;
 }
 
-Matrix EMT::Ph3::SynchronGeneratorDQ::dq0ToAbcTransform(Real theta,
-                                                        Matrix &dq0Vector) {
-  Matrix abcVector(3, 1);
-  Matrix dq0ToAbc(3, 3);
+MatrixFixedSize<3, 1> EMT::Ph3::SynchronGeneratorDQ::dq0ToAbcTransform(
+    Real theta, const Eigen::Ref<const Matrix> &dq0Vector) {
+  MatrixFixedSize<3, 1> abcVector;
+  MatrixFixedSize<3, 3> dq0ToAbc;
 
   // Park transform according to Kundur
   dq0ToAbc << cos(theta), -sin(theta), 1., cos(theta - 2. * PI / 3.),
       -sin(theta - 2. * PI / 3.), 1., cos(theta + 2. * PI / 3.),
       -sin(theta + 2. * PI / 3.), 1.;
 
-  abcVector = dq0ToAbc * dq0Vector;
+  abcVector.noalias() = dq0ToAbc * dq0Vector;
 
   return abcVector;
 }

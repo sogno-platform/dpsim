@@ -48,13 +48,14 @@ void SP::Ph3::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 void SP::Ph3::Resistor::mnaCompInitialize(Real omega, Real timeStep,
                                           Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
+  mConductance = (**mResistance).inverse();
   **mRightVector = Matrix::Zero(0, 0);
 }
 
 void SP::Ph3::Resistor::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
   MatrixFixedSizeComp<3, 3> conductance = Matrix::Zero(3, 3);
-  conductance.real() = (**mResistance).inverse();
+  conductance.real() = mConductance;
 
   MNAStampUtils::stampAdmittanceMatrix(
       conductance, systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),
@@ -79,7 +80,7 @@ void SP::Ph3::Resistor::mnaCompPostStep(Real time, Int timeStepCount,
 
 void SP::Ph3::Resistor::mnaCompUpdateVoltage(const Matrix &leftVector) {
   // Voltage across component is defined as V1 - V0
-  **mIntfVoltage = MatrixComp::Zero(3, 1);
+  (**mIntfVoltage).setZero();
   if (terminalNotGrounded(1)) {
     (**mIntfVoltage)(0, 0) =
         Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 0));
@@ -105,7 +106,7 @@ void SP::Ph3::Resistor::mnaCompUpdateVoltage(const Matrix &leftVector) {
 }
 
 void SP::Ph3::Resistor::mnaCompUpdateCurrent(const Matrix &leftVector) {
-  **mIntfCurrent = (**mResistance).inverse() * **mIntfVoltage;
+  **mIntfCurrent = mConductance * **mIntfVoltage;
   //mLog.debug() << "Current A: " << std::abs((**mIntfCurrent)(0, 0))
   //	<< "<" << std::arg((**mIntfCurrent)(0, 0)) << std::endl;
 }

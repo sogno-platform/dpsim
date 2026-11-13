@@ -7,12 +7,18 @@
  *********************************************************************************/
 
 #include <dpsim-models/DP/DP_Ph1_RxLine.h>
+#include <dpsim-models/MNAStampUtils.h>
 
 using namespace CPS;
 
 DP::Ph1::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
+    : RxLine(uid, name, true, logLevel) {}
+
+DP::Ph1::RxLine::RxLine(String uid, String name, Bool useSubcomponents,
+                        Logger::Level logLevel)
     : Base::Ph1::PiLine(mAttributes),
-      CompositePowerComp<Complex>(uid, name, true, true, logLevel) {
+      CompositePowerComp<Complex>(uid, name, true, true, logLevel),
+      mUseSubcomponents(useSubcomponents) {
   setVirtualNodeNumber(1);
   setTerminalNumber(2);
 
@@ -23,12 +29,14 @@ DP::Ph1::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
 
 ///DEPRECATED: Delete method
 SimPowerComp<Complex>::Ptr DP::Ph1::RxLine::clone(String name) {
-  auto copy = RxLine::make(name, mLogLevel);
+  auto copy = RxLine::make(name, mUseSubcomponents, mLogLevel);
   copy->setParameters(**mSeriesRes, **mSeriesInd);
   return copy;
 }
 
 void DP::Ph1::RxLine::createSubComponents() {
+  if (!mUseSubcomponents)
+    return;
   if (mSubCompCreated)
     return;
   mSubCompCreated = true;
@@ -75,6 +83,76 @@ void DP::Ph1::RxLine::initializeParentFromNodesAndTerminals(Real frequency) {
                      Logger::phasorToString(initialSingleVoltage(1)));
 }
 
+void DP::Ph1::RxLine::mnaParentInitialize(Real omega, Real timeStep,
+                                          Attribute<Matrix>::Ptr leftVector) {
+  if (mUseSubcomponents)
+    return;
+  mDirectInductorCond = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectPrevCurrentFactor = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectCurrent = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectVoltage = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectHistory = MatrixComp::Zero(mNumFreqs, 1);
+  for (UInt freq = 0; freq < mNumFreqs; ++freq) {
+    const Real harmonicOmega = 2. * PI * mFrequencies(freq, 0);
+    const Real b = timeStep * harmonicOmega / 2.;
+    const Real a = timeStep / (2. * **mSeriesInd);
+    mDirectInductorCond(freq, 0) =
+        Complex(a / (1. + b * b), -a * b / (1. + b * b));
+    mDirectPrevCurrentFactor(freq, 0) =
+        Complex((1. - b * b) / (1. + b * b), -2. * b / (1. + b * b));
+    if (freq == 0) {
+      mDirectVoltage(freq, 0) =
+          initialSingleVoltage(1) - mVirtualNodes[0]->initialSingleVoltage();
+      const Complex initialCurrent =
+          harmonicOmega != 0. ? mDirectVoltage(freq, 0) /
+                                    Complex(0., harmonicOmega * **mSeriesInd)
+                              : Complex(0., 0.);
+      // Match the DP Inductor's initialization recurrence exactly: initVars()
+      // stores G*v + K*i and then initializes i to G*v + that history.
+      mDirectCurrent(freq, 0) =
+          2. * mDirectInductorCond(freq, 0) * mDirectVoltage(freq, 0) +
+          mDirectPrevCurrentFactor(freq, 0) * initialCurrent;
+    }
+  }
+}
+
+void DP::Ph1::RxLine::mnaParentApplySystemMatrixStamp(
+    SparseMatrixRow &systemMatrix) {
+  if (mUseSubcomponents)
+    return;
+  const UInt terminal0 = matrixNodeIndex(0);
+  const UInt terminal1 = matrixNodeIndex(1);
+  const UInt internal = virtualNode(0)->matrixNodeIndex();
+  for (UInt freq = 0; freq < mNumFreqs; ++freq) {
+    MNAStampUtils::stampAdmittance(Complex(1. / **mSeriesRes, 0.), systemMatrix,
+                                   terminal0, internal, terminalNotGrounded(0),
+                                   true, mSLog, mNumFreqs, freq);
+    MNAStampUtils::stampAdmittance(
+        mDirectInductorCond(freq, 0), systemMatrix, internal, terminal1, true,
+        terminalNotGrounded(1), mSLog, mNumFreqs, freq);
+    MNAStampUtils::stampAdmittance(Complex(1e-6, 0.), systemMatrix, terminal1,
+                                   0, terminalNotGrounded(1), false, mSLog,
+                                   mNumFreqs, freq);
+  }
+}
+
+void DP::Ph1::RxLine::mnaParentApplyRightSideVectorStamp(Matrix &rightVector) {
+  if (mUseSubcomponents)
+    return;
+  const UInt terminal1 = matrixNodeIndex(1);
+  const UInt internal = virtualNode(0)->matrixNodeIndex();
+  for (UInt freq = 0; freq < mNumFreqs; ++freq) {
+    mDirectHistory(freq, 0) =
+        mDirectInductorCond(freq, 0) * mDirectVoltage(freq, 0) +
+        mDirectPrevCurrentFactor(freq, 0) * mDirectCurrent(freq, 0);
+    Math::setVectorElement(rightVector, internal, mDirectHistory(freq, 0),
+                           mNumFreqs, freq);
+    if (terminalNotGrounded(1))
+      Math::setVectorElement(rightVector, terminal1, -mDirectHistory(freq, 0),
+                             mNumFreqs, freq);
+  }
+}
+
 void DP::Ph1::RxLine::mnaParentPreStep(Real time, Int timeStepCount) {
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
@@ -114,5 +192,23 @@ void DP::Ph1::RxLine::mnaCompUpdateVoltage(const Matrix &leftVector) {
 }
 
 void DP::Ph1::RxLine::mnaCompUpdateCurrent(const Matrix &leftVector) {
-  (**mIntfCurrent)(0, 0) = mSubInductor->intfCurrent()(0, 0);
+  if (mUseSubcomponents) {
+    (**mIntfCurrent)(0, 0) = mSubInductor->intfCurrent()(0, 0);
+    return;
+  }
+  const UInt internal = virtualNode(0)->matrixNodeIndex();
+  for (UInt freq = 0; freq < mNumFreqs; ++freq) {
+    const Complex internalVoltage =
+        Math::complexFromVectorElement(leftVector, internal, mNumFreqs, freq);
+    const Complex terminalVoltage =
+        terminalNotGrounded(1)
+            ? Math::complexFromVectorElement(leftVector, matrixNodeIndex(1),
+                                             mNumFreqs, freq)
+            : Complex(0., 0.);
+    mDirectVoltage(freq, 0) = terminalVoltage - internalVoltage;
+    mDirectCurrent(freq, 0) =
+        mDirectInductorCond(freq, 0) * mDirectVoltage(freq, 0) +
+        mDirectHistory(freq, 0);
+    (**mIntfCurrent)(0, freq) = mDirectCurrent(freq, 0);
+  }
 }

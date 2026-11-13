@@ -48,7 +48,7 @@ void DP::Ph3::TwoTerminalVTypeSSNComp::mnaCompApplyRightSideVectorStamp(
 
 void DP::Ph3::TwoTerminalVTypeSSNComp::mnaCompUpdateVoltage(
     const Matrix &leftVector) {
-  **mIntfVoltage = MatrixComp::Zero(3, 1);
+  (**mIntfVoltage).setZero();
 
   if (terminalNotGrounded(1)) {
     for (Int phase = 0; phase < 3; ++phase)

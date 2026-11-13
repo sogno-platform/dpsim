@@ -36,6 +36,8 @@ void PLL::setParameters(Real kpPLL, Real kiPLL, Real omegaNom) {
 
 void PLL::setSimulationParameters(Real timestep) {
   mTimeStep = timestep;
+  Math::calculateStateSpaceTrapezoidalMatrices(mA, mB, mTimeStep, mDiscreteA,
+                                               mDiscreteB);
   SPDLOG_LOGGER_INFO(mSLog, "Integration step = {}", mTimeStep);
 }
 
@@ -104,8 +106,8 @@ void PLL::signalStep(Real time, Int timeStepCount) {
                       (**mStateCurr)(0, 0), (**mStateCurr)(1, 0),
                       (**mStatePrev)(0, 0), (**mStatePrev)(1, 0));
 
-  **mStateCurr = Math::StateSpaceTrapezoidal(**mStatePrev, mA, mB, mTimeStep,
-                                             **mInputCurr, **mInputPrev);
+  (**mStateCurr).noalias() =
+      mDiscreteA * **mStatePrev + mDiscreteB * (**mInputCurr + **mInputPrev);
   **mOutputCurr = mC * **mStateCurr + mD * **mInputCurr;
 
   SPDLOG_LOGGER_TRACE(mSLog, "State values: stateCurr = ({}, {})",

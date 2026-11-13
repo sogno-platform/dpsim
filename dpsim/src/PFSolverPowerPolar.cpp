@@ -206,6 +206,8 @@ void PFSolverPowerPolar::calculateJacobian() {
     for (UInt b = 0; b < npqpv; ++b) {
       if (b != a) {
         j = mPQPVBusIndices[b];
+        if (mZeroSkipping && G(k, j) == 0.0 && B(k, j) == 0.0)
+          continue;
         val = sol_V.coeff(k) * sol_V.coeff(j) *
               (G(k, j) * sin(sol_D.coeff(k) - sol_D.coeff(j)) -
                B(k, j) * cos(sol_D.coeff(k) - sol_D.coeff(j)));
@@ -230,6 +232,8 @@ void PFSolverPowerPolar::calculateJacobian() {
     for (UInt b = 0; b < mNumPQBuses; ++b) {
       if (b != a) {
         j = mPQPVBusIndices[b];
+        if (mZeroSkipping && G(k, j) == 0.0 && B(k, j) == 0.0)
+          continue;
         val = sol_V.coeff(k) * sol_V.coeff(j) *
               (G(k, j) * cos(sol_D.coeff(k) - sol_D.coeff(j)) +
                B(k, j) * sin(sol_D.coeff(k) - sol_D.coeff(j)));
@@ -254,6 +258,8 @@ void PFSolverPowerPolar::calculateJacobian() {
     for (UInt b = 0; b < npqpv; ++b) {
       if (b != a) {
         j = mPQPVBusIndices[b];
+        if (mZeroSkipping && G(k, j) == 0.0 && B(k, j) == 0.0)
+          continue;
         val = sol_V.coeff(k) * sol_V.coeff(j) *
               (G(k, j) * cos(sol_D.coeff(k) - sol_D.coeff(j)) +
                B(k, j) * sin(sol_D.coeff(k) - sol_D.coeff(j)));
@@ -278,6 +284,8 @@ void PFSolverPowerPolar::calculateJacobian() {
     for (UInt b = 0; b < mNumPQBuses; ++b) {
       if (b != a) {
         j = mPQPVBusIndices[b];
+        if (mZeroSkipping && G(k, j) == 0.0 && B(k, j) == 0.0)
+          continue;
         val = sol_V.coeff(k) * sol_V.coeff(j) *
               (G(k, j) * sin(sol_D.coeff(k) - sol_D.coeff(j)) -
                B(k, j) * cos(sol_D.coeff(k) - sol_D.coeff(j)));

@@ -91,12 +91,12 @@ void DP::Ph3::SynchronGeneratorDQTrapez::stepInPerUnit(Real time) {
 
     // Update of fluxes
     if (mNumericalMethod == NumericalMethod::Euler) {
-      mPsisr = Math::StateSpaceEuler(
+      mPsisr = Math::StateSpaceEulerNoCopy(
           mPsisr,
           mBase_OmElec * (mFluxStateSpaceMat + mOmegaFluxMat * **mOmMech),
           mBase_OmElec * mVsr, mTimeStep / mMultisamplingRate);
     } else {
-      mPsisr = Math::StateSpaceTrapezoidal(
+      mPsisr = Math::StateSpaceTrapezoidalNoCopy(
           mPsisr,
           mBase_OmElec * (mFluxStateSpaceMat + mOmegaFluxMat * **mOmMech),
           mBase_OmElec * mVsr, mTimeStep / mMultisamplingRate);

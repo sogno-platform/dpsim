@@ -18,6 +18,7 @@
 #include <dpsim-models/SimPowerComp.h>
 #include <dpsim-models/SimSignalComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
+#include <dpsim-models/Solver/MNANonlinearCompInterface.h>
 #include <dpsim-models/Solver/MNASwitchInterface.h>
 #include <dpsim-models/Solver/MNASyncGenInterface.h>
 #include <dpsim-models/Solver/MNAVariableCompInterface.h>
@@ -79,6 +80,7 @@ protected:
   std::bitset<SWITCH_NUM> mCurrentSwitchStatus;
   /// List of synchronous generators that need iterate to solve the differential equations
   CPS::MNASyncGenInterface::List mSyncGen;
+  CPS::MNANonlinearCompInterface::List mNonlinearComps;
 
   /// Source vector of known quantities
   Matrix mRightSideVector;
@@ -95,6 +97,7 @@ protected:
   /// List of components that indicate the solver to recompute the system matrix
   /// depending on their state
   CPS::MNAVariableCompInterface::List mVariableComps;
+  std::vector<Bool> mVariableCompAlwaysDirty;
   /// List of variable components if they must be accessed as MNAInterface objects
   CPS::MNAInterface::List mMNAIntfVariableComps;
 
@@ -208,6 +211,8 @@ protected:
 public:
   /// Solution vector of unknown quantities
   CPS::Attribute<Matrix>::Ptr mLeftSideVector;
+  /// Cached payload for the per-step solver hot path.
+  Matrix *mLeftSideVectorValue = nullptr;
 
   /// Solution vector of unknown quantities (parallel frequencies)
   std::vector<CPS::Attribute<Matrix>::Ptr> mLeftSideVectorHarm;

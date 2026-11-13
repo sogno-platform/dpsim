@@ -37,6 +37,9 @@ protected:
   Matrix mC = Matrix::Zero(2, 2);
   /// matrix D of state space model
   Matrix mD = Matrix::Zero(2, 2);
+  /// Trapezoidal discrete maps cached when the simulation step is set.
+  Matrix mDiscreteA = Matrix::Zero(2, 2);
+  Matrix mDiscreteB = Matrix::Zero(2, 2);
 
 public:
   /// This is never explicitely set to reference anything, so the outside code is responsible for setting up the reference.

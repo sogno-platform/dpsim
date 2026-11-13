@@ -7,12 +7,19 @@
  *********************************************************************************/
 
 #include <dpsim-models/DP/DP_Ph1_VoltageSourceRamp.h>
+#include <dpsim-models/MNAStampUtils.h>
 
 using namespace CPS;
 
 DP::Ph1::VoltageSourceRamp::VoltageSourceRamp(String uid, String name,
                                               Logger::Level logLevel)
+    : VoltageSourceRamp(uid, name, true, logLevel) {}
+
+DP::Ph1::VoltageSourceRamp::VoltageSourceRamp(String uid, String name,
+                                              Bool useSubcomponents,
+                                              Logger::Level logLevel)
     : CompositePowerComp<Complex>(uid, name, true, false, logLevel),
+      mUseSubcomponents(useSubcomponents),
       mVoltageRef(mAttributes->create<Complex>("V_ref")),
       mSrcFreq(mAttributes->create<Real>("f_src")) {
   setVirtualNodeNumber(1);
@@ -23,7 +30,7 @@ DP::Ph1::VoltageSourceRamp::VoltageSourceRamp(String uid, String name,
 
 /// DEPRECATED: Delete method
 SimPowerComp<Complex>::Ptr DP::Ph1::VoltageSourceRamp::clone(String name) {
-  auto copy = VoltageSourceRamp::make(name, mLogLevel);
+  auto copy = VoltageSourceRamp::make(name, mUseSubcomponents, mLogLevel);
   copy->setParameters(**mVoltageRef, mAddVoltage, **mSrcFreq, mAddSrcFreq,
                       mSwitchTime, mRampTime);
   return copy;
@@ -49,14 +56,68 @@ void DP::Ph1::VoltageSourceRamp::initialize(Matrix frequencies) {
   if (**mVoltageRef == Complex(0, 0))
     **mVoltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);
 
-  mSubVoltageSource = VoltageSource::make(**mName + "_src", mLogLevel);
-  mSubVoltageSource->setParameters(**mVoltageRef, **mSrcFreq);
-  mSubVoltageSource->connect({node(0), node(1)});
-  mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[0], 0);
-  mSubVoltageSource->initialize(frequencies);
-  addMNASubComponent(mSubVoltageSource,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::NO_TASK, true);
+  if (mUseSubcomponents) {
+    mSubVoltageSource = VoltageSource::make(**mName + "_src", mLogLevel);
+    mSubVoltageSource->setParameters(**mVoltageRef, **mSrcFreq);
+    mSubVoltageSource->connect({node(0), node(1)});
+    mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[0], 0);
+    mSubVoltageSource->initialize(frequencies);
+    addMNASubComponent(mSubVoltageSource,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_AFTER_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::NO_TASK, true);
+  }
+}
+
+void DP::Ph1::VoltageSourceRamp::mnaParentInitialize(
+    Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+  if (!mUseSubcomponents)
+    updateMatrixNodeIndices();
+}
+
+void DP::Ph1::VoltageSourceRamp::mnaParentApplySystemMatrixStamp(
+    SparseMatrixRow &systemMatrix) {
+  if (mUseSubcomponents)
+    return;
+  const UInt sourceCurrent = virtualNode(0)->matrixNodeIndex();
+  for (UInt freq = 0; freq < mNumFreqs; ++freq) {
+    if (terminalNotGrounded(0)) {
+      Math::setMatrixElement(systemMatrix, sourceCurrent, matrixNodeIndex(0),
+                             Complex(-1., 0.), mNumFreqs, freq);
+      Math::setMatrixElement(systemMatrix, matrixNodeIndex(0), sourceCurrent,
+                             Complex(-1., 0.), mNumFreqs, freq);
+    }
+    if (terminalNotGrounded(1)) {
+      Math::setMatrixElement(systemMatrix, sourceCurrent, matrixNodeIndex(1),
+                             Complex(1., 0.), mNumFreqs, freq);
+      Math::setMatrixElement(systemMatrix, matrixNodeIndex(1), sourceCurrent,
+                             Complex(1., 0.), mNumFreqs, freq);
+    }
+  }
+}
+
+void DP::Ph1::VoltageSourceRamp::mnaParentApplyRightSideVectorStamp(
+    Matrix &rightVector) {
+  if (!mUseSubcomponents)
+    Math::setVectorElement(rightVector, virtualNode(0)->matrixNodeIndex(),
+                           (**mIntfVoltage)(0, 0), mNumFreqs, 0);
+}
+
+void DP::Ph1::VoltageSourceRamp::mnaParentAddPostStepDependencies(
+    AttributeBase::List &prevStepDependencies,
+    AttributeBase::List &attributeDependencies,
+    AttributeBase::List &modifiedAttributes,
+    Attribute<Matrix>::Ptr &leftVector) {
+  if (!mUseSubcomponents) {
+    attributeDependencies.push_back(leftVector);
+    modifiedAttributes.push_back(mIntfCurrent);
+  }
+}
+
+void DP::Ph1::VoltageSourceRamp::mnaParentPostStep(
+    Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+  if (!mUseSubcomponents)
+    (**mIntfCurrent)(0, 0) = Math::complexFromVectorElement(
+        **leftVector, virtualNode(0)->matrixNodeIndex(), mNumFreqs, 0);
 }
 
 void DP::Ph1::VoltageSourceRamp::initializeParentFromNodesAndTerminals(
@@ -85,6 +146,8 @@ void DP::Ph1::VoltageSourceRamp::updateState(Real time) {
 void DP::Ph1::VoltageSourceRamp::mnaParentPreStep(Real time,
                                                   Int timeStepCount) {
   updateState(time);
-  **mSubVoltageSource->mVoltageRef = (**mIntfVoltage)(0, 0);
-  mnaCompApplyRightSideVectorStamp(**mRightVector);
+  if (mUseSubcomponents)
+    **mSubVoltageSource->mVoltageRef = (**mIntfVoltage)(0, 0);
+  else
+    mnaParentApplyRightSideVectorStamp(**mRightVector);
 }

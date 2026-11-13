@@ -38,4 +38,8 @@ void SparseLUAdapter::partialRefactorize(
 Matrix SparseLUAdapter::solve(Matrix &mRightHandSideVector) {
   return LUFactorizedSparse.solve(mRightHandSideVector);
 }
+
+void SparseLUAdapter::solveInto(Matrix &rightSideVector, Matrix &solution) {
+  solution = LUFactorizedSparse.solve(rightSideVector);
+}
 } // namespace DPsim

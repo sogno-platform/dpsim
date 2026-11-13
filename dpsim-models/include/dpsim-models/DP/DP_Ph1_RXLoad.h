@@ -21,6 +21,7 @@ namespace Ph1 {
 class RXLoad : public CompositePowerComp<Complex>,
                public SharedFactory<RXLoad> {
 protected:
+  Bool mUseSubcomponents = true;
   /// Resistance [Ohm]
   /// CHECK: This is only used for logging output
   Real mResistance;
@@ -38,6 +39,15 @@ protected:
   std::shared_ptr<DP::Ph1::Resistor> mSubResistor;
   /// Right side vectors of subcomponents
   std::vector<const Matrix *> mRightVectorStamps;
+  Bool mDirectUseInductor = false;
+  Bool mDirectUseCapacitor = false;
+  Real mDirectConductance = 0.;
+  Real mDirectCapacitance = 0.;
+  MatrixComp mDirectEquivCond;
+  MatrixComp mDirectHistory;
+  MatrixComp mDirectPrevCurrentFactor;
+  MatrixComp mDirectPrevVoltageFactor;
+  MatrixComp mDirectBranchCurrent;
   /// True after createSubComponents() runs; prevents double-construction.
 
 public:
@@ -49,8 +59,13 @@ public:
   const Attribute<Real>::Ptr mNomVoltage;
   /// Defines UID, name and logging level
   RXLoad(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+  RXLoad(String uid, String name, Bool useSubcomponents,
+         Logger::Level logLevel = Logger::Level::off);
   /// Defines name, component parameters and logging level
   RXLoad(String name, Logger::Level logLevel = Logger::Level::off);
+  RXLoad(String name, Bool useSubcomponents,
+         Logger::Level logLevel = Logger::Level::off)
+      : RXLoad(name, name, useSubcomponents, logLevel) {}
 
   SimPowerComp<Complex>::Ptr clone(String name) override;
 
@@ -61,6 +76,11 @@ public:
   void initializeParentFromNodesAndTerminals(Real frequency) override;
   /// Set model specific parameters
   void setParameters(Real activePower, Real ReactivePower, Real volt);
+
+  void mnaParentInitialize(Real omega, Real timeStep,
+                           Attribute<Matrix>::Ptr leftVector) override;
+  void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
 
   // #### MNA section ####
   /// Update interface current from MNA system result

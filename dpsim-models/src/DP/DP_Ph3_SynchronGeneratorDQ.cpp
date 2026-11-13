@@ -15,6 +15,13 @@
 using namespace CPS;
 using namespace std;
 
+namespace {
+const Complex kPositiveSequenceRotation(std::cos(2. / 3. * PI),
+                                        std::sin(2. / 3. * PI));
+const Complex kPositiveSequenceRotationSquared =
+    std::pow(kPositiveSequenceRotation, 2);
+} // namespace
+
 DP::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String uid, String name,
                                                   Logger::Level logLevel)
     : MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
@@ -36,6 +43,8 @@ void DP::Ph3::SynchronGeneratorDQ::initializeFromNodesAndTerminals(
   if (mInitialValuesSet)
     return;
 
+  // SystemTopology stores the generator's total three-phase PF power on the
+  // phase-A terminal record, matching the machine power base.
   const Complex terminalPower = -terminal(0)->singlePower();
   const Complex terminalVoltage = initialSingleVoltage(0);
   const Real terminalVoltagePeak =
@@ -187,40 +196,33 @@ Real DP::Ph3::SynchronGeneratorDQ::rotationalSpeed() const {
 
 Real DP::Ph3::SynchronGeneratorDQ::rotorPosition() const { return mThetaMech; }
 
-Matrix DP::Ph3::SynchronGeneratorDQ::abcToDq0Transform(Real theta,
-                                                       MatrixComp &abcVector) {
-  // Balanced case because we do not return the zero sequence component
-  Complex alpha(cos(2. / 3. * PI), sin(2. / 3. * PI));
-  Complex thetaCompInv(cos(-theta), sin(-theta));
+MatrixFixedSize<3, 1>
+DP::Ph3::SynchronGeneratorDQ::abcToDq0Transform(Real theta,
+                                                MatrixComp &abcVector) {
+  // Balanced positive-sequence projection, followed by e^(-j theta). Keep
+  // the sequence rotation constants shared instead of rebuilding 3x3
+  // transform matrices and powers of alpha at every generator timestep.
+  const Complex positiveSequence =
+      (abcVector(0, 0) + kPositiveSequenceRotation * abcVector(1, 0) +
+       kPositiveSequenceRotationSquared * abcVector(2, 0)) /
+      3.;
+  const Complex thetaCompInv(std::cos(theta), -std::sin(theta));
+  const Complex pnz = positiveSequence * thetaCompInv;
 
-  MatrixComp abcToPnz(3, 3);
-  abcToPnz << 1, 1, 1, 1, alpha, pow(alpha, 2), 1, pow(alpha, 2), alpha;
-  abcToPnz = (1. / 3.) * abcToPnz;
-
-  MatrixComp pnzVector(3, 1);
-  pnzVector = abcToPnz * abcVector * thetaCompInv;
-
-  Matrix dq0Vector(3, 1);
-  dq0Vector << pnzVector(1, 0).real(), pnzVector(1, 0).imag(), 0;
+  MatrixFixedSize<3, 1> dq0Vector;
+  dq0Vector << pnz.real(), pnz.imag(), 0.;
 
   return dq0Vector;
 }
 
-MatrixComp DP::Ph3::SynchronGeneratorDQ::dq0ToAbcTransform(Real theta,
-                                                           Matrix &dq0) {
-  // Balanced case because we do not consider the zero sequence component
-  Complex alpha(cos(2. / 3. * PI), sin(2. / 3. * PI));
-  Complex thetaComp(cos(theta), sin(theta));
-  // Matrix to transform from symmetrical components to ABC
-  MatrixComp pnzToAbc(3, 3);
-  pnzToAbc << 1, 1, 1, 1, pow(alpha, 2), alpha, 1, alpha, pow(alpha, 2);
-  // Symmetrical components vector
-  MatrixComp pnzVector(3, 1);
-  // Picking only d and q for positive sequence component
-  pnzVector << 0, Complex(dq0(0, 0), dq0(1, 0)), 0;
-  // ABC vector
-  MatrixComp abcCompVector(3, 1);
-  abcCompVector = pnzToAbc * pnzVector * thetaComp;
+MatrixFixedSizeComp<3, 1> DP::Ph3::SynchronGeneratorDQ::dq0ToAbcTransform(
+    Real theta, const Eigen::Ref<const Matrix> &dq0) {
+  const Complex thetaComp(std::cos(theta), std::sin(theta));
+  const Complex positiveSequence = Complex(dq0(0, 0), dq0(1, 0)) * thetaComp;
+  MatrixFixedSizeComp<3, 1> abcCompVector;
+  abcCompVector << positiveSequence,
+      kPositiveSequenceRotationSquared * positiveSequence,
+      kPositiveSequenceRotation * positiveSequence;
 
   return abcCompVector;
 }

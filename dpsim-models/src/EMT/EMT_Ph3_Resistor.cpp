@@ -64,20 +64,18 @@ void EMT::Ph3::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 void EMT::Ph3::Resistor::mnaCompInitialize(Real omega, Real timeStep,
                                            Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
+  mConductance = (**mResistance).inverse();
   **mRightVector = Matrix::Zero(0, 0);
 }
 
 void EMT::Ph3::Resistor::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
-  MatrixFixedSize<3, 3> conductance = Matrix::Zero(3, 3);
-  conductance = (**mResistance).inverse();
-
   MNAStampUtils::stampConductanceMatrix(
-      conductance, systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),
+      mConductance, systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),
       terminalNotGrounded(0), terminalNotGrounded(1), mSLog);
 
   SPDLOG_LOGGER_INFO(mSLog, "\nConductance matrix: {:s}",
-                     Logger::matrixToString(conductance));
+                     Logger::matrixToString(mConductance));
 }
 
 void EMT::Ph3::Resistor::mnaCompAddPostStepDependencies(
@@ -92,31 +90,48 @@ void EMT::Ph3::Resistor::mnaCompAddPostStepDependencies(
 
 void EMT::Ph3::Resistor::mnaCompPostStep(Real time, Int timeStepCount,
                                          Attribute<Matrix>::Ptr &leftVector) {
-  mnaCompUpdateVoltage(**leftVector);
-  mnaCompUpdateCurrent(**leftVector);
+  // Fuse the two related post-step updates. The current is calculated from
+  // this step's voltage difference, so invoking the separate update methods
+  // needlessly rereads the just-written voltage attribute and adds dispatch
+  // overhead for every resistor in composite networks. Keep the standalone
+  // update methods unchanged for callers that use them independently.
+  Matrix &voltage = **mIntfVoltage;
+  Matrix &current = **mIntfCurrent;
+  voltage.setZero();
+  if (terminalNotGrounded(1))
+    for (UInt phase = 0; phase < 3; ++phase)
+      voltage(phase, 0) =
+          Math::realFromVectorElement(**leftVector, matrixNodeIndex(1, phase));
+  if (terminalNotGrounded(0))
+    for (UInt phase = 0; phase < 3; ++phase)
+      voltage(phase, 0) -=
+          Math::realFromVectorElement(**leftVector, matrixNodeIndex(0, phase));
+
+  const Matrix &conductance = mConductance;
+  for (UInt phase = 0; phase < 3; ++phase)
+    current(phase, 0) = conductance(phase, 0) * voltage(0, 0) +
+                        conductance(phase, 1) * voltage(1, 0) +
+                        conductance(phase, 2) * voltage(2, 0);
+
+  SPDLOG_LOGGER_DEBUG(mSLog, "\nVoltage: {:s}",
+                      Logger::matrixToString(**mIntfVoltage));
+  SPDLOG_LOGGER_DEBUG(mSLog, "\nCurrent: {:s}",
+                      Logger::matrixToString(**mIntfCurrent));
+  mSLog->flush();
 }
 
 void EMT::Ph3::Resistor::mnaCompUpdateVoltage(const Matrix &leftVector) {
   // v1 - v0
-  **mIntfVoltage = Matrix::Zero(3, 1);
-  if (terminalNotGrounded(1)) {
-    (**mIntfVoltage)(0, 0) =
-        Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
-    (**mIntfVoltage)(1, 0) =
-        Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));
-    (**mIntfVoltage)(2, 0) =
-        Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2));
-  }
-  if (terminalNotGrounded(0)) {
-    (**mIntfVoltage)(0, 0) =
-        (**mIntfVoltage)(0, 0) -
-        Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
-    (**mIntfVoltage)(1, 0) =
-        (**mIntfVoltage)(1, 0) -
-        Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
-    (**mIntfVoltage)(2, 0) =
-        (**mIntfVoltage)(2, 0) -
-        Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
+  const bool terminal0Connected = terminalNotGrounded(0);
+  const bool terminal1Connected = terminalNotGrounded(1);
+  Matrix &voltage = **mIntfVoltage;
+  for (UInt phase = 0; phase < 3; ++phase) {
+    Real value = 0.;
+    if (terminal1Connected)
+      value = leftVector(matrixNodeIndex(1, phase), 0);
+    if (terminal0Connected)
+      value -= leftVector(matrixNodeIndex(0, phase), 0);
+    voltage(phase, 0) = value;
   }
   SPDLOG_LOGGER_DEBUG(mSLog, "\nVoltage: {:s}",
                       Logger::matrixToString(**mIntfVoltage));
@@ -124,9 +139,14 @@ void EMT::Ph3::Resistor::mnaCompUpdateVoltage(const Matrix &leftVector) {
 }
 
 void EMT::Ph3::Resistor::mnaCompUpdateCurrent(const Matrix &leftVector) {
-  Matrix resistanceInv = Matrix::Zero(3, 3);
-  Math::invertMatrix(**mResistance, resistanceInv);
-  **mIntfCurrent = resistanceInv * **mIntfVoltage;
+  // The dimensions are fixed at 3x3; scalar rows avoid dynamic GEMV setup in
+  // this per-step post-processing path.
+  const Matrix &voltage = **mIntfVoltage;
+  Matrix &current = **mIntfCurrent;
+  for (Int phase = 0; phase < 3; ++phase)
+    current(phase, 0) = mConductance(phase, 0) * voltage(0, 0) +
+                        mConductance(phase, 1) * voltage(1, 0) +
+                        mConductance(phase, 2) * voltage(2, 0);
   SPDLOG_LOGGER_DEBUG(mSLog, "\nCurrent: {:s}",
                       Logger::matrixToString(**mIntfCurrent));
   mSLog->flush();

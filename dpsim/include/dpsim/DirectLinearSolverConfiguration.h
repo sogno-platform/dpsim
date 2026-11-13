@@ -38,6 +38,7 @@ class DirectLinearSolverConfiguration {
   FILL_IN_REDUCTION_METHOD mFillInReductionMethod;
   PARTIAL_REFACTORIZATION_METHOD mPartialRefactorizationMethod;
   USE_BTF mUseBTF;
+  Bool mUseStaticPreconditioner;
 
 public:
   DirectLinearSolverConfiguration();
@@ -50,6 +51,7 @@ public:
       PARTIAL_REFACTORIZATION_METHOD partialRefactorizationMethod);
 
   void setBTF(USE_BTF useBTF);
+  void setStaticPreconditioner(Bool enabled);
 
   SCALING_METHOD getScalingMethod() const;
 
@@ -58,6 +60,7 @@ public:
   PARTIAL_REFACTORIZATION_METHOD getPartialRefactorizationMethod() const;
 
   USE_BTF getBTF() const;
+  Bool getStaticPreconditioner() const;
 
   String getScalingMethodString() const;
 

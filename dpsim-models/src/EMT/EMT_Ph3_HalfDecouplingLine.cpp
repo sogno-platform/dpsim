@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <dpsim-models/EMT/EMT_Ph3_HalfDecouplingLine.h>
+#include <dpsim-models/MNAStampUtils.h>
 #include <dpsim-models/MathUtils.h>
 
 using namespace CPS;
@@ -26,6 +27,13 @@ EMT::Ph3::HalfDecouplingLine::HalfDecouplingLine(String uid, String name,
   **mIntfCurrent = Matrix::Zero(3, 1);
 }
 
+EMT::Ph3::HalfDecouplingLine::HalfDecouplingLine(String uid, String name,
+                                                 Bool useSubcomponents,
+                                                 Logger::Level logLevel)
+    : HalfDecouplingLine(uid, name, logLevel) {
+  mUseSubcomponents = useSubcomponents;
+}
+
 void EMT::Ph3::HalfDecouplingLine::setParameters(Matrix resistance,
                                                  Matrix inductance,
                                                  Matrix capacitance) {
@@ -38,6 +46,8 @@ void EMT::Ph3::HalfDecouplingLine::setParameters(Matrix resistance,
   mDelay = (inductance.array() * capacitance.array()).sqrt().maxCoeff();
 
   **mSrcRes = mSurgeImpedance + mResistance / 4;
+  mSrcResInverse = (**mSrcRes).inverse();
+  mSrcResSquaredInverse = ((**mSrcRes) * (**mSrcRes)).inverse();
 
   SPDLOG_LOGGER_INFO(mSLog, "surge impedance: {}", mSurgeImpedance);
   SPDLOG_LOGGER_INFO(mSLog, "delay: {}", mDelay);
@@ -52,6 +62,8 @@ void EMT::Ph3::HalfDecouplingLine::setCouplingSource(
 }
 
 void EMT::Ph3::HalfDecouplingLine::createSubComponents() {
+  if (!mUseSubcomponents)
+    return;
   if (mSubCompCreated)
     return;
   mSubCompCreated = true;
@@ -68,6 +80,24 @@ void EMT::Ph3::HalfDecouplingLine::createSubComponents() {
   mSubCtrledCurrentSource->connect({mTerminals[0]->node(), SimNode::GND});
   addMNASubComponent(mSubCtrledCurrentSource, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+}
+
+void EMT::Ph3::HalfDecouplingLine::mnaParentApplySystemMatrixStamp(
+    SparseMatrixRow &systemMatrix) {
+  if (mUseSubcomponents)
+    return;
+  MNAStampUtils::stampConductanceMatrix(mSrcResInverse, systemMatrix,
+                                        matrixNodeIndex(0), 0,
+                                        terminalNotGrounded(0), false, mSLog);
+}
+
+void EMT::Ph3::HalfDecouplingLine::mnaParentApplyRightSideVectorStamp(
+    Matrix &rightVector) {
+  if (mUseSubcomponents || !terminalNotGrounded(0))
+    return;
+  for (UInt phase = 0; phase < 3; ++phase)
+    Math::setVectorElement(rightVector, matrixNodeIndex(0, phase),
+                           (**mSrcCtrledCurrent)(phase, 0));
 }
 
 void EMT::Ph3::HalfDecouplingLine::initializeParentFromNodesAndTerminals(
@@ -108,39 +138,46 @@ void EMT::Ph3::HalfDecouplingLine::mnaParentInitialize(
   **mSendingCur = curNear.real();
 }
 
-Matrix EMT::Ph3::HalfDecouplingLine::interpolate(Matrix &data) {
-  Matrix c1 = data.row(mBufIdx);
-  Matrix c2 = mBufIdx == mBufSize - 1 ? data.row(0) : data.row(mBufIdx + 1);
-  return (mAlpha * c1 + (1 - mAlpha) * c2).transpose();
+MatrixFixedSize<3, 1>
+EMT::Ph3::HalfDecouplingLine::interpolate(const Matrix &data) const {
+  const UInt nextIdx = (mBufIdx + 1 == mBufSize) ? 0 : mBufIdx + 1;
+  MatrixFixedSize<3, 1> result;
+  const Real nextWeight = 1 - mAlpha;
+  for (UInt phase = 0; phase < 3; ++phase)
+    result(phase) =
+        mAlpha * data(mBufIdx, phase) + nextWeight * data(nextIdx, phase);
+  return result;
 }
 
 void EMT::Ph3::HalfDecouplingLine::step(Real time, Int timeStepCount) {
-  Matrix voltNear = **mSendingVolt;
-  Matrix curNear = **mSendingCur;
-  Matrix voltFar = **mReceivingVolt;
-  Matrix curFar = **mReceivingCur;
-
-  Matrix denom =
-      (mSurgeImpedance + mResistance / 4) * (mSurgeImpedance + mResistance / 4);
+  const Matrix &voltNear = **mSendingVolt;
+  const Matrix &curNear = **mSendingCur;
+  const Matrix &voltFar = **mReceivingVolt;
+  const Matrix &curFar = **mReceivingCur;
 
   if (timeStepCount == 0) {
-    **mSrcCtrledCurrent =
-        curNear - (mSurgeImpedance + mResistance / 4).inverse() * voltNear;
+    **mSrcCtrledCurrent = curNear - mSrcResInverse * voltNear;
   } else {
     **mSrcCtrledCurrent =
-        -mSurgeImpedance * denom.inverse() *
+        -mSurgeImpedance * mSrcResSquaredInverse *
             (voltFar + (mSurgeImpedance - mResistance / 4) * curFar) -
-        mResistance / 4 * denom.inverse() *
+        mResistance / 4 * mSrcResSquaredInverse *
             (voltNear + (mSurgeImpedance - mResistance / 4) * curNear);
   }
 
-  mSubCtrledCurrentSource->mCurrentRef->set(**mSrcCtrledCurrent);
+  if (mUseSubcomponents)
+    mSubCtrledCurrentSource->mCurrentRef->set(**mSrcCtrledCurrent);
 }
 
 void EMT::Ph3::HalfDecouplingLine::postStep() {
-  mVoltBuf.row(mBufIdx) = -mSubRes->intfVoltage().transpose();
-  mCurBuf.row(mBufIdx) =
-      -mSubRes->intfCurrent().transpose() + (**mSrcCtrledCurrent).transpose();
+  if (mUseSubcomponents) {
+    mVoltBuf.row(mBufIdx) = -mSubRes->intfVoltage().transpose();
+    mCurBuf.row(mBufIdx) =
+        -mSubRes->intfCurrent().transpose() + (**mSrcCtrledCurrent).transpose();
+  } else {
+    mVoltBuf.row(mBufIdx) = -(**mIntfVoltage).transpose();
+    mCurBuf.row(mBufIdx) = (**mIntfCurrent).transpose();
+  }
 
   mBufIdx++;
   if (mBufIdx == mBufSize)
@@ -153,7 +190,8 @@ void EMT::Ph3::HalfDecouplingLine::postStep() {
 void EMT::Ph3::HalfDecouplingLine::mnaParentPreStep(Real time,
                                                     Int timeStepCount) {
   step(time, timeStepCount);
-  mSubCtrledCurrentSource->mnaPreStep(time, timeStepCount);
+  if (mUseSubcomponents)
+    mSubCtrledCurrentSource->mnaPreStep(time, timeStepCount);
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
@@ -176,7 +214,11 @@ void EMT::Ph3::HalfDecouplingLine::mnaCompUpdateVoltage(
 
 void EMT::Ph3::HalfDecouplingLine::mnaCompUpdateCurrent(
     const Matrix &leftVector) {
-  **mIntfCurrent = -mSubRes->intfCurrent() + **mSrcCtrledCurrent;
+  if (mUseSubcomponents) {
+    **mIntfCurrent = -mSubRes->intfCurrent() + **mSrcCtrledCurrent;
+    return;
+  }
+  **mIntfCurrent = -mSrcResInverse * **mIntfVoltage + **mSrcCtrledCurrent;
 }
 
 void EMT::Ph3::HalfDecouplingLine::mnaParentAddPreStepDependencies(

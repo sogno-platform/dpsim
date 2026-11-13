@@ -218,19 +218,22 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompInitialize(
   mDVq = mDVqd(0);
   mDVd = mDVqd(1);
 
-  mDVa = inverseParkTransform(mThetaMech, mDVq, mDVd, 0)(0);
-  mDVb = inverseParkTransform(mThetaMech, mDVq, mDVd, 0)(1);
-  mDVc = inverseParkTransform(mThetaMech, mDVq, mDVd, 0)(2);
+  const auto dvAbc = inverseParkTransform(mThetaMech, mDVq, mDVd, 0);
+  mDVa = dvAbc(0);
+  mDVb = dvAbc(1);
+  mDVc = dvAbc(2);
 
   mDVabc << mDVa, mDVb, mDVc;
 
-  mVa = inverseParkTransform(mThetaMech, mVq, mVd, mV0)(0);
-  mVb = inverseParkTransform(mThetaMech, mVq, mVd, mV0)(1);
-  mVc = inverseParkTransform(mThetaMech, mVq, mVd, mV0)(2);
+  const auto vAbc = inverseParkTransform(mThetaMech, mVq, mVd, mV0);
+  mVa = vAbc(0);
+  mVb = vAbc(1);
+  mVc = vAbc(2);
 
-  mIa = inverseParkTransform(mThetaMech, mIq, mId, mI0)(0);
-  mIb = inverseParkTransform(mThetaMech, mIq, mId, mI0)(1);
-  mIc = inverseParkTransform(mThetaMech, mIq, mId, mI0)(2);
+  const auto iAbc = inverseParkTransform(mThetaMech, mIq, mId, mI0);
+  mIa = iAbc(0);
+  mIb = iAbc(1);
+  mIc = iAbc(2);
 
   CalculateL();
 
@@ -282,6 +285,16 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompApplyRightSideVectorStamp(
   }
 }
 
+void EMT::Ph3::SynchronGeneratorVBR::mnaAddCompactRightSideVectorStamp(
+    Matrix &rightVector) {
+  if (!terminalNotGrounded(0))
+    return;
+
+  Math::addToVectorElement(rightVector, matrixNodeIndex(0, 0), mISourceEq(0));
+  Math::addToVectorElement(rightVector, matrixNodeIndex(0, 1), mISourceEq(1));
+  Math::addToVectorElement(rightVector, matrixNodeIndex(0, 2), mISourceEq(2));
+}
+
 void EMT::Ph3::SynchronGeneratorVBR::stepInPerUnit() {
 
   // Update of mechanical torque from turbine governor
@@ -305,10 +318,11 @@ void EMT::Ph3::SynchronGeneratorVBR::stepInPerUnit() {
 
   mIabc << mIa, mIb, mIc;
 
-  mEsh_vbr =
+  mEsh_vbr.noalias() =
       (mResistanceMat - (2 / (mTimeStep * mBase_OmElec)) * mDInductanceMat) *
-          mIabc +
-      mDVabc - mVabc;
+      mIabc;
+  mEsh_vbr += mDVabc;
+  mEsh_vbr -= mVabc;
 
   CalculateL();
 
@@ -321,10 +335,12 @@ void EMT::Ph3::SynchronGeneratorVBR::stepInPerUnit() {
       mResistanceMat + (2 / (mTimeStep * mBase_OmElec)) * mDInductanceMat + K;
   E_eq_vbr = mEsh_vbr + E_r_vbr;
 
-  MatrixFixedSize<3, 3> R_eq_vbr_mBase_Z = R_eq_vbr * mBase_Z;
-
-  mConductanceMat = R_eq_vbr_mBase_Z.inverse();
-  mISourceEq = R_eq_vbr.inverse() * E_eq_vbr * mBase_I;
+  mR_eq_vbr_inv = R_eq_vbr.inverse();
+  // mBase_Z is a scalar. Avoid a second 3x3 inverse:
+  // (R_eq_vbr * mBase_Z)^-1 = R_eq_vbr^-1 / mBase_Z.
+  mConductanceMat = mR_eq_vbr_inv / mBase_Z;
+  mISourceEq.noalias() = mR_eq_vbr_inv * E_eq_vbr;
+  mISourceEq *= mBase_I;
 }
 
 void EMT::Ph3::SynchronGeneratorVBR::mnaCompPostStep(
@@ -345,9 +361,10 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompPostStep(
   // ################ Update machine stator and rotor variables ############################
   mVabc << mVa, mVb, mVc;
 
-  mVq = parkTransform(mThetaMech, mVa, mVb, mVc)(0);
-  mVd = parkTransform(mThetaMech, mVa, mVb, mVc)(1);
-  mV0 = parkTransform(mThetaMech, mVa, mVb, mVc)(2);
+  const auto vDq0 = parkTransform(mThetaMech, mVa, mVb, mVc);
+  mVq = vDq0(0);
+  mVd = vDq0(1);
+  mV0 = vDq0(2);
 
   if (mHasExciter) {
     Real Vpss = mHasPSS
@@ -357,7 +374,10 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompPostStep(
     // to the synchronous generator pu system
     mVfd = (mRfd / mLmd) * mExciter->step(mVd, mVq, mTimeStep, Vpss);
   }
-  mIabc = R_eq_vbr.inverse() * (mVabc - E_eq_vbr);
+  MatrixFixedSize<3, 1> voltageDifference;
+  for (UInt phase = 0; phase < 3; ++phase)
+    voltageDifference(phase) = mVabc(phase) - E_eq_vbr(phase);
+  mIabc.noalias() = mR_eq_vbr_inv * voltageDifference;
 
   mIa = mIabc(0);
   mIb = mIabc(1);
@@ -366,9 +386,10 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompPostStep(
   mIq_hist = mIq;
   mId_hist = mId;
 
-  mIq = parkTransform(mThetaMech, mIa, mIb, mIc)(0);
-  mId = parkTransform(mThetaMech, mIa, mIb, mIc)(1);
-  mI0 = parkTransform(mThetaMech, mIa, mIb, mIc)(2);
+  const auto iDq0 = parkTransform(mThetaMech, mIa, mIb, mIc);
+  mIq = iDq0(0);
+  mId = iDq0(1);
+  mI0 = iDq0(2);
 
   // Calculate rotor flux likanges
   if (mNumDampingWindings == 2) {
@@ -407,9 +428,10 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompPostStep(
   mDVq = mDVqd(0);
   mDVd = mDVqd(1);
 
-  mDVa = inverseParkTransform(mThetaMech, mDVq, mDVd, 0)(0);
-  mDVb = inverseParkTransform(mThetaMech, mDVq, mDVd, 0)(1);
-  mDVc = inverseParkTransform(mThetaMech, mDVq, mDVd, 0)(2);
+  const auto dvAbc = inverseParkTransform(mThetaMech, mDVq, mDVd, 0);
+  mDVa = dvAbc(0);
+  mDVb = dvAbc(1);
+  mDVc = dvAbc(2);
   mDVabc << mDVa, mDVb, mDVc;
 
   **mIntfVoltage = mVabc * mBase_V;
@@ -428,15 +450,15 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompAddPostStepDependencies(
 }
 
 void EMT::Ph3::SynchronGeneratorVBR::CalculateL() {
-  mDInductanceMat << **mLl + mLa - mLb * cos(2 * mThetaMech),
-      -mLa / 2 - mLb * cos(2 * mThetaMech - 2 * PI / 3),
-      -mLa / 2 - mLb * cos(2 * mThetaMech + 2 * PI / 3),
-      -mLa / 2 - mLb * cos(2 * mThetaMech - 2 * PI / 3),
-      **mLl + mLa - mLb * cos(2 * mThetaMech - 4 * PI / 3),
-      -mLa / 2 - mLb * cos(2 * mThetaMech),
-      -mLa / 2 - mLb * cos(2 * mThetaMech + 2 * PI / 3),
-      -mLa / 2 - mLb * cos(2 * mThetaMech),
-      **mLl + mLa - mLb * cos(2 * mThetaMech + 4 * PI / 3);
+  const Real doubledAngle = 2 * mThetaMech;
+  const Real cos0 = cos(doubledAngle);
+  const Real cosMinus = cos(doubledAngle - 2 * PI / 3);
+  const Real cosPlus = cos(doubledAngle + 2 * PI / 3);
+  mDInductanceMat << **mLl + mLa - mLb * cos0, -mLa / 2 - mLb * cosMinus,
+      -mLa / 2 - mLb * cosPlus, -mLa / 2 - mLb * cosMinus,
+      **mLl + mLa - mLb * cosPlus, -mLa / 2 - mLb * cos0,
+      -mLa / 2 - mLb * cosPlus, -mLa / 2 - mLb * cos0,
+      **mLl + mLa - mLb * cosMinus;
 }
 
 void EMT::Ph3::SynchronGeneratorVBR::CalculateAuxiliarConstants(Real dt) {
@@ -526,7 +548,9 @@ void EMT::Ph3::SynchronGeneratorVBR::CalculateAuxiliarVariables() {
   K2b << 0, c25;
   K2 = K2a * F1 + K2b;
 
-  K << K1, K2, Matrix::Zero(2, 1), 0, 0, 0;
+  K.setZero();
+  K.block<2, 1>(0, 0) = K1;
+  K.block<2, 1>(0, 1) = K2;
 
   mKrs_teta << 2. / 3. * cos(mThetaMech),
       2. / 3. * cos(mThetaMech - 2. * M_PI / 3.),
@@ -552,38 +576,21 @@ void EMT::Ph3::SynchronGeneratorVBR::CalculateAuxiliarVariables() {
   E_r_vbr = mKrs_teta_inv * H_qdr;
 }
 
-Matrix EMT::Ph3::SynchronGeneratorVBR::parkTransform(Real theta, Real a, Real b,
-                                                     Real c) {
-
-  Matrix dq0vector(3, 1);
-
-  Real q, d, zero;
-
-  q = 2. / 3. * cos(theta) * a + 2. / 3. * cos(theta - 2. * M_PI / 3.) * b +
-      2. / 3. * cos(theta + 2. * M_PI / 3.) * c;
-  d = 2. / 3. * sin(theta) * a + 2. / 3. * sin(theta - 2. * M_PI / 3.) * b +
-      2. / 3. * sin(theta + 2. * M_PI / 3.) * c;
-  zero = 1. / 3. * a + 1. / 3. * b + 1. / 3. * c;
-
-  dq0vector << q, d, zero;
-
-  return dq0vector;
+MatrixFixedSize<3, 1> EMT::Ph3::SynchronGeneratorVBR::parkTransform(Real theta,
+                                                                    Real a,
+                                                                    Real b,
+                                                                    Real c) {
+  (void)theta;
+  MatrixFixedSize<3, 1> abc;
+  abc << a, b, c;
+  return mKrs_teta * abc;
 }
 
-Matrix EMT::Ph3::SynchronGeneratorVBR::inverseParkTransform(Real theta, Real q,
-                                                            Real d, Real zero) {
-
-  Matrix abcVector(3, 1);
-
-  Real a, b, c;
-
-  a = cos(theta) * q + sin(theta) * d + 1. * zero;
-  b = cos(theta - 2. * M_PI / 3.) * q + sin(theta - 2. * M_PI / 3.) * d +
-      1. * zero;
-  c = cos(theta + 2. * M_PI / 3.) * q + sin(theta + 2. * M_PI / 3.) * d +
-      1. * zero;
-
-  abcVector << a, b, c;
-
-  return abcVector;
+MatrixFixedSize<3, 1>
+EMT::Ph3::SynchronGeneratorVBR::inverseParkTransform(Real theta, Real q, Real d,
+                                                     Real zero) {
+  (void)theta;
+  MatrixFixedSize<3, 1> dq0;
+  dq0 << q, d, zero;
+  return mKrs_teta_inv * dq0;
 }

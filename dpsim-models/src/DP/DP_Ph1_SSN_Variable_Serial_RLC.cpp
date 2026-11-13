@@ -58,10 +58,22 @@ void DP::Ph1::SSN::Variable_Serial_RLC::setParameters(Real resistance,
   buildStateSpaceModel(A, B, C, D);
 
   MixedVTypeVariableSSNComp::setParameters(A, B, C, D);
+  if (mTimeStep > 0.)
+    mParameterChanged = true;
 }
 
 Bool DP::Ph1::SSN::Variable_Serial_RLC::updateComponentParameters() {
-  // Change-check intentionally skipped, to exercise recompute-every-step.
+  // R, L, C, and omegaN are fixed by setParameters() for this component.
+  // mnaCompInitialize() builds the realization and discretizes it once, so
+  // report no per-step parameter change and avoid rebuilding identical state
+  // matrices and their trapezoidal discretization on every timestep.
+  if (!mParameterChanged)
+    return false;
+
+  // Preserve the public setter's ability to change parameters after MNA
+  // initialization: rebuild once, then let the variable-component path
+  // recompute the discrete model and matrix stamp for the new parameters.
   buildStateSpaceModel(mA, mB, mC, mD);
+  mParameterChanged = false;
   return true;
 }

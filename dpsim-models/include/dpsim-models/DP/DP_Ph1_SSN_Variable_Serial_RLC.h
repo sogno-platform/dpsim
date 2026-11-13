@@ -35,6 +35,7 @@ private:
   Real mInductance = 0.;
   Real mCapacitance = 0.;
   Real mOmegaN = 0.;
+  Bool mParameterChanged = false;
 
   void buildStateSpaceModel(Matrix &A, Matrix &B, Matrix &C, Matrix &D) const;
 };

@@ -14,6 +14,8 @@
 #include <dpsim-models/Signal/SineWaveGenerator.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
+#include <array>
+
 namespace CPS {
 namespace EMT {
 namespace Ph3 {
@@ -26,6 +28,7 @@ class ControlledVoltageSource : public MNASimPowerComp<Real>,
 protected:
   // Updates voltage according to reference phasor and frequency
   void updateVoltage(Real time);
+  std::array<UInt, 3> mVirtualNodeRows{};
 
 public:
   const CPS::Attribute<Matrix>::Ptr mVoltageRef;

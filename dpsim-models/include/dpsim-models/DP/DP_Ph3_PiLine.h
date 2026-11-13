@@ -24,6 +24,22 @@ class PiLine : public CompositePowerComp<Complex>,
                public Base::Ph3::PiLine,
                public SharedFactory<PiLine> {
 protected:
+  Bool mUseSubcomponents = true;
+  MatrixComp mDirectSeriesCond = MatrixComp::Zero(3, 3);
+  MatrixComp mDirectInductorAdmittance = MatrixComp::Zero(3, 3);
+  MatrixComp mDirectSeriesSystemInverse = MatrixComp::Identity(3, 3);
+  MatrixComp mDirectSeriesCurrent = MatrixComp::Zero(3, 1);
+  MatrixComp mDirectSeriesVoltage = MatrixComp::Zero(3, 1);
+  MatrixComp mDirectSeriesHistory = MatrixComp::Zero(3, 1);
+  Complex mDirectSeriesPrevCurrentFactor = 0.;
+  MatrixComp mDirectCapCond = MatrixComp::Zero(3, 3);
+  MatrixComp mDirectCapPrevVoltCoeff = MatrixComp::Zero(3, 3);
+  MatrixComp mDirectCapCurrent0 = MatrixComp::Zero(3, 1);
+  MatrixComp mDirectCapCurrent1 = MatrixComp::Zero(3, 1);
+  MatrixComp mDirectCapVoltage0 = MatrixComp::Zero(3, 1);
+  MatrixComp mDirectCapVoltage1 = MatrixComp::Zero(3, 1);
+  MatrixComp mDirectCapHistory0 = MatrixComp::Zero(3, 1);
+  MatrixComp mDirectCapHistory1 = MatrixComp::Zero(3, 1);
   /// True after createSubComponents() runs; prevents double-construction.
   /// Series Inductance submodel
   std::shared_ptr<Inductor> mSubSeriesInductor;
@@ -43,9 +59,14 @@ protected:
 public:
   /// Defines UID, name and logging level
   PiLine(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+  PiLine(String uid, String name, Bool useSubcomponents,
+         Logger::Level logLevel = Logger::Level::off);
   /// Defines name and logging level
   PiLine(String name, Logger::Level logLevel = Logger::Level::off)
       : PiLine(name, name, logLevel) {}
+  PiLine(String name, Bool useSubcomponents,
+         Logger::Level logLevel = Logger::Level::off)
+      : PiLine(name, name, useSubcomponents, logLevel) {}
 
   SimPowerComp<Complex>::Ptr clone(String copySuffix) override;
 
@@ -54,6 +75,10 @@ public:
   void createSubComponents() override;
   /// Derives values from power flow data and pushes them to subcomponents
   void initializeParentFromNodesAndTerminals(Real frequency) override;
+  void mnaParentInitialize(Real omega, Real timeStep,
+                           Attribute<Matrix>::Ptr leftVector) override;
+  void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
 
   // #### MNA section ####
   /// Updates internal current variable of the component

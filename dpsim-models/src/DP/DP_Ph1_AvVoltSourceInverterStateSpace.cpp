@@ -95,7 +95,7 @@ void DP::Ph1::AvVoltSourceInverterStateSpace::setParameters(
 
 void DP::Ph1::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
     const Matrix &x, const Matrix &u, Matrix &A, Matrix &B, Matrix &C,
-    Matrix &D, Matrix &E, Matrix &F) const {
+    Matrix &D, Matrix &E, Matrix &F) {
   // 1) Unpack the operating point. psi := theta0 - thetaN (never a state itself).
   const Real psi = x(Psi, 0);
   const Real pF = x(PFiltered, 0);
@@ -221,19 +221,23 @@ void DP::Ph1::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
   const Real dVRefEnvImByUIm = dVRefEnvIm(dVRefDByUIm, dVRefQByUIm);
 
   // 6) RHS f(x,u) (x_dot = f(x,u)).
-  Matrix f = Matrix::Zero(12, 1);
-  f(Psi, 0) = mKpPLL * vcQ + mKiPLL * x(PhiPLL, 0);
-  f(PhiPLL, 0) = vcQ;
-  f(PFiltered, 0) = mOmegaCutoff * (pInst - pF);
-  f(QFiltered, 0) = mOmegaCutoff * (qInst - qF);
-  f(PhiD, 0) = mPRef - pF;
-  f(PhiQ, 0) = qF - mQRef;
-  f(GammaD, 0) = iRefD - ircD;
-  f(GammaQ, 0) = iRefQ - ircQ;
-  f(VcRe, 0) = ifRe / mCf + (uRe - vcRe) / (mCf * mRc) + mOmegaN * vcIm;
-  f(VcIm, 0) = ifIm / mCf + (uIm - vcIm) / (mCf * mRc) - mOmegaN * vcRe;
-  f(IfRe, 0) = (vRefEnvRe - vcRe - mRf * ifRe) / mLf + mOmegaN * ifIm;
-  f(IfIm, 0) = (vRefEnvIm - vcIm - mRf * ifIm) / mLf - mOmegaN * ifRe;
+  mStateDerivative.setZero();
+  mStateDerivative(Psi, 0) = mKpPLL * vcQ + mKiPLL * x(PhiPLL, 0);
+  mStateDerivative(PhiPLL, 0) = vcQ;
+  mStateDerivative(PFiltered, 0) = mOmegaCutoff * (pInst - pF);
+  mStateDerivative(QFiltered, 0) = mOmegaCutoff * (qInst - qF);
+  mStateDerivative(PhiD, 0) = mPRef - pF;
+  mStateDerivative(PhiQ, 0) = qF - mQRef;
+  mStateDerivative(GammaD, 0) = iRefD - ircD;
+  mStateDerivative(GammaQ, 0) = iRefQ - ircQ;
+  mStateDerivative(VcRe, 0) =
+      ifRe / mCf + (uRe - vcRe) / (mCf * mRc) + mOmegaN * vcIm;
+  mStateDerivative(VcIm, 0) =
+      ifIm / mCf + (uIm - vcIm) / (mCf * mRc) - mOmegaN * vcRe;
+  mStateDerivative(IfRe, 0) =
+      (vRefEnvRe - vcRe - mRf * ifRe) / mLf + mOmegaN * ifIm;
+  mStateDerivative(IfIm, 0) =
+      (vRefEnvIm - vcIm - mRf * ifIm) / mLf - mOmegaN * ifRe;
 
   // 7) Analytic Jacobian A = df/dx, B = df/du.
   A = Matrix::Zero(12, 12);
@@ -318,7 +322,9 @@ void DP::Ph1::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
   B(IfIm, 1) = dVRefEnvImByUIm / mLf;
 
   // 8) Offset E = f(x,u) - A*x - B*u.
-  E = f - A * x - B * u;
+  E = mStateDerivative;
+  E.noalias() -= A * x;
+  E.noalias() -= B * u;
 
   // 9) SSN output: y = (u - Vc)/Rc (exact, no relinearization needed).
   C = Matrix::Zero(2, 12);
@@ -333,15 +339,12 @@ void DP::Ph1::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
 }
 
 Bool DP::Ph1::AvVoltSourceInverterStateSpace::updateComponentParameters() {
-  Matrix E;
-  Matrix F;
-
   // Relinearized every step (mirrors EMT); change-check intentionally skipped.
   buildStateSpaceModel(**mX, packComplex((**inputAttribute())(0, 0)), mA, mB,
-                       mC, mD, E, F);
+                       mC, mD, mStateOffsetWorkspace, mOutputOffsetWorkspace);
 
-  setStateOffset(E);
-  setOutputOffset(F);
+  setStateOffset(mStateOffsetWorkspace);
+  setOutputOffset(mOutputOffsetWorkspace);
 
   return true;
 }

@@ -35,6 +35,7 @@ list(APPEND MODELS_SOURCES
 	DP/DP_Ph1_VoltageSourceRamp.cpp
 	DP/DP_Ph1_VoltageSourceNorton.cpp
 	DP/DP_Ph1_Shunt.cpp
+	DP/DP_Ph1_SVC.cpp
 	DP/DP_Ph1_Switch.cpp
 	DP/DP_Ph1_SynchronGeneratorIdeal.cpp
 	DP/DP_Ph1_SynchronGeneratorTrStab.cpp
@@ -72,11 +73,15 @@ list(APPEND MODELS_SOURCES
 	DP/DP_Ph3_Resistor.cpp
 	DP/DP_Ph3_NetworkInjection.cpp
 	DP/DP_Ph3_PiLine.cpp
+	DP/DP_Ph3_SSN_PiLine.cpp
+	DP/DP_Ph3_SSN_ImpedanceLoad.cpp
+	DP/DP_Ph3_SSN_Transformer.cpp
 	DP/DP_Ph3_Transformer.cpp
 	DP/DP_Ph3_SeriesResistor.cpp
 	DP/DP_Ph3_SeriesSwitch.cpp
 	DP/DP_Ph3_Switch.cpp
 	DP/DP_Ph3_SynchronGeneratorDQ.cpp
+	DP/DP_Ph3_SynchronGenerator4OrderVBR.cpp
 	DP/DP_Ph3_SynchronGeneratorDQTrapez.cpp
 	# DP/DP_Ph3_SynchronGeneratorDQSmpl.cpp
 	# DP/DP_Ph3_SynchronGeneratorVBR.cpp
@@ -84,6 +89,7 @@ list(APPEND MODELS_SOURCES
 
 	DP/DP_Ph3_TwoTerminalVTypeSSNComp.cpp
 	DP/DP_Ph3_MixedVTypeVariableSSNComp.cpp
+	DP/DP_Ph3_SSN_SynchronGenerator4Order.cpp
 	DP/DP_Ph3_AvVoltSourceInverterStateSpace.cpp
 	DP/DP_Ph3_TwoTerminalITypeSSNComp.cpp
 	DP/DP_Ph3_SSN_Full_Serial_RLC.cpp
@@ -91,6 +97,8 @@ list(APPEND MODELS_SOURCES
 	DP/DP_Ph3_GenericTwoTerminalITypeSSN.cpp
 
 	EMT/EMT_SSNComp.cpp
+	EMT/EMT_LinearSSNFused.cpp
+	EMT/EMT_LinearSSNGroup.cpp
 	EMT/EMT_VTypeSSNComp.cpp
 	EMT/EMT_VTypeSplitSSNComp.cpp
 	EMT/EMT_VTypeVariableSSNComp.cpp
@@ -131,6 +139,9 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph3_SeriesSwitch.cpp
 	EMT/EMT_Ph3_VoltageSourceNorton.cpp
 	EMT/EMT_Ph3_PiLine.cpp
+	EMT/EMT_Ph3_SSN_PiLine.cpp
+	EMT/EMT_Ph3_SSN_ImpedanceLoad.cpp
+	EMT/EMT_Ph3_SSN_Transformer.cpp
 	EMT/EMT_Ph3_RxLine.cpp
 	EMT/EMT_Ph3_RXLoad.cpp
 	EMT/EMT_Ph3_NetworkInjection.cpp
@@ -169,6 +180,7 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph3_TwoTerminalVTypeVariableSSNComp.cpp
 	EMT/EMT_Ph3_FourTerminalVTypeSSNComp.cpp
 	EMT/EMT_Ph3_SSN_InductionMotor.cpp
+	EMT/EMT_Ph3_SSN_SynchronGenerator4Order.cpp
 	EMT/EMT_Ph3_PiecewiseLinearInductor.cpp
 	EMT/EMT_Ph3_VSIVoltageControlVCO.cpp
 	EMT/EMT_Ph3_HalfDecouplingLine.cpp

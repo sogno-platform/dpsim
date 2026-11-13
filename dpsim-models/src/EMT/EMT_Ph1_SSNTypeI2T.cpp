@@ -118,8 +118,11 @@ void EMT::Ph1::SSNTypeI2T::mnaCompInitialize(
 
   Math::calculateStateSpaceTrapezoidalMatrices(**mA, **mB, timeStep, **mdA,
                                                **mdB);
-  mW = Matrix::Zero(1, 1);
-  mW = (**mC) * (**mdB) + (**mD);
+  mYHist.resize(1, 1);
+  mYHistC = **mC;
+  mYHistStateMap = (**mC) * (**mdA);
+  mYHistInputMap = (**mC) * (**mdB);
+  mW = mYHistInputMap + (**mD);
 }
 
 void EMT::Ph1::SSNTypeI2T::mnaCompApplySystemMatrixStamp(
@@ -145,8 +148,16 @@ void EMT::Ph1::SSNTypeI2T::mnaCompApplySystemMatrixStamp(
 
 void EMT::Ph1::SSNTypeI2T::mnaCompApplyRightSideVectorStamp(
     Matrix &rightVector) {
+  if (mYHistC.rows() != (**mC).rows() || mYHistC.cols() != (**mC).cols() ||
+      !(mYHistC.array() == (**mC).array()).all()) {
+    mYHistC = **mC;
+    mYHistStateMap = (**mC) * (**mdA);
+    mYHistInputMap = (**mC) * (**mdB);
+  }
+
   // Update internal state
-  mYHist = (**mC) * ((**mdA) * mX + (**mdB) * mU);
+  mYHist(0, 0) =
+      mYHistStateMap.row(0).dot(mX.col(0)) + mYHistInputMap(0, 0) * mU(0, 0);
   Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(),
                          mYHist(0, 0));
 }

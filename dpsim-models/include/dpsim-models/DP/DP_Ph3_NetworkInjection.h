@@ -5,6 +5,7 @@
 
 #include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/DP/DP_Ph3_VoltageSource.h>
+#include <dpsim-models/Signal/SineWaveGenerator.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
@@ -18,6 +19,8 @@ namespace Ph3 {
 class NetworkInjection : public CompositePowerComp<Complex>,
                          public SharedFactory<NetworkInjection> {
 private:
+  Bool mUseSubcomponents = true;
+  Signal::SignalGenerator::Ptr mDirectSignal;
   // ### Electrical Subcomponents ###
   /// Voltage source
   std::shared_ptr<DP::Ph3::VoltageSource> mSubVoltageSource;
@@ -33,15 +36,23 @@ public:
   /// Defines UID, name, component parameters and logging level
   NetworkInjection(String uid, String name,
                    Logger::Level loglevel = Logger::Level::off);
+  NetworkInjection(String uid, String name, Bool useSubcomponents,
+                   Logger::Level loglevel = Logger::Level::off);
   /// Defines name, component parameters and logging level
   NetworkInjection(String name, Logger::Level logLevel = Logger::Level::off)
       : NetworkInjection(name, name, logLevel) {}
+  NetworkInjection(String name, Bool useSubcomponents,
+                   Logger::Level logLevel = Logger::Level::off)
+      : NetworkInjection(name, name, useSubcomponents, logLevel) {}
   ///
   SimPowerComp<Complex>::Ptr clone(String name) override;
 
   // #### General ####
   /// Initializes component from power flow data
   void initializeParentFromNodesAndTerminals(Real frequency) override;
+  void mnaParentInitialize(Real omega, Real timeStep,
+                           Attribute<Matrix>::Ptr leftVector) override;
+  void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   /// Setter for reference voltage parameters
   void setParameters(MatrixComp voltageRef, Real srcFreq = 0.0);
 

@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <iostream>
 #include <stdexcept>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -92,10 +93,13 @@ public:
     const auto systemPF = runPowerFlow(baseName + "_PF", pPccRef, qPccRef);
 
     std::vector<TimingResult> timings;
-    timings.reserve(4);
+    timings.reserve(5);
 
     // New composite GFL runs first.
-    timings.push_back(runGFL(baseName + "_GFL", systemPF, pPccRef, qPccRef));
+    timings.push_back(
+        runGFL(baseName + "_GFL", systemPF, pPccRef, qPccRef, true));
+    timings.push_back(
+        runGFL(baseName + "_GFL_Direct", systemPF, pPccRef, qPccRef, false));
 
     timings.push_back(runSSNGFL(baseName + "_SSN_GFL", systemPF));
 
@@ -104,6 +108,67 @@ public:
     timings.push_back(runAvVoltStateSpace(
         baseName + "_AvVoltSourceInverterStateSpace", systemPF));
 
+    printTimingSummary(timings);
+  }
+
+  void runDirectPairRepetitions(UInt repetitions) const {
+    if (repetitions == 0)
+      throw std::invalid_argument("repetitions must be positive");
+
+    const String baseName = "EMT_Ph3_GFL_DirectPair";
+    const auto [pPccRef, qPccRef] =
+        pccPowerFromFilterPowerReference(mPrefFilter, mQrefFilter);
+    const auto systemPF = runPowerFlow(baseName + "_PF", pPccRef, qPccRef);
+
+    std::vector<TimingResult> timings;
+    timings.reserve(2 * repetitions);
+    for (UInt runIndex = 0; runIndex < repetitions; ++runIndex) {
+      const String runSuffix = "_run" + std::to_string(runIndex + 1);
+      timings.push_back(runGFL(baseName + "_Legacy" + runSuffix, systemPF,
+                               pPccRef, qPccRef, true));
+      timings.push_back(runGFL(baseName + "_Direct" + runSuffix, systemPF,
+                               pPccRef, qPccRef, false));
+    }
+    printTimingSummary(timings);
+  }
+
+  void runSplitRepetitions(UInt repetitions) const {
+    if (repetitions == 0)
+      throw std::invalid_argument("repetitions must be positive");
+
+    const String baseName = "EMT_Ph3_GFL_Split_Standalone";
+    const auto [pPccRef, qPccRef] =
+        pccPowerFromFilterPowerReference(mPrefFilter, mQrefFilter);
+    const auto systemPF = runPowerFlow(baseName + "_PF", pPccRef, qPccRef);
+
+    std::vector<TimingResult> timings;
+    timings.reserve(repetitions);
+    for (UInt runIndex = 0; runIndex < repetitions; ++runIndex) {
+      const String runSuffix = "_run" + std::to_string(runIndex + 1);
+      timings.push_back(runSSNGFLSplit(baseName + runSuffix, systemPF));
+    }
+    printTimingSummary(timings);
+  }
+
+  void runMonolithicGFLRepetitions(UInt repetitions,
+                                   Real finalTime = 3.0) const {
+    if (repetitions == 0)
+      throw std::invalid_argument("repetitions must be positive");
+    if (finalTime <= 0.0)
+      throw std::invalid_argument("final time must be positive");
+
+    const String baseName =
+        "EMT_Ph3_GFL_Monolithic_" + std::to_string(finalTime) + "s";
+    const auto [pPccRef, qPccRef] =
+        pccPowerFromFilterPowerReference(mPrefFilter, mQrefFilter);
+    const auto systemPF = runPowerFlow(baseName + "_PF", pPccRef, qPccRef);
+
+    std::vector<TimingResult> timings;
+    timings.reserve(repetitions);
+    for (UInt runIndex = 0; runIndex < repetitions; ++runIndex) {
+      const String runSuffix = "_run" + std::to_string(runIndex + 1);
+      timings.push_back(runSSNGFL(baseName + runSuffix, systemPF, finalTime));
+    }
     printTimingSummary(timings);
   }
 
@@ -243,7 +308,7 @@ private:
   // CASE 1: New EMT::Ph3::GFL
   // =========================================================================
   TimingResult runGFL(const String &simName, const SystemTopology &systemPF,
-                      Real pPccRef, Real qPccRef) const {
+                      Real pPccRef, Real qPccRef, Bool useSubcomponents) const {
 
     Logger::setLogDir("logs/" + simName);
 
@@ -265,7 +330,8 @@ private:
     gridInductor->setParameters(
         Math::singlePhaseParameterToThreePhase(mGridInductance));
 
-    auto inverter = EMT::Ph3::GFL::make("INV_GFL", Logger::Level::off);
+    auto inverter =
+        EMT::Ph3::GFL::make("INV_GFL", useSubcomponents, Logger::Level::off);
 
     // No Rc in this model: regulate the common PCC operating point directly.
     inverter->setParameters(mSystemOmega, mGridVoltageRMSLineToLine, pPccRef,
@@ -313,8 +379,8 @@ private:
   // =========================================================================
   // CASE 2: SSN_GFL
   // =========================================================================
-  TimingResult runSSNGFL(const String &simName,
-                         const SystemTopology &systemPF) const {
+  TimingResult runSSNGFL(const String &simName, const SystemTopology &systemPF,
+                         Real finalTime = -1.0) const {
 
     Logger::setLogDir("logs/" + simName);
 
@@ -368,7 +434,7 @@ private:
     addStateSpaceCommonSignals(logger, nGrid, nSeries, nPcc, inverter);
 
     return runTimedSimulation("SSN_GFL", simName, system, logger, true,
-                              breakerLoad.breaker);
+                              breakerLoad.breaker, finalTime);
   }
 
   // =========================================================================
@@ -498,10 +564,12 @@ private:
   // =========================================================================
   // COMMON SIMULATION / LOGGING
   // =========================================================================
-  TimingResult runTimedSimulation(
-      const String &label, const String &simName, SystemTopology &system,
-      const DataLogger::Ptr &logger, Bool recomputeSystemMatrix,
-      const std::shared_ptr<EMT::Ph3::SeriesSwitch> &loadBreaker) const {
+  TimingResult
+  runTimedSimulation(const String &label, const String &simName,
+                     SystemTopology &system, const DataLogger::Ptr &logger,
+                     Bool recomputeSystemMatrix,
+                     const std::shared_ptr<EMT::Ph3::SeriesSwitch> &loadBreaker,
+                     Real finalTime = -1.0) const {
 
     Logger::setLogDir("logs/" + simName);
 
@@ -513,7 +581,7 @@ private:
     sim.doSystemMatrixRecomputation(recomputeSystemMatrix);
     sim.doInitFromNodesAndTerminals(true);
     sim.setTimeStep(mTimeStepEMT);
-    sim.setFinalTime(mFinalTimeEMT);
+    sim.setFinalTime(finalTime > 0.0 ? finalTime : mFinalTimeEMT);
 
     // Close the physical load breaker at exactly t = 5 s.
     sim.addEvent(SwitchEvent::make(mLoadStepTime, loadBreaker, true));
@@ -569,6 +637,8 @@ private:
     logger->logAttribute("v_pcc", nPcc->attribute("v"));
 
     logger->logAttribute("i_inv", inverter->attribute("i_intf"));
+    logger->logAttribute("v_source", inverter->mVs);
+    logger->logAttribute("v_source_ref", inverter->mVsref);
 
     logger->logAttribute("vc_d", inverter->mVcd);
     logger->logAttribute("vc_q", inverter->mVcq);
@@ -757,6 +827,23 @@ private:
 
 int main(int argc, char *argv[]) {
   Example_GFL_Four_Model_BreakerLoadStep example;
+  if (argc == 3 && String(argv[1]) == "--split-repetitions") {
+    const auto repetitions = static_cast<UInt>(std::stoul(argv[2]));
+    example.runSplitRepetitions(repetitions);
+    return 0;
+  }
+  if ((argc == 3 || argc == 4) &&
+      String(argv[1]) == "--monolithic-gfl-repetitions") {
+    const auto repetitions = static_cast<UInt>(std::stoul(argv[2]));
+    const auto finalTime = argc == 4 ? std::stod(argv[3]) : 3.0;
+    example.runMonolithicGFLRepetitions(repetitions, finalTime);
+    return 0;
+  }
+  if (argc == 3 && String(argv[1]) == "--direct-pair-repetitions") {
+    const auto repetitions = static_cast<UInt>(std::stoul(argv[2]));
+    example.runDirectPairRepetitions(repetitions);
+    return 0;
+  }
   example.run();
   return 0;
 }

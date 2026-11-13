@@ -54,8 +54,12 @@ void DP::Ph1::TwoTerminalITypeSSNComp::mnaCompApplyRightSideVectorStamp(
 }
 
 void DP::Ph1::TwoTerminalITypeSSNComp::mnaCompUpdateCurrent(const Matrix &) {
-  // i = W^-1 (v - yHist)
-  **mIntfCurrent = mW.inverse() * (**mIntfVoltage - mYHist);
+  // i = W^-1 (v - yHist). WInverse is scalar for this one-port, while the
+  // interface matrices may contain multiple frequency columns.
+  const Complex inverseW = mWInverse(0, 0);
+  for (UInt freq = 0; freq < mNumFreqs; ++freq)
+    (**mIntfCurrent)(0, freq) =
+        inverseW * ((**mIntfVoltage)(0, freq) - mYHist(0, freq));
 }
 
 void DP::Ph1::TwoTerminalITypeSSNComp::mnaCompUpdateVoltage(

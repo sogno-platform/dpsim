@@ -59,6 +59,21 @@ protected:
 
   /// Flag for connection transformer usage
   Bool mWithConnectionTransformer = false;
+  /// Use legacy electrical MNA children or the inlined direct realization.
+  Bool mUseSubcomponents = true;
+  Complex mDirectInductorConductance = Complex(0., 0.);
+  Complex mDirectInductorHistory = Complex(0., 0.);
+  Complex mDirectInductorPreviousCurrentFactor = Complex(0., 0.);
+  Complex mDirectCapacitorConductance = Complex(0., 0.);
+  Complex mDirectCapacitorHistory = Complex(0., 0.);
+  Complex mDirectCapacitorPreviousVoltageFactor = Complex(0., 0.);
+  Complex mDirectGridCurrent = Complex(0., 0.);
+  Complex mDirectInductorVoltage = Complex(0., 0.);
+  Complex mDirectInductorCurrent = Complex(0., 0.);
+  Complex mDirectCapacitorVoltage = Complex(0., 0.);
+  Complex mDirectCapacitorCurrent = Complex(0., 0.);
+  Complex mDirectSourceValue = Complex(0., 0.);
+  std::vector<UInt> mDirectChildRightVectorIndices;
   /// Flag for controller usage
   Bool mWithControl = true;
 
@@ -88,6 +103,7 @@ public:
 
   // Sub voltage source
   const Attribute<MatrixComp>::Ptr mVs;
+  const Attribute<MatrixComp>::Ptr mDirectSourceVoltageAttr;
 
   // PLL
   const Attribute<Matrix>::Ptr mPllOutput;
@@ -105,6 +121,15 @@ public:
   AvVoltageSourceInverterDQ(String uid, String name,
                             Logger::Level logLevel = Logger::Level::off,
                             Bool withTrafo = false);
+  /// Direct electrical MNA realization; legacy constructor remains default.
+  AvVoltageSourceInverterDQ(String uid, String name, Bool useSubcomponents,
+                            Logger::Level logLevel = Logger::Level::off,
+                            Bool withTrafo = false);
+  AvVoltageSourceInverterDQ(String name, Bool useSubcomponents,
+                            Logger::Level logLevel = Logger::Level::off,
+                            Bool withTrafo = false)
+      : AvVoltageSourceInverterDQ(name, name, useSubcomponents, logLevel,
+                                  withTrafo) {}
 
   // #### General ####
   /// Initializes component from power flow data
@@ -132,6 +157,9 @@ public:
   /// Initializes internal variables of the component
   void mnaParentInitialize(Real omega, Real timeStep,
                            Attribute<Matrix>::Ptr leftVector) override;
+  void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaAddCompactRightSideVectorStamp(Matrix &rightVector) override;
   /// Updates current through the component
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;
   /// Updates voltage across component

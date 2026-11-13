@@ -2,10 +2,47 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <dpsim-models/EMT/EMT_Ph3_VSIVoltageControlVCO.h>
+#include <dpsim-models/MNAStampUtils.h>
+
+#include <stdexcept>
 
 using namespace CPS;
 
+namespace {
+using ParkTransform = MatrixFixedSize<2, 3>;
+using InverseParkTransform = MatrixFixedSize<3, 2>;
+using PhaseVector = MatrixFixedSize<3, 1>;
+using DqVector = MatrixFixedSize<2, 1>;
+
+ParkTransform makePowerInvariantParkTransform(Real theta) {
+  const Real k = std::sqrt(2.0 / 3.0);
+  ParkTransform transform;
+  transform << k * std::cos(theta), k * std::cos(theta - 2.0 * M_PI / 3.0),
+      k * std::cos(theta + 2.0 * M_PI / 3.0), -k * std::sin(theta),
+      -k * std::sin(theta - 2.0 * M_PI / 3.0),
+      -k * std::sin(theta + 2.0 * M_PI / 3.0);
+  return transform;
+}
+
+InverseParkTransform makePowerInvariantInverseParkTransform(Real theta) {
+  const Real k = std::sqrt(2.0 / 3.0);
+  InverseParkTransform transform;
+  transform << k * std::cos(theta), -k * std::sin(theta),
+      k * std::cos(theta - 2.0 * M_PI / 3.0),
+      -k * std::sin(theta - 2.0 * M_PI / 3.0),
+      k * std::cos(theta + 2.0 * M_PI / 3.0),
+      -k * std::sin(theta + 2.0 * M_PI / 3.0);
+  return transform;
+}
+} // namespace
+
 EMT::Ph3::VSIVoltageControlVCO::VSIVoltageControlVCO(String uid, String name,
+                                                     Logger::Level logLevel,
+                                                     Bool withTrafo)
+    : VSIVoltageControlVCO(uid, name, true, logLevel, withTrafo) {}
+
+EMT::Ph3::VSIVoltageControlVCO::VSIVoltageControlVCO(String uid, String name,
+                                                     Bool useSubcomponents,
                                                      Logger::Level logLevel,
                                                      Bool withTrafo)
     : CompositePowerComp<Real>(uid, name, true, true, logLevel),
@@ -29,6 +66,10 @@ EMT::Ph3::VSIVoltageControlVCO::VSIVoltageControlVCO(String uid, String name,
           mAttributes->createDynamic<Matrix>("voltagectrl_outputs")) {
 
   mPhaseType = PhaseType::ABC;
+  mUseSubcomponents = useSubcomponents;
+  if (!mUseSubcomponents && withTrafo)
+    throw std::invalid_argument(
+        "Direct VSIVoltageControlVCO currently requires withTrafo=false.");
 
   //if transformer is connected --> setup
   if (withTrafo) {
@@ -39,7 +80,7 @@ EMT::Ph3::VSIVoltageControlVCO::VSIVoltageControlVCO(String uid, String name,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
   } else {
-    setVirtualNodeNumber(3);
+    setVirtualNodeNumber(mUseSubcomponents ? 3 : 4);
   }
   mWithConnectionTransformer = withTrafo;
   setTerminalNumber(1);
@@ -49,24 +90,28 @@ EMT::Ph3::VSIVoltageControlVCO::VSIVoltageControlVCO(String uid, String name,
   **mIntfCurrent = Matrix::Zero(3, 1);
 
   // Create electrical sub components
-  mSubResistorF = EMT::Ph3::Resistor::make(**mName + "_resF", mLogLevel);
-  mSubResistorC = EMT::Ph3::Resistor::make(**mName + "_resC", mLogLevel);
-  mSubCapacitorF = EMT::Ph3::Capacitor::make(**mName + "_capF", mLogLevel);
-  mSubInductorF = EMT::Ph3::Inductor::make(**mName + "_indF", mLogLevel);
-  mSubCtrledVoltageSource =
-      EMT::Ph3::VoltageSource::make(**mName + "_src", mLogLevel);
-  addMNASubComponent(mSubResistorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
-  addMNASubComponent(mSubResistorC, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
-  addMNASubComponent(mSubCapacitorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-  addMNASubComponent(mSubInductorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-
-  // Pre-step of the subcontrolled voltage source is handled explicitly in mnaParentPreStep
-  addMNASubComponent(mSubCtrledVoltageSource, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+  if (mUseSubcomponents) {
+    mSubResistorF = EMT::Ph3::Resistor::make(**mName + "_resF", mLogLevel);
+    mSubResistorC = EMT::Ph3::Resistor::make(**mName + "_resC", mLogLevel);
+    mSubCapacitorF = EMT::Ph3::Capacitor::make(**mName + "_capF", mLogLevel);
+    mSubInductorF = EMT::Ph3::Inductor::make(**mName + "_indF", mLogLevel);
+    mSubCtrledVoltageSource =
+        EMT::Ph3::VoltageSource::make(**mName + "_src", mLogLevel);
+    addMNASubComponent(mSubResistorF,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+    addMNASubComponent(mSubResistorC,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+    addMNASubComponent(mSubCapacitorF,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+    addMNASubComponent(mSubInductorF,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+    addMNASubComponent(mSubCtrledVoltageSource, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+  }
 
   //Log subcomponents
   SPDLOG_LOGGER_INFO(mSLog, "Electrical subcomponents: ");
@@ -79,7 +124,8 @@ EMT::Ph3::VSIVoltageControlVCO::VSIVoltageControlVCO(String uid, String name,
       **mName + "_VoltageControllerVSI", mLogLevel);
 
   // Sub voltage source
-  mVs->setReference(mSubCtrledVoltageSource->mIntfVoltage);
+  if (mUseSubcomponents)
+    mVs->setReference(mSubCtrledVoltageSource->mIntfVoltage);
 
   // VCO
   mVCO->mInputRef->setReference(mOmegaN);
@@ -174,14 +220,16 @@ void EMT::Ph3::VSIVoltageControlVCO::setFilterParameters(Real Lf, Real Cf,
   SPDLOG_LOGGER_INFO(mSLog, "Resistance Rf={} [Ohm] Resistance Rc={} [Ohm]",
                      mRf, mRc);
 
-  mSubResistorC->setParameters(
-      CPS::Math::singlePhaseParameterToThreePhase(mRc));
-  mSubResistorF->setParameters(
-      CPS::Math::singlePhaseParameterToThreePhase(mRf));
-  mSubInductorF->setParameters(
-      CPS::Math::singlePhaseParameterToThreePhase(mLf));
-  mSubCapacitorF->setParameters(
-      CPS::Math::singlePhaseParameterToThreePhase(mCf));
+  if (mUseSubcomponents) {
+    mSubResistorC->setParameters(
+        CPS::Math::singlePhaseParameterToThreePhase(mRc));
+    mSubResistorF->setParameters(
+        CPS::Math::singlePhaseParameterToThreePhase(mRf));
+    mSubInductorF->setParameters(
+        CPS::Math::singlePhaseParameterToThreePhase(mLf));
+    mSubCapacitorF->setParameters(
+        CPS::Math::singlePhaseParameterToThreePhase(mCf));
+  }
 }
 
 //Overload function of Voltage Controller --> set start values of states
@@ -265,24 +313,33 @@ void EMT::Ph3::VSIVoltageControlVCO::initializeParentFromNodesAndTerminals(
                           std::conj(-intfCurrentComplex(0, 0)))
                              .imag();
 
+  if (!mUseSubcomponents) {
+    mDirectVlf = (vcInit - vfInit).real();
+    mDirectVcf = vcInit.real();
+    mDirectIf = (filterInterfaceInitialCurrent - icfInit).real();
+    mDirectIcf = -icfInit.real();
+  }
+
   // Initialize controlled source
-  mSubCtrledVoltageSource->setParameters(mVirtualNodes[0]->initialVoltage(),
-                                         0.0);
+  if (mUseSubcomponents) {
+    mSubCtrledVoltageSource->setParameters(mVirtualNodes[0]->initialVoltage(),
+                                           0.0);
+    mSubCtrledVoltageSource->connect({SimNode::GND, mVirtualNodes[0]});
+    mSubResistorF->connect({mVirtualNodes[0], mVirtualNodes[1]});
+    mSubInductorF->connect({mVirtualNodes[1], mVirtualNodes[2]});
+    mSubCapacitorF->connect({mVirtualNodes[2], SimNode::GND});
+    if (mWithConnectionTransformer)
+      mSubResistorC->connect({mVirtualNodes[2], mVirtualNodes[3]});
+    else
+      mSubResistorC->connect({mVirtualNodes[2], mTerminals[0]->node()});
 
-  // Connect electrical subcomponents
-  mSubCtrledVoltageSource->connect({SimNode::GND, mVirtualNodes[0]});
-  mSubResistorF->connect({mVirtualNodes[0], mVirtualNodes[1]});
-  mSubInductorF->connect({mVirtualNodes[1], mVirtualNodes[2]});
-  mSubCapacitorF->connect({mVirtualNodes[2], SimNode::GND});
-  if (mWithConnectionTransformer)
-    mSubResistorC->connect({mVirtualNodes[2], mVirtualNodes[3]});
-  else
-    mSubResistorC->connect({mVirtualNodes[2], mTerminals[0]->node()});
-
-  // Initialize electrical subcomponents
-  for (auto subcomp : mSubComponents) {
-    subcomp->initialize(mFrequencies);
-    subcomp->initializeFromNodesAndTerminals(frequency);
+    for (auto subcomp : mSubComponents) {
+      subcomp->initialize(mFrequencies);
+      subcomp->initializeFromNodesAndTerminals(frequency);
+    }
+  } else {
+    mDirectSourceVoltage = vsInit.real();
+    mVs->set(mDirectSourceVoltage);
   }
 
   if (mWithConnectionTransformer) {
@@ -372,6 +429,13 @@ void EMT::Ph3::VSIVoltageControlVCO::mnaParentInitialize(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
   mTimeStep = timeStep;
 
+  if (!mUseSubcomponents) {
+    mDirectRf = Matrix::Identity(3, 3) / mRf;
+    mDirectLf = (timeStep / (2. * mLf)) * Matrix::Identity(3, 3);
+    mDirectCf = (2. * mCf / timeStep) * Matrix::Identity(3, 3);
+    mDirectRc = Matrix::Identity(3, 3) / mRc;
+  }
+
   // initialize state space controller
   mVoltageControllerVSI->initializeStateSpaceModel(omega, timeStep, leftVector);
   mVCO->setSimulationParameters(timeStep);
@@ -379,6 +443,49 @@ void EMT::Ph3::VSIVoltageControlVCO::mnaParentInitialize(
   // TODO: these are actually no MNA tasks
   mMnaTasks.push_back(std::make_shared<ControlPreStep>(*this));
   mMnaTasks.push_back(std::make_shared<ControlStep>(*this));
+}
+
+void EMT::Ph3::VSIVoltageControlVCO::mnaParentApplySystemMatrixStamp(
+    SparseMatrixRow &systemMatrix) {
+  if (mUseSubcomponents)
+    return;
+  updateMatrixNodeIndices();
+  const UInt source = mVirtualNodes[0]->matrixNodeIndex(PhaseType::A);
+  const UInt filter = mVirtualNodes[1]->matrixNodeIndex(PhaseType::A);
+  const UInt capacitor = mVirtualNodes[2]->matrixNodeIndex(PhaseType::A);
+  const UInt sourceCurrent = mVirtualNodes[3]->matrixNodeIndex(PhaseType::A);
+  MNAStampUtils::stampConductanceMatrix(mDirectRf, systemMatrix, source, filter,
+                                        true, true, mSLog);
+  MNAStampUtils::stampConductanceMatrix(mDirectLf, systemMatrix, filter,
+                                        capacitor, true, true, mSLog);
+  MNAStampUtils::stampConductanceMatrix(mDirectCf, systemMatrix, capacitor, 0,
+                                        true, false, mSLog);
+  MNAStampUtils::stampConductanceMatrix(mDirectRc, systemMatrix, capacitor,
+                                        matrixNodeIndex(0), true,
+                                        terminalNotGrounded(0), mSLog);
+  for (UInt phase = 0; phase < 3; ++phase) {
+    Math::addToMatrixElement(systemMatrix, source + phase,
+                             sourceCurrent + phase, 1.);
+    Math::addToMatrixElement(systemMatrix, sourceCurrent + phase,
+                             source + phase, 1.);
+  }
+}
+
+void EMT::Ph3::VSIVoltageControlVCO::mnaParentApplyRightSideVectorStamp(
+    Matrix &rightVector) {
+  if (mUseSubcomponents)
+    return;
+  const UInt filter = mVirtualNodes[1]->matrixNodeIndex(PhaseType::A);
+  const UInt capacitor = mVirtualNodes[2]->matrixNodeIndex(PhaseType::A);
+  const UInt sourceCurrent = mVirtualNodes[3]->matrixNodeIndex(PhaseType::A);
+  for (UInt phase = 0; phase < 3; ++phase) {
+    Math::setVectorElement(rightVector, sourceCurrent + phase,
+                           mDirectSourceVoltage(phase));
+    Math::setVectorElement(rightVector, filter + phase,
+                           mDirectHistoryLf(phase));
+    Math::setVectorElement(rightVector, capacitor + phase,
+                           mDirectHistoryCf(phase) - mDirectHistoryLf(phase));
+  }
 }
 
 void EMT::Ph3::VSIVoltageControlVCO::addControlPreStepDependencies(
@@ -416,19 +523,26 @@ void EMT::Ph3::VSIVoltageControlVCO::addControlStepDependencies(
 
 void EMT::Ph3::VSIVoltageControlVCO::controlStep(Real time, Int timeStepCount) {
   // Transformation interface forward
-  Matrix vcdq, ircdq;
-  Real theta = mVCO->mOutputPrev->get();
-  vcdq = Math::parkTransformPowerInvariant(theta, **mVirtualNodes[2]->mVoltage);
-  ircdq =
-      Math::parkTransformPowerInvariant(theta, -**mSubResistorF->mIntfCurrent);
-  Matrix intfVoltageDQ =
-      Math::parkTransformPowerInvariant(mThetaN, **mIntfVoltage);
-  Matrix intfCurrentDQ =
-      Math::parkTransformPowerInvariant(mThetaN, **mIntfCurrent);
-  **mElecActivePower = -1. * (intfVoltageDQ(0, 0) * intfCurrentDQ(0, 0) +
-                              intfVoltageDQ(1, 0) * intfCurrentDQ(1, 0));
-  **mElecReactivePower = -1. * (intfVoltageDQ(1, 0) * intfCurrentDQ(0, 0) -
-                                intfVoltageDQ(0, 0) * intfCurrentDQ(1, 0));
+  const Real theta = mVCO->mOutputPrev->get();
+  const ParkTransform park = makePowerInvariantParkTransform(theta);
+  const PhaseVector capacitorVoltage = **mVirtualNodes[2]->mVoltage;
+  PhaseVector filterCurrent;
+  if (mUseSubcomponents)
+    filterCurrent = -**mSubResistorF->mIntfCurrent;
+  else
+    filterCurrent = -mDirectIf;
+  const DqVector vcdq = park * capacitorVoltage;
+  const DqVector ircdq = park * filterCurrent;
+
+  const ParkTransform networkPark = makePowerInvariantParkTransform(mThetaN);
+  const PhaseVector interfaceVoltage = **mIntfVoltage;
+  const PhaseVector interfaceCurrent = **mIntfCurrent;
+  const DqVector intfVoltageDQ = networkPark * interfaceVoltage;
+  const DqVector intfCurrentDQ = networkPark * interfaceCurrent;
+  **mElecActivePower = -(intfVoltageDQ(0, 0) * intfCurrentDQ(0, 0) +
+                         intfVoltageDQ(1, 0) * intfCurrentDQ(1, 0));
+  **mElecReactivePower = -(intfVoltageDQ(1, 0) * intfCurrentDQ(0, 0) -
+                           intfVoltageDQ(0, 0) * intfCurrentDQ(1, 0));
   //vector of voltages
   **mVcd = vcdq(0, 0);
   **mVcq = vcdq(1, 0);
@@ -442,8 +556,11 @@ void EMT::Ph3::VSIVoltageControlVCO::controlStep(Real time, Int timeStepCount) {
   mVoltageControllerVSI->signalStep(time, timeStepCount);
 
   // Transformation interface backward
-  **mVsref = Math::inverseParkTransformPowerInvariant(
-      mVCO->mOutputPrev->get(), mVoltageControllerVSI->mOutputCurr->get());
+  DqVector voltageControllerOutput;
+  voltageControllerOutput << mVCO->mOutputPrev->get(),
+      mVoltageControllerVSI->mOutputCurr->get();
+  **mVsref =
+      makePowerInvariantInverseParkTransform(theta) * voltageControllerOutput;
   mThetaN = std::fmod(mThetaN + mTimeStep * **mOmegaN, 2 * PI);
 }
 
@@ -462,11 +579,18 @@ void EMT::Ph3::VSIVoltageControlVCO::mnaParentAddPreStepDependencies(
 void EMT::Ph3::VSIVoltageControlVCO::mnaParentPreStep(Real time,
                                                       Int timeStepCount) {
   // pre-step of subcomponents - controlled source
-  if (mWithControl)
-    mSubCtrledVoltageSource->mVoltageRef->set(PEAK1PH_TO_RMS3PH * **mVsref);
-
-  std::dynamic_pointer_cast<MNAInterface>(mSubCtrledVoltageSource)
-      ->mnaPreStep(time, timeStepCount);
+  if (mUseSubcomponents) {
+    if (mWithControl)
+      mSubCtrledVoltageSource->mVoltageRef->set(PEAK1PH_TO_RMS3PH * **mVsref);
+    std::dynamic_pointer_cast<MNAInterface>(mSubCtrledVoltageSource)
+        ->mnaPreStep(time, timeStepCount);
+  } else {
+    if (mWithControl)
+      mDirectSourceVoltage = **mVsref;
+    mDirectHistoryLf = mDirectLf * mDirectVlf + mDirectIf;
+    mDirectHistoryCf = -mDirectIcf + mDirectCf * mDirectVcf;
+    mVs->set(mDirectSourceVoltage);
+  }
   // pre-step of component itself
   mnaApplyRightSideVectorStamp(**mRightVector);
 }
@@ -492,15 +616,49 @@ void EMT::Ph3::VSIVoltageControlVCO::mnaCompUpdateCurrent(
     const Matrix &leftvector) {
   if (mWithConnectionTransformer)
     **mIntfCurrent = mConnectionTransformer->mIntfCurrent->get();
-  else
+  else if (mUseSubcomponents)
     **mIntfCurrent = mSubResistorC->mIntfCurrent->get();
+  else {
+    PhaseVector terminalVoltage = PhaseVector::Zero();
+    if (terminalNotGrounded(0))
+      for (UInt phase = 0; phase < 3; ++phase)
+        terminalVoltage(phase) =
+            Math::realFromVectorElement(leftvector, matrixNodeIndex(0, phase));
+    const UInt capacitor = mVirtualNodes[2]->matrixNodeIndex(PhaseType::A);
+    PhaseVector capacitorVoltage = PhaseVector::Zero();
+    for (UInt phase = 0; phase < 3; ++phase)
+      capacitorVoltage(phase) =
+          Math::realFromVectorElement(leftvector, capacitor + phase);
+    const PhaseVector voltageDifference = terminalVoltage - capacitorVoltage;
+    PhaseVector current;
+    current.noalias() = mDirectRc * voltageDifference;
+    **mIntfCurrent = current;
+  }
 }
 
 //Voltage update
 void EMT::Ph3::VSIVoltageControlVCO::mnaCompUpdateVoltage(
     const Matrix &leftVector) {
-  for (auto virtualNode : mVirtualNodes)
-    virtualNode->mnaUpdateVoltage(leftVector);
+  if (mUseSubcomponents)
+    for (auto virtualNode : mVirtualNodes)
+      virtualNode->mnaUpdateVoltage(leftVector);
+  else {
+    for (UInt node = 0; node < 3; ++node)
+      mVirtualNodes[node]->mnaUpdateVoltage(leftVector);
+    const UInt filter = mVirtualNodes[1]->matrixNodeIndex(PhaseType::A);
+    const UInt capacitor = mVirtualNodes[2]->matrixNodeIndex(PhaseType::A);
+    for (UInt phase = 0; phase < 3; ++phase) {
+      mDirectVlf(phase) =
+          Math::realFromVectorElement(leftVector, capacitor + phase) -
+          Math::realFromVectorElement(leftVector, filter + phase);
+      mDirectVcf(phase) =
+          Math::realFromVectorElement(leftVector, capacitor + phase);
+      mDirectIf(phase) =
+          mDirectLf(phase, phase) * mDirectVlf(phase) + mDirectHistoryLf(phase);
+      mDirectIcf(phase) = -mDirectCf(phase, phase) * mDirectVcf(phase) +
+                          mDirectHistoryCf(phase);
+    }
+  }
   (**mIntfVoltage)(0, 0) =
       Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
   (**mIntfVoltage)(1, 0) =

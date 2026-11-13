@@ -31,6 +31,13 @@ private:
   std::shared_ptr<Inductor> mSubInductor;
   /// Resistor between terminal and ground
   std::shared_ptr<Resistor> mSubResistor;
+  Bool mUseSubcomponents = true;
+  Matrix mCapEquivalentConductance = Matrix::Zero(3, 3);
+  Matrix mIndEquivalentConductance = Matrix::Zero(3, 3);
+  Matrix mCapEquivalentCurrent = Matrix::Zero(3, 1);
+  Matrix mIndEquivalentCurrent = Matrix::Zero(3, 1);
+  Matrix mCapBranchCurrent = Matrix::Zero(3, 1);
+  Matrix mIndBranchCurrent = Matrix::Zero(3, 1);
 
 public:
   /// Defines UID, name, component parameters and logging level
@@ -39,6 +46,12 @@ public:
   /// Defines name and logging level
   Shunt(String name, Logger::Level logLevel = Logger::Level::off)
       : Shunt(name, name, logLevel) {}
+  /// Direct MNA implementation that preserves the legacy constructor by default.
+  Shunt(String uid, String name, Bool useSubcomponents,
+        Logger::Level logLevel = Logger::Level::off);
+  Shunt(String name, Bool useSubcomponents,
+        Logger::Level logLevel = Logger::Level::off)
+      : Shunt(name, name, useSubcomponents, logLevel) {}
 
   // #### General ####
   /// Set shunt specific parameters
@@ -48,6 +61,10 @@ public:
   // #### MNA section ####
   /// Initializes component from power flow data
   void initializeParentFromNodesAndTerminals(Real frequency) final;
+  void mnaParentInitialize(Real omega, Real timeStep,
+                           Attribute<Matrix>::Ptr leftVector) override;
+  void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
   /// Add MNA pre step dependencies
   void mnaParentAddPreStepDependencies(
       AttributeBase::List &prevStepDependencies,

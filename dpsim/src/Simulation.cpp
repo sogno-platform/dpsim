@@ -2,7 +2,9 @@
 
 #include <algorithm>
 #include <chrono>
+#include <cmath>
 #include <iomanip>
+#include <limits>
 #include <stdexcept>
 #include <typeindex>
 
@@ -133,6 +135,7 @@ template <typename VarType> void Simulation::createSolvers() {
 #endif
 
     pfSolver->setKeepLastSolution(**mPFKeepLastSolution);
+    pfSolver->setZeroSkipping(mZeroSkipping);
     pfSolver->setBaseApparentPowerFallback(**mPFBaseApparentPowerFallback);
     pfSolver->setMaxIterations(**mPFMaxIterations);
     pfSolver->setEnforceReactiveLimits(**mPFEnforceReactiveLimits);
@@ -171,6 +174,7 @@ template <typename VarType> void Simulation::createSolvers() {
 }
 
 template <typename VarType> void Simulation::createMNASolver() {
+  CPS::Math::ScopedZeroSkipping zeroSkippingScope(mZeroSkipping);
   Solver::Ptr solver;
   std::vector<SystemTopology> subnets;
   // The Diakoptics solver splits the system at a later point.
@@ -216,9 +220,11 @@ template <typename VarType> void Simulation::createMNASolver() {
       solver->setSystemMatrixRecomputationMode(mSystemMatrixRecomputationMode);
       solver->setDirectLinearSolverConfiguration(
           mDirectLinearSolverConfiguration);
+      solver->setZeroSkipping(mZeroSkipping);
       solver->initialize();
       solver->setMaxNumberOfIterations(mMaxIterations);
     }
+    solver->setZeroSkipping(mZeroSkipping);
     mSolvers.push_back(solver);
   }
 }
@@ -464,6 +470,28 @@ Real Simulation::next() {
 
 void Simulation::run() {
   start();
+
+  // Device-resident schedulers may own an entire deterministic run interval.
+  // Only allow that fast path when bypassing Simulation::step cannot skip
+  // events, user logging, interfaces, or requested per-step timing samples.
+  const Real stepSize = **mTimeStep;
+  const Real totalStepRatio = **mFinalTime / stepSize;
+  const Real roundedStepRatio = std::round(totalStepRatio);
+  const Bool hasIntegralStepCount =
+      std::isfinite(totalStepRatio) &&
+      std::abs(totalStepRatio - roundedStepRatio) <=
+          8.0 * std::numeric_limits<Real>::epsilon() *
+              std::max<Real>(1.0, std::abs(totalStepRatio));
+  if (!mLogStepTimes && mLoggers.empty() && mInterfaces.empty() &&
+      mEvents.empty() && hasIntegralStepCount && roundedStepRatio >= 0.0 &&
+      roundedStepRatio <= static_cast<Real>(std::numeric_limits<UInt>::max()) &&
+      mScheduler->runSimulation(mTime, mTimeStepCount,
+                                static_cast<UInt>(roundedStepRatio))) {
+    mTime += roundedStepRatio * stepSize;
+    mTimeStepCount += static_cast<Int>(roundedStepRatio);
+    stop();
+    return;
+  }
 
   while (mTime < **mFinalTime + DOUBLE_EPSILON) {
     step();

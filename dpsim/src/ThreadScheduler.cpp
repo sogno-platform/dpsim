@@ -21,6 +21,7 @@ ThreadScheduler::ThreadScheduler(Int threads, String outMeasurementFile,
     throw SchedulingException();
   mTempSchedules.resize(threads);
   mSchedules.resize(threads, nullptr);
+  mBatches.resize(threads);
 }
 
 ThreadScheduler::~ThreadScheduler() {
@@ -47,6 +48,19 @@ void ThreadScheduler::finishSchedule(const Edges &inEdges) {
       auto &task = mTempSchedules[thread][i];
       mSchedules[thread][i].task = task.get();
       counters[task] = &mSchedules[thread][i].endCounter;
+    }
+  }
+  for (int thread = 0; thread < mNumThreads; thread++) {
+    auto &batches = mBatches[thread];
+    batches.clear();
+    const size_t count = mTempSchedules[thread].size();
+    size_t begin = 0;
+    while (begin < count) {
+      size_t end = begin + 1;
+      while (end < count && mSchedules[thread][end].reqCounters.empty())
+        ++end;
+      batches.push_back({begin, end});
+      begin = end;
     }
   }
   for (int thread = 0; thread < mNumThreads; thread++) {
@@ -103,12 +117,14 @@ void ThreadScheduler::threadFunction(ThreadScheduler *sched, Int idx) {
 
 void ThreadScheduler::doStep(Int thread) {
   if (mOutMeasurementFile.empty()) {
-    for (size_t i = 0; i != mTempSchedules[thread].size(); i++) {
-      ScheduleEntry *entry = &mSchedules[thread][i];
-      for (Counter *counter : entry->reqCounters)
-        counter->wait(mTimeStepCount + 1);
-      entry->task->execute(mTime, mTimeStepCount);
-      entry->endCounter.inc();
+    for (const auto &batch : mBatches[thread]) {
+      for (size_t i = batch.begin; i != batch.end; ++i) {
+        ScheduleEntry *entry = &mSchedules[thread][i];
+        for (Counter *counter : entry->reqCounters)
+          counter->wait(mTimeStepCount + 1);
+        entry->task->executeFast(mTime, mTimeStepCount);
+        entry->endCounter.inc();
+      }
     }
   } else {
     for (size_t i = 0; i != mTempSchedules[thread].size(); i++) {
@@ -116,7 +132,7 @@ void ThreadScheduler::doStep(Int thread) {
       for (Counter *counter : entry->reqCounters)
         counter->wait(mTimeStepCount + 1);
       auto start = std::chrono::steady_clock::now();
-      entry->task->execute(mTime, mTimeStepCount);
+      entry->task->executeFast(mTime, mTimeStepCount);
       auto end = std::chrono::steady_clock::now();
       updateMeasurement(entry->task, end - start);
       entry->endCounter.inc();

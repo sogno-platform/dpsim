@@ -30,6 +30,9 @@ protected:
   Matrix mUOld;
   Matrix mW;
   Matrix mYHist;
+  Matrix mYHistC;
+  Matrix mYHistStateMap;
+  Matrix mYHistInputMap;
 
 public:
   const CPS::Attribute<Matrix>::Ptr mA;

@@ -10,6 +10,7 @@
 
 #include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/EMT/EMT_Ph3_VoltageSource.h>
+#include <dpsim-models/Signal/SignalGenerator.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
@@ -24,6 +25,8 @@ private:
   // ### Electrical Subcomponents ###
   /// Voltage source
   std::shared_ptr<EMT::Ph3::VoltageSource> mSubVoltageSource;
+  Bool mUseSubcomponents = true;
+  CPS::Signal::SignalGenerator::Ptr mSrcSig;
 
   // #### solver ####
   /// Vector to collect subcomponent right vector stamps
@@ -36,6 +39,12 @@ public:
   /// Defines UID, name, component parameters and logging level
   NetworkInjection(String uid, String name,
                    Logger::Level loglevel = Logger::Level::off);
+  /// Direct ideal-source implementation without an MNA child component.
+  NetworkInjection(String uid, String name, Bool useSubcomponents,
+                   Logger::Level loglevel = Logger::Level::off);
+  NetworkInjection(String name, Bool useSubcomponents,
+                   Logger::Level logLevel = Logger::Level::off)
+      : NetworkInjection(name, name, useSubcomponents, logLevel) {}
   /// Defines UID, name, component parameters and logging level
   NetworkInjection(String name, Logger::Level logLevel = Logger::Level::off)
       : NetworkInjection(name, name, logLevel) {}
@@ -61,6 +70,9 @@ public:
   // #### MNA Section ####
   /// Stamps right side (source) vector
   void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  Bool mnaHasCompactRightSideVectorStamp() const override;
+  void mnaAddCompactRightSideVectorStamp(Matrix &rightVector) override;
   /// Returns current through the component
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;
   /// Updates voltage across component

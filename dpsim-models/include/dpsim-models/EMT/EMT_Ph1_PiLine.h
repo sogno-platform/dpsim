@@ -39,10 +39,28 @@ protected:
   std::shared_ptr<Capacitor> mSubParallelCapacitor1;
   /// solver
   std::vector<const Matrix *> mRightVectorStamps;
+  /// Select the legacy component hierarchy or direct parent MNA stamps.
+  Bool mUseSubcomponents = true;
+  /// Companion-model coefficients used when subcomponents are disabled.
+  Real mDirectInductorConductance = 0.;
+  Real mDirectInductorHistory = 0.;
+  Real mDirectSeriesConductance = 0.;
+  Real mDirectSeriesHistory = 0.;
+  Real mDirectShuntConductance = 0.;
+  Real mDirectCapacitorConductance = 0.;
+  Real mDirectCapacitorHistory0 = 0.;
+  Real mDirectCapacitorHistory1 = 0.;
 
 public:
   /// Defines UID, name and logging level
   PiLine(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+  /// Defines UID, name, implementation mode, and logging level.
+  PiLine(String uid, String name, Bool useSubcomponents,
+         Logger::Level logLevel = Logger::Level::off);
+  /// Defines name, implementation mode, and logging level.
+  PiLine(String name, Bool useSubcomponents,
+         Logger::Level logLevel = Logger::Level::off)
+      : PiLine(name, name, useSubcomponents, logLevel) {}
   /// Defines name and logging level
   PiLine(String name, Logger::Level logLevel = Logger::Level::off)
       : PiLine(name, name, logLevel) {}
@@ -54,6 +72,8 @@ public:
   void createSubComponents() override;
   /// Derives values from power flow data and pushes them to subcomponents
   void initializeParentFromNodesAndTerminals(Real frequency) override;
+  void mnaParentInitialize(Real omega, Real timeStep,
+                           Attribute<Matrix>::Ptr leftVector) override;
 
   // #### MNA section ####
   /// Updates internal current variable of the component
@@ -62,6 +82,8 @@ public:
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
   /// MNA pre step operations
   void mnaParentPreStep(Real time, Int timeStepCount) override;
+  void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
   /// MNA post step operations
   void mnaParentPostStep(Real time, Int timeStepCount,
                          Attribute<Matrix>::Ptr &leftVector) override;

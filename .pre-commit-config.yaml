@@ -19,6 +19,8 @@ repos:
         exclude: .devcontainer/devcontainer\.json
       - id: check-toml
       - id: check-added-large-files
+        # FMUs are required example inputs and are intentionally versioned.
+        exclude: \.fmu$
       - id: pretty-format-json
         # black has its own mind of formatting Jupyter notebooks
         exclude: \.ipynb$|^.devcontainer/devcontainer\.json$|package-lock\.json$

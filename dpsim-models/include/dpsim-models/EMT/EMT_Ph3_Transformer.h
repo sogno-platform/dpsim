@@ -62,6 +62,19 @@ private:
   WindingReference mReferenceWinding = WindingReference::Auto;
   /// Resolves the reference winding
   void resolveWindingRoles();
+  Bool mUseSubcomponents = true;
+  Attribute<Matrix>::Ptr mDirectState;
+  MatrixFixedSize<3, 3> mSeriesInductanceHalf = MatrixFixedSize<3, 3>::Zero();
+  MatrixFixedSize<3, 3> mSeriesResistanceHalf = MatrixFixedSize<3, 3>::Zero();
+  MatrixFixedSize<3, 3> mDirectInductorAdmittance =
+      MatrixFixedSize<3, 3>::Zero();
+  MatrixFixedSize<3, 3> mDirectMagnetizingInductorAdmittance =
+      MatrixFixedSize<3, 3>::Zero();
+  MatrixFixedSize<3, 3> mDirectMagnetizingConductance =
+      MatrixFixedSize<3, 3>::Zero();
+  MatrixFixedSize<3, 1> mDirectHistory0 = MatrixFixedSize<3, 1>::Zero();
+  MatrixFixedSize<3, 1> mDirectHistory1 = MatrixFixedSize<3, 1>::Zero();
+  MatrixFixedSize<3, 1> mDirectHistoryMag = MatrixFixedSize<3, 1>::Zero();
 
 public:
   /// Sets the magnetizing branch from the no-load test quantities
@@ -77,6 +90,16 @@ public:
   Transformer(String uid, String name,
               Logger::Level logLevel = Logger::Level::off,
               Bool withResistiveLosses = false);
+  /// Optional direct MNA implementation without child components. The legacy
+  /// constructor continues to use child components by default.
+  Transformer(String uid, String name, Bool useSubcomponents,
+              Logger::Level logLevel = Logger::Level::off,
+              Bool withResistiveLosses = false);
+  Transformer(String name, Bool useSubcomponents,
+              Logger::Level logLevel = Logger::Level::off,
+              Bool withResistiveLosses = false)
+      : Transformer(name, name, useSubcomponents, logLevel,
+                    withResistiveLosses) {}
   /// Defines name and logging level
   Transformer(String name, Logger::Level logLevel = Logger::Level::off)
       : Transformer(name, name, logLevel) {}
@@ -97,6 +120,9 @@ public:
   /// Initializes internal variables of the component
   void mnaParentInitialize(Real omega, Real timeStep,
                            Attribute<Matrix>::Ptr leftVector) override;
+  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
+  Bool mnaHasCompactRightSideVectorStamp() const override;
+  void mnaAddCompactRightSideVectorStamp(Matrix &rightVector) override;
   /// Stamps system matrix
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   /// Updates internal current variable of the component

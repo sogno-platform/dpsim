@@ -19,6 +19,7 @@ namespace Ph1 {
 class SynchronGeneratorIdeal : public CompositePowerComp<Complex>,
                                public SharedFactory<SynchronGeneratorIdeal> {
 private:
+  Bool mUseSubcomponents = true;
   /// Inner voltage source that represents the generator
   std::shared_ptr<DP::Ph1::VoltageSource> mSubVoltageSource;
   /// True after createSubComponents() runs; prevents double-construction.
@@ -30,15 +31,24 @@ public:
   /// Defines UID, name, component parameters and logging level
   SynchronGeneratorIdeal(String uid, String name,
                          Logger::Level logLevel = Logger::Level::off);
+  SynchronGeneratorIdeal(String uid, String name, Bool useSubcomponents,
+                         Logger::Level logLevel = Logger::Level::off);
   /// Defines name, component parameters and logging level
   SynchronGeneratorIdeal(String name,
                          Logger::Level logLevel = Logger::Level::off);
+  SynchronGeneratorIdeal(String name, Bool useSubcomponents,
+                         Logger::Level logLevel = Logger::Level::off)
+      : SynchronGeneratorIdeal(name, name, useSubcomponents, logLevel) {}
 
   SimPowerComp<Complex>::Ptr clone(String name) override;
 
   // #### General ####
   /// Constructs and registers MNA subcomponents; idempotent.
   void createSubComponents() override;
+  void mnaParentInitialize(Real omega, Real timeStep,
+                           Attribute<Matrix>::Ptr leftVector) override;
+  void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
   /// Initializes component from power flow data
   void initializeParentFromNodesAndTerminals(Real frequency) override;
 

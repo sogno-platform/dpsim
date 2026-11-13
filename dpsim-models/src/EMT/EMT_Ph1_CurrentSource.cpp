@@ -51,6 +51,16 @@ void EMT::Ph1::CurrentSource::mnaCompApplyRightSideVectorStamp(
                            (**mIntfCurrent)(0, 0));
 }
 
+void EMT::Ph1::CurrentSource::mnaAddCompactRightSideVectorStamp(
+    Matrix &rightVector) {
+  if (terminalNotGrounded(0))
+    Math::addToVectorElement(rightVector, matrixNodeIndex(0),
+                             -(**mIntfCurrent)(0, 0));
+  if (terminalNotGrounded(1))
+    Math::addToVectorElement(rightVector, matrixNodeIndex(1),
+                             (**mIntfCurrent)(0, 0));
+}
+
 void EMT::Ph1::CurrentSource::updateState(Real time) {
   Complex currentRef = mCurrentRef->get();
   Real srcFreq = mSrcFreq->get();
@@ -73,7 +83,8 @@ void EMT::Ph1::CurrentSource::mnaCompAddPreStepDependencies(
 
 void EMT::Ph1::CurrentSource::mnaCompPreStep(Real time, Int timeStepCount) {
   updateState(time);
-  mnaCompApplyRightSideVectorStamp(**mRightVector);
+  // The direct solver consumes mIntfCurrent through the compact callback;
+  // avoid also staging the same source into its network-sized scratch vector.
 }
 
 void EMT::Ph1::CurrentSource::mnaCompAddPostStepDependencies(

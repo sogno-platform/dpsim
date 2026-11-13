@@ -12,10 +12,16 @@ using namespace CPS;
 
 DP::Ph1::NetworkInjection::NetworkInjection(String uid, String name,
                                             Logger::Level logLevel)
+    : NetworkInjection(uid, name, true, logLevel) {}
+
+DP::Ph1::NetworkInjection::NetworkInjection(String uid, String name,
+                                            Bool useSubcomponents,
+                                            Logger::Level logLevel)
     : CompositePowerComp<Complex>(uid, name, true, true, logLevel),
+      mUseSubcomponents(useSubcomponents),
       mVoltageRef(mAttributes->createDynamic<Complex>("V_ref")),
       mSrcFreq(mAttributes->createDynamic<Real>("f_src")) {
-  setVirtualNodeNumber(0);
+  setVirtualNodeNumber(mUseSubcomponents ? 0 : 1);
   setTerminalNumber(1);
 
   SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
@@ -23,18 +29,19 @@ DP::Ph1::NetworkInjection::NetworkInjection(String uid, String name,
   **mIntfCurrent = MatrixComp::Zero(1, 1);
 
   // Create electrical sub components
-  mSubVoltageSource =
-      std::make_shared<DP::Ph1::VoltageSource>(**mName + "_vs", mLogLevel);
-  addMNASubComponent(mSubVoltageSource,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+  if (mUseSubcomponents) {
+    mSubVoltageSource =
+        std::make_shared<DP::Ph1::VoltageSource>(**mName + "_vs", mLogLevel);
+    addMNASubComponent(mSubVoltageSource,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+    mSubVoltageSource->mVoltageRef->setReference(mVoltageRef);
+    mSubVoltageSource->mSrcFreq->setReference(mSrcFreq);
+  }
 
   SPDLOG_LOGGER_INFO(mSLog, "Electrical subcomponents: ");
   for (auto subcomp : mSubComponents)
     SPDLOG_LOGGER_INFO(mSLog, "- {}", subcomp->name());
-
-  mSubVoltageSource->mVoltageRef->setReference(mVoltageRef);
-  mSubVoltageSource->mSrcFreq->setReference(mSrcFreq);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::NetworkInjection::clone(String name) {
@@ -46,8 +53,17 @@ SimPowerComp<Complex>::Ptr DP::Ph1::NetworkInjection::clone(String name) {
 void DP::Ph1::NetworkInjection::setParameters(Complex voltageRef,
                                               Real srcFreq) {
   mParametersSet = true;
-
-  mSubVoltageSource->setParameters(voltageRef, srcFreq);
+  if (mUseSubcomponents)
+    mSubVoltageSource->setParameters(voltageRef, srcFreq);
+  else {
+    mVoltageRef->set(voltageRef);
+    mSrcFreq->set(srcFreq);
+    auto signal = Signal::SineWaveGenerator::make(**mName + "_sw");
+    signal->mVoltageRef->setReference(mVoltageRef);
+    signal->mFreq->setReference(mSrcFreq);
+    signal->setParameters(voltageRef, srcFreq);
+    mDirectSignal = signal;
+  }
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\nVoltage Ref={:s} [V]"
@@ -61,9 +77,18 @@ void DP::Ph1::NetworkInjection::setParameters(Complex initialPhasor,
                                               Real timeStart, Real duration,
                                               bool smoothRamp) {
   mParametersSet = true;
-
-  mSubVoltageSource->setParameters(initialPhasor, freqStart, rocof, timeStart,
-                                   duration, smoothRamp);
+  if (mUseSubcomponents)
+    mSubVoltageSource->setParameters(initialPhasor, freqStart, rocof, timeStart,
+                                     duration, smoothRamp);
+  else {
+    mVoltageRef->set(initialPhasor);
+    mSrcFreq->set(freqStart);
+    auto signal = Signal::FrequencyRampGenerator::make(**mName + "_fr");
+    signal->mFreq->setReference(mSrcFreq);
+    signal->setParameters(initialPhasor, freqStart, rocof, timeStart, duration,
+                          smoothRamp);
+    mDirectSignal = signal;
+  }
 
   SPDLOG_LOGGER_INFO(
       mSLog,
@@ -83,9 +108,19 @@ void DP::Ph1::NetworkInjection::setParameters(Complex initialPhasor,
                                               Real baseFrequency /*= 0.0*/,
                                               bool zigzag /*= false*/) {
   mParametersSet = true;
-
-  mSubVoltageSource->setParameters(initialPhasor, modulationFrequency,
-                                   modulationAmplitude, baseFrequency, zigzag);
+  if (mUseSubcomponents)
+    mSubVoltageSource->setParameters(initialPhasor, modulationFrequency,
+                                     modulationAmplitude, baseFrequency,
+                                     zigzag);
+  else {
+    mVoltageRef->set(initialPhasor);
+    mSrcFreq->set(baseFrequency);
+    auto signal = Signal::CosineFMGenerator::make(**mName + "_fm");
+    signal->mFreq->setReference(mSrcFreq);
+    signal->setParameters(initialPhasor, modulationFrequency,
+                          modulationAmplitude, baseFrequency, zigzag);
+    mDirectSignal = signal;
+  }
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\nVoltage Ref={:s} [V]"
@@ -97,13 +132,45 @@ void DP::Ph1::NetworkInjection::setParameters(Complex initialPhasor,
 void DP::Ph1::NetworkInjection::initializeParentFromNodesAndTerminals(
     Real frequency) {
   // Connect electrical subcomponents
-  mSubVoltageSource->connect({SimNode::GND, node(0)});
+  if (mUseSubcomponents) {
+    mSubVoltageSource->connect({SimNode::GND, node(0)});
+    return;
+  }
+  if (**mVoltageRef == Complex(0., 0.))
+    mVoltageRef->set(initialSingleVoltage(0));
+  if (mDirectSignal == nullptr) {
+    auto signal = Signal::SineWaveGenerator::make(**mName);
+    signal->mVoltageRef->setReference(mVoltageRef);
+    signal->mFreq->setReference(mSrcFreq);
+    signal->setParameters(**mVoltageRef);
+    mDirectSignal = signal;
+  }
+  // The legacy voltage-source child initializes its public interface voltage
+  // to zero and publishes the generated waveform on the first pre-step.
+  mDirectVoltage = 0.;
+  (**mIntfVoltage)(0, 0) = mDirectVoltage;
 }
 
 // #### MNA functions ####
 
+void DP::Ph1::NetworkInjection::mnaParentApplySystemMatrixStamp(
+    SparseMatrixRow &systemMatrix) {
+  if (mUseSubcomponents)
+    return;
+  const UInt sourceCurrent = virtualNode(0)->matrixNodeIndex();
+  for (UInt freq = 0; freq < mNumFreqs; ++freq) {
+    Math::setMatrixElement(systemMatrix, sourceCurrent, matrixNodeIndex(0),
+                           Complex(1., 0.), mNumFreqs, freq);
+    Math::setMatrixElement(systemMatrix, matrixNodeIndex(0), sourceCurrent,
+                           Complex(1., 0.), mNumFreqs, freq);
+  }
+}
+
 void DP::Ph1::NetworkInjection::mnaParentApplyRightSideVectorStamp(
     Matrix &rightVector) {
+  if (!mUseSubcomponents)
+    Math::setVectorElement(rightVector, virtualNode(0)->matrixNodeIndex(),
+                           mDirectVoltage, mNumFreqs);
   SPDLOG_LOGGER_DEBUG(mSLog, "Right Side Vector: {:s}",
                       Logger::matrixToString(rightVector));
 }
@@ -113,12 +180,21 @@ void DP::Ph1::NetworkInjection::mnaParentAddPreStepDependencies(
     AttributeBase::List &attributeDependencies,
     AttributeBase::List &modifiedAttributes) {
   // add pre-step dependencies of component itself
+  if (!mUseSubcomponents) {
+    attributeDependencies.push_back(mVoltageRef);
+    attributeDependencies.push_back(mSrcFreq);
+  }
   prevStepDependencies.push_back(mIntfCurrent);
   prevStepDependencies.push_back(mIntfVoltage);
   modifiedAttributes.push_back(mRightVector);
 }
 
 void DP::Ph1::NetworkInjection::mnaParentPreStep(Real time, Int timeStepCount) {
+  if (!mUseSubcomponents) {
+    mDirectSignal->step(time);
+    mDirectVoltage = mDirectSignal->getSignal();
+    (**mIntfVoltage)(0, 0) = mDirectVoltage;
+  }
   // pre-step of component itself
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
@@ -142,11 +218,19 @@ void DP::Ph1::NetworkInjection::mnaParentPostStep(
 }
 
 void DP::Ph1::NetworkInjection::mnaCompUpdateVoltage(const Matrix &leftVector) {
-  **mIntfVoltage = **mSubVoltageSource->mIntfVoltage;
+  if (mUseSubcomponents)
+    **mIntfVoltage = **mSubVoltageSource->mIntfVoltage;
 }
 
 void DP::Ph1::NetworkInjection::mnaCompUpdateCurrent(const Matrix &leftVector) {
-  **mIntfCurrent = **mSubVoltageSource->mIntfCurrent;
+  if (mUseSubcomponents) {
+    **mIntfCurrent = **mSubVoltageSource->mIntfCurrent;
+    return;
+  }
+  const UInt sourceCurrent = virtualNode(0)->matrixNodeIndex();
+  for (UInt freq = 0; freq < mNumFreqs; ++freq)
+    (**mIntfCurrent)(0, freq) = Math::complexFromVectorElement(
+        leftVector, sourceCurrent, mNumFreqs, freq);
 }
 
 void DP::Ph1::NetworkInjection::daeResidual(double ttime, const double state[],
@@ -181,6 +265,7 @@ void DP::Ph1::NetworkInjection::daeResidual(double ttime, const double state[],
 }
 
 Complex DP::Ph1::NetworkInjection::daeInitialize() {
-  (**mIntfVoltage)(0, 0) = (**mSubVoltageSource->mIntfVoltage)(0, 0);
-  return (**mSubVoltageSource->mIntfVoltage)(0, 0);
+  if (mUseSubcomponents)
+    (**mIntfVoltage)(0, 0) = (**mSubVoltageSource->mIntfVoltage)(0, 0);
+  return (**mIntfVoltage)(0, 0);
 }

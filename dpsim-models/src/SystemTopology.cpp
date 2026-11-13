@@ -456,8 +456,8 @@ void SystemTopology::splitSubnets(std::vector<SystemTopology> &splitSystems) {
       }
     }
     for (int currentNet = 0; currentNet < numberSubnets; currentNet++) {
-      splitSystems.emplace_back(mSystemFrequency, nodes[currentNet],
-                                components[currentNet]);
+      splitSystems.emplace_back(mSystemFrequency, mFrequencies,
+                                nodes[currentNet], components[currentNet]);
     }
   }
 }

@@ -126,6 +126,8 @@ protected:
   Matrix mDVqd = Matrix::Zero(2, 1);
   /// Equivalent VBR Stator Resistance
   MatrixFixedSize<3, 3> R_eq_vbr = MatrixFixedSize<3, 3>::Zero(3, 3);
+  /// Inverse of the equivalent VBR stator resistance, reused by pre/post-step.
+  MatrixFixedSize<3, 3> mR_eq_vbr_inv = MatrixFixedSize<3, 3>::Zero(3, 3);
   /// Equivalent VBR Stator Voltage Source
   Matrix E_eq_vbr = Matrix::Zero(3, 1);
   /// Park Transformation Matrix
@@ -144,11 +146,11 @@ protected:
   MatrixFixedSize<2, 2> K2a = MatrixFixedSize<2, 2>::Zero(2, 2);
   Matrix K2b = Matrix::Zero(2, 1);
   Matrix K2 = Matrix::Zero(2, 1);
-  Matrix H_qdr = Matrix::Zero(3, 1);
+  MatrixFixedSize<3, 1> H_qdr = MatrixFixedSize<3, 1>::Zero();
   Matrix h_qdr;
   MatrixFixedSize<3, 3> K = MatrixFixedSize<3, 3>::Zero(3, 3);
-  Matrix mEsh_vbr = Matrix::Zero(3, 1);
-  Matrix E_r_vbr = Matrix::Zero(3, 1);
+  MatrixFixedSize<3, 1> mEsh_vbr = MatrixFixedSize<3, 1>::Zero();
+  MatrixFixedSize<3, 1> E_r_vbr = MatrixFixedSize<3, 1>::Zero();
   MatrixFixedSize<2, 2> K1K2 = MatrixFixedSize<2, 2>::Zero(2, 2);
 
   /// Auxiliar constants
@@ -177,17 +179,17 @@ protected:
   Real E2_1d;
 
   MatrixFixedSize<2, 2> Ea = MatrixFixedSize<2, 2>::Zero(2, 2);
-  Matrix E1b = Matrix::Zero(2, 1);
+  MatrixFixedSize<2, 1> E1b = MatrixFixedSize<2, 1>::Zero();
   // CHECK: E1 and F1 seem to be vectors (Zero(2, 1)) and not matrices
   Matrix E1 = Matrix::Zero(2, 2);
   MatrixFixedSize<2, 2> Fa = MatrixFixedSize<2, 2>::Zero(2, 2);
-  Matrix F1b = Matrix::Zero(2, 1);
+  MatrixFixedSize<2, 1> F1b = MatrixFixedSize<2, 1>::Zero();
   Matrix F1 = Matrix::Zero(2, 2);
   MatrixFixedSize<2, 2> E2b = MatrixFixedSize<2, 2>::Zero(2, 2);
   MatrixFixedSize<2, 2> E2 = MatrixFixedSize<2, 2>::Zero(2, 2);
   MatrixFixedSize<2, 2> F2b = MatrixFixedSize<2, 2>::Zero(2, 2);
   MatrixFixedSize<2, 2> F2 = MatrixFixedSize<2, 2>::Zero(2, 2);
-  Matrix F3b = Matrix::Zero(2, 1);
+  MatrixFixedSize<2, 1> F3b = MatrixFixedSize<2, 1>::Zero();
   Matrix F3 = Matrix::Zero(2, 2);
   Matrix C26 = Matrix::Zero(2, 1);
 
@@ -238,10 +240,11 @@ public:
   void stepInPerUnit();
 
   /// Park transform as described in Krause
-  Matrix parkTransform(Real theta, Real a, Real b, Real c);
+  MatrixFixedSize<3, 1> parkTransform(Real theta, Real a, Real b, Real c);
 
   /// Inverse Park transform as described in Krause
-  Matrix inverseParkTransform(Real theta, Real q, Real d, Real zero);
+  MatrixFixedSize<3, 1> inverseParkTransform(Real theta, Real q, Real d,
+                                             Real zero);
 
   /// Calculate inductance Matrix L and its derivative
   void CalculateL();
@@ -261,6 +264,9 @@ public:
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   /// Stamps right side (source) vector
   void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
+  /// Accumulate the three active source entries without a network-sized copy.
+  Bool mnaHasCompactRightSideVectorStamp() const override { return true; }
+  void mnaAddCompactRightSideVectorStamp(Matrix &rightVector) override;
   /// MNA pre step operations
   void mnaCompPreStep(Real time, Int timeStepCount) override;
   /// MNA post step operations
@@ -279,6 +285,7 @@ public:
                                  Attribute<Matrix>::Ptr &leftVector) override;
   /// Mark that parameter changes so that system matrix is updated
   Bool hasParameterChanged() override { return true; }
+  Bool hasContinuouslyChangingSystemMatrix() const override { return true; }
 };
 } // namespace Ph3
 } // namespace EMT

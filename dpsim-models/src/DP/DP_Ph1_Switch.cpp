@@ -249,6 +249,17 @@ void DP::Ph1::Switch::mnaCompInitialize(Real omega, Real timeStep,
   mResetZeroCrossingHistory = false;
 }
 
+void DP::Ph1::Switch::mnaCompInitializeHarm(
+    Real omega, Real timeStep,
+    std::vector<Attribute<Matrix>::Ptr> leftVectors) {
+  // Harmonic initialization bypasses mnaCompInitialize() in the shared MNA
+  // wrapper. Reuse its setup so the switch has valid node indices and state
+  // before the solver stamps each precomputed switch/frequency matrix.
+  mnaCompInitialize(omega, timeStep,
+                    leftVectors.empty() ? Attribute<Matrix>::Ptr{}
+                                        : leftVectors.front());
+}
+
 void DP::Ph1::Switch::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
   MNAStampUtils::stampAdmittance(currentConductance(), systemMatrix,

@@ -174,9 +174,8 @@ bool DP::Ph1::SynchronGenerator4OrderPCM::requiresIteration() {
     return true;
   } else {
     // check voltage convergence according to tolerance
-    Matrix voltageDifference = **mVdq - mVdqPrevIter;
-    if (Math::abs(voltageDifference(0, 0)) > mTolerance ||
-        Math::abs(voltageDifference(1, 0)) > mTolerance)
+    if (Math::abs((**mVdq)(0, 0) - mVdqPrevIter(0, 0)) > mTolerance ||
+        Math::abs((**mVdq)(1, 0) - mVdqPrevIter(1, 0)) > mTolerance)
       return true;
     else
       return false;

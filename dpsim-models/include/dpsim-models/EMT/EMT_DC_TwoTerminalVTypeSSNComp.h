@@ -19,6 +19,8 @@ protected:
   TwoTerminalVTypeSSNComp(String uid, String name,
                           Logger::Level logLevel = Logger::Level::off);
 
+  void calculateHistoryVector(Matrix &history) const override;
+  void updateState(const Matrix &uOld, const Matrix &uNew) override;
   MatrixComp buildInitialInputFromNodes(Real frequency) override final;
   void validateDCTerminals() const;
 

@@ -30,6 +30,14 @@ public:
 private:
   CPS::Task::List mSchedule;
 
+  struct StepMeasurement {
+    std::chrono::nanoseconds schedulerWall{};
+    std::chrono::nanoseconds taskExecution{};
+    Real simulationTime = 0.;
+    Int timeStepCount = 0;
+  };
+  std::vector<StepMeasurement> mDetailedStepMeasurements;
+
   std::unordered_map<size_t, std::vector<std::chrono::nanoseconds>>
       mMeasurements;
   std::vector<std::chrono::nanoseconds> mStepMeasurements;

@@ -8,6 +8,24 @@
 
 using namespace CPS;
 
+namespace {
+void buildParkTransformPair(Real theta, Matrix &parkTransform,
+                            Matrix &inverseParkTransform) {
+  const Real k = std::sqrt(2.0 / 3.0);
+  const Real angles[3] = {theta, theta - 2.0 * PI / 3.0,
+                          theta + 2.0 * PI / 3.0};
+
+  for (Int phase = 0; phase < 3; ++phase) {
+    const Real cosine = std::cos(angles[phase]);
+    const Real sine = std::sin(angles[phase]);
+    parkTransform(0, phase) = k * cosine;
+    parkTransform(1, phase) = -k * sine;
+    inverseParkTransform(phase, 0) = k * cosine;
+    inverseParkTransform(phase, 1) = -k * sine;
+  }
+}
+} // namespace
+
 EMT::Ph3::AvVoltSourceInverterStateSpace::AvVoltSourceInverterStateSpace(
     String uid, String name, Logger::Level logLevel)
     : TwoTerminalVTypeVariableSSNComp(uid, name, logLevel), mLf(0.0), mCf(0.0),
@@ -296,10 +314,11 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
 
   const Matrix identity3 = Matrix::Identity(3, 3);
 
-  const Matrix parkTransform = getParkTransformMatrix(theta0);
+  Matrix parkTransform(2, 3);
+  Matrix inverseParkTransform(3, 2);
+  buildParkTransformPair(theta0, parkTransform, inverseParkTransform);
   const Matrix tD = parkTransform.row(0);
   const Matrix tQ = parkTransform.row(1);
-  const Matrix inverseParkTransform = getInverseParkTransformMatrix(theta0);
   const Matrix sD = inverseParkTransform.col(0);
   const Matrix sQ = inverseParkTransform.col(1);
 
@@ -537,17 +556,15 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::buildStateSpaceModel(
 }
 
 Bool EMT::Ph3::AvVoltSourceInverterStateSpace::updateComponentParameters() {
-  Matrix E;
-  Matrix F;
-
   // The local linearized SSN model is time-varying because the network abc
   // states are coupled with dq-frame control through the Park transformation.
   // Therefore the stamp is recomputed every step and the change check is
   // intentionally skipped.
-  buildStateSpaceModel(**mX, **mIntfVoltage, mA, mB, mC, mD, E, F);
+  buildStateSpaceModel(**mX, **mIntfVoltage, mA, mB, mC, mD,
+                       mParameterStateOffset, mParameterOutputOffset);
 
-  setStateOffset(E);
-  setOutputOffset(F);
+  setStateOffset(mParameterStateOffset);
+  setOutputOffset(mParameterOutputOffset);
 
   return true;
 }

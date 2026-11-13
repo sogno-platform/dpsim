@@ -50,7 +50,8 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[], String nm, Real dt,
           {"solver-type", required_argument, 0, 'T', "(NRP|MNA)",
            "Type of solver"},
           {"linear-solver-impl", required_argument, 0, 'U',
-           "(DenseLU|SparseLU|KLU|CUDADense|CUDASparse)",
+           "(DenseLU|SparseLU|KLU|CUDADense|CUDASparse|MetalDense|"
+           "MetalSparseBiCGSTAB)",
            "Type of direct linear solver implementation"},
           {"option", required_argument, 0, 'o', "KEY=VALUE",
            "User-definable options"},
@@ -91,7 +92,8 @@ CommandLineArgs::CommandLineArgs(String nm, Real dt, Real d, Real sf, Int s,
           {"solver-type", required_argument, 0, 'T', "(NRP|MNA)",
            "Type of solver"},
           {"linear-solver-impl", required_argument, 0, 'U',
-           "(DenseLU|SparseLU|KLU|CUDADense|CUDASparse)",
+           "(DenseLU|SparseLU|KLU|CUDADense|CUDASparse|MetalDense|"
+           "MetalSparseBiCGSTAB)",
            "Type of direct linear solver implementation"},
           {"option", required_argument, 0, 'o', "KEY=VALUE",
            "User-definable options"},
@@ -221,6 +223,18 @@ void CommandLineArgs::parseArguments(int argc, char *argv[]) {
         directImpl = DirectLinearSolverImpl::CUDASparse;
       } else if (arg == "CUDAMagma") {
         directImpl = DirectLinearSolverImpl::CUDAMagma;
+      } else if (arg == "MetalDense") {
+        directImpl = DirectLinearSolverImpl::MetalDense;
+      } else if (arg == "MetalSparseBiCGSTAB") {
+        directImpl = DirectLinearSolverImpl::MetalSparseBiCGSTAB;
+      } else if (arg == "HIPDense") {
+        directImpl = DirectLinearSolverImpl::HIPDense;
+      } else if (arg == "HIPSparseBiCGStab") {
+        directImpl = DirectLinearSolverImpl::HIPSparseBiCGStab;
+      } else if (arg == "HIPSparseLURefactor") {
+        directImpl = DirectLinearSolverImpl::HIPSparseLURefactor;
+      } else if (arg == "HIPSparseQR") {
+        directImpl = DirectLinearSolverImpl::HIPSparseQR;
       } else if (arg == "Plugin") {
         directImpl = DirectLinearSolverImpl::Plugin;
       } else {

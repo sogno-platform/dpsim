@@ -17,6 +17,7 @@ DirectLinearSolverConfiguration::DirectLinearSolverConfiguration() {
       PARTIAL_REFACTORIZATION_METHOD::NO_PARTIAL_REFACTORIZATION;
   mUseBTF = USE_BTF::DO_BTF;
   mFillInReductionMethod = FILL_IN_REDUCTION_METHOD::AMD;
+  mUseStaticPreconditioner = false;
 }
 
 void DirectLinearSolverConfiguration::setFillInReductionMethod(
@@ -38,6 +39,10 @@ void DirectLinearSolverConfiguration::setBTF(USE_BTF useBTF) {
   mUseBTF = useBTF;
 }
 
+void DirectLinearSolverConfiguration::setStaticPreconditioner(Bool enabled) {
+  mUseStaticPreconditioner = enabled;
+}
+
 SCALING_METHOD DirectLinearSolverConfiguration::getScalingMethod() const {
   return mScalingMethod;
 }
@@ -52,10 +57,10 @@ DirectLinearSolverConfiguration::getPartialRefactorizationMethod() const {
   return mPartialRefactorizationMethod;
 }
 
-USE_BTF
-DirectLinearSolverConfiguration::DirectLinearSolverConfiguration::getBTF()
-    const {
-  return mUseBTF;
+USE_BTF DirectLinearSolverConfiguration::getBTF() const { return mUseBTF; }
+
+Bool DirectLinearSolverConfiguration::getStaticPreconditioner() const {
+  return mUseStaticPreconditioner;
 }
 
 String DirectLinearSolverConfiguration::getScalingMethodString() const {

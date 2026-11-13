@@ -64,6 +64,12 @@ public:
   /// solution function for a right hand side
   virtual Matrix solve(Matrix &rightSideVector) = 0;
 
+  /// Solve into caller-owned storage. Adapters can reuse this storage in the
+  /// simulation loop; the default keeps existing adapter behavior.
+  virtual void solveInto(Matrix &rightSideVector, Matrix &solution) {
+    solution = solve(rightSideVector);
+  }
+
   virtual void
   setConfiguration(DirectLinearSolverConfiguration &configuration) {
     mConfiguration = configuration;

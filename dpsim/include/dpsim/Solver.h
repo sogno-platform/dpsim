@@ -80,6 +80,8 @@ protected:
       SystemMatrixRecomputationMode::Auto;
   /// Effective system-matrix recomputation setting used by the solver.
   Bool mSystemMatrixRecomputationEnabled = false;
+  /// Skip exact zero contributions during matrix assembly (enabled by default).
+  Bool mZeroSkipping = true;
 
   /// Solver behaviour initialization or simulation
   Behaviour mBehaviour = Solver::Behaviour::Simulation;
@@ -121,6 +123,9 @@ public:
   // #### Initialization ####
   ///
   virtual void initialize() {}
+  /// Enable or disable skipping exact zero matrix contributions.
+  void setZeroSkipping(Bool enabled) { mZeroSkipping = enabled; }
+  Bool getZeroSkipping() const { return mZeroSkipping; }
   /// activate steady state initialization
   void doSteadyStateInit(Bool f) { mSteadyStateInit = f; }
   /// set steady state initialization time limit

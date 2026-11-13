@@ -7,6 +7,7 @@
  *********************************************************************************/
 
 #include <dpsim-models/EMT/EMT_Ph3_RxLine.h>
+#include <dpsim-models/MNAStampUtils.h>
 
 using namespace CPS;
 
@@ -14,8 +15,15 @@ using namespace CPS;
 // !!! 			with initialization from phase-to-phase RMS variables
 
 EMT::Ph3::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
+    : RxLine(uid, name, true, logLevel) {}
+
+EMT::Ph3::RxLine::RxLine(String uid, String name, Bool useSubcomponents,
+                         Logger::Level logLevel)
     : Base::Ph3::PiLine(mAttributes),
       CompositePowerComp<Real>(uid, name, true, true, logLevel) {
+  mUseSubcomponents = useSubcomponents;
+  mDirectState = mAttributes->create<Matrix>("direct_state");
+  **mDirectState = Matrix::Zero(6, 1);
   mPhaseType = PhaseType::ABC;
   setVirtualNodeNumber(1);
   setTerminalNumber(2);
@@ -29,7 +37,7 @@ EMT::Ph3::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
 
 /// DEPRECATED: Delete method
 SimPowerComp<Real>::Ptr EMT::Ph3::RxLine::clone(String name) {
-  auto copy = RxLine::make(name, mLogLevel);
+  auto copy = RxLine::make(name, mUseSubcomponents, mLogLevel);
   copy->setParameters(**mSeriesRes, **mSeriesInd);
   return copy;
 }
@@ -38,6 +46,9 @@ void EMT::Ph3::RxLine::createSubComponents() {
   if (mSubCompCreated)
     return;
   mSubCompCreated = true;
+
+  if (!mUseSubcomponents)
+    return;
 
   // Default model with virtual node in between
   mSubResistor =
@@ -100,6 +111,12 @@ void EMT::Ph3::RxLine::initializeParentFromNodesAndTerminals(Real frequency) {
 
   mVirtualNodes[0]->setInitialVoltage(PEAK1PH_TO_RMS3PH *
                                       (vInitTerm0 + **mSeriesRes * iInit));
+  if (!mUseSubcomponents) {
+    (**mDirectState).setZero();
+    (**mDirectState).block<3, 1>(0, 0) = iInit.real();
+    (**mDirectState).block<3, 1>(3, 0) =
+        (vInitABC - (**mSeriesRes).cast<Complex>() * iInit).real();
+  }
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"
@@ -114,10 +131,84 @@ void EMT::Ph3::RxLine::initializeParentFromNodesAndTerminals(Real frequency) {
                      Logger::phasorToString(initialSingleVoltage(1)));
 }
 
+void EMT::Ph3::RxLine::mnaParentInitialize(Real, Real timeStep,
+                                           Attribute<Matrix>::Ptr) {
+  if (!mUseSubcomponents)
+    mDirectInductorAdmittance = (timeStep / 2.) * (**mSeriesInd).inverse();
+}
+
+void EMT::Ph3::RxLine::mnaParentApplySystemMatrixStamp(
+    SparseMatrixRow &systemMatrix) {
+  if (mUseSubcomponents)
+    return;
+  updateMatrixNodeIndices();
+  cacheDirectMatrixIndices();
+  const Matrix snubberConductance = Matrix::Identity(3, 3) * 1e-6;
+  MNAStampUtils::stampConductanceMatrix(
+      (**mSeriesRes).inverse(), systemMatrix, mDirectTerminalIndices[0][0],
+      mDirectMidpointIndices[0], mDirectTerminalConnected[0], true, mSLog);
+  MNAStampUtils::stampConductanceMatrix(
+      mDirectInductorAdmittance, systemMatrix, mDirectMidpointIndices[0],
+      mDirectTerminalIndices[1][0], true, mDirectTerminalConnected[1], mSLog);
+  MNAStampUtils::stampConductanceMatrix(
+      snubberConductance, systemMatrix, mDirectTerminalIndices[1][0], 0,
+      mDirectTerminalConnected[1], false, mSLog);
+}
+
+void EMT::Ph3::RxLine::cacheDirectMatrixIndices() {
+  for (UInt terminal = 0; terminal < 2; ++terminal) {
+    mDirectTerminalConnected[terminal] = terminalNotGrounded(terminal);
+    for (UInt phase = 0; phase < 3; ++phase)
+      mDirectTerminalIndices[terminal][phase] =
+          matrixNodeIndex(terminal, phase);
+  }
+  for (UInt phase = 0; phase < 3; ++phase)
+    mDirectMidpointIndices[phase] =
+        mVirtualNodes[0]->matrixNodeIndex(static_cast<PhaseType>(phase));
+}
+
+void EMT::Ph3::RxLine::mnaParentApplyRightSideVectorStamp(Matrix &rightVector) {
+  if (mUseSubcomponents)
+    return;
+  for (UInt phase = 0; phase < 3; ++phase) {
+    Math::setVectorElement(rightVector, mDirectMidpointIndices[phase],
+                           mDirectHistory(phase));
+    if (mDirectTerminalConnected[1])
+      Math::setVectorElement(rightVector, mDirectTerminalIndices[1][phase],
+                             -mDirectHistory(phase));
+  }
+}
+
+Bool EMT::Ph3::RxLine::mnaHasCompactRightSideVectorStamp() const {
+  return !mUseSubcomponents ||
+         CompositePowerComp<Real>::mnaHasCompactRightSideVectorStamp();
+}
+
+void EMT::Ph3::RxLine::mnaAddCompactRightSideVectorStamp(Matrix &rightVector) {
+  if (mUseSubcomponents) {
+    CompositePowerComp<Real>::mnaAddCompactRightSideVectorStamp(rightVector);
+    return;
+  }
+  for (UInt phase = 0; phase < 3; ++phase) {
+    Math::addToVectorElement(
+        rightVector, mDirectMidpointIndices[phase],
+        Math::realFromVectorElement(**mRightVector,
+                                    mDirectMidpointIndices[phase]));
+    if (mDirectTerminalConnected[1]) {
+      const UInt index = mDirectTerminalIndices[1][phase];
+      Math::addToVectorElement(
+          rightVector, index,
+          Math::realFromVectorElement(**mRightVector, index));
+    }
+  }
+}
+
 void EMT::Ph3::RxLine::mnaParentAddPreStepDependencies(
     AttributeBase::List &prevStepDependencies,
     AttributeBase::List &attributeDependencies,
     AttributeBase::List &modifiedAttributes) {
+  if (!mUseSubcomponents)
+    prevStepDependencies.push_back(mDirectState);
   modifiedAttributes.push_back(mRightVector);
 };
 
@@ -129,21 +220,49 @@ void EMT::Ph3::RxLine::mnaParentAddPostStepDependencies(
   attributeDependencies.push_back(leftVector);
   modifiedAttributes.push_back(mIntfCurrent);
   modifiedAttributes.push_back(mIntfVoltage);
+  if (!mUseSubcomponents)
+    modifiedAttributes.push_back(mDirectState);
 };
 
 void EMT::Ph3::RxLine::mnaParentPreStep(Real time, Int timeStepCount) {
+  if (!mUseSubcomponents) {
+    mDirectHistory.noalias() =
+        mDirectInductorAdmittance * (**mDirectState).block<3, 1>(3, 0);
+    mDirectHistory += (**mDirectState).block<3, 1>(0, 0);
+  }
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
 void EMT::Ph3::RxLine::mnaParentPostStep(Real time, Int timeStepCount,
                                          Attribute<Matrix>::Ptr &leftVector) {
+  if (!mUseSubcomponents) {
+    Eigen::Matrix<Real, 3, 1> v0 = Eigen::Matrix<Real, 3, 1>::Zero();
+    Eigen::Matrix<Real, 3, 1> v1 = Eigen::Matrix<Real, 3, 1>::Zero();
+    Eigen::Matrix<Real, 3, 1> vmid;
+    if (mDirectTerminalConnected[0])
+      for (UInt phase = 0; phase < 3; ++phase)
+        v0(phase) = Math::realFromVectorElement(
+            **leftVector, mDirectTerminalIndices[0][phase]);
+    if (mDirectTerminalConnected[1])
+      for (UInt phase = 0; phase < 3; ++phase)
+        v1(phase) = Math::realFromVectorElement(
+            **leftVector, mDirectTerminalIndices[1][phase]);
+    for (UInt phase = 0; phase < 3; ++phase)
+      vmid(phase) = Math::realFromVectorElement(**leftVector,
+                                                mDirectMidpointIndices[phase]);
+    **mIntfVoltage = v1 - v0;
+    **mIntfCurrent = mDirectInductorAdmittance * (v1 - vmid) + mDirectHistory;
+    (**mDirectState).block<3, 1>(0, 0) = **mIntfCurrent;
+    (**mDirectState).block<3, 1>(3, 0) = v1 - vmid;
+    return;
+  }
   mnaCompUpdateVoltage(**leftVector);
   mnaCompUpdateCurrent(**leftVector);
 }
 
 void EMT::Ph3::RxLine::mnaCompUpdateVoltage(const Matrix &leftVector) {
   // v1 - v0
-  **mIntfVoltage = Matrix::Zero(3, 1);
+  (**mIntfVoltage).setZero();
   if (terminalNotGrounded(1)) {
     (**mIntfVoltage)(0, 0) =
         Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
@@ -166,5 +285,18 @@ void EMT::Ph3::RxLine::mnaCompUpdateVoltage(const Matrix &leftVector) {
 }
 
 void EMT::Ph3::RxLine::mnaCompUpdateCurrent(const Matrix &leftVector) {
+  if (!mUseSubcomponents) {
+    Eigen::Matrix<Real, 3, 1> v1 = Eigen::Matrix<Real, 3, 1>::Zero();
+    Eigen::Matrix<Real, 3, 1> vmid;
+    if (mDirectTerminalConnected[1])
+      for (UInt phase = 0; phase < 3; ++phase)
+        v1(phase) = Math::realFromVectorElement(
+            leftVector, mDirectTerminalIndices[1][phase]);
+    for (UInt phase = 0; phase < 3; ++phase)
+      vmid(phase) = Math::realFromVectorElement(leftVector,
+                                                mDirectMidpointIndices[phase]);
+    **mIntfCurrent = mDirectInductorAdmittance * (v1 - vmid) + mDirectHistory;
+    return;
+  }
   **mIntfCurrent = mSubInductor->intfCurrent();
 }

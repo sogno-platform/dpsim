@@ -35,7 +35,7 @@ MatrixComp DP::Ph3::TwoTerminalITypeSSNComp::buildInitialInputFromNodes(Real) {
 void DP::Ph3::TwoTerminalITypeSSNComp::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
   // Norton-equivalent admittance G = W^-1 (v = W i + yHist => i = G v - G yHist).
-  MatrixComp g = mW.inverse();
+  const MatrixComp &g = mWInverse;
 
   MNAStampUtils::stampAdmittanceMatrix(
       g, systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),
@@ -44,7 +44,7 @@ void DP::Ph3::TwoTerminalITypeSSNComp::mnaCompApplySystemMatrixStamp(
 
 void DP::Ph3::TwoTerminalITypeSSNComp::mnaCompApplyRightSideVectorStamp(
     Matrix &rightVector) {
-  MatrixComp iHist = -mW.inverse() * mYHist;
+  MatrixComp iHist = -mWInverse * mYHist;
 
   if (terminalNotGrounded(0)) {
     for (Int phase = 0; phase < 3; ++phase)
@@ -60,12 +60,21 @@ void DP::Ph3::TwoTerminalITypeSSNComp::mnaCompApplyRightSideVectorStamp(
 
 void DP::Ph3::TwoTerminalITypeSSNComp::mnaCompUpdateCurrent(const Matrix &) {
   // i = W^-1 (v - yHist)
-  **mIntfCurrent = mW.inverse() * (**mIntfVoltage - mYHist);
+  const MatrixComp &voltage = **mIntfVoltage;
+  const MatrixComp &g = mWInverse;
+  const MatrixComp &history = mYHist;
+  MatrixComp &current = **mIntfCurrent;
+  const Complex d0 = voltage(0, 0) - history(0, 0);
+  const Complex d1 = voltage(1, 0) - history(1, 0);
+  const Complex d2 = voltage(2, 0) - history(2, 0);
+  current(0, 0) = g(0, 0) * d0 + g(0, 1) * d1 + g(0, 2) * d2;
+  current(1, 0) = g(1, 0) * d0 + g(1, 1) * d1 + g(1, 2) * d2;
+  current(2, 0) = g(2, 0) * d0 + g(2, 1) * d1 + g(2, 2) * d2;
 }
 
 void DP::Ph3::TwoTerminalITypeSSNComp::mnaCompUpdateVoltage(
     const Matrix &leftVector) {
-  **mIntfVoltage = MatrixComp::Zero(3, 1);
+  (**mIntfVoltage).setZero();
 
   if (terminalNotGrounded(1)) {
     for (Int phase = 0; phase < 3; ++phase)

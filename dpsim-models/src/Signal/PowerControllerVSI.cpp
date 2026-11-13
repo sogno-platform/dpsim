@@ -145,6 +145,13 @@ void PowerControllerVSI::initializeStateSpaceModel(
   // update B matrix due to its dependence on Irc
   updateBMatrixStateSpaceModel();
 
+  const Matrix identity = Matrix::Identity(mA.rows(), mA.cols());
+  const Matrix f1 = identity + (mTimeStep / 2.) * mA;
+  const Matrix f2 = identity - (mTimeStep / 2.) * mA;
+  mF2Inverse = f2.inverse();
+  mDiscreteA = mF2Inverse * f1;
+  mTransformedB.noalias() = mF2Inverse * (mTimeStep / 2.) * mB;
+
   // initialization of input
   **mInputCurr << mPref, mQref, **mVc_d, **mVc_q, **mIrc_d, **mIrc_q;
   SPDLOG_LOGGER_INFO(mSLog, "Initialization of input: \n" +
@@ -202,8 +209,10 @@ void PowerControllerVSI::signalStep(Real time, Int timeStepCount) {
       time, **mInputCurr, **mInputPrev, **mStatePrev);
 
   // calculate new states
-  **mStateCurr = Math::StateSpaceTrapezoidal(**mStatePrev, mA, mB, mTimeStep,
-                                             **mInputCurr, **mInputPrev);
+  mInputSum.noalias() = **mInputCurr + **mInputPrev;
+  mTransformedB.noalias() = mF2Inverse * (mTimeStep / 2.) * mB;
+  (**mStateCurr).noalias() =
+      mDiscreteA * **mStatePrev + mTransformedB * mInputSum;
   SPDLOG_LOGGER_DEBUG(mSLog, "stateCurr = \n {}", **mStateCurr);
 
   // calculate new outputs

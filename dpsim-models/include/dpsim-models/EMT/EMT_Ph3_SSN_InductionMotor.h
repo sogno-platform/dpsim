@@ -77,9 +77,22 @@ protected:
   Matrix mInductanceMatrix;
   Matrix mInverseInductanceMatrix;
   Matrix mResistanceMatrix;
+  Matrix mResistiveFluxMatrix;
 
   Real mJacobianRelativeStep;
   Real mJacobianAbsoluteStep;
+
+  /// Pre-sized scratch storage for the per-step finite-difference Jacobian.
+  mutable Matrix mJacobianPerturbation;
+  mutable Matrix mJacobianInputPerturbation;
+  mutable Matrix mJacobianDerivativePlus;
+  mutable Matrix mJacobianDerivativeMinus;
+  mutable Matrix mJacobianOutputPlus;
+  mutable Matrix mJacobianOutputMinus;
+  mutable Matrix mStateDerivativeScratch;
+  mutable Matrix mOutputScratch;
+  mutable Matrix mStateOffsetScratch;
+  mutable Matrix mOutputOffsetScratch;
 
   Attribute<Real>::Ptr mElectricalPower;
   Attribute<Real>::Ptr mReactivePower;
@@ -96,10 +109,9 @@ protected:
   Attribute<Real>::Ptr mStatorCurrentMagnitude;
   Attribute<Real>::Ptr mStatorVoltageMagnitude;
 
-  Matrix getParkTransformMatrix(Real electricalAngle) const;
-  Matrix getInverseParkTransformMatrix(Real electricalAngle) const;
-  Matrix buildSpeedMatrix(Real electricalSpeed) const;
-
+  MatrixFixedSize<2, 3> getParkTransformMatrix(Real electricalAngle) const;
+  MatrixFixedSize<3, 2>
+  getInverseParkTransformMatrix(Real electricalAngle) const;
   void rebuildMachineMatrices();
 
   void evaluateStateDerivative(const Matrix &x, const Matrix &u,

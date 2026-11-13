@@ -12,8 +12,52 @@
 #include <cstdint>
 #include <cstring>
 #include <stdexcept>
+#include <unordered_map>
 
 using namespace CPS;
+
+namespace {
+using SparseCache = std::unordered_map<std::uint64_t, Eigen::Index>;
+thread_local Bool gZeroSkippingEnabled = true;
+std::unordered_map<const CPS::SparseMatrixRow *, SparseCache>
+    gSparseMatrixValueCaches;
+
+std::uint64_t sparseKey(Eigen::Index row, Eigen::Index column) {
+  return (static_cast<std::uint64_t>(row) << 32) |
+         static_cast<std::uint64_t>(column);
+}
+
+Real *cachedSparseValue(CPS::SparseMatrixRow &mat, Eigen::Index row,
+                        Eigen::Index column) {
+  auto cacheIt = gSparseMatrixValueCaches.find(&mat);
+  if (cacheIt == gSparseMatrixValueCaches.end())
+    return nullptr;
+  auto valueIt = cacheIt->second.find(sparseKey(row, column));
+  if (valueIt == cacheIt->second.end())
+    return nullptr;
+  return mat.valuePtr() + valueIt->second;
+}
+
+Matrix trapezoidalStep(const Matrix &states, const Matrix &A,
+                       const Matrix &input, Real dt) {
+  const Matrix identity = Matrix::Identity(states.rows(), states.rows());
+  const Matrix lhs = identity - (dt / 2.) * A;
+  const Matrix rhs = (identity + (dt / 2.) * A) * states + dt * input;
+  return lhs.partialPivLu().solve(rhs);
+}
+
+} // namespace
+
+Math::ScopedZeroSkipping::ScopedZeroSkipping(Bool enabled)
+    : mPrevious(gZeroSkippingEnabled) {
+  gZeroSkippingEnabled = enabled;
+}
+
+Math::ScopedZeroSkipping::~ScopedZeroSkipping() {
+  gZeroSkippingEnabled = mPrevious;
+}
+
+Bool Math::zeroSkippingEnabled() { return gZeroSkippingEnabled; }
 
 // #### Angular Operations ####
 Real Math::radtoDeg(Real rad) { return rad * 180 / PI; }
@@ -121,10 +165,18 @@ void Math::setMatrixElement(SparseMatrixRow &mat, Matrix::Index row,
   Eigen::Index harmRow = row + harmonicOffset * freqIdx;
   Eigen::Index harmCol = column + harmonicOffset * freqIdx;
 
-  mat.coeffRef(harmRow, harmCol) = value.real();
-  mat.coeffRef(harmRow + complexOffset, harmCol + complexOffset) = value.real();
-  mat.coeffRef(harmRow, harmCol + complexOffset) = -value.imag();
-  mat.coeffRef(harmRow + complexOffset, harmCol) = value.imag();
+  auto set = [&mat](Eigen::Index r, Eigen::Index c, Real v) {
+    if (zeroSkippingEnabled() && v == 0. && mat.coeff(r, c) == 0.)
+      return;
+    if (Real *cached = cachedSparseValue(mat, r, c))
+      *cached = v;
+    else
+      mat.coeffRef(r, c) = v;
+  };
+  set(harmRow, harmCol, value.real());
+  set(harmRow + complexOffset, harmCol + complexOffset, value.real());
+  set(harmRow, harmCol + complexOffset, -value.imag());
+  set(harmRow + complexOffset, harmCol, value.imag());
 }
 
 void Math::addToMatrixElement(SparseMatrixRow &mat, Matrix::Index row,
@@ -136,11 +188,18 @@ void Math::addToMatrixElement(SparseMatrixRow &mat, Matrix::Index row,
   Eigen::Index harmRow = row + harmonicOffset * freqIdx;
   Eigen::Index harmCol = column + harmonicOffset * freqIdx;
 
-  mat.coeffRef(harmRow, harmCol) += value.real();
-  mat.coeffRef(harmRow + complexOffset, harmCol + complexOffset) +=
-      value.real();
-  mat.coeffRef(harmRow, harmCol + complexOffset) -= value.imag();
-  mat.coeffRef(harmRow + complexOffset, harmCol) += value.imag();
+  auto add = [&mat](Eigen::Index r, Eigen::Index c, Real v) {
+    if (zeroSkippingEnabled() && v == 0.)
+      return;
+    if (Real *cached = cachedSparseValue(mat, r, c))
+      *cached += v;
+    else
+      mat.coeffRef(r, c) += v;
+  };
+  add(harmRow, harmCol, value.real());
+  add(harmRow + complexOffset, harmCol + complexOffset, value.real());
+  add(harmRow, harmCol + complexOffset, -value.imag());
+  add(harmRow + complexOffset, harmCol, value.imag());
 }
 
 void Math::addToMatrixElement(SparseMatrixRow &mat, Matrix::Index row,
@@ -152,15 +211,28 @@ void Math::addToMatrixElement(SparseMatrixRow &mat, Matrix::Index row,
   Eigen::Index harmRow = row + harmonicOffset * freqIdx;
   Eigen::Index harmCol = column + harmonicOffset * freqIdx;
 
-  mat.coeffRef(harmRow, harmCol) += value(0, 0);
-  mat.coeffRef(harmRow + complexOffset, harmCol + complexOffset) += value(1, 1);
-  mat.coeffRef(harmRow, harmCol + complexOffset) += value(0, 1);
-  mat.coeffRef(harmRow + complexOffset, harmCol) += value(1, 0);
+  auto add = [&mat](Eigen::Index r, Eigen::Index c, Real v) {
+    if (zeroSkippingEnabled() && v == 0.)
+      return;
+    if (Real *cached = cachedSparseValue(mat, r, c))
+      *cached += v;
+    else
+      mat.coeffRef(r, c) += v;
+  };
+  add(harmRow, harmCol, value(0, 0));
+  add(harmRow + complexOffset, harmCol + complexOffset, value(1, 1));
+  add(harmRow, harmCol + complexOffset, value(0, 1));
+  add(harmRow + complexOffset, harmCol, value(1, 0));
 }
 
 void Math::setMatrixElement(SparseMatrixRow &mat, Matrix::Index row,
                             Matrix::Index column, Real value) {
-  mat.coeffRef(row, column) = value;
+  if (zeroSkippingEnabled() && value == 0. && mat.coeff(row, column) == 0.)
+    return;
+  if (Real *cached = cachedSparseValue(mat, row, column))
+    *cached = value;
+  else
+    mat.coeffRef(row, column) = value;
 }
 
 void Math::addToMatrixElement(SparseMatrixRow &mat, std::vector<UInt> rows,
@@ -171,7 +243,35 @@ void Math::addToMatrixElement(SparseMatrixRow &mat, std::vector<UInt> rows,
 
 void Math::addToMatrixElement(SparseMatrixRow &mat, Matrix::Index row,
                               Matrix::Index column, Real value) {
-  mat.coeffRef(row, column) = mat.coeff(row, column) + value;
+  if (zeroSkippingEnabled() && value == 0.)
+    return;
+  if (Real *cached = cachedSparseValue(mat, row, column))
+    *cached += value;
+  else
+    mat.coeffRef(row, column) = mat.coeff(row, column) + value;
+}
+
+void Math::addToMatrixElement(SparseMatrixCompRow &mat, Matrix::Index row,
+                              Matrix::Index column, Complex value) {
+  if (zeroSkippingEnabled() && value == Complex(0., 0.))
+    return;
+  mat.coeffRef(row, column) += value;
+}
+
+void Math::prepareSparseMatrixValueCache(SparseMatrixRow &mat) {
+  SparseCache cache;
+  cache.reserve(static_cast<std::size_t>(mat.nonZeros()));
+  for (Eigen::Index row = 0; row < mat.outerSize(); ++row) {
+    for (SparseMatrixRow::InnerIterator it(mat, row); it; ++it) {
+      cache.emplace(sparseKey(it.row(), it.col()),
+                    &it.valueRef() - mat.valuePtr());
+    }
+  }
+  gSparseMatrixValueCaches[&mat] = std::move(cache);
+}
+
+void Math::clearSparseMatrixValueCache(SparseMatrixRow &mat) {
+  gSparseMatrixValueCaches.erase(&mat);
 }
 
 void Math::addToMatrixElement(SparseMatrixRow &mat, std::vector<UInt> rows,
@@ -261,39 +361,49 @@ std::pair<Real, Real> Math::pccPowerFromFilterPowerReference(Real pFilterRef,
 
 Matrix Math::StateSpaceTrapezoidal(Matrix states, Matrix A, Matrix B, Real dt,
                                    Matrix u_new, Matrix u_old) {
-  Matrix::Index n = states.rows();
-  Matrix I = Matrix::Identity(n, n);
-
-  Matrix F1 = I + (dt / 2.) * A;
-  Matrix F2 = I - (dt / 2.) * A;
-  Matrix F2inv = F2.inverse();
-
-  return F2inv * F1 * states + F2inv * (dt / 2.) * B * (u_new + u_old);
+  return StateSpaceTrapezoidalNoCopy(states, A, B, dt, u_new, u_old);
 }
 
 Matrix Math::StateSpaceTrapezoidal(Matrix states, Matrix A, Matrix B, Matrix C,
                                    Real dt, Matrix u_new, Matrix u_old) {
-  Matrix::Index n = states.rows();
-  Matrix I = Matrix::Identity(n, n);
+  return StateSpaceTrapezoidalNoCopy(states, A, B, C, dt, u_new, u_old);
+}
 
-  Matrix F1 = I + (dt / 2.) * A;
-  Matrix F2 = I - (dt / 2.) * A;
-  Matrix F2inv = F2.inverse();
-
-  return F2inv * F1 * states + F2inv * (dt / 2.) * B * (u_new + u_old) +
-         F2inv * dt * C;
+Matrix Math::StateSpaceTrapezoidal(Matrix states, Matrix A, Matrix B, Real dt,
+                                   Matrix u) {
+  return StateSpaceTrapezoidalNoCopy(states, A, B, dt, u);
 }
 
 Matrix Math::StateSpaceTrapezoidal(Matrix states, Matrix A, Matrix B, Matrix C,
                                    Real dt, Matrix u) {
-  Matrix::Index n = states.rows();
-  Matrix I = Matrix::Identity(n, n);
+  return StateSpaceTrapezoidalNoCopy(states, A, B, C, dt, u);
+}
 
-  Matrix F1 = I + (dt / 2.) * A;
-  Matrix F2 = I - (dt / 2.) * A;
-  Matrix F2inv = F2.inverse();
+Matrix Math::StateSpaceTrapezoidal(Matrix states, Matrix A, Matrix input,
+                                   Real dt) {
+  return StateSpaceTrapezoidalNoCopy(states, A, input, dt);
+}
 
-  return F2inv * F1 * states + F2inv * dt * B * u + F2inv * dt * C;
+Matrix Math::StateSpaceTrapezoidalNoCopy(const Matrix &states, const Matrix &A,
+                                         const Matrix &B, Real dt,
+                                         const Matrix &u_new,
+                                         const Matrix &u_old) {
+  return trapezoidalStep(states, A, (0.5 * B * (u_new + u_old)).eval(), dt);
+}
+
+Matrix Math::StateSpaceTrapezoidalNoCopy(const Matrix &states, const Matrix &A,
+                                         const Matrix &B, const Matrix &C,
+                                         Real dt, const Matrix &u_new,
+                                         const Matrix &u_old) {
+  const Matrix input = (0.5 * B * (u_new + u_old) + C).eval();
+  return trapezoidalStep(states, A, input, dt);
+}
+
+Matrix Math::StateSpaceTrapezoidalNoCopy(const Matrix &states, const Matrix &A,
+                                         const Matrix &B, const Matrix &C,
+                                         Real dt, const Matrix &u) {
+  const Matrix input = (B * u + C).eval();
+  return trapezoidalStep(states, A, input, dt);
 }
 
 Real Math::StateSpaceTrapezoidal(Real states, Real A, Real B, Real C, Real dt,
@@ -305,28 +415,15 @@ Real Math::StateSpaceTrapezoidal(Real states, Real A, Real B, Real C, Real dt,
   return F2inv * F1 * states + F2inv * dt * B * u + F2inv * dt * C;
 }
 
-Matrix Math::StateSpaceTrapezoidal(Matrix states, Matrix A, Matrix B, Real dt,
-                                   Matrix u) {
-  Matrix::Index n = states.rows();
-  Matrix I = Matrix::Identity(n, n);
-
-  Matrix F1 = I + (dt / 2.) * A;
-  Matrix F2 = I - (dt / 2.) * A;
-  Matrix F2inv = F2.inverse();
-
-  return F2inv * F1 * states + F2inv * dt * B * u;
+Matrix Math::StateSpaceTrapezoidalNoCopy(const Matrix &states, const Matrix &A,
+                                         const Matrix &B, Real dt,
+                                         const Matrix &u) {
+  return trapezoidalStep(states, A, (B * u).eval(), dt);
 }
 
-Matrix Math::StateSpaceTrapezoidal(Matrix states, Matrix A, Matrix input,
-                                   Real dt) {
-  Matrix::Index n = states.rows();
-  Matrix I = Matrix::Identity(n, n);
-
-  Matrix F1 = I + (dt / 2.) * A;
-  Matrix F2 = I - (dt / 2.) * A;
-  Matrix F2inv = F2.inverse();
-
-  return F2inv * F1 * states + F2inv * dt * input;
+Matrix Math::StateSpaceTrapezoidalNoCopy(const Matrix &states, const Matrix &A,
+                                         const Matrix &input, Real dt) {
+  return trapezoidalStep(states, A, input, dt);
 }
 
 Real Math::StateSpaceTrapezoidal(Real states, Real A, Real B, Real dt, Real u) {
@@ -339,6 +436,20 @@ Real Math::StateSpaceTrapezoidal(Real states, Real A, Real B, Real dt, Real u) {
 
 Matrix Math::StateSpaceEuler(Matrix states, Matrix A, Matrix B, Real dt,
                              Matrix u) {
+  return StateSpaceEulerNoCopy(states, A, B, dt, u);
+}
+
+Matrix Math::StateSpaceEuler(Matrix states, Matrix A, Matrix B, Matrix C,
+                             Real dt, Matrix u) {
+  return StateSpaceEulerNoCopy(states, A, B, C, dt, u);
+}
+
+Matrix Math::StateSpaceEuler(Matrix states, Matrix A, Matrix input, Real dt) {
+  return StateSpaceEulerNoCopy(states, A, input, dt);
+}
+
+Matrix Math::StateSpaceEulerNoCopy(const Matrix &states, const Matrix &A,
+                                   const Matrix &B, Real dt, const Matrix &u) {
   return states + dt * (A * states + B * u);
 }
 
@@ -346,8 +457,9 @@ Real Math::StateSpaceEuler(Real states, Real A, Real B, Real dt, Real u) {
   return states + dt * (A * states + B * u);
 }
 
-Matrix Math::StateSpaceEuler(Matrix states, Matrix A, Matrix B, Matrix C,
-                             Real dt, Matrix u) {
+Matrix Math::StateSpaceEulerNoCopy(const Matrix &states, const Matrix &A,
+                                   const Matrix &B, const Matrix &C, Real dt,
+                                   const Matrix &u) {
   return states + dt * (A * states + B * u + C);
 }
 
@@ -356,7 +468,8 @@ Real Math::StateSpaceEuler(Real states, Real A, Real B, Real C, Real dt,
   return states + dt * (A * states + B * u + C);
 }
 
-Matrix Math::StateSpaceEuler(Matrix states, Matrix A, Matrix input, Real dt) {
+Matrix Math::StateSpaceEulerNoCopy(const Matrix &states, const Matrix &A,
+                                   const Matrix &input, Real dt) {
   return states + dt * (A * states + input);
 }
 

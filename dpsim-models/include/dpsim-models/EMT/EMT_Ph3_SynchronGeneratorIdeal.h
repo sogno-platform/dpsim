@@ -20,6 +20,7 @@ namespace Ph3 {
 class SynchronGeneratorIdeal : public CompositePowerComp<Real>,
                                public SharedFactory<SynchronGeneratorIdeal> {
 private:
+  Bool mUseSubcomponents = true;
   /// Specifies type of ideal source
   CPS::GeneratorType mSourceType;
   /// True after createSubComponents() runs; prevents double-construction.
@@ -31,14 +32,26 @@ private:
 public:
   /// CHECK: Is this actually necessary? It is never read from within the component's code
   const Attribute<MatrixComp>::Ptr mRefVoltage;
+  const Attribute<MatrixComp>::Ptr mRefCurrent;
+  const Attribute<Real>::Ptr mSrcFreq;
 
   /// Defines UID, name, component parameters and logging level
   SynchronGeneratorIdeal(
       String uid, String name, Logger::Level logLevel = Logger::Level::off,
       CPS::GeneratorType sourceType = CPS::GeneratorType::IdealVoltageSource);
+  SynchronGeneratorIdeal(
+      String uid, String name, Bool useSubcomponents,
+      Logger::Level logLevel = Logger::Level::off,
+      CPS::GeneratorType sourceType = CPS::GeneratorType::IdealVoltageSource);
   /// Defines name, component parameters and logging level
   SynchronGeneratorIdeal(String name,
                          Logger::Level logLevel = Logger::Level::off);
+  SynchronGeneratorIdeal(
+      String name, Bool useSubcomponents,
+      Logger::Level logLevel = Logger::Level::off,
+      CPS::GeneratorType sourceType = CPS::GeneratorType::IdealVoltageSource)
+      : SynchronGeneratorIdeal(name, name, useSubcomponents, logLevel,
+                               sourceType) {}
 
   SimPowerComp<Real>::Ptr clone(String name) override;
 
@@ -51,6 +64,8 @@ public:
   // #### MNA section ####
   /// MNA pre step operations
   void mnaParentPreStep(Real time, Int timeStepCount) override;
+  void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
   /// MNA post step operations
   void mnaParentPostStep(Real time, Int timeStepCount,
                          Attribute<Matrix>::Ptr &leftVector) override;

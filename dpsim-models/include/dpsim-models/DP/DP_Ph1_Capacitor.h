@@ -51,6 +51,8 @@ public:
   // #### MNA section ####
   /// Return single-frequency MNA companion conductance.
   Complex getMNAConductance() const;
+  /// Change capacitance and refresh trapezoidal companion coefficients.
+  void updateCapacitance(Real capacitance, Real timeStep);
   /// Initializes internal variables of the component
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override;

@@ -121,6 +121,16 @@ void DP::Ph3::VoltageSource::mnaCompApplyRightSideVectorStamp(
                          (**mIntfVoltage)(2, 0));
 }
 
+void DP::Ph3::VoltageSource::mnaAddCompactRightSideVectorStamp(
+    Matrix &rightVector) {
+  const MatrixComp &voltage = **mIntfVoltage;
+  for (UInt phase = 0; phase < 3; ++phase)
+    Math::addToVectorElement(
+        rightVector,
+        mVirtualNodes[0]->matrixNodeIndex(static_cast<PhaseType>(phase)),
+        voltage(phase, 0));
+}
+
 void DP::Ph3::VoltageSource::updateVoltage(Real time) {
   if (mSrcSig != nullptr) {
     mSrcSig->step(time);
