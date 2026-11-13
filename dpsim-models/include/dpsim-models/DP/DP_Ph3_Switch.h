@@ -106,6 +106,9 @@ public:
   // #### General MNA ####
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override;
+  void mnaCompInitializeHarm(
+      Real omega, Real timeStep,
+      std::vector<Attribute<Matrix>::Ptr> leftVectors) override;
 
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
 

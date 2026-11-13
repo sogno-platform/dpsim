@@ -6,6 +6,7 @@
 #include <vector>
 
 #include <dpsim-models/EMT/EMT_Ph3_TwoTerminalVTypeVariableSSNComp.h>
+#include <dpsim-models/MathUtils.h>
 
 namespace CPS {
 namespace EMT {
@@ -82,6 +83,11 @@ private:
   Real mKpCurrCtrl;
   Real mKiCurrCtrl;
 
+  Matrix mStateDerivativeScratch = Matrix::Zero(mStateSize, 1);
+  Matrix mOutputScratch = Matrix::Zero(mOutputSize, 1);
+  Matrix mStateOffsetScratch = Matrix::Zero(mStateSize, 1);
+  Matrix mOutputOffsetScratch = Matrix::Zero(mOutputSize, 1);
+
   // Logging attributes
   const Attribute<Real>::Ptr mVcD;
   const Attribute<Real>::Ptr mVcQ;
@@ -91,8 +97,8 @@ private:
   const Attribute<Real>::Ptr mQInst;
   const Attribute<Real>::Ptr mOmegaPLL;
 
-  Matrix getParkTransformMatrix(Real theta) const;
-  Matrix getInverseParkTransformMatrix(Real theta) const;
+  MatrixFixedSize<2, 3> getParkTransformMatrix(Real theta) const;
+  MatrixFixedSize<3, 2> getInverseParkTransformMatrix(Real theta) const;
 
   /// \brief Evaluate the nonlinear state derivative x_dot = f(x,u).
   void evaluateStateDerivative(const Matrix &x, const Matrix &u,
@@ -108,7 +114,7 @@ private:
   /// \brief Construct the complete local affine state-space model.
   void buildStateSpaceModel(const Matrix &x, const Matrix &u, Matrix &A,
                             Matrix &B, Matrix &C, Matrix &D, Matrix &E,
-                            Matrix &F) const;
+                            Matrix &F);
 
 protected:
   Bool updateComponentParameters() override final;

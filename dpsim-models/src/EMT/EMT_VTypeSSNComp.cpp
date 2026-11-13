@@ -8,8 +8,15 @@ using namespace CPS;
 EMT::VTypeSSNComp::VTypeSSNComp(String uid, String name, Int inputSize,
                                 Int outputSize, Logger::Level logLevel)
     : SSNComp(uid, name, inputSize, outputSize, logLevel) {
-  **mIntfVoltage = Matrix::Zero(inputSize, 1);
-  **mIntfCurrent = Matrix::Zero(outputSize, 1);
+  *mIntfVoltageValue = Matrix::Zero(inputSize, 1);
+  *mIntfCurrentValue = Matrix::Zero(outputSize, 1);
+
+  // Some nonlinear SSN components assemble their initial history while
+  // initializing from the power-flow operating point, before the MNA solver
+  // calls mnaCompInitialize(). Bind the stable attribute storage here so
+  // stateValue()/inputValue() are valid during that initialization path too.
+  mXValue = &mX->get();
+  mInputValue = &mIntfVoltage->get();
 }
 
 Attribute<Matrix>::Ptr EMT::VTypeSSNComp::inputAttribute() const {
@@ -29,10 +36,10 @@ void EMT::VTypeSSNComp::initializeFromNodesAndTerminals(Real frequency) {
   MatrixComp xInit = calculateSteadyStateStateFromInput(uInit, frequency);
   MatrixComp yInit = calculateSteadyStateOutputFromInput(xInit, uInit);
 
-  **mX = xInit.real();
-  **mIntfVoltage = uInit.real();
-  **mIntfCurrent = yInit.real();
-  updateLogAttributes(**mIntfVoltage);
+  mX->get() = xInit.real();
+  *mIntfVoltageValue = uInit.real();
+  *mIntfCurrentValue = yInit.real();
+  updateLogAttributes(*mIntfVoltageValue);
 
   SPDLOG_LOGGER_INFO(
       mSLog,
@@ -41,19 +48,20 @@ void EMT::VTypeSSNComp::initializeFromNodesAndTerminals(Real frequency) {
       "\nOutput y: {:s}"
       "\nState x: {:s}"
       "\n--- Initialization from nodes and terminals finished ---",
-      Logger::matrixToString(**mIntfVoltage),
-      Logger::matrixToString(**mIntfCurrent), Logger::matrixToString(**mX));
+      Logger::matrixToString(*mIntfVoltageValue),
+      Logger::matrixToString(*mIntfCurrentValue),
+      Logger::matrixToString(mX->get()));
 }
 
 void EMT::VTypeSSNComp::mnaCompUpdateCurrent(const Matrix &) {
-  **mIntfCurrent = mW * (**mIntfVoltage) + mYHist;
+  *mIntfCurrentValue = mW * (*mIntfVoltageValue) + mYHist;
 }
 
 void EMT::VTypeSSNComp::mnaCompPostStep(Real, Int,
                                         Attribute<Matrix>::Ptr &leftVector) {
-  Matrix uOld = **mIntfVoltage;
+  mPreviousInput = *mIntfVoltageValue;
   mnaCompUpdateVoltage(**leftVector);
   mnaCompUpdateCurrent(**leftVector);
-  updateState(uOld, **mIntfVoltage);
-  updateLogAttributes(**mIntfVoltage);
+  updateState(mPreviousInput, *mIntfVoltageValue);
+  updateLogAttributes(*mIntfVoltageValue);
 }

@@ -22,6 +22,13 @@ class RxLine : public CompositePowerComp<Complex>,
                public Base::Ph1::PiLine,
                public SharedFactory<RxLine> {
 protected:
+  Bool mUseSubcomponents = true;
+  MatrixComp mDirectInductorCond;
+  MatrixComp mDirectPrevCurrentFactor;
+  MatrixComp mDirectCurrent;
+  MatrixComp mDirectVoltage;
+  MatrixComp mDirectHistory;
+  MatrixComp mDirectShuntCurrent;
   /// Inductance submodel
   std::shared_ptr<Inductor> mSubInductor;
   /// Resistor submodel
@@ -33,9 +40,14 @@ protected:
 public:
   /// Defines UID, name, logging level
   RxLine(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+  RxLine(String uid, String name, Bool useSubcomponents,
+         Logger::Level logLevel = Logger::Level::off);
   /// Defines name, component parameters and logging level
   RxLine(String name, Logger::Level logLevel = Logger::Level::off)
       : RxLine(name, name, logLevel) {}
+  RxLine(String name, Bool useSubcomponents,
+         Logger::Level logLevel = Logger::Level::off)
+      : RxLine(name, name, useSubcomponents, logLevel) {}
 
   SimPowerComp<Complex>::Ptr clone(String name) override;
 
@@ -44,6 +56,10 @@ public:
   void createSubComponents() override;
   /// Derives values from power flow data and pushes them to subcomponents
   void initializeParentFromNodesAndTerminals(Real frequency) override;
+  void mnaParentInitialize(Real omega, Real timeStep,
+                           Attribute<Matrix>::Ptr leftVector) override;
+  void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
 
   // #### MNA section ####
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;

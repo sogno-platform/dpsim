@@ -144,7 +144,7 @@ void EMT::Ph3::ControlledCurrentSource::mnaCompPostStep(
 void EMT::Ph3::ControlledCurrentSource::mnaCompUpdateVoltage(
     const Matrix &leftVector) {
   // v1 - v0
-  **mIntfVoltage = Matrix::Zero(3, 1);
+  (**mIntfVoltage).setZero();
   if (terminalNotGrounded(1)) {
     (**mIntfVoltage)(0, 0) =
         Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));

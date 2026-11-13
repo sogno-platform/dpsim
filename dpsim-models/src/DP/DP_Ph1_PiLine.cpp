@@ -4,12 +4,18 @@
  */
 
 #include <dpsim-models/DP/DP_Ph1_PiLine.h>
+#include <dpsim-models/MNAStampUtils.h>
 
 using namespace CPS;
 
 DP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
+    : PiLine(uid, name, true, logLevel) {}
+
+DP::Ph1::PiLine::PiLine(String uid, String name, Bool useSubcomponents,
+                        Logger::Level logLevel)
     : Base::Ph1::PiLine(mAttributes),
-      CompositePowerComp<Complex>(uid, name, true, true, logLevel) {
+      CompositePowerComp<Complex>(uid, name, true, true, logLevel),
+      mUseSubcomponents(useSubcomponents) {
   setVirtualNodeNumber(1);
   setTerminalNumber(2);
 
@@ -27,6 +33,8 @@ SimPowerComp<Complex>::Ptr DP::Ph1::PiLine::clone(String name) {
 }
 
 void DP::Ph1::PiLine::createSubComponents() {
+  if (!mUseSubcomponents)
+    return;
   if (mSubCompCreated)
     return;
   mSubCompCreated = true;
@@ -93,6 +101,12 @@ void DP::Ph1::PiLine::createSubComponents() {
 }
 
 void DP::Ph1::PiLine::initializeParentFromNodesAndTerminals(Real frequency) {
+  if (**mParallelCond <= 0.)
+    **mParallelCond = 1e-6;
+  mDirectSeriesConductance = (**mSeriesRes != 0.) ? 1. / **mSeriesRes : 0.;
+  mDirectShuntConductance = **mParallelCond / 2.;
+  mDirectShuntCapacitance = std::max(0., **mParallelCap) / 2.;
+
   // Static calculation
   Real omega = 2. * PI * frequency;
   Complex impedance = {**mSeriesRes, omega * **mSeriesInd};
@@ -100,8 +114,9 @@ void DP::Ph1::PiLine::initializeParentFromNodesAndTerminals(Real frequency) {
   (**mIntfCurrent)(0, 0) = (**mIntfVoltage)(0, 0) / impedance;
 
   // Initialization of virtual node
-  mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0) +
-                                      (**mIntfCurrent)(0, 0) * **mSeriesRes);
+  if (mUseSubcomponents)
+    mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0) +
+                                        (**mIntfCurrent)(0, 0) * **mSeriesRes);
 
   SPDLOG_LOGGER_INFO(
       mSLog,
@@ -116,7 +131,109 @@ void DP::Ph1::PiLine::initializeParentFromNodesAndTerminals(Real frequency) {
       Logger::phasorToString((**mIntfCurrent)(0, 0)),
       Logger::phasorToString(initialSingleVoltage(0)),
       Logger::phasorToString(initialSingleVoltage(1)),
-      Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()));
+      Logger::phasorToString(mUseSubcomponents
+                                 ? mVirtualNodes[0]->initialSingleVoltage()
+                                 : Complex(0., 0.)));
+}
+
+void DP::Ph1::PiLine::mnaParentInitialize(Real omega, Real timeStep,
+                                          Attribute<Matrix>::Ptr leftVector) {
+  if (mUseSubcomponents)
+    return;
+  mDirectSeriesCond = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectInductorCond = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectSeriesPrevCurrentFactor = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectSeriesCurrent = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectSeriesVoltage = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectSeriesHistory = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectCapCond = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectCapPrevVoltageFactor = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectCapCurrent0 = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectCapCurrent1 = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectCapVoltage0 = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectCapVoltage1 = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectCapHistory0 = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectCapHistory1 = MatrixComp::Zero(mNumFreqs, 1);
+
+  for (UInt freq = 0; freq < mNumFreqs; ++freq) {
+    const Real harmonicOmega = 2. * PI * mFrequencies(freq, 0);
+    const Real b = timeStep * harmonicOmega / 2.;
+    const Real a = timeStep / (2. * **mSeriesInd);
+    mDirectInductorCond(freq, 0) =
+        Complex(a / (1. + b * b), -a * b / (1. + b * b));
+    mDirectSeriesCond(freq, 0) = mDirectInductorCond(freq, 0);
+    mDirectSeriesPrevCurrentFactor(freq, 0) =
+        Complex((1. - b * b) / (1. + b * b), -2. * b / (1. + b * b));
+    const Real capG = 2. * mDirectShuntCapacitance / timeStep;
+    const Real capB = harmonicOmega * mDirectShuntCapacitance;
+    mDirectCapCond(freq, 0) = Complex(capG, capB);
+    mDirectCapPrevVoltageFactor(freq, 0) = Complex(capG, -capB);
+    if (freq == 0) {
+      const Complex voltage1 = initialSingleVoltage(1);
+      const Complex seriesCurrent = (**mIntfCurrent)(0, 0);
+      mDirectSeriesCurrent(freq, 0) = seriesCurrent;
+      mDirectSeriesVoltage(freq, 0) =
+          (**mIntfVoltage)(0, 0) - **mSeriesRes * seriesCurrent;
+      mDirectCapCurrent0(freq, 0) =
+          Complex(0., harmonicOmega * mDirectShuntCapacitance) *
+          initialSingleVoltage(0);
+      mDirectCapCurrent1(freq, 0) =
+          Complex(0., harmonicOmega * mDirectShuntCapacitance) * voltage1;
+      mDirectCapVoltage0(freq, 0) = initialSingleVoltage(0);
+      mDirectCapVoltage1(freq, 0) = voltage1;
+    }
+  }
+}
+
+void DP::Ph1::PiLine::mnaParentApplySystemMatrixStamp(
+    SparseMatrixRow &systemMatrix) {
+  if (mUseSubcomponents)
+    return;
+  const UInt terminal0 = matrixNodeIndex(0);
+  const UInt terminal1 = matrixNodeIndex(1);
+  for (UInt freq = 0; freq < mNumFreqs; ++freq) {
+    MNAStampUtils::stampAdmittance(
+        Complex(mDirectSeriesConductance, 0.), systemMatrix, terminal0,
+        virtualNode(0)->matrixNodeIndex(), terminalNotGrounded(0), true, mSLog,
+        mNumFreqs, freq);
+    MNAStampUtils::stampAdmittance(mDirectSeriesCond(freq, 0), systemMatrix,
+                                   virtualNode(0)->matrixNodeIndex(), terminal1,
+                                   true, terminalNotGrounded(1), mSLog,
+                                   mNumFreqs, freq);
+    MNAStampUtils::stampAdmittance(
+        Complex(mDirectShuntConductance, 0.) + mDirectCapCond(freq, 0),
+        systemMatrix, terminal0, 0, terminalNotGrounded(0), false, mSLog,
+        mNumFreqs, freq);
+    MNAStampUtils::stampAdmittance(
+        Complex(mDirectShuntConductance, 0.) + mDirectCapCond(freq, 0),
+        systemMatrix, terminal1, 0, terminalNotGrounded(1), false, mSLog,
+        mNumFreqs, freq);
+  }
+}
+
+void DP::Ph1::PiLine::mnaParentApplyRightSideVectorStamp(Matrix &rightVector) {
+  if (mUseSubcomponents)
+    return;
+  const UInt terminal0 = matrixNodeIndex(0);
+  const UInt terminal1 = matrixNodeIndex(1);
+  for (UInt freq = 0; freq < mNumFreqs; ++freq) {
+    mDirectSeriesHistory(freq, 0) =
+        mDirectInductorCond(freq, 0) * mDirectSeriesVoltage(freq, 0) +
+        mDirectSeriesPrevCurrentFactor(freq, 0) * mDirectSeriesCurrent(freq, 0);
+    mDirectCapHistory0(freq, 0) =
+        -mDirectCapCurrent0(freq, 0) -
+        mDirectCapPrevVoltageFactor(freq, 0) * mDirectCapVoltage0(freq, 0);
+    mDirectCapHistory1(freq, 0) =
+        -mDirectCapCurrent1(freq, 0) -
+        mDirectCapPrevVoltageFactor(freq, 0) * mDirectCapVoltage1(freq, 0);
+    Math::setVectorElement(rightVector, virtualNode(0)->matrixNodeIndex(),
+                           mDirectSeriesHistory(freq, 0), mNumFreqs, freq);
+    if (terminalNotGrounded(1))
+      Math::setVectorElement(rightVector, terminal1,
+                             -mDirectSeriesHistory(freq, 0) -
+                                 mDirectCapHistory1(freq, 0),
+                             mNumFreqs, freq);
+  }
 }
 
 void DP::Ph1::PiLine::mnaParentAddPreStepDependencies(
@@ -147,29 +264,98 @@ void DP::Ph1::PiLine::mnaParentAddPostStepDependencies(
 
 void DP::Ph1::PiLine::mnaParentPostStep(Real time, Int timeStepCount,
                                         Attribute<Matrix>::Ptr &leftVector) {
-  // post-step of component itself
-  this->mnaUpdateVoltage(**leftVector);
-  this->mnaUpdateCurrent(**leftVector);
+  if (mUseSubcomponents) {
+    this->mnaUpdateVoltage(**leftVector);
+    this->mnaUpdateCurrent(**leftVector);
+    return;
+  }
+
+  const Matrix &solution = **leftVector;
+  const Bool terminal0Connected = terminalNotGrounded(0);
+  const Bool terminal1Connected = terminalNotGrounded(1);
+  for (UInt freq = 0; freq < mNumFreqs; ++freq) {
+    const Complex voltage0 =
+        terminal0Connected ? Math::complexFromVectorElement(
+                                 solution, matrixNodeIndex(0), mNumFreqs, freq)
+                           : Complex(0., 0.);
+    const Complex voltage1 =
+        terminal1Connected ? Math::complexFromVectorElement(
+                                 solution, matrixNodeIndex(1), mNumFreqs, freq)
+                           : Complex(0., 0.);
+    const Complex internalVoltage = Math::complexFromVectorElement(
+        solution, virtualNode(0)->matrixNodeIndex(), mNumFreqs, freq);
+
+    (**mIntfVoltage)(0, freq) = voltage1 - voltage0;
+    mDirectSeriesVoltage(freq, 0) = voltage1 - internalVoltage;
+    mDirectSeriesCurrent(freq, 0) =
+        mDirectSeriesCond(freq, 0) * mDirectSeriesVoltage(freq, 0) +
+        mDirectSeriesHistory(freq, 0);
+    (**mIntfCurrent)(0, freq) = mDirectSeriesCurrent(freq, 0);
+
+    mDirectCapVoltage0(freq, 0) = voltage0;
+    mDirectCapVoltage1(freq, 0) = voltage1;
+    mDirectCapCurrent0(freq, 0) =
+        mDirectCapCond(freq, 0) * voltage0 + mDirectCapHistory0(freq, 0);
+    mDirectCapCurrent1(freq, 0) =
+        mDirectCapCond(freq, 0) * voltage1 + mDirectCapHistory1(freq, 0);
+  }
 }
 
 void DP::Ph1::PiLine::mnaCompUpdateVoltage(const Matrix &leftVector) {
-  (**mIntfVoltage)(0, 0) = 0;
-  if (terminalNotGrounded(1))
-    (**mIntfVoltage)(0, 0) =
-        Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
-  if (terminalNotGrounded(0))
-    (**mIntfVoltage)(0, 0) =
-        (**mIntfVoltage)(0, 0) -
-        Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+  for (UInt freq = 0; freq < mNumFreqs; ++freq) {
+    (**mIntfVoltage)(0, freq) = 0.;
+    if (terminalNotGrounded(1))
+      (**mIntfVoltage)(0, freq) = Math::complexFromVectorElement(
+          leftVector, matrixNodeIndex(1), mNumFreqs, freq);
+    if (terminalNotGrounded(0))
+      (**mIntfVoltage)(0, freq) -= Math::complexFromVectorElement(
+          leftVector, matrixNodeIndex(0), mNumFreqs, freq);
+  }
 }
 
 void DP::Ph1::PiLine::mnaCompUpdateCurrent(const Matrix &leftVector) {
-  (**mIntfCurrent)(0, 0) = mSubSeriesInductor->intfCurrent()(0, 0);
+  if (mUseSubcomponents) {
+    (**mIntfCurrent)(0, 0) = mSubSeriesInductor->intfCurrent()(0, 0);
+    return;
+  }
+  for (UInt freq = 0; freq < mNumFreqs; ++freq) {
+    const Complex internalVoltage = Math::complexFromVectorElement(
+        leftVector, virtualNode(0)->matrixNodeIndex(), mNumFreqs, freq);
+    const Complex terminalVoltage1 =
+        terminalNotGrounded(1)
+            ? Math::complexFromVectorElement(leftVector, matrixNodeIndex(1),
+                                             mNumFreqs, freq)
+            : Complex(0., 0.);
+    mDirectSeriesVoltage(freq, 0) = terminalVoltage1 - internalVoltage;
+    mDirectSeriesCurrent(freq, 0) =
+        mDirectSeriesCond(freq, 0) * mDirectSeriesVoltage(freq, 0) +
+        mDirectSeriesHistory(freq, 0);
+    (**mIntfCurrent)(0, freq) = mDirectSeriesCurrent(freq, 0);
+    const Complex voltage0 =
+        terminalNotGrounded(0)
+            ? Math::complexFromVectorElement(leftVector, matrixNodeIndex(0),
+                                             mNumFreqs, freq)
+            : Complex(0., 0.);
+    const Complex voltageTerminal1 =
+        terminalNotGrounded(1)
+            ? Math::complexFromVectorElement(leftVector, matrixNodeIndex(1),
+                                             mNumFreqs, freq)
+            : Complex(0., 0.);
+    mDirectCapVoltage0(freq, 0) = voltage0;
+    mDirectCapVoltage1(freq, 0) = voltageTerminal1;
+    mDirectCapCurrent0(freq, 0) =
+        mDirectCapCond(freq, 0) * voltage0 + mDirectCapHistory0(freq, 0);
+    mDirectCapCurrent1(freq, 0) = mDirectCapCond(freq, 0) * voltageTerminal1 +
+                                  mDirectCapHistory1(freq, 0);
+  }
 }
 
 // #### Tear Methods ####
 MNAInterface::List DP::Ph1::PiLine::mnaTearGroundComponents() {
   MNAInterface::List gndComponents;
+
+  if (!mUseSubcomponents)
+    return gndComponents;
 
   gndComponents.push_back(mSubParallelResistor0);
   gndComponents.push_back(mSubParallelResistor1);
@@ -183,6 +369,8 @@ MNAInterface::List DP::Ph1::PiLine::mnaTearGroundComponents() {
 }
 
 void DP::Ph1::PiLine::mnaTearInitialize(Real omega, Real timeStep) {
+  if (!mUseSubcomponents)
+    return;
   mSubSeriesResistor->mnaTearSetIdx(mTearIdx);
   mSubSeriesResistor->mnaTearInitialize(omega, timeStep);
   mSubSeriesInductor->mnaTearSetIdx(mTearIdx);
@@ -190,15 +378,25 @@ void DP::Ph1::PiLine::mnaTearInitialize(Real omega, Real timeStep) {
 }
 
 void DP::Ph1::PiLine::mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) {
+  if (!mUseSubcomponents)
+    return;
   mSubSeriesResistor->mnaTearApplyMatrixStamp(tearMatrix);
   mSubSeriesInductor->mnaTearApplyMatrixStamp(tearMatrix);
 }
 
 void DP::Ph1::PiLine::mnaTearApplyVoltageStamp(Matrix &voltageVector) {
+  if (!mUseSubcomponents)
+    return;
   mSubSeriesInductor->mnaTearApplyVoltageStamp(voltageVector);
 }
 
 void DP::Ph1::PiLine::mnaTearPostStep(Complex voltage, Complex current) {
+  if (!mUseSubcomponents) {
+    mDirectSeriesVoltage(0, 0) = voltage - current * **mSeriesRes;
+    mDirectSeriesCurrent(0, 0) = current;
+    (**mIntfCurrent)(0, 0) = current;
+    return;
+  }
   mSubSeriesInductor->mnaTearPostStep(voltage - current * **mSeriesRes,
                                       current);
   (**mIntfCurrent)(0, 0) = mSubSeriesInductor->intfCurrent()(0, 0);

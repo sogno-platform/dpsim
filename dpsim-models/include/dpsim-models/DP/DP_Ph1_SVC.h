@@ -13,6 +13,7 @@
 #include <dpsim-models/DP/DP_Ph1_Capacitor.h>
 #include <dpsim-models/DP/DP_Ph1_Inductor.h>
 #include <dpsim-models/DP/DP_Ph1_Switch.h>
+#include <dpsim-models/MNAStampUtils.h>
 #include <dpsim-models/Solver/MNAVariableCompInterface.h>
 
 namespace CPS {
@@ -31,6 +32,7 @@ class SVC : public CompositePowerComp<Complex>,
             public MNAVariableCompInterface,
             public SharedFactory<SVC> {
 protected:
+  Bool mUseSubcomponents = true;
   /// Internal inductor
   std::shared_ptr<DP::Ph1::Inductor> mSubInductor;
   std::shared_ptr<DP::Ph1::Switch> mSubInductorSwitch;
@@ -61,6 +63,22 @@ protected:
   Real mProtCount2 = 0;
   Real mProtCount3 = 0;
   Bool mDisconnect = false;
+  Bool mDirectInductorClosed = false;
+  Bool mDirectCapacitorClosed = false;
+  Real mDirectInductance = 0.;
+  Real mDirectCapacitance = 0.;
+  Real mDirectTimeStep = 0.;
+  MatrixComp mDirectInductorAdmittance;
+  MatrixComp mDirectInductorPrevCurrentFactor;
+  MatrixComp mDirectInductorCurrent;
+  MatrixComp mDirectInductorVoltage;
+  MatrixComp mDirectInductorHistory;
+  MatrixComp mDirectCapacitorAdmittance;
+  MatrixComp mDirectCapacitorPrevVoltageFactor;
+  MatrixComp mDirectCapacitorCurrent;
+  MatrixComp mDirectCapacitorVoltage;
+  MatrixComp mDirectCapacitorHistory;
+  void updateDirectCompanions();
 
 public:
   const Attribute<Real>::Ptr mVpcc;
@@ -68,6 +86,11 @@ public:
 
   /// Defines UID, name and log level
   SVC(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+  SVC(String uid, String name, Bool useSubcomponents,
+      Logger::Level logLevel = Logger::Level::off);
+  SVC(String name, Bool useSubcomponents,
+      Logger::Level logLevel = Logger::Level::off)
+      : SVC(name, name, useSubcomponents, logLevel) {}
   /// Defines name and log level
   SVC(String name, Logger::Level logLevel = Logger::Level::off)
       : SVC(name, name, logLevel) {}
@@ -77,6 +100,10 @@ public:
   void createSubComponents() override;
   /// Initializes states from power flow data (parent-specific part).
   void initializeParentFromNodesAndTerminals(Real frequency) override;
+  void mnaParentInitialize(Real omega, Real timeStep,
+                           Attribute<Matrix>::Ptr leftVector) override;
+  void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
 
   // #### MNA section ####
   /// Update interface voltage from MNA system results

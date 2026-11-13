@@ -30,6 +30,7 @@ protected:
   size_t mRowNumber;
   size_t mCurrentRow;
   size_t mCurrentAttribute;
+  size_t mRowsWritten;
 
   std::vector<std::vector<Real>> mAttributeData;
 

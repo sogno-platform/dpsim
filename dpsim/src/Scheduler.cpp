@@ -8,6 +8,9 @@
 
 #include <dpsim/Scheduler.h>
 
+#include <algorithm>
+
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <unordered_map>
@@ -21,23 +24,38 @@ CPS::AttributeBase::Ptr Scheduler::external;
 void Scheduler::initMeasurements(const Task::List &tasks) {
   // Fill map here already since it's not protected by a mutex
   for (auto task : tasks) {
-    mMeasurements[task.get()] = std::vector<TaskTime>();
+    mMeasurements[task.get()] = TaskMeasurement{};
   }
 }
 
 void Scheduler::updateMeasurement(Task *ptr, TaskTime time) {
-  mMeasurements[ptr].push_back(time);
+  auto &measurement = mMeasurements[ptr];
+  if (measurement.count == 0) {
+    measurement.minimum = time;
+    measurement.maximum = time;
+  } else {
+    measurement.minimum = std::min(measurement.minimum, time);
+    measurement.maximum = std::max(measurement.maximum, time);
+  }
+  measurement.total += time;
+  ++measurement.count;
 }
 
 void Scheduler::writeMeasurements(String filename) {
+  const auto parentPath = std::filesystem::path(filename).parent_path();
+  if (!parentPath.empty())
+    std::filesystem::create_directories(parentPath);
   std::ofstream os(filename);
-  std::unordered_map<String, TaskTime> averages;
+  os << "task,avg_ns,min_ns,max_ns,total_ns,calls\n";
   for (auto &pair : mMeasurements) {
-    averages[pair.first->toString()] = getAveragedMeasurement(pair.first);
-  }
-  // TODO think of nicer output format
-  for (auto pair : averages) {
-    os << pair.first << "," << pair.second.count() << std::endl;
+    const auto &measurement = pair.second;
+    const TaskTime average = getAveragedMeasurement(pair.first);
+    // Keep the average in column two for readMeasurements(); also record its
+    // range and sample count without retaining every per-step sample.
+    os << pair.first->toString() << "," << average.count() << ","
+       << measurement.minimum.count() << "," << measurement.maximum.count()
+       << "," << measurement.total.count() << "," << measurement.count
+       << std::endl;
   }
   os.close();
 }
@@ -52,6 +70,8 @@ void Scheduler::readMeasurements(
   while (fs.good()) {
     std::string line;
     std::getline(fs, line);
+    if (line.rfind("task,", 0) == 0)
+      continue;
     int idx = static_cast<UInt>(line.find(','));
     if (idx == -1) {
       if (line.empty())
@@ -63,16 +83,10 @@ void Scheduler::readMeasurements(
 }
 
 Scheduler::TaskTime Scheduler::getAveragedMeasurement(CPS::Task *task) {
-  TaskTime avg(0), tot(0);
-
-  for (TaskTime time : mMeasurements[task]) {
-    tot += time;
-  }
-
-  if (!mMeasurements[task].empty())
-    avg = tot / mMeasurements[task].size();
-
-  return avg;
+  const auto &measurement = mMeasurements[task];
+  if (measurement.count == 0)
+    return TaskTime::zero();
+  return measurement.total / measurement.count;
 }
 
 void Scheduler::resolveDeps(Task::List &tasks, Edges &inEdges,

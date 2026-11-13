@@ -38,6 +38,21 @@ Complex DP::Ph1::Capacitor::getMNAConductance() const {
   return mEquivCond(0, 0);
 }
 
+void DP::Ph1::Capacitor::updateCapacitance(Real capacitance, Real timeStep) {
+  setParameters(capacitance);
+  const Real equivCondReal = 2. * capacitance / timeStep;
+  const Real prevVoltCoeffReal = equivCondReal;
+  for (UInt freq = 0; freq < mNumFreqs; ++freq) {
+    const Real harmonicOmega = 2. * PI * mFrequencies(freq, 0);
+    mEquivCond(freq, 0) = Complex(equivCondReal, harmonicOmega * capacitance);
+    mPrevVoltCoeff(freq, 0) =
+        Complex(prevVoltCoeffReal, -harmonicOmega * capacitance);
+    mEquivCurrent(freq, 0) =
+        -(**mIntfCurrent)(0, freq) -
+        mPrevVoltCoeff(freq, 0) * (**mIntfVoltage)(0, freq);
+  }
+}
+
 void DP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 
   Real omega = 2 * PI * frequency;

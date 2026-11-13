@@ -71,10 +71,12 @@ void EMT::Ph1::VoltageSourceNorton::mnaCompApplyRightSideVectorStamp(
 
 void EMT::Ph1::VoltageSourceNorton::updateState(Real time) {
   // Check if set source was called
-  if (Math::abs(**mVoltageRef) > 0)
-    (**mIntfVoltage)(0, 0) =
-        Math::abs(**mVoltageRef) *
-        cos(2. * PI * **mSrcFreq * time + Math::phase(**mVoltageRef));
+  const Complex voltageRef = **mVoltageRef;
+  const Real magnitude = Math::abs(voltageRef);
+  if (magnitude > 0) {
+    const Real angle = 2. * PI * **mSrcFreq * time + Math::phase(voltageRef);
+    (**mIntfVoltage)(0, 0) = magnitude * cos(angle);
+  }
 
   mEquivCurrent = (**mIntfVoltage)(0, 0) / **mResistance;
 }

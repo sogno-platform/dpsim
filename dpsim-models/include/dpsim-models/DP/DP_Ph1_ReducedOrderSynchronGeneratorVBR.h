@@ -60,6 +60,7 @@ protected:
 public:
   /// Mark that parameter changes so that system matrix is updated
   Bool hasParameterChanged() override { return true; };
+  Bool hasContinuouslyChangingSystemMatrix() const override { return true; };
 };
 } // namespace Ph1
 } // namespace DP

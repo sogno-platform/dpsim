@@ -31,6 +31,8 @@ createGenDP(const String &SGModel, const String &name, Logger::Level logLevel) {
     genDP = DP::Ph1::SynchronGenerator3OrderVBR::make(name, logLevel);
   else if (SGModel == "4")
     genDP = DP::Ph1::SynchronGenerator4OrderVBR::make(name, logLevel);
+  else if (SGModel == "5")
+    genDP = DP::Ph1::SynchronGenerator5OrderVBR::make(name, logLevel);
   else if (SGModel == "6a")
     genDP = DP::Ph1::SynchronGenerator6aOrderVBR::make(name, logLevel);
   else if (SGModel == "6b")
@@ -49,6 +51,8 @@ createGenEMT(const String &SGModel, const String &name,
     genEMT = EMT::Ph3::SynchronGenerator3OrderVBR::make(name, logLevel);
   else if (SGModel == "4")
     genEMT = EMT::Ph3::SynchronGenerator4OrderVBR::make(name, logLevel);
+  else if (SGModel == "5")
+    genEMT = EMT::Ph3::SynchronGenerator5OrderVBR::make(name, logLevel);
   else if (SGModel == "6a")
     genEMT = EMT::Ph3::SynchronGenerator6aOrderVBR::make(name, logLevel);
   else if (SGModel == "6b")

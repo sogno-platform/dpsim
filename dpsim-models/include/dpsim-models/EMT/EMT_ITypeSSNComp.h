@@ -20,8 +20,13 @@ namespace EMT {
 /// - post-step state update.
 class ITypeSSNComp : public SSNComp {
 protected:
+  /// Cached Norton admittance W^-1, where W is fixed after discretization.
+  Matrix mWInverse;
+
   ITypeSSNComp(String uid, String name, Int inputSize, Int outputSize,
                Logger::Level logLevel = Logger::Level::off);
+
+  void recomputeDiscreteModel() override;
 
   Attribute<Matrix>::Ptr inputAttribute() const override final;
   Attribute<Matrix>::Ptr outputAttribute() const override final;

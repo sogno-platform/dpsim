@@ -21,6 +21,8 @@ namespace Ph1 {
 class PQLoadCS : public CompositePowerComp<Complex>,
                  public SharedFactory<PQLoadCS> {
 protected:
+  Bool mUseSubcomponents = true;
+  Complex mDirectCurrentRef = 0.;
   /// Internal current source
   std::shared_ptr<DP::Ph1::CurrentSource> mSubCurrentSource;
   /// True after createSubComponents() runs; prevents double-construction.
@@ -35,8 +37,13 @@ public:
   /// Defines UID, name and logging level
   PQLoadCS(String uid, String name,
            Logger::Level logLevel = Logger::Level::off);
+  PQLoadCS(String uid, String name, Bool useSubcomponents,
+           Logger::Level logLevel = Logger::Level::off);
   /// Defines UID, name and logging level
   PQLoadCS(String name, Logger::Level logLevel = Logger::Level::off);
+  PQLoadCS(String name, Bool useSubcomponents,
+           Logger::Level logLevel = Logger::Level::off)
+      : PQLoadCS(name, name, useSubcomponents, logLevel) {}
   /// Defines name, component parameters and logging level
   PQLoadCS(String name, Real activePower, Real reactivePower, Real volt,
            Logger::Level logLevel = Logger::Level::off);
@@ -52,6 +59,10 @@ public:
   void createSubComponents() override;
   /// Initializes component from power flow data
   void initializeParentFromNodesAndTerminals(Real frequency) override;
+  void mnaParentInitialize(Real omega, Real timeStep,
+                           Attribute<Matrix>::Ptr leftVector) override;
+  void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
 
   // #### MNA section ####
   /// MNA pre and post step operations

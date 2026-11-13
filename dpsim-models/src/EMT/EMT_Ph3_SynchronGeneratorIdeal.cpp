@@ -13,10 +13,18 @@ using namespace CPS;
 EMT::Ph3::SynchronGeneratorIdeal::SynchronGeneratorIdeal(
     String uid, String name, Logger::Level logLevel,
     CPS::GeneratorType sourceType)
+    : SynchronGeneratorIdeal(uid, name, true, logLevel, sourceType) {}
+
+EMT::Ph3::SynchronGeneratorIdeal::SynchronGeneratorIdeal(
+    String uid, String name, Bool useSubcomponents, Logger::Level logLevel,
+    CPS::GeneratorType sourceType)
     : CompositePowerComp<Real>(uid, name, true, true, logLevel),
-      mRefVoltage(mAttributes->createDynamic<MatrixComp>("V_ref")) {
+      mRefVoltage(mAttributes->createDynamic<MatrixComp>("V_ref")),
+      mRefCurrent(mAttributes->createDynamic<MatrixComp>("I_ref")),
+      mSrcFreq(mAttributes->createDynamic<Real>("f_src")) {
   mPhaseType = PhaseType::ABC;
   mSourceType = sourceType;
+  mUseSubcomponents = useSubcomponents;
 
   if (mSourceType == CPS::GeneratorType::IdealVoltageSource)
     setVirtualNodeNumber(1);
@@ -33,13 +41,17 @@ EMT::Ph3::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String name,
     : SynchronGeneratorIdeal(name, name, logLevel) {}
 
 SimPowerComp<Real>::Ptr EMT::Ph3::SynchronGeneratorIdeal::clone(String name) {
-  return SynchronGeneratorIdeal::make(name, mLogLevel);
+  return SynchronGeneratorIdeal::make(name, mUseSubcomponents, mLogLevel,
+                                      mSourceType);
 }
 
 void EMT::Ph3::SynchronGeneratorIdeal::createSubComponents() {
   if (mSubCompCreated)
     return;
   mSubCompCreated = true;
+
+  if (!mUseSubcomponents)
+    return;
 
   if (mSourceType == CPS::GeneratorType::IdealVoltageSource) {
     mSubVoltageSource =
@@ -66,10 +78,28 @@ void EMT::Ph3::SynchronGeneratorIdeal::createSubComponents() {
   if (mSourceType == CPS::GeneratorType::IdealVoltageSource)
     mRefVoltage->setReference(
         mSubComponents[0]->attributeTyped<MatrixComp>("V_ref"));
+  if (mSourceType == CPS::GeneratorType::IdealCurrentSource)
+    mRefCurrent->setReference(
+        mSubComponents[0]->attributeTyped<MatrixComp>("I_ref"));
+  mSrcFreq->setReference(mSubComponents[0]->attributeTyped<Real>("f_src"));
 }
 
 void EMT::Ph3::SynchronGeneratorIdeal::initializeParentFromNodesAndTerminals(
     Real frequency) {
+  if (!mUseSubcomponents) {
+    **mSrcFreq = frequency;
+    if (mSourceType == CPS::GeneratorType::IdealVoltageSource) {
+      **mRefVoltage =
+          Math::singlePhaseVariableToThreePhase(initialSingleVoltage(0));
+    } else {
+      const Complex voltage = initialSingleVoltage(0);
+      const Complex power = terminal(0)->singlePower();
+      const Complex current = std::abs(voltage) > 0.
+                                  ? std::conj(power / voltage / sqrt(3.))
+                                  : Complex(0., 0.);
+      **mRefCurrent = Math::singlePhaseVariableToThreePhase(current);
+    }
+  }
   // The voltage-source representation has its internal source node behind
   // the ideal source.  Seed that node from the solved terminal voltage so the
   // child VoltageSource can derive its reference phasor automatically.
@@ -94,6 +124,17 @@ void EMT::Ph3::SynchronGeneratorIdeal::mnaParentAddPreStepDependencies(
     AttributeBase::List &prevStepDependencies,
     AttributeBase::List &attributeDependencies,
     AttributeBase::List &modifiedAttributes) {
+  if (!mUseSubcomponents) {
+    if (mSourceType == CPS::GeneratorType::IdealVoltageSource)
+      attributeDependencies.push_back(mRefVoltage);
+    else
+      attributeDependencies.push_back(mRefCurrent);
+    attributeDependencies.push_back(mSrcFreq);
+    modifiedAttributes.push_back(mIntfVoltage);
+    modifiedAttributes.push_back(mIntfCurrent);
+    modifiedAttributes.push_back(mRightVector);
+    return;
+  }
   prevStepDependencies.push_back(mIntfCurrent);
   prevStepDependencies.push_back(mIntfVoltage);
   modifiedAttributes.push_back(mRightVector);
@@ -101,7 +142,56 @@ void EMT::Ph3::SynchronGeneratorIdeal::mnaParentAddPreStepDependencies(
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaParentPreStep(Real time,
                                                         Int timeStepCount) {
+  if (!mUseSubcomponents) {
+    if (mSourceType == CPS::GeneratorType::IdealVoltageSource) {
+      for (Int phase = 0; phase < 3; ++phase) {
+        const Complex reference = (**mRefVoltage)(phase, 0);
+        (**mIntfVoltage)(phase, 0) =
+            RMS3PH_TO_PEAK1PH * Math::abs(reference) *
+            std::cos(2. * PI * **mSrcFreq * time + Math::phase(reference));
+      }
+    } else {
+      for (Int phase = 0; phase < 3; ++phase) {
+        const Complex reference = (**mRefCurrent)(phase, 0);
+        (**mIntfCurrent)(phase, 0) =
+            RMS_TO_PEAK * Math::abs(reference) *
+            std::cos(2. * PI * **mSrcFreq * time + Math::phase(reference));
+      }
+    }
+  }
   mnaCompApplyRightSideVectorStamp(**mRightVector);
+}
+
+void EMT::Ph3::SynchronGeneratorIdeal::mnaParentApplySystemMatrixStamp(
+    SparseMatrixRow &systemMatrix) {
+  if (mUseSubcomponents ||
+      mSourceType != CPS::GeneratorType::IdealVoltageSource ||
+      !terminalNotGrounded(0))
+    return;
+  for (Int phase = 0; phase < 3; ++phase) {
+    const UInt nodeIndex = matrixNodeIndex(0, phase);
+    const UInt sourceIndex =
+        mVirtualNodes[0]->matrixNodeIndex(static_cast<PhaseType>(phase));
+    Math::addToMatrixElement(systemMatrix, nodeIndex, sourceIndex, 1.);
+    Math::addToMatrixElement(systemMatrix, sourceIndex, nodeIndex, 1.);
+  }
+}
+
+void EMT::Ph3::SynchronGeneratorIdeal::mnaParentApplyRightSideVectorStamp(
+    Matrix &rightVector) {
+  if (mUseSubcomponents)
+    return;
+  if (mSourceType == CPS::GeneratorType::IdealVoltageSource) {
+    for (Int phase = 0; phase < 3; ++phase)
+      Math::setVectorElement(
+          rightVector,
+          mVirtualNodes[0]->matrixNodeIndex(static_cast<PhaseType>(phase)),
+          (**mIntfVoltage)(phase, 0));
+  } else if (terminalNotGrounded(0)) {
+    for (Int phase = 0; phase < 3; ++phase)
+      Math::setVectorElement(rightVector, matrixNodeIndex(0, phase),
+                             -(**mIntfCurrent)(phase, 0));
+  }
 }
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaParentAddPostStepDependencies(
@@ -122,10 +212,26 @@ void EMT::Ph3::SynchronGeneratorIdeal::mnaParentPostStep(
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaCompUpdateCurrent(
     const Matrix &leftvector) {
-  **mIntfCurrent = **mSubComponents[0]->mIntfCurrent;
+  if (mUseSubcomponents) {
+    **mIntfCurrent = **mSubComponents[0]->mIntfCurrent;
+    return;
+  }
+  if (mSourceType == CPS::GeneratorType::IdealVoltageSource)
+    for (Int phase = 0; phase < 3; ++phase)
+      (**mIntfCurrent)(phase, 0) = Math::realFromVectorElement(
+          leftvector,
+          mVirtualNodes[0]->matrixNodeIndex(static_cast<PhaseType>(phase)));
 }
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaCompUpdateVoltage(
     const Matrix &leftVector) {
-  **mIntfVoltage = **mSubComponents[0]->mIntfVoltage;
+  if (mUseSubcomponents) {
+    **mIntfVoltage = **mSubComponents[0]->mIntfVoltage;
+    return;
+  }
+  (**mIntfVoltage).setZero();
+  if (terminalNotGrounded(0))
+    for (Int phase = 0; phase < 3; ++phase)
+      (**mIntfVoltage)(phase, 0) =
+          Math::realFromVectorElement(leftVector, matrixNodeIndex(0, phase));
 }

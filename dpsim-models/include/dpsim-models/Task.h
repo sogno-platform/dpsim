@@ -32,6 +32,23 @@ public:
 
   virtual void execute(Real time, Int timeStepCount) = 0;
 
+  /// Execute through a setup-time compiled function pointer when available.
+  /// The virtual execute() API remains the compatibility fallback.
+  void executeFast(Real time, Int timeStepCount) {
+    if (mFastExecutor)
+      mFastExecutor(mFastContext, time, timeStepCount);
+    else
+      execute(time, timeStepCount);
+  }
+
+  template <typename TaskType, void (TaskType::*Executor)(Real, Int)>
+  void setFastExecutor(TaskType *task) {
+    mFastContext = task;
+    mFastExecutor = [](void *context, Real time, Int timeStepCount) {
+      (static_cast<TaskType *>(context)->*Executor)(time, timeStepCount);
+    };
+  }
+
   virtual String toString() const { return mName; }
 
   const std::vector<AttributeBase::Ptr> &getAttributeDependencies() {
@@ -52,5 +69,10 @@ protected:
   std::vector<AttributeBase::Ptr> mAttributeDependencies;
   std::vector<AttributeBase::Ptr> mModifiedAttributes;
   std::vector<AttributeBase::Ptr> mPrevStepDependencies;
+
+private:
+  using FastExecutor = void (*)(void *, Real, Int);
+  FastExecutor mFastExecutor = nullptr;
+  void *mFastContext = nullptr;
 };
 } // namespace CPS

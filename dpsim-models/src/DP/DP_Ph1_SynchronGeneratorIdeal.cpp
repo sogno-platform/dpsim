@@ -7,12 +7,19 @@
  *********************************************************************************/
 
 #include <dpsim-models/DP/DP_Ph1_SynchronGeneratorIdeal.h>
+#include <dpsim-models/MNAStampUtils.h>
 
 using namespace CPS;
 
 DP::Ph1::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String uid, String name,
                                                         Logger::Level logLevel)
+    : SynchronGeneratorIdeal(uid, name, true, logLevel) {}
+
+DP::Ph1::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String uid, String name,
+                                                        Bool useSubcomponents,
+                                                        Logger::Level logLevel)
     : CompositePowerComp<Complex>(uid, name, true, true, logLevel),
+      mUseSubcomponents(useSubcomponents),
       mVoltageRef(mAttributes->createDynamic<Complex>("V_ref")) {
   setVirtualNodeNumber(1);
   setTerminalNumber(1);
@@ -22,13 +29,15 @@ DP::Ph1::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String uid, String name,
 
 DP::Ph1::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String name,
                                                         Logger::Level logLevel)
-    : SynchronGeneratorIdeal(name, name, logLevel) {}
+    : SynchronGeneratorIdeal(name, name, true, logLevel) {}
 
 SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGeneratorIdeal::clone(String name) {
-  return SynchronGeneratorIdeal::make(name, mLogLevel);
+  return SynchronGeneratorIdeal::make(name, mUseSubcomponents, mLogLevel);
 }
 
 void DP::Ph1::SynchronGeneratorIdeal::createSubComponents() {
+  if (!mUseSubcomponents)
+    return;
   if (mSubCompCreated)
     return;
   mSubCompCreated = true;
@@ -42,6 +51,33 @@ void DP::Ph1::SynchronGeneratorIdeal::createSubComponents() {
   addMNASubComponent(mSubVoltageSource,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                      MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+}
+
+void DP::Ph1::SynchronGeneratorIdeal::mnaParentInitialize(
+    Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+  if (!mUseSubcomponents)
+    updateMatrixNodeIndices();
+}
+
+void DP::Ph1::SynchronGeneratorIdeal::mnaParentApplySystemMatrixStamp(
+    SparseMatrixRow &systemMatrix) {
+  if (mUseSubcomponents)
+    return;
+  const UInt sourceCurrent = virtualNode(0)->matrixNodeIndex();
+  const UInt terminal = matrixNodeIndex(0);
+  for (UInt freq = 0; freq < mNumFreqs; ++freq) {
+    Math::setMatrixElement(systemMatrix, sourceCurrent, terminal,
+                           Complex(1., 0.), mNumFreqs, freq);
+    Math::setMatrixElement(systemMatrix, terminal, sourceCurrent,
+                           Complex(1., 0.), mNumFreqs, freq);
+  }
+}
+
+void DP::Ph1::SynchronGeneratorIdeal::mnaParentApplyRightSideVectorStamp(
+    Matrix &rightVector) {
+  if (!mUseSubcomponents)
+    Math::setVectorElement(rightVector, virtualNode(0)->matrixNodeIndex(),
+                           **mVoltageRef, mNumFreqs, 0);
 }
 
 void DP::Ph1::SynchronGeneratorIdeal::initializeParentFromNodesAndTerminals(
@@ -97,10 +133,18 @@ void DP::Ph1::SynchronGeneratorIdeal::mnaParentPostStep(
 
 void DP::Ph1::SynchronGeneratorIdeal::mnaCompUpdateCurrent(
     const Matrix &leftvector) {
-  **mIntfCurrent = **mSubComponents[0]->mIntfCurrent;
+  if (mUseSubcomponents)
+    **mIntfCurrent = **mSubComponents[0]->mIntfCurrent;
+  else
+    (**mIntfCurrent)(0, 0) = Math::complexFromVectorElement(
+        leftvector, virtualNode(0)->matrixNodeIndex(), mNumFreqs, 0);
 }
 
 void DP::Ph1::SynchronGeneratorIdeal::mnaCompUpdateVoltage(
     const Matrix &leftVector) {
-  **mIntfVoltage = **mSubComponents[0]->mIntfVoltage;
+  if (mUseSubcomponents)
+    **mIntfVoltage = **mSubComponents[0]->mIntfVoltage;
+  else
+    (**mIntfVoltage)(0, 0) = Math::complexFromVectorElement(
+        leftVector, matrixNodeIndex(0), mNumFreqs, 0);
 }

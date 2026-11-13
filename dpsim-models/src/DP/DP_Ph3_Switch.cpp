@@ -288,6 +288,17 @@ void DP::Ph3::Switch::mnaCompInitialize(Real omega, Real timeStep,
   mResetZeroCrossingHistory = false;
 }
 
+void DP::Ph3::Switch::mnaCompInitializeHarm(
+    Real omega, Real timeStep,
+    std::vector<Attribute<Matrix>::Ptr> leftVectors) {
+  // Harmonic initialization bypasses mnaCompInitialize() in the shared MNA
+  // wrapper. Reuse its setup so the switch has valid node indices before the
+  // solver stamps each precomputed switch/frequency matrix.
+  mnaCompInitialize(omega, timeStep,
+                    leftVectors.empty() ? Attribute<Matrix>::Ptr{}
+                                        : leftVectors.front());
+}
+
 Bool DP::Ph3::Switch::mnaIsClosed() {
   if (mSwitchingMode == SwitchingMode::Ideal)
     return **mIsClosed;
@@ -313,7 +324,6 @@ void DP::Ph3::Switch::mnaCompApplySwitchSystemMatrixStamp(
   // Conventional precomputed two-state path. CurrentZero mode bypasses this
   // by returning supportsPrecomputedSystemMatrices() == false.
   MatrixFixedSizeComp<3, 3> conductance = MatrixFixedSizeComp<3, 3>::Zero();
-
   conductance.real() =
       closed ? (**mClosedResistance).inverse() : (**mOpenResistance).inverse();
 
@@ -372,7 +382,7 @@ void DP::Ph3::Switch::mnaCompPostStep(Real time, Int timeStepCount,
 }
 
 void DP::Ph3::Switch::mnaCompUpdateVoltage(const Matrix &leftVector) {
-  **mIntfVoltage = MatrixComp::Zero(3, 1);
+  (**mIntfVoltage).setZero();
 
   if (terminalNotGrounded(1)) {
     (**mIntfVoltage)(0, 0) =
@@ -624,8 +634,20 @@ MatrixFixedSizeComp<3, 3> DP::Ph3::Switch::currentConductanceMatrix() const {
   MatrixFixedSizeComp<3, 3> conductance = MatrixFixedSizeComp<3, 3>::Zero();
 
   if (mSwitchingMode == SwitchingMode::Ideal) {
-    conductance.real() = (**mIsClosed) ? (**mClosedResistance).inverse()
-                                       : (**mOpenResistance).inverse();
+    const Matrix &resistance =
+        **mIsClosed ? **mClosedResistance : **mOpenResistance;
+    // Ideal switches are commonly configured with independent phase
+    // resistances. Avoid a general dynamic 3x3 inverse in every post-step for
+    // that case, while preserving full mutual-resistance support below.
+    if (resistance(0, 1) == 0.0 && resistance(0, 2) == 0.0 &&
+        resistance(1, 0) == 0.0 && resistance(1, 2) == 0.0 &&
+        resistance(2, 0) == 0.0 && resistance(2, 1) == 0.0) {
+      conductance(0, 0) = Complex(1.0 / resistance(0, 0), 0.0);
+      conductance(1, 1) = Complex(1.0 / resistance(1, 1), 0.0);
+      conductance(2, 2) = Complex(1.0 / resistance(2, 2), 0.0);
+    } else {
+      conductance.real() = resistance.inverse();
+    }
     return conductance;
   }
 

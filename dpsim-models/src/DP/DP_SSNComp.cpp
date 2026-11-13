@@ -4,6 +4,8 @@
 #include <dpsim-models/DP/DP_SSNComp.h>
 #include <dpsim-models/MathUtils.h>
 
+#include <algorithm>
+
 using namespace CPS;
 
 DP::SSNComp::SSNComp(String uid, String name, Int inputSize, Int outputSize,
@@ -51,6 +53,8 @@ void DP::SSNComp::setParameters(const Matrix &A, const Matrix &B,
 
   mW = MatrixComp::Zero(mOutputSize, mInputSize);
   mYHist = MatrixComp::Zero(mOutputSize, 1);
+  mStateUpdateInput.resize(mInputSize, 1);
+  mStateUpdate.resize(mA.rows(), 1);
 
   mParametersSet = true;
 }
@@ -102,6 +106,13 @@ MatrixComp DP::SSNComp::calculateHistoryVector() const {
          (mDiscreteA * (**mX) + mDiscreteB * (**inputAttribute()));
 }
 
+void DP::SSNComp::updateHistoryVector(MatrixComp &history) {
+  mHistoryState.noalias() = mDiscreteA * (**mX);
+  mHistoryInput.noalias() = mDiscreteB * (**inputAttribute());
+  mHistoryState += mHistoryInput;
+  history.noalias() = mComplexC * mHistoryState;
+}
+
 MatrixComp DP::SSNComp::calculateSteadyStateStateFromInput(const MatrixComp &u,
                                                            Real omega) const {
   MatrixComp h =
@@ -118,7 +129,10 @@ DP::SSNComp::calculateSteadyStateOutputFromInput(const MatrixComp &x,
 }
 
 void DP::SSNComp::updateState(const MatrixComp &uOld, const MatrixComp &uNew) {
-  **mX = mDiscreteA * (**mX) + mDiscreteB * (uNew + uOld);
+  mStateUpdateInput = uNew + uOld;
+  mStateUpdate.noalias() = mDiscreteA * (**mX);
+  mStateUpdate.noalias() += mDiscreteB * mStateUpdateInput;
+  **mX = mStateUpdate;
 }
 
 void DP::SSNComp::updateStateSpaceModel() {
@@ -126,7 +140,7 @@ void DP::SSNComp::updateStateSpaceModel() {
 }
 
 void DP::SSNComp::mnaCompInitialize(Real omega, Real timeStep,
-                                    Attribute<Matrix>::Ptr) {
+                                    Attribute<Matrix>::Ptr leftVector) {
   if (!mParametersSet)
     throw std::logic_error(
         "setParameters() must be called before initialization.");
@@ -138,8 +152,42 @@ void DP::SSNComp::mnaCompInitialize(Real omega, Real timeStep,
   mTimeStep = timeStep;
   updateMatrixNodeIndices();
 
+  mRightVectorAffectedIndices.clear();
+  const UInt baseRowLimit = static_cast<UInt>(leftVector->get().rows() / 2);
+  for (UInt terminal = 0; terminal < terminalNumberConnected(); ++terminal) {
+    if (terminalNotGrounded(terminal)) {
+      for (UInt index : matrixNodeIndices(terminal))
+        if (index < baseRowLimit)
+          mRightVectorAffectedIndices.push_back(index);
+    }
+  }
+  for (UInt virtualNode = 0; virtualNode < virtualNodesNumber();
+       ++virtualNode) {
+    for (UInt index : virtualMatrixNodeIndices(virtualNode))
+      if (index < baseRowLimit)
+        mRightVectorAffectedIndices.push_back(index);
+  }
+  std::sort(mRightVectorAffectedIndices.begin(),
+            mRightVectorAffectedIndices.end());
+  mRightVectorAffectedIndices.erase(
+      std::unique(mRightVectorAffectedIndices.begin(),
+                  mRightVectorAffectedIndices.end()),
+      mRightVectorAffectedIndices.end());
+
   recomputeDiscreteModel(omega);
-  mYHist = calculateHistoryVector();
+  mComplexC = mC.cast<Complex>();
+  mHistoryState.resize(mA.rows(), 1);
+  mHistoryInput.resize(mA.rows(), 1);
+  mYHist.resize(mOutputSize, 1);
+  updateHistoryVector(mYHist);
+}
+
+void DP::SSNComp::mnaAddCompactRightSideVectorStamp(Matrix &rightVector) {
+  for (UInt index : mRightVectorAffectedIndices)
+    Math::addToVectorElement(
+        rightVector, index,
+        Math::complexFromVectorElement(*mRightVectorValue, index, mNumFreqs, 0),
+        mNumFreqs, 0);
 }
 
 void DP::SSNComp::mnaCompAddPreStepDependencies(
@@ -153,7 +201,7 @@ void DP::SSNComp::mnaCompAddPreStepDependencies(
 
 void DP::SSNComp::mnaCompPreStep(Real time, Int timeStepCount) {
   updateStateSpaceModel();
-  mYHist = calculateHistoryVector();
+  updateHistoryVector(mYHist);
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 

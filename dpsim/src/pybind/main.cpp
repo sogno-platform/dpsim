@@ -16,6 +16,7 @@
 #include <pybind11/stl.h>
 
 #include <DPsim.h>
+#include <dpsim/SequentialScheduler.h>
 
 #include <DPsimPy.h>
 
@@ -23,6 +24,10 @@ PYBIND11_DECLARE_HOLDER_TYPE(T, CPS::AttributePointer<T>);
 
 namespace py = pybind11;
 using namespace pybind11::literals;
+
+#ifdef DPSIM_WITH_FMI
+void addFMIBindings(py::module_ root);
+#endif
 
 /// Dispatches a single argument of the deprecated SystemTopology.add
 /// alias to add_node or add_component depending on its type
@@ -124,7 +129,21 @@ PYBIND11_MODULE(dpsimpy, m) {
       .value("KLU", DPsim::DirectLinearSolverImpl::KLU)
       .value("CUDADense", DPsim::DirectLinearSolverImpl::CUDADense)
       .value("CUDASparse", DPsim::DirectLinearSolverImpl::CUDASparse)
-      .value("CUDAMagma", DPsim::DirectLinearSolverImpl::CUDAMagma);
+      .value("CUDAMagma", DPsim::DirectLinearSolverImpl::CUDAMagma)
+#ifdef WITH_METAL
+      .value("MetalDense", DPsim::DirectLinearSolverImpl::MetalDense)
+      .value("MetalSparseBiCGSTAB",
+             DPsim::DirectLinearSolverImpl::MetalSparseBiCGSTAB)
+#endif
+#ifdef WITH_HIP
+      .value("HIPDense", DPsim::DirectLinearSolverImpl::HIPDense)
+      .value("HIPSparseBiCGStab",
+             DPsim::DirectLinearSolverImpl::HIPSparseBiCGStab)
+      .value("HIPSparseLURefactor",
+             DPsim::DirectLinearSolverImpl::HIPSparseLURefactor)
+      .value("HIPSparseQR", DPsim::DirectLinearSolverImpl::HIPSparseQR)
+#endif
+      ;
 
   py::enum_<DPsim::SCALING_METHOD>(m, "scaling_method")
       .value("no_scaling", DPsim::SCALING_METHOD::NO_SCALING)
@@ -246,6 +265,15 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("set_system", &DPsim::Simulation::setSystem)
       .def("run", &DPsim::Simulation::run)
       .def("set_solver", &DPsim::Simulation::setSolverType)
+      .def(
+          "set_sequential_scheduler",
+          [](DPsim::Simulation &sim, const std::string &measurementFile) {
+            sim.setScheduler(
+                std::make_shared<DPsim::SequentialScheduler>(measurementFile));
+          },
+          "measurement_file"_a = "")
+      .def("set_log_step_times", &DPsim::Simulation::setLogStepTimes)
+      .def("log_step_times", &DPsim::Simulation::logStepTimes)
       .def("set_pf_keep_last_solution",
            &DPsim::Simulation::setPFKeepLastSolution)
       .def("get_pf_keep_last_solution",
@@ -258,6 +286,8 @@ PYBIND11_MODULE(dpsimpy, m) {
       .def("get_pf_max_iterations", &DPsim::Simulation::getPFMaxIterations)
       .def("set_pf_solver_use_sparse", &DPsim::Simulation::setPFSolverUseSparse)
       .def("get_pf_solver_use_sparse", &DPsim::Simulation::getPFSolverUseSparse)
+      .def("set_zero_skipping", &DPsim::Simulation::setZeroSkipping)
+      .def("get_zero_skipping", &DPsim::Simulation::getZeroSkipping)
       .def("set_pf_solver_enforce_q_limits",
            &DPsim::Simulation::setPFSolverEnforceReactiveLimits)
       .def("get_pf_solver_enforce_q_limits",
@@ -422,6 +452,8 @@ PYBIND11_MODULE(dpsimpy, m) {
   py::class_<DPsim::DataLogger, DPsim::DataLoggerInterface,
              std::shared_ptr<DPsim::DataLogger>>(m, "Logger")
       .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Bool, CPS::UInt>(), "name"_a, "enabled"_a,
+           "downsampling"_a)
       .def_static("set_log_dir", &CPS::Logger::setLogDir)
       .def_static("get_log_dir", &CPS::Logger::logDir)
       .def("log_attribute",
@@ -610,6 +642,10 @@ PYBIND11_MODULE(dpsimpy, m) {
 
   py::module mSignal = m.def_submodule("signal", "signal models");
   addSignalComponents(mSignal);
+
+#ifdef DPSIM_WITH_FMI
+  addFMIBindings(m);
+#endif
 
 #ifdef VERSION_INFO
   m.attr("__version__") = VERSION_INFO;

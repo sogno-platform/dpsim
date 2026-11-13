@@ -35,7 +35,7 @@ MatrixComp EMT::Ph3::TwoTerminalITypeSSNComp::buildInitialInputFromNodes(Real) {
 
 void EMT::Ph3::TwoTerminalITypeSSNComp::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
-  Matrix G = mW.inverse();
+  const Matrix &G = mWInverse;
 
   MNAStampUtils::stampConductanceMatrix(
       G, systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),
@@ -44,8 +44,7 @@ void EMT::Ph3::TwoTerminalITypeSSNComp::mnaCompApplySystemMatrixStamp(
 
 void EMT::Ph3::TwoTerminalITypeSSNComp::mnaCompApplyRightSideVectorStamp(
     Matrix &rightVector) {
-  Matrix G = mW.inverse();
-
+  const Matrix &G = mWInverse;
   // i = G * v - G * mYHist
   Matrix iHist = -G * mYHist;
 
@@ -65,7 +64,7 @@ void EMT::Ph3::TwoTerminalITypeSSNComp::mnaCompApplyRightSideVectorStamp(
 }
 
 void EMT::Ph3::TwoTerminalITypeSSNComp::mnaCompUpdateCurrent(const Matrix &) {
-  Matrix G = mW.inverse();
+  const Matrix &G = mWInverse;
 
   // I-type Norton-equivalent current:
   //
@@ -77,7 +76,7 @@ void EMT::Ph3::TwoTerminalITypeSSNComp::mnaCompUpdateCurrent(const Matrix &) {
 void EMT::Ph3::TwoTerminalITypeSSNComp::mnaCompUpdateVoltage(
     const Matrix &leftVector) {
   // Interface voltage convention: v = v_terminal1 - v_terminal0
-  **mIntfVoltage = Matrix::Zero(3, 1);
+  (**mIntfVoltage).setZero();
 
   if (terminalNotGrounded(1)) {
     for (Int phase = 0; phase < 3; ++phase) {

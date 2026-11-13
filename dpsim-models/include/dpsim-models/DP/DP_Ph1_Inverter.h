@@ -62,6 +62,7 @@ protected:
 
   /// voltage part of system fundamental
   Real mVfund = 0;
+  Bool mPhasorsDirty = true;
   /// Vector of phasor frequencies
   Matrix mPhasorFreqs;
   /// Vector of phasor magnitudes

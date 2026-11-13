@@ -26,6 +26,7 @@ protected:
   Real mAddSrcFreq;
   ///
   Real mRampTime;
+  Bool mUseSubcomponents = true;
   ///
   std::shared_ptr<VoltageSource> mSubVoltageSource;
 
@@ -39,9 +40,14 @@ public:
   /// Defines UID, name and logging level
   VoltageSourceRamp(String uid, String name,
                     Logger::Level logLevel = Logger::Level::off);
+  VoltageSourceRamp(String uid, String name, Bool useSubcomponents,
+                    Logger::Level logLevel = Logger::Level::off);
   /// Defines name and logging level
   VoltageSourceRamp(String name, Logger::Level logLevel = Logger::Level::off)
       : VoltageSourceRamp(name, name, logLevel) {}
+  VoltageSourceRamp(String name, Bool useSubcomponents,
+                    Logger::Level logLevel = Logger::Level::off)
+      : VoltageSourceRamp(name, name, useSubcomponents, logLevel) {}
 
   SimPowerComp<Complex>::Ptr clone(String name) override;
 
@@ -53,6 +59,17 @@ public:
                      Real addSrcFreq, Real switchTime, Real rampTime);
   ///
   void initialize(Matrix frequencies) override;
+  void mnaParentInitialize(Real omega, Real timeStep,
+                           Attribute<Matrix>::Ptr leftVector) override;
+  void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void
+  mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
+                                   AttributeBase::List &attributeDependencies,
+                                   AttributeBase::List &modifiedAttributes,
+                                   Attribute<Matrix>::Ptr &leftVector) override;
+  void mnaParentPostStep(Real time, Int timeStepCount,
+                         Attribute<Matrix>::Ptr &leftVector) override;
 
   // #### MNA section ####
   void mnaParentPreStep(Real time, Int timeStepCount) override;

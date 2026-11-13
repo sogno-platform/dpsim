@@ -19,6 +19,9 @@ class Resistor : public MNASimPowerComp<Real>,
                  public Base::Ph3::Resistor,
                  public MNATearInterface,
                  public SharedFactory<Resistor> {
+private:
+  Matrix mConductance = Matrix::Zero(3, 3);
+
 protected:
 public:
   /// Defines UID, name, component parameters and logging level

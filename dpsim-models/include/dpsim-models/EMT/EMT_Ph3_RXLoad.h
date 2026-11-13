@@ -43,6 +43,16 @@ protected:
   std::shared_ptr<EMT::Ph3::Capacitor> mSubCapacitor;
   /// Internal resistance
   std::shared_ptr<EMT::Ph3::Resistor> mSubResistor;
+  Bool mUseSubcomponents = true;
+  Attribute<Matrix>::Ptr mDirectState;
+  Matrix mDirectNodalAdmittance = Matrix::Zero(3, 3);
+  Matrix mDirectHistoryLoad = Matrix::Zero(3, 1);
+  Matrix mDirectHistoryShunt = Matrix::Zero(3, 1);
+  Real mDirectTotalConductance = 0.;
+  Real mDirectInductorAdmittance = 0.;
+  Real mDirectCapacitorAdmittance = 0.;
+  Bool mDirectHasInductor = false;
+  Bool mDirectHasCapacitor = false;
 
 public:
   /// Active power [Watt]
@@ -53,6 +63,12 @@ public:
   const Attribute<Real>::Ptr mNomVoltage;
   /// Defines UID, name and logging level
   RXLoad(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+  /// Optional direct MNA implementation; legacy subcomponents remain the default.
+  RXLoad(String uid, String name, Bool useSubcomponents,
+         Logger::Level logLevel = Logger::Level::off);
+  RXLoad(String name, Bool useSubcomponents,
+         Logger::Level logLevel = Logger::Level::off)
+      : RXLoad(name, name, useSubcomponents, logLevel) {}
   /// Defines name, component parameters and logging level
   RXLoad(String name, Logger::Level logLevel = Logger::Level::off);
   /// Defines name, component parameters and logging level
@@ -74,6 +90,12 @@ public:
   void createSubComponents() override;
   /// Derives values from power flow data and pushes them to subcomponents
   void initializeParentFromNodesAndTerminals(Real frequency) override;
+  void mnaParentInitialize(Real omega, Real timeStep,
+                           Attribute<Matrix>::Ptr leftVector) override;
+  void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
+  Bool mnaHasCompactRightSideVectorStamp() const override;
+  void mnaAddCompactRightSideVectorStamp(Matrix &rightVector) override;
 
   // #### MNA section ####
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;
@@ -81,13 +103,12 @@ public:
 
   /// MNA pre and post step operations
   void mnaParentPreStep(Real time, Int timeStepCount) override;
-  void mnaParentPostStep(Real time, Int timeStepCount,
-                         Attribute<Matrix>::Ptr &leftVector) override;
-
   void mnaParentAddPreStepDependencies(
       AttributeBase::List &prevStepDependencies,
       AttributeBase::List &attributeDependencies,
       AttributeBase::List &modifiedAttributes) override;
+  void mnaParentPostStep(Real time, Int timeStepCount,
+                         Attribute<Matrix>::Ptr &leftVector) override;
   void
   mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
                                    AttributeBase::List &attributeDependencies,

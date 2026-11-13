@@ -18,8 +18,11 @@
 #include <dpsim-models/EMT/EMT_Ph3_RxLine.h>
 #include <dpsim-models/EMT/EMT_Ph3_SSN_GFL.h>
 #include <dpsim-models/EMT/EMT_Ph3_SSN_GFL_Split.h>
+#include <dpsim-models/EMT/EMT_Ph3_SSN_ImpedanceLoad.h>
 #include <dpsim-models/EMT/EMT_Ph3_SSN_InductionMotor.h>
 #include <dpsim-models/EMT/EMT_Ph3_SSN_Inductor.h>
+#include <dpsim-models/EMT/EMT_Ph3_SSN_PiLine.h>
+#include <dpsim-models/EMT/EMT_Ph3_SSN_Transformer.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator4OrderPCM.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorTrStab.h>
 #include <dpsim-models/EMT/EMT_Ph3_VoltageSourceNorton.h>
@@ -428,6 +431,43 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
            "parallel_capacitance"_a = zeroMatrix(3),
            "parallel_conductance"_a = zeroMatrix(3))
       .def("connect", &CPS::EMT::Ph3::PiLine::connect);
+
+  py::class_<CPS::EMT::Ph3::SSN::PiLine,
+             std::shared_ptr<CPS::EMT::Ph3::SSN::PiLine>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SSN_PiLine",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::EMT::Ph3::SSN::PiLine::setParameters,
+           "series_resistance"_a, "series_inductance"_a,
+           "parallel_capacitance"_a = zeroMatrix(3),
+           "parallel_conductance"_a = zeroMatrix(3))
+      .def("connect", &CPS::EMT::Ph3::SSN::PiLine::connect);
+
+  py::class_<CPS::EMT::Ph3::SSN::ImpedanceLoad,
+             std::shared_ptr<CPS::EMT::Ph3::SSN::ImpedanceLoad>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SSN_ImpedanceLoad",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::EMT::Ph3::SSN::ImpedanceLoad::setParameters,
+           "active_power"_a, "reactive_power"_a, "nominal_voltage"_a,
+           "shunt_conductance"_a = 0., "shunt_susceptance"_a = 0.)
+      .def("connect", &CPS::EMT::Ph3::SSN::ImpedanceLoad::connect);
+
+  py::class_<CPS::EMT::Ph3::SSN::Transformer,
+             std::shared_ptr<CPS::EMT::Ph3::SSN::Transformer>,
+             CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SSN_Transformer",
+                                           py::multiple_inheritance())
+      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
+           "loglevel"_a = CPS::Logger::Level::off)
+      .def("set_parameters", &CPS::EMT::Ph3::SSN::Transformer::setParameters,
+           "nom_voltage_primary"_a, "nom_voltage_secondary"_a, "rated_power"_a,
+           "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a)
+      .def("set_magnetizing_branch",
+           &CPS::EMT::Ph3::SSN::Transformer::setMagnetizingBranch,
+           "no_load_current"_a, "no_load_loss"_a)
+      .def("connect", &CPS::EMT::Ph3::SSN::Transformer::connect);
 
   py::class_<CPS::EMT::Ph3::RxLine, std::shared_ptr<CPS::EMT::Ph3::RxLine>,
              CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "RxLine",

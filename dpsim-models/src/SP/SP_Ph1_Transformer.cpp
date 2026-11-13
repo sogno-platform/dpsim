@@ -383,18 +383,18 @@ void SP::Ph1::Transformer::pfApplyAdmittanceMatrixStamp(
       }
 
   //set the circuit matrix values
-  Y.coeffRef(this->matrixNodeIndex(mReferenceTerminal),
-             this->matrixNodeIndex(mReferenceTerminal)) +=
-      mY_element.coeff(0, 0);
-  Y.coeffRef(this->matrixNodeIndex(mReferenceTerminal),
-             this->matrixNodeIndex(nonReferenceTerminal())) +=
-      mY_element.coeff(0, 1);
-  Y.coeffRef(this->matrixNodeIndex(nonReferenceTerminal()),
-             this->matrixNodeIndex(nonReferenceTerminal())) +=
-      mY_element.coeff(1, 1);
-  Y.coeffRef(this->matrixNodeIndex(nonReferenceTerminal()),
-             this->matrixNodeIndex(mReferenceTerminal)) +=
-      mY_element.coeff(1, 0);
+  Math::addToMatrixElement(Y, this->matrixNodeIndex(mReferenceTerminal),
+                           this->matrixNodeIndex(mReferenceTerminal),
+                           mY_element.coeff(0, 0));
+  Math::addToMatrixElement(Y, this->matrixNodeIndex(mReferenceTerminal),
+                           this->matrixNodeIndex(nonReferenceTerminal()),
+                           mY_element.coeff(0, 1));
+  Math::addToMatrixElement(Y, this->matrixNodeIndex(nonReferenceTerminal()),
+                           this->matrixNodeIndex(nonReferenceTerminal()),
+                           mY_element.coeff(1, 1));
+  Math::addToMatrixElement(Y, this->matrixNodeIndex(nonReferenceTerminal()),
+                           this->matrixNodeIndex(mReferenceTerminal),
+                           mY_element.coeff(1, 0));
 
   SPDLOG_LOGGER_INFO(mSLog, "#### Y matrix stamping: {}", mY_element);
 }

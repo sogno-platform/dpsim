@@ -3,6 +3,8 @@
 
 #include <dpsim-models/EMT/EMT_SSNComp.h>
 
+#include <algorithm>
+
 using namespace CPS;
 
 EMT::SSNComp::SSNComp(String uid, String name, Int inputSize, Int outputSize,
@@ -10,7 +12,8 @@ EMT::SSNComp::SSNComp(String uid, String name, Int inputSize, Int outputSize,
     : MNASimPowerComp<Real>(uid, name, true, true, logLevel), mTimeStep(0.0),
       mW(Matrix::Zero(outputSize, inputSize)),
       mYHist(Matrix::Zero(outputSize, 1)), mInputSize(inputSize),
-      mOutputSize(outputSize), mX(mAttributes->create<Matrix>("x")) {
+      mOutputSize(outputSize), mX(mAttributes->create<Matrix>("x")),
+      mPreviousInput(Matrix::Zero(inputSize, 1)) {
   mParametersSet = false;
 }
 
@@ -65,8 +68,19 @@ void EMT::SSNComp::setParameters(const Matrix &A, const Matrix &B,
   mParametersSet = true;
 }
 
-Matrix EMT::SSNComp::calculateHistoryVector() const {
-  return mC * (mdA * (**mX) + mdB * (**inputAttribute()));
+void EMT::SSNComp::calculateHistoryVector(Matrix &history) const {
+  // Algebraic SSN components have no dynamic state. Their discrete history is
+  // identically zero; feedthrough remains represented by mW = D and is
+  // handled by the component's MNA stamp/update path.
+  if (mA.rows() == 0) {
+    history.setZero();
+    return;
+  }
+
+  mHistoryState.noalias() = mdA * stateValue();
+  mHistoryInput.noalias() = mdB * inputValue();
+  mHistoryState += mHistoryInput;
+  history.noalias() = mC * mHistoryState;
 }
 
 MatrixComp
@@ -87,6 +101,9 @@ EMT::SSNComp::calculateSteadyStateOutputFromInput(const MatrixComp &x,
 }
 
 void EMT::SSNComp::updateState(const Matrix &uOld, const Matrix &uNew) {
+  if (mA.rows() == 0)
+    return;
+
   **mX = mdA * (**mX) + mdB * (uNew + uOld);
 }
 
@@ -104,16 +121,46 @@ void EMT::SSNComp::updateStateSpaceModel() {
 }
 
 void EMT::SSNComp::mnaCompInitialize(Real, Real timeStep,
-                                     Attribute<Matrix>::Ptr) {
+                                     Attribute<Matrix>::Ptr leftVector) {
   if (!mParametersSet)
     throw std::logic_error(
         "setParameters() must be called before initialization.");
 
   mTimeStep = timeStep;
+  mXValue = &mX->get();
+  mInputValue = &inputAttribute()->get();
   updateMatrixNodeIndices();
 
+  mRightVectorAffectedIndices.clear();
+  for (UInt terminal = 0; terminal < terminalNumberConnected(); ++terminal) {
+    if (terminalNotGrounded(terminal)) {
+      for (UInt index : matrixNodeIndices(terminal))
+        if (index < static_cast<UInt>(leftVector->get().rows()))
+          mRightVectorAffectedIndices.push_back(index);
+    }
+  }
+  for (UInt virtualNode = 0; virtualNode < virtualNodesNumber();
+       ++virtualNode) {
+    for (UInt index : virtualMatrixNodeIndices(virtualNode))
+      if (index < static_cast<UInt>(leftVector->get().rows()))
+        mRightVectorAffectedIndices.push_back(index);
+  }
+  std::sort(mRightVectorAffectedIndices.begin(),
+            mRightVectorAffectedIndices.end());
+  mRightVectorAffectedIndices.erase(
+      std::unique(mRightVectorAffectedIndices.begin(),
+                  mRightVectorAffectedIndices.end()),
+      mRightVectorAffectedIndices.end());
+
   recomputeDiscreteModel();
-  mYHist = calculateHistoryVector();
+  mHistoryState.resize(mA.rows(), 1);
+  mHistoryInput.resize(mA.rows(), 1);
+  calculateHistoryVector(mYHist);
+}
+
+void EMT::SSNComp::mnaAddCompactRightSideVectorStamp(Matrix &rightVector) {
+  for (UInt index : mRightVectorAffectedIndices)
+    rightVector(index, 0) += (*mRightVectorValue)(index, 0);
 }
 
 void EMT::SSNComp::mnaCompAddPreStepDependencies(
@@ -127,8 +174,8 @@ void EMT::SSNComp::mnaCompAddPreStepDependencies(
 
 void EMT::SSNComp::mnaCompPreStep(Real time, Int timeStepCount) {
   updateStateSpaceModel();
-  mYHist = calculateHistoryVector();
-  mnaCompApplyRightSideVectorStamp(**mRightVector);
+  calculateHistoryVector(mYHist);
+  mnaCompApplyRightSideVectorStamp(*mRightVectorValue);
 }
 
 void EMT::SSNComp::mnaCompAddPostStepDependencies(

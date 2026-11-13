@@ -184,8 +184,9 @@ void EMT::Ph3::SSN_GFL_Split::setParameters(Real lf, Real cf, Real rf, Real rc,
                      bControllerOutput, measurementState, measurementTerminal);
 }
 
-Matrix EMT::Ph3::SSN_GFL_Split::getParkTransformMatrix(Real theta) const {
-  Matrix transform(2, 3);
+MatrixFixedSize<2, 3>
+EMT::Ph3::SSN_GFL_Split::getParkTransformMatrix(Real theta) const {
+  MatrixFixedSize<2, 3> transform;
   const Real scale = std::sqrt(2.0 / 3.0);
 
   transform.row(0) << scale * std::cos(theta),
@@ -199,9 +200,9 @@ Matrix EMT::Ph3::SSN_GFL_Split::getParkTransformMatrix(Real theta) const {
   return transform;
 }
 
-Matrix
+MatrixFixedSize<3, 2>
 EMT::Ph3::SSN_GFL_Split::getInverseParkTransformMatrix(Real theta) const {
-  Matrix transform(3, 2);
+  MatrixFixedSize<3, 2> transform;
   const Real scale = std::sqrt(2.0 / 3.0);
 
   transform << scale * std::cos(theta), -scale * std::sin(theta),
@@ -234,13 +235,13 @@ void EMT::Ph3::SSN_GFL_Split::evaluateControllerStateDerivative(
   const Real phiD = xController(PhiD, 0);
   const Real phiQ = xController(PhiQ, 0);
 
-  const Matrix vcAbc = measurement.block(0, 0, 3, 1);
-  const Matrix iGridAbc = measurement.block(3, 0, 3, 1);
+  const auto vcAbc = measurement.block<3, 1>(0, 0);
+  const auto iGridAbc = measurement.block<3, 1>(3, 0);
 
-  const Matrix parkTransform = getParkTransformMatrix(thetaPLL);
+  const auto parkTransform = getParkTransformMatrix(thetaPLL);
 
-  const Matrix vcDq = parkTransform * vcAbc;
-  const Matrix iGridDq = parkTransform * iGridAbc;
+  MatrixFixedSize<2, 1> vcDq = parkTransform * vcAbc;
+  MatrixFixedSize<2, 1> iGridDq = parkTransform * iGridAbc;
 
   const Real vcD = vcDq(0, 0);
   const Real vcQ = vcDq(1, 0);
@@ -292,12 +293,12 @@ void EMT::Ph3::SSN_GFL_Split::evaluateControllerOutput(
   const Real gammaD = xController(GammaD, 0);
   const Real gammaQ = xController(GammaQ, 0);
 
-  const Matrix iGridAbc = measurement.block(3, 0, 3, 1);
+  const auto iGridAbc = measurement.block<3, 1>(3, 0);
 
-  const Matrix parkTransform = getParkTransformMatrix(thetaPLL);
-  const Matrix inverseParkTransform = getInverseParkTransformMatrix(thetaPLL);
+  const auto parkTransform = getParkTransformMatrix(thetaPLL);
+  const auto inverseParkTransform = getInverseParkTransformMatrix(thetaPLL);
 
-  const Matrix iGridDq = parkTransform * iGridAbc;
+  const MatrixFixedSize<2, 1> iGridDq = parkTransform * iGridAbc;
   const Real iGridD = iGridDq(0, 0);
   const Real iGridQ = iGridDq(1, 0);
 
@@ -314,7 +315,7 @@ void EMT::Ph3::SSN_GFL_Split::evaluateControllerOutput(
   const Real converterVoltageReferenceQ =
       mKpCurrCtrl * currentErrorQ + mKiCurrCtrl * gammaQ;
 
-  Matrix converterVoltageReferenceDq(2, 1);
+  MatrixFixedSize<2, 1> converterVoltageReferenceDq;
   converterVoltageReferenceDq << converterVoltageReferenceD,
       converterVoltageReferenceQ;
 
@@ -341,16 +342,16 @@ void EMT::Ph3::SSN_GFL_Split::calculateControllerAnalyticalJacobians(
   const Real gammaD = xController(GammaD, 0);
   const Real gammaQ = xController(GammaQ, 0);
 
-  const Matrix vcAbc = measurement.block(0, 0, 3, 1);
-  const Matrix iGridAbc = measurement.block(3, 0, 3, 1);
+  const auto vcAbc = measurement.block<3, 1>(0, 0);
+  const auto iGridAbc = measurement.block<3, 1>(3, 0);
 
-  const Matrix parkTransform = getParkTransformMatrix(thetaPLL);
-  const Matrix tD = parkTransform.row(0);
-  const Matrix tQ = parkTransform.row(1);
+  const auto parkTransform = getParkTransformMatrix(thetaPLL);
+  const Eigen::Matrix<Real, 1, 3, Eigen::RowMajor> tD = parkTransform.row(0);
+  const Eigen::Matrix<Real, 1, 3, Eigen::RowMajor> tQ = parkTransform.row(1);
 
-  const Matrix inverseParkTransform = getInverseParkTransformMatrix(thetaPLL);
-  const Matrix sD = inverseParkTransform.col(0);
-  const Matrix sQ = inverseParkTransform.col(1);
+  const auto inverseParkTransform = getInverseParkTransformMatrix(thetaPLL);
+  const MatrixFixedSize<3, 1> sD = inverseParkTransform.col(0);
+  const MatrixFixedSize<3, 1> sQ = inverseParkTransform.col(1);
 
   // Exact derivatives of the orthonormal Park transformation.
   const Matrix dTdTheta = tQ;
@@ -368,14 +369,16 @@ void EMT::Ph3::SSN_GFL_Split::calculateControllerAnalyticalJacobians(
   const Real dIGridDByTheta = (dTdTheta * iGridAbc)(0, 0);
   const Real dIGridQByTheta = (dTqTheta * iGridAbc)(0, 0);
 
-  const Matrix dPByVc = iGridD * tD + iGridQ * tQ;
-  const Matrix dPByI = vcD * tD + vcQ * tQ;
+  const Eigen::Matrix<Real, 1, 3, Eigen::RowMajor> dPByVc =
+      iGridD * tD + iGridQ * tQ;
+  const Eigen::Matrix<Real, 1, 3, Eigen::RowMajor> dPByI = vcD * tD + vcQ * tQ;
 
   const Real dPByTheta = iGridD * dVcDByTheta + vcD * dIGridDByTheta +
                          iGridQ * dVcQByTheta + vcQ * dIGridQByTheta;
 
-  const Matrix dQByVc = -iGridQ * tD + iGridD * tQ;
-  const Matrix dQByI = -vcD * tQ + vcQ * tD;
+  const Eigen::Matrix<Real, 1, 3, Eigen::RowMajor> dQByVc =
+      -iGridQ * tD + iGridD * tQ;
+  const Eigen::Matrix<Real, 1, 3, Eigen::RowMajor> dQByI = -vcD * tQ + vcQ * tD;
 
   const Real dQByTheta = -iGridQ * dVcDByTheta - vcD * dIGridQByTheta +
                          iGridD * dVcQByTheta + vcQ * dIGridDByTheta;
@@ -477,10 +480,10 @@ void EMT::Ph3::SSN_GFL_Split::updateLogAttributes(const Matrix &u) const {
   const Matrix measurement = buildControllerMeasurement(**mX, u);
 
   const Real thetaPLL = mControllerState(ThetaPLL, 0);
-  const Matrix parkTransform = getParkTransformMatrix(thetaPLL);
+  const auto parkTransform = getParkTransformMatrix(thetaPLL);
 
-  const Matrix vcAbc = measurement.block(0, 0, 3, 1);
-  const Matrix iGridAbc = measurement.block(3, 0, 3, 1);
+  const auto vcAbc = measurement.block<3, 1>(0, 0);
+  const auto iGridAbc = measurement.block<3, 1>(3, 0);
 
   **mVcD = (parkTransform.row(0) * vcAbc)(0, 0);
   **mVcQ = (parkTransform.row(1) * vcAbc)(0, 0);
@@ -558,7 +561,7 @@ void EMT::Ph3::SSN_GFL_Split::initializeFromNodesAndTerminals(Real frequency) {
       converterVoltageReferencePhasor.real();
 
   const Real theta0 = std::arg(vcPhasor(0, 0));
-  const Matrix parkTransform = getParkTransformMatrix(theta0);
+  const auto parkTransform = getParkTransformMatrix(theta0);
 
   const Matrix vcDq0 = parkTransform * vcAbc0;
   const Matrix injectionCurrentDq0 = parkTransform * injectionCurrentAbc0;

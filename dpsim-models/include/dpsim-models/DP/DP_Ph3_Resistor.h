@@ -27,6 +27,9 @@ class Resistor : public MNASimPowerComp<Complex>,
                  public Base::Ph3::Resistor,
                  public MNATearInterface,
                  public SharedFactory<Resistor> {
+private:
+  MatrixFixedSizeComp<3, 3> mConductance = MatrixFixedSizeComp<3, 3>::Zero();
+
 public:
   Resistor(String uid, String name,
            Logger::Level logLevel = Logger::Level::off);

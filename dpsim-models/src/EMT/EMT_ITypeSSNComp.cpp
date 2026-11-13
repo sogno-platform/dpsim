@@ -7,9 +7,15 @@ using namespace CPS;
 
 EMT::ITypeSSNComp::ITypeSSNComp(String uid, String name, Int inputSize,
                                 Int outputSize, Logger::Level logLevel)
-    : SSNComp(uid, name, inputSize, outputSize, logLevel) {
+    : SSNComp(uid, name, inputSize, outputSize, logLevel),
+      mWInverse(Matrix::Zero(outputSize, inputSize)) {
   **mIntfCurrent = Matrix::Zero(inputSize, 1);
   **mIntfVoltage = Matrix::Zero(outputSize, 1);
+}
+
+void EMT::ITypeSSNComp::recomputeDiscreteModel() {
+  SSNComp::recomputeDiscreteModel();
+  mWInverse = mW.inverse();
 }
 
 Attribute<Matrix>::Ptr EMT::ITypeSSNComp::inputAttribute() const {
@@ -50,7 +56,7 @@ void EMT::ITypeSSNComp::mnaCompUpdateVoltage(const Matrix &) {}
 
 void EMT::ITypeSSNComp::mnaCompPostStep(Real, Int,
                                         Attribute<Matrix>::Ptr &leftVector) {
-  Matrix uOld = **mIntfCurrent;
+  mPreviousInput = **mIntfCurrent;
 
   // First reconstruct output voltage from the MNA solution.
   mnaCompUpdateVoltage(**leftVector);
@@ -59,6 +65,6 @@ void EMT::ITypeSSNComp::mnaCompPostStep(Real, Int,
   //   v = mW * i + mYHist
   mnaCompUpdateCurrent(**leftVector);
 
-  updateState(uOld, **mIntfCurrent);
+  updateState(mPreviousInput, **mIntfCurrent);
   updateLogAttributes(**mIntfCurrent);
 }

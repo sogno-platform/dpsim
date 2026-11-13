@@ -26,6 +26,11 @@ protected:
   Matrix mInductance = Matrix::Zero(3, 3);
   Matrix mCapacitance = Matrix::Zero(3, 3);
   Matrix mSurgeImpedance;
+  Matrix mSurgeResistiveImpedanceInverse;
+  Matrix mDenominatorInverse;
+  Matrix mSurgeMinusResistanceQuarter;
+  Matrix mSurgeCurrentCoefficient;
+  Matrix mResistanceCurrentCoefficient;
 
   std::shared_ptr<EMT::SimNode> mNode1, mNode2;
   std::shared_ptr<EMT::Ph3::Resistor> mRes1, mRes2;
@@ -39,7 +44,7 @@ protected:
   UInt mBufSize;
   Real mAlpha;
 
-  Matrix interpolate(Matrix &data);
+  Eigen::Matrix<Real, 3, 1> interpolate(const Matrix &data) const;
 
 public:
   typedef std::shared_ptr<DecouplingLineEMT_Ph3> Ptr;

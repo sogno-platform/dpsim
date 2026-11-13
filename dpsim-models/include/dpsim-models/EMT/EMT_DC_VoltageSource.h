@@ -50,6 +50,7 @@ public:
       Attribute<Matrix>::Ptr &leftVector) override final;
 
 private:
+  UInt mBranchMatrixIndex = 0;
   void validateDCTerminals() const;
 };
 

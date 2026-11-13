@@ -124,32 +124,17 @@ void DP_Ph1_VSI2_4bus_SampleGrid() {
   logger->logAttribute("vBus2", n2->attribute("v"));
   logger->logAttribute("vBus3", n3->attribute("v"));
   logger->logAttribute("vBus4", n4->attribute("v"));
-  // power outputs
-  logger->logAttribute("P", vsi->attribute("p"));
-  logger->logAttribute("Q", vsi->attribute("q"));
-  logger->logAttribute("P2", vsi2->attribute("p"));
-  logger->logAttribute("Q2", vsi2->attribute("q"));
+  // Reference and controller signals exposed by AvVoltageSourceInverterDQ.
   logger->logAttribute("P_ref", vsi->attribute("P_ref"));
   logger->logAttribute("Q_ref", vsi->attribute("Q_ref"));
   logger->logAttribute("P_ref2", vsi2->attribute("P_ref"));
   logger->logAttribute("Q_ref2", vsi2->attribute("Q_ref"));
-  // states of controller
-  logger->logAttribute("theta", vsi->attribute("theta"));
-  logger->logAttribute("phi_pll", vsi->attribute("phipll"));
-  logger->logAttribute("phid", vsi->attribute("phid"));
-  logger->logAttribute("phiq", vsi->attribute("phiq"));
-  logger->logAttribute("gammad", vsi->attribute("gammad"));
-  logger->logAttribute("gammaq", vsi->attribute("gammaq"));
-  logger->logAttribute("ifdq", vsi->attribute("ifdq"));
-  logger->logAttribute("igdq", vsi->attribute("igdq"));
-  logger->logAttribute("Vsdq", vsi->attribute("Vsdq"));
-
-  // frequency
-  logger->logAttribute("freq_vsi1", vsi->attribute("freq"));
-  logger->logAttribute("freq_vsi2", vsi2->attribute("freq"));
-  // output voltages
-  logger->logAttribute("vsi", vsi->attribute("v_intf"));
-  logger->logAttribute("vsi2", vsi2->attribute("v_intf"));
+  logger->logAttribute("Vc_d", vsi->attribute("Vc_d"));
+  logger->logAttribute("Vc_q", vsi->attribute("Vc_q"));
+  logger->logAttribute("Irc_d", vsi->attribute("Irc_d"));
+  logger->logAttribute("Irc_q", vsi->attribute("Irc_q"));
+  logger->logAttribute("vsi_voltage", vsi->attribute("v_intf"));
+  logger->logAttribute("vsi_current", vsi->attribute("i_intf"));
 
   Simulation sim(simName);
   sim.setSystem(sys);

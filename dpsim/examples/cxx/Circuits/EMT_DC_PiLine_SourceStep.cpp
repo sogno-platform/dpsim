@@ -26,7 +26,7 @@ Real relativeError(Real actual, Real expected) {
 
 } // namespace
 
-int main() {
+int main(int argc, char *argv[]) {
   try {
     // -------------------------------------------------------------------------
     // Simulation settings
@@ -34,7 +34,9 @@ int main() {
     constexpr Real timeStep = 1e-5;
     constexpr Real finalTime = 0.5;
     constexpr Real sourceStepTime = 0.1;
-    const String simName = "EMT_DC_SSN_PiLine_SourceStep";
+    const Bool useDirectLine = argc > 1 && std::string(argv[1]) == "direct";
+    const String simName = String("EMT_DC_SSN_PiLine_SourceStep") +
+                           (useDirectLine ? String("_Direct") : String(""));
 
     // -------------------------------------------------------------------------
     // Electrical parameters in SI units
@@ -98,7 +100,8 @@ int main() {
     feeder->setParameters(feederResistance);
     feeder->connect({sendingNode, sourceNode});
 
-    auto line = EMT::DC::PiLine::make("dc_pi_line");
+    auto line = useDirectLine ? EMT::DC::PiLine::make("dc_pi_line", false)
+                              : EMT::DC::PiLine::make("dc_pi_line");
     line->setParameters(lineResistance, lineInductance, totalLineCapacitance,
                         lineConductance, initialCurrent);
     line->connect({receivingNode, sendingNode});
@@ -156,9 +159,12 @@ int main() {
               << "  sending node     = " << scalarIndex(sendingNode) << '\n'
               << "  receiving node   = " << scalarIndex(receivingNode) << '\n'
               << "  source branch    = " << scalarIndex(source->virtualNode(0))
-              << '\n'
-              << "  pi-line internal = " << scalarIndex(line->virtualNode(0))
-              << "\n\n";
+              << '\n';
+    if (useDirectLine)
+      std::cout << "  PiLine topology  = direct (no virtual node)\n\n";
+    else
+      std::cout << "  pi-line internal = " << scalarIndex(line->virtualNode(0))
+                << "\n\n";
 
     simulation.start();
 

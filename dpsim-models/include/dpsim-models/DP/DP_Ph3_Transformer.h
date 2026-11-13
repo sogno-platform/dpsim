@@ -31,6 +31,20 @@ private:
   Real mNoLoadCurrent = 0.01;
   /// No-load loss as a fraction of rated power (IEC 60076 P0)
   Real mNoLoadLoss = 1e-3;
+  Bool mUseSubcomponents = true;
+  MatrixComp mDirectInductorAdmittance = MatrixComp::Zero(3, 3);
+  Complex mDirectInductorPrevCurrentFactor = Complex(0., 0.);
+  MatrixComp mDirectInductorCurrent0 = MatrixComp::Zero(3, 1);
+  MatrixComp mDirectInductorCurrent1 = MatrixComp::Zero(3, 1);
+  MatrixComp mDirectInductorVoltage0 = MatrixComp::Zero(3, 1);
+  MatrixComp mDirectInductorVoltage1 = MatrixComp::Zero(3, 1);
+  MatrixComp mDirectInductorHistory0 = MatrixComp::Zero(3, 1);
+  MatrixComp mDirectInductorHistory1 = MatrixComp::Zero(3, 1);
+  MatrixComp mDirectMagnetizingAdmittance = MatrixComp::Zero(3, 3);
+  Complex mDirectMagnetizingPrevCurrentFactor = Complex(0., 0.);
+  MatrixComp mDirectMagnetizingCurrent = MatrixComp::Zero(3, 1);
+  MatrixComp mDirectMagnetizingVoltage = MatrixComp::Zero(3, 1);
+  MatrixComp mDirectMagnetizingHistory = MatrixComp::Zero(3, 1);
   /// True once the sub-components have been built
   Bool mSubCompCreated = false;
   /// Considers resistive losses with a series sub resistor
@@ -65,6 +79,14 @@ public:
   Transformer(String uid, String name,
               Logger::Level logLevel = Logger::Level::off,
               Bool withResistiveLosses = false);
+  Transformer(String uid, String name, Bool useSubcomponents,
+              Logger::Level logLevel = Logger::Level::off,
+              Bool withResistiveLosses = false);
+  Transformer(String name, Bool useSubcomponents,
+              Logger::Level logLevel = Logger::Level::off,
+              Bool withResistiveLosses = false)
+      : Transformer(name, name, useSubcomponents, logLevel,
+                    withResistiveLosses) {}
   /// Defines name and logging level
   Transformer(String name, Logger::Level logLevel = Logger::Level::off)
       : Transformer(name, name, logLevel) {}
@@ -78,7 +100,11 @@ public:
 
   void initializeParentFromNodesAndTerminals(Real frequency) override;
 
+  void mnaParentInitialize(Real omega, Real timeStep,
+                           Attribute<Matrix>::Ptr leftVector) override;
+
   void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
   void mnaParentPreStep(Real time, Int timeStepCount) override;
   void mnaParentAddPreStepDependencies(
       AttributeBase::List &prevStepDependencies,

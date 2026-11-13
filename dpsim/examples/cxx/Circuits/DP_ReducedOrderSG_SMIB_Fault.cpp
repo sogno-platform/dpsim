@@ -165,7 +165,12 @@ int main(int argc, char *argv[]) {
   loggerDP->logAttribute("Te", genDP->attribute("Te"));
   loggerDP->logAttribute("delta", genDP->attribute("delta"));
   loggerDP->logAttribute("w_r", genDP->attribute("w_r"));
-  loggerDP->logAttribute("Edq0", genDP->attribute("Edq0_t"));
+  if (SGModel == "3" || SGModel == "4")
+    loggerDP->logAttribute("Edq0", genDP->attribute("Edq0_t"));
+  else {
+    loggerDP->logAttribute("Edq_t", genDP->attribute("Edq_t"));
+    loggerDP->logAttribute("Edq_s", genDP->attribute("Edq_s"));
+  }
   loggerDP->logAttribute("Vdq0", genDP->attribute("Vdq0"));
   loggerDP->logAttribute("Idq0", genDP->attribute("Idq0"));
 

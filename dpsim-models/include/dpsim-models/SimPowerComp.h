@@ -46,6 +46,14 @@ public:
   /// Current through component
   const typename Attribute<MatrixVar<VarType>>::Ptr mIntfCurrent;
 
+protected:
+  // The Attribute objects remain the authoritative dependency/public API
+  // storage. These pointers cache their stable payloads for tight numerical
+  // loops and avoid repeated virtual Attribute::get() dispatch.
+  MatrixVar<VarType> *mIntfVoltageValue;
+  MatrixVar<VarType> *mIntfCurrentValue;
+
+public:
   /// Basic constructor that takes UID, name and log level
   SimPowerComp(String uid, String name,
                Logger::Level logLevel = Logger::Level::off);

@@ -27,7 +27,7 @@ protected:
   /// Calculates the voltage vector shifted by 90 degrees for positive sequence.
   static Matrix quadratureVoltage(const Matrix &voltage);
   /// Calculates the load current for a given instantaneous abc voltage.
-  Matrix calculateCurrent(const Matrix &voltage) const;
+  MatrixFixedSize<3, 1> calculateCurrent(const Matrix &voltage) const;
   /// Updates the instantaneous measured powers.
   void updateMeasuredPower();
 
@@ -76,6 +76,8 @@ public:
                          Attribute<Matrix>::Ptr leftVector) override;
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
+  Bool mnaHasCompactRightSideVectorStamp() const override { return true; }
+  void mnaAddCompactRightSideVectorStamp(Matrix &rightVector) override;
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
   void mnaCompPreStep(Real time, Int timeStepCount) override;
   void mnaCompPostStep(Real time, Int timeStepCount,

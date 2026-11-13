@@ -23,6 +23,10 @@ class Resistor : public MNASimPowerComp<Complex>,
                  public MNATearInterface,
                  public SharedFactory<Resistor> {
 
+private:
+  /// Cached conductance; the SP resistor has a constant system-matrix stamp.
+  Matrix mConductance = Matrix::Zero(3, 3);
+
 public:
   /// Defines UID, name and logging level
   Resistor(String uid, String name,

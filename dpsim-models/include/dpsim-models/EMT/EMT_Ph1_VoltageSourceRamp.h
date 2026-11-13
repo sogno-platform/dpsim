@@ -26,6 +26,8 @@ protected:
   Real mAddSrcFreq;
   ///
   Real mRampTime;
+  Bool mUseSubcomponents = true;
+  Real mDirectVoltageForRhs = 0.;
   ///
   std::shared_ptr<VoltageSource> mSubVoltageSource;
 
@@ -37,6 +39,11 @@ public:
   /// Defines UID, name and logging level
   VoltageSourceRamp(String uid, String name,
                     Logger::Level logLevel = Logger::Level::off);
+  VoltageSourceRamp(String uid, String name, Bool useSubcomponents,
+                    Logger::Level logLevel = Logger::Level::off);
+  VoltageSourceRamp(String name, Bool useSubcomponents,
+                    Logger::Level logLevel = Logger::Level::off)
+      : VoltageSourceRamp(name, name, useSubcomponents, logLevel) {}
   /// Defines name and logging level
   VoltageSourceRamp(String name, Logger::Level logLevel = Logger::Level::off)
       : VoltageSourceRamp(name, name, logLevel) {}
@@ -54,6 +61,19 @@ public:
 
   // #### MNA section ####
   void mnaParentPreStep(Real time, Int timeStepCount) override;
+  void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaParentPostStep(Real time, Int timeStepCount,
+                         Attribute<Matrix>::Ptr &leftVector) override;
+  void mnaParentAddPreStepDependencies(
+      AttributeBase::List &prevStepDependencies,
+      AttributeBase::List &attributeDependencies,
+      AttributeBase::List &modifiedAttributes) override;
+  void
+  mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
+                                   AttributeBase::List &attributeDependencies,
+                                   AttributeBase::List &modifiedAttributes,
+                                   Attribute<Matrix>::Ptr &leftVector) override;
   void updateState(Real time);
 };
 } // namespace Ph1

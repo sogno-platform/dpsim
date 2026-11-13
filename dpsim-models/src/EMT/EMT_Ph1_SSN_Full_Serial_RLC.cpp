@@ -182,7 +182,7 @@ void EMT::Ph1::SSN::Full_Serial_RLC::mnaCompUpdateVoltage(
     const Matrix &leftVector) {
   // v1 - v0
   mDufourUNT = (**mIntfVoltage)(0, 0);
-  **mIntfVoltage = Matrix::Zero(1, 1);
+  (**mIntfVoltage).setZero();
   if (terminalNotGrounded(1)) {
     (**mIntfVoltage)(0, 0) =
         Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));

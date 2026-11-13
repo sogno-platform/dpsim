@@ -12,6 +12,7 @@ class Domain(Enum):
     SP = 2
     DP = 3
     EMT = 4
+    DP3PH = 5
 
 
 class GenModel(Enum):
@@ -306,7 +307,7 @@ class Reader:
         The dpsim nodes are stored in the dict self.dpsimpy_busses_dict.
         All other components are stored in the dict self.dpsimpy_comp_dict
 
-        @param domain: modeling domain to be used in dpsim (PF, SP, EMT or DP)
+        @param domain: modeling domain (PF, SP, EMT, DP, or DP3PH)
         @param frequency: system frequency
         @param log_level: log level used by the dpsim objects
         @param filter_out_of_service: if True, exclude out-of-service
@@ -336,6 +337,10 @@ class Reader:
             self.dpsimpy_components = dpsimpy.dp.ph1
             self.dpsimpy_components.SimNode = getattr(dpsimpy.dp, "SimNode")
             self.dpsimpy_components.Switch = getattr(dpsimpy.dp.ph1, "Switch")
+        elif self.domain == Domain.DP3PH:
+            self.dpsimpy_components = dpsimpy.dp.ph3
+            self.dpsimpy_components.SimNode = getattr(dpsimpy.dp, "SimNode")
+            self.dpsimpy_components.Switch = getattr(dpsimpy.dp.ph3, "Switch")
         elif self.domain == Domain.EMT:
             self.dpsimpy_components = dpsimpy.emt.ph3
             self.dpsimpy_components.SimNode = getattr(dpsimpy.emt, "SimNode")
@@ -368,7 +373,7 @@ class Reader:
                 else:
                     bus_assets = list(self.mpc_bus_assets_dict[int(bus_index)])
 
-            if self.domain == Domain.EMT:
+            if self.domain in [Domain.EMT, Domain.DP3PH]:
                 self.dpsimpy_busses_dict[bus_name] = self.dpsimpy_components.SimNode(
                     bus_name, dpsimpy.PhaseType.ABC
                 )
@@ -436,15 +441,39 @@ class Reader:
 
             # Slack bus
             elif bus_type == 3:
-                # TODO: Use SG or NetworkInjection???? --> SG
-                # # set initial Q is not implemented for network injection in DPsim.
-                # # The mapping was changed here to test case ieee14/ieee39.
-                # # This mapping does not work with asm uc because Pg and Qg of the slack are equal to zero
-                # # TODO implement initial reactive power for slack in Dpsim.
-
-                self.map_network_injection(index, bus_index)
-                # self.map_synchronous_machine(index, bus_index, bus_type=dpsimpy.PowerflowBusType.VD,
-                # with_pss=with_pss, with_tg=with_tg, with_avr=with_avr)
+                # Keep the PF slack as an ideal reference, but use the selected
+                # synchronous-machine model for dynamic simulations when one is
+                # explicitly requested. This makes model-to-model comparisons
+                # use the same generator type at every generator bus.
+                slack_gen_model = generator_model
+                if slack_gen_model is not None and not isinstance(
+                    slack_gen_model, GenModel
+                ):
+                    slack_gen_model = GenModel(int(slack_gen_model))
+                if self.domain == Domain.PF:
+                    # Use the generator's MATPOWER name in the PF topology so
+                    # dynamic models can inherit its solved P/Q at the slack bus.
+                    self.map_synchronous_machine(
+                        index,
+                        bus_index,
+                        bus_type=dpsimpy.PowerflowBusType.VD,
+                    )
+                elif (
+                    self.domain in [Domain.DP, Domain.DP3PH, Domain.EMT]
+                    and slack_gen_model is not None
+                    and slack_gen_model != GenModel.IDEAL_VOLTAGE_SOURCE
+                ):
+                    self.map_synchronous_machine(
+                        index,
+                        bus_index,
+                        bus_type=dpsimpy.PowerflowBusType.VD,
+                        with_pss=with_pss,
+                        with_tg=with_tg,
+                        with_avr=with_avr,
+                        gen_model=slack_gen_model,
+                    )
+                else:
+                    self.map_network_injection(index, bus_index)
 
                 # check if there is a load connected to slack bus (and create it)
                 self.map_energy_consumer(
@@ -522,7 +551,7 @@ class Reader:
                 self.dpsimpy_comp_dict[line_name] = [
                     self.dpsimpy_components.PiLine(line_name, log_level)
                 ]
-                if self.domain == Domain.EMT:
+                if self.domain in [Domain.EMT, Domain.DP3PH]:
                     self.dpsimpy_comp_dict[line_name][0].set_parameters(
                         dpsimpy.Math.single_phase_parameter_to_three_phase(line_r),
                         dpsimpy.Math.single_phase_parameter_to_three_phase(line_l),
@@ -561,7 +590,7 @@ class Reader:
                 if branch_ratio == 0:
                     branch_ratio = 1
 
-                # TODO: For transformation of Impedances a ratio with angle shift has to be used!
+                # TODO: For transformation of impedances a ratio with angle shift has to be used!
                 transf_ratioAbs = branch_ratio * fbus_baseV / tbus_baseV
 
                 # From MATPOWER-manual taps at “from” bus,  impedance at “to” bus,  i.e.  ifr=x=b= 0,tap=|Vf|/|Vt|
@@ -609,7 +638,7 @@ class Reader:
                 rated_power = (
                     branch_rateA if branch_rateA > 0 else self.mpc_base_power_MVA
                 )
-                if self.domain == Domain.EMT:
+                if self.domain in [Domain.EMT, Domain.DP3PH]:
                     trafo.set_parameters(
                         fbus_baseV,
                         tbus_baseV,
@@ -703,21 +732,29 @@ class Reader:
             gen.set_base_voltage(gen_baseV)
             gen.modify_power_flow_bus_type(bus_type)
         else:
-            # get dynamic data of the generator
-            gen_dyn_row_idx = self.mpc_dyn_gen_data.index[
-                self.mpc_dyn_gen_data["bus"] == int(bus_index)
-            ].tolist()[0]
-            # TODO: throw error if len(self.mpc_dyn_gen_data.index[self.mpc_dyn_gen_data['bus'] == int(bus_index)].tolist() > 1) ??
-            # --> two gens associated to one node...
-
-            gen_model_data = self.mpc_dyn_gen_data["model"][gen_dyn_row_idx]
-
             try:
                 if gen_model is not None and not isinstance(gen_model, GenModel):
                     gen_model = GenModel(int(gen_model))
 
                 if gen_model is None:
-                    gen_model = GenModel(int(gen_model_data))
+                    if self.domain == Domain.DP3PH:
+                        gen_model = GenModel.IDEAL_VOLTAGE_SOURCE
+                    elif self.mpc_dyn_gen_data is not None:
+                        rows = self.mpc_dyn_gen_data.index[
+                            self.mpc_dyn_gen_data["bus"] == int(bus_index)
+                        ].tolist()
+                        if not rows:
+                            raise ValueError(
+                                f"No dynamic-generator data for bus {bus_index}."
+                            )
+                        gen_model = GenModel(
+                            int(self.mpc_dyn_gen_data["model"][rows[0]])
+                        )
+                    else:
+                        raise ValueError(
+                            "Dynamic-generator data is required unless an ideal "
+                            "voltage source model is selected."
+                        )
             except ValueError:
                 raise Exception(
                     "Unrecognized generator model {} in dynamic data for bus {}."
@@ -729,10 +766,40 @@ class Reader:
                 )
 
             if gen_model == GenModel.IDEAL_VOLTAGE_SOURCE:
-                if self.domain == Domain.EMT or self.domain == Domain.DP:
-                    gen = self.dpsimpy_components.SynchronGeneratorIdeal(
+                if self.domain == Domain.DP3PH:
+                    gen = self.dpsimpy_components.NetworkInjection(
                         gen_name, self.log_level
                     )
+                    gen_v_ref = (
+                        np.sqrt(2.0 / 3.0)
+                        * gen_v
+                        * np.exp(1j * np.deg2rad(self.mpc_bus_data.at[index, "Va"]))
+                    )
+                    gen.set_parameters(
+                        dpsimpy.Math.single_phase_variable_to_three_phase(gen_v_ref)
+                    )
+                elif self.domain in [Domain.EMT, Domain.DP]:
+                    if self.domain == Domain.EMT:
+                        # An explicit ideal-generator selection is useful as a
+                        # network-only baseline. Keep the source voltage at the
+                        # MATPOWER setpoint and angle, using EMT's line-line RMS
+                        # convention for NetworkInjection.
+                        gen = self.dpsimpy_components.NetworkInjection(
+                            gen_name, self.log_level
+                        )
+                        gen_v_ref = gen_v * np.exp(
+                            1j * np.deg2rad(self.mpc_bus_data.at[index, "Va"])
+                        )
+                        gen.set_parameters(
+                            dpsimpy.Math.single_phase_variable_to_three_phase(
+                                gen_v_ref
+                            ),
+                            self.mpc_freq,
+                        )
+                    else:
+                        gen = self.dpsimpy_components.SynchronGeneratorIdeal(
+                            gen_name, self.log_level
+                        )
                 elif self.domain == Domain.SP:
                     raise Exception(
                         "Matpower reader does not support the generator model {} in the SP domain.".format(
@@ -742,11 +809,20 @@ class Reader:
                         )
                     )
             else:
+                if self.mpc_dyn_gen_data is None:
+                    raise ValueError(
+                        f"Dynamic-generator data is required for bus {bus_index}."
+                    )
+                gen_rows = self.mpc_dyn_gen_data.index[
+                    self.mpc_dyn_gen_data["bus"] == int(bus_index)
+                ].tolist()
+                if not gen_rows:
+                    raise ValueError(f"No dynamic-generator data for bus {bus_index}.")
+                gen_dyn_row_idx = gen_rows[0]
                 gen_baseS = self.mpc_dyn_gen_data["BaseS"][gen_dyn_row_idx] * mw_w
                 H = self.mpc_dyn_gen_data["H"][gen_dyn_row_idx]
                 Ra = self.mpc_dyn_gen_data["Ra"][gen_dyn_row_idx]
-                # Ll = self.mpc_dyn_gen_data['Xl'][gen_dyn_row_idx]
-                Ll = 0.1
+                Ll = self.mpc_dyn_gen_data["Xl"][gen_dyn_row_idx]
                 Td0_t = self.mpc_dyn_gen_data["Td0_t"][gen_dyn_row_idx]
                 Td0_s = self.mpc_dyn_gen_data["Td0_s"][gen_dyn_row_idx]
                 Tq0_t = self.mpc_dyn_gen_data["Tq0_t"][gen_dyn_row_idx]
@@ -757,7 +833,32 @@ class Reader:
                 Lq = self.mpc_dyn_gen_data["Xq"][gen_dyn_row_idx]
                 Lq_t = self.mpc_dyn_gen_data["Xq_t"][gen_dyn_row_idx]
                 Lq_s = self.mpc_dyn_gen_data["Xq_s"][gen_dyn_row_idx]
-                if gen_model == GenModel.SG_3ORDER_VBR:
+                if self.domain == Domain.DP3PH:
+                    if gen_model != GenModel.SG_4ORDER_VBR:
+                        raise NotImplementedError(
+                            "DP3Ph currently supports the fourth-order VBR "
+                            "synchronous generator."
+                        )
+                    gen = self.dpsimpy_components.SynchronGenerator4OrderVBR(
+                        gen_name, self.log_level
+                    )
+                    gen.set_parameters_operational_per_unit(
+                        nom_power=gen_baseS,
+                        nom_volt=gen_baseV,
+                        nom_freq=self.mpc_freq,
+                        pole_number=2,
+                        nom_field_cur=1.0,
+                        Rs=Ra,
+                        Ld=Ld,
+                        Lq=Lq,
+                        Ld_t=Ld_t,
+                        Lq_t=Lq_t,
+                        Ll=Ll,
+                        Td0_t=Td0_t,
+                        Tq0_t=Tq0_t,
+                        inertia=H,
+                    )
+                elif gen_model == GenModel.SG_3ORDER_VBR:
                     gen = self.dpsimpy_components.SynchronGenerator3OrderVBR(
                         gen_name, self.log_level
                     )
@@ -959,6 +1060,17 @@ class Reader:
         # get relevant data
         load_baseV = self.mpc_bus_data.at[index, "baseKV"] * kv_v
 
+        if self.domain == Domain.DP3PH:
+            self.map_energy_consumer_dp3ph(
+                bus_index,
+                load_name,
+                load_p,
+                load_q,
+                load_baseV,
+                self.mpc_bus_data.at[index, "Vm"],
+            )
+            return
+
         # create dpsim components
         load = None
         if self.domain in [Domain.PF, Domain.SP]:
@@ -969,7 +1081,10 @@ class Reader:
         if self.domain == Domain.EMT:
             load_p = dpsimpy.Math.single_phase_parameter_to_three_phase(load_p / 3)
             load_q = dpsimpy.Math.single_phase_parameter_to_three_phase(load_q / 3)
-        load.set_parameters(load_p, load_q, load_baseV)
+        load_voltage = load_baseV
+        if self.domain == Domain.EMT:
+            load_voltage *= self.mpc_bus_data.at[index, "Vm"]
+        load.set_parameters(load_p, load_q, load_voltage)
 
         if self.domain == Domain.PF and bus_type == dpsimpy.PowerflowBusType.PQ:
             load.modify_power_flow_bus_type(bus_type)
@@ -978,6 +1093,48 @@ class Reader:
         self.dpsimpy_comp_dict[load_name].append(
             [self.dpsimpy_busses_dict[self.get_node_name(bus_index)]]
         )  # [to bus]
+
+    def map_energy_consumer_dp3ph(
+        self, bus_index, load_name, active_power, reactive_power, base_voltage, vm_pu
+    ):
+        """Map a MATPOWER PQ load to balanced DP3Ph passive components."""
+        omega = 2 * np.pi * self.mpc_freq
+        phase_voltage_peak = vm_pu * base_voltage * np.sqrt(2.0 / 3.0)
+        phase_parameter = dpsimpy.Math.single_phase_parameter_to_three_phase
+        node = self.dpsimpy_busses_dict[self.get_node_name(bus_index)]
+
+        if active_power > 0:
+            resistance = dpsimpy.dp.ph3.Resistor(load_name + "_R", self.log_level)
+            resistance.set_parameters(
+                phase_parameter(1.5 * phase_voltage_peak**2 / active_power)
+            )
+            self.dpsimpy_comp_dict[load_name + "_R"] = [
+                resistance,
+                [node, dpsimpy.dp.SimNode.gnd],
+            ]
+        elif active_power < 0:
+            raise ValueError(
+                f"DP3PH reader cannot map negative active load at bus {bus_index}."
+            )
+
+        if reactive_power > 0:
+            inductance = dpsimpy.dp.ph3.Inductor(load_name + "_L", self.log_level)
+            inductance.set_parameters(
+                phase_parameter(1.5 * phase_voltage_peak**2 / (omega * reactive_power))
+            )
+            self.dpsimpy_comp_dict[load_name + "_L"] = [
+                inductance,
+                [node, dpsimpy.dp.SimNode.gnd],
+            ]
+        elif reactive_power < 0:
+            capacitance = dpsimpy.dp.ph3.Capacitor(load_name + "_C", self.log_level)
+            capacitance.set_parameters(
+                phase_parameter(-reactive_power / (1.5 * phase_voltage_peak**2 * omega))
+            )
+            self.dpsimpy_comp_dict[load_name + "_C"] = [
+                capacitance,
+                [node, dpsimpy.dp.SimNode.gnd],
+            ]
 
     def map_shunt(self, index, bus_index):
         # Gs in Matpower represents the MW demanded at V = 1.0 p.u., Bs the MVAr injected at V = 1.0 p.u.
@@ -1010,6 +1167,40 @@ class Reader:
             self.dpsimpy_comp_dict[shunt_name].append(
                 [self.dpsimpy_busses_dict[self.get_node_name(bus_index)]]
             )
+        elif self.domain == Domain.DP3PH:
+            phase_parameter = dpsimpy.Math.single_phase_parameter_to_three_phase
+            node = self.dpsimpy_busses_dict[self.get_node_name(bus_index)]
+            if gs != 0:
+                shunt_res = self.dpsimpy_components.Resistor(
+                    "Shunt_N" + bus_index + "_R", self.log_level
+                )
+                shunt_res.set_parameters(phase_parameter(1 / gs))
+                self.dpsimpy_comp_dict["Shunt_N" + bus_index + "_R"] = [
+                    shunt_res,
+                    [node, dpsimpy.dp.SimNode.gnd],
+                ]
+            if bs > 0:
+                shunt_cap = self.dpsimpy_components.Capacitor(
+                    "Shunt_N" + bus_index + "_C", self.log_level
+                )
+                shunt_cap.set_parameters(
+                    phase_parameter(bs / (2 * np.pi * self.mpc_freq))
+                )
+                self.dpsimpy_comp_dict["Shunt_N" + bus_index + "_C"] = [
+                    shunt_cap,
+                    [node, dpsimpy.dp.SimNode.gnd],
+                ]
+            elif bs < 0:
+                shunt_ind = self.dpsimpy_components.Inductor(
+                    "Shunt_N" + bus_index + "_L", self.log_level
+                )
+                shunt_ind.set_parameters(
+                    phase_parameter(-1 / (2 * np.pi * self.mpc_freq * bs))
+                )
+                self.dpsimpy_comp_dict["Shunt_N" + bus_index + "_L"] = [
+                    shunt_ind,
+                    [node, dpsimpy.dp.SimNode.gnd],
+                ]
         else:
             shunt_name = "Shunt_N" + bus_index
             shunt_res = self.dpsimpy_components.Shunt(shunt_name, self.log_level)
@@ -1030,13 +1221,22 @@ class Reader:
         ]
         extnet_baseV = self.mpc_bus_data.at[index, "baseKV"] * kv_v
         extnet_v = extnet["Vg"].values[0] * extnet_baseV
-        if self.domain == Domain.EMT:
+        if self.domain in [Domain.EMT, Domain.DP3PH]:
+            # EMT voltage-source V_ref is line-line RMS and scales internally;
+            # DP3Ph sources instead use phase-ground peak phasors.
+            if self.domain == Domain.DP3PH:
+                extnet_v *= np.sqrt(2.0 / 3.0)
             extnet_v = dpsimpy.Math.single_phase_variable_to_three_phase(extnet_v)
 
         self.dpsimpy_comp_dict[extnet_name] = [
             self.dpsimpy_components.NetworkInjection(extnet_name, self.log_level)
         ]
-        self.dpsimpy_comp_dict[extnet_name][0].set_parameters(extnet_v)
+        if self.domain == Domain.EMT:
+            self.dpsimpy_comp_dict[extnet_name][0].set_parameters(
+                extnet_v, self.mpc_freq
+            )
+        else:
+            self.dpsimpy_comp_dict[extnet_name][0].set_parameters(extnet_v)
         if self.domain == Domain.PF:
             self.dpsimpy_comp_dict[extnet_name][0].set_base_voltage(extnet_baseV)
             self.dpsimpy_comp_dict[extnet_name][0].modify_power_flow_bus_type(

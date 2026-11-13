@@ -5,12 +5,18 @@
 #include <stdexcept>
 
 #include <dpsim-models/EMT/EMT_Ph3_GFL.h>
+#include <dpsim-models/MNAStampUtils.h>
 #include <dpsim-models/MathUtils.h>
 
 using namespace CPS;
 
 EMT::Ph3::GFL::GFL(String uid, String name, Logger::Level logLevel)
+    : GFL(uid, name, true, logLevel) {}
+
+EMT::Ph3::GFL::GFL(String uid, String name, Bool useSubcomponents,
+                   Logger::Level logLevel)
     : CompositePowerComp<Real>(uid, name, true, true, logLevel),
+      mUseSubcomponents(useSubcomponents),
       mVcd(mAttributes->create<Real>("vc_d", 0.0)),
       mVcq(mAttributes->create<Real>("vc_q", 0.0)),
       mIgridD(mAttributes->create<Real>("igrid_d", 0.0)),
@@ -20,6 +26,8 @@ EMT::Ph3::GFL::GFL(String uid, String name, Logger::Level logLevel)
       mOmegaPLL(mAttributes->create<Real>("omega_pll", 0.0)),
       mVsref(mAttributes->create<Matrix>("vs_ref", Matrix::Zero(3, 1))),
       mVs(mAttributes->createDynamic<Matrix>("vs")),
+      mDirectSourceVoltageAttr(mAttributes->create<Matrix>(
+          "direct_source_voltage", Matrix::Zero(3, 1))),
       mPllOutput(mAttributes->createDynamic<Matrix>("pll_output")),
       mPowerctrlInputs(mAttributes->createDynamic<Matrix>("powerctrl_inputs")),
       mPowerctrlOutputs(
@@ -29,7 +37,7 @@ EMT::Ph3::GFL::GFL(String uid, String name, Logger::Level logLevel)
   mPhaseType = PhaseType::ABC;
 
   // Two internal nodes are used for source, resistor, and inductor connection.
-  setVirtualNodeNumber(2);
+  setVirtualNodeNumber(mUseSubcomponents ? 2 : 3);
   setTerminalNumber(1);
 
   **mIntfVoltage = Matrix::Zero(3, 1);
@@ -40,29 +48,27 @@ EMT::Ph3::GFL::GFL(String uid, String name, Logger::Level logLevel)
   // -------------------------------------------------------------------------
   // Electrical subcomponents
   // -------------------------------------------------------------------------
-  mSubControlledVoltageSource =
-      EMT::Ph3::VoltageSource::make(**mName + "_src", mLogLevel);
+  if (mUseSubcomponents) {
+    mSubControlledVoltageSource =
+        EMT::Ph3::VoltageSource::make(**mName + "_src", mLogLevel);
+    mSubResistorF = EMT::Ph3::Resistor::make(**mName + "_resF", mLogLevel);
+    mSubInductorF = EMT::Ph3::Inductor::make(**mName + "_indF", mLogLevel);
+    mSubCapacitorF = EMT::Ph3::Capacitor::make(**mName + "_capF", mLogLevel);
 
-  mSubResistorF = EMT::Ph3::Resistor::make(**mName + "_resF", mLogLevel);
-
-  mSubInductorF = EMT::Ph3::Inductor::make(**mName + "_indF", mLogLevel);
-
-  mSubCapacitorF = EMT::Ph3::Capacitor::make(**mName + "_capF", mLogLevel);
-
-  addMNASubComponent(mSubResistorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
-
-  addMNASubComponent(mSubInductorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-
-  addMNASubComponent(mSubCapacitorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-
-  // The controlled voltage source pre-step is handled explicitly by the
-  // parent so its voltage reference can be updated immediately beforehand.
-  addMNASubComponent(mSubControlledVoltageSource,
-                     MNA_SUBCOMP_TASK_ORDER::NO_TASK,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+    addMNASubComponent(mSubResistorF,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+    addMNASubComponent(mSubInductorF,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+    addMNASubComponent(mSubCapacitorF,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+    // The controlled source pre-step is handled by the parent.
+    addMNASubComponent(mSubControlledVoltageSource,
+                       MNA_SUBCOMP_TASK_ORDER::NO_TASK,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+  }
 
   // -------------------------------------------------------------------------
   // Control subcomponents
@@ -73,7 +79,10 @@ EMT::Ph3::GFL::GFL(String uid, String name, Logger::Level logLevel)
       **mName + "_PowerControllerVSI", mLogLevel);
 
   // Actual internal source voltage for logging.
-  mVs->setReference(mSubControlledVoltageSource->mIntfVoltage);
+  if (mUseSubcomponents)
+    mVs->setReference(mSubControlledVoltageSource->mIntfVoltage);
+  else
+    mVs->setReference(mDirectSourceVoltageAttr);
 
   // PLL input is the PCC q-axis voltage.
   mPLL->mInputRef->setReference(mVcq);
@@ -93,7 +102,7 @@ EMT::Ph3::GFL::GFL(String uid, String name, Logger::Level logLevel)
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::GFL::clone(String name) {
-  auto copy = GFL::make(name, mLogLevel);
+  auto copy = GFL::make(name, mUseSubcomponents, mLogLevel);
 
   copy->setParameters(mOmegaN, mVnom, mPRef, mQRef);
 
@@ -216,11 +225,11 @@ void EMT::Ph3::GFL::setFilterParameters(Real lf, Real cf, Real rf) {
   mCf = cf;
   mRf = rf;
 
-  mSubResistorF->setParameters(Math::singlePhaseParameterToThreePhase(mRf));
-
-  mSubInductorF->setParameters(Math::singlePhaseParameterToThreePhase(mLf));
-
-  mSubCapacitorF->setParameters(Math::singlePhaseParameterToThreePhase(mCf));
+  if (mUseSubcomponents) {
+    mSubResistorF->setParameters(Math::singlePhaseParameterToThreePhase(mRf));
+    mSubInductorF->setParameters(Math::singlePhaseParameterToThreePhase(mLf));
+    mSubCapacitorF->setParameters(Math::singlePhaseParameterToThreePhase(mCf));
+  }
 
   mFilterParametersSet = true;
 
@@ -255,50 +264,56 @@ void EMT::Ph3::GFL::setInitialStateValues(Real pInit, Real qInit, Real phiDInit,
                                              gammaDInit, gammaQInit);
 }
 
-Matrix EMT::Ph3::GFL::getParkTransformMatrixPowerInvariant(Real theta) const {
+MatrixFixedSize<2, 3>
+EMT::Ph3::GFL::getParkTransformMatrixPowerInvariant(Real theta) const {
 
-  Matrix transform = Matrix::Zero(2, 3);
+  MatrixFixedSize<2, 3> transform;
 
   const Real k = std::sqrt(2.0 / 3.0);
+  const Real c = std::cos(theta);
+  const Real s = std::sin(theta);
+  const Real c120 = 0.5 * std::sqrt(3.0);
 
-  transform << k * std::cos(theta), k * std::cos(theta - 2.0 * PI / 3.0),
-      k * std::cos(theta + 2.0 * PI / 3.0),
+  transform << k * c, k * (-0.5 * c + c120 * s), k * (-0.5 * c - c120 * s),
 
-      -k * std::sin(theta), -k * std::sin(theta - 2.0 * PI / 3.0),
-      -k * std::sin(theta + 2.0 * PI / 3.0);
+      -k * s, k * (0.5 * s + c120 * c), k * (0.5 * s - c120 * c);
 
   return transform;
 }
 
-Matrix
+MatrixFixedSize<3, 2>
 EMT::Ph3::GFL::getInverseParkTransformMatrixPowerInvariant(Real theta) const {
 
-  Matrix transform = Matrix::Zero(3, 2);
+  MatrixFixedSize<3, 2> transform;
 
   const Real k = std::sqrt(2.0 / 3.0);
+  const Real c = std::cos(theta);
+  const Real s = std::sin(theta);
+  const Real c120 = 0.5 * std::sqrt(3.0);
 
-  transform << k * std::cos(theta), -k * std::sin(theta),
+  transform << k * c, -k * s,
 
-      k * std::cos(theta - 2.0 * PI / 3.0),
-      -k * std::sin(theta - 2.0 * PI / 3.0),
+      k * (-0.5 * c + c120 * s), k * (0.5 * s + c120 * c),
 
-      k * std::cos(theta + 2.0 * PI / 3.0),
-      -k * std::sin(theta + 2.0 * PI / 3.0);
+      k * (-0.5 * c - c120 * s), k * (0.5 * s - c120 * c);
 
   return transform;
 }
 
-Matrix EMT::Ph3::GFL::parkTransformPowerInvariant(Real theta,
-                                                  const Matrix &fabc) const {
+MatrixFixedSize<2, 1>
+EMT::Ph3::GFL::parkTransformPowerInvariant(Real theta,
+                                           const Matrix &fabc) const {
 
-  return getParkTransformMatrixPowerInvariant(theta) * fabc;
+  const MatrixFixedSize<3, 1> phases = fabc;
+  return getParkTransformMatrixPowerInvariant(theta) * phases;
 }
 
-Matrix
+MatrixFixedSize<3, 1>
 EMT::Ph3::GFL::inverseParkTransformPowerInvariant(Real theta,
                                                   const Matrix &fdq) const {
 
-  return getInverseParkTransformMatrixPowerInvariant(theta) * fdq;
+  const MatrixFixedSize<2, 1> dq = fdq;
+  return getInverseParkTransformMatrixPowerInvariant(theta) * dq;
 }
 
 void EMT::Ph3::GFL::updateMeasurementAttributes(Real theta) {
@@ -314,9 +329,9 @@ void EMT::Ph3::GFL::updateMeasurementAttributes(Real theta) {
   // converter-to-grid injection.
   const Matrix iGridAbc = -**mIntfCurrent;
 
-  const Matrix vDq = parkTransformPowerInvariant(theta, vPccAbc);
+  const auto vDq = parkTransformPowerInvariant(theta, vPccAbc);
 
-  const Matrix iDq = parkTransformPowerInvariant(theta, iGridAbc);
+  const auto iDq = parkTransformPowerInvariant(theta, iGridAbc);
 
   **mVcd = vDq(0, 0);
   **mVcq = vDq(1, 0);
@@ -404,16 +419,26 @@ void EMT::Ph3::GFL::initializeParentFromNodesAndTerminals(Real frequency) {
   // -------------------------------------------------------------------------
   // Controlled source
   // -------------------------------------------------------------------------
-  mSubControlledVoltageSource->setParameters(mVirtualNodes[0]->initialVoltage(),
-                                             0.0);
-
-  mSubControlledVoltageSource->connect({SimNode::GND, mVirtualNodes[0]});
-
-  mSubResistorF->connect({mVirtualNodes[0], mVirtualNodes[1]});
-
-  mSubInductorF->connect({mVirtualNodes[1], mTerminals[0]->node()});
-
-  mSubCapacitorF->connect({mTerminals[0]->node(), SimNode::GND});
+  if (mUseSubcomponents) {
+    mSubControlledVoltageSource->setParameters(
+        mVirtualNodes[0]->initialVoltage(), 0.0);
+    mSubControlledVoltageSource->connect({SimNode::GND, mVirtualNodes[0]});
+    mSubResistorF->connect({mVirtualNodes[0], mVirtualNodes[1]});
+    mSubInductorF->connect({mVirtualNodes[1], mTerminals[0]->node()});
+    mSubCapacitorF->connect({mTerminals[0]->node(), SimNode::GND});
+  } else {
+    mVirtualNodes[2]->setInitialVoltage(Matrix::Zero(3, 1));
+    mDirectInductorVoltage = (vPcc - vInductorInput).real();
+    // The child inductor is oriented from the converter-side virtual node to
+    // the PCC; its terminal voltage is Vpcc - VinductorInput = -jωLf·iF.
+    mDirectInductorCurrent = -iF.real();
+    mDirectCapacitorCurrent = -iCf.real();
+    mDirectSourceVoltage = vSource.real();
+    // Match the legacy controlled voltage-source attribute at t=0: its
+    // interface voltage is still zero until its first pre-step. The direct
+    // source attribute is populated in mnaParentPreStep before the first
+    // solve, while the branch value already carries the initialized command.
+  }
 
   // Subcomponents are initialized recursively by CompositePowerComp.
 
@@ -428,11 +453,11 @@ void EMT::Ph3::GFL::initializeParentFromNodesAndTerminals(Real frequency) {
 
   const Matrix vSourceAbc0 = vSource.real();
 
-  const Matrix vDq0 = parkTransformPowerInvariant(theta0, vPccAbc0);
+  const auto vDq0 = parkTransformPowerInvariant(theta0, vPccAbc0);
 
-  const Matrix iDq0 = parkTransformPowerInvariant(theta0, iGridAbc0);
+  const auto iDq0 = parkTransformPowerInvariant(theta0, iGridAbc0);
 
-  const Matrix vSourceDq0 = parkTransformPowerInvariant(theta0, vSourceAbc0);
+  const auto vSourceDq0 = parkTransformPowerInvariant(theta0, vSourceAbc0);
 
   **mVcd = vDq0(0, 0);
 
@@ -509,6 +534,19 @@ void EMT::Ph3::GFL::mnaParentInitialize(Real omega, Real timeStep,
 
   mTimeStep = timeStep;
 
+  if (!mUseSubcomponents) {
+    mDirectResistorConductance = Matrix::Identity(3, 3) / std::max(mRf, 1e-12);
+    mDirectInductorConductance =
+        (timeStep / (2. * mLf)) * Matrix::Identity(3, 3);
+    mDirectCapacitorConductance =
+        (2. * mCf / timeStep) * Matrix::Identity(3, 3);
+    mDirectInductorHistory =
+        mDirectInductorConductance * mDirectInductorVoltage +
+        mDirectInductorCurrent;
+    mDirectCapacitorHistory = -mDirectCapacitorCurrent +
+                              mDirectCapacitorConductance * (**mIntfVoltage);
+  }
+
   // Initialize power controller first. Its initial output is the desired
   // source voltage in dq when the automatically computed states are used.
   mPowerControllerVSI->initializeStateSpaceModel(omega, timeStep, leftVector);
@@ -528,6 +566,52 @@ void EMT::Ph3::GFL::mnaParentInitialize(Real omega, Real timeStep,
   mMnaTasks.push_back(std::make_shared<ControlPreStep>(*this));
 
   mMnaTasks.push_back(std::make_shared<ControlStep>(*this));
+}
+
+void EMT::Ph3::GFL::mnaParentApplySystemMatrixStamp(
+    SparseMatrixRow &systemMatrix) {
+  if (mUseSubcomponents)
+    return;
+
+  updateMatrixNodeIndices();
+  const UInt sourceNode = mVirtualNodes[0]->matrixNodeIndex(PhaseType::A);
+  const UInt filterNode = mVirtualNodes[1]->matrixNodeIndex(PhaseType::A);
+  const UInt sourceCurrent = mVirtualNodes[2]->matrixNodeIndex(PhaseType::A);
+  MNAStampUtils::stampConductanceMatrix(mDirectResistorConductance,
+                                        systemMatrix, sourceNode, filterNode,
+                                        true, true, mSLog);
+  MNAStampUtils::stampConductanceMatrix(
+      mDirectInductorConductance, systemMatrix, filterNode, matrixNodeIndex(0),
+      true, terminalNotGrounded(0), mSLog);
+  MNAStampUtils::stampConductanceMatrix(mDirectCapacitorConductance,
+                                        systemMatrix, matrixNodeIndex(0), 0,
+                                        terminalNotGrounded(0), false, mSLog);
+  for (UInt phase = 0; phase < 3; ++phase) {
+    Math::addToMatrixElement(systemMatrix, sourceNode + phase,
+                             sourceCurrent + phase, 1.);
+    Math::addToMatrixElement(systemMatrix, sourceCurrent + phase,
+                             sourceNode + phase, 1.);
+  }
+}
+
+void EMT::Ph3::GFL::mnaParentApplyRightSideVectorStamp(Matrix &rightVector) {
+  if (mUseSubcomponents)
+    return;
+
+  const UInt filterNode = mVirtualNodes[1]->matrixNodeIndex(PhaseType::A);
+  const UInt sourceCurrent = mVirtualNodes[2]->matrixNodeIndex(PhaseType::A);
+  for (UInt phase = 0; phase < 3; ++phase) {
+    Math::setVectorElement(rightVector, sourceCurrent + phase,
+                           mDirectSourceVoltage(phase, 0));
+    Math::setVectorElement(rightVector, filterNode + phase,
+                           mDirectInductorHistory(phase, 0));
+    if (terminalNotGrounded(0)) {
+      const UInt terminalIndex = matrixNodeIndex(0, phase);
+      Math::setVectorElement(rightVector, terminalIndex,
+                             -mDirectInductorHistory(phase, 0) +
+                                 mDirectCapacitorHistory(phase, 0));
+    }
+  }
 }
 
 void EMT::Ph3::GFL::addControlPreStepDependencies(
@@ -626,14 +710,25 @@ void EMT::Ph3::GFL::mnaParentAddPreStepDependencies(
 
 void EMT::Ph3::GFL::mnaParentPreStep(Real time, Int timeStepCount) {
 
-  if (mWithControl) {
-    // VoltageSource::mVoltageRef uses RMS line-line-equivalent scaling,
-    // whereas mVsref stores instantaneous phase-peak abc values.
-    mSubControlledVoltageSource->mVoltageRef->set(PEAK1PH_TO_RMS3PH * **mVsref);
+  if (mUseSubcomponents) {
+    if (mWithControl) {
+      // VoltageSource::mVoltageRef uses RMS line-line-equivalent scaling,
+      // whereas mVsref stores instantaneous phase-peak abc values.
+      mSubControlledVoltageSource->mVoltageRef->set(PEAK1PH_TO_RMS3PH *
+                                                    **mVsref);
+    }
+    std::dynamic_pointer_cast<MNAInterface>(mSubControlledVoltageSource)
+        ->mnaPreStep(time, timeStepCount);
+  } else {
+    if (mWithControl)
+      mDirectSourceVoltage = **mVsref;
+    mDirectSourceVoltageAttr->set(mDirectSourceVoltage);
+    mDirectInductorHistory =
+        mDirectInductorConductance * mDirectInductorVoltage +
+        mDirectInductorCurrent;
+    mDirectCapacitorHistory = -mDirectCapacitorCurrent +
+                              mDirectCapacitorConductance * (**mIntfVoltage);
   }
-
-  std::dynamic_pointer_cast<MNAInterface>(mSubControlledVoltageSource)
-      ->mnaPreStep(time, timeStepCount);
 
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
@@ -664,16 +759,46 @@ void EMT::Ph3::GFL::mnaParentPostStep(Real time, Int timeStepCount,
 void EMT::Ph3::GFL::mnaCompUpdateCurrent(const Matrix &leftVector) {
 
   // Net current entering the complete converter component.
-  **mIntfCurrent =
-      mSubInductorF->mIntfCurrent->get() - mSubCapacitorF->mIntfCurrent->get();
+  if (mUseSubcomponents) {
+    **mIntfCurrent = mSubInductorF->mIntfCurrent->get() -
+                     mSubCapacitorF->mIntfCurrent->get();
+    return;
+  }
+
+  const UInt filterNode = mVirtualNodes[1]->matrixNodeIndex(PhaseType::A);
+  Matrix terminalVoltage = Matrix::Zero(3, 1);
+  if (terminalNotGrounded(0))
+    for (UInt phase = 0; phase < 3; ++phase)
+      terminalVoltage(phase, 0) =
+          Math::realFromVectorElement(leftVector, matrixNodeIndex(0, phase));
+
+  // The legacy inductor/capacitor children update their terminal voltages
+  // from the solved vector before updating their histories.  The parent
+  // interface attribute still contains the previous step's value here, so
+  // using it would introduce an unintended one-step delay in direct mode.
+  mDirectInductorVoltage = terminalVoltage;
+  for (UInt phase = 0; phase < 3; ++phase)
+    mDirectInductorVoltage(phase, 0) -=
+        Math::realFromVectorElement(leftVector, filterNode + phase);
+  mDirectInductorCurrent = mDirectInductorConductance * mDirectInductorVoltage +
+                           mDirectInductorHistory;
+  mDirectCapacitorCurrent =
+      -mDirectCapacitorConductance * terminalVoltage + mDirectCapacitorHistory;
+  **mIntfCurrent = mDirectInductorCurrent - mDirectCapacitorCurrent;
 }
 
 void EMT::Ph3::GFL::mnaCompUpdateVoltage(const Matrix &leftVector) {
 
-  for (auto virtualNode : mVirtualNodes)
-    virtualNode->mnaUpdateVoltage(leftVector);
+  if (mUseSubcomponents) {
+    for (auto virtualNode : mVirtualNodes)
+      virtualNode->mnaUpdateVoltage(leftVector);
+  } else {
+    mVirtualNodes[0]->mnaUpdateVoltage(leftVector);
+    mVirtualNodes[1]->mnaUpdateVoltage(leftVector);
+    mDirectSourceVoltage = **mVs;
+  }
 
-  **mIntfVoltage = Matrix::Zero(3, 1);
+  (**mIntfVoltage).setZero();
 
   if (terminalNotGrounded(0)) {
     (**mIntfVoltage)(0, 0) =

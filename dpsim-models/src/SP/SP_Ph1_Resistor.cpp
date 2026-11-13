@@ -84,7 +84,7 @@ void SP::Ph1::Resistor::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow &Y) {
   }
 
   //set the circuit matrix values
-  Y.coeffRef(bus1, bus1) += Y_element;
+  Math::addToMatrixElement(Y, bus1, bus1, Y_element);
   SPDLOG_LOGGER_INFO(mSLog, "#### Y matrix stamping: {}", Y_element);
 }
 

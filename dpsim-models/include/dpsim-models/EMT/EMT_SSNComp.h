@@ -31,6 +31,9 @@ protected:
 
   Matrix mW;
   Matrix mYHist;
+  /// Reused workspaces for the per-step linear history evaluation.
+  mutable Matrix mHistoryState;
+  mutable Matrix mHistoryInput;
 
   Matrix mA;
   Matrix mB;
@@ -41,11 +44,19 @@ protected:
   Matrix mdB;
 
   const Attribute<Matrix>::Ptr mX;
+  const Matrix *mXValue = nullptr;
+  const Matrix *mInputValue = nullptr;
+  /// Reused storage for the previous SSN input during post-step updates.
+  Matrix mPreviousInput;
+  std::vector<UInt> mRightVectorAffectedIndices;
+
+  const Matrix &stateValue() const { return *mXValue; }
+  const Matrix &inputValue() const { return *mInputValue; }
 
   SSNComp(String uid, String name, Int inputSize, Int outputSize,
           Logger::Level logLevel = Logger::Level::off);
 
-  virtual Matrix calculateHistoryVector() const;
+  virtual void calculateHistoryVector(Matrix &history) const;
 
   virtual MatrixComp calculateSteadyStateStateFromInput(const MatrixComp &u,
                                                         Real frequency) const;
@@ -117,6 +128,10 @@ public:
       AttributeBase::List &modifiedAttributes) override final;
 
   void mnaCompPreStep(Real time, Int timeStepCount) override final;
+
+  Bool mnaHasCompactRightSideVectorStamp() const override final { return true; }
+
+  void mnaAddCompactRightSideVectorStamp(Matrix &rightVector) override final;
 
   void mnaCompAddPostStepDependencies(
       AttributeBase::List &prevStepDependencies,

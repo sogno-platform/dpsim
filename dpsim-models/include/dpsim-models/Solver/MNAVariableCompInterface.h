@@ -22,5 +22,7 @@ public:
 
   /// Returns true if one of the element paramters has changed
   virtual Bool hasParameterChanged() = 0;
+
+  virtual Bool hasContinuouslyChangingSystemMatrix() const { return false; }
 };
 } // namespace CPS

@@ -4,12 +4,21 @@
  */
 
 #include <dpsim-models/EMT/EMT_Ph1_PiLine.h>
+#include <dpsim-models/MNAStampUtils.h>
 
 using namespace CPS;
 
 EMT::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
+    : PiLine(uid, name, true, logLevel) {}
+
+EMT::Ph1::PiLine::PiLine(String uid, String name, Bool useSubcomponents,
+                         Logger::Level logLevel)
     : Base::Ph1::PiLine(mAttributes),
       CompositePowerComp<Real>(uid, name, true, true, logLevel) {
+  mUseSubcomponents = useSubcomponents;
+  // Keep the legacy virtual-node allocation so the matrix graph has the same
+  // dimensions in either mode; the direct realization leaves that variable
+  // isolated with a unit diagonal.
   setVirtualNodeNumber(1);
   setTerminalNumber(2);
 
@@ -22,7 +31,7 @@ EMT::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
 
 /// DEPRECATED: Delete method
 SimPowerComp<Real>::Ptr EMT::Ph1::PiLine::clone(String name) {
-  auto copy = PiLine::make(name, mLogLevel);
+  auto copy = PiLine::make(name, mUseSubcomponents, mLogLevel);
   copy->setParameters(**mSeriesRes, **mSeriesInd, **mParallelCap,
                       **mParallelCond);
   return copy;
@@ -38,6 +47,9 @@ void EMT::Ph1::PiLine::createSubComponents() {
   Real defaultParallelCond = 1e-6;
   **mParallelCond =
       (**mParallelCond > 0) ? **mParallelCond : defaultParallelCond;
+
+  if (!mUseSubcomponents)
+    return;
 
   // Create series sub components
   mSubSeriesResistor =
@@ -106,9 +118,10 @@ void EMT::Ph1::PiLine::initializeParentFromNodesAndTerminals(Real frequency) {
   (**mIntfVoltage)(0, 0) = voltage.real();
   (**mIntfCurrent)(0, 0) = current.real();
 
-  // Initialization of virtual node
-  mVirtualNodes[0]->setInitialVoltage(
-      initialSingleVoltage(0) + PEAK1PH_TO_RMS3PH * current * **mSeriesRes);
+  // Initialization of virtual node for the legacy series R-L realization.
+  if (mUseSubcomponents)
+    mVirtualNodes[0]->setInitialVoltage(
+        initialSingleVoltage(0) + PEAK1PH_TO_RMS3PH * current * **mSeriesRes);
 
   SPDLOG_LOGGER_DEBUG(mSLog,
                       "\n--debug--"
@@ -136,17 +149,94 @@ void EMT::Ph1::PiLine::initializeParentFromNodesAndTerminals(Real frequency) {
   mSLog->flush();
 }
 
+void EMT::Ph1::PiLine::mnaParentInitialize(Real omega, Real timeStep,
+                                           Attribute<Matrix>::Ptr leftVector) {
+  if (mUseSubcomponents)
+    return;
+
+  updateMatrixNodeIndices();
+  mDirectInductorConductance = timeStep / (2. * **mSeriesInd);
+  mDirectSeriesConductance = mDirectInductorConductance /
+                             (1. + mDirectInductorConductance * **mSeriesRes);
+  mDirectShuntConductance = **mParallelCond / 2.;
+  mDirectCapacitorConductance = **mParallelCap / timeStep;
+
+  const Real initialSeriesCurrent = (**mIntfCurrent)(0, 0);
+  const Real initialInductorVoltage =
+      (**mIntfVoltage)(0, 0) - **mSeriesRes * initialSeriesCurrent;
+  mDirectInductorHistory = mDirectInductorConductance * initialInductorVoltage +
+                           initialSeriesCurrent;
+  mDirectSeriesHistory =
+      mDirectInductorHistory / (1. + mDirectInductorConductance * **mSeriesRes);
+
+  if (**mParallelCap > 0.) {
+    const Real capacitance = **mParallelCap / 2.;
+    const Complex capacitorImpedance(0., -1. / (omega * capacitance));
+    const Complex initial0 = RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
+    const Complex initial1 = RMS3PH_TO_PEAK1PH * initialSingleVoltage(1);
+    const Real current0 = (initial0 / capacitorImpedance).real();
+    const Real current1 = (initial1 / capacitorImpedance).real();
+    mDirectCapacitorHistory0 =
+        current0 + mDirectCapacitorConductance * initial0.real();
+    mDirectCapacitorHistory1 =
+        current1 + mDirectCapacitorConductance * initial1.real();
+  }
+}
+
 void EMT::Ph1::PiLine::mnaParentAddPreStepDependencies(
     AttributeBase::List &prevStepDependencies,
     AttributeBase::List &attributeDependencies,
     AttributeBase::List &modifiedAttributes) {
   prevStepDependencies.push_back(mIntfCurrent);
   prevStepDependencies.push_back(mIntfVoltage);
+  if (!mUseSubcomponents) {
+    modifiedAttributes.push_back(mRightVector);
+    return;
+  }
   modifiedAttributes.push_back(mRightVector);
 }
 
 void EMT::Ph1::PiLine::mnaParentPreStep(Real time, Int timeStepCount) {
   mnaCompApplyRightSideVectorStamp(**mRightVector);
+}
+
+void EMT::Ph1::PiLine::mnaParentApplySystemMatrixStamp(
+    SparseMatrixRow &systemMatrix) {
+  if (mUseSubcomponents)
+    return;
+
+  MNAStampUtils::stampConductance(mDirectSeriesConductance, systemMatrix,
+                                  matrixNodeIndex(0), matrixNodeIndex(1),
+                                  terminalNotGrounded(0),
+                                  terminalNotGrounded(1), mSLog);
+  Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(),
+                           mVirtualNodes[0]->matrixNodeIndex(), 1.);
+  const Real shuntAdmittance =
+      mDirectShuntConductance + mDirectCapacitorConductance;
+  if (terminalNotGrounded(0))
+    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0),
+                             matrixNodeIndex(0), shuntAdmittance);
+  if (terminalNotGrounded(1))
+    Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1),
+                             matrixNodeIndex(1), shuntAdmittance);
+}
+
+void EMT::Ph1::PiLine::mnaParentApplyRightSideVectorStamp(Matrix &rightVector) {
+  if (mUseSubcomponents)
+    return;
+
+  if (terminalNotGrounded(0)) {
+    Math::addToVectorElement(rightVector, matrixNodeIndex(0),
+                             mDirectSeriesHistory);
+    Math::addToVectorElement(rightVector, matrixNodeIndex(0),
+                             mDirectCapacitorHistory0);
+  }
+  if (terminalNotGrounded(1)) {
+    Math::addToVectorElement(rightVector, matrixNodeIndex(1),
+                             -mDirectSeriesHistory);
+    Math::addToVectorElement(rightVector, matrixNodeIndex(1),
+                             mDirectCapacitorHistory1);
+  }
 }
 
 void EMT::Ph1::PiLine::mnaParentAddPostStepDependencies(
@@ -163,6 +253,30 @@ void EMT::Ph1::PiLine::mnaParentPostStep(Real time, Int timeStepCount,
                                          Attribute<Matrix>::Ptr &leftVector) {
   mnaCompUpdateVoltage(**leftVector);
   mnaCompUpdateCurrent(**leftVector);
+
+  if (!mUseSubcomponents) {
+    const Real seriesCurrent = (**mIntfCurrent)(0, 0);
+    const Real inductorVoltage =
+        (**mIntfVoltage)(0, 0) - **mSeriesRes * seriesCurrent;
+    mDirectInductorHistory =
+        mDirectInductorConductance * inductorVoltage + seriesCurrent;
+    mDirectSeriesHistory = mDirectInductorHistory /
+                           (1. + mDirectInductorConductance * **mSeriesRes);
+    const Real terminal0Voltage =
+        terminalNotGrounded(0)
+            ? Math::realFromVectorElement(**leftVector, matrixNodeIndex(0))
+            : 0.;
+    const Real terminal1Voltage =
+        terminalNotGrounded(1)
+            ? Math::realFromVectorElement(**leftVector, matrixNodeIndex(1))
+            : 0.;
+    mDirectCapacitorHistory0 =
+        2. * mDirectCapacitorConductance * terminal0Voltage -
+        mDirectCapacitorHistory0;
+    mDirectCapacitorHistory1 =
+        2. * mDirectCapacitorConductance * terminal1Voltage -
+        mDirectCapacitorHistory1;
+  }
 }
 
 void EMT::Ph1::PiLine::mnaCompUpdateVoltage(const Matrix &leftVector) {
@@ -177,12 +291,19 @@ void EMT::Ph1::PiLine::mnaCompUpdateVoltage(const Matrix &leftVector) {
 }
 
 void EMT::Ph1::PiLine::mnaCompUpdateCurrent(const Matrix &leftVector) {
-  **mIntfCurrent = mSubSeriesInductor->intfCurrent();
+  if (mUseSubcomponents)
+    **mIntfCurrent = mSubSeriesInductor->intfCurrent();
+  else
+    (**mIntfCurrent)(0, 0) = mDirectSeriesConductance * (**mIntfVoltage)(0, 0) +
+                             mDirectSeriesHistory;
 }
 
 // #### Tear Methods ####
 MNAInterface::List EMT::Ph1::PiLine::mnaTearGroundComponents() {
   MNAInterface::List gndComponents;
+
+  if (!mUseSubcomponents)
+    return gndComponents;
 
   gndComponents.push_back(mSubParallelResistor0);
   gndComponents.push_back(mSubParallelResistor1);
@@ -196,6 +317,12 @@ MNAInterface::List EMT::Ph1::PiLine::mnaTearGroundComponents() {
 }
 
 void EMT::Ph1::PiLine::mnaTearInitialize(Real omega, Real timeStep) {
+  if (!mUseSubcomponents) {
+    mDirectInductorConductance = timeStep / (2. * **mSeriesInd);
+    mDirectSeriesConductance = mDirectInductorConductance /
+                               (1. + mDirectInductorConductance * **mSeriesRes);
+    return;
+  }
   mSubSeriesResistor->mnaTearSetIdx(mTearIdx);
   mSubSeriesResistor->mnaTearInitialize(omega, timeStep);
   mSubSeriesInductor->mnaTearSetIdx(mTearIdx);
@@ -203,15 +330,35 @@ void EMT::Ph1::PiLine::mnaTearInitialize(Real omega, Real timeStep) {
 }
 
 void EMT::Ph1::PiLine::mnaTearApplyMatrixStamp(SparseMatrixRow &tearMatrix) {
+  if (!mUseSubcomponents) {
+    Math::addToMatrixElement(tearMatrix, mTearIdx, mTearIdx,
+                             **mSeriesRes + 1. / mDirectInductorConductance);
+    return;
+  }
   mSubSeriesResistor->mnaTearApplyMatrixStamp(tearMatrix);
   mSubSeriesInductor->mnaTearApplyMatrixStamp(tearMatrix);
 }
 
 void EMT::Ph1::PiLine::mnaTearApplyVoltageStamp(Matrix &voltageVector) {
+  if (!mUseSubcomponents) {
+    Math::addToVectorElement(voltageVector, mTearIdx,
+                             mDirectInductorHistory /
+                                 mDirectInductorConductance);
+    return;
+  }
   mSubSeriesInductor->mnaTearApplyVoltageStamp(voltageVector);
 }
 
 void EMT::Ph1::PiLine::mnaTearPostStep(Complex voltage, Complex current) {
+  if (!mUseSubcomponents) {
+    const Real realCurrent = current.real();
+    const Real inductorVoltage = voltage.real() - realCurrent * **mSeriesRes;
+    mDirectInductorHistory =
+        mDirectInductorConductance * inductorVoltage + realCurrent;
+    (**mIntfVoltage)(0, 0) = voltage.real();
+    (**mIntfCurrent)(0, 0) = realCurrent;
+    return;
+  }
   mSubSeriesInductor->mnaTearPostStep(voltage - current * **mSeriesRes,
                                       current);
   (**mIntfCurrent) = mSubSeriesInductor->intfCurrent();

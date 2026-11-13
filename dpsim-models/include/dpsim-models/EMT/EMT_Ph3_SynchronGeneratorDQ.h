@@ -31,12 +31,13 @@ protected:
   /// @brief Park transform as described in Krause
   ///
   /// Balanced case because the zero sequence variable is ignored
-  Matrix abcToDq0Transform(Real theta, Matrix &abc);
+  MatrixFixedSize<3, 1> abcToDq0Transform(Real theta, Matrix &abc);
 
   /// @brief Inverse Park transform as described in Krause
   ///
   /// Balanced case because the zero sequence variable is ignored
-  Matrix dq0ToAbcTransform(Real theta, Matrix &dq0);
+  MatrixFixedSize<3, 1> dq0ToAbcTransform(Real theta,
+                                          const Eigen::Ref<const Matrix> &dq0);
 
 public:
   ///

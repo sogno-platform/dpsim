@@ -19,13 +19,17 @@ public:
         mKpPowerCtrl(0.05), mKiPowerCtrl(0.2), mKpCurrCtrl(0.25),
         mKiCurrCtrl(1.0) {}
 
-  void run() const {
+  void run(Real simulationDuration = -1.0) const {
+    if (simulationDuration <= 0.0)
+      simulationDuration = mFinalTimeDP;
     const String simNameBase = "DP_Ph3_AvVoltSourceInverterStateSpace";
 
     const auto systemPF = runPowerFlow(simNameBase + "_PF");
     // Same SLG scenario, positive-sequence-only vs dual-sequence control.
-    runDPSimulation(simNameBase + "_DP_posSeq", systemPF, false);
-    runDPSimulation(simNameBase + "_DP_dualSeq", systemPF, true);
+    runDPSimulation(simNameBase + "_DP_posSeq", systemPF, false,
+                    simulationDuration);
+    runDPSimulation(simNameBase + "_DP_dualSeq", systemPF, true,
+                    simulationDuration);
   }
 
 private:
@@ -89,7 +93,8 @@ private:
   }
 
   void runDPSimulation(const String &simName, const SystemTopology &systemPF,
-                       Bool enableNegSeqControl) const {
+                       Bool enableNegSeqControl,
+                       Real simulationDuration) const {
     Logger::setLogDir("logs/" + simName);
 
     auto nGrid = SimNode<Complex>::make("nGrid", PhaseType::ABC);
@@ -153,7 +158,7 @@ private:
     sim.addEvent(SwitchEvent3Ph::make(mFaultTime, fault, true));
 
     sim.setTimeStep(mTimeStepDP);
-    sim.setFinalTime(mFinalTimeDP);
+    sim.setFinalTime(simulationDuration);
     sim.run();
   }
 
@@ -239,6 +244,9 @@ private:
 
 int main(int argc, char *argv[]) {
   Example_AvVoltSourceInverterStateSpace example;
-  example.run();
+  if (argc == 3 && String(argv[1]) == "--duration")
+    example.run(std::stod(argv[2]));
+  else
+    example.run();
   return 0;
 }

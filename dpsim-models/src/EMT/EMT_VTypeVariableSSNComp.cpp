@@ -12,8 +12,12 @@ EMT::VTypeVariableSSNComp::VTypeVariableSSNComp(String uid, String name,
       mParameterChanged(false), mE(Matrix::Zero(0, 1)), mdE(Matrix::Zero(0, 1)),
       mF(Matrix::Zero(outputSize, 1)) {}
 
-Matrix EMT::VTypeVariableSSNComp::calculateHistoryVector() const {
-  return mC * (mdA * (**mX) + mdB * (**inputAttribute()) + mdE) + mF;
+void EMT::VTypeVariableSSNComp::calculateHistoryVector(Matrix &history) const {
+  mHistoryState.noalias() = mdA * stateValue();
+  mHistoryState.noalias() += mdB * inputValue();
+  mHistoryState += mdE;
+  history.noalias() = mC * mHistoryState;
+  history += mF;
 }
 
 MatrixComp EMT::VTypeVariableSSNComp::calculateSteadyStateStateFromInput(
@@ -33,7 +37,12 @@ MatrixComp EMT::VTypeVariableSSNComp::calculateSteadyStateOutputFromInput(
 
 void EMT::VTypeVariableSSNComp::updateState(const Matrix &uOld,
                                             const Matrix &uNew) {
-  **mX = mdA * (**mX) + mdB * (uNew + uOld) + mdE;
+  mUpdateInput = uNew;
+  mUpdateInput += uOld;
+  mHistoryState.noalias() = mdA * mX->get();
+  mHistoryState.noalias() += mdB * mUpdateInput;
+  mHistoryState += mdE;
+  mX->get() = mHistoryState;
 }
 
 void EMT::VTypeVariableSSNComp::recomputeDiscreteModel() {
@@ -81,6 +90,7 @@ void EMT::VTypeVariableSSNComp::setParameters(const Matrix &A, const Matrix &B,
   setStateOffset(E);
   setOutputOffset(F);
   mdE = Matrix::Zero(mE.rows(), 1);
+  mUpdateInput.resize(B.cols(), 1);
 }
 
 void EMT::VTypeVariableSSNComp::updateStateSpaceModel() {
@@ -102,8 +112,8 @@ void EMT::VTypeVariableSSNComp::initializeFromNodesAndTerminals(
 
   const MatrixComp uInit = buildInitialInputFromNodes(frequency);
 
-  **mIntfVoltage = uInit.real();
-  **mX = Matrix::Zero((**mX).rows(), 1);
+  *mIntfVoltageValue = uInit.real();
+  mX->get() = Matrix::Zero(mX->get().rows(), 1);
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from nodes and terminals ---");
@@ -116,15 +126,15 @@ void EMT::VTypeVariableSSNComp::initializeFromNodesAndTerminals(
   Bool converged = false;
 
   for (Int iter = 0; iter < mInitializationMaxIterations; ++iter) {
-    const Matrix xPrev = **mX;
+    const Matrix xPrev = mX->get();
 
     updateComponentParameters();
 
     const MatrixComp xInit =
         calculateSteadyStateStateFromInput(uInit, frequency);
-    **mX = xInit.real();
+    mX->get() = xInit.real();
 
-    if ((**mX).isApprox(xPrev, mInitializationTolerance)) {
+    if (mX->get().isApprox(xPrev, mInitializationTolerance)) {
       converged = true;
       break;
     }
@@ -140,11 +150,11 @@ void EMT::VTypeVariableSSNComp::initializeFromNodesAndTerminals(
   // Ensure the local model corresponds to the final initialized state.
   updateComponentParameters();
 
-  const MatrixComp xInit = (**mX).cast<Complex>();
+  const MatrixComp xInit = mX->get().cast<Complex>();
   const MatrixComp yInit = calculateSteadyStateOutputFromInput(xInit, uInit);
 
-  **mIntfCurrent = yInit.real();
-  updateLogAttributes(**mIntfVoltage);
+  *mIntfCurrentValue = yInit.real();
+  updateLogAttributes(*mIntfVoltageValue);
   mParameterChanged = false;
 
   SPDLOG_LOGGER_INFO(
@@ -153,6 +163,7 @@ void EMT::VTypeVariableSSNComp::initializeFromNodesAndTerminals(
       "\nOutput y: {:s}"
       "\nState x: {:s}"
       "\n--- Initialization from nodes and terminals finished ---",
-      Logger::matrixToString(**mIntfVoltage),
-      Logger::matrixToString(**mIntfCurrent), Logger::matrixToString(**mX));
+      Logger::matrixToString(*mIntfVoltageValue),
+      Logger::matrixToString(*mIntfCurrentValue),
+      Logger::matrixToString(mX->get()));
 }

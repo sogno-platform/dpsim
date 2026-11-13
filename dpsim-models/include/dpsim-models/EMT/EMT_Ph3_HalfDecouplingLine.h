@@ -24,12 +24,16 @@ protected:
   Matrix mCapacitance = Matrix::Zero(3, 3);
   /// Surge impedance, sqrt(L/C)
   Matrix mSurgeImpedance = Matrix::Zero(3, 3);
+  /// Constant inverses used by the half-line history source update.
+  Matrix mSrcResInverse = Matrix::Zero(3, 3);
+  Matrix mSrcResSquaredInverse = Matrix::Zero(3, 3);
 
   // ### Electrical Subcomponents ###
   /// Controlled current source carrying the history term
   std::shared_ptr<EMT::Ph3::ControlledCurrentSource> mSubCtrledCurrentSource;
   /// Terminating impedance calculated from line parameters
   std::shared_ptr<EMT::Ph3::Resistor> mSubRes;
+  Bool mUseSubcomponents = true;
 
   /// Ring buffers for the values of previous timesteps, one row per stored step
   Matrix mVoltBuf, mCurBuf;
@@ -38,7 +42,7 @@ protected:
   Real mAlpha;
 
   /// Reads a ring buffer one travel time back
-  Matrix interpolate(Matrix &data);
+  MatrixFixedSize<3, 1> interpolate(const Matrix &data) const;
 
 public:
   typedef std::shared_ptr<HalfDecouplingLine> Ptr;
@@ -62,6 +66,12 @@ public:
   /// Defines UID, name and logging level
   HalfDecouplingLine(String uid, String name,
                      Logger::Level logLevel = Logger::Level::off);
+  /// Direct MNA stamping mode; the legacy subcomponent mode remains default.
+  HalfDecouplingLine(String uid, String name, Bool useSubcomponents,
+                     Logger::Level logLevel = Logger::Level::off);
+  HalfDecouplingLine(String name, Bool useSubcomponents,
+                     Logger::Level logLevel = Logger::Level::off)
+      : HalfDecouplingLine(name, name, useSubcomponents, logLevel) {}
 
   // #### General ####
   /// Line data. Give the parameters of the whole line, not of this half.
@@ -72,6 +82,8 @@ public:
                          Attribute<Matrix>::Ptr receivingCur);
   /// Creates the terminating resistor and the history current source
   void createSubComponents() override;
+  void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
   /// Seeds the interface quantities and the sending attributes
   void initializeParentFromNodesAndTerminals(Real frequency) override;
 

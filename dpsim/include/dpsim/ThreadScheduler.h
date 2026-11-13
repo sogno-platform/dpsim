@@ -45,6 +45,11 @@ private:
     std::vector<Counter *> reqCounters;
   };
   std::vector<ScheduleEntry *> mSchedules;
+  struct TaskBatch {
+    size_t begin;
+    size_t end;
+  };
+  std::vector<std::vector<TaskBatch>> mBatches;
 
   Bool mJoining = false;
   Real mTime = 0;

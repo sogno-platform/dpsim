@@ -128,6 +128,12 @@ void DP::Ph3::MixedVTypeVariableSSNComp::setParameters(
   mdB = Matrix::Zero(n, m);
   mdE = Matrix::Zero(n, 1);
 
+  mHistoryInputScratch = Matrix::Zero(m, 1);
+  mHistoryStateScratch = Matrix::Zero(n, 1);
+  mHistoryOutputScratch = Matrix::Zero(m, 1);
+  mUpdateInputScratch = Matrix::Zero(m, 1);
+  mUpdateStateScratch = Matrix::Zero(n, 1);
+
   mW = Matrix::Zero(2 * mPhaseCount, 2 * mPhaseCount);
   mYHist = MatrixComp::Zero(mPhaseCount, 1);
 
@@ -157,15 +163,33 @@ void DP::Ph3::MixedVTypeVariableSSNComp::setOutputOffset(const Matrix &F) {
 }
 
 Matrix DP::Ph3::MixedVTypeVariableSSNComp::calculateHistoryVectorReal() const {
-  const Matrix u = packComplex(**inputAttribute());
-  return mC * (mdA * (**mX) + mdB * u + mdE) + mF;
+  const MatrixComp &u = **inputAttribute();
+  for (Int phase = 0; phase < mPhaseCount; ++phase) {
+    mHistoryInputScratch(2 * phase, 0) = u(phase, 0).real();
+    mHistoryInputScratch(2 * phase + 1, 0) = u(phase, 0).imag();
+  }
+
+  mHistoryStateScratch.noalias() = mdA * (**mX);
+  mHistoryStateScratch.noalias() += mdB * mHistoryInputScratch;
+  mHistoryStateScratch += mdE;
+  mHistoryOutputScratch.noalias() = mC * mHistoryStateScratch;
+  mHistoryOutputScratch += mF;
+  return mHistoryOutputScratch;
 }
 
 void DP::Ph3::MixedVTypeVariableSSNComp::updateState(const MatrixComp &uOld,
                                                      const MatrixComp &uNew) {
-  const Matrix uOldReal = packComplex(uOld);
-  const Matrix uNewReal = packComplex(uNew);
-  **mX = mdA * (**mX) + mdB * (uNewReal + uOldReal) + mdE;
+  for (Int phase = 0; phase < mPhaseCount; ++phase) {
+    mUpdateInputScratch(2 * phase, 0) =
+        uNew(phase, 0).real() + uOld(phase, 0).real();
+    mUpdateInputScratch(2 * phase + 1, 0) =
+        uNew(phase, 0).imag() + uOld(phase, 0).imag();
+  }
+
+  mUpdateStateScratch.noalias() = mdA * (**mX);
+  mUpdateStateScratch.noalias() += mdB * mUpdateInputScratch;
+  mUpdateStateScratch += mdE;
+  **mX = mUpdateStateScratch;
 }
 
 void DP::Ph3::MixedVTypeVariableSSNComp::recomputeDiscreteModel() {
@@ -314,7 +338,7 @@ void DP::Ph3::MixedVTypeVariableSSNComp::mnaCompApplyRightSideVectorStamp(
 
 void DP::Ph3::MixedVTypeVariableSSNComp::mnaCompUpdateVoltage(
     const Matrix &leftVector) {
-  **mIntfVoltage = MatrixComp::Zero(mPhaseCount, 1);
+  (**mIntfVoltage).setZero();
 
   if (terminalNotGrounded(1)) {
     for (Int phase = 0; phase < mPhaseCount; ++phase)

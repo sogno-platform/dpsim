@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include <dpsim-models/MNASimPowerComp.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
@@ -37,9 +39,18 @@ protected:
   MatrixComp mW;
   /// Complex history term.
   MatrixComp mYHist;
+  /// Reused workspaces for the per-step history calculation.
+  MatrixComp mHistoryState;
+  MatrixComp mHistoryInput;
+  /// Reused post-step buffers for the trapezoidal state update.
+  MatrixComp mStateUpdateInput;
+  MatrixComp mStateUpdate;
+  MatrixComp mComplexC;
 
   /// Complex envelope state X.
   const Attribute<MatrixComp>::Ptr mX;
+  /// MNA rows that may receive this component's compact history stamp.
+  std::vector<UInt> mRightVectorAffectedIndices;
 
   SSNComp(String uid, String name, Int inputSize, Int outputSize,
           Logger::Level logLevel = Logger::Level::off);
@@ -53,6 +64,7 @@ protected:
   virtual void recomputeDiscreteModel(Real omega);
 
   virtual MatrixComp calculateHistoryVector() const;
+  void updateHistoryVector(MatrixComp &history);
 
   /// Steady-state envelope state X_ss = (j w I - A)^-1 B u.
   virtual MatrixComp calculateSteadyStateStateFromInput(const MatrixComp &u,
@@ -92,6 +104,9 @@ public:
       AttributeBase::List &modifiedAttributes) override final;
 
   void mnaCompPreStep(Real time, Int timeStepCount) override final;
+
+  Bool mnaHasCompactRightSideVectorStamp() const override final { return true; }
+  void mnaAddCompactRightSideVectorStamp(Matrix &rightVector) override final;
 
   void mnaCompAddPostStepDependencies(
       AttributeBase::List &prevStepDependencies,

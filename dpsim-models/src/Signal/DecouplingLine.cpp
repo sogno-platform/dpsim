@@ -96,6 +96,16 @@ void DecouplingLine::initialize(Real omega, Real timeStep) {
   mAlpha = 1 - (mBufSize - mDelay / timeStep);
   SPDLOG_LOGGER_INFO(mSLog, "bufsize {} alpha {}", mBufSize, mAlpha);
 
+  const Real resistanceQuarter = mResistance / 4.;
+  const Real sourceImpedance = mSurgeImpedance + resistanceQuarter;
+  const Real denominator = sourceImpedance * sourceImpedance;
+  mSurgeMinusResistanceQuarter = mSurgeImpedance - resistanceQuarter;
+  mInitialSourceImpedanceInverse = 1. / sourceImpedance;
+  mSurgeCurrentCoefficient = -mSurgeImpedance / denominator;
+  mResistanceCurrentCoefficient = -resistanceQuarter / denominator;
+  mDelayPhase =
+      Complex(cos(-2. * PI * 50. * mDelay), sin(-2. * PI * 50. * mDelay));
+
   Complex volt1 = mNode1->initialSingleVoltage();
   Complex volt2 = mNode2->initialSingleVoltage();
   // TODO different initialization for lumped resistance?
@@ -130,24 +140,19 @@ void DecouplingLine::step(Real time, Int timeStepCount) {
 
   if (timeStepCount == 0) {
     // bit of a hack for proper initialization
-    **mSrcCur1Ref = cur1 - volt1 / (mSurgeImpedance + mResistance / 4);
-    **mSrcCur2Ref = cur2 - volt2 / (mSurgeImpedance + mResistance / 4);
+    **mSrcCur1Ref = cur1 - mInitialSourceImpedanceInverse * volt1;
+    **mSrcCur2Ref = cur2 - mInitialSourceImpedanceInverse * volt2;
   } else {
-    // Update currents
-    Real denom = (mSurgeImpedance + mResistance / 4) *
-                 (mSurgeImpedance + mResistance / 4);
-    **mSrcCur1Ref = -mSurgeImpedance / denom *
-                        (volt2 + (mSurgeImpedance - mResistance / 4) * cur2) -
-                    mResistance / 4 / denom *
-                        (volt1 + (mSurgeImpedance - mResistance / 4) * cur1);
-    **mSrcCur2Ref = -mSurgeImpedance / denom *
-                        (volt1 + (mSurgeImpedance - mResistance / 4) * cur1) -
-                    mResistance / 4 / denom *
-                        (volt2 + (mSurgeImpedance - mResistance / 4) * cur2);
-    **mSrcCur1Ref = **mSrcCur1Ref * Complex(cos(-2. * PI * 50 * mDelay),
-                                            sin(-2. * PI * 50 * mDelay));
-    **mSrcCur2Ref = **mSrcCur2Ref * Complex(cos(-2. * PI * 50 * mDelay),
-                                            sin(-2. * PI * 50 * mDelay));
+    const Complex current1 = mSurgeCurrentCoefficient *
+                                 (volt2 + mSurgeMinusResistanceQuarter * cur2) +
+                             mResistanceCurrentCoefficient *
+                                 (volt1 + mSurgeMinusResistanceQuarter * cur1);
+    const Complex current2 = mSurgeCurrentCoefficient *
+                                 (volt1 + mSurgeMinusResistanceQuarter * cur1) +
+                             mResistanceCurrentCoefficient *
+                                 (volt2 + mSurgeMinusResistanceQuarter * cur2);
+    **mSrcCur1Ref = current1 * mDelayPhase;
+    **mSrcCur2Ref = current2 * mDelayPhase;
   }
   mSrcCur1->set(**mSrcCur1Ref);
   mSrcCur2->set(**mSrcCur2Ref);

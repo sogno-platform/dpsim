@@ -116,8 +116,8 @@ private:
   // -------------------------------------------------------------------------
   // Transformations
   // -------------------------------------------------------------------------
-  Matrix getParkTransformMatrix(Real theta) const;
-  Matrix getInverseParkTransformMatrix(Real theta) const;
+  MatrixFixedSize<2, 3> getParkTransformMatrix(Real theta) const;
+  MatrixFixedSize<3, 2> getInverseParkTransformMatrix(Real theta) const;
 
   // -------------------------------------------------------------------------
   // Controller model

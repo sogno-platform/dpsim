@@ -49,6 +49,11 @@ protected:
   Matrix mC = Matrix::Zero(2, 4);
   /// matrix D of state space model
   Matrix mD = Matrix::Zero(2, 6);
+  /// Trapezoidal discrete maps cached during controller initialization.
+  Matrix mDiscreteA = Matrix::Zero(4, 4);
+  Matrix mDiscreteB = Matrix::Zero(4, 6);
+  /// Reusable input sum for the per-step state update.
+  Matrix mInputSum = Matrix::Zero(6, 1);
 
 public:
   // voltages and currents from filter in dq-frame

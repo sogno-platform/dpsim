@@ -71,17 +71,14 @@ void DP::Ph3::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 void DP::Ph3::Resistor::mnaCompInitialize(Real omega, Real timeStep,
                                           Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
+  mConductance.real() = (**mResistance).inverse();
   **mRightVector = Matrix::Zero(0, 0);
 }
 
 void DP::Ph3::Resistor::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
-  MatrixFixedSizeComp<3, 3> conductance = MatrixFixedSizeComp<3, 3>::Zero();
-
-  conductance.real() = (**mResistance).inverse();
-
   MNAStampUtils::stampAdmittanceMatrix(
-      conductance, systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),
+      mConductance, systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),
       terminalNotGrounded(0), terminalNotGrounded(1), mSLog);
 }
 
@@ -102,28 +99,22 @@ void DP::Ph3::Resistor::mnaCompPostStep(Real time, Int timeStepCount,
 }
 
 void DP::Ph3::Resistor::mnaCompUpdateVoltage(const Matrix &leftVector) {
-  **mIntfVoltage = MatrixComp::Zero(3, 1);
-
-  if (terminalNotGrounded(1)) {
-    (**mIntfVoltage)(0, 0) =
-        Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 0));
-
-    (**mIntfVoltage)(1, 0) =
-        Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 1));
-
-    (**mIntfVoltage)(2, 0) =
-        Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 2));
-  }
-
-  if (terminalNotGrounded(0)) {
-    (**mIntfVoltage)(0, 0) -=
-        Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
-
-    (**mIntfVoltage)(1, 0) -=
-        Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 1));
-
-    (**mIntfVoltage)(2, 0) -=
-        Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 2));
+  const bool terminal0Connected = terminalNotGrounded(0);
+  const bool terminal1Connected = terminalNotGrounded(1);
+  const Matrix::Index imaginaryOffset = leftVector.rows() / 2;
+  for (UInt phase = 0; phase < 3; ++phase) {
+    Complex voltage(0., 0.);
+    if (terminal1Connected) {
+      const Matrix::Index row = matrixNodeIndex(1, phase);
+      voltage =
+          Complex(leftVector(row, 0), leftVector(row + imaginaryOffset, 0));
+    }
+    if (terminal0Connected) {
+      const Matrix::Index row = matrixNodeIndex(0, phase);
+      voltage -=
+          Complex(leftVector(row, 0), leftVector(row + imaginaryOffset, 0));
+    }
+    (**mIntfVoltage)(phase, 0) = voltage;
   }
 
   SPDLOG_LOGGER_DEBUG(mSLog, "Voltage A: {} < {}",
@@ -132,7 +123,14 @@ void DP::Ph3::Resistor::mnaCompUpdateVoltage(const Matrix &leftVector) {
 }
 
 void DP::Ph3::Resistor::mnaCompUpdateCurrent(const Matrix &leftVector) {
-  **mIntfCurrent = (**mResistance).inverse() * **mIntfVoltage;
+  // The dimensions are fixed at 3x3; scalar rows avoid dynamic GEMV setup in
+  // this per-step post-processing path.
+  const MatrixComp &voltage = **mIntfVoltage;
+  MatrixComp &current = **mIntfCurrent;
+  for (Int phase = 0; phase < 3; ++phase)
+    current(phase, 0) = mConductance(phase, 0) * voltage(0, 0) +
+                        mConductance(phase, 1) * voltage(1, 0) +
+                        mConductance(phase, 2) * voltage(2, 0);
 
   SPDLOG_LOGGER_DEBUG(mSLog, "Current A: {} < {}",
                       std::abs((**mIntfCurrent)(0, 0)),

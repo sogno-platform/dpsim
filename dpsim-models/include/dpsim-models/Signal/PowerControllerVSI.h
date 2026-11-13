@@ -58,6 +58,11 @@ protected:
   Matrix mC = Matrix::Zero(2, 6);
   /// matrix D of state space model
   Matrix mD = Matrix::Zero(2, 6);
+  /// Cached trapezoidal factors; A and time step are constant during a run.
+  Matrix mDiscreteA = Matrix::Zero(6, 6);
+  Matrix mF2Inverse = Matrix::Zero(6, 6);
+  Matrix mTransformedB = Matrix::Zero(6, 6);
+  Matrix mInputSum = Matrix::Zero(6, 1);
 
 public:
   // attributes of input references

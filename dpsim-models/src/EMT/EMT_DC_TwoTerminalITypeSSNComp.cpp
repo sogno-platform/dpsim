@@ -12,6 +12,28 @@ EMT::DC::TwoTerminalITypeSSNComp::TwoTerminalITypeSSNComp(
   setTerminalNumber(2);
 }
 
+void EMT::DC::TwoTerminalITypeSSNComp::calculateHistoryVector(
+    Matrix &history) const {
+  if (mA.rows() != 1) {
+    EMT::SSNComp::calculateHistoryVector(history);
+    return;
+  }
+
+  history(0, 0) = mC(0, 0) * (mdA(0, 0) * stateValue()(0, 0) +
+                              mdB(0, 0) * inputValue()(0, 0));
+}
+
+void EMT::DC::TwoTerminalITypeSSNComp::updateState(const Matrix &uOld,
+                                                   const Matrix &uNew) {
+  if (mA.rows() != 1) {
+    EMT::SSNComp::updateState(uOld, uNew);
+    return;
+  }
+
+  (**mX)(0, 0) =
+      mdA(0, 0) * (**mX)(0, 0) + mdB(0, 0) * (uNew(0, 0) + uOld(0, 0));
+}
+
 void EMT::DC::TwoTerminalITypeSSNComp::validateDCTerminals() const {
   for (UInt terminalIdx = 0; terminalIdx < 2; ++terminalIdx) {
     const auto terminalNode =
@@ -27,7 +49,7 @@ Real EMT::DC::TwoTerminalITypeSSNComp::companionConductance() const {
       std::abs(mW(0, 0)) <= DOUBLE_EPSILON)
     throw std::runtime_error(
         "DC I-type SSN component has a singular companion impedance.");
-  const Real conductance = 1.0 / mW(0, 0);
+  const Real conductance = mWInverse(0, 0);
   if (!Math::isFinite(conductance))
     throw std::runtime_error(
         "DC I-type SSN companion conductance is non-finite.");

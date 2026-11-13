@@ -47,9 +47,7 @@ void EMT::Ph3::SynchronGenerator3OrderVBR::stepInPerUnit() {
     (**mEdq0_t)(1, 0) = (**mIdq0)(0, 0) * mLd_t + (**mVdq0)(1, 0);
   }
 
-  // get transformation matrix
-  mAbcToDq0 = get_parkTransformMatrix();
-  mDq0ToAbc = get_inverseParkTransformMatrix();
+  updateParkTransformMatrices();
 
   // calculate resistance matrix at t=k+1
   calculateResistanceMatrix();

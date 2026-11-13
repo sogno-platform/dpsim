@@ -86,11 +86,11 @@ String Logger::logDir() {
 
 /// Set env variable CPS_LOG_DIR and overwrite
 void Logger::setLogDir(String path) {
-#ifdef __linux__
-  setenv("CPS_LOG_DIR", path.c_str(), 1);
-#elif defined(_WIN32)
+#ifdef _WIN32
   String var = "CPS_LOG_DIR=" + path;
   _putenv(var.c_str());
+#else
+  setenv("CPS_LOG_DIR", path.c_str(), 1);
 #endif
 }
 

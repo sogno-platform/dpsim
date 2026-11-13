@@ -11,7 +11,12 @@
 using namespace CPS;
 
 DP::Ph1::SVC::SVC(String uid, String name, Logger::Level logLevel)
+    : SVC(uid, name, true, logLevel) {}
+
+DP::Ph1::SVC::SVC(String uid, String name, Bool useSubcomponents,
+                  Logger::Level logLevel)
     : CompositePowerComp<Complex>(uid, name, true, true, logLevel),
+      mUseSubcomponents(useSubcomponents),
       mVpcc(mAttributes->create<Real>("Vpcc", 0)),
       mVmeasPrev(mAttributes->create<Real>("Vmeas", 0)) {
   setTerminalNumber(1);
@@ -27,6 +32,8 @@ DP::Ph1::SVC::SVC(String uid, String name, Logger::Level logLevel)
 Bool DP::Ph1::SVC::ValueChanged() { return mValueChange; }
 
 void DP::Ph1::SVC::createSubComponents() {
+  if (!mUseSubcomponents)
+    return;
   if (mSubCompCreated)
     return;
   mSubCompCreated = true;
@@ -108,8 +115,13 @@ void DP::Ph1::SVC::initializeParentFromNodesAndTerminals(Real frequency) {
       (**mIntfVoltage)(0, 0) - CImpedance * (**mIntfCurrent)(0, 0);
   mVirtualNodes[1]->setInitialVoltage(VCSwitch);
 
-  mSubInductor->setParameters(LInit);
-  mSubCapacitor->setParameters(CInit);
+  if (mUseSubcomponents) {
+    mSubInductor->setParameters(LInit);
+    mSubCapacitor->setParameters(CInit);
+  } else {
+    mDirectInductance = LInit;
+    mDirectCapacitance = CInit;
+  }
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- Initialization from powerflow ---"
@@ -123,6 +135,123 @@ void DP::Ph1::SVC::initializeParentFromNodesAndTerminals(Real frequency) {
                      Logger::phasorToString(initialSingleVoltage(0)));
 }
 
+void DP::Ph1::SVC::mnaParentInitialize(Real omega, Real timeStep,
+                                       Attribute<Matrix>::Ptr leftVector) {
+  if (mUseSubcomponents)
+    return;
+  mDirectTimeStep = timeStep;
+  mDirectInductorAdmittance = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectInductorPrevCurrentFactor = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectInductorCurrent = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectInductorVoltage = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectInductorHistory = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectCapacitorAdmittance = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectCapacitorPrevVoltageFactor = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectCapacitorCurrent = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectCapacitorVoltage = MatrixComp::Zero(mNumFreqs, 1);
+  mDirectCapacitorHistory = MatrixComp::Zero(mNumFreqs, 1);
+  for (UInt freq = 0; freq < mNumFreqs; ++freq) {
+    const Real harmonicOmega = 2. * PI * mFrequencies(freq, 0);
+    mDirectInductorVoltage(freq, 0) = mVirtualNodes[0]->initialSingleVoltage();
+    mDirectCapacitorVoltage(freq, 0) = mVirtualNodes[1]->initialSingleVoltage();
+    mDirectInductorCurrent(freq, 0) =
+        harmonicOmega != 0. ? mDirectInductorVoltage(freq, 0) /
+                                  Complex(0., harmonicOmega * mDirectInductance)
+                            : Complex(0., 0.);
+    mDirectCapacitorCurrent(freq, 0) =
+        Complex(0., harmonicOmega * mDirectCapacitance) *
+        mDirectCapacitorVoltage(freq, 0);
+  }
+  updateDirectCompanions();
+  // Match the state transition performed by DP::Inductor::mnaCompInitialize
+  // and DP::Capacitor::mnaCompInitialize. Those components convert the
+  // sinusoidal steady-state initial currents into their trapezoidal companion
+  // state before the first pre-step; retaining only the physical phasor here
+  // produces a different first history source in direct mode.
+  for (UInt freq = 0; freq < mNumFreqs; ++freq) {
+    mDirectInductorHistory(freq, 0) =
+        mDirectInductorAdmittance(freq, 0) * mDirectInductorVoltage(freq, 0) +
+        mDirectInductorPrevCurrentFactor(freq, 0) *
+            mDirectInductorCurrent(freq, 0);
+    mDirectInductorCurrent(freq, 0) =
+        mDirectInductorAdmittance(freq, 0) * mDirectInductorVoltage(freq, 0) +
+        mDirectInductorHistory(freq, 0);
+
+    mDirectCapacitorHistory(freq, 0) =
+        -mDirectCapacitorCurrent(freq, 0) -
+        mDirectCapacitorPrevVoltageFactor(freq, 0) *
+            mDirectCapacitorVoltage(freq, 0);
+    mDirectCapacitorCurrent(freq, 0) =
+        mDirectCapacitorAdmittance(freq, 0) * mDirectCapacitorVoltage(freq, 0) +
+        mDirectCapacitorHistory(freq, 0);
+  }
+}
+
+void DP::Ph1::SVC::updateDirectCompanions() {
+  if (mUseSubcomponents || mDirectTimeStep <= 0.)
+    return;
+  for (UInt freq = 0; freq < mNumFreqs; ++freq) {
+    const Real harmonicOmega = 2. * PI * mFrequencies(freq, 0);
+    const Real b = mDirectTimeStep * harmonicOmega / 2.;
+    const Real a = mDirectTimeStep / (2. * mDirectInductance);
+    mDirectInductorAdmittance(freq, 0) =
+        Complex(a / (1. + b * b), -a * b / (1. + b * b));
+    mDirectInductorPrevCurrentFactor(freq, 0) =
+        Complex((1. - b * b) / (1. + b * b), -2. * b / (1. + b * b));
+    const Real capG = 2. * mDirectCapacitance / mDirectTimeStep;
+    const Real capB = harmonicOmega * mDirectCapacitance;
+    mDirectCapacitorAdmittance(freq, 0) = Complex(capG, capB);
+    mDirectCapacitorPrevVoltageFactor(freq, 0) = Complex(capG, -capB);
+  }
+}
+
+void DP::Ph1::SVC::mnaParentApplySystemMatrixStamp(
+    SparseMatrixRow &systemMatrix) {
+  if (mUseSubcomponents)
+    return;
+  for (UInt freq = 0; freq < mNumFreqs; ++freq) {
+    MNAStampUtils::stampAdmittance(
+        mDirectInductorAdmittance(freq, 0), systemMatrix,
+        SimNode::GND->matrixNodeIndex(), virtualNode(0)->matrixNodeIndex(),
+        false, true, mSLog, mNumFreqs, freq);
+    MNAStampUtils::stampAdmittance(
+        mDirectCapacitorAdmittance(freq, 0), systemMatrix,
+        SimNode::GND->matrixNodeIndex(), virtualNode(1)->matrixNodeIndex(),
+        false, true, mSLog, mNumFreqs, freq);
+    const Real gInductor =
+        mDirectInductorClosed ? 1. / mSwitchRClosed : 1. / mSwitchROpen;
+    const Real gCapacitor =
+        mDirectCapacitorClosed ? 1. / mSwitchRClosed : 1. / mSwitchROpen;
+    MNAStampUtils::stampAdmittance(
+        Complex(gInductor, 0.), systemMatrix, matrixNodeIndex(0),
+        virtualNode(0)->matrixNodeIndex(), terminalNotGrounded(0), true, mSLog,
+        mNumFreqs, freq);
+    MNAStampUtils::stampAdmittance(
+        Complex(gCapacitor, 0.), systemMatrix, matrixNodeIndex(0),
+        virtualNode(1)->matrixNodeIndex(), terminalNotGrounded(0), true, mSLog,
+        mNumFreqs, freq);
+  }
+}
+
+void DP::Ph1::SVC::mnaParentApplyRightSideVectorStamp(Matrix &rightVector) {
+  if (mUseSubcomponents)
+    return;
+  for (UInt freq = 0; freq < mNumFreqs; ++freq) {
+    mDirectInductorHistory(freq, 0) =
+        mDirectInductorAdmittance(freq, 0) * mDirectInductorVoltage(freq, 0) +
+        mDirectInductorPrevCurrentFactor(freq, 0) *
+            mDirectInductorCurrent(freq, 0);
+    mDirectCapacitorHistory(freq, 0) =
+        -mDirectCapacitorCurrent(freq, 0) -
+        mDirectCapacitorPrevVoltageFactor(freq, 0) *
+            mDirectCapacitorVoltage(freq, 0);
+    Math::setVectorElement(rightVector, virtualNode(0)->matrixNodeIndex(),
+                           -mDirectInductorHistory(freq, 0), mNumFreqs, freq);
+    Math::setVectorElement(rightVector, virtualNode(1)->matrixNodeIndex(),
+                           -mDirectCapacitorHistory(freq, 0), mNumFreqs, freq);
+  }
+}
+
 // #### MNA functions ####
 
 void DP::Ph1::SVC::mnaParentAddPreStepDependencies(
@@ -133,7 +262,8 @@ void DP::Ph1::SVC::mnaParentAddPreStepDependencies(
 }
 
 void DP::Ph1::SVC::mnaParentPreStep(Real time, Int timeStepCount) {
-  mnaCompApplyRightSideVectorStamp(**mRightVector);
+  if (mUseSubcomponents)
+    mnaCompApplyRightSideVectorStamp(**mRightVector);
 
   if (time > 0.1 && !mDisconnect) {
     if (mMechMode) {
@@ -142,6 +272,10 @@ void DP::Ph1::SVC::mnaParentPreStep(Real time, Int timeStepCount) {
       updateSusceptance();
     }
     checkProtection(time);
+  }
+  if (!mUseSubcomponents) {
+    updateDirectCompanions();
+    mnaCompApplyRightSideVectorStamp(**mRightVector);
   }
 }
 
@@ -171,9 +305,26 @@ void DP::Ph1::SVC::mnaCompUpdateVoltage(const Matrix &leftVector) {
                 .real();
   (**mIntfVoltage)(0, 0) =
       Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+  if (!mUseSubcomponents) {
+    mDirectInductorVoltage(0, 0) = Math::complexFromVectorElement(
+        leftVector, virtualNode(0)->matrixNodeIndex());
+    mDirectCapacitorVoltage(0, 0) = Math::complexFromVectorElement(
+        leftVector, virtualNode(1)->matrixNodeIndex());
+  }
 }
 
 void DP::Ph1::SVC::mnaCompUpdateCurrent(const Matrix &leftVector) {
+  if (!mUseSubcomponents) {
+    mDirectInductorCurrent(0, 0) =
+        mDirectInductorAdmittance(0, 0) * mDirectInductorVoltage(0, 0) +
+        mDirectInductorHistory(0, 0);
+    mDirectCapacitorCurrent(0, 0) =
+        mDirectCapacitorAdmittance(0, 0) * mDirectCapacitorVoltage(0, 0) +
+        mDirectCapacitorHistory(0, 0);
+    (**mIntfCurrent)(0, 0) =
+        mDirectInductorCurrent(0, 0) + mDirectCapacitorCurrent(0, 0);
+    return;
+  }
   (**mIntfCurrent)(0, 0) = 0;
   (**mIntfCurrent)(0, 0) += mSubInductor->intfCurrent()(0, 0);
   (**mIntfCurrent)(0, 0) += mSubCapacitor->intfCurrent()(0, 0);
@@ -212,8 +363,13 @@ void DP::Ph1::SVC::checkProtection(Real time) {
   if (mDisconnect) {
     SPDLOG_LOGGER_INFO(mSLog, "Disconnect SVC because of overvoltage at {}",
                        time);
-    mSubCapacitorSwitch->open();
-    mSubInductorSwitch->open();
+    if (mUseSubcomponents) {
+      mSubCapacitorSwitch->open();
+      mSubInductorSwitch->open();
+    } else {
+      mDirectCapacitorClosed = false;
+      mDirectInductorClosed = false;
+    }
     mValueChange = true;
   }
 }
@@ -254,7 +410,10 @@ void DP::Ph1::SVC::updateSusceptance() {
       //check if change in reactance is sufficient to trigger a change
       if (Math::abs(1 - inductance / mLPrev) > 0.01) {
         mInductiveMode = true;
-        mSubInductor->updateInductance(inductance, mDeltaT);
+        if (mUseSubcomponents)
+          mSubInductor->updateInductance(inductance, mDeltaT);
+        else
+          mDirectInductance = inductance;
         mLPrev = inductance;
 
         mValueChange = true;
@@ -266,7 +425,10 @@ void DP::Ph1::SVC::updateSusceptance() {
       //check if change in reactance is sufficient to trigger a change
       if (Math::abs(1 - capacitance / mCPrev) > 0.01) {
         mInductiveMode = false;
-        mSubCapacitor->updateCapacitance(capacitance, mDeltaT);
+        if (mUseSubcomponents)
+          mSubCapacitor->updateCapacitance(capacitance, mDeltaT);
+        else
+          mDirectCapacitance = capacitance;
         mCPrev = capacitance;
 
         mValueChange = true;
@@ -332,7 +494,10 @@ void DP::Ph1::SVC::mechanicalModelUpdateSusceptance(Real time) {
           mInductiveMode = true;
           Real inductance = 1 / ((mTapPos / mMaxPos) * mBN * omega);
           SPDLOG_LOGGER_INFO(mSLog, "New inductance: {}", inductance);
-          mSubInductor->updateInductance(inductance, mDeltaT);
+          if (mUseSubcomponents)
+            mSubInductor->updateInductance(inductance, mDeltaT);
+          else
+            mDirectInductance = inductance;
           mValueChange = true;
           setSwitchState();
         } else if (mTapPos < 0) {
@@ -340,7 +505,10 @@ void DP::Ph1::SVC::mechanicalModelUpdateSusceptance(Real time) {
           mInductiveMode = false;
           Real capacitance = ((mTapPos / mMinPos) * mBN) / omega;
           SPDLOG_LOGGER_INFO(mSLog, "New capacitance: {}", capacitance);
-          mSubCapacitor->updateCapacitance(capacitance, mDeltaT);
+          if (mUseSubcomponents)
+            mSubCapacitor->updateCapacitance(capacitance, mDeltaT);
+          else
+            mDirectCapacitance = capacitance;
           mValueChange = true;
           setSwitchState();
 
@@ -350,8 +518,14 @@ void DP::Ph1::SVC::mechanicalModelUpdateSusceptance(Real time) {
                              "Time: {}"
                              "Tap Position: 0. Open both elements",
                              time);
-          mSubInductorSwitch->open();
-          mSubCapacitorSwitch->open();
+          if (mUseSubcomponents) {
+            mSubInductorSwitch->open();
+            mSubCapacitorSwitch->open();
+          } else {
+            mDirectInductorClosed = false;
+            mDirectCapacitorClosed = false;
+            mValueChange = true;
+          }
         }
       }
     } else {
@@ -369,6 +543,16 @@ void DP::Ph1::SVC::mechanicalModelUpdateSusceptance(Real time) {
 }
 
 void DP::Ph1::SVC::setSwitchState() {
+  if (!mUseSubcomponents) {
+    const Bool newInductorClosed = mInductiveMode;
+    const Bool newCapacitorClosed = !mInductiveMode;
+    if (mDirectInductorClosed != newInductorClosed ||
+        mDirectCapacitorClosed != newCapacitorClosed)
+      mValueChange = true;
+    mDirectInductorClosed = newInductorClosed;
+    mDirectCapacitorClosed = newCapacitorClosed;
+    return;
+  }
   // set switches according to current mode of svc
   if (mInductiveMode) {
     if (!mSubInductorSwitch->mnaIsClosed()) {

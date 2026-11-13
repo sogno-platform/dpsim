@@ -33,8 +33,11 @@ void FIRFilter::step(Real time) {
   Real output = 0;
   ///CHECK: Does this copy the value or the reference of the data behind mInput? It should only copy the value.
   mSignal[mCurrentIdx] = **mInput;
+  Int signalIdx = mCurrentIdx;
   for (int i = 0; i < mFilterLength; i++) {
-    output += mFilter[i] * mSignal[getIndex(i)];
+    output += mFilter[i] * mSignal[signalIdx];
+    if (++signalIdx == mFilterLength)
+      signalIdx = 0;
   }
 
   incrementIndex();
@@ -51,11 +54,8 @@ Task::List FIRFilter::getTasks() {
 }
 
 void FIRFilter::incrementIndex() {
-  mCurrentIdx = (mCurrentIdx + 1) % mFilterLength;
-}
-
-Int FIRFilter::getIndex(Int index) {
-  return (mCurrentIdx + index) % mFilterLength;
+  if (++mCurrentIdx == mFilterLength)
+    mCurrentIdx = 0;
 }
 
 void FIRFilter::setInput(Attribute<Real>::Ptr input) { mInput = input; }

@@ -11,8 +11,13 @@ namespace DP {
 /// \brief Abstract base for DP I-type SSN components (input current, output voltage).
 class ITypeSSNComp : public SSNComp {
 protected:
+  /// Cached Norton admittance W^-1, where W is fixed after discretization.
+  MatrixComp mWInverse;
+
   ITypeSSNComp(String uid, String name, Int inputSize, Int outputSize,
                Logger::Level logLevel = Logger::Level::off);
+
+  void recomputeDiscreteModel(Real omega) override;
 
   Attribute<MatrixComp>::Ptr inputAttribute() const override final;
   Attribute<MatrixComp>::Ptr outputAttribute() const override final;

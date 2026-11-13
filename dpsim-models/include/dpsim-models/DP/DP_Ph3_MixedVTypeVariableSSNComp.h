@@ -25,6 +25,13 @@ class MixedVTypeVariableSSNComp : public MNASimPowerComp<Complex>,
                                   public MNAVariableCompInterface {
 private:
   Bool mParameterChanged;
+  /// Workspaces for the per-step history calculation (const virtual API).
+  mutable Matrix mHistoryInputScratch;
+  mutable Matrix mHistoryStateScratch;
+  mutable Matrix mHistoryOutputScratch;
+  /// Workspaces for the per-step state update.
+  Matrix mUpdateInputScratch;
+  Matrix mUpdateStateScratch;
 
 protected:
   static constexpr Int mInitializationMaxIterations = 10;

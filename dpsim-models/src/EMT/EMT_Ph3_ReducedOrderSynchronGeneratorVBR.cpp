@@ -8,11 +8,16 @@
 
 #include <dpsim-models/EMT/EMT_Ph3_ReducedOrderSynchronGeneratorVBR.h>
 
+#include <cmath>
+
 using namespace CPS;
 
 EMT::Ph3::ReducedOrderSynchronGeneratorVBR::ReducedOrderSynchronGeneratorVBR(
     const String &uid, const String &name, Logger::Level logLevel)
     : Base::ReducedOrderSynchronGenerator<Real>(uid, name, logLevel) {
+  mVdq0Value = &mVdq0->get();
+  mIdq0Value = &mIdq0->get();
+  mEfValue = &mEf->get();
 
   mPhaseType = PhaseType::ABC;
   setTerminalNumber(1);
@@ -31,15 +36,14 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::initializeResistanceMatrix() {
   mResistanceMatrixDq0 = MatrixFixedSize<3, 3>::Zero(3, 3);
   mResistanceMatrixDq0 << 0.0, mA, 0.0, mB, 0.0, 0.0, 0.0, 0.0, mL0;
 
-  // initialize conductance matrix
+  // This impedance is constant in the rotor frame. Compute its inverse once;
+  // each step only rotates the conductance into the abc frame.
+  mConductanceMatrixDq0 = mResistanceMatrixDq0.inverse() / mBase_Z;
   mConductanceMatrix = MatrixFixedSize<3, 3>::Zero(3, 3);
 }
 
 void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::calculateResistanceMatrix() {
-  MatrixFixedSize<3, 3> resistanceMatrix =
-      mDq0ToAbc * mResistanceMatrixDq0 * mAbcToDq0;
-  resistanceMatrix = resistanceMatrix * mBase_Z;
-  mConductanceMatrix = resistanceMatrix.inverse();
+  mConductanceMatrix.noalias() = mDq0ToAbc * mConductanceMatrixDq0 * mAbcToDq0;
 }
 
 void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaCompInitialize(
@@ -183,6 +187,9 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaCompInitialize(
 void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
 
+  if (mDeviceMatrixManaged)
+    return;
+
   if (mModelAsNortonSource) {
     MNAStampUtils::stamp3x3ConductanceMatrixNodeToGround(
         mConductanceMatrix, systemMatrix, matrixNodeIndex(0), mSLog);
@@ -237,6 +244,20 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::
   }
 }
 
+void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::
+    mnaAddCompactRightSideVectorStamp(Matrix &rightVector) {
+  if (mDeviceRhsManaged)
+    return;
+  const Matrix &stamp = **mRightVector;
+  const PhaseType phases[] = {PhaseType::A, PhaseType::B, PhaseType::C};
+  for (UInt phase = 0; phase < 3; ++phase) {
+    const UInt index = mModelAsNortonSource
+                           ? matrixNodeIndex(0, phase)
+                           : mVirtualNodes[1]->matrixNodeIndex(phases[phase]);
+    rightVector(index, 0) += stamp(index, 0);
+  }
+}
+
 void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaCompPostStep(
     const Matrix &leftVector) {
   // update armature voltage
@@ -252,8 +273,7 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaCompPostStep(
 
   // update armature current
   if (mModelAsNortonSource) {
-    Matrix Iconductance = mConductanceMatrix * **mIntfVoltage;
-    (**mIntfCurrent) = mIvbr - Iconductance;
+    **mIntfCurrent = mIvbr - mConductanceMatrix * **mIntfVoltage;
   } else {
     (**mIntfCurrent)(0, 0) = Math::realFromVectorElement(
         leftVector, mVirtualNodes[1]->matrixNodeIndex(PhaseType::A));
@@ -267,9 +287,9 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::mnaCompPostStep(
   **mIdq0 = mAbcToDq0 * **mIntfCurrent / mBase_I;
 }
 
-Matrix
+MatrixFixedSize<3, 3>
 EMT::Ph3::ReducedOrderSynchronGeneratorVBR::get_parkTransformMatrix() const {
-  Matrix abcToDq0(3, 3);
+  MatrixFixedSize<3, 3> abcToDq0;
 
   abcToDq0 << 2. / 3. * cos(**mThetaMech),
       2. / 3. * cos(**mThetaMech - 2. * PI / 3.),
@@ -280,14 +300,30 @@ EMT::Ph3::ReducedOrderSynchronGeneratorVBR::get_parkTransformMatrix() const {
   return abcToDq0;
 }
 
-Matrix
+MatrixFixedSize<3, 3>
 EMT::Ph3::ReducedOrderSynchronGeneratorVBR::get_inverseParkTransformMatrix()
     const {
-  Matrix dq0ToAbc(3, 3);
+  MatrixFixedSize<3, 3> dq0ToAbc;
 
   dq0ToAbc << cos(**mThetaMech), -sin(**mThetaMech), 1.,
       cos(**mThetaMech - 2. * PI / 3.), -sin(**mThetaMech - 2. * PI / 3.), 1.,
       cos(**mThetaMech + 2. * PI / 3.), -sin(**mThetaMech + 2. * PI / 3.), 1.;
 
   return dq0ToAbc;
+}
+
+void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::updateParkTransformMatrices() {
+  const Real theta = **mThetaMech;
+  const Real thetaB = theta - 2. * PI / 3.;
+  const Real thetaC = theta + 2. * PI / 3.;
+  const Real cosA = std::cos(theta);
+  const Real sinA = std::sin(theta);
+  const Real cosB = std::cos(thetaB);
+  const Real sinB = std::sin(thetaB);
+  const Real cosC = std::cos(thetaC);
+  const Real sinC = std::sin(thetaC);
+
+  mAbcToDq0 << 2. / 3. * cosA, 2. / 3. * cosB, 2. / 3. * cosC, -2. / 3. * sinA,
+      -2. / 3. * sinB, -2. / 3. * sinC, 1. / 3., 1. / 3., 1. / 3.;
+  mDq0ToAbc << cosA, -sinA, 1., cosB, -sinB, 1., cosC, -sinC, 1.;
 }

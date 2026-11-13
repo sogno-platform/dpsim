@@ -22,6 +22,7 @@ PFSolver::PFSolver(CPS::String name, CPS::SystemTopology system,
 }
 
 void PFSolver::initialize() {
+  CPS::Math::ScopedZeroSkipping zeroSkippingScope(mZeroSkipping);
   SPDLOG_LOGGER_INFO(mSLog, "#### INITIALIZATION OF POWERFLOW SOLVER ");
   // mComponentsAtNode is a view derived from mComponents; rebuild it here so
   // the solver never sees entries for removed or re-added components (#635)

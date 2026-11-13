@@ -56,12 +56,13 @@ void EMT::DC::VoltageSource::mnaCompInitialize(Real, Real,
         "setParameters() must be called before source initialization.");
   validateDCTerminals();
   updateMatrixNodeIndices();
+  mBranchMatrixIndex = mVirtualNodes.at(0)->matrixNodeIndices().at(0);
   (**mIntfVoltage)(0, 0) = **mVoltageRef;
 }
 
 void EMT::DC::VoltageSource::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
-  const UInt branchIdx = mVirtualNodes.at(0)->matrixNodeIndices().at(0);
+  const UInt branchIdx = mBranchMatrixIndex;
   if (terminalNotGrounded(0)) {
     Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), branchIdx, -1.0);
     Math::addToMatrixElement(systemMatrix, branchIdx, matrixNodeIndex(0), -1.0);
@@ -74,14 +75,13 @@ void EMT::DC::VoltageSource::mnaCompApplySystemMatrixStamp(
 
 void EMT::DC::VoltageSource::mnaCompApplyRightSideVectorStamp(
     Matrix &rightVector) {
-  Math::setVectorElement(rightVector,
-                         mVirtualNodes.at(0)->matrixNodeIndices().at(0),
+  Math::setVectorElement(rightVector, mBranchMatrixIndex,
                          (**mIntfVoltage)(0, 0));
 }
 
 void EMT::DC::VoltageSource::mnaCompUpdateCurrent(const Matrix &leftVector) {
-  (**mIntfCurrent)(0, 0) = Math::realFromVectorElement(
-      leftVector, mVirtualNodes.at(0)->matrixNodeIndices().at(0));
+  (**mIntfCurrent)(0, 0) =
+      Math::realFromVectorElement(leftVector, mBranchMatrixIndex);
   if (!Math::isFinite((**mIntfCurrent)(0, 0)))
     throw std::runtime_error(
         "DC voltage-source current contains a non-finite value.");

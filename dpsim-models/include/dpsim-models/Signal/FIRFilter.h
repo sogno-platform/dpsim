@@ -26,7 +26,6 @@ protected:
   Int mFilterLength;
 
   void incrementIndex();
-  Int getIndex(Int index);
 
 public:
   const Attribute<Real>::Ptr mOutput;

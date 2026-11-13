@@ -27,20 +27,19 @@ void PFSolverPowerPolarSparse::buildJacobianPattern() {
   UInt npqpv = mNumPQBuses + mNumPVBuses;
   std::vector<Eigen::Triplet<Real>> triplets;
 
-  // Pattern mirrors the bus admittance sparsity; off-diagonal entries exist only
-  // between connected buses. Blocks: J1 dTheta/dTheta, J2 dTheta/dV, J3 dQ/dTheta,
-  // J4 dQ/dV (V increments only for PQ buses).
+  // With zero skipping enabled, the pattern mirrors bus admittance sparsity.
+  // Disabling it retains the dense off-diagonal pattern for comparison runs.
   for (UInt a = 0; a < npqpv; ++a) {
     UInt k = mPQPVBusIndices[a];
     triplets.emplace_back(a, a, 0.0); // J1 diagonal
     if (a < mNumPQBuses)
       triplets.emplace_back(a, a + npqpv, 0.0); // J2 diagonal
     for (UInt b = 0; b < npqpv; ++b) {          // J1 off-diagonal
-      if (b != a && isConnected(k, mPQPVBusIndices[b]))
+      if (b != a && (!mZeroSkipping || isConnected(k, mPQPVBusIndices[b])))
         triplets.emplace_back(a, b, 0.0);
     }
     for (UInt b = 0; b < mNumPQBuses; ++b) { // J2 off-diagonal
-      if (b != a && isConnected(k, mPQPVBusIndices[b]))
+      if (b != a && (!mZeroSkipping || isConnected(k, mPQPVBusIndices[b])))
         triplets.emplace_back(a, b + npqpv, 0.0);
     }
   }
@@ -49,11 +48,11 @@ void PFSolverPowerPolarSparse::buildJacobianPattern() {
     triplets.emplace_back(a + npqpv, a, 0.0);         // J3 diagonal
     triplets.emplace_back(a + npqpv, a + npqpv, 0.0); // J4 diagonal
     for (UInt b = 0; b < npqpv; ++b) {                // J3 off-diagonal
-      if (b != a && isConnected(k, mPQPVBusIndices[b]))
+      if (b != a && (!mZeroSkipping || isConnected(k, mPQPVBusIndices[b])))
         triplets.emplace_back(a + npqpv, b, 0.0);
     }
     for (UInt b = 0; b < mNumPQBuses; ++b) { // J4 off-diagonal
-      if (b != a && isConnected(k, mPQPVBusIndices[b]))
+      if (b != a && (!mZeroSkipping || isConnected(k, mPQPVBusIndices[b])))
         triplets.emplace_back(a + npqpv, b + npqpv, 0.0);
     }
   }
@@ -97,7 +96,7 @@ void PFSolverPowerPolarSparse::calculateJacobian() {
       if (b == a)
         continue;
       j = mPQPVBusIndices[b];
-      if (!isConnected(k, j))
+      if (mZeroSkipping && !isConnected(k, j))
         continue;
       val = sol_V.coeff(k) * sol_V.coeff(j) *
             (G(k, j) * sin(sol_D.coeff(k) - sol_D.coeff(j)) -
@@ -116,7 +115,7 @@ void PFSolverPowerPolarSparse::calculateJacobian() {
       if (b == a)
         continue;
       j = mPQPVBusIndices[b];
-      if (!isConnected(k, j))
+      if (mZeroSkipping && !isConnected(k, j))
         continue;
       val = sol_V.coeff(k) * sol_V.coeff(j) *
             (G(k, j) * cos(sol_D.coeff(k) - sol_D.coeff(j)) +
@@ -134,7 +133,7 @@ void PFSolverPowerPolarSparse::calculateJacobian() {
       if (b == a)
         continue;
       j = mPQPVBusIndices[b];
-      if (!isConnected(k, j))
+      if (mZeroSkipping && !isConnected(k, j))
         continue;
       val = sol_V.coeff(k) * sol_V.coeff(j) *
             (G(k, j) * cos(sol_D.coeff(k) - sol_D.coeff(j)) +
@@ -152,7 +151,7 @@ void PFSolverPowerPolarSparse::calculateJacobian() {
       if (b == a)
         continue;
       j = mPQPVBusIndices[b];
-      if (!isConnected(k, j))
+      if (mZeroSkipping && !isConnected(k, j))
         continue;
       val = sol_V.coeff(k) * sol_V.coeff(j) *
             (G(k, j) * sin(sol_D.coeff(k) - sol_D.coeff(j)) -

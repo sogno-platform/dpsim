@@ -98,6 +98,26 @@ void DP::Ph3::CurrentSource::mnaCompApplyRightSideVectorStamp(
   }
 }
 
+void DP::Ph3::CurrentSource::mnaAddCompactRightSideVectorStamp(
+    Matrix &rightVector) {
+  if (terminalNotGrounded(1)) {
+    Math::addToVectorElement(rightVector, matrixNodeIndex(1, 0),
+                             -(**mIntfCurrent)(0, 0));
+    Math::addToVectorElement(rightVector, matrixNodeIndex(1, 1),
+                             -(**mIntfCurrent)(1, 0));
+    Math::addToVectorElement(rightVector, matrixNodeIndex(1, 2),
+                             -(**mIntfCurrent)(2, 0));
+  }
+  if (terminalNotGrounded(0)) {
+    Math::addToVectorElement(rightVector, matrixNodeIndex(0, 0),
+                             (**mIntfCurrent)(0, 0));
+    Math::addToVectorElement(rightVector, matrixNodeIndex(0, 1),
+                             (**mIntfCurrent)(1, 0));
+    Math::addToVectorElement(rightVector, matrixNodeIndex(0, 2),
+                             (**mIntfCurrent)(2, 0));
+  }
+}
+
 void DP::Ph3::CurrentSource::updateCurrent(Real time) {
   if (mSrcSig != nullptr) {
     mSrcSig->step(time);
@@ -136,7 +156,7 @@ void DP::Ph3::CurrentSource::mnaCompPostStep(
 }
 
 void DP::Ph3::CurrentSource::mnaCompUpdateVoltage(const Matrix &leftVector) {
-  **mIntfVoltage = MatrixComp::Zero(3, 1);
+  (**mIntfVoltage).setZero();
   if (terminalNotGrounded(1)) {
     (**mIntfVoltage)(0, 0) =
         Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 0));

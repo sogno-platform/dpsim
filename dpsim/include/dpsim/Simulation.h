@@ -99,7 +99,7 @@ protected:
   /// (Real) time needed for the timesteps
   std::vector<Real> mStepTimes;
   /// activate collection of step times
-  Bool mLogStepTimes = true;
+  Bool mLogStepTimes = false;
 
   // #### Solver Settings ####
   ///
@@ -121,6 +121,8 @@ protected:
       Solver::SystemMatrixRecomputationMode::Auto;
   /// Enable extraction of the MNA-coupled discrete-time state matrix.
   Bool mStateSpaceExtraction = false;
+  /// Skip exact zero matrix contributions. Enabled by default for all solvers.
+  Bool mZeroSkipping = true;
 
   /// If tearing components exist, the Diakoptics
   /// solver is selected automatically.
@@ -279,6 +281,11 @@ public:
   void setPFSolverUseSparse(Bool value);
 
   Bool getPFSolverUseSparse() const;
+
+  /// Enable or disable exact-zero skipping in matrix assembly and power flow.
+  void setZeroSkipping(Bool enabled) { mZeroSkipping = enabled; }
+
+  Bool getZeroSkipping() const { return mZeroSkipping; }
 
   void setPFSolverEnforceReactiveLimits(Bool value);
 

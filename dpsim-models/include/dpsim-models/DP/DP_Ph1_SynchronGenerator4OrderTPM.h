@@ -51,6 +51,10 @@ protected:
   Matrix mCdStateSpace;
   /// Idp at k-1
   MatrixComp mIdpTwoPrevStep;
+  /// Reused real-valued DP current scratch for the predictor/corrector
+  Matrix mIdpScratch = Matrix::Zero(2, 1);
+  /// Reused output for the varying-resistance current compensation product
+  Matrix mIdpResistanceProduct = Matrix::Zero(2, 1);
   /// Vdq at k
   Matrix mVdqPrevStep;
   /// Vdq at j-1

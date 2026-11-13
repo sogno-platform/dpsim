@@ -7,16 +7,25 @@
  *********************************************************************************/
 
 #include <dpsim-models/EMT/EMT_Ph3_NetworkInjection.h>
+#include <dpsim-models/Signal/CosineFMGenerator.h>
+#include <dpsim-models/Signal/FrequencyRampGenerator.h>
+#include <dpsim-models/Signal/SineWaveGenerator.h>
 
 using namespace CPS;
 
 EMT::Ph3::NetworkInjection::NetworkInjection(String uid, String name,
                                              Logger::Level logLevel)
+    : NetworkInjection(uid, name, true, logLevel) {}
+
+EMT::Ph3::NetworkInjection::NetworkInjection(String uid, String name,
+                                             Bool useSubcomponents,
+                                             Logger::Level logLevel)
     : CompositePowerComp<Real>(uid, name, true, true, logLevel),
       mVoltageRef(mAttributes->createDynamic<MatrixComp>("V_ref")),
       mSrcFreq(mAttributes->createDynamic<Real>("f_src")) {
+  mUseSubcomponents = useSubcomponents;
   mPhaseType = PhaseType::ABC;
-  setVirtualNodeNumber(0);
+  setVirtualNodeNumber(mUseSubcomponents ? 0 : 1);
   setTerminalNumber(1);
   **mIntfVoltage = Matrix::Zero(3, 1);
   **mIntfCurrent = Matrix::Zero(3, 1);
@@ -24,21 +33,19 @@ EMT::Ph3::NetworkInjection::NetworkInjection(String uid, String name,
   SPDLOG_LOGGER_INFO(mSLog, "Create {} {}", this->type(), name);
 
   // Create electrical sub components
-  mSubVoltageSource =
-      std::make_shared<EMT::Ph3::VoltageSource>(**mName + "_vs", mLogLevel);
-  addMNASubComponent(mSubVoltageSource,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-  SPDLOG_LOGGER_INFO(mSLog, "Electrical subcomponents: ");
-  for (auto subcomp : mSubComponents)
-    SPDLOG_LOGGER_INFO(mSLog, "- {}", subcomp->name());
-
-  mSubVoltageSource->mVoltageRef->setReference(mVoltageRef);
-  mSubVoltageSource->mSrcFreq->setReference(mSrcFreq);
+  if (mUseSubcomponents) {
+    mSubVoltageSource =
+        std::make_shared<EMT::Ph3::VoltageSource>(**mName + "_vs", mLogLevel);
+    addMNASubComponent(mSubVoltageSource,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+    mSubVoltageSource->mVoltageRef->setReference(mVoltageRef);
+    mSubVoltageSource->mSrcFreq->setReference(mSrcFreq);
+  }
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::NetworkInjection::clone(String name) {
-  auto copy = NetworkInjection::make(name, mLogLevel);
+  auto copy = NetworkInjection::make(name, mUseSubcomponents, mLogLevel);
   copy->setParameters(**mVoltageRef);
   return copy;
 }
@@ -47,7 +54,16 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef,
                                                Real srcFreq) {
   mParametersSet = true;
 
-  mSubVoltageSource->setParameters(voltageRef, srcFreq);
+  if (mUseSubcomponents)
+    mSubVoltageSource->setParameters(voltageRef, srcFreq);
+  else {
+    auto source = Signal::SineWaveGenerator::make(**mName + "_sw");
+    source->mFreq->setReference(mSrcFreq);
+    source->setParameters(Complex(1, 0), srcFreq);
+    mSrcSig = source;
+    **mVoltageRef = voltageRef;
+    **mSrcFreq = srcFreq;
+  }
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\nVoltage Ref={:s} [V]"
@@ -62,8 +78,18 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef,
                                                bool smoothRamp) {
   mParametersSet = true;
 
-  mSubVoltageSource->setParameters(voltageRef, freqStart, rocof, timeStart,
-                                   duration, smoothRamp);
+  if (mUseSubcomponents)
+    mSubVoltageSource->setParameters(voltageRef, freqStart, rocof, timeStart,
+                                     duration, smoothRamp);
+  else {
+    auto source = Signal::FrequencyRampGenerator::make(**mName + "_fr");
+    source->mFreq->setReference(mSrcFreq);
+    source->setParameters(Complex(1, 0), freqStart, rocof, timeStart, duration,
+                          smoothRamp);
+    mSrcSig = source;
+    **mVoltageRef = voltageRef;
+    **mSrcFreq = freqStart;
+  }
 
   SPDLOG_LOGGER_INFO(
       mSLog,
@@ -84,8 +110,19 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef,
                                                bool zigzag /*= false*/) {
   mParametersSet = true;
 
-  mSubVoltageSource->setParameters(voltageRef, modulationFrequency,
-                                   modulationAmplitude, baseFrequency, zigzag);
+  if (mUseSubcomponents)
+    mSubVoltageSource->setParameters(voltageRef, modulationFrequency,
+                                     modulationAmplitude, baseFrequency,
+                                     zigzag);
+  else {
+    auto source = Signal::CosineFMGenerator::make(**mName + "_fm");
+    source->mFreq->setReference(mSrcFreq);
+    source->setParameters(Complex(1, 0), modulationFrequency,
+                          modulationAmplitude, baseFrequency, zigzag);
+    mSrcSig = source;
+    **mVoltageRef = voltageRef;
+    **mSrcFreq = baseFrequency;
+  }
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\nVoltage Ref={:s} [V]"
@@ -96,6 +133,18 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef,
 
 void EMT::Ph3::NetworkInjection::initializeParentFromNodesAndTerminals(
     Real frequency) {
+  if (!mUseSubcomponents) {
+    if (!mParametersSet) {
+      auto source = Signal::SineWaveGenerator::make(**mName + "_sw");
+      source->mFreq->setReference(mSrcFreq);
+      source->setParameters(Complex(1, 0), frequency);
+      mSrcSig = source;
+      **mVoltageRef = CPS::Math::singlePhaseVariableToThreePhase(
+          initialSingleVoltage(1) - initialSingleVoltage(0));
+      **mSrcFreq = frequency;
+    }
+    return;
+  }
   // Connect electrical subcomponents
   mSubVoltageSource->connect({SimNode::GND, node(0)});
 }
@@ -103,8 +152,51 @@ void EMT::Ph3::NetworkInjection::initializeParentFromNodesAndTerminals(
 // #### MNA functions ####
 void EMT::Ph3::NetworkInjection::mnaParentApplyRightSideVectorStamp(
     Matrix &rightVector) {
+  if (!mUseSubcomponents) {
+    for (UInt phase = 0; phase < 3; ++phase)
+      Math::setVectorElement(
+          rightVector,
+          mVirtualNodes[0]->matrixNodeIndex(static_cast<PhaseType>(phase)),
+          (**mIntfVoltage)(phase, 0));
+    return;
+  }
   SPDLOG_LOGGER_DEBUG(mSLog, "Right Side Vector: {:s}",
                       Logger::matrixToString(rightVector));
+}
+
+void EMT::Ph3::NetworkInjection::mnaParentApplySystemMatrixStamp(
+    SparseMatrixRow &systemMatrix) {
+  if (mUseSubcomponents)
+    return;
+  for (UInt phase = 0; phase < 3; ++phase) {
+    const UInt sourceCurrent =
+        mVirtualNodes[0]->matrixNodeIndex(static_cast<PhaseType>(phase));
+    if (terminalNotGrounded(0)) {
+      Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, phase),
+                               sourceCurrent, 1.);
+      Math::addToMatrixElement(systemMatrix, sourceCurrent,
+                               matrixNodeIndex(0, phase), 1.);
+    }
+  }
+}
+
+Bool EMT::Ph3::NetworkInjection::mnaHasCompactRightSideVectorStamp() const {
+  return !mUseSubcomponents ||
+         CompositePowerComp<Real>::mnaHasCompactRightSideVectorStamp();
+}
+
+void EMT::Ph3::NetworkInjection::mnaAddCompactRightSideVectorStamp(
+    Matrix &rightVector) {
+  if (mUseSubcomponents) {
+    CompositePowerComp<Real>::mnaAddCompactRightSideVectorStamp(rightVector);
+    return;
+  }
+  for (UInt phase = 0; phase < 3; ++phase) {
+    const UInt index =
+        mVirtualNodes[0]->matrixNodeIndex(static_cast<PhaseType>(phase));
+    Math::addToVectorElement(
+        rightVector, index, Math::realFromVectorElement(**mRightVector, index));
+  }
 }
 
 void EMT::Ph3::NetworkInjection::mnaParentAddPreStepDependencies(
@@ -113,11 +205,26 @@ void EMT::Ph3::NetworkInjection::mnaParentAddPreStepDependencies(
     AttributeBase::List &modifiedAttributes) {
   prevStepDependencies.push_back(mIntfCurrent);
   prevStepDependencies.push_back(mIntfVoltage);
+  if (!mUseSubcomponents) {
+    attributeDependencies.push_back(mVoltageRef);
+    attributeDependencies.push_back(mSrcFreq);
+  }
   modifiedAttributes.push_back(mRightVector);
 }
 
 void EMT::Ph3::NetworkInjection::mnaParentPreStep(Real time,
                                                   Int timeStepCount) {
+  if (!mUseSubcomponents) {
+    if (mSrcSig != nullptr) {
+      mSrcSig->step(time);
+      for (UInt phase = 0; phase < 3; ++phase)
+        (**mIntfVoltage)(phase, 0) =
+            RMS3PH_TO_PEAK1PH * Math::abs((**mVoltageRef)(phase, 0)) *
+            cos(Math::phase(mSrcSig->getSignal()) +
+                Math::phase((**mVoltageRef)(phase, 0)));
+    } else
+      **mIntfVoltage = RMS3PH_TO_PEAK1PH * (**mVoltageRef).real();
+  }
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
@@ -139,10 +246,17 @@ void EMT::Ph3::NetworkInjection::mnaParentPostStep(
 
 void EMT::Ph3::NetworkInjection::mnaCompUpdateVoltage(
     const Matrix &leftVector) {
-  **mIntfVoltage = **mSubVoltageSource->mIntfVoltage;
+  if (mUseSubcomponents)
+    **mIntfVoltage = **mSubVoltageSource->mIntfVoltage;
 }
 
 void EMT::Ph3::NetworkInjection::mnaCompUpdateCurrent(
     const Matrix &leftVector) {
-  **mIntfCurrent = **mSubVoltageSource->mIntfCurrent;
+  if (mUseSubcomponents)
+    **mIntfCurrent = **mSubVoltageSource->mIntfCurrent;
+  else
+    for (UInt phase = 0; phase < 3; ++phase)
+      (**mIntfCurrent)(phase, 0) = Math::realFromVectorElement(
+          leftVector,
+          mVirtualNodes[0]->matrixNodeIndex(static_cast<PhaseType>(phase)));
 }

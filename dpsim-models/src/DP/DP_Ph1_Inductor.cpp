@@ -37,6 +37,11 @@ Complex DP::Ph1::Inductor::getMNAConductance() const {
   return mEquivCond(0, 0);
 }
 
+void DP::Ph1::Inductor::updateInductance(Real inductance, Real timeStep) {
+  setParameters(inductance);
+  initVars(timeStep);
+}
+
 void DP::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 
   Real omega = 2. * PI * frequency;

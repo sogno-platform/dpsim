@@ -36,6 +36,15 @@ villas_sent_data.conf
 !examples/Notebooks/**/*.gif
 !examples/Notebooks/**/*.webp
 !examples/Notebooks/**/*.ico
+# Data files required to reproduce the IEEE118 task-time attribution notebook.
+!examples/Notebooks/Performance/data/IEEE118_Component_Task_Profile/*.csv
+!examples/Notebooks/Performance/data/IEEE118_Composite_Optimization/*.csv
+!examples/Notebooks/Benchmarks/data/verified_rerun/grouped_shared_maps_*.csv
+!examples/Notebooks/Benchmarks/data/verified_rerun/grouped_shared_maps_*.log.xz
+!examples/Notebooks/Benchmarks/data/IEEE300_EMT_10s_50us/*.csv
+!examples/Notebooks/Benchmarks/data/IEEE300_EMT_10s_50us/*.log.xz
+!examples/Notebooks/Benchmarks/data/IEEE300_Publishable_10s_50us/*.csv
+!examples/Notebooks/Benchmarks/data/IEEE300_Publishable_10s_50us/solver_screen/*.csv
 
 # Folders
 Libraries/
@@ -102,3 +111,9 @@ env/
 docs/hugo/static/sphinx/
 docs/hugo/static/doxygen/
 docs/hugo/static/xml/
+
+# Checked-in compact profile data for benchmark notebooks (must follow Logs/).
+!examples/Notebooks/Benchmarks/data/deep_timing_10s/**/
+!examples/Notebooks/Benchmarks/data/deep_timing_10s/**/*.csv
+examples/Notebooks/Benchmarks/data/deep_timing_10s/**/*TaskTimes_SchedulerSteps.csv
+!examples/Notebooks/Benchmarks/data/deep_timing_10s/**/*.xz

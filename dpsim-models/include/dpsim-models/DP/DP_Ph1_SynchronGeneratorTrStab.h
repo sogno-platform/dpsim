@@ -12,6 +12,7 @@
 #include <dpsim-models/CompositePowerComp.h>
 #include <dpsim-models/DP/DP_Ph1_Inductor.h>
 #include <dpsim-models/DP/DP_Ph1_VoltageSource.h>
+#include <dpsim-models/MNAStampUtils.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
@@ -31,12 +32,18 @@ protected:
   Real mLpd;
   /// Absolute damping coefficient
   Real mKd;
+  Bool mUseSubcomponents = true;
   /// Equivalent impedance for loadflow calculation
   Complex mImpedance;
   /// Inner voltage source that represents the generator
   std::shared_ptr<VoltageSource> mSubVoltageSource;
   /// Inner inductor that represents the generator impedance
   std::shared_ptr<Inductor> mSubInductor;
+  MatrixComp mDirectAdmittance;
+  MatrixComp mDirectPreviousCurrentFactor;
+  MatrixComp mDirectHistory;
+  MatrixComp mDirectCurrent;
+  MatrixComp mDirectVoltage;
   /// Logging
   Matrix mStates;
   /// Flag for usage of attribute of w_ref (otherwise mNomOmega is used)
@@ -64,10 +71,15 @@ public:
   ///
   SynchronGeneratorTrStab(String uid, String name,
                           Logger::Level logLevel = Logger::Level::off);
+  SynchronGeneratorTrStab(String uid, String name, Bool useSubcomponents,
+                          Logger::Level logLevel = Logger::Level::off);
   ///
   SynchronGeneratorTrStab(String name,
                           Logger::Level logLevel = Logger::Level::off)
       : SynchronGeneratorTrStab(name, name, logLevel) {}
+  SynchronGeneratorTrStab(String name, Bool useSubcomponents,
+                          Logger::Level logLevel = Logger::Level::off)
+      : SynchronGeneratorTrStab(name, name, useSubcomponents, logLevel) {}
 
   SimPowerComp<Complex>::Ptr clone(String name) override;
 
@@ -91,6 +103,8 @@ public:
   void step(Real time);
   /// Constructs and registers MNA subcomponents without emf value; idempotent.
   void createSubComponents() override;
+  void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
   ///
   void initializeParentFromNodesAndTerminals(Real frequency) override;
 

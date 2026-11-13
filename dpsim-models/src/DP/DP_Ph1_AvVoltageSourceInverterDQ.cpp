@@ -7,11 +7,20 @@
  *********************************************************************************/
 
 #include <dpsim-models/DP/DP_Ph1_AvVoltageSourceInverterDQ.h>
+#include <dpsim-models/MNAStampUtils.h>
+
+#include <array>
+#include <stdexcept>
 
 using namespace CPS;
 
 DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(
     String uid, String name, Logger::Level logLevel, Bool withTrafo)
+    : AvVoltageSourceInverterDQ(uid, name, true, logLevel, withTrafo) {}
+
+DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(
+    String uid, String name, Bool useSubcomponents, Logger::Level logLevel,
+    Bool withTrafo)
     : CompositePowerComp<Complex>(uid, name, true, true, logLevel),
       mOmegaN(mAttributes->create<Real>("Omega_nom")),
       mPref(mAttributes->create<Real>("P_ref")),
@@ -22,12 +31,15 @@ DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(
       mIrcq(mAttributes->create<Real>("Irc_q", 0)),
       mVsref(mAttributes->create<MatrixComp>("Vsref", MatrixComp::Zero(1, 1))),
       mVs(mAttributes->createDynamic<MatrixComp>("Vs")),
+      mDirectSourceVoltageAttr(mAttributes->create<MatrixComp>(
+          "direct_source_voltage", MatrixComp::Zero(1, 1))),
       mPllOutput(mAttributes->createDynamic<Matrix>("pll_output")),
       mPowerctrlInputs(mAttributes->createDynamic<Matrix>("powerctrl_inputs")),
       mPowerctrlOutputs(
           mAttributes->createDynamic<Matrix>("powerctrl_outputs")),
       mPowerctrlStates(mAttributes->createDynamic<Matrix>("powerctrl_states")) {
 
+  mUseSubcomponents = useSubcomponents;
   if (withTrafo) {
     setVirtualNodeNumber(4);
     mConnectionTransformer = DP::Ph1::Transformer::make(
@@ -36,7 +48,7 @@ DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
                        MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
   } else {
-    setVirtualNodeNumber(3);
+    setVirtualNodeNumber(mUseSubcomponents ? 3 : 4);
   }
   mWithConnectionTransformer = withTrafo;
   setTerminalNumber(1);
@@ -45,25 +57,40 @@ DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(
   **mIntfVoltage = MatrixComp::Zero(1, 1);
   **mIntfCurrent = MatrixComp::Zero(1, 1);
 
-  // Create electrical sub components
-  mSubResistorF = DP::Ph1::Resistor::make(**mName + "_resF", mLogLevel);
-  mSubResistorC = DP::Ph1::Resistor::make(**mName + "_resC", mLogLevel);
-  mSubCapacitorF = DP::Ph1::Capacitor::make(**mName + "_capF", mLogLevel);
-  mSubInductorF = DP::Ph1::Inductor::make(**mName + "_indF", mLogLevel);
-  mSubCtrledVoltageSource =
-      DP::Ph1::VoltageSource::make(**mName + "_src", mLogLevel);
-  addMNASubComponent(mSubResistorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
-  addMNASubComponent(mSubResistorC, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
-  addMNASubComponent(mSubCapacitorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
-  addMNASubComponent(mSubInductorF, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+  if (mUseSubcomponents) {
+    // Create electrical sub components
+    mSubResistorF = DP::Ph1::Resistor::make(**mName + "_resF", mLogLevel);
+    mSubResistorC = DP::Ph1::Resistor::make(**mName + "_resC", mLogLevel);
+    mSubCapacitorF = DP::Ph1::Capacitor::make(**mName + "_capF", mLogLevel);
+    mSubInductorF = DP::Ph1::Inductor::make(**mName + "_indF", mLogLevel);
+    addMNASubComponent(mSubResistorF,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+    addMNASubComponent(mSubResistorC,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, false);
+    addMNASubComponent(mSubCapacitorF,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+    addMNASubComponent(mSubInductorF,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+  }
 
-  // Pre-step of the subcontrolled voltage source is handled explicitly in mnaParentPreStep
-  addMNASubComponent(mSubCtrledVoltageSource, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
-                     MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+  // Keep the controlled source as a component in transformer-enabled direct
+  // mode. Its branch unknown is distinct from the transformer's low-voltage
+  // node, while the R-L-C filter remains stamped directly by this parent.
+  if (!mUseSubcomponents && mWithConnectionTransformer) {
+    mSubCtrledVoltageSource =
+        DP::Ph1::VoltageSource::make(**mName + "_src", mLogLevel);
+    addMNASubComponent(mSubCtrledVoltageSource, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+  } else if (mUseSubcomponents) {
+    mSubCtrledVoltageSource =
+        DP::Ph1::VoltageSource::make(**mName + "_src", mLogLevel);
+    addMNASubComponent(mSubCtrledVoltageSource, MNA_SUBCOMP_TASK_ORDER::NO_TASK,
+                       MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT, true);
+  }
 
   SPDLOG_LOGGER_INFO(mSLog, "Electrical subcomponents: ");
   for (auto subcomp : mSubComponents)
@@ -75,7 +102,10 @@ DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(
       **mName + "_PowerControllerVSI", mLogLevel);
 
   // Sub voltage source
-  mVs->setReference(mSubCtrledVoltageSource->mIntfVoltage);
+  if (mUseSubcomponents || mWithConnectionTransformer)
+    mVs->setReference(mSubCtrledVoltageSource->mIntfVoltage);
+  else
+    mVs->setReference(mDirectSourceVoltageAttr);
 
   // PLL
   mPLL->mInputRef->setReference(mVcq);
@@ -169,10 +199,12 @@ void DP::Ph1::AvVoltageSourceInverterDQ::setFilterParameters(Real Lf, Real Cf,
   SPDLOG_LOGGER_INFO(mSLog, "Resistance Rf={} [Ohm] Resistance Rc={} [Ohm]",
                      mRf, mRc);
 
-  mSubResistorC->setParameters(mRc);
-  mSubResistorF->setParameters(mRf);
-  mSubInductorF->setParameters(mLf);
-  mSubCapacitorF->setParameters(mCf);
+  if (mUseSubcomponents) {
+    mSubResistorC->setParameters(mRc);
+    mSubResistorF->setParameters(mRf);
+    mSubInductorF->setParameters(mLf);
+    mSubCapacitorF->setParameters(mCf);
+  }
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::setInitialStateValues(
@@ -233,24 +265,35 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeParentFromNodesAndTerminals(
   mVirtualNodes[1]->setInitialVoltage(vfInit);
   mVirtualNodes[2]->setInitialVoltage(vcInit);
 
-  // Set parameters electrical subcomponents
   (**mVsref)(0, 0) = mVirtualNodes[0]->initialSingleVoltage();
-  mSubCtrledVoltageSource->setParameters((**mVsref)(0, 0));
+  mDirectSourceValue = (**mVsref)(0, 0);
+  (**mDirectSourceVoltageAttr)(0, 0) = mDirectSourceValue;
+  if (mUseSubcomponents) {
+    mSubCtrledVoltageSource->setParameters((**mVsref)(0, 0));
+    mSubCtrledVoltageSource->connect({SimNode::GND, mVirtualNodes[0]});
+    mSubResistorF->connect({mVirtualNodes[0], mVirtualNodes[1]});
+    mSubInductorF->connect({mVirtualNodes[1], mVirtualNodes[2]});
+    mSubCapacitorF->connect({mVirtualNodes[2], SimNode::GND});
+    if (mWithConnectionTransformer)
+      mSubResistorC->connect({mVirtualNodes[2], mVirtualNodes[3]});
+    else
+      mSubResistorC->connect({mVirtualNodes[2], mTerminals[0]->node()});
 
-  // Connect electrical subcomponents
-  mSubCtrledVoltageSource->connect({SimNode::GND, mVirtualNodes[0]});
-  mSubResistorF->connect({mVirtualNodes[0], mVirtualNodes[1]});
-  mSubInductorF->connect({mVirtualNodes[1], mVirtualNodes[2]});
-  mSubCapacitorF->connect({mVirtualNodes[2], SimNode::GND});
-  if (mWithConnectionTransformer)
-    mSubResistorC->connect({mVirtualNodes[2], mVirtualNodes[3]});
-  else
-    mSubResistorC->connect({mVirtualNodes[2], mTerminals[0]->node()});
-
-  // Initialize electrical subcomponents
-  for (auto subcomp : mSubComponents) {
-    subcomp->initialize(mFrequencies);
-    subcomp->initializeFromNodesAndTerminals(frequency);
+    for (auto subcomp : mSubComponents) {
+      subcomp->initialize(mFrequencies);
+      subcomp->initializeFromNodesAndTerminals(frequency);
+    }
+  } else {
+    mDirectGridCurrent = filterInterfaceInitialCurrent;
+    // DP inductor/capacitor component voltage is terminal-1 minus terminal-0.
+    mDirectInductorVoltage = vcInit - vfInit;
+    mDirectInductorCurrent = filterInterfaceInitialCurrent - icfInit;
+    mDirectCapacitorVoltage = -vcInit;
+    mDirectCapacitorCurrent = -icfInit;
+    if (mWithConnectionTransformer) {
+      mSubCtrledVoltageSource->setParameters((**mVsref)(0, 0));
+      mSubCtrledVoltageSource->connect({SimNode::GND, mVirtualNodes[0]});
+    }
   }
 
   // Initialize control subcomponents
@@ -263,7 +306,10 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeParentFromNodesAndTerminals(
                                  ? mVirtualNodes[3]->initialSingleVoltage()
                                  : filterInterfaceInitialVoltage;
   vcdq = Math::rotatingFrame2to1(pllVoltage, std::arg(pllVoltage), 0);
-  ircdq = Math::rotatingFrame2to1(-1. * (**mSubResistorC->mIntfCurrent)(0, 0),
+  const Complex initialGridCurrent = mUseSubcomponents
+                                         ? (**mSubResistorC->mIntfCurrent)(0, 0)
+                                         : mDirectGridCurrent;
+  ircdq = Math::rotatingFrame2to1(-1. * initialGridCurrent,
                                   std::arg(pllVoltage), 0);
   **mVcd = vcdq.real();
   **mVcq = vcdq.imag();
@@ -304,6 +350,65 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeParentFromNodesAndTerminals(
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaParentInitialize(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
   mTimeStep = timeStep;
+
+  if (!mUseSubcomponents) {
+    updateMatrixNodeIndices();
+    const Real b = timeStep * omega / 2.;
+    const Real a = timeStep / (2. * mLf);
+    const Real denominator = 1. + b * b;
+    mDirectInductorConductance = Complex(a / denominator, -a * b / denominator);
+    mDirectInductorPreviousCurrentFactor =
+        Complex((1. - b * b) / denominator, -2. * b / denominator);
+    mDirectCapacitorConductance = Complex(2. * mCf / timeStep, omega * mCf);
+    mDirectCapacitorPreviousVoltageFactor =
+        Complex(2. * mCf / timeStep, -omega * mCf);
+    mDirectInductorHistory =
+        mDirectInductorConductance * mDirectInductorVoltage +
+        mDirectInductorPreviousCurrentFactor * mDirectInductorCurrent;
+    mDirectCapacitorHistory =
+        -mDirectCapacitorCurrent -
+        mDirectCapacitorPreviousVoltageFactor * mDirectCapacitorVoltage;
+
+    if (mWithConnectionTransformer) {
+      const UInt harmonicOffset =
+          static_cast<UInt>(leftVector->get().rows()) / mNumFreqs;
+      const UInt complexOffset = harmonicOffset / 2;
+      const UInt vectorSize = static_cast<UInt>(leftVector->get().rows());
+      auto appendComponentRows = [&](SimPowerComp<Complex> &component) {
+        std::vector<UInt> baseIndices;
+        for (UInt terminal = 0; terminal < component.terminalNumberConnected();
+             ++terminal) {
+          if (component.node(terminal)->isGround())
+            continue;
+          const auto indices = component.matrixNodeIndices(terminal);
+          baseIndices.insert(baseIndices.end(), indices.begin(), indices.end());
+        }
+        for (UInt virtualNode = 0; virtualNode < component.virtualNodesNumber();
+             ++virtualNode) {
+          const auto indices = component.virtualMatrixNodeIndices(virtualNode);
+          baseIndices.insert(baseIndices.end(), indices.begin(), indices.end());
+        }
+        for (UInt freq = 0; freq < mNumFreqs; ++freq) {
+          for (UInt index : baseIndices) {
+            const UInt realIndex = index + freq * harmonicOffset;
+            const UInt imagIndex = realIndex + complexOffset;
+            if (realIndex < vectorSize)
+              mDirectChildRightVectorIndices.push_back(realIndex);
+            if (imagIndex < vectorSize)
+              mDirectChildRightVectorIndices.push_back(imagIndex);
+          }
+        }
+      };
+      appendComponentRows(*mConnectionTransformer);
+      appendComponentRows(*mSubCtrledVoltageSource);
+      std::sort(mDirectChildRightVectorIndices.begin(),
+                mDirectChildRightVectorIndices.end());
+      mDirectChildRightVectorIndices.erase(
+          std::unique(mDirectChildRightVectorIndices.begin(),
+                      mDirectChildRightVectorIndices.end()),
+          mDirectChildRightVectorIndices.end());
+    }
+  }
 
   // initialize state space controller
   mPowerControllerVSI->initializeStateSpaceModel(omega, timeStep, leftVector);
@@ -350,15 +455,18 @@ void DP::Ph1::AvVoltageSourceInverterDQ::addControlStepDependencies(
 void DP::Ph1::AvVoltageSourceInverterDQ::controlStep(Real time,
                                                      Int timeStepCount) {
   // Transformation interface forward
-  Complex vcdq, ircdq;
   const Complex pllVoltage = mWithConnectionTransformer
                                  ? mVirtualNodes[3]->singleVoltage()
                                  : (**mIntfVoltage)(0, 0);
+  Complex vcdq, ircdq;
   vcdq = Math::rotatingFrame2to1(
       pllVoltage, mPLL->attributeTyped<Matrix>("output_prev")->get()(0, 0),
       mThetaN);
+  const Complex gridCurrent = mUseSubcomponents
+                                  ? (**mSubResistorC->mIntfCurrent)(0, 0)
+                                  : mDirectGridCurrent;
   ircdq = Math::rotatingFrame2to1(
-      -1. * (**mSubResistorC->mIntfCurrent)(0, 0),
+      -1. * gridCurrent,
       mPLL->attributeTyped<Matrix>("output_prev")->get()(0, 0), mThetaN);
   **mVcd = vcdq.real();
   **mVcq = vcdq.imag();
@@ -381,6 +489,84 @@ void DP::Ph1::AvVoltageSourceInverterDQ::controlStep(Real time,
   mThetaN = mThetaN + mTimeStep * **mOmegaN;
 }
 
+void DP::Ph1::AvVoltageSourceInverterDQ::mnaParentApplySystemMatrixStamp(
+    SparseMatrixRow &systemMatrix) {
+  if (mUseSubcomponents) {
+    return CompositePowerComp<Complex>::mnaParentApplySystemMatrixStamp(
+        systemMatrix);
+  }
+
+  const Int sourceNode = mVirtualNodes[0]->matrixNodeIndex();
+  const Int resistorNode = mVirtualNodes[1]->matrixNodeIndex();
+  const Int capacitorNode = mVirtualNodes[2]->matrixNodeIndex();
+  const Int sourceBranch = mVirtualNodes[3]->matrixNodeIndex();
+  const Int terminal = matrixNodeIndex(0);
+  const Int filterOutput = mWithConnectionTransformer
+                               ? mVirtualNodes[3]->matrixNodeIndex()
+                               : terminal;
+  const Complex rfConductance(1. / mRf, 0.);
+  const Complex rcConductance(1. / mRc, 0.);
+
+  MNAStampUtils::stampAdmittance(rfConductance, systemMatrix, sourceNode,
+                                 resistorNode, true, true, mSLog);
+  MNAStampUtils::stampAdmittance(mDirectInductorConductance, systemMatrix,
+                                 resistorNode, capacitorNode, true, true,
+                                 mSLog);
+  MNAStampUtils::stampAdmittance(mDirectCapacitorConductance, systemMatrix,
+                                 capacitorNode, 0, true, false, mSLog);
+  MNAStampUtils::stampAdmittance(
+      rcConductance, systemMatrix, capacitorNode, filterOutput, true,
+      mWithConnectionTransformer || terminalNotGrounded(0), mSLog);
+
+  if (!mWithConnectionTransformer) {
+    Math::setMatrixElement(systemMatrix, sourceBranch, sourceNode,
+                           Complex(1., 0.));
+    Math::setMatrixElement(systemMatrix, sourceNode, sourceBranch,
+                           Complex(1., 0.));
+  }
+}
+
+void DP::Ph1::AvVoltageSourceInverterDQ::mnaParentApplyRightSideVectorStamp(
+    Matrix &rightVector) {
+  if (mUseSubcomponents)
+    return CompositePowerComp<Complex>::mnaParentApplyRightSideVectorStamp(
+        rightVector);
+
+  const Int sourceNode = mVirtualNodes[0]->matrixNodeIndex();
+  const Int resistorNode = mVirtualNodes[1]->matrixNodeIndex();
+  const Int capacitorNode = mVirtualNodes[2]->matrixNodeIndex();
+  const Complex inductorEquivalent =
+      mDirectInductorConductance * mDirectInductorVoltage +
+      mDirectInductorPreviousCurrentFactor * mDirectInductorCurrent;
+  const Complex capacitorEquivalent =
+      -mDirectCapacitorCurrent -
+      mDirectCapacitorPreviousVoltageFactor * mDirectCapacitorVoltage;
+  if (!mWithConnectionTransformer)
+    Math::setVectorElement(rightVector, mVirtualNodes[3]->matrixNodeIndex(),
+                           mDirectSourceValue, mNumFreqs);
+  Math::setVectorElement(rightVector, resistorNode, inductorEquivalent,
+                         mNumFreqs);
+  Math::setVectorElement(rightVector, capacitorNode,
+                         capacitorEquivalent - inductorEquivalent, mNumFreqs);
+}
+
+void DP::Ph1::AvVoltageSourceInverterDQ::mnaAddCompactRightSideVectorStamp(
+    Matrix &rightVector) {
+  CompositePowerComp<Complex>::mnaAddCompactRightSideVectorStamp(rightVector);
+  if (mUseSubcomponents || !mWithConnectionTransformer)
+    return;
+
+  // The direct filter realization keeps only its external voltage source and
+  // connection transformer as MNA children. Unlike the legacy pre-step path,
+  // the direct parent does not fold those child histories into its own vector.
+  const Matrix &transformerStamp = **mConnectionTransformer->mRightVector;
+  const Matrix &sourceStamp = **mSubCtrledVoltageSource->mRightVector;
+  for (UInt index : mDirectChildRightVectorIndices) {
+    rightVector(index, 0) += transformerStamp(index, 0);
+    rightVector(index, 0) += sourceStamp(index, 0);
+  }
+}
+
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaParentAddPreStepDependencies(
     AttributeBase::List &prevStepDependencies,
     AttributeBase::List &attributeDependencies,
@@ -397,14 +583,26 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaParentAddPreStepDependencies(
 
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaParentPreStep(Real time,
                                                           Int timeStepCount) {
-  // pre-steo of subcomponents - controlled source
-  if (mWithControl)
-    **mSubCtrledVoltageSource->mVoltageRef = (**mVsref)(0, 0);
-
-  std::dynamic_pointer_cast<MNAInterface>(mSubCtrledVoltageSource)
-      ->mnaPreStep(time, timeStepCount);
+  if (mUseSubcomponents) {
+    if (mWithControl)
+      **mSubCtrledVoltageSource->mVoltageRef = (**mVsref)(0, 0);
+    std::dynamic_pointer_cast<MNAInterface>(mSubCtrledVoltageSource)
+        ->mnaPreStep(time, timeStepCount);
+  }
   // pre-step of component itself
-  mnaCompApplyRightSideVectorStamp(**mRightVector);
+  if (mUseSubcomponents)
+    mnaCompApplyRightSideVectorStamp(**mRightVector);
+  else {
+    if (mWithConnectionTransformer) {
+      if (mWithControl)
+        **mSubCtrledVoltageSource->mVoltageRef = (**mVsref)(0, 0);
+      mSubCtrledVoltageSource->mnaPreStep(time, timeStepCount);
+    }
+    if (mWithControl)
+      mDirectSourceValue = (**mVsref)(0, 0);
+    (**mDirectSourceVoltageAttr)(0, 0) = mDirectSourceValue;
+    mnaParentApplyRightSideVectorStamp(**mRightVector);
+  }
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaParentAddPostStepDependencies(
@@ -427,6 +625,45 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaParentPostStep(
 
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaCompUpdateCurrent(
     const Matrix &leftvector) {
+  if (!mUseSubcomponents) {
+    const Complex sourceVoltage = Math::complexFromVectorElement(
+        leftvector, mVirtualNodes[0]->matrixNodeIndex());
+    const Complex resistorVoltage = Math::complexFromVectorElement(
+        leftvector, mVirtualNodes[1]->matrixNodeIndex());
+    const Complex capacitorVoltage = Math::complexFromVectorElement(
+        leftvector, mVirtualNodes[2]->matrixNodeIndex());
+    const Complex terminalVoltage =
+        terminalNotGrounded(0)
+            ? Math::complexFromVectorElement(leftvector, matrixNodeIndex(0))
+            : Complex(0., 0.);
+    const Complex inductorVoltage = capacitorVoltage - resistorVoltage;
+    const Complex inductorEquivalent =
+        mDirectInductorConductance * mDirectInductorVoltage +
+        mDirectInductorPreviousCurrentFactor * mDirectInductorCurrent;
+    const Complex capacitorEquivalent =
+        -mDirectCapacitorCurrent -
+        mDirectCapacitorPreviousVoltageFactor * mDirectCapacitorVoltage;
+    mDirectInductorCurrent =
+        mDirectInductorConductance * inductorVoltage + inductorEquivalent;
+    mDirectInductorVoltage = inductorVoltage;
+    const Complex capacitorComponentVoltage = -capacitorVoltage;
+    mDirectCapacitorCurrent =
+        mDirectCapacitorConductance * capacitorComponentVoltage +
+        capacitorEquivalent;
+    mDirectCapacitorVoltage = capacitorComponentVoltage;
+    const Complex filterOutputVoltage =
+        mWithConnectionTransformer
+            ? Math::complexFromVectorElement(
+                  leftvector, mVirtualNodes[3]->matrixNodeIndex())
+            : terminalVoltage;
+    mDirectGridCurrent = (filterOutputVoltage - capacitorVoltage) / mRc;
+    (**mIntfVoltage)(0, 0) = terminalVoltage;
+    (**mIntfCurrent)(0, 0) =
+        mWithConnectionTransformer
+            ? (**mConnectionTransformer->mIntfCurrent)(0, 0)
+            : mDirectGridCurrent;
+    return;
+  }
   if (mWithConnectionTransformer)
     **mIntfCurrent = **mConnectionTransformer->mIntfCurrent;
   else
@@ -435,6 +672,15 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaCompUpdateCurrent(
 
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaCompUpdateVoltage(
     const Matrix &leftVector) {
+  if (!mUseSubcomponents) {
+    for (auto virtualNode : mVirtualNodes)
+      virtualNode->mnaUpdateVoltage(leftVector);
+    (**mIntfVoltage)(0, 0) =
+        terminalNotGrounded(0)
+            ? Math::complexFromVectorElement(leftVector, matrixNodeIndex(0))
+            : Complex(0., 0.);
+    return;
+  }
   for (auto virtualNode : mVirtualNodes)
     virtualNode->mnaUpdateVoltage(leftVector);
   (**mIntfVoltage)(0, 0) =

@@ -42,10 +42,27 @@ protected:
   std::shared_ptr<Capacitor> mSubParallelCapacitor1;
   /// solver
   std::vector<const Matrix *> mRightVectorStamps;
+  Bool mUseSubcomponents = true;
+  Attribute<Matrix>::Ptr mDirectState;
+  MatrixFixedSize<3, 3> mDirectInductorAdmittance =
+      MatrixFixedSize<3, 3>::Zero();
+  MatrixFixedSize<3, 3> mDirectResistanceConductance =
+      MatrixFixedSize<3, 3>::Zero();
+  MatrixFixedSize<3, 3> mDirectCapAdmittance = MatrixFixedSize<3, 3>::Zero();
+  MatrixFixedSize<3, 1> mDirectSeriesHistory = MatrixFixedSize<3, 1>::Zero();
+  MatrixFixedSize<3, 1> mDirectInductorHistory = MatrixFixedSize<3, 1>::Zero();
+  MatrixFixedSize<3, 1> mDirectCapHistory0 = MatrixFixedSize<3, 1>::Zero();
+  MatrixFixedSize<3, 1> mDirectCapHistory1 = MatrixFixedSize<3, 1>::Zero();
 
 public:
   /// Defines UID, name and logging level
   PiLine(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+  /// Optional direct MNA implementation; legacy subcomponents remain the default.
+  PiLine(String uid, String name, Bool useSubcomponents,
+         Logger::Level logLevel = Logger::Level::off);
+  PiLine(String name, Bool useSubcomponents,
+         Logger::Level logLevel = Logger::Level::off)
+      : PiLine(name, name, useSubcomponents, logLevel) {}
   /// Defines name and logging level
   PiLine(String name, Logger::Level logLevel = Logger::Level::off)
       : PiLine(name, name, logLevel) {}
@@ -57,6 +74,12 @@ public:
   void createSubComponents() override;
   /// Derives values from power flow data and pushes them to subcomponents
   void initializeParentFromNodesAndTerminals(Real frequency) override;
+  void mnaParentInitialize(Real omega, Real timeStep,
+                           Attribute<Matrix>::Ptr leftVector) override;
+  void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
+  Bool mnaHasCompactRightSideVectorStamp() const override;
+  void mnaAddCompactRightSideVectorStamp(Matrix &rightVector) override;
 
   // #### MNA section ####
   /// Updates internal current variable of the component

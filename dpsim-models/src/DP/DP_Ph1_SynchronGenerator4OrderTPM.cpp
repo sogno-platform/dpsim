@@ -164,11 +164,11 @@ void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
                       Logger::matrixToString(mResistanceMatrixVarying));
 
   // predict stator current (linear extrapolation)
-  Matrix IdpPrediction = Matrix::Zero(2, 1);
-  IdpPrediction(0, 0) =
+  mIdpScratch(0, 0) =
       2 * (**mIntfCurrent)(0, 0).real() - mIdpTwoPrevStep(0, 0).real();
-  IdpPrediction(1, 0) =
+  mIdpScratch(1, 0) =
       2 * (**mIntfCurrent)(0, 0).imag() - mIdpTwoPrevStep(0, 0).imag();
+  mIdpResistanceProduct.noalias() = mResistanceMatrixVarying * mIdpScratch;
 
   // calculate emf at t=k
   (**mEdq_t)(0, 0) = (**mVdq)(0, 0) - (**mIdq)(1, 0) * mLq_t;
@@ -183,10 +183,8 @@ void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
   **mEhMod = mDomainInterface.applyDQToDPTransform(mEh) * mBase_V_RMS;
 
   // add current prediction based component to modified history voltage of TPM model in dp domain
-  **mEhMod +=
-      -Complex(mBase_Z * (mResistanceMatrixVarying * IdpPrediction)(0, 0), 0);
-  **mEhMod +=
-      -Complex(0, mBase_Z * (mResistanceMatrixVarying * IdpPrediction)(1, 0));
+  **mEhMod += -Complex(mBase_Z * mIdpResistanceProduct(0, 0), 0);
+  **mEhMod += -Complex(0, mBase_Z * mIdpResistanceProduct(1, 0));
 
   // store values currently at t=k for later use
   mIdpTwoPrevStep = **mIntfCurrent;
@@ -229,18 +227,16 @@ void DP::Ph1::SynchronGenerator4OrderTPM::correctorStep() {
   Complex IdpCorrectionComplex =
       mDomainInterface.applyDQToDPTransform(**mIdq) * mBase_I_RMS;
 
-  Matrix IdpCorrection = Matrix::Zero(2, 1);
-  IdpCorrection(0, 0) = IdpCorrectionComplex.real();
-  IdpCorrection(1, 0) = IdpCorrectionComplex.imag();
+  mIdpScratch(0, 0) = IdpCorrectionComplex.real();
+  mIdpScratch(1, 0) = IdpCorrectionComplex.imag();
+  mIdpResistanceProduct.noalias() = mResistanceMatrixVarying * mIdpScratch;
 
   // reset to original history voltage of VBR model in dp domain
   **mEhMod = mDomainInterface.applyDQToDPTransform(mEh) * mBase_V_RMS;
 
   // add current correction based component to modified history voltage of TPM model in dp domain
-  **mEhMod +=
-      -Complex(mBase_Z * (mResistanceMatrixVarying * IdpCorrection)(0, 0), 0);
-  **mEhMod +=
-      -Complex(0, mBase_Z * (mResistanceMatrixVarying * IdpCorrection)(1, 0));
+  **mEhMod += -Complex(mBase_Z * mIdpResistanceProduct(0, 0), 0);
+  **mEhMod += -Complex(0, mBase_Z * mIdpResistanceProduct(1, 0));
 
   // stamp currents
   (**mRightVector).setZero();
@@ -271,9 +267,9 @@ bool DP::Ph1::SynchronGenerator4OrderTPM::requiresIteration() {
     return true;
   } else {
     // check voltage convergence according to tolerance
-    Matrix voltageDifference = **mVdq - mVdqPrevIter;
-    if (Math::abs(voltageDifference(0, 0)) > mTolerance ||
-        Math::abs(voltageDifference(1, 0)) > mTolerance)
+    const Matrix &voltage = **mVdq;
+    if (Math::abs(voltage(0, 0) - mVdqPrevIter(0, 0)) > mTolerance ||
+        Math::abs(voltage(1, 0) - mVdqPrevIter(1, 0)) > mTolerance)
       return true;
     else
       return false;

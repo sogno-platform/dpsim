@@ -488,12 +488,10 @@ int main(int argc, char *argv[]) {
   bool log = args.options.find("log") != args.options.end() &&
              args.getOptionBool("log");
 
-  std::filesystem::path logFilename = "./logs/" + args.name + ".csv";
   std::shared_ptr<DataLoggerInterface> logger = nullptr;
 
   if (log) {
-    logger =
-        RealTimeDataLogger::make(logFilename, args.duration, args.timeStep);
+    logger = DataLogger::make(args.name);
   }
 
   auto sys = buildTopology(args, logger);

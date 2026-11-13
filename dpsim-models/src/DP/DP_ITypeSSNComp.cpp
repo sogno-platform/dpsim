@@ -7,9 +7,15 @@ using namespace CPS;
 
 DP::ITypeSSNComp::ITypeSSNComp(String uid, String name, Int inputSize,
                                Int outputSize, Logger::Level logLevel)
-    : SSNComp(uid, name, inputSize, outputSize, logLevel) {
+    : SSNComp(uid, name, inputSize, outputSize, logLevel),
+      mWInverse(MatrixComp::Zero(outputSize, inputSize)) {
   **mIntfCurrent = MatrixComp::Zero(inputSize, 1);
   **mIntfVoltage = MatrixComp::Zero(outputSize, 1);
+}
+
+void DP::ITypeSSNComp::recomputeDiscreteModel(Real omega) {
+  SSNComp::recomputeDiscreteModel(omega);
+  mWInverse = mW.inverse();
 }
 
 Attribute<MatrixComp>::Ptr DP::ITypeSSNComp::inputAttribute() const {
