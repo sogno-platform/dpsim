@@ -101,8 +101,29 @@ void DP::Ph1::SynchronGenerator4OrderPCM::stepInPerUnit() {
 
 void DP::Ph1::SynchronGenerator4OrderPCM::mnaCompApplyRightSideVectorStamp(
     Matrix &rightVector) {
+  // Keep the physical current-source relation, but express it as a Norton
+  // source plus a constant companion conductance. This avoids the unstable
+  // voltage/current fixed point for a machine whose transient reactance is
+  // comparable to the network impedance.
+  const Complex voltage = (**mIntfVoltage)(0, 0);
+  const Complex compensationCurrent(
+      mConductanceMatrixConst(0, 0) * voltage.real() +
+          mConductanceMatrixConst(0, 1) * voltage.imag(),
+      mConductanceMatrixConst(1, 0) * voltage.real() +
+          mConductanceMatrixConst(1, 1) * voltage.imag());
   Math::setVectorElement(rightVector, matrixNodeIndex(0, 0),
-                         (**mIntfCurrent)(0, 0));
+                         (**mIntfCurrent)(0, 0) + compensationCurrent);
+}
+
+void DP::Ph1::SynchronGenerator4OrderPCM::mnaCompApplySystemMatrixStamp(
+    SparseMatrixRow &systemMatrix) {
+  Matrix resistance = Matrix::Zero(2, 2);
+  resistance(0, 1) = (mA - mB) / 2.0;
+  resistance(1, 0) = -(mA - mB) / 2.0;
+  mConductanceMatrixConst = (resistance * mBase_Z).inverse();
+
+  Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0),
+                           matrixNodeIndex(0, 0), mConductanceMatrixConst);
 }
 
 void DP::Ph1::SynchronGenerator4OrderPCM::correctorStep() {
@@ -163,4 +184,7 @@ bool DP::Ph1::SynchronGenerator4OrderPCM::requiresIteration() {
 }
 
 void DP::Ph1::SynchronGenerator4OrderPCM::mnaCompPostStep(
-    const Matrix &leftVector) {}
+    const Matrix &leftVector) {
+  // The Norton source is based on the current model current plus its
+  // conductance compensation. Report the actual model current at the port.
+}

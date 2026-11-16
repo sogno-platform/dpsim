@@ -63,7 +63,7 @@ public:
   ///
   void mnaCompPostStep(const Matrix &leftVector) final;
   ///
-  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) final{};
+  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) final;
 
 protected:
   /// Interface used to transform between DP and DQ vars
@@ -95,6 +95,9 @@ protected:
   Matrix mBStateSpace = Matrix::Zero(2, 2);
   /// C matrix of continuous time state space model
   Matrix mCStateSpace = Matrix::Zero(2, 1);
+
+  /// Constant Norton conductance used to stabilize the MNA coupling.
+  Matrix mConductanceMatrixConst = Matrix::Zero(2, 2);
 };
 } // namespace Ph1
 } // namespace DP

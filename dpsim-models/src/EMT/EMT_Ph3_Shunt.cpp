@@ -66,16 +66,15 @@ void EMT::Ph3::Shunt::initializeParentFromNodesAndTerminals(Real frequency) {
   vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
   vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
   **mIntfVoltage = vInitABC.real();
-  // The shunt interface current follows the component's terminal-current
-  // convention (positive into the component), opposite to the current from
-  // the network node into the shunt admittance.
-  **mIntfCurrent = -(admittance * vInitABC).real();
+  // The passive subcomponents use the same terminal orientation as the DP
+  // shunt: ground is terminal 0 and the live bus is terminal 1.
+  **mIntfCurrent = (admittance * vInitABC).real();
 
   // Create series rl sub component
   if (mConductance(0, 0) > 0) {
     mSubResistor =
         std::make_shared<EMT::Ph3::Resistor>(**mName + "_Res", mLogLevel);
-    mSubResistor->connect({mTerminals[0]->node(), SimNode::GND});
+    mSubResistor->connect({SimNode::GND, mTerminals[0]->node()});
     mSubResistor->setParameters(mConductance.inverse());
     mSubResistor->initialize(mFrequencies);
     mSubResistor->initializeFromNodesAndTerminals(frequency);
@@ -87,7 +86,7 @@ void EMT::Ph3::Shunt::initializeParentFromNodesAndTerminals(Real frequency) {
     mSubCapacitor =
         std::make_shared<EMT::Ph3::Capacitor>(**mName + "_cap", mLogLevel);
     mSubCapacitor->setParameters(mSusceptance * (1 / omega));
-    mSubCapacitor->connect({mTerminals[0]->node(), SimNode::GND});
+    mSubCapacitor->connect({SimNode::GND, mTerminals[0]->node()});
     mSubCapacitor->initialize(mFrequencies);
     mSubCapacitor->initializeFromNodesAndTerminals(frequency);
     addMNASubComponent(mSubCapacitor,
@@ -99,7 +98,7 @@ void EMT::Ph3::Shunt::initializeParentFromNodesAndTerminals(Real frequency) {
     mSubInductor =
         std::make_shared<EMT::Ph3::Inductor>(**mName + "_ind", mLogLevel);
     mSubInductor->setParameters(-mSusceptance.inverse() * (1 / omega));
-    mSubInductor->connect({mTerminals[0]->node(), SimNode::GND});
+    mSubInductor->connect({SimNode::GND, mTerminals[0]->node()});
     mSubInductor->initialize(mFrequencies);
     mSubInductor->initializeFromNodesAndTerminals(frequency);
     addMNASubComponent(mSubInductor, MNA_SUBCOMP_TASK_ORDER::TASK_BEFORE_PARENT,

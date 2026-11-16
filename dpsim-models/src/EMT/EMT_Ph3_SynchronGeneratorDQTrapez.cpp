@@ -30,6 +30,10 @@ void EMT::Ph3::SynchronGeneratorDQTrapez::mnaCompInitialize(
   mTimeStep = timeStep;
 
   SynchronGeneratorDQ::initializeMatrixAndStates();
+  for (UInt row = 0; row < 3; ++row)
+    for (UInt col = 0; col < 3; ++col)
+      mVariableSystemMatrixEntries.emplace_back(matrixNodeIndex(0, row),
+                                                matrixNodeIndex(0, col));
 }
 
 void EMT::Ph3::SynchronGeneratorDQTrapez::mnaCompAddPreStepDependencies(
@@ -93,19 +97,83 @@ void EMT::Ph3::SynchronGeneratorDQTrapez::stepInPerUnit(Real time) {
   // Update using euler
   **mDelta = **mDelta + mTimeStep * (**mOmMech - 1);
 
-  // Update of fluxes
-  if (mNumericalMethod == NumericalMethod::Euler)
-    mPsisr = Math::StateSpaceEuler(
-        mPsisr, mBase_OmElec * (mFluxStateSpaceMat + mOmegaFluxMat * **mOmMech),
-        mBase_OmElec * mVsr, mTimeStep);
-  else
-    mPsisr = Math::StateSpaceTrapezoidal(
-        mPsisr, mBase_OmElec * (mFluxStateSpaceMat + mOmegaFluxMat * **mOmMech),
-        mBase_OmElec * mVsr, mTimeStep);
+  // Integrate the machine states as a linear function of the newly solved
+  // terminal voltage. The Norton matrix below carries that voltage
+  // dependence into the network solve, avoiding an unstable explicit
+  // current-source/line-capacitance feedback loop.
+  mPreviousFluxes = mPsisr;
+  const Matrix stateMatrix =
+      mBase_OmElec * (mFluxStateSpaceMat + mOmegaFluxMat * **mOmMech);
+  const Matrix identity = Matrix::Identity(mPsisr.rows(), mPsisr.rows());
+  const Matrix lhs = identity - (mTimeStep / 2.0) * stateMatrix;
+  const Matrix lhsInverse = lhs.inverse();
+  mFluxF = lhsInverse * (identity + (mTimeStep / 2.0) * stateMatrix);
 
-  // Calculate new currents from fluxes
+  Matrix inputSelector = Matrix::Zero(mPsisr.rows(), mPsisr.rows());
+  inputSelector(0, 0) = 1.0;
+  inputSelector(3, 3) = 1.0;
+  inputSelector(6, 6) = 1.0;
+  mFluxK = lhsInverse * (mTimeStep * mBase_OmElec) * inputSelector;
+  mPsisr = mFluxF * mPreviousFluxes + mFluxK * mVsr;
   mIsr = mFluxToCurrentMat * mPsisr;
 
+  Matrix currentSelector = Matrix::Zero(3, mIsr.rows());
+  Matrix voltageSelector = Matrix::Zero(mVsr.rows(), 3);
+  currentSelector(0, 0) = 1.0;
+  currentSelector(1, 3) = 1.0;
+  currentSelector(2, 6) = 1.0;
+  voltageSelector(0, 0) = 1.0;
+  voltageSelector(3, 1) = 1.0;
+  voltageSelector(6, 2) = 1.0;
+  const Matrix dqJacobian =
+      currentSelector * mFluxToCurrentMat * mFluxK * voltageSelector;
+  const Real theta = mThetaMech;
+  Matrix dq0ToAbc(3, 3);
+  Matrix abcToDq0(3, 3);
+  dq0ToAbc << cos(theta), -sin(theta), 1., cos(theta - 2. * PI / 3.),
+      -sin(theta - 2. * PI / 3.), 1., cos(theta + 2. * PI / 3.),
+      -sin(theta + 2. * PI / 3.), 1.;
+  abcToDq0 << 2. / 3. * cos(theta), 2. / 3. * cos(theta - 2. * PI / 3.),
+      2. / 3. * cos(theta + 2. * PI / 3.), -2. / 3. * sin(theta),
+      -2. / 3. * sin(theta - 2. * PI / 3.),
+      -2. / 3. * sin(theta + 2. * PI / 3.), 1. / 3., 1. / 3., 1. / 3.;
+  mNortonConductance = (mBase_I / mBase_V) * dq0ToAbc * dqJacobian * abcToDq0;
+  mIdq0(0, 0) = mIsr(0, 0);
+  mIdq0(1, 0) = mIsr(3, 0);
+  mIdq0(2, 0) = mIsr(6, 0);
+  **mIntfCurrent = mBase_I * dq0ToAbcTransform(mThetaMech, mIdq0);
+}
+
+void EMT::Ph3::SynchronGeneratorDQTrapez::mnaCompApplySystemMatrixStamp(
+    SparseMatrixRow &systemMatrix) {
+  if (!terminalNotGrounded(0))
+    return;
+  for (UInt row = 0; row < 3; ++row)
+    for (UInt col = 0; col < 3; ++col)
+      Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, row),
+                               matrixNodeIndex(0, col),
+                               mNortonConductance(row, col));
+}
+
+void EMT::Ph3::SynchronGeneratorDQTrapez::mnaCompApplyRightSideVectorStamp(
+    Matrix &rightVector) {
+  const Matrix compensationCurrent = mNortonConductance * **mIntfVoltage;
+  for (UInt phase = 0; phase < 3; ++phase)
+    Math::setVectorElement(rightVector, matrixNodeIndex(0, phase),
+                           -(**mIntfCurrent)(phase, 0) +
+                               compensationCurrent(phase, 0));
+}
+
+void EMT::Ph3::SynchronGeneratorDQTrapez::mnaCompPostStep(
+    Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+  mnaCompUpdateVoltage(**leftVector);
+  mVdq0 = abcToDq0Transform(mThetaMech, **mIntfVoltage) / mBase_V;
+  mVsr(0, 0) = mVdq0(0, 0);
+  mVsr(3, 0) = mVdq0(1, 0);
+  mVsr(6, 0) = mVdq0(2, 0);
+
+  mPsisr = mFluxF * mPreviousFluxes + mFluxK * mVsr;
+  mIsr = mFluxToCurrentMat * mPsisr;
   mIdq0(0, 0) = mIsr(0, 0);
   mIdq0(1, 0) = mIsr(3, 0);
   mIdq0(2, 0) = mIsr(6, 0);
