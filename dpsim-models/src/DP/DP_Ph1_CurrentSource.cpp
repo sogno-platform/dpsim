@@ -53,10 +53,10 @@ void DP::Ph1::CurrentSource::initializeFromNodesAndTerminals(Real frequency) {
     if (std::abs(voltage) > std::numeric_limits<Real>::epsilon()) {
       const Complex power =
           terminal(0)->singlePower() - terminal(1)->singlePower();
-      // PF terminal power uses the injection sign convention, while a
-      // positive current reference in this model draws current from terminal
-      // 0. Flip the PF sign when mapping P/Q to the source reference.
-      **mCurrentRef = -std::conj(power / voltage);
+      // Map the terminal's complex power directly to the current reference:
+      // S = V * conj(I). The source's terminal-current convention matches
+      // the power-flow current convention for this component.
+      **mCurrentRef = std::conj(power / voltage);
     }
   }
 

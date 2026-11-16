@@ -15,15 +15,17 @@ EMT::Ph3::TwoTerminalITypeSSNComp::TwoTerminalITypeSSNComp(
 }
 
 MatrixComp EMT::Ph3::TwoTerminalITypeSSNComp::buildInitialInputFromNodes(Real) {
-  // Use terminal 1's own line-line RMS voltage and three-phase power.
-  // Dividing a difference of terminal powers by the port voltage drop gives
-  // the wrong current when both buses have nonzero voltage.
-  const Complex voltage = initialSingleVoltage(1);
+  // The state-space port voltage is v1 - v0 and its input current is positive
+  // from terminal 1 to terminal 0. Derive the operating current from the live
+  // terminal's power-flow operating point, then reverse it to match that port
+  // orientation. This also handles a grounded terminal without losing the
+  // nonzero bus-side current needed to seed the state.
+  const Complex voltage = initialSingleVoltage(0);
   if (std::abs(voltage) <= std::numeric_limits<Real>::epsilon())
     return MatrixComp::Zero(3, 1);
 
-  const Complex power = terminal(1)->singlePower();
-  const Complex rmsCurrent = std::conj(power / voltage / std::sqrt(3.));
+  const Complex power = terminal(0)->singlePower();
+  const Complex rmsCurrent = -std::conj(power / voltage / std::sqrt(3.));
   MatrixComp current = MatrixComp::Zero(3, 1);
   current(0, 0) = RMS_TO_PEAK * rmsCurrent;
   current(1, 0) = current(0, 0) * SHIFT_TO_PHASE_B;

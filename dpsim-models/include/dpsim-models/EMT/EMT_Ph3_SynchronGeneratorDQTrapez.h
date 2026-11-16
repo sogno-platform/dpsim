@@ -9,12 +9,14 @@
 #pragma once
 
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorDQ.h>
+#include <dpsim-models/Solver/MNAVariableCompInterface.h>
 
 namespace CPS {
 namespace EMT {
 namespace Ph3 {
 class SynchronGeneratorDQTrapez
     : public SynchronGeneratorDQ,
+      public MNAVariableCompInterface,
       public SharedFactory<SynchronGeneratorDQTrapez> {
 public:
   SynchronGeneratorDQTrapez(String uid, String name,
@@ -26,6 +28,11 @@ public:
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override;
   void mnaCompPreStep(Real time, Int timeStepCount) override;
+  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaCompPostStep(Real time, Int timeStepCount,
+                       Attribute<Matrix>::Ptr &leftVector) override;
+  Bool hasParameterChanged() override { return true; }
 
   /// Add MNA pre step dependencies
   void mnaCompAddPreStepDependencies(
@@ -34,6 +41,12 @@ public:
       AttributeBase::List &modifiedAttributes) override;
 
 protected:
+  Matrix mPreviousFluxes;
+  Matrix mFluxA;
+  Matrix mFluxF;
+  Matrix mFluxK;
+  Matrix mNortonConductance = Matrix::Zero(3, 3);
+
   // #### Trapezoidal Section ####
 
   /// Performs an Euler forward step with the state space model of a synchronous generator

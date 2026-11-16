@@ -89,16 +89,61 @@ void EMT::Ph3::SynchronGenerator4OrderPCM::stepInPerUnit() {
   // convert currents into the abc domain
   **mIntfCurrent = inverseParkTransform(**mThetaMech, **mIdq0);
   **mIntfCurrent = **mIntfCurrent * mBase_I;
+
+  // The current equations have voltage Jacobian
+  // d(Id, Iq) / d(Vd, Vq) = [[0, -1/Ld_t], [1/Lq_t, 0]]. Stamp its
+  // negative in MNA so that the source-side compensation cancels this
+  // voltage dependence in the network iteration. The transform depends on
+  // rotor position and therefore the matrix is updated every step.
+  Matrix dq0ToAbc(3, 3);
+  Matrix abcToDq0(3, 3);
+  const Real theta = **mThetaMech;
+  dq0ToAbc << cos(theta), -sin(theta), 1., cos(theta - 2. * PI / 3.),
+      -sin(theta - 2. * PI / 3.), 1., cos(theta + 2. * PI / 3.),
+      -sin(theta + 2. * PI / 3.), 1.;
+  abcToDq0 << 2. / 3. * cos(theta), 2. / 3. * cos(theta - 2. * PI / 3.),
+      2. / 3. * cos(theta + 2. * PI / 3.), -2. / 3. * sin(theta),
+      -2. / 3. * sin(theta - 2. * PI / 3.),
+      -2. / 3. * sin(theta + 2. * PI / 3.), 1. / 3., 1. / 3., 1. / 3.;
+  Matrix dq0Conductance = Matrix::Zero(3, 3);
+  dq0Conductance(0, 1) = 1.0 / mLd_t;
+  dq0Conductance(1, 0) = -1.0 / mLq_t;
+  mNortonConductance = dq0ToAbc * dq0Conductance * abcToDq0 / mBase_Z;
 }
 
 void EMT::Ph3::SynchronGenerator4OrderPCM::mnaCompApplyRightSideVectorStamp(
     Matrix &rightVector) {
+  const Matrix compensationCurrent = mNortonConductance * **mIntfVoltage;
   Math::setVectorElement(rightVector, matrixNodeIndex(0, 0),
-                         (**mIntfCurrent)(0, 0));
+                         (**mIntfCurrent)(0, 0) + compensationCurrent(0, 0));
   Math::setVectorElement(rightVector, matrixNodeIndex(0, 1),
-                         (**mIntfCurrent)(1, 0));
+                         (**mIntfCurrent)(1, 0) + compensationCurrent(1, 0));
   Math::setVectorElement(rightVector, matrixNodeIndex(0, 2),
-                         (**mIntfCurrent)(2, 0));
+                         (**mIntfCurrent)(2, 0) + compensationCurrent(2, 0));
+}
+
+void EMT::Ph3::SynchronGenerator4OrderPCM::mnaCompApplySystemMatrixStamp(
+    SparseMatrixRow &systemMatrix) {
+  if (!terminalNotGrounded(0))
+    return;
+
+  for (UInt row = 0; row < 3; ++row) {
+    for (UInt col = 0; col < 3; ++col) {
+      Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, row),
+                               matrixNodeIndex(0, col),
+                               mNortonConductance(row, col));
+    }
+  }
+}
+
+void EMT::Ph3::SynchronGenerator4OrderPCM::mnaCompInitialize(
+    Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+  Base::ReducedOrderSynchronGenerator<Real>::mnaCompInitialize(omega, timeStep,
+                                                               leftVector);
+  for (UInt row = 0; row < 3; ++row)
+    for (UInt col = 0; col < 3; ++col)
+      mVariableSystemMatrixEntries.emplace_back(matrixNodeIndex(0, row),
+                                                matrixNodeIndex(0, col));
 }
 
 void EMT::Ph3::SynchronGenerator4OrderPCM::correctorStep() {

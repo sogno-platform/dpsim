@@ -10,8 +10,6 @@
 
 #include <dpsim-models/Base/Base_SynchronGenerator.h>
 #include <dpsim-models/CompositePowerComp.h>
-#include <dpsim-models/EMT/EMT_Ph3_Inductor.h>
-#include <dpsim-models/EMT/EMT_Ph3_VoltageSource.h>
 #include <dpsim-models/Solver/MNAInterface.h>
 
 namespace CPS {
@@ -33,10 +31,12 @@ protected:
   Real mKd;
   /// Equivalent impedance for loadflow calculation
   Complex mImpedance;
-  /// Inner voltage source that represents the generator
-  std::shared_ptr<VoltageSource> mSubVoltageSource;
-  /// Inner inductor that represents the generator impedance
-  std::shared_ptr<Inductor> mSubInductor;
+  /// Stator R-L branch Norton companion state
+  const Attribute<Matrix>::Ptr mStatorVoltagePrevious;
+  const Attribute<Matrix>::Ptr mStatorSourceVoltage;
+  const Attribute<Matrix>::Ptr mStatorHistoryCurrent;
+  Matrix mStatorConductance = Matrix::Zero(3, 3);
+  Real mStatorCurrentDecay = 1.0;
   // Logging
   Matrix mStates;
   /// Nominal system angle
@@ -99,6 +99,9 @@ public:
   /// Initializes variables of component
   void mnaParentInitialize(Real omega, Real timeStep,
                            Attribute<Matrix>::Ptr leftVector) override;
+  /// Stamp the stator R-L Norton conductance and history current.
+  void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
+  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
   /// Performs with the model of a synchronous generator
   /// to calculate the flux and current from the voltage vector.
   void mnaParentPreStep(Real time, Int timeStepCount) override;
@@ -119,22 +122,6 @@ public:
                                    AttributeBase::List &attributeDependencies,
                                    AttributeBase::List &modifiedAttributes,
                                    Attribute<Matrix>::Ptr &leftVector) override;
-
-  class AddBStep : public Task {
-  public:
-    AddBStep(SynchronGeneratorTrStab &generator)
-        : Task(**generator.mName + ".AddBStep"), mGenerator(generator) {
-      mAttributeDependencies.push_back(
-          generator.mSubVoltageSource->mRightVector);
-      mAttributeDependencies.push_back(generator.mSubInductor->mRightVector);
-      mModifiedAttributes.push_back(generator.mRightVector);
-    }
-
-    void execute(Real time, Int timeStepCount);
-
-  private:
-    SynchronGeneratorTrStab &mGenerator;
-  };
 };
 } // namespace Ph3
 } // namespace EMT

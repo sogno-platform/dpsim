@@ -10,6 +10,7 @@
 
 #include <dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h>
 #include <dpsim-models/Solver/MNASyncGenInterface.h>
+#include <dpsim-models/Solver/MNAVariableCompInterface.h>
 
 namespace CPS {
 namespace EMT {
@@ -21,6 +22,7 @@ namespace Ph3 {
 class SynchronGenerator4OrderPCM
     : public Base::ReducedOrderSynchronGenerator<Real>,
       public MNASyncGenInterface,
+      public MNAVariableCompInterface,
       public SharedFactory<SynchronGenerator4OrderPCM> {
 
 public:
@@ -65,7 +67,10 @@ public:
   ///
   void mnaCompPostStep(const Matrix &leftVector) final;
   ///
-  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) final{};
+  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) final;
+  void mnaCompInitialize(Real omega, Real timeStep,
+                         Attribute<Matrix>::Ptr leftVector) override;
+  Bool hasParameterChanged() override { return true; }
 
 protected:
   // #### Model specific variables ####
@@ -94,6 +99,9 @@ protected:
   Matrix mBStateSpace = Matrix::Zero(3, 3);
   /// C matrix of continuous time state space model
   Matrix mCStateSpace = Matrix::Zero(3, 1);
+
+  /// Balanced Norton companion conductance used by the EMT network solve.
+  Matrix mNortonConductance = Matrix::Zero(3, 3);
 };
 } // namespace Ph3
 } // namespace EMT
