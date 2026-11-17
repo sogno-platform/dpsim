@@ -5,8 +5,7 @@
 #pragma once
 
 #include <dpsim-models/Base/Base_Ph3_PiLine.h>
-#include <dpsim-models/EMT/EMT_LinearSSNModel.h>
-#include <dpsim-models/MNASimPowerComp.h>
+#include <dpsim-models/EMT/EMT_Ph3_MultiPortVTypeSSNComp.h>
 
 namespace CPS {
 namespace EMT {
@@ -17,7 +16,7 @@ namespace SSN {
 ///
 /// The series R-L branch and both shunt G-C branches are represented by one
 /// component, avoiding per-element tasks and composite right-vector reduction.
-class PiLine final : public MNASimPowerComp<Real>,
+class PiLine final : public MultiPortVTypeSSNComp,
                      public Base::Ph3::PiLine,
                      public SharedFactory<PiLine> {
 public:
@@ -35,43 +34,24 @@ public:
                      const Matrix &parallelConductance = Matrix::Zero(3, 3));
 
   void initializeFromNodesAndTerminals(Real frequency) override;
-  void exportFusedModel(LinearSSNModel &model);
-  void mnaCompInitialize(Real omega, Real timeStep,
-                         Attribute<Matrix>::Ptr leftVector) override;
-  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
-  Bool mnaHasCompactRightSideVectorStamp() const override { return true; }
-  void mnaAddCompactRightSideVectorStamp(Matrix &rightVector) override;
-  void mnaCompUpdateVoltage(const Matrix &leftVector) override;
-  void mnaCompUpdateCurrent(const Matrix &leftVector) override;
-  void mnaCompPreStep(Real time, Int timeStepCount) override;
-  void mnaCompPostStep(Real time, Int timeStepCount,
-                       Attribute<Matrix>::Ptr &leftVector) override;
-  void mnaCompAddPreStepDependencies(
-      AttributeBase::List &prevStepDependencies,
-      AttributeBase::List &attributeDependencies,
-      AttributeBase::List &modifiedAttributes) override;
-  void
-  mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
-                                 AttributeBase::List &attributeDependencies,
-                                 AttributeBase::List &modifiedAttributes,
-                                 Attribute<Matrix>::Ptr &leftVector) override;
 
 private:
   using TerminalVoltage = Eigen::Matrix<Real, 3, 1>;
 
-  Attribute<Matrix>::Ptr mState;
   Matrix *mStateValue;
   Matrix mInductorAdmittance;
   Matrix mSeriesAdmittance;
   Matrix mSeriesSystemInverse;
   Matrix mCapAdmittance;
-  Matrix mSeriesHistory;
-  Matrix mInductorHistory;
-  Matrix mCapHistory0;
-  Matrix mCapHistory1;
+  mutable Matrix mSeriesHistory;
+  mutable Matrix mInductorHistory;
+  mutable Matrix mCapHistory0;
+  mutable Matrix mCapHistory1;
 
-  TerminalVoltage terminalVoltage(const Matrix &leftVector, UInt terminal);
+protected:
+  void recomputeDiscreteModel() override;
+  void calculateHistoryVector(Matrix &history) const override;
+  void updateState(const Matrix &uOld, const Matrix &uNew) override;
 };
 
 } // namespace SSN

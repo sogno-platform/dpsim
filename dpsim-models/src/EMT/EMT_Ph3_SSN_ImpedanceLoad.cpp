@@ -20,16 +20,12 @@ constexpr Int kLoadCapacitorCurrent = 9;
 
 EMT::Ph3::SSN::ImpedanceLoad::ImpedanceLoad(String uid, String name,
                                             Logger::Level logLevel)
-    : MNASimPowerComp<Real>(uid, name, true, true, logLevel),
-      mState(mAttributes->create<Matrix>("state")), mStateValue(&mState->get()),
+    : VTypeSSNComp(uid, name, 3, 3, logLevel), mStateValue(&mX->get()),
       mNodalAdmittance(Matrix::Zero(3, 3)),
       mInductorAdmittance(Matrix::Zero(3, 3)),
       mCapacitorAdmittance(Matrix::Zero(3, 3)),
       mHistoryLoad(Matrix::Zero(3, 1)), mHistoryShunt(Matrix::Zero(3, 1)) {
-  mPhaseType = PhaseType::ABC;
   setTerminalNumber(1);
-  *mIntfVoltageValue = Matrix::Zero(3, 1);
-  *mIntfCurrentValue = Matrix::Zero(3, 1);
   *mStateValue = Matrix::Zero(12, 1);
 }
 
@@ -59,6 +55,8 @@ void EMT::Ph3::SSN::ImpedanceLoad::setParameters(Real activePower,
                          ? activePower / (nominalVoltage * nominalVoltage)
                          : 0.;
   mTotalConductance = mLoadConductance + shuntConductance;
+  EMT::SSNComp::setParameters(Matrix::Zero(12, 12), Matrix::Zero(12, 3),
+                              Matrix::Zero(3, 12), Matrix::Zero(3, 3));
 }
 
 void EMT::Ph3::SSN::ImpedanceLoad::initializeFromNodesAndTerminals(
@@ -103,69 +101,45 @@ void EMT::Ph3::SSN::ImpedanceLoad::initializeFromNodesAndTerminals(
     mStateValue->block<3, 1>(kLoadCapacitorCurrent, 0) = capacitorCurrent;
   }
   *mIntfCurrentValue =
-      -(mTotalConductance * voltage + inductorCurrent + capacitorCurrent);
+      mTotalConductance * voltage + inductorCurrent + capacitorCurrent;
 }
 
-void EMT::Ph3::SSN::ImpedanceLoad::exportFusedModel(LinearSSNModel &model) {
-  model = LinearSSNModel{};
-  model.kind = LinearSSNModel::Kind::ImpedanceLoad;
-  model.terminalCount = 1;
-  model.grounded[0] = !terminalNotGrounded(0);
-  for (UInt phase = 0; phase < 3; ++phase)
-    model.nodeIndices[phase] = matrixNodeIndex(0, phase);
-  for (UInt phase = 0; phase < 3; ++phase)
-    model.nodeNames[phase] = node(0)->name();
-  model.state = *mStateValue;
-  model.portAdmittance = mNodalAdmittance;
-  model.totalConductance = mTotalConductance;
-  model.inductorAdmittanceScalar = mInductorAdmittanceScalar;
-  model.capacitorAdmittanceScalar = mCapacitorAdmittanceScalar;
-  model.hasLoadInductance = mLoadInductance > 0.;
-  model.hasLoadCapacitance = mLoadCapacitance > 0.;
+MatrixComp EMT::Ph3::SSN::ImpedanceLoad::buildInitialInputFromNodes(Real) {
+  MatrixComp voltage = MatrixComp::Zero(3, 1);
+  const Complex phaseA = RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
+  voltage(0, 0) = phaseA;
+  voltage(1, 0) = phaseA * SHIFT_TO_PHASE_B;
+  voltage(2, 0) = phaseA * SHIFT_TO_PHASE_C;
+  return voltage;
 }
 
-void EMT::Ph3::SSN::ImpedanceLoad::mnaCompInitialize(Real, Real timeStep,
-                                                     Attribute<Matrix>::Ptr) {
-  updateMatrixNodeIndices();
+void EMT::Ph3::SSN::ImpedanceLoad::recomputeDiscreteModel() {
   mNodalAdmittance = mTotalConductance * Matrix::Identity(3, 3);
   if (mLoadInductance > 0.) {
-    mInductorAdmittanceScalar = timeStep / (2. * mLoadInductance);
+    mInductorAdmittanceScalar = mTimeStep / (2. * mLoadInductance);
     mInductorAdmittance = mInductorAdmittanceScalar * Matrix::Identity(3, 3);
     mNodalAdmittance += mInductorAdmittance;
   } else {
     mInductorAdmittanceScalar = 0.;
+    mInductorAdmittance.setZero();
   }
   if (mLoadCapacitance > 0.) {
-    mCapacitorAdmittanceScalar = 2. * mLoadCapacitance / timeStep;
+    mCapacitorAdmittanceScalar = 2. * mLoadCapacitance / mTimeStep;
     mCapacitorAdmittance = mCapacitorAdmittanceScalar * Matrix::Identity(3, 3);
     mNodalAdmittance += mCapacitorAdmittance;
   } else {
     mCapacitorAdmittanceScalar = 0.;
+    mCapacitorAdmittance.setZero();
   }
+  mW = mNodalAdmittance;
+  mdA.setZero(12, 12);
+  mdB.setZero(12, 3);
 }
 
 void EMT::Ph3::SSN::ImpedanceLoad::mnaCompApplySystemMatrixStamp(
     SparseMatrixRow &systemMatrix) {
-  MNAStampUtils::stampConductanceMatrix(mNodalAdmittance, systemMatrix,
-                                        matrixNodeIndex(0), 0,
+  MNAStampUtils::stampConductanceMatrix(mW, systemMatrix, matrixNodeIndex(0), 0,
                                         terminalNotGrounded(0), false, mSLog);
-}
-
-void EMT::Ph3::SSN::ImpedanceLoad::updateHistory() {
-  if (mLoadInductance > 0.) {
-    for (UInt phase = 0; phase < 3; ++phase)
-      mHistoryLoad(phase, 0) =
-          mInductorAdmittanceScalar *
-              (*mStateValue)(kLoadInductorVoltage + phase, 0) +
-          (*mStateValue)(kLoadInductorCurrent + phase, 0);
-  }
-  if (mLoadCapacitance > 0.) {
-    for (UInt phase = 0; phase < 3; ++phase)
-      mHistoryShunt(phase, 0) =
-          -(*mStateValue)(kLoadCapacitorCurrent + phase, 0) -
-          mCapacitorAdmittanceScalar *
-              (*mStateValue)(kLoadCapacitorVoltage + phase, 0);
-  }
 }
 
 void EMT::Ph3::SSN::ImpedanceLoad::mnaCompApplyRightSideVectorStamp(
@@ -174,88 +148,47 @@ void EMT::Ph3::SSN::ImpedanceLoad::mnaCompApplyRightSideVectorStamp(
     return;
   for (UInt phase = 0; phase < 3; ++phase)
     Math::setVectorElement(rightVector, matrixNodeIndex(0, phase),
-                           -(mHistoryLoad(phase, 0) + mHistoryShunt(phase, 0)));
-}
-
-void EMT::Ph3::SSN::ImpedanceLoad::mnaAddCompactRightSideVectorStamp(
-    Matrix &rightVector) {
-  if (!terminalNotGrounded(0))
-    return;
-  for (UInt phase = 0; phase < 3; ++phase)
-    Math::addToVectorElement(
-        rightVector, matrixNodeIndex(0, phase),
-        -(mHistoryLoad(phase, 0) + mHistoryShunt(phase, 0)));
-}
-
-void EMT::Ph3::SSN::ImpedanceLoad::mnaCompPreStep(Real, Int) {
-  updateHistory();
-}
-
-EMT::Ph3::SSN::ImpedanceLoad::PhaseVector
-EMT::Ph3::SSN::ImpedanceLoad::nodeVoltage(const Matrix &leftVector) {
-  PhaseVector voltage = PhaseVector::Zero();
-  if (terminalNotGrounded(0))
-    for (UInt phase = 0; phase < 3; ++phase)
-      voltage(phase, 0) =
-          Math::realFromVectorElement(leftVector, matrixNodeIndex(0, phase));
-  return voltage;
+                           -mYHist(phase, 0));
 }
 
 void EMT::Ph3::SSN::ImpedanceLoad::mnaCompUpdateVoltage(
     const Matrix &leftVector) {
-  *mIntfVoltageValue = nodeVoltage(leftVector);
+  mIntfVoltageValue->setZero();
+  if (terminalNotGrounded(0))
+    for (UInt phase = 0; phase < 3; ++phase)
+      (*mIntfVoltageValue)(phase, 0) =
+          Math::realFromVectorElement(leftVector, matrixNodeIndex(0, phase));
 }
 
-void EMT::Ph3::SSN::ImpedanceLoad::mnaCompUpdateCurrent(const Matrix &) {
-  updateCurrentFromVoltage(*mIntfVoltageValue);
-}
-
-void EMT::Ph3::SSN::ImpedanceLoad::updateCurrentFromVoltage(
-    const PhaseVector &voltage) {
-  PhaseVector inductorCurrent = PhaseVector::Zero();
-  PhaseVector capacitorCurrent = PhaseVector::Zero();
+void EMT::Ph3::SSN::ImpedanceLoad::calculateHistoryVector(
+    Matrix &history) const {
+  mHistoryLoad.setZero();
+  mHistoryShunt.setZero();
   if (mLoadInductance > 0.)
     for (UInt phase = 0; phase < 3; ++phase)
-      inductorCurrent(phase) =
-          mInductorAdmittanceScalar * voltage(phase) + mHistoryLoad(phase, 0);
+      mHistoryLoad(phase, 0) =
+          mInductorAdmittanceScalar * (*mStateValue)(phase, 0) +
+          (*mStateValue)(3 + phase, 0);
   if (mLoadCapacitance > 0.)
     for (UInt phase = 0; phase < 3; ++phase)
-      capacitorCurrent(phase) =
-          mCapacitorAdmittanceScalar * voltage(phase) + mHistoryShunt(phase, 0);
+      mHistoryShunt(phase, 0) =
+          -(*mStateValue)(9 + phase, 0) -
+          mCapacitorAdmittanceScalar * (*mStateValue)(6 + phase, 0);
+  history = mHistoryLoad + mHistoryShunt;
+}
 
-  *mIntfCurrentValue =
-      -(mTotalConductance * voltage + inductorCurrent + capacitorCurrent);
+void EMT::Ph3::SSN::ImpedanceLoad::updateState(const Matrix &,
+                                               const Matrix &voltage) {
   if (mLoadInductance > 0.) {
-    mStateValue->block<3, 1>(kLoadInductorVoltage, 0) = voltage;
-    mStateValue->block<3, 1>(kLoadInductorCurrent, 0) = inductorCurrent;
+    const PhaseVector current =
+        mInductorAdmittanceScalar * voltage + mHistoryLoad;
+    mStateValue->block<3, 1>(0, 0) = voltage;
+    mStateValue->block<3, 1>(3, 0) = current;
   }
   if (mLoadCapacitance > 0.) {
-    mStateValue->block<3, 1>(kLoadCapacitorVoltage, 0) = voltage;
-    mStateValue->block<3, 1>(kLoadCapacitorCurrent, 0) = capacitorCurrent;
+    const PhaseVector current =
+        mCapacitorAdmittanceScalar * voltage + mHistoryShunt;
+    mStateValue->block<3, 1>(6, 0) = voltage;
+    mStateValue->block<3, 1>(9, 0) = current;
   }
-}
-
-void EMT::Ph3::SSN::ImpedanceLoad::mnaCompPostStep(
-    Real, Int, Attribute<Matrix>::Ptr &leftVector) {
-  const PhaseVector voltage = nodeVoltage(**leftVector);
-  *mIntfVoltageValue = voltage;
-  updateCurrentFromVoltage(voltage);
-}
-
-void EMT::Ph3::SSN::ImpedanceLoad::mnaCompAddPreStepDependencies(
-    AttributeBase::List &prevStepDependencies,
-    AttributeBase::List &attributeDependencies,
-    AttributeBase::List &modifiedAttributes) {
-  prevStepDependencies.push_back(mState);
-  modifiedAttributes.push_back(mRightVector);
-}
-
-void EMT::Ph3::SSN::ImpedanceLoad::mnaCompAddPostStepDependencies(
-    AttributeBase::List &, AttributeBase::List &attributeDependencies,
-    AttributeBase::List &modifiedAttributes,
-    Attribute<Matrix>::Ptr &leftVector) {
-  attributeDependencies.push_back(leftVector);
-  modifiedAttributes.push_back(mIntfVoltage);
-  modifiedAttributes.push_back(mIntfCurrent);
-  modifiedAttributes.push_back(mState);
 }

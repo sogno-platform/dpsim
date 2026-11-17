@@ -162,6 +162,7 @@ Components/EMT_Ph3_2T_I_Type_SSN.cpp
 Components/DP_Ph1_MixedVariableSSN_vs_FixedSSN.cpp
 Components/DP_Ph1_AvVoltSourceInverterStateSpace.cpp
 Components/DP_Ph3_AvVoltSourceInverterStateSpace.cpp
+Components/DP_Ph3_SSN_SynchronGenerator4Order_JacobianCheck.cpp
 Components/EMT_SSN_GFM_Test.cpp
 Components/EMT_Ph3_SSN_GFM_JacobianCheck.cpp
 Components/EMT_Ph3_GFL_Comparison.cpp

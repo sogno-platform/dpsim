@@ -5,7 +5,7 @@
 #pragma once
 
 #include <dpsim-models/Base/Base_Ph3_PiLine.h>
-#include <dpsim-models/MNASimPowerComp.h>
+#include <dpsim-models/DP/DP_Ph3_MultiPortVTypeSSNComp.h>
 
 namespace CPS {
 namespace DP {
@@ -16,7 +16,7 @@ namespace SSN {
 ///
 /// The series R-L branch and both shunt G-C branches are represented by one
 /// component, avoiding per-element tasks and composite right-vector reduction.
-class PiLine final : public MNASimPowerComp<Complex>,
+class PiLine final : public MultiPortVTypeSSNComp,
                      public Base::Ph3::PiLine,
                      public SharedFactory<PiLine> {
 public:
@@ -34,43 +34,26 @@ public:
                      const Matrix &parallelConductance = Matrix::Zero(3, 3));
 
   void initializeFromNodesAndTerminals(Real frequency) override;
-  void mnaCompInitialize(Real omega, Real timeStep,
-                         Attribute<Matrix>::Ptr leftVector) override;
-  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
-  Bool mnaHasCompactRightSideVectorStamp() const override { return true; }
-  void mnaAddCompactRightSideVectorStamp(Matrix &rightVector) override;
-  void mnaCompUpdateVoltage(const Matrix &leftVector) override;
-  void mnaCompUpdateCurrent(const Matrix &leftVector) override;
-  void mnaCompPreStep(Real time, Int timeStepCount) override;
-  void mnaCompPostStep(Real time, Int timeStepCount,
-                       Attribute<Matrix>::Ptr &leftVector) override;
-  void mnaCompAddPreStepDependencies(
-      AttributeBase::List &prevStepDependencies,
-      AttributeBase::List &attributeDependencies,
-      AttributeBase::List &modifiedAttributes) override;
-  void
-  mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
-                                 AttributeBase::List &attributeDependencies,
-                                 AttributeBase::List &modifiedAttributes,
-                                 Attribute<Matrix>::Ptr &leftVector) override;
 
 private:
   using TerminalVoltage = Eigen::Matrix<Complex, 3, 1>;
 
-  Attribute<MatrixComp>::Ptr mState;
   MatrixComp mInductorAdmittance;
   MatrixComp mSeriesAdmittance;
   MatrixComp mSeriesSystemInverse;
   MatrixComp mCapAdmittance;
   MatrixComp mCapPreviousVoltage;
-  MatrixComp mSeriesHistory;
-  MatrixComp mInductorHistory;
-  MatrixComp mCapHistory0;
-  MatrixComp mCapHistory1;
+  mutable MatrixComp mSeriesHistory;
+  mutable MatrixComp mInductorHistory;
+  mutable MatrixComp mCapHistory0;
+  mutable MatrixComp mCapHistory1;
   Complex mInductorPreviousCurrent = Complex(1., 0.);
 
-  TerminalVoltage terminalVoltage(const Matrix &leftVector, UInt terminal);
+protected:
+  void recomputeDiscreteModel(Real omega) override;
+  MatrixComp calculateHistoryVector() const override;
+  void updateHistoryVector(MatrixComp &history) override;
+  void updateState(const MatrixComp &uOld, const MatrixComp &uNew) override;
 };
 
 } // namespace SSN

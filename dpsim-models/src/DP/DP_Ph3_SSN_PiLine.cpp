@@ -3,8 +3,6 @@
  */
 
 #include <dpsim-models/DP/DP_Ph3_SSN_PiLine.h>
-#include <dpsim-models/MNAStampUtils.h>
-
 using namespace CPS;
 
 namespace {
@@ -17,9 +15,8 @@ constexpr Int kCapCurrent1 = 15;
 } // namespace
 
 DP::Ph3::SSN::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
-    : MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
+    : MultiPortVTypeSSNComp(uid, name, logLevel),
       Base::Ph3::PiLine(mAttributes),
-      mState(mAttributes->create<MatrixComp>("state")),
       mInductorAdmittance(MatrixComp::Zero(3, 3)),
       mSeriesAdmittance(MatrixComp::Zero(3, 3)),
       mSeriesSystemInverse(MatrixComp::Identity(3, 3)),
@@ -29,11 +26,7 @@ DP::Ph3::SSN::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
       mInductorHistory(MatrixComp::Zero(3, 1)),
       mCapHistory0(MatrixComp::Zero(3, 1)),
       mCapHistory1(MatrixComp::Zero(3, 1)) {
-  mPhaseType = PhaseType::ABC;
-  setTerminalNumber(2);
-  **mIntfVoltage = MatrixComp::Zero(3, 1);
-  **mIntfCurrent = MatrixComp::Zero(3, 1);
-  **mState = MatrixComp::Zero(18, 1);
+  **mX = MatrixComp::Zero(18, 1);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph3::SSN::PiLine::clone(String copySuffix) {
@@ -54,6 +47,8 @@ void DP::Ph3::SSN::PiLine::setParameters(const Matrix &seriesResistance,
   }
   Base::Ph3::PiLine::setParameters(seriesResistance, seriesInductance,
                                    parallelCapacitance, parallelConductance);
+  DP::SSNComp::setParameters(Matrix::Zero(18, 18), Matrix::Zero(18, 6),
+                             Matrix::Zero(6, 18), Matrix::Zero(6, 6));
 }
 
 void DP::Ph3::SSN::PiLine::initializeFromNodesAndTerminals(Real frequency) {
@@ -82,154 +77,81 @@ void DP::Ph3::SSN::PiLine::initializeFromNodesAndTerminals(Real frequency) {
   const MatrixComp cap1Current =
       Complex(0., omega) * ((**mParallelCap) / 2.).cast<Complex>() * v1;
 
-  **mIntfVoltage = voltage;
-  **mIntfCurrent = current;
-  (**mState).setZero();
-  (**mState).block<3, 1>(kSeriesCurrent, 0) = current;
-  (**mState).block<3, 1>(kSeriesInductorVoltage, 0) = inductorVoltage;
-  (**mState).block<3, 1>(kCapVoltage0, 0) = v0;
-  (**mState).block<3, 1>(kCapCurrent0, 0) = cap0Current;
-  (**mState).block<3, 1>(kCapVoltage1, 0) = v1;
-  (**mState).block<3, 1>(kCapCurrent1, 0) = cap1Current;
+  **mIntfVoltage = MatrixComp::Zero(6, 1);
+  (**mIntfVoltage).block(0, 0, 3, 1) = v0;
+  (**mIntfVoltage).block(3, 0, 3, 1) = v1;
+  **mIntfCurrent = MatrixComp::Zero(6, 1);
+  (**mIntfCurrent).block(0, 0, 3, 1) = -current + cap0Current;
+  (**mIntfCurrent).block(3, 0, 3, 1) = current + cap1Current;
+  (**mX).setZero();
+  (**mX).block<3, 1>(kSeriesCurrent, 0) = current;
+  (**mX).block<3, 1>(kSeriesInductorVoltage, 0) = inductorVoltage;
+  (**mX).block<3, 1>(kCapVoltage0, 0) = v0;
+  (**mX).block<3, 1>(kCapCurrent0, 0) = cap0Current;
+  (**mX).block<3, 1>(kCapVoltage1, 0) = v1;
+  (**mX).block<3, 1>(kCapCurrent1, 0) = cap1Current;
 }
 
-void DP::Ph3::SSN::PiLine::mnaCompInitialize(Real omega, Real timeStep,
-                                             Attribute<Matrix>::Ptr) {
-  updateMatrixNodeIndices();
-
+void DP::Ph3::SSN::PiLine::recomputeDiscreteModel(Real omega) {
+  const Real timeStep = mTimeStep;
   const Real b = timeStep * omega / 2.;
   const Matrix inverseL = (**mSeriesInd).inverse();
   const MatrixComp a = (timeStep / 2.) * inverseL.cast<Complex>();
   mInductorAdmittance = a / Complex(1., b);
   mInductorPreviousCurrent =
       Complex((1. - b * b) / (1. + b * b), -2. * b / (1. + b * b));
-
   mSeriesSystemInverse = (MatrixComp::Identity(3, 3) +
                           mInductorAdmittance * (**mSeriesRes).cast<Complex>())
                              .inverse();
   mSeriesAdmittance = mSeriesSystemInverse * mInductorAdmittance;
-
   const Matrix capHalf = **mParallelCap / 2.;
   const MatrixComp capReal = (2. / timeStep) * capHalf.cast<Complex>();
   mCapAdmittance = capReal + Complex(0., omega) * capHalf.cast<Complex>();
   mCapPreviousVoltage = capReal - Complex(0., omega) * capHalf.cast<Complex>();
-}
-
-void DP::Ph3::SSN::PiLine::mnaCompApplySystemMatrixStamp(
-    SparseMatrixRow &systemMatrix) {
-  MNAStampUtils::stampAdmittanceMatrix(
-      mSeriesAdmittance, systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),
-      terminalNotGrounded(0), terminalNotGrounded(1), mSLog);
   const MatrixComp shunt =
       mCapAdmittance + ((**mParallelCond) / 2.).cast<Complex>();
-  for (UInt terminal = 0; terminal < 2; ++terminal) {
-    MNAStampUtils::stampAdmittanceMatrix(
-        shunt, systemMatrix, matrixNodeIndex(terminal), 0,
-        terminalNotGrounded(terminal), false, mSLog);
-  }
+  mW = MatrixComp::Zero(6, 6);
+  mW.block<3, 3>(0, 0) = mSeriesAdmittance + shunt;
+  mW.block<3, 3>(0, 3) = -mSeriesAdmittance;
+  mW.block<3, 3>(3, 0) = -mSeriesAdmittance;
+  mW.block<3, 3>(3, 3) = mSeriesAdmittance + shunt;
+  mDiscreteA.setZero(18, 18);
+  mDiscreteB.setZero(18, 6);
 }
 
-void DP::Ph3::SSN::PiLine::mnaCompPreStep(Real, Int) {
+MatrixComp DP::Ph3::SSN::PiLine::calculateHistoryVector() const {
   mInductorHistory.noalias() =
-      mInductorAdmittance * (**mState).block<3, 1>(kSeriesInductorVoltage, 0);
+      mInductorAdmittance * (**mX).block<3, 1>(kSeriesInductorVoltage, 0);
   mInductorHistory +=
-      mInductorPreviousCurrent * (**mState).block<3, 1>(kSeriesCurrent, 0);
+      mInductorPreviousCurrent * (**mX).block<3, 1>(kSeriesCurrent, 0);
   mSeriesHistory.noalias() = mSeriesSystemInverse * mInductorHistory;
-  mCapHistory0 = -(**mState).block<3, 1>(kCapCurrent0, 0) -
-                 mCapPreviousVoltage * (**mState).block<3, 1>(kCapVoltage0, 0);
-  mCapHistory1 = -(**mState).block<3, 1>(kCapCurrent1, 0) -
-                 mCapPreviousVoltage * (**mState).block<3, 1>(kCapVoltage1, 0);
-  mnaCompApplyRightSideVectorStamp(**mRightVector);
+  mCapHistory0 = -(mCapPreviousVoltage * (**mX).block<3, 1>(kCapVoltage0, 0) +
+                   (**mX).block<3, 1>(kCapCurrent0, 0));
+  mCapHistory1 = -(mCapPreviousVoltage * (**mX).block<3, 1>(kCapVoltage1, 0) +
+                   (**mX).block<3, 1>(kCapCurrent1, 0));
+  MatrixComp history = MatrixComp::Zero(6, 1);
+  history.block<3, 1>(0, 0) = -mSeriesHistory + mCapHistory0;
+  history.block<3, 1>(3, 0) = mSeriesHistory + mCapHistory1;
+  return history;
 }
 
-void DP::Ph3::SSN::PiLine::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
-  if (terminalNotGrounded(0)) {
-    for (UInt phase = 0; phase < 3; ++phase)
-      Math::setVectorElement(rightVector, matrixNodeIndex(0, phase),
-                             mSeriesHistory(phase, 0) - mCapHistory0(phase, 0));
-  }
-  if (terminalNotGrounded(1)) {
-    for (UInt phase = 0; phase < 3; ++phase)
-      Math::setVectorElement(rightVector, matrixNodeIndex(1, phase),
-                             -mSeriesHistory(phase, 0) -
-                                 mCapHistory1(phase, 0));
-  }
+void DP::Ph3::SSN::PiLine::updateHistoryVector(MatrixComp &history) {
+  history = calculateHistoryVector();
 }
 
-void DP::Ph3::SSN::PiLine::mnaAddCompactRightSideVectorStamp(
-    Matrix &rightVector) {
-  if (terminalNotGrounded(0)) {
-    for (UInt phase = 0; phase < 3; ++phase)
-      Math::addToVectorElement(rightVector, matrixNodeIndex(0, phase),
-                               Math::complexFromVectorElement(
-                                   **mRightVector, matrixNodeIndex(0, phase)));
-  }
-  if (terminalNotGrounded(1)) {
-    for (UInt phase = 0; phase < 3; ++phase)
-      Math::addToVectorElement(rightVector, matrixNodeIndex(1, phase),
-                               Math::complexFromVectorElement(
-                                   **mRightVector, matrixNodeIndex(1, phase)));
-  }
-}
-
-DP::Ph3::SSN::PiLine::TerminalVoltage
-DP::Ph3::SSN::PiLine::terminalVoltage(const Matrix &leftVector, UInt terminal) {
-  TerminalVoltage voltage = TerminalVoltage::Zero();
-  if (terminalNotGrounded(terminal)) {
-    for (UInt phase = 0; phase < 3; ++phase)
-      voltage(phase, 0) = Math::complexFromVectorElement(
-          leftVector, matrixNodeIndex(terminal, phase));
-  }
-  return voltage;
-}
-
-void DP::Ph3::SSN::PiLine::mnaCompUpdateVoltage(const Matrix &leftVector) {
-  **mIntfVoltage =
-      terminalVoltage(leftVector, 1) - terminalVoltage(leftVector, 0);
-}
-
-void DP::Ph3::SSN::PiLine::mnaCompUpdateCurrent(const Matrix &) {
-  **mIntfCurrent = mSeriesAdmittance * (**mIntfVoltage) + mSeriesHistory;
-}
-
-void DP::Ph3::SSN::PiLine::mnaCompPostStep(Real, Int,
-                                           Attribute<Matrix>::Ptr &leftVector) {
-  // Reuse the terminal voltages for both the interface update and the
-  // capacitor state update instead of extracting them twice.
-  const MatrixComp v0 = terminalVoltage(**leftVector, 0);
-  const MatrixComp v1 = terminalVoltage(**leftVector, 1);
-  **mIntfVoltage = v1 - v0;
-  (**mIntfCurrent).noalias() = mSeriesAdmittance * (**mIntfVoltage);
-  **mIntfCurrent += mSeriesHistory;
-
-  const TerminalVoltage inductorVoltage =
-      **mIntfVoltage - (**mSeriesRes).cast<Complex>() * (**mIntfCurrent);
-  const TerminalVoltage capCurrent0 = mCapAdmittance * v0 + mCapHistory0;
-  const TerminalVoltage capCurrent1 = mCapAdmittance * v1 + mCapHistory1;
-
-  (**mState).block<3, 1>(kSeriesCurrent, 0) = **mIntfCurrent;
-  (**mState).block<3, 1>(kSeriesInductorVoltage, 0) = inductorVoltage;
-  (**mState).block<3, 1>(kCapVoltage0, 0) = v0;
-  (**mState).block<3, 1>(kCapCurrent0, 0) = capCurrent0;
-  (**mState).block<3, 1>(kCapVoltage1, 0) = v1;
-  (**mState).block<3, 1>(kCapCurrent1, 0) = capCurrent1;
-}
-
-void DP::Ph3::SSN::PiLine::mnaCompAddPreStepDependencies(
-    AttributeBase::List &prevStepDependencies,
-    AttributeBase::List &attributeDependencies,
-    AttributeBase::List &modifiedAttributes) {
-  prevStepDependencies.push_back(mState);
-  modifiedAttributes.push_back(mRightVector);
-}
-
-void DP::Ph3::SSN::PiLine::mnaCompAddPostStepDependencies(
-    AttributeBase::List &, AttributeBase::List &attributeDependencies,
-    AttributeBase::List &modifiedAttributes,
-    Attribute<Matrix>::Ptr &leftVector) {
-  attributeDependencies.push_back(leftVector);
-  modifiedAttributes.push_back(mIntfVoltage);
-  modifiedAttributes.push_back(mIntfCurrent);
-  modifiedAttributes.push_back(mState);
+void DP::Ph3::SSN::PiLine::updateState(const MatrixComp &,
+                                       const MatrixComp &input) {
+  const TerminalVoltage v0 = input.block<3, 1>(0, 0);
+  const TerminalVoltage v1 = input.block<3, 1>(3, 0);
+  const TerminalVoltage voltage = v1 - v0;
+  const TerminalVoltage current = mSeriesAdmittance * voltage + mSeriesHistory;
+  const TerminalVoltage inductorVoltage = voltage - **mSeriesRes * current;
+  const TerminalVoltage cap0Current = mCapAdmittance * v0 + mCapHistory0;
+  const TerminalVoltage cap1Current = mCapAdmittance * v1 + mCapHistory1;
+  (**mX).block<3, 1>(kSeriesCurrent, 0) = current;
+  (**mX).block<3, 1>(kSeriesInductorVoltage, 0) = inductorVoltage;
+  (**mX).block<3, 1>(kCapVoltage0, 0) = v0;
+  (**mX).block<3, 1>(kCapCurrent0, 0) = cap0Current;
+  (**mX).block<3, 1>(kCapVoltage1, 0) = v1;
+  (**mX).block<3, 1>(kCapCurrent1, 0) = cap1Current;
 }
