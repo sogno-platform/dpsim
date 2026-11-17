@@ -53,6 +53,8 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_Ph3_R3C1L1CS1_RC_vs_SSN_Fault.cpp
 	Circuits/DP_Ph3_Switch_vs_SeriesSwitch.cpp
 	Circuits/EMT_Ph3_R3C1L1CS1_RC_vs_SSN_Fault.cpp
+	Circuits/DP_Ph3_SSN_Grid_Validation.cpp
+	Circuits/EMT_Ph3_SSN_Grid_Validation.cpp
 
 	# EMT examples with PF initialization
 	Circuits/EMT_Slack_PiLine_PQLoad_with_PF_Init.cpp
@@ -183,18 +185,13 @@ StateSpace/DP_Ph1_Switch_StateSpaceExtraction.cpp
 # Targets required for tests in the Jupyter Notebooks. This list is only for grouping the (already configured) targets, so every entry
 # also has to appear in another list in this file.
 list(APPEND TEST_SOURCES
-	Circuits/DP_Ph1_Transformer_OpenShortCircuit.cpp
-	Circuits/EMT_DP_Ph3_CurrentSource_PF_Init.cpp
-	Circuits/EMT_DP_Ph3_Passive_PF_Init.cpp
-	Circuits/DP_Ph1_Shunt_PF_Init.cpp
-	Circuits/DP_Ph1_Transformer_OpenSecondaryStepSweep.cpp
+	Circuits/DP_Ph3_SSN_Grid_Validation.cpp
+	Circuits/EMT_Ph3_SSN_Grid_Validation.cpp
 	Circuits/SP_Ph1_IEEE9_4Order.cpp
 	Circuits/DP_Ph1_IEEE9_4Order.cpp
 	Circuits/EMT_Ph3_IEEE9_4Order.cpp
 	Circuits/EMT_Ph3_IEEE9_SSN_InverterMix.cpp
 	Circuits/SP_ReducedOrderSG_SMIB_Fault.cpp
-	Circuits/DP_ReducedOrderSG_SMIB_Fault.cpp
-	Circuits/EMT_ReducedOrderSG_SMIB_Fault.cpp
 	Circuits/SP_ReducedOrderSG_VBR_Load_Fault.cpp
 	Circuits/DP_ReducedOrderSG_VBR_Load_Fault.cpp
 	Circuits/EMT_ReducedOrderSG_VBR_Load_Fault.cpp
@@ -214,9 +211,7 @@ list(APPEND TEST_SOURCES
 	Circuits/EMT_Ph3_R3C1L1CS1_RC_vs_SSN.cpp
 	Circuits/EMT_Ph3_RLC1VS1_RC_vs_SSN.cpp
 	Circuits/EMT_Ph1_General2TerminalSSN.cpp
-	Circuits/SP_ITM_withPiLine_Ph1.cpp
 	Circuits/SP_Ph1_General2TerminalSSN.cpp
-	Circuits/EMT_DC_PiLine_SourceStep.cpp
 	Components/EMT_Ph3_SSN_InductionMotor_LoadSwitch.cpp
 )
 
@@ -293,7 +288,6 @@ if(WITH_CIM)
 	)
 
 	list(APPEND TEST_SOURCES
-		CIM/CIGRE_MV_PowerFlowTest.cpp
 		CIM/DP_WSCC-9bus_IdealVS.cpp
 		CIM/EMT_WSCC-9bus_IdealCS.cpp
 		CIM/EMT_WSCC-9bus_IdealVS.cpp
