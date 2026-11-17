@@ -23,5 +23,6 @@ var class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor =
     [ "mnaTearPostStep", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html#a3567d6913a996c8bdada47cee98e31df", null ],
     [ "mEquivCond", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html#a982f432906ad3ada5ae3a3d139c80cdc", null ],
     [ "mEquivCurrent", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html#a52bfc79ff4513f28ca570afad5241174", null ],
+    [ "mEquivImpedance", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html#a2123a7ed01b3b002f008a180338f4a7c", null ],
     [ "mPrevCurrFac", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html#a238b7639f4a1cca6397f60026df039e1", null ]
 ];

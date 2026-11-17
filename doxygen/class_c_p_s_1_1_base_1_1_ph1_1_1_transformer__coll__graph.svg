@@ -81,9 +81,10 @@ var sectionId = 'dynsection-1';
 <polygon fill="#9a32cd" stroke="#9a32cd" points="500.7,-118.95 491.32,-123.87 501.72,-125.88 500.7,-118.95"/>
 </a>
 </g>
-<text text-anchor="middle" x="550.75" y="-152.2" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> mInductance</text>
-<text text-anchor="middle" x="550.75" y="-137.95" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">mRatedPower</text>
-<text text-anchor="middle" x="550.75" y="-123.7" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">mResistance</text>
+<text text-anchor="middle" x="550.75" y="-166.45" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> mInductance</text>
+<text text-anchor="middle" x="550.75" y="-152.2" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">mRatedPower</text>
+<text text-anchor="middle" x="550.75" y="-137.95" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">mResistance</text>
+<text text-anchor="middle" x="550.75" y="-123.7" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">mTapRatio</text>
 </g>
 <!-- Node3 -->
 <g id="Node000003" class="node">

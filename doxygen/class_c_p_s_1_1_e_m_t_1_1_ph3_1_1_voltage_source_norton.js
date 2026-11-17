@@ -3,7 +3,7 @@ var class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source_norton =
     [ "VoltageSourceNorton", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source_norton.html#a1b9a848d58184d75ac55eaa94fd89a0e", null ],
     [ "VoltageSourceNorton", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source_norton.html#a15f2dedafb204c667bbf4d2f797e6a60", null ],
     [ "clone", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source_norton.html#af641b3bc8a3b644caa0cc4a52eb81b6f", null ],
-    [ "initializeFromNodesAndTerminals", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source_norton.html#a885d91bb28421ce677bfb56ad1ba833c", null ],
+    [ "initializeFromNodesAndTerminals", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source_norton.html#ade9371a55d0c698c89c171c0cee00e25", null ],
     [ "mnaCompAddPostStepDependencies", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source_norton.html#af427023fc1f9864bd811e5735ac2c5d8", null ],
     [ "mnaCompAddPreStepDependencies", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source_norton.html#ae74a216ece35aac5b24f950e1f8c1b11", null ],
     [ "mnaCompApplyRightSideVectorStamp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source_norton.html#a27102286e387b3ead90d33f9a42874c3", null ],

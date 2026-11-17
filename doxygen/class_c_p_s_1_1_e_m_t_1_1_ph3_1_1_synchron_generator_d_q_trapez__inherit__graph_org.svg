@@ -12,9 +12,9 @@
 <g id="Node000001" class="node">
 <title>Node1</title>
 <g id="a_Node000001"><a xlink:title=" ">
-<polygon fill="#999999" stroke="#666666" points="1502.5,-108.5 1322.25,-108.5 1322.25,-72 1502.5,-72 1502.5,-108.5"/>
-<text text-anchor="start" x="1330.25" y="-95" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::SynchronGenerator</text>
-<text text-anchor="middle" x="1412.38" y="-80.75" font-family="Helvetica,sans-Serif" font-size="10.00">DQTrapez</text>
+<polygon fill="#999999" stroke="#666666" points="1502.5,-112.5 1322.25,-112.5 1322.25,-76 1502.5,-76 1502.5,-112.5"/>
+<text text-anchor="start" x="1330.25" y="-99" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::SynchronGenerator</text>
+<text text-anchor="middle" x="1412.38" y="-84.75" font-family="Helvetica,sans-Serif" font-size="10.00">DQTrapez</text>
 </a>
 </g>
 </g>
@@ -22,8 +22,8 @@
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_d_q.html" target="_top" xlink:title="Synchronous generator model in dq&#45;reference frame.">
-<polygon fill="white" stroke="#666666" points="1285.25,-125.38 1090,-125.38 1090,-103.12 1285.25,-103.12 1285.25,-125.38"/>
-<text text-anchor="middle" x="1187.62" y="-111.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::SynchronGeneratorDQ</text>
+<polygon fill="white" stroke="#666666" points="1285.25,-145.38 1090,-145.38 1090,-123.12 1285.25,-123.12 1285.25,-145.38"/>
+<text text-anchor="middle" x="1187.62" y="-131.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::EMT::Ph3::SynchronGeneratorDQ</text>
 </a>
 </g>
 </g>
@@ -31,8 +31,8 @@
 <g id="edge1_Node000001_Node000002" class="edge">
 <title>Node2&#45;&gt;Node1</title>
 <g id="a_edge1_Node000001_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1297.05,-102.57C1305.41,-101.67 1313.79,-100.76 1322.01,-99.88"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1296.75,-99.08 1287.18,-103.63 1297.5,-106.04 1296.75,-99.08"/>
+<path fill="none" stroke="#63b8ff" d="M1264.64,-120.6C1283.11,-117.28 1303.02,-113.71 1322.04,-110.29"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1264.07,-117.15 1254.84,-122.36 1265.3,-124.04 1264.07,-117.15"/>
 </a>
 </g>
 </g>
@@ -50,8 +50,8 @@
 <g id="edge2_Node000002_Node000003" class="edge">
 <title>Node3&#45;&gt;Node2</title>
 <g id="a_edge2_Node000002_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M898.62,-114.25C954.56,-114.25 1030.11,-114.25 1089.8,-114.25"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="898.86,-110.75 888.86,-114.25 898.86,-117.75 898.86,-110.75"/>
+<path fill="none" stroke="#63b8ff" d="M898.62,-118.53C954.56,-121.59 1030.11,-125.71 1089.8,-128.97"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="899.03,-115.05 888.86,-118 898.65,-122.04 899.03,-115.05"/>
 </a>
 </g>
 </g>
@@ -227,18 +227,17 @@
 <g id="edge13_Node000002_Node000011" class="edge">
 <title>Node11&#45;&gt;Node2</title>
 <g id="a_edge13_Node000002_Node000011"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M910.28,-149.69C966.82,-142.44 1039.47,-133.12 1096.08,-125.86"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="910.17,-146.17 900.7,-150.92 911.06,-153.12 910.17,-146.17"/>
+<path fill="none" stroke="#63b8ff" d="M910.57,-154.59C964.99,-150.58 1034.23,-145.48 1089.76,-141.39"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="910.42,-151.09 900.71,-155.31 910.94,-158.07 910.42,-151.09"/>
 </a>
 </g>
 </g>
 <!-- Node12 -->
 <g id="Node000012" class="node">
 <title>Node12</title>
-<g id="a_Node000012"><a xlink:href="class_shared_factory.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="1278.88,-85.5 1096.38,-85.5 1096.38,-49 1278.88,-49 1278.88,-85.5"/>
-<text text-anchor="start" x="1104.38" y="-72" font-family="Helvetica,sans-Serif" font-size="10.00">SharedFactory&lt; SynchronGenerator</text>
-<text text-anchor="middle" x="1187.62" y="-57.75" font-family="Helvetica,sans-Serif" font-size="10.00">DQTrapez &gt;</text>
+<g id="a_Node000012"><a xlink:href="class_c_p_s_1_1_m_n_a_variable_comp_interface.html" target="_top" xlink:title="MNA interface to be used by elements that require recomputing of the system matrix.">
+<polygon fill="white" stroke="#666666" points="1272.5,-105.38 1102.75,-105.38 1102.75,-83.12 1272.5,-83.12 1272.5,-105.38"/>
+<text text-anchor="middle" x="1187.62" y="-91.88" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::MNAVariableCompInterface</text>
 </a>
 </g>
 </g>
@@ -246,8 +245,8 @@
 <g id="edge14_Node000001_Node000012" class="edge">
 <title>Node12&#45;&gt;Node1</title>
 <g id="a_edge14_Node000001_Node000012"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1290.54,-77.77C1301.02,-78.85 1311.61,-79.95 1321.94,-81.02"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1291.04,-74.31 1280.73,-76.76 1290.32,-81.27 1291.04,-74.31"/>
+<path fill="none" stroke="#63b8ff" d="M1284.21,-94.25C1296.7,-94.25 1309.46,-94.25 1321.84,-94.25"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1284.35,-90.75 1274.35,-94.25 1284.35,-97.75 1284.35,-90.75"/>
 </a>
 </g>
 </g>
@@ -255,20 +254,39 @@
 <g id="Node000013" class="node">
 <title>Node13</title>
 <g id="a_Node000013"><a xlink:href="class_shared_factory.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="871.38,-78.38 766.88,-78.38 766.88,-56.12 871.38,-56.12 871.38,-78.38"/>
-<text text-anchor="middle" x="819.12" y="-64.88" font-family="Helvetica,sans-Serif" font-size="10.00">SharedFactory&lt; T &gt;</text>
+<polygon fill="white" stroke="#666666" points="1278.88,-65.5 1096.38,-65.5 1096.38,-29 1278.88,-29 1278.88,-65.5"/>
+<text text-anchor="start" x="1104.38" y="-52" font-family="Helvetica,sans-Serif" font-size="10.00">SharedFactory&lt; SynchronGenerator</text>
+<text text-anchor="middle" x="1187.62" y="-37.75" font-family="Helvetica,sans-Serif" font-size="10.00">DQTrapez &gt;</text>
 </a>
 </g>
 </g>
-<!-- Node13&#45;&gt;Node12 -->
-<g id="edge15_Node000012_Node000013" class="edge">
-<title>Node13&#45;&gt;Node12</title>
-<g id="a_edge15_Node000012_Node000013"><a xlink:title=" ">
-<path fill="none" stroke="orange" stroke-dasharray="5,2" d="M883.18,-67.25C941.8,-67.25 1029.78,-67.25 1095.94,-67.25"/>
-<polygon fill="orange" stroke="orange" points="883.37,-63.75 873.37,-67.25 883.37,-70.75 883.37,-63.75"/>
+<!-- Node13&#45;&gt;Node1 -->
+<g id="edge15_Node000001_Node000013" class="edge">
+<title>Node13&#45;&gt;Node1</title>
+<g id="a_edge15_Node000001_Node000013"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1288.23,-68.27C1299.69,-70.69 1311.33,-73.14 1322.64,-75.53"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1289.29,-64.91 1278.78,-66.27 1287.84,-71.76 1289.29,-64.91"/>
 </a>
 </g>
-<text text-anchor="middle" x="994.38" y="-72" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &lt; SynchronGeneratorDQTrapez &gt;</text>
+</g>
+<!-- Node14 -->
+<g id="Node000014" class="node">
+<title>Node14</title>
+<g id="a_Node000014"><a xlink:href="class_shared_factory.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="871.38,-58.38 766.88,-58.38 766.88,-36.12 871.38,-36.12 871.38,-58.38"/>
+<text text-anchor="middle" x="819.12" y="-44.88" font-family="Helvetica,sans-Serif" font-size="10.00">SharedFactory&lt; T &gt;</text>
+</a>
+</g>
+</g>
+<!-- Node14&#45;&gt;Node13 -->
+<g id="edge16_Node000013_Node000014" class="edge">
+<title>Node14&#45;&gt;Node13</title>
+<g id="a_edge16_Node000013_Node000014"><a xlink:title=" ">
+<path fill="none" stroke="orange" stroke-dasharray="5,2" d="M883.18,-47.25C941.8,-47.25 1029.78,-47.25 1095.94,-47.25"/>
+<polygon fill="orange" stroke="orange" points="883.37,-43.75 873.37,-47.25 883.37,-50.75 883.37,-43.75"/>
+</a>
+</g>
+<text text-anchor="middle" x="994.38" y="-52" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &lt; SynchronGeneratorDQTrapez &gt;</text>
 </g>
 </g>
 </svg>

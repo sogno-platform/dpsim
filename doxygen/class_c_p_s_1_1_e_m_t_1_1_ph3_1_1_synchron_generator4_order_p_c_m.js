@@ -4,10 +4,12 @@ var class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m =
     [ "SynchronGenerator4OrderPCM", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html#ae66533f39cf7380717f029071279737c", null ],
     [ "calculateStateSpaceMatrices", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html#a852fc540b444147334fca1c72e916773", null ],
     [ "correctorStep", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html#a29354165950926bb1d00e69b762346f7", null ],
+    [ "hasParameterChanged", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html#a1098ba01e6946871a3068aa4148ffc82", null ],
     [ "initializeResistanceMatrix", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html#a89b4c55f7986a81c7cba84c260782738", null ],
     [ "inverseParkTransform", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html#ae89f3bb94f67c23043876dc223588f96", null ],
     [ "mnaCompApplyRightSideVectorStamp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html#a219375f32e9b12bfa91ff60f1f8939b4", null ],
-    [ "mnaCompApplySystemMatrixStamp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html#abba1cf2629400354b4dbe95b6a43c368", null ],
+    [ "mnaCompApplySystemMatrixStamp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html#a967231f3ff5d287effcfd68f8ecc651d", null ],
+    [ "mnaCompInitialize", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html#a1df76b4e556981036178c82970e7d9e0", null ],
     [ "mnaCompPostStep", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html#ac81621b9a8b8cc9c9accf982fe0ac6a9", null ],
     [ "parkTransform", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html#a5ea87f6d600cff19b05cc9f72575f098", null ],
     [ "requiresIteration", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html#a198ab152ff6d0c38eeca6044c51e5641", null ],
@@ -24,6 +26,7 @@ var class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m =
     [ "mEdq0_t", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html#aedf00e07f23f7ce6440dea65d49b99b0", null ],
     [ "mEdq0tPrevStep", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html#a966e4873828836a519ff65aa1c114133", null ],
     [ "mIdq0PrevStep", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html#a6b0ce00ee177578fba4dbd8ad9727ee0", null ],
+    [ "mNortonConductance", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html#a579471b5e93d7de506bc7346c4e797e8", null ],
     [ "mVdq0PrevIter", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html#ad52ee38cd92bc438a8173f06241b743e", null ],
     [ "mVdq0PrevStep", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html#a89d7dec8f3e25f9bee06d9e92c0bf7fd", null ]
 ];

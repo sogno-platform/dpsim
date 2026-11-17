@@ -1091,9 +1091,10 @@
 <polygon fill="#9a32cd" stroke="#9a32cd" points="600.06,-803.63 590.06,-807.13 600.06,-810.63 600.06,-803.63"/>
 </a>
 </g>
-<text text-anchor="middle" x="684.62" y="-840.38" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> mInductance</text>
-<text text-anchor="middle" x="684.62" y="-826.12" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">mRatedPower</text>
-<text text-anchor="middle" x="684.62" y="-811.88" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">mResistance</text>
+<text text-anchor="middle" x="684.62" y="-854.62" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> mInductance</text>
+<text text-anchor="middle" x="684.62" y="-840.38" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">mRatedPower</text>
+<text text-anchor="middle" x="684.62" y="-826.12" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">mResistance</text>
+<text text-anchor="middle" x="684.62" y="-811.88" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">mTapRatio</text>
 </g>
 <!-- Node41 -->
 <g id="Node000041" class="node">

@@ -1,7 +1,7 @@
 var searchData=
 [
   ['accessexception_0',['AccessException',['../class_c_p_s_1_1_access_exception.html',1,'CPS']]],
-  ['addbstep_1',['AddBStep',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab_1_1_add_b_step.html',1,'CPS::DP::Ph1::SynchronGeneratorTrStab::AddBStep'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_tr_stab_1_1_add_b_step.html',1,'CPS::EMT::Ph3::SynchronGeneratorTrStab::AddBStep'],['../class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator_tr_stab_1_1_add_b_step.html',1,'CPS::SP::Ph1::SynchronGeneratorTrStab::AddBStep']]],
+  ['addbstep_1',['AddBStep',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab_1_1_add_b_step.html',1,'CPS::DP::Ph1::SynchronGeneratorTrStab::AddBStep'],['../class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator_tr_stab_1_1_add_b_step.html',1,'CPS::SP::Ph1::SynchronGeneratorTrStab::AddBStep']]],
   ['argument_2',['Argument',['../struct_d_psim_1_1_command_line_args_1_1_argument.html',1,'DPsim::CommandLineArgs']]],
   ['attribute_3',['Attribute',['../class_c_p_s_1_1_attribute.html',1,'CPS']]],
   ['attribute_3c_20bool_20_3e_4',['Attribute&lt; Bool &gt;',['../class_c_p_s_1_1_attribute.html',1,'CPS']]],

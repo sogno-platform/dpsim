@@ -191,6 +191,10 @@ modelling the windings: the magnitude carries the tap ratio and the angle carrie
 The conjugate on the low voltage row is what makes the phase shift preserve power rather than create
 it. The three-phase representation in &lt;code>SP::Ph3&lt;/code> and &lt;code>DP::Ph3&lt;/code> carries this, and &lt;code>EMT::Ph3&lt;/code> cannot,
 because a phase shift is a rotation in the complex plane and the EMT state is real.&lt;/p>
+&lt;p>The nominal turns ratio and the regulating tap are separate inputs. &lt;code>setParameters(..., ratioAbs, ratioPhase, ...)&lt;/code> sets the nominal complex ratio; &lt;code>setTapRatio(tapRatio)&lt;/code> applies a positive scalar
+multiplier to it. The effective ratio is &lt;code>ratioAbs * tapRatio&lt;/code> with the configured phase angle. The
+tap defaults to 1.0, so existing models retain their previous behavior. CIM ratio tap changers are
+mapped through this explicit tap setting rather than being folded into the nominal turns ratio.&lt;/p>
 &lt;h2 id="the-direction-of-the-ratio">The direction of the ratio&lt;/h2>
 &lt;p>The reference winding decides which side the impedance is referred to. Referring an impedance across
 an ideal transformer scales it by $T^2$, so the choice of side is a choice of reference, not an

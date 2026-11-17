@@ -1,9 +1,9 @@
 <map id="CPS::EMT::Ph3::SynchronGenerator4OrderPCM" name="CPS::EMT::Ph3::SynchronGenerator4OrderPCM">
-<area shape="rect" id="Node000001" title="4 Order Synchronous generator model for transient stability analysis" alt="" coords="1759,177,2008,226"/>
-<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html" title=" " alt="" coords="1465,115,1704,163"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1719,165,1765,174,1764,179,1718,170"/>
+<area shape="rect" id="Node000001" title="4 Order Synchronous generator model for transient stability analysis" alt="" coords="1759,216,2008,265"/>
+<area shape="rect" id="Node000002" href="$class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html" title=" " alt="" coords="1465,127,1704,175"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1688,178,1711,184,1804,213,1802,218,1709,190,1687,183"/>
 <area shape="rect" id="Node000003" href="$class_c_p_s_1_1_m_n_a_sim_power_comp.html" title=" " alt="" coords="1020,76,1201,125"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1217,106,1465,127,1464,132,1217,112"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1217,109,1465,136,1464,141,1216,114"/>
 <area shape="rect" id="Node000004" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="722,5,881,54"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="897,49,1020,77,1019,82,896,54"/>
 <area shape="rect" id="Node000005" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="208,48,404,78"/>
@@ -25,12 +25,14 @@
 <area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="627,173,710,162,711,167,628,178"/>
 <area shape="poly" id="edge15_Node000012_Node000010" title=" " alt="" coords="628,203,636,204,711,214,710,219,636,210,627,208"/>
 <area shape="rect" id="Node000011" href="$class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html" title=" " alt="" coords="991,165,1230,214"/>
-<area shape="poly" id="edge13_Node000002_Node000011" title=" " alt="" coords="1245,173,1464,149,1465,154,1245,178"/>
+<area shape="poly" id="edge13_Node000002_Node000011" title=" " alt="" coords="1245,176,1434,161,1465,158,1465,164,1435,166,1245,181"/>
 <area shape="poly" id="edge14_Node000011_Node000012" title=" " alt="" coords="908,211,991,201,991,206,908,216"/>
-<area shape="rect" id="Node000013" href="$class_c_p_s_1_1_m_n_a_sync_gen_interface.html" title="Interface to be used by synchronous generators." alt="" coords="1487,187,1682,216"/>
-<area shape="poly" id="edge17_Node000001_Node000013" title=" " alt="" coords="1698,199,1759,199,1759,204,1698,204"/>
-<area shape="rect" id="Node000014" href="$class_shared_factory.html" title=" " alt="" coords="1459,240,1710,289"/>
-<area shape="poly" id="edge18_Node000001_Node000014" title=" " alt="" coords="1718,234,1764,224,1765,229,1719,239"/>
-<area shape="rect" id="Node000015" href="$class_shared_factory.html" title=" " alt="" coords="1041,250,1180,279"/>
-<area shape="poly" id="edge19_Node000014_Node000015" title=" " alt="" coords="1195,262,1458,262,1458,267,1195,267"/>
+<area shape="rect" id="Node000013" href="$class_c_p_s_1_1_m_n_a_sync_gen_interface.html" title="Interface to be used by synchronous generators." alt="" coords="1487,199,1682,228"/>
+<area shape="poly" id="edge17_Node000001_Node000013" title=" " alt="" coords="1698,221,1759,227,1759,232,1697,226"/>
+<area shape="rect" id="Node000014" href="$class_c_p_s_1_1_m_n_a_variable_comp_interface.html" title="MNA interface to be used by elements that require recomputing of the system matrix." alt="" coords="1471,252,1698,282"/>
+<area shape="poly" id="edge18_Node000001_Node000014" title=" " alt="" coords="1713,253,1759,249,1759,254,1713,258"/>
+<area shape="rect" id="Node000015" href="$class_shared_factory.html" title=" " alt="" coords="1459,305,1710,354"/>
+<area shape="poly" id="edge19_Node000001_Node000015" title=" " alt="" coords="1687,298,1709,291,1802,263,1804,268,1711,296,1688,303"/>
+<area shape="rect" id="Node000016" href="$class_shared_factory.html" title=" " alt="" coords="1041,315,1180,344"/>
+<area shape="poly" id="edge20_Node000015_Node000016" title=" " alt="" coords="1195,327,1458,327,1458,332,1195,332"/>
 </map>

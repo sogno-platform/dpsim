@@ -47,7 +47,7 @@
   </g>
 </defs>
 <script type="application/ecmascript">
-var viewWidth = 1469;
+var viewWidth = 1518;
 var viewHeight = 815;
 var sectionId = 'dynsection-0';
 </script>
@@ -59,10 +59,10 @@ var sectionId = 'dynsection-0';
 <g id="Node000001" class="node">
 <title>Node1</title>
 <g id="a_Node000001"><a xlink:title=" ">
-<polygon fill="#999999" stroke="#666666" points="1461.25,-806.75 1281,-806.75 1281,-756 1461.25,-756 1461.25,-806.75"/>
-<text text-anchor="start" x="1289" y="-793.25" font-family="Helvetica,sans-Serif" font-size="10.00">/__w/dpsim/dpsim/dpsim</text>
-<text text-anchor="start" x="1289" y="-779" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;models/src/Signal/PowerController</text>
-<text text-anchor="middle" x="1371.12" y="-764.75" font-family="Helvetica,sans-Serif" font-size="10.00">VSI.cpp</text>
+<polygon fill="#999999" stroke="#666666" points="1510.25,-806.75 1330,-806.75 1330,-756 1510.25,-756 1510.25,-806.75"/>
+<text text-anchor="start" x="1338" y="-793.25" font-family="Helvetica,sans-Serif" font-size="10.00">/__w/dpsim/dpsim/dpsim</text>
+<text text-anchor="start" x="1338" y="-779" font-family="Helvetica,sans-Serif" font-size="10.00">&#45;models/src/Signal/PowerController</text>
+<text text-anchor="middle" x="1420.12" y="-764.75" font-family="Helvetica,sans-Serif" font-size="10.00">VSI.cpp</text>
 </a>
 </g>
 </g>
@@ -80,8 +80,26 @@ var sectionId = 'dynsection-0';
 <g id="edge1_Node000001_Node000002" class="edge">
 <title>Node1&#45;&gt;Node2</title>
 <g id="a_edge1_Node000001_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1371.12,-755.81C1371.12,-748.15 1371.12,-739.61 1371.12,-731.67"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1374.63,-731.78 1371.13,-721.78 1367.63,-731.78 1374.63,-731.78"/>
+<path fill="none" stroke="#63b8ff" d="M1404.62,-755.81C1399.44,-747.6 1393.63,-738.41 1388.33,-730"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1391.29,-728.14 1382.99,-721.55 1385.37,-731.87 1391.29,-728.14"/>
+</a>
+</g>
+</g>
+<!-- Node38 -->
+<g id="Node000038" class="node">
+<title>Node38</title>
+<g id="a_Node000038"><a xlink:title=" ">
+<polygon fill="#e0e0e0" stroke="#999999" points="1489.12,-712.88 1449.12,-712.88 1449.12,-690.62 1489.12,-690.62 1489.12,-712.88"/>
+<text text-anchor="middle" x="1469.12" y="-699.38" font-family="Helvetica,sans-Serif" font-size="10.00">limits</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node38 -->
+<g id="edge72_Node000001_Node000038" class="edge">
+<title>Node1&#45;&gt;Node38</title>
+<g id="a_edge72_Node000001_Node000038"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1435.63,-755.81C1442.37,-745.13 1450.17,-732.78 1456.54,-722.68"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1459.38,-724.74 1461.76,-714.42 1453.46,-721.01 1459.38,-724.74"/>
 </a>
 </g>
 </g>

@@ -138,6 +138,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6f7477bb3489698b5ebb00eddf1a0395" id="r_a6f7477bb3489698b5ebb00eddf1a0395"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6f7477bb3489698b5ebb00eddf1a0395">setInitialStateValues</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> pInit, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> qInit, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> phi_dInit, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> phi_qInit, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> gamma_dInit, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> gamma_qInit)</td></tr>
 <tr class="memdesc:a6f7477bb3489698b5ebb00eddf1a0395"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setter for initial state values.  <br /></td></tr>
 <tr class="separator:a6f7477bb3489698b5ebb00eddf1a0395"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0139bae4aa37b93dd45991bbed3e454" id="r_ab0139bae4aa37b93dd45991bbed3e454"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab0139bae4aa37b93dd45991bbed3e454">initializeSteadyState</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> pRef, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> qRef, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> iD, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> iQ, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> vSourceD, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> vSourceQ)</td></tr>
+<tr class="separator:ab0139bae4aa37b93dd45991bbed3e454"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4d586f4f5f2b957a0a7913a33943df8" id="r_aa4d586f4f5f2b957a0a7913a33943df8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa4d586f4f5f2b957a0a7913a33943df8">initializeStateSpaceModel</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> omega, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#ac0e7daab9cffc2059b8432cbeb4aa2e5">::Ptr</a> leftVector)</td></tr>
 <tr class="memdesc:aa4d586f4f5f2b957a0a7913a33943df8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize vectors of state space model.  <br /></td></tr>
 <tr class="separator:aa4d586f4f5f2b957a0a7913a33943df8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -287,6 +289,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a2515af13656be41bac93f07f8d857eeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a38d5120702de4613ca908b58355e8b8f" id="r_a38d5120702de4613ca908b58355e8b8f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a38d5120702de4613ca908b58355e8b8f">mGamma_qInit</a> = 0</td></tr>
 <tr class="separator:a38d5120702de4613ca908b58355e8b8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0ef166bcbcb2c2a920830e3949de8af" id="r_ab0ef166bcbcb2c2a920830e3949de8af"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab0ef166bcbcb2c2a920830e3949de8af">mInitialStatesExplicit</a> = false</td></tr>
+<tr class="separator:ab0ef166bcbcb2c2a920830e3949de8af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad053bcb14f2191ad2dfc9aeb4fe617d1" id="r_ad053bcb14f2191ad2dfc9aeb4fe617d1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad053bcb14f2191ad2dfc9aeb4fe617d1">mA</a> = Matrix::Zero(6, 6)</td></tr>
 <tr class="memdesc:ad053bcb14f2191ad2dfc9aeb4fe617d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">matrix A of state space model  <br /></td></tr>
 <tr class="separator:ad053bcb14f2191ad2dfc9aeb4fe617d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -362,7 +366,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8cpp_source.html#l00014">14</a> of file <a class="el" href="_power_controller_v_s_i_8cpp_source.html">PowerControllerVSI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8cpp_source.html#l00016">16</a> of file <a class="el" href="_power_controller_v_s_i_8cpp_source.html">PowerControllerVSI.cpp</a>.</p>
 
 </div>
 </div>
@@ -392,7 +396,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a39aa9f7a81ecaccbb8933fbdf8c09041">CPS::SimSignalComp</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8cpp_source.html#l00193">193</a> of file <a class="el" href="_power_controller_v_s_i_8cpp_source.html">PowerControllerVSI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8cpp_source.html#l00221">221</a> of file <a class="el" href="_power_controller_v_s_i_8cpp_source.html">PowerControllerVSI.cpp</a>.</p>
 
 </div>
 </div>
@@ -422,7 +426,51 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Initialize vectors of state space model. </p>
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8cpp_source.html#l00112">112</a> of file <a class="el" href="_power_controller_v_s_i_8cpp_source.html">PowerControllerVSI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8cpp_source.html#l00140">140</a> of file <a class="el" href="_power_controller_v_s_i_8cpp_source.html">PowerControllerVSI.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ab0139bae4aa37b93dd45991bbed3e454" name="ab0139bae4aa37b93dd45991bbed3e454"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0139bae4aa37b93dd45991bbed3e454">&#9670;&#160;</a></span>initializeSteadyState()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void PowerControllerVSI::initializeSteadyState </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>pRef</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>qRef</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>iD</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>iQ</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>vSourceD</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>vSourceQ</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Derive controller integrator states for a steady operating point unless the caller explicitly supplied initial states. </p>
+
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8cpp_source.html#l00115">115</a> of file <a class="el" href="_power_controller_v_s_i_8cpp_source.html">PowerControllerVSI.cpp</a>.</p>
 
 </div>
 </div>
@@ -462,7 +510,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Setter for parameters of control loops. </p>
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8cpp_source.html#l00047">47</a> of file <a class="el" href="_power_controller_v_s_i_8cpp_source.html">PowerControllerVSI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8cpp_source.html#l00049">49</a> of file <a class="el" href="_power_controller_v_s_i_8cpp_source.html">PowerControllerVSI.cpp</a>.</p>
 
 </div>
 </div>
@@ -507,7 +555,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Setter for initial state values. </p>
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8cpp_source.html#l00092">92</a> of file <a class="el" href="_power_controller_v_s_i_8cpp_source.html">PowerControllerVSI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8cpp_source.html#l00094">94</a> of file <a class="el" href="_power_controller_v_s_i_8cpp_source.html">PowerControllerVSI.cpp</a>.</p>
 
 </div>
 </div>
@@ -532,7 +580,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Setter for general parameters. </p>
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8cpp_source.html#l00033">33</a> of file <a class="el" href="_power_controller_v_s_i_8cpp_source.html">PowerControllerVSI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8cpp_source.html#l00035">35</a> of file <a class="el" href="_power_controller_v_s_i_8cpp_source.html">PowerControllerVSI.cpp</a>.</p>
 
 </div>
 </div>
@@ -562,7 +610,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>pre step dependencies </p>
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8cpp_source.html#l00137">137</a> of file <a class="el" href="_power_controller_v_s_i_8cpp_source.html">PowerControllerVSI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8cpp_source.html#l00165">165</a> of file <a class="el" href="_power_controller_v_s_i_8cpp_source.html">PowerControllerVSI.cpp</a>.</p>
 
 </div>
 </div>
@@ -592,7 +640,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>add step dependencies </p>
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8cpp_source.html#l00153">153</a> of file <a class="el" href="_power_controller_v_s_i_8cpp_source.html">PowerControllerVSI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8cpp_source.html#l00181">181</a> of file <a class="el" href="_power_controller_v_s_i_8cpp_source.html">PowerControllerVSI.cpp</a>.</p>
 
 </div>
 </div>
@@ -617,7 +665,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>pre step operations </p>
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8cpp_source.html#l00147">147</a> of file <a class="el" href="_power_controller_v_s_i_8cpp_source.html">PowerControllerVSI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8cpp_source.html#l00175">175</a> of file <a class="el" href="_power_controller_v_s_i_8cpp_source.html">PowerControllerVSI.cpp</a>.</p>
 
 </div>
 </div>
@@ -642,7 +690,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>step operations </p>
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8cpp_source.html#l00165">165</a> of file <a class="el" href="_power_controller_v_s_i_8cpp_source.html">PowerControllerVSI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8cpp_source.html#l00193">193</a> of file <a class="el" href="_power_controller_v_s_i_8cpp_source.html">PowerControllerVSI.cpp</a>.</p>
 
 </div>
 </div>
@@ -663,7 +711,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Update B matrix due to its dependence on the input. </p>
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8cpp_source.html#l00186">186</a> of file <a class="el" href="_power_controller_v_s_i_8cpp_source.html">PowerControllerVSI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8cpp_source.html#l00214">214</a> of file <a class="el" href="_power_controller_v_s_i_8cpp_source.html">PowerControllerVSI.cpp</a>.</p>
 
 </div>
 </div>
@@ -690,7 +738,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>matrix A of state space model </p>
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00053">53</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00054">54</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
 
 </div>
 </div>
@@ -716,7 +764,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>matrix B of state space model </p>
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00055">55</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00056">56</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
 
 </div>
 </div>
@@ -742,7 +790,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>matrix C of state space model </p>
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00057">57</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00058">58</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
 
 </div>
 </div>
@@ -768,7 +816,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>matrix D of state space model </p>
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00059">59</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00060">60</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
 
 </div>
 </div>
@@ -820,6 +868,30 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="ab0ef166bcbcb2c2a920830e3949de8af" name="ab0ef166bcbcb2c2a920830e3949de8af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0ef166bcbcb2c2a920830e3949de8af">&#9670;&#160;</a></span>mInitialStatesExplicit</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> CPS::Signal::PowerControllerVSI::mInitialStatesExplicit = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00050">50</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
+
+</div>
+</div>
 <a id="ac4b0656aacf616bac73175ca02cb307e" name="ac4b0656aacf616bac73175ca02cb307e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac4b0656aacf616bac73175ca02cb307e">&#9670;&#160;</a></span>mInputCurr</h2>
 
@@ -834,7 +906,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Current Input. </p>
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00073">73</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00074">74</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
 
 </div>
 </div>
@@ -852,7 +924,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Previous Input. </p>
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00071">71</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00072">72</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
 
 </div>
 </div>
@@ -868,7 +940,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00066">66</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00067">67</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
 
 </div>
 </div>
@@ -884,7 +956,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00067">67</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00068">68</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
 
 </div>
 </div>
@@ -1118,7 +1190,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Current Output. </p>
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00081">81</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00082">82</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
 
 </div>
 </div>
@@ -1136,7 +1208,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Previous Output. </p>
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00079">79</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00080">80</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
 
 </div>
 </div>
@@ -1300,7 +1372,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Current State. </p>
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00077">77</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00078">78</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
 
 </div>
 </div>
@@ -1318,7 +1390,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Previous State. </p>
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00075">75</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00076">76</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
 
 </div>
 </div>
@@ -1362,7 +1434,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>These are never explicitely set to reference anything, so the outside code is responsible for setting up the reference. </p>
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00064">64</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00065">65</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
 
 </div>
 </div>
@@ -1378,7 +1450,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00065">65</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_power_controller_v_s_i_8h_source.html#l00066">66</a> of file <a class="el" href="_power_controller_v_s_i_8h_source.html">PowerControllerVSI.h</a>.</p>
 
 </div>
 </div>

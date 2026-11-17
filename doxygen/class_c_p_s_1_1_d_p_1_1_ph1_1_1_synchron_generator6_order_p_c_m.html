@@ -151,9 +151,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5293afc39fa23e38b9ecb7c1116a53c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a09b60643034eb83aa978da105b88f909" id="r_a09b60643034eb83aa978da105b88f909"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a09b60643034eb83aa978da105b88f909">mnaCompPostStep</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;leftVector) final</td></tr>
 <tr class="separator:a09b60643034eb83aa978da105b88f909"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f7951a1e61ab39476e1a95ae3b80c83" id="r_a7f7951a1e61ab39476e1a95ae3b80c83"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7f7951a1e61ab39476e1a95ae3b80c83">mnaCompApplySystemMatrixStamp</a> (<a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;systemMatrix) final</td></tr>
-<tr class="memdesc:a7f7951a1e61ab39476e1a95ae3b80c83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix.  <br /></td></tr>
-<tr class="separator:a7f7951a1e61ab39476e1a95ae3b80c83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e73178991385911f5e19de9de50285e" id="r_a7e73178991385911f5e19de9de50285e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e73178991385911f5e19de9de50285e">mnaCompApplySystemMatrixStamp</a> (<a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;systemMatrix) final</td></tr>
+<tr class="memdesc:a7e73178991385911f5e19de9de50285e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps system matrix.  <br /></td></tr>
+<tr class="separator:a7e73178991385911f5e19de9de50285e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html">CPS::Base::ReducedOrderSynchronGenerator&lt; Complex &gt;</a></td></tr>
 <tr class="memitem:a6598fb1ae8f4efa2bcd9e1d8ffa9221e inherit pub_methods_class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator" id="r_a6598fb1ae8f4efa2bcd9e1d8ffa9221e"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#a6598fb1ae8f4efa2bcd9e1d8ffa9221e">~ReducedOrderSynchronGenerator</a> ()</td></tr>
 <tr class="memdesc:a6598fb1ae8f4efa2bcd9e1d8ffa9221e inherit pub_methods_class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor - does nothing.  <br /></td></tr>
@@ -468,6 +468,9 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:aceb6663d06a205c66e2f5c1558b062c7" id="r_aceb6663d06a205c66e2f5c1558b062c7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aceb6663d06a205c66e2f5c1558b062c7">mCStateSpace</a> = Matrix::Zero(4, 1)</td></tr>
 <tr class="memdesc:aceb6663d06a205c66e2f5c1558b062c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">C matrix of continuous time state space model.  <br /></td></tr>
 <tr class="separator:aceb6663d06a205c66e2f5c1558b062c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ce5e082cddc3079612e68d4aa7c64f7" id="r_a5ce5e082cddc3079612e68d4aa7c64f7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5ce5e082cddc3079612e68d4aa7c64f7">mConductanceMatrixConst</a> = Matrix::Zero(2, 2)</td></tr>
+<tr class="memdesc:a5ce5e082cddc3079612e68d4aa7c64f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constant Norton conductance used to stabilize the MNA coupling.  <br /></td></tr>
+<tr class="separator:a5ce5e082cddc3079612e68d4aa7c64f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html">CPS::Base::ReducedOrderSynchronGenerator&lt; Complex &gt;</a></td></tr>
 <tr class="memitem:a5e821289ca3bf71d6f36dd037e6c6cf8 inherit pro_attribs_class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator" id="r_a5e821289ca3bf71d6f36dd037e6c6cf8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#a5e821289ca3bf71d6f36dd037e6c6cf8">mModelAsNortonSource</a></td></tr>
 <tr class="memdesc:a5e821289ca3bf71d6f36dd037e6c6cf8 inherit pro_attribs_class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Model flag indicating whether the machine is modelled as Norton or Thevenin equivalent.  <br /></td></tr>
@@ -953,7 +956,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a2c68ba119680d791d76178222113520a">CPS::MNASyncGenInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator6_order_p_c_m_8cpp_source.html#l00124">124</a> of file <a class="el" href="_d_p___ph1___synchron_generator6_order_p_c_m_8cpp_source.html">DP_Ph1_SynchronGenerator6OrderPCM.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator6_order_p_c_m_8cpp_source.html#l00141">141</a> of file <a class="el" href="_d_p___ph1___synchron_generator6_order_p_c_m_8cpp_source.html">DP_Ph1_SynchronGenerator6OrderPCM.cpp</a>.</p>
 
 </div>
 </div>
@@ -1015,8 +1018,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a7f7951a1e61ab39476e1a95ae3b80c83" name="a7f7951a1e61ab39476e1a95ae3b80c83"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7f7951a1e61ab39476e1a95ae3b80c83">&#9670;&#160;</a></span>mnaCompApplySystemMatrixStamp()</h2>
+<a id="a7e73178991385911f5e19de9de50285e" name="a7e73178991385911f5e19de9de50285e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e73178991385911f5e19de9de50285e">&#9670;&#160;</a></span>mnaCompApplySystemMatrixStamp()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1025,7 +1028,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void CPS::DP::Ph1::SynchronGenerator6OrderPCM::mnaCompApplySystemMatrixStamp </td>
+          <td class="memname">void DP::Ph1::SynchronGenerator6OrderPCM::mnaCompApplySystemMatrixStamp </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>systemMatrix</em></span></td><td>)</td>
           <td></td>
@@ -1033,7 +1036,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel final">final</span><span class="mlabel virtual">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel final">final</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1042,7 +1045,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#adac9c4f5abac41f729bf84897a4cfa35">CPS::Base::ReducedOrderSynchronGenerator&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator6_order_p_c_m_8h_source.html#l00064">64</a> of file <a class="el" href="_d_p___ph1___synchron_generator6_order_p_c_m_8h_source.html">DP_Ph1_SynchronGenerator6OrderPCM.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator6_order_p_c_m_8cpp_source.html#l00130">130</a> of file <a class="el" href="_d_p___ph1___synchron_generator6_order_p_c_m_8cpp_source.html">DP_Ph1_SynchronGenerator6OrderPCM.cpp</a>.</p>
 
 </div>
 </div>
@@ -1071,7 +1074,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_c_p_s_1_1_base_1_1_reduced_order_synchron_generator.html#a39f7cfcd90529c34c78f16951c1396be">CPS::Base::ReducedOrderSynchronGenerator&lt; Complex &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator6_order_p_c_m_8cpp_source.html#l00177">177</a> of file <a class="el" href="_d_p___ph1___synchron_generator6_order_p_c_m_8cpp_source.html">DP_Ph1_SynchronGenerator6OrderPCM.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator6_order_p_c_m_8cpp_source.html#l00194">194</a> of file <a class="el" href="_d_p___ph1___synchron_generator6_order_p_c_m_8cpp_source.html">DP_Ph1_SynchronGenerator6OrderPCM.cpp</a>.</p>
 
 </div>
 </div>
@@ -1100,7 +1103,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a58ebbb3b9ca1c39ea6024300b85f44c2">CPS::MNASyncGenInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator6_order_p_c_m_8cpp_source.html#l00159">159</a> of file <a class="el" href="_d_p___ph1___synchron_generator6_order_p_c_m_8cpp_source.html">DP_Ph1_SynchronGenerator6OrderPCM.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator6_order_p_c_m_8cpp_source.html#l00176">176</a> of file <a class="el" href="_d_p___ph1___synchron_generator6_order_p_c_m_8cpp_source.html">DP_Ph1_SynchronGenerator6OrderPCM.cpp</a>.</p>
 
 </div>
 </div>
@@ -1222,7 +1225,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#af8018a5f5cfb7dd4c252316d785903e9">CPS::MNASyncGenInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator6_order_p_c_m_8cpp_source.html#l00145">145</a> of file <a class="el" href="_d_p___ph1___synchron_generator6_order_p_c_m_8cpp_source.html">DP_Ph1_SynchronGenerator6OrderPCM.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator6_order_p_c_m_8cpp_source.html#l00162">162</a> of file <a class="el" href="_d_p___ph1___synchron_generator6_order_p_c_m_8cpp_source.html">DP_Ph1_SynchronGenerator6OrderPCM.cpp</a>.</p>
 
 </div>
 </div>
@@ -1354,6 +1357,32 @@ Additional Inherited Members</h2></td></tr>
 <p>Trapedzoidal based state space matrix Cd. </p>
 
 <p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator6_order_p_c_m_8h_source.html#l00084">84</a> of file <a class="el" href="_d_p___ph1___synchron_generator6_order_p_c_m_8h_source.html">DP_Ph1_SynchronGenerator6OrderPCM.h</a>.</p>
+
+</div>
+</div>
+<a id="a5ce5e082cddc3079612e68d4aa7c64f7" name="a5ce5e082cddc3079612e68d4aa7c64f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ce5e082cddc3079612e68d4aa7c64f7">&#9670;&#160;</a></span>mConductanceMatrixConst</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::DP::Ph1::SynchronGenerator6OrderPCM::mConductanceMatrixConst = Matrix::Zero(2, 2)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constant Norton conductance used to stabilize the MNA coupling. </p>
+
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___synchron_generator6_order_p_c_m_8h_source.html#l00100">100</a> of file <a class="el" href="_d_p___ph1___synchron_generator6_order_p_c_m_8h_source.html">DP_Ph1_SynchronGenerator6OrderPCM.h</a>.</p>
 
 </div>
 </div>
