@@ -232,7 +232,7 @@ public:
                   CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
   /// Destructor
-  virtual ~MnaSolverDirect() = default;
+  virtual ~MnaSolverDirect();
 
   /// Sets the linear solver to "implementation" and creates an object
   void

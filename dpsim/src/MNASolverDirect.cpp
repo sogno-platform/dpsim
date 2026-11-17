@@ -92,6 +92,11 @@ void MnaSolverDirect<VarType>::switchedMatrixStamp(
 template <typename VarType>
 void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
 
+  // Matrix value caches are keyed by the address of mVariableSystemMatrix.
+  // Eigen may reuse that address for a later solver instance, so discard any
+  // cache left by a previous instance before the first matrix stamps.
+  CPS::Math::clearSparseMatrixValueCache(mVariableSystemMatrix);
+
   this->mDirectLinearSolverVariableSystemMatrix =
       createDirectSolverImplementation(mSLog);
   // TODO: a direct linear solver configuration is only applied if system matrix recomputation is used
@@ -158,6 +163,10 @@ void MnaSolverDirect<VarType>::stampVariableSystemMatrix() {
   auto end = std::chrono::steady_clock::now();
   std::chrono::duration<Real> diff = end - start;
   mFactorizeTimes.push_back(diff.count());
+}
+
+template <typename VarType> MnaSolverDirect<VarType>::~MnaSolverDirect() {
+  CPS::Math::clearSparseMatrixValueCache(mVariableSystemMatrix);
 }
 
 template <typename VarType>
