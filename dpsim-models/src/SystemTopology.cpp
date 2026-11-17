@@ -20,7 +20,7 @@
 
 using namespace CPS;
 
-Matrix SystemTopology::initFrequency(Real frequency) const {
+Matrix SystemTopology::initFrequency(Real frequency) {
   Matrix frequencies(1, 1);
   frequencies << frequency;
   return frequencies;
