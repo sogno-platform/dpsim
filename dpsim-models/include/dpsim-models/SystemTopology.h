@@ -78,7 +78,7 @@ public:
     componentsAtNodeList();
   }
 
-  Matrix initFrequency(Real frequency) const;
+  static Matrix initFrequency(Real frequency);
 
   /// Reset state of components
   void reset();
