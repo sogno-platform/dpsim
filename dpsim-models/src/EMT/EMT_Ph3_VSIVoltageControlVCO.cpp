@@ -557,8 +557,7 @@ void EMT::Ph3::VSIVoltageControlVCO::controlStep(Real time, Int timeStepCount) {
 
   // Transformation interface backward
   DqVector voltageControllerOutput;
-  voltageControllerOutput << mVCO->mOutputPrev->get(),
-      mVoltageControllerVSI->mOutputCurr->get();
+  voltageControllerOutput = mVoltageControllerVSI->mOutputCurr->get();
   **mVsref =
       makePowerInvariantInverseParkTransform(theta) * voltageControllerOutput;
   mThetaN = std::fmod(mThetaN + mTimeStep * **mOmegaN, 2 * PI);

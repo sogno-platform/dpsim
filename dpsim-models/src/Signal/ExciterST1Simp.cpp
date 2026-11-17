@@ -56,7 +56,7 @@ void Signal::ExciterST1Simp::initializeStates(Real Vh_init, Real Ef_init) {
   mVr = mVh;
 
   /// exciter reference
-  mVref = mVr - mEf / mParameters->Ka;
+  mVref = mVr + mEf / mParameters->Ka;
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "Actually applied excitation system initial values:"
@@ -79,7 +79,7 @@ Real Signal::ExciterST1Simp::step(Real Vd, Real Vq, Real dt, Real Vpss) {
   mVr = mVr_prev + dt / mParameters->Tr * (mVh - mVr_prev);
 
   // Exciter output
-  mEf = (mVr + Vpss - mVref) * mParameters->Ka;
+  mEf = (mVref + Vpss - mVr) * mParameters->Ka;
 
   return mEf;
 }
