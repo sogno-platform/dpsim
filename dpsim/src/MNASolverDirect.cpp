@@ -175,7 +175,6 @@ void MnaSolverDirect<VarType>::solveWithSystemMatrixRecomputation(
 
 #ifdef WITH_HIP
   updateHipSG4PreStep(time);
-  updateHipLinearSSNHistories();
 #endif
 
   // Add together the right side vector (computed by the components'
@@ -226,8 +225,6 @@ void MnaSolverDirect<VarType>::solveWithSystemMatrixRecomputation(
       mHipSparseDeviceSolver->uploadRightHandSide(mRightSideVector);
     for (auto &adapter : mHipSG4Adapters)
       adapter->accumulateDeviceRhs();
-    for (auto &adapter : mHipLinearSSNAdapters)
-      adapter->accumulateDeviceRhs();
     mHipSparseDeviceSolver->solveDevice(synchronizeNodeOutputs);
     if (synchronizeNodeOutputs)
       mHipSparseDeviceSolver->copyDeviceSolutionToHost(*mLeftSideVectorValue);
@@ -249,15 +246,8 @@ void MnaSolverDirect<VarType>::solveWithSystemMatrixRecomputation(
       adapter->postStepDevice(*mLeftSideVectorValue,
                               mHipSparseDeviceSolver->deviceSolution(),
                               synchronizeNodeOutputs);
-    if (mHipDeviceAssemblyReady)
-      for (auto &adapter : mHipLinearSSNAdapters)
-        adapter->updateStatesDevice(*mLeftSideVectorValue,
-                                    mHipSparseDeviceSolver->deviceSolution());
-    else
-      updateHipLinearSSNStates(*mLeftSideVectorValue);
   } else {
     updateHipSG4PostStep(*mLeftSideVectorValue);
-    updateHipLinearSSNStates(*mLeftSideVectorValue);
   }
 #endif
 
@@ -407,7 +397,7 @@ template <typename VarType>
 std::shared_ptr<CPS::Task> MnaSolverDirect<VarType>::createSolveTask() {
   prepareCompactRightVectorStamps();
 #ifdef WITH_HIP
-  initializeHipLinearSSNAdapters();
+  initializeHipSG4Adapters();
 #endif
   return std::make_shared<MnaSolverDirect<VarType>::SolveTask>(*this);
 }
@@ -416,22 +406,22 @@ template <typename VarType>
 std::shared_ptr<CPS::Task> MnaSolverDirect<VarType>::createSolveTaskRecomp() {
   prepareCompactRightVectorStamps();
 #ifdef WITH_HIP
-  initializeHipLinearSSNAdapters();
+  initializeHipSG4Adapters();
 #endif
   return std::make_shared<MnaSolverDirect<VarType>::SolveTaskRecomp>(*this);
 }
 
 #ifdef WITH_HIP
 template <typename VarType>
-void MnaSolverDirect<VarType>::initializeHipLinearSSNAdapters() {
-  if (mHipAdaptersInitialized)
+void MnaSolverDirect<VarType>::initializeHipSG4Adapters() {
+  if (mHipSG4AdaptersInitialized)
     return;
   if (mImplementationInUse != DirectLinearSolverImpl::HIPDense &&
       mImplementationInUse != DirectLinearSolverImpl::HIPSparseBiCGStab &&
       mImplementationInUse != DirectLinearSolverImpl::HIPSparseLURefactor &&
       mImplementationInUse != DirectLinearSolverImpl::HIPSparseQR)
     return;
-  mHipAdaptersInitialized = true;
+  mHipSG4AdaptersInitialized = true;
   std::vector<std::shared_ptr<CPS::EMT::Ph3::SynchronGenerator4OrderVBR>>
       supportedGenerators;
   std::unordered_set<const CPS::MNAInterface *> seen;
@@ -439,10 +429,6 @@ void MnaSolverDirect<VarType>::initializeHipLinearSSNAdapters() {
                               &seen](const auto &component) {
     if (!component || !seen.insert(component.get()).second)
       return;
-    if (auto fused =
-            std::dynamic_pointer_cast<CPS::EMT::LinearSSNFused>(component))
-      mHipLinearSSNAdapters.emplace_back(
-          std::make_unique<HipLinearSSNFusedAdapter>(*fused));
     if (auto generator = std::dynamic_pointer_cast<
             CPS::EMT::Ph3::SynchronGenerator4OrderVBR>(component))
       if (generator->supportsHipBatch())
@@ -468,9 +454,7 @@ void MnaSolverDirect<VarType>::initializeHipLinearSSNAdapters() {
           dynamic_cast<CPS::EMT::Ph3::SynchronGenerator4OrderVBR *>(
               operation.compact);
       const bool isSg4 = generator && generator->supportsHipBatch();
-      const bool isFused =
-          dynamic_cast<CPS::EMT::LinearSSNFused *>(operation.compact);
-      if (!isSg4 && !isFused) {
+      if (!isSg4) {
         allRightStampsManaged = false;
         break;
       }
@@ -490,24 +474,8 @@ void MnaSolverDirect<VarType>::initializeHipLinearSSNAdapters() {
           mHipSparseDeviceSolver->deviceValues(),
           mHipSparseDeviceSolver->deviceRightHandSide());
     }
-    for (auto &adapter : mHipLinearSSNAdapters)
-      adapter->configureDeviceRhs(
-          mHipSparseDeviceSolver->deviceRightHandSide());
     mHipDeviceAssemblyReady = true;
   }
-}
-
-template <typename VarType>
-void MnaSolverDirect<VarType>::updateHipLinearSSNHistories() {
-  for (auto &adapter : mHipLinearSSNAdapters)
-    adapter->updateHistories();
-}
-
-template <typename VarType>
-void MnaSolverDirect<VarType>::updateHipLinearSSNStates(
-    const Matrix &leftVector) {
-  for (auto &adapter : mHipLinearSSNAdapters)
-    adapter->updateStates(leftVector);
 }
 
 template <typename VarType>
@@ -612,7 +580,6 @@ void MnaSolverDirect<VarType>::solve(Real time, Int timeStepCount) {
 
 #ifdef WITH_HIP
   updateHipSG4PreStep(time);
-  updateHipLinearSSNHistories();
 #endif
 
   // Add together the right side vector (computed by the components' pre-step tasks)
@@ -721,7 +688,6 @@ void MnaSolverDirect<VarType>::solve(Real time, Int timeStepCount) {
 
 #ifdef WITH_HIP
   updateHipSG4PostStep(*mLeftSideVectorValue);
-  updateHipLinearSSNStates(*mLeftSideVectorValue);
 #endif
 
   mSystemMatrixChanged = (mCurrentSwitchStatus != previousSwitchStatus);

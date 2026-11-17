@@ -100,8 +100,8 @@ if(WITH_CUDA)
 endif()
 
 if(WITH_METAL)
-	list(APPEND DPSIM_SOURCES GPU/Apple/MetalDenseAdapter.mm GPU/Apple/MetalSparseLUAdapter.mm GPU/Apple/MetalSparseBiCGSTABAdapter.mm GPU/Apple/MetalLinearSSNGroupAdapter.mm GPU/Apple/MetalVBRGeneratorAdapter.mm GPU/Apple/MetalResidentScheduler.mm)
-	set_source_files_properties(GPU/Apple/MetalDenseAdapter.mm GPU/Apple/MetalSparseLUAdapter.mm GPU/Apple/MetalSparseBiCGSTABAdapter.mm GPU/Apple/MetalLinearSSNGroupAdapter.mm GPU/Apple/MetalVBRGeneratorAdapter.mm GPU/Apple/MetalResidentScheduler.mm PROPERTIES COMPILE_OPTIONS "-fno-objc-arc")
+	list(APPEND DPSIM_SOURCES GPU/Apple/MetalDenseAdapter.mm GPU/Apple/MetalSparseLUAdapter.mm GPU/Apple/MetalSparseBiCGSTABAdapter.mm GPU/Apple/MetalVBRGeneratorAdapter.mm GPU/Apple/MetalResidentScheduler.mm)
+	set_source_files_properties(GPU/Apple/MetalDenseAdapter.mm GPU/Apple/MetalSparseLUAdapter.mm GPU/Apple/MetalSparseBiCGSTABAdapter.mm GPU/Apple/MetalVBRGeneratorAdapter.mm GPU/Apple/MetalResidentScheduler.mm PROPERTIES COMPILE_OPTIONS "-fno-objc-arc")
 	list(APPEND DPSIM_LIBRARIES
 		"-framework Foundation"
 		"-framework Metal"
@@ -126,7 +126,7 @@ if(WITH_HIP)
 	find_library(HIPBLAS_LIBRARY NAMES hipblas HINTS "${ROCM_ROOT}/lib" "${ROCM_ROOT}/lib64" REQUIRED)
 	find_library(ROCSPARSE_LIBRARY NAMES rocsparse HINTS "${ROCM_ROOT}/lib" "${ROCM_ROOT}/lib64" REQUIRED)
 	find_library(HIPSPARSE_LIBRARY NAMES hipsparse HINTS "${ROCM_ROOT}/lib" "${ROCM_ROOT}/lib64" REQUIRED)
-	list(APPEND DPSIM_SOURCES HipDenseAdapter.cpp HipSparseBiCGStabAdapter.cpp HipSparseQrAdapter.cpp HipLinearSSNFusedAdapter.cpp HipSG4BatchAdapter.cpp HipResidentKernels.hip HipLinearSSNFusedKernels.hip HipSG4BatchKernels.hip)
+	list(APPEND DPSIM_SOURCES HipDenseAdapter.cpp HipSparseBiCGStabAdapter.cpp HipSparseQrAdapter.cpp HipSG4BatchAdapter.cpp HipResidentKernels.hip HipSG4BatchKernels.hip)
 	list(APPEND DPSIM_INCLUDE_DIRS "${HIP_INCLUDE_DIR}" "${HIPSOLVER_INCLUDE_DIR}")
 	list(APPEND DPSIM_LIBRARIES "${HIP_RUNTIME_LIBRARY}" "${HIPSOLVER_LIBRARY}" "${HIPBLAS_LIBRARY}" "${ROCSPARSE_LIBRARY}" "${HIPSPARSE_LIBRARY}")
 	if(WITH_KLU)

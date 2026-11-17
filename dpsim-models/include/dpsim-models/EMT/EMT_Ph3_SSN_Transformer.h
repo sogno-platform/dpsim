@@ -5,15 +5,14 @@
 #pragma once
 
 #include <dpsim-models/Base/Base_Ph3_Transformer.h>
-#include <dpsim-models/EMT/EMT_LinearSSNModel.h>
-#include <dpsim-models/MNASimPowerComp.h>
+#include <dpsim-models/EMT/EMT_Ph3_MultiPortVTypeSSNComp.h>
 
 namespace CPS::EMT::Ph3::SSN {
 
 /// Three-phase transformer represented by a single Norton multiport stamp.
 /// The equivalent preserves the conventional transformer's T network and
 /// magnetizing branch while eliminating its internal virtual nodes.
-class Transformer final : public MNASimPowerComp<Real>,
+class Transformer final : public MultiPortVTypeSSNComp,
                           public Base::Ph3::Transformer,
                           public SharedFactory<Transformer> {
 public:
@@ -34,30 +33,10 @@ public:
   void setReferenceWinding(WindingReference referenceWinding);
 
   void initializeFromNodesAndTerminals(Real frequency) override;
-  void exportFusedModel(LinearSSNModel &model);
-  void mnaCompInitialize(Real omega, Real timeStep,
-                         Attribute<Matrix>::Ptr leftVector) override;
-  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
-  Bool mnaHasCompactRightSideVectorStamp() const override { return true; }
-  void mnaAddCompactRightSideVectorStamp(Matrix &rightVector) override;
-  void mnaCompPreStep(Real time, Int timeStepCount) override;
-  void mnaCompPostStep(Real time, Int timeStepCount,
-                       Attribute<Matrix>::Ptr &leftVector) override;
-  void mnaCompAddPreStepDependencies(
-      AttributeBase::List &prevStepDependencies,
-      AttributeBase::List &attributeDependencies,
-      AttributeBase::List &modifiedAttributes) override;
-  void
-  mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
-                                 AttributeBase::List &attributeDependencies,
-                                 AttributeBase::List &modifiedAttributes,
-                                 Attribute<Matrix>::Ptr &leftVector) override;
 
 private:
   using PhaseVector = Eigen::Matrix<Real, 3, 1>;
 
-  Attribute<Matrix>::Ptr mState;
   Matrix *mStateValue;
   Matrix mSeriesResistanceHalf;
   Matrix mSeriesInductanceHalf;
@@ -71,13 +50,13 @@ private:
   Matrix mPortAdmittance01;
   Matrix mPortAdmittance10;
   Matrix mPortAdmittance11;
-  Matrix mHistory0;
-  Matrix mHistory1;
-  Matrix mHistoryMagnetizing;
-  Matrix mMidpointHistory;
-  Matrix mMidpointSource;
-  Matrix mSource0;
-  Matrix mSource1;
+  mutable Matrix mHistory0;
+  mutable Matrix mHistory1;
+  mutable Matrix mHistoryMagnetizing;
+  mutable Matrix mMidpointHistory;
+  mutable Matrix mMidpointSource;
+  mutable Matrix mSource0;
+  mutable Matrix mSource1;
   Matrix mMagnetizingResistance;
   Matrix mMagnetizingInductance;
   Real mNoLoadCurrent = 0.01;
@@ -88,10 +67,12 @@ private:
   Complex mRatioFromReference = Complex(1., 0.);
   WindingReference mReferenceWinding = WindingReference::Auto;
 
-  UInt nonReferenceTerminal() const { return 1 - mReferenceTerminal; }
   void resolveWindingRoles();
-  PhaseVector terminalVoltage(const Matrix &leftVector, UInt terminal);
-  void updateHistory();
+
+protected:
+  void recomputeDiscreteModel() override;
+  void calculateHistoryVector(Matrix &history) const override;
+  void updateState(const Matrix &uOld, const Matrix &uNew) override;
 };
 
 } // namespace CPS::EMT::Ph3::SSN

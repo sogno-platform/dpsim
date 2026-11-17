@@ -28,7 +28,6 @@
 #endif
 #ifdef WITH_HIP
 #include <dpsim/HipDenseAdapter.h>
-#include <dpsim/HipLinearSSNFusedAdapter.h>
 #include <dpsim/HipSG4BatchAdapter.h>
 #include <dpsim/HipSparseBiCGStabAdapter.h>
 #include <dpsim/HipSparseDeviceSolver.h>
@@ -154,14 +153,11 @@ protected:
   };
   std::map<String, ProfileMeasurement> mProfileMeasurements;
 #ifdef WITH_HIP
-  std::vector<std::unique_ptr<HipLinearSSNFusedAdapter>> mHipLinearSSNAdapters;
   std::vector<std::unique_ptr<HipSG4BatchAdapter>> mHipSG4Adapters;
   HipSparseDeviceSolver *mHipSparseDeviceSolver = nullptr;
   bool mHipDeviceAssemblyReady = false;
-  bool mHipAdaptersInitialized = false;
-  void initializeHipLinearSSNAdapters();
-  void updateHipLinearSSNHistories();
-  void updateHipLinearSSNStates(const Matrix &leftVector);
+  bool mHipSG4AdaptersInitialized = false;
+  void initializeHipSG4Adapters();
   void updateHipSG4PreStep(Real time);
   void updateHipSG4PostStep(const Matrix &leftVector);
 #endif

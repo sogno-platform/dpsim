@@ -64,7 +64,7 @@ protected:
   virtual void recomputeDiscreteModel(Real omega);
 
   virtual MatrixComp calculateHistoryVector() const;
-  void updateHistoryVector(MatrixComp &history);
+  virtual void updateHistoryVector(MatrixComp &history);
 
   /// Steady-state envelope state X_ss = (j w I - A)^-1 B u.
   virtual MatrixComp calculateSteadyStateStateFromInput(const MatrixComp &u,

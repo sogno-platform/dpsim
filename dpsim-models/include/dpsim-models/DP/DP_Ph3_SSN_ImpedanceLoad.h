@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <dpsim-models/MNASimPowerComp.h>
+#include <dpsim-models/DP/DP_VTypeSSNComp.h>
 
 namespace CPS {
 namespace DP {
@@ -12,7 +12,7 @@ namespace Ph3 {
 namespace SSN {
 
 /// Balanced fixed-impedance load and bus shunt as one SSN MNA component.
-class ImpedanceLoad final : public MNASimPowerComp<Complex>,
+class ImpedanceLoad final : public VTypeSSNComp,
                             public SharedFactory<ImpedanceLoad> {
 public:
   using SharedFactory<ImpedanceLoad>::make;
@@ -30,31 +30,13 @@ public:
                      Real shuntConductance = 0., Real shuntSusceptance = 0.);
 
   void initializeFromNodesAndTerminals(Real frequency) override;
-  void mnaCompInitialize(Real omega, Real timeStep,
-                         Attribute<Matrix>::Ptr leftVector) override;
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
-  Bool mnaHasCompactRightSideVectorStamp() const override { return true; }
-  void mnaAddCompactRightSideVectorStamp(Matrix &rightVector) override;
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
-  void mnaCompUpdateCurrent(const Matrix &leftVector) override;
-  void mnaCompPreStep(Real time, Int timeStepCount) override;
-  void mnaCompPostStep(Real time, Int timeStepCount,
-                       Attribute<Matrix>::Ptr &leftVector) override;
-  void mnaCompAddPreStepDependencies(
-      AttributeBase::List &prevStepDependencies,
-      AttributeBase::List &attributeDependencies,
-      AttributeBase::List &modifiedAttributes) override;
-  void
-  mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
-                                 AttributeBase::List &attributeDependencies,
-                                 AttributeBase::List &modifiedAttributes,
-                                 Attribute<Matrix>::Ptr &leftVector) override;
 
 private:
   using PhaseVector = Eigen::Matrix<Complex, 3, 1>;
 
-  Attribute<MatrixComp>::Ptr mState;
   Real mActivePower = 0.;
   Real mReactivePower = 0.;
   Real mNominalVoltage = 0.;
@@ -68,12 +50,15 @@ private:
   Complex mInductorPreviousCurrent = Complex(1., 0.);
   MatrixComp mCapacitorAdmittance;
   MatrixComp mCapacitorPreviousVoltage;
-  MatrixComp mHistoryLoad;
-  MatrixComp mHistoryShunt;
+  mutable MatrixComp mHistoryLoad;
+  mutable MatrixComp mHistoryShunt;
 
-  void updateHistory();
-  PhaseVector nodeVoltage(const Matrix &leftVector);
-  void updateCurrentFromVoltage(const PhaseVector &voltage);
+protected:
+  MatrixComp buildInitialInputFromNodes(Real frequency) override;
+  void recomputeDiscreteModel(Real omega) override;
+  MatrixComp calculateHistoryVector() const override;
+  void updateHistoryVector(MatrixComp &history) override;
+  void updateState(const MatrixComp &uOld, const MatrixComp &uNew) override;
 };
 
 } // namespace SSN

@@ -88,6 +88,7 @@ list(APPEND MODELS_SOURCES
 	# DP/DP_Ph3_SynchronGeneratorVBRStandalone.cpp
 
 	DP/DP_Ph3_TwoTerminalVTypeSSNComp.cpp
+	DP/DP_Ph3_MultiPortVTypeSSNComp.cpp
 	DP/DP_Ph3_MixedVTypeVariableSSNComp.cpp
 	DP/DP_Ph3_SSN_SynchronGenerator4Order.cpp
 	DP/DP_Ph3_AvVoltSourceInverterStateSpace.cpp
@@ -97,8 +98,6 @@ list(APPEND MODELS_SOURCES
 	DP/DP_Ph3_GenericTwoTerminalITypeSSN.cpp
 
 	EMT/EMT_SSNComp.cpp
-	EMT/EMT_LinearSSNFused.cpp
-	EMT/EMT_LinearSSNGroup.cpp
 	EMT/EMT_VTypeSSNComp.cpp
 	EMT/EMT_VTypeSplitSSNComp.cpp
 	EMT/EMT_VTypeVariableSSNComp.cpp
@@ -175,6 +174,7 @@ list(APPEND MODELS_SOURCES
 	EMT/EMT_Ph3_GenericTwoTerminalITypeSSN.cpp
 	EMT/EMT_Ph3_GenericFourTerminalVTypeSSN.cpp
 	EMT/EMT_Ph3_TwoTerminalVTypeSSNComp.cpp
+	EMT/EMT_Ph3_MultiPortVTypeSSNComp.cpp
 	EMT/EMT_Ph3_TwoTerminalITypeSSNComp.cpp
 	EMT/EMT_Ph3_TwoTerminalVTypeSplitSSNComp.cpp
 	EMT/EMT_Ph3_TwoTerminalVTypeVariableSSNComp.cpp

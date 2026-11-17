@@ -3,8 +3,6 @@
  */
 
 #include <dpsim-models/EMT/EMT_Ph3_SSN_PiLine.h>
-#include <dpsim-models/MNAStampUtils.h>
-
 using namespace CPS;
 
 namespace {
@@ -17,19 +15,14 @@ constexpr Int kCapCurrent1 = 15;
 } // namespace
 
 EMT::Ph3::SSN::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
-    : MNASimPowerComp<Real>(uid, name, true, true, logLevel),
-      Base::Ph3::PiLine(mAttributes),
-      mState(mAttributes->create<Matrix>("state")), mStateValue(&mState->get()),
+    : MultiPortVTypeSSNComp(uid, name, logLevel),
+      Base::Ph3::PiLine(mAttributes), mStateValue(&mX->get()),
       mInductorAdmittance(Matrix::Zero(3, 3)),
       mSeriesAdmittance(Matrix::Zero(3, 3)),
       mSeriesSystemInverse(Matrix::Identity(3, 3)),
       mCapAdmittance(Matrix::Zero(3, 3)), mSeriesHistory(Matrix::Zero(3, 1)),
       mInductorHistory(Matrix::Zero(3, 1)), mCapHistory0(Matrix::Zero(3, 1)),
       mCapHistory1(Matrix::Zero(3, 1)) {
-  mPhaseType = PhaseType::ABC;
-  setTerminalNumber(2);
-  *mIntfVoltageValue = Matrix::Zero(3, 1);
-  *mIntfCurrentValue = Matrix::Zero(3, 1);
   *mStateValue = Matrix::Zero(18, 1);
 }
 
@@ -51,6 +44,8 @@ void EMT::Ph3::SSN::PiLine::setParameters(const Matrix &seriesResistance,
   }
   Base::Ph3::PiLine::setParameters(seriesResistance, seriesInductance,
                                    parallelCapacitance, parallelConductance);
+  EMT::SSNComp::setParameters(Matrix::Zero(18, 18), Matrix::Zero(18, 6),
+                              Matrix::Zero(6, 18), Matrix::Zero(6, 6));
 }
 
 void EMT::Ph3::SSN::PiLine::initializeFromNodesAndTerminals(Real frequency) {
@@ -80,8 +75,14 @@ void EMT::Ph3::SSN::PiLine::initializeFromNodesAndTerminals(Real frequency) {
   const MatrixComp capCurrent0 = Complex(0., omega) * capHalf * v0Phasor;
   const MatrixComp capCurrent1 = Complex(0., omega) * capHalf * v1Phasor;
 
-  *mIntfVoltageValue = voltagePhasor.real();
-  *mIntfCurrentValue = currentPhasor.real();
+  *mIntfVoltageValue = Matrix::Zero(6, 1);
+  mIntfVoltageValue->block(0, 0, 3, 1) = v0Phasor.real();
+  mIntfVoltageValue->block(3, 0, 3, 1) = v1Phasor.real();
+  *mIntfCurrentValue = Matrix::Zero(6, 1);
+  mIntfCurrentValue->block(0, 0, 3, 1) =
+      -currentPhasor.real() + capCurrent0.real();
+  mIntfCurrentValue->block(3, 0, 3, 1) =
+      currentPhasor.real() + capCurrent1.real();
   mStateValue->setZero();
   mStateValue->block<3, 1>(kSeriesCurrent, 0) = currentPhasor.real();
   mStateValue->block<3, 1>(kSeriesInductorVoltage, 0) =
@@ -92,58 +93,24 @@ void EMT::Ph3::SSN::PiLine::initializeFromNodesAndTerminals(Real frequency) {
   mStateValue->block<3, 1>(kCapCurrent1, 0) = capCurrent1.real();
 }
 
-void EMT::Ph3::SSN::PiLine::exportFusedModel(LinearSSNModel &model) {
-  model = LinearSSNModel{};
-  model.kind = LinearSSNModel::Kind::PiLine;
-  model.terminalCount = 2;
-  for (UInt terminal = 0; terminal < 2; ++terminal) {
-    model.grounded[terminal] = !terminalNotGrounded(terminal);
-    for (UInt phase = 0; phase < 3; ++phase)
-      model.nodeIndices[terminal * 3 + phase] =
-          matrixNodeIndex(terminal, phase);
-    for (UInt phase = 0; phase < 3; ++phase)
-      model.nodeNames[terminal * 3 + phase] = node(terminal)->name();
-  }
-  model.state = *mStateValue;
-  model.seriesResistance = **mSeriesRes;
-  model.inductorAdmittance = mInductorAdmittance;
-  model.seriesSystemInverse = mSeriesSystemInverse;
-  model.seriesAdmittance = mSeriesAdmittance;
-  model.capAdmittance = mCapAdmittance;
-  model.parallelConductance = **mParallelCond;
-  model.portAdmittance = Matrix::Zero(6, 6);
-  model.portAdmittance.block<3, 3>(0, 0) =
-      mSeriesAdmittance + mCapAdmittance + **mParallelCond / 2.;
-  model.portAdmittance.block<3, 3>(0, 3) = -mSeriesAdmittance;
-  model.portAdmittance.block<3, 3>(3, 0) = -mSeriesAdmittance;
-  model.portAdmittance.block<3, 3>(3, 3) =
-      mSeriesAdmittance + mCapAdmittance + **mParallelCond / 2.;
-}
-
-void EMT::Ph3::SSN::PiLine::mnaCompInitialize(Real, Real timeStep,
-                                              Attribute<Matrix>::Ptr) {
-  updateMatrixNodeIndices();
+void EMT::Ph3::SSN::PiLine::recomputeDiscreteModel() {
+  const Real timeStep = mTimeStep;
   mInductorAdmittance = (timeStep / 2.) * (**mSeriesInd).inverse();
   mSeriesSystemInverse =
       (Matrix::Identity(3, 3) + mInductorAdmittance * **mSeriesRes).inverse();
   mSeriesAdmittance = mSeriesSystemInverse * mInductorAdmittance;
-  mCapAdmittance = (2. / timeStep) * ((**mParallelCap) / 2.);
+  mCapAdmittance = (**mParallelCap) / timeStep;
+  const Matrix shunt = mCapAdmittance + (**mParallelCond) / 2.;
+  mW = Matrix::Zero(6, 6);
+  mW.block<3, 3>(0, 0) = mSeriesAdmittance + shunt;
+  mW.block<3, 3>(0, 3) = -mSeriesAdmittance;
+  mW.block<3, 3>(3, 0) = -mSeriesAdmittance;
+  mW.block<3, 3>(3, 3) = mSeriesAdmittance + shunt;
+  mdA.setZero(18, 18);
+  mdB.setZero(18, 6);
 }
 
-void EMT::Ph3::SSN::PiLine::mnaCompApplySystemMatrixStamp(
-    SparseMatrixRow &systemMatrix) {
-  MNAStampUtils::stampConductanceMatrix(
-      mSeriesAdmittance, systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1),
-      terminalNotGrounded(0), terminalNotGrounded(1), mSLog);
-  const Matrix shunt = mCapAdmittance + ((**mParallelCond) / 2.);
-  for (UInt terminal = 0; terminal < 2; ++terminal) {
-    MNAStampUtils::stampConductanceMatrix(
-        shunt, systemMatrix, matrixNodeIndex(terminal), 0,
-        terminalNotGrounded(terminal), false, mSLog);
-  }
-}
-
-void EMT::Ph3::SSN::PiLine::mnaCompPreStep(Real, Int) {
+void EMT::Ph3::SSN::PiLine::calculateHistoryVector(Matrix &history) const {
   mInductorHistory.noalias() =
       mInductorAdmittance * mStateValue->block<3, 1>(kSeriesInductorVoltage, 0);
   mInductorHistory += mStateValue->block<3, 1>(kSeriesCurrent, 0);
@@ -152,98 +119,25 @@ void EMT::Ph3::SSN::PiLine::mnaCompPreStep(Real, Int) {
                  mCapAdmittance * mStateValue->block<3, 1>(kCapVoltage0, 0);
   mCapHistory1 = -mStateValue->block<3, 1>(kCapCurrent1, 0) -
                  mCapAdmittance * mStateValue->block<3, 1>(kCapVoltage1, 0);
+  history.resize(6, 1);
+  history.block(0, 0, 3, 1) = -mSeriesHistory + mCapHistory0;
+  history.block(3, 0, 3, 1) = mSeriesHistory + mCapHistory1;
 }
 
-void EMT::Ph3::SSN::PiLine::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
-  if (terminalNotGrounded(0)) {
-    for (UInt phase = 0; phase < 3; ++phase)
-      Math::setVectorElement(rightVector, matrixNodeIndex(0, phase),
-                             mSeriesHistory(phase, 0) - mCapHistory0(phase, 0));
-  }
-  if (terminalNotGrounded(1)) {
-    for (UInt phase = 0; phase < 3; ++phase)
-      Math::setVectorElement(rightVector, matrixNodeIndex(1, phase),
-                             -mSeriesHistory(phase, 0) -
-                                 mCapHistory1(phase, 0));
-  }
-}
-
-void EMT::Ph3::SSN::PiLine::mnaAddCompactRightSideVectorStamp(
-    Matrix &rightVector) {
-  if (terminalNotGrounded(0)) {
-    for (UInt phase = 0; phase < 3; ++phase)
-      Math::addToVectorElement(rightVector, matrixNodeIndex(0, phase),
-                               mSeriesHistory(phase, 0) -
-                                   mCapHistory0(phase, 0));
-  }
-  if (terminalNotGrounded(1)) {
-    for (UInt phase = 0; phase < 3; ++phase)
-      Math::addToVectorElement(rightVector, matrixNodeIndex(1, phase),
-                               -mSeriesHistory(phase, 0) -
-                                   mCapHistory1(phase, 0));
-  }
-}
-
-EMT::Ph3::SSN::PiLine::TerminalVoltage
-EMT::Ph3::SSN::PiLine::terminalVoltage(const Matrix &leftVector,
-                                       UInt terminal) {
-  TerminalVoltage voltage = TerminalVoltage::Zero();
-  if (terminalNotGrounded(terminal)) {
-    for (UInt phase = 0; phase < 3; ++phase)
-      voltage(phase, 0) = Math::realFromVectorElement(
-          leftVector, matrixNodeIndex(terminal, phase));
-  }
-  return voltage;
-}
-
-void EMT::Ph3::SSN::PiLine::mnaCompUpdateVoltage(const Matrix &leftVector) {
-  *mIntfVoltageValue =
-      terminalVoltage(leftVector, 1) - terminalVoltage(leftVector, 0);
-}
-
-void EMT::Ph3::SSN::PiLine::mnaCompUpdateCurrent(const Matrix &) {
-  *mIntfCurrentValue =
-      mSeriesAdmittance * (*mIntfVoltageValue) + mSeriesHistory;
-}
-
-void EMT::Ph3::SSN::PiLine::mnaCompPostStep(
-    Real, Int, Attribute<Matrix>::Ptr &leftVector) {
-  // Reuse the terminal voltages for both the interface update and the
-  // capacitor state update instead of extracting them twice.
-  const TerminalVoltage v0 = terminalVoltage(**leftVector, 0);
-  const TerminalVoltage v1 = terminalVoltage(**leftVector, 1);
+void EMT::Ph3::SSN::PiLine::updateState(const Matrix &, const Matrix &input) {
+  const TerminalVoltage v0 = input.block(0, 0, 3, 1);
+  const TerminalVoltage v1 = input.block(3, 0, 3, 1);
   const TerminalVoltage interfaceVoltage = v1 - v0;
-  *mIntfVoltageValue = interfaceVoltage;
-  mIntfCurrentValue->noalias() = mSeriesAdmittance * interfaceVoltage;
-  *mIntfCurrentValue += mSeriesHistory;
+  const TerminalVoltage seriesCurrent =
+      mSeriesAdmittance * interfaceVoltage + mSeriesHistory;
   const TerminalVoltage inductorVoltage =
-      interfaceVoltage - **mSeriesRes * (*mIntfCurrentValue);
+      interfaceVoltage - **mSeriesRes * seriesCurrent;
   const TerminalVoltage capCurrent0 = mCapAdmittance * v0 + mCapHistory0;
   const TerminalVoltage capCurrent1 = mCapAdmittance * v1 + mCapHistory1;
-
-  mStateValue->block<3, 1>(kSeriesCurrent, 0) = *mIntfCurrentValue;
+  mStateValue->block<3, 1>(kSeriesCurrent, 0) = seriesCurrent;
   mStateValue->block<3, 1>(kSeriesInductorVoltage, 0) = inductorVoltage;
   mStateValue->block<3, 1>(kCapVoltage0, 0) = v0;
   mStateValue->block<3, 1>(kCapCurrent0, 0) = capCurrent0;
   mStateValue->block<3, 1>(kCapVoltage1, 0) = v1;
   mStateValue->block<3, 1>(kCapCurrent1, 0) = capCurrent1;
-}
-
-void EMT::Ph3::SSN::PiLine::mnaCompAddPreStepDependencies(
-    AttributeBase::List &prevStepDependencies,
-    AttributeBase::List &attributeDependencies,
-    AttributeBase::List &modifiedAttributes) {
-  prevStepDependencies.push_back(mState);
-  modifiedAttributes.push_back(mRightVector);
-}
-
-void EMT::Ph3::SSN::PiLine::mnaCompAddPostStepDependencies(
-    AttributeBase::List &, AttributeBase::List &attributeDependencies,
-    AttributeBase::List &modifiedAttributes,
-    Attribute<Matrix>::Ptr &leftVector) {
-  attributeDependencies.push_back(leftVector);
-  modifiedAttributes.push_back(mIntfVoltage);
-  modifiedAttributes.push_back(mIntfCurrent);
-  modifiedAttributes.push_back(mState);
 }
