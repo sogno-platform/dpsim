@@ -334,6 +334,8 @@ void addDPPh1Components(py::module_ mDPPh1) {
                    setOperationalParametersPerUnit),
            "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
            "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a)
+      .def("set_damping", &CPS::DP::Ph1::SynchronGenerator4OrderVBR::setDamping,
+           "damping"_a)
       .def("connect", &CPS::DP::Ph1::SynchronGenerator4OrderVBR::connect);
 
   py::class_<CPS::DP::Ph1::SynchronGenerator5OrderVBR,

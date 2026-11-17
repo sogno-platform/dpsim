@@ -17,8 +17,6 @@ EMT::Ph3::SynchronGenerator4OrderVBR::SynchronGenerator4OrderVBR(
     : ReducedOrderSynchronGeneratorVBR(uid, name, logLevel),
       mEdq0_t(mAttributes->create<Matrix>("Edq0_t")) {
 
-  // Keep the SG4 shaft damping consistent with the DP phasor implementation.
-  setDamping(1.0);
   //
   mSGOrder = SGOrder::SG4Order;
 
