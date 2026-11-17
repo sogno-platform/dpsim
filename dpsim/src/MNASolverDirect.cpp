@@ -16,11 +16,26 @@
 #endif
 
 #include <algorithm>
+#include <cctype>
 #include <numeric>
 #include <unordered_set>
 
 using namespace DPsim;
 using namespace CPS;
+
+namespace {
+String safeLogFileComponent(const String &name) {
+  String safeName;
+  safeName.reserve(name.size());
+  for (unsigned char character : name) {
+    if (std::isalnum(character) || character == '-' || character == '_')
+      safeName.push_back(static_cast<char>(character));
+    else
+      safeName.push_back('_');
+  }
+  return safeName.empty() ? "solver" : safeName;
+}
+} // namespace
 
 namespace DPsim {
 
@@ -774,6 +789,7 @@ template <typename VarType> void MnaSolverDirect<VarType>::logSystemMatrices() {
 }
 
 template <typename VarType> void MnaSolverDirect<VarType>::logLUTimes() {
+  const auto safeName = safeLogFileComponent(this->mName);
   logFactorizationTime();
   logRecomputationTime();
   logSolveTime();
@@ -790,7 +806,7 @@ template <typename VarType> void MnaSolverDirect<VarType>::logLUTimes() {
                        averageNs * 1e-3, measurement.minimum.count() * 1e-3,
                        measurement.maximum.count() * 1e-3, measurement.count);
   }
-  std::ofstream phaseFile(CPS::Logger::logDir() + "/" + this->mName +
+  std::ofstream phaseFile(CPS::Logger::logDir() + "/" + safeName +
                           "_SolverPhaseTimes.csv");
   phaseFile << "phase,total_s,avg_us,min_us,max_us,calls\n";
   for (const auto &entry : mProfileMeasurements) {
@@ -814,11 +830,11 @@ template <typename VarType> void MnaSolverDirect<VarType>::logLUTimes() {
     dense->writeDetailedProfile(phaseFile);
   if (auto dense = std::dynamic_pointer_cast<DenseLUAdapter>(
           mDirectLinearSolverVariableSystemMatrix)) {
-    std::ofstream diagnostics(CPS::Logger::logDir() + "/" + this->mName +
+    std::ofstream diagnostics(CPS::Logger::logDir() + "/" + safeName +
                               "_SolverDiagnostics.csv");
     dense->writeDetailedDiagnostics(diagnostics);
   }
-  std::ofstream matrixFile(CPS::Logger::logDir() + "/" + this->mName +
+  std::ofstream matrixFile(CPS::Logger::logDir() + "/" + safeName +
                            "_SolverMatrixStats.csv");
   const SparseMatrix *profiledMatrix = &mVariableSystemMatrix;
   const char *matrixSource = "variable_system_matrix";
